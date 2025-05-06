@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_OSS|Win32">
+      <Configuration>Release_OSS</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_OSS|x64">
+      <Configuration>Release_OSS</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="backend\endless_control.h" />
+    <ClInclude Include="backend\ng_editor_container.h" />
+    <ClInclude Include="backend\ng_ide.h" />
+    <ClInclude Include="backend\ng_recordset_view.h" />
+    <ClInclude Include="backend\ng_session_handler.h" />
+    <ClInclude Include="backend\ng_sheet.h" />
+    <ClInclude Include="backend\ng_sidebar.h" />
+    <ClInclude Include="editors\code_editor_base.h" />
+    <ClInclude Include="editors\ecma_code_editor.h" />
+    <ClInclude Include="editors\mysql_code_editor.h" />
+    <ClInclude Include="ng_public_interface.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="backend\endless_control.cpp" />
+    <ClCompile Include="backend\ng_editor_container.cpp" />
+    <ClCompile Include="backend\ng_ide.cpp" />
+    <ClCompile Include="backend\ng_recordset_view.cpp" />
+    <ClCompile Include="backend\ng_session_handler.cpp" />
+    <ClCompile Include="backend\ng_sheet.cpp" />
+    <ClCompile Include="backend\ng_sidebar.cpp" />
+    <ClCompile Include="editors\code_editor_base.cpp" />
+    <ClCompile Include="editors\ecma_code_editor.cpp" />
+    <ClCompile Include="editors\mysql_code_editor.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_OSS|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\backend\wbprivate\wbprivate.be.vcxproj">
+      <Project>{188dd57c-17e3-462f-b734-390c8ff6f852}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\backend\wbpublic\wbpublic.be.vcxproj">
+      <Project>{55ee797d-2b76-474b-82d6-1f96f7788af8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\library\base\base.vcxproj">
+      <Project>{c3b85913-b106-40c6-8dde-a7cf52a4ec80}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\library\cdbc\cdbc.vcxproj">
+      <Project>{2d0409d4-09a1-4776-8dac-3bf778d51734}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\library\forms\mysql.forms.vcxproj">
+      <Project>{28fcb4e3-8baa-42f2-b2c6-247d9d0745b1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\library\grt\grt.vcxproj">
+      <Project>{dc1ddaad-7dc1-4bc4-b6c8-b7cec998c7ed}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\library\mysql.canvas\mysql.canvas.vcxproj">
+      <Project>{1b17d534-365d-4c93-b3b6-55610df8629a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\library\parsers\parsers.vcxproj">
+      <Project>{f563e3de-39ba-4a9d-a6c2-9e9222e8f518}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{70E71FFB-AB26-498A-B756-9EE4315E5D9B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>wbng</RootNamespace>
+    <ProjectName>studio.ide</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;NG_EXPORTS;NO_MYSQLXTEST;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>.;$(SolutionDir)\backend\wbprivate;$(SolutionDir)\backend\wbpublic;$(SolutionDir)\backend\wbpublic\objimpl;$(SolutionDir)\ext\antlr-runtime\include;$(SolutionDir)\generated;$(SolutionDir)\library\cdbc\src;$(SolutionDir)\library\grt\src;$(SolutionDir)\library\base;$(SolutionDir)\library\forms;$(SolutionDir)\plugins\db.mysql\frontend;$(SolutionDir)\library\mysql.canvas\src;$(SolutionDir)\library\parsers;$(SolutionDir)\modules;$(SolutionDir)\ext\scintilla\include;$(SolutionDir)\..\mysql-win-res\include\;$(SolutionDir)\..\mysql-win-res\include\cppconn;$(SolutionDir)\..\mysql-win-res\include\ngshell;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh\mysqlxtest;$(SolutionDir)\..\mysql-win-res\include\glib;$(SolutionDir)\..\mysql-win-res\include\libxml;$(SolutionDir)\..\mysql-win-res\include\vsqlite++;$(SolutionDir)\..\mysql-win-res\include\mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\glib\glib-2.0.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\mysqlshcore.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\v8.lib;$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\python\$(Configuration)\python27_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;NG_EXPORTS;NO_MYSQLXTEST;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>.;$(SolutionDir)\backend\wbprivate;$(SolutionDir)\backend\wbpublic;$(SolutionDir)\backend\wbpublic\objimpl;$(SolutionDir)\ext\antlr-runtime\include;$(SolutionDir)\generated;$(SolutionDir)\library\cdbc\src;$(SolutionDir)\library\grt\src;$(SolutionDir)\library\base;$(SolutionDir)\library\forms;$(SolutionDir)\plugins\db.mysql\frontend;$(SolutionDir)\library\mysql.canvas\src;$(SolutionDir)\library\parsers;$(SolutionDir)\modules;$(SolutionDir)\ext\scintilla\include;$(SolutionDir)\..\mysql-win-res\include\;$(SolutionDir)\..\mysql-win-res\include\cppconn;$(SolutionDir)\..\mysql-win-res\include\ngshell;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh\mysqlxtest;$(SolutionDir)\..\mysql-win-res\include\glib;$(SolutionDir)\..\mysql-win-res\include\libxml;$(SolutionDir)\..\mysql-win-res\include\vsqlite++;$(SolutionDir)\..\mysql-win-res\include\mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\glib\glib-2.0.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\mysqlshcore.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\v8.lib;$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\python\$(Configuration)\python27_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;NG_EXPORTS;NO_MYSQLXTEST;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>.;$(SolutionDir)\backend\wbprivate;$(SolutionDir)\backend\wbpublic;$(SolutionDir)\backend\wbpublic\objimpl;$(SolutionDir)\ext\antlr-runtime\include;$(SolutionDir)\generated;$(SolutionDir)\library\cdbc\src;$(SolutionDir)\library\grt\src;$(SolutionDir)\library\base;$(SolutionDir)\library\forms;$(SolutionDir)\plugins\db.mysql\frontend;$(SolutionDir)\library\mysql.canvas\src;$(SolutionDir)\library\parsers;$(SolutionDir)\modules;$(SolutionDir)\ext\scintilla\include;$(SolutionDir)\..\mysql-win-res\include\;$(SolutionDir)\..\mysql-win-res\include\cppconn;$(SolutionDir)\..\mysql-win-res\include\ngshell;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh\mysqlxtest;$(SolutionDir)\..\mysql-win-res\include\glib;$(SolutionDir)\..\mysql-win-res\include\libxml;$(SolutionDir)\..\mysql-win-res\include\vsqlite++;$(SolutionDir)\..\mysql-win-res\include\mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\glib\glib-2.0.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\mysqlshcore.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\v8.lib;$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\python\$(Configuration)\python27.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;NG_EXPORTS;NO_MYSQLXTEST;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>.;$(SolutionDir)\backend\wbprivate;$(SolutionDir)\backend\wbpublic;$(SolutionDir)\backend\wbpublic\objimpl;$(SolutionDir)\ext\antlr-runtime\include;$(SolutionDir)\generated;$(SolutionDir)\library\cdbc\src;$(SolutionDir)\library\grt\src;$(SolutionDir)\library\base;$(SolutionDir)\library\forms;$(SolutionDir)\plugins\db.mysql\frontend;$(SolutionDir)\library\mysql.canvas\src;$(SolutionDir)\library\parsers;$(SolutionDir)\modules;$(SolutionDir)\ext\scintilla\include;$(SolutionDir)\..\mysql-win-res\include\;$(SolutionDir)\..\mysql-win-res\include\cppconn;$(SolutionDir)\..\mysql-win-res\include\ngshell;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh\mysqlxtest;$(SolutionDir)\..\mysql-win-res\include\glib;$(SolutionDir)\..\mysql-win-res\include\libxml;$(SolutionDir)\..\mysql-win-res\include\vsqlite++;$(SolutionDir)\..\mysql-win-res\include\mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\glib\glib-2.0.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\mysqlshcore.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\v8.lib;$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\python\$(Configuration)\python27.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;NG_EXPORTS;NO_MYSQLXTEST;NO_MYSQLXTEST;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>.;$(SolutionDir)\backend\wbprivate;$(SolutionDir)\backend\wbpublic;$(SolutionDir)\backend\wbpublic\objimpl;$(SolutionDir)\ext\antlr-runtime\include;$(SolutionDir)\generated;$(SolutionDir)\library\cdbc\src;$(SolutionDir)\library\grt\src;$(SolutionDir)\library\base;$(SolutionDir)\library\forms;$(SolutionDir)\plugins\db.mysql\frontend;$(SolutionDir)\library\mysql.canvas\src;$(SolutionDir)\library\parsers;$(SolutionDir)\modules;$(SolutionDir)\ext\scintilla\include;$(SolutionDir)\..\mysql-win-res\include\;$(SolutionDir)\..\mysql-win-res\include\cppconn;$(SolutionDir)\..\mysql-win-res\include\ngshell;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh\mysqlxtest;$(SolutionDir)\..\mysql-win-res\include\glib;$(SolutionDir)\..\mysql-win-res\include\libxml;$(SolutionDir)\..\mysql-win-res\include\vsqlite++;$(SolutionDir)\..\mysql-win-res\include\mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\glib\glib-2.0.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\mysqlshcore.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\v8.lib;$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\python\$(Configuration)\python27.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;NG_EXPORTS;NO_MYSQLXTEST;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>.;$(SolutionDir)\backend\wbprivate;$(SolutionDir)\backend\wbpublic;$(SolutionDir)\backend\wbpublic\objimpl;$(SolutionDir)\ext\antlr-runtime\include;$(SolutionDir)\generated;$(SolutionDir)\library\cdbc\src;$(SolutionDir)\library\grt\src;$(SolutionDir)\library\base;$(SolutionDir)\library\forms;$(SolutionDir)\plugins\db.mysql\frontend;$(SolutionDir)\library\mysql.canvas\src;$(SolutionDir)\library\parsers;$(SolutionDir)\modules;$(SolutionDir)\ext\scintilla\include;$(SolutionDir)\..\mysql-win-res\include\;$(SolutionDir)\..\mysql-win-res\include\cppconn;$(SolutionDir)\..\mysql-win-res\include\ngshell;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh;$(SolutionDir)\..\mysql-win-res\include\ngshell\mysqlsh\mysqlxtest;$(SolutionDir)\..\mysql-win-res\include\glib;$(SolutionDir)\..\mysql-win-res\include\libxml;$(SolutionDir)\..\mysql-win-res\include\vsqlite++;$(SolutionDir)\..\mysql-win-res\include\mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\glib\glib-2.0.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\mysqlshcore.lib;$(SolutionDir)..\mysql-win-res\lib\$(PlatformTarget)\ngshell\$(Configuration)\v8.lib;$(SolutionDir)\..\mysql-win-res\lib\$(PlatformTarget)\python\$(Configuration)\python27.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

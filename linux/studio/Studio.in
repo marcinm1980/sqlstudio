@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Uncomment the following line if you're having trouble with gnome-keyring lockups.
+# This will cause passwords to be stored only temporarily for the session.
+#WB_NO_GNOME_KEYRING=1
+
+# force disable the Mac style single menu hack in Ubuntu Unity
+export UBUNTU_MENUPROXY=0
+
+# another Ubuntu bug, this this one causes modal dialogs to not work as intended
+# https://bugs.launchpad.net/ubuntu/+source/overlay-scrollbar/+bug/903302
+export LIBOVERLAY_SCROLLBAR=0
+
+# Set the destdir=<some_dir> when ever you install using DESTDIR=<some_dir>. 
+destdir="$WB_DEST_DIR"
+
+wblibdir="$destdir@WB_INSTALL_LIB_DIR@"
+wbxlibdir="$destdir@WBX_INSTALL_LIB_DIR@"
+
+# Set the PROJSO env variable so gdal can find proj cause it's using dlopen instead ld 
+if test -f "/usr/lib/libproj.so.0"; then
+  export PROJSO="/usr/lib/libproj.so.0"
+elif test -f "/usr/lib64/libproj.so.0"; then
+  export PROJSO="/usr/lib64/libproj.so.0"
+fi
+
+if test -f $wblibdir/libsqlite3.so; then
+  if test "$LD_PRELOAD" != ""; then
+    export LD_PRELOAD="$LD_PRELOAD:$wblibdir/libsqlite3.so"
+  else
+    export LD_PRELOAD="$wblibdir/libsqlite3.so"
+  fi
+fi
+
+
+# if libcairo and pixman are in the wb libraries dir, force them to be preloaded
+if test -f $wblibdir/libcairo.so.2; then
+	if test "$LD_PRELOAD" != ""; then
+		export LD_PRELOAD="$LD_PRELOAD:$wblibdir/libcairo.so.2"
+	else
+		export LD_PRELOAD="$wblibdir/libcairo.so.2"
+	fi
+fi
+if test -f $wblibdir/libpixman-1.so.0; then
+	if test "$LD_PRELOAD" != ""; then
+		export LD_PRELOAD="$LD_PRELOAD:$wblibdir/libpixman.so.0"
+	else
+		export LD_PRELOAD="$wblibdir/libpixman.so.0"
+	fi
+fi
+
+
+if test "$LD_LIBRARY_PATH" != ""; then
+    export LD_LIBRARY_PATH="$wbxlibdir:$wblibdir:$LD_LIBRARY_PATH"
+else
+    export LD_LIBRARY_PATH="$wbxlibdir:$wblibdir"
+fi
+
+if test "$PYTHONPATH" != ""; then
+    export PYTHONPATH="$wblibdir:$PYTHONPATH"
+else
+    export PYTHONPATH="$wblibdir"
+fi
+
+export MWB_DATA_DIR="$destdir@WB_PACKAGE_SHARED_DIR@"
+export MWB_LIBRARY_DIR="$destdir@WB_INSTALL_SHARED_DIR@/mysql-studio/libraries"
+export MWB_MODULE_DIR="$destdir@WB_PYTHON_MODULES_DIR@"
+export MWB_PLUGIN_DIR="$destdir@WB_PACKAGE_PLUGINS_DIR@"
+export DBC_DRIVER_PATH="$destdir@LIB_INSTALL_DIR@/mysql-studio"
+export MWB_BASE_DIR="$destdir@WB_INSTALL_DIR@"
+export MWB_BINARIES_DIR="$destdir@WB_INSTALL_DIR_EXECUTABLE@"
+
+if test "$WB_DEBUG" != ""; then
+  $WB_DEBUG $MWB_BINARIES_DIR/studio.x-bin "$@"
+else
+  if type -p catchsegv > /dev/null; then
+  catchsegv $MWB_BINARIES_DIR/studio.x-bin "$@"
+  else
+  $MWB_BINARIES_DIR/studio.x-bin "$@"
+  fi
+fi
