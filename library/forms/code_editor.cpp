@@ -32,8 +32,7 @@
 #include "base/drawing.h"
 #include "base/xml_functions.h"
 
-// @@FIXMEE
-//#include "SciLexer.h"
+#include "SciLexer.h"
 
 #include "mforms/mforms.h"
 #include "mforms/utilities.h"
@@ -1018,32 +1017,32 @@ void CodeEditor::handle_notification(const std::string &name, void *sender, Noti
 //----------------------------------------------------------------------------------------------------------------------
 
 void CodeEditor::set_language(SyntaxHighlighterLanguage language) {
-  // switch (language) {
-  //  case mforms::LanguageMySQL56:
-  //  case mforms::LanguageMySQL57:
-  //  case mforms::LanguageMySQL80:
-  //    _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_MYSQL, 0);
-  //    break;
+  switch (language) {
+    case mforms::LanguageMySQL56:
+    case mforms::LanguageMySQL57:
+    case mforms::LanguageMySQL80:
+      _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_MYSQL, 0);
+      break;
 
-  //  case mforms::LanguageHtml:
-  //    _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_HTML, 0);
-  //    break;
+    case mforms::LanguageHtml:
+      _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_HTML, 0);
+      break;
 
-  //  case mforms::LanguagePython:
-  //    _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_PYTHON, 0);
-  //    break;
+    case mforms::LanguagePython:
+      _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_PYTHON, 0);
+      break;
 
-  //  case mforms::LanguageCpp:
-  //  case mforms::LanguageJS:
-  //  case mforms::LanguageJson:
-  //    _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_CPP, 0);
-  //    break;
+    case mforms::LanguageCpp:
+    case mforms::LanguageJS:
+    case mforms::LanguageJson:
+      _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_CPP, 0);
+      break;
 
-  //  default:
-  //    // No (known) language. Syntax highlighting will be switched off.
-  //    _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_NULL, 0);
-  //    return;
-  //}
+    default:
+      // No (known) language. Syntax highlighting will be switched off.
+      _code_editor_impl->send_editor(this, SCI_SETLEXER, SCLEX_NULL, 0);
+      return;
+  }
 
   loadConfiguration(language);
 }

@@ -1,4 +1,28 @@
+/*
+ * Copyright (c) 2005, 2021, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2.0,
+ * as published by the Free Software Foundation.
+ *
+ * This program is designed to work with certain software (including
+ * but not limited to OpenSSL) that is licensed under separate terms, as
+ * designated in a particular file or component or in included license
+ * documentation.  The authors of MySQL hereby grant you an additional
+ * permission to link the program and your derivative works with the
+ * separately licensed software that they have either included with
+ * the program or referenced in the documentation.
+ * This program is distributed in the hope that it will be useful,  but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+ * the GNU General Public License, version 2.0, for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
+#include <glib/gstdio.h>
 #include <cstdio>
 #include <sstream>
 #include <fstream>
@@ -8,6 +32,7 @@
 #include "base/common.h"
 #include "base/string_utilities.h"
 #include "base/file_utilities.h"
+#include "workbench/wb_version.h"
 
 // Windows includes
 #ifdef _MSC_VER
@@ -49,8 +74,6 @@
 #include <mach/machine.h>
 #endif
 
-#include <filesystem>
-
 #include "base/file_functions.h"
 #include "base/util_functions.h"
 
@@ -65,51 +88,51 @@ struct hardware_info {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-//char *auto_line_break(const char *txt, unsigned int width, char sep) {
-//  char *dst = (char *)g_malloc((width + 2) * 80);
-//  unsigned int i, o = 0, p = 0, w = 0, l = (unsigned int)strlen(txt);
-//
-//  for (i = 0; i < l;) {
-//    w++;
-//
-//    if (w > width) {
-//#if defined(_MSC_VER)
-//      dst[p + o] = '\r';
-//      dst[p + o + 1] = '\n';
-//
-//      o += 1;
-//#else
-//      dst[p + o] = '\n';
-//#endif
-//      i = p + 1;
-//      w = 0;
-//    } else {
-//      dst[i + o] = txt[i];
-//
-//      if (txt[i] == sep)
-//        p = i;
-//
-//      i++;
-//    }
-//  }
-//
-//  dst[i + o] = 0;
-//
-//  return dst;
-//}
+char *auto_line_break(const char *txt, unsigned int width, char sep) {
+  char *dst = (char *)g_malloc((width + 2) * 80);
+  unsigned int i, o = 0, p = 0, w = 0, l = (unsigned int)strlen(txt);
+
+  for (i = 0; i < l;) {
+    w++;
+
+    if (w > width) {
+#if defined(_MSC_VER)
+      dst[p + o] = '\r';
+      dst[p + o + 1] = '\n';
+
+      o += 1;
+#else
+      dst[p + o] = '\n';
+#endif
+      i = p + 1;
+      w = 0;
+    } else {
+      dst[i + o] = txt[i];
+
+      if (txt[i] == sep)
+        p = i;
+
+      i++;
+    }
+  }
+
+  dst[i + o] = 0;
+
+  return dst;
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 
-//int str_is_numeric(const char *str) {
-//  unsigned int len = (unsigned int)strlen(str);
-//  unsigned int i;
-//
-//  for (i = 0; i < len; i++)
-//    if (g_ascii_digit_value(str[i]) == -1)
-//      return 0;
-//
-//  return 1;
-//}
+int str_is_numeric(const char *str) {
+  unsigned int len = (unsigned int)strlen(str);
+  unsigned int i;
+
+  for (i = 0; i < len; i++)
+    if (g_ascii_digit_value(str[i]) == -1)
+      return 0;
+
+  return 1;
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -165,8 +188,7 @@ int set_value_to_registry(HKEY root_key, const char *sub_key, const char *key, c
   LONG retval;
   DWORD dwDispo;
 
-  char class_name[] = "";
-  if ((retval = RegCreateKeyExA(root_key, sub_key, 0, class_name, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hSubKey,
+  if ((retval = RegCreateKeyExA(root_key, sub_key, 0, "", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hSubKey,
                                 &dwDispo)) == ERROR_SUCCESS) {
     retval = RegSetValueExA(hSubKey, key, 0, REG_SZ, (const BYTE *)value, (DWORD)strlen(value) + 1);
 
@@ -210,6 +232,7 @@ std::string get_local_os_name() {
 //----------------------------------------------------------------------------------------------------------------------
 
 std::string get_local_hardware_info() {
+  char *hardware_string;
   SYSTEM_INFO sysinfo;
   MEMORYSTATUSEX memstat;
   char processor_name[BUFSIZE];
@@ -250,16 +273,15 @@ std::string get_local_hardware_info() {
   }
 
   target_size = 16 + (int)strlen(processor_name) + (int)strlen(total_phys_ram);
-  std::vector<char> hardware_string;
-  hardware_string.resize(target_size + 1);
+  hardware_string = (char *)g_malloc(target_size);
 
   if (sysinfo.dwNumberOfProcessors > 1) {
-    sprintf_s(hardware_string.data(), hardware_string.size(), "%dx %s, %s", sysinfo.dwNumberOfProcessors, processor_name, total_phys_ram);
+    sprintf_s(hardware_string, target_size, "%dx %s, %s", sysinfo.dwNumberOfProcessors, processor_name, total_phys_ram);
   } else {
-    sprintf_s(hardware_string.data(), hardware_string.size(), "%s, %s", processor_name, total_phys_ram);
+    sprintf_s(hardware_string, target_size, "%s, %s", processor_name, total_phys_ram);
   }
 
-  return hardware_string.data();
+  return hardware_string;
 }
 
 #else
@@ -671,25 +693,21 @@ std::int64_t get_file_size(const char *filename) {
 #endif //! WINDOWS
 }
 
-char* strcasestr_len(const char* haystack, int haystack_len, const char* needle) {
-  size_t needle_len = strlen(needle);
+// note, needle has to be ascii!
+char *strcasestr_len(const char *haystack, int haystack_len, const char *needle) {
+  gssize needle_len = (gssize)strlen(needle);
+  int i;
 
-  if (needle_len > static_cast<size_t>(haystack_len))
-    return nullptr;
+  if (needle_len > haystack_len)
+    return NULL;
 
-  for (int i = 0; i <= haystack_len - static_cast<int>(needle_len); i++) {
-    bool match = true;
-    for (size_t j = 0; j < needle_len; j++) {
-      if (std::tolower(static_cast<unsigned char>(haystack[i + j])) !=
-        std::tolower(static_cast<unsigned char>(needle[j]))) {
-        match = false;
-        break;
-      }
-    }
-    if (match)
-      return const_cast<char*>(haystack + i);
+  i = 0;
+  while (i <= haystack_len - needle_len) {
+    if (g_ascii_strncasecmp(needle, haystack + i, needle_len) == 0)
+      return (char *)haystack + i;
+    i++;
   }
-  return nullptr;
+  return NULL;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -726,51 +744,35 @@ const char *strfindword(const char *str, const char *word) {
  * Copies all files non-recursively from source to target. Target will be created on the fly.
  */
 int copy_folder(const char *source_folder, const char *target_folder) {
-  try {
-    // Convert input C-style strings to std::filesystem::path
-    std::filesystem::path source(source_folder);
-    std::filesystem::path target(target_folder);
+  const char *entry;
+  GDir *dir;
 
-    // Check if the source folder exists
-    if (!std::filesystem::exists(source) || !std::filesystem::is_directory(source)) {
-      std::cerr << "Source folder does not exist or is not a directory: " << source_folder << std::endl;
-      return -1;
-    }
+  // Create target folder.
+  if (!g_file_test(target_folder, G_FILE_TEST_IS_DIR))
+    if (g_mkdir(target_folder, 0700) < 0)
+      return 0;
 
-    // Create the target folder if it doesn't exist
-    if (!std::filesystem::exists(target)) {
-      std::filesystem::create_directories(target);
-    }
-
-    // Iterate through the source folder and copy files and subdirectories
-    for (const auto& entry : std::filesystem::recursive_directory_iterator(source)) {
-      const auto& path = entry.path();
-      auto relative_path = std::filesystem::relative(path, source);
-      auto target_path = target / relative_path;
-
-      if (entry.is_directory()) {
-        // Create subdirectory in the target folder
-        std::filesystem::create_directories(target_path);
+  dir = g_dir_open(source_folder, 0, NULL);
+  if (dir) {
+    while ((entry = g_dir_read_name(dir)) != NULL) {
+      char *source = g_build_filename(source_folder, entry, NULL);
+      char *target = g_build_filename(target_folder, entry, NULL);
+      if (!base::copyFile(source, target)) {
+        logWarning("Could not copy file %s to %s: %s\n", source, target, g_strerror(errno));
+        g_free(source);
+        g_free(target);
+        g_dir_close(dir);
+        return 0;
       }
-      else if (entry.is_regular_file()) {
-        // Copy file to the target folder
-        std::filesystem::copy_file(path, target_path, std::filesystem::copy_options::overwrite_existing);
-      }
-      else {
-        std::cerr << "Skipping unsupported file type: " << path << std::endl;
-      }
+      g_free(source);
+      g_free(target);
     }
-
-    return 0; // Success
+    g_dir_close(dir);
+  } else {
+    logWarning("Could not open directory %s\n", source_folder);
+    return 0;
   }
-  catch (const std::filesystem::filesystem_error& e) {
-    std::cerr << "Filesystem error: " << e.what() << std::endl;
-    return -1;
-  }
-  catch (const std::exception& e) {
-    std::cerr << "Error: " << e.what() << std::endl;
-    return -1;
-  }
+  return 1;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -819,9 +821,8 @@ namespace base {
   }
 
 
-  // @@FIXMEE save version in cost or so     
   BASELIBRARY_PUBLIC_FUNC std::string getVersion(void) {
-    return strfmt("%u.%u.%u", 1, 1, 1);
+    return strfmt("%u.%u.%u", APP_MAJOR_NUMBER, APP_MINOR_NUMBER, APP_RELEASE_NUMBER);
   }
 
 

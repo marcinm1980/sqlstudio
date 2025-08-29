@@ -56,7 +56,7 @@ typedef int ssize_t;
 #include <cstdlib>
 #include <list>
 
-//#include "glib.h"
-//#include <glib/gstdio.h>
+#include "glib.h"
+#include <glib/gstdio.h>
 
-//#include "SciLexer.h"
+#include "SciLexer.h"

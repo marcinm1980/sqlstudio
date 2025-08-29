@@ -28,6 +28,7 @@
 #include "base/file_utilities.h"
 #include <libxml/HTMLparser.h>
 
+#include <glib.h>
 #include <stdexcept>
 #include <vector>
 

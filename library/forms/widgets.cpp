@@ -24,7 +24,6 @@
 
 #include "mforms/mforms.h"
 #include "base/log.h"
-#include <mutex>
 
 DEFAULT_LOG_DOMAIN(DOMAIN_MFORMS_BE)
 
@@ -35,7 +34,7 @@ using namespace base;
 
 // Animation timer. One timer for all widget animations.
 static int animation_timer_refcount = 0;
-static std::mutex animation_timer_mutex;
+static base::Mutex animation_timer_mutex;
 static int animation_timer_id;
 static vector<BaseWidget*> animated_widgets;
 
@@ -77,7 +76,7 @@ static vector<BaseWidget*> animated_widgets;
  * Animation timer callback. Triggers all registered step() methods.
  */
 static bool on_timer(int task_id) {
-  std::lock_guard<std::mutex> guard(animation_timer_mutex);
+  base::MutexLock lock(animation_timer_mutex);
 
   for (vector<BaseWidget*>::const_iterator iterator = animated_widgets.begin(); iterator != animated_widgets.end();
        iterator++)
@@ -93,7 +92,7 @@ static bool on_timer(int task_id) {
  * get freed before the last consumer is gone.
  */
 static void start_animation_timer_for(BaseWidget* widget) {
-  std::lock_guard<std::mutex> guard(animation_timer_mutex);
+  base::MutexLock lock(animation_timer_mutex);
 
   animated_widgets.push_back(widget);
   if (animation_timer_refcount == 0)
@@ -107,7 +106,7 @@ static void start_animation_timer_for(BaseWidget* widget) {
  * Decreases the animation timer ref count and frees the timer if no consumer is left.
  */
 static void stop_animation_timer_for(BaseWidget* widget) {
-  std::lock_guard<std::mutex> guard(animation_timer_mutex);
+  base::MutexLock lock(animation_timer_mutex);
 
   for (vector<BaseWidget*>::iterator iterator = animated_widgets.begin(); iterator != animated_widgets.end();
        iterator++)

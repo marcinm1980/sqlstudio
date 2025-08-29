@@ -32,7 +32,7 @@
 
 #include "base/drawing.h"
 #include "base/string_utilities.h"
-// #include "base/threading.h"
+#include "base/threading.h"
 
 using namespace base;
 
@@ -450,7 +450,7 @@ HSVColor::HSVColor(const Color &rgb) : a(rgb.alpha) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::mutex color_mutex;
+static std::shared_ptr<base::Mutex> color_mutex(new base::Mutex());
 
 static ColorScheme active_scheme =
   ColorSchemeStandard; // Only set when loading the application or by a preferences change.
@@ -512,7 +512,7 @@ std::string Color::getApplicationColorAsString(ApplicationColor color, bool fore
     std::make_pair("#808080", "#000000"), // AppColorStatusbar
   };
 
-  std::lock_guard<std::mutex> guard(color_mutex);
+  base::MutexLock lock(*color_mutex);
 
   switch (active_scheme) {
     case ColorSchemeCustom:
@@ -559,7 +559,7 @@ Color Color::getApplicationColor(ApplicationColor color, bool foreground) {
 //----------------------------------------------------------------------------------------------------------------------
 
 void Color::set_active_scheme(ColorScheme scheme) {
-  std::lock_guard<std::mutex> guard(color_mutex);
+  base::MutexLock lock(*color_mutex);
 
   active_scheme = scheme;
 
@@ -580,7 +580,7 @@ void Color::set_active_scheme(ColorScheme scheme) {
 //----------------------------------------------------------------------------------------------------------------------
 
 base::ColorScheme base::Color::get_active_scheme() {
-  std::lock_guard<std::mutex> guard(color_mutex);
+  base::MutexLock lock(*color_mutex);
 
   return active_scheme;
 }

@@ -206,7 +206,7 @@ static void *cancellable_task_thread(void *) {
   CancellableTaskData *data = NULL;
 
   {
-    std::lock_guard<std::mutex> guard(thread_data_mutex);
+    base::MutexLock lock(thread_data_mutex);
     data = thread_data[g_thread_self()];
     if (data != NULL)
       data->ref_count++; // Increment ref count while the data is still protected.
@@ -227,7 +227,7 @@ static void *cancellable_task_thread(void *) {
     ControlFactory::get_instance()->_utilities_impl.stop_cancelable_wait_message();
 
     {
-      std::lock_guard<std::mutex> guard(thread_data_mutex);
+      base::MutexLock lock(thread_data_mutex);
       data->ref_count--;
       if (data->ref_count == 0) {
         thread_data.erase(g_thread_self());
@@ -250,7 +250,7 @@ bool Utilities::run_cancelable_task(const std::string &title, const std::string 
   // Start a thread that will run the task. Store thread data so it can be accessed by the thread
   // safely.
   {
-    std::lock_guard<std::mutex> guard(thread_data_mutex);
+    base::MutexLock lock(thread_data_mutex);
     data = new CancellableTaskData(); // Ref count is 1.
 
     GError *error = NULL;
@@ -301,7 +301,7 @@ retry:
   }
 
   {
-    std::lock_guard<std::mutex> guard(thread_data_mutex);
+    base::MutexLock lock(thread_data_mutex);
     data->ref_count--;
     if (data->ref_count == 0) {
       thread_data.erase(thread);

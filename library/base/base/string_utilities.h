@@ -78,7 +78,7 @@ namespace base {
   // Parsing/Formatting.
   BASELIBRARY_PUBLIC_FUNC std::string get_identifier(const std::string &id, std::string::const_iterator &start);
   BASELIBRARY_PUBLIC_FUNC std::vector<std::string> split_qualified_identifier(const std::string &id);
-  BASELIBRARY_PUBLIC_FUNC std::string strfmt(const char *fmt, ...);
+  BASELIBRARY_PUBLIC_FUNC std::string strfmt(const char *fmt, ...) G_GNUC_PRINTF(1, 2);
   BASELIBRARY_PUBLIC_FUNC std::string sizefmt(int64_t s, bool metric);
   BASELIBRARY_PUBLIC_FUNC std::string pop_path_front(std::string &path);
   BASELIBRARY_PUBLIC_FUNC std::string pop_path_back(std::string &path);

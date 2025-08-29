@@ -29,12 +29,10 @@
 #include <sys/file.h>
 #endif
 
-#include <filesystem>
-
 #include "base/file_functions.h"
 #include "base/string_utilities.h"
 
-//#include <glib/gstdio.h>
+#include <glib/gstdio.h>
 
 using namespace base;
 
@@ -119,24 +117,34 @@ int base_remove(const std::string &filename) {
 
 int base_rename(const char *oldname, const char *newname) {
 #ifdef _MSC_VER
-  std::vector<WCHAR> converted_old_vec;
-  std::vector<WCHAR> converted_new_vec;
 
-  int required = MultiByteToWideChar(CP_UTF8, 0, oldname, -1, NULL, 0);
+  int result;
+  int required;
+  WCHAR *converted_old;
+  WCHAR *converted_new;
+
+  required = MultiByteToWideChar(CP_UTF8, 0, oldname, -1, NULL, 0);
   if (required == 0)
     return -1;
 
-  converted_old_vec.resize(required);
-  MultiByteToWideChar(CP_UTF8, 0, oldname, -1, &converted_old_vec[0], required);
+  converted_old = g_new0(WCHAR, required);
+  MultiByteToWideChar(CP_UTF8, 0, oldname, -1, converted_old, required);
 
   required = MultiByteToWideChar(CP_UTF8, 0, newname, -1, NULL, 0);
   if (required == 0) {
+    g_free(converted_old);
     return -1;
   }
 
-  MultiByteToWideChar(CP_UTF8, 0, newname, -1, &converted_new_vec[0], required);
+  converted_new = g_new0(WCHAR, required);
+  MultiByteToWideChar(CP_UTF8, 0, newname, -1, converted_new, required);
 
-  return _wrename(&converted_old_vec[0], &converted_new_vec[0]);
+  result = _wrename(converted_old, converted_new);
+
+  g_free(converted_old);
+  g_free(converted_new);
+
+  return result;
 
 #else
 
@@ -161,15 +169,22 @@ int base_rename(const char *oldname, const char *newname) {
 #ifdef _MSC_VER
 int base_stat(const char *filename, struct _stat *stbuf) {
   // Convert filename from UTF-8 to UTF-16.
-  std::vector<WCHAR> converted_vec;
-  int required = MultiByteToWideChar(CP_UTF8, 0, filename, -1, NULL, 0);
+  int required;
+  WCHAR *converted;
+  int result;
+
+  required = MultiByteToWideChar(CP_UTF8, 0, filename, -1, NULL, 0);
   if (required == 0)
     return -1;
-  // Required contains the length for the result string including the terminating 0.
-  converted_vec.resize(required);
-  MultiByteToWideChar(CP_UTF8, 0, filename, -1, &converted_vec[0], required);
 
-  return _wstat(&converted_vec[0], stbuf);
+  // Required contains the length for the result string including the terminating 0.
+  converted = g_new0(WCHAR, required);
+  MultiByteToWideChar(CP_UTF8, 0, filename, -1, converted, required);
+
+  result = _wstat(converted, stbuf);
+  g_free(converted);
+
+  return result;
 }
 #else
 int base_stat(const char *filename, struct stat *stbuf) {
@@ -179,23 +194,30 @@ int base_stat(const char *filename, struct stat *stbuf) {
 
 //--------------------------------------------------------------------------------------------------
 
-int base_rmdir_recursively(const char* path) {
-  try {
-    for (const auto& entry : std::filesystem::directory_iterator(path)) {
-      if (entry.is_directory()) {
-        base_rmdir_recursively(entry.path().string().c_str());
-      }
-      else {
-        std::filesystem::remove(entry.path());
-      }
-    }
-    std::filesystem::remove(path);
-    return 0;
+int base_rmdir_recursively(const char *path) {
+  int res = 0;
+  GError *error = NULL;
+  GDir *dir;
+  const char *dir_entry;
+  gchar *entry_path;
+
+  dir = g_dir_open(path, 0, &error);
+  if (!dir && error)
+    return error->code;
+
+  while ((dir_entry = g_dir_read_name(dir))) {
+    entry_path = g_build_filename(path, dir_entry, NULL);
+    if (g_file_test(entry_path, G_FILE_TEST_IS_DIR))
+      (void)base_rmdir_recursively(entry_path);
+    else
+      (void)::g_remove(entry_path);
+    g_free(entry_path);
   }
-  catch (const std::filesystem::filesystem_error& /*e*/) {
-    // @@FIXMEE error handling
-    return -1;
-  }
+
+  (void)g_rmdir(path);
+
+  g_dir_close(dir);
+  return res;
 }
 
 //--------------------------------------------------------------------------------------------------

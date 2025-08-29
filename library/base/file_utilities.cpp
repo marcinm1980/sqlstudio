@@ -1,11 +1,37 @@
+/*
+ * Copyright (c) 2010, 2022, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2.0,
+ * as published by the Free Software Foundation.
+ *
+ * This program is designed to work with certain software (including
+ * but not limited to OpenSSL) that is licensed under separate terms, as
+ * designated in a particular file or component or in included license
+ * documentation.  The authors of MySQL hereby grant you an additional
+ * permission to link the program and your derivative works with the
+ * separately licensed software that they have either included with
+ * the program or referenced in the documentation.
+ * This program is distributed in the hope that it will be useful,  but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+ * the GNU General Public License, version 2.0, for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 #include "base/string_utilities.h"
 #include "base/file_utilities.h"
 #include "base/file_functions.h"
 
 #include <stdexcept>
+#include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib/gstdio.h>
 #ifdef _MSC_VER
 #include <windows.h>
 #else
@@ -14,10 +40,6 @@
 #include <sys/file.h>
 #endif
 #include <algorithm>
-#include <filesystem>
-#include <regex>
-
-//--------------------------------------------------------------------------------------------------
 
 namespace base {
 
@@ -69,35 +91,47 @@ namespace base {
   std::list<std::string> scan_for_files_matching(const std::string &pattern, bool recursive) {
     std::list<std::string> matches;
 
-    std::filesystem::path path = std::filesystem::path(pattern).parent_path();
-    if (!std::filesystem::exists(path)) {
+    std::string path = dirname(pattern);
+    if (!g_file_test(path.c_str(), G_FILE_TEST_EXISTS)) {
       return matches;
     }
 
-    std::string pure_pattern = std::filesystem::path(pattern).filename().string();
-    // Convert the pattern to a regex
-    std::string regex_pattern = std::regex_replace(pure_pattern, std::regex(R"(\*)"), ".*");
-    regex_pattern = std::regex_replace(regex_pattern, std::regex(R"(\?)"), ".");
-    std::regex file_regex(regex_pattern);
+    std::string pure_pattern = pattern.substr(path.size() + 1);
 
-    try {
-      for (const auto& entry : std::filesystem::directory_iterator(path)) {
-        const auto& filename = entry.path().filename().string();
-        if (std::regex_match(filename, file_regex)) {
-          matches.push_back(entry.path().string());
-        }
-
-        if (recursive && entry.is_directory()) {
-          std::string subpattern = (entry.path() / pure_pattern).string();
-          std::list<std::string> submatches = scan_for_files_matching(subpattern, true);
-          matches.insert(matches.end(), submatches.begin(), submatches.end());
-        }
+    std::string bname = basename(pattern);
+    GPatternSpec *pat = g_pattern_spec_new(bname.c_str());
+    GDir *dir;
+    {
+      GError *err = NULL;
+      dir = g_dir_open(path.empty() ? "." : path.c_str(), 0, &err);
+      if (!dir) {
+        std::string msg = strfmt("can't open %s: %s", !path.empty() ? path.c_str() : ".", err->message);
+        g_error_free(err);
+        g_pattern_spec_free(pat);
+        throw std::runtime_error(msg);
       }
     }
-    catch (const std::filesystem::filesystem_error& e) {
-      throw std::runtime_error("Error accessing directory: " + std::string(e.what()));
-    }
+    const gchar *filename;
+    while ((filename = g_dir_read_name(dir))) {
+      std::string full_path = strfmt("%s%s%s", path.c_str(), G_DIR_SEPARATOR_S, filename);
+// #ifdef GLIB_VERSION_2_70 won't work in RHEL9/OL9 because the glib-2.68 package already contains this definition
+#if defined(GLIB_VERSION_CUR_STABLE) && defined(GLIB_VERSION_2_70) && GLIB_VERSION_CUR_STABLE >= GLIB_VERSION_2_70
+      bool match_string  = g_pattern_spec_match_string(pat, filename);
+#else
+      bool match_string = g_pattern_match_string(pat, filename);
+#endif
+      if (match_string)
+        matches.push_back(full_path);
 
+      if (recursive && g_file_test(full_path.c_str(), G_FILE_TEST_IS_DIR)) {
+        std::string subpattern = strfmt("%s%s%s", full_path.c_str(), G_DIR_SEPARATOR_S, pure_pattern.c_str());
+        std::list<std::string> submatches = scan_for_files_matching(subpattern, true);
+        if (submatches.size() > 0)
+          matches.insert(matches.end(), submatches.begin(), submatches.end());
+      }
+    }
+    g_dir_close(dir);
+    g_pattern_spec_free(pat);
     return matches;
   }
 
@@ -296,40 +330,47 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  bool copyDirectoryRecursive(const std::string& src, const std::string& dst, bool includeFiles) {
-    namespace fs = std::filesystem;
+  bool copyDirectoryRecursive(const std::string &src, const std::string &dst, bool includeFiles) {
+    GError *error = NULL;
+    GDir *srcDir, *dstDir;
+    const char *dirEntry;
+    gchar *entryPathSrc, *entryPathDst;
 
-    try {
-      // Check if the source directory exists
-      if (!fs::exists(src) || !fs::is_directory(src)) {
-        throw std::runtime_error("Source directory does not exist or is not a directory: " + src);
-      }
-
-      // Create the destination directory if it doesn't exist
-      if (!fs::exists(dst)) {
-        fs::create_directories(dst);
-      }
-
-      // Iterate through the source directory
-      for (const auto& entry : fs::directory_iterator(src)) {
-        const auto& entryPath = entry.path();
-        auto relativePath = fs::relative(entryPath, src);
-        auto destinationPath = fs::path(dst) / relativePath;
-
-        if (entry.is_directory()) {
-          // Recursively copy subdirectories
-          copyDirectoryRecursive(entryPath.string(), destinationPath.string(), includeFiles);
-        }
-        else if (includeFiles && entry.is_regular_file()) {
-          // Copy files if includeFiles is true
-          fs::copy(entryPath, destinationPath, fs::copy_options::overwrite_existing);
-        }
-      }
-    }
-    catch (const fs::filesystem_error& e) {
-      throw std::runtime_error("Error copying directory: " + std::string(e.what()));
+    srcDir = g_dir_open(src.c_str(), 0, &error);
+    if (!srcDir && error) {
+      g_error_free(error);
+      return false;
     }
 
+    dstDir = g_dir_open(dst.c_str(), 0, &error);
+    if (!dstDir && error) {
+      g_error_free(error);
+      create_directory(dst, 0700);
+    } else
+      g_dir_close(dstDir);
+
+    while ((dirEntry = g_dir_read_name(srcDir))) {
+      entryPathDst = g_build_filename(dst.c_str(), dirEntry, NULL);
+      entryPathSrc = g_build_filename(src.c_str(), dirEntry, NULL);
+      try {
+        if (g_file_test(entryPathSrc, G_FILE_TEST_IS_DIR))
+          copyDirectoryRecursive(entryPathSrc, entryPathDst, includeFiles);
+
+        if (g_file_test(entryPathSrc, G_FILE_TEST_IS_REGULAR) && includeFiles) {
+          std::ifstream src(entryPathSrc, std::ios::binary);
+          std::ofstream dst(entryPathDst, std::ios::binary);
+          dst << src.rdbuf();
+        }
+      } catch (...) {
+        g_free(entryPathSrc);
+        g_free(entryPathDst);
+        throw;
+      }
+      g_free(entryPathSrc);
+      g_free(entryPathDst);
+    }
+
+    g_dir_close(srcDir);
     return true;
   }
 
@@ -417,22 +458,31 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  bool remove_recursive(const std::string& path) {
-    namespace fs = std::filesystem;
+  bool remove_recursive(const std::string &path) {
+    GError *error = NULL;
+    GDir *dir;
+    const char *dir_entry;
+    gchar *entry_path;
 
-    try {
-      // Check if the path exists
-      if (!fs::exists(path)) {
-        return false; // Path does not exist
-      }
+    dir = g_dir_open(path.c_str(), 0, &error);
+    if (!dir && error) {
+      g_error_free(error);
+      return false;
+    }
 
-      // Remove the directory or file recursively
-      fs::remove_all(path);
-      return true;
+    while ((dir_entry = g_dir_read_name(dir))) {
+      entry_path = g_build_filename(path.c_str(), dir_entry, NULL);
+      if (g_file_test(entry_path, G_FILE_TEST_IS_DIR))
+        (void)remove_recursive(entry_path);
+      else
+        (void)::g_remove(entry_path);
+      g_free(entry_path);
     }
-    catch (const fs::filesystem_error& e) {
-      throw std::runtime_error("Error removing path: " + std::string(e.what()));
-    }
+
+    (void)g_rmdir(path.c_str());
+
+    g_dir_close(dir);
+    return true;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -485,16 +535,26 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  bool file_exists(const std::string& path) {
-    namespace fs = std::filesystem;
-    return fs::exists(path);
+  bool file_exists(const std::string &path) {
+    char *f = g_filename_from_utf8(path.c_str(), -1, NULL, NULL, NULL);
+    if (g_file_test(f, G_FILE_TEST_EXISTS)) {
+      g_free(f);
+      return true;
+    }
+    g_free(f);
+    return false;
   }
 
   //--------------------------------------------------------------------------------------------------
 
-  bool is_directory(const std::string& path) {
-    namespace fs = std::filesystem;
-    return fs::is_directory(path);
+  bool is_directory(const std::string &path) {
+    char *f = g_filename_from_utf8(path.c_str(), -1, NULL, NULL, NULL);
+    if (g_file_test(f, G_FILE_TEST_IS_DIR)) {
+      g_free(f);
+      return true;
+    }
+    g_free(f);
+    return false;
   }
 
   //--------------------------------------------------------------------------------------------------
@@ -520,19 +580,19 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string dirname(const std::string& path) {
-    namespace fs = std::filesystem;
-    return fs::path(path).parent_path().string();
+  std::string dirname(const std::string &path) {
+    char *dn = g_path_get_dirname(path.c_str());
+    std::string tmp(dn);
+    g_free(dn);
+    return tmp;
   }
 
-  //--------------------------------------------------------------------------------------------------
-
-  std::string basename(const std::string& path) {
-    namespace fs = std::filesystem;
-    return fs::path(path).filename().string();
+  std::string basename(const std::string &path) {
+    char *dn = g_path_get_basename(path.c_str());
+    std::string tmp(dn);
+    g_free(dn);
+    return tmp;
   }
-
-  //--------------------------------------------------------------------------------------------------
 
   std::string strip_extension(const std::string &path) {
     std::string ext;
@@ -542,8 +602,6 @@ namespace base {
     return path;
   }
 
-  //--------------------------------------------------------------------------------------------------
-
   FileHandle::FileHandle(const std::string &filename, const char* mode, bool throwOnFail) : _file(nullptr) {
     _file = base_fopen(filename.c_str(), mode);
     if (!_file && throwOnFail)
@@ -551,15 +609,11 @@ namespace base {
     _path = filename;
   }
 
-  //--------------------------------------------------------------------------------------------------
-
   FileHandle &FileHandle::operator=(FileHandle &fh) {
     dispose();
     swap(fh);
     return *this;
   }
-
-  //--------------------------------------------------------------------------------------------------
 
   FileHandle &FileHandle::operator=(FileHandle &&fh) {
     dispose();
@@ -567,20 +621,14 @@ namespace base {
     return *this;
   }
 
-  //--------------------------------------------------------------------------------------------------
-
   std::string FileHandle::getPath() const {
     return _path;
   }
-
-  //--------------------------------------------------------------------------------------------------
 
   void FileHandle::swap(FileHandle &fh) {
     std::swap(_file, fh._file);
     _path = std::move(fh._path);
   }
-
-  //--------------------------------------------------------------------------------------------------
 
   void FileHandle::dispose() {
     if (_file) {
@@ -589,8 +637,6 @@ namespace base {
       _path = "";
     }
   }
-
-  //--------------------------------------------------------------------------------------------------
 
   /**
    * Returns the last modification time of the given file.
@@ -613,30 +659,39 @@ namespace base {
     return false;
   }
 
-  std::string makePath(const std::string& prefix, const std::string& file) {
+  std::string makePath(const std::string &prefix, const std::string &file) {
     if (prefix.empty())
       return file;
 
     if (prefix[prefix.size() - 1] == '/' || prefix[prefix.size() - 1] == '\\')
       return prefix + file;
-    return (std::filesystem::path(prefix) / file).string();
+    return prefix + G_DIR_SEPARATOR + file;
   }
 
-  //----------------------------------------------------------------------------------------------------
+  std::string joinPath(const char *prefix, ...) {
+    std::string path = prefix;
+#ifdef _MSC_VER
+    char wrong_path_separator = '\\';
+#else
+    char wrong_path_separator = '/';
+#endif
 
-  std::string joinPath(const char* prefix, ...) {
-    std::filesystem::path result = prefix;
-
+    std::replace(path.begin(), path.end(), wrong_path_separator, G_DIR_SEPARATOR);
+    std::string arg = const_cast<char *>(prefix);
     va_list ap;
     va_start(ap, prefix);
-    const char* arg = nullptr;
-
-    while ((arg = va_arg(ap, const char*)) != nullptr) {
-      result /= arg; // Use the `/` operator to append paths
+    while (!arg.empty()) {
+      arg = va_arg(ap, char *);
+      if (!arg.empty()) {
+        if (path[path.size() - 1] == G_DIR_SEPARATOR)
+          path += arg;
+        else
+          path += G_DIR_SEPARATOR + arg;
+      }
     }
     va_end(ap);
 
-    return result.string(); // Convert the resulting path back to a string
+    return path;
   }
 
   //----------------------------------------------------------------------------------------------------
@@ -682,57 +737,47 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  FileHandle makeTmpFile(const std::string& prefix) {
-    std::string tmp = prefix;
-
-#ifdef _MSC_VER
+  /**
+   * Returns temporary file with the given prefix.
+   */
+  FileHandle makeTmpFile(const std::string &prefix) {
+    std::string tmp(prefix);
+#if _MSC_VER
     wchar_t tempPathBuffer[MAX_PATH] = { 0 };
-    if (GetTempPath(MAX_PATH, tempPathBuffer) == 0) {
-      throw std::runtime_error("Failed to retrieve temporary path.");
+    DWORD dwRetVal = GetTempPath(MAX_PATH, tempPathBuffer);
+    if (dwRetVal > MAX_PATH || (dwRetVal == 0)) {
+      throw std::runtime_error("GetTempPath failed.");
     }
-
-    wchar_t tempFileName[MAX_PATH] = { 0 };
-    if (GetTempFileName(tempPathBuffer, L"wb_", 0, tempFileName) == 0) {
-      throw std::runtime_error("Failed to create temporary file name.");
+    TCHAR tempFileName[MAX_PATH] = { 0 };
+    UINT  uRetVal = GetTempFileName(tempPathBuffer, TEXT("wb_"), 0, tempFileName);
+    if (uRetVal == 0) {
+      throw std::runtime_error("GetTempFileName failed.");
     }
-
     tmp = base::wstring_to_string(tempFileName);
 #else
     tmp.append("XXXXXX");
     int fd = mkstemp(&tmp[0]);
     if (fd == -1) {
-      throw std::runtime_error("Failed to create temporary file.");
+      throw std::runtime_error("Unable to create temporary file.");
     }
     close(fd);
 #endif
-
-    return FileHandle(tmp, "w+");
+    FileHandle fh(tmp, "w+");
+    return fh;
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
-
-  const char* getPreferredSeparatorAsCString() {
-    static const char separator[] = { std::filesystem::path::preferred_separator, '\0' };
-    return separator;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
 
   std::string pathlistAppend(const std::string &l, const std::string &s) {
     if (l.empty())
       return s;
-    return l + getPreferredSeparatorAsCString() + s;
+    return l + G_SEARCHPATH_SEPARATOR + s;
   }
-
-  //--------------------------------------------------------------------------------------------------------------------
 
   std::string pathlistPrepend(const std::string &l, const std::string &s) {
     if (l.empty())
       return s;
-    return s + getPreferredSeparatorAsCString() + l;
+    return s + G_SEARCHPATH_SEPARATOR + l;
   }
-
-  //--------------------------------------------------------------------------------------------------------------------
 
   std::string cwd() {
 #ifdef _MSC_VER

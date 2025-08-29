@@ -33,7 +33,7 @@
 
 #include <list>
 
-//#include "glib.h"
+#include "glib.h"
 #include "cairo/cairo.h"
 
 #include "mforms/base.h"

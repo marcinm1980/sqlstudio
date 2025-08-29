@@ -42,6 +42,8 @@
 
 #endif
 
+#include "glib.h"
+
 #ifdef _MSC_VER
 #define _br "\r\n"
 #define BASE_PATH_SEPARATOR '\\'
