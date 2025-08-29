@@ -29,7 +29,7 @@
 #include <string.h>
 #include <vector>
 
-//#include <glib/gstdio.h>
+#include <glib/gstdio.h>
 
 #include "base/c++helpers.h"
 
@@ -167,23 +167,11 @@ void Logger::disable_level(const LogLevel level) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string formatString(const char* format, va_list args) {
-  // Determine the size of the formatted string
-  va_list argsCopy;
-  va_copy(argsCopy, args);
-  int size = std::vsnprintf(nullptr, 0, format, argsCopy);
-  va_end(argsCopy);
-
-  if (size < 0) {
-    throw std::runtime_error("Error formatting string");
-  }
-
-  // Allocate a buffer for the formatted string
-  std::string result(size, '\0');
-  std::vsnprintf(result.data(), result.size() + 1, format, args);
-
-  return result;
+void local_free(char* d) {
+  g_free(d);
 }
+
+//--------------------------------------------------------------------------------------------------
 
 /**
  * Logs the given text with the given domain to the current log file.
@@ -191,22 +179,11 @@ std::string formatString(const char* format, va_list args) {
  * which are several thousands of chars long.
  */
 void Logger::logv(LogLevel level, const char* const domain, const char* format, va_list args) {
+  scope_ptr<char, local_free> buffer(g_strdup_vprintf(format, args));
 
-  va_list argsCopy;
-  va_copy(argsCopy, args);
-  int size = std::vsnprintf(nullptr, 0, format, argsCopy);
-  va_end(argsCopy);
-
-  if (size < 0) {
-    throw std::runtime_error("Error formatting string");
-  }
-
-  // Allocate a buffer for the formatted string
-  std::string buffer(size, '\0');
-  std::vsnprintf(buffer.data(), buffer.size() + 1, format, args);
-  
+  // Print to stderr if no logger is created (yet).
   if (!_impl) {
-    fprintf(stderr, "%s", buffer.c_str());
+    fprintf(stderr, "%s", buffer.get());
     fflush(stderr);
     return;
   }
@@ -225,7 +202,7 @@ void Logger::logv(LogLevel level, const char* const domain, const char* format, 
     if (_impl->_new_line_pending)
       fprintf(fp, "%02u:%02u:%02u [%3s][%15s]: ", tm.tm_hour, tm.tm_min, tm.tm_sec, LevelText[enumIndex(level)],
               domain);
-    fwrite(buffer.c_str(), 1, buffer.size(), fp);
+    fwrite(buffer, 1, strlen(buffer.get()), fp);
   }
 
   // No explicit newline here. If messages are composed (e.g. python errors)
@@ -254,15 +231,15 @@ void Logger::logv(LogLevel level, const char* const domain, const char* format, 
 #endif
 
 #ifdef _MSC_VER
-    /*if (_impl->_new_line_pending) {
+    if (_impl->_new_line_pending) {
       char* tmp = g_strdup_printf("%02u:%02u:%02u [%3s][%15s]: ", tm.tm_hour, tm.tm_min, tm.tm_sec,
                                   LevelText[enumIndex(level)], domain);
       OutputDebugStringA(tmp);
       g_free(tmp);
-    }*/
+    }
     // if you want the program to stop when a specific log msg is printed, put a bp in the next line and set condition
     // to log_msg_serial==#
-    OutputDebugStringA(buffer.c_str());
+    OutputDebugStringA(buffer.get());
 #endif
     // We need the data in stderr even in Windows, so that the output can be read from other tools.
     if (_impl->_new_line_pending)
@@ -271,7 +248,7 @@ void Logger::logv(LogLevel level, const char* const domain, const char* format, 
 
     // If you want the program to stop when a specific log msg is printed, put a bp in the next line
     // and set condition to log_msg_serial==#
-    fprintf(stderr, "%s", buffer.c_str());
+    fprintf(stderr, "%s", buffer.get());
 
 #if defined(_MSC_VER)
     if ((level == LogLevel::Error) || (level == LogLevel::Warning))
@@ -282,7 +259,7 @@ void Logger::logv(LogLevel level, const char* const domain, const char* format, 
 #endif
   }
 
-  const char ending_char = buffer.size() - 1;
+  const char ending_char = buffer[strlen(buffer) - 1];
   _impl->_new_line_pending = (ending_char == '\n') || (ending_char == '\r');
 }
 

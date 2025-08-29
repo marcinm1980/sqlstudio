@@ -28,7 +28,7 @@
 
 #include <string>
 #include <iterator>
-//#include <glib.h>
+#include <glib.h>
 #include <vector>
 #include <cstring>
 #include <cstdint>

@@ -78,7 +78,7 @@ namespace mforms {
     bool release_on_add();
 
     // Below code is used for debugging
-    inline std::int32_t retain_count() const {
+    inline base::refcount_t retain_count() const {
       return _refcount;
     }
 
@@ -122,7 +122,7 @@ namespace mforms {
 
 #endif // !__APPLE__
 
-    volatile mutable std::int32_t _refcount;
+    volatile mutable base::refcount_t _refcount;
 
     // We use only ptr's in mforms.
     Object(Object const& o) {

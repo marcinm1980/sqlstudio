@@ -27,6 +27,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <boost/locale/encoding_utf.hpp>
+#include <glib.h>
 #include <cstring>
 #include <functional>
 #include <cctype>

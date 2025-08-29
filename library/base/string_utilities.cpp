@@ -1,7 +1,30 @@
+/*
+ * Copyright (c) 2009, 2019, Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2.0,
+ * as published by the Free Software Foundation.
+ *
+ * This program is designed to work with certain software (including
+ * but not limited to OpenSSL) that is licensed under separate terms, as
+ * designated in a particular file or component or in included license
+ * documentation.  The authors of MySQL hereby grant you an additional
+ * permission to link the program and your derivative works with the
+ * separately licensed software that they have either included with
+ * the program or referenced in the documentation.
+ * This program is distributed in the hope that it will be useful,  but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+ * the GNU General Public License, version 2.0, for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ */
+
 #include "base/string_utilities.h"
 #include "base/file_functions.h"
 #include "base/log.h"
-
 
 #include <stdexcept>
 #include <functional>
@@ -11,16 +34,15 @@
 #include <errno.h>
 #include <string.h>
 #include <fstream>
-//#include <boost/locale/encoding_utf.hpp>
-#include <cstdarg>
-#include <filesystem>
-
+#include <boost/locale/encoding_utf.hpp>
 
 DEFAULT_LOG_DOMAIN(DOMAIN_BASE);
 
 namespace base {
 
 #ifdef _MSC_VER
+
+  // Win uses C++11 with support for wstring_convert. Other platforms use boost for now.
 
   //--------------------------------------------------------------------------------------------------
 
@@ -84,39 +106,30 @@ namespace base {
   //--------------------------------------------------------------------------------------------------
 
   std::string string_to_path_for_open(const std::string &s) {
+// XXX: convert from utf-8 to wide string and then back to utf-8?
+//      How can this help in any way here?
 #ifdef _MSC_VER
-    // Convert UTF-8 string to wide string
-    int wideSize = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, nullptr, 0);
-    if (wideSize == 0) {
-      throw std::runtime_error("Failed to convert UTF-8 to wide string.");
+    std::wstring ws = string_to_wstring(s);
+    int buflen = GetShortPathNameW(ws.c_str(), NULL, 0);
+    if (buflen > 0) {
+      wchar_t *buffer = g_new(wchar_t, buflen);
+      if (GetShortPathNameW(ws.c_str(), buffer, buflen) > 0) {
+        char *buffer2;
+        buflen = WideCharToMultiByte(CP_UTF8, 0, buffer, buflen, NULL, 0, 0, 0);
+        buffer2 = g_new(char, buflen);
+        if (WideCharToMultiByte(CP_UTF8, 0, buffer, buflen, buffer2, buflen, 0, 0) == 0) {
+          std::string path(buffer2);
+          g_free(buffer2);
+          g_free(buffer);
+          return path;
+        }
+        g_free(buffer2);
+      }
+      g_free(buffer);
     }
-
-    std::vector<wchar_t> wideBuffer(wideSize);
-    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, wideBuffer.data(), wideSize);
-
-    // Get the short path name
-    int shortPathSize = GetShortPathNameW(wideBuffer.data(), nullptr, 0);
-    if (shortPathSize == 0) {
-      return s; // Return the original string if short path name retrieval fails
-    }
-
-    std::vector<wchar_t> shortPathBuffer(shortPathSize);
-    if (GetShortPathNameW(wideBuffer.data(), shortPathBuffer.data(), shortPathSize) == 0) {
-      return s; // Return the original string if short path name retrieval fails
-    }
-
-    // Convert wide string back to UTF-8
-    int utf8Size = WideCharToMultiByte(CP_UTF8, 0, shortPathBuffer.data(), -1, nullptr, 0, nullptr, nullptr);
-    if (utf8Size == 0) {
-      throw std::runtime_error("Failed to convert wide string to UTF-8.");
-  }
-
-    std::vector<char> utf8Buffer(utf8Size);
-    WideCharToMultiByte(CP_UTF8, 0, shortPathBuffer.data(), -1, utf8Buffer.data(), utf8Size, nullptr, nullptr);
-
-    return std::string(utf8Buffer.data());
+    return s;
 #else
-    return s; // On non-Windows platforms, return the original string
+    return s;
 #endif
   }
 
@@ -189,43 +202,31 @@ namespace base {
    * because in some cultures letter cases are more complicated. Use string_compare instead in such cases.
    */
   std::string tolower(const std::string &s) {
-    std::string result;
-    result.reserve(s.size()); // Reserve space to avoid reallocations
-
-    std::locale loc; // Use the default locale
-    for (char c : s) {
-      result.push_back(std::tolower(c, loc));
-    }
-
+    char *str_down = g_utf8_strdown(s.c_str(), (gsize)s.length());
+    std::string result(str_down);
+    g_free(str_down);
     return result;
   }
 
   //--------------------------------------------------------------------------------------------------
 
   std::string toupper(const std::string &s) {
-    std::string result;
-    result.reserve(s.size()); // Reserve space to avoid reallocations
-
-    std::locale loc; // Use the default locale
-    for (char c : s) {
-      result.push_back(std::toupper(c, loc));
-    }
-
+    char *str_up = g_utf8_strup(s.c_str(), (gsize)s.length());
+    std::string result(str_up);
+    g_free(str_up);
     return result;
   }
 
   //--------------------------------------------------------------------------------------------------
 
   std::string truncate_text(const std::string &s, int max_length) {
-    if (static_cast<int>(s.length()) > max_length) {
-      std::string shortened = s.substr(0, max_length);
-
-      // Ensure we don't cut off in the middle of a multibyte UTF-8 character
-      size_t lastValidPos = shortened.find_last_of("\xC0-\xFD");
-      if (lastValidPos != std::string::npos && lastValidPos + 1 > max_length) {
-        shortened = shortened.substr(0, lastValidPos);
+    if ((int)s.length() > max_length) {
+      std::string shortened(s.substr(0, max_length));
+      const char *prev = g_utf8_find_prev_char(shortened.c_str(), shortened.c_str() + (max_length - 1));
+      if (prev) {
+        shortened.resize(prev - shortened.c_str(), 0);
+        shortened.append("...");
       }
-      shortened.append("...");
       return shortened;
     }
     return s;
@@ -234,17 +235,10 @@ namespace base {
   //--------------------------------------------------------------------------------------------------
 
   std::string sanitize_utf8(const std::string &s) {
-    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
-    try {
-      // Attempt to convert the string to UTF-32 and back to UTF-8
-      std::u32string utf32 = converter.from_bytes(s);
-      return converter.to_bytes(utf32);
-    }
-    catch (const std::range_error&) {
-      // If invalid UTF-8 is encountered, truncate the string up to the valid part
-      size_t valid_length = converter.converted();
-      return s.substr(0, valid_length);
-    }
+    const char *end = 0;
+    if (!g_utf8_validate(s.data(), (gsize)s.size(), &end))
+      return std::string(s.data(), end);
+    return s;
   }
 
   //--------------------------------------------------------------------------------------------------
@@ -528,30 +522,18 @@ namespace base {
    * Helper routine to format a string into an STL string using the printf parameter syntax.
    */
   std::string strfmt(const char *fmt, ...) {
-    if (!fmt) {
-      throw std::invalid_argument("Format string cannot be null.");
-    }
-
     va_list args;
+    char *tmp;
+    std::string ret;
+
     va_start(args, fmt);
-
-    // Determine the size of the formatted string
-    va_list argsCopy;
-    va_copy(argsCopy, args);
-    int size = std::vsnprintf(nullptr, 0, fmt, argsCopy);
-    va_end(argsCopy);
-
-    if (size < 0) {
-      va_end(args);
-      throw std::runtime_error("Error formatting string.");
-    }
-
-    // Create a buffer for the formatted string
-    std::vector<char> buffer(size + 1);
-    std::vsnprintf(buffer.data(), buffer.size(), fmt, args);
+    tmp = g_strdup_vprintf(fmt, args);
     va_end(args);
 
-    return std::string(buffer.data());
+    ret = tmp;
+    g_free(tmp);
+
+    return ret;
   }
 
   //--------------------------------------------------------------------------------------------------
@@ -617,7 +599,12 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string replaceVariable(const std::string& format, const std::string& variable, const std::string& value) {
+  /**
+   * replaces a variable from a string in format %variable%
+   * a filter can be passed to the variable as in %variable|filter%
+   * supported filters are upper, lower and capitalize
+   */
+  std::string replaceVariable(const std::string &format, const std::string &variable, const std::string &value) {
     std::string result = format;
     std::string::size_type pos;
 
@@ -641,39 +628,39 @@ namespace base {
       if (filter_pos == std::string::npos) {
         if (s.length() != variable.length() - 2)
           break;
-      }
-      else if (filter_pos != variable.length() - 2)
+      } else if (filter_pos != variable.length() - 2)
         break;
       else {
         std::string filter = s.substr(filter_pos + 1, s.size() - filter_pos);
 
-        if (filter == "capitalize") {
-          // Capitalize the first character and append the rest
-          if (!value.empty()) {
-            filtered_value[0] = std::toupper(value[0], std::locale());
-            std::transform(value.begin() + 1, value.end(), std::back_inserter(filtered_value), [](char c) {
-              return std::tolower(c, std::locale());
-              });
-          }
-        }
-        else if (filter == "uncapitalize") {
-          // Uncapitalize the first character and append the rest
-          if (!value.empty()) {
-            filtered_value[0] = std::tolower(value[0], std::locale());
-            std::copy(value.begin() + 1, value.end(), std::back_inserter(filtered_value));
-          }
-        }
-        else if (filter == "lower") {
-          // Convert the entire string to lowercase
-          std::transform(value.begin(), value.end(), filtered_value.begin(), [](char c) {
-            return std::tolower(c, std::locale());
-            });
-        }
-        else if (filter == "upper") {
-          // Convert the entire string to uppercase
-          std::transform(value.begin(), value.end(), filtered_value.begin(), [](char c) {
-            return std::toupper(c, std::locale());
-            });
+        if (filter.compare("capitalize") == 0) {
+          gunichar ch = g_utf8_get_char(value.data());
+
+          ch = g_unichar_toupper(ch);
+
+          gchar *rest = g_utf8_find_next_char(value.data(), value.data() + value.size());
+          char utf8[10];
+          utf8[g_unichar_to_utf8(ch, utf8)] = 0;
+          filtered_value = std::string(utf8).append(rest);
+        } else if (filter.compare("uncapitalize") == 0) {
+          gunichar ch = g_utf8_get_char(value.data());
+
+          ch = g_unichar_tolower(ch);
+
+          gchar *rest = g_utf8_find_next_char(value.data(), value.data() + value.size());
+          char utf8[10];
+          utf8[g_unichar_to_utf8(ch, utf8)] = 0;
+          filtered_value = std::string(utf8).append(rest);
+        } else if (filter.compare("lower") == 0) {
+          gchar *l = g_utf8_strdown(value.data(), (gssize)value.size());
+          if (l)
+            filtered_value = l;
+          g_free(l);
+        } else if (filter.compare("upper") == 0) {
+          gchar *l = g_utf8_strup(value.data(), (gssize)value.size());
+          if (l)
+            filtered_value = l;
+          g_free(l);
         }
       }
       result = result.substr(0, pos).append(filtered_value).append(result.substr(end + 1));
@@ -718,7 +705,7 @@ namespace base {
     // First convert all separators to the one that is used on the platform (no mix)
     // and ease so at the same time further processing here.
     std::string result;
-    std::string separator(1, std::filesystem::path::preferred_separator);
+    std::string separator(1, G_DIR_SEPARATOR);
 
     result = path;
     replaceStringInplace(result, "\\", separator);
@@ -758,17 +745,12 @@ namespace base {
     return result.substr(1);
   }
 
-  std::string expand_tilde(const std::string& path) {
-    if (!path.empty() && path[0] == '~' && (path.size() == 1 || path[1] == std::filesystem::path::preferred_separator)) {
-      const char* homedir = std::getenv("HOME");
-#ifdef _WIN32
-      if (!homedir) {
-        homedir = std::getenv("USERPROFILE"); // Fallback for Windows
-      }
-#endif
-      if (!homedir) {
-        throw std::runtime_error("Home directory environment variable is not set.");
-      }
+  std::string expand_tilde(const std::string &path) {
+    if (!path.empty() && path[0] == '~' && (path.size() == 1 || path[1] == G_DIR_SEPARATOR)) {
+      const char *homedir = g_getenv("HOME");
+      if (!homedir)
+        homedir = g_get_home_dir();
+
       return std::string(homedir).append(path.substr(1));
     }
     return path;
@@ -873,30 +855,30 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  void setTextFileContent(const std::string& filename, const std::string& data) {
+  /**
+   * Write text data to file, converting to \r\n if in Windows.
+   */
+  void setTextFileContent(const std::string &filename, const std::string &data) {
 #ifdef _MSC_VER
     // Opening a file in text mode will automatically convert \n to \r\n.
-    FILE* f = base_fopen(filename.c_str(), "w+t");
+    FILE *f = base_fopen(filename.c_str(), "w+t");
     if (!f)
-      throw std::runtime_error(std::strerror(errno)); // Replaced g_strerror with std::strerror
+      throw std::runtime_error(g_strerror(errno));
 
     size_t bytes_written = fwrite(data.data(), 1, data.size(), f);
     fclose(f);
     if (bytes_written != data.size())
-      throw std::runtime_error(std::strerror(errno)); // Replaced g_strerror with std::strerror
+      throw std::runtime_error(g_strerror(errno));
 #else
-    std::ofstream file(filename, std::ios::out | std::ios::binary);
-    if (!file.is_open()) {
-      throw std::runtime_error(std::strerror(errno)); // Replaced g_strerror with std::strerror
-    }
-
-    file.write(data.data(), data.size());
-    if (!file) {
-      throw std::runtime_error("Failed to write the entire content to the file.");
+    GError *error = NULL;
+    g_file_set_contents(filename.c_str(), data.data(), data.size(), &error);
+    if (error) {
+      std::string msg = error->message;
+      g_error_free(error);
+      throw std::runtime_error(msg);
     }
 #endif
-    }
-
+  }
 
   //--------------------------------------------------------------------------------------------------
 
@@ -1191,7 +1173,12 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  bool parse_font_description(const std::string& fontspec, std::string& font, float& size, bool& bold, bool& italic) {
+  /**
+   * Splits the given font description and returns its details in the provided fields.
+   *
+   * @return True if successful, otherwise false.
+   */
+  bool parse_font_description(const std::string &fontspec, std::string &font, float &size, bool &bold, bool &italic) {
     std::vector<std::string> parts = split(fontspec, " ");
     font = fontspec;
     size = 12;
@@ -1201,7 +1188,7 @@ namespace base {
     if (parts.empty())
       return false;
 
-    for (auto iter = parts.begin(); iter != parts.end(); ++iter) {
+    for (std::vector<std::string>::iterator iter = parts.begin(); iter != parts.end(); ++iter) {
       float size_check = 0;
       if (sscanf(iter->c_str(), "%f", &size_check) == 1) {
         size = size_check;
@@ -1209,21 +1196,17 @@ namespace base {
         break;
       }
     }
-
-    auto case_insensitive_compare = [](const std::string& a, const std::string& b) {
-      return a.size() == b.size() &&
-        std::equal(a.begin(), a.end(), b.begin(), [](char c1, char c2) {
-        return std::tolower(c1) == std::tolower(c2);
-          });
-      };
+    /*
+      if (!parts.empty() && sscanf(parts.back().c_str(), "%f", &size) == 1)
+        parts.pop_back();*/
 
     for (int i = 0; i < 2 && !parts.empty(); i++) {
-      if (case_insensitive_compare(parts.back(), "bold")) {
+      if (g_ascii_strcasecmp(parts.back().c_str(), "bold") == 0) {
         bold = true;
         parts.pop_back();
       }
 
-      if (!parts.empty() && case_insensitive_compare(parts.back(), "italic")) {
+      if (g_ascii_strcasecmp(parts.back().c_str(), "italic") == 0) {
         italic = true;
         parts.pop_back();
       }
@@ -1236,7 +1219,6 @@ namespace base {
     }
     return true;
   }
-
 
   //--------------------------------------------------------------------------------------------------
 
@@ -1352,35 +1334,37 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  int string_compare(const std::string& first, const std::string& second, bool case_sensitive) {
-    std::locale loc; // Use the default locale
-    std::string normalized_first = first;
-    std::string normalized_second = second;
+  /**
+   * Culturally correct string comparison. Also properly compares different normalization forms.
+   * For a large amount of strings this function is not very effective as it generates the sort keys
+   * repeatedly (not to mention normalization).
+   * So if we ever need sorting of 10000 strings we have to add a separate implementation.
+   *
+   * @param first, the left string to compare.
+   * @param second, the right string to compare.
+   * @result   0 - If the strings are equal.
+   *         < 0 - If first sorts before second.
+   *         > 0 - If second sorts before first.
+   */
+  int string_compare(const std::string &first, const std::string &second, bool case_sensitive) {
+    int result = 0;
 
-    // Normalize strings (trim whitespace, etc.)
-    normalized_first.erase(std::remove_if(normalized_first.begin(), normalized_first.end(), ::isspace), normalized_first.end());
-    normalized_second.erase(std::remove_if(normalized_second.begin(), normalized_second.end(), ::isspace), normalized_second.end());
-
+    gchar *left = g_utf8_normalize(first.c_str(), -1, G_NORMALIZE_DEFAULT);
+    gchar *right = g_utf8_normalize(second.c_str(), -1, G_NORMALIZE_DEFAULT);
     if (!case_sensitive) {
-      // Convert both strings to lowercase for case-insensitive comparison
-      std::transform(normalized_first.begin(), normalized_first.end(), normalized_first.begin(),
-        [&loc](char c) { return std::tolower(c, loc); });
-      std::transform(normalized_second.begin(), normalized_second.end(), normalized_second.begin(),
-        [&loc](char c) { return std::tolower(c, loc); });
-    }
+      gchar *s1 = g_utf8_casefold(left, -1);
+      gchar *s2 = g_utf8_casefold(right, -1);
+      result = g_utf8_collate(s1, s2);
+      g_free(s1);
+      g_free(s2);
+    } else
+      result = g_utf8_collate(left, right);
 
-    // Perform lexicographical comparison
-    if (normalized_first < normalized_second) {
-      return -1;
-    }
-    else if (normalized_first > normalized_second) {
-      return 1;
-    }
-    else {
-      return 0;
-    }
+    g_free(left);
+    g_free(right);
+
+    return result;
   }
-
 
   //--------------------------------------------------------------------------------------------------
 
@@ -1394,28 +1378,55 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  bool contains_string(const std::string& text, const std::string& candidate, bool case_sensitive) {
-    if (text.empty() || candidate.empty())
+  /**
+   * Determines if the given candidate is part of the given text. As with the string_compare matches
+   * are culturally correct.
+   */
+  bool contains_string(const std::string &text, const std::string &candidate, bool case_sensitive) {
+    if (text.size() == 0 || candidate.size() == 0)
       return false;
 
-    std::string hay_stack = text;
-    std::string needle = candidate;
+    gchar *hay_stack = g_utf8_normalize(text.c_str(), -1, G_NORMALIZE_DEFAULT);
+    gchar *needle = g_utf8_normalize(candidate.c_str(), -1, G_NORMALIZE_DEFAULT);
 
     if (!case_sensitive) {
-      std::locale loc;
-      std::transform(hay_stack.begin(), hay_stack.end(), hay_stack.begin(),
-        [&loc](char c) { return std::tolower(c, loc); });
-      std::transform(needle.begin(), needle.end(), needle.begin(),
-        [&loc](char c) { return std::tolower(c, loc); });
+      gchar *temp = g_utf8_casefold(hay_stack, -1);
+      g_free(hay_stack);
+      hay_stack = temp;
+
+      temp = g_utf8_casefold(needle, -1);
+      g_free(needle);
+      needle = temp;
     }
 
-    // Use std::search to find the candidate in the text
-    auto it = std::search(hay_stack.begin(), hay_stack.end(),
-      needle.begin(), needle.end());
+    gunichar start_char = g_utf8_get_char(needle);
 
-    return it != hay_stack.end();
+    bool result = false;
+    gchar *run = hay_stack;
+    while (!result) {
+      gchar *p = g_utf8_strchr(run, -1, start_char);
+      if (p == NULL)
+        break;
+
+      // Found the start char in the remaining text. See if that part matches the needle.
+      gchar *needle_run = needle;
+      bool mismatch = false;
+      for (size_t i = 0; i < candidate.size(); ++i, ++p, ++needle_run) {
+        if (g_utf8_get_char(needle_run) != g_utf8_get_char(p)) {
+          mismatch = true;
+          break;
+        }
+      }
+      if (mismatch)
+        ++run;
+      else
+        result = true;
+    }
+    g_free(hay_stack);
+    g_free(needle);
+
+    return result;
   }
-
 
   //--------------------------------------------------------------------------------------------------
 
@@ -1525,47 +1536,38 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-#include <stdexcept>
-#include <string>
-#include <locale>
-#include <codecvt>
-#include <cctype>
-#include <vector>
-
-  std::string reflow_text(const std::string& text, unsigned int line_length, const std::string& left_fill,
-    bool indent_first, unsigned int max_lines) {
+  std::string reflow_text(const std::string &text, unsigned int line_length, const std::string &left_fill,
+                          bool indent_first, unsigned int max_lines) {
     bool use_fill = true;
     const unsigned int minimum_text_length = 5;
 
-    // Check if the line length complies with the minimum required
+    //  Check if the line length complies to the minimum required
     if (line_length < minimum_text_length)
       return "";
 
-    // Only use left_fill when it's small enough to fit in the line
-    const unsigned int left_fill_length = static_cast<unsigned>(left_fill.size());
+    //  Only use left_fill when it's small enough to fit in the line and make the function able
+    //  to do what it has to do
+    const unsigned int left_fill_length = (unsigned)left_fill.size();
 
     if (left_fill_length + minimum_text_length >= line_length)
       use_fill = false;
 
-    // Check for empty string
-    if (text.empty())
+    //  Check for empty string...if we let it go, a left_fill will be inserted
+    if (text.size() == 0)
       return "";
 
-    // Validate UTF-8 string
-    try {
-      std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
-      converter.from_bytes(text); // Throws if invalid UTF-8 is encountered
-    }
-    catch (const std::range_error&) {
-      throw std::invalid_argument("base::reflow_text received an invalid UTF-8 string: " + text);
-    }
+    //  Check if it's a valid utf8 string
+    const char *invalid_data_ptr = NULL;
+
+    if (g_utf8_validate(text.c_str(), (gsize)text.size(), &invalid_data_ptr) != TRUE)
+      throw std::invalid_argument(std::string("base::reflow_text received an invalid string: ") + text);
 
     const std::string initial = (indent_first && use_fill) ? left_fill : "";
     const std::string new_line = use_fill ? std::string("\n") + left_fill : std::string("\n");
     std::string result = initial;
 
-    const char* char_string = text.c_str();
-    const char* iter = char_string;
+    const char *char_string = text.c_str();
+    const char *iter = char_string;
 
     unsigned int space_position_source = 0;
     unsigned int line_char_counter = 0;
@@ -1574,43 +1576,33 @@ namespace base {
     unsigned int text_real_length = use_fill ? line_length - left_fill_length : line_length;
 
     while (*iter) {
-      // Get the full UTF-8 character into the result string
-      unsigned char lead = static_cast<unsigned char>(*iter);
-      size_t char_len = 1;
+      //  Get the full utf8 char into the result string
+      result += std::string(iter, g_utf8_skip[*(const guchar *)(iter)]);
 
-      if (lead >= 0xC0 && lead <= 0xFD) { // Multibyte UTF-8 character
-        if ((lead & 0xE0) == 0xC0) char_len = 2; // 2-byte character
-        else if ((lead & 0xF0) == 0xE0) char_len = 3; // 3-byte character
-        else if ((lead & 0xF8) == 0xF0) char_len = 4; // 4-byte character
-      }
-
-      result.append(iter, char_len);
       line_char_counter++;
       char_count_after_space++;
 
-      // Check for whitespace
-      if (std::isspace(static_cast<unsigned char>(*iter)) && line_char_counter > left_fill_length) {
-        space_position_source = static_cast<unsigned>(iter - char_string + 1);
+      if (g_unichar_isspace(*iter) && line_char_counter > left_fill_length) {
+        space_position_source = (unsigned)(iter - char_string + 1);
         char_count_after_space = 0;
       }
 
       if (line_char_counter == text_real_length) {
-        // Special case: word as big as a line
+        //  Check for special case when we have a word as big as a line
         if (char_count_after_space == text_real_length) {
           result += new_line;
+
           space_position_source += char_count_after_space;
           line_char_counter = char_count_after_space = 0;
-        }
-        else {
-          // Find last space character position in the result string
+        } else {
+          //  Find last space character position in the result string
           unsigned int break_position =
-            space_position_source + line_counter * static_cast<unsigned>(new_line.size()) +
-            static_cast<unsigned>(initial.size());
+            space_position_source + line_counter * (unsigned)new_line.size() + (unsigned)initial.size();
 
-          // Insert a newline at the right position
+          //  Insert a \n in the right position, right after the space char(or at the end of the string)
           result.size() == break_position ? result += new_line : result.insert(break_position, new_line);
 
-          // Mark the characters that were already inserted after the newline
+          //  Mark the characters that were already inserted after the new line
           line_char_counter = char_count_after_space;
         }
 
@@ -1621,11 +1613,16 @@ namespace base {
         }
       }
 
-      iter += char_len; // Move to the next character
+      iter = g_utf8_next_char((gchar *)iter); //  Get the next char from the sequence
     }
+
+#ifdef DEBUG
+    if (g_utf8_validate(result.c_str(), result.size(), &invalid_data_ptr) != TRUE)
+      throw std::logic_error(
+        strfmt("base::reflow_text produced an invalid string:\nInput:\n%s\nOutput:\n%s", text.c_str(), result.c_str()));
+#endif
 
     return result;
   }
-
 
 } // namespace base

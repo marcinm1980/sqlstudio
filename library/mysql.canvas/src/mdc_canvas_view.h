@@ -37,8 +37,6 @@
 #include <glib.h>
 #endif
 
-#include <mutex>
-
 namespace mdc {
 
   class Line;
@@ -345,7 +343,7 @@ namespace mdc {
     std::vector<ClickInfo> _last_click_info;
     base::Point _last_mouse_pos;
 
-    std::mutex _lock;
+    base::RecMutex _lock;
 
     static void *canvas_item_destroyed(void *data);
     void set_last_click_item(CanvasItem *item);

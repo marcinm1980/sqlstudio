@@ -29,7 +29,6 @@
 #include <errno.h>
 #include <cstdlib>
 #include <cstring>
-#include <mutex>
 
 DEFAULT_LOG_DOMAIN("pwdcache");
 
@@ -37,7 +36,6 @@ DEFAULT_LOG_DOMAIN("pwdcache");
 #include <sys/mman.h>
 #define HAVE_MLOCK 1
 #endif
-
 
 using namespace mforms;
 
@@ -62,7 +60,7 @@ PasswordCache::PasswordCache() {
 }
 
 PasswordCache PasswordCache::instance;
-static std::mutex cache_mutex;
+static base::Mutex cache_mutex;
 
 PasswordCache *PasswordCache::get() {
   return &instance;
@@ -86,7 +84,7 @@ void PasswordCache::add_password(const std::string &service, const std::string &
 
     bool flag = false;
     {
-      std::lock_guard<std::mutex> guard(cache_mutex);
+      base::MutexLock lock(cache_mutex);
 
       const char *opassword = find_password(service, account);
       if (opassword) {
@@ -98,7 +96,7 @@ void PasswordCache::add_password(const std::string &service, const std::string &
     if (flag)
       remove_password(service, account);
 
-    std::lock_guard<std::mutex> guard(cache_mutex);
+    base::MutexLock lock(cache_mutex);
 
     size_t reclen = sizeof(size_t) + service.size() + 1 + account.size() + 1 + strlen(password) + 1;
 
@@ -160,7 +158,7 @@ size_t PasswordCache::find_block(const std::string &service, const std::string &
 
 void PasswordCache::remove_password(const std::string &service, const std::string &account) {
   if (storage) {
-    std::lock_guard<std::mutex> guard(cache_mutex);
+    base::MutexLock lock(cache_mutex);
 
     size_t offset = find_block(service, account);
     if (offset != (size_t)-1) {
@@ -184,7 +182,7 @@ const char *PasswordCache::find_password(const std::string &service, const std::
 }
 
 bool PasswordCache::get_password(const std::string &service, const std::string &account, std::string &ret_password) {
-  std::lock_guard<std::mutex> guard(cache_mutex);
+  base::MutexLock lock(cache_mutex);
   const char *tmp = find_password(service, account);
   if (tmp)
     ret_password = tmp;

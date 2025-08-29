@@ -51,6 +51,9 @@
     <ClCompile Include="threaded_timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="threading.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ui_form.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,6 +73,9 @@
     <ClCompile Include="mem_stat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utf8string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="xml_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,9 +83,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="symbol-info.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="thread_pool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,6 +132,9 @@
     <ClInclude Include="base\threaded_timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="base\threading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="base\trackable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -162,6 +168,9 @@
     <ClInclude Include="base\mem_stat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="base\utf8string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="base\xml_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -172,9 +181,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="base\symbol-info.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="base\thread_pool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

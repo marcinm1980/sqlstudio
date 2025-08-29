@@ -25,7 +25,6 @@
 #ifndef _MDC_SELECTION_H_
 #define _MDC_SELECTION_H_
 
-#include <mutex>
 #include "mdc_canvas_public.h"
 
 #include "mdc_common.h"
@@ -115,7 +114,7 @@ namespace mdc {
     boost::signals2::signal<void()> _signal_end_drag;
 
     std::map<CanvasItem *, DragData> _drag_data;
-    std::mutex _mutex;
+    base::RecMutex _mutex;
     CanvasView *_view;
 
     void lock();
