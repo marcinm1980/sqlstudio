@@ -27,7 +27,7 @@
 
 #include "mdc.h"
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "grts/structs.model.h"
 

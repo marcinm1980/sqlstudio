@@ -21,7 +21,7 @@
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 import mforms
-from workbench.ui import WizardPage
+from studio.ui import WizardPage
 
 class MainView(WizardPage):
     def __init__(self, main):

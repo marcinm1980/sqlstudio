@@ -24,7 +24,7 @@
 
 #pragma once
 
-#define DRAG_SOURCE_FORMAT_NAME "com.mysql.workbench.drag-source"
+#define DRAG_SOURCE_FORMAT_NAME "com.mysql.studio.drag-source"
 
 namespace MySQL {
   namespace Forms {

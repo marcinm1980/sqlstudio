@@ -25,7 +25,7 @@
 #ifndef _WBCONTEXT_SQLIDE_H_
 #define _WBCONTEXT_SQLIDE_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "grt/plugin_manager.h"
 #include "grts/structs.db.mgmt.h"
 #include "grts/structs.app.h"

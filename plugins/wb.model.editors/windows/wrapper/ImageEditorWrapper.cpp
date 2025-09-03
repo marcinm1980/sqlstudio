@@ -35,7 +35,7 @@ ImageEditorWrapper::ImageEditorWrapper(ImageEditorBE *inn) : BaseEditorWrapper(i
 
 ImageEditorWrapper::ImageEditorWrapper(MySQL::Grt::GrtValue ^ arglist)
   : BaseEditorWrapper(new ::ImageEditorBE(
-      workbench_model_ImageFigureRef::cast_from(grt::BaseListRef::cast_from(arglist->get_unmanaged_object()).get(0)))) {
+      studio_model_ImageFigureRef::cast_from(grt::BaseListRef::cast_from(arglist->get_unmanaged_object()).get(0)))) {
 }
 
 //--------------------------------------------------------------------------------------------------

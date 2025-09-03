@@ -39,12 +39,12 @@
 
 #include "grts/structs.h"
 #include "grts/structs.app.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include "grt/editor_base.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_context.h"
+#include "studio/wb_context_ui.h"
 
 #include "preferences_form.h"
 
@@ -227,7 +227,7 @@ static void force_checkbox_on_toggle(mforms::CheckBox *value, mforms::CheckBox *
 
 //----------------- PreferencesForm ----------------------------------------------------------------
 
-PreferencesForm::PreferencesForm(const workbench_physical_ModelRef &model)
+PreferencesForm::PreferencesForm(const studio_physical_ModelRef &model)
   : Form(NULL, mforms::FormResizable),
     _switcher(mforms::TreeNoHeader | mforms::TreeSidebar),
     _hbox(true),
@@ -743,7 +743,7 @@ mforms::View *PreferencesForm::create_sqlide_page() {
       mforms::CheckBox *save_workspace, *discard_unsaved;
 
       save_workspace =
-        table->add_checkbox_option("workbench:SaveSQLWorkspaceOnClose",
+        table->add_checkbox_option("studio:SaveSQLWorkspaceOnClose",
                                    _("Save snapshot of open editors on close"), "Save Snapshot on Close",
                                    _("A snapshot of all open scripts is saved when the SQL Editor is closed. Next time "
                                      "it is opened to the same connection that state is restored. Unsaved files will "
@@ -753,7 +753,7 @@ mforms::View *PreferencesForm::create_sqlide_page() {
         static const char *auto_save_intervals =
           "disable:0,5 seconds:5,10 seconds:10,15 seconds:15,30 seconds:30,1 minute:60,5 minutes:300,10 minutes:600,20 "
           "minutes:1200";
-        mforms::Selector *sel = new_selector_option("workbench:AutoSaveSQLEditorInterval", auto_save_intervals, true);
+        mforms::Selector *sel = new_selector_option("studio:AutoSaveSQLEditorInterval", auto_save_intervals, true);
 
         table->add_option(sel, _("Auto-save scripts interval:"), "Auto Save Interval",
                           _("Interval to perform auto-saving of all open script tabs. The scripts will be restored "
@@ -834,7 +834,7 @@ mforms::View *PreferencesForm::create_sqlide_page() {
     OptionTable *otable = new OptionTable(this, _("Other"), true);
 
     {
-      mforms::TextEntry *entry = new_entry_option("workbench:InternalSchema", false);
+      mforms::TextEntry *entry = new_entry_option("studio:InternalSchema", false);
       entry->set_max_length(100);
       entry->set_size(100, -1);
 
@@ -1302,10 +1302,10 @@ mforms::View *PreferencesForm::create_model_page() {
   table = mforms::manage(new OptionTable(this, _("EER Modeler"), true));
   top_box->add(table, false, true);
   {
-    table->add_checkbox_option("workbench.AutoReopenLastModel", _("Automatically reopen previous model at start"), "Reopen Previous Model", "");
+    table->add_checkbox_option("studio.AutoReopenLastModel", _("Automatically reopen previous model at start"), "Reopen Previous Model", "");
 
 #ifndef __APPLE__
-    table->add_checkbox_option("workbench:ForceSWRendering",
+    table->add_checkbox_option("studio:ForceSWRendering",
                                _("Force use of software based rendering for EER diagrams"),
                                "Force Software Redering Diagrams",
                                _("Enable this option if you have drawing problems in MySqlStudio modeling. You must "
@@ -1313,7 +1313,7 @@ mforms::View *PreferencesForm::create_model_page() {
 #endif
 
     {
-      mforms::TextEntry *entry = new_numeric_entry_option("workbench:UndoEntries", 1, 500);
+      mforms::TextEntry *entry = new_numeric_entry_option("studio:UndoEntries", 1, 500);
       entry->set_max_length(5);
       entry->set_size(100, -1);
 
@@ -1325,7 +1325,7 @@ mforms::View *PreferencesForm::create_model_page() {
     {
       static const char *auto_save_intervals =
         "disable:0,10 seconds:10,15 seconds:15,30 seconds:30,1 minute:60,5 minutes:300,10 minutes:600,20 minutes:1200";
-      mforms::Selector *sel = new_selector_option("workbench:AutoSaveModelInterval", auto_save_intervals, true);
+      mforms::Selector *sel = new_selector_option("studio:AutoSaveModelInterval", auto_save_intervals, true);
 
       table->add_option(sel, _("Auto-save model interval:"), "Auto Save Model Interval",
                         _("Interval to perform auto-saving of the open model. The model will be restored from the last "
@@ -1553,7 +1553,7 @@ void PreferencesForm::createLogLevelSelectionPulldown(mforms::Box *content) {
   }
 
   // add dropdown (combo) box
-  mforms::Selector *selector = new_selector_option("workbench.logger:LogLevel", logLevels, false);
+  mforms::Selector *selector = new_selector_option("studio.logger:LogLevel", logLevels, false);
   selector->set_name("Log Level");
   selector->set_tooltip(
     _("Log level determines how serious a message has to be before it gets logged.  For example, an error is more "
@@ -1688,7 +1688,7 @@ mforms::View *PreferencesForm::create_model_defaults_page() {
   return box;
 }
 
-static void show_target_version(const workbench_physical_ModelRef &model, mforms::TextEntry *entry) {
+static void show_target_version(const studio_physical_ModelRef &model, mforms::TextEntry *entry) {
   if (*model->catalog()->version()->releaseNumber() < 0)
     entry->set_value(base::strfmt("%li.%li", (long)*model->catalog()->version()->majorNumber(),
                                   (long)*model->catalog()->version()->minorNumber()));
@@ -1698,7 +1698,7 @@ static void show_target_version(const workbench_physical_ModelRef &model, mforms
                                   (long)*model->catalog()->version()->releaseNumber()));
 }
 
-static void update_target_version(workbench_physical_ModelRef model, mforms::TextEntry *entry) {
+static void update_target_version(studio_physical_ModelRef model, mforms::TextEntry *entry) {
   GrtVersionRef version = bec::parse_version(entry->get_string_value());
   model->catalog()->version(version);
   version->owner(model);
@@ -1799,7 +1799,7 @@ mforms::View *PreferencesForm::create_diagram_page() {
 
     mforms::CheckBox *check;
 
-    check = new_checkbox_option("workbench.physical.ObjectFigure:Expanded");
+    check = new_checkbox_option("studio.physical.ObjectFigure:Expanded");
     check->set_text(_("Expand New Objects"));
     check->set_tooltip(_("Set the initial state of newly created objects to expanded (or collapsed)"));
     vbox->add(check, false);
@@ -1827,19 +1827,19 @@ mforms::View *PreferencesForm::create_diagram_page() {
 
     mforms::CheckBox *check;
 
-    check = new_checkbox_option("workbench.physical.TableFigure:ShowColumnTypes");
+    check = new_checkbox_option("studio.physical.TableFigure:ShowColumnTypes");
     check->set_text(_("Show Column Types"));
     check->set_tooltip(_("Show the column types along their names in table figures"));
     vbox->add(check, false);
 
-    check = new_checkbox_option("workbench.physical.TableFigure:ShowSchemaName");
+    check = new_checkbox_option("studio.physical.TableFigure:ShowSchemaName");
     check->set_text(_("Show Schema Name"));
     check->set_tooltip(_("Show owning schema name in the table titlebar figures"));
     vbox->add(check, false);
 
     {
       mforms::Box *hbox = mforms::manage(new mforms::Box(true));
-      mforms::TextEntry *entry = new_entry_option("workbench.physical.TableFigure:MaxColumnTypeLength", true);
+      mforms::TextEntry *entry = new_entry_option("studio.physical.TableFigure:MaxColumnTypeLength", true);
 
       hbox->set_spacing(4);
 
@@ -1853,14 +1853,14 @@ mforms::View *PreferencesForm::create_diagram_page() {
       vbox->add(hbox, false);
     }
 
-    check = new_checkbox_option("workbench.physical.TableFigure:ShowColumnFlags");
+    check = new_checkbox_option("studio.physical.TableFigure:ShowColumnFlags");
     check->set_text(_("Show Column Flags"));
     check->set_tooltip(_("Show column flags such as NOT NULL or UNSIGNED along their names in table figures"));
     vbox->add(check, false);
 
     {
       mforms::Box *hbox = mforms::manage(new mforms::Box(true));
-      mforms::TextEntry *entry = new_entry_option("workbench.physical.TableFigure:MaxColumnsDisplayed", true);
+      mforms::TextEntry *entry = new_entry_option("studio.physical.TableFigure:MaxColumnsDisplayed", true);
       mforms::Label *descr = mforms::manage(new mforms::Label());
 
       hbox->set_spacing(4);
@@ -1897,7 +1897,7 @@ mforms::View *PreferencesForm::create_diagram_page() {
 
     hbox->add(new_label(_("Trim Routine Names Longer Than"), "Trim Routine Names"), false);
 
-    entry = new_entry_option("workbench.physical.RoutineGroupFigure:MaxRoutineNameLength", true);
+    entry = new_entry_option("studio.physical.RoutineGroupFigure:MaxRoutineNameLength", true);
     entry->set_size(60, -1);
     entry->set_max_length(3);
     hbox->add(entry, false);
@@ -1921,17 +1921,17 @@ mforms::View *PreferencesForm::create_diagram_page() {
 
     mforms::CheckBox *check;
 
-    check = new_checkbox_option("workbench.physical.Diagram:DrawLineCrossings");
+    check = new_checkbox_option("studio.physical.Diagram:DrawLineCrossings");
     check->set_text(_("Draw Line Crossings (slow in large diagrams)"));
     check->set_name("Draw Linw Crossings");
     vbox->add(check, false);
 
-    check = new_checkbox_option("workbench.physical.Connection:ShowCaptions");
+    check = new_checkbox_option("studio.physical.Connection:ShowCaptions");
     check->set_text(_("Show Captions"));
     check->set_name("Show Captions");
     vbox->add(check, false);
 
-    check = new_checkbox_option("workbench.physical.Connection:CenterCaptions");
+    check = new_checkbox_option("studio.physical.Connection:CenterCaptions");
     check->set_text(_("Center Captions Over Line"));
     check->set_name("Center Captions Over Line");
     vbox->add(check, false);
@@ -1963,17 +1963,17 @@ void PreferencesForm::font_preset_changed() {
 
   if (i >= 0) {
     wb::WBContextUI::get()->set_wb_options_value(_model.is_valid() ? _model.id() : "",
-                                                 "workbench.physical.FontSet:Name", font_sets[i].name);
+                                                 "studio.physical.FontSet:Name", font_sets[i].name);
 
-    change_font_option("workbench.physical.TableFigure:TitleFont", font_sets[i].object_title_font);
-    change_font_option("workbench.physical.TableFigure:SectionFont", font_sets[i].object_section_font);
-    change_font_option("workbench.physical.TableFigure:ItemsFont", font_sets[i].object_item_font);
-    change_font_option("workbench.physical.ViewFigure:TitleFont", font_sets[i].object_title_font);
-    change_font_option("workbench.physical.RoutineGroupFigure:TitleFont", font_sets[i].object_title_font);
-    change_font_option("workbench.physical.RoutineGroupFigure:ItemsFont", font_sets[i].object_item_font);
-    change_font_option("workbench.physical.Connection:CaptionFont", font_sets[i].object_item_font);
-    change_font_option("workbench.physical.Layer:TitleFont", font_sets[i].object_item_font);
-    change_font_option("workbench.model.NoteFigure:TextFont", font_sets[i].object_item_font);
+    change_font_option("studio.physical.TableFigure:TitleFont", font_sets[i].object_title_font);
+    change_font_option("studio.physical.TableFigure:SectionFont", font_sets[i].object_section_font);
+    change_font_option("studio.physical.TableFigure:ItemsFont", font_sets[i].object_item_font);
+    change_font_option("studio.physical.ViewFigure:TitleFont", font_sets[i].object_title_font);
+    change_font_option("studio.physical.RoutineGroupFigure:TitleFont", font_sets[i].object_title_font);
+    change_font_option("studio.physical.RoutineGroupFigure:ItemsFont", font_sets[i].object_item_font);
+    change_font_option("studio.physical.Connection:CaptionFont", font_sets[i].object_item_font);
+    change_font_option("studio.physical.Layer:TitleFont", font_sets[i].object_item_font);
+    change_font_option("studio.model.NoteFigure:TextFont", font_sets[i].object_item_font);
   }
 }
 
@@ -2006,8 +2006,8 @@ mforms::View *PreferencesForm::create_appearance_page() {
     Option *option = new Option();
     _options.push_back(option);
     option->view = text;
-    option->show_value = std::bind(show_text_option, get_options(), "workbench.model.ObjectFigure:ColorList", text);
-    option->update_value = std::bind(update_text_option, get_options(), "workbench.model.ObjectFigure:ColorList", text);
+    option->show_value = std::bind(show_text_option, get_options(), "studio.model.ObjectFigure:ColorList", text);
+    option->update_value = std::bind(update_text_option, get_options(), "studio.model.ObjectFigure:ColorList", text);
 
     table->add(new_label(_("Colors available when creating layers, notes etc"), "Available Colors"), 1, 2, 0, 1, mforms::HFillFlag);
     text = mforms::manage(new mforms::TextBox(mforms::VerticalScrollBar));
@@ -2017,8 +2017,8 @@ mforms::View *PreferencesForm::create_appearance_page() {
     option = new Option();
     _options.push_back(option);
     option->view = text;
-    option->show_value = std::bind(&show_text_option, get_options(), "workbench.model.Figure:ColorList", text);
-    option->update_value = std::bind(&update_text_option, get_options(), "workbench.model.Figure:ColorList", text);
+    option->show_value = std::bind(&show_text_option, get_options(), "studio.model.Figure:ColorList", text);
+    option->update_value = std::bind(&update_text_option, get_options(), "studio.model.Figure:ColorList", text);
 
     box->add(frame, false);
   }
@@ -2041,12 +2041,12 @@ mforms::View *PreferencesForm::create_appearance_page() {
 
     std::string font_name;
     wb::WBContextUI::get()->get_wb_options_value(_model.is_valid() ? _model.id() : "",
-                                                 "workbench.physical.FontSet:Name", font_name);
+                                                 "studio.physical.FontSet:Name", font_name);
 
     for (size_t i = 0; font_sets[i].name; i++) {
       // skip font options that are not modeling specific
-      if (base::hasPrefix(font_sets[i].name, "workbench.general") ||
-          base::hasPrefix(font_sets[i].name, "workbench.scripting"))
+      if (base::hasPrefix(font_sets[i].name, "studio.general") ||
+          base::hasPrefix(font_sets[i].name, "studio.scripting"))
         continue;
       _font_preset.add_item(font_sets[i].name);
       if (font_sets[i].name == font_name)
@@ -2079,16 +2079,16 @@ mforms::View *PreferencesForm::create_fonts_and_colors_page() {
   {
     OptionTable *table = new OptionTable(this, _("Fonts"), true);
 
-    table->add_option(new_entry_option("workbench.general.Editor:Font", false), _("SQL Editor:"), "SQL Editor",
+    table->add_option(new_entry_option("studio.general.Editor:Font", false), _("SQL Editor:"), "SQL Editor",
                       _("Global font for SQL text editors"));
 
-    table->add_option(new_entry_option("workbench.general.Resultset:Font", false), _("Resultset Grid:"), "Resultset Grid",
+    table->add_option(new_entry_option("studio.general.Resultset:Font", false), _("Resultset Grid:"), "Resultset Grid",
                       _("Resultset grid in SQL Editor"));
 
-    table->add_option(new_entry_option("workbench.scripting.ScriptingShell:Font", false), _("Scripting Shell:"), "Scripting Shell",
+    table->add_option(new_entry_option("studio.scripting.ScriptingShell:Font", false), _("Scripting Shell:"), "Scripting Shell",
                       _("Scripting Shell output area"));
 
-    table->add_option(new_entry_option("workbench.scripting.ScriptingEditor:Font", false), _("Script Editor:"), "Script Editor",
+    table->add_option(new_entry_option("studio.scripting.ScriptingEditor:Font", false), _("Script Editor:"), "Script Editor",
                       _("Code editors in scripting shell"));
 
     content->add(table, true, true);
@@ -2135,10 +2135,10 @@ void PreferencesForm::show_colors_and_fonts() {
   _font_list.clear();
 
   for (std::vector<std::string>::const_iterator iter = options.begin(); iter != options.end(); ++iter) {
-    if (base::hasPrefix(*iter, "workbench.general") || base::hasPrefix(*iter, "workbench.scripting"))
+    if (base::hasPrefix(*iter, "studio.general") || base::hasPrefix(*iter, "studio.scripting"))
       continue;
 
-    if (base::hasSuffix(*iter, "Font") && base::hasPrefix(*iter, "workbench.")) {
+    if (base::hasSuffix(*iter, "Font") && base::hasPrefix(*iter, "studio.")) {
       std::string::size_type pos = iter->find(':');
 
       if (pos != std::string::npos) {

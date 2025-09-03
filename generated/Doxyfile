@@ -652,7 +652,7 @@ RECURSIVE              = NO
 
 EXCLUDE                = grts/structs.db.maxdb.h \
                          grts/structs.eer.h \
-                         grts/structs.workbench.logical.h
+                         grts/structs.studio.logical.h
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 

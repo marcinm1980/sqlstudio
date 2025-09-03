@@ -120,35 +120,35 @@ set(IMAGE_FILES
     structs/db.mgmt.Connection.manage.48x48.png
     structs/db.mgmt.ServerInstance.48x48.png
     structs/db.mgmt.ServerInstance.manage.48x48.png
-    structs/workbench.Document.16x16.png
-    structs/workbench.Document.32x32.png
-    structs/workbench.Document.48x48.png
-    structs/workbench.logical.Diagram.16x16.png
-    structs/workbench.logical.Diagram.48x48.png
-    structs/workbench.logical.Diagram.add.48x48.png
-    structs/workbench.logical.Model.16x16.png
-    structs/workbench.logical.Model.48x48.png
-    structs/workbench.model.ImageFigure.16x16.png
-    structs/workbench.model.NoteFigure.16x16.png
-    structs/workbench.physical.Diagram.16x16.png
-    structs/workbench.physical.Diagram.48x48.png
-    structs/workbench.physical.Diagram.add.16x16.png
-    structs/workbench.physical.Diagram.add.48x48.png
-    structs/workbench.physical.Layer.16x16.png
-    structs/workbench.physical.Layer.24x24.png
-    structs/workbench.physical.Layer.many.16x16.png
-    structs/workbench.physical.Model.16x16.png
-    structs/workbench.physical.Model.48x48.png
-    structs/workbench.physical.RoutineGroupFigure.16x16.png
-    structs/workbench.physical.TableFigure.16x16.png
-    structs/workbench.physical.ViewFigure.16x16.png
-    structs/workbench.physical.db2.Model.48x48.png
-    structs/workbench.physical.mssql.Model.48x48.png
-    structs/workbench.physical.mysql.Model.16x16.png
-    structs/workbench.physical.mysql.Model.48x48.png
-    structs/workbench.physical.oracle.Model.48x48.png
-    structs/workbench.physical.sqlite.Model.48x48.png
-    structs/workbench.physical.sybase.Model.48x48.png
+    structs/studio.Document.16x16.png
+    structs/studio.Document.32x32.png
+    structs/studio.Document.48x48.png
+    structs/studio.logical.Diagram.16x16.png
+    structs/studio.logical.Diagram.48x48.png
+    structs/studio.logical.Diagram.add.48x48.png
+    structs/studio.logical.Model.16x16.png
+    structs/studio.logical.Model.48x48.png
+    structs/studio.model.ImageFigure.16x16.png
+    structs/studio.model.NoteFigure.16x16.png
+    structs/studio.physical.Diagram.16x16.png
+    structs/studio.physical.Diagram.48x48.png
+    structs/studio.physical.Diagram.add.16x16.png
+    structs/studio.physical.Diagram.add.48x48.png
+    structs/studio.physical.Layer.16x16.png
+    structs/studio.physical.Layer.24x24.png
+    structs/studio.physical.Layer.many.16x16.png
+    structs/studio.physical.Model.16x16.png
+    structs/studio.physical.Model.48x48.png
+    structs/studio.physical.RoutineGroupFigure.16x16.png
+    structs/studio.physical.TableFigure.16x16.png
+    structs/studio.physical.ViewFigure.16x16.png
+    structs/studio.physical.db2.Model.48x48.png
+    structs/studio.physical.mssql.Model.48x48.png
+    structs/studio.physical.mysql.Model.16x16.png
+    structs/studio.physical.mysql.Model.48x48.png
+    structs/studio.physical.oracle.Model.48x48.png
+    structs/studio.physical.sqlite.Model.48x48.png
+    structs/studio.physical.sybase.Model.48x48.png
 )
 
 install(FILES ${IMAGE_FILES} DESTINATION ${WB_PACKAGE_SHARED_DIR}/images)

@@ -51,13 +51,13 @@ public:
     grt::ValueRef ret = _module->call_function("getTemplateDirFromName", args);
     return *grt::StringRef::cast_from(ret);
   }
-  workbench_model_reporting_TemplateInfoRef getReportingTemplateInfo(const std::string & param0) {
+  studio_model_reporting_TemplateInfoRef getReportingTemplateInfo(const std::string & param0) {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(grt::StringRef(param0));
     grt::ValueRef ret = _module->call_function("getReportingTemplateInfo", args);
-    return workbench_model_reporting_TemplateInfoRef::cast_from(ret);
+    return studio_model_reporting_TemplateInfoRef::cast_from(ret);
   }
-  ssize_t generateReport(const workbench_physical_ModelRef& param0, const grt::DictRef& param1) {
+  ssize_t generateReport(const studio_physical_ModelRef& param0, const grt::DictRef& param1) {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(param0);
     args.ginsert(param1);

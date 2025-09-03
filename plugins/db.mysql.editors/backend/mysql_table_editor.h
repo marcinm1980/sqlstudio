@@ -25,7 +25,7 @@
 #pragma once
 
 #include "grtdb/editor_table.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "grts/structs.db.mysql.h"
 
 #include "mysql_support_backend_public_interface.h"

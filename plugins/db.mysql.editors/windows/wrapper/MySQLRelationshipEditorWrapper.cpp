@@ -31,7 +31,7 @@ using namespace MySQL::Grt::Db;
 //--------------------------------------------------------------------------------------------------
 
 MySQLRelationshipEditorWrapper::MySQLRelationshipEditorWrapper(MySQL::Grt::GrtValue ^ arglist)
-  : BaseEditorWrapper(new RelationshipEditorBE(workbench_physical_ConnectionRef::cast_from(
+  : BaseEditorWrapper(new RelationshipEditorBE(studio_physical_ConnectionRef::cast_from(
       grt::BaseListRef::cast_from(arglist->get_unmanaged_object()).get(0)))) {
 }
 

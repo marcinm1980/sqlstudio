@@ -22,7 +22,7 @@
 
 import mforms
 import grt
-from workbench.ui import WizardPage
+from studio.ui import WizardPage
 
 
 ### remove when mforms version of newCodeEditor() is merged

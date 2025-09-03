@@ -28,7 +28,7 @@
 #include "grts/structs.db.h"
 #include "grts/structs.db.mgmt.h"
 #include "grts/structs.db.mysql.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include <set>
 #include "base/string_utilities.h"
 
@@ -59,7 +59,7 @@ namespace bec {
   const int EMPTY_COLUMN_PRECISION = EMPTY_COLUMN_LENGTH;
   const int EMPTY_COLUMN_SCALE = EMPTY_COLUMN_LENGTH;
 
-  grt::ValueRef WBPUBLICBACKEND_PUBLIC_FUNC getModelOption(workbench_physical_ModelRef model, const std::string &key, bool forceModel = false);
+  grt::ValueRef WBPUBLICBACKEND_PUBLIC_FUNC getModelOption(studio_physical_ModelRef model, const std::string &key, bool forceModel = false);
 
   struct WBPUBLICBACKEND_PUBLIC_FUNC CatalogHelper {
     static void apply_defaults(db_mysql_CatalogRef catalog, std::string default_engine);

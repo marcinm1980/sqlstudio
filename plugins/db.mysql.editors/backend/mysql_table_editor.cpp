@@ -272,7 +272,7 @@ bec::MenuItemList MySQLTableColumnsListBE::get_popup_items_for_nodes(const std::
       bool improved_timestamp_support = false;
 
       GrtVersionRef target_version =
-        GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(_owner->get_catalog()->owner()), "CatalogVersion"));
+        GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(_owner->get_catalog()->owner()), "CatalogVersion"));
       // in MySQL 5.6, CURRENT_TIMESTAMP works for TIMESTAMP and DATETIME
       // and for any number of colums
       if (target_version.is_valid() && (*target_version->majorNumber() > 5 ||
@@ -388,7 +388,7 @@ bool MySQLTableColumnsListBE::activate_popup_item_for_nodes(const std::string &n
 
 //----------------- TriggerTreeView ----------------------------------------------------------------
 
-#define TRIGGER_DRAG_FORMAT "com.mysql.workbench.drag-trigger"
+#define TRIGGER_DRAG_FORMAT "com.mysql.studio.drag-trigger"
 
 class TriggerTreeView : public mforms::TreeView {
 public:
@@ -569,7 +569,7 @@ public:
       case -1: // Add button.
       {
         GrtVersionRef version =
-                GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(_editor->get_catalog()->owner()), "CatalogVersion"));
+                GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(_editor->get_catalog()->owner()), "CatalogVersion"));
 
         bool supports_multiple = bec::is_supported_mysql_version_at_least(version, 5, 7, 2);
         if (node->level() == 2) // Go up to group node if this is a trigger node.
@@ -968,7 +968,7 @@ public:
     // See if there's any timing/event combination with more than one trigger definition.
     bool found_multiple = false;
     bool supports_multiple = bec::is_supported_mysql_version_at_least(
-      GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(_editor->get_catalog()->owner()), "CatalogVersion")), 5,
+      GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(_editor->get_catalog()->owner()), "CatalogVersion")), 5,
       7, 2);
 
     mforms::TreeNodeTextAttributes normal_attributes("#000000", false, false);
@@ -1007,7 +1007,7 @@ public:
     }
 
     // Since 5.7 we can add multiple triggers for the same timing.
-    GrtVersionRef version = GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(_editor->get_catalog()->owner()), "CatalogVersion"));
+    GrtVersionRef version = GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(_editor->get_catalog()->owner()), "CatalogVersion"));
     if (node->get_parent() != _trigger_list.root_node()) {
       // One of the triggers.
       _trigger_menu.set_item_enabled(
@@ -1407,7 +1407,7 @@ std::vector<std::string> MySQLTableEditorBE::get_index_types() {
   std::vector<std::string> index_types;
 
   GrtVersionRef version =
-    GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(get_catalog()->owner()), "CatalogVersion"));
+    GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(get_catalog()->owner()), "CatalogVersion"));
 
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   index_types.push_back("INDEX");

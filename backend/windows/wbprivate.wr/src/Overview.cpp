@@ -23,7 +23,7 @@
  */
 
 #include "base/string_utilities.h"
-#include "workbench/wb_overview.h"
+#include "studio/wb_overview.h"
 #include "ConvUtils.h"
 #include "GrtTemplates.h"
 #include "Overview.h"

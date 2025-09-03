@@ -16,7 +16,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.view.schema">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.view</link>
         <value type="string" key="name">physical/view/schema</value>
-        <value type="string" key="command">option:workbench.physical.ViewFigure:Schema</value>
+        <value type="string" key="command">option:studio.physical.ViewFigure:Schema</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Schemas</value>
       </value>
@@ -30,7 +30,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.view.color">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.view</link>
         <value type="string" key="name">physical/view/color</value>
-        <value type="string" key="command">option:workbench.physical.ViewFigure:Color</value>
+        <value type="string" key="command">option:studio.physical.ViewFigure:Color</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Colors</value>
       </value>

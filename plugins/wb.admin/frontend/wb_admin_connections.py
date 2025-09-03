@@ -24,7 +24,7 @@ from mforms import newTreeView, newButton, newBox, newSelector, newCheckBox, new
 import mforms
 import grt
 
-from workbench.db_utils import escape_sql_string, QueryError
+from studio.db_utils import escape_sql_string, QueryError
 
 from functools import partial
 
@@ -32,7 +32,7 @@ from wb_common import dprint_ex
 from wb_admin_utils import weakcb, WbAdminTabBase, WbAdminValidationBase, WbAdminValidationConnection
 import json
 
-from workbench.log import log_error
+from studio.log import log_error
 
 class WBThreadStack(mforms.Form):
     enable_debug_info = False

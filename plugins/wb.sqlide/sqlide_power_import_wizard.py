@@ -30,13 +30,13 @@ import os
 from mforms import newTreeView
 from mforms import FileChooser
 from sqlide_power_import_export_be import create_module
-from workbench.ui import WizardForm, WizardPage, WizardProgressPage
+from studio.ui import WizardForm, WizardPage, WizardProgressPage
 from datetime import datetime
 import operator
-from workbench.utils import Version
+from studio.utils import Version
 
 
-from workbench.log import log_error, log_info
+from studio.log import log_error, log_info
 
 from wb_common import to_unicode
 

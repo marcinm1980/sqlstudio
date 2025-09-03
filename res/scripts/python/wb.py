@@ -240,7 +240,7 @@ class _wbinputs:
   def currentModel(self):
     arg= grt.classes.app_PluginObjectInput() 
     arg.name= "activeModel"
-    arg.objectStructName= "workbench.physical.Model"
+    arg.objectStructName= "studio.physical.Model"
     return arg
 
   def currentCatalog(self):
@@ -252,13 +252,13 @@ class _wbinputs:
   def currentDiagram(self):
     arg= grt.classes.app_PluginObjectInput()
     arg.name= "activeDiagram"
-    arg.objectStructName= "workbench.physical.Diagram"
+    arg.objectStructName= "studio.physical.Diagram"
     return arg
 
   def selectedDiagram(self):
     arg= grt.classes.app_PluginObjectInput()
     arg.name= ""
-    arg.objectStructName= "workbench.physical.Diagram"
+    arg.objectStructName= "studio.physical.Diagram"
     return arg
 
   # SQL Editor

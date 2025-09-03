@@ -246,7 +246,7 @@ static void text_changed(int line, int linesAdded, void *editor_)
                                              object: nsviewForView(mforms_editor)];
 
 
-  std::string font = grt::StringRef::cast_from(bec::GRTManager::get()->get_app_option("workbench.general.Editor:Font"));
+  std::string font = grt::StringRef::cast_from(bec::GRTManager::get()->get_app_option("studio.general.Editor:Font"));
   mforms_editor->set_font(font); 
 
   mforms_editor->signal_changed()->connect(std::bind(text_changed, std::placeholders::_1, std::placeholders::_2, (__bridge void *)self));

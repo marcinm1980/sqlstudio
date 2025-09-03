@@ -35,12 +35,12 @@ import mforms
 from mforms import Utilities, Form, newBox, newLabel, newTextBox, newButton, App
 from wb_common import OperationCancelledError, InvalidPasswordError, PermissionDeniedError, splitpath, Users
 
-from workbench.log import log_info, log_debug, log_debug2, log_debug3
+from studio.log import log_info, log_debug, log_debug2, log_debug3
 
 
 from wb_server_control import ServerProfile
 
-from workbench.utils import server_version_str2tuple
+from studio.utils import server_version_str2tuple
 import functools
 
 pysource = {}
@@ -1147,7 +1147,7 @@ class WbAdminConfigFileBE(object):
                     print("Can't add option")
 
         tempdir = tempfile.gettempdir()
-        self.temp_file_name = os.path.join(tempdir, "mysql_workbench_config.temp")
+        self.temp_file_name = os.path.join(tempdir, "mysql_studio_config.temp")
         outf = open(self.temp_file_name, "w")
         eol = "\n"
 

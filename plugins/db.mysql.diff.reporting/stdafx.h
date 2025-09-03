@@ -42,6 +42,6 @@
 
 #include "grts/structs.model.h"
 #include "grts/structs.db.query.h"
-#include "grts/structs.workbench.physical.h"
-#include "grts/structs.workbench.logical.h"
+#include "grts/structs.studio.physical.h"
+#include "grts/structs.studio.logical.h"
 #include "grts/structs.db.migration.h"

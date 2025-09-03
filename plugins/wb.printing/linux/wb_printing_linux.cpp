@@ -31,7 +31,7 @@
 #include "wb_printing.h"
 #include "mdc_canvas_view_printing.h"
 #include "wbcanvas/model_diagram_impl.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "gtk_helpers.h"
 #include <stdio.h>
 #include <gtk/gtk.h>
@@ -181,7 +181,7 @@ namespace linux_printing {
 
   //------------------------------------------------------------------------------
   void WBPrintOperation::on_begin_print(const Glib::RefPtr<Gtk::PrintContext> &ctx) {
-    app_PageSettingsRef pageSettings(workbench_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());
+    app_PageSettingsRef pageSettings(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());
     app_PaperTypeRef paperType(pageSettings->paperType());
 
     update_gtk_page_setup_from_grt(_page_setup, pageSettings, true);
@@ -325,7 +325,7 @@ GUIPluginBase *createPrintPreviewDialog(grt::Module *m, const grt::BaseListRef &
 //------------------------------------------------------------------------------
 extern "C" {
 GUIPluginBase *createPrintSetupDialog(grt::Module *m, const grt::BaseListRef &args) {
-  workbench_DocumentRef doc(workbench_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc")));
+  studio_DocumentRef doc(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc")));
   if (doc.is_valid()) {
     linux_printing::WBPageSetup ps(doc->pageSettings());
 

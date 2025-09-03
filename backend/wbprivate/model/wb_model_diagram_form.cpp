@@ -23,7 +23,7 @@
  */
 
 #include "wb_model_diagram_form.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "wb_component.h"
 #include "wb_component_basic.h"
 #include "canvas_floater.h"
@@ -41,7 +41,7 @@
 #include "wbcanvas/model_diagram_impl.h"
 #include "wbcanvas/model_connection_impl.h"
 
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_context_ui.h"
 
 #include "wb_physical_model_diagram_features.h"
 #include "base/string_utilities.h"
@@ -276,7 +276,7 @@ mforms::MenuBar *ModelDiagramForm::get_menubar() {
 //----------------------------------------------------------------------------------------------------------------------
 
 void ModelDiagramForm::revalidate_menu() {
-  static const char *figure_notations[] = {"workbench/default", "workbench/simple", "workbench/pkonly",
+  static const char *figure_notations[] = {"studio/default", "studio/simple", "studio/pkonly",
                                            "classic",           "idef1x",           NULL};
   static const char *relationship_notations[] = {"crowsfoot", "classic", "fromcolumn", "uml", "idef1x", NULL};
   if (_menu) {
@@ -292,12 +292,12 @@ void ModelDiagramForm::revalidate_menu() {
     _menu->set_item_checked("wb.edit.toggleGrid", get_diagram_options().get_int("ShowGrid", 1) != 0);
     _menu->set_item_checked("wb.edit.togglePageGrid", get_diagram_options().get_int("ShowPageGrid", 1) != 0);
     _menu->set_item_checked("wb.edit.toggleFKHighlight", get_diagram_options().get_int("ShowFKHighlight", 0) != 0);
-    std::string notation = workbench_physical_ModelRef::cast_from(get_model_diagram()->owner())->figureNotation();
+    std::string notation = studio_physical_ModelRef::cast_from(get_model_diagram()->owner())->figureNotation();
     for (int i = 0; figure_notations[i]; i++)
       _menu->set_item_checked(strfmt("wb.view.setFigureNotation:%s", figure_notations[i]),
                               notation == figure_notations[i]);
 
-    notation = workbench_physical_ModelRef::cast_from(get_model_diagram()->owner())->connectionNotation();
+    notation = studio_physical_ModelRef::cast_from(get_model_diagram()->owner())->connectionNotation();
     for (int i = 0; relationship_notations[i]; i++)
       _menu->set_item_checked(strfmt("wb.view.setRelationshipNotation:%s", relationship_notations[i]),
                               notation == relationship_notations[i]);

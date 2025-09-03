@@ -28,7 +28,7 @@
 #include "base/ui_form.h"
 #include "base/notifications.h"
 
-#include "workbench/wb_command_ui.h"
+#include "studio/wb_command_ui.h"
 #include "grt/icon_manager.h"
 #include "mini_view.h"
 

@@ -24,10 +24,10 @@
 
 #include "base/config_file.h"
 
-#include "workbench/wb_overview.h"
-#include "grts/structs.workbench.h"
-#include "grts/structs.workbench.logical.h"
-#include "grts/structs.workbench.physical.h"
+#include "studio/wb_overview.h"
+#include "grts/structs.studio.h"
+#include "grts/structs.studio.logical.h"
+#include "grts/structs.studio.physical.h"
 
 #include "casmine.h"
 

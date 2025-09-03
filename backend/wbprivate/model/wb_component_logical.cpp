@@ -24,7 +24,7 @@
 
 #include "wb_component_logical.h"
 
-#include "grts/structs.workbench.logical.h"
+#include "grts/structs.studio.logical.h"
 
 using namespace wb;
 using namespace grt;
@@ -32,9 +32,9 @@ using namespace grt;
 WBComponentLogical::WBComponentLogical(WBContext *wb) : WBComponent(wb) {
 }
 
-void WBComponentLogical::setup_logical_model(workbench_DocumentRef &doc) {
+void WBComponentLogical::setup_logical_model(studio_DocumentRef &doc) {
   // init logical model
-  workbench_logical_ModelRef lmodel(grt::Initialized);
+  studio_logical_ModelRef lmodel(grt::Initialized);
   lmodel->owner(doc);
 
   doc->logicalModel(lmodel);

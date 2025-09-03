@@ -24,7 +24,7 @@
 
 #include "wb_overview_physical_schema.h"
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "wb_component_physical.h"
 
 #include "grt/icon_manager.h"

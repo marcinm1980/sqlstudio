@@ -25,7 +25,7 @@
 #ifndef _DB_SQL_EDITOR_SNIPPETSBE_H_
 #define _DB_SQL_EDITOR_SNIPPETSBE_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "base/ui_form.h"
 #include "grt/tree_model.h"
 

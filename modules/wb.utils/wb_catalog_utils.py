@@ -77,7 +77,7 @@ def generateName(name_prefix, names_map):
          name_suffix = name_suffix + 1
          
 @ModuleInfo.plugin('wb.util.obfuscateCatalog', caption='Obfuscate Object Names in Catalog', input= [wbinputs.currentModel()], groups= ['Catalog/Utilities', 'Menu/Utilities'], accessibilityName="Obsfuscate Object Names in Catalog")
-@ModuleInfo.export(grt.INT, grt.classes.workbench_physical_Model)
+@ModuleInfo.export(grt.INT, grt.classes.studio_physical_Model)
 def obfuscateCatalog(model):     
  
      result = mforms.Utilities.show_warning('Warning', '''This operation will change names of all schemata and tables in the model.

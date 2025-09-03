@@ -24,7 +24,7 @@ import grt
 import mforms
 import re
 
-from workbench.ui import WizardPage, WizardProgressPage, DatabaseSchemaSelector
+from studio.ui import WizardPage, WizardProgressPage, DatabaseSchemaSelector
 
 class SchemaMainView(WizardPage):
 

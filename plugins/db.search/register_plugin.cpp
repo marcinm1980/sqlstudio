@@ -27,7 +27,7 @@
 #include "grtpp_notifications.h"
 
 #include "grts/structs.db.mgmt.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "DbSearchFilterPanel.h"
 #include "DbSearchPanel.h"
 #include "interfaces/plugin.h"

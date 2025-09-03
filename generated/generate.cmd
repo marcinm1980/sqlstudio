@@ -38,11 +38,11 @@ echo Generating new wrappers...
 ..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.db.sybase.xml ../res/grt/ grts ../backend/wbpublic/objimpl/db.sybase
 ..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.eer.xml ../res/grt/ grts ../backend/wbpublic/objimpl/eer
 ..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.model.xml ../res/grt/ grts ../backend/wbpublic/objimpl/model
-..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.workbench.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench
-..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.workbench.logical.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench.logical
-..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.workbench.model.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench.model
-..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.workbench.physical.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench.physical
-..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.workbench.model.reporting.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench.model.reporting
+..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.studio.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio
+..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.studio.logical.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio.logical
+..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.studio.model.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio.model
+..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.studio.physical.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio.physical
+..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.studio.model.reporting.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio.model.reporting
 ..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.ui.xml ../res/grt/ grts ../backend/wbpublic/objimpl/ui
 ..\tools\bin\x64\Debug\genobj.exe ../res/grt/structs.wrapper.xml ../res/grt/ grts ../backend/wbpublic/objimpl/wrapper
 

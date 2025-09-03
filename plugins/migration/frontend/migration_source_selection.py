@@ -26,10 +26,10 @@ import migration
 import re
 
 from grt import DBLoginError
-from workbench.ui import WizardPage, WizardProgressPage
-from workbench.utils import replace_string_parameters
-from workbench.db_driver import get_connection_parameters, get_odbc_connection_string, is_odbc_connection
-from workbench.log import log_error
+from studio.ui import WizardPage, WizardProgressPage
+from studio.utils import replace_string_parameters
+from studio.db_driver import get_connection_parameters, get_odbc_connection_string, is_odbc_connection
+from studio.log import log_error
 
 def ping_host(hostname):
     import sys

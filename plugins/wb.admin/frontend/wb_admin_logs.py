@@ -179,9 +179,9 @@ from wb_log_reader import GeneralQueryLogReader, SlowQueryLogReader, GeneralLogF
 import wb_admin_config_file_be
 
 from wb_common import LogFileAccessError, ServerIOError, OperationCancelledError, InvalidPasswordError, log_error_decorator, to_unicode
-from workbench.utils import WorkerThreadHelper
+from studio.utils import WorkerThreadHelper
 
-from workbench.log import log_error, log_debug
+from studio.log import log_error, log_debug
 
 from wb_admin_utils import WbAdminTabBase, WbAdminValidationConfigFile, WbAdminValidationConnection, WbAdminValidationBase, WbAdminValidationRemoteAccess
 

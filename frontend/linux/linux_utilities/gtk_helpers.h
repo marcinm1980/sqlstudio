@@ -90,7 +90,7 @@ void set_glib_double(Glib::ValueBase &value, const double d);
 void fill_combo_from_string_list(Gtk::ComboBox *combo, const std::vector<std::string> &list);
 void fill_combo_from_string_list(Gtk::ComboBoxText *combo, const std::vector<std::string> &list);
 
-//! get_mainwindow is declared here as extern while it is implemented in frontend/linux/workbench/Program.cpp
+//! get_mainwindow is declared here as extern while it is implemented in frontend/linux/studio/Program.cpp
 //! and frontend/linux/shell/shell.cpp. get_mainwindow is needed by some functions/methods to
 //! set dialog transient. Returns ptr to Gtk::Window
 extern void *get_mainwindow_impl();

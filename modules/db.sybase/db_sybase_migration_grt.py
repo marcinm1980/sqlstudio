@@ -26,7 +26,7 @@ from wb import DefineModule
 import grt
 
 from db_generic_migration_grt import GenericMigration
-from workbench.utils import find_object_with_name
+from studio.utils import find_object_with_name
 
 ModuleInfo = DefineModule(name= "DbSybaseMigration", author= "Oracle Corp.", version="1.0")
 

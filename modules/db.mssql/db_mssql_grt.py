@@ -24,8 +24,8 @@ from wb import DefineModule
 
 import grt
 
-from workbench import db_driver
-from workbench.exceptions import NotConnectedError
+from studio import db_driver
+from studio.exceptions import NotConnectedError
 
 
 ModuleInfo = DefineModule(name= "DbMssqlRE", author= "Oracle Corp.", version="1.0")

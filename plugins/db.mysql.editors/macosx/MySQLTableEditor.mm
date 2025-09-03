@@ -55,7 +55,7 @@
 #include <mforms/view.h>
 
 static NSString* shouldRaiseException = @"should raise exception";
-static NSString* columnDragUTI = @"com.mysql.workbench.column";
+static NSString* columnDragUTI = @"com.mysql.studio.column";
 
 extern const char* DEFAULT_CHARSET_CAPTION;
 extern const char* DEFAULT_COLLATION_CAPTION;

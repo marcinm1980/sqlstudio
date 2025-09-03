@@ -26,8 +26,8 @@ import os.path
 from db_generic_re_grt import GenericReverseEngineering
 
 from wb import DefineModule
-from workbench.utils import server_version_str2tuple
-from workbench.exceptions import NotConnectedError
+from studio.utils import server_version_str2tuple
+from studio.exceptions import NotConnectedError
 
 import grt
 

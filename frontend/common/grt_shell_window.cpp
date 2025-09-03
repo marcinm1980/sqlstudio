@@ -37,7 +37,7 @@ DEFAULT_LOG_DOMAIN("grtshell")
 #include "grt_code_editor.h"
 #include "grt_plugin_wizard.h"
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "mforms/app.h"
 #include "mforms/imagebox.h"
 
@@ -1329,10 +1329,10 @@ void GRTShellWindow::load_state() {
   _classes_splitter.set_divider_position(_context->read_state("classes-splitter", "scripting-shell", 400));
   _snippet_splitter.set_divider_position(_context->read_state("snippets-splitter", "scripting-shell", 400));
 
-  _shell_text.set_font(bec::GRTManager::get()->get_app_option_string("workbench.scripting.ScriptingShell:Font"));
-  _snippet_text.set_font(bec::GRTManager::get()->get_app_option_string("workbench.scripting.ScriptingEditor:Font"));
+  _shell_text.set_font(bec::GRTManager::get()->get_app_option_string("studio.scripting.ScriptingShell:Font"));
+  _snippet_text.set_font(bec::GRTManager::get()->get_app_option_string("studio.scripting.ScriptingEditor:Font"));
   for (std::vector<GRTCodeEditor *>::iterator editor = _editors.begin(); editor != _editors.end(); editor++)
-    (*editor)->set_font(bec::GRTManager::get()->get_app_option_string("workbench.scripting.ScriptingEditor:Font"));
+    (*editor)->set_font(bec::GRTManager::get()->get_app_option_string("studio.scripting.ScriptingEditor:Font"));
 
   _lower_tab_height = _context->read_state("editor-splitter", "scripting-shell", 400);
   on_tab_changed();

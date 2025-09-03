@@ -36,7 +36,7 @@
 #include "base/string_utilities.h"
 #include "mforms/fs_object_selector.h"
 #include "mforms/app.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grtdb/db_object_helpers.h"
 
 using namespace grtui;
@@ -297,7 +297,7 @@ protected:
 
     db_CatalogRef catalog(_export_be->get_catalog());
     if (catalog.is_valid() && catalog->owner().is_valid() && catalog->owner()->owner().is_valid()) {
-      workbench_DocumentRef doc(workbench_DocumentRef::cast_from(catalog->owner()->owner()));
+      studio_DocumentRef doc(studio_DocumentRef::cast_from(catalog->owner()->owner()));
       std::string description = doc->info()->description();
 
       base::replaceStringInplace(description, "\n", "\n-- ");
@@ -336,7 +336,7 @@ protected:
     // take target version from the version in the model
 
     _export_be->set_db_options_for_version(
-        GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(_export_be->get_catalog()->owner()), "CatalogVersion")));
+        GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(_export_be->get_catalog()->owner()), "CatalogVersion")));
 
     return true;
   }

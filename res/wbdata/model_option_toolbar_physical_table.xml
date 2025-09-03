@@ -15,7 +15,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.table.template">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.table</link>
         <value type="string" key="name">physical/table/template</value>
-        <value type="string" key="command">option:workbench.physical.TableFigure:Template</value>
+        <value type="string" key="command">option:studio.physical.TableFigure:Template</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Templates</value>
       </value>
@@ -37,7 +37,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.table.schema">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.table</link>
         <value type="string" key="name">physical/table/schema</value>
-        <value type="string" key="command">option:workbench.physical.TableFigure:Schema</value>
+        <value type="string" key="command">option:studio.physical.TableFigure:Schema</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Schemas</value>
       </value>
@@ -58,7 +58,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.table.engine">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.table</link>
         <value type="string" key="name">physical/table/engine</value>
-        <value type="string" key="command">option:workbench.physical.TableFigure:Engine</value>
+        <value type="string" key="command">option:studio.physical.TableFigure:Engine</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Engines</value>
       </value>
@@ -79,7 +79,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.table.collation">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.table</link>
         <value type="string" key="name">physical/table/collation</value>
-        <value type="string" key="command">option:workbench.physical.TableFigure:Collation</value>
+        <value type="string" key="command">option:studio.physical.TableFigure:Collation</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Collations</value>
       </value>
@@ -93,7 +93,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.table.color">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.table</link>
         <value type="string" key="name">physical/table/color</value>
-        <value type="string" key="command">option:workbench.physical.TableFigure:Color</value>
+        <value type="string" key="command">option:studio.physical.TableFigure:Color</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Colors</value>
       </value>

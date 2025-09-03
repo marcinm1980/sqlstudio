@@ -11,11 +11,11 @@ set(DATA_FILES
     structs.eer.xml
     structs.model.xml
     structs.meta.xml
-    structs.workbench.logical.xml
-    structs.workbench.model.reporting.xml
-    structs.workbench.model.xml
-    structs.workbench.physical.xml
-    structs.workbench.xml
+    structs.studio.logical.xml
+    structs.studio.model.reporting.xml
+    structs.studio.model.xml
+    structs.studio.physical.xml
+    structs.studio.xml
     structs.xml
     structs.ui.xml
     structs.wrapper.xml

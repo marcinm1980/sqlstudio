@@ -36,14 +36,14 @@ import wba_ssh_ui
 import wb_admin_control
 from wb_server_control import PasswordHandler
 from wb_server_control import ServerProfile
-from workbench.db_utils import MySQLConnection, MySQLError, escape_sql_string
+from studio.db_utils import MySQLConnection, MySQLError, escape_sql_string
 from wb_common import OperationCancelledError, InvalidPasswordError, NoDriverInConnection
 
-from workbench.utils import Version
-from workbench.notifications import NotificationCenter
+from studio.utils import Version
+from studio.notifications import NotificationCenter
 
 
-from workbench.log import log_info, log_warning, log_error, log_debug, log_debug2
+from studio.log import log_info, log_warning, log_error, log_debug, log_debug2
 
 
 # How the Administrator Module Works

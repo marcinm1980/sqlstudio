@@ -36,8 +36,8 @@
 namespace mforms {
 
   // Predefined drag formats used during a drag session. Custom definitions are possible too.
-  const std::string DragFormatText = "com.mysql.workbench.text";     // UTF-8 encoded text.
-  const std::string DragFormatFileName = "com.mysql.workbench.file"; // A plain file name (UTF-8 encoded).
+  const std::string DragFormatText = "com.mysql.studio.text";     // UTF-8 encoded text.
+  const std::string DragFormatFileName = "com.mysql.studio.file"; // A plain file name (UTF-8 encoded).
 
   class View;
 

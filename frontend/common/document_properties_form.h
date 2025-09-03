@@ -25,7 +25,7 @@
 #ifndef _DOCUMENT_PROPERTIES_FORM_H_
 #define _DOCUMENT_PROPERTIES_FORM_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "mforms/textentry.h"
 #include "mforms/textbox.h"

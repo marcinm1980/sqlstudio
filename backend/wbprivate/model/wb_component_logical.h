@@ -27,8 +27,8 @@
 #define _WB_COMPONENT_LOGICAL_H_
 
 #include "wb_component.h"
-#include "grts/structs.workbench.h"
-#include "grts/structs.workbench.logical.h"
+#include "grts/structs.studio.h"
+#include "grts/structs.studio.logical.h"
 
 namespace wb {
 
@@ -44,10 +44,10 @@ namespace wb {
       return WBComponentLogical::name();
     }
     virtual std::string get_diagram_class_name() {
-      return workbench_logical_Diagram::static_class_name();
+      return studio_logical_Diagram::static_class_name();
     }
 
-    void setup_logical_model(workbench_DocumentRef &doc);
+    void setup_logical_model(studio_DocumentRef &doc);
 
     virtual void activate_canvas_object(const model_ObjectRef &object, bool newwindow) {
     }

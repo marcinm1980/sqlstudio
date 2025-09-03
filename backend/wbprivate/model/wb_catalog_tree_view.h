@@ -25,7 +25,7 @@
 #ifndef _WB_CATALOG_TREE_VIEW_H_
 #define _WB_CATALOG_TREE_VIEW_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "mforms/treeview.h"
 #include "grtpp_value.h"

@@ -55,11 +55,11 @@
 #include "base/scope_exit_trigger.h"
 #include "base/threading.h"
 
-#include "workbench/wb_command_ui.h"
-#include "workbench/wb_context_names.h"
-#include "workbench/SSHSessionWrapper.h"
-#include "workbench/wb_context_ui.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_command_ui.h"
+#include "studio/wb_context_names.h"
+#include "studio/SSHSessionWrapper.h"
+#include "studio/wb_context_ui.h"
+#include "studio/wb_context.h"
 
 #include <mysql_connection.h>
 
@@ -585,7 +585,7 @@ grt::StringRef SqlEditorForm::do_disconnect() {
 //----------------------------------------------------------------------------------------------------------------------
 
 void SqlEditorForm::close() {
-  grt::ValueRef option(bec::GRTManager::get()->get_app_option("workbench:SaveSQLWorkspaceOnClose"));
+  grt::ValueRef option(bec::GRTManager::get()->get_app_option("studio:SaveSQLWorkspaceOnClose"));
 
   if (option.is_valid() && *grt::IntegerRef::cast_from(option)) {
     bec::GRTManager::get()->replace_status_text("Saving workspace state...");
@@ -3185,7 +3185,7 @@ bool SqlEditorForm::can_close_(bool interactive) {
 
   // if Save of workspace on close is enabled, we don't need to check whether there are unsaved
   // SQL editors but other stuff should be checked.
-  grt::ValueRef option(bec::GRTManager::get()->get_app_option("workbench:SaveSQLWorkspaceOnClose"));
+  grt::ValueRef option(bec::GRTManager::get()->get_app_option("studio:SaveSQLWorkspaceOnClose"));
   if (option.is_valid() && *grt::IntegerRef::cast_from(option)) {
     save_workspace_on_close = true;
     check_scratch_editors = false;

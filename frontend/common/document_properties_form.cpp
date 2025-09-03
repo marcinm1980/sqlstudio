@@ -34,7 +34,7 @@
 
 #include "grt/editor_base.h"
 
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_context_ui.h"
 
 #include "document_properties_form.h"
 

@@ -35,7 +35,7 @@ NoteEditorWrapper::NoteEditorWrapper(NoteEditorBE *inn) : BaseEditorWrapper(inn)
 
 NoteEditorWrapper::NoteEditorWrapper(MySQL::Grt::GrtValue ^ arglist)
   : BaseEditorWrapper(new ::NoteEditorBE(
-      workbench_model_NoteFigureRef::cast_from(grt::BaseListRef::cast_from(arglist->get_unmanaged_object()).get(0)))) {
+      studio_model_NoteFigureRef::cast_from(grt::BaseListRef::cast_from(arglist->get_unmanaged_object()).get(0)))) {
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -30,7 +30,7 @@
 #include "grtui/db_conn_be.h"
 #include "grt/grt_manager.h"
 #include "grt/grt_string_list_model.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grtdb/diff_dbobjectmatch.h"
 
 class Db_plugin;
@@ -94,7 +94,7 @@ protected:
     }
   };
 
-  workbench_DocumentRef _doc;
+  studio_DocumentRef _doc;
   DbConnection *_db_conn;
   db_CatalogRef _catalog;
 

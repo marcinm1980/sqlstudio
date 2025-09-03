@@ -24,14 +24,14 @@ from wb import DefineModule
 import grt
 import mforms
 
-from workbench.log import log_warning, log_error
-from workbench.utils import Version
-from workbench.graphics.cairo_utils import Context
+from studio.log import log_warning, log_error
+from studio.utils import Version
+from studio.graphics.cairo_utils import Context
 from explain_renderer import ExplainContext, decode_json
 
 from mforms import Color, ControlBackgroundColor, TextColor, TextBackgroundColor
 
-from workbench.notifications import nc
+from studio.notifications import nc
 
 ModuleInfo = DefineModule(name= "SQLIDEQueryAnalysis", author= "Oracle Corp.", version= "1.0")
 

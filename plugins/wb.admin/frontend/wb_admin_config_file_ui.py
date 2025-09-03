@@ -32,7 +32,7 @@ import wb_admin_config_file_be
 from wb_common import dprint_ex, debug_level, PermissionDeniedError, InvalidPasswordError, OperationCancelledError, Users
 from wb_admin_config_file_be import multi_separator
 
-from workbench.utils import server_os_path
+from studio.utils import server_os_path
 
 from wb_admin_utils import WbAdminTabBase, WbAdminValidationConfigFile, WbAdminValidationConnection, WbAdminValidationBase, WbAdminValidationRemoteAccess
 

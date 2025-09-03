@@ -46,13 +46,13 @@ def reset_sudo_prefix():
 reset_sudo_prefix()
 
 from mforms import App
-from workbench.utils import QueueFileMP
+from studio.utils import QueueFileMP
 from wb_common import InvalidPasswordError, PermissionDeniedError, Users, sanitize_sudo_output, splitpath, to_unicode
 from wb_common import CmdOptions, CmdOutput
-from workbench.log import log_info, log_warning, log_error, log_debug, log_debug2, log_debug3
+from studio.log import log_info, log_warning, log_error, log_debug, log_debug2, log_debug3
 
-from workbench.tcp_utils import CustomCommandListener
-from workbench.os_utils import FileUtils, OSUtils, FunctionType
+from studio.tcp_utils import CustomCommandListener
+from studio.os_utils import FileUtils, OSUtils, FunctionType
 
 def handle_ssh_command_output(return_value, merge_output = False):
     if return_value['stderr']:
@@ -1798,7 +1798,7 @@ class FileOpsRemoteWindows(object):
             if not tmpdir:
                 tmpdir = dirname
 
-            tmpfilename = tmpdir + r"\workbench-temp-file.ini"
+            tmpfilename = tmpdir + r"\studio-temp-file.ini"
 
             log_debug('%s: Remotely writing contents to temporary file "%s"\n' % (self.__class__.__name__, tmpfilename) )
             log_debug3('%s: %s\n' % (self.__class__.__name__, content) )

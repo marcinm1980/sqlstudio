@@ -18,7 +18,7 @@ files_to_keep = ('sys_reports.js')
 
 PROJECT_DIR = os.getcwd() + "/"
 SCRIPT_DEPLOYMENT_DIR = PROJECT_DIR + "res/scripts/sys/"
-MSI_FRAGMENT_FILE = PROJECT_DIR + "build/msi/source/mysql_workbench_fragment.xml"
+MSI_FRAGMENT_FILE = PROJECT_DIR + "build/msi/source/mysql_studio_fragment.xml"
 CMAKE_FILE = PROJECT_DIR + "res/scripts/CMakeLists.txt"
 
 clone_repo = False

@@ -464,7 +464,7 @@ $describe("Data type parsing") {
       }
 
       catalog->version(version);
-      auto model = workbench_physical_ModelRef::cast_from(catalog->owner());
+      auto model = studio_physical_ModelRef::cast_from(catalog->owner());
       model->options().set("useglobal", grt::IntegerRef(0));
 
       // The parameter format type tells us which combination is valid.

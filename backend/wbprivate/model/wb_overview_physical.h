@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "workbench/wb_overview.h"
+#include "studio/wb_overview.h"
 
 #include "base/notifications.h"
 
@@ -42,14 +42,14 @@ namespace wb {
     class PhysicalSchemataNode : public OverviewBE::ContainerNode {
       virtual OverviewBE::Node *create_child_node(db_SchemaRef schema);
 
-      workbench_physical_ModelRef model;
+      studio_physical_ModelRef model;
 
       virtual bool add_object(WBContext *wb);
       virtual void delete_object(WBContext *wb);
       virtual void refresh_children();
 
     public:
-      PhysicalSchemataNode(workbench_physical_ModelRef model);
+      PhysicalSchemataNode(studio_physical_ModelRef model);
       virtual void init();
     };
 
@@ -57,12 +57,12 @@ namespace wb {
     private:
       PhysicalOverviewBE *_owner;
       std::string id;
-      workbench_physical_ModelRef _model;
+      studio_physical_ModelRef _model;
 
       bool add_new(WBContext *wb);
 
     public:
-      SQLScriptsNode(workbench_physical_ModelRef model, PhysicalOverviewBE *owner);
+      SQLScriptsNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner);
 
       virtual void refresh_children();
 
@@ -76,12 +76,12 @@ namespace wb {
     private:
       PhysicalOverviewBE *_owner;
       std::string id;
-      workbench_physical_ModelRef _model;
+      studio_physical_ModelRef _model;
 
       bool add_new(WBContext *wb);
 
     public:
-      NotesNode(workbench_physical_ModelRef model, PhysicalOverviewBE *owner);
+      NotesNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner);
 
       virtual void refresh_children();
 
@@ -121,9 +121,9 @@ namespace wb {
   // Nodes marked <RefreshChildren> must have their contents refreshable when
   // Refresh message is received by the frontend. Arguments are paths.
   class MYSQLWBBACKEND_PUBLIC_FUNC PhysicalOverviewBE : public OverviewBE, public base::Observer {
-    workbench_physical_ModelRef _model;
+    studio_physical_ModelRef _model;
 
-    virtual OverviewBE::ContainerNode *create_root_node(workbench_physical_ModelRef model, PhysicalOverviewBE *owner);
+    virtual OverviewBE::ContainerNode *create_root_node(studio_physical_ModelRef model, PhysicalOverviewBE *owner);
 
   protected:
     mforms::MenuBar *_menu;
@@ -148,7 +148,7 @@ namespace wb {
     void send_refresh_for_schema(const db_SchemaRef &schema, bool refresh_object_itself);
     void send_refresh_for_schema_object(const GrtObjectRef &object, bool refresh_object_itself);
 
-    void set_model(workbench_physical_ModelRef model);
+    void set_model(studio_physical_ModelRef model);
 
     virtual mforms::ToolBar *get_toolbar();
     virtual mforms::MenuBar *get_menubar();

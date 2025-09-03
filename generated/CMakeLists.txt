@@ -10,13 +10,13 @@ set(SOURCES_TO_GENERATE
     grts/structs.db.ng.h
     grts/structs.db.h
     grts/structs.eer.h
-    grts/structs.workbench.h
+    grts/structs.studio.h
     grts/structs.meta.h
     grts/structs.model.h
-    grts/structs.workbench.model.h
-    grts/structs.workbench.model.reporting.h
-    grts/structs.workbench.logical.h
-    grts/structs.workbench.physical.h
+    grts/structs.studio.model.h
+    grts/structs.studio.model.reporting.h
+    grts/structs.studio.logical.h
+    grts/structs.studio.physical.h
     grts/structs.h
     grts/structs.ui.h
     grts/structs.wrapper.h

@@ -227,7 +227,7 @@ MySQLEditor::MySQLEditor(MySQLParserContext::Ref syntax_check_context, MySQLPars
   d = new Private(syntax_check_context, autocompleteContext);
 
   d->codeEditor = new mforms::CodeEditor(this);
-  d->codeEditor->set_font(bec::GRTManager::get()->get_app_option_string("workbench.general.Editor:Font"));
+  d->codeEditor->set_font(bec::GRTManager::get()->get_app_option_string("studio.general.Editor:Font"));
   d->codeEditor->set_features(mforms::FeatureUsePopup, false);
   d->codeEditor->set_features(mforms::FeatureConvertEolOnPaste | mforms::FeatureAutoIndent, true);
   d->codeEditor->set_name("Code Editor");

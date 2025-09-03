@@ -66,10 +66,10 @@ Params.inc
 build-stamp
 configure-stamp
 MySQLMySqlStudio.desktop
-build/mysql-workbench.spec
-debian/mysql-workbench
+build/mysql-studio.spec
+debian/mysql-studio
 frontend/linux/shell/grtshell
-frontend/linux/workbench/mysql-workbench-bin
+frontend/linux/studio/mysql-studio-bin
 template_dictionary_nothreads_unittest
 template_dictionary_unittest
 template_modifiers_nothreads_unittest
@@ -90,9 +90,9 @@ template_test_util_nothreads_test
 template_test_util_test
 output/*
 ../../../debian/files
-../../../debian/mysql-workbench.substvars
+../../../debian/mysql-studio.substvars
 files
-mysql-workbench.substvars
+mysql-studio.substvars
 *.pbxuser
 *.mode2v3
 ext/scintilla/cocoa/ScintillaTest/build
@@ -103,7 +103,7 @@ ext/scintilla/cocoa/ScintillaFramework/build
 mergechset
 plugins/wb.admin/.project
 plugins/wb.admin/.pydevproject
-build/mysqlworkbench-template.dmg
+build/mysqlstudio-template.dmg
 *.wb50.mwb
 CodeAnalyst
 *.aps

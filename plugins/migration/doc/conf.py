@@ -241,6 +241,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'mysqlworkbenchmigrationtool', 'MySql Studio Migration Tool Documentation',
+    ('index', 'mysqlstudiomigrationtool', 'MySql Studio Migration Tool Documentation',
      ['Oracle MySQL Developer Tools Team'], 1)
 ]

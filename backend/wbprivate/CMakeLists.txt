@@ -37,23 +37,23 @@ add_library(wbprivate
     sqlide/query_side_palette.cpp
     sqlide/spatial_data_view.cpp
     sqlide/spatial_draw_box.cpp
-    workbench/metaclasses.cpp
-    workbench/upgrade_helper.cpp
-    workbench/wb_command_ui.cpp
-    workbench/wb_context_ui.cpp
-    workbench/wb_context_ui_home.cpp
-    workbench/wb_context.cpp
-    workbench/wb_model_file.cpp
-    workbench/wb_model_file_upgrade.cpp
-    workbench/wb_module.cpp
-    workbench/wb_tunnel.cpp
-    workbench/wb_overview.cpp
-    workbench/wb_tunnel.cpp
-    workbench/wb_db_schema.cpp
-    workbench/about_box.cpp
-    workbench/SSHSessionWrapper.cpp
-    workbench/SSHFileWrapper.cpp
-    workbench/license_view.cpp
+    studio/metaclasses.cpp
+    studio/upgrade_helper.cpp
+    studio/wb_command_ui.cpp
+    studio/wb_context_ui.cpp
+    studio/wb_context_ui_home.cpp
+    studio/wb_context.cpp
+    studio/wb_model_file.cpp
+    studio/wb_model_file_upgrade.cpp
+    studio/wb_module.cpp
+    studio/wb_tunnel.cpp
+    studio/wb_overview.cpp
+    studio/wb_tunnel.cpp
+    studio/wb_db_schema.cpp
+    studio/about_box.cpp
+    studio/SSHSessionWrapper.cpp
+    studio/SSHFileWrapper.cpp
+    studio/license_view.cpp
     ${PROJECT_SOURCE_DIR}/frontend/common/new_server_instance_wizard.cpp
     ${PROJECT_SOURCE_DIR}/frontend/common/preferences_form.cpp
     ${PROJECT_SOURCE_DIR}/frontend/common/new_connection_wizard.cpp
@@ -104,7 +104,7 @@ add_library(wbprivate::wbprivate ALIAS wbprivate_Iface)
 
 target_include_directories(wbprivate_Iface INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/workbench>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/studio>
 
 )
 

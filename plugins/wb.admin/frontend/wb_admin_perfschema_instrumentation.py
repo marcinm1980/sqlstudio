@@ -22,14 +22,14 @@
 
 import grt
 import mforms
-from workbench.change_tracker import ChangeCounter
-from workbench.graphics.cairo_utils import Context
-from workbench.graphics.canvas import ImageFigure
+from studio.change_tracker import ChangeCounter
+from studio.graphics.cairo_utils import Context
+from studio.graphics.canvas import ImageFigure
 
 from wb_admin_perfschema_instrumentation_be import PSConfiguration, PSTimerType, PSObject, PSActor
 
-from workbench.log import log_info, log_error
-from workbench.notifications import nc
+from studio.log import log_info, log_error
+from studio.notifications import nc
 
 from wb_admin_perfschema import WbAdminPSBaseTab
 

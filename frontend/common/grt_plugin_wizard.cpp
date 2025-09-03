@@ -26,7 +26,7 @@
 
 #include "base/string_utilities.h"
 #include "base/file_functions.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 
 #include "mforms/radiobutton.h"
 #include "mforms/selector.h"
@@ -35,7 +35,7 @@
 #include "mforms/label.h"
 #include "mforms/tabview.h"
 #include "mforms/box.h"
-#include "workbench/wb_version.h"
+#include "studio/wb_version.h"
 
 #define PYTHON_SCRIPT_TEMPLATE              \
   "# -*- coding: utf-8 -*-\n"               \

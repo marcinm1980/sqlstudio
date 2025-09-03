@@ -1660,25 +1660,25 @@
                         <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.model.visualization.table_default">
                             <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.model.fnotation</link>
                             <value type="string" key="accessibilityName">MySqlStudio Default</value>
-                            <value type="string" key="name">figure_notation_workbench/default</value>
+                            <value type="string" key="name">figure_notation_studio/default</value>
                             <value type="string" key="caption">MySqlStudio (Default)</value>
-                            <value type="string" key="command">plugin:wb.view.setFigureNotation:workbench/default</value>
+                            <value type="string" key="command">plugin:wb.view.setFigureNotation:studio/default</value>
                             <value type="string" key="itemType">radio</value>
                         </value>
                         <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.model.visualization.table_simple">
                             <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.model.fnotation</link>
                             <value type="string" key="accessibilityName">MySqlStudio Simplified</value>
-                            <value type="string" key="name">figure_notation_workbench/simple</value>
+                            <value type="string" key="name">figure_notation_studio/simple</value>
                             <value type="string" key="caption">MySqlStudio (Simplified)</value>
-                            <value type="string" key="command">plugin:wb.view.setFigureNotation:workbench/simple</value>
+                            <value type="string" key="command">plugin:wb.view.setFigureNotation:studio/simple</value>
                             <value type="string" key="itemType">radio</value>
                         </value>
                         <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.model.visualization.table_pkonly">
                             <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.model.fnotation</link>
                             <value type="string" key="accessibilityName">MySqlStudio Primary Keys and Foreign Keys Only</value>
-                            <value type="string" key="name">figure_notation_workbench/pkonly</value>
+                            <value type="string" key="name">figure_notation_studio/pkonly</value>
                             <value type="string" key="caption">MySqlStudio (PKs and FKs Only)</value>
-                            <value type="string" key="command">plugin:wb.view.setFigureNotation:workbench/pkonly</value>
+                            <value type="string" key="command">plugin:wb.view.setFigureNotation:studio/pkonly</value>
                             <value type="string" key="itemType">radio</value>
                         </value>
                         <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.separator.model.visuwb">
@@ -2558,7 +2558,7 @@
                     <value type="string" key="platform">windows,linux</value>
                     <value type="string" key="accessibilityName">Separator</value>
                 </value>
-                <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.help.about_workbench">
+                <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.help.about_studio">
                     <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.help</link>
                     <value type="string" key="accessibilityName">About MySqlStudio</value>
                     <value type="string" key="caption">About MySqlStudio</value>

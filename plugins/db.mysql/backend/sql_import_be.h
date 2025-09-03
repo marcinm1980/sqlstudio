@@ -25,7 +25,7 @@
 #pragma once
 
 #include "grts/structs.db.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 
 #include "grt/grt_manager.h"
 #include "grtpp_undo_manager.h"
@@ -72,7 +72,7 @@ protected:
 
   grt::DictRef _options;
 
-  workbench_DocumentRef _doc;
+  studio_DocumentRef _doc;
   std::string _sqlScript;
   std::string _encoding;
   std::string _sqlMode;

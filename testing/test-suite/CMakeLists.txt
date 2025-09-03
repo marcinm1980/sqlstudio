@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.8)
 
 project(WORKBENCH_UNIT_TESTS)
 
-set(workbench_dir "${CMAKE_SOURCE_DIR}/../..") # This must come from the parent
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${workbench_dir}/build/cmake/Modules/")
+set(studio_dir "${CMAKE_SOURCE_DIR}/../..") # This must come from the parent
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${studio_dir}/build/cmake/Modules/")
 
 #if(ENABLE_COTIRE AND CMAKE_VERSION VERSION_GREATER "2.8.11")
 #  include(cotire)
@@ -15,8 +15,8 @@ if(DISABLE_SPECIAL_CHARACTERS)
   add_compile_definitions(DISABLE_SPECIAL_CHARACTERS)
 endif()
 
-set(path_to_binaries "${workbench_dir}/wb-build/usr/local")
-set(path_to_libraries "${path_to_binaries}/lib/mysql-workbench")
+set(path_to_binaries "${studio_dir}/wb-build/usr/local")
+set(path_to_libraries "${path_to_binaries}/lib/mysql-studio")
 set(path_to_modules "${path_to_libraries}/modules")
 set(path_to_plugins "${path_to_libraries}/plugins")
 
@@ -140,16 +140,16 @@ add_executable(wbtests-bin
   tests/backend/wbpublic/sqlide/recordset_specs.cpp
   tests/backend/wbpublic/sqlide/sql_editor_be_autocomplete_specs.cpp
   
-  tests/backend/wbprivate/workbench/ssh_specs.cpp
-  tests/backend/wbprivate/workbench/overview_specs.cpp
-  tests/backend/wbprivate/workbench/wb_module_specs.cpp
-  tests/backend/wbprivate/workbench/wb_undo_diagram_specs.cpp
-  tests/backend/wbprivate/workbench/wb_undo_editors_specs.cpp
-  tests/backend/wbprivate/workbench/wb_undo_others_specs.cpp
-  tests/backend/wbprivate/workbench/wb_model_file_specs.cpp
-  tests/backend/wbprivate/workbench/wb_context_specs.cpp
-  tests/backend/wbprivate/workbench/wb_copy_paste_specs.cpp
-  tests/backend/wbprivate/workbench/wb_lowlevel_specs.cpp
+  tests/backend/wbprivate/studio/ssh_specs.cpp
+  tests/backend/wbprivate/studio/overview_specs.cpp
+  tests/backend/wbprivate/studio/wb_module_specs.cpp
+  tests/backend/wbprivate/studio/wb_undo_diagram_specs.cpp
+  tests/backend/wbprivate/studio/wb_undo_editors_specs.cpp
+  tests/backend/wbprivate/studio/wb_undo_others_specs.cpp
+  tests/backend/wbprivate/studio/wb_model_file_specs.cpp
+  tests/backend/wbprivate/studio/wb_context_specs.cpp
+  tests/backend/wbprivate/studio/wb_copy_paste_specs.cpp
+  tests/backend/wbprivate/studio/wb_lowlevel_specs.cpp
   tests/backend/wbprivate/sqlide/wb_sql_editor_help_specs.cpp
   tests/backend/wbprivate/sqlide/wb_sql_editor_form_specs.cpp
   tests/backend/wbprivate/sqlide/wb_live_schema_tree_specs.cpp
@@ -180,36 +180,36 @@ target_include_directories(wbtests-bin
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/library/forms/stub
     ${PROJECT_SOURCE_DIR}/casmine
 
-    ${workbench_dir}
-    ${workbench_dir}/library
-    ${workbench_dir}/library/base
-    ${workbench_dir}/library/base/base
-    ${workbench_dir}/library/cdbc/src
-    ${workbench_dir}/library/grt/src
-    ${workbench_dir}/library/mysql.canvas/src
-    ${workbench_dir}/library/sql.parser/include
-    ${workbench_dir}/library/sql.parser/source
-    ${workbench_dir}/library/ssh
-    ${workbench_dir}/library/forms
-    ${workbench_dir}/library/parsers
+    ${studio_dir}
+    ${studio_dir}/library
+    ${studio_dir}/library/base
+    ${studio_dir}/library/base/base
+    ${studio_dir}/library/cdbc/src
+    ${studio_dir}/library/grt/src
+    ${studio_dir}/library/mysql.canvas/src
+    ${studio_dir}/library/sql.parser/include
+    ${studio_dir}/library/sql.parser/source
+    ${studio_dir}/library/ssh
+    ${studio_dir}/library/forms
+    ${studio_dir}/library/parsers
 
-    ${workbench_dir}/modules
-    ${workbench_dir}/modules/wb.model/src
-    ${workbench_dir}/modules/db.mysql.sqlparser/src
-    ${workbench_dir}/modules/db.mysql/src
+    ${studio_dir}/modules
+    ${studio_dir}/modules/wb.model/src
+    ${studio_dir}/modules/db.mysql.sqlparser/src
+    ${studio_dir}/modules/db.mysql/src
 
-    ${workbench_dir}/plugins/db.mysql
-    ${workbench_dir}/plugins/db.mysql/backend
-    ${workbench_dir}/plugins/db.mysql.editors/backend
+    ${studio_dir}/plugins/db.mysql
+    ${studio_dir}/plugins/db.mysql/backend
+    ${studio_dir}/plugins/db.mysql.editors/backend
 
-    ${workbench_dir}/backend/wbpublic
-    ${workbench_dir}/backend/wbprivate
-    ${workbench_dir}/backend/wbprivate/workbench
-    ${workbench_dir}/backend/wbprivate/model
+    ${studio_dir}/backend/wbpublic
+    ${studio_dir}/backend/wbprivate
+    ${studio_dir}/backend/wbprivate/studio
+    ${studio_dir}/backend/wbprivate/model
 
-    ${workbench_dir}/generated/
-    ${workbench_dir}/generated/grti
-    ${workbench_dir}/ext/scintilla/include/
+    ${studio_dir}/generated/
+    ${studio_dir}/generated/grti
+    ${studio_dir}/ext/scintilla/include/
     ${MySQL_INCLUDE_DIRS}
     SYSTEM ${MySQLCppConn_INCLUDE_DIRS}
   PUBLIC
@@ -231,7 +231,7 @@ target_compile_definitions(wbtests-bin
 target_link_libraries(wbtests-bin
   PUBLIC
     casmine
-#    workbenchtests
+#    studiotests
     ${path_to_libraries}/libwbbase.so
     ${path_to_libraries}/libgrt.so
     ${path_to_libraries}/libmdcanvas.so

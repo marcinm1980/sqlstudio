@@ -16,7 +16,7 @@ Contents:
    :maxdepth: 2
 
    migration_api
-   workbench_module
+   studio_module
    odbc_setup
 
 Indices and tables

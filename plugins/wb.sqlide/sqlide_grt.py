@@ -31,8 +31,8 @@ import mforms
 
 import os
 
-from workbench.log import log_error
-from workbench.notifications import NotificationCenter
+from studio.log import log_error
+from studio.notifications import NotificationCenter
 
 from sql_reformatter import formatter_for_statement_ast
 from text_output import TextOutputTab

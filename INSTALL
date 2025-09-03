@@ -32,11 +32,11 @@ To build MySql Studio on Ubuntu and other Debian based distros:
 
 - Extract the sources into a directory
 
-  $> tar xvf mysql-workbench-community-<version>-src.tar.gz
+  $> tar xvf mysql-studio-community-<version>-src.tar.gz
 
 - Go to the project and create a build directory
 
-  $> cd mysql-workbench-community-<version>-src
+  $> cd mysql-studio-community-<version>-src
   $> mkdir wb-build
   $> cd wb-build
   
@@ -86,7 +86,7 @@ To Build:
       ** lib
      * python
 - Create in system environoment variable which point to folder where 3rd party libs are located WB_3DPARTY_LIB=<libs and headers files directory>
-- Go to the mysql-workbench directory
+- Go to the mysql-studio directory
 - Open MySQLMySqlStudio.sln solution file
 - Select Release_OSS or the Debug Configuration
 - Build Project

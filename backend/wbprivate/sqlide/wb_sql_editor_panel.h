@@ -25,7 +25,7 @@
 #ifndef __MySQLMySqlStudio__wb_sql_editor_panel__
 #define __MySQLMySqlStudio__wb_sql_editor_panel__
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "mforms/appview.h"
 #include "mforms/box.h"

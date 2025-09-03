@@ -39,10 +39,10 @@ from wb_common import to_unicode
 
 from wb_server_management import local_run_cmd
 
-from workbench.db_utils import QueryError, ConnectionTunnel, escape_sql_identifier
+from studio.db_utils import QueryError, ConnectionTunnel, escape_sql_identifier
 from collections import deque
-from workbench.utils import Version
-from workbench.log import log_warning, log_error, log_debug
+from studio.utils import Version
+from studio.log import log_warning, log_error, log_debug
 
 
 from mforms import newBox, newButton, newPanel, newTextBox, newRadioButton, newLabel, newTreeView, newProgressBar, newTextEntry, newCheckBox, newScrollPanel, newTabView, newSelector

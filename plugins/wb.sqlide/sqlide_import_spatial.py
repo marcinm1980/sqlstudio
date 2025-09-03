@@ -25,8 +25,8 @@
 # import the mforms module for GUI stuff
 import mforms
 import grt
-from workbench.utils import get_exe_path
-from workbench.utils import Version
+from studio.utils import get_exe_path
+from studio.utils import Version
 
 
 import sys, os, platform, subprocess
@@ -39,7 +39,7 @@ from mforms import newButton, newCheckBox, newTreeView
 from mforms import FileChooser
 from datetime import datetime
 
-from workbench.log import log_error, log_debug, log_info
+from studio.log import log_error, log_debug, log_info
 
 def showImporter(editor, schema):
     importer = SpatialImporterWizard(editor)
@@ -255,7 +255,7 @@ class SpatialImporter:
         self.is_running = False
 
 
-from workbench.ui import WizardForm, WizardPage, WizardProgressPage
+from studio.ui import WizardForm, WizardPage, WizardProgressPage
 
 class SelectFileWizardPage(WizardPage):
     def __init__(self, owner):

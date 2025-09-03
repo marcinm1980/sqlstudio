@@ -27,7 +27,7 @@
 
 #include "grt/editor_base.h"
 
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include "mysql_support_backend_public_interface.h"
 
@@ -35,12 +35,12 @@
 
 class MYSQLWBMYSQLSUPPORTBACKEND_PUBLIC_FUNC RelationshipEditorBE : public bec::BaseEditor {
 protected:
-  workbench_physical_ConnectionRef _relationship;
+  studio_physical_ConnectionRef _relationship;
 
 public: // editor interface
   enum VisibilityType { Visible = 1, Splitted = 2, Hidden = 3 };
 
-  RelationshipEditorBE(const workbench_physical_ConnectionRef &relationship);
+  RelationshipEditorBE(const studio_physical_ConnectionRef &relationship);
   virtual bool should_close_on_delete_of(const std::string &oid);
 
   bool model_only() {
@@ -52,7 +52,7 @@ public: // editor interface
     return get_relationship();
   }
 
-  workbench_physical_ConnectionRef get_relationship() {
+  studio_physical_ConnectionRef get_relationship() {
     return _relationship;
   }
 

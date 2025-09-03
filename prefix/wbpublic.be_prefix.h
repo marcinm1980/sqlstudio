@@ -64,7 +64,7 @@
 
 #include "grts/structs.model.h"
 #include "grts/structs.db.query.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "grts/structs.db.mgmt.h"
 #include "grts/structs.db.mysql.h"
 

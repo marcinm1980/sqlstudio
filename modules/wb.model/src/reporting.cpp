@@ -26,7 +26,7 @@
 #include "reporting.h"
 
 #include "interfaces/sqlgenerator.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grtdb/db_helpers.h"
 
 #include "reporting_template_variables.h"
@@ -358,7 +358,7 @@ void WbModelImpl::initializeReporting() {
 /*
  * @brief returns the list of available template file directories
  *
- * @param model - the workbench_physical_ModelRef to process
+ * @param model - the studio_physical_ModelRef to process
  * @param templates - a GRT List the available templates will be added to
  * @return 1 on success, 0 on error
  */
@@ -404,43 +404,43 @@ ssize_t WbModelImpl::getAvailableReportingTemplates(grt::StringListRef templates
 /*
  * @brief returns the template info for the given template
  *
- * @param model - the workbench_physical_ModelRef to process
+ * @param model - the studio_physical_ModelRef to process
  * @param template_name - the name of the template
  * @return the template info object
  */
-workbench_model_reporting_TemplateInfoRef WbModelImpl::getReportingTemplateInfo(const std::string &template_name) {
+studio_model_reporting_TemplateInfoRef WbModelImpl::getReportingTemplateInfo(const std::string &template_name) {
   std::string template_dir = getTemplateDirFromName(template_name);
 
   std::string template_info_path = base::makePath(template_dir, "info.xml");
   if (g_file_test(template_info_path.c_str(), (GFileTest)(G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)))
-    return workbench_model_reporting_TemplateInfoRef::cast_from(grt::GRT::get()->unserialize(template_info_path));
+    return studio_model_reporting_TemplateInfoRef::cast_from(grt::GRT::get()->unserialize(template_info_path));
   else
-    return workbench_model_reporting_TemplateInfoRef();
+    return studio_model_reporting_TemplateInfoRef();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-workbench_model_reporting_TemplateStyleInfoRef WbModelImpl::get_template_style_from_name(std::string template_name,
+studio_model_reporting_TemplateStyleInfoRef WbModelImpl::get_template_style_from_name(std::string template_name,
   std::string template_style_name) {
   if (template_style_name == "")
-    return workbench_model_reporting_TemplateStyleInfoRef();
+    return studio_model_reporting_TemplateStyleInfoRef();
 
   std::string template_dir = getTemplateDirFromName(template_name);
 
   std::string template_info_path = base::makePath(template_dir, "info.xml");
   if (g_file_test(template_info_path.c_str(), (GFileTest)(G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR))) {
-    workbench_model_reporting_TemplateInfoRef info =
-      workbench_model_reporting_TemplateInfoRef::cast_from(grt::GRT::get()->unserialize(template_info_path));
+    studio_model_reporting_TemplateInfoRef info =
+      studio_model_reporting_TemplateInfoRef::cast_from(grt::GRT::get()->unserialize(template_info_path));
 
     for (std::size_t i = 0; i < info->styles().count(); i++) {
-      workbench_model_reporting_TemplateStyleInfoRef styleInfo = info->styles().get(i);
+      studio_model_reporting_TemplateStyleInfoRef styleInfo = info->styles().get(i);
 
       if (template_style_name == (std::string)styleInfo->name())
         return styleInfo;
     }
   }
 
-  return workbench_model_reporting_TemplateStyleInfoRef();
+  return studio_model_reporting_TemplateStyleInfoRef();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -893,13 +893,13 @@ static int count_template_files(const std::string template_dir) {
 //----------------------------------------------------------------------------------------------------------------------
 
 /**
- * @brief Generates a schema report for the model passed in workbench_physical_Model.
+ * @brief Generates a schema report for the model passed in studio_physical_Model.
  *
- * @param model - the workbench_physical_ModelRef to process
+ * @param model - the studio_physical_ModelRef to process
  * @param options - various options that customize the output, including output template, output path etc.
  * @return 1 on success, 0 on error
  */
-ssize_t WbModelImpl::generateReport(workbench_physical_ModelRef model, const grt::DictRef &options) {
+ssize_t WbModelImpl::generateReport(studio_physical_ModelRef model, const grt::DictRef &options) {
   // get pointer to the GRT
   std::string basedir = bec::GRTManager::get()->get_basedir();
   std::string template_base_dir = base::makePath(basedir, "modules/data/wb_model_reporting");
@@ -1003,7 +1003,7 @@ ssize_t WbModelImpl::generateReport(workbench_physical_ModelRef model, const grt
   std::string time = base::fmttime(0, DATETIME_FMT);
   main_dictionary->setValue(REPORT_GENERATED, time);
 
-  workbench_DocumentRef document = workbench_DocumentRef::cast_from(model->owner());
+  studio_DocumentRef document = studio_DocumentRef::cast_from(model->owner());
   main_dictionary->setValue(REPORT_PROJECT_NAME, (std::string)document->info()->project());
   main_dictionary->setValue(REPORT_PROJECT_AUTHOR, (std::string)document->info()->author());
   main_dictionary->setValue(REPORT_PROJECT_TITLE, (std::string)document->info()->caption());
@@ -1014,7 +1014,7 @@ ssize_t WbModelImpl::generateReport(workbench_physical_ModelRef model, const grt
 
   main_dictionary->dump();
 
-  workbench_model_reporting_TemplateStyleInfoRef styleInfo =
+  studio_model_reporting_TemplateStyleInfoRef styleInfo =
     get_template_style_from_name(template_name, template_style_name);
   if (styleInfo.is_valid())
     main_dictionary->setValue(REPORT_STYLE_NAME, (std::string)styleInfo->styleTagValue());

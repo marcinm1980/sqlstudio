@@ -26,7 +26,7 @@ import grt
 import mforms
 
 from grt import DBLoginError
-from workbench.ui import WizardPage
+from studio.ui import WizardPage
 
 from migration_source_selection import request_password, test_connectivity
 

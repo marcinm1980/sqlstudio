@@ -24,8 +24,8 @@ import mforms
 import grt
 import os
 
-from workbench.ui import WizardPage
-from workbench.ui import WizardProgressPage
+from studio.ui import WizardPage
+from studio.ui import WizardProgressPage
 
 
 class MainView(WizardPage):

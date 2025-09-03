@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "workbench/wb_overview.h"
+#include "studio/wb_overview.h"
 #include "GrtTemplates.h"
 #include "DelegateWrapper.h"
 

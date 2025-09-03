@@ -26,7 +26,7 @@
 
 #include "snippet_list.h"
 #include "mforms/box.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 namespace wb {
   class WBContextModel;

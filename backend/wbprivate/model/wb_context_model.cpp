@@ -30,9 +30,9 @@
 
 #include "wb_context_model.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_context_ui.h"
-#include "workbench/wb_command_ui.h"
+#include "studio/wb_context.h"
+#include "studio/wb_context_ui.h"
+#include "studio/wb_command_ui.h"
 
 #include "wb_component.h"
 #include "wb_component_basic.h"
@@ -44,13 +44,13 @@
 #include "wb_catalog_tree_view.h"
 
 #include "objimpl/wrapper/mforms_ObjectReference_impl.h"
-#include "workbench/wb_model_file.h"
+#include "studio/wb_model_file.h"
 #include "model/wb_overview_physical.h"
 #include "model/wb_user_datatypes.h"
 #include "model/wb_history_tree.h"
 #include "wbcanvas/model_diagram_impl.h"
-#include "wbcanvas/workbench_physical_model_impl.h"
-#include "workbench/wb_model_file.h"
+#include "wbcanvas/studio_physical_model_impl.h"
+#include "studio/wb_model_file.h"
 #include "grtdb/db_helpers.h"
 #include "grtdb/db_object_helpers.h"
 #include "grt/clipboard.h"
@@ -107,7 +107,7 @@ WBContextModel::WBContextModel()
 
   // Setup auto-save for model, only full seconds.
   int interval = (int)wb::WBContextUI::get()->get_wb()->get_root()->options()->options().get_int(
-    "workbench:AutoSaveModelInterval", 60);
+    "studio:AutoSaveModelInterval", 60);
   if (interval > 0)
     _auto_save_timer =
       bec::GRTManager::get()->run_every(std::bind(&WBContextModel::auto_save_document, this), interval);
@@ -202,7 +202,7 @@ mforms::TreeView *WBContextModel::create_history_tree() {
 //--------------------------------------------------------------------------------------------------
 
 void WBContextModel::option_changed(grt::internal::OwnedDict *dict, bool, const std::string &key) {
-  if (key == "workbench:AutoSaveModelInterval" &&
+  if (key == "studio:AutoSaveModelInterval" &&
       dict == wb::WBContextUI::get()->get_wb()->get_wb_options().valueptr()) {
     auto_save_document();
   }
@@ -210,11 +210,11 @@ void WBContextModel::option_changed(grt::internal::OwnedDict *dict, bool, const 
 
 bool WBContextModel::auto_save_document() {
   WBContext *wb = wb::WBContextUI::get()->get_wb();
-  ssize_t interval = wb->get_root()->options()->options().get_int("workbench:AutoSaveModelInterval", 60);
+  ssize_t interval = wb->get_root()->options()->options().get_int("studio:AutoSaveModelInterval", 60);
   if (interval <= 0)
     return false;
 
-  workbench_DocumentRef doc(wb->get_document());
+  studio_DocumentRef doc(wb->get_document());
 
   mdc::Timestamp now = mdc::get_time();
   if (now - _last_auto_save_time > interval && _file && doc.is_valid() &&
@@ -319,7 +319,7 @@ model_ModelRef WBContextModel::get_active_model(bool main_form) {
   return model_ModelRef();
 }
 
-void WBContextModel::model_created(ModelFile *file, workbench_DocumentRef doc) {
+void WBContextModel::model_created(ModelFile *file, studio_DocumentRef doc) {
   _file = file;
   _doc = doc;
 
@@ -352,7 +352,7 @@ void WBContextModel::model_created(ModelFile *file, workbench_DocumentRef doc) {
   grt::GRTNotificationCenter::get()->send_grt("GRNModelCreated", _grtmodel_panel, info);
 }
 
-void WBContextModel::model_loaded(ModelFile *file, workbench_DocumentRef doc) {
+void WBContextModel::model_loaded(ModelFile *file, studio_DocumentRef doc) {
   _file = file;
   _doc = doc;
 
@@ -422,7 +422,7 @@ void WBContextModel::update_page_settings() {
     views[v]->get_data()->update_size();
   }
 
-  grt::ListRef<workbench_physical_Model> models(_doc->physicalModels());
+  grt::ListRef<studio_physical_Model> models(_doc->physicalModels());
   for (size_t c = models.count(), i = 0; i < c; i++) {
     views = grt::ListRef<model_Diagram>::cast_from(models[i]->diagrams());
     for (size_t vc = views.count(), v = 0; v < vc; v++) {
@@ -655,7 +655,7 @@ bool WBContextModel::has_selected_model() {
 
 void WBContextModel::add_model_schema() {
   wb::WBContextUI::get()->get_wb()->get_component<WBComponentPhysical>()->add_new_db_schema(
-    workbench_physical_ModelRef::cast_from(get_active_model(true)));
+    studio_physical_ModelRef::cast_from(get_active_model(true)));
 }
 
 void WBContextModel::add_model_diagram() {
@@ -704,7 +704,7 @@ GrtObjectRef WBContextModel::duplicate_object(const db_DatabaseObjectRef &object
     // post-processing
     // - Make foreign key names unique.
     ssize_t max_fk_len =
-      workbench_physical_ModelRef::cast_from(dbtable->owner()->owner()->owner())->rdbms()->maximumIdentifierLength();
+      studio_physical_ModelRef::cast_from(dbtable->owner()->owner()->owner())->rdbms()->maximumIdentifierLength();
     grt::ListRef<db_ForeignKey> fks(dbtable->foreignKeys());
     std::set<std::string> used_fk_names =
       bec::SchemaHelper::get_foreign_key_names(db_SchemaRef::cast_from(dbtable->owner()));
@@ -769,8 +769,8 @@ void WBContextModel::update_plugin_arguments_pool(ArgumentPool &args) {
   args.add_entries_for_object("", model, "model.Model");
   args.add_entries_for_object("activeModel", model, "model.Model");
 
-  if (workbench_physical_ModelRef::can_wrap(model)) {
-    workbench_physical_ModelRef pmodel(workbench_physical_ModelRef::cast_from(model));
+  if (studio_physical_ModelRef::can_wrap(model)) {
+    studio_physical_ModelRef pmodel(studio_physical_ModelRef::cast_from(model));
     args.add_entries_for_object("", pmodel->catalog(), "db.Catalog");
     args.add_entries_for_object("activeCatalog", pmodel->catalog(), "db.Catalog");
   }
@@ -1120,7 +1120,7 @@ void WBContextModel::selection_changed() {
 
 GrtVersionRef WBContextModel::get_target_version() {
   if (get_active_model(true).is_valid()) {
-    return GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(get_active_model(true)), "CatalogVersion"));
+    return GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(get_active_model(true)), "CatalogVersion"));
   }
   return GrtVersionRef();
 }
@@ -1362,7 +1362,7 @@ static void userTypeEditorClosed(UserDefinedTypeEditor **editor_ptr) {
   *editor_ptr = NULL;
 }
 
-void WBContextModel::show_user_type_editor(workbench_physical_ModelRef model) {
+void WBContextModel::show_user_type_editor(studio_physical_ModelRef model) {
   if (_current_user_type_editor == NULL) {
     _current_user_type_editor = new UserDefinedTypeEditor(model);
     scoped_connect(_current_user_type_editor->signal_closed(),

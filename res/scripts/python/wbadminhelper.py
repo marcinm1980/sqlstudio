@@ -21,8 +21,8 @@ import time
 import stat
 import shlex
 
-from workbench.tcp_utils import SocketClient
-from workbench.os_utils import FileUtils, OSUtils
+from studio.tcp_utils import SocketClient
+from studio.os_utils import FileUtils, OSUtils
 import subprocess
 
 # The script is executed with elevated privileges which means it is 

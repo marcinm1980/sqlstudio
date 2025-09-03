@@ -155,7 +155,7 @@ static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
                    "db.mysql.editors.mwbplugin");
   relationship_editor->pluginType("gui");
   relationship_editor->moduleFunctionName("DbMysqlRelationshipEditor");
-  set_object_argument(relationship_editor, "workbench.physical.Connection");
+  set_object_argument(relationship_editor, "studio.physical.Connection");
   relationship_editor->caption("Edit Relationship");
   relationship_editor->rating(10);
   relationship_editor->name("db.mysql.plugin.edit.relationship");

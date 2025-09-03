@@ -29,7 +29,7 @@ from mforms import App
 from wb_server_management import wbaOS, handle_ssh_command_output
 from wb_common import Users
 
-from workbench.log import log_info, log_error, log_debug, log_debug2, log_debug3
+from studio.log import log_info, log_error, log_debug, log_debug2, log_debug3
 
 
 #===============================================================================

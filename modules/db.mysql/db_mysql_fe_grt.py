@@ -22,9 +22,9 @@
 
 from wb import DefineModule
 import grt
-from workbench import db_utils
-from workbench.exceptions import NotConnectedError
-from workbench.utils import Version
+from studio import db_utils
+from studio.exceptions import NotConnectedError
+from studio.utils import Version
 
 
 ModuleInfo = DefineModule(name= "DbMySQLFE", author= "Oracle Corp.", version="1.0")

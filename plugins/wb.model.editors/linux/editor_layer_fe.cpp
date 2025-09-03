@@ -77,7 +77,7 @@ public:
 
   virtual bool switch_edited_object(const grt::BaseListRef &args) {
     LayerEditorBE *old_be = _be;
-    _be = new LayerEditorBE(workbench_physical_LayerRef::cast_from(args[0]));
+    _be = new LayerEditorBE(studio_physical_LayerRef::cast_from(args[0]));
     delete old_be;
 
     _be->set_refresh_ui_slot(std::bind(&LayerEditor::refresh_form_data, this));

@@ -23,7 +23,7 @@
  */
 
 #include "wb_component.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "model/wb_model_diagram_form.h"
 #include "wb_layer_tree.h"
 #include "mdc_algorithms.h"

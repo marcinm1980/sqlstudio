@@ -29,7 +29,7 @@ using namespace base;
 
 View::View(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self)
   : BaseFigure(layer, hub, self), _title(layer, hub, this, false) {
-  _title.set_icon(mdc::ImageManager::get_instance()->get_image("workbench.physical.ViewFigure.16x16.png"));
+  _title.set_icon(mdc::ImageManager::get_instance()->get_image("studio.physical.ViewFigure.16x16.png"));
 
   set_allowed_resizing(false, false);
   set_accepts_focus(true);

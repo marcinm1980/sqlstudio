@@ -121,7 +121,7 @@ protected:
   }
 
   db_CatalogRef parse_catalog_from_file(const std::string &filename) {
-    workbench_physical_ModelRef pm = workbench_physical_ModelRef::cast_from(_model_catalog->owner());
+    studio_physical_ModelRef pm = studio_physical_ModelRef::cast_from(_model_catalog->owner());
 
     db_mysql_CatalogRef cat(grt::Initialized);
     cat->version(pm->rdbms()->version());

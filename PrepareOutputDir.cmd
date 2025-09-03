@@ -104,9 +104,9 @@ xcopy /i /s /y /d %RES_DIR%\scripts\shell\*.vbs %TARGET_DIR%\
 if not exist %TARGET_DIR%\firewall\ mkdir %TARGET_DIR%\firewall
 xcopy /i /s /y /d %RES_DIR%\scripts\firewall\* %TARGET_DIR%\firewall 1> nul 2> nul
 
-echo Copy python workbench files
-if not exist %TARGET_DIR%\workbench mkdir %TARGET_DIR%\workbench
-xcopy /i /s /y /d %LIBRARY_DIR%\python\workbench\*.py %TARGET_DIR%\workbench
+echo Copy python studio files
+if not exist %TARGET_DIR%\studio mkdir %TARGET_DIR%\studio
+xcopy /i /s /y /d %LIBRARY_DIR%\python\studio\*.py %TARGET_DIR%\studio
 
 echo Copy python/mforms
 xcopy /i /s /y /d %LIBRARY_DIR%\forms\swig\mforms.py %TARGET_DIR%\
@@ -314,7 +314,7 @@ echo Usage:
 echo   %0 SolutionDirectory ConfigurationName Architecture
 echo .
 echo Example:
-echo   %0 "C:\Documents and Settings\mysqldev\My Documents\work\mysql-workbench\" Debug x64
+echo   %0 "C:\Documents and Settings\mysqldev\My Documents\work\mysql-studio\" Debug x64
 echo .
 
 :EndOfScript

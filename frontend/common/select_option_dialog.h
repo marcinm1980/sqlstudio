@@ -25,7 +25,7 @@
 #ifndef _SELECTOPTIONWIZARD_H_
 #define _SELECTOPTIONWIZARD_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include <string>
 #include <vector>
 

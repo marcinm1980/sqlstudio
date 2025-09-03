@@ -42,7 +42,7 @@
     
     [objectTable registerForDraggedTypes:[NSArray arrayWithObject:@"x-mysql-wb/db.DatabaseObject"]];
     
-    mBackEnd= new TagEditorBE(workbench_physical_ModelRef::cast_from(args[0]));
+    mBackEnd= new TagEditorBE(studio_physical_ModelRef::cast_from(args[0]));
     
     [self refresh];
   }

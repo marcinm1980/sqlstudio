@@ -26,9 +26,9 @@
 #include "grt.h"
 #include "grtpp_util.h"
 
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grts/structs.db.h"
-#include "grts/structs.workbench.model.h"
+#include "grts/structs.studio.model.h"
 
 #include "base/wb_iterators.h"
 #include "base/string_utilities.h"
@@ -54,15 +54,15 @@ void copy_additional_data(T obj, std::string new_name, TOwner new_owner) {
 };
 
 template <class TOwner>
-void copy_additional_data(workbench_physical_DiagramRef obj, std::string old_name, TOwner new_owner) {
+void copy_additional_data(studio_physical_DiagramRef obj, std::string old_name, TOwner new_owner) {
   grt::BaseListRef args(true);
   grt::Module* module = grt::GRT::get()->get_module("MySqlStudio");
   grt::StringRef img_file_path(grt::StringRef::cast_from(module->call_function("getTempDir", args)));
   update_ids(obj);
   grt::ListRef<model_Figure> figures = obj->figures();
   for (size_t i = 0; i < figures.count(); ++i)
-    if (workbench_model_ImageFigureRef::can_wrap(figures[i])) {
-      workbench_model_ImageFigureRef image = workbench_model_ImageFigureRef::cast_from(figures[i]);
+    if (studio_model_ImageFigureRef::can_wrap(figures[i])) {
+      studio_model_ImageFigureRef image = studio_model_ImageFigureRef::cast_from(figures[i]);
       std::string img_path = img_file_path;
       img_path.append("/").append(image->filename());
       image->setImageFile(img_path);
@@ -132,7 +132,7 @@ void update_list(grt::ListRef<T> list) {
   }
 }
 
-void merge_schema( // workbench_DocumentRef document,
+void merge_schema( // studio_DocumentRef document,
   const db_SchemaRef& target_schema, const db_SchemaRef& schema) {
   merge_list(target_schema->tables(), schema->tables(), GrtObjectRef::cast_from(target_schema));
   merge_list(target_schema->views(), schema->views(), target_schema);
@@ -181,7 +181,7 @@ void merge_catalog(grt::Module* module, db_CatalogRef& dest_cat, const db_Catalo
   }
 };
 
-void merge_diagrams(grt::ListRef<workbench_physical_Diagram>& dest_diagrams,
-                    const grt::ListRef<workbench_physical_Diagram>& src_diagrams, const GrtObjectRef& dst_owner) {
+void merge_diagrams(grt::ListRef<studio_physical_Diagram>& dest_diagrams,
+                    const grt::ListRef<studio_physical_Diagram>& src_diagrams, const GrtObjectRef& dst_owner) {
   merge_list(dest_diagrams, src_diagrams, dst_owner);
 };

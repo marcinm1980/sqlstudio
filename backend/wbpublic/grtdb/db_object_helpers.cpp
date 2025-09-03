@@ -35,7 +35,7 @@
 #include "grtpp_util.h"
 #include "grt/parse_utils.h"
 #include "grt/grt_manager.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "grtdb/db_helpers.h"
 
 DEFAULT_LOG_DOMAIN("dbhelpers");
@@ -62,11 +62,11 @@ public:
 // Important: this functions works only for model objects, not live objects!
 db_mgmt_RdbmsRef get_rdbms_for_db_object(const ::grt::ValueRef &object) {
   GrtObjectRef parent = GrtObjectRef::cast_from(object);
-  while (parent.is_valid() && !parent.is_instance("workbench.physical.Model"))
+  while (parent.is_valid() && !parent.is_instance("studio.physical.Model"))
     parent = parent->owner();
 
   // do it the hard way to avoid havig to link to objimpl for model
-  // return workbench_physical_ModelRef::cast_from(parent)->rdbms();
+  // return studio_physical_ModelRef::cast_from(parent)->rdbms();
 
   if (parent.is_valid())
     return db_mgmt_RdbmsRef::cast_from(parent.get_member("rdbms"));
@@ -75,7 +75,7 @@ db_mgmt_RdbmsRef get_rdbms_for_db_object(const ::grt::ValueRef &object) {
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef bec::getModelOption(workbench_physical_ModelRef model, const std::string &key, bool forceModel) {
+grt::ValueRef bec::getModelOption(studio_physical_ModelRef model, const std::string &key, bool forceModel) {
   if (!model.is_valid()) {
     if (forceModel)
       return grt::ValueRef();

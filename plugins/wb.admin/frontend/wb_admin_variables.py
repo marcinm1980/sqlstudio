@@ -29,7 +29,7 @@ import mforms
 import wb_admin_variable_list
 
 from wb_admin_utils import weakcb, WbAdminTabBase, WbAdminValidationConnection
-from workbench.log import log_error
+from studio.log import log_error
 
 class VariablesViewer(mforms.Box):
     def __init__(self, ctrl_be, variables, command, viewer_type):

@@ -28,7 +28,7 @@ import threading
 import zipfile
 import tempfile
 import shlex
-from workbench.utils import get_exe_path
+from studio.utils import get_exe_path
 
 # import the wb module
 from wb import DefineModule, wbinputs
@@ -37,10 +37,10 @@ import grt
 import mforms
 
 from grt import log_warning
-from workbench.log import log_info, log_error, log_debug2
+from studio.log import log_info, log_error, log_debug2
 import traceback
 
-from workbench.ui import WizardForm, WizardPage
+from studio.ui import WizardForm, WizardPage
 from mforms import newButton, newCheckBox
 
 # define this Python module as a GRT module
@@ -716,7 +716,7 @@ class CheckForUpdateThread(threading.Thread):
 
             urllib.request.install_opener(opener)
 
-            self.json = json.load(urllib.request.urlopen("http://workbench.mysql.com/current-release")) 
+            self.json = json.load(urllib.request.urlopen("http://studio.mysql.com/current-release")) 
         except Exception as error:
 
             self.json = None
@@ -735,9 +735,9 @@ class CheckForUpdateThread(threading.Thread):
                 newest_version = tuple(int(i) for i in self.json['fullversion'].split("."))
 
                 if newest_version > current_version:
-                    if mforms.Utilities.show_message('New Version Available', 'The new MySql Studio %s has been released.\nYou can download the latest version from\nhttp://www.mysql.com/downloads/workbench.' % '.'.join( [str(num) for num in newest_version] ),
+                    if mforms.Utilities.show_message('New Version Available', 'The new MySql Studio %s has been released.\nYou can download the latest version from\nhttp://www.mysql.com/downloads/studio.' % '.'.join( [str(num) for num in newest_version] ),
                                                   'Get it Now', 'Maybe Later', "") == mforms.ResultOk:
-                        mforms.Utilities.open_url('http://www.mysql.com/downloads/workbench')
+                        mforms.Utilities.open_url('http://www.mysql.com/downloads/studio')
                 else:
                     mforms.Utilities.show_message('MySql Studio is Up to Date', 'You are already using the latest version of MySql Studio.', 'OK', '', '')
         

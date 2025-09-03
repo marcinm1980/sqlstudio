@@ -22,20 +22,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -257,16 +257,16 @@
     <ClCompile Include="objimpl\ui\ui_db_ConnectPanel.cpp" />
     <ClCompile Include="objimpl\ui\ui_ObjectEditor.cpp" />
     <ClCompile Include="objimpl\ui\ui_ObjectEditor_impl.cpp" />
-    <ClCompile Include="objimpl\workbench.logical\workbench_logical_Diagram.cpp" />
-    <ClCompile Include="objimpl\workbench.logical\workbench_logical_Model.cpp" />
-    <ClCompile Include="objimpl\workbench.model\workbench_model_ImageFigure.cpp" />
-    <ClCompile Include="objimpl\workbench.model\workbench_model_NoteFigure.cpp" />
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_Connection.cpp" />
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_Diagram.cpp" />
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_Model.cpp" />
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_RoutineGroupFigure.cpp" />
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_TableFigure.cpp" />
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_ViewFigure.cpp" />
+    <ClCompile Include="objimpl\studio.logical\studio_logical_Diagram.cpp" />
+    <ClCompile Include="objimpl\studio.logical\studio_logical_Model.cpp" />
+    <ClCompile Include="objimpl\studio.model\studio_model_ImageFigure.cpp" />
+    <ClCompile Include="objimpl\studio.model\studio_model_NoteFigure.cpp" />
+    <ClCompile Include="objimpl\studio.physical\studio_physical_Connection.cpp" />
+    <ClCompile Include="objimpl\studio.physical\studio_physical_Diagram.cpp" />
+    <ClCompile Include="objimpl\studio.physical\studio_physical_Model.cpp" />
+    <ClCompile Include="objimpl\studio.physical\studio_physical_RoutineGroupFigure.cpp" />
+    <ClCompile Include="objimpl\studio.physical\studio_physical_TableFigure.cpp" />
+    <ClCompile Include="objimpl\studio.physical\studio_physical_ViewFigure.cpp" />
     <ClCompile Include="objimpl\wrapper\parser_ContextReference.cpp" />
     <ClCompile Include="sqlide\column_width_cache.cpp" />
     <ClCompile Include="sqlide\recordset_be.cpp" />
@@ -305,14 +305,14 @@
     <ClCompile Include="wbcanvas\table_figure_simple.cpp" />
     <ClCompile Include="wbcanvas\table_figure_wb.cpp" />
     <ClCompile Include="wbcanvas\view_figure.cpp" />
-    <ClCompile Include="wbcanvas\workbench_model_imagefigure_impl.cpp" />
-    <ClCompile Include="wbcanvas\workbench_model_notefigure_impl.cpp" />
-    <ClCompile Include="wbcanvas\workbench_physical_connection_impl.cpp" />
-    <ClCompile Include="wbcanvas\workbench_physical_diagram_impl.cpp" />
-    <ClCompile Include="wbcanvas\workbench_physical_model_impl.cpp" />
-    <ClCompile Include="wbcanvas\workbench_physical_routinegroupfigure_impl.cpp" />
-    <ClCompile Include="wbcanvas\workbench_physical_tablefigure_impl.cpp" />
-    <ClCompile Include="wbcanvas\workbench_physical_viewfigure_impl.cpp" />
+    <ClCompile Include="wbcanvas\studio_model_imagefigure_impl.cpp" />
+    <ClCompile Include="wbcanvas\studio_model_notefigure_impl.cpp" />
+    <ClCompile Include="wbcanvas\studio_physical_connection_impl.cpp" />
+    <ClCompile Include="wbcanvas\studio_physical_diagram_impl.cpp" />
+    <ClCompile Include="wbcanvas\studio_physical_model_impl.cpp" />
+    <ClCompile Include="wbcanvas\studio_physical_routinegroupfigure_impl.cpp" />
+    <ClCompile Include="wbcanvas\studio_physical_tablefigure_impl.cpp" />
+    <ClCompile Include="wbcanvas\studio_physical_viewfigure_impl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\generated\grts\structs.app.h" />
@@ -328,11 +328,11 @@
     <ClInclude Include="..\..\generated\grts\structs.meta.h" />
     <ClInclude Include="..\..\generated\grts\structs.model.h" />
     <ClInclude Include="..\..\generated\grts\structs.ui.h" />
-    <ClInclude Include="..\..\generated\grts\structs.workbench.h" />
-    <ClInclude Include="..\..\generated\grts\structs.workbench.logical.h" />
-    <ClInclude Include="..\..\generated\grts\structs.workbench.model.h" />
-    <ClInclude Include="..\..\generated\grts\structs.workbench.model.reporting.h" />
-    <ClInclude Include="..\..\generated\grts\structs.workbench.physical.h" />
+    <ClInclude Include="..\..\generated\grts\structs.studio.h" />
+    <ClInclude Include="..\..\generated\grts\structs.studio.logical.h" />
+    <ClInclude Include="..\..\generated\grts\structs.studio.model.h" />
+    <ClInclude Include="..\..\generated\grts\structs.studio.model.reporting.h" />
+    <ClInclude Include="..\..\generated\grts\structs.studio.physical.h" />
     <ClInclude Include="..\..\generated\grts\structs.wrapper.h" />
     <ClInclude Include="grtdb\catalog_templates.h" />
     <ClInclude Include="grtdb\charset_list.h" />
@@ -456,14 +456,14 @@
     <ClInclude Include="wbcanvas\table_figure_simple.h" />
     <ClInclude Include="wbcanvas\table_figure_wb.h" />
     <ClInclude Include="wbcanvas\view_figure.h" />
-    <ClInclude Include="wbcanvas\workbench_model_imagefigure_impl.h" />
-    <ClInclude Include="wbcanvas\workbench_model_notefigure_impl.h" />
-    <ClInclude Include="wbcanvas\workbench_physical_connection_impl.h" />
-    <ClInclude Include="wbcanvas\workbench_physical_diagram_impl.h" />
-    <ClInclude Include="wbcanvas\workbench_physical_model_impl.h" />
-    <ClInclude Include="wbcanvas\workbench_physical_routinegroupfigure_impl.h" />
-    <ClInclude Include="wbcanvas\workbench_physical_tablefigure_impl.h" />
-    <ClInclude Include="wbcanvas\workbench_physical_viewfigure_impl.h" />
+    <ClInclude Include="wbcanvas\studio_model_imagefigure_impl.h" />
+    <ClInclude Include="wbcanvas\studio_model_notefigure_impl.h" />
+    <ClInclude Include="wbcanvas\studio_physical_connection_impl.h" />
+    <ClInclude Include="wbcanvas\studio_physical_diagram_impl.h" />
+    <ClInclude Include="wbcanvas\studio_physical_model_impl.h" />
+    <ClInclude Include="wbcanvas\studio_physical_routinegroupfigure_impl.h" />
+    <ClInclude Include="wbcanvas\studio_physical_tablefigure_impl.h" />
+    <ClInclude Include="wbcanvas\studio_physical_viewfigure_impl.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\library\base\base.vcxproj">

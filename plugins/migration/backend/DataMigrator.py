@@ -28,10 +28,10 @@ import grt
 import re
 import tempfile
 from threading import Thread
-from workbench.db_driver import get_connection_parameters
-from workbench.utils import replace_string_parameters
-from workbench.exceptions import NotConnectedError
-from workbench import db_utils
+from studio.db_driver import get_connection_parameters
+from studio.utils import replace_string_parameters
+from studio.exceptions import NotConnectedError
+from studio import db_utils
 from migration_source_selection import request_password
 from grt import modules
 from wb_common import to_encodedString

@@ -25,7 +25,7 @@ import sys
 
 from mforms import newLabel
 import mforms
-from workbench.log import log_error, log_debug3
+from studio.log import log_error, log_debug3
 
 #-------------------------------------------------------------------------------
 

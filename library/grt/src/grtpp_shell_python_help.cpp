@@ -103,7 +103,7 @@ static HelpTopic help_topics[] = {
     "# change color of all figures in diagram of a given class" NL "def change_color(diagram, klass, new_color):" NL
     "    for figure in diagram.figures:" NL "        if figure.__grtclassname__ == klass:" NL
     "            figure.color = new_color" NL NL
-    "change_color(grt.root.wb.doc.physicalModels[0].diagrams[0], 'workbench.physical.TableFigure', '#aa8844')" NL },
+    "change_color(grt.root.wb.doc.physicalModels[0].diagrams[0], 'studio.physical.TableFigure', '#aa8844')" NL },
   { "lowercase",
     "# change name of all tables to lowercase" NL "def change_table_names(function, schema=None):" NL
     "    if schema is None:" NL "       schema = grt.root.wb.doc.physicalModels[0].catalog.schemata[0]" NL

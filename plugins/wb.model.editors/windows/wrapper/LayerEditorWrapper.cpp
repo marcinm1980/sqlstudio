@@ -35,7 +35,7 @@ LayerEditorWrapper::LayerEditorWrapper(LayerEditorBE *inn) : BaseEditorWrapper(i
 
 LayerEditorWrapper::LayerEditorWrapper(MySQL::Grt::GrtValue ^ arglist)
   : BaseEditorWrapper(new ::LayerEditorBE(
-      workbench_physical_LayerRef::cast_from(grt::BaseListRef::cast_from(arglist->get_unmanaged_object()).get(0)))) {
+      studio_physical_LayerRef::cast_from(grt::BaseListRef::cast_from(arglist->get_unmanaged_object()).get(0)))) {
 }
 
 //--------------------------------------------------------------------------------------------------

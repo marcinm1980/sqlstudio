@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_context_ui.h"
 #include "model/wb_model_diagram_form.h"
 #include "model/wb_context_model.h"
 #include "model/wb_history_tree.h"

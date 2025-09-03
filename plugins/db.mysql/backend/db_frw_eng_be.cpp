@@ -27,7 +27,7 @@
 #include "grts/structs.h"
 #include "grts/structs.db.mgmt.h"
 #include "grts/structs.db.mysql.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 
 #include "grt.h"
 
@@ -37,7 +37,7 @@ using namespace grt;
 
 Db_frw_eng::Db_frw_eng() : Db_plugin(), DbMySQLValidationPage() {
   {
-    workbench_DocumentRef doc = workbench_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
+    studio_DocumentRef doc = studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
     Db_frw_eng::grtm(false);
   }
 

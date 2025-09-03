@@ -77,19 +77,19 @@
     <ClInclude Include="..\..\generated\grts\structs.ui.h">
       <Filter>Generated Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generated\grts\structs.workbench.h">
+    <ClInclude Include="..\..\generated\grts\structs.studio.h">
       <Filter>Generated Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generated\grts\structs.workbench.logical.h">
+    <ClInclude Include="..\..\generated\grts\structs.studio.logical.h">
       <Filter>Generated Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generated\grts\structs.workbench.model.h">
+    <ClInclude Include="..\..\generated\grts\structs.studio.model.h">
       <Filter>Generated Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generated\grts\structs.workbench.model.reporting.h">
+    <ClInclude Include="..\..\generated\grts\structs.studio.model.reporting.h">
       <Filter>Generated Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generated\grts\structs.workbench.physical.h">
+    <ClInclude Include="..\..\generated\grts\structs.studio.physical.h">
       <Filter>Generated Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\generated\grts\structs.app.h">
@@ -404,28 +404,28 @@
     <ClInclude Include="wbcanvas\view_figure.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wbcanvas\workbench_model_imagefigure_impl.h">
+    <ClInclude Include="wbcanvas\studio_model_imagefigure_impl.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wbcanvas\workbench_model_notefigure_impl.h">
+    <ClInclude Include="wbcanvas\studio_model_notefigure_impl.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wbcanvas\workbench_physical_connection_impl.h">
+    <ClInclude Include="wbcanvas\studio_physical_connection_impl.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wbcanvas\workbench_physical_diagram_impl.h">
+    <ClInclude Include="wbcanvas\studio_physical_diagram_impl.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wbcanvas\workbench_physical_model_impl.h">
+    <ClInclude Include="wbcanvas\studio_physical_model_impl.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wbcanvas\workbench_physical_routinegroupfigure_impl.h">
+    <ClInclude Include="wbcanvas\studio_physical_routinegroupfigure_impl.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wbcanvas\workbench_physical_tablefigure_impl.h">
+    <ClInclude Include="wbcanvas\studio_physical_tablefigure_impl.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wbcanvas\workbench_physical_viewfigure_impl.h">
+    <ClInclude Include="wbcanvas\studio_physical_viewfigure_impl.h">
       <Filter>wbcanvas Header Files</Filter>
     </ClInclude>
     <ClInclude Include="wbcanvas\badge_figure.h">
@@ -560,34 +560,34 @@
     <ClCompile Include="objimpl\ui\ui_ObjectEditor_impl.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.logical\workbench_logical_Diagram.cpp">
+    <ClCompile Include="objimpl\studio.logical\studio_logical_Diagram.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.logical\workbench_logical_Model.cpp">
+    <ClCompile Include="objimpl\studio.logical\studio_logical_Model.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.model\workbench_model_ImageFigure.cpp">
+    <ClCompile Include="objimpl\studio.model\studio_model_ImageFigure.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.model\workbench_model_NoteFigure.cpp">
+    <ClCompile Include="objimpl\studio.model\studio_model_NoteFigure.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_Connection.cpp">
+    <ClCompile Include="objimpl\studio.physical\studio_physical_Connection.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_Diagram.cpp">
+    <ClCompile Include="objimpl\studio.physical\studio_physical_Diagram.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_Model.cpp">
+    <ClCompile Include="objimpl\studio.physical\studio_physical_Model.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_RoutineGroupFigure.cpp">
+    <ClCompile Include="objimpl\studio.physical\studio_physical_RoutineGroupFigure.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_TableFigure.cpp">
+    <ClCompile Include="objimpl\studio.physical\studio_physical_TableFigure.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objimpl\workbench.physical\workbench_physical_ViewFigure.cpp">
+    <ClCompile Include="objimpl\studio.physical\studio_physical_ViewFigure.cpp">
       <Filter>Generated Source Files</Filter>
     </ClCompile>
     <ClCompile Include="grt\action_list.cpp">
@@ -833,28 +833,28 @@
     <ClCompile Include="wbcanvas\view_figure.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wbcanvas\workbench_model_imagefigure_impl.cpp">
+    <ClCompile Include="wbcanvas\studio_model_imagefigure_impl.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wbcanvas\workbench_model_notefigure_impl.cpp">
+    <ClCompile Include="wbcanvas\studio_model_notefigure_impl.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wbcanvas\workbench_physical_connection_impl.cpp">
+    <ClCompile Include="wbcanvas\studio_physical_connection_impl.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wbcanvas\workbench_physical_diagram_impl.cpp">
+    <ClCompile Include="wbcanvas\studio_physical_diagram_impl.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wbcanvas\workbench_physical_model_impl.cpp">
+    <ClCompile Include="wbcanvas\studio_physical_model_impl.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wbcanvas\workbench_physical_routinegroupfigure_impl.cpp">
+    <ClCompile Include="wbcanvas\studio_physical_routinegroupfigure_impl.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wbcanvas\workbench_physical_tablefigure_impl.cpp">
+    <ClCompile Include="wbcanvas\studio_physical_tablefigure_impl.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wbcanvas\workbench_physical_viewfigure_impl.cpp">
+    <ClCompile Include="wbcanvas\studio_physical_viewfigure_impl.cpp">
       <Filter>wbcanvas Source Files</Filter>
     </ClCompile>
     <ClCompile Include="wbcanvas\badge_figure.cpp">

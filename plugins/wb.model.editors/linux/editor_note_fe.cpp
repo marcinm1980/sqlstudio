@@ -46,7 +46,7 @@ class NoteEditor : public PluginEditorBase {
 
 public:
   NoteEditor(grt::Module *m, const grt::BaseListRef &args)
-    : PluginEditorBase(m, args), _be(workbench_model_NoteFigureRef::cast_from(args[0])) {
+    : PluginEditorBase(m, args), _be(studio_model_NoteFigureRef::cast_from(args[0])) {
     set_border_width(8);
 
     _xml = Gtk::Builder::create_from_file(bec::GRTManager::get()->get_data_file_path("modules/data/editor_note.glade"));

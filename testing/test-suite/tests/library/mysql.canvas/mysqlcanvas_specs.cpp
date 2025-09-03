@@ -110,9 +110,9 @@ public:
 
     // TODO: Verify these urls
     column_icon =
-      cairo_image_surface_create_from_png("/Users/kojima/Development/mysql-workbench-pro/images/grt/column.png");
+      cairo_image_surface_create_from_png("/Users/kojima/Development/mysql-studio-pro/images/grt/column.png");
     key_icon =
-      cairo_image_surface_create_from_png("/Users/kojima/Development/mysql-workbench-pro/images/grt/column_pk.png");
+      cairo_image_surface_create_from_png("/Users/kojima/Development/mysql-studio-pro/images/grt/column_pk.png");
 
     set_accepts_focus(true);
     set_accepts_selection(true);
@@ -129,7 +129,7 @@ public:
     title_bar.set_draw_background(true);
 
     title.set_icon(cairo_image_surface_create_from_png(
-      "/Users/kojima/Development/mysql-workbench-pro/images/grt/db.Table.12x12.png"));
+      "/Users/kojima/Development/mysql-studio-pro/images/grt/db.Table.12x12.png"));
     title.set_font(mdc::FontSpec("Lucida Grande", mdc::SNormal, mdc::WBold, 10));
     title.set_text("Hello World");
 

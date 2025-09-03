@@ -2483,7 +2483,7 @@ namespace grt {
     void load_metaclasses(const std::string &file, std::list<std::string> * requiresList = 0);
 
     /**
-     * This one should not be used during normal workbench run,
+     * This one should not be used during normal studio run,
      * it's mean to be used only in the test.
      * Causes all metaclasses to be unloaded,
      * and grt to be recreated.

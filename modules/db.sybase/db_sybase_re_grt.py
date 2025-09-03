@@ -24,9 +24,9 @@ from wb import DefineModule
 
 import grt
 
-from workbench import db_driver
-from workbench.exceptions import NotConnectedError
-from workbench.utils import find_object_with_name
+from studio import db_driver
+from studio.exceptions import NotConnectedError
+from studio.utils import find_object_with_name
 
 
 ModuleInfo = DefineModule(name= "DbSybaseRE", author= "Oracle Corp.", version="1.0")

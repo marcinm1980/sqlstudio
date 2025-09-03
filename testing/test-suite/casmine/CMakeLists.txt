@@ -20,9 +20,9 @@ target_link_libraries(casmine
 
 target_include_directories(casmine
 PRIVATE
-    ${workbench_dir}/library
-    ${workbench_dir}/library/base
-    ${workbench_dir}/library/base/base
+    ${studio_dir}/library
+    ${studio_dir}/library/base
+    ${studio_dir}/library/base/base
     SYSTEM ${GLIB_INCLUDE_DIRS}
     SYSTEM ${LIBXML2_INCLUDE_DIR}
 )

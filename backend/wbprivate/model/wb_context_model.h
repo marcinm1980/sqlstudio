@@ -24,17 +24,17 @@
 
 #pragma once
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "base/notifications.h"
 
 #include "wbcanvas/model_model_impl.h"
 
 #include <grts/structs.app.h>
 #include <grts/structs.model.h>
-#include <grts/structs.workbench.h>
+#include <grts/structs.studio.h>
 #include <grts/structs.ui.h>
 
-#define MODEL_DOCKING_POINT "workbench.physical.Model:main"
+#define MODEL_DOCKING_POINT "studio.physical.Model:main"
 
 namespace grt {
   class UndoAction;
@@ -77,7 +77,7 @@ namespace wb {
     }
 
     mforms::TreeView *create_user_type_list();
-    void show_user_type_editor(workbench_physical_ModelRef model);
+    void show_user_type_editor(studio_physical_ModelRef model);
 
     GrtVersionRef get_target_version();
 
@@ -87,8 +87,8 @@ namespace wb {
     model_ModelRef get_active_model(bool main_form);
 
     // return the named toolbar
-    void model_created(ModelFile *file, workbench_DocumentRef doc);
-    void model_loaded(ModelFile *file, workbench_DocumentRef doc);
+    void model_created(ModelFile *file, studio_DocumentRef doc);
+    void model_loaded(ModelFile *file, studio_DocumentRef doc);
     void model_closed();
 
     void register_diagram_form(ModelDiagramForm *view);
@@ -194,7 +194,7 @@ namespace wb {
     TableTemplatePanel *_template_panel;
     mforms::DockingPoint *_sidebar_dockpoint;
 
-    workbench_DocumentRef _doc;
+    studio_DocumentRef _doc;
     boost::signals2::connection _page_settings_conn;
 
     grt::UndoAction *_auto_save_point;

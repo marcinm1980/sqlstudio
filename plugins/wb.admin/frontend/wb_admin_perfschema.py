@@ -28,13 +28,13 @@ import os
 
 from threading import Thread
 from queue import Queue, Empty
-from workbench.client_utils import MySQLScriptImporter
+from studio.client_utils import MySQLScriptImporter
 
 from wb_admin_utils import weakcb, MessageButtonPanel, WbAdminTabBase, WbAdminValidationBase, WbAdminValidationConnection
 
-from workbench.utils import Version
+from studio.utils import Version
 
-from workbench.log import log_info, log_error, log_warning
+from studio.log import log_info, log_error, log_warning
 from mforms import FileChooser
 
 
@@ -232,15 +232,15 @@ class HelperInstallPanel(mforms.Table):
                 location = download_server_install_script(self.ctrl_be)
               
                 if location:
-                    workbench_version_string = get_current_sys_version(None)
+                    studio_version_string = get_current_sys_version(None)
                     server_version_string = get_sys_version_from_script(location)
                     
-                    maj, min, rel = [int(i) for i in workbench_version_string.split(".")]
-                    workbench_version = Version(maj, min, rel)
+                    maj, min, rel = [int(i) for i in studio_version_string.split(".")]
+                    studio_version = Version(maj, min, rel)
                     maj, min, rel = [int(i) for i in server_version_string.split(".")]
                     server_version = Version(maj, min, rel)
 
-                    if server_version >= workbench_version:
+                    if server_version >= studio_version:
                         log_info("Installing sys schema supplied by the server: %s\n" % str(location))
                         self.install_scripts([(location, None)], "Installing server script")
                         return
@@ -248,7 +248,7 @@ class HelperInstallPanel(mforms.Table):
                         log_info("Server sys schema install script exists but it's outdated compared to the one supplied by MySqlStudio...\n")
                         
                         
-                log_info("Installing sys schema supplied by workbench\n")
+                log_info("Installing sys schema supplied by studio\n")
                 self.install_scripts(files, "Installing MySqlStudio script")
         except Exception as e:
               log_error("Runtime error when installing the sys schema: %s\n" % str(e))

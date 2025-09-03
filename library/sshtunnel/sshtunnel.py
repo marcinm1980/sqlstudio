@@ -35,7 +35,7 @@ import os
 import mforms
 
 import paramiko
-from workbench.log import log_warning, log_error, log_debug, log_debug2, log_debug3, log_info
+from studio.log import log_warning, log_error, log_debug, log_debug2, log_debug3, log_info
 from wb_common import SSHFingerprintNewError, format_bad_host_exception
 
 import grt

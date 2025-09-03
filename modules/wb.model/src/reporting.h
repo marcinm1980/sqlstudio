@@ -32,7 +32,7 @@
 #include "grtpp_util.h"
 #include "grtdb/db_object_helpers.h"
 #include "grts/structs.db.mysql.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include <fstream>
 

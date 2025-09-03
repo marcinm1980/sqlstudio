@@ -26,7 +26,7 @@
 #include "grt/icon_manager.h"
 #include "base/file_utilities.h"
 #include "base/string_utilities.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 
 using namespace mforms;
 using namespace grt;

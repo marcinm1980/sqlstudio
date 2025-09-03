@@ -217,7 +217,7 @@ bool TagObjectListBE::add_dropped_objectdata(const std::string &data) {
   return false;
 }
 
-TagEditorBE::TagEditorBE(const workbench_physical_ModelRef &model) : _model(model), _object_list(model->catalog()) {
+TagEditorBE::TagEditorBE(const studio_physical_ModelRef &model) : _model(model), _object_list(model->catalog()) {
   _selected_tag = -1;
   _selected_category = 0;
 }

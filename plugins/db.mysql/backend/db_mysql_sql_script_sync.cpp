@@ -30,8 +30,8 @@
 #include "grts/structs.h"
 #include "grts/structs.db.mgmt.h"
 #include "grts/structs.db.mysql.h"
-#include "grts/structs.workbench.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.h"
+#include "grts/structs.studio.physical.h"
 
 #include "grt.h"
 #include "db_mysql_sql_export.h"
@@ -355,7 +355,7 @@ db_mysql_CatalogRef DbMySQLScriptSync::get_cat_from_file_or_tree(std::string fil
     return db_mysql_CatalogRef();
   }
 
-  workbench_physical_ModelRef pm = workbench_physical_ModelRef::cast_from(ref_cat->owner());
+  studio_physical_ModelRef pm = studio_physical_ModelRef::cast_from(ref_cat->owner());
 
   db_mysql_CatalogRef cat(grt::Initialized);
   cat->version(pm->rdbms()->version());
@@ -446,15 +446,15 @@ grt::StringRef DbMySQLScriptSync::generate_alter(db_mysql_CatalogRef org_cat, db
 void DbMySQLScriptSync::save_sync_profile() {
   db_mysql_CatalogRef mod_cat = get_model_catalog();
   GrtObjectRef model_obj = mod_cat->owner();
-  if (_sync_profile_name.is_valid() && model_obj.is_valid() && workbench_physical_ModelRef::can_wrap(model_obj)) {
+  if (_sync_profile_name.is_valid() && model_obj.is_valid() && studio_physical_ModelRef::can_wrap(model_obj)) {
     for (size_t i = 0; i < mod_cat->schemata().count(); i++) {
       db_SchemaRef schema(mod_cat->schemata()[i]);
       logInfo("Saving oldNames and other sync state info for %s::%s (catalog %s)\n", _sync_profile_name.c_str(),
               schema->name().c_str(), mod_cat.id().c_str());
       db_mgmt_SyncProfileRef profile =
-        bec::get_sync_profile(workbench_physical_ModelRef::cast_from(model_obj), _sync_profile_name, schema->name());
+        bec::get_sync_profile(studio_physical_ModelRef::cast_from(model_obj), _sync_profile_name, schema->name());
       if (!profile.is_valid())
-        profile = bec::create_sync_profile(workbench_physical_ModelRef::cast_from(model_obj), _sync_profile_name,
+        profile = bec::create_sync_profile(studio_physical_ModelRef::cast_from(model_obj), _sync_profile_name,
                                            schema->name());
       bec::update_sync_profile_from_schema(profile, schema);
     }
@@ -465,11 +465,11 @@ void DbMySQLScriptSync::save_sync_profile() {
 // for this specific connection
 void DbMySQLScriptSync::restore_sync_profile(db_CatalogRef catalog) {
   GrtObjectRef model_obj = catalog->owner();
-  if (_sync_profile_name.is_valid() && model_obj.is_valid() && workbench_physical_ModelRef::can_wrap(model_obj)) {
+  if (_sync_profile_name.is_valid() && model_obj.is_valid() && studio_physical_ModelRef::can_wrap(model_obj)) {
     for (size_t i = 0; i < catalog->schemata().count(); i++) {
       db_SchemaRef schema(catalog->schemata()[i]);
       db_mgmt_SyncProfileRef profile =
-        bec::get_sync_profile(workbench_physical_ModelRef::cast_from(model_obj), _sync_profile_name, schema->name());
+        bec::get_sync_profile(studio_physical_ModelRef::cast_from(model_obj), _sync_profile_name, schema->name());
       if (profile.is_valid()) {
         logInfo("Restoring oldNames and other sync state info for %s::%s (catalog %s)\n", _sync_profile_name.c_str(),
                 schema->name().c_str(), catalog.id().c_str());

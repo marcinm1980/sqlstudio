@@ -26,8 +26,8 @@
 
 #include "grts/structs.db.mysql.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_context.h"
+#include "studio/wb_context_ui.h"
 
 #include "model/wb_context_model.h"
 #include "model/wb_component_physical.h"
@@ -86,9 +86,9 @@ public:
   void addFileForFileDialog(const std::string &path);
   void activateOverview();
 
-  workbench_physical_ModelRef getPmodel();
+  studio_physical_ModelRef getPmodel();
   db_mgmt_RdbmsRef getRdbms();
-  workbench_physical_DiagramRef getPview();
+  studio_physical_DiagramRef getPview();
   db_CatalogRef getCatalog();
   db_SchemaRef getSchema();
 

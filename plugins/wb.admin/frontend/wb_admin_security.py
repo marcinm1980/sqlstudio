@@ -35,10 +35,10 @@ import mforms
 from mforms import newBox, newLabel, newButton, newTextEntry, newTreeView, newTable, newRadioButton, newSelector, newPanel, newTabView, Utilities, newCheckBox, newImageBox, newScrollPanel, App
 from wb_admin_security_be import AdminSecurity, PrivilegeInfo, PrivilegeReverseDict, SecurityAdminRoles, WBSecurityValidationError
 from wb_common import PermissionDeniedError, to_unicode
-from workbench.log import log_error, log_debug3
+from studio.log import log_error, log_debug3
 
 import grt
-from workbench import db_utils
+from studio import db_utils
 
 from wb_admin_utils import weakcb, WbAdminTabBase, WbAdminValidationConnection, WbAdminValidationBase
 

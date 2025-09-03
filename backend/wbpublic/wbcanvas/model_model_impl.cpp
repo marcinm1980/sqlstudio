@@ -32,7 +32,7 @@
 #include "model_figure_impl.h"
 #include "model_layer_impl.h"
 
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grtpp_undo_manager.h"
 
 DEFAULT_LOG_DOMAIN(DOMAIN_CANVAS_BE)
@@ -63,8 +63,8 @@ void model_Model::ImplData::list_changed(grt::internal::OwnedList *list, bool ad
 void model_Model::ImplData::option_changed(grt::internal::OwnedDict *dict, bool added, const std::string &option) {
   if (!_options_changed_signal.empty())
     _options_changed_signal(option);
-  if (!_reset_pending && (base::hasSuffix(option, "Font") || option == "workbench.physical.Connection:ShowCaptions" ||
-                          option == "workbench.physical.Diagram:DrawLineCrossings")) {
+  if (!_reset_pending && (base::hasSuffix(option, "Font") || option == "studio.physical.Connection:ShowCaptions" ||
+                          option == "studio.physical.Diagram:DrawLineCrossings")) {
     _reset_pending = true;
     //    run_later(std::bind(&model_Model::ImplData::reset_figures, this));
     run_later(std::bind(&model_Model::ImplData::reset_layers, this));
@@ -172,11 +172,11 @@ void model_Model::ImplData::reset_layers() {
 app_PageSettingsRef model_Model::ImplData::get_page_settings() {
   GrtObjectRef object(_owner);
 
-  while (object.is_valid() && !object.is_instance<workbench_Document>())
+  while (object.is_valid() && !object.is_instance<studio_Document>())
     object = object->owner();
 
   if (object.is_valid())
-    return workbench_DocumentRef::cast_from(object)->pageSettings();
+    return studio_DocumentRef::cast_from(object)->pageSettings();
 
   return app_PageSettingsRef();
 }

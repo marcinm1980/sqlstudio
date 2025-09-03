@@ -187,7 +187,7 @@ MySqlStudioTester::MySqlStudioTester(bool initPython, const base::Size &apage_si
   {
     db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(
       grt::GRT::get()->unserialize(bec::GRTManager::get()->get_basedir() + "/modules/data/mysql_rdbms_info.xml"));
-    workbench_MySqlStudioRef::cast_from(grt::GRT::get()->get("/wb"))->rdbmsMgmt()->rdbms().insert(rdbms);
+    studio_MySqlStudioRef::cast_from(grt::GRT::get()->get("/wb"))->rdbmsMgmt()->rdbms().insert(rdbms);
   }
 
   mforms::stub::check();
@@ -217,15 +217,15 @@ void MySqlStudioTester::initializeRuntime() {
   std::string rdbmsInfoPath = wboptions->basedir + prefix + "/modules/data/mysql_rdbms_info.xml";
   std::string typeGroupsPath = wboptions->basedir + prefix + "/data/db_datatype_groups.xml";
 
-  workbench_MySqlStudioRef workbench = wb->get_root();
-  workbench_DocumentRef doc(grt::Initialized);
-  doc->owner(workbench);
-  workbench->doc(doc);
-  grt::GRT::get()->set("/wb", workbench);
+  studio_MySqlStudioRef studio = wb->get_root();
+  studio_DocumentRef doc(grt::Initialized);
+  doc->owner(studio);
+  studio->doc(doc);
+  grt::GRT::get()->set("/wb", studio);
 
   db_mgmt_ManagementRef mgmt(grt::Initialized);
-  workbench->rdbmsMgmt(mgmt);
-  mgmt->owner(workbench);
+  studio->rdbmsMgmt(mgmt);
+  mgmt->owner(studio);
 
   // Load datatype groups so that it can be found during load of types.
   grt::ListRef<db_DatatypeGroup> grouplist =
@@ -276,7 +276,7 @@ void MySqlStudioTester::activateOverview() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-workbench_physical_ModelRef MySqlStudioTester::getPmodel() {
+studio_physical_ModelRef MySqlStudioTester::getPmodel() {
   return wb->get_document()->physicalModels()[0];
 }
 
@@ -288,7 +288,7 @@ db_mgmt_RdbmsRef MySqlStudioTester::getRdbms() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-workbench_physical_DiagramRef MySqlStudioTester::getPview() {
+studio_physical_DiagramRef MySqlStudioTester::getPview() {
   return getPmodel()->diagrams().get(0);
 }
 
@@ -413,7 +413,7 @@ void MySqlStudioTester::interactivePlaceDbObjects(int x, int y, std::list<db_Dat
 //----------------------------------------------------------------------------------------------------------------------
 
 void MySqlStudioTester::openAllDiagrams() {
-  workbench_DocumentRef doc = wb->get_document();
+  studio_DocumentRef doc = wb->get_document();
 
   for (int i = 0; i < (int)doc->physicalModels()[0]->diagrams().count(); i++) {
     bec::NodeId node(0);

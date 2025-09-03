@@ -24,7 +24,7 @@
 
 #include "mforms/menubar.h"
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "grt/icon_manager.h"
 #include "wb_model_diagram_form.h"
 #include "wb_catalog_tree_view.h"
@@ -245,7 +245,7 @@ void CatalogTreeView::refill(bool force) {
   }
 
   freeze_refresh();
-  grt::ListRef<db_Schema> schema_list = workbench_physical_ModelRef::cast_from(model)->catalog()->schemata();
+  grt::ListRef<db_Schema> schema_list = studio_physical_ModelRef::cast_from(model)->catalog()->schemata();
   for (size_t i = 0; i < schema_list.count(); ++i) {
     mforms::TreeNodeRef node = add_node();
     node->set_string(0, schema_list[i]->name().c_str());
@@ -398,7 +398,7 @@ void CatalogTreeView::add_update_node_caption(grt::ValueRef val) {
     if (node.is_valid()) {
       mforms::TreeNodeRef prnt = node;
       node = create_new_node(otype, prnt, new_name, obj);
-      workbench_physical_DiagramRef view(workbench_physical_DiagramRef::cast_from(_owner->get_model_diagram()));
+      studio_physical_DiagramRef view(studio_physical_DiagramRef::cast_from(_owner->get_model_diagram()));
       if (view->getFigureForDBObject(obj).is_valid())
         node->set_string(1, "\xe2\x97\x8f");
 

@@ -39,10 +39,10 @@
 #include "grt/editor_base.h"
 #include "grtui/grtdb_connect_dialog.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_context_ui.h"
-#include "workbench/wb_command_ui.h"
-#include "workbench/SSHSessionWrapper.h"
+#include "studio/wb_context.h"
+#include "studio/wb_context_ui.h"
+#include "studio/wb_command_ui.h"
+#include "studio/SSHSessionWrapper.h"
 
 #include "sqlide/wb_context_sqlide.h"
 #include "sqlide/wb_sql_editor_form.h"
@@ -591,7 +591,7 @@ WBContextSQLIDE::~WBContextSQLIDE() {
 //--------------------------------------------------------------------------------------------------
 
 void WBContextSQLIDE::option_changed(grt::internal::OwnedDict *dict, bool, const std::string &key) {
-  if (key == "workbench:AutoSaveSQLEditorInterval" &&
+  if (key == "studio:AutoSaveSQLEditorInterval" &&
       dict == WBContextUI::get()->get_wb()->get_wb_options().valueptr()) {
     auto_save_workspaces();
   }
@@ -601,7 +601,7 @@ void WBContextSQLIDE::option_changed(grt::internal::OwnedDict *dict, bool, const
 
 bool WBContextSQLIDE::auto_save_workspaces() {
   WBContext *wb = WBContextUI::get()->get_wb();
-  ssize_t interval = wb->get_root()->options()->options().get_int("workbench:AutoSaveSQLEditorInterval", 60);
+  ssize_t interval = wb->get_root()->options()->options().get_int("studio:AutoSaveSQLEditorInterval", 60);
   if (interval <= 0 || !_auto_save_active) {
     _auto_save_handle = static_cast<mforms::TimeoutHandle>(NULL);
     _auto_save_active = false;
@@ -929,7 +929,7 @@ SqlEditorForm::Ref WBContextSQLIDE::create_connected_editor(const db_mgmt_Connec
   if (!_auto_save_active) {
     _auto_save_active = true;
     ssize_t interval = wb::WBContextUI::get()->get_wb()->get_root()->options()->options().get_int(
-      "workbench:AutoSaveSQLEditorInterval", 60);
+      "studio:AutoSaveSQLEditorInterval", 60);
     if (interval > 0)
       _auto_save_handle =
         mforms::Utilities::add_timeout((float)interval, std::bind(&WBContextSQLIDE::auto_save_workspaces, this));

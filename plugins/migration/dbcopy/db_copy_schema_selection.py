@@ -24,7 +24,7 @@ import mforms
 import grt
 import re
 
-from workbench.ui import WizardPage, DatabaseSchemaSelector
+from studio.ui import WizardPage, DatabaseSchemaSelector
 
 
 SYSTEM_SCHEMAS = ['`def`.`mysql`', '`def`.`information_schema`', '`def`.`performance_schema`']

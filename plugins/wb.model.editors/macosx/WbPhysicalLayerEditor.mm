@@ -77,7 +77,7 @@ static void call_refresh(PhysicalLayerEditor *self)
   delete mBackEnd;
   
   // setup the editor backend with the layer object (args[0])
-  mBackEnd= new LayerEditorBE(workbench_physical_LayerRef::cast_from(args[0]));
+  mBackEnd= new LayerEditorBE(studio_physical_LayerRef::cast_from(args[0]));
   
   // register a callback that will make [self refresh] get called
   // whenever the backend thinks its needed to refresh the UI from the backend data (ie, the

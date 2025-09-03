@@ -32,7 +32,7 @@ RoutineGroup::RoutineGroup(mdc::Layer *layer, FigureEventHub *hub, const model_O
     _title(layer, hub, this, true),
     _footer(layer, hub, this, false),
     _content_box(layer, mdc::Box::Vertical) {
-  _title.set_icon(mdc::ImageManager::get_instance()->get_image("workbench.physical.RoutineGroupFigure.16x16.png"));
+  _title.set_icon(mdc::ImageManager::get_instance()->get_image("studio.physical.RoutineGroupFigure.16x16.png"));
 
   scoped_connect(_title.signal_expand_toggle(), std::bind(&RoutineGroup::toggle, this, std::placeholders::_1));
 

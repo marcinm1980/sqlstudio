@@ -11,7 +11,7 @@ ModuleInfo = DefineModule(%modulename%, author="Author Name", version="1.0", des
 
 # This plugin takes the EER Model as an argument and will appear in the Plugins -> Utilities menu
 @ModuleInfo.plugin(%pluginname%, caption="Caption", description="description", input=[wbinputs.currentModel()], pluginMenu="Utilities")
-@ModuleInfo.export(grt.INT, grt.classes.workbench_physical_Model)
+@ModuleInfo.export(grt.INT, grt.classes.studio_physical_Model)
 def %functionname%(model):
     # Put plugin contents here
     return 0

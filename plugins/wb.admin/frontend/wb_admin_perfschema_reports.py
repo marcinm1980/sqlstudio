@@ -26,7 +26,7 @@ import json
 
 import os
 import sys
-from workbench.log import log_error, log_debug
+from studio.log import log_error, log_debug
 
 from wb_admin_perfschema import WbAdminPSBaseTab
 

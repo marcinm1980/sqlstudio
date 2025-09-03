@@ -31,7 +31,7 @@
 #include <gtkmm/combobox.h>
 #include <gtkmm/builder.h>
 #include "text_list_columns_model.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 
 //==============================================================================
 class DbMySQLRoleEditor : public PluginEditorBase {

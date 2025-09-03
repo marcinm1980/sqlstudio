@@ -26,7 +26,7 @@
 
 #include "mdc.h"
 #include "grts/structs.model.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include "grt/grt_manager.h"
 
@@ -64,9 +64,9 @@ namespace wb {
 
     void activate_item(const model_ObjectRef &owner, mdc::CanvasItem *item, mdc::EventState state);
 
-    void highlight_connection(const workbench_physical_ConnectionRef &conn, bool flag);
-    void highlight_table(const workbench_physical_TableFigureRef &table, bool flag);
-    void highlight_table_index(const workbench_physical_TableFigureRef &table, const db_IndexRef &index, bool entered);
+    void highlight_connection(const studio_physical_ConnectionRef &conn, bool flag);
+    void highlight_table(const studio_physical_TableFigureRef &table, bool flag);
+    void highlight_table_index(const studio_physical_TableFigureRef &table, const db_IndexRef &index, bool entered);
 
     void tooltip_setup(const model_ObjectRef &owner);
     void tooltip_cancel();

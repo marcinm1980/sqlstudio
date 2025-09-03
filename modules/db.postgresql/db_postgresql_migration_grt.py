@@ -23,7 +23,7 @@
 import re
 
 from wb import DefineModule
-from workbench.utils import find_object_with_name
+from studio.utils import find_object_with_name
 
 import grt
 

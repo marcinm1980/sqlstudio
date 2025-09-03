@@ -25,7 +25,7 @@
 #include "wb_overview_physical.h"
 #include "wb_overview_privileges.h"
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "wb_component_physical.h"
 
 #include "grt/icon_manager.h"
@@ -271,13 +271,13 @@ bool wb::internal::PrivilegeInfoNode::is_pasteable(bec::Clipboard *clip) {
 
 bool wb::internal::PrivilegeInfoNode::add_new_user(WBContext *wb) {
   bec::GRTManager::get()->open_object_editor(
-    wb->get_component<WBComponentPhysical>()->add_new_user(workbench_physical_ModelRef::cast_from(object->owner())));
+    wb->get_component<WBComponentPhysical>()->add_new_user(studio_physical_ModelRef::cast_from(object->owner())));
   return true;
 }
 
 bool wb::internal::PrivilegeInfoNode::add_new_role(WBContext *wb) {
   bec::GRTManager::get()->open_object_editor(
-    wb->get_component<WBComponentPhysical>()->add_new_role(workbench_physical_ModelRef::cast_from(object->owner())));
+    wb->get_component<WBComponentPhysical>()->add_new_role(studio_physical_ModelRef::cast_from(object->owner())));
   return true;
 }
 

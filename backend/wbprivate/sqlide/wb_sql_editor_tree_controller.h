@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "sqlide/wb_live_schema_tree.h"
 #include "sqlide/db_sql_editor_log.h" // for RowId
 #include "grt/grt_threaded_task.h"

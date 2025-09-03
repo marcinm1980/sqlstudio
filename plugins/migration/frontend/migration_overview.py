@@ -22,8 +22,8 @@
 
 import mforms
 import grt
-from workbench.ui import WizardPage
-from workbench.utils import server_version_str2tuple
+from studio.ui import WizardPage
+from studio.utils import server_version_str2tuple
 
 class MainView(WizardPage):
     def __init__(self, main):
@@ -81,7 +81,7 @@ class MainView(WizardPage):
         box.add(mforms.newLabel(""), True, True)
         button_doc = mforms.newButton()
         button_doc.set_text("View Documentation")
-        button_doc.add_clicked_callback(lambda: mforms.Utilities.open_url('http://dev.mysql.com/doc/workbench/en/wb-migration.html'))
+        button_doc.add_clicked_callback(lambda: mforms.Utilities.open_url('http://dev.mysql.com/doc/studio/en/wb-migration.html'))
         box.add(button_doc, True, True)
         box.add(mforms.newLabel(""), True, True)
         self.content.add_end(box, False, True)

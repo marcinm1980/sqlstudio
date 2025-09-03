@@ -2808,9 +2808,9 @@ this library, you may remove it, but the Oracle program might not operate
 properly or at all without it. Depending on the operating system the library can
 be found in the following locations:
 
-   - Linux: <librarydir-prefix>/mysql-workbench/libssh.so
+   - Linux: <librarydir-prefix>/mysql-studio/libssh.so
    - OSX: <appbundle>/Contents/Frameworks/libssh.dylib
-   - Windows: <installation-path>\mysql-workbench\libssh.dll
+   - Windows: <installation-path>\mysql-studio\libssh.dll
 
  * Copyright (c) 2004-2013 by Aris Adamantiadis
  *

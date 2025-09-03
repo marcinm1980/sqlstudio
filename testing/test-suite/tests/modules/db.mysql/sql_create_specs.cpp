@@ -161,7 +161,7 @@ $describe("SQL code generation") {
     NormalizedComparer cmp;
     DbObjectMatchAlterOmf omf;
 
-    data->tester->wb->open_document(data->dataDir + "/workbench/11926862.mwb");
+    data->tester->wb->open_document(data->dataDir + "/studio/11926862.mwb");
     db_mysql_CatalogRef catalog =
       db_mysql_CatalogRef::cast_from(data->tester->wb->get_document()->physicalModels().get(0)->catalog());
 

@@ -29,7 +29,7 @@
 using namespace bec;
 using namespace base;
 
-RelationshipEditorBE::RelationshipEditorBE(const workbench_physical_ConnectionRef &relationship)
+RelationshipEditorBE::RelationshipEditorBE(const studio_physical_ConnectionRef &relationship)
   : BaseEditor(relationship), _relationship(relationship) {
 }
 

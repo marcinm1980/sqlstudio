@@ -26,7 +26,7 @@ import sys
 import grt
 import mforms
 
-from workbench.log import log_debug
+from studio.log import log_debug
 
 class NotSupportedError(Exception):
     pass

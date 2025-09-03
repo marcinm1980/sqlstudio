@@ -98,11 +98,11 @@ Current limitations:
 
 import re
 
-from workbench.log import log_info, log_error, log_warning
+from studio.log import log_info, log_error, log_warning
 
 from wb_server_management import SudoTailInputFile, LocalInputFile, SFTPInputFile
 from wb_common import LogFileAccessError, ServerIOError, InvalidPasswordError
-from workbench.utils import server_os_path
+from studio.utils import server_os_path
 
 import time
 import datetime
