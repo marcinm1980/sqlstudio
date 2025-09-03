@@ -630,10 +630,10 @@ bool DbConnectPanel::test_connection() {
           if (mforms::Utilities::show_warning(
                 "Connection Warning",
                 base::strfmt("Incompatible/nonstandard server version or connection protocol detected (%s).\n\n"
-                             "A connection to this database can be established but some MySQL Workbench features may "
+                             "A connection to this database can be established but some MySql Studio features may "
                              "not work properly since the database is not fully compatible with the supported versions "
                              "of MySQL.\n\n"
-                             "MySQL Workbench is developed and tested for MySQL Server versions 5.6, 5.7 and 8.0\n"
+                             "MySql Studio is developed and tested for MySQL Server versions 5.6, 5.7 and 8.0\n"
                              "Please note: there may be some incompatibilities with version 8.4.",
                              bec::sanitize_server_version_number(version).c_str()),
                 "Continue Anyway", "Cancel") != mforms::ResultOk)

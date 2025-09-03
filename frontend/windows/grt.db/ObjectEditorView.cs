@@ -28,7 +28,7 @@ using System.Windows.Forms;
 using MySQL.Base;
 using MySQL.Grt;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
   public partial class ObjectEditorView : DockablePlugin
   {
@@ -94,7 +94,7 @@ namespace MySQL.GUI.Workbench.Plugins
     }
 
 
-    #region IWorkbenchDocument implementation
+    #region IMySqlStudioDocument implementation
 
     public override UIForm BackendForm
     {

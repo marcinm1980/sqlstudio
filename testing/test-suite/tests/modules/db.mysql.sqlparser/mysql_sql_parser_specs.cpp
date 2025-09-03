@@ -41,7 +41,7 @@ using namespace casmine;
 namespace {
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref sqlFacade;
   
   MySQLParserContext::Ref context;
@@ -132,9 +132,8 @@ $TestData {
 };
 
 $describe("High level MySQL parser tests") {
-
   $beforeAll([this] {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     auto rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->get("/rdbms"));

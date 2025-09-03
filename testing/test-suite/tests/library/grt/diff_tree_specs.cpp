@@ -52,13 +52,13 @@ static grt::DictRef get_traits(bool case_sensitive = false) {
 }
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   std::string dataDir;
 };
 
 $describe("Sync diff") {
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     data->dataDir = casmine::CasmineContext::get()->tmpDataDir();

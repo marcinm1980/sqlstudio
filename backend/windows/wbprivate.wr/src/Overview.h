@@ -26,7 +26,7 @@
 #define __OVERVIEW_H__
 
 namespace MySQL {
-  namespace Workbench {
+  namespace MySqlStudio {
 
   public
     ref class Overview : public MySQL::Grt::TreeModelWrapper {
@@ -213,7 +213,7 @@ namespace MySQL {
       }
     };
 
-  } // namespace Workbench
+  } // namespace MySqlStudio
 } // namespace MySQL
 
 #endif // __OVERVIEW_H__

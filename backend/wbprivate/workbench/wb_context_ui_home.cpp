@@ -272,7 +272,7 @@ void WBContextUI::show_about() {
 //--------------------------------------------------------------------------------------------------
 
 /**
- * Creates the main home screen (Workbench Central, Workspace) if not yet done and docks it to
+ * Creates the main home screen (MySqlStudio Central, Workspace) if not yet done and docks it to
  * the main application window.
  */
 
@@ -470,10 +470,10 @@ void WBContextUI::show_home_screen() {
     int rc = mforms::Utilities::show_warning(
       "Connections using old authentication protocol found",
       "While loading the stored connections some were found to use the old authentication protocol. "
-      "This is no longer supported by MySQL Workbench and the MySQL client library. Click on the \"More Info\" button "
+      "This is no longer supported by MySql Studio and the MySQL client library. Click on the \"More Info\" button "
       "for a more detailed explanation.\n\n"
       "With this change it is essential that user accounts are converted to the new password storage or you can no "
-      "longer connect with MySQL Workbench using these accounts.\n\n"
+      "longer connect with MySql Studio using these accounts.\n\n"
       "The following connections are affected:\n" +
         tmp,
       "Change", "Ignore", "More Info");
@@ -580,7 +580,7 @@ void WBContextUI::remove_connection(const db_mgmt_ConnectionRef &connection) {
   grt::BaseListRef args(true);
   args->insert_unchecked(connection);
 
-  grt::ValueRef result = grt::GRT::get()->call_module_function("Workbench", "deleteConnection", args);
+  grt::ValueRef result = grt::GRT::get()->call_module_function("MySqlStudio", "deleteConnection", args);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -688,7 +688,7 @@ void WBContextUI::handle_home_context_menu(const base::any &object, const std::s
       std::string val = object;
       args->insert_unchecked(grt::StringRef(val));
 
-      grt::ValueRef result = grt::GRT::get()->call_module_function("Workbench", "deleteConnectionGroup", args);
+      grt::ValueRef result = grt::GRT::get()->call_module_function("MySqlStudio", "deleteConnectionGroup", args);
 
       // Internal deletion does not require the UI update
       if (action == "delete_connection_group")
@@ -908,7 +908,7 @@ void WBContextUI::handle_home_action(mforms::HomeScreenAction action, const base
 
     case HomeScreenAction::ActionOpenEERModel: {
       // Note: wb->open_document has an own GUILock, so we must not set another one here.
-      std::string filename = _wb->_frontendCallbacks->show_file_dialog("open", _("Open Workbench Model"), "mwb");
+      std::string filename = _wb->_frontendCallbacks->show_file_dialog("open", _("Open MySqlStudio Model"), "mwb");
       if (!filename.empty())
         _wb->open_document(filename);
       else
@@ -1013,9 +1013,9 @@ void WBContextUI::refresh_home_connections(bool clear_state) {
   // If there are no connections defined yet then create entries for all currently installed
   // local servers (only if this is the first run, after application start).
   if (_initializing_home_screen && (connections->count() == 0)) {
-    grt::Module *module = grt::GRT::get()->get_module("Workbench");
+    grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
     if (module == NULL)
-      throw std::logic_error("Internal error: can't find Workbench module.");
+      throw std::logic_error("Internal error: can't find MySqlStudio module.");
 
     grt::StringListRef arguments(grt::Initialized);
     module->call_function("createInstancesFromLocalServers", arguments);

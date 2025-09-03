@@ -8,7 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MySQL.GUI.Workbench.Plugins.Properties {
+namespace MySQL.GUI.MySqlStudio.Plugins.Properties
+{
     using System;
     
     
@@ -39,7 +40,7 @@ namespace MySQL.GUI.Workbench.Plugins.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySQL.GUI.Workbench.Plugins.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySQL.GUI.MySqlStudio.Plugins.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

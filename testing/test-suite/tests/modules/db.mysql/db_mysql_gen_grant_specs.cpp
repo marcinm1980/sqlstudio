@@ -44,15 +44,12 @@ template <class _InIt1, class _InIt2>
   }
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
 
 $describe("DB MySQL gen grant") {
-
-  $beforeAll([&]() {
-    data->tester.reset(new WorkbenchTester());
-  });
+  $beforeAll([&]() { data->tester.reset(new MySqlStudioTester()); });
 
   $afterAll([&]() {
 

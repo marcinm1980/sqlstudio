@@ -15,9 +15,9 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "8D1107260486CEB800E47090"
-                     BuildableName = "MySQLWorkbench.app"
-                     BlueprintName = "MySQLWorkbench"
-                     ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+                     BuildableName = "MySQLMySqlStudio.app"
+                     BlueprintName = "MySQLMySqlStudio"
+                     ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8D1107260486CEB800E47090"
-               BuildableName = "MySQLWorkbench.app"
-               BlueprintName = "MySQLWorkbench"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               BuildableName = "MySQLMySqlStudio.app"
+               BlueprintName = "MySQLMySqlStudio"
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -49,9 +49,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8D1107260486CEB800E47090"
-            BuildableName = "MySQLWorkbench.app"
-            BlueprintName = "MySQLWorkbench"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            BuildableName = "MySQLMySqlStudio.app"
+            BlueprintName = "MySQLMySqlStudio"
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8D1107260486CEB800E47090"
-            BuildableName = "MySQLWorkbench.app"
-            BlueprintName = "MySQLWorkbench"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            BuildableName = "MySQLMySqlStudio.app"
+            BlueprintName = "MySQLMySqlStudio"
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8D1107260486CEB800E47090"
-            BuildableName = "MySQLWorkbench.app"
-            BlueprintName = "MySQLWorkbench"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            BuildableName = "MySQLMySqlStudio.app"
+            BlueprintName = "MySQLMySqlStudio"
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

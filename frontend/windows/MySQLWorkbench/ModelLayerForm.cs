@@ -29,7 +29,7 @@ using Aga.Controls.Tree;
 using MySQL.Controls;
 using MySQL.Grt;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
   public partial class ModelLayerForm : TabDocument
   {

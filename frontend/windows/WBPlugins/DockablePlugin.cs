@@ -29,14 +29,14 @@ using System.Runtime.InteropServices;
 using MySQL.Base;
 using MySQL.Controls;
 using MySQL.Grt;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
-	/// <summary>
-	/// Generic GRT Object Editor
-	/// </summary>
-  public partial class DockablePlugin : TabDocument, IWorkbenchDocument
+  /// <summary>
+  /// Generic GRT Object Editor
+  /// </summary>
+  public partial class DockablePlugin : TabDocument, IMySqlStudioDocument
   {
     #region Member Variables
 
@@ -115,14 +115,14 @@ namespace MySQL.GUI.Workbench.Plugins
 
     #endregion
 
-    #region IWorkbenchDocument Members
+    #region IMySqlStudioDocument Members
 
     public virtual UIForm BackendForm
     {
       get { return null; }
     }
 
-    public virtual void RefreshGUI(MySQL.Workbench.RefreshType refresh, string str, IntPtr ptr)
+    public virtual void RefreshGUI(MySQL.MySqlStudio.RefreshType refresh, string str, IntPtr ptr)
     {
     }
 

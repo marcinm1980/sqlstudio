@@ -7,4 +7,4 @@ Table `grtdiff_alter_test`.`t1` was modified
   - removed column t
   __
 ----------------------------------------------
-End of MySQL Workbench Report
+End of MySql Studio Report

@@ -17,7 +17,7 @@
               <member name="description" type="string" attr:desc="the note text" attr:editas="longtext"/>
               <member name="styleTagValue" type="string" attr:desc="the value the style tag should be set to, e.g. the name of the css file"/>
               <member name="previewImageFileName" type="string" attr:desc="the file name of the preview image, has to match preview_*.png"/>
-              <member name="canUseHTMLMarkup" type="int" attr:desc="A flag that indicates if Workbench can use HTML markup for SQL syntax highlighting."/>
+              <member name="canUseHTMLMarkup" type="int" attr:desc="A flag that indicates if MySqlStudio can use HTML markup for SQL syntax highlighting."/>
           </members>
       </gstruct>
   

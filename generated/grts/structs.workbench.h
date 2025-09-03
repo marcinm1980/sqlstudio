@@ -55,19 +55,18 @@ class workbench_OverviewPanel;
 typedef grt::Ref<workbench_OverviewPanel> workbench_OverviewPanelRef;
 class workbench_Document;
 typedef grt::Ref<workbench_Document> workbench_DocumentRef;
-class workbench_Workbench;
-typedef grt::Ref<workbench_Workbench> workbench_WorkbenchRef;
+class workbench_MySqlStudio;
+typedef grt::Ref<workbench_MySqlStudio> workbench_MySqlStudioRef;
 
-
-namespace mforms { 
+namespace mforms {
   class Object;
-}; 
+};
 
-namespace grt { 
+namespace grt {
   class AutoPyObject;
-}; 
+};
 
-class  workbench_OverviewPanel : public GrtObject {
+class workbench_OverviewPanel : public GrtObject {
   typedef GrtObject super;
 
 public:
@@ -100,11 +99,13 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  grt::StringRef caption() const {
+    return _caption;
+  }
 
   /**
    * Setter for attribute caption
-   * 
+   *
    * the caption displayed on the panel's header
    * \par In Python:
    *   obj.caption = value
@@ -122,11 +123,13 @@ public:
    * \par In Python:
    *    value = obj.expanded
    */
-  grt::IntegerRef expanded() const { return _expanded; }
+  grt::IntegerRef expanded() const {
+    return _expanded;
+  }
 
   /**
    * Setter for attribute expanded
-   * 
+   *
    * specifies if the panel is currently expanded
    * \par In Python:
    *   obj.expanded = value
@@ -144,11 +147,13 @@ public:
    * \par In Python:
    *    value = obj.expandedHeight
    */
-  grt::IntegerRef expandedHeight() const { return _expandedHeight; }
+  grt::IntegerRef expandedHeight() const {
+    return _expandedHeight;
+  }
 
   /**
    * Setter for attribute expandedHeight
-   * 
+   *
    * the panel's height when it is expanded
    * \par In Python:
    *   obj.expandedHeight = value
@@ -166,11 +171,13 @@ public:
    * \par In Python:
    *    value = obj.hasTabSelection
    */
-  grt::IntegerRef hasTabSelection() const { return _hasTabSelection; }
+  grt::IntegerRef hasTabSelection() const {
+    return _hasTabSelection;
+  }
 
   /**
    * Setter for attribute hasTabSelection
-   * 
+   *
    * specifies if the panel has attached tabs
    * \par In Python:
    *   obj.hasTabSelection = value
@@ -188,11 +195,13 @@ public:
    * \par In Python:
    *    value = obj.implModule
    */
-  grt::StringRef implModule() const { return _implModule; }
+  grt::StringRef implModule() const {
+    return _implModule;
+  }
 
   /**
    * Setter for attribute implModule
-   * 
+   *
    * GRT module implementing the item functionality
    * \par In Python:
    *   obj.implModule = value
@@ -210,11 +219,13 @@ public:
    * \par In Python:
    *    value = obj.itemActivationFunction
    */
-  grt::StringRef itemActivationFunction() const { return _itemActivationFunction; }
+  grt::StringRef itemActivationFunction() const {
+    return _itemActivationFunction;
+  }
 
   /**
    * Setter for attribute itemActivationFunction
-   * 
+   *
    * the function that is called when the item is activated
    * \par In Python:
    *   obj.itemActivationFunction = value
@@ -232,11 +243,13 @@ public:
    * \par In Python:
    *    value = obj.itemCountFunction
    */
-  grt::StringRef itemCountFunction() const { return _itemCountFunction; }
+  grt::StringRef itemCountFunction() const {
+    return _itemCountFunction;
+  }
 
   /**
    * Setter for attribute itemCountFunction
-   * 
+   *
    * the function that returns the number of items
    * \par In Python:
    *   obj.itemCountFunction = value
@@ -250,16 +263,20 @@ public:
   /**
    * Getter for attribute itemDisplayMode
    *
-   * defines how the items on the panel are displayed. Setting it to 1 will cause a large icon display, 2 a small icon display and 3 a list
+   * defines how the items on the panel are displayed. Setting it to 1 will cause a large icon display, 2 a small icon
+   * display and 3 a list
    * \par In Python:
    *    value = obj.itemDisplayMode
    */
-  grt::IntegerRef itemDisplayMode() const { return _itemDisplayMode; }
+  grt::IntegerRef itemDisplayMode() const {
+    return _itemDisplayMode;
+  }
 
   /**
    * Setter for attribute itemDisplayMode
-   * 
-   * defines how the items on the panel are displayed. Setting it to 1 will cause a large icon display, 2 a small icon display and 3 a list
+   *
+   * defines how the items on the panel are displayed. Setting it to 1 will cause a large icon display, 2 a small icon
+   * display and 3 a list
    * \par In Python:
    *   obj.itemDisplayMode = value
    */
@@ -276,11 +293,13 @@ public:
    * \par In Python:
    *    value = obj.itemInfoFunction
    */
-  grt::StringRef itemInfoFunction() const { return _itemInfoFunction; }
+  grt::StringRef itemInfoFunction() const {
+    return _itemInfoFunction;
+  }
 
   /**
    * Setter for attribute itemInfoFunction
-   * 
+   *
    * the function that returns the item information
    * \par In Python:
    *   obj.itemInfoFunction = value
@@ -298,11 +317,13 @@ public:
    * \par In Python:
    *    value = obj.nodeId
    */
-  grt::StringRef nodeId() const { return _nodeId; }
+  grt::StringRef nodeId() const {
+    return _nodeId;
+  }
 
   /**
    * Setter for attribute nodeId
-   * 
+   *
    * the identifier of panel in the GUI
    * \par In Python:
    *   obj.nodeId = value
@@ -320,8 +341,9 @@ public:
    * \par In Python:
    *    value = obj.selectedItems
    */
-  grt::IntegerListRef selectedItems() const { return _selectedItems; }
-
+  grt::IntegerListRef selectedItems() const {
+    return _selectedItems;
+  }
 
 private: // The next attribute is read-only.
   virtual void selectedItems(const grt::IntegerListRef &value) {
@@ -329,8 +351,8 @@ private: // The next attribute is read-only.
     _selectedItems = value;
     member_changed("selectedItems", ovalue, value);
   }
-public:
 
+public:
   /**
    * Getter for attribute tabActivationFunction
    *
@@ -338,11 +360,13 @@ public:
    * \par In Python:
    *    value = obj.tabActivationFunction
    */
-  grt::StringRef tabActivationFunction() const { return _tabActivationFunction; }
+  grt::StringRef tabActivationFunction() const {
+    return _tabActivationFunction;
+  }
 
   /**
    * Setter for attribute tabActivationFunction
-   * 
+   *
    * the function that is called when the tab is activated
    * \par In Python:
    *   obj.tabActivationFunction = value
@@ -360,11 +384,13 @@ public:
    * \par In Python:
    *    value = obj.tabCountFunction
    */
-  grt::StringRef tabCountFunction() const { return _tabCountFunction; }
+  grt::StringRef tabCountFunction() const {
+    return _tabCountFunction;
+  }
 
   /**
    * Setter for attribute tabCountFunction
-   * 
+   *
    * the function that returns the number of tabs
    * \par In Python:
    *   obj.tabCountFunction = value
@@ -382,11 +408,13 @@ public:
    * \par In Python:
    *    value = obj.tabInfoFunction
    */
-  grt::StringRef tabInfoFunction() const { return _tabInfoFunction; }
+  grt::StringRef tabInfoFunction() const {
+    return _tabInfoFunction;
+  }
 
   /**
    * Setter for attribute tabInfoFunction
-   * 
+   *
    * the function that returns the tab information
    * \par In Python:
    *   obj.tabInfoFunction = value
@@ -398,7 +426,6 @@ public:
   }
 
 protected:
-
   grt::StringRef _caption;
   grt::IntegerRef _expanded;
   grt::IntegerRef _expandedHeight;
@@ -428,77 +455,92 @@ public:
     {
       void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::caption;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::caption;
-      meta->bind_member("caption", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("caption",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::IntegerRef &) = &workbench_OverviewPanel::expanded;
       grt::IntegerRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::expanded;
-      meta->bind_member("expanded", new grt::MetaClass::Property<workbench_OverviewPanel,grt::IntegerRef>(getter, setter));
+      meta->bind_member("expanded",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::IntegerRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::IntegerRef &) = &workbench_OverviewPanel::expandedHeight;
       grt::IntegerRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::expandedHeight;
-      meta->bind_member("expandedHeight", new grt::MetaClass::Property<workbench_OverviewPanel,grt::IntegerRef>(getter, setter));
+      meta->bind_member("expandedHeight",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::IntegerRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::IntegerRef &) = &workbench_OverviewPanel::hasTabSelection;
       grt::IntegerRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::hasTabSelection;
-      meta->bind_member("hasTabSelection", new grt::MetaClass::Property<workbench_OverviewPanel,grt::IntegerRef>(getter, setter));
+      meta->bind_member("hasTabSelection",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::IntegerRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::implModule;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::implModule;
-      meta->bind_member("implModule", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("implModule",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
     {
-      void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::itemActivationFunction;
+      void (workbench_OverviewPanel::*setter)(const grt::StringRef &) =
+        &workbench_OverviewPanel::itemActivationFunction;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::itemActivationFunction;
-      meta->bind_member("itemActivationFunction", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("itemActivationFunction",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::itemCountFunction;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::itemCountFunction;
-      meta->bind_member("itemCountFunction", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("itemCountFunction",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::IntegerRef &) = &workbench_OverviewPanel::itemDisplayMode;
       grt::IntegerRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::itemDisplayMode;
-      meta->bind_member("itemDisplayMode", new grt::MetaClass::Property<workbench_OverviewPanel,grt::IntegerRef>(getter, setter));
+      meta->bind_member("itemDisplayMode",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::IntegerRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::itemInfoFunction;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::itemInfoFunction;
-      meta->bind_member("itemInfoFunction", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("itemInfoFunction",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::nodeId;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::nodeId;
-      meta->bind_member("nodeId", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("nodeId",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::IntegerListRef &) = &workbench_OverviewPanel::selectedItems;
       grt::IntegerListRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::selectedItems;
-      meta->bind_member("selectedItems", new grt::MetaClass::Property<workbench_OverviewPanel,grt::IntegerListRef>(getter, setter));
+      meta->bind_member("selectedItems",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::IntegerListRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::tabActivationFunction;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::tabActivationFunction;
-      meta->bind_member("tabActivationFunction", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("tabActivationFunction",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::tabCountFunction;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::tabCountFunction;
-      meta->bind_member("tabCountFunction", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("tabCountFunction",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
     {
       void (workbench_OverviewPanel::*setter)(const grt::StringRef &) = &workbench_OverviewPanel::tabInfoFunction;
       grt::StringRef (workbench_OverviewPanel::*getter)() const = &workbench_OverviewPanel::tabInfoFunction;
-      meta->bind_member("tabInfoFunction", new grt::MetaClass::Property<workbench_OverviewPanel,grt::StringRef>(getter, setter));
+      meta->bind_member("tabInfoFunction",
+                        new grt::MetaClass::Property<workbench_OverviewPanel, grt::StringRef>(getter, setter));
     }
   }
 };
 
-class  workbench_Document : public app_Document {
+class workbench_Document : public app_Document {
   typedef app_Document super;
 
 public:
@@ -520,11 +562,13 @@ public:
    * \par In Python:
    *    value = obj.logicalModel
    */
-  workbench_logical_ModelRef logicalModel() const { return _logicalModel; }
+  workbench_logical_ModelRef logicalModel() const {
+    return _logicalModel;
+  }
 
   /**
    * Setter for attribute logicalModel
-   * 
+   *
    * the logical model
    * \par In Python:
    *   obj.logicalModel = value
@@ -543,11 +587,13 @@ public:
    * \par In Python:
    *    value = obj.overviewCurrentModelType
    */
-  model_ModelRef overviewCurrentModelType() const { return _overviewCurrentModelType; }
+  model_ModelRef overviewCurrentModelType() const {
+    return _overviewCurrentModelType;
+  }
 
   /**
    * Setter for attribute overviewCurrentModelType
-   * 
+   *
    * specifies if the panel is currently selected
    * \par In Python:
    *   obj.overviewCurrentModelType = value
@@ -566,8 +612,9 @@ public:
    * \par In Python:
    *    value = obj.overviewPanels
    */
-  grt::ListRef<workbench_OverviewPanel> overviewPanels() const { return _overviewPanels; }
-
+  grt::ListRef<workbench_OverviewPanel> overviewPanels() const {
+    return _overviewPanels;
+  }
 
 private: // The next attribute is read-only.
   virtual void overviewPanels(const grt::ListRef<workbench_OverviewPanel> &value) {
@@ -576,8 +623,8 @@ private: // The next attribute is read-only.
     _overviewPanels = value;
     owned_member_changed("overviewPanels", ovalue, value);
   }
-public:
 
+public:
   // physicalModels is owned by workbench_Document
   /**
    * Getter for attribute physicalModels (read-only)
@@ -586,8 +633,9 @@ public:
    * \par In Python:
    *    value = obj.physicalModels
    */
-  grt::ListRef<workbench_physical_Model> physicalModels() const { return _physicalModels; }
-
+  grt::ListRef<workbench_physical_Model> physicalModels() const {
+    return _physicalModels;
+  }
 
 private: // The next attribute is read-only.
   virtual void physicalModels(const grt::ListRef<workbench_physical_Model> &value) {
@@ -596,14 +644,13 @@ private: // The next attribute is read-only.
     _physicalModels = value;
     owned_member_changed("physicalModels", ovalue, value);
   }
+
 public:
-
 protected:
-
-  workbench_logical_ModelRef _logicalModel;// owned
+  workbench_logical_ModelRef _logicalModel; // owned
   model_ModelRef _overviewCurrentModelType;
-  grt::ListRef<workbench_OverviewPanel> _overviewPanels;// owned
-  grt::ListRef<workbench_physical_Model> _physicalModels;// owned
+  grt::ListRef<workbench_OverviewPanel> _overviewPanels;  // owned
+  grt::ListRef<workbench_physical_Model> _physicalModels; // owned
 
 private: // Wrapper methods for use by the grt.
   static grt::ObjectRef create() {
@@ -619,73 +666,88 @@ public:
     {
       void (workbench_Document::*setter)(const workbench_logical_ModelRef &) = &workbench_Document::logicalModel;
       workbench_logical_ModelRef (workbench_Document::*getter)() const = &workbench_Document::logicalModel;
-      meta->bind_member("logicalModel", new grt::MetaClass::Property<workbench_Document,workbench_logical_ModelRef>(getter, setter));
+      meta->bind_member("logicalModel",
+                        new grt::MetaClass::Property<workbench_Document, workbench_logical_ModelRef>(getter, setter));
     }
     {
       void (workbench_Document::*setter)(const model_ModelRef &) = &workbench_Document::overviewCurrentModelType;
       model_ModelRef (workbench_Document::*getter)() const = &workbench_Document::overviewCurrentModelType;
-      meta->bind_member("overviewCurrentModelType", new grt::MetaClass::Property<workbench_Document,model_ModelRef>(getter, setter));
+      meta->bind_member("overviewCurrentModelType",
+                        new grt::MetaClass::Property<workbench_Document, model_ModelRef>(getter, setter));
     }
     {
-      void (workbench_Document::*setter)(const grt::ListRef<workbench_OverviewPanel> &) = &workbench_Document::overviewPanels;
+      void (workbench_Document::*setter)(const grt::ListRef<workbench_OverviewPanel> &) =
+        &workbench_Document::overviewPanels;
       grt::ListRef<workbench_OverviewPanel> (workbench_Document::*getter)() const = &workbench_Document::overviewPanels;
-      meta->bind_member("overviewPanels", new grt::MetaClass::Property<workbench_Document,grt::ListRef<workbench_OverviewPanel>>(getter, setter));
+      meta->bind_member(
+        "overviewPanels",
+        new grt::MetaClass::Property<workbench_Document, grt::ListRef<workbench_OverviewPanel>>(getter, setter));
     }
     {
-      void (workbench_Document::*setter)(const grt::ListRef<workbench_physical_Model> &) = &workbench_Document::physicalModels;
-      grt::ListRef<workbench_physical_Model> (workbench_Document::*getter)() const = &workbench_Document::physicalModels;
-      meta->bind_member("physicalModels", new grt::MetaClass::Property<workbench_Document,grt::ListRef<workbench_physical_Model>>(getter, setter));
+      void (workbench_Document::*setter)(const grt::ListRef<workbench_physical_Model> &) =
+        &workbench_Document::physicalModels;
+      grt::ListRef<workbench_physical_Model> (workbench_Document::*getter)() const =
+        &workbench_Document::physicalModels;
+      meta->bind_member(
+        "physicalModels",
+        new grt::MetaClass::Property<workbench_Document, grt::ListRef<workbench_physical_Model>>(getter, setter));
     }
   }
 };
 
 /** an object to store the workbench's data */
-class  workbench_Workbench : public app_Application {
+class workbench_MySqlStudio : public app_Application {
   typedef app_Application super;
 
 public:
-  workbench_Workbench(grt::MetaClass *meta = nullptr)
+  workbench_MySqlStudio(grt::MetaClass *meta = nullptr)
     : app_Application(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())),
       _docPath(""),
       _sqlEditors(this, false) {
   }
 
   static std::string static_class_name() {
-    return "workbench.Workbench";
+    return "workbench.MySqlStudio";
   }
 
-  // doc is owned by workbench_Workbench
+  // doc is owned by workbench_MySqlStudio
   /**
    * Getter for attribute doc
    *
-   * the Workbench document
+   * the MySqlStudio document
    * \par In Python:
    *    value = obj.doc
    */
-  workbench_DocumentRef doc() const { return workbench_DocumentRef::cast_from(_doc); }
+  workbench_DocumentRef doc() const {
+    return workbench_DocumentRef::cast_from(_doc);
+  }
 
   /**
    * Setter for attribute doc
-   * 
-   * the Workbench document
+   *
+   * the MySqlStudio document
    * \par In Python:
    *   obj.doc = value
    */
-  virtual void doc(const workbench_DocumentRef &value) { super::doc(value); }
+  virtual void doc(const workbench_DocumentRef &value) {
+    super::doc(value);
+  }
 
   /**
    * Getter for attribute docPath
    *
-   * the Workbench document path
+   * the MySqlStudio document path
    * \par In Python:
    *    value = obj.docPath
    */
-  grt::StringRef docPath() const { return _docPath; }
+  grt::StringRef docPath() const {
+    return _docPath;
+  }
 
   /**
    * Setter for attribute docPath
-   * 
-   * the Workbench document path
+   *
+   * the MySqlStudio document path
    * \par In Python:
    *   obj.docPath = value
    */
@@ -695,7 +757,7 @@ public:
     member_changed("docPath", ovalue, value);
   }
 
-  // migration is owned by workbench_Workbench
+  // migration is owned by workbench_MySqlStudio
   /**
    * Getter for attribute migration
    *
@@ -703,11 +765,13 @@ public:
    * \par In Python:
    *    value = obj.migration
    */
-  db_migration_MigrationRef migration() const { return _migration; }
+  db_migration_MigrationRef migration() const {
+    return _migration;
+  }
 
   /**
    * Setter for attribute migration
-   * 
+   *
    * data for Migration Plugin
    * \par In Python:
    *   obj.migration = value
@@ -719,7 +783,7 @@ public:
     owned_member_changed("migration", ovalue, value);
   }
 
-  // rdbmsMgmt is owned by workbench_Workbench
+  // rdbmsMgmt is owned by workbench_MySqlStudio
   /**
    * Getter for attribute rdbmsMgmt
    *
@@ -727,11 +791,13 @@ public:
    * \par In Python:
    *    value = obj.rdbmsMgmt
    */
-  db_mgmt_ManagementRef rdbmsMgmt() const { return _rdbmsMgmt; }
+  db_mgmt_ManagementRef rdbmsMgmt() const {
+    return _rdbmsMgmt;
+  }
 
   /**
    * Setter for attribute rdbmsMgmt
-   * 
+   *
    * the RDBMS management information
    * \par In Python:
    *   obj.rdbmsMgmt = value
@@ -743,7 +809,7 @@ public:
     owned_member_changed("rdbmsMgmt", ovalue, value);
   }
 
-  // sqlEditors is owned by workbench_Workbench
+  // sqlEditors is owned by workbench_MySqlStudio
   /**
    * Getter for attribute sqlEditors (read-only)
    *
@@ -751,8 +817,9 @@ public:
    * \par In Python:
    *    value = obj.sqlEditors
    */
-  grt::ListRef<db_query_Editor> sqlEditors() const { return _sqlEditors; }
-
+  grt::ListRef<db_query_Editor> sqlEditors() const {
+    return _sqlEditors;
+  }
 
 private: // The next attribute is read-only.
   virtual void sqlEditors(const grt::ListRef<db_query_Editor> &value) {
@@ -761,18 +828,17 @@ private: // The next attribute is read-only.
     _sqlEditors = value;
     owned_member_changed("sqlEditors", ovalue, value);
   }
+
 public:
-
 protected:
-
   grt::StringRef _docPath;
-  db_migration_MigrationRef _migration;// owned
-  db_mgmt_ManagementRef _rdbmsMgmt;// owned
-  grt::ListRef<db_query_Editor> _sqlEditors;// owned
+  db_migration_MigrationRef _migration;      // owned
+  db_mgmt_ManagementRef _rdbmsMgmt;          // owned
+  grt::ListRef<db_query_Editor> _sqlEditors; // owned
 
 private: // Wrapper methods for use by the grt.
   static grt::ObjectRef create() {
-    return grt::ObjectRef(new workbench_Workbench());
+    return grt::ObjectRef(new workbench_MySqlStudio());
   }
 
 public:
@@ -780,41 +846,44 @@ public:
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
-    meta->bind_allocator(&workbench_Workbench::create);
+    meta->bind_allocator(&workbench_MySqlStudio::create);
     {
-      void (workbench_Workbench::*setter)(const workbench_DocumentRef &) = 0;
-      workbench_DocumentRef (workbench_Workbench::*getter)() const = 0;
-      meta->bind_member("doc", new grt::MetaClass::Property<workbench_Workbench,workbench_DocumentRef>(getter, setter));
+      void (workbench_MySqlStudio::*setter)(const workbench_DocumentRef &) = 0;
+      workbench_DocumentRef (workbench_MySqlStudio::*getter)() const = 0;
+      meta->bind_member("doc",
+                        new grt::MetaClass::Property<workbench_MySqlStudio, workbench_DocumentRef>(getter, setter));
     }
     {
-      void (workbench_Workbench::*setter)(const grt::StringRef &) = &workbench_Workbench::docPath;
-      grt::StringRef (workbench_Workbench::*getter)() const = &workbench_Workbench::docPath;
-      meta->bind_member("docPath", new grt::MetaClass::Property<workbench_Workbench,grt::StringRef>(getter, setter));
+      void (workbench_MySqlStudio::*setter)(const grt::StringRef &) = &workbench_MySqlStudio::docPath;
+      grt::StringRef (workbench_MySqlStudio::*getter)() const = &workbench_MySqlStudio::docPath;
+      meta->bind_member("docPath", new grt::MetaClass::Property<workbench_MySqlStudio, grt::StringRef>(getter, setter));
     }
     {
-      void (workbench_Workbench::*setter)(const db_migration_MigrationRef &) = &workbench_Workbench::migration;
-      db_migration_MigrationRef (workbench_Workbench::*getter)() const = &workbench_Workbench::migration;
-      meta->bind_member("migration", new grt::MetaClass::Property<workbench_Workbench,db_migration_MigrationRef>(getter, setter));
+      void (workbench_MySqlStudio::*setter)(const db_migration_MigrationRef &) = &workbench_MySqlStudio::migration;
+      db_migration_MigrationRef (workbench_MySqlStudio::*getter)() const = &workbench_MySqlStudio::migration;
+      meta->bind_member("migration",
+                        new grt::MetaClass::Property<workbench_MySqlStudio, db_migration_MigrationRef>(getter, setter));
     }
     {
-      void (workbench_Workbench::*setter)(const db_mgmt_ManagementRef &) = &workbench_Workbench::rdbmsMgmt;
-      db_mgmt_ManagementRef (workbench_Workbench::*getter)() const = &workbench_Workbench::rdbmsMgmt;
-      meta->bind_member("rdbmsMgmt", new grt::MetaClass::Property<workbench_Workbench,db_mgmt_ManagementRef>(getter, setter));
+      void (workbench_MySqlStudio::*setter)(const db_mgmt_ManagementRef &) = &workbench_MySqlStudio::rdbmsMgmt;
+      db_mgmt_ManagementRef (workbench_MySqlStudio::*getter)() const = &workbench_MySqlStudio::rdbmsMgmt;
+      meta->bind_member("rdbmsMgmt",
+                        new grt::MetaClass::Property<workbench_MySqlStudio, db_mgmt_ManagementRef>(getter, setter));
     }
     {
-      void (workbench_Workbench::*setter)(const grt::ListRef<db_query_Editor> &) = &workbench_Workbench::sqlEditors;
-      grt::ListRef<db_query_Editor> (workbench_Workbench::*getter)() const = &workbench_Workbench::sqlEditors;
-      meta->bind_member("sqlEditors", new grt::MetaClass::Property<workbench_Workbench,grt::ListRef<db_query_Editor>>(getter, setter));
+      void (workbench_MySqlStudio::*setter)(const grt::ListRef<db_query_Editor> &) = &workbench_MySqlStudio::sqlEditors;
+      grt::ListRef<db_query_Editor> (workbench_MySqlStudio::*getter)() const = &workbench_MySqlStudio::sqlEditors;
+      meta->bind_member(
+        "sqlEditors",
+        new grt::MetaClass::Property<workbench_MySqlStudio, grt::ListRef<db_query_Editor>>(getter, setter));
     }
   }
 };
 
-
-
 inline void register_structs_workbench_xml() {
   grt::internal::ClassRegistry::register_class<workbench_OverviewPanel>();
   grt::internal::ClassRegistry::register_class<workbench_Document>();
-  grt::internal::ClassRegistry::register_class<workbench_Workbench>();
+  grt::internal::ClassRegistry::register_class<workbench_MySqlStudio>();
 }
 
 #ifdef AUTO_REGISTER_GRT_CLASSES

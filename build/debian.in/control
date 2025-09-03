@@ -15,9 +15,9 @@ Replaces: mysql-workbench-com-se, mysql-workbench, mysql-workbench-community, my
 Depends: ${shlibs:Depends}, ${misc:Depends}, libglib2.0-0 (>= 2.28), libsecret-1-0
 Architecture: i386 amd64
 Suggests: gnome-keyring, libproj-dev
-Description: MySQL Workbench
- MySQL Workbench is development, administration and data modeling tool
+Description: MySql Studio
+ MySql Studio is development, administration and data modeling tool
  for MySQL. Besides editing and running SQL queries and scripts, it supports
  the design of MySQL databases through a EER diagram, which is then used to
- generate SQL scripts. Workbench also supports migration from many RDBMS
+ generate SQL scripts. MySqlStudio also supports migration from many RDBMS
  products to MySQL.

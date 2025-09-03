@@ -77,12 +77,12 @@ static void ensure_list_contents_copy(const grt::BaseListRef &copy, const grt::B
 }
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
 $describe("Copy/paste related tests") {
   $beforeAll([&]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
   });
 

@@ -107,7 +107,7 @@ namespace mforms {
   };
 
   /**
-   * This class implements the main (home) screen in MySQL Workbench.
+   * This class implements the main (home) screen in MySql Studio.
    */
   class MFORMS_EXPORT HomeScreen : public mforms::AppView, public base::Observer {
   private:

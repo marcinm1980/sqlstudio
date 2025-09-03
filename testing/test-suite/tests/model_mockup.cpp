@@ -32,31 +32,31 @@
 using namespace bec;
 using namespace casmine;
 
-SyntheticMySQLModel::SyntheticMySQLModel(WorkbenchTester *tester)
+SyntheticMySQLModel::SyntheticMySQLModel(MySqlStudioTester *tester)
   : physicalDiagram(grt::Initialized),
-  schema(grt::Initialized),
-  table(grt::Initialized),
-  column(grt::Initialized),
-  column2(grt::Initialized),
-  columnText(grt::Initialized),
-  columnDate(grt::Initialized),
-  columnDouble(grt::Initialized),
-  columnEnum(grt::Initialized),
-  primaryKey(grt::Initialized),
-  indexColumn(grt::Initialized),
-  foreignKey(grt::Initialized),
-  trigger(grt::Initialized),
-  view(grt::Initialized),
-  routine(grt::Initialized),
-  routineGroup(grt::Initialized),
-  user(grt::Initialized),
-  role(grt::Initialized),
-  tablePrivilege(grt::Initialized),
-  viewPrivilege(grt::Initialized),
-  routinePrivilege(grt::Initialized),
-  tableFigure(grt::Initialized),
-  viewFigure(grt::Initialized),
-  routineGroupFigure(grt::Initialized) {
+    schema(grt::Initialized),
+    table(grt::Initialized),
+    column(grt::Initialized),
+    column2(grt::Initialized),
+    columnText(grt::Initialized),
+    columnDate(grt::Initialized),
+    columnDouble(grt::Initialized),
+    columnEnum(grt::Initialized),
+    primaryKey(grt::Initialized),
+    indexColumn(grt::Initialized),
+    foreignKey(grt::Initialized),
+    trigger(grt::Initialized),
+    view(grt::Initialized),
+    routine(grt::Initialized),
+    routineGroup(grt::Initialized),
+    user(grt::Initialized),
+    role(grt::Initialized),
+    tablePrivilege(grt::Initialized),
+    viewPrivilege(grt::Initialized),
+    routinePrivilege(grt::Initialized),
+    tableFigure(grt::Initialized),
+    viewFigure(grt::Initialized),
+    routineGroupFigure(grt::Initialized) {
   model = grt::copy_object(tester->wb->get_document()->physicalModels().get(0));
   rdbms = model->rdbms();
   catalog = db_mysql_CatalogRef::cast_from(model->catalog());
@@ -95,7 +95,7 @@ SyntheticMySQLModel::SyntheticMySQLModel()
   routineGroupFigure(grt::Initialized) {
 
   // Set up a basic root structure.
-  workbench_WorkbenchRef wb(grt::Initialized);
+  workbench_MySqlStudioRef wb(grt::Initialized);
   workbench_DocumentRef doc(grt::Initialized);
   doc->owner(wb);
   wb->doc(doc);

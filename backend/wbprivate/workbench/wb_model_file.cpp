@@ -49,7 +49,7 @@
 #include "grts/structs.workbench.h"
 #include <glib/gstdio.h>
 
-#define DOCUMENT_FORMAT "MySQL Workbench Model"
+#define DOCUMENT_FORMAT "MySql Studio Model"
 // version history:
 // switched to 1.1.6 in 5.0.20
 // switched to 1.2.0 in 5.1.0
@@ -448,7 +448,7 @@ std::list<std::string> ModelFile::unpack_zip(const std::string &zipfile, const s
 #endif
   if (z == NULL) {
     if (err == ZIP_ER_NOZIP)
-      throw std::runtime_error("The file is not a Workbench document.");
+      throw std::runtime_error("The file is not a MySqlStudio document.");
     else if (err == ZIP_ER_MEMORY)
       throw grt::os_error("Cannot allocate enough memory to open document.");
     else if (err == ZIP_ER_NOENT)
@@ -682,7 +682,7 @@ workbench_DocumentRef ModelFile::unserialize_document(xmlDocPtr xmldoc, const st
   _load_warnings.clear();
 
   if (doctype != DOCUMENT_FORMAT)
-    throw std::runtime_error("The file does not contain a Workbench document.");
+    throw std::runtime_error("The file does not contain a MySqlStudio document.");
 
   if (version != DOCUMENT_VERSION) {
     // first phase of document upgrade will upgrade it at XML level
@@ -698,7 +698,7 @@ workbench_DocumentRef ModelFile::unserialize_document(xmlDocPtr xmldoc, const st
     throw std::runtime_error("Error unserializing document data.");
 
   if (!workbench_DocumentRef::can_wrap(value))
-    throw std::runtime_error("Loaded file does not contain a valid Workbench document.");
+    throw std::runtime_error("Loaded file does not contain a valid MySqlStudio document.");
 
   workbench_DocumentRef doc(workbench_DocumentRef::cast_from(value));
 

@@ -69,9 +69,7 @@ $describe("GRT Inspector Value") {
     grt::GRT::get()->end_loading_metaclasses();
   });
 
-  $afterAll([&]() {
-    WorkbenchTester::reinitGRT();
-  });
+  $afterAll([&]() { MySqlStudioTester::reinitGRT(); });
 
   $it("Test inspection of list", [this]() {
     bool flag;

@@ -263,7 +263,7 @@ class WbAdminControl(object):
                 self.sshBridge = self.editor.sshConnection
                 self.server_helper = ServerManagementHelper(self.server_profile, self.sshBridge)
             else:
-                ssh = grt.modules.Workbench.createSSHSession(self.server_profile.get_settings_object())
+                ssh = grt.modules.MySqlStudio.createSSHSession(self.server_profile.get_settings_object())
                 if ssh.connect() != 0:
                     raise OperationCancelledError("Could not connect to SSH server")
                 self.sshBridge = ssh 
@@ -862,7 +862,7 @@ uses_ssh: %i uses_wmi: %i\n""" % (self.server_profile.uses_ssh, self.server_prof
 
         # Save the server profile if at least one of its values has changed:
         if request_save_profile:
-            grt.modules.Workbench.saveInstances()
+            grt.modules.MySqlStudio.saveInstances()
 
 
     #---------------------------------------------------------------------------

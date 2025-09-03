@@ -29,7 +29,7 @@ namespace wb {
 }
 
 namespace MySQL {
-  namespace Workbench {
+  namespace MySqlStudio {
 
   public
     ref class ModelDiagramFormWrapper : public MySQL::Base::UIForm {
@@ -76,5 +76,5 @@ namespace MySQL {
       Aga::Controls::Tree::TreeViewAdv ^ get_catalog_tree();
     };
 
-  } // namespace Workbench
+  } // namespace MySqlStudio
 } // namespace MySQL

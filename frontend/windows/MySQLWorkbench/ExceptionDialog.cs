@@ -24,9 +24,9 @@
 
 using System;
 using System.Windows.Forms;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
   public partial class ExceptionDialog : Form
   {

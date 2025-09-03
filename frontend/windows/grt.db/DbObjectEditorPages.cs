@@ -29,7 +29,7 @@ using MySQL.Grt;
 using MySQL.Grt.Db;
 using MySQL.Controls;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
 	public partial class DbObjectEditorPages : TabDocument
 	{

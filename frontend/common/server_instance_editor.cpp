@@ -341,7 +341,7 @@ ServerInstanceEditor::ServerInstanceEditor(const db_mgmt_ManagementRef &mgmt)
     table->add(&_sys_win_hint_label, 1, 2, 5, 6, HFillFlag | HExpandFlag);
 
     _details_description.set_text(
-      _("The following options specify how Workbench should perform certain management actions.\n"
+      _("The following options specify how MySqlStudio should perform certain management actions.\n"
         "Commands given here are the same as if they would be run in a system shell."));
     _details_description.set_style(SmallHelpTextStyle);
     _sys_box.add(&_details_description, false, true);
@@ -372,10 +372,10 @@ ServerInstanceEditor::ServerInstanceEditor(const db_mgmt_ManagementRef &mgmt)
       _("Acquire administrator rights to execute start/stop commands\nand write configuration data"));
 #endif
 
-    _sudo_description.set_text(
-      _("When sudo is used in Linux like systems, a certain set of parameters are passed to it.\n"
-        "In certain environments, it may be necessary to override these parameters.\n"
-        "Look at the Workbench log file to determine the parameters being currently used. Leave it blank if unsure."));
+    _sudo_description.set_text(_(
+      "When sudo is used in Linux like systems, a certain set of parameters are passed to it.\n"
+      "In certain environments, it may be necessary to override these parameters.\n"
+      "Look at the MySqlStudio log file to determine the parameters being currently used. Leave it blank if unsure."));
     _sudo_description.set_style(SmallHelpTextStyle);
     _sys_box.add(&_sudo_description, false, true);
     _custom_sudo_box.add(manage(RLabel(_("Override sudo command line:"))), false, true);
@@ -530,8 +530,8 @@ db_mgmt_ServerInstanceRef ServerInstanceEditor::run(db_mgmt_ConnectionRef select
   _top_vbox.resume_layout();
   run_modal(NULL, &_close_button);
 
-  grt::GRT::get()->call_module_function("Workbench", "saveConnections", grt::BaseListRef());
-  grt::GRT::get()->call_module_function("Workbench", "saveInstances", grt::BaseListRef());
+  grt::GRT::get()->call_module_function("MySqlStudio", "saveConnections", grt::BaseListRef());
+  grt::GRT::get()->call_module_function("MySqlStudio", "saveInstances", grt::BaseListRef());
 
   return selected_instance();
 }

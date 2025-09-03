@@ -1,14 +1,14 @@
 
-Localization for MySQL Workbench
+Localization for MySql Studio
 
-How to translate MySQL Workbench to your language.
+How to translate MySql Studio to your language.
 
 
 
 Intro
 -----
 
-Workbench supports Windows, Mac OS X and Linux operating systems. There is backend
+MySqlStudio supports Windows, Mac OS X and Linux operating systems. There is backend
 code that is written in C++ and is used in all platforms, frontend code that is native
 to each platform and plugins/modules, some of which are platform neutral and some are native.
 

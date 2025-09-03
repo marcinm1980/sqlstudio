@@ -50,7 +50,7 @@ using namespace wb;
 
 using namespace MySQL::Base;
 using namespace MySQL::Forms;
-using namespace MySQL::Workbench;
+using namespace MySQL::MySqlStudio;
 
 //--------------------------------------------------------------------------------------------------
 
@@ -279,7 +279,7 @@ void WbContext::set_description_for_selection(GrtValue ^ activeObjList, String ^
 
 //--------------------------------------------------------------------------------------------------
 
-MySQL::Workbench::ModelDiagramFormWrapper ^ WbContext::get_diagram_form_for_diagram(String ^ id) {
+MySQL::MySqlStudio::ModelDiagramFormWrapper ^ WbContext::get_diagram_form_for_diagram(String ^ id) {
   return gcnew ModelDiagramFormWrapper(
     WBContextUI::get()->get_wb()->get_model_context()->get_diagram_form_for_diagram_id(NativeToCppString(id)));
 }
@@ -402,7 +402,8 @@ String ^ WbContext::read_option_value(String ^ model, String ^ key, String ^ def
 
 //--------------------------------------------------------------------------------------------------
 
-void WbContext::set_create_main_form_view(MySQL::Workbench::WbFrontendCallbacks ^ cbacks, VoidStrUIFormDelegate ^ dt) {
+void WbContext::set_create_main_form_view(MySQL::MySqlStudio::WbFrontendCallbacks ^ cbacks,
+                                          VoidStrUIFormDelegate ^ dt) {
   create_main_form_view_delegate = dt;
   create_main_form_view_wrapper_delegate =
     gcnew VoidStrUIFormWrapperDelegate(this, &WbContext::create_main_form_view_wrapper);
@@ -423,7 +424,7 @@ void WbContext::create_main_form_view_wrapper(const std::string &view_name, std:
 
   if (0 == view_name.compare(WB_MAIN_VIEW_DB_QUERY)) {
     std::shared_ptr<::SqlEditorForm> ref(std::static_pointer_cast<::SqlEditorForm>(form_be));
-    form = gcnew MySQL::GUI::Workbench::SqlEditorFormWrapper(&ref);
+    form = gcnew MySQL::GUI::MySqlStudio::SqlEditorFormWrapper(&ref);
   }
 
   create_main_form_view_delegate(name, form);

@@ -161,7 +161,7 @@ def restoreConnections():
                 mforms.Utilities.show_error('Restore Connections Error', 'The selected file is not a valid backup file '
                                             'or the file is corrupted.',
                                             'OK', '', '')
-                grt.log_error('restoreConnections', 'Workbench restored %i valid connections but server configuration data could not be found or is not valid.\n' % len(connections))
+                grt.log_error('restoreConnections', 'MySqlStudio restored %i valid connections but server configuration data could not be found or is not valid.\n' % len(connections))
                 return
      
             existent_instance_names = set(instance.name for instance in grt.root.wb.rdbmsMgmt.storedInstances)
@@ -182,13 +182,13 @@ def restoreConnections():
                 candidate_instance.connection = new_conn
                 grt.root.wb.rdbmsMgmt.storedInstances.append(candidate_instance)
 
-            grt.modules.Workbench.refreshHomeConnections()
-            grt.modules.Workbench.saveConnections()
-            grt.modules.Workbench.saveInstances()
+            grt.modules.MySqlStudio.refreshHomeConnections()
+            grt.modules.MySqlStudio.saveConnections()
+            grt.modules.MySqlStudio.saveInstances()
             
             if duplicate_connection_count > 0 or duplicated_instance_count > 0:
                 message = []
-                message.append('Workbench detected ')
+                message.append('MySqlStudio detected ')
                 if duplicate_connection_count > 0:
                     message.append('%i duplicated connections' % duplicate_connection_count)
                 if duplicated_instance_count > 0:
@@ -343,9 +343,9 @@ def copyJDBCConnectionString(conn):
 @ModuleInfo.export(grt.INT)
 def createMissingLocalConnections():
 
-    found_instances = grt.modules.Workbench.createInstancesFromLocalServers()
+    found_instances = grt.modules.MySqlStudio.createInstancesFromLocalServers()
     
-    grt.modules.Workbench.refreshHomeConnections()
+    grt.modules.MySqlStudio.refreshHomeConnections()
     
     if found_instances < 0:
         mforms.Utilities.show_error("Rescan for Local MySQL Servers", "Rescan for local MySQL servers failed", "OK", "", "")
@@ -392,7 +392,7 @@ def newConnectionFromClipboard():
         found_instances = found_instances + 1
         grt.root.wb.rdbmsMgmt.storedConns.append(conn)
 
-    grt.modules.Workbench.refreshHomeConnections()
+    grt.modules.MySqlStudio.refreshHomeConnections()
 
     if found_instances > 0:
         mforms.Utilities.show_message('Add Connection(s) from Clipboard', 'Found %s servers.' % found_instances, 'OK', '', '')
@@ -467,7 +467,7 @@ def startCommandLineClientForConnection(conn):
         subprocess.Popen(["/bin/sh", "-c",
                           get_linux_terminal_program() + " -e '" +
                 "sh -c \"while :; do %s && break || read -p \\\"Press Enter to retry or Ctrl+C to quit\\\" DUMMY_VAR; done\" " % command
-                + "' &"   # <--- launch GUI terminal and exit (returns to Workbench immediately rather than blocking) 
+                + "' &"   # <--- launch GUI terminal and exit (returns to MySqlStudio immediately rather than blocking) 
         ], shell=False, env=my_env)
 
 
@@ -735,11 +735,11 @@ class CheckForUpdateThread(threading.Thread):
                 newest_version = tuple(int(i) for i in self.json['fullversion'].split("."))
 
                 if newest_version > current_version:
-                    if mforms.Utilities.show_message('New Version Available', 'The new MySQL Workbench %s has been released.\nYou can download the latest version from\nhttp://www.mysql.com/downloads/workbench.' % '.'.join( [str(num) for num in newest_version] ),
+                    if mforms.Utilities.show_message('New Version Available', 'The new MySql Studio %s has been released.\nYou can download the latest version from\nhttp://www.mysql.com/downloads/workbench.' % '.'.join( [str(num) for num in newest_version] ),
                                                   'Get it Now', 'Maybe Later', "") == mforms.ResultOk:
                         mforms.Utilities.open_url('http://www.mysql.com/downloads/workbench')
                 else:
-                    mforms.Utilities.show_message('MySQL Workbench is Up to Date', 'You are already using the latest version of MySQL Workbench.', 'OK', '', '')
+                    mforms.Utilities.show_message('MySql Studio is Up to Date', 'You are already using the latest version of MySql Studio.', 'OK', '', '')
         
             except Exception as error:
                 mforms.Utilities.show_error("Check for updates failed", str(error), "OK", "", "")
@@ -924,7 +924,7 @@ class SSLWizard_GenerationTask:
 
 class SSLWizard_IntroPage(WizardPage):
     def __init__(self, owner):
-        WizardPage.__init__(self, owner, "Welcome to MySQL Workbench SSL Wizard")
+        WizardPage.__init__(self, owner, "Welcome to MySql Studio SSL Wizard")
 
     def go_cancel(self):
         self.main.finish()

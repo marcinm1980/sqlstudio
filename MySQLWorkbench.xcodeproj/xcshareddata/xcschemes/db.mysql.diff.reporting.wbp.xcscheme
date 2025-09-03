@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2BB588F20F44D57B00089423"
                BuildableName = "db.mysql.diff.reporting.wbp.dylib"
                BlueprintName = "db.mysql.diff.reporting.wbp"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2BB588F20F44D57B00089423"
             BuildableName = "db.mysql.diff.reporting.wbp.dylib"
             BlueprintName = "db.mysql.diff.reporting.wbp"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2BB588F20F44D57B00089423"
             BuildableName = "db.mysql.diff.reporting.wbp.dylib"
             BlueprintName = "db.mysql.diff.reporting.wbp"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

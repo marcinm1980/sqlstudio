@@ -30,7 +30,7 @@ class MainView(WizardPage):
         self.main = main
 
     def create_ui(self):
-        label = mforms.newLabel('Welcome to the MySQL Workbench Schema Transfer Wizard')
+        label = mforms.newLabel('Welcome to the MySql Studio Schema Transfer Wizard')
         label.set_style(mforms.BigBoldStyle)
         self.content.add(label, False, True)
         self.content.set_spacing(12)

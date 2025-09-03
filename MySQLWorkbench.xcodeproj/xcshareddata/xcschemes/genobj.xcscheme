@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2731DE4E21A2CD70002EEE8A"
                BuildableName = "genobj"
                BlueprintName = "genobj"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,7 +33,7 @@
             BlueprintIdentifier = "2731DE4E21A2CD70002EEE8A"
             BuildableName = "genobj"
             BlueprintName = "genobj"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -54,7 +54,7 @@
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
          runnableDebuggingMode = "0"
-         RemotePath = "/Volumes/Extern/Work/MySQL/workbench/master/DerivedData/MySQLWorkbench/Build/Products/Debug/MySQLWorkbench.app/Contents/MacOS/genobj">
+         RemotePath = "/Volumes/Extern/Work/MySQL/workbench/master/DerivedData/MySQLMySqlStudio/Build/Products/Debug/MySQLMySqlStudio.app/Contents/MacOS/genobj">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2731DE4E21A2CD70002EEE8A"
             BuildableName = "genobj"
             BlueprintName = "genobj"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <CommandLineArguments>
@@ -97,7 +97,7 @@
             BlueprintIdentifier = "2731DE4E21A2CD70002EEE8A"
             BuildableName = "genobj"
             BlueprintName = "genobj"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

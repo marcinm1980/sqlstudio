@@ -604,7 +604,7 @@ $TestData {
 
   std::string dataDir = casmine::CasmineContext::get()->tmpDataDir();
 
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   std::set<std::string> charsets;
 
   ANTLRInputStream input;
@@ -711,7 +711,7 @@ $describe("MySQL parser test suite (ANTLR)") {
   //--------------------------------------------------------------------------------------------------------------------
 
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     // The charset list contains also the 3 charsets that were introduced in 5.5.3.

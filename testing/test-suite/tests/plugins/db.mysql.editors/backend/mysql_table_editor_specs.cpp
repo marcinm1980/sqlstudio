@@ -38,12 +38,12 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
 $describe("MySQL Table Editor") {
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
     data->tester->flushUntil(0.5);
     data->tester->createNewDocument();

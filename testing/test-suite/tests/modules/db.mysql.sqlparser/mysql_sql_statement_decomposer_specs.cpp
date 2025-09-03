@@ -36,7 +36,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref sqlFacade;
   Sql_statement_decomposer::Ref sqlStatementDecomposer;
   db_mgmt_RdbmsRef rdbms;
@@ -126,9 +126,8 @@ $TestData {
 };
 
 $describe("SQL Parser (MySQL): Statement Decomposer") {
-
   $beforeAll([this]() {
-    data->tester = std::make_unique<WorkbenchTester>();
+    data->tester = std::make_unique<MySqlStudioTester>();
     data->tester->createNewDocument();
 
     $expect(data->tester->wb->get_document()->physicalModels().count()).toBe(1U, "loaded physycal model count");

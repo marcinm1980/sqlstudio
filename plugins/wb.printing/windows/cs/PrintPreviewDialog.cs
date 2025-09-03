@@ -29,7 +29,7 @@ using System.Windows.Forms;
 
 using MySQL.Grt;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
   class PrintPreviewDialog : Plugin
   {
@@ -68,7 +68,7 @@ namespace MySQL.GUI.Workbench.Plugins
 
       System.Windows.Forms.PrintPreviewDialog preview = new System.Windows.Forms.PrintPreviewDialog();
 
-      preview.Icon = new System.Drawing.Icon("images/icons/MySQLWorkbench.ico");
+      preview.Icon = new System.Drawing.Icon("images/icons/MySQLMySqlStudio.ico");
 
       preview.Document = printDocument;
       preview.UseAntiAlias = true;

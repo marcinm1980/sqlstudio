@@ -53,7 +53,7 @@ $describe("Grt Shell Backend") {
   $afterAll([&]() {
     data->dispatcher->shutdown();
     data->dispatcher.reset();
-    WorkbenchTester::reinitGRT();
+    MySqlStudioTester::reinitGRT();
   });
 
   $it("Test History Navigation", [&]() {

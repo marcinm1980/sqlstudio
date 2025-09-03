@@ -26,7 +26,7 @@ using System.Windows.Forms;
 
 using MySQL.Controls;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
 	public partial class TextEditorForm : TabDocument
 	{

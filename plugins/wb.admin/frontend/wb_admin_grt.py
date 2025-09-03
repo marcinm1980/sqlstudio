@@ -51,7 +51,7 @@ from workbench.log import log_info, log_warning, log_error, log_debug, log_debug
 #
 # = Initial Setup
 #
-# When the Workbench starts up, the initialize() function from this module is called.
+# When the MySqlStudio starts up, the initialize() function from this module is called.
 # That will do the following:
 # - register an observer for the GRNSQLEditorOpened notification.
 # - register all built-in pages of the administrator
@@ -196,7 +196,7 @@ class AdministratorContext:
                 self.admin_access_status = "Remote management capabilities are currently unavailable.\nCould not acquire management access to the server\n\n%s" % exc
                 mforms.App.get().set_status_text("Could not Open WB Admin")
                 if Utilities.show_error("Could not acquire management access for administration", "%s: %s" % (type(exc).__name__, exc), "Settings...", "Cancel", "") == mforms.ResultOk:
-                    grt.modules.Workbench.showInstanceManagerFor(self.connection)
+                    grt.modules.MySqlStudio.showInstanceManagerFor(self.connection)
                 return None
 
     def acquire_admin_access(self, ignore_failure=False):
@@ -275,7 +275,7 @@ class AdministratorContext:
         except Exception as exc:
             import traceback
             traceback.print_exc()
-            Utilities.show_error("Error Starting Workbench Administrator", "%s: %s" % (type(exc).__name__, exc), "OK", "", "")
+            Utilities.show_error("Error Starting MySqlStudio Administrator", "%s: %s" % (type(exc).__name__, exc), "OK", "", "")
             app.set_status_text("Could not Open WB Admin")
             return None
 
@@ -504,7 +504,7 @@ def autoDetectLocalInstance(connection):
 
     instance.owner = grt.root.wb.rdbmsMgmt
     grt.root.wb.rdbmsMgmt.storedInstances.append(instance)
-    grt.modules.Workbench.saveInstances()
+    grt.modules.MySqlStudio.saveInstances()
     return instance
 
 
@@ -520,7 +520,7 @@ def autoDetectRemoteInstance(connection):
     
     instance.owner = grt.root.wb.rdbmsMgmt
     grt.root.wb.rdbmsMgmt.storedInstances.append(instance)
-    grt.modules.Workbench.saveInstances()
+    grt.modules.MySqlStudio.saveInstances()
 
     return instance
 
@@ -876,7 +876,7 @@ except ImportError:
 @ModuleInfo.plugin("wb.admin.settings", type="standalone", input=[wbinputs.currentSQLEditor()], accessibilityName="Settings")
 @ModuleInfo.export(grt.INT, grt.classes.db_query_Editor)
 def openConnectionSettings(editor):
-    grt.modules.Workbench.showInstanceManagerFor(editor.connection)
+    grt.modules.MySqlStudio.showInstanceManagerFor(editor.connection)
     context = grt.fromgrt(editor.customData["adminContext"])
     if context:
         context.refresh_admin_links()

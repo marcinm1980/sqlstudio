@@ -32,16 +32,15 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref facade;
   db_mgmt_RdbmsRef rdbms;
   grt::DictRef options;
 };
 
 $describe("SQL Parser FE (MySQL)") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->facade = nullptr;
     data->tester->createNewDocument();
 

@@ -30,10 +30,10 @@ using System.Windows.Forms;
 using MySQL.Grt;
 using MySQL.Utilities;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
   using Pages = LinkedList<PageInfo>;
-  using MySQL.Workbench;
+  using MySQL.MySqlStudio;
 
   public class WizardPluginPages : Form
   {

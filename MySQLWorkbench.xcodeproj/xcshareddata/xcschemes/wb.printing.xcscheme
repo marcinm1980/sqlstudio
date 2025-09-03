@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2BB37AB911094DE800DA4577"
                BuildableName = "wb.printing.mwbplugin"
                BlueprintName = "wb.printing"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2BB37AB911094DE800DA4577"
             BuildableName = "wb.printing.mwbplugin"
             BlueprintName = "wb.printing"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2BB37AB911094DE800DA4577"
             BuildableName = "wb.printing.mwbplugin"
             BlueprintName = "wb.printing"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

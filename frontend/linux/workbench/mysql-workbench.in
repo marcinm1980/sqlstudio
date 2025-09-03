@@ -28,7 +28,7 @@ if [[ -z "${PROJSO}" ]]; then
     echo "Found $TMPLOC"
     export PROJSO=$TMPLOC
   else
-    echo "Workbench can't find libproj.so, some options may be unavailable."
+    echo "MySqlStudio can't find libproj.so, some options may be unavailable."
   fi
 else
   if [[ ! -f ${PROJSO} ]]; then

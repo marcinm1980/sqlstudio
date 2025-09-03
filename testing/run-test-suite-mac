@@ -3,7 +3,7 @@
 # Disable the crash report.
 defaults write com.apple.CrashReporter DialogType none
 
-root_path="../../DerivedData/MySQLWorkbench/Build/Products/Debug/MySQLWorkbench.app/Contents"
+root_path="../../DerivedData/MySQLMySqlStudio/Build/Products/Debug/MySQLMySqlStudio.app/Contents"
 test_binary="$root_path/MacOS/wbtests"
 
 program_path=$(cd $(dirname $0);pwd)

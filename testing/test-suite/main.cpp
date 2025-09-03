@@ -45,8 +45,7 @@ std::string printWithDefault(T value, std::string const& type) {
 //----------------------------------------------------------------------------------------------------------------------
 
 int main(int argc, const char *argv[]) {
-
-  std::cout << "Casmine testing MySQL Workbench " << printWithDefault(APP_MAJOR_NUMBER, "major version") << ".";
+  std::cout << "Casmine testing MySql Studio " << printWithDefault(APP_MAJOR_NUMBER, "major version") << ".";
   std::cout << printWithDefault(APP_MINOR_NUMBER, "minor version") << ".";
   std::cout << printWithDefault(APP_RELEASE_NUMBER, "release number");
   std::cout << " (" << printWithDefault(APP_RELEASE_TYPE, "release type") << ", ";

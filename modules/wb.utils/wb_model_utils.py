@@ -258,7 +258,7 @@ def printModel(model):
 def renameDiagram(diagram):
     ret, name = mforms.Utilities.request_input("Rename Diagram", "Enter new name for the diagram", diagram.name)
     if ret:
-        grt.modules.Workbench.startTrackingUndo()
+        grt.modules.MySqlStudio.startTrackingUndo()
         diagram.name = name
-        grt.modules.Workbench.finishTrackingUndo("Rename diagram to %s" % name)
+        grt.modules.MySqlStudio.finishTrackingUndo("Rename diagram to %s" % name)
     return 0

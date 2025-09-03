@@ -46,9 +46,9 @@ enum PhysicalRelationshipNotation {
 };
 
 enum PhysicalFigureNotation {
-  PFWorkbenchNotation,
-  PFWorkbenchSimpleNotation,
-  PFWorkbenchPKOnlyNotation,
+  PFMySqlStudioNotation,
+  PFMySqlStudioSimpleNotation,
+  PFMySqlStudioPKOnlyNotation,
   PFIdef1xNotation,
   PFClassicNotation,
   PFBarkerNotation

@@ -35,7 +35,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   MySQLParserServices::Ref services;
   MySQLParserContext::Ref context;
 };
@@ -43,9 +43,8 @@ $TestData {
 // Contains tests for the parser module implementing the ANTLR based parser services.
 // Many of the APIs are also used in other tests.
 $describe("Parser module") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester(false));
+    data->tester.reset(new MySqlStudioTester(false));
     data->tester->initializeRuntime();
 
     data->services = MySQLParserServices::get();

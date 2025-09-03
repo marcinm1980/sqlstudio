@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using MySQL.GUI.Workbench;
+using MySQL.GUI.MySqlStudio;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MySQL Workbench")]
+[assembly: AssemblyTitle("MySql Studio")]
 [assembly: AssemblyDescription("MySQL Database Design + SQL Work Tool")]
 [assembly: AssemblyConfiguration("development")]
 [assembly: AssemblyCompany("Oracle Corporation")]
-[assembly: AssemblyProduct("MySQL Workbench")]
+[assembly: AssemblyProduct("MySql Studio")]
 [assembly: AssemblyCopyright("Copyright © 2006, 2024, Oracle and/or its affiliates.")]
 [assembly: AssemblyTrademark("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")]
 [assembly: AssemblyCulture("")]

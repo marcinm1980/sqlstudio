@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<data grt_format="2.0" document_type="MySQL Workbench Model" version="1.4.2">
+<data grt_format="2.0" document_type="MySql Studio Model" version="1.4.2">
   <value type="object" struct-name="workbench.Document" id="{BA3704B6-8C1C-498C-8EF3-69B44E6EBD53}" struct-checksum="0x7131bf99">
     <value type="object" struct-name="workbench.logical.Model" id="{DA3C8658-28CE-45EB-BE85-788CADE32D5E}" struct-checksum="0xf4220370" key="logicalModel">
       <value _ptr_="0D81A3A0" type="list" content-type="object" content-struct-name="workbench.logical.Diagram" key="diagrams"/>

@@ -1,19 +1,19 @@
 /*!
 
-\mainpage MySQL Workbench Scripting and Plugin Development
+\mainpage MySql Studio Scripting and Plugin Development
 
 \section python_plugin Python Plugin Interface
 
 \subsection GRT Modules and Plugins
 
-GRT Modules are a group of functions that are exported to be called from other parts of Workbench, such as Workbench itself, other modules, scripts and plugins in any of the languages supported. For a python function to be recognized as a plugin and be inserted into a context menu or to the Plugins menu, 
+GRT Modules are a group of functions that are exported to be called from other parts of MySqlStudio, such as MySqlStudio itself, other modules, scripts and plugins in any of the languages supported. For a python function to be recognized as a plugin and be inserted into a context menu or to the Plugins menu, 
 
 The following example illustrates how to define a module and define a plugin in Python:
 \code
 # import the wb module, where various utilities for working with plugins are defined
 from wb import *
 
-# import module for working with Workbench data structures
+# import module for working with MySqlStudio data structures
 import grt
 
 # create a module information descriptor. The variable name must be ModuleInfo
@@ -31,12 +31,12 @@ def do_stuff_with_catalog(catalog):
 
 \endcode
 
-The Python plugin code must be in a file that ends with "_grt.py" and be placed in your users module folder for Workbench. You can install the file from the Scripting menu or copy it by hand to the folder, its path is displayed in the Scripting Shell window, when Workbench is started.
+The Python plugin code must be in a file that ends with "_grt.py" and be placed in your users module folder for MySqlStudio. You can install the file from the Scripting menu or copy it by hand to the folder, its path is displayed in the Scripting Shell window, when MySqlStudio is started.
 
 \subsection plugin_inputs Plugin Input Definition
 
 The wbinputs object from the wb module contains various convenience functions that create plugin input descriptors for
-the parameters that a plugin can request from Workbench. These parameters are usually related to the active environment,
+the parameters that a plugin can request from MySqlStudio. These parameters are usually related to the active environment,
 such as the currently loaded model, selected diagram, open SQL editor etc If the requested arguments are not available,
 the menu entry for the plugin will be disabled.
 
@@ -174,7 +174,7 @@ def process_script(script):
 	return "".join(output)
 
 # because of a bug in the wbinputs.currentSQLEditor() input	specifier from the wb module 
-# in Workbench 5.2.26, we include our own version of it here
+# in MySqlStudio 5.2.26, we include our own version of it here
 def currentSQLEditor():
 	arg= grt.classes.app_PluginObjectInput()
     	arg.name= "activeSQLEditor"
@@ -203,7 +203,7 @@ def fill_random_query(editor):
 <a href="scripting_sample_grt.py">Here</a> is the complete code in a single file.
 \endhtmlonly
 
-Now that the code is ready, we must install it. From the Scripting menu in Workbench, call Install Plugin/Module File... and select the file to be installed.
+Now that the code is ready, we must install it. From the Scripting menu in MySqlStudio, call Install Plugin/Module File... and select the file to be installed.
 
 
 */

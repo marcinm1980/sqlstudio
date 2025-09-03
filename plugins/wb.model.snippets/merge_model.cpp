@@ -56,7 +56,7 @@ void copy_additional_data(T obj, std::string new_name, TOwner new_owner) {
 template <class TOwner>
 void copy_additional_data(workbench_physical_DiagramRef obj, std::string old_name, TOwner new_owner) {
   grt::BaseListRef args(true);
-  grt::Module* module = grt::GRT::get()->get_module("Workbench");
+  grt::Module* module = grt::GRT::get()->get_module("MySqlStudio");
   grt::StringRef img_file_path(grt::StringRef::cast_from(module->call_function("getTempDir", args)));
   update_ids(obj);
   grt::ListRef<model_Figure> figures = obj->figures();
@@ -72,7 +72,7 @@ void copy_additional_data(workbench_physical_DiagramRef obj, std::string old_nam
 template <class TOwner>
 void copy_additional_data(db_TableRef obj, std::string old_name, TOwner new_owner) {
   grt::BaseListRef args(true);
-  grt::Module* module = grt::GRT::get()->get_module("Workbench");
+  grt::Module* module = grt::GRT::get()->get_module("MySqlStudio");
   grt::StringRef db_file_path(grt::StringRef::cast_from(module->call_function("getDbFilePath", args)));
 
   Recordset_table_inserts_storage::Ref input_storage = Recordset_table_inserts_storage::create_with_path(db_file_path);

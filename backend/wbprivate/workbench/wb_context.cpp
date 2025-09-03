@@ -89,12 +89,12 @@ DEFAULT_LOG_DOMAIN(DOMAIN_WB_CONTEXT)
 
 // Options file.
 #define OPTIONS_FILE_NAME "wb_options.xml"
-#define OPTIONS_DOCUMENT_FORMAT "MySQL Workbench Options"
+#define OPTIONS_DOCUMENT_FORMAT "MySql Studio Options"
 #define OPTIONS_DOCUMENT_VERSION "1.0.1"
 
 // State file.
 #define STATE_FILE_NAME "wb_state.xml"
-#define STATE_DOCUMENT_FORMAT "MySQL Workbench Application State"
+#define STATE_DOCUMENT_FORMAT "MySql Studio Application State"
 #define STATE_DOCUMENT_VERSION "1.0.0"
 
 // Don't send a given refresh_request unless no new ones arrive in this time.
@@ -312,7 +312,7 @@ WBOptions::WBOptions(const std::string &appBinaryName)
                                                   "<code>"));
 
   programOptions->addEntry(dataTypes::OptionEntry(dataTypes::OptionArgumentType::OptionArgumentLogical,
-                                                  "quit-when-done", "Quit Workbench when the script is done",
+                                                  "quit-when-done", "Quit MySqlStudio when the script is done",
                                                   [this](const dataTypes::OptionEntry &entry, int *retval) {
                                                     quit_when_done = entry.value.logicalValue;
                                                     return true;
@@ -346,14 +346,14 @@ WBOptions::WBOptions(const std::string &appBinaryName)
                                                   }));
 
   programOptions->addEntry(dataTypes::OptionEntry(
-    dataTypes::OptionArgumentType::OptionArgumentLogical, "version", "Show Workbench version number and exit",
+    dataTypes::OptionArgumentType::OptionArgumentLogical, "version", "Show MySqlStudio version number and exit",
     [](const dataTypes::OptionEntry &entry, int *retval) {
       if (entry.value.logicalValue) {
         const char *type = APP_EDITION_NAME;
         if (strcmp(APP_EDITION_NAME, "Community") == (0)) // Extra parens to silence warning.
           type = "CE";
 
-        printf("MySQL Workbench %s (%s) %i.%i.%i %s build %i\n", type, APP_LICENSE_TYPE, APP_MAJOR_NUMBER,
+        printf("MySql Studio %s (%s) %i.%i.%i %s build %i\n", type, APP_LICENSE_TYPE, APP_MAJOR_NUMBER,
                APP_MINOR_NUMBER, APP_RELEASE_NUMBER, APP_RELEASE_TYPE, APP_BUILD_NUMBER);
         *retval = 0;
 
@@ -381,7 +381,7 @@ WBOptions::WBOptions(const std::string &appBinaryName)
                              if (!entry.value.textValue.empty()) {
                                printf(
                                  "Note: the \"open\" parameter is deprecated and will be removed in a future version"
-                                 " of MySQL Workbench\n");
+                                 " of MySql Studio\n");
                                open_at_startup = entry.value.textValue;
                              }
 
@@ -472,8 +472,8 @@ WBContext::WBContext(bool verbose) : _frontendCallbacks(nullptr) {
   _plugin_manager = bec::GRTManager::get()->get_plugin_manager();
   _plugin_manager->set_registry_paths(PLUGIN_LIST_PATH, PLUGIN_GROUP_PATH);
 
-  // create and register the module for Workbench stuff
-  _workbench = grt::GRT::get()->get_native_module<WorkbenchImpl>();
+  // create and register the module for MySqlStudio stuff
+  _workbench = grt::GRT::get()->get_native_module<MySqlStudioImpl>();
   _workbench->set_context(this);
 
   _components.push_back(new WBComponentBasic(this));
@@ -492,7 +492,7 @@ WBContext::~WBContext() {
   logDebug("Destroying WBContext\n");
 
   //{
-  //  workbench_WorkbenchRef app(get_root());
+  //  workbench_MySqlStudioRef app(get_root());
 
   //  app.options().unref_tree();
   //  app.registry().unref_tree();
@@ -884,12 +884,12 @@ bool WBContext::init_(WBFrontendCallbacks *callbacks, WBOptions *options) {
 
   grt::GRT::get()->send_output(strfmt("Looking for user plugins in %s\n", user_modules_path.c_str()));
 
-  _frontendCallbacks->show_status_text(_("Initializing Workbench components..."));
+  _frontendCallbacks->show_status_text(_("Initializing MySqlStudio components..."));
   res = setup_context_grt(options);
 
   if (res.is_valid() && *grt::IntegerRef::cast_from(res) != 1)
     show_error(_("Initialization Error"),
-               _("There was an error during initialization of Workbench, some functionality may not work."));
+               _("There was an error during initialization of MySqlStudio, some functionality may not work."));
 
   logInfo("System info:\n %s\n", _workbench->getSystemInfo(true).c_str());
 
@@ -929,7 +929,7 @@ void WBContext::warnIfRunningOnUnsupportedOS() {
     mforms::Utilities::show_message_and_remember(
       "Unsupported Operating System",
 
-      "You are running Workbench on an unsupported operating system. "
+      "You are running MySqlStudio on an unsupported operating system. "
       "While it may work for you just fine, it wasn't designed to run on your platform. "
       "Please keep this in mind if you run into problems.",
 
@@ -1204,7 +1204,7 @@ void WBContext::init_templates() {
 
 void WBContext::init_grt_tree(WBOptions *options, std::shared_ptr<grt::internal::Unserializer> unserializer) {
   grt::DictRef root(true);
-  workbench_WorkbenchRef app(grt::Initialized);
+  workbench_MySqlStudioRef app(grt::Initialized);
 
   root.set("wb", app);
 
@@ -1220,7 +1220,7 @@ void WBContext::init_grt_tree(WBOptions *options, std::shared_ptr<grt::internal:
     version->buildNumber(APP_BUILD_NUMBER);
     version->status(1);
 
-    info->name("MySQL Workbench");
+    info->name("MySql Studio");
     info->version(version);
     info->copyright("Oracle and/or its affiliates");
     info->license(APP_LICENSE_TYPE);
@@ -1272,34 +1272,34 @@ void WBContext::init_plugin_groups_grt(WBOptions *options) {
     const char *category;
     const char *name;
     const char *accessibilityName;
-  } std_groups[] = {{"Database", "Database", "Database"},
-                    {"Catalog", "Editors", "Editors"},
-                    {"Application", "Workbench", "Workbench"},
-                    {"Model", "Validation", "Validation"},
-                    {"Model", "Export", "Export"},
+  } std_groups[] = { { "Database", "Database", "Database" },
+                     { "Catalog", "Editors", "Editors" },
+                     { "Application", "MySqlStudio", "MySqlStudio" },
+                     { "Model", "Validation", "Validation" },
+                     { "Model", "Export", "Export" },
 
-                    {"Home", "Home", "Home"},
-                    {"Home", "Home/Connections", "Connections"},
-                    {"Home", "Home/ModelFiles", "Model Files"},
-                    {"Home", "Home/Instances", "Instances"},
+                     { "Home", "Home", "Home" },
+                     { "Home", "Home/Connections", "Connections" },
+                     { "Home", "Home/ModelFiles", "Model Files" },
+                     { "Home", "Home/Instances", "Instances" },
 
-                    {"Model", "Menu/Text", "Model Text"},
-                    {"SQLEditor", "Menu/Text", "SQL Editor Text"},
+                     { "Model", "Menu/Text", "Model Text" },
+                     { "SQLEditor", "Menu/Text", "SQL Editor Text" },
 
-                    {"Model", "Menu/Model", "Model"},
-                    {"Model", "Menu/Utilities", "Utilities"},
-                    {"Catalog", "Menu/Catalog", "Catalog"},
-                    {"Catalog", "Menu/Objects", "Objects"},
-                    {"Database", "Menu/Database", "Database"},
+                     { "Model", "Menu/Model", "Model" },
+                     { "Model", "Menu/Utilities", "Utilities" },
+                     { "Catalog", "Menu/Catalog", "Catalog" },
+                     { "Catalog", "Menu/Objects", "Objects" },
+                     { "Database", "Menu/Database", "Database" },
 
-                    {"Utilities", "Filter", "Filter"},
-                    {"Utilities", "Menu/Utilities", "Utilities"},
+                     { "Utilities", "Filter", "Filter" },
+                     { "Utilities", "Menu/Utilities", "Utilities" },
 
-                    {"SQLEditor", "Menu/SQL/Editor", "SQL Editor"},
-                    {"SQLEditor", "Menu/SQL/Script", "SQL Script"},
-                    {"SQLEditor", "Menu/SQL/Utilities", "SQL Utilities"},
+                     { "SQLEditor", "Menu/SQL/Editor", "SQL Editor" },
+                     { "SQLEditor", "Menu/SQL/Script", "SQL Script" },
+                     { "SQLEditor", "Menu/SQL/Utilities", "SQL Utilities" },
 
-                    {"Others", "Menu/Ungrouped", "Others"}};
+                     { "Others", "Menu/Ungrouped", "Others" } };
 
   std::map<std::string, app_PluginGroupRef> groups;
 
@@ -1380,7 +1380,7 @@ static void set_default(grt::DictRef dict, const char *option, const std::string
 
 /**
  ****************************************************************************
- * @brief Sets Workbench specific options
+ * @brief Sets MySqlStudio specific options
  *
  * To get a configuration option, use GRTManager::get_app_option()
  *
@@ -1597,7 +1597,7 @@ void WBContext::set_default_options(grt::DictRef options) {
   // By the time we make it here, Logger's log level has already been set to default (whatever it may be).
   // NOTE that there's a cornercase we ignore: if user set --log-level or WB_LOG_LEVEL, this is what
   // Logger::active_level() will return instead.
-  // But since set_default() only has effect the first time the Workbench is run, this shouldn't really matter for the
+  // But since set_default() only has effect the first time the MySqlStudio is run, this shouldn't really matter for the
   // user while keeping our code simpler.
   set_default(options, "workbench.logger:LogLevel", base::Logger::active_level());
 }
@@ -1655,7 +1655,7 @@ void WBContext::load_app_options(bool update) {
       xmlDocPtr xmlDocument = grt::GRT::get()->load_xml(options_xml);
       if (!xmlDocument) {
         throw std::runtime_error(
-          _("The file is not a valid MySQL Workbench options file.\n"
+          _("The file is not a valid MySql Studio options file.\n"
             "The file will skipped and settings are reset to their default values."));
       }
 
@@ -1671,9 +1671,9 @@ void WBContext::load_app_options(bool update) {
       else
         // Document format has been introduced in 1.0.1.
         if (doctype != OPTIONS_DOCUMENT_FORMAT) {
-        throw std::runtime_error(
-          _("The file is not a valid MySQL Workbench options file.\n"
-            "The file will skipped and settings are reset to their default values."));
+          throw std::runtime_error(
+            _("The file is not a valid MySql Studio options file.\n"
+              "The file will skipped and settings are reset to their default values."));
       }
 
       // Try to upgrade document at XML level.
@@ -1881,7 +1881,7 @@ void WBContext::load_app_state(std::shared_ptr<grt::internal::Unserializer> unse
 
       if (doctype != STATE_DOCUMENT_FORMAT) {
         throw std::runtime_error(
-          _("The file is not a valid MySQL Workbench state file.\n"
+          _("The file is not a valid MySql Studio state file.\n"
             "The file will skipped and the application starts in its default state."));
       }
 
@@ -2068,7 +2068,7 @@ void WBContext::new_document() {
 
     // create an empty document and add a physical model to it
     workbench_DocumentRef doc(grt::Initialized);
-    workbench_WorkbenchRef wb(get_root());
+    workbench_MySqlStudioRef wb(get_root());
     wb->doc(doc);
 
     // mark the document as a global object, so that child objects have changes tracked for undo
@@ -2180,7 +2180,7 @@ bool WBContext::open_file_by_extension(const std::string &path, bool interactive
   } else {
     if (interactive) {
       show_error(_("Unrecognized File Type"),
-                 base::strfmt(_("MySQL Workbench does not know how to open file %s"), path.c_str()));
+                 base::strfmt(_("MySql Studio does not know how to open file %s"), path.c_str()));
     }
     return false;
   }
@@ -2388,7 +2388,7 @@ bool WBContext::open_document(const std::string &file) {
     NotificationCenter::get()->send("GNDocumentOpened", 0, info);
   }
 
-  workbench_WorkbenchRef wb(get_root());
+  workbench_MySqlStudioRef wb(get_root());
 
   wb->doc(doc);
   doc->owner(wb);
@@ -2711,10 +2711,10 @@ void WBContext::update_plugin_arguments_pool(bec::ArgumentPool &args) {
 void WBContext::report_bug(const std::string &errorInfo) {
   grt::Module *module;
 
-  module = grt::GRT::get()->get_module("Workbench");
+  module = grt::GRT::get()->get_module("MySqlStudio");
 
   if (!module)
-    throw std::runtime_error("Workbench module not found");
+    throw std::runtime_error("MySqlStudio module not found");
 
   // Setst he parameters for the python plugin
   grt::BaseListRef args(true);
@@ -2911,11 +2911,11 @@ std::shared_ptr<SqlEditorForm> WBContext::add_new_query_window(const db_mgmt_Con
               base::strfmt("Connection Warning (%s)", targetConnection->name().c_str()),
               base::strfmt(
                 "Incompatible/nonstandard server version or connection protocol detected (%s).\n\n"
-                "A connection to this database can be established but some MySQL Workbench features may not work "
+                "A connection to this database can be established but some MySql Studio features may not work "
                 "properly since the database is not fully compatible with the supported versions of MySQL.\n\n"
-                "MySQL Workbench is developed and tested for MySQL Server versions 5.6, 5.7 and 8.0.\n"
+                "MySql Studio is developed and tested for MySQL Server versions 5.6, 5.7 and 8.0.\n"
                 "Please note: there may be some incompatibilities with version 8.4.\n"
-                "For MySQL Server older than 5.6, please use MySQL Workbench version 6.3.",
+                "For MySQL Server older than 5.6, please use MySql Studio version 6.3.",
                 bec::sanitize_server_version_number(form->connection_details()["dbmsProductVersion"]).c_str()),
               "Continue Anyway", "Cancel", "", "wb.supported_server_check.suppress_warning",
               "Don't show this message again") != mforms::ResultOk) {
@@ -3025,8 +3025,8 @@ void WBContext::add_new_plugin_window(const std::string &plugin_id, const std::s
 #endif // AutoStartPlugins____
 
 #ifndef Utilities____
-workbench_WorkbenchRef WBContext::get_root() {
-  return workbench_WorkbenchRef::cast_from(grt::DictRef::cast_from(grt::GRT::get()->root()).get("wb"));
+workbench_MySqlStudioRef WBContext::get_root() {
+  return workbench_MySqlStudioRef::cast_from(grt::DictRef::cast_from(grt::GRT::get()->root()).get("wb"));
 }
 
 workbench_DocumentRef WBContext::get_document() {
@@ -3147,10 +3147,10 @@ bool WBContext::install_module_file(const std::string &path) {
   logInfo("%s\n", message.c_str());
   _frontendCallbacks->show_status_text(message);
   mforms::Utilities::show_message(
-    "Plugin Installed", strfmt("Plugin %s was installed, please restart Workbench to use it.", path.c_str()), "OK");
+    "Plugin Installed", strfmt("Plugin %s was installed, please restart MySqlStudio to use it.", path.c_str()), "OK");
 
   grt::GRT::get()->send_output(strfmt("Copied module %s to '%s'\n", path.c_str(), target_path.c_str()));
-  grt::GRT::get()->send_output("Please restart Workbench for the change to take effect.\n");
+  grt::GRT::get()->send_output("Please restart MySqlStudio for the change to take effect.\n");
 
   return true;
 }
@@ -3261,7 +3261,7 @@ void WBContext::delete_attached_file(const std::string &name) {
  */
 std::string WBContext::read_state(const std::string &name, const std::string &domain,
                                   const std::string &default_value) {
-  workbench_WorkbenchRef wb = get_root();
+  workbench_MySqlStudioRef wb = get_root();
   grt::DictRef dict = wb->state();
 
   return dict.get_string(domain + ":" + name, default_value);
@@ -3365,10 +3365,10 @@ void WBContext::handle_notification(const std::string &name, void *sender, std::
 static struct RegisterNotifDocs_wb_context {
   RegisterNotifDocs_wb_context() {
     base::NotificationCenter::get()->register_notification("GNDocumentOpened", "modeling",
-                                                           "Sent when a Workbench document file is opened.", "",
+                                                           "Sent when a MySqlStudio document file is opened.", "",
                                                            "path - path of the file that was opened");
 
     base::NotificationCenter::get()->register_notification("GNAppClosing", "application",
-                                                           "Sent right before Workbench closes.", "", "");
+                                                           "Sent right before MySqlStudio closes.", "", "");
   }
 } initdocs_wb_context;

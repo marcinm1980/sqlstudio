@@ -94,7 +94,7 @@ namespace mforms {
      @param arg1 - target specific string argument
      @param arg2 - target specific int argument
 
-     In Workbench, view will be added into one of the tabs in the application window.
+     In MySqlStudio, view will be added into one of the tabs in the application window.
      */
     void dock_view(AppView *view, const std::string &arg1 = "", int arg2 = 0);
 

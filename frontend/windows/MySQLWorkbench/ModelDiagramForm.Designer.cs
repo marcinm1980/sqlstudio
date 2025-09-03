@@ -1,4 +1,4 @@
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
     partial class ModelDiagramForm
     {

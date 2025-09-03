@@ -48,9 +48,9 @@ public:
   }
 
   virtual grt::IntegerRef includeModel(const std::string &path) {
-    grt::Module *module = grt::GRT::get()->get_module("Workbench");
+    grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
     if (!module)
-      throw std::runtime_error("Workbench module not found");
+      throw std::runtime_error("MySqlStudio module not found");
 
     grt::BaseListRef args(true);
 

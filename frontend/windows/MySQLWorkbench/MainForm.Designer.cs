@@ -1,4 +1,4 @@
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
 	partial class MainForm
 	{
@@ -154,7 +154,7 @@ namespace MySQL.GUI.Workbench
       this.MinimumSize = new System.Drawing.Size(980, 600);
       this.Name = "MainForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-      this.Text = "MySQL Workbench";
+      this.Text = "MySql Studio";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
       this.Load += new System.EventHandler(this.MainForm_Load);
       this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);

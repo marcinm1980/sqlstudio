@@ -191,7 +191,7 @@ mysql-workbench-@edition@ (8.0.11-1@distrov@) @distro@; urgency=low
 
 mysql-workbench-@edition@ (6.3.10-1@distrov@) @distro@; urgency=low
 
-  * The release notes for MySQL Workbench can be found at
+  * The release notes for MySql Studio can be found at
     https://dev.mysql.com/doc/relnotes/workbench/en/
 
  -- MySQL Release Engineering <mysql-build@oss.oracle.com>  Wed, 09 Mar 2017 15:00:00 +0100

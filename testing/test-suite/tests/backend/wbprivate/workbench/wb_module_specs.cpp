@@ -32,12 +32,12 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
-$describe("wb_module tests for Workbench") {
+$describe("wb_module tests for MySqlStudio") {
   $beforeAll([&]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     // data->tester->initializeRuntime();
   });
 
@@ -49,7 +49,7 @@ $describe("wb_module tests for Workbench") {
     // So if it's failing and it wasn't before, that's probably why - just update them.
 
     // proxy function for a module call
-    grt::Module* module = grt::GRT::get()->get_module("Workbench");
+    grt::Module* module = grt::GRT::get()->get_module("MySqlStudio");
     auto isOsSupportedProxy = [module](std::string const& os) -> bool {
       grt::StringListRef arguments(grt::Initialized);
       arguments.ginsert(grt::StringRef(os));

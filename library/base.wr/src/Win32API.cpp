@@ -123,9 +123,10 @@ bool Win32Api::UnblockFile(String ^ file) {
 /// if no lock exists anymore. Testing for an existing lock takes probably more time than just
 /// trying to remove it (even if it doesn't exist).
 /// </summary>
-bool Win32Api::UnblockWorkbenchFiles(String ^ folder) {
+bool Win32Api::UnblockMySqlStudioFiles(String ^ folder) {
   bool result = true;
-  for each(String ^ subFolder in Directory::GetDirectories(folder)) result &= UnblockWorkbenchFiles(subFolder);
+  for each (String ^ subFolder in Directory::GetDirectories(folder))
+    result &= UnblockMySqlStudioFiles(subFolder);
 
   for each(String ^ file in Directory::GetFiles(folder)) result &= UnblockFile(file);
 

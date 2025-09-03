@@ -67,9 +67,7 @@ $describe("GRT: serialization") {
     grt::GRT::get()->end_loading_metaclasses();
   });
 
-  $afterAll([&]() {
-    WorkbenchTester::reinitGRT();
-  });
+  $afterAll([&]() { MySqlStudioTester::reinitGRT(); });
 
   $it("Serialization of simple values + dictionaries", [this]() {
     StringRef sv("<tag1>%string_value/</tag1>");

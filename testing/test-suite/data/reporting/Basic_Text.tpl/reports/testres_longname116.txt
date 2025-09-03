@@ -29,4 +29,4 @@ Table `frn_keys_check_t2` was created
   - default character set: latin1
   __
 ----------------------------------------------
-End of MySQL Workbench Report
+End of MySql Studio Report

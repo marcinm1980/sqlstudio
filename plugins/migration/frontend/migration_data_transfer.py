@@ -115,7 +115,7 @@ class SetupMainView(WizardPage):
         if sys.platform == "win32":
             self._add_script_radiobutton_option(box, "Copy Script", "Create a batch file to copy the data at another time", "Batch File:", "Save As", "You should edit this file to add the source and target server passwords before running it.", rid)
         else:
-            self._add_script_radiobutton_option(box, "Copy Script", "Create a shell script to copy the data from outside Workbench", "Shell Script File:", "Save As", "You should edit this file to add the source and target server passwords before running it.", rid)
+            self._add_script_radiobutton_option(box, "Copy Script", "Create a shell script to copy the data from outside MySqlStudio", "Shell Script File:", "Save As", "You should edit this file to add the source and target server passwords before running it.", rid)
 
         self._add_script_radiobutton_option(box, "Bulk Copy Script", "Create a shell script to use native server dump and load abilities for fast migration", "Bulk Data Copy Script:", "Save As", "Edit the generated file and change passwords at the top of the generated script.\nRun it on the source server to create a zip package containing a data dump as well as a load script.\nCopy this to the target server, extract it, and run the import script. See the script output for further details.", rid)
 
@@ -545,8 +545,8 @@ class TransferMainView(WizardProgressPage):
                 return "# "+s+"\n"
             f.write("#!/bin/sh\n")
 
-        f.write(cmt("Workbench Table Data copy script"))
-        f.write(cmt("Workbench Version: %s" % Version.fromgrt(grt.root.wb.info.version)))
+        f.write(cmt("MySqlStudio Table Data copy script"))
+        f.write(cmt("MySqlStudio Version: %s" % Version.fromgrt(grt.root.wb.info.version)))
         f.write(cmt(""))
         f.write(cmt("Execute this to copy table data from a source RDBMS to MySQL."))
         f.write(cmt("Edit the options below to customize it. You will need to provide passwords, at least."))
@@ -572,7 +572,7 @@ if not [%wbcopytables_path%] == [] set wbcopytables_path=%wbcopytables_path%
 set wbcopytables=%wbcopytables_path%\\wbcopytables.exe
 
 if not exist "%wbcopytables%" (
-	echo "wbcopytables.exe doesn't exist in the supplied path. Please set 'wbcopytables_path' with the proper path(e.g. to Workbench binaries)"
+	echo "wbcopytables.exe doesn't exist in the supplied path. Please set 'wbcopytables_path' with the proper path(e.g. to MySqlStudio binaries)"
 	exit 1
 )
 

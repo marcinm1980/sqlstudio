@@ -147,9 +147,9 @@ void StoredNoteEditorBE::changed_selector(mforms::ToolBarItem *item) {
 
 void StoredNoteEditorBE::set_text(grt::StringRef text) {
   // XXX replace this using module wrapper class
-  grt::Module *module = grt::GRT::get()->get_module("Workbench");
+  grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
   if (!module)
-    throw std::runtime_error("Workbench module not found");
+    throw std::runtime_error("MySqlStudio module not found");
 
   grt::BaseListRef args(true);
 
@@ -162,9 +162,9 @@ void StoredNoteEditorBE::set_text(grt::StringRef text) {
 }
 
 grt::StringRef StoredNoteEditorBE::get_text(bool &isutf8) {
-  grt::Module *module = grt::GRT::get()->get_module("Workbench");
+  grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
   if (!module)
-    throw std::runtime_error("Workbench module not found");
+    throw std::runtime_error("MySqlStudio module not found");
 
   grt::BaseListRef args(true);
 

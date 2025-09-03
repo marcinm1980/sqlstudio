@@ -157,9 +157,7 @@ $describe("GRT values") {
     grt::GRT::get()->end_loading_metaclasses();
   });
 
-  $afterAll([]() {
-    WorkbenchTester::reinitGRT();
-  });
+  $afterAll([]() { MySqlStudioTester::reinitGRT(); });
 
   $it("load structures", [&](){
     $expect(grt::GRT::get()->get_metaclasses().size()).toBe(6U);

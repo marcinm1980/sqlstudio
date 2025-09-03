@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2B5284050F1A572C005FBF7C"
                BuildableName = "wb.model.grt.dylib"
                BlueprintName = "wb.model.grt"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2B5284050F1A572C005FBF7C"
             BuildableName = "wb.model.grt.dylib"
             BlueprintName = "wb.model.grt"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2B5284050F1A572C005FBF7C"
             BuildableName = "wb.model.grt.dylib"
             BlueprintName = "wb.model.grt"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

@@ -28,18 +28,18 @@ using System.Windows.Forms;
 using MySQL.Base;
 using MySQL.Forms;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
-	public interface IWorkbenchDocument
-	{
+    public interface IMySqlStudioDocument
+    {
     // Function that returns a pointer to the backend used
     UIForm BackendForm { get; }
 
-    // Refresh command for a specific workbench document.
-    void RefreshGUI(MySQL.Workbench.RefreshType refresh, String str, IntPtr ptr);
+        // Refresh command for a specific workbench document.
+        void RefreshGUI(MySQL.MySqlStudio.RefreshType refresh, String str, IntPtr ptr);
 
-    // General command handling.
-    void PerformCommand(String command);
+        // General command handling.
+        void PerformCommand(String command);
 
     void UpdateColors();
 

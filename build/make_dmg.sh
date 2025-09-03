@@ -1,8 +1,8 @@
 #!/bin/sh
 
-app="MySQLWorkbench.app"
-appx="MySQLWorkbench.X.app"
-srcdir="DerivedData/MySQLWorkbench/Build/Products/Release"
+app="MySQLMySqlStudio.app"
+appx="MySQLMySqlStudio.X.app"
+srcdir="DerivedData/MySQLMySqlStudio/Build/Products/Release"
 edition=$1
 ver=$2
 if test "$ver" == ""; then

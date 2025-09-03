@@ -37,29 +37,29 @@
 #include "mforms/box.h"
 #include "workbench/wb_version.h"
 
-#define PYTHON_SCRIPT_TEMPLATE                 \
-  "# -*- coding: utf-8 -*-\n"                  \
-  "# MySQL Workbench Python script\n"          \
-  "# <description>\n"                          \
-  "# Written in MySQL Workbench %wbversion%\n" \
-  "\n"                                         \
-  "import grt\n"                               \
+#define PYTHON_SCRIPT_TEMPLATE              \
+  "# -*- coding: utf-8 -*-\n"               \
+  "# MySql Studio Python script\n"          \
+  "# <description>\n"                       \
+  "# Written in MySql Studio %wbversion%\n" \
+  "\n"                                      \
+  "import grt\n"                            \
   "#import mforms\n"
 
-#define PYTHON_MODULE_TEMPLATE                 \
-  "# -*- coding: utf-8 -*-\n"                  \
-  "# MySQL Workbench module\n"                 \
-  "# <description>\n"                          \
-  "# Written in MySQL Workbench %wbversion%\n" \
-  "\n"                                         \
-  "from wb import *\n"                         \
-  "import grt\n"                               \
-  "#import mforms\n"                           \
-  "\n\n"                                       \
-  "ModuleInfo = DefineModule(%modulename%)\n"  \
-  "\n\n"                                       \
-  "@ModuleInfo.export()\n"                     \
-  "def %functionname%():\n"                    \
+#define PYTHON_MODULE_TEMPLATE                \
+  "# -*- coding: utf-8 -*-\n"                 \
+  "# MySql Studio module\n"                   \
+  "# <description>\n"                         \
+  "# Written in MySql Studio %wbversion%\n"   \
+  "\n"                                        \
+  "from wb import *\n"                        \
+  "import grt\n"                              \
+  "#import mforms\n"                          \
+  "\n\n"                                      \
+  "ModuleInfo = DefineModule(%modulename%)\n" \
+  "\n\n"                                      \
+  "@ModuleInfo.export()\n"                    \
+  "def %functionname%():\n"                   \
   "    pass\n"
 
 using namespace mforms;
@@ -104,13 +104,13 @@ NewPluginDialog::NewPluginDialog(Form* owner, const std::string& template_dir)
   _python_script.set_active(true);
   _python_plugin.set_text(_("Python Plugin"));
   table->add(&_python_plugin, 0, 1, 2, 3, HFillFlag);
-  table->add(manage(newDescr(_("Plugins accessible by the user from various places in Workbench:"))), 1, 2, 2, 3,
+  table->add(manage(newDescr(_("Plugins accessible by the user from various places in MySqlStudio:"))), 1, 2, 2, 3,
              HExpandFlag | HFillFlag);
   _python_module.set_text(_("Python Module"));
   table->add(&_python_module, 0, 1, 3, 4, HFillFlag);
   table->add(
-    manage(newDescr(
-      _("Python modules containing functions exported to be used by other scripts, modules or plugins in Workbench."))),
+    manage(newDescr(_(
+      "Python modules containing functions exported to be used by other scripts, modules or plugins in MySqlStudio."))),
     1, 2, 3, 4, HExpandFlag | HFillFlag);
 
   scoped_connect(_python_script.signal_clicked(), std::bind(&NewPluginDialog::changed_type, this));
@@ -136,7 +136,7 @@ NewPluginDialog::NewPluginDialog(Form* owner, const std::string& template_dir)
   scoped_connect(_filename.signal_changed(), std::bind(&NewPluginDialog::validate, this));
   _script_args.add(
     manage(newDescr(
-      _("The default location for scripts is in the scripts folder\nof your Workbench configuration folder."))),
+      _("The default location for scripts is in the scripts folder\nof your MySqlStudio configuration folder."))),
     2, 3, 0, 1, HFillFlag);
   _tab.add_page(&_script_args, "");
 
@@ -411,27 +411,27 @@ Label* NewPluginDialog::newDescr(const std::string& text) {
   return l;
 }
 
-#define PYTHON_SCRIPT_TEMPLATE                 \
-  "# -*- coding: utf-8 -*-\n"                  \
-  "# MySQL Workbench Python script\n"          \
-  "# <description>\n"                          \
-  "# Written in MySQL Workbench %wbversion%\n" \
-  "\n"                                         \
-  "import grt\n"                               \
+#define PYTHON_SCRIPT_TEMPLATE              \
+  "# -*- coding: utf-8 -*-\n"               \
+  "# MySql Studio Python script\n"          \
+  "# <description>\n"                       \
+  "# Written in MySql Studio %wbversion%\n" \
+  "\n"                                      \
+  "import grt\n"                            \
   "#import mforms\n"
 
-#define PYTHON_MODULE_TEMPLATE                 \
-  "# -*- coding: utf-8 -*-\n"                  \
-  "# MySQL Workbench module\n"                 \
-  "# <description>\n"                          \
-  "# Written in MySQL Workbench %wbversion%\n" \
-  "\n"                                         \
-  "from wb import *\n"                         \
-  "import grt\n"                               \
-  "#import mforms\n"                           \
-  "\n\n"                                       \
-  "ModuleInfo = DefineModule(%modulename%)\n"  \
-  "\n\n"                                       \
-  "@ModuleInfo.export()\n"                     \
-  "def %functionname%():\n"                    \
+#define PYTHON_MODULE_TEMPLATE                \
+  "# -*- coding: utf-8 -*-\n"                 \
+  "# MySql Studio module\n"                   \
+  "# <description>\n"                         \
+  "# Written in MySql Studio %wbversion%\n"   \
+  "\n"                                        \
+  "from wb import *\n"                        \
+  "import grt\n"                              \
+  "#import mforms\n"                          \
+  "\n\n"                                      \
+  "ModuleInfo = DefineModule(%modulename%)\n" \
+  "\n\n"                                      \
+  "@ModuleInfo.export()\n"                    \
+  "def %functionname%():\n"                   \
   "    pass\n"

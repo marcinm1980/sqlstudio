@@ -39,7 +39,7 @@ using namespace System::Windows::Forms;
 
 using namespace MySQL;
 using namespace MySQL::Forms;
-using namespace MySQL::GUI::Workbench;
+using namespace MySQL::GUI::MySqlStudio;
 
 //--------------------------------------------------------------------------------------------------
 

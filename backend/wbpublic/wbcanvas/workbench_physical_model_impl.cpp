@@ -34,7 +34,7 @@
 
 workbench_physical_Model::ImplData::ImplData(workbench_physical_Model *self) : super(self) {
   _relationship_notation = PRCrowFoofnotation;
-  _figure_notation = PFWorkbenchNotation;
+  _figure_notation = PFMySqlStudioNotation;
 
   scoped_connect(self->signal_changed(),
                  std::bind(&ImplData::member_changed_comm, this, std::placeholders::_1, std::placeholders::_2));
@@ -85,11 +85,11 @@ void workbench_physical_Model::ImplData::member_changed_comm(const std::string &
   } else if (name == "figureNotation") {
     std::string s = self()->_figureNotation;
     if (s == "workbench" || s == "workbench/default")
-      fnot = PFWorkbenchNotation;
+      fnot = PFMySqlStudioNotation;
     else if (s == "workbench/simple")
-      fnot = PFWorkbenchSimpleNotation;
+      fnot = PFMySqlStudioSimpleNotation;
     else if (s == "workbench/pkonly")
-      fnot = PFWorkbenchPKOnlyNotation;
+      fnot = PFMySqlStudioPKOnlyNotation;
     else if (s == "idef1x")
       fnot = PFIdef1xNotation;
     else if (s == "classic")
@@ -97,7 +97,7 @@ void workbench_physical_Model::ImplData::member_changed_comm(const std::string &
     else if (s == "barker")
       fnot = PFBarkerNotation;
     else
-      fnot = PFWorkbenchNotation;
+      fnot = PFMySqlStudioNotation;
     if (_figure_notation != fnot) {
       _figure_notation = fnot;
       run_later(std::bind(&workbench_physical_Model::ImplData::reset_figures, this));
@@ -232,17 +232,17 @@ wbfig::Table *workbench_physical_Model::ImplData::create_table_figure(mdc::Layer
                                                                       const model_DiagramRef &diagram,
                                                                       const model_ObjectRef &forTable) {
   switch (_figure_notation) {
-    case PFWorkbenchNotation:
+    case PFMySqlStudioNotation:
       return new wbfig::WBTable(layer, diagram->get_data(), forTable);
 
-    case PFWorkbenchSimpleNotation: {
+    case PFMySqlStudioSimpleNotation: {
       wbfig::WBTable *table = new wbfig::WBTable(layer, diagram->get_data(), forTable);
       table->hide_indices();
       table->hide_triggers();
       return table;
     }
 
-    case PFWorkbenchPKOnlyNotation: {
+    case PFMySqlStudioPKOnlyNotation: {
       wbfig::WBTable *table = new wbfig::WBTable(layer, diagram->get_data(), forTable);
       table->hide_columns();
       table->hide_indices();

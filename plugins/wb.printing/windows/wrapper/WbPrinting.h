@@ -29,7 +29,7 @@
 
 namespace MySQL {
   namespace GUI {
-    namespace Workbench {
+    namespace MySqlStudio {
       namespace Plugins {
 
       public
@@ -43,8 +43,8 @@ namespace MySQL {
         };
 
       } // namespace MySQL
-    }   // namespace GUI
-  }     // namespace Workbench
+    } // namespace MySqlStudio
+  } // namespace GUI
 } // namespace Plugins
 
 #endif // _WB_PRINTING_WRAPPER_H_

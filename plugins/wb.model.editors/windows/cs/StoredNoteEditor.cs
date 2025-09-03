@@ -29,7 +29,7 @@ using System.Windows.Forms;
 using MySQL.Grt;
 using MySQL.Forms;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
   public partial class StoredNoteEditor : ObjectEditorPlugin
   {

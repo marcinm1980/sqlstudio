@@ -37,7 +37,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   grt::UndoManager* um = nullptr;
   OverviewBE* overview = nullptr;
   db_SchemaRef schema;
@@ -51,9 +51,8 @@ $TestData {
 };
 
 $describe("Undo Tests for Editors") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->um = grt::GRT::get()->get_undo_manager();
     data->overview = WBContextUI::get()->get_physical_overview();
 

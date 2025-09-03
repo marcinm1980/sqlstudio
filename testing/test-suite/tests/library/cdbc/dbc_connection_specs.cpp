@@ -54,9 +54,7 @@ $describe("DBC: connection tests") {
     setupConnectionEnvironment(data->connectionProperties);
   });
 
-  $afterAll([&]() {
-    WorkbenchTester::reinitGRT();
-  });
+  $afterAll([&]() { MySqlStudioTester::reinitGRT(); });
 
   $it("Test initialization of a connection and it's destruction", [&]() {
     sql::DriverManager *dm = sql::DriverManager::getDriverManager();

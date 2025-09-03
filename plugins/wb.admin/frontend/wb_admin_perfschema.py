@@ -85,7 +85,7 @@ def download_server_install_script(ctrl_be):
 
 
 def get_sys_version_from_script(file_path):
-    """Gets the version of the sys schema that's shipped with Workbench."""
+    """Gets the version of the sys schema that's shipped with MySqlStudio."""
     if not os.path.exists(file_path):
         log_info("No sys script found\n")
         return None
@@ -97,7 +97,7 @@ def get_sys_version_from_script(file_path):
     return None
 
 def get_current_sys_version(server_version):
-    """Gets the version of the sys schema that's shipped with Workbench."""
+    """Gets the version of the sys schema that's shipped with MySqlStudio."""
     syspath = mforms.App.get().get_resource_path("sys")
     path = os.path.join(syspath, "before_setup.sql")
     return get_sys_version_from_script(path)
@@ -245,11 +245,11 @@ class HelperInstallPanel(mforms.Table):
                         self.install_scripts([(location, None)], "Installing server script")
                         return
                     else:
-                        log_info("Server sys schema install script exists but it's outdated compared to the one supplied by Workbench...\n")
+                        log_info("Server sys schema install script exists but it's outdated compared to the one supplied by MySqlStudio...\n")
                         
                         
                 log_info("Installing sys schema supplied by workbench\n")
-                self.install_scripts(files, "Installing Workbench script")
+                self.install_scripts(files, "Installing MySqlStudio script")
         except Exception as e:
               log_error("Runtime error when installing the sys schema: %s\n" % str(e))
               self._worker_queue.put(e)
@@ -383,7 +383,7 @@ class WbAdminValidationNeedsInstallation(WbAdminValidationBase):
                         version_ok = True
                 
                 if not version_ok:
-                    self.set_error_message("Performance Schema helper schema (sys) is outdated\n\nMySQL Workbench needs to upgrade it.\n(current version is %s, server has %s%s)." % (curversion, installed_version, install_text))
+                    self.set_error_message("Performance Schema helper schema (sys) is outdated\n\nMySql Studio needs to upgrade it.\n(current version is %s, server has %s%s)." % (curversion, installed_version, install_text))
                     self.add_install_button()
                     return False
         except grt.DBError as e:

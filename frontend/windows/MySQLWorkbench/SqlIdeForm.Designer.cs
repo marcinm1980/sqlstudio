@@ -1,4 +1,4 @@
-﻿namespace MySQL.GUI.Workbench
+﻿namespace MySQL.GUI.MySqlStudio
 {
     partial class SqlIdeForm
     {
@@ -270,7 +270,7 @@
       // outputPaneIcon
       // 
       this.outputPaneIcon.AutoSize = false;
-      this.outputPaneIcon.Image = global::MySQL.GUI.Workbench.Properties.Resources.wb_toolbar_pages_18x18;
+      this.outputPaneIcon.Image = global::MySQL.GUI.MySqlStudio.Properties.Resources.wb_toolbar_pages_18x18;
       this.outputPaneIcon.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
       this.outputPaneIcon.Margin = new System.Windows.Forms.Padding(0, 1, 5, 2);
       this.outputPaneIcon.Name = "outputPaneIcon";

@@ -545,13 +545,11 @@ ConnectionsWelcomeScreen::ConnectionsWelcomeScreen(HomeScreen *owner) : _owner(o
 
   _closeIcon = nullptr;
 
-  _heading = "Welcome to MySQL Workbench";
-  _content = {
-    "MySQL Workbench is the official graphical user interface (GUI) tool for MySQL. It allows you to design,",
-    "create and browse your database schemas, work with database objects and insert data as well as",
-    "design and run SQL queries to work with stored data. You can also migrate schemas and data from other",
-    "database vendors to your MySQL database."
-  };
+  _heading = "Welcome to MySql Studio";
+  _content = { "MySql Studio is the official graphical user interface (GUI) tool for MySQL. It allows you to design,",
+               "create and browse your database schemas, work with database objects and insert data as well as",
+               "design and run SQL queries to work with stored data. You can also migrate schemas and data from other",
+               "database vendors to your MySQL database." };
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -1141,7 +1139,7 @@ void ConnectionsSection::repaint(cairo_t *cr, int areax, int areay, int areaw, i
   base::Rect bounds(0, CONNECTIONS_TOP_PADDING, CONNECTIONS_TILE_WIDTH, CONNECTIONS_TILE_HEIGHT);
 
   if (connections.size() == 0) {
-    std::string line1 = "MySQL Workbench could not detect any MySQL server running.";
+    std::string line1 = "MySql Studio could not detect any MySQL server running.";
     std::string line2 = "This means that MySQL is not installed or is not running.";
 
     double x = get_width() / 2 - (extents.width / 2 + extents.x_bearing);

@@ -36,9 +36,9 @@ using MySQL.Forms;
 using MySQL.Grt;
 using MySQL.Utilities;
 using MySQL.Utilities.SysUtils;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
   static class Program
   {
@@ -47,7 +47,7 @@ namespace MySQL.GUI.Workbench
     // The types of application metadata information
     public enum ApplicationMetaInfo { Company, Copyright, Version, Revision, Configuration, ReleaseType };
 
-    // The Workbench Context
+    // The MySqlStudio Context
     private static WbContext wbContext = null;
 
     // The GRT Manager
@@ -83,11 +83,11 @@ namespace MySQL.GUI.Workbench
       // Start with command line parsing.
       string userDir = System.IO.Path.Combine(System.IO.Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "MySQL"), "Workbench");
+        "MySQL"), "MySqlStudio");
       Logger.InitLogger(userDir);
 
       if (!consoleRedirectionWorked)
-        Logger.LogError("Workbench", "Console redirection failed.\n");
+        Logger.LogError("MySqlStudio", "Console redirection failed.\n");
 
       System.Reflection.Assembly asm = System.Reflection.Assembly.GetEntryAssembly();
       string baseDir = System.IO.Path.GetDirectoryName(asm.Location);
@@ -95,7 +95,7 @@ namespace MySQL.GUI.Workbench
 
       if (!wbOptions.parse_args(Args, asm.Location))
       {
-        Logger.LogInfo("Workbench", "Command line params told us to shut down.\n");
+        Logger.LogInfo("MySqlStudio", "Command line params told us to shut down.\n");
         return;
       }
 
@@ -116,11 +116,11 @@ namespace MySQL.GUI.Workbench
       bool singleInstance = true;
       string lastVersion = "";
       string currentVersion = GetApplicationMetaInfo(ApplicationMetaInfo.Version);
-      Logger.LogInfo("Workbench", "Current version given by meta info is: " + currentVersion + '\n');
+      Logger.LogInfo("MySqlStudio", "Current version given by meta info is: " + currentVersion + '\n');
       RegistryKey wbKey = Registry.CurrentUser;
       try
       {
-        wbKey = wbKey.OpenSubKey(@"Software\Oracle\MySQL Workbench", false);
+        wbKey = wbKey.OpenSubKey(@"Software\Oracle\MySql Studio", false);
         if (wbKey != null)
         {
           if (wbKey.GetValue("DisableSingleInstance", 0).ToString() == "1")
@@ -128,11 +128,11 @@ namespace MySQL.GUI.Workbench
           lastVersion = wbKey.GetValue("LastStartedAs", "").ToString();
         }
         else
-          Registry.CurrentUser.CreateSubKey(@"Software\Oracle\MySQL Workbench");
+          Registry.CurrentUser.CreateSubKey(@"Software\Oracle\MySql Studio");
       }
       catch (Exception e)
       {
-        Logger.LogError("Workbench", "Error while checking single instance reg key: " + e.Message + '\n');
+        Logger.LogError("MySqlStudio", "Error while checking single instance reg key: " + e.Message + '\n');
       }
       finally
       {
@@ -140,7 +140,7 @@ namespace MySQL.GUI.Workbench
           wbKey.Close();
       }
 
-      // First check if this is the first instance of Workbench (if enabled).
+      // First check if this is the first instance of MySqlStudio (if enabled).
       // The setting for single-instance is stored in the registry as it is Windows-only
       // and loading of the application settings happens later.
       if (singleInstance)
@@ -148,7 +148,7 @@ namespace MySQL.GUI.Workbench
         if (!ApplicationInstanceManager.CreateSingleInstance(
           Assembly.GetExecutingAssembly().GetName().Name, Args, SingleInstanceCallback))
         {
-          Logger.LogInfo("Workbench", "Exiting as another instance of WB is already running.\n");
+          Logger.LogInfo("MySqlStudio", "Exiting as another instance of WB is already running.\n");
           return;
         }
       }
@@ -167,7 +167,7 @@ namespace MySQL.GUI.Workbench
       // under certain circumstances.
       if (currentVersion != lastVersion)
       {
-        Logger.LogInfo("Workbench", "This is the first start of a new version. Doing some clean up.\n");
+        Logger.LogInfo("MySqlStudio", "This is the first start of a new version. Doing some clean up.\n");
         List<string> failed = new List<string>();
         RemoveCompiledPythonFiles(baseDir, failed);
 
@@ -189,7 +189,7 @@ namespace MySQL.GUI.Workbench
           cleanedPath = cleanedPath + ";" + path;
       }
       Environment.SetEnvironmentVariable("PATH", systemFolder + cleanedPath);
-      Logger.LogInfo("Workbench", "Setting PATH to: " + systemFolder + cleanedPath + '\n');
+      Logger.LogInfo("MySqlStudio", "Setting PATH to: " + systemFolder + cleanedPath + '\n');
 
       // Clear PYTHONPATH environment variable, as we do not need it but our python impl
       // seriously gets confused with it.
@@ -211,10 +211,10 @@ namespace MySQL.GUI.Workbench
       foreach (Char c in baseDir)
         if (c > 0x7f)
         {
-          MessageBox.Show("MySQL Workbench cannot be executed from a path that contains non-ASCII characters.\n"+
+          MessageBox.Show("MySql Studio cannot be executed from a path that contains non-ASCII characters.\n" +
             "This problem is imposed by used third-party libraries.\n" +
             "Please run this application from the default installation path or at least a path which is all ASCII characters.",
-            "MySQL Workbench Execution Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            "MySql Studio Execution Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
           return;
         }
 
@@ -230,14 +230,14 @@ namespace MySQL.GUI.Workbench
 
         if (DateTime.Now.Subtract(fileDate).TotalDays > 45)
         {
-          Logger.LogInfo("Workbench", "Found an old WB pre release. Showing warning.\n");
-          if (MessageBox.Show("This version of MySQL Workbench is older than 45 days and most probably outdated. "
+          Logger.LogInfo("MySqlStudio", "Found an old WB pre release. Showing warning.\n");
+          if (MessageBox.Show("This version of MySql Studio is older than 45 days and most probably outdated. "
             + Environment.NewLine
             + "It is recommended to upgrade to a newer version if available. "
             + Environment.NewLine
             + "Press [OK] to check for a new version and exit the application. "
             + "Press [Cancel] to continue using this version.",
-            "MySQL Workbench Version Outdated", MessageBoxButtons.OKCancel,
+            "MySql Studio Version Outdated", MessageBoxButtons.OKCancel,
             MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.OK)
           {
             CheckForNewVersion();
@@ -254,10 +254,10 @@ namespace MySQL.GUI.Workbench
 
       #region Initialize GRT
 
-      // Try to instantiate the Workbench context and the GRT Manager and catch exceptions
+      // Try to instantiate the MySqlStudio context and the GRT Manager and catch exceptions
       try
       {
-        // Create Workbench Context
+        // Create MySqlStudio Context
         wbContext = new WbContext(wbOptions.Verbose);
 
         if (wbContext != null)
@@ -273,7 +273,7 @@ namespace MySQL.GUI.Workbench
 
       #endregion
 
-      // If the Workbench Context and GRT Manager were successfully created, 
+      // If the MySqlStudio Context and GRT Manager were successfully created, 
       // initialize the application
       if (wbContext != null && grtManager != null)
       {
@@ -281,7 +281,7 @@ namespace MySQL.GUI.Workbench
 
         mainForm = new MainForm(wbContext);
 
-        // Initialize the Workbench context
+        // Initialize the MySqlStudio context
         ManagedApplication formsApplication = new ManagedApplication(
           new AppCommandDelegate(mainForm.ApplicationCommand),
           mainForm.dockDelegate);
@@ -327,7 +327,7 @@ namespace MySQL.GUI.Workbench
         // Setup Menus
         wbContext.validate_edit_menu();
         mainForm.Show();
-        Logger.LogInfo("Workbench", "UI is up\n");
+        Logger.LogInfo("MySqlStudio", "UI is up\n");
 
         // Tell the backend our main UI is ready. This will also load a model if it was given via command line
         // and opens the overview form for it.
@@ -337,13 +337,13 @@ namespace MySQL.GUI.Workbench
         // to allow us later to find out if we ran a new version the first time.
         try
         {
-          wbKey = Registry.CurrentUser.OpenSubKey(@"Software\Oracle\MySQL Workbench", true);
+          wbKey = Registry.CurrentUser.OpenSubKey(@"Software\Oracle\MySql Studio", true);
           if (wbKey != null)
             wbKey.SetValue("LastStartedAs", currentVersion);
         }
         catch (Exception e)
         {
-          Logger.LogError("Workbench", "Couldn't write regkey LastStartedAs: " + e.Message + '\n');
+          Logger.LogError("MySqlStudio", "Couldn't write regkey LastStartedAs: " + e.Message + '\n');
         }
         finally
         {
@@ -356,7 +356,7 @@ namespace MySQL.GUI.Workbench
         {
           try
           {
-            Logger.LogInfo("Workbench", "Running the application\n");
+            Logger.LogInfo("MySqlStudio", "Running the application\n");
             Application.Run(new ApplicationContext(mainForm));
           }
           catch (Exception e)
@@ -367,7 +367,7 @@ namespace MySQL.GUI.Workbench
 
         #endregion
 
-        Logger.LogInfo("Workbench", "Shutting down Workbench\n");
+        Logger.LogInfo("MySqlStudio", "Shutting down MySqlStudio\n");
 
         timer.Stop();
         timer.Dispose();
@@ -389,7 +389,7 @@ namespace MySQL.GUI.Workbench
       
       Win32Api.ReleaseConsole();
 
-      Logger.LogInfo("Workbench", "Done\n");
+      Logger.LogInfo("MySqlStudio", "Done\n");
     }
 
     /// <summary>
@@ -397,8 +397,8 @@ namespace MySQL.GUI.Workbench
     /// </summary>
     private static void PrintInitialLogInfo()
     {
-      Logger.LogInfo("Workbench", "Starting up Workbench\n");
-      Logger.LogInfo("Workbench", string.Format("Current environment:\n\tCommand line: {0}\n\tCurrentDirectory: {1}\n" + 
+      Logger.LogInfo("MySqlStudio", "Starting up MySqlStudio\n");
+      Logger.LogInfo("MySqlStudio", string.Format("Current environment:\n\tCommand line: {0}\n\tCurrentDirectory: {1}\n" +
         "\tHasShutdownStarted: {2}\n\tOSVersion: {3}\n\tSystemDirectory: {4}\n" +
         "\tTickCount: {5}\n\tUserInteractive: {6}\n\tVersion: {7}\n\tWorkingSet: {8}\n",
         Environment.CommandLine, Environment.CurrentDirectory, Environment.HasShutdownStarted,
@@ -410,7 +410,7 @@ namespace MySQL.GUI.Workbench
       string variables = "";
       foreach (DictionaryEntry entry in environmentVariables)
         variables += string.Format("\t{0} = {1}\n", entry.Key, entry.Value);
-      Logger.LogInfo("Workbench", "Environment variables:\n" + variables);
+      Logger.LogInfo("MySqlStudio", "Environment variables:\n" + variables);
     }
     
     #region Application handlers
@@ -600,20 +600,20 @@ namespace MySQL.GUI.Workbench
         info += "FullText = " + o.ToString();
       }
 
-      Logger.LogError("Workbench", message + "\n" + info + '\n');
+      Logger.LogError("MySqlStudio", message + "\n" + info + '\n');
 
       // Check for blocked files (Windows "security" feature).
       if (info.Contains("0x80131515"))
       {
-        MessageBox.Show("A blocked library could not be loaded. You probably downloaded MySQL Workbench " +
+        MessageBox.Show("A blocked library could not be loaded. You probably downloaded MySql Studio " +
           "as no-installation zip package. Windows has locked this, preventing so its full operation.\n\n" +
-          "When you click \"OK\" MySQL Workbench will try to automatically unblock all its files. Restart the application " +
+          "When you click \"OK\" MySql Studio will try to automatically unblock all its files. Restart the application " +
           "for this change to take effect!\n\nThis operation might fail " +
           "e.g. on read-only volumes or for other reasons. If that is the case then manually unblock the zip package " +
           "(see its Properties in Explorer) and unzip it again.",
           "Blocked DLL Detected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-        Win32Api.UnblockWorkbenchFiles(System.IO.Directory.GetCurrentDirectory());
+        Win32Api.UnblockMySqlStudioFiles(System.IO.Directory.GetCurrentDirectory());
       }
       else
       {
@@ -623,7 +623,7 @@ namespace MySQL.GUI.Workbench
         if (isFontProblem)
         {
           MessageBox.Show("There was a problem with one of the system fonts, which indicates this font " +
-          "is corrupt. The original message is:\n" + message + "\nMySQL Workbench needs to close now. You " +
+          "is corrupt. The original message is:\n" + message + "\nMySql Studio needs to close now. You " +
           "should re-install the font in question to avoid this problem in the future.",
           "Invalid Font Reported", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
           Application.Exit();

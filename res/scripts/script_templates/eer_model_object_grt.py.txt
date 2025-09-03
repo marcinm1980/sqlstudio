@@ -1,7 +1,7 @@
 ## EER Model Utility
-# MySQL Workbench Plugin
+# MySql Studio Plugin
 # <description>
-# Written in MySQL Workbench %wbversion%
+# Written in MySql Studio %wbversion%
 
 from wb import *
 import grt

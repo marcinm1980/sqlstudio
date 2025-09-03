@@ -238,11 +238,11 @@ PreferencesForm::PreferencesForm(const workbench_physical_ModelRef &model)
     _font_list(mforms::TreeFlatList) {
   _model = model;
 
-  set_name("Workbench Preferences");
+  set_name("MySqlStudio Preferences");
   setInternalName("preferences");
 
   if (!model.is_valid())
-    set_title(_("Workbench Preferences"));
+    set_title(_("MySqlStudio Preferences"));
   else
     set_title(_("Model Options"));
 
@@ -534,8 +534,7 @@ void PreferencesForm::update_checkbox_option(const std::string &option_name, mfo
   // On Windows we have to write the following value also to the registry as our options are not
   // available yet when we need that value.
   if (option_name == "DisableSingleInstance")
-    set_value_to_registry(HKEY_CURRENT_USER, "Software\\Oracle\\MySQL Workbench", "DisableSingleInstance",
-                          value.c_str());
+    set_value_to_registry(HKEY_CURRENT_USER, "Software\\Oracle\\MySql Studio", "DisableSingleInstance", value.c_str());
 #endif
 }
 
@@ -693,7 +692,7 @@ mforms::View *PreferencesForm::create_admin_page() {
     table->add(new_label(_("Path to mysqldump Tool:"), "Path to MySQL Tool", true), 0, 1, 0, 1, mforms::HFillFlag);
     pathsel = new_path_option("mysqldump", true);
     pathsel->get_entry()->set_tooltip(
-      _("Specifiy the full path to the mysqldump tool, which is needed for the Workbench Administrator.\nIt usually "
+      _("Specifiy the full path to the mysqldump tool, which is needed for the MySqlStudio Administrator.\nIt usually "
         "comes bundled with the MySQL server and/or client packages."));
     table->add(pathsel, 1, 2, 0, 1, mforms::HFillFlag | mforms::HExpandFlag | mforms::VFillFlag);
 #ifdef HAVE_BUNDLED_MYSQLDUMP
@@ -706,7 +705,7 @@ mforms::View *PreferencesForm::create_admin_page() {
     table->add(new_label(_("Path to mysql Tool:"), "Path to MySQL Tool", true), 0, 1, 1, 2, mforms::HFillFlag);
     pathsel = new_path_option("mysqlclient", true);
     pathsel->get_entry()->set_tooltip(
-      _("Specifiy the full path to the mysql command line client tool, which is needed for the Workbench "
+      _("Specifiy the full path to the mysql command line client tool, which is needed for the MySqlStudio "
         "Administrator.\nIt usually comes bundled with the MySQL server and/or client packages."));
     table->add(pathsel, 1, 2, 1, 2, mforms::HFillFlag | mforms::HExpandFlag | mforms::VFillFlag);
 #ifdef HAVE_BUNDLED_MYSQLDUMP
@@ -758,7 +757,7 @@ mforms::View *PreferencesForm::create_sqlide_page() {
 
         table->add_option(sel, _("Auto-save scripts interval:"), "Auto Save Interval",
                           _("Interval to perform auto-saving of all open script tabs. The scripts will be restored "
-                            "from the last auto-saved version if Workbench unexpectedly quits."));
+                            "from the last auto-saved version if MySqlStudio unexpectedly quits."));
       }
 
       discard_unsaved = table->add_checkbox_option("DbSqlEditor:DiscardUnsavedQueryTabs",
@@ -840,8 +839,8 @@ mforms::View *PreferencesForm::create_sqlide_page() {
       entry->set_size(100, -1);
 
       otable->add_option(
-        entry, _("Internal Workbench Schema:"), "Internal Schema",
-        _("This schema will be used by MySQL Workbench to store information required for certain operations."));
+        entry, _("Internal MySqlStudio Schema:"), "Internal Schema",
+        _("This schema will be used by MySql Studio to store information required for certain operations."));
     }
 
     {
@@ -892,9 +891,9 @@ mforms::View *PreferencesForm::create_general_editor_page() {
           "model. "
           "Model scoped same named parameter in its turn affects SQL parsing within the model, and defines the value "
           "of SQL_MODE session variable when connecting to DBMS.\n"
-          "Note: Empty value for this parameter will cause Workbench to treat SQL_MODE as empty string when parsing "
+          "Note: Empty value for this parameter will cause MySqlStudio to treat SQL_MODE as empty string when parsing "
           "SQL within the model, but will leave DBMS session variable at its default value.\n"
-          "To force Workbench to reset SQL_MODE session variable as well, this parameter needs to be set to a "
+          "To force MySqlStudio to reset SQL_MODE session variable as well, this parameter needs to be set to a "
           "whitespace symbol."));
       tbox->add(entry, true, true);
     }
@@ -1307,9 +1306,10 @@ mforms::View *PreferencesForm::create_model_page() {
 
 #ifndef __APPLE__
     table->add_checkbox_option("workbench:ForceSWRendering",
-                               _("Force use of software based rendering for EER diagrams"), "Force Software Redering Diagrams",
-                               _("Enable this option if you have drawing problems in Workbench modeling. You must "
-                                 "restart Workbench for the option to take effect."));
+                               _("Force use of software based rendering for EER diagrams"),
+                               "Force Software Redering Diagrams",
+                               _("Enable this option if you have drawing problems in MySqlStudio modeling. You must "
+                                 "restart MySqlStudio for the option to take effect."));
 #endif
 
     {
@@ -1329,7 +1329,7 @@ mforms::View *PreferencesForm::create_model_page() {
 
       table->add_option(sel, _("Auto-save model interval:"), "Auto Save Model Interval",
                         _("Interval to perform auto-saving of the open model. The model will be restored from the last "
-                          "auto-saved version if Workbench unexpectedly quits."));
+                          "auto-saved version if MySqlStudio unexpectedly quits."));
     }
   }
   return top_box;
@@ -1523,9 +1523,9 @@ mforms::View *PreferencesForm::create_others_page()
   OptionTable *table = mforms::manage(new OptionTable(this, _("Others"), true));
   content->add(table, false, true);
   {
-    table->add_checkbox_option("DisableSingleInstance",
-      _("Allow more than one instance of MySQL Workbench to run"), "Allow More Then One Instance",
-      _("By default only one instance of MySQL Workbench can run at the same time. This is more resource friendly "
+    table->add_checkbox_option(
+      "DisableSingleInstance", _("Allow more than one instance of MySql Studio to run"), "Allow More Then One Instance",
+      _("By default only one instance of MySql Studio can run at the same time. This is more resource friendly "
         "and necessary as multiple instances share the same files (settings etc.). Change at your own risk."));
   }
 #endif

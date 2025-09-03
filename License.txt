@@ -1,6 +1,6 @@
 Licensing Information User Manual
 
-MySQL Workbench 8.0.43 Community
+MySql Studio 8.0.43 Community
      __________________________________________________________________
 
 Introduction
@@ -8,18 +8,18 @@ Introduction
    This License Information User Manual contains Oracle's product license
    and other licensing information, including licensing information for
    third-party software which may be included in this distribution of
-   MySQL Workbench 8.0.43 Community.
+   MySql Studio 8.0.43 Community.
 
    Last updated: June 2025
 
 Licensing Information
 
-   This release of MySQL Workbench 8.0.43 Community is brought to you by
+   This release of MySql Studio 8.0.43 Community is brought to you by
    the MySQL team at Oracle. This software is released under version 2 of
    the GNU General Public License (GPLv2), as set forth below, with the
    following additional permissions:
 
-   This distribution of MySQL Workbench 8.0.43 Community is designed to
+   This distribution of MySql Studio 8.0.43 Community is designed to
    work with certain software (including but not limited to OpenSSL) that
    is licensed under separate terms, as designated in a particular file or
    component or in the license documentation. Without limiting your rights
@@ -483,8 +483,8 @@ Cairo
 
 You are receiving a copy of Cairo in the
 following DLL (libcairo.dll) or dynamic libraries
-(MySQLWorkbench.app/Contents/Frameworks/libcairo.2.dylib and
-MySQLWorkbench.app/Contents/Frameworks/libpixman-1.0.dylib). The terms of the
+(MySQLMySqlStudio.app/Contents/Frameworks/libcairo.2.dylib and
+MySQLMySqlStudio.app/Contents/Frameworks/libpixman-1.0.dylib). The terms of the
 Oracle license do NOT apply to Cairo; Oracle distributes it under the GNU
 Lesser General Public License Version 2.1 separately from the Oracle programs
 you receive. You can also separately obtain and use Cairo independent of the
@@ -492,7 +492,7 @@ Oracle programs under a dual license subject to the terms of the LGPL or the
 Mozilla Public License Version 1.1. If you do not wish to install this
 program, you may delete libcairo.dll or libcairo.2.dylib and
 libpixman-1.0.dylib from the installation directory ... (or uninstall
-Workbench completely).
+MySqlStudio completely).
 ------------------------------------------------------------------------------
 --
 == COPYING file
@@ -686,7 +686,7 @@ of the Oracle license do NOT apply to FreeTDS; Oracle distributes it under
 the GNU Lesser General Public License Version 2.0 separately from the Oracle
 programs you receive. If you do not wish to install this program, you may
 delete freetds.so (*nix) and dylib (windows) from the installation directory
-(or uninstall Workbench completely).
+(or uninstall MySqlStudio completely).
 
 This component is licensed under the GNU GPL license, version 2.0.
 
@@ -1101,25 +1101,25 @@ ogr/ogr_recordbatch.h
    ======================================================================
    ======================================================================
 
-GLib (for MySQL Workbench)
+GLib (for MySql Studio)
 
 GLib
 
 You are receiving a copy of the GLib library in the following folder:
-C:\Program Files(x86)\MySQL\MySQLWorkbench <ver>\ on Windows
-and MySQLWorkbench.app/Contents/Frameworks on Mac OS X.
+C:\Program Files(x86)\MySQL\MySQLMySqlStudio <ver>\ on Windows
+and MySQLMySqlStudio.app/Contents/Frameworks on Mac OS X.
 The terms of the Oracle license do NOT apply to the GLib library;
 it is licensed under the following license, separately from the
 Oracle programs you receive.
 If you do not wish to install this library, on Windows go to the
-folder C:\Program Files (x86)\MySQL\MySQL Workbench <ver>\
+folder C:\Program Files (x86)\MySQL\MySql Studio <ver>\
 and remove or replace the files:
  - libglib-2.0-0.dll
  - libgmodule-2.0-0.dll
  - libgobject-2.0-0.dll
  - libgthread-2.0-0.dll
 if present.
-On  Mac OS X go to the folder MySQLWorkbench.app/Contents/Frameworks
+On  Mac OS X go to the folder MySQLMySqlStudio.app/Contents/Frameworks
 folder and remove or replace the files
  - libglib-2.*.dylib
  - libgmodule-2.*.dylib
@@ -2801,7 +2801,7 @@ be appreciated.
 
 libssh
 
-You are receiving a copy of libssh as part of MySQL Workbench in object code
+You are receiving a copy of libssh as part of MySql Studio in object code
 form. The terms of the Oracle license do NOT apply to libssh; libssh is licensed
 under the LGPLv2.1 license, separate from MySQL. If you do not wish to install
 this library, you may remove it, but the Oracle program might not operate

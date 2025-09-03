@@ -96,7 +96,7 @@ public:
     MinimizeBox = false;
     StartPosition = FormStartPosition::CenterScreen;
     CancelButton = cancelButton;
-    Icon = gcnew Drawing::Icon("images/icons/MySQLWorkbench.ico", Drawing::Size(16, 16));
+    Icon = gcnew Drawing::Icon("images/icons/MySQLMySqlStudio.ico", Drawing::Size(16, 16));
 
     // The footer with buttons.
     Controls->Add(footer);

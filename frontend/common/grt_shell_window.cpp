@@ -93,7 +93,7 @@ GRTShellWindow::GRTShellWindow(wb::WBContext *context)
     _snippet_text(),
     _userSnippetsLoaded(false),
     _snippetClicked(false) {
-  set_title(("Workbench Scripting Shell"));
+  set_title(("MySqlStudio Scripting Shell"));
   set_name("Shell Window");
   setInternalName("shell_window");
 
@@ -1124,8 +1124,9 @@ void GRTShellWindow::open_file_in_editor(const std::string &path, bool is_script
       return;
   } else if (language == "sql") {
     if (Utilities::show_message_and_remember(
-          _("Unsupported Execution"), _("This script editor is meant for developing Workbench plugins and scripts. SQL "
-                                        "scripts should be opened and executed in the SQL Editor."),
+          _("Unsupported Execution"),
+          _("This script editor is meant for developing MySqlStudio plugins and scripts. SQL "
+            "scripts should be opened and executed in the SQL Editor."),
           _("OK"), _("Cancel"), "", "ShellWindowSqlLanguageFile", "") == mforms::ResultCancel)
       return;
   }

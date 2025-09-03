@@ -9,17 +9,17 @@
       <requires file="structs.workbench.logical.xml"/>
       <requires file="structs.db.migration.xml"/>
 
-      <gstruct name="workbench.Workbench" parent="app.Application" attr:caption="Workbench application object" attr:desc="an object to store the workbench's data">
+      <gstruct name="workbench.MySqlStudio" parent="app.Application" attr:caption="MySqlStudio application object" attr:desc="an object to store the workbench's data">
           <members>
-              <member name="doc" type="object" struct-name="workbench.Document" owned="1" overrides="app.Document" attr:desc="the Workbench document"/>
-              <member name="docPath" type="string" attr:desc="the Workbench document path"/>
+              <member name="doc" type="object" struct-name="workbench.Document" owned="1" overrides="app.Document" attr:desc="the MySqlStudio document"/>
+              <member name="docPath" type="string" attr:desc="the MySqlStudio document path"/>
               <member name="sqlEditors" type="list" content-type="object" content-struct-name="db.query.Editor" owned="1" read-only="1" attr:desc="list of open SQL Editor instances"/>
               <member name="rdbmsMgmt" type="object" struct-name="db.mgmt.Management" owned="1" attr:desc="the RDBMS management information"/>
               <member name="migration" type="object" struct-name="db.migration.Migration" owned="1" attr:desc="data for Migration Plugin"/>
           </members>
       </gstruct>
 
-      <gstruct name="workbench.Document" parent="app.Document" attr:caption="Workbench Document">
+      <gstruct name="workbench.Document" parent="app.Document" attr:caption="MySqlStudio Document">
           <members>
               <member name="logicalModel" type="object" struct-name="workbench.logical.Model" owned="1" attr:desc="the logical model"/>
               <member name="physicalModels" type="list" content-type="object" owned="1" content-struct-name="workbench.physical.Model" attr:desc="the physical models"/>

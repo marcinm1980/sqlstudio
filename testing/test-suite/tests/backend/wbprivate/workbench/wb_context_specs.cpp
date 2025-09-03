@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-// High-level testing for Workbench
+// High-level testing for MySqlStudio
 // This tests WBContext, which will test the integration of all components.
 
 #include "base/util_functions.h"
@@ -53,9 +53,9 @@ static mforms::DialogResult messageOtherCallback() {
 //----------------------------------------------------------------------------------------------------------------------
 
 static void set_note_content(GrtStoredNoteRef note, const std::string &text) {
-  grt::Module *module = grt::GRT::get()->get_module("Workbench");
+  grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
   if (!module)
-    throw std::runtime_error("Workbench module not found");
+    throw std::runtime_error("MySqlStudio module not found");
 
   note->lastChangeDate(base::fmttime());
 
@@ -70,9 +70,9 @@ static void set_note_content(GrtStoredNoteRef note, const std::string &text) {
 //----------------------------------------------------------------------------------------------------------------------
 
 static std::string get_note_content(const GrtStoredNoteRef &note) {
-  grt::Module *module = grt::GRT::get()->get_module("Workbench");
+  grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
   if (!module)
-    throw std::runtime_error("Workbench module not found");
+    throw std::runtime_error("MySqlStudio module not found");
 
   grt::BaseListRef args(true);
 
@@ -84,15 +84,14 @@ static std::string get_note_content(const GrtStoredNoteRef &note) {
 //----------------------------------------------------------------------------------------------------------------------
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   std::string dataDir = casmine::CasmineContext::get()->tmpDataDir();
   std::string outputDir = casmine::CasmineContext::get()->outputDir();
 };
 
-$describe("Workbench model document integration tests") {
+$describe("MySqlStudio model document integration tests") {
   $beforeAll([this]() {
-    
-    data->tester.reset(new WorkbenchTester());
+        data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     // Modeling uses a default server version, which is not related to any server it might have
@@ -119,7 +118,7 @@ $describe("Workbench model document integration tests") {
   $it("Test loading documents", [this]() {
     $expect(data->tester->wb->open_document(data->dataDir + "/workbench/test_model_xml.mwb")).toBeTrue();
 
-    workbench_WorkbenchRef root(data->tester->wb->get_root());
+    workbench_MySqlStudioRef root(data->tester->wb->get_root());
 
     $expect(root->doc().is_valid()).toBeTrue();
 
@@ -759,5 +758,4 @@ $describe("Workbench model document integration tests") {
     data->tester->wb->close_document_finish();
   });
 }
-
 }

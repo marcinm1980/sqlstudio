@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2B2E91C8158915DE0078D08A"
                BuildableName = "wbcopytables"
                BlueprintName = "wbcopytables"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,7 +33,7 @@
             BlueprintIdentifier = "2B2E91C8158915DE0078D08A"
             BuildableName = "wbcopytables"
             BlueprintName = "wbcopytables"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -56,7 +56,7 @@
             BlueprintIdentifier = "2B2E91C8158915DE0078D08A"
             BuildableName = "wbcopytables"
             BlueprintName = "wbcopytables"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -73,7 +73,7 @@
             BlueprintIdentifier = "2B2E91C8158915DE0078D08A"
             BuildableName = "wbcopytables"
             BlueprintName = "wbcopytables"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -32,12 +32,12 @@ using MySQL.Base;
 using MySQL.Controls;
 using MySQL.Grt;
 using MySQL.GUI.Mdc;
-using MySQL.GUI.Workbench.Plugins;
-using MySQL.Workbench;
+using MySQL.GUI.MySqlStudio.Plugins;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
-  public partial class ModelDiagramForm : TabDocument, IWorkbenchDocument, IWorkbenchObserver
+  public partial class ModelDiagramForm : TabDocument, IMySqlStudioDocument, IMySqlStudioObserver
   {
     #region Member Variables
     
@@ -118,8 +118,8 @@ namespace MySQL.GUI.Workbench
     }
 
     #endregion
-    
-    #region IWorkbenchDocument Interface
+
+    #region IMySqlStudioDocument Interface
 
     public UIForm BackendForm
     {
@@ -265,8 +265,8 @@ namespace MySQL.GUI.Workbench
     public bool CanCloseDocument()
     {
       foreach (ITabDocument document in bottomTabControl.Documents)
-        if (document is IWorkbenchDocument)
-          if (!(document as IWorkbenchDocument).CanCloseDocument())
+        if (document is IMySqlStudioDocument)
+          if (!(document as IMySqlStudioDocument).CanCloseDocument())
             return false;
 
       if (!BackendForm.can_close())
@@ -359,8 +359,8 @@ namespace MySQL.GUI.Workbench
     private void tabControl_TabClosing(object sender, TabClosingEventArgs e)
     {
       ITabDocument document = (sender as FlatTabControl).DocumentFromPage(e.page);
-      if (document is IWorkbenchDocument)
-        e.canClose = (document as IWorkbenchDocument).CanCloseDocument();
+      if (document is IMySqlStudioDocument)
+        e.canClose = (document as IMySqlStudioDocument).CanCloseDocument();
       else
         if (document is MySQL.Forms.AppViewDockContent)
         {
@@ -380,8 +380,8 @@ namespace MySQL.GUI.Workbench
 
     private void CloseTabDocument(ITabDocument document)
     {
-      if (document is IWorkbenchDocument)
-        (document as IWorkbenchDocument).CloseDocument();
+      if (document is IMySqlStudioDocument)
+        (document as IMySqlStudioDocument).CloseDocument();
       else
         if (document is MySQL.Forms.AppViewDockContent)
         {

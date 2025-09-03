@@ -55,7 +55,7 @@ struct TestEntry {
 };
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref sqlParser;
   DbMySQLImpl *diffsqlModule;
   grt::DbObjectMatchAlterOmf omf;
@@ -218,7 +218,7 @@ $describe("GRT: diff alter") {
   $beforeAll([this]() {
     data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
 
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     data->omf.dontdiff_mask = 3;

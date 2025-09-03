@@ -1659,25 +1659,25 @@
                     <value type="list" key="subItems" content-type="object" content-struct-name="app.MenuItem">
                         <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.model.visualization.table_default">
                             <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.model.fnotation</link>
-                            <value type="string" key="accessibilityName">Workbench Default</value>
+                            <value type="string" key="accessibilityName">MySqlStudio Default</value>
                             <value type="string" key="name">figure_notation_workbench/default</value>
-                            <value type="string" key="caption">Workbench (Default)</value>
+                            <value type="string" key="caption">MySqlStudio (Default)</value>
                             <value type="string" key="command">plugin:wb.view.setFigureNotation:workbench/default</value>
                             <value type="string" key="itemType">radio</value>
                         </value>
                         <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.model.visualization.table_simple">
                             <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.model.fnotation</link>
-                            <value type="string" key="accessibilityName">Workbench Simplified</value>
+                            <value type="string" key="accessibilityName">MySqlStudio Simplified</value>
                             <value type="string" key="name">figure_notation_workbench/simple</value>
-                            <value type="string" key="caption">Workbench (Simplified)</value>
+                            <value type="string" key="caption">MySqlStudio (Simplified)</value>
                             <value type="string" key="command">plugin:wb.view.setFigureNotation:workbench/simple</value>
                             <value type="string" key="itemType">radio</value>
                         </value>
                         <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.model.visualization.table_pkonly">
                             <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.model.fnotation</link>
-                            <value type="string" key="accessibilityName">Workbench Primary Keys and Foreign Keys Only</value>
+                            <value type="string" key="accessibilityName">MySqlStudio Primary Keys and Foreign Keys Only</value>
                             <value type="string" key="name">figure_notation_workbench/pkonly</value>
-                            <value type="string" key="caption">Workbench (PKs and FKs Only)</value>
+                            <value type="string" key="caption">MySqlStudio (PKs and FKs Only)</value>
                             <value type="string" key="command">plugin:wb.view.setFigureNotation:workbench/pkonly</value>
                             <value type="string" key="itemType">radio</value>
                         </value>
@@ -2405,8 +2405,8 @@
                 </value>
                 <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.tools.runscript">
                     <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.tools</link>
-                    <value type="string" key="accessibilityName">Run Workbench Script File</value>
-                    <value type="string" key="caption">Run Workbench Script File...</value>
+                    <value type="string" key="accessibilityName">Run MySqlStudio Script File</value>
+                    <value type="string" key="caption">Run MySqlStudio Script File...</value>
                     <value type="string" key="name">run_script</value>
                     <value type="string" key="command">plugin:wb.tools.runScriptFile</value>
                     <value type="string" key="itemType">action</value>
@@ -2471,24 +2471,24 @@
                 </value>
                 <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.help.web_mysql_docs">
                     <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.help</link>
-                    <value type="string" key="accessibilityName">MySQL Workbench Documentation</value>
-                    <value type="string" key="caption">MySQL Workbench Documentation</value>
+                    <value type="string" key="accessibilityName">MySql Studio Documentation</value>
+                    <value type="string" key="caption">MySql Studio Documentation</value>
                     <value type="string" key="name">web_mysql_docs</value>
                     <value type="string" key="command">builtin:web_mysql_docs</value>
                     <value type="string" key="itemType">action</value>
                 </value>
                 <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.help.web_mysql_blog">
                     <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.help</link>
-                    <value type="string" key="accessibilityName">MySQL Workbench Blog</value>
-                    <value type="string" key="caption">MySQL Workbench Blog</value>
+                    <value type="string" key="accessibilityName">MySql Studio Blog</value>
+                    <value type="string" key="caption">MySql Studio Blog</value>
                     <value type="string" key="name">web_mysql_blog</value>
                     <value type="string" key="command">builtin:web_mysql_blog</value>
                     <value type="string" key="itemType">action</value>
                 </value>
                 <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.help.web_mysql_forum">
                     <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.help</link>
-                    <value type="string" key="accessibilityName">MySQL Workbench Forums</value>
-                    <value type="string" key="caption">MySQL Workbench Forums</value>
+                    <value type="string" key="accessibilityName">MySql Studio Forums</value>
+                    <value type="string" key="caption">MySql Studio Forums</value>
                     <value type="string" key="name">web_mysql_forum</value>
                     <value type="string" key="command">builtin:web_mysql_forum</value>
                     <value type="string" key="itemType">action</value>
@@ -2560,8 +2560,8 @@
                 </value>
                 <value type="object" struct-name="app.MenuItem" id="com.mysql.wb.menu.help.about_workbench">
                     <link type="object" key="owner" struct-name="app.MenuItem">com.mysql.wb.menu.help</link>
-                    <value type="string" key="accessibilityName">About Workbench</value>
-                    <value type="string" key="caption">About Workbench</value>
+                    <value type="string" key="accessibilityName">About MySqlStudio</value>
+                    <value type="string" key="caption">About MySqlStudio</value>
                     <value type="string" key="name">about</value>
                     <value type="string" key="command">builtin:show_about</value>
                     <value type="string" key="itemType">action</value>

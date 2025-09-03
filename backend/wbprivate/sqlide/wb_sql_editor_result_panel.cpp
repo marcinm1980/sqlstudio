@@ -757,7 +757,7 @@ void SqlEditorResult::create_spatial_view_panel_if_needed() {
         mforms::Utilities::show_message_and_remember("Unable to initialize Spatial Viewer",
                                                      "Spatial support requires the PROJ.4 library (libproj). If you "
                                                      "already have it installed, please set the PROJSO environment "
-                                                     "variable to its location before starting Workbench.",
+                                                     "variable to its location before starting MySqlStudio.",
                                                      "Ok", "", "", "SqlEditorResult.libprojcheck", "");
         return;
       }

@@ -2242,7 +2242,7 @@ public:
                               // to separate creation of structures from data loading.
     std::string triggers_sql; // Triggers DDLs could be prior or after INSERTs depending on settings
 
-    out_sql.append("-- MySQL Workbench Forward Engineering").append("\n");
+    out_sql.append("-- MySql Studio Forward Engineering").append("\n");
     if (include_document_properties)
       out_sql.append(generateDocumentProperties(db_CatalogRef::cast_from(cat)));
     out_sql.append("\n");
@@ -2443,7 +2443,7 @@ public:
     std::string routines;
     std::string triggers;
 
-    out_sql.append("-- MySQL Workbench Synchronization").append("\n");
+    out_sql.append("-- MySql Studio Synchronization").append("\n");
     if (include_document_properties)
       out_sql.append(generateDocumentProperties(cat));
     out_sql.append("\n");
@@ -2745,7 +2745,7 @@ db_mgmt_RdbmsRef DbMySQLImpl::initializeDBMSInfo() {
   db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->unserialize(
     base::makePath(bec::GRTManager::get()->get_basedir(), "modules/data/mysql_rdbms_info.xml")));
 
-  workbench_WorkbenchRef::cast_from(grt::GRT::get()->get("/wb"))->rdbmsMgmt()->rdbms().insert(rdbms);
+  workbench_MySqlStudioRef::cast_from(grt::GRT::get()->get("/wb"))->rdbmsMgmt()->rdbms().insert(rdbms);
   return rdbms;
 }
 

@@ -1,4 +1,4 @@
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
   partial class UserDatatypesEditor
   {

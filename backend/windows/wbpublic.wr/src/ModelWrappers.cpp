@@ -30,7 +30,7 @@
 #include "ModelWrappers.h"
 
 using namespace MySQL::Grt;
-using namespace MySQL::Workbench;
+using namespace MySQL::MySqlStudio;
 
 //--------------------------------------------------------------------------------------------------
 

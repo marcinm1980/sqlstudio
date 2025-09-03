@@ -3,7 +3,7 @@ MySQL GUI Automator (MGA)
 
 This tool is a cross platform command line application that can be used to automate GUI applications, particularly for testing scenarios.
 
-Building the tool requires the same 3rd party library setup as used by MySQL Workbench.
+Building the tool requires the same 3rd party library setup as used by MySql Studio.
 
 Recreating duktape Headers + Source
 ---

@@ -223,7 +223,7 @@ public:
 namespace {
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   WBContextSQLIDE *wbContextSqlide;
   sql::ConnectionWrapper connection;
   SqlEditorForm::Ref form;
@@ -235,7 +235,7 @@ $describe("SQL Editor Form") {
   $beforeAll([&]() {
     bec::GRTManager::get(); // Ensure the GRT instance exists.
 
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->wbContextSqlide = new WBContextSQLIDE();
     data->formTester = new LocalEditorFormTester();
 

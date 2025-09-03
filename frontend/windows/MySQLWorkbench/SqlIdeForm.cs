@@ -31,13 +31,13 @@ using MySQL.Controls;
 using MySQL.Forms;
 using MySQL.Base;
 using MySQL.Grt.Db;
-using MySQL.GUI.Workbench.Plugins;
+using MySQL.GUI.MySqlStudio.Plugins;
 using MySQL.Utilities;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
-  public partial class SqlIdeForm : Plugins.DockablePlugin, IWorkbenchObserver
+  public partial class SqlIdeForm : Plugins.DockablePlugin, IMySqlStudioObserver
   {
     private List<RecordsetView> pendingRelayouts = new List<RecordsetView>();
 
@@ -122,7 +122,7 @@ namespace MySQL.GUI.Workbench
         Logger.LogDebug("WQE.net", 1, "Setting up menu for History View\n");
 
         // TODO: replace by mforms backed menu. Then remove SqlIdeMenuManager.
-        // See if WorkbenchToolbarManager.cs can go entirely when done.
+        // See if MySqlStudioToolbarManager.cs can go entirely when done.
         SqlIdeMenuManager.MenuContext popupMenuContext = new SqlIdeMenuManager.MenuContext();
         popupMenuContext.GetNodesMenuItems = historyEntriesView.Model.get_popup_items_for_nodes;
         popupMenuContext.GetSelectedNodes = historyEntriesView.SelectedNodes;
@@ -347,8 +347,8 @@ namespace MySQL.GUI.Workbench
       {
         // One of the object editors.
         ITabDocument tabDocument = mainContentTabControl.ActiveDocument;
-        if (tabDocument is IWorkbenchDocument)
-          e.canClose = (tabDocument as IWorkbenchDocument).CanCloseDocument();
+        if (tabDocument is IMySqlStudioDocument)
+          e.canClose = (tabDocument as IMySqlStudioDocument).CanCloseDocument();
       }
  
       Logger.LogDebug("WQE.net", 1, "Can close tab: " + e.canClose + "\n");
@@ -363,7 +363,7 @@ namespace MySQL.GUI.Workbench
 
     #endregion
 
-    #region IWorkbenchDocument implementation
+    #region IMySqlStudioDocument implementation
 
     public override UIForm BackendForm
     {

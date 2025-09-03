@@ -4,7 +4,7 @@
 
 \anchor globals
 
-Much of the internal data handled by Workbench is kept in a structure accessible from plugins and scripts, known as a GRT Globals Tree. Configuration data, model information, SQL editor instances are accessible from it. You can browse this tree in the Scripting Shell window, in the Globals sidebar tree. The sidebar also has access to the list of available classes and modules, which the functions they export.
+Much of the internal data handled by MySqlStudio is kept in a structure accessible from plugins and scripts, known as a GRT Globals Tree. Configuration data, model information, SQL editor instances are accessible from it. You can browse this tree in the Scripting Shell window, in the Globals sidebar tree. The sidebar also has access to the list of available classes and modules, which the functions they export.
 
 In Python, the Globals Tree root node can be accessed from the root variable in the 'grt' module:
 
@@ -13,15 +13,15 @@ import grt
 grt.root
 \endcode
 
-All object nodes descend from a base \ref GrtObject class. It has a name and owner fields. The owner field must alway point to the object that precedes it in the globals tree hierarchy, eg: a column is owned by a table, a table is owned by a schema, a schema by a catalog and so on up to the root node, which is an instance of \ref workbench_Workbench.
+All object nodes descend from a base \ref GrtObject class. It has a name and owner fields. The owner field must alway point to the object that precedes it in the globals tree hierarchy, eg: a column is owned by a table, a table is owned by a schema, a schema by a catalog and so on up to the root node, which is an instance of \ref workbench_MySqlStudio.
 
 \section keynotes Key Globals Tree Nodes
 
-- \b root.wb.info.version (\ref GrtVersion) contains the version number of MySQL Workbench.
+- \b root.wb.info.version (\ref GrtVersion) contains the version number of MySql Studio.
 
 - \b root.wb.options.recentFiles (list of strings) contains a list of the names of the most recently opened model files. It is displayed in the Recent Files menu and a filtered list in list of recent models in the Home tab.
 
-- \b root.wb.options.options (dictionary of various types, usually integers, doubles and strings) a dictionary containing various configuration options from Workbench. The options stored here are global and apply to any document and are saved when Workbench quits. You may add your own options there, but as a convention, use a format such as pluginname.optionname for the key name, to avoid name collisions with other plugins and Workbench itself.
+- \b root.wb.options.options (dictionary of various types, usually integers, doubles and strings) a dictionary containing various configuration options from MySqlStudio. The options stored here are global and apply to any document and are saved when MySqlStudio quits. You may add your own options there, but as a convention, use a format such as pluginname.optionname for the key name, to avoid name collisions with other plugins and MySqlStudio itself.
 
 - \b root.wb.rdbmsMgmt (\ref db.mgmt.Rdbms) RDBMS data. It contains lists of global RDBMS specific information and also lists of stored server connections and instances.
 
@@ -33,7 +33,7 @@ All object nodes descend from a base \ref GrtObject class. It has a name and own
 
 \subsection modeling Modeling
 
-- \b root.wb.doc (\ref workbench_Document) the base node for the currently loaded MySQL Workbench model document. This node will be null if there is no model document loaded. 
+- \b root.wb.doc (\ref workbench_Document) the base node for the currently loaded MySql Studio model document. This node will be null if there is no model document loaded. 
 
 - \b root.wb.docPath (string) path to the currently loaded document.
 

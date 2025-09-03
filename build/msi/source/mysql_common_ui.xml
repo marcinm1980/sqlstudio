@@ -317,7 +317,7 @@
                 <Control Id="Back" Type="PushButton" X="164" Y="243" Width="66" Height="17" Text="&lt; &amp;Back" TabSkip="no" Disabled="yes" />
                 <Control Id="TextLine3" Type="Text" X="135" Y="55" Width="228" Height="45" Text="The Setup Wizard has successfully uninstalled [ProductName]. Click Finish to exit the wizard." TabSkip="yes" Hidden="yes" Transparent="yes" ShowCondition="ProgressType2=&quot;uninstalled&quot;" />
                 <Control Id="UpdateTextLine1" Type="Text" X="135" Y="30" Width="228" Height="45" Text="Setup has finished installing [ProductName]." TabSkip="yes" Hidden="yes" Transparent="yes" ShowCondition="NOT Installed And ACTION=&quot;INSTALL&quot;" />
-				 <Control Id="LaunchCheckBox" Type="CheckBox" X="10" Y="243" Width="150" Height="17" Property="LAUNCHAPPONEXIT" Hidden="yes" CheckBoxValue="1" Text="Launch MySQL Workbench now" ShowCondition="NOT Installed And ACTION=&quot;INSTALL&quot;" />
+				 <Control Id="LaunchCheckBox" Type="CheckBox" X="10" Y="243" Width="150" Height="17" Property="LAUNCHAPPONEXIT" Hidden="yes" CheckBoxValue="1" Text="Launch MySql Studio now" ShowCondition="NOT Installed And ACTION=&quot;INSTALL&quot;" />
                 <Control Id="DlgLine" Type="Line" X="0" Y="234" Width="378" Height="0" TabSkip="yes" Disabled="yes" />
                 <Control Id="TextLine1" Type="Text" X="135" Y="8" Width="225" Height="45" Text="{&amp;TahomaBold10}Wizard Completed" TabSkip="yes" Transparent="yes" />
             </Dialog>

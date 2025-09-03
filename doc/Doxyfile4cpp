@@ -4,7 +4,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "MySQL Workbench"
+PROJECT_NAME           = "MySql Studio"
 PROJECT_NUMBER         = 5.2
 OUTPUT_DIRECTORY       = ./ntv
 CREATE_SUBDIRS         = NO

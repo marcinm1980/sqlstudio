@@ -60,12 +60,12 @@ static void ensure_files_equal(const std::string &test, const char *file, const 
 }
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
 $describe("WB overview") {
   $beforeAll([&]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
   });
 

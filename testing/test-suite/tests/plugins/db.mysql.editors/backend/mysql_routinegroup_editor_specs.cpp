@@ -37,14 +37,11 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
 $describe("MySQL Routine Group Editor") {
-
-  $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
-  });
+  $beforeAll([this]() { data->tester.reset(new MySqlStudioTester()); });
 
   $it("Editor with no routines", []() {
     const char* routine_sql = "";

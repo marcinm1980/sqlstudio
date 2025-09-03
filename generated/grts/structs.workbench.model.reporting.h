@@ -78,7 +78,7 @@ public:
   /**
    * Getter for attribute canUseHTMLMarkup
    *
-   * A flag that indicates if Workbench can use HTML markup for SQL syntax highlighting.
+   * A flag that indicates if MySqlStudio can use HTML markup for SQL syntax highlighting.
    * \par In Python:
    *    value = obj.canUseHTMLMarkup
    */
@@ -86,8 +86,8 @@ public:
 
   /**
    * Setter for attribute canUseHTMLMarkup
-   * 
-   * A flag that indicates if Workbench can use HTML markup for SQL syntax highlighting.
+   *
+   * A flag that indicates if MySqlStudio can use HTML markup for SQL syntax highlighting.
    * \par In Python:
    *   obj.canUseHTMLMarkup = value
    */

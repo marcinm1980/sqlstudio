@@ -845,7 +845,7 @@ mforms::ToolBar *SqlEditorPanel::setup_editor_toolbar() {
   item->set_name("Limit Rows");
   item->setInternalName("limit_rows");
   item->set_tooltip(
-    _("Set limit for number of rows returned by queries.\nWorkbench will automatically add the LIMIT clause with the "
+    _("Set limit for number of rows returned by queries.\nMySqlStudio will automatically add the LIMIT clause with the "
       "configured number of rows to SELECT queries."));
   bec::UIForm::scoped_connect(item->signal_activated(), std::bind(&SqlEditorPanel::limit_rows, this, item));
   tbar->add_item(item);
@@ -919,7 +919,7 @@ void SqlEditorPanel::check_external_file_changes() {
           ? strfmt("(from connection to %s) ", _form->connection_descriptor()->name().c_str())
           : "";
       if (mforms::Utilities::show_warning("File Changed",
-                                          strfmt(_("File %s %swas changed from outside MySQL Workbench.\nWould you "
+                                          strfmt(_("File %s %swas changed from outside MySql Studio.\nWould you "
                                                    "like to discard your changes and reload it?"),
                                                  _filename.c_str(), connection_description.c_str()),
                                           "Reload File", "Ignore", "") == mforms::ResultOk) {

@@ -388,7 +388,7 @@ bool SqlEditorTreeController::fetch_data_for_filter(
   if (!remote_search_enabled) {
     if (mforms::Utilities::show_message(
           _("Search Objects in Server"),
-          base::strfmt(_("To enable searching objects in the remote server, MySQL Workbench needs to create a stored "
+          base::strfmt(_("To enable searching objects in the remote server, MySql Studio needs to create a stored "
                          "procedure in a custom schema (%s)."),
                        wb_internal_schema.c_str()),
           _("Create"), _("Cancel")) == 1) {
@@ -402,9 +402,9 @@ bool SqlEditorTreeController::fetch_data_for_filter(
         std::string msgFmt =
           _("The user %s has no privileges to create the required schema and stored procedures "
             "to enable remote search in this server. \n"
-            "Ensure your database administrator creates a schema for internal use of MySQL Workbench"
+            "Ensure your database administrator creates a schema for internal use of MySql Studio"
             " with full privileges for the user %s, once created configure it in "
-            "Preferences->General->Internal Workbench Schema and retry.\n\n%s.");
+            "Preferences->General->Internal MySqlStudio Schema and retry.\n\n%s.");
 
         std::string message = base::strfmt(msgFmt.c_str(), userName.c_str(), userName.c_str(), error.c_str());
 

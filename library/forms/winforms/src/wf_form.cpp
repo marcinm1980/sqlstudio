@@ -244,8 +244,8 @@ bool FormWrapper::create(mforms::Form *backend, mforms::Form *aOwner, mforms::Fo
   else
     form->StartPosition = FormStartPosition::Manual;
 
-  if (File::Exists("images/icons/MySQLWorkbench.ico"))
-    form->Icon = gcnew Icon("images/icons/MySQLWorkbench.ico", Size(16, 16));
+  if (File::Exists("images/icons/MySQLMySqlStudio.ico"))
+    form->Icon = gcnew Icon("images/icons/MySQLMySqlStudio.ico", Size(16, 16));
 
   if ((flag & mforms::FormToolWindow) != 0) {
     if ((flag & mforms::FormResizable) != 0)

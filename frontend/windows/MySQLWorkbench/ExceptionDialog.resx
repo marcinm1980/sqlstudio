@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="richTextBox1.Text" xml:space="preserve">
-    <value>We are sorry for the inconvenience but an unexpected exception has been raised by one of the MySQL Workbench modules. In order to fix this issue we would kindly ask you to file a bug report. You can do that by pressing the [Report Bug] button below. 
+    <value>We are sorry for the inconvenience but an unexpected exception has been raised by one of the MySql Studio modules. In order to fix this issue we would kindly ask you to file a bug report. You can do that by pressing the [Report Bug] button below. 
 
 Please make sure to include a detailed description of your actions that lead to this problem.
 
-Thanks a lot for taking the time to help us improve MySQL Workbench!
+Thanks a lot for taking the time to help us improve MySql Studio!
 
-The MySQL Workbench Team</value>
+The MySql Studio Team</value>
   </data>
   <metadata name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>

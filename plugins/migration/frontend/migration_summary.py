@@ -32,7 +32,7 @@ from workbench.template import MiniTemplate
 
 text_template = """
 ------------------------------------------------------------------------------------
-MySQL Workbench Migration Wizard Report
+MySql Studio Migration Wizard Report
 
 Date: {{date}}
 Source: {{sourceRdbmsName}} {{sourceRdbmsVersion}}

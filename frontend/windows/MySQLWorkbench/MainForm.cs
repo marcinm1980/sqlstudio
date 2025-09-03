@@ -36,15 +36,15 @@ using MySQL.Controls;
 using MySQL.Forms;
 using MySQL.Grt;
 using MySQL.GUI.Mdc;
-using MySQL.GUI.Workbench.Plugins;
-using MySQL.GUI.Workbench.Properties;
+using MySQL.GUI.MySqlStudio.Plugins;
+using MySQL.GUI.MySqlStudio.Properties;
 using MySQL.Utilities;
 using MySQL.Utilities.SysUtils;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
-  public partial class MainForm : Form, IWorkbenchObserver
+  public partial class MainForm : Form, IMySqlStudioObserver
   {
     #region Member Variables
 
@@ -60,7 +60,7 @@ namespace MySQL.GUI.Workbench
       "images/sql/mac",
     };
 
-    // The Workbench context
+    // The MySqlStudio context
     protected WbContext wbContext;
     // the GRT manager
     protected GrtManager grtManager;
@@ -180,7 +180,7 @@ namespace MySQL.GUI.Workbench
 
     #endregion
 
-    #region IWorkbenchObserver interface
+    #region IMySqlStudioObserver interface
 
     public void HandleNotification(string name, IntPtr sender, Dictionary<string, string> info)
     {
@@ -200,7 +200,7 @@ namespace MySQL.GUI.Workbench
 
     #region Properties
 
-    public ModelOverviewForm WorkbenchPhysicalOverviewForm
+    public ModelOverviewForm MySqlStudioPhysicalOverviewForm
     {
       get { return workbenchPhysicalOverviewForm; }
     }
@@ -442,15 +442,15 @@ namespace MySQL.GUI.Workbench
                 // document page then reuse that. If not try the other pages and close the first
                 // editor of that plugin type we find.
                 DockablePlugin plugin = null;
-                if (contentTabControl.ActiveDocument is IWorkbenchDocument)
-                  plugin = (contentTabControl.ActiveDocument as IWorkbenchDocument).FindPluginOfType(type);
+                if (contentTabControl.ActiveDocument is IMySqlStudioDocument)
+                  plugin = (contentTabControl.ActiveDocument as IMySqlStudioDocument).FindPluginOfType(type);
 
                 if (plugin == null)
                 {
                   foreach (ITabDocument document in contentTabControl.Documents)
-                    if (document is IWorkbenchDocument && document != contentTabControl.ActiveDocument)
+                    if (document is IMySqlStudioDocument && document != contentTabControl.ActiveDocument)
                     {
-                      if ((document as IWorkbenchDocument).ClosePluginOfType(type))
+                      if ((document as IMySqlStudioDocument).ClosePluginOfType(type))
                         break;
                     }
                 }
@@ -628,7 +628,7 @@ namespace MySQL.GUI.Workbench
     private bool EditCanUndo()
     {
       // If we are on a model form then edit actions are controlled by the backend.
-      IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+      IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
       if (wbDocument == workbenchPhysicalOverviewForm)
         return wbContext.edit_can_undo();
 
@@ -657,7 +657,7 @@ namespace MySQL.GUI.Workbench
 
     private bool EditCanRedo()
     {
-      IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+      IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
       if (wbDocument == workbenchPhysicalOverviewForm)
         return wbContext.edit_can_redo();
 
@@ -692,7 +692,7 @@ namespace MySQL.GUI.Workbench
 
     private bool EditCanCopy()
     {
-      IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+      IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
       if (wbDocument == workbenchPhysicalOverviewForm)
         return wbContext.edit_can_copy();
 
@@ -727,7 +727,7 @@ namespace MySQL.GUI.Workbench
 
     private bool EditCanCut()
     {
-      IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+      IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
       if (wbDocument == workbenchPhysicalOverviewForm)
         return wbContext.edit_can_cut();
 
@@ -762,7 +762,7 @@ namespace MySQL.GUI.Workbench
 
     private bool EditCanPaste()
     {
-      IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+      IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
       if (wbDocument == workbenchPhysicalOverviewForm)
         return wbContext.edit_can_paste();
 
@@ -797,7 +797,7 @@ namespace MySQL.GUI.Workbench
 
     private bool EditCanSelectAll()
     {
-      IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+      IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
       if (wbDocument == workbenchPhysicalOverviewForm)
         return wbContext.edit_can_select_all();
 
@@ -824,7 +824,7 @@ namespace MySQL.GUI.Workbench
 
     private bool EditCanDelete()
     {
-      IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+      IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
       if (wbDocument == workbenchPhysicalOverviewForm)
         return wbContext.edit_can_delete();
 
@@ -846,7 +846,7 @@ namespace MySQL.GUI.Workbench
       else
       {
         // Not an editor control. So try focusing the search box in the toolbar (if there's any).
-        IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+        IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
         if (wbDocument != null)
         {
           wbContext.focus_search_box(wbDocument.BackendForm);
@@ -868,7 +868,7 @@ namespace MySQL.GUI.Workbench
 
     private bool EditCanFind()
     {
-      IWorkbenchDocument wbDocument = contentTabControl.ActiveDocument as IWorkbenchDocument;
+      IMySqlStudioDocument wbDocument = contentTabControl.ActiveDocument as IMySqlStudioDocument;
       if (wbDocument == null && !EditCanFindReplace())
         return false;
 
@@ -901,8 +901,8 @@ namespace MySQL.GUI.Workbench
 
       foreach (ITabDocument document in contentTabControl.Documents)
       {
-        if (document is IWorkbenchDocument)
-          (document as IWorkbenchDocument).UpdateColors();
+        if (document is IMySqlStudioDocument)
+          (document as IMySqlStudioDocument).UpdateColors();
         else
           if (document is AppViewDockContent)
             (document as AppViewDockContent).UpdateColors();
@@ -1084,7 +1084,7 @@ namespace MySQL.GUI.Workbench
           filter = filter + ext + "|";
         else if (ext == "mwb")
           filter = filter + String.Format("{0} (*.mwb)|*.mwb|",
-            "MySQL Workbench Models");
+            "MySql Studio Models");
         else if (ext == "sql")
           filter = filter + String.Format("{0} (*.sql)|*.sql|",
             "SQL Script Files");
@@ -1358,7 +1358,7 @@ namespace MySQL.GUI.Workbench
         }
         else
         {
-          IWorkbenchDocument wbDocument = documents[i] as IWorkbenchDocument;
+          IMySqlStudioDocument wbDocument = documents[i] as IMySqlStudioDocument;
           if (wbDocument != null)
           {
             MenuStrip menu = wbContext.menu_for_form(wbDocument.BackendForm);
@@ -1388,9 +1388,9 @@ namespace MySQL.GUI.Workbench
           activeDocument.Activate();
           topAreaHeight += activeDocument.ToolbarHeight;
 
-          if (activeDocument is IWorkbenchDocument)
+          if (activeDocument is IMySqlStudioDocument)
           {
-            IWorkbenchDocument wbDoc = activeDocument as IWorkbenchDocument;
+            IMySqlStudioDocument wbDoc = activeDocument as IMySqlStudioDocument;
 
             // If the current View is changed, update ModelCatalogForm
             if (activeDocument is ModelDiagramForm)
@@ -1438,28 +1438,28 @@ namespace MySQL.GUI.Workbench
 
     private void ForwardRefreshToActivDocument(RefreshType refresh, String str, IntPtr ptr)
     {
-      if (contentTabControl.ActiveDocument is IWorkbenchDocument)
-        (contentTabControl.ActiveDocument as IWorkbenchDocument).RefreshGUI(refresh, str, ptr);
+      if (contentTabControl.ActiveDocument is IMySqlStudioDocument)
+        (contentTabControl.ActiveDocument as IMySqlStudioDocument).RefreshGUI(refresh, str, ptr);
     }
 
     private void ForwardRefreshToAllDocuments(RefreshType refresh, String str, IntPtr ptr)
     {
       foreach (ITabDocument document in contentTabControl.Documents)
-        if (document is IWorkbenchDocument)
-          (document as IWorkbenchDocument).RefreshGUI(refresh, str, ptr);
+        if (document is IMySqlStudioDocument)
+          (document as IMySqlStudioDocument).RefreshGUI(refresh, str, ptr);
     }
 
     private void ForwardCommandToActivDocument(String command)
     {
-      if (contentTabControl.ActiveDocument is IWorkbenchDocument)
-        (contentTabControl.ActiveDocument as IWorkbenchDocument).PerformCommand(command);
+      if (contentTabControl.ActiveDocument is IMySqlStudioDocument)
+        (contentTabControl.ActiveDocument as IMySqlStudioDocument).PerformCommand(command);
     }
 
     private void ForwardCommandToAllDocuments(String command)
     {
       foreach (ITabDocument document in contentTabControl.Documents)
-        if (document is IWorkbenchDocument)
-          (document as IWorkbenchDocument).PerformCommand(command);
+        if (document is IMySqlStudioDocument)
+          (document as IMySqlStudioDocument).PerformCommand(command);
     }
 
     /// <summary>
@@ -1476,7 +1476,7 @@ namespace MySQL.GUI.Workbench
         int index = -1;
         if (!contentTabControl.HasDocument(document))
         {
-          IWorkbenchDocument wbDocument = document as IWorkbenchDocument;
+          IMySqlStudioDocument wbDocument = document as IMySqlStudioDocument;
           SetupDockLayout(document, (wbDocument != null) ? wbDocument.BackendForm : null, contentTabControl.TabCount > 0);
           index = contentTabControl.AddDocument(document);
         }
@@ -1507,8 +1507,8 @@ namespace MySQL.GUI.Workbench
       }
 
       // Do the color updates after everything set up as this depends on the structure.
-      if (document is IWorkbenchDocument)
-        (document as IWorkbenchDocument).UpdateColors();
+      if (document is IMySqlStudioDocument)
+        (document as IMySqlStudioDocument).UpdateColors();
       else
         if (document is AppViewDockContent)
           (document as AppViewDockContent).UpdateColors();
@@ -1585,7 +1585,7 @@ namespace MySQL.GUI.Workbench
       {
         if (document is ModelDiagramForm)
         {
-          e.Cancel = !(document as IWorkbenchDocument).CanCloseDocument();
+          e.Cancel = !(document as IMySqlStudioDocument).CanCloseDocument();
 
           // Make the page active that refused to close.
           if (e.Cancel)
@@ -1603,8 +1603,8 @@ namespace MySQL.GUI.Workbench
           if (document is ModelDiagramForm)
             continue;
 
-          if (document is IWorkbenchDocument)
-            e.Cancel = !(document as IWorkbenchDocument).CanCloseDocument();
+          if (document is IMySqlStudioDocument)
+            e.Cancel = !(document as IMySqlStudioDocument).CanCloseDocument();
           else
             if (document is MySQL.Forms.AppViewDockContent)
             {
@@ -1778,8 +1778,8 @@ namespace MySQL.GUI.Workbench
       if (document == null)
         return;
 
-      if (document is IWorkbenchDocument)
-        e.canClose = (document as IWorkbenchDocument).CanCloseDocument();
+      if (document is IMySqlStudioDocument)
+        e.canClose = (document as IMySqlStudioDocument).CanCloseDocument();
       else
         if (document is MySQL.Forms.AppViewDockContent)
         {
@@ -1791,8 +1791,8 @@ namespace MySQL.GUI.Workbench
     private void contentTabControl_TabClosed(object sender, TabClosedEventArgs e)
     {
       ITabDocument document = (sender as FlatTabControl).DocumentFromPage(e.page);
-      if (document is IWorkbenchDocument)
-        (document as IWorkbenchDocument).CloseDocument();
+      if (document is IMySqlStudioDocument)
+        (document as IMySqlStudioDocument).CloseDocument();
       else
         if (document is MySQL.Forms.AppViewDockContent)
         {

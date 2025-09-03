@@ -181,7 +181,7 @@ mforms::DialogResult CustomMessageBox::ShowInternal(const std::string &title, co
   config.hwndParent = GetForegroundWindow();
 
   config.pszMainIcon = mainIcon;
-  config.pszWindowTitle = L"MySQL Workbench";
+  config.pszWindowTitle = L"MySql Studio";
 
   std::wstring titleText = base::string_to_wstring(title);
   config.pszMainInstruction = titleText.c_str();
@@ -760,7 +760,7 @@ std::string UtilitiesWrapper::get_special_folder(mforms::FolderType type) {
   // ApplicationSettings is not a predefined folder, but our own application data folder.
   if (type == mforms::ApplicationSettings) {
     std::string folder = NativeToCppString(Environment::GetFolderPath(special_folder));
-    return folder + "/MySQL/Workbench";
+    return folder + "/MySQL/MySqlStudio";
   }
 
   return NativeToCppString(Environment::GetFolderPath(special_folder));
@@ -829,7 +829,7 @@ void UtilitiesWrapper::load_passwords() {
   logDebug("Loading password cache\n");
 
   // Load password cache from disk. Don't throw an error if the cache file doesn't exist yet, though.
-  std::string file = get_special_folder(mforms::ApplicationData) + "/MySQL/Workbench/workbench_user_data.dat";
+  std::string file = get_special_folder(mforms::ApplicationData) + "/MySQL/MySqlStudio/workbench_user_data.dat";
   std::string user_info =
     _(std::string("If loading the passwords fails repeatedly you should clear the vault. This will remove all ") +
       "passwords, hence you have to enter them again.");
@@ -917,7 +917,7 @@ void UtilitiesWrapper::unload_passwords(bool store) {
       }
 
       // Now write the encrypted data to file.
-      std::string file = get_special_folder(mforms::ApplicationData) + "/MySQL/Workbench/workbench_user_data.dat";
+      std::string file = get_special_folder(mforms::ApplicationData) + "/MySQL/MySqlStudio/workbench_user_data.dat";
       GError *error = NULL;
       bool result = g_file_set_contents(file.c_str(), (gchar *)data_out.pbData, data_out.cbData, &error) == TRUE;
 

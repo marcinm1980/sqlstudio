@@ -122,7 +122,7 @@ CodeEditorConfig::CodeEditorConfig(SyntaxHighlighterLanguage language) {
 
   // Load the user's config file if it exists, otherwise use the default one.
   std::string config_file =
-    mforms::Utilities::get_special_folder(mforms::ApplicationData) + "/MySQL/Workbench/code_editor.xml";
+    mforms::Utilities::get_special_folder(mforms::ApplicationData) + "/MySQL/MySqlStudio/code_editor.xml";
 
   if (!base::file_exists(config_file))
     config_file = App::get()->get_resource_path("") + "/data/code_editor.xml";

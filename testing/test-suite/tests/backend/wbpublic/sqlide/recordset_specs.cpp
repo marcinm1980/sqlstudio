@@ -35,7 +35,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   sql::Dbc_connection_handler::Ref connection;
 };
 
@@ -43,9 +43,8 @@ static void dummy() {
 }
 
 $describe("Recordset") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     sql::DriverManager *manager = sql::DriverManager::getDriverManager();
