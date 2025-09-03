@@ -2,9 +2,9 @@
 
 Copyright (c) 2007, 2025, Oracle and/or its affiliates.
 
-This is a release of [MySql Studio](https://mysqlworkbench.org), a graphical tool for working with MySQL servers and databases.
+This is a release of [MySql Studio](https://mysqlstudio.org), a graphical tool for working with MySQL servers and databases.
 
-![Home screen on Windows](https://dev.mysql.com/doc/workbench/en/images/wb-home-screen-new.png)
+![Home screen on Windows](https://dev.mysql.com/doc/studio/en/images/wb-home-screen-new.png)
 
 License information can be found in the [License](License.txt) file.
 
@@ -12,7 +12,7 @@ This distribution may include materials developed by third parties.
 For license and attribution notices for these materials, please refer to the [License](License.txt) file. 
 
 For more information on MySql Studio, visit 
-  [http://dev.mysql.com/doc/workbench/en](http://dev.mysql.com/doc/workbench/en)
+  [http://dev.mysql.com/doc/studio/en](http://dev.mysql.com/doc/studio/en)
 
 For additional downloads and the source of MySql Studio, visit
   [http://dev.mysql.com/downloads](http://dev.mysql.com/downloads)
@@ -21,7 +21,7 @@ MySql Studio is brought to you by the MySQL team at Oracle.
 
 # Overview
 
-[MySql Studio](https://mysqlworkbench.org) is a graphical tool for working with MySQL servers and databases. MySql Studio fully supports MySQL server versions 5.6 and higher.
+[MySql Studio](https://mysqlstudio.org) is a graphical tool for working with MySQL servers and databases. MySql Studio fully supports MySQL server versions 5.6 and higher.
 
 MySql Studio functionality covers five main topics:
 
@@ -35,6 +35,6 @@ MySql Studio functionality covers five main topics:
 
 * **MySQL Enterprise Support:** Support for Enterprise products such as MySQL Enterprise Backup, MySQL Firewall, and MySQL Audit.
 
-![Performance dashboard](https://dev.mysql.com/doc/workbench/en/images/wb-performance-dashboard.png)
+![Performance dashboard](https://dev.mysql.com/doc/studio/en/images/wb-performance-dashboard.png)
 
-The [code repository on Github](https://github.com/mysql/mysql-workbench) is where we publish a snapshot of our internal repository everytime a new release of the product is published. Use the [MySQL bug system](http://bugs.mysql.com/) to report any issue you have. You can use Github or the MySQL bug system to contribute to the development. File a pull request on Github or a new issue on the MySQL Bug system with your patch and we will take care of it.
+The [code repository on Github](https://github.com/mysql/mysql-studio) is where we publish a snapshot of our internal repository everytime a new release of the product is published. Use the [MySQL bug system](http://bugs.mysql.com/) to report any issue you have. You can use Github or the MySQL bug system to contribute to the development. File a pull request on Github or a new issue on the MySQL Bug system with your patch and we will take care of it.

@@ -27,7 +27,7 @@
 #include "grtpp.h"
 #include "interfaces/plugin.h"
 
-#include "grts/structs.workbench.model.h"
+#include "grts/structs.studio.model.h"
 #include "grts/structs.meta.h"
 
 #define MODULE_VERSION "1.0.0"
@@ -73,7 +73,7 @@ static grt::ListRef<app_Plugin> get_plugins_info(grt::GRT *grt) {
                    "wb.model.tagging.mwbplugin");
   tag_editor->pluginType("gui");
   tag_editor->moduleFunctionName("WbTagEditor");
-  set_object_argument(tag_editor, "workbench.physical.Model");
+  set_object_argument(tag_editor, "studio.physical.Model");
   tag_editor->caption("Edit Object Tags");
   tag_editor->rating(10);
   tag_editor->name("wb.plugin.edit.tags");

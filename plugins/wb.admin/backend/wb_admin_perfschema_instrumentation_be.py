@@ -20,9 +20,9 @@
 # along with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-from workbench.log import log_error
-from workbench.db_utils import QueryError
-from workbench.change_tracker import ChangeTracker, ChangeCounter, ChangeNotifierList, ChangeNotifierDict
+from studio.log import log_error
+from studio.db_utils import QueryError
+from studio.change_tracker import ChangeTracker, ChangeCounter, ChangeNotifierList, ChangeNotifierDict
 
 
 MYSQL_ERR_TABLE_DOESNT_EXIST = 1146

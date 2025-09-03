@@ -28,7 +28,7 @@
 
 #include "grt.h"
 #include "grt/tree_model.h"
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "base/string_utilities.h"
 #include "mforms/treeview.h"
 #include "base/trackable.h"

@@ -25,11 +25,11 @@ $BINPATH/genobj ../res/grt/structs.db.ng.xml ../res/grt/ grts ../backend/wbpubli
 $BINPATH/genobj ../res/grt/structs.db.sybase.xml ../res/grt/ grts ../backend/wbpublic/objimpl/db.sybase
 $BINPATH/genobj ../res/grt/structs.eer.xml ../res/grt/ grts ../backend/wbpublic/objimpl/eer
 $BINPATH/genobj ../res/grt/structs.model.xml ../res/grt/ grts ../backend/wbpublic/objimpl/model
-$BINPATH/genobj ../res/grt/structs.workbench.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench
-$BINPATH/genobj ../res/grt/structs.workbench.logical.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench.logical
-$BINPATH/genobj ../res/grt/structs.workbench.model.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench.model
-$BINPATH/genobj ../res/grt/structs.workbench.physical.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench.physical
-$BINPATH/genobj ../res/grt/structs.workbench.model.reporting.xml ../res/grt/ grts ../backend/wbpublic/objimpl/workbench.model.reporting
+$BINPATH/genobj ../res/grt/structs.studio.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio
+$BINPATH/genobj ../res/grt/structs.studio.logical.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio.logical
+$BINPATH/genobj ../res/grt/structs.studio.model.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio.model
+$BINPATH/genobj ../res/grt/structs.studio.physical.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio.physical
+$BINPATH/genobj ../res/grt/structs.studio.model.reporting.xml ../res/grt/ grts ../backend/wbpublic/objimpl/studio.model.reporting
 $BINPATH/genobj ../res/grt/structs.ui.xml ../res/grt/ grts ../backend/wbpublic/objimpl/ui
 $BINPATH/genobj ../res/grt/structs.wrapper.xml ../res/grt/ grts ../backend/wbpublic/objimpl/wrapper
 

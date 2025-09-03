@@ -25,7 +25,7 @@ import itertools
 import mforms
 import grt
 
-from workbench.ui import WizardPage
+from studio.ui import WizardPage
 
 
 class ReportMainView(WizardPage):

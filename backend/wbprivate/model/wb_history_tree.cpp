@@ -23,7 +23,7 @@
  */
 
 #include "wb_history_tree.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "base/string_utilities.h"
 
 using namespace wb;

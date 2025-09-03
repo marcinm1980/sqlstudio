@@ -25,15 +25,15 @@
 #pragma once
 
 #include "grt/editor_base.h"
-#include "grts/structs.workbench.model.h"
+#include "grts/structs.studio.model.h"
 
 #include "wb_editor_backend_public_interface.h"
 
 class WBEDITOR_BACKEND_PUBLIC_FUNC NoteEditorBE : public bec::BaseEditor {
-  workbench_model_NoteFigureRef _note;
+  studio_model_NoteFigureRef _note;
 
 public:
-  NoteEditorBE(const workbench_model_NoteFigureRef &note);
+  NoteEditorBE(const studio_model_NoteFigureRef &note);
 
   virtual bool should_close_on_delete_of(const std::string &oid);
 

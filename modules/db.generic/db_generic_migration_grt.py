@@ -21,7 +21,7 @@
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 from wb import DefineModule
-from workbench.utils import find_object_with_old_name
+from studio.utils import find_object_with_old_name
 
 import grt
 

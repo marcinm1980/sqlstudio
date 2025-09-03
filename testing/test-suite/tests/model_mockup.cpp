@@ -95,8 +95,8 @@ SyntheticMySQLModel::SyntheticMySQLModel()
   routineGroupFigure(grt::Initialized) {
 
   // Set up a basic root structure.
-  workbench_MySqlStudioRef wb(grt::Initialized);
-  workbench_DocumentRef doc(grt::Initialized);
+  studio_MySqlStudioRef wb(grt::Initialized);
+  studio_DocumentRef doc(grt::Initialized);
   doc->owner(wb);
   wb->doc(doc);
   grt::GRT::get()->set("/wb", wb);

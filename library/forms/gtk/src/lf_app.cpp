@@ -22,4 +22,4 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-// Dummy file. Actual implementation is in frontend/linux/workbench/main_form.cpp
+// Dummy file. Actual implementation is in frontend/linux/studio/main_form.cpp

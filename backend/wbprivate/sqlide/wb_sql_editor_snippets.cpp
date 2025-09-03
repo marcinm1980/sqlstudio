@@ -34,7 +34,7 @@
 #include "wb_sql_editor_snippets.h"
 #include "sqlide/wb_sql_editor_form.h"
 #include "sqlide/wb_sql_editor_panel.h"
-#include "workbench/wb_db_schema.h"
+#include "studio/wb_db_schema.h"
 
 #include "mforms/utilities.h"
 #include "mforms/filechooser.h"
@@ -205,7 +205,7 @@ void DbSqlEditorSnippets::load_from_db(SqlEditorForm *editor) {
 
   if (editor) {
     if (_snippet_db.empty())
-      _snippet_db = bec::GRTManager::get()->get_app_option_string("workbench:InternalSchema");
+      _snippet_db = bec::GRTManager::get()->get_app_option_string("studio:InternalSchema");
 
     sql::Dbc_connection_handler::Ref conn;
 

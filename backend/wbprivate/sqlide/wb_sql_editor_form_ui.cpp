@@ -26,7 +26,7 @@
 #include "wb_sql_editor_form_ui.h"
 #include "wb_sql_editor_panel.h"
 #include "query_side_palette.h"
-#include "workbench/wb_context_names.h"
+#include "studio/wb_context_names.h"
 #include "objimpl/db.query/db_query_Resultset.h"
 #include "grtdb/editor_dbobject.h"
 #include "grtdb/db_helpers.h"
@@ -34,8 +34,8 @@
 #include "sqlide/wb_sql_editor_tree_controller.h"
 #include "sqlide/sql_script_run_wizard.h"
 
-#include "workbench/wb_command_ui.h"
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_command_ui.h"
+#include "studio/wb_context_ui.h"
 #include "base/boost_smart_ptr_helpers.h"
 
 #include <boost/signals2/connection.hpp>

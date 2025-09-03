@@ -28,7 +28,7 @@
 #include "mforms/treeview.h"
 #include <set>
 
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 namespace wb {
   class WBContextUI;
@@ -45,7 +45,7 @@ namespace wb {
 
     ModelDiagramForm *_form;
     model_DiagramRef _diagram;
-    std::multimap<std::string, workbench_physical_ConnectionRef> _figure_connections;
+    std::multimap<std::string, studio_physical_ConnectionRef> _figure_connections;
     bool _updating_selection;
 
     void activate_node(const mforms::TreeNodeRef &node, int column);

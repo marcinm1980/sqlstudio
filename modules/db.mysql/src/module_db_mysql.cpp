@@ -49,7 +49,7 @@
 #include "sqlide/recordset_table_inserts_storage.h"
 #include "sqlide/recordset_be.h"
 
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "module_db_mysql_shared_code.h"
 #include "grtdb/db_helpers.h"
 
@@ -660,7 +660,7 @@ namespace {
     GrtVersionRef version;
     if (catalog->owner().is_valid())
       version = GrtVersionRef::cast_from(
-        bec::getModelOption(workbench_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion"));
+        bec::getModelOption(studio_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion"));
     else
       version = catalog->version();
 
@@ -1228,7 +1228,7 @@ namespace {
     GrtVersionRef version;
     if (catalog->owner().is_valid())
       version = GrtVersionRef::cast_from(
-        bec::getModelOption(workbench_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion"));
+        bec::getModelOption(studio_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion"));
     else
       version = catalog->version();
 
@@ -1599,7 +1599,7 @@ namespace {
     GrtVersionRef version;
     if (catalog->owner().is_valid())
       version = GrtVersionRef::cast_from(
-        bec::getModelOption(workbench_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion", true));
+        bec::getModelOption(studio_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion", true));
     else
       version = catalog->version();
 
@@ -1981,7 +1981,7 @@ static std::string generateDocumentProperties(const db_CatalogRef cat) {
   if (cat->owner().is_valid() && cat->owner()->owner().is_valid()) {
     output.append("-- Generated: ").append(fmttime(0, DATETIME_FMT)).append("\n");
 
-    workbench_DocumentRef doc(workbench_DocumentRef::cast_from(cat->owner()->owner()));
+    studio_DocumentRef doc(studio_DocumentRef::cast_from(cat->owner()->owner()));
     if (strlen(doc->info()->caption().c_str()))
       output.append("-- Model: ").append(doc->info()->caption()).append("\n");
     if (strlen(doc->info()->version().c_str()))
@@ -2248,7 +2248,7 @@ public:
     out_sql.append("\n");
 
     if (include_scripts && cat->owner().is_valid()) {
-      GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+      GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
         if ((*script)->forwardEngineerScriptPosition() == "top_file")
           out_sql.append(user_script(*script));
       }
@@ -2259,7 +2259,7 @@ public:
     TableSorterByFK sorter;
 
     if (include_scripts && cat->owner().is_valid()) {
-      GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+      GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
         if ((*script)->forwardEngineerScriptPosition() == "before_ddl")
           out_sql.append(user_script(*script));
       }
@@ -2378,7 +2378,7 @@ public:
 
     if (gen_inserts && !inserts_sql.empty()) {
       if (include_scripts && cat->owner().is_valid()) {
-        GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+        GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
           if ((*script)->forwardEngineerScriptPosition() == "before_inserts")
             out_sql.append(user_script(*script));
         }
@@ -2387,7 +2387,7 @@ public:
       out_sql.append(inserts_sql);
 
       if (include_scripts && cat->owner().is_valid()) {
-        GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+        GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
           if ((*script)->forwardEngineerScriptPosition() == "after_inserts")
             out_sql.append(user_script(*script));
         }
@@ -2398,7 +2398,7 @@ public:
       out_sql.append(triggers_sql);
 
     if (include_scripts && cat->owner().is_valid()) {
-      GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+      GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
         if ((*script)->forwardEngineerScriptPosition() == "after_ddl")
           out_sql.append(user_script(*script));
       }
@@ -2407,7 +2407,7 @@ public:
       out_sql.append(restore_server_vars());
 
     if (include_scripts && cat->owner().is_valid()) {
-      GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+      GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
         if ((*script)->forwardEngineerScriptPosition() == "bottom_file")
           out_sql.append(user_script(*script));
       }
@@ -2449,7 +2449,7 @@ public:
     out_sql.append("\n");
 
     if (include_scripts && cat.is_valid() && cat->owner().is_valid()) {
-      GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+      GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
         if ((*script)->synchronizeScriptPosition() == "top_file")
           out_sql.append(user_script(*script));
       }
@@ -2458,7 +2458,7 @@ public:
     out_sql.append(set_server_vars());
 
     if (include_scripts && cat.is_valid() && cat->owner().is_valid()) {
-      GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+      GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
         if ((*script)->synchronizeScriptPosition() == "before_ddl")
           out_sql.append(user_script(*script));
       }
@@ -2501,7 +2501,7 @@ public:
     }
 
     if (include_scripts && cat.is_valid() && cat->owner().is_valid()) {
-      GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+      GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
         if ((*script)->synchronizeScriptPosition() == "after_ddl")
           out_sql.append(user_script(*script));
       }
@@ -2510,7 +2510,7 @@ public:
     out_sql.append(restore_server_vars());
 
     if (include_scripts && cat.is_valid() && cat->owner().is_valid()) {
-      GRTLIST_FOREACH(db_Script, workbench_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
+      GRTLIST_FOREACH(db_Script, studio_physical_ModelRef::cast_from(cat->owner())->scripts(), script) {
         if ((*script)->synchronizeScriptPosition() == "bottom_file")
           out_sql.append(user_script(*script));
       }
@@ -2745,7 +2745,7 @@ db_mgmt_RdbmsRef DbMySQLImpl::initializeDBMSInfo() {
   db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->unserialize(
     base::makePath(bec::GRTManager::get()->get_basedir(), "modules/data/mysql_rdbms_info.xml")));
 
-  workbench_MySqlStudioRef::cast_from(grt::GRT::get()->get("/wb"))->rdbmsMgmt()->rdbms().insert(rdbms);
+  studio_MySqlStudioRef::cast_from(grt::GRT::get()->get("/wb"))->rdbmsMgmt()->rdbms().insert(rdbms);
   return rdbms;
 }
 

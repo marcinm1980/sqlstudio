@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 
 #include "../stub_app.h"
 #include "../stub_button.h"

@@ -31,7 +31,7 @@
 #include "grtui/file_charset_dialog.h"
 
 #include "grts/structs.db.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include "grtsqlparser/sql_facade.h"
 
@@ -41,7 +41,7 @@
 
 void Sql_import::grtm() {
   _options = grt::DictRef(true);
-  _doc = workbench_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
+  _doc = studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
 
   // init some options based on global defaults
   // FE will query them to init controls state
@@ -83,7 +83,7 @@ grt::StringRef Sql_import::parse_sql_script(db_CatalogRef catalog, const std::st
   db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->get("/wb/rdbmsMgmt/rdbms/0/"));
   parsers::MySQLParserContext::Ref context = services->createParserContext(
     rdbms->characterSets(),
-    GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion")), _sqlMode,
+    GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion")), _sqlMode,
     _options.get_int("SqlIdentifiersCS", 0));
 
   parse_sql_script(services, context, catalog, sql_script, _options);
@@ -122,7 +122,7 @@ grt::ListRef<GrtObject> Sql_import::get_created_objects() {
 grt::ValueRef Sql_import::autoplace_grt() {
   db_CatalogRef catalog = target_catalog();
 
-  workbench_physical_ModelRef model(workbench_physical_ModelRef::cast_from(catalog->owner()));
+  studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(catalog->owner()));
 
   grt::ListRef<db_DatabaseObject> dbobjects(true);
   grt::ListRef<GrtObject> objects(grt::ListRef<GrtObject>::cast_from(_options.get("created_objects")));

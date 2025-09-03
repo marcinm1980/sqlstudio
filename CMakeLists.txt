@@ -179,14 +179,14 @@ if (UNIX)
 	set(WB_INSTALL_DIR              "${CMAKE_INSTALL_PREFIX}")
 	set(WB_INSTALL_DIR_EXECUTABLE   "${REAL_EXECUTABLE_DIR}")
 	set(WB_INSTALL_BIN_DIR          "${CMAKE_INSTALL_PREFIX}/bin")
-	set(WB_INSTALL_LIB_DIR          "${LIB_INSTALL_DIR}/mysql-workbench")
+	set(WB_INSTALL_LIB_DIR          "${LIB_INSTALL_DIR}/mysql-studio")
 	set(WB_PYTHON_MODULES_DIR       "${WB_INSTALL_LIB_DIR}/modules")
 	set(WB_INSTALL_SHARED_DIR       "${SHARE_INSTALL_PREFIX}")
 	set(WB_INSTALL_ETC_DIR          "${ETC_INSTALL_DIR}")
-	set(WB_PACKAGE_SHARED_DIR       "${SHARE_INSTALL_PREFIX}/mysql-workbench")
-	set(WB_PACKAGE_PLUGINS_DIR      "${LIB_INSTALL_DIR}/mysql-workbench/plugins")
-	set(WB_PYTHON_MODULES_DATA_DIR  "${SHARE_INSTALL_PREFIX}/mysql-workbench/modules/data")
-	set(WB_INSTALL_DOC_DIR          "${SHARE_INSTALL_PREFIX}/doc/mysql-workbench")
+	set(WB_PACKAGE_SHARED_DIR       "${SHARE_INSTALL_PREFIX}/mysql-studio")
+	set(WB_PACKAGE_PLUGINS_DIR      "${LIB_INSTALL_DIR}/mysql-studio/plugins")
+	set(WB_PYTHON_MODULES_DATA_DIR  "${SHARE_INSTALL_PREFIX}/mysql-studio/modules/data")
+	set(WB_INSTALL_DOC_DIR          "${SHARE_INSTALL_PREFIX}/doc/mysql-studio")
 endif()
 
 include(ExternalProject)
@@ -224,7 +224,7 @@ endif()
 #-----------------------------------------------------------------------
 # Define some useful variables and options
 #-----------------------------------------------------------------------
-configure_file(${PROJECT_SOURCE_DIR}/mysql-workbench.desktop.in mysql-workbench.desktop)
+configure_file(${PROJECT_SOURCE_DIR}/mysql-studio.desktop.in mysql-studio.desktop)
 
 add_subdirectory(tools)
 add_subdirectory(backend)
@@ -239,15 +239,15 @@ if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/internal)
   add_subdirectory(internal)
 endif()
 
-install(FILES ${CMAKE_BINARY_DIR}/mysql-workbench.desktop DESTINATION ${WB_INSTALL_SHARED_DIR}/applications)
+install(FILES ${CMAKE_BINARY_DIR}/mysql-studio.desktop DESTINATION ${WB_INSTALL_SHARED_DIR}/applications)
 
 if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/internal)
     install(FILES README-commercial.md License-commercial.txt DESTINATION ${WB_INSTALL_DOC_DIR}-commercial)
 else()
     install(FILES README.md License.txt DESTINATION ${WB_INSTALL_DOC_DIR}-community)
 endif()
-install(FILES build/mysql-workbench-commercial.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-workbench.xml)
-install(FILES build/mysql-workbench-commercial.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-workbench.mime)
+install(FILES build/mysql-studio-commercial.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
+install(FILES build/mysql-studio-commercial.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
 
 
 install(FILES build/build_freetds.sh

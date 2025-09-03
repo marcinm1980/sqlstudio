@@ -31,9 +31,9 @@
 #include <gmodule.h>
 #include "grtpp_util.h"
 #include "grts/structs.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "grts/structs.model.h"
-#include "grts/structs.workbench.logical.h"
+#include "grts/structs.studio.logical.h"
 
 namespace bec {
 
@@ -133,7 +133,7 @@ namespace bec {
     }                                                          \
   }
 
-    int iterate(T &Self, const workbench_logical_ModelRef &model, bool breakOnError = false,
+    int iterate(T &Self, const studio_logical_ModelRef &model, bool breakOnError = false,
                 bool model_diagrams = true) {
       stack_item _centry(model, call_stack);
 
@@ -148,7 +148,7 @@ namespace bec {
       return res;
     }
 
-    int iterate(T &Self, const workbench_physical_ModelRef &model, bool breakOnError = false,
+    int iterate(T &Self, const studio_physical_ModelRef &model, bool breakOnError = false,
                 bool model_diagrams = true) {
       stack_item _centry(model, call_stack);
 
@@ -175,8 +175,8 @@ namespace bec {
           return res;
       }
 
-      if (EXIST_CB(db_Table) && workbench_physical_TableFigureRef::can_wrap(figure)) {
-        workbench_physical_TableFigureRef table_figure(workbench_physical_TableFigureRef::cast_from(figure));
+      if (EXIST_CB(db_Table) && studio_physical_TableFigureRef::can_wrap(figure)) {
+        studio_physical_TableFigureRef table_figure(studio_physical_TableFigureRef::cast_from(figure));
         if (table_figure->table().is_valid()) {
           CALL_CB(db_Table, table_figure->table());
           res = iterate(Self, table_figure->table(), breakOnError);
@@ -185,16 +185,16 @@ namespace bec {
         }
       }
 
-      if (EXIST_CB(db_View) && workbench_physical_ViewFigureRef::can_wrap(figure)) {
-        workbench_physical_ViewFigureRef view_figure(workbench_physical_ViewFigureRef::cast_from(figure));
+      if (EXIST_CB(db_View) && studio_physical_ViewFigureRef::can_wrap(figure)) {
+        studio_physical_ViewFigureRef view_figure(studio_physical_ViewFigureRef::cast_from(figure));
         if (view_figure->view().is_valid())
           CALL_CB(db_View, view_figure->view());
       }
 
       if ((EXIST_CB(db_RoutineGroup) || EXIST_CB(db_Routine)) &&
-          workbench_physical_RoutineGroupFigureRef::can_wrap(figure)) {
-        workbench_physical_RoutineGroupFigureRef rgroup_figure(
-          workbench_physical_RoutineGroupFigureRef::cast_from(figure));
+          studio_physical_RoutineGroupFigureRef::can_wrap(figure)) {
+        studio_physical_RoutineGroupFigureRef rgroup_figure(
+          studio_physical_RoutineGroupFigureRef::cast_from(figure));
         if (rgroup_figure->routineGroup().is_valid()) {
           db_RoutineGroupRef routineGroup = rgroup_figure->routineGroup();
           CALL_CB(db_RoutineGroup, routineGroup);
@@ -276,8 +276,8 @@ namespace bec {
 
     int iterate(T &Self, const GrtObjectRef &object, bool breakOnError = false, bool model_diagrams = true) {
       stack_item _centry(object, call_stack);
-      CASE_ITERATE_MODEL(workbench_logical_Model, model_diagrams);
-      CASE_ITERATE_MODEL(workbench_physical_Model, model_diagrams);
+      CASE_ITERATE_MODEL(studio_logical_Model, model_diagrams);
+      CASE_ITERATE_MODEL(studio_physical_Model, model_diagrams);
       CASE_ITERATE(model_Diagram);
       CASE_ITERATE(model_Object);
       CASE_ITERATE(db_Catalog);

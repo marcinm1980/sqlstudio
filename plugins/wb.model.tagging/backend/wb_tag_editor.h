@@ -26,7 +26,7 @@
 #define _WB_TAG_EDITOR_BE_
 
 #include <sigc++/sigc++.h>
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "grt/tree_model.h"
 
 class TagObjectListBE : public bec::ListModel {
@@ -65,13 +65,13 @@ public:
 class TagEditorBE : public sigc::trackable {
   TagObjectListBE _object_list;
 
-  workbench_physical_ModelRef _model;
+  studio_physical_ModelRef _model;
   int _selected_category;
   int _selected_tag;
   bool _changed;
 
 public:
-  TagEditorBE(const workbench_physical_ModelRef &model);
+  TagEditorBE(const studio_physical_ModelRef &model);
 
   TagObjectListBE *get_object_list() {
     return &_object_list;

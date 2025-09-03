@@ -25,7 +25,7 @@
 #include "grt.h"
 #include "interfaces/plugin.h"
 
-#include "grts/structs.workbench.model.h"
+#include "grts/structs.studio.model.h"
 
 #define MODULE_VERSION "1.0.0"
 
@@ -74,7 +74,7 @@ static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
                    "wb.model.editors.mwbplugin");
   note_editor->pluginType("gui");
   note_editor->moduleFunctionName("NoteEditor");
-  set_object_argument(note_editor, "workbench.model.NoteFigure");
+  set_object_argument(note_editor, "studio.model.NoteFigure");
   note_editor->caption("Edit Note");
   note_editor->rating(10);
   note_editor->name("wb.plugin.edit.note");
@@ -85,7 +85,7 @@ static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
                    "wb.model.editors.mwbplugin");
   image_editor->pluginType("gui");
   image_editor->moduleFunctionName("ImageEditor");
-  set_object_argument(image_editor, "workbench.model.ImageFigure");
+  set_object_argument(image_editor, "studio.model.ImageFigure");
   image_editor->caption("Edit Image");
   image_editor->rating(10);
   image_editor->name("wb.plugin.edit.image");
@@ -96,7 +96,7 @@ static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
                    "wb.model.editors.mwbplugin");
   layer_editor->pluginType("gui");
   layer_editor->moduleFunctionName("PhysicalLayerEditor");
-  set_object_argument(layer_editor, "workbench.physical.Layer");
+  set_object_argument(layer_editor, "studio.physical.Layer");
   layer_editor->caption("Edit Layer");
   layer_editor->rating(10);
   layer_editor->name("wb.plugin.edit.physical.layer");

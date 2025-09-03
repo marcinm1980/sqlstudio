@@ -33,8 +33,8 @@
 #include "grt/editor_base.h"
 #include "grtdb/db_object_helpers.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_context.h"
+#include "studio/wb_context_ui.h"
 
 #include "user_defined_type_editor.h"
 #include "grtui/string_list_editor.h"
@@ -44,7 +44,7 @@ DEFAULT_LOG_DOMAIN("udt");
 
 using namespace base;
 
-UserDefinedTypeEditor::UserDefinedTypeEditor(const workbench_physical_ModelRef &model)
+UserDefinedTypeEditor::UserDefinedTypeEditor(const studio_physical_ModelRef &model)
   : mforms::Form(0, mforms::FormResizable),
     _model(model),
     _vbox(false),

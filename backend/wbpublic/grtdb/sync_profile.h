@@ -27,14 +27,14 @@
 #include "grt.h"
 #include "grts/structs.db.h"
 #include "grts/structs.db.mgmt.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "wbpublic_public_interface.h"
 
 namespace bec {
-  WBPUBLICBACKEND_PUBLIC_FUNC db_mgmt_SyncProfileRef create_sync_profile(workbench_physical_ModelRef model,
+  WBPUBLICBACKEND_PUBLIC_FUNC db_mgmt_SyncProfileRef create_sync_profile(studio_physical_ModelRef model,
                                                                          const std::string &profile_name,
                                                                          const std::string &target_schema);
-  WBPUBLICBACKEND_PUBLIC_FUNC db_mgmt_SyncProfileRef get_sync_profile(workbench_physical_ModelRef model,
+  WBPUBLICBACKEND_PUBLIC_FUNC db_mgmt_SyncProfileRef get_sync_profile(studio_physical_ModelRef model,
                                                                       const std::string &profile_name,
                                                                       const std::string &target_schema);
   WBPUBLICBACKEND_PUBLIC_FUNC void update_schema_from_sync_profile(db_SchemaRef schema, db_mgmt_SyncProfileRef profile);

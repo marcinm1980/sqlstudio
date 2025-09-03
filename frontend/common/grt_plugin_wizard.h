@@ -27,7 +27,7 @@
 
 #include "base/string_utilities.h"
 #include "base/file_functions.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "grt/common.h"
 
 #include <glib/gstdio.h>

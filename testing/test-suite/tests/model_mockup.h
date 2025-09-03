@@ -27,8 +27,8 @@
 #include "grts/structs.h"
 #include "grts/structs.db.mgmt.h"
 #include "grts/structs.db.mysql.h"
-#include "grts/structs.workbench.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.h"
+#include "grts/structs.studio.physical.h"
 
 #include "grt/grt_manager.h"
 
@@ -38,8 +38,8 @@ namespace casmine {
 
   struct SyntheticMySQLModel {
     db_mgmt_RdbmsRef rdbms;
-    workbench_physical_ModelRef model;
-    workbench_physical_DiagramRef physicalDiagram;
+    studio_physical_ModelRef model;
+    studio_physical_DiagramRef physicalDiagram;
 
     db_mysql_CatalogRef catalog;
     db_mysql_SchemaRef schema;
@@ -65,9 +65,9 @@ namespace casmine {
     db_RolePrivilegeRef viewPrivilege;
     db_RolePrivilegeRef routinePrivilege;
 
-    workbench_physical_TableFigureRef tableFigure;
-    workbench_physical_ViewFigureRef viewFigure;
-    workbench_physical_RoutineGroupFigureRef routineGroupFigure;
+    studio_physical_TableFigureRef tableFigure;
+    studio_physical_ViewFigureRef viewFigure;
+    studio_physical_RoutineGroupFigureRef routineGroupFigure;
 
     SyntheticMySQLModel();
     SyntheticMySQLModel(MySqlStudioTester *wbt);

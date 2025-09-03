@@ -23,11 +23,11 @@
 import mforms
 
 
-from workbench.log import log_error
+from studio.log import log_error
 
 
-from workbench.graphics.canvas import VBoxFigure, Canvas, DiamondShapeFigure, RectangleShapeFigure, TextFigure, HFill, draw_varrow, draw_harrow
-from workbench.graphics.cairo_utils import ImageSurface, Context
+from studio.graphics.canvas import VBoxFigure, Canvas, DiamondShapeFigure, RectangleShapeFigure, TextFigure, HFill, draw_varrow, draw_harrow
+from studio.graphics.cairo_utils import ImageSurface, Context
 import cairo
 
 import io

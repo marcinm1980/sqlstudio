@@ -48,7 +48,7 @@
     <Filter Include="tests\backend\wbprivate\sqlide">
       <UniqueIdentifier>{a7145498-4eba-4c13-a72d-15a6b258ad9f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="tests\backend\wbprivate\workbench">
+    <Filter Include="tests\backend\wbprivate\studio">
       <UniqueIdentifier>{b15518ad-f739-4861-9586-cef7dc608035}</UniqueIdentifier>
     </Filter>
     <Filter Include="tests\backend\wbpublic\grt">
@@ -263,8 +263,8 @@
     <ClInclude Include="tests\model_mockup.h">
       <Filter>tests</Filter>
     </ClInclude>
-    <ClInclude Include="tests\backend\wbprivate\workbench\wb_undo_helpers.h">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClInclude Include="tests\backend\wbprivate\studio\wb_undo_helpers.h">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClInclude>
     <ClInclude Include="tests\structs.test.h">
       <Filter>tests</Filter>
@@ -358,23 +358,23 @@
     <ClCompile Include="tests\library\cdbc\dbc_statement_specs.cpp">
       <Filter>tests\library\cdbc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\backend\wbprivate\workbench\metaclasses.cpp">
+    <ClCompile Include="..\..\backend\wbprivate\studio\metaclasses.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\overview_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\overview_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\ssh_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\ssh_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\wb_undo_diagram_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_diagram_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\wb_undo_editors_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_editors_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\wb_undo_others_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_others_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
     <ClCompile Include="tests\backend\wbprivate\sqlide\wb_sql_editor_help_specs.cpp">
       <Filter>tests\backend\wbprivate\sqlide</Filter>
@@ -382,23 +382,23 @@
     <ClCompile Include="tests\backend\wbprivate\sqlide\wb_sql_editor_form_specs.cpp">
       <Filter>tests\backend\wbprivate\sqlide</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\wb_module_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_module_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\wb_model_file_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_model_file_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\wb_lowlevel_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_lowlevel_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\wb_copy_paste_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_copy_paste_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
     <ClCompile Include="tests\backend\wbprivate\sqlide\wb_live_schema_tree_specs.cpp">
       <Filter>tests\backend\wbprivate\sqlide</Filter>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\workbench\wb_context_specs.cpp">
-      <Filter>tests\backend\wbprivate\workbench</Filter>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_context_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
     </ClCompile>
     <ClCompile Include="tests\library\forms\utilities_specs.cpp">
       <Filter>tests\library\forms</Filter>

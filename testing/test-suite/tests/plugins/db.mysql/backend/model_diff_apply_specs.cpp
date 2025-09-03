@@ -359,7 +359,7 @@ $describe("db.mysql plugin") {
   });
 
   $beforeEach([this] () {
-    data->tester->wb->open_document(data->dataDir + "/workbench/all_objects.mwb");
+    data->tester->wb->open_document(data->dataDir + "/studio/all_objects.mwb");
   });
 
   $afterEach([this] () {

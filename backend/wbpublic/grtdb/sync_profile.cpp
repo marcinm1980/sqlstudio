@@ -29,7 +29,7 @@
 #include "grtpp_util.h"
 #include "grt/common.h"
 
-db_mgmt_SyncProfileRef bec::create_sync_profile(workbench_physical_ModelRef model, const std::string &profile_name,
+db_mgmt_SyncProfileRef bec::create_sync_profile(studio_physical_ModelRef model, const std::string &profile_name,
                                                 const std::string &target_schema) {
   db_mgmt_SyncProfileRef profile(grt::Initialized);
   profile->targetHostIdentifier(profile_name);
@@ -41,7 +41,7 @@ db_mgmt_SyncProfileRef bec::create_sync_profile(workbench_physical_ModelRef mode
   return profile;
 }
 
-db_mgmt_SyncProfileRef bec::get_sync_profile(workbench_physical_ModelRef model, const std::string &profile_name,
+db_mgmt_SyncProfileRef bec::get_sync_profile(studio_physical_ModelRef model, const std::string &profile_name,
                                              const std::string &target_schema) {
   return db_mgmt_SyncProfileRef::cast_from(
     model->syncProfiles().get(base::strfmt("%s::%s", profile_name.c_str(), target_schema.c_str())));

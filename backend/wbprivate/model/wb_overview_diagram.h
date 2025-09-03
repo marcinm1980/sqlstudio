@@ -25,7 +25,7 @@
 #ifndef _WB_OVERVIEW_DIAGRAM_H_
 #define _WB_OVERVIEW_DIAGRAM_H_
 
-#include "workbench/wb_overview.h"
+#include "studio/wb_overview.h"
 /**
  * @file  wb_overview_diagram.h
  * @brief

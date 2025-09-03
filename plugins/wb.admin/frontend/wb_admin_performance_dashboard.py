@@ -23,15 +23,15 @@
 import sys
 import mforms
 
-from workbench.graphics.charting import DBTimeLineGraph, DBSimpleCounter, DBRoundMeter, DBLevelMeter, DBImage, DBText
-from workbench.graphics.canvas import Canvas, TextFigure
-from workbench.graphics.cairo_utils import Context
+from studio.graphics.charting import DBTimeLineGraph, DBSimpleCounter, DBRoundMeter, DBLevelMeter, DBImage, DBText
+from studio.graphics.canvas import Canvas, TextFigure
+from studio.graphics.cairo_utils import Context
 
 from wb_admin_utils import weakcb, WbAdminTabBase, WbAdminValidationConnection
 import re
-from workbench.log import log_error
-from workbench.utils import Version
-from workbench.notifications import nc
+from studio.log import log_error
+from studio.utils import Version
+from studio.notifications import nc
 
 from mforms import Color, ControlBackgroundColor, TextColor, TextBackgroundColor
 

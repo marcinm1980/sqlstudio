@@ -39,7 +39,7 @@
 #include "mforms/find_panel.h"
 #include "mforms/filechooser.h"
 
-#include "workbench/wb_command_ui.h"
+#include "studio/wb_command_ui.h"
 
 #include "base/boost_smart_ptr_helpers.h"
 
@@ -111,7 +111,7 @@ SqlEditorPanel::SqlEditorPanel(SqlEditorForm *owner, bool is_scratch, bool start
   _editor_box.add_end(code_editor, true, true);
 
   code_editor->set_font(
-    grt::StringRef::cast_from(bec::GRTManager::get()->get_app_option("workbench.general.Editor:Font")));
+    grt::StringRef::cast_from(bec::GRTManager::get()->get_app_option("studio.general.Editor:Font")));
   code_editor->set_status_text("");
   code_editor->set_show_find_panel_callback(
     std::bind(&SqlEditorPanel::show_find_panel, this, std::placeholders::_1, std::placeholders::_2));
@@ -213,7 +213,7 @@ bool SqlEditorPanel::can_close() {
   bool check_editors = true;
   // if Save of workspace on close is enabled, we don't need to check whether there are unsaved scratch
   // SQL editors but other stuff should be checked.
-  grt::ValueRef option(bec::GRTManager::get()->get_app_option("workbench:SaveSQLWorkspaceOnClose"));
+  grt::ValueRef option(bec::GRTManager::get()->get_app_option("studio:SaveSQLWorkspaceOnClose"));
   if (option.is_valid() && *grt::IntegerRef::cast_from(option))
     check_editors = false;
 

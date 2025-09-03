@@ -30,8 +30,8 @@
 #include "grtui/wizard_progress_page.h"
 #include "grtui/grtdb_connect_panel.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_module.h"
+#include "studio/wb_context.h"
+#include "studio/wb_module.h"
 
 #include "cppdbc.h"
 

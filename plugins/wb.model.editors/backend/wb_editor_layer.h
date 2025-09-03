@@ -25,15 +25,15 @@
 #pragma once
 
 #include "grt/editor_base.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include "wb_editor_backend_public_interface.h"
 
 class WBEDITOR_BACKEND_PUBLIC_FUNC LayerEditorBE : public bec::BaseEditor {
-  workbench_physical_LayerRef _layer;
+  studio_physical_LayerRef _layer;
 
 public:
-  LayerEditorBE(const workbench_physical_LayerRef &layer);
+  LayerEditorBE(const studio_physical_LayerRef &layer);
 
   virtual bool should_close_on_delete_of(const std::string &oid);
 

@@ -27,7 +27,7 @@
 
 using namespace bec;
 
-ImageEditorBE::ImageEditorBE(const workbench_model_ImageFigureRef &image) : bec::BaseEditor(image), _image(image) {
+ImageEditorBE::ImageEditorBE(const studio_model_ImageFigureRef &image) : bec::BaseEditor(image), _image(image) {
 }
 
 bool ImageEditorBE::should_close_on_delete_of(const std::string &oid) {

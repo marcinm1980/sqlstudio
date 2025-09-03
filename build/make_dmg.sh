@@ -9,8 +9,8 @@ if test "$ver" == ""; then
         echo "./make_dmg.sh <edition> <wbversion>"
         exit 1
 fi
-templatedmg=~/guibuild/mysqlworkbench-$edition-template.dmg
-finaldmg=mysql-workbench-$edition-$ver-osx-x86_64
+templatedmg=~/guibuild/mysqlstudio-$edition-template.dmg
+finaldmg=mysql-studio-$edition-$ver-osx-x86_64
 
 if [ ! -d $srcdir ]; then
     srcdir="build/Release"

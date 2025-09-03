@@ -1,6 +1,6 @@
 #!/bin/bash
 DIR="$(dirname  "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" )"
-WB_VERSION="$DIR/backend/wbprivate/workbench/wb_version.h"
+WB_VERSION="$DIR/backend/wbprivate/studio/wb_version.h"
 
 while read line; do
   line_array=($line)

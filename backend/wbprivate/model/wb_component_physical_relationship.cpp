@@ -30,11 +30,11 @@
 #include "grts/structs.db.mysql.h"
 #include "base/string_utilities.h"
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "grtpp_undo_manager.h"
 
-#include "wbcanvas/workbench_physical_diagram_impl.h"
-#include "wbcanvas/workbench_physical_tablefigure_impl.h"
+#include "wbcanvas/studio_physical_diagram_impl.h"
+#include "wbcanvas/studio_physical_tablefigure_impl.h"
 
 using namespace wb;
 using namespace base;
@@ -42,8 +42,8 @@ using namespace base;
 WBComponentPhysical::RelationshipToolContext::RelationshipToolContext(WBComponentPhysical *owner,
                                                                       ModelDiagramForm *form, RelationshipType rtype)
   : owner(owner), view(form), state(RPickingStart), type(rtype), floater(0) {
-  workbench_physical_Diagram::ImplData *view_bridge =
-    workbench_physical_DiagramRef::cast_from(form->get_model_diagram())->get_data();
+  studio_physical_Diagram::ImplData *view_bridge =
+    studio_physical_DiagramRef::cast_from(form->get_model_diagram())->get_data();
   if (view_bridge)
     scoped_connect(view_bridge->signal_item_crossed(),
                    std::bind(&RelationshipToolContext::on_figure_crossed, this, std::placeholders::_1,
@@ -88,8 +88,8 @@ void WBComponentPhysical::RelationshipToolContext::cancel() {
     owner->get_wb()->_frontendCallbacks->show_status_text(_("Cancelled."));
 }
 
-bool WBComponentPhysical::RelationshipToolContext::pick_table(const workbench_physical_TableFigureRef &table) {
-  workbench_physical_TableFigure::ImplData *tfig = table->get_data();
+bool WBComponentPhysical::RelationshipToolContext::pick_table(const studio_physical_TableFigureRef &table) {
+  studio_physical_TableFigure::ImplData *tfig = table->get_data();
 
   if (type == RelationshipnmId && !table->table()->primaryKey().is_valid()) {
     last_message =
@@ -109,7 +109,7 @@ bool WBComponentPhysical::RelationshipToolContext::pick_table(const workbench_ph
   return true;
 }
 
-bool WBComponentPhysical::RelationshipToolContext::pick_reftable(const workbench_physical_TableFigureRef &table) {
+bool WBComponentPhysical::RelationshipToolContext::pick_reftable(const studio_physical_TableFigureRef &table) {
   if (!table->table()->primaryKey().is_valid()) {
     last_message =
       strfmt(_("'%s' has no Primary Key. Please add a PK or select another Table."), table->table()->name().c_str());
@@ -153,7 +153,7 @@ bool WBComponentPhysical::RelationshipToolContext::add_column(const db_ColumnRef
   return true;
 }
 
-bool WBComponentPhysical::RelationshipToolContext::pick_column(const workbench_physical_TableFigureRef &table,
+bool WBComponentPhysical::RelationshipToolContext::pick_column(const studio_physical_TableFigureRef &table,
                                                                const db_ColumnRef &column) {
   if (column.is_valid()) {
     // if so, then make sure that all columns belong to the same table and
@@ -216,7 +216,7 @@ bool WBComponentPhysical::RelationshipToolContext::add_refcolumn(const db_Column
   return true;
 }
 
-bool WBComponentPhysical::RelationshipToolContext::pick_refcolumn(const workbench_physical_TableFigureRef &table,
+bool WBComponentPhysical::RelationshipToolContext::pick_refcolumn(const studio_physical_TableFigureRef &table,
                                                                   const db_ColumnRef &column) {
   if (column.is_valid()) {
     // if so, then make sure that all columns belong to the same table and
@@ -299,8 +299,8 @@ bool WBComponentPhysical::RelationshipToolContext::finish_for_columns() {
     default:
       break;
   }
-  imand = view->get_tool_argument("workbench.physical.Connection:optional") != "1";
-  fmand = view->get_tool_argument("workbench.physical.Connection:refOptional") != "1";
+  imand = view->get_tool_argument("studio.physical.Connection:optional") != "1";
+  fmand = view->get_tool_argument("studio.physical.Connection:refOptional") != "1";
 
   itable->get_data()->unhighlight();
 
@@ -328,7 +328,7 @@ bool WBComponentPhysical::RelationshipToolContext::finish_for_columns() {
 
     fk = bec::TableHelper::create_foreign_key_to_table(
       itable->table(), columns, ftable->table(), refcolumns, imand, imany,
-      workbench_physical_ModelRef::cast_from(view->get_model_diagram()->owner())->rdbms(),
+      studio_physical_ModelRef::cast_from(view->get_model_diagram()->owner())->rdbms(),
       owner->get_wb()->get_wb_options(), view->get_model_diagram()->owner()->options());
     if (fk.is_valid()) {
       undo.end(_("Create Relationship"));
@@ -381,8 +381,8 @@ bool WBComponentPhysical::RelationshipToolContext::finish_for_tables() {
     default:
       break;
   }
-  imand = view->get_tool_argument("workbench.physical.Connection:optional") != "1";
-  fmand = view->get_tool_argument("workbench.physical.Connection:refOptional") != "1";
+  imand = view->get_tool_argument("studio.physical.Connection:optional") != "1";
+  fmand = view->get_tool_argument("studio.physical.Connection:refOptional") != "1";
 
   itable->get_data()->unhighlight();
 
@@ -410,13 +410,13 @@ bool WBComponentPhysical::RelationshipToolContext::finish_for_tables() {
       grt::AutoUndo fkundo;
       fk = bec::TableHelper::create_foreign_key_to_table(
         itable->table(), ftable->table(), imand, fmand, imany, identifying,
-        workbench_physical_ModelRef::cast_from(view->get_model_diagram()->owner())->rdbms(),
+        studio_physical_ModelRef::cast_from(view->get_model_diagram()->owner())->rdbms(),
         owner->get_wb()->get_wb_options(), view->get_model_diagram()->owner()->options());
 
       fkundo.end(strfmt("Add ForeignKey to %s", itable->table()->name().c_str()));
     }
     if (fk.is_valid()) {
-      workbench_physical_DiagramRef::cast_from(view->get_model_diagram())->createConnectionForForeignKey(fk);
+      studio_physical_DiagramRef::cast_from(view->get_model_diagram())->createConnectionForForeignKey(fk);
 
       undo.end(_("Create Relationship"));
 
@@ -435,15 +435,15 @@ bool WBComponentPhysical::RelationshipToolContext::finish_for_tables() {
 void WBComponentPhysical::RelationshipToolContext::on_figure_crossed(const model_ObjectRef &owner,
                                                                      mdc::CanvasItem *item, bool enter,
                                                                      const Point &pos) {
-  if (owner.is_instance<workbench_physical_TableFigure>()) {
+  if (owner.is_instance<studio_physical_TableFigure>()) {
     if (enter)
-      enter_table(workbench_physical_TableFigureRef::cast_from(owner));
+      enter_table(studio_physical_TableFigureRef::cast_from(owner));
     else
-      leave_table(workbench_physical_TableFigureRef::cast_from(owner));
+      leave_table(studio_physical_TableFigureRef::cast_from(owner));
   }
 }
 
-void WBComponentPhysical::RelationshipToolContext::enter_table(const workbench_physical_TableFigureRef &table) {
+void WBComponentPhysical::RelationshipToolContext::enter_table(const studio_physical_TableFigureRef &table) {
   bool hover_columns = false;
 
   if (state == RPickingEnd) {
@@ -471,7 +471,7 @@ void WBComponentPhysical::RelationshipToolContext::enter_table(const workbench_p
   }
 }
 
-void WBComponentPhysical::RelationshipToolContext::leave_table(const workbench_physical_TableFigureRef &table) {
+void WBComponentPhysical::RelationshipToolContext::leave_table(const studio_physical_TableFigureRef &table) {
   wbfig::Table *tfig = dynamic_cast<wbfig::Table *>(table->get_data()->get_canvas_item());
   if (tfig) {
     wbfig::Table::ItemList *columns = tfig->get_columns();
@@ -479,7 +479,7 @@ void WBComponentPhysical::RelationshipToolContext::leave_table(const workbench_p
       (*iter)->set_draws_hover(false);
   }
   table->get_data()->get_canvas_item()->set_draws_hover(false);
-  hovering = workbench_physical_TableFigureRef();
+  hovering = studio_physical_TableFigureRef();
 }
 
 bool WBComponentPhysical::RelationshipToolContext::button_press(ModelDiagramForm *view, const Point &pos) {
@@ -489,11 +489,11 @@ bool WBComponentPhysical::RelationshipToolContext::button_press(ModelDiagramForm
     case RPickingStart: {
       // check if there's a table at the clicked point
       model_ObjectRef obj = view->get_object_at(pos);
-      if (obj.is_valid() && obj.is_instance(workbench_physical_TableFigure::static_class_name())) {
-        workbench_physical_TableFigureRef table(workbench_physical_TableFigureRef::cast_from(obj));
+      if (obj.is_valid() && obj.is_instance(studio_physical_TableFigure::static_class_name())) {
+        studio_physical_TableFigureRef table(studio_physical_TableFigureRef::cast_from(obj));
         bool done = false;
 
-        workbench_physical_TableFigure::ImplData *tfig = table->get_data();
+        studio_physical_TableFigure::ImplData *tfig = table->get_data();
 
         if (type == RelationshipPick && tfig) {
           // if we're picking columns, then check if what was clicked is a column
@@ -522,9 +522,9 @@ bool WBComponentPhysical::RelationshipToolContext::button_press(ModelDiagramForm
     case RPickingEnd: {
       // check if there's a table at the clicked point
       model_ObjectRef obj = view->get_object_at(pos);
-      if (obj.is_valid() && obj.is_instance(workbench_physical_TableFigure::static_class_name())) {
-        workbench_physical_TableFigureRef table(workbench_physical_TableFigureRef::cast_from(obj));
-        workbench_physical_TableFigure::ImplData *tfig = table->get_data();
+      if (obj.is_valid() && obj.is_instance(studio_physical_TableFigure::static_class_name())) {
+        studio_physical_TableFigureRef table(studio_physical_TableFigureRef::cast_from(obj));
+        studio_physical_TableFigure::ImplData *tfig = table->get_data();
         bool done = false;
 
         if (type == RelationshipPick && tfig) {

@@ -1,6 +1,6 @@
 //
 // This header file auto-generated for the template
-//    c:\Users\vkolesnikov\co\mysql-workbench-pro\modules\db.mysql\res\reporting_includes\.\..\reporting\Basic_Text.tpl\basic_text_report.txt.tpl
+//    c:\Users\vkolesnikov\co\mysql-studio-pro\modules\db.mysql\res\reporting_includes\.\..\reporting\Basic_Text.tpl\basic_text_report.txt.tpl
 // by ..\..\..\..\..\mysql-gui-win-res\bin\make_tpl_varname_h
 // DO NOT MODIFY THIS FILE DIRECTLY
 //

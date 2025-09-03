@@ -331,7 +331,7 @@ namespace DBImport {
     Db_plugin *plugin = ((WbPluginDbImport *)_form)->db_plugin();
       
 
-    GrtVersionRef version = GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(plugin->db_catalog()->owner()), "CatalogVersion"));
+    GrtVersionRef version = GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(plugin->db_catalog()->owner()), "CatalogVersion"));
     version->owner(plugin->model_catalog());
     plugin->model_catalog()->version(version);
       

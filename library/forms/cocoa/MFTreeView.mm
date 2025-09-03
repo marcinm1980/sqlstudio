@@ -36,7 +36,7 @@
 
 DEFAULT_LOG_DOMAIN(DOMAIN_MFORMS_COCOA);
 
-static NSString *RowReorderPasteboardDatatype = @"com.mysql.workbench.row-reorder";
+static NSString *RowReorderPasteboardDatatype = @"com.mysql.studio.row-reorder";
 
 class TreeNodeImpl;
 

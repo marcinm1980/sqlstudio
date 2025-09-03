@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "wb_context_model.h"
 #include "wb_user_datatypes.h"
 #include "mforms/menubar.h"
@@ -48,7 +48,7 @@ UserDatatypeList::~UserDatatypeList() {
 
 void UserDatatypeList::handle_menu_action(const std::string &action) {
   if (action == "edit")
-    _wb->get_model_context()->show_user_type_editor(workbench_physical_ModelRef::cast_from(_catalog->owner()));
+    _wb->get_model_context()->show_user_type_editor(studio_physical_ModelRef::cast_from(_catalog->owner()));
 }
 
 void UserDatatypeList::set_catalog(const db_CatalogRef &catalog) {

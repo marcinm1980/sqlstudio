@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "base/trackable.h"
 #include "grt.h"
 #include "grtpp_util.h"

@@ -49,7 +49,7 @@
 #include "base/file_utilities.h"
 #include "base/string_utilities.h"
 
-#include "workbench/wb_version.h"
+#include "studio/wb_version.h"
 
 #include "SSHTunnelManager.h"
 

@@ -86,9 +86,9 @@ typedef int ssize_t;
 #include "grts/structs.db.migration.h"
 #include "grts/structs.eer.h"
 
-#include "grts/structs.workbench.logical.h"
-#include "grts/structs.workbench.model.h"
-#include "grts/structs.workbench.physical.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.logical.h"
+#include "grts/structs.studio.model.h"
+#include "grts/structs.studio.physical.h"
+#include "grts/structs.studio.h"
 
 #include "grts/structs.wrapper.h"

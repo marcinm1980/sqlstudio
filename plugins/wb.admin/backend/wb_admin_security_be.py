@@ -20,12 +20,12 @@
 # along with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-from workbench.db_utils import QueryError, escape_sql_string
-from workbench.utils import Version
+from studio.db_utils import QueryError, escape_sql_string
+from studio.utils import Version
 from wb_common import PermissionDeniedError, to_unicode
 
 import mforms
-from workbench.log import log_error
+from studio.log import log_error
 
 import functools
 

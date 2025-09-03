@@ -27,9 +27,9 @@ fi
 basedirname=$(cd "$bindirname/..";pwd)
 
 libdir=$(basename $prefix/lib)
-wblibdir="$basedirname/$libdir/mysql-workbench"
+wblibdir="$basedirname/$libdir/mysql-studio"
 
-CAIRO=`ldd $bindirname/mysql-workbench-bin | grep libcairo\.so | cut -d " " -f 3`
+CAIRO=`ldd $bindirname/mysql-studio-bin | grep libcairo\.so | cut -d " " -f 3`
 PNG=`ldd $CAIRO | grep libpng | cut -d " " -f 3`
 LIBZ=`ldd $PNG | grep libz\.so | cut -d " " -f 3`
 
@@ -57,17 +57,17 @@ fi
 
 # Setup environment
 #------------------------------------------------------------------
-export LD_LIBRARY_PATH="$wblibdir:$LD_LIBRARY_PATH" #:../../frontend/linux/lib/mysql-workbench"
+export LD_LIBRARY_PATH="$wblibdir:$LD_LIBRARY_PATH" #:../../frontend/linux/lib/mysql-studio"
 
-export MWB_DATA_DIR="$basedirname/share/mysql-workbench"
-export MWB_LIBRARY_DIR="$basedirname/share/mysql-workbench/libraries"
-export MWB_MODULE_DIR="$basedirname/$libdir/mysql-workbench/modules"
-export MWB_PLUGIN_DIR="$basedirname/$libdir/mysql-workbench/plugins"
+export MWB_DATA_DIR="$basedirname/share/mysql-studio"
+export MWB_LIBRARY_DIR="$basedirname/share/mysql-studio/libraries"
+export MWB_MODULE_DIR="$basedirname/$libdir/mysql-studio/modules"
+export MWB_PLUGIN_DIR="$basedirname/$libdir/mysql-studio/plugins"
 
-export DBC_DRIVER_PATH="$basedirname/$libdir/mysql-workbench"
+export DBC_DRIVER_PATH="$basedirname/$libdir/mysql-studio"
 
-export TEST_MODULES_DIR="$MWB_MODULE_DIR"   #"../../wb-build/usr/local/lib/mysql-workbench/modules"
-#export LD_LIBRARY_PATH=../../frontend/linux/lib/mysql-workbench
+export TEST_MODULES_DIR="$MWB_MODULE_DIR"   #"../../wb-build/usr/local/lib/mysql-studio/modules"
+#export LD_LIBRARY_PATH=../../frontend/linux/lib/mysql-studio
 
 
 export G_FILENAME_ENCODING="UTF-8"

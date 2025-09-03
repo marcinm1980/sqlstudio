@@ -21,8 +21,8 @@
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 import grt
-from workbench.log import log_warning, log_error
-from workbench.db_utils import parse_mysql_ids
+from studio.log import log_warning, log_error
+from studio.db_utils import parse_mysql_ids
 
 
 class PrivilegeTarget(object):

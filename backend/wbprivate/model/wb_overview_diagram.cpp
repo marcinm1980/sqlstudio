@@ -23,7 +23,7 @@
  */
 
 #include "wb_overview_diagram.h"
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "model/wb_context_model.h"
 #include "grtpp_undo_manager.h"
 #include "grt/icon_manager.h"

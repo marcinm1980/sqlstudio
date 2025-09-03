@@ -23,8 +23,8 @@
 import re
 import grt
 import mforms
-from workbench.db_utils import escape_sql_identifier
-from workbench.plugins import insert_item_to_plugin_context_menu
+from studio.db_utils import escape_sql_identifier
+from studio.plugins import insert_item_to_plugin_context_menu
 
 from table_templates import TableTemplateManager
 

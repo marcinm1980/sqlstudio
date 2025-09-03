@@ -279,7 +279,7 @@ void SqlEditorResult::set_recordset(Recordset::Ref rset) {
   _grid_header_menu->add_item_with_title("Reset Column Widths", std::bind(&SqlEditorResult::reset_column_widths, this), "Reset Column Widths", "");
 
   
-  std::string fontDescription = bec::GRTManager::get()->get_app_option_string("workbench.general.Resultset:Font");
+  std::string fontDescription = bec::GRTManager::get()->get_app_option_string("studio.general.Resultset:Font");
   std::string font;
   float size = 0;
   bool bold, italic;
@@ -609,7 +609,7 @@ void SqlEditorResult::reset_column_widths() {
 
 std::vector<float> SqlEditorResult::get_autofit_column_widths(Recordset *rs) {
   std::vector<float> widths(rs->get_column_count());
-  std::string font = bec::GRTManager::get()->get_app_option_string("workbench.general.Resultset:Font");
+  std::string font = bec::GRTManager::get()->get_app_option_string("studio.general.Resultset:Font");
 
   for (size_t c = rs->get_column_count(), j = 0; j < c; j++) {
     widths[j] = (float)mforms::Utilities::get_text_width(rs->get_column_caption(j), font);

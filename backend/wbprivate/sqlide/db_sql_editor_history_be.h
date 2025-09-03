@@ -25,7 +25,7 @@
 #ifndef _DB_SQL_EDITOR_HISTORY_BE_H_
 #define _DB_SQL_EDITOR_HISTORY_BE_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "sqlide/var_grid_model_be.h"
 #include <time.h>
 #include "mforms/menu.h"

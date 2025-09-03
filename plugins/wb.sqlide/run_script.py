@@ -29,8 +29,8 @@ import mforms
 from threading import Thread
 from queue import Queue, Empty
 
-from workbench.log import log_info, log_error
-from workbench.client_utils import MySQLScriptImporter
+from studio.log import log_info, log_error
+from studio.client_utils import MySQLScriptImporter
 
 
 class RunPanel(mforms.Table):

@@ -24,9 +24,9 @@ import random
 import os.path
 
 from wb import DefineModule
-from workbench import db_driver
-from workbench.utils import find_object_with_name
-from workbench.exceptions import NotConnectedError
+from studio import db_driver
+from studio.utils import find_object_with_name
+from studio.exceptions import NotConnectedError
 
 from db_generic_re_grt import GenericReverseEngineering
 

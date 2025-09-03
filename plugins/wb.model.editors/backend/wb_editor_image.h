@@ -25,15 +25,15 @@
 #pragma once
 
 #include "grt/editor_base.h"
-#include "grts/structs.workbench.model.h"
+#include "grts/structs.studio.model.h"
 
 #include "wb_editor_backend_public_interface.h"
 
 class WBEDITOR_BACKEND_PUBLIC_FUNC ImageEditorBE : public bec::BaseEditor {
-  workbench_model_ImageFigureRef _image;
+  studio_model_ImageFigureRef _image;
 
 public:
-  ImageEditorBE(const workbench_model_ImageFigureRef &image);
+  ImageEditorBE(const studio_model_ImageFigureRef &image);
 
   virtual bool should_close_on_delete_of(const std::string &oid);
 

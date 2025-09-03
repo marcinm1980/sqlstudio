@@ -35,7 +35,7 @@
 #include "mforms/code_editor.h"
 
 #include "grtdb/db_helpers.h"
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "wb_sql_editor_help.h"
 
 #include "mysql/mysql-recognition-types.h"

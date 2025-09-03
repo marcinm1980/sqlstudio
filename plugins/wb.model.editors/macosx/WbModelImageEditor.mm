@@ -72,7 +72,7 @@ static void call_refresh(void *theEditor) {
   delete mBackEnd;
 
   // setup the editor backend with the image object (args[0])
-  mBackEnd = new ImageEditorBE(workbench_model_ImageFigureRef::cast_from(args[0]));
+  mBackEnd = new ImageEditorBE(studio_model_ImageFigureRef::cast_from(args[0]));
 
   // register a callback that will make [self refresh] get called
   // whenever the backend thinks its needed to refresh the UI from the backend data (ie, the

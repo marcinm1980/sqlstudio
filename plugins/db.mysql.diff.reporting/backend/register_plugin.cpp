@@ -72,7 +72,7 @@ static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
     plugin->groups().insert("database/Database");
 
     grt::StringListRef document_types(grt::Initialized);
-    document_types.insert("workbench.Document");
+    document_types.insert("studio.Document");
     // plugin->documentStructNames(document_types);
 
     app_PluginObjectInputRef pdef(grt::Initialized);

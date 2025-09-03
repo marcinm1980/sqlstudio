@@ -24,8 +24,8 @@
 
 #include "wb_physical_model_diagram_features.h"
 #include "wbcanvas/model_diagram_impl.h"
-#include "wbcanvas/workbench_physical_connection_impl.h"
-#include "wbcanvas/workbench_physical_tablefigure_impl.h"
+#include "wbcanvas/studio_physical_connection_impl.h"
+#include "wbcanvas/studio_physical_tablefigure_impl.h"
 
 #include "mforms/form.h"
 #include "mforms/popover.h"
@@ -33,7 +33,7 @@
 
 #include "wbcanvas/badge_figure.h"
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 
 #include "wb_component.h"
 #include "model/wb_model_diagram_form.h"
@@ -102,14 +102,14 @@ void PhysicalModelDiagramFeatures::on_figure_crossed(const model_ObjectRef &owne
     _last_over_item = NULL;
   }
 
-  if (owner.is_instance<workbench_physical_Connection>() && !_highlight_all) {
-    workbench_physical_ConnectionRef conn(workbench_physical_ConnectionRef::cast_from(owner));
+  if (owner.is_instance<studio_physical_Connection>() && !_highlight_all) {
+    studio_physical_ConnectionRef conn(studio_physical_ConnectionRef::cast_from(owner));
 
     highlight_connection(conn, enter);
   }
 
-  if (owner.is_instance<workbench_physical_TableFigure>() && !_highlight_all) {
-    workbench_physical_TableFigureRef table(workbench_physical_TableFigureRef::cast_from(owner));
+  if (owner.is_instance<studio_physical_TableFigure>() && !_highlight_all) {
+    studio_physical_TableFigureRef table(studio_physical_TableFigureRef::cast_from(owner));
     wbfig::Table *figure = dynamic_cast<wbfig::Table *>(table->get_data()->get_canvas_item());
 
     if (figure && over == figure->get_title())
@@ -129,7 +129,7 @@ void PhysicalModelDiagramFeatures::on_selection_changed() {
 
 void PhysicalModelDiagramFeatures::on_figure_will_unrealize(const model_ObjectRef &object) {
   if (object.id() == _highlighted_connection_id)
-    highlight_connection(workbench_physical_ConnectionRef::cast_from(object), false);
+    highlight_connection(studio_physical_ConnectionRef::cast_from(object), false);
 }
 
 void PhysicalModelDiagramFeatures::activate_item(const model_ObjectRef &owner, mdc::CanvasItem *item,
@@ -171,7 +171,7 @@ PhysicalModelDiagramFeatures::~PhysicalModelDiagramFeatures() {
 
 // Table highlighting
 
-void PhysicalModelDiagramFeatures::highlight_table(const workbench_physical_TableFigureRef &table, bool flag) {
+void PhysicalModelDiagramFeatures::highlight_table(const studio_physical_TableFigureRef &table, bool flag) {
   Color tocolor(0.0, 0.8, 0.0, 0.4);
   Color fromcolor(0.0, 0.6, 1.0, 0.4);
 
@@ -184,16 +184,16 @@ void PhysicalModelDiagramFeatures::highlight_table(const workbench_physical_Tabl
   grt::ListRef<model_Connection> connections(_diagram->get_model_diagram()->connections());
 
   for (grt::ListRef<model_Connection>::const_iterator conn = connections.begin(); conn != connections.end(); ++conn) {
-    db_ForeignKeyRef fk(workbench_physical_ConnectionRef::cast_from(*conn)->foreignKey());
+    db_ForeignKeyRef fk(studio_physical_ConnectionRef::cast_from(*conn)->foreignKey());
 
     if (!fk.is_valid())
       continue;
 
     if ((*conn)->startFigure() == table) {
-      workbench_physical_TableFigure::ImplData *dtable =
+      studio_physical_TableFigure::ImplData *dtable =
         !(*conn)->endFigure().is_valid()
           ? 0
-          : workbench_physical_TableFigureRef::cast_from((*conn)->endFigure())->get_data();
+          : studio_physical_TableFigureRef::cast_from((*conn)->endFigure())->get_data();
 
       if (dtable) {
         size_t count = fk->referencedColumns().count();
@@ -221,10 +221,10 @@ void PhysicalModelDiagramFeatures::highlight_table(const workbench_physical_Tabl
       else
         (*conn)->get_data()->unhighlight();
     } else if ((*conn)->endFigure() == table) {
-      workbench_physical_TableFigure::ImplData *stable =
+      studio_physical_TableFigure::ImplData *stable =
         !(*conn)->startFigure().is_valid()
           ? 0
-          : workbench_physical_TableFigureRef::cast_from((*conn)->startFigure())->get_data();
+          : studio_physical_TableFigureRef::cast_from((*conn)->startFigure())->get_data();
 
       if (stable) {
         size_t count = fk->columns().count();
@@ -258,7 +258,7 @@ void PhysicalModelDiagramFeatures::highlight_table(const workbench_physical_Tabl
 
 // Table Index Highlighting
 
-void PhysicalModelDiagramFeatures::highlight_table_index(const workbench_physical_TableFigureRef &table,
+void PhysicalModelDiagramFeatures::highlight_table_index(const studio_physical_TableFigureRef &table,
                                                          const db_IndexRef &index, bool entered) {
   wbfig::Table *figure = dynamic_cast<wbfig::Table *>(table->get_data()->get_canvas_item());
 
@@ -305,11 +305,11 @@ void PhysicalModelDiagramFeatures::highlight_table_index(const workbench_physica
 
 // Connection Highlighting
 
-void PhysicalModelDiagramFeatures::highlight_connection(const workbench_physical_ConnectionRef &conn, bool flag) {
-  workbench_physical_TableFigure::ImplData *stable =
-    !conn->startFigure().is_valid() ? 0 : workbench_physical_TableFigureRef::cast_from(conn->startFigure())->get_data();
-  workbench_physical_TableFigure::ImplData *dtable =
-    !conn->endFigure().is_valid() ? 0 : workbench_physical_TableFigureRef::cast_from(conn->endFigure())->get_data();
+void PhysicalModelDiagramFeatures::highlight_connection(const studio_physical_ConnectionRef &conn, bool flag) {
+  studio_physical_TableFigure::ImplData *stable =
+    !conn->startFigure().is_valid() ? 0 : studio_physical_TableFigureRef::cast_from(conn->startFigure())->get_data();
+  studio_physical_TableFigure::ImplData *dtable =
+    !conn->endFigure().is_valid() ? 0 : studio_physical_TableFigureRef::cast_from(conn->endFigure())->get_data();
 
   if (flag) {
     base::Color color(_diagram->get_view()->get_highlight_color());
@@ -345,8 +345,8 @@ void PhysicalModelDiagramFeatures::highlight_all_connections(bool flag) {
 
   _highlight_all = flag;
   for (size_t c = diagram->figures().count(), i = 0; i < c; i++) {
-    if (workbench_physical_TableFigureRef::can_wrap(diagram->figures()[i]))
-      highlight_table(workbench_physical_TableFigureRef::cast_from(diagram->figures()[i]), flag);
+    if (studio_physical_TableFigureRef::can_wrap(diagram->figures()[i]))
+      highlight_table(studio_physical_TableFigureRef::cast_from(diagram->figures()[i]), flag);
   }
 }
 

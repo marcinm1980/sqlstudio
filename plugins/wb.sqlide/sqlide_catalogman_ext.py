@@ -23,11 +23,11 @@
 import mforms
 import grt 
 
-from workbench.log import log_error, log_warning
+from studio.log import log_error, log_warning
 from mforms import IconStringColumnType, StringColumnType, LongIntegerColumnType, IntegerColumnType, NumberWithUnitColumnType
-from workbench.notifications import NotificationCenter
+from studio.notifications import NotificationCenter
 from wb_admin_utils import make_panel_header
-from workbench.utils import human_size, Version
+from studio.utils import human_size, Version
 
 def show_schema_manager(editor, selection, table_maintenance=False):
     try:

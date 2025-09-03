@@ -27,7 +27,7 @@
 #include "wb_editor_backend_public_interface.h"
 #include "grt/editor_base.h"
 #include "sqlide/sql_editor_be.h"
-#include "grts/structs.workbench.model.h"
+#include "grts/structs.studio.model.h"
 #include <memory>
 
 namespace mforms {

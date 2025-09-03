@@ -37,8 +37,8 @@
 #include "base/log.h"
 #include "base/notifications.h"
 
-#include "workbench/wb_command_ui.h"
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_command_ui.h"
+#include "studio/wb_context_ui.h"
 
 #include <boost/signals2/connection.hpp>
 
@@ -50,7 +50,7 @@
 #include "grtdb/db_helpers.h"
 #include "grtsqlparser/sql_facade.h"
 
-#include "workbench/wb_db_schema.h"
+#include "studio/wb_db_schema.h"
 
 #include "objimpl/wrapper/mforms_ObjectReference_impl.h"
 
@@ -374,7 +374,7 @@ void SqlEditorTreeController::sidebar_splitter_changed() {
 bool SqlEditorTreeController::fetch_data_for_filter(
   const std::string &schema_filter, const std::string &object_filter,
   const wb::LiveSchemaTree::NewSchemaContentArrivedSlot &arrived_slot) {
-  std::string wb_internal_schema = bec::GRTManager::get()->get_app_option_string("workbench:InternalSchema");
+  std::string wb_internal_schema = bec::GRTManager::get()->get_app_option_string("studio:InternalSchema");
 
   sql::Dbc_connection_handler::Ref conn;
 
@@ -579,7 +579,7 @@ grt::StringRef SqlEditorTreeController::do_fetch_data_for_filter(
   std::map<std::string, int> schema_directory;
   std::string last_schema;
 
-  std::string wb_internal_schema = bec::GRTManager::get()->get_app_option_string("workbench:InternalSchema");
+  std::string wb_internal_schema = bec::GRTManager::get()->get_app_option_string("studio:InternalSchema");
 
   try {
     // Creates the template for the sqlstring
@@ -1336,7 +1336,7 @@ void SqlEditorTreeController::do_alter_live_object(wb::LiveSchemaTree::ObjectTyp
     grt::replace_contents(client_state_catalog->characterSets(), rdbms->characterSets());
     // XXX this should be changed when/if global userDatatypes are added
     // XXX    grt::replace_contents(client_state_catalog->userDatatypes(),
-    // XXX workbench_physical_ModelRef::cast_from(_live_physical_overview->get_model())->catalog()->userDatatypes());
+    // XXX studio_physical_ModelRef::cast_from(_live_physical_overview->get_model())->catalog()->userDatatypes());
 
     db_mysql_SchemaRef schema;
     if (wb::LiveSchemaTree::Schema != type) {

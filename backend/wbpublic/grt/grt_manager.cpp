@@ -747,7 +747,7 @@ std::string GRTManager::get_tmp_dir() {
   std::string res = g_get_tmp_dir();
   if (base::hasSuffix(res, "/") || base::hasSuffix(res, "\\"))
     res.resize(res.size() - 1);
-  res += "/" + std::string("mysql-workbench-");
+  res += "/" + std::string("mysql-studio-");
 #ifdef _MSC_VER
   res += std::to_string(GetCurrentProcessId()) + "/";
 #else

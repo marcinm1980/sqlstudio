@@ -25,7 +25,7 @@
 #ifndef _NEWCONNECTIONWIZARD_H_
 #define _NEWCONNECTIONWIZARD_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "grtui/db_conn_be.h"
 #include "grtui/grtdb_connect_panel.h"

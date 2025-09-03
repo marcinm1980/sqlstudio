@@ -105,7 +105,7 @@ echo Usage:
 echo   %0 SolutionDirectory ConfigurationName Architecture
 echo .
 echo Example:
-echo   %0 "C:\Documents and Settings\mysqldev\My Documents\work\mysql-workbench" Debug x64
+echo   %0 "C:\Documents and Settings\mysqldev\My Documents\work\mysql-studio" Debug x64
 echo .
 
 :EndOfScript

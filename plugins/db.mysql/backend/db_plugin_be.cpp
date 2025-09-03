@@ -41,9 +41,9 @@
 DEFAULT_LOG_DOMAIN("Db Plugin")
 
 void Db_plugin::grtm(bool reveng) {
-  _doc = workbench_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
+  _doc = studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
 
-  db_mgmt_ManagementRef mgmt = workbench_MySqlStudioRef::cast_from(_doc->owner())->rdbmsMgmt();
+  db_mgmt_ManagementRef mgmt = studio_MySqlStudioRef::cast_from(_doc->owner())->rdbmsMgmt();
   // don't need schema box for reverse engineer, but need it for fwd/sync (in case OmitQualifiers is on)
   _db_conn = new DbConnection(mgmt, db_mgmt_DriverRef(), reveng ? true : false);
 
@@ -68,9 +68,9 @@ db_CatalogRef Db_plugin::model_catalog() {
   db_mgmt_RdbmsRef rdbms = selected_rdbms();
 
   // find first appropriate model catalog for selected rdbms
-  grt::ListRef<workbench_physical_Model> physicalModels = _doc->physicalModels();
+  grt::ListRef<studio_physical_Model> physicalModels = _doc->physicalModels();
   for (size_t n = 0, count = physicalModels.count(); n < count; ++n) {
-    workbench_physical_ModelRef model = physicalModels.get(n);
+    studio_physical_ModelRef model = physicalModels.get(n);
     if (model->rdbms().id() == rdbms.id()) {
       _catalog = model->catalog();
       break;
@@ -481,7 +481,7 @@ db_CatalogRef Db_plugin::db_catalog() {
   if (!mod_cat.is_valid())
     throw std::runtime_error(_("Internal error. Catalog is invalid"));
 
-  workbench_physical_ModelRef pm = workbench_physical_ModelRef::cast_from(mod_cat->owner());
+  studio_physical_ModelRef pm = studio_physical_ModelRef::cast_from(mod_cat->owner());
 
   std::string sql_input_script;
   dump_ddl(sql_input_script);

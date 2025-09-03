@@ -41,7 +41,7 @@ WBTable::WBTable(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &
   //  _index_title.signal_expand_toggle().connect(std::bind(&WBTable::toggle_indexes, this));
   //  _trigger_title.signal_expand_toggle().connect(std::bind(&WBTable::toggle_triggers, this));
 
-  _title.set_icon(mdc::ImageManager::get_instance()->get_image("workbench.physical.TableFigure.16x16.png"));
+  _title.set_icon(mdc::ImageManager::get_instance()->get_image("studio.physical.TableFigure.16x16.png"));
 
   set_allowed_resizing(true, true);
   set_accepts_focus(true);

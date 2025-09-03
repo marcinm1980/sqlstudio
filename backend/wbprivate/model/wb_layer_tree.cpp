@@ -24,13 +24,13 @@
 
 #include "wb_layer_tree.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_context.h"
+#include "studio/wb_context_ui.h"
 
 #include "model/wb_context_model.h"
 #include "model/wb_model_diagram_form.h"
 #include "grts/structs.model.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include <algorithm>
 
@@ -77,7 +77,7 @@ void LayerTree::add_figure_node(mforms::TreeNodeRef parent, model_FigureRef figu
 
   std::string conn_icon = im->get_icon_path("db.Column.fknn.16x16.png");
   std::string id = figure->id();
-  std::multimap<std::string, workbench_physical_ConnectionRef>::iterator iter;
+  std::multimap<std::string, studio_physical_ConnectionRef>::iterator iter;
   for (iter = _figure_connections.find(id); iter != _figure_connections.end() && iter->first == id; ++iter) {
     mforms::TreeNodeRef cnode = fnode->add_child();
     FigureNode *cchild = new FigureNode();
@@ -98,8 +98,8 @@ void LayerTree::refresh() {
   grt::ListRef<model_Connection> connections(_diagram->connections());
   for (size_t c = connections.count(), i = 0; i < c; i++) {
     if (connections[i]->startFigure().is_valid())
-      _figure_connections.insert(std::pair<std::string, workbench_physical_ConnectionRef>(
-        connections[i]->startFigure().id(), workbench_physical_ConnectionRef::cast_from(connections[i])));
+      _figure_connections.insert(std::pair<std::string, studio_physical_ConnectionRef>(
+        connections[i]->startFigure().id(), studio_physical_ConnectionRef::cast_from(connections[i])));
   }
 
   clear();
@@ -224,8 +224,8 @@ void LayerTree::diagram_objects_changed(grt::internal::OwnedList *list, bool add
         grt::ListRef<model_Connection> connections(_diagram->connections());
         for (size_t c = connections.count(), i = 0; i < c; i++) {
           if (connections[i]->startFigure() == figure)
-            _figure_connections.insert(std::pair<std::string, workbench_physical_ConnectionRef>(
-              connections[i]->startFigure().id(), workbench_physical_ConnectionRef::cast_from(connections[i])));
+            _figure_connections.insert(std::pair<std::string, studio_physical_ConnectionRef>(
+              connections[i]->startFigure().id(), studio_physical_ConnectionRef::cast_from(connections[i])));
         }
       }
       model_LayerRef layer(figure->layer());

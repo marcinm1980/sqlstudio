@@ -26,10 +26,10 @@
 #define _MERGE_MODEL_H_
 
 #include "grts/structs.db.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 
 void merge_catalog(grt::Module* module, db_CatalogRef& dest_cat, const db_CatalogRef src_cat);
-void merge_diagrams(grt::ListRef<workbench_physical_Diagram>& dest_diagrams,
-                    const grt::ListRef<workbench_physical_Diagram>& src_diagrams, const GrtObjectRef& dst_owner);
+void merge_diagrams(grt::ListRef<studio_physical_Diagram>& dest_diagrams,
+                    const grt::ListRef<studio_physical_Diagram>& src_diagrams, const GrtObjectRef& dst_owner);
 
 #endif //#ifndef _MERGE_MODEL_H_

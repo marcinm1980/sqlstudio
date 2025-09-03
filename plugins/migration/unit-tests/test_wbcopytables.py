@@ -80,8 +80,8 @@ class CopyTablesTestCase(unittest.TestCase):
         cls._env_var_original = None
         if OS == 'Linux':
             env_var = 'LD_LIBRARY_PATH'
-            # set lib_dir to dir(wbcopytables executable)/../lib/mysql-workbench
-            lib_dir = os.path.join(os.path.dirname(os.path.dirname(settings.copytables_path)), 'lib', 'mysql-workbench')
+            # set lib_dir to dir(wbcopytables executable)/../lib/mysql-studio
+            lib_dir = os.path.join(os.path.dirname(os.path.dirname(settings.copytables_path)), 'lib', 'mysql-studio')
             sep = ':'
         elif OS == 'Windows':
             return  # In our current build setup, base.dll is in the same dir than wbcopytables.exe, so no need to tweak

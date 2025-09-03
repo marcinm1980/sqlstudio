@@ -24,8 +24,8 @@
 
 #pragma once
 
-#include "workbench/wb_backend_public_interface.h"
-#include "grts/structs.workbench.physical.h"
+#include "studio/wb_backend_public_interface.h"
+#include "grts/structs.studio.physical.h"
 
 #include "mforms/treeview.h"
 #include "mforms/table.h"
@@ -45,7 +45,7 @@ namespace mforms {
 };
 
 class MYSQLWBBACKEND_PUBLIC_FUNC UserDefinedTypeEditor : public mforms::Form {
-  workbench_physical_ModelRef _model;
+  studio_physical_ModelRef _model;
 
   mforms::Box _vbox;
   mforms::TreeView _type_list;
@@ -90,5 +90,5 @@ class MYSQLWBBACKEND_PUBLIC_FUNC UserDefinedTypeEditor : public mforms::Form {
   void selected_row();
 
 public:
-  UserDefinedTypeEditor(const workbench_physical_ModelRef &model);
+  UserDefinedTypeEditor(const studio_physical_ModelRef &model);
 };

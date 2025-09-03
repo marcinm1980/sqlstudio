@@ -38,7 +38,7 @@
       <value type="int" key="DbSqlEditor:SidebarModeCombined">1</value>
       <value type="string" key="DefaultColumnType">VARCHAR(45)</value>
       <value type="string" key="DefaultConnectionNotation">crowsfoot</value>
-      <value type="string" key="DefaultFigureNotation">workbench/default</value>
+      <value type="string" key="DefaultFigureNotation">studio/default</value>
       <value type="string" key="DefaultPkColumnType">INT</value>
       <value type="string" key="DefaultTargetMySQLVersion">8.0.16</value>
       <value type="int" key="Editor:IndentWidth">4</value>
@@ -446,57 +446,57 @@
       <value type="string" key="mysqldump"></value>
       <value type="int" key="sshkeepalive">60</value>
       <value type="int" key="sshtimeout">10</value>
-      <value type="int" key="workbench.AutoReopenLastModel">0</value>
-      <value type="string" key="workbench.general.Editor:Font">Consolas 13</value>
-      <value type="string" key="workbench.general.Resultset:Font">Helvetica 11</value>
-      <value type="string" key="workbench.logger:LogLevel">debug3</value>
-      <value type="string" key="workbench.model.Figure:ColorList">#FFEEEC
+      <value type="int" key="studio.AutoReopenLastModel">0</value>
+      <value type="string" key="studio.general.Editor:Font">Consolas 13</value>
+      <value type="string" key="studio.general.Resultset:Font">Helvetica 11</value>
+      <value type="string" key="studio.logger:LogLevel">debug3</value>
+      <value type="string" key="studio.model.Figure:ColorList">#FFEEEC
 #FEFDED
 #EAFFE5
 #ECFDFF
 #F0F1FE
 #FFEBFA
 </value>
-      <value type="string" key="workbench.model.Layer:Color">#F0F1FE</value>
-      <value type="string" key="workbench.model.NoteFigure:Color">#FEFDED</value>
-      <value type="string" key="workbench.model.NoteFigure:TextFont">Helvetica 11</value>
-      <value type="string" key="workbench.model.ObjectFigure:ColorList">#98BFDA
+      <value type="string" key="studio.model.Layer:Color">#F0F1FE</value>
+      <value type="string" key="studio.model.NoteFigure:Color">#FEFDED</value>
+      <value type="string" key="studio.model.NoteFigure:TextFont">Helvetica 11</value>
+      <value type="string" key="studio.model.ObjectFigure:ColorList">#98BFDA
 #FEDE58
 #98D8A5
 #FE9898
 #FE98FE
 #FFFFFF
 </value>
-      <value type="string" key="workbench.physical.Connection:CaptionFont">Helvetica 11</value>
-      <value type="int" key="workbench.physical.Connection:CenterCaptions">0</value>
-      <value type="int" key="workbench.physical.Connection:ShowCaptions">0</value>
-      <value type="int" key="workbench.physical.Diagram:DrawLineCrossings">0</value>
-      <value type="string" key="workbench.physical.FontSet:Name">Default (Western)</value>
-      <value type="string" key="workbench.physical.Layer:TitleFont">Helvetica 11</value>
-      <value type="int" key="workbench.physical.ObjectFigure:Expanded">1</value>
-      <value type="string" key="workbench.physical.RoutineGroupFigure:Color">#98D8A5</value>
-      <value type="string" key="workbench.physical.RoutineGroupFigure:ItemsFont">Helvetica 12</value>
-      <value type="int" key="workbench.physical.RoutineGroupFigure:MaxRoutineNameLength">20</value>
-      <value type="string" key="workbench.physical.RoutineGroupFigure:TitleFont">Helvetica Bold 12</value>
-      <value type="string" key="workbench.physical.TableFigure:Color">#98BFDA</value>
-      <value type="string" key="workbench.physical.TableFigure:ItemsFont">Helvetica 11</value>
-      <value type="int" key="workbench.physical.TableFigure:MaxColumnTypeLength">20</value>
-      <value type="int" key="workbench.physical.TableFigure:MaxColumnsDisplayed">30</value>
-      <value type="string" key="workbench.physical.TableFigure:SectionFont">Helvetica Bold 11</value>
-      <value type="int" key="workbench.physical.TableFigure:ShowColumnFlags">0</value>
-      <value type="int" key="workbench.physical.TableFigure:ShowColumnTypes">1</value>
-      <value type="string" key="workbench.physical.TableFigure:TitleFont">Helvetica Bold 12</value>
-      <value type="string" key="workbench.physical.ViewFigure:Color">#FEDE58</value>
-      <value type="string" key="workbench.physical.ViewFigure:TitleFont">Helvetica Bold 12</value>
-      <value type="string" key="workbench.scripting.ScriptingEditor:Font">Consolas 13</value>
-      <value type="string" key="workbench.scripting.ScriptingShell:Font">Consolas 13</value>
-      <value type="int" key="workbench:AutoSaveModelInterval">60</value>
-      <value type="int" key="workbench:AutoSaveSQLEditorInterval">10</value>
-      <value type="int" key="workbench:ForceSWRendering">0</value>
-      <value type="string" key="workbench:InternalSchema">.mysqlworkbench</value>
-      <value type="int" key="workbench:OSSHideMissing">0</value>
-      <value type="int" key="workbench:SaveSQLWorkspaceOnClose">1</value>
-      <value type="int" key="workbench:UndoEntries">10</value>
+      <value type="string" key="studio.physical.Connection:CaptionFont">Helvetica 11</value>
+      <value type="int" key="studio.physical.Connection:CenterCaptions">0</value>
+      <value type="int" key="studio.physical.Connection:ShowCaptions">0</value>
+      <value type="int" key="studio.physical.Diagram:DrawLineCrossings">0</value>
+      <value type="string" key="studio.physical.FontSet:Name">Default (Western)</value>
+      <value type="string" key="studio.physical.Layer:TitleFont">Helvetica 11</value>
+      <value type="int" key="studio.physical.ObjectFigure:Expanded">1</value>
+      <value type="string" key="studio.physical.RoutineGroupFigure:Color">#98D8A5</value>
+      <value type="string" key="studio.physical.RoutineGroupFigure:ItemsFont">Helvetica 12</value>
+      <value type="int" key="studio.physical.RoutineGroupFigure:MaxRoutineNameLength">20</value>
+      <value type="string" key="studio.physical.RoutineGroupFigure:TitleFont">Helvetica Bold 12</value>
+      <value type="string" key="studio.physical.TableFigure:Color">#98BFDA</value>
+      <value type="string" key="studio.physical.TableFigure:ItemsFont">Helvetica 11</value>
+      <value type="int" key="studio.physical.TableFigure:MaxColumnTypeLength">20</value>
+      <value type="int" key="studio.physical.TableFigure:MaxColumnsDisplayed">30</value>
+      <value type="string" key="studio.physical.TableFigure:SectionFont">Helvetica Bold 11</value>
+      <value type="int" key="studio.physical.TableFigure:ShowColumnFlags">0</value>
+      <value type="int" key="studio.physical.TableFigure:ShowColumnTypes">1</value>
+      <value type="string" key="studio.physical.TableFigure:TitleFont">Helvetica Bold 12</value>
+      <value type="string" key="studio.physical.ViewFigure:Color">#FEDE58</value>
+      <value type="string" key="studio.physical.ViewFigure:TitleFont">Helvetica Bold 12</value>
+      <value type="string" key="studio.scripting.ScriptingEditor:Font">Consolas 13</value>
+      <value type="string" key="studio.scripting.ScriptingShell:Font">Consolas 13</value>
+      <value type="int" key="studio:AutoSaveModelInterval">60</value>
+      <value type="int" key="studio:AutoSaveSQLEditorInterval">10</value>
+      <value type="int" key="studio:ForceSWRendering">0</value>
+      <value type="string" key="studio:InternalSchema">.mysqlstudio</value>
+      <value type="int" key="studio:OSSHideMissing">0</value>
+      <value type="int" key="studio:SaveSQLWorkspaceOnClose">1</value>
+      <value type="int" key="studio:UndoEntries">10</value>
     </value>
     <value _ptr_="0x10b953530" type="list" content-type="object" content-struct-name="app.PaperType" key="paperTypes">
       <value type="object" struct-name="app.PaperType" id="com.mysql.wb.papertype.letter" struct-checksum="0xa53b8cf0">

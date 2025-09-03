@@ -24,7 +24,7 @@ import pyodbc
 
 import db_mssql_test_main
 
-from workbench import db_driver
+from studio import db_driver
 
 class TestPythonDBDriver(db_mssql_test_main.MssqlTestCase):
 

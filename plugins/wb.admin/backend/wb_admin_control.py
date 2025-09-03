@@ -28,20 +28,20 @@ import queue
 import io
 import traceback
 
-from workbench.utils import Version
-from workbench.db_utils import MySQLConnection, MySQLError, QueryError, strip_password, escape_sql_string
+from studio.utils import Version
+from studio.db_utils import MySQLConnection, MySQLError, QueryError, strip_password, escape_sql_string
 
 from wb_common import OperationCancelledError, Users, PermissionDeniedError, InvalidPasswordError, SSHFingerprintNewError
 
 from wb_server_control import PasswordHandler, ServerControlShell, ServerControlWMI
 from wb_server_management import ServerManagementHelper, wbaOS
 
-from workbench.notifications import nc
+from studio.notifications import nc
 
 import grt
 import mforms
 
-from workbench.log import log_info, log_warning, log_error, log_debug, log_debug2, log_debug3
+from studio.log import log_info, log_warning, log_error, log_debug, log_debug2, log_debug3
 from wb_common import to_unicode
 
 MYSQL_ERR_ACCESS_DENIED = 1045

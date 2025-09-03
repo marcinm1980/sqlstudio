@@ -30,9 +30,9 @@ import sys, os, csv
 import datetime
 import json
 import base64
-from workbench.utils import Version
+from studio.utils import Version
 
-from workbench.log import log_debug3, log_debug2, log_error, log_warning
+from studio.log import log_debug3, log_debug2, log_error, log_warning
 
 from wb_common import to_unicode
 

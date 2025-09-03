@@ -28,7 +28,7 @@
 
 #include "grts/structs.db.h"
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 #include "wb_template_list.h"
 #include "wb_context_model.h"
 #include "wb_model_diagram_form.h"
@@ -186,7 +186,7 @@ void TableTemplatePanel::on_action(const std::string &action) {
   } else if (action == "use_template") {
     if (!_templates.get_selected_template().empty()) {
       grt::BaseListRef args(true);
-      args.ginsert(workbench_physical_ModelRef::cast_from(_context->get_active_model(true))->catalog()->schemata()[0]);
+      args.ginsert(studio_physical_ModelRef::cast_from(_context->get_active_model(true))->catalog()->schemata()[0]);
       args.ginsert(grt::StringRef(_templates.get_selected_template()));
       db_TableRef table(
         db_TableRef::cast_from(grt::GRT::get()->call_module_function("WbTableUtils", "createTableFromTemplate", args)));

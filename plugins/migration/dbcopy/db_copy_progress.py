@@ -28,7 +28,7 @@ from functools import partial
 import grt
 import mforms
 
-from workbench.ui import WizardPage
+from studio.ui import WizardPage
 from migration_source_selection import request_password
 from DataMigrator import DataMigrator
 

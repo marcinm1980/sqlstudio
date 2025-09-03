@@ -25,7 +25,7 @@
 #include "grt.h"
 #include "interfaces/plugin.h"
 
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grts/structs.db.mgmt.h"
 #include "grtui/grt_wizard_plugin.h"
 #include "merge_model.h"
@@ -56,7 +56,7 @@ public:
 
     args.ginsert(grt::StringRef(path));
 
-    workbench_DocumentRef doc(workbench_DocumentRef::cast_from(module->call_function("openModelFile", args)));
+    studio_DocumentRef doc(studio_DocumentRef::cast_from(module->call_function("openModelFile", args)));
     if (!doc.is_valid())
       return grt::IntegerRef(0);
 
@@ -66,11 +66,11 @@ public:
     merge_catalog(this, target_catalog, source_catalog);
 
     // Merge diagrams
-    grt::ListRef<workbench_physical_Diagram> source_diagrams = doc->physicalModels()[0]->diagrams();
-    grt::ListRef<workbench_physical_Diagram> target_diagrams =
-      grt::ListRef<workbench_physical_Diagram>::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0/diagrams"));
-    workbench_physical_ModelRef dst_owner =
-      workbench_physical_ModelRef::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0"));
+    grt::ListRef<studio_physical_Diagram> source_diagrams = doc->physicalModels()[0]->diagrams();
+    grt::ListRef<studio_physical_Diagram> target_diagrams =
+      grt::ListRef<studio_physical_Diagram>::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0/diagrams"));
+    studio_physical_ModelRef dst_owner =
+      studio_physical_ModelRef::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0"));
     merge_diagrams(target_diagrams, source_diagrams, dst_owner);
     //    dst_owner->signal_changed().emit("", grt::ValueRef());
     args.clear();
@@ -78,7 +78,7 @@ public:
     return grt::IntegerRef(0);
   }
 
-  virtual grt::IntegerRef includeModelObjects(const workbench_DocumentRef &document,
+  virtual grt::IntegerRef includeModelObjects(const studio_DocumentRef &document,
                                               grt::StringListRef objectNameList) {
     return grt::IntegerRef(0);
   }

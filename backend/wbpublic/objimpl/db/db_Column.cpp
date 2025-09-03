@@ -175,7 +175,7 @@ grt::IntegerRef db_Column::setParseType(const std::string &type, const grt::List
     db_CatalogRef catalog = db_CatalogRef::cast_from(owner()->owner()->owner());
     user_types = catalog->userDatatypes();
     default_type_list = catalog->simpleDatatypes();
-    GrtVersionRef catalogVersion = GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion"));
+    GrtVersionRef catalogVersion = GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(catalog->owner()), "CatalogVersion"));
     targetVersion->majorNumber(catalogVersion->majorNumber());
     targetVersion->minorNumber(catalogVersion->minorNumber());
     targetVersion->releaseNumber(catalogVersion->releaseNumber() > 0 ? catalogVersion->releaseNumber()

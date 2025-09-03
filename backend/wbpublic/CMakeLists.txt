@@ -85,30 +85,30 @@ add_library(wbpublic
     wbcanvas/model_layer_impl.cpp
     wbcanvas/model_object_impl.cpp
     wbcanvas/model_connection_impl.cpp
-    wbcanvas/workbench_physical_viewfigure_impl.cpp
-    wbcanvas/workbench_physical_connection_impl.cpp
-    wbcanvas/workbench_physical_model_impl.cpp
-    wbcanvas/workbench_physical_diagram_impl.cpp
-    wbcanvas/workbench_physical_routinegroupfigure_impl.cpp
-    wbcanvas/workbench_physical_tablefigure_impl.cpp
-    wbcanvas/workbench_model_notefigure_impl.cpp
-    wbcanvas/workbench_model_imagefigure_impl.cpp
+    wbcanvas/studio_physical_viewfigure_impl.cpp
+    wbcanvas/studio_physical_connection_impl.cpp
+    wbcanvas/studio_physical_model_impl.cpp
+    wbcanvas/studio_physical_diagram_impl.cpp
+    wbcanvas/studio_physical_routinegroupfigure_impl.cpp
+    wbcanvas/studio_physical_tablefigure_impl.cpp
+    wbcanvas/studio_model_notefigure_impl.cpp
+    wbcanvas/studio_model_imagefigure_impl.cpp
     objimpl/model/model_Connection.cpp
     objimpl/model/model_Figure.cpp
     objimpl/model/model_Layer.cpp
     objimpl/model/model_Model.cpp
     objimpl/model/model_Object.cpp
     objimpl/model/model_Diagram.cpp
-    objimpl/workbench.model/workbench_model_NoteFigure.cpp
-    objimpl/workbench.model/workbench_model_ImageFigure.cpp
-    objimpl/workbench.physical/workbench_physical_Connection.cpp
-    objimpl/workbench.physical/workbench_physical_RoutineGroupFigure.cpp
-    objimpl/workbench.physical/workbench_physical_TableFigure.cpp
-    objimpl/workbench.physical/workbench_physical_Diagram.cpp
-    objimpl/workbench.physical/workbench_physical_Model.cpp
-    objimpl/workbench.physical/workbench_physical_ViewFigure.cpp
-    objimpl/workbench.logical/workbench_logical_Model.cpp
-    objimpl/workbench.logical/workbench_logical_Diagram.cpp
+    objimpl/studio.model/studio_model_NoteFigure.cpp
+    objimpl/studio.model/studio_model_ImageFigure.cpp
+    objimpl/studio.physical/studio_physical_Connection.cpp
+    objimpl/studio.physical/studio_physical_RoutineGroupFigure.cpp
+    objimpl/studio.physical/studio_physical_TableFigure.cpp
+    objimpl/studio.physical/studio_physical_Diagram.cpp
+    objimpl/studio.physical/studio_physical_Model.cpp
+    objimpl/studio.physical/studio_physical_ViewFigure.cpp
+    objimpl/studio.logical/studio_logical_Model.cpp
+    objimpl/studio.logical/studio_logical_Diagram.cpp
     objimpl/db.query/db_query_Resultset.cpp
     objimpl/db.query/db_query_QueryBuffer.cpp
     objimpl/db.query/db_query_Editor.cpp

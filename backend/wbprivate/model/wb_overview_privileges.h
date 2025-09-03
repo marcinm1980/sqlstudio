@@ -25,7 +25,7 @@
 #ifndef _WB_OVERVIEW_PRIVILEGES_H_
 #define _WB_OVERVIEW_PRIVILEGES_H_
 
-#include "workbench/wb_overview.h"
+#include "studio/wb_overview.h"
 
 namespace wb {
 

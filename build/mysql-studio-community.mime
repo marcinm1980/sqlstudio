@@ -1,0 +1,2 @@
+application/vnd.mysql-studio-model; mysql-studio '%s'; description="MySql Studio Model"; test=test -n "$DISPLAY"; nametemplate=%s.mwb
+application/sql; mysql-studio --script '%s'; description="MySql Studio Query File"; test=test -n "$DISPLAY"; nametemplate=%s.sql

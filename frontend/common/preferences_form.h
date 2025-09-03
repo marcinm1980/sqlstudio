@@ -25,7 +25,7 @@
 #ifndef _PREFERENCES_FORM_H_
 #define _PREFERENCES_FORM_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "mforms/form.h"
 #include "mforms/tabview.h"
@@ -72,7 +72,7 @@ private:
 
   mforms::TextEntry *version_entry;
 
-  workbench_physical_ModelRef _model; // nil unless we're showing model specific options
+  studio_physical_ModelRef _model; // nil unless we're showing model specific options
 
   void change_font_option(const std::string &option, const std::string &value);
   void font_preset_changed();
@@ -143,7 +143,7 @@ private:
   void version_changed(mforms::TextEntry *entry);
 
 public:
-  PreferencesForm(const workbench_physical_ModelRef &model = workbench_physical_ModelRef());
+  PreferencesForm(const studio_physical_ModelRef &model = studio_physical_ModelRef());
   virtual ~PreferencesForm();
 
   void show();

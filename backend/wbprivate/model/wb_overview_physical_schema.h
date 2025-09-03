@@ -25,7 +25,7 @@
 #ifndef _WB_OVERVIEW_PHYSICAL_SCHEMA_H_
 #define _WB_OVERVIEW_PHYSICAL_SCHEMA_H_
 
-#include "workbench/wb_overview.h"
+#include "studio/wb_overview.h"
 
 namespace wb {
   namespace internal {

@@ -60,11 +60,11 @@ MYSQL_HOME=$(HOME)/mysql-server-advanced/
 endif
 @endif
 
-WBDIRNAME=mysql-workbench-@edition@
+WBDIRNAME=mysql-studio-@edition@
 
-WBLIBPATH=$(INSTALL_PREFIX)/lib/mysql-workbench
-WBDATADIRPATH=$(INSTALL_PREFIX)/share/mysql-workbench
-WBDOCPATH=$(INSTALL_PREFIX)/share/doc/mysql-workbench-@edition@
+WBLIBPATH=$(INSTALL_PREFIX)/lib/mysql-studio
+WBDATADIRPATH=$(INSTALL_PREFIX)/share/mysql-studio
+WBDOCPATH=$(INSTALL_PREFIX)/share/doc/mysql-studio-@edition@
 
 configure: configure-stamp
 configure-stamp:
@@ -106,7 +106,7 @@ build-stamp: configure-stamp
 
 	# Add here commands to compile the package.
 	$(MAKE) $(MAKEFLAGS)
-	#docbook-to-man debian/mysql-workbench.sgml > mysql-workbench.1
+	#docbook-to-man debian/mysql-studio.sgml > mysql-studio.1
 
 	touch $@
 
@@ -124,7 +124,7 @@ install: build
 	dh_prep
 	dh_installdirs
 
-	# Add here commands to install the package into debian/mysql-workbench.
+	# Add here commands to install the package into debian/mysql-studio.
 	DESTDIR=debian/$(WBDIRNAME) $(MAKE) install
 	# Bundle libaries
 	cp -a $(BUNDLES_PATH)/bin/iodbcadm-gtk         $(CURDIR)/debian/$(WBDIRNAME)$(WBLIBPATH)
@@ -148,7 +148,7 @@ install: build
 	cp -a $(BUNDLES_PATH)/bin/ogrinfo              $(CURDIR)/debian/$(WBDIRNAME)$(WBLIBPATH)
 
 	# Remove these files:
-	# - The file /etc/ld.so.conf.d/mysql-workbench.conf is a non.conformance in debian based distros
+	# - The file /etc/ld.so.conf.d/mysql-studio.conf is a non.conformance in debian based distros
 	# - The .la metadata files are not necessary
 	rm -f  $(CURDIR)/debian/$(WBDIRNAME)$(WBLIBPATH)/*.la
 	rm -rf $(CURDIR)/debian/$(WBDIRNAME)/etc
@@ -178,7 +178,7 @@ binary-arch: build install
 	dh_lintian
 	dh_installman
 	dh_link
-	#dh_strip --dbg-package=mysql-workbench-@edition@
+	#dh_strip --dbg-package=mysql-studio-@edition@
 	dh_strip
 	dh_compress -XLicense.txt -XLicense-commercial.txt
 	dh_fixperms -X*.sh

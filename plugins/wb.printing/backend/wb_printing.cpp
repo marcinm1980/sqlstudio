@@ -28,7 +28,7 @@
 #include "mdc_canvas_view_printing.h"
 #include "wbcanvas/model_diagram_impl.h"
 
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 
 //--------------------------------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ void wbprint::getPageLayout(model_DiagramRef view, int &xpages, int &ypages) {
 //--------------------------------------------------------------------------------------------------
 
 app_PageSettingsRef wbprint::getPageSettings(model_DiagramRef diagram) {
-  return workbench_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings();
+  return studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ app_PageSettingsRef wbprint::getPageSettings(model_DiagramRef diagram) {
 int wbprint::printPageHDC(model_DiagramRef view, int pagenum, HDC hdc, int width, int height) {
   mdc::CanvasViewExtras extras(view->get_data()->get_canvas_view());
 
-  app_PageSettingsRef page(workbench_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());
+  app_PageSettingsRef page(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());
 
   // TODO: we have both paper and page margins, which is kinda confusing.
   extras.set_page_margins(page->marginTop(), page->marginLeft(), page->marginBottom(), page->marginRight());

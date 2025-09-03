@@ -106,7 +106,7 @@ static void call_refresh(void *theEditor)
   
   delete mBackEnd;
   
-  mBackEnd = new RelationshipEditorBE(workbench_physical_ConnectionRef::cast_from(args[0]));
+  mBackEnd = new RelationshipEditorBE(studio_physical_ConnectionRef::cast_from(args[0]));
   
   mBackEnd->set_refresh_ui_slot(std::bind(call_refresh, (__bridge void *)self));
   

@@ -26,8 +26,8 @@
 #include "wb_component_basic.h"
 #include "wb_context_model.h"
 #include "model/wb_model_diagram_form.h"
-#include "workbench/wb_context.h"
-#include "grts/structs.workbench.model.h"
+#include "studio/wb_context.h"
+#include "grts/structs.studio.model.h"
 #include "base/string_utilities.h"
 #include "base/file_utilities.h"
 #include "base/file_functions.h"
@@ -159,7 +159,7 @@ void WBComponentBasic::setup_canvas_tool(ModelDiagramForm *view, const std::stri
 std::vector<std::string> WBComponentBasic::get_command_dropdown_items(const std::string &option) {
   std::vector<std::string> items;
   if (base::hasSuffix(option, ":Color")) {
-    std::string colors = _wb->get_wb_options().get_string("workbench.model.Figure:ColorList");
+    std::string colors = _wb->get_wb_options().get_string("studio.model.Figure:ColorList");
     std::vector<std::string> colorList;
 
     colorList = base::split(colors, "\n");
@@ -199,8 +199,8 @@ grt::ListRef<app_ShortcutItem> WBComponentBasic::get_shortcut_items() {
 
 bool WBComponentBasic::handles_figure(const model_ObjectRef &object) {
   if (object.is_instance(model_Layer::static_class_name()) ||
-      object.is_instance(workbench_model_NoteFigure::static_class_name()) ||
-      object.is_instance(workbench_model_ImageFigure::static_class_name()))
+      object.is_instance(studio_model_NoteFigure::static_class_name()) ||
+      object.is_instance(studio_model_ImageFigure::static_class_name()))
     return true;
   return false;
 }
@@ -211,10 +211,10 @@ grt::ValueRef WBComponentBasic::place_layer(ModelDiagramForm *form, const Rect &
 
     std::string color;
 
-    if (form->get_tool_argument("workbench.model.Layer:Color").empty())
-      color = _wb->get_wb_options().get_string("workbench.model.Layer:Color");
+    if (form->get_tool_argument("studio.model.Layer:Color").empty())
+      color = _wb->get_wb_options().get_string("studio.model.Layer:Color");
     else
-      color = form->get_tool_argument("workbench.model.Layer:Color");
+      color = form->get_tool_argument("studio.model.Layer:Color");
 
     model_LayerRef layer;
 
@@ -306,8 +306,8 @@ void WBComponentBasic::copy_object_to_clipboard(const grt::ObjectRef &object, gr
 }
 
 bool WBComponentBasic::can_paste_object(const grt::ObjectRef &object) {
-  if (object.is_instance(workbench_model_NoteFigure::static_class_name()) ||
-      object.is_instance(workbench_model_ImageFigure::static_class_name()) ||
+  if (object.is_instance(studio_model_NoteFigure::static_class_name()) ||
+      object.is_instance(studio_model_ImageFigure::static_class_name()) ||
       object.is_instance(model_Layer::static_class_name()))
     return true;
   return false;
@@ -398,9 +398,9 @@ model_ObjectRef WBComponentBasic::paste_object(ModelDiagramForm *view, const grt
 }
 
 void WBComponentBasic::activate_canvas_object(const model_ObjectRef &figure, bool newwindow) {
-  if (figure.is_instance(workbench_model_NoteFigure::static_class_name()))
+  if (figure.is_instance(studio_model_NoteFigure::static_class_name()))
     bec::GRTManager::get()->open_object_editor(figure, newwindow ? bec::ForceNewWindowFlag : bec::NoFlags);
-  else if (figure.is_instance(workbench_model_ImageFigure::static_class_name()))
+  else if (figure.is_instance(studio_model_ImageFigure::static_class_name()))
     bec::GRTManager::get()->open_object_editor(figure, newwindow ? bec::ForceNewWindowFlag : bec::NoFlags);
   else if (figure.is_instance(model_Layer::static_class_name()))
     bec::GRTManager::get()->open_object_editor(figure, newwindow ? bec::ForceNewWindowFlag : bec::NoFlags);
@@ -466,8 +466,8 @@ bool WBComponentBasic::handle_button_event(ModelDiagramForm *view, mdc::MouseBut
         }
         else*/
     if (press) {
-      workbench_model_NoteFigureRef note(
-        workbench_model_NoteFigureRef::cast_from(place_object(view, pos, "workbench.model.NoteFigure")));
+      studio_model_NoteFigureRef note(
+        studio_model_NoteFigureRef::cast_from(place_object(view, pos, "studio.model.NoteFigure")));
       if (note.is_valid()) {
         note->name(grt::get_name_suggestion_for_list_object(
           grt::ObjectListRef::cast_from(view->get_model_diagram()->figures()), "text"));
@@ -482,7 +482,7 @@ bool WBComponentBasic::handle_button_event(ModelDiagramForm *view, mdc::MouseBut
     return true;
   } else if (tool == WB_TOOL_IMAGE) {
     if (press) {
-      workbench_model_ImageFigureRef image;
+      studio_model_ImageFigureRef image;
       std::string filename =
         _wb->_frontendCallbacks->show_file_dialog("open", _("Place Image"), "PNG Image Files (*.png)|*.png");
 
@@ -505,7 +505,7 @@ bool WBComponentBasic::handle_button_event(ModelDiagramForm *view, mdc::MouseBut
           fclose(f);
         }
 
-        image = workbench_model_ImageFigureRef::cast_from(place_object(view, pos, "workbench.model.ImageFigure"));
+        image = studio_model_ImageFigureRef::cast_from(place_object(view, pos, "studio.model.ImageFigure"));
 
         if (image.is_valid())
           image->setImageFile(filename);

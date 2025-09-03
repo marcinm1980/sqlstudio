@@ -16,7 +16,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.routinegroup.schema">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.routinegroup</link>
         <value type="string" key="name">physical/routinegroup/schema</value>
-        <value type="string" key="command">option:workbench.physical.RoutineGroupFigure:Schema</value>
+        <value type="string" key="command">option:studio.physical.RoutineGroupFigure:Schema</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Schemas</value>
       </value>
@@ -30,7 +30,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.tool.option.routinegroup.color">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.routinegroup</link>
         <value type="string" key="name">physical/routinegroup/color</value>
-        <value type="string" key="command">option:workbench.physical.RoutineGroupFigure:Color</value>
+        <value type="string" key="command">option:studio.physical.RoutineGroupFigure:Color</value>
         <value type="string" key="itemType">dropdown</value>
         <value type="string" key="accessibilityName">Colors</value>
       </value>

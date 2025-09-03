@@ -23,7 +23,7 @@
 import mforms
 import grt
 
-from workbench.ui import WizardPage, WizardProgressPage
+from studio.ui import WizardPage, WizardProgressPage
 
 
 class MigrationOptionsView(WizardPage):

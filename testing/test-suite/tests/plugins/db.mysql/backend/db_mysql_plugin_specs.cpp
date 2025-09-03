@@ -28,7 +28,7 @@
 #include "grt.h"
 
 #include "grts/structs.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grts/structs.db.mgmt.h"
 #include "grts/structs.db.mysql.h"
 #include "grts/structs.db.mgmt.h"
@@ -636,7 +636,7 @@ $describe("db.mysql plugin test") {
       "  PRIMARY KEY (`idtable1`) )\n"
       "ENGINE = InnoDB;";
 
-    data->tester->wb->open_document("data/workbench/diff_table_replace_test.mwb");
+    data->tester->wb->open_document("data/studio/diff_table_replace_test.mwb");
 
     db_mgmt_ManagementRef mgmt(db_mgmt_ManagementRef::cast_from(GRT::get()->get("/wb/rdbmsMgmt")));
 
@@ -693,7 +693,7 @@ $describe("db.mysql plugin test") {
       "  `idtable1` TINYINT NOT NULL ,\n"
       "  PRIMARY KEY (`idtable1`) )\n"
       "ENGINE = InnoDB;";
-    data->tester->wb->open_document(data->dataDir + "/workbench/diff_table_replace_test.mwb");
+    data->tester->wb->open_document(data->dataDir + "/studio/diff_table_replace_test.mwb");
     data->applySqlToModel(sql1);
 
     db_TableRef t2 = data->tester->getCatalog()->schemata().get(0)->tables().get(0);
@@ -707,7 +707,7 @@ $describe("db.mysql plugin test") {
 
   $it("Schema collation/charset change", [this] () {
     std::string sql1 = "CREATE schema IF NOT EXISTS `mydb` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;";
-    data->tester->wb->open_document(data->dataDir + "/workbench/diff_table_replace_test.mwb");
+    data->tester->wb->open_document(data->dataDir + "/studio/diff_table_replace_test.mwb");
     data->applySqlToModel(sql1);
     $expect(data->tester->getCatalog()->schemata().get(0)->tables().count()).toEqual(0U);
 

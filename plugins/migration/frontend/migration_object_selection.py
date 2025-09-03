@@ -23,7 +23,7 @@
 import threading
 
 import mforms
-from workbench.ui import DatabaseObjectSelector, WizardPage
+from studio.ui import DatabaseObjectSelector, WizardPage
 
 class ObjectMainView(WizardPage):
 

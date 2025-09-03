@@ -32,7 +32,7 @@
 
 #include "mforms/treeview.h"
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 namespace wb {
   class WBContext;

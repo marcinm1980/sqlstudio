@@ -30,15 +30,15 @@
 #include "wb_component_physical.h"
 #include "wb_model_diagram_form.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_context.h"
+#include "studio/wb_context_ui.h"
 
 #include "model/wb_context_model.h"
 #include "wb_overview_physical.h"
 
 #include "grt/clipboard.h"
 
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "grts/structs.db.mgmt.h"
 #include "grts/structs.db.mysql.h"
 
@@ -48,12 +48,12 @@
 
 #include "mdc.h"
 
-#include "wbcanvas/workbench_physical_model_impl.h"
-#include "wbcanvas/workbench_physical_diagram_impl.h"
-#include "wbcanvas/workbench_physical_tablefigure_impl.h"
-#include "wbcanvas/workbench_physical_viewfigure_impl.h"
-#include "wbcanvas/workbench_physical_routinegroupfigure_impl.h"
-#include "wbcanvas/workbench_physical_connection_impl.h"
+#include "wbcanvas/studio_physical_model_impl.h"
+#include "wbcanvas/studio_physical_diagram_impl.h"
+#include "wbcanvas/studio_physical_tablefigure_impl.h"
+#include "wbcanvas/studio_physical_viewfigure_impl.h"
+#include "wbcanvas/studio_physical_routinegroupfigure_impl.h"
+#include "wbcanvas/studio_physical_connection_impl.h"
 
 #include "base/log.h"
 DEFAULT_LOG_DOMAIN("component_physical")
@@ -197,7 +197,7 @@ void WBComponentPhysical::setup_context_grt(WBOptions *options) {
 }
 
 void WBComponentPhysical::init_catalog_grt(const db_mgmt_RdbmsRef &rdbms, const std::string &db_version,
-                                           workbench_physical_ModelRef &model) {
+                                           studio_physical_ModelRef &model) {
   std::string db_package = rdbms->databaseObjectPackage();
 
   // assemble struct name for catalog and schema for the requested db type
@@ -317,10 +317,10 @@ grt::ListRef<db_UserDatatype> WBComponentPhysical::create_builtin_user_datatypes
   return grt::ListRef<db_UserDatatype>();
 }
 
-void WBComponentPhysical::setup_physical_model(workbench_DocumentRef &doc, const std::string &rdbms_name,
+void WBComponentPhysical::setup_physical_model(studio_DocumentRef &doc, const std::string &rdbms_name,
                                                const std::string &rdbms_version) {
   // init physical model
-  workbench_physical_ModelRef pmodel(grt::Initialized);
+  studio_physical_ModelRef pmodel(grt::Initialized);
   pmodel->owner(doc);
 
   pmodel->connectionNotation(_wb->get_wb_options().get_string("DefaultConnectionNotation"));
@@ -347,7 +347,7 @@ void WBComponentPhysical::setup_physical_model(workbench_DocumentRef &doc, const
 //--------------------------------------------------------------------------------
 // Model Management
 
-db_SchemaRef WBComponentPhysical::add_new_db_schema(const workbench_physical_ModelRef &model) {
+db_SchemaRef WBComponentPhysical::add_new_db_schema(const studio_physical_ModelRef &model) {
   db_SchemaRef schema;
   std::string name;
   std::string class_name;
@@ -387,9 +387,9 @@ grt::DictRef WBComponentPhysical::delete_db_schema(const db_SchemaRef &schema, b
     return dict;
   }
 
-  workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(schema));
+  studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(schema));
   if (model.is_valid()) {
-    workbench_physical_DiagramRef view;
+    studio_physical_DiagramRef view;
 
     if (model->catalog()->schemata().get_index(schema) == grt::BaseListRef::npos)
       return grt::DictRef();
@@ -496,7 +496,7 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_table(const db_SchemaRef &s
   }
   if (!table.is_valid())
     table =
-      schema->addNewTable(*get_parent_for_object<workbench_physical_Model>(schema)->rdbms()->databaseObjectPackage());
+      schema->addNewTable(*get_parent_for_object<studio_physical_Model>(schema)->rdbms()->databaseObjectPackage());
 
   if (table.has_member("tableEngine"))
     table.set_member("tableEngine", bec::GRTManager::get()->get_app_option("db.mysql.Table:tableEngine"));
@@ -516,7 +516,7 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_view(const db_SchemaRef &sc
   grt::AutoUndo undo;
 
   db_ViewRef view =
-    schema->addNewView(*get_parent_for_object<workbench_physical_Model>(schema)->rdbms()->databaseObjectPackage());
+    schema->addNewView(*get_parent_for_object<studio_physical_Model>(schema)->rdbms()->databaseObjectPackage());
 
   undo.end(_("Create View"));
   if (view.is_valid()) {
@@ -532,7 +532,7 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_routine_group(const db_Sche
   grt::AutoUndo undo;
 
   db_RoutineGroupRef rgroup = schema->addNewRoutineGroup(
-    *get_parent_for_object<workbench_physical_Model>(schema)->rdbms()->databaseObjectPackage());
+    *get_parent_for_object<studio_physical_Model>(schema)->rdbms()->databaseObjectPackage());
 
   undo.end(_("Create Routine Group"));
   if (rgroup.is_valid()) {
@@ -548,7 +548,7 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_routine(const db_SchemaRef 
   grt::AutoUndo undo;
 
   db_RoutineRef routine =
-    schema->addNewRoutine(*get_parent_for_object<workbench_physical_Model>(schema)->rdbms()->databaseObjectPackage());
+    schema->addNewRoutine(*get_parent_for_object<studio_physical_Model>(schema)->rdbms()->databaseObjectPackage());
 
   undo.end(_("Create Routine"));
   if (routine.is_valid()) {
@@ -560,7 +560,7 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_routine(const db_SchemaRef 
   return routine;
 }
 
-db_ScriptRef WBComponentPhysical::add_new_stored_script(const workbench_physical_ModelRef &model,
+db_ScriptRef WBComponentPhysical::add_new_stored_script(const studio_physical_ModelRef &model,
                                                         const std::string &path) {
   db_ScriptRef script(grt::Initialized);
   std::string name = "script";
@@ -583,7 +583,7 @@ db_ScriptRef WBComponentPhysical::add_new_stored_script(const workbench_physical
   return script;
 }
 
-GrtStoredNoteRef WBComponentPhysical::add_new_stored_note(const workbench_physical_ModelRef &model,
+GrtStoredNoteRef WBComponentPhysical::add_new_stored_note(const studio_physical_ModelRef &model,
                                                           const std::string &path) {
   GrtStoredNoteRef note(grt::Initialized);
   std::string name = _("New Note");
@@ -671,7 +671,7 @@ model_FigureRef WBComponentPhysical::place_db_object(ModelDiagramForm *view, con
                                                      const db_DatabaseObjectRef &object, bool select_figure) {
   model_FigureRef figure;
   try {
-    workbench_physical_DiagramRef pview(workbench_physical_DiagramRef::cast_from(view->get_model_diagram()));
+    studio_physical_DiagramRef pview(studio_physical_DiagramRef::cast_from(view->get_model_diagram()));
     std::string object_member;
 
     if (object.is_instance(db_Table::static_class_name())) {
@@ -695,8 +695,8 @@ model_FigureRef WBComponentPhysical::place_db_object(ModelDiagramForm *view, con
         figure->color(_wb->get_wb_options().get_string(figure.class_name() + ":Color", ""));
     }
 
-    if (view->get_model_options().get_int("workbench.physical.ObjectFigure:Expanded",
-                                          _wb->get_wb_options().get_int("workbench.physical.ObjectFigure:Expanded")))
+    if (view->get_model_options().get_int("studio.physical.ObjectFigure:Expanded",
+                                          _wb->get_wb_options().get_int("studio.physical.ObjectFigure:Expanded")))
       figure->expanded(1);
     else
       figure->expanded(0);
@@ -764,7 +764,7 @@ bool WBComponentPhysical::perform_drop(ModelDiagramForm *view, int x, int y, con
 
   if (type == WB_DBOBJECT_DRAG_TYPE) {
     std::list<db_DatabaseObjectRef> dbobjects;
-    db_CatalogRef catalog = workbench_physical_ModelRef::cast_from(view->get_model_diagram()->owner())->catalog();
+    db_CatalogRef catalog = studio_physical_ModelRef::cast_from(view->get_model_diagram()->owner())->catalog();
 
     dbobjects = bec::CatalogHelper::dragdata_to_dbobject_list(catalog, data);
 
@@ -867,20 +867,20 @@ void WBComponentPhysical::place_new_db_object(ModelDiagramForm *vform, const Poi
   grt::AutoUndo undo;
 
   model_DiagramRef view(vform->get_model_diagram());
-  workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(view));
+  studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(view));
 
   switch (type) {
     case ObjectTable:
-      object_struct_name = workbench_physical_TableFigure::static_class_name();
+      object_struct_name = studio_physical_TableFigure::static_class_name();
       template_name = vform->get_tool_argument(object_struct_name + std::string(":Template"));
       if (template_name == "*None*")
         template_name = "";
       break;
     case ObjectView:
-      object_struct_name = workbench_physical_ViewFigure::static_class_name();
+      object_struct_name = studio_physical_ViewFigure::static_class_name();
       break;
     case ObjectRoutineGroup:
-      object_struct_name = workbench_physical_RoutineGroupFigure::static_class_name();
+      object_struct_name = studio_physical_RoutineGroupFigure::static_class_name();
       break;
     default:
       throw std::logic_error("place_db_object() called with invalid tool");
@@ -941,14 +941,14 @@ void WBComponentPhysical::place_new_db_object(ModelDiagramForm *vform, const Poi
   undo.end(strfmt(_("Place '%s'"), object->name().c_str()));
 }
 
-bool WBComponentPhysical::create_nm_relationship(ModelDiagramForm *view, workbench_physical_TableFigureRef table1,
-                                                 workbench_physical_TableFigureRef table2, bool imandatory,
+bool WBComponentPhysical::create_nm_relationship(ModelDiagramForm *view, studio_physical_TableFigureRef table1,
+                                                 studio_physical_TableFigureRef table2, bool imandatory,
                                                  bool fmandatory) {
   grt::AutoUndo undo;
   // create the associative table for a n:m relationship
   db_TableRef atable = bec::TableHelper::create_associative_table(
     db_SchemaRef::cast_from(table1->table()->owner()), table1->table(), table2->table(), imandatory, fmandatory,
-    workbench_physical_ModelRef::cast_from(view->get_model_diagram()->owner())->rdbms(), _wb->get_wb_options(),
+    studio_physical_ModelRef::cast_from(view->get_model_diagram()->owner())->rdbms(), _wb->get_wb_options(),
     view->get_model_diagram()->owner()->options());
 
   if (!atable.is_valid())
@@ -995,7 +995,7 @@ void WBComponentPhysical::cancel_relationship(ModelDiagramForm *view, Relationsh
 
 void WBComponentPhysical::delete_db_object(const db_DatabaseObjectRef &object) {
   db_SchemaRef schema(db_SchemaRef::cast_from(object->owner()));
-  workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(schema));
+  studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(schema));
 
   // XXX need to look for refs by other objects and show them to user
   // and confirm that they should be removed or cancel
@@ -1006,13 +1006,13 @@ void WBComponentPhysical::delete_db_object(const db_DatabaseObjectRef &object) {
     schema->tables().remove_value(db_TableRef::cast_from(object));
 
     if (model.is_valid()) {
-      for (grt::ListRef<workbench_physical_Diagram>::const_iterator view = model->diagrams().begin();
+      for (grt::ListRef<studio_physical_Diagram>::const_iterator view = model->diagrams().begin();
            view != model->diagrams().end(); ++view) {
         grt::ListRef<model_Figure> figures((*view)->figures());
         for (std::size_t f = figures.count(); f > 0; --f) {
           model_FigureRef figure = figures[f - 1];
-          if (figure.is_instance(workbench_physical_TableFigure::static_class_name()) &&
-              workbench_physical_TableFigureRef::cast_from(figure)->table() == object) {
+          if (figure.is_instance(studio_physical_TableFigure::static_class_name()) &&
+              studio_physical_TableFigureRef::cast_from(figure)->table() == object) {
             // do not delete db object from model object deleter, since that would
             // mean deleting it twice and adding 2 entries in the undo stack
             delete_model_object(figure, true);
@@ -1083,12 +1083,12 @@ void WBComponentPhysical::delete_db_object(const db_DatabaseObjectRef &object) {
     schema->views().remove_value(db_ViewRef::cast_from(object));
 
     if (model.is_valid()) {
-      for (grt::ListRef<workbench_physical_Diagram>::const_iterator view = model->diagrams().begin();
+      for (grt::ListRef<studio_physical_Diagram>::const_iterator view = model->diagrams().begin();
            view != model->diagrams().end(); ++view) {
         for (grt::ListRef<model_Figure>::const_reverse_iterator figure = (*view)->figures().rbegin();
              figure != (*view)->figures().rend(); ++figure) {
-          if ((*figure).is_instance(workbench_physical_ViewFigure::static_class_name()) &&
-              workbench_physical_ViewFigureRef::cast_from(*figure)->view() == object) {
+          if ((*figure).is_instance(studio_physical_ViewFigure::static_class_name()) &&
+              studio_physical_ViewFigureRef::cast_from(*figure)->view() == object) {
             delete_model_object(*figure, false);
             break; // We have deleted figure, figure is invalid from now and may not be incremented
           }
@@ -1162,12 +1162,12 @@ void WBComponentPhysical::delete_db_object(const db_DatabaseObjectRef &object) {
     schema->routineGroups().remove_value(routine_group);
 
     if (model.is_valid()) {
-      for (grt::ListRef<workbench_physical_Diagram>::const_iterator view = model->diagrams().begin();
+      for (grt::ListRef<studio_physical_Diagram>::const_iterator view = model->diagrams().begin();
            view != model->diagrams().end(); ++view) {
         for (grt::ListRef<model_Figure>::const_reverse_iterator figure = (*view)->figures().rbegin();
              figure != (*view)->figures().rend(); ++figure) {
-          if ((*figure).is_instance(workbench_physical_RoutineGroupFigure::static_class_name()) &&
-              workbench_physical_RoutineGroupFigureRef::cast_from(*figure)->routineGroup() == object) {
+          if ((*figure).is_instance(studio_physical_RoutineGroupFigure::static_class_name()) &&
+              studio_physical_RoutineGroupFigureRef::cast_from(*figure)->routineGroup() == object) {
             delete_model_object(*figure, false);
             break; // We have deleted figure, figure is invalid from now and may not be incremented
           }
@@ -1198,9 +1198,9 @@ void WBComponentPhysical::delete_db_object(const db_DatabaseObjectRef &object) {
 }
 
 bool WBComponentPhysical::delete_model_object(const model_ObjectRef &object, bool figure_only) {
-  if (object.is_instance(workbench_physical_Connection::static_class_name())) {
+  if (object.is_instance(studio_physical_Connection::static_class_name())) {
     if (!figure_only) {
-      workbench_physical_ConnectionRef conn(workbench_physical_ConnectionRef::cast_from(object));
+      studio_physical_ConnectionRef conn(studio_physical_ConnectionRef::cast_from(object));
       db_ForeignKeyRef fk(conn->foreignKey());
       db_TableRef table(db_TableRef::cast_from(fk->owner()));
       int result;
@@ -1235,28 +1235,28 @@ bool WBComponentPhysical::delete_model_object(const model_ObjectRef &object, boo
 
     grt::AutoUndo undo;
     // if the figure is a DB object, the DB object is also deleted
-    if (figure.is_instance(workbench_physical_TableFigure::static_class_name())) {
-      db_TableRef dbtable(workbench_physical_TableFigureRef::cast_from(figure)->table());
+    if (figure.is_instance(studio_physical_TableFigure::static_class_name())) {
+      db_TableRef dbtable(studio_physical_TableFigureRef::cast_from(figure)->table());
 
-      workbench_physical_DiagramRef::cast_from(figure->owner())->deleteConnectionsForTable(dbtable);
+      studio_physical_DiagramRef::cast_from(figure->owner())->deleteConnectionsForTable(dbtable);
 
-      workbench_physical_TableFigureRef::cast_from(figure)->table(db_TableRef());
+      studio_physical_TableFigureRef::cast_from(figure)->table(db_TableRef());
 
       // this must be called after the figure->table field is invalidated, otherwise
       // delete_db_object() will try to delete the figure again and we get into a loop
       if (!figure_only)
         delete_db_object(dbtable);
-    } else if (figure.is_instance(workbench_physical_ViewFigure::static_class_name())) {
-      db_ViewRef view(workbench_physical_ViewFigureRef::cast_from(figure)->view());
+    } else if (figure.is_instance(studio_physical_ViewFigure::static_class_name())) {
+      db_ViewRef view(studio_physical_ViewFigureRef::cast_from(figure)->view());
 
-      workbench_physical_ViewFigureRef::cast_from(figure)->view(db_ViewRef());
+      studio_physical_ViewFigureRef::cast_from(figure)->view(db_ViewRef());
 
       if (!figure_only)
         delete_db_object(view);
-    } else if (figure.is_instance(workbench_physical_RoutineGroupFigure::static_class_name())) {
-      db_RoutineGroupRef rg(workbench_physical_RoutineGroupFigureRef::cast_from(figure)->routineGroup());
+    } else if (figure.is_instance(studio_physical_RoutineGroupFigure::static_class_name())) {
+      db_RoutineGroupRef rg(studio_physical_RoutineGroupFigureRef::cast_from(figure)->routineGroup());
 
-      workbench_physical_RoutineGroupFigureRef::cast_from(figure)->routineGroup(db_RoutineGroupRef());
+      studio_physical_RoutineGroupFigureRef::cast_from(figure)->routineGroup(db_RoutineGroupRef());
 
       if (!figure_only)
         delete_db_object(rg);
@@ -1264,7 +1264,7 @@ bool WBComponentPhysical::delete_model_object(const model_ObjectRef &object, boo
       return false;
 
     // removeFigure() will remove anything that depends on the figure automatically, ie connections
-    workbench_physical_DiagramRef::cast_from(figure->owner())->removeFigure(figure);
+    studio_physical_DiagramRef::cast_from(figure->owner())->removeFigure(figure);
 
     if (figure_only)
       undo.end(strfmt(_("Remove Figure '%s'"), figure.get_metaclass()->get_attribute("caption").c_str()));
@@ -1275,10 +1275,10 @@ bool WBComponentPhysical::delete_model_object(const model_ObjectRef &object, boo
 }
 
 bool WBComponentPhysical::handles_figure(const model_ObjectRef &figure) {
-  if (figure.is_instance(workbench_physical_TableFigure::static_class_name()) ||
-      figure.is_instance(workbench_physical_ViewFigure::static_class_name()) ||
-      figure.is_instance(workbench_physical_RoutineGroupFigure::static_class_name()) ||
-      figure.is_instance(workbench_physical_Connection::static_class_name()))
+  if (figure.is_instance(studio_physical_TableFigure::static_class_name()) ||
+      figure.is_instance(studio_physical_ViewFigure::static_class_name()) ||
+      figure.is_instance(studio_physical_RoutineGroupFigure::static_class_name()) ||
+      figure.is_instance(studio_physical_Connection::static_class_name()))
     return true;
   return false;
 }
@@ -1301,9 +1301,9 @@ model_ObjectRef WBComponentPhysical::clone_object(const model_ObjectRef &object,
   std::set<std::string> skip;
   skip.insert("oldName");
 
-  if (object.is_instance(workbench_physical_TableFigure::static_class_name()))
+  if (object.is_instance(studio_physical_TableFigure::static_class_name()))
   {
-    workbench_physical_TableFigureRef table(workbench_physical_TableFigureRef::cast_from(object));
+    studio_physical_TableFigureRef table(studio_physical_TableFigureRef::cast_from(object));
 
     grt::AutoUndo undo;
 
@@ -1313,7 +1313,7 @@ copy_context)));
 
     // copy figure
     skip.insert("table");
-    workbench_physical_TableFigureRef copy(workbench_physical_TableFigureRef::cast_from(copy_context.copy(table,
+    studio_physical_TableFigureRef copy(studio_physical_TableFigureRef::cast_from(copy_context.copy(table,
 skip)));
     copy->table(dbtable);
 
@@ -1327,7 +1327,7 @@ skip)));
       copy->name(dbtable->name());
 
       destlayer->owner()->addFigure(copy);
-      workbench_physical_DiagramRef::cast_from(destlayer->owner())->createConnectionsForTable(copy->table());
+      studio_physical_DiagramRef::cast_from(destlayer->owner())->createConnectionsForTable(copy->table());
 
       undo.end(strfmt(_("Duplicate Table '%s'"), copy->name().c_str()));
     }
@@ -1338,9 +1338,9 @@ skip)));
     }
     return copy;
   }
-  else if (object.is_instance(workbench_physical_ViewFigure::static_class_name()))
+  else if (object.is_instance(studio_physical_ViewFigure::static_class_name()))
   {
-    workbench_physical_ViewFigureRef view(workbench_physical_ViewFigureRef::cast_from(object));
+    studio_physical_ViewFigureRef view(studio_physical_ViewFigureRef::cast_from(object));
 
     grt::AutoUndo undo;
 
@@ -1349,7 +1349,7 @@ skip)));
 
     // copy figure
     skip.insert("view");
-    workbench_physical_ViewFigureRef copy(workbench_physical_ViewFigureRef::cast_from(copy_context.copy(view)));
+    studio_physical_ViewFigureRef copy(studio_physical_ViewFigureRef::cast_from(copy_context.copy(view)));
     copy->view(dbview);
 
     copy_context.update_references();
@@ -1372,9 +1372,9 @@ skip)));
     }
     return copy;
   }
-  else if (object.is_instance(workbench_physical_RoutineGroupFigure::static_class_name()))
+  else if (object.is_instance(studio_physical_RoutineGroupFigure::static_class_name()))
   {
-    workbench_physical_RoutineGroupFigureRef routineGroup(workbench_physical_RoutineGroupFigureRef::cast_from(object));
+    studio_physical_RoutineGroupFigureRef routineGroup(studio_physical_RoutineGroupFigureRef::cast_from(object));
 
     grt::AutoUndo undo;
 
@@ -1385,8 +1385,8 @@ copy_context)));
 
     // copy figure
     skip.insert("routineGroup");
-    workbench_physical_RoutineGroupFigureRef
-copy(workbench_physical_RoutineGroupFigureRef::cast_from(copy_context.copy(routineGroup)));
+    studio_physical_RoutineGroupFigureRef
+copy(studio_physical_RoutineGroupFigureRef::cast_from(copy_context.copy(routineGroup)));
     copy->routineGroup(dbroutineGroup);
 
     copy_context.update_references();
@@ -1417,27 +1417,27 @@ copy(workbench_physical_RoutineGroupFigureRef::cast_from(copy_context.copy(routi
 bool WBComponentPhysical::can_paste_object(const grt::ObjectRef &object) {
   if (object.is_instance(db_Table::static_class_name()) || object.is_instance(db_View::static_class_name()) ||
       object.is_instance(db_RoutineGroup::static_class_name()) ||
-      object.is_instance(workbench_physical_TableFigure::static_class_name()) ||
-      object.is_instance(workbench_physical_ViewFigure::static_class_name()) ||
-      object.is_instance(workbench_physical_RoutineGroupFigure::static_class_name()) ||
-      object.is_instance(workbench_physical_Connection::static_class_name()))
+      object.is_instance(studio_physical_TableFigure::static_class_name()) ||
+      object.is_instance(studio_physical_ViewFigure::static_class_name()) ||
+      object.is_instance(studio_physical_RoutineGroupFigure::static_class_name()) ||
+      object.is_instance(studio_physical_Connection::static_class_name()))
     return true;
   return false;
 }
 
-static void updateConnectionState(workbench_physical_TableFigureRef src, workbench_physical_TableFigureRef dst) {
-  workbench_physical_DiagramRef dstView = workbench_physical_DiagramRef::cast_from(dst->owner());
-  workbench_physical_DiagramRef srcView = workbench_physical_DiagramRef::cast_from(src->owner());
+static void updateConnectionState(studio_physical_TableFigureRef src, studio_physical_TableFigureRef dst) {
+  studio_physical_DiagramRef dstView = studio_physical_DiagramRef::cast_from(dst->owner());
+  studio_physical_DiagramRef srcView = studio_physical_DiagramRef::cast_from(src->owner());
 
   grt::ListRef<db_ForeignKey> dstKeys = dst->table()->foreignKeys();
   grt::ListRef<db_ForeignKey> srcKeys = src->table()->foreignKeys();
   for (grt::ListRef<db_ForeignKey>::const_iterator dstIt = dstKeys.begin(); dstIt != dstKeys.end(); ++dstIt) {
-    workbench_physical_ConnectionRef dstConn = dstView->getConnectionForForeignKey(*dstIt);
+    studio_physical_ConnectionRef dstConn = dstView->getConnectionForForeignKey(*dstIt);
     if (dstConn.is_valid()) // If there's a connection we need to find out state of the src conn and copy it.
     {
       for (grt::ListRef<db_ForeignKey>::const_iterator srcIt = srcKeys.begin(); srcIt != srcKeys.end(); ++srcIt) {
         if (*srcIt == *dstIt) {
-          workbench_physical_ConnectionRef srcConn = srcView->getConnectionForForeignKey(*srcIt);
+          studio_physical_ConnectionRef srcConn = srcView->getConnectionForForeignKey(*srcIt);
           if (srcConn.is_valid()) {
             dstConn->visible(srcConn->visible());
             dstConn->drawSplit(srcConn->drawSplit());
@@ -1483,10 +1483,10 @@ model_ObjectRef WBComponentPhysical::paste_object(ModelDiagramForm *view, const 
         figure->width(original->width());
         figure->height(original->height());
 
-        // We need to try to cast is to workbench_physical_TableFigureRef, so we can copy additional properties.
-        if (workbench_physical_TableFigureRef::can_wrap(original)) {
-          workbench_physical_TableFigureRef src(workbench_physical_TableFigureRef::cast_from(original));
-          workbench_physical_TableFigureRef dst(workbench_physical_TableFigureRef::cast_from(figure));
+        // We need to try to cast is to studio_physical_TableFigureRef, so we can copy additional properties.
+        if (studio_physical_TableFigureRef::can_wrap(original)) {
+          studio_physical_TableFigureRef src(studio_physical_TableFigureRef::cast_from(original));
+          studio_physical_TableFigureRef dst(studio_physical_TableFigureRef::cast_from(figure));
           dst->indicesExpanded(src->indicesExpanded());
           dst->triggersExpanded(src->triggersExpanded());
           dst->foreignKeysExpanded(src->foreignKeysExpanded());
@@ -1513,12 +1513,12 @@ inline const char *find_prev_space(const char *begin, const char *pos) {
 }
 
 std::string WBComponentPhysical::get_object_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item) {
-  if (workbench_physical_TableFigureRef::can_wrap(object)) {
-    workbench_physical_TableFigureRef table_figure(workbench_physical_TableFigureRef::cast_from(object));
+  if (studio_physical_TableFigureRef::can_wrap(object)) {
+    studio_physical_TableFigureRef table_figure(studio_physical_TableFigureRef::cast_from(object));
     db_TableRef table(table_figure->table());
 
     if (table.is_valid()) {
-      workbench_physical_TableFigure::ImplData *tfig = table_figure->get_data();
+      studio_physical_TableFigure::ImplData *tfig = table_figure->get_data();
       if (tfig) {
         db_ColumnRef column(tfig->get_column_at(item));
         db_IndexRef index;
@@ -1729,16 +1729,16 @@ std::string WBComponentPhysical::get_object_tooltip(const model_ObjectRef &objec
       }
     }
     return "";
-  } else if (workbench_physical_ViewFigureRef::can_wrap(object)) {
-    workbench_physical_ViewFigureRef figure(workbench_physical_ViewFigureRef::cast_from(object));
+  } else if (studio_physical_ViewFigureRef::can_wrap(object)) {
+    studio_physical_ViewFigureRef figure(studio_physical_ViewFigureRef::cast_from(object));
     if (figure->view().is_valid())
       return figure->view()->comment();
-  } else if (workbench_physical_RoutineGroupFigureRef::can_wrap(object)) {
-    workbench_physical_RoutineGroupFigureRef figure(workbench_physical_RoutineGroupFigureRef::cast_from(object));
+  } else if (studio_physical_RoutineGroupFigureRef::can_wrap(object)) {
+    studio_physical_RoutineGroupFigureRef figure(studio_physical_RoutineGroupFigureRef::cast_from(object));
     if (figure->routineGroup().is_valid())
       return figure->routineGroup()->comment();
-  } else if (workbench_physical_ConnectionRef::can_wrap(object)) {
-    workbench_physical_ConnectionRef connection(workbench_physical_ConnectionRef::cast_from(object));
+  } else if (studio_physical_ConnectionRef::can_wrap(object)) {
+    studio_physical_ConnectionRef connection(studio_physical_ConnectionRef::cast_from(object));
     std::string text;
     db_ForeignKeyRef fk(connection->foreignKey());
     if (fk.is_valid()) {
@@ -1773,14 +1773,14 @@ std::string WBComponentPhysical::get_object_tooltip(const model_ObjectRef &objec
 }
 
 GrtObjectRef WBComponentPhysical::get_object_for_figure(const model_ObjectRef &object) {
-  if (workbench_physical_TableFigureRef::can_wrap(object))
-    return workbench_physical_TableFigureRef::cast_from(object)->table();
+  if (studio_physical_TableFigureRef::can_wrap(object))
+    return studio_physical_TableFigureRef::cast_from(object)->table();
 
-  else if (workbench_physical_ViewFigureRef::can_wrap(object))
-    return workbench_physical_ViewFigureRef::cast_from(object)->view();
+  else if (studio_physical_ViewFigureRef::can_wrap(object))
+    return studio_physical_ViewFigureRef::cast_from(object)->view();
 
-  else if (workbench_physical_RoutineGroupFigureRef::can_wrap(object))
-    return workbench_physical_RoutineGroupFigureRef::cast_from(object)->routineGroup();
+  else if (studio_physical_RoutineGroupFigureRef::can_wrap(object))
+    return studio_physical_RoutineGroupFigureRef::cast_from(object)->routineGroup();
 
   return GrtObjectRef();
 }
@@ -1791,7 +1791,7 @@ void WBComponentPhysical::activate_canvas_object(const model_ObjectRef &figure, 
   if (object.is_valid())
     bec::GRTManager::get()->open_object_editor(object, newwindow ? bec::ForceNewWindowFlag : bec::NoFlags);
 
-  else if (workbench_physical_ConnectionRef::can_wrap(figure))
+  else if (studio_physical_ConnectionRef::can_wrap(figure))
     bec::GRTManager::get()->open_object_editor(figure, newwindow ? bec::ForceNewWindowFlag : bec::NoFlags);
 }
 
@@ -1833,9 +1833,9 @@ std::vector<std::string> WBComponentPhysical::get_command_dropdown_items(const s
   std::vector<std::string> items;
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
 
-  if (base::hasPrefix(option, "workbench.physical.")) {
+  if (base::hasPrefix(option, "studio.physical.")) {
     if (base::hasSuffix(option, ":Color")) {
-      std::string colors = _wb->get_wb_options().get_string("workbench.model.ObjectFigure:ColorList");
+      std::string colors = _wb->get_wb_options().get_string("studio.model.ObjectFigure:ColorList");
       std::vector<std::string> colorList;
 
       colorList = base::split(colors, "\n");
@@ -1876,7 +1876,7 @@ std::vector<std::string> WBComponentPhysical::get_command_dropdown_items(const s
 
       form->set_tool_argument(option, "None");
     } else if (base::hasSuffix(option, ":Schema")) {
-      workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(form->get_model_diagram()));
+      studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(form->get_model_diagram()));
 
       if (model.is_valid()) {
         for (std::size_t c = model->catalog()->schemata().count(), i = 0; i < c; i++)
@@ -1902,7 +1902,7 @@ std::vector<std::string> WBComponentPhysical::get_command_dropdown_items(const s
       }
 
       // Table engine might be model specific.
-      workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(form->get_model_diagram()));
+      studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(form->get_model_diagram()));
       std::string selected;
 
       wb::WBContextUI::get()->get_wb_options_value(model.id(), "db.mysql.Table:tableEngine", selected);
@@ -1911,7 +1911,7 @@ std::vector<std::string> WBComponentPhysical::get_command_dropdown_items(const s
 
       form->set_tool_argument(option, selected);
     } else if (base::hasSuffix(option, ":Collation")) {
-      workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(form->get_model_diagram()));
+      studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(form->get_model_diagram()));
 
       if (_collation_list.empty()) {
         items.push_back("*Default Collation*");
@@ -1999,11 +1999,11 @@ void WBComponentPhysical::close_document() {
  *
  */
 void WBComponentPhysical::reset_document() {
-  workbench_DocumentRef doc(_wb->get_document());
+  studio_DocumentRef doc(_wb->get_document());
 
   // add listener to all schemas, views etc
   for (std::size_t c = doc->physicalModels().count(), i = 0; i < c; i++) {
-    workbench_physical_ModelRef model(doc->physicalModels()[i]);
+    studio_physical_ModelRef model(doc->physicalModels()[i]);
     if (model.is_valid()) {
       db_CatalogRef catalog(model->catalog());
 
@@ -2046,9 +2046,9 @@ void WBComponentPhysical::reset_document() {
  - Update the userDatatypes list in the document with what we have now
  */
 void WBComponentPhysical::document_loaded() {
-  grt::ListRef<workbench_physical_Model> models(_wb->get_document()->physicalModels());
+  grt::ListRef<studio_physical_Model> models(_wb->get_document()->physicalModels());
 
-  for (grt::ListRef<workbench_physical_Model>::const_iterator pmodel = models.begin(); pmodel != models.end();
+  for (grt::ListRef<studio_physical_Model>::const_iterator pmodel = models.begin(); pmodel != models.end();
        ++pmodel) {
     db_CatalogRef catalog((*pmodel)->catalog());
     db_mgmt_RdbmsRef rdbms((*pmodel)->rdbms());
@@ -2151,9 +2151,9 @@ void WBComponentPhysical::view_object_list_changed(grt::internal::OwnedList *lis
         // if not undoing/redoing, then auto-create the connection for the table
         if (!get_grt()->get_undo_manager()->is_undoing() && !get_grt()->get_undo_manager()->is_redoing())
         {
-          if (value.is_instance(workbench_physical_TableFigure::static_class_name()))
+          if (value.is_instance(studio_physical_TableFigure::static_class_name()))
           {
-            workbench_physical_TableFigureRef table(workbench_physical_TableFigureRef::cast_from(value));
+            studio_physical_TableFigureRef table(studio_physical_TableFigureRef::cast_from(value));
             
             if (table.table().is_valid())
             {
@@ -2329,12 +2329,12 @@ void WBComponentPhysical::foreign_key_changed(const db_ForeignKeyRef &fk) {
     return;
 
   bool valid = fk->checkCompleteness() != 0;
-  grt::ListRef<workbench_physical_Diagram> views(_wb->get_document()->physicalModels()[0]->diagrams());
+  grt::ListRef<studio_physical_Diagram> views(_wb->get_document()->physicalModels()[0]->diagrams());
 
   // go through all views and create/destroy connections if needed
-  for (grt::ListRef<workbench_physical_Diagram>::const_iterator iter = views.begin(); iter != views.end(); ++iter) {
-    workbench_physical_DiagramRef view(*iter);
-    workbench_physical_ConnectionRef conn(view->getConnectionForForeignKey(fk));
+  for (grt::ListRef<studio_physical_Diagram>::const_iterator iter = views.begin(); iter != views.end(); ++iter) {
+    studio_physical_DiagramRef view(*iter);
+    studio_physical_ConnectionRef conn(view->getConnectionForForeignKey(fk));
 
     if (conn.is_valid() != valid) {
       if (!conn.is_valid())
@@ -2362,7 +2362,7 @@ void WBComponentPhysical::schema_content_object_changed(const db_DatabaseObjectR
  */
 void WBComponentPhysical::refresh_ui_for_object(const GrtObjectRef &object) {
   if (object.is_valid() && object->owner().is_valid()) {
-    workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(object));
+    studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(object));
     PhysicalOverviewBE *overview =
       (PhysicalOverviewBE *)((PhysicalOverviewBE *)wb::WBContextUI::get()->get_physical_overview());
 
@@ -2397,7 +2397,7 @@ void WBComponentPhysical::refresh_ui_for_object(const GrtObjectRef &object) {
  ****************************************************************************
  */
 bool WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, const db_ForeignKeyRef &fk, bool added) {
-  workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(table));
+  studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(table));
 
   if (!model.is_valid() || !model->diagrams().is_valid())
     return false;
@@ -2416,18 +2416,18 @@ bool WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, c
     if (added && table->foreignKeys().get_index(fk) == BaseListRef::npos)
       return false;
 
-    grt::ListRef<workbench_physical_Diagram> views(model->diagrams());
+    grt::ListRef<studio_physical_Diagram> views(model->diagrams());
     if (added) {
       // we have to go through all views in the model and find all table figures
       // that correspond to the FK for creating the relationship in all these views
 
       for (std::size_t c = views.count(), i = 0; i < c; i++) {
-        workbench_physical_DiagramRef view(views[i]);
+        studio_physical_DiagramRef view(views[i]);
 
-        workbench_physical_TableFigureRef table1(
-          workbench_physical_TableFigureRef::cast_from(view->getFigureForDBObject(table)));
-        workbench_physical_TableFigureRef table2(
-          workbench_physical_TableFigureRef::cast_from(view->getFigureForDBObject(fk->referencedTable())));
+        studio_physical_TableFigureRef table1(
+          studio_physical_TableFigureRef::cast_from(view->getFigureForDBObject(table)));
+        studio_physical_TableFigureRef table2(
+          studio_physical_TableFigureRef::cast_from(view->getFigureForDBObject(fk->referencedTable())));
 
         if (table1.is_valid() &&
             table2.is_valid()) { // both tables in the relationship are in this view, so create the connection
@@ -2435,12 +2435,12 @@ bool WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, c
           // but 1st check if it already exists
 
           grt::ListRef<model_Connection> connections(view->connections());
-          workbench_physical_ConnectionRef found;
+          studio_physical_ConnectionRef found;
 
           for (std::size_t c = connections.count(), i = 0; i < c; i++) {
             model_ConnectionRef conn(connections[i]);
-            if (conn.is_instance(workbench_physical_Connection::static_class_name())) {
-              workbench_physical_ConnectionRef pconn(workbench_physical_ConnectionRef::cast_from(conn));
+            if (conn.is_instance(studio_physical_Connection::static_class_name())) {
+              studio_physical_ConnectionRef pconn(studio_physical_ConnectionRef::cast_from(conn));
 
               if (pconn->foreignKey() == fk) {
                 found = pconn;
@@ -2451,7 +2451,7 @@ bool WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, c
 
           // connection doesnt exist yet, create it
           if (!found.is_valid()) {
-            workbench_physical_ConnectionRef conn(grt::Initialized);
+            studio_physical_ConnectionRef conn(grt::Initialized);
 
             conn->owner(view);
             conn->startFigure(table1);
@@ -2468,7 +2468,7 @@ bool WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, c
             return true;
           } else {
             // connection exists, check if its correct
-            if (workbench_physical_TableFigureRef::cast_from(found->endFigure())->table() !=
+            if (studio_physical_TableFigureRef::cast_from(found->endFigure())->table() !=
                 found->foreignKey()->referencedTable()) {
               if (!found->foreignKey()->referencedTable().is_valid()) {
                 // referencedTable was unset, so we need to remove the connection
@@ -2487,15 +2487,15 @@ bool WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, c
     } else {
       // remove all connections that correspond to the FK in all views
 
-      for (grt::ListRef<workbench_physical_Diagram>::const_iterator view = views.begin(); view != views.end(); ++view) {
-        workbench_physical_TableFigureRef table1(
-          workbench_physical_TableFigureRef::cast_from((*view)->getFigureForDBObject(table)));
+      for (grt::ListRef<studio_physical_Diagram>::const_iterator view = views.begin(); view != views.end(); ++view) {
+        studio_physical_TableFigureRef table1(
+          studio_physical_TableFigureRef::cast_from((*view)->getFigureForDBObject(table)));
         grt::ListRef<model_Connection>::const_reverse_iterator end = (*view)->connections().rend();
 
         for (grt::ListRef<model_Connection>::const_reverse_iterator conn = (*view)->connections().rbegin(); conn != end;
              ++conn) {
-          if ((*conn).is_instance(workbench_physical_Connection::static_class_name())) {
-            workbench_physical_ConnectionRef pconn(workbench_physical_ConnectionRef::cast_from(*conn));
+          if ((*conn).is_instance(studio_physical_Connection::static_class_name())) {
+            studio_physical_ConnectionRef pconn(studio_physical_ConnectionRef::cast_from(*conn));
 
             if (pconn->foreignKey() == fk) {
               grt::AutoUndo undo;
@@ -2517,7 +2517,7 @@ bool WBComponentPhysical::has_figure_for_object_in_active_view(const GrtObjectRe
     vform = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
 
   if (vform) {
-    workbench_physical_DiagramRef view(workbench_physical_DiagramRef::cast_from(vform->get_model_diagram()));
+    studio_physical_DiagramRef view(studio_physical_DiagramRef::cast_from(vform->get_model_diagram()));
 
     if (view->getFigureForDBObject(db_DatabaseObjectRef::cast_from(object)).is_valid())
       return true;
@@ -2679,7 +2679,7 @@ void WBComponentPhysical::privilege_list_changed(grt::internal::OwnedList *list,
 //--------------------------------------------------------------------------------
 // Privilege Management
 
-db_UserRef WBComponentPhysical::add_new_user(const workbench_physical_ModelRef &model) {
+db_UserRef WBComponentPhysical::add_new_user(const studio_physical_ModelRef &model) {
   db_CatalogRef catalog;
   db_UserRef user;
 
@@ -2711,7 +2711,7 @@ void WBComponentPhysical::remove_user(const db_UserRef &user) {
   _wb->_frontendCallbacks->show_status_text(strfmt(_("Removed user '%s'"), user->name().c_str()));
 }
 
-db_RoleRef WBComponentPhysical::add_new_role(const workbench_physical_ModelRef &model) {
+db_RoleRef WBComponentPhysical::add_new_role(const studio_physical_ModelRef &model) {
   db_CatalogRef catalog;
   db_RoleRef role;
 
@@ -2781,7 +2781,7 @@ void WBComponentPhysical::remove_references_to_object(const db_DatabaseObjectRef
     undo.end_or_cancel_if_empty(_("Remove Object Privileges"));
   }
 
-  workbench_physical_ModelRef model(get_parent_for_object<workbench_physical_Model>(object));
+  studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(object));
   // remove any tags that reference this object
   if (model.is_valid()) {
     grt::AutoUndo undo;

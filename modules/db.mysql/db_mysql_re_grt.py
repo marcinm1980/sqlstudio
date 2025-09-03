@@ -22,11 +22,11 @@
 
 from wb import DefineModule
 import grt
-from workbench import db_utils
+from studio import db_utils
 
-from workbench.db_utils import MySQLConnection, escape_sql_string, escape_sql_identifier
+from studio.db_utils import MySQLConnection, escape_sql_string, escape_sql_identifier
 
-from workbench.exceptions import NotConnectedError
+from studio.exceptions import NotConnectedError
 
 ModuleInfo = DefineModule(name= "DbMySQLRE", author= "Oracle Corp.", version="1.0")
 

@@ -25,7 +25,7 @@
 #include "wb_editor_layer.h"
 #include "base/string_utilities.h"
 
-LayerEditorBE::LayerEditorBE(const workbench_physical_LayerRef &layer) : BaseEditor(layer), _layer(layer) {
+LayerEditorBE::LayerEditorBE(const studio_physical_LayerRef &layer) : BaseEditor(layer), _layer(layer) {
 }
 
 bool LayerEditorBE::should_close_on_delete_of(const std::string &oid) {

@@ -24,7 +24,7 @@ from mforms import App, Utilities, newBox, newPanel, newButton, newLabel, newTab
 import mforms
 import errno
 from wb_common import OperationCancelledError, InvalidPasswordError, dprint_ex, parentdir, joinpath
-from workbench.log import log_debug
+from studio.log import log_debug
 
 #===============================================================================
 #

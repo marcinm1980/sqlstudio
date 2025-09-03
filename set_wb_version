@@ -12,7 +12,7 @@ edition_name=$3
 license_type=$4
 
 echo "----------------------------------------------------"
-echo "Setting workbench version"
+echo "Setting studio version"
 echo "Version       : $1"
 echo "Release Type  : $2"
 echo "Edition       : $3"
@@ -43,12 +43,12 @@ sed -e "s/#define APP_MAJOR_NUMBER.*/#define APP_MAJOR_NUMBER $major/" \
     -e "s/#define APP_RELEASE_NUMBER.*/#define APP_RELEASE_NUMBER $release_number/" \
     -e "s/#define APP_RELEASE_TYPE.*/#define APP_RELEASE_TYPE \"$release_type\"/" \
     -e "s/#define APP_BUILD_NUMBER.*/#define APP_BUILD_NUMBER $build/" \
-    -i.bak backend/wbprivate/workbench/wb_version.h 
+    -i.bak backend/wbprivate/studio/wb_version.h 
 
 if test "$edition_name" != "" -a "$license_type" != ""; then
 sed -e "s/#define APP_LICENSE_TYPE.*/#define APP_LICENSE_TYPE \"$license_type\"/" \
     -e "s/#define APP_EDITION_NAME.*/#define APP_EDITION_NAME \"$edition_name\"/" \
-    -i.bak backend/wbprivate/workbench/wb_version.h 
+    -i.bak backend/wbprivate/studio/wb_version.h 
 fi
 
 echo "Updating AssemblyInfo.cs"
@@ -65,15 +65,15 @@ fi
 echo "Updating Info.plist"
 sed -e "/<key>CFBundleShortVersionString<\/key>/N;s/.*\n.*<\/string>/	<key>CFBundleShortVersionString<\/key>@	<string>$major.$minor.$release$dot_release_type<\/string>/" -e 'y/@/\n/' -i.bak Info.plist
 
-echo "Updating mysql-workbench.spec.in"
-sed -e "s/--define='version.*'/--define='version $major.$minor.$release_number'/" -i.bak build/mysql-workbench.spec.in
+echo "Updating mysql-studio.spec.in"
+sed -e "s/--define='version.*'/--define='version $major.$minor.$release_number'/" -i.bak build/mysql-studio.spec.in
 
 # check if build/debian.in/changelog needs update
 echo "Checking if build/debian.in/changelog needs updating"
 if ! grep $major.$minor.$release- build/debian.in/changelog; then
     echo "build/debian.in/changelog needs update, adding a new entry"
     cat <<EOF > build/debian.in/changelog.new
-mysql-workbench-@edition@ ($major.$minor.$release$dot_release_type-1@distrov@) @distro@; urgency=low
+mysql-studio-@edition@ ($major.$minor.$release$dot_release_type-1@distrov@) @distro@; urgency=low
 
   * New release
 

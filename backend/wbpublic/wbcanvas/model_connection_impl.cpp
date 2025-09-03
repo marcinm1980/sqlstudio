@@ -169,7 +169,7 @@ void model_Connection::ImplData::set_above_caption(const std::string &text) {
     return;
   }
 
-  if (self()->owner()->owner()->get_data()->get_int_option("workbench.physical.Connection:ShowCaptions", 0) == 0) {
+  if (self()->owner()->owner()->get_data()->get_int_option("studio.physical.Connection:ShowCaptions", 0) == 0) {
     delete _above_caption;
     _above_caption = 0;
     return;
@@ -190,7 +190,7 @@ void model_Connection::ImplData::set_below_caption(const std::string &text) {
     return;
   }
 
-  if (self()->owner()->owner()->get_data()->get_int_option("workbench.physical.Connection:ShowCaptions", 0) == 0) {
+  if (self()->owner()->owner()->get_data()->get_int_option("studio.physical.Connection:ShowCaptions", 0) == 0) {
     delete _below_caption;
     _below_caption = 0;
     return;
@@ -290,7 +290,7 @@ void model_Connection::ImplData::finish_realize() {
 
   _line->set_splitted(*self()->_drawSplit != 0);
 
-  if (self()->owner()->owner()->get_data()->get_int_option("workbench.physical.Connection:CenterCaptions", 0) != 0)
+  if (self()->owner()->owner()->get_data()->get_int_option("studio.physical.Connection:CenterCaptions", 0) != 0)
     _line->set_center_captions(true);
   else
     _line->set_center_captions(false);

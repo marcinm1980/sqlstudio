@@ -26,9 +26,9 @@
 #include "wb_overview_physical.h"
 #include "wb_overview_physical_schema.h"
 
-#include "workbench/wb_context.h"
-#include "workbench/wb_context_ui.h"
-#include "workbench/wb_command_ui.h"
+#include "studio/wb_context.h"
+#include "studio/wb_context_ui.h"
+#include "studio/wb_command_ui.h"
 #include "wb_component_physical.h"
 
 #include "grt/incremental_list_updater.h"
@@ -61,7 +61,7 @@ using namespace base;
 #define SCRIPT_NODE NodeId(3)
 #define NOTE_NODE NodeId(4)
 
-PhysicalSchemataNode::PhysicalSchemataNode(workbench_physical_ModelRef amodel) : ContainerNode(OverviewBE::OGroup) {
+PhysicalSchemataNode::PhysicalSchemataNode(studio_physical_ModelRef amodel) : ContainerNode(OverviewBE::OGroup) {
   type = OverviewBE::ODivision;
   object = amodel->catalog();
   model = amodel;
@@ -207,7 +207,7 @@ public:
     //= bec::GRTManager::get();
     // QQQgrt->lock_tree_write();
 
-    workbench_physical_ModelRef model(workbench_physical_ModelRef::cast_from(object->owner()));
+    studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(object->owner()));
     grt::ListRef<GrtStoredNote> notes;
 
     if (object.is_instance(db_Script::static_class_name()))
@@ -249,7 +249,7 @@ public:
   }
 };
 
-SQLScriptsNode::SQLScriptsNode(workbench_physical_ModelRef model, PhysicalOverviewBE *owner)
+SQLScriptsNode::SQLScriptsNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner)
   : ContainerNode(OverviewBE::OItem), _owner(owner), _model(model) {
   object = model;
   id = model->id() + "/scripts";
@@ -317,7 +317,7 @@ void SQLScriptsNode::refresh_children() {
   }
 }
 
-NotesNode::NotesNode(workbench_physical_ModelRef model, PhysicalOverviewBE *owner)
+NotesNode::NotesNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner)
   : ContainerNode(OverviewBE::OItem), _owner(owner), _model(model) {
   object = model;
   id = model->id() + "/notes";
@@ -386,7 +386,7 @@ void NotesNode::refresh_children() {
 
 class PhysicalRootNode : public OverviewBE::ContainerNode {
 public:
-  PhysicalRootNode(workbench_physical_ModelRef model, PhysicalOverviewBE *owner)
+  PhysicalRootNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner)
     : ContainerNode(OverviewBE::ODivision) {
     type = OverviewBE::ORoot;
     if (model->rdbms().is_valid())
@@ -478,7 +478,7 @@ void PhysicalOverviewBE::update_toolbar_icons() {
 
 //--------------------------------------------------------------------------------------------------
 
-OverviewBE::ContainerNode *PhysicalOverviewBE::create_root_node(workbench_physical_ModelRef model,
+OverviewBE::ContainerNode *PhysicalOverviewBE::create_root_node(studio_physical_ModelRef model,
                                                                 PhysicalOverviewBE *owner) {
   return new PhysicalRootNode(model, owner);
 }
@@ -508,7 +508,7 @@ std::string PhysicalOverviewBE::get_title() {
   return std::string(_("MySQL Model")) + dirty_mark;
 }
 
-void PhysicalOverviewBE::set_model(workbench_physical_ModelRef model) {
+void PhysicalOverviewBE::set_model(studio_physical_ModelRef model) {
   if (_root_node)
     delete _root_node;
 

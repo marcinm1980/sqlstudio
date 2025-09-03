@@ -26,7 +26,7 @@
 
 #include "grts/structs.h"
 #include "grts/structs.db.mgmt.h"
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grt.h"
 
 using namespace grt;

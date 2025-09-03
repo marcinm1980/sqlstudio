@@ -24,7 +24,7 @@
 
 #include "grt.h"
 #include "wb_model.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "grt/grt_manager.h"
 #include "grtpp_undo_manager.h"
 #include "base/string_utilities.h"
@@ -104,7 +104,7 @@ static void def_export_catalog_plugin(const char *aName, const char *aCaption, g
   plugin->rating(100);
   plugin->showProgress(1);
   pdef1->name("activeModel");
-  pdef1->objectStructName("workbench.physical.Model");
+  pdef1->objectStructName("studio.physical.Model");
   pdef1->owner(plugin);
   plugin->inputValues().insert(pdef1);
 
@@ -678,14 +678,14 @@ int WbModelImpl::do_autolayout(const model_LayerRef &layer, ListRef<model_Object
   if (selection.count() > 0) {
     for (std::size_t i = 0; i < selection->count(); ++i) {
       const model_ObjectRef figure = selection[i];
-      if (workbench_physical_TableFigureRef::can_wrap(figure) || workbench_physical_ViewFigureRef::can_wrap(figure))
+      if (studio_physical_TableFigureRef::can_wrap(figure) || studio_physical_ViewFigureRef::can_wrap(figure))
         layout.add_figure_to_layout(model_FigureRef::cast_from(figure));
     }
   } else {
     const ListRef<model_Figure> figures = layer->figures();
     for (std::size_t i = 0; i < figures->count(); ++i) {
       const model_ObjectRef figure = figures[i];
-      if (workbench_physical_TableFigureRef::can_wrap(figure) || workbench_physical_ViewFigureRef::can_wrap(figure))
+      if (studio_physical_TableFigureRef::can_wrap(figure) || studio_physical_ViewFigureRef::can_wrap(figure))
         layout.add_figure_to_layout(model_FigureRef::cast_from(figure));
     }
   }
@@ -721,13 +721,13 @@ static bool calculate_view_size(const app_PageSettingsRef &page, double &width, 
   }
 }
 
-workbench_physical_DiagramRef WbModelImpl::add_model_view(
+studio_physical_DiagramRef WbModelImpl::add_model_view(
   const db_CatalogRef &catalog, int xpages,
   int ypages) { // XXX TODO move this to MySqlStudio module so we can reuse the same code as from wb_component
   // also add code to place db objects or figures in canvas
-  workbench_physical_DiagramRef view(grt::Initialized);
+  studio_physical_DiagramRef view(grt::Initialized);
 
-  workbench_physical_ModelRef model = workbench_physical_ModelRef::cast_from(catalog->owner());
+  studio_physical_ModelRef model = studio_physical_ModelRef::cast_from(catalog->owner());
 
   app_PageSettingsRef page(app_PageSettingsRef::cast_from(grt::GRT::get()->get("/wb/doc/pageSettings")));
   double width, height;
@@ -748,7 +748,7 @@ workbench_physical_DiagramRef WbModelImpl::add_model_view(
   return view;
 }
 
-static workbench_physical_DiagramRef create_view_for_object_count(workbench_physical_ModelRef model, int object_count) {
+static studio_physical_DiagramRef create_view_for_object_count(studio_physical_ModelRef model, int object_count) {
   int xpages = 2, ypages = 1;
   int pages;
   // guesstimate about 15 objects per page
@@ -760,19 +760,19 @@ static workbench_physical_DiagramRef create_view_for_object_count(workbench_phys
   if (xpages < 1)
     xpages = 1;
 
-  workbench_physical_DiagramRef view = workbench_physical_DiagramRef::cast_from(model->addNewDiagram(false));
+  studio_physical_DiagramRef view = studio_physical_DiagramRef::cast_from(model->addNewDiagram(false));
 
   view->setPageCounts(xpages, ypages);
 
   return view;
 }
 
-int WbModelImpl::createDiagramWithObjects(workbench_physical_ModelRef model, grt::ListRef<GrtObject> objects) {
+int WbModelImpl::createDiagramWithObjects(studio_physical_ModelRef model, grt::ListRef<GrtObject> objects) {
   std::size_t object_count = objects.count();
 
   if (object_count > 0) {
     begin_undo_group();
-    workbench_physical_DiagramRef view = create_view_for_object_count(model, (int)object_count);
+    studio_physical_DiagramRef view = create_view_for_object_count(model, (int)object_count);
 
     do_autoplace_any_list(view, objects);
     ListRef<db_Table> tables(true);
@@ -793,7 +793,7 @@ int WbModelImpl::createDiagramWithObjects(workbench_physical_ModelRef model, grt
   return 0;
 }
 
-int WbModelImpl::createDiagramWithCatalog(workbench_physical_ModelRef model, db_CatalogRef catalog) {
+int WbModelImpl::createDiagramWithCatalog(studio_physical_ModelRef model, db_CatalogRef catalog) {
   std::size_t object_count = 0;
   ListRef<db_Schema> schemata = catalog->schemata();
   for (std::size_t n = 0, count = schemata.count(); n < count; ++n) {
@@ -810,7 +810,7 @@ int WbModelImpl::createDiagramWithCatalog(workbench_physical_ModelRef model, db_
   DictRef wb_options = DictRef::cast_from(grt::GRT::get()->get("/wb/options/options"));
 
   begin_undo_group();
-  workbench_physical_DiagramRef diagram = create_view_for_object_count(model, (int)object_count);
+  studio_physical_DiagramRef diagram = create_view_for_object_count(model, (int)object_count);
 
   for (std::size_t n = 0, count = schemata.count(); n < count; ++n) {
     db_SchemaRef schema = schemata[n];
@@ -848,7 +848,7 @@ int WbModelImpl::do_autoplace_any_list(const model_DiagramRef &view, ListRef<Grt
   if (!count)
     return 0;
 
-  workbench_physical_DiagramRef diagram(workbench_physical_DiagramRef::cast_from(view));
+  studio_physical_DiagramRef diagram(studio_physical_DiagramRef::cast_from(view));
 
   DictRef wb_options = DictRef::cast_from(grt::GRT::get()->get("/wb/options/options"));
 
@@ -904,13 +904,13 @@ void WbModelImpl::handle_fklist_change(const model_DiagramRef &view, const db_Ta
       // that correspond to the FK for creating the relationship in all these views
 
       grt::ListRef<model_Figure> figures(view->figures());
-      workbench_physical_TableFigureRef table1, table2;
+      studio_physical_TableFigureRef table1, table2;
 
       for (std::size_t d = figures.count(), f = 0; f < d; f++) {
         model_FigureRef fig(figures[f]);
 
-        if (fig.is_instance(workbench_physical_TableFigure::static_class_name())) {
-          workbench_physical_TableFigureRef tablefig(workbench_physical_TableFigureRef::cast_from(fig));
+        if (fig.is_instance(studio_physical_TableFigure::static_class_name())) {
+          studio_physical_TableFigureRef tablefig(studio_physical_TableFigureRef::cast_from(fig));
 
           if (tablefig->table() == table) {
             table1 = tablefig;
@@ -934,8 +934,8 @@ void WbModelImpl::handle_fklist_change(const model_DiagramRef &view, const db_Ta
         for (std::size_t d = connections.count(), j = 0; j < d; j++) {
           model_ConnectionRef conn(connections[j]);
 
-          if (conn.is_instance(workbench_physical_Connection::static_class_name())) {
-            workbench_physical_ConnectionRef pconn(workbench_physical_ConnectionRef::cast_from(conn));
+          if (conn.is_instance(studio_physical_Connection::static_class_name())) {
+            studio_physical_ConnectionRef pconn(studio_physical_ConnectionRef::cast_from(conn));
 
             if (pconn->foreignKey() == fk) {
               found = true;
@@ -946,7 +946,7 @@ void WbModelImpl::handle_fklist_change(const model_DiagramRef &view, const db_Ta
 
         // connection doesnt exist yet, create it
         if (!found) {
-          workbench_physical_ConnectionRef conn(grt::Initialized);
+          studio_physical_ConnectionRef conn(grt::Initialized);
           conn->owner(view);
           conn->startFigure(table1);
           conn->endFigure(table2);
@@ -964,8 +964,8 @@ void WbModelImpl::handle_fklist_change(const model_DiagramRef &view, const db_Ta
 
       for (grt::ListRef<model_Connection>::const_reverse_iterator conn = connections.rbegin();
            conn != connections.rend(); ++conn) {
-        if ((*conn).is_instance(workbench_physical_Connection::static_class_name())) {
-          workbench_physical_ConnectionRef pconn(workbench_physical_ConnectionRef::cast_from(*conn));
+        if ((*conn).is_instance(studio_physical_Connection::static_class_name())) {
+          studio_physical_ConnectionRef pconn(studio_physical_ConnectionRef::cast_from(*conn));
 
           if (pconn->foreignKey() == fk) {
             // remove this connection

@@ -25,7 +25,7 @@
 #ifndef _SERVER_INSTANCE_EDITOR_H_
 #define _SERVER_INSTANCE_EDITOR_H_
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 #include "grts/structs.db.mgmt.h"
 #include "grtui/grtdb_connect_panel.h"
 

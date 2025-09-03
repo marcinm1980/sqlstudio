@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "grts/structs.workbench.model.h"
+#include "grts/structs.studio.model.h"
 
 #include "model_diagram_impl.h"
 #include "model_model_impl.h"
@@ -260,10 +260,10 @@ void model_Diagram::ImplData::realize_selection() {
 }
 
 void model_Diagram::ImplData::update_options(const std::string &key) {
-  if (key == "workbench.physical.Diagram:DrawLineCrossings" || key.empty()) {
+  if (key == "studio.physical.Diagram:DrawLineCrossings" || key.empty()) {
     model_Model::ImplData *model = _self->owner()->get_data();
     if (_canvas_view)
-      _canvas_view->set_draws_line_hops(model->get_int_option("workbench.physical.Diagram:DrawLineCrossings", 1) == 1);
+      _canvas_view->set_draws_line_hops(model->get_int_option("studio.physical.Diagram:DrawLineCrossings", 1) == 1);
   }
 }
 

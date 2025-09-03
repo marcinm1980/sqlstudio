@@ -27,7 +27,7 @@
 
 // Physical Model Handling
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "base/trackable.h"
 #include "base/notifications.h"
@@ -36,9 +36,9 @@
 
 #include "grt/icon_manager.h"
 
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 
-#include "wbcanvas/workbench_physical_model_impl.h"
+#include "wbcanvas/studio_physical_model_impl.h"
 
 namespace wb {
 
@@ -79,11 +79,11 @@ namespace wb {
       return WBComponentPhysical::name();
     }
     virtual std::string get_diagram_class_name() {
-      return workbench_physical_Diagram::static_class_name();
+      return studio_physical_Diagram::static_class_name();
     }
 
     // Model
-    db_SchemaRef add_new_db_schema(const workbench_physical_ModelRef &model);
+    db_SchemaRef add_new_db_schema(const studio_physical_ModelRef &model);
     void delete_db_schema(const db_SchemaRef &schema);
 
     db_DatabaseObjectRef add_new_db_table(const db_SchemaRef &schema, const std::string &template_name = "");
@@ -91,8 +91,8 @@ namespace wb {
     db_DatabaseObjectRef add_new_db_routine(const db_SchemaRef &schema);
     db_DatabaseObjectRef add_new_db_routine_group(const db_SchemaRef &schema);
 
-    db_ScriptRef add_new_stored_script(const workbench_physical_ModelRef &model, const std::string &path = "");
-    GrtStoredNoteRef add_new_stored_note(const workbench_physical_ModelRef &model, const std::string &path = "");
+    db_ScriptRef add_new_stored_script(const studio_physical_ModelRef &model, const std::string &path = "");
+    GrtStoredNoteRef add_new_stored_note(const studio_physical_ModelRef &model, const std::string &path = "");
 
     std::list<model_FigureRef> interactive_place_db_objects(ModelDiagramForm *vform, int x, int y,
                                                             const std::list<db_DatabaseObjectRef> &objects);
@@ -112,7 +112,7 @@ namespace wb {
 
     virtual void delete_db_object(const db_DatabaseObjectRef &object);
 
-    void setup_physical_model(workbench_DocumentRef &doc, const std::string &rdbms_name,
+    void setup_physical_model(studio_DocumentRef &doc, const std::string &rdbms_name,
                               const std::string &rdbms_version);
 
     bool has_figure_for_object_in_active_view(const GrtObjectRef &object, ModelDiagramForm *vform = 0);
@@ -122,8 +122,8 @@ namespace wb {
     void remove_user(const db_UserRef &user);
     void remove_role(const db_RoleRef &role);
 
-    db_UserRef add_new_user(const workbench_physical_ModelRef &model);
-    db_RoleRef add_new_role(const workbench_physical_ModelRef &model);
+    db_UserRef add_new_user(const studio_physical_ModelRef &model);
+    db_RoleRef add_new_role(const studio_physical_ModelRef &model);
 
     void remove_references_to_object(const db_DatabaseObjectRef &object);
     virtual void close_document();
@@ -138,20 +138,20 @@ namespace wb {
       RelationshipToolState state;
       std::string last_message;
       RelationshipType type;
-      workbench_physical_TableFigureRef hovering;
+      studio_physical_TableFigureRef hovering;
       std::vector<db_ColumnRef> columns;
       std::vector<db_ColumnRef> refcolumns;
 
       RelationshipFloater *floater;
 
-      workbench_physical_TableFigureRef itable;
-      workbench_physical_TableFigureRef ftable;
+      studio_physical_TableFigureRef itable;
+      studio_physical_TableFigureRef ftable;
 
-      bool pick_table(const workbench_physical_TableFigureRef &table);
-      bool pick_reftable(const workbench_physical_TableFigureRef &table);
+      bool pick_table(const studio_physical_TableFigureRef &table);
+      bool pick_reftable(const studio_physical_TableFigureRef &table);
 
-      bool pick_column(const workbench_physical_TableFigureRef &table, const db_ColumnRef &column);
-      bool pick_refcolumn(const workbench_physical_TableFigureRef &table, const db_ColumnRef &column);
+      bool pick_column(const studio_physical_TableFigureRef &table, const db_ColumnRef &column);
+      bool pick_refcolumn(const studio_physical_TableFigureRef &table, const db_ColumnRef &column);
       bool done_picking_columns() {
         return (!columns.empty() && columns.size() == refcolumns.size());
       }
@@ -164,8 +164,8 @@ namespace wb {
       bool add_refcolumn(const db_ColumnRef &column);
 
       void on_figure_crossed(const model_ObjectRef &owner, mdc::CanvasItem *item, bool enter, const base::Point &pos);
-      void enter_table(const workbench_physical_TableFigureRef &table);
-      void leave_table(const workbench_physical_TableFigureRef &table);
+      void enter_table(const studio_physical_TableFigureRef &table);
+      void leave_table(const studio_physical_TableFigureRef &table);
 
       void source_picking_done();
 
@@ -182,7 +182,7 @@ namespace wb {
     virtual void setup_context_grt(WBOptions *options);
 
     void init_catalog_grt(const db_mgmt_RdbmsRef &rdbms, const std::string &db_versionRef,
-                          workbench_physical_ModelRef &model);
+                          studio_physical_ModelRef &model);
 
     grt::ListRef<db_UserDatatype> create_builtin_user_datatypes(const db_CatalogRef &catalog,
                                                                 const db_mgmt_RdbmsRef &rdbms);
@@ -229,8 +229,8 @@ namespace wb {
     RelationshipToolContext *start_relationship(ModelDiagramForm *view, const base::Point &pos, RelationshipType type);
     void cancel_relationship(ModelDiagramForm *view, RelationshipToolContext *rctx);
 
-    bool create_nm_relationship(ModelDiagramForm *view, workbench_physical_TableFigureRef table1,
-                                workbench_physical_TableFigureRef table2, bool imandatory, bool fmandatory);
+    bool create_nm_relationship(ModelDiagramForm *view, studio_physical_TableFigureRef table1,
+                                studio_physical_TableFigureRef table2, bool imandatory, bool fmandatory);
 
   private:
     std::map<std::string, app_ToolbarRef> _toolbars;

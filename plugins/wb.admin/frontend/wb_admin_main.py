@@ -26,12 +26,12 @@ import os
 import sys
 import grt
 
-from workbench.log import log_info, log_error, log_debug
+from studio.log import log_info, log_error, log_debug
 
 from mforms import App, Utilities, newTabView, Color, ControlBackgroundColor
 import mforms
 
-from workbench.notifications import nc
+from studio.notifications import nc
 
 from wb_common import dprint_ex
 import wb_admin_utils

@@ -31,14 +31,14 @@
 #include "grt/icon_manager.h"
 #include "grt/grt_manager.h"
 
-#include "workbench/wb_model_file.h"
-#include "workbench/wb_context_ui.h"
+#include "studio/wb_model_file.h"
+#include "studio/wb_context_ui.h"
 
 #include "mforms/progressbar.h"
 #include "mforms/imagebox.h"
 #include "mforms/label.h"
 
-#include "workbench/wb_context.h"
+#include "studio/wb_context.h"
 
 DEFAULT_LOG_DOMAIN("PlugIn")
 

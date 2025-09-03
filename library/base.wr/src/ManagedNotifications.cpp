@@ -78,7 +78,7 @@ void ManagedNotificationCenter::RemoveObserver(IMySqlStudioObserver ^ observer, 
   std::string message =
     (notification == nullptr || notification->Length == 0) ? "" : NativeToCppStringRaw(notification);
 
-  // Find the interfaced observer we created for the workbench observer.
+  // Find the interfaced observer we created for the studio observer.
   for (std::vector<InterfacedObserver *>::const_iterator iterator = observer_list->begin();
        iterator != observer_list->end(); ++iterator) {
     if ((*iterator)->WrapsObserver(observer)) {

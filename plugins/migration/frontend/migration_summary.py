@@ -23,8 +23,8 @@
 import mforms
 import grt
 
-from workbench.ui import WizardPage
-from workbench.template import MiniTemplate
+from studio.ui import WizardPage
+from studio.template import MiniTemplate
 
 
 

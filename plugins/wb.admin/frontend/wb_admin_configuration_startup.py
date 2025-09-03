@@ -28,7 +28,7 @@ import datetime
 from wb_admin_utils import no_remote_admin_warning_label
 
 from wb_log_reader import ErrorLogFileReader
-from workbench.notifications import nc
+from studio.notifications import nc
 
 from wb_admin_utils import weakcb, WbAdminTabBase, WbAdminValidationConnection, WbAdminValidationRemoteAccess
 

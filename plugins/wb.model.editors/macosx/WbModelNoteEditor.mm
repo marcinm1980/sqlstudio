@@ -85,7 +85,7 @@ static void call_refresh(void *theEditor)
   delete mBackEnd;
   
     // setup the editor backend with the note object (args[0])
-  mBackEnd= new NoteEditorBE(workbench_model_NoteFigureRef::cast_from(args[0]));
+  mBackEnd= new NoteEditorBE(studio_model_NoteFigureRef::cast_from(args[0]));
     
   // register a callback that will make [self refresh] get called
   // whenever the backend thinks its needed to refresh the UI from the backend data (ie, the

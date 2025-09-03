@@ -61,8 +61,8 @@ public:
   int center(model_DiagramRef view);
   int autolayout(model_DiagramRef view);
 
-  int createDiagramWithCatalog(workbench_physical_ModelRef model, db_CatalogRef catalog);
-  int createDiagramWithObjects(workbench_physical_ModelRef model, grt::ListRef<GrtObject> objects);
+  int createDiagramWithCatalog(studio_physical_ModelRef model, db_CatalogRef catalog);
+  int createDiagramWithObjects(studio_physical_ModelRef model, grt::ListRef<GrtObject> objects);
 
   int fitObjectsToContents(const grt::ListRef<model_Object> &figures);
 
@@ -74,15 +74,15 @@ public:
 
   virtual std::string getTemplateDirFromName(const std::string &template_name) override;
 
-  virtual workbench_model_reporting_TemplateInfoRef getReportingTemplateInfo(const std::string &template_name) override;
+  virtual studio_model_reporting_TemplateInfoRef getReportingTemplateInfo(const std::string &template_name) override;
 
-  virtual ssize_t generateReport(workbench_physical_ModelRef model, const grt::DictRef &options) override;
+  virtual ssize_t generateReport(studio_physical_ModelRef model, const grt::DictRef &options) override;
 
 private:
   void initializeReporting();
   void begin_undo_group();
   void end_undo_group(const std::string &action_desc);
-  workbench_physical_DiagramRef add_model_view(const db_CatalogRef &catalog, int xpages, int ypages);
+  studio_physical_DiagramRef add_model_view(const db_CatalogRef &catalog, int xpages, int ypages);
 
   grt::ListRef<GrtObject> _selected_objects;
   bool _use_objects_from_catalog;
@@ -93,7 +93,7 @@ private:
   void handle_fklist_change(const model_DiagramRef &view, const db_TableRef &table, const db_ForeignKeyRef &fk,
                             bool added);
 
-  workbench_model_reporting_TemplateStyleInfoRef get_template_style_from_name(std::string template_name,
+  studio_model_reporting_TemplateStyleInfoRef get_template_style_from_name(std::string template_name,
                                                                               std::string template_style_name);
 
   grt::UndoManager *_undo_man;

@@ -9,7 +9,7 @@
       <value type="object" struct-name="app.ToolbarItem" id="com.mysql.wb.toolbar.option.layer.color">
         <link type="object" key="owner" struct-name="db.Toolbar">com.mysql.wb.toolbar.option.layer</link>
         <value type="string" key="name">basic/layer/colors</value>
-        <value type="string" key="command">option:workbench.model.Layer:Color</value>
+        <value type="string" key="command">option:studio.model.Layer:Color</value>
         <value type="string" key="itemType">dropdown</value>
       </value>
     </value>

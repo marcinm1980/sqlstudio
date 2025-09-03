@@ -42,7 +42,7 @@ using namespace mforms;
   const char* HomeScreenSettings::HOME_NORMAL_FONT = "Tahoma";
   const char* HomeScreenSettings::HOME_DETAILS_FONT = "Helvetica";
 #endif
-const char* HomeScreenSettings::TILE_DRAG_FORMAT = "com.mysql.workbench-drag-tile-format";
+const char* HomeScreenSettings::TILE_DRAG_FORMAT = "com.mysql.studio-drag-tile-format";
 
 //--------------------------------------------------------------------------------------------------
 

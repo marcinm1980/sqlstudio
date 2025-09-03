@@ -1,7 +1,7 @@
 //
 // This header file auto-generated for the template
 //    C:\Documents and Settings\mysqldev\My Documents\Visual Studio
-//    2005\Projects\mysql-workbench-pro\testing\tut\data\modules_grt\schema_reporting\.\schema_reporting_test_1.tpl.html
+//    2005\Projects\mysql-studio-pro\testing\tut\data\modules_grt\schema_reporting\.\schema_reporting_test_1.tpl.html
 // by ..\..\..\..\..\..\mysql-gui-win-res\bin\make_tpl_varname_h
 // DO NOT MODIFY THIS FILE DIRECTLY
 //

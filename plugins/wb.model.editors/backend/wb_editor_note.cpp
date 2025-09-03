@@ -25,7 +25,7 @@
 #include "wb_editor_note.h"
 #include "base/string_utilities.h"
 
-NoteEditorBE::NoteEditorBE(const workbench_model_NoteFigureRef &note) : bec::BaseEditor(note), _note(note) {
+NoteEditorBE::NoteEditorBE(const studio_model_NoteFigureRef &note) : bec::BaseEditor(note), _note(note) {
 }
 
 bool NoteEditorBE::should_close_on_delete_of(const std::string &oid) {

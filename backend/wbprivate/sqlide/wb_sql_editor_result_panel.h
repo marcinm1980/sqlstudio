@@ -26,7 +26,7 @@
 
 #include "base/notifications.h"
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "mforms/appview.h"
 #include "mforms/tabview_dock.h"

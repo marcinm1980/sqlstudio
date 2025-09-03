@@ -31,7 +31,7 @@
 #include "grt/clipboard.h"
 #include "grt/validation_manager.h"
 #include "grtdb/db_object_helpers.h"
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include "base/string_utilities.h"
 #include "base/file_utilities.h"
@@ -78,7 +78,7 @@ DEFAULT_LOG_DOMAIN("TableEditorBE")
  - So, to distinguish between real UDTs and corrupt-UDTs you should check if the object id.
  */
 
-static std::string getTemplate(workbench_physical_ModelRef model, const std::string &name, bool isEditingLiveObject) {
+static std::string getTemplate(studio_physical_ModelRef model, const std::string &name, bool isEditingLiveObject) {
   if (isEditingLiveObject)
     return bec::GRTManager::get()->get_app_option_string(name);
   else
@@ -112,7 +112,7 @@ std::vector<std::string> TableColumnsListBE::get_datatype_names() {
   types.push_back("DATETIME");
   types.push_back("BLOB");
 
-  GrtVersionRef target_version = GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(_owner->get_catalog()->owner()), "CatalogVersion"));
+  GrtVersionRef target_version = GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(_owner->get_catalog()->owner()), "CatalogVersion"));
   std::vector<db_SimpleDatatypeRef> sorted_types;
   grt::ListRef<db_SimpleDatatype> stypes(_owner->get_catalog()->simpleDatatypes());
   for (grt::ListRef<db_SimpleDatatype>::const_iterator iter = stypes.begin(); iter != stypes.end(); ++iter) {
@@ -495,7 +495,7 @@ bool TableColumnsListBE::set_field(const NodeId &node, ColumnId column, const st
 
       db_ColumnRef col(_owner->get_table()->columns()[node[0]]);
 
-      auto model = workbench_physical_ModelRef::cast_from(_owner->get_catalog()->owner());
+      auto model = studio_physical_ModelRef::cast_from(_owner->get_catalog()->owner());
       if (node[0] == 0) {
         _owner->get_table()->addPrimaryKeyColumn(col);
         set_column_type_from_string(col,
@@ -812,7 +812,7 @@ bool TableColumnsListBE::get_field_grt(const NodeId &node, ColumnId column, grt:
         return false;
     }
   } else if (node[0] == count() - 1) {
-    auto model = workbench_physical_ModelRef::cast_from(_owner->get_catalog()->owner());
+    auto model = studio_physical_ModelRef::cast_from(_owner->get_catalog()->owner());
     if (column == Name && _editing_placeholder_row == node[0]) {
       if (node[0] == 0) {
         value = grt::StringRef(
@@ -2493,7 +2493,7 @@ bool FKConstraintListBE::get_field_grt(const NodeId &node, ColumnId column, grt:
         value = fk->name();
       else if (_editing_placeholder_row == node[0]) {
         std::string temp =
-          base::replaceString(getTemplate(workbench_physical_ModelRef::cast_from(_owner->get_catalog()->owner()),
+          base::replaceString(getTemplate(studio_physical_ModelRef::cast_from(_owner->get_catalog()->owner()),
                                           "FKNameTemplate", _owner->is_editing_live_object()),
                               "%stable%", _owner->get_name().c_str());
 
@@ -2745,7 +2745,7 @@ NodeId TableEditorBE::add_fk(const std::string &name) {
 
   fk = TableHelper::create_empty_foreign_key(get_table(), name);
 
-  auto model = workbench_physical_ModelRef::cast_from(get_catalog()->owner());
+  auto model = studio_physical_ModelRef::cast_from(get_catalog()->owner());
   fk->updateRule(StringRef(getTemplate(model, "db.ForeignKey:updateRule",
                                        is_editing_live_object())));
 
@@ -2913,7 +2913,7 @@ bool TableEditorBE::showErrorMessage(const std::string &type) {
   bool ret = false;
   std::string key = base::tolower(type);
   if (key == "json") {
-    GrtVersionRef version = GrtVersionRef::cast_from(bec::getModelOption(workbench_physical_ModelRef::cast_from(get_catalog()->owner()), "CatalogVersion"));
+    GrtVersionRef version = GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(get_catalog()->owner()), "CatalogVersion"));
     bool versionCheck = bec::is_supported_mysql_version_at_least(version, 5, 7, 8);
     if (!versionCheck) {
       mforms::Utilities::show_message(

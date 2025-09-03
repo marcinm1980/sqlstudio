@@ -24,10 +24,10 @@ import sys
 import grt
 import mforms
 import os
-from workbench.ui import WizardPage, WizardProgressPage
+from studio.ui import WizardPage, WizardProgressPage
 from DataMigrator import DataMigrator
 from migration_source_selection import request_password
-from workbench.utils import Version
+from studio.utils import Version
 from migration_bulk_copy_data import DataCopyFactory
 
 class SetupMainView(WizardPage):

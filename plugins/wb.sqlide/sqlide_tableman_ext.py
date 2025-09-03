@@ -23,7 +23,7 @@
 import mforms
 import grt
 import sys
-from workbench.log import log_error
+from studio.log import log_error
 
 from sqlide_catalogman_ext import MaintenanceResultForm
 from sqlide_catalogman_ext import ObjectManager
@@ -31,7 +31,7 @@ from sqlide_catalogman_ext import TriggerManager
 from sqlide_catalogman_ext import ColumnManager
 from mforms import IconStringColumnType, StringColumnType, LongIntegerColumnType
 from wb_admin_utils import make_panel_header
-from workbench.utils import human_size, Version
+from studio.utils import human_size, Version
 from wb_common import to_unicode
 
 def make_title(t):

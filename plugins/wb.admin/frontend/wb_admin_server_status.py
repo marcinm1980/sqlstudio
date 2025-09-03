@@ -21,15 +21,15 @@
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 
-from workbench.log import log_info, log_error, log_warning, log_debug3
+from studio.log import log_info, log_error, log_warning, log_debug3
 
-from workbench.utils import format_duration, Version
-from workbench.db_utils import QueryError
+from studio.utils import format_duration, Version
+from studio.db_utils import QueryError
 import mforms
 import time
 import wb_admin_monitor
 
-from workbench.notifications import NotificationCenter
+from studio.notifications import NotificationCenter
 
 def stradd(table, y, label, value):
     t = mforms.newLabel(label + ":")

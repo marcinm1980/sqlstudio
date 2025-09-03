@@ -24,13 +24,13 @@
 
 #pragma once
 
-#include "workbench/wb_backend_public_interface.h"
+#include "studio/wb_backend_public_interface.h"
 
 #include "base/file_utilities.h"
 #include "base/ui_form.h"
 #include "base/threaded_timer.h"
 
-#include "grts/structs.workbench.h"
+#include "grts/structs.studio.h"
 #include "grts/structs.db.mgmt.h"
 #include "grtpp_notifications.h"
 

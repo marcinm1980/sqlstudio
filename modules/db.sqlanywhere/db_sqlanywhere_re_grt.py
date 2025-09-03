@@ -23,9 +23,9 @@
 from db_generic_re_grt import GenericReverseEngineering
 
 from wb import DefineModule
-from workbench.utils import find_object_with_name, server_version_str2tuple, replace_string_parameters
-from workbench import db_driver
-from workbench.exceptions import NotConnectedError
+from studio.utils import find_object_with_name, server_version_str2tuple, replace_string_parameters
+from studio import db_driver
+from studio.exceptions import NotConnectedError
 
 import grt
 

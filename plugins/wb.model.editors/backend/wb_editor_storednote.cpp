@@ -27,7 +27,7 @@
 
 #include "wb_editor_storednote.h"
 
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 #include "grt/exceptions.h"
 
 #include "mforms/code_editor.h"
@@ -60,7 +60,7 @@ bool StoredNoteEditorBE::is_script() {
 
 MySQLEditor::Ref StoredNoteEditorBE::get_sql_editor() {
   if (!_sql_editor) {
-    workbench_physical_ModelRef model(workbench_physical_ModelRef::cast_from(_note->owner()));
+    studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(_note->owner()));
     MySQLParserServices::Ref services = MySQLParserServices::get();
     MySQLParserContext::Ref context =
       services->createParserContext(model->catalog()->characterSets(), model->catalog()->version(), "", false);
@@ -183,7 +183,7 @@ grt::StringRef StoredNoteEditorBE::get_text(bool &isutf8) {
 
 void StoredNoteEditorBE::set_name(const std::string &name) {
   if (_note->name() != name) {
-    workbench_physical_ModelRef model(workbench_physical_ModelRef::cast_from(_note->owner()));
+    studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(_note->owner()));
 
     if (!model.is_valid())
       throw std::logic_error("Note owner not set");

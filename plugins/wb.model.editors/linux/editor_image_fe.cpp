@@ -41,7 +41,7 @@ class ImageEditorFE : public PluginEditorBase {
 
 public:
   ImageEditorFE(grt::Module *m, const grt::BaseListRef &args)
-    : PluginEditorBase(m, args), _be(workbench_model_ImageFigureRef::cast_from(args[0])), _xml(0), _image(0) {
+    : PluginEditorBase(m, args), _be(studio_model_ImageFigureRef::cast_from(args[0])), _xml(0), _image(0) {
     set_border_width(8);
 
     _xml =

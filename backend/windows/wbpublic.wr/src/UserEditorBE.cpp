@@ -27,7 +27,7 @@
 #include "DelegateWrapper.h"
 #include "GrtManager.h"
 
-#include "grts/structs.workbench.physical.h"
+#include "grts/structs.studio.physical.h"
 
 #include "UserEditorBE.h"
 

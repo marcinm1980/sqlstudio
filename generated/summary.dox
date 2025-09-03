@@ -13,7 +13,7 @@ import grt
 grt.root
 \endcode
 
-All object nodes descend from a base \ref GrtObject class. It has a name and owner fields. The owner field must alway point to the object that precedes it in the globals tree hierarchy, eg: a column is owned by a table, a table is owned by a schema, a schema by a catalog and so on up to the root node, which is an instance of \ref workbench_MySqlStudio.
+All object nodes descend from a base \ref GrtObject class. It has a name and owner fields. The owner field must alway point to the object that precedes it in the globals tree hierarchy, eg: a column is owned by a table, a table is owned by a schema, a schema by a catalog and so on up to the root node, which is an instance of \ref studio_MySqlStudio.
 
 \section keynotes Key Globals Tree Nodes
 
@@ -33,11 +33,11 @@ All object nodes descend from a base \ref GrtObject class. It has a name and own
 
 \subsection modeling Modeling
 
-- \b root.wb.doc (\ref workbench_Document) the base node for the currently loaded MySql Studio model document. This node will be null if there is no model document loaded. 
+- \b root.wb.doc (\ref studio_Document) the base node for the currently loaded MySql Studio model document. This node will be null if there is no model document loaded. 
 
 - \b root.wb.docPath (string) path to the currently loaded document.
 
-- \b root.wb.doc.physicalModels[0] (\ref workbench_physical_Model) The first (and only) object of the list of physical model objects. This is the starting node for all model related data.
+- \b root.wb.doc.physicalModels[0] (\ref studio_physical_Model) The first (and only) object of the list of physical model objects. This is the starting node for all model related data.
 
 - \b root.wb.doc.physicalModels[0] (dictionary) Model specific options dictionary. Model specific options in this dictionary will override values stored in root.wb.options.options.
 
@@ -45,13 +45,13 @@ All object nodes descend from a base \ref GrtObject class. It has a name and own
 
 - \b root.wb.doc.physicalModels[0].catalog.schemata (list of \ref db_mysql_Schema) A list of the schemas you have in your model. The schema object contains lists of tables, views, stored procedures and functions (ie "routines"). See the \ref db_mysql_Schema class for more information about the schema.
 
-- \b root.wb.doc.pyhsicalModels[0].diagrams (list of \ref workbench_physical_Diagram) A list of EER diagrams in the model. A diagram is a graphical canvas containing figures, some of them representating database objects from the model's catalog.
+- \b root.wb.doc.pyhsicalModels[0].diagrams (list of \ref studio_physical_Diagram) A list of EER diagrams in the model. A diagram is a graphical canvas containing figures, some of them representating database objects from the model's catalog.
 
-- \b root.wb.doc.physicalModels[0].diagrams[0].figures (list of \ref model_Figure) A list of figure objects, subclasses of \ref model_Figure, such as \ref workbench_physical_TableFigure, \ref workbench_physical_ViewFigure, \ref workbench_physical_RoutineGroupFigure, \ref workbench_model_NoteFigure or \ref workbench_model_ImageFigure 
+- \b root.wb.doc.physicalModels[0].diagrams[0].figures (list of \ref model_Figure) A list of figure objects, subclasses of \ref model_Figure, such as \ref studio_physical_TableFigure, \ref studio_physical_ViewFigure, \ref studio_physical_RoutineGroupFigure, \ref studio_model_NoteFigure or \ref studio_model_ImageFigure 
 
-- \b root.wb.doc.pyhsicalModels[0].diagrams[0].connections (list of \ref model_Connection) A list of connection objects, of the class \ref workbench_physical_Connection. Connections represent relationships between tables through a line connecting their figures.
+- \b root.wb.doc.pyhsicalModels[0].diagrams[0].connections (list of \ref model_Connection) A list of connection objects, of the class \ref studio_physical_Connection. Connections represent relationships between tables through a line connecting their figures.
 
-- \b root.wb.doc.physicalModels[0].diagrams[0].rootLayer (\ref workbench_physical_Layer) The root layer in the diagram. Layers are used to group and organize related objects together, drawing a colored rectangle around them. However, the root layer does not have a background nor a title and always has the same size as the entire diagram. The root layer can contain figures and other layer objects, but sub-layers may only contain figures. All figures must be inside a layer, even if it's the root layer.
+- \b root.wb.doc.physicalModels[0].diagrams[0].rootLayer (\ref studio_physical_Layer) The root layer in the diagram. Layers are used to group and organize related objects together, drawing a colored rectangle around them. However, the root layer does not have a background nor a title and always has the same size as the entire diagram. The root layer can contain figures and other layer objects, but sub-layers may only contain figures. All figures must be inside a layer, even if it's the root layer.
 
 - \b root.wb.doc.physicalModels[0].selection (list of \ref model_Object) The list of currently selected objects in the diagram. May contain connections, layers and figures. This list may be modified to change the selection.
 
