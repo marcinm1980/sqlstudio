@@ -36,7 +36,7 @@ using namespace Runtime::InteropServices; // Needed for the [Out] keyword.
 
 namespace MySQL {
   namespace GUI {
-    namespace Workbench {
+    namespace MySqlStudio {
 
     public
       ref class SqlEditorFormWrapper : public MySQL::Base::UIForm {
@@ -123,6 +123,6 @@ namespace MySQL {
         Post_query_cb ^ _post_query_cb;
       };
 
-    }; // namespace Workbench
+    }; // namespace MySqlStudio
   };   // namespace GUI
 };     // namespace MySQL

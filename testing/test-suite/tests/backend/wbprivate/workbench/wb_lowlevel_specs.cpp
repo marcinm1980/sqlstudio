@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-// High-level testing for Workbench.
+// High-level testing for MySqlStudio.
 // This tests WBContext, which will test the integration of all components.
 
 #include "wb_test_helpers.h"
@@ -53,14 +53,14 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
-$describe("Low-level tests for Workbench context") {
+$describe("Low-level tests for MySqlStudio context") {
   $beforeAll([&]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
-  #ifndef _MSC_VER
+#ifndef _MSC_VER
     if (signal(SIGSEGV, signal_handler) == SIG_ERR) {
       printf("Failed to setup the signal handler\n");
     }

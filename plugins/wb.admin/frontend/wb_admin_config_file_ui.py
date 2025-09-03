@@ -79,7 +79,7 @@ def run_version_select_form(version):
     right_vbox = newBox(False)
     right_vbox.set_spacing(12)
 
-    warn_label = newLabel("Server version %s is not supported by Workbench\nconfiguration file management tool." % ".".join([str(x) for x in version]))
+    warn_label = newLabel("Server version %s is not supported by MySqlStudio\nconfiguration file management tool." % ".".join([str(x) for x in version]))
     right_vbox.add(warn_label, False, True)
 
     warn_label = newLabel("Although, you can select different server version\nfor the tool to use. Suggested version "
@@ -164,7 +164,7 @@ class Page(object):
 
 class WbAdminValidationRequiredRemoteAdmin(WbAdminValidationBase):
     def __init__(self, instance_info):
-        super().__init__("MySQL Workbench requires an SSH connection to support managing Option File remotely.")
+        super().__init__("MySql Studio requires an SSH connection to support managing Option File remotely.")
         self._instance_info = instance_info
         
     def validate(self):
@@ -535,7 +535,7 @@ class WbAdminConfigFileUI(WbAdminTabBase):
                 res = mforms.Utilities.show_error('Specify remote location',
                     'No remote location available. Please specify the path to the file in the server using '
                     'the line edit control at the left of the download button and try again. Or you can click '
-                    'on the "Use Suggested" button to let Workbench use an appropriate value for the remote '
+                    'on the "Use Suggested" button to let MySqlStudio use an appropriate value for the remote '
                     'location',
                     'OK', 'Use Suggested', '')
                 if res == mforms.ResultCancel:
@@ -630,7 +630,7 @@ class WbAdminConfigFileUI(WbAdminTabBase):
                 res = mforms.Utilities.show_error('Specify remote location',
                     'No remote location available. Please specify the path to the file in the server using '
                     'the line edit control at the left of the upload button and try again. Or you can click '
-                    'on the "Use Suggested" button to let Workbench use an appropriate value for the remote '
+                    'on the "Use Suggested" button to let MySqlStudio use an appropriate value for the remote '
                     'location',
                     'OK', 'Use Suggested', '')
                 if res == mforms.ResultCancel:

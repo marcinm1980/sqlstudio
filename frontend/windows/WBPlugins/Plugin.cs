@@ -24,7 +24,7 @@
 
 using MySQL.Grt;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
 	/// <summary>
 	/// Generic GRT Object Editor

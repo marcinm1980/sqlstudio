@@ -1,8 +1,8 @@
-# MySQL Workbench
+# MySql Studio
 
 Copyright (c) 2007, 2025, Oracle and/or its affiliates.
 
-This is a release of [MySQL Workbench](https://mysqlworkbench.org), a graphical tool for working with MySQL servers and databases.
+This is a release of [MySql Studio](https://mysqlworkbench.org), a graphical tool for working with MySQL servers and databases.
 
 ![Home screen on Windows](https://dev.mysql.com/doc/workbench/en/images/wb-home-screen-new.png)
 
@@ -11,21 +11,21 @@ License information can be found in the [License](License.txt) file.
 This distribution may include materials developed by third parties. 
 For license and attribution notices for these materials, please refer to the [License](License.txt) file. 
 
-For more information on MySQL Workbench, visit 
+For more information on MySql Studio, visit 
   [http://dev.mysql.com/doc/workbench/en](http://dev.mysql.com/doc/workbench/en)
 
-For additional downloads and the source of MySQL Workbench, visit
+For additional downloads and the source of MySql Studio, visit
   [http://dev.mysql.com/downloads](http://dev.mysql.com/downloads)
 
-MySQL Workbench is brought to you by the MySQL team at Oracle.
+MySql Studio is brought to you by the MySQL team at Oracle.
 
 # Overview
 
-[MySQL Workbench](https://mysqlworkbench.org) is a graphical tool for working with MySQL servers and databases. MySQL Workbench fully supports MySQL server versions 5.6 and higher.
+[MySql Studio](https://mysqlworkbench.org) is a graphical tool for working with MySQL servers and databases. MySql Studio fully supports MySQL server versions 5.6 and higher.
 
-MySQL Workbench functionality covers five main topics:
+MySql Studio functionality covers five main topics:
 
-* **SQL Development:** Enables you to create and manage connections to database servers. Along with enabling you to configure connection parameters, MySQL Workbench provides the capability to execute SQL queries on the database connections using the built-in SQL Editor.
+* **SQL Development:** Enables you to create and manage connections to database servers. Along with enabling you to configure connection parameters, MySql Studio provides the capability to execute SQL queries on the database connections using the built-in SQL Editor.
 
 * **Data Modeling (Design):** Enables you to create models of your database schema graphically, reverse and forward engineer between a schema and a live database, and edit all aspects of your database using the comprehensive Table Editor. The Table Editor provides easy-to-use facilities for editing Tables, Columns, Indexes, Triggers, Partitioning, Options, Inserts and Privileges, Routines and Views.
 

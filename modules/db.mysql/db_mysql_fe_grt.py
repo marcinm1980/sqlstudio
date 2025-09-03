@@ -246,11 +246,11 @@ def createScriptForCatalogObjects(path, catalog, objectCreationParams):
     import time
     file = open(path, "w+")
     file.write("""-- ----------------------------------------------------------------------------
--- MySQL Workbench Migration
+-- MySql Studio Migration
 -- Migrated Schemata: %s
 -- Source Schemata: %s
 -- Created: %s
--- Workbench Version: %s
+-- MySqlStudio Version: %s
 -- ----------------------------------------------------------------------------
 
 """ % (", ".join([s.name for s in catalog.schemata]), ", ".join([s.oldName for s in catalog.schemata]), time.ctime(), Version.fromgrt(grt.root.wb.info.version)))

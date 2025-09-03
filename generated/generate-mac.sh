@@ -2,10 +2,10 @@
 # MySQL Interface Generation Script
 #================================================================================
 # This script will generate all header files.
-# In order to make this work Workbench must be built completely, including genobj + genwrap targets.
+# In order to make this work MySqlStudio must be built completely, including genobj + genwrap targets.
 # ================================================================================
 
-BINPATH="../DerivedData/MySQLWorkbench/Build/Products/Debug/MySQLWorkbench.app/Contents/MacOS"
+BINPATH="../DerivedData/MySQLMySqlStudio/Build/Products/Debug/MySQLMySqlStudio.app/Contents/MacOS"
 
 echo --------------------------------------------------------------------------------
 echo

@@ -41,7 +41,7 @@ using namespace MySQL::Base;
 using namespace MySQL::Grt;
 using namespace MySQL::Forms;
 using namespace MySQL::GUI::Mdc;
-using namespace MySQL::Workbench;
+using namespace MySQL::MySqlStudio;
 
 //--------------------------------------------------------------------------------------------------
 

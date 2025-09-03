@@ -274,7 +274,7 @@ static void wizard_run_modal(mforms::Wizard *self) {
       NSAlert *alert = [NSAlert new];
       alert.messageText = @"Unhandled Exception";
       alert.informativeText = [NSString stringWithFormat: @"An unhandled exception has occurred while executing the wizard. "
-                               "Please restart Workbench at the first opportunity.\nException: %s", exc.what()];
+                               "Please restart MySqlStudio at the first opportunity.\nException: %s", exc.what()];
       alert.alertStyle = NSAlertStyleCritical;
       [alert addButtonWithTitle: @"Close"];
       [alert runModal];

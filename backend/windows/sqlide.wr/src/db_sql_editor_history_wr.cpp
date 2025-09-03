@@ -31,7 +31,7 @@ using namespace MySQL::Forms;
 
 namespace MySQL {
   namespace GUI {
-    namespace Workbench {
+    namespace MySqlStudio {
 
       using namespace MySQL::Grt::Db;
 
@@ -57,6 +57,6 @@ namespace MySQL {
 
       //--------------------------------------------------------------------------------------------------
 
-    }; // namespace Workbench
+    }; // namespace MySqlStudio
   };   // namespace GUI
 };     // namespace MySQL

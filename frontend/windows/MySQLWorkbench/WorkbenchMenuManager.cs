@@ -29,22 +29,22 @@ using System.Windows.Forms;
 
 using MySQL.Grt;
 using MySQL.Utilities;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
-  class WorkbenchMenuManager : MenuManager
+  class MySqlStudioMenuManager : MenuManager
   {
     #region Member Variables
-    
-    // The Workbench context
+
+    // The MySqlStudio context
     private WbContext wbContext;
 
     #endregion
 
     #region Constructors
 
-    public WorkbenchMenuManager(WbContext WbContext)
+    public MySqlStudioMenuManager(WbContext WbContext)
     {
       wbContext = WbContext;
     }

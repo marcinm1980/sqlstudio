@@ -30,7 +30,7 @@ using System.Runtime.Remoting.Channels.Ipc;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace MySQL.Workbench
+namespace MySQL.MySqlStudio
 {
   /// <summary>
   /// Application Instance Manager
@@ -46,7 +46,7 @@ namespace MySQL.Workbench
     public static bool CreateSingleInstance(string name, String[] args, 
       EventHandler<InstanceCallbackEventArgs> callback)
     {
-      Logger.LogDebug("Workbench", 1, "Creating single instance setup\n");
+      Logger.LogDebug("MySqlStudio", 1, "Creating single instance setup\n");
 
       EventWaitHandle eventWaitHandle = null;
       string eventName = String.Format("{0}.{1}.{2}", Environment.MachineName, Environment.UserName, name);
@@ -57,7 +57,7 @@ namespace MySQL.Workbench
       try
       {
         // Try opening existing wait handle.
-        Logger.LogDebug("Workbench", 2, "Trying to open existing event wait handle\n");
+        Logger.LogDebug("MySqlStudio", 2, "Trying to open existing event wait handle\n");
         eventWaitHandle = EventWaitHandle.OpenExisting(eventName);
       }
       catch
@@ -68,8 +68,8 @@ namespace MySQL.Workbench
 
       if (InstanceProxy.IsFirstInstance)
       {
-        Logger.LogDebug("Workbench", 2, "This is the first application instance\n");
-        
+        Logger.LogDebug("MySqlStudio", 2, "This is the first application instance\n");
+
         // Since this is the first instance we need to set up our communication infrastructure.
         eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, eventName);
         ThreadPool.RegisterWaitForSingleObject(eventWaitHandle, WaitOrTimerCallback, callback,
@@ -81,8 +81,8 @@ namespace MySQL.Workbench
       }
       else
       {
-        Logger.LogDebug("Workbench", 2, "Another application instance is already running\n");
-        
+        Logger.LogDebug("MySqlStudio", 2, "Another application instance is already running\n");
+
         // We are second in a row, so pass application arguments to the shared object and quit.
         UpdateRemoteObject(name);
 
@@ -99,8 +99,8 @@ namespace MySQL.Workbench
     /// <param name="uri">The name used to identify the application.</param>
     private static void UpdateRemoteObject(string uri)
     {
-      Logger.LogDebug("Workbench", 2, "Sending our command line arguments to the first instance\n");
-      
+      Logger.LogDebug("MySqlStudio", 2, "Sending our command line arguments to the first instance\n");
+
       // Open an inter-process-communication channel to the target application.
       var clientChannel = new IpcClientChannel();
       ChannelServices.RegisterChannel(clientChannel, true);
@@ -117,11 +117,11 @@ namespace MySQL.Workbench
         }
         catch
         {
-          Logger.LogError("Workbench", "Sending command line parameters to existing instance failed.\n");
-          MessageBox.Show("MySQL Workbench encountered a problem when trying to pass on command line parameters" +
-            " to the already running Workbench instance. Maybe there's a hanging Workbench process that is" +
+          Logger.LogError("MySqlStudio", "Sending command line parameters to existing instance failed.\n");
+          MessageBox.Show("MySql Studio encountered a problem when trying to pass on command line parameters" +
+            " to the already running MySqlStudio instance. Maybe there's a hanging MySqlStudio process that is" +
             " pretending to be the current instance.\n\nPlease kill the hanging process and try again.",
-            "MySQL Workbench Execution Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            "MySql Studio Execution Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
       // Finally clean up. We are done.
@@ -134,7 +134,7 @@ namespace MySQL.Workbench
     /// <param name="uri">The name used to identify the application.</param>
     private static void RegisterRemoteType(string uri)
     {
-      Logger.LogDebug("Workbench", 2, "Registering IPC channel and instance proxy\n");
+      Logger.LogDebug("MySqlStudio", 2, "Registering IPC channel and instance proxy\n");
 
       // Create and register the IPC channel for communication.
       var serverChannel = new IpcServerChannel(
@@ -158,15 +158,15 @@ namespace MySQL.Workbench
     /// <param name="timedOut">Can never be true as we have an infinite timeout.</param>
     private static void WaitOrTimerCallback(object state, bool timedOut)
     {
-      Logger.LogDebug("Workbench", 2, "Application instance wait handle was triggered\n");
-      
+      Logger.LogDebug("MySqlStudio", 2, "Application instance wait handle was triggered\n");
+
       var callback = state as EventHandler<InstanceCallbackEventArgs>;
       if (callback == null)
         return;
 
       // Invoke the first instance's application callback so it can do what it needs to do
       // with the given parameters.
-      Logger.LogDebug("Workbench", 2, "Sending passed-in command line arguments to the callback\n");
+      Logger.LogDebug("MySqlStudio", 2, "Sending passed-in command line arguments to the callback\n");
       callback(state,
         new InstanceCallbackEventArgs(InstanceProxy.IsFirstInstance, InstanceProxy.CommandLineArgs)
       );

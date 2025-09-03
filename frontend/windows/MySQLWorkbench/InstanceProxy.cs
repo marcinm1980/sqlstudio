@@ -25,7 +25,7 @@
 ﻿using System;
 using System.Security.Permissions;
 
-namespace MySQL.Workbench
+namespace MySQL.MySqlStudio
 {
 	/// <summary>
 	/// A shared object used for interprocess communication.

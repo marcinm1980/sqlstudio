@@ -2,7 +2,7 @@ The workbench Python Module
 ############################
 
 The :mod:`workbench` module provides several submodules that facilitate the development of python plugins
-and scripts for MySQL Workbench.
+and scripts for MySql Studio.
 
 .. contents::
     :local:

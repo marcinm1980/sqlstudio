@@ -29,8 +29,8 @@
 		1671A3870F83A46900F7767F /* TabMenuIconLight.png in Resources */ = {isa = PBXBuildFile; fileRef = 1671A3860F83A46900F7767F /* TabMenuIconLight.png */; };
 		16764CA80F82DC590099223D /* RightArrowIconLight.png in Resources */ = {isa = PBXBuildFile; fileRef = 16764CA60F82DC590099223D /* RightArrowIconLight.png */; };
 		16764CA90F82DC590099223D /* LeftArrowIconLight.png in Resources */ = {isa = PBXBuildFile; fileRef = 16764CA70F82DC590099223D /* LeftArrowIconLight.png */; };
-		169CCFF20F017969005152CD /* MySQLWorkbench.icns in Resources */ = {isa = PBXBuildFile; fileRef = 169CCFF10F017969005152CD /* MySQLWorkbench.icns */; };
-		169CD0000F017A2A005152CD /* MySQLWorkbenchDoc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 169CCFFF0F017A2A005152CD /* MySQLWorkbenchDoc.icns */; };
+		169CCFF20F017969005152CD /* MySQLMySqlStudio.icns in Resources */ = {isa = PBXBuildFile; fileRef = 169CCFF10F017969005152CD /* MySQLMySqlStudio.icns */; };
+		169CD0000F017A2A005152CD /* MySQLMySqlStudioDoc.icns in Resources */ = {isa = PBXBuildFile; fileRef = 169CCFFF0F017A2A005152CD /* MySQLMySqlStudioDoc.icns */; };
 		16B2EA600F54A3D200D583B1 /* MacTableEditorFKColumnsInformationSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 16B2EA580F54A3D200D583B1 /* MacTableEditorFKColumnsInformationSource.mm */; };
 		16B2EA610F54A3D200D583B1 /* MacTableEditorIndexColumnsInformationSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 16B2EA590F54A3D200D583B1 /* MacTableEditorIndexColumnsInformationSource.mm */; };
 		16B2EA620F54A3D200D583B1 /* MacTableEditorInformationSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 16B2EA5C0F54A3D200D583B1 /* MacTableEditorInformationSource.mm */; };
@@ -2792,7 +2792,7 @@
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 8D1107260486CEB800E47090;
-			remoteInfo = MySQLWorkbench;
+			remoteInfo = MySQLMySqlStudio;
 		};
 		2731DE7921A2F148002EEE8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2813,7 +2813,7 @@
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 8D1107260486CEB800E47090;
-			remoteInfo = MySQLWorkbench;
+			remoteInfo = MySQLMySqlStudio;
 		};
 		27323B451DF1833F00CA4E1B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2827,14 +2827,14 @@
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 8D1107260486CEB800E47090;
-			remoteInfo = MySQLWorkbench;
+			remoteInfo = MySQLMySqlStudio;
 		};
 		27366F2122F9D0D400140A7C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 8D1107260486CEB800E47090;
-			remoteInfo = MySQLWorkbench;
+			remoteInfo = MySQLMySqlStudio;
 		};
 		27378CC91917C71F00DE1AA6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -3829,7 +3829,7 @@
 		27D807AD1A3F30B000EDCA8F /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = MySQLWorkbench.app/Contents/Resources/Plugins;
+			dstPath = MySQLMySqlStudio.app/Contents/Resources/Plugins;
 			dstSubfolderSpec = 7;
 			files = (
 				27D807AE1A3F30B800EDCA8F /* wba_audit in CopyFiles */,
@@ -4102,8 +4102,8 @@
 		16764CA70F82DC590099223D /* LeftArrowIconLight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LeftArrowIconLight.png; sourceTree = "<group>"; };
 		169CCB3B0EFFCD61005152CD /* WBSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBSplitView.h; sourceTree = "<group>"; };
 		169CCB3C0EFFCD61005152CD /* WBSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBSplitView.m; sourceTree = "<group>"; };
-		169CCFF10F017969005152CD /* MySQLWorkbench.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = MySQLWorkbench.icns; sourceTree = "<group>"; };
-		169CCFFF0F017A2A005152CD /* MySQLWorkbenchDoc.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = MySQLWorkbenchDoc.icns; sourceTree = "<group>"; };
+		169CCFF10F017969005152CD /* MySQLMySqlStudio.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = MySQLMySqlStudio.icns; sourceTree = "<group>"; };
+		169CCFFF0F017A2A005152CD /* MySQLMySqlStudioDoc.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = MySQLMySqlStudioDoc.icns; sourceTree = "<group>"; };
 		169E60B40EF115EA00D821E7 /* SchemaTabIconLight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SchemaTabIconLight.png; sourceTree = "<group>"; };
 		169E60B60EF115EA00D821E7 /* TabClose_PressedLight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabClose_PressedLight.png; sourceTree = "<group>"; };
 		169E60B70EF115EA00D821E7 /* TabClose_UnpressedLight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabClose_UnpressedLight.png; sourceTree = "<group>"; };
@@ -4438,7 +4438,7 @@
 		27BFE4621924BC670070B8FB /* db.mysql.editors.wbp_prefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = db.mysql.editors.wbp_prefix.h; path = prefix/db.mysql.editors.wbp_prefix.h; sourceTree = "<group>"; };
 		27BFE4651924C31C0070B8FB /* db.mysql.editors_prefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = db.mysql.editors_prefix.h; path = prefix/db.mysql.editors_prefix.h; sourceTree = "<group>"; };
 		27BFE4671924C3930070B8FB /* wb.model.editors_prefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wb.model.editors_prefix.h; path = prefix/wb.model.editors_prefix.h; sourceTree = "<group>"; };
-		27BFE4691924C3DB0070B8FB /* MySQLWorkbench_prefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MySQLWorkbench_prefix.h; path = prefix/MySQLWorkbench_prefix.h; sourceTree = "<group>"; };
+		27BFE4691924C3DB0070B8FB /* MySQLMySqlStudio_prefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MySQLMySqlStudio_prefix.h; path = prefix/MySQLMySqlStudio_prefix.h; sourceTree = "<group>"; };
 		27C08A421CB79775001A0ECC /* home_screen_connections.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = home_screen_connections.cpp; path = library/forms/home_screen_connections.cpp; sourceTree = "<group>"; };
 		27C08A431CB79775001A0ECC /* home_screen_documents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = home_screen_documents.cpp; path = library/forms/home_screen_documents.cpp; sourceTree = "<group>"; };
 		27C08A441CB79775001A0ECC /* home_screen_helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = home_screen_helpers.cpp; path = library/forms/home_screen_helpers.cpp; sourceTree = "<group>"; };
@@ -6721,7 +6721,7 @@
 		75C847F41067E9C70067947D /* wb_admin_config_file_be.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = wb_admin_config_file_be.py; path = plugins/wb.admin/backend/wb_admin_config_file_be.py; sourceTree = "<group>"; };
 		75C847F81067E9DF0067947D /* wb_admin_config_file_ui.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = wb_admin_config_file_ui.py; path = plugins/wb.admin/frontend/wb_admin_config_file_ui.py; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* MySQLWorkbench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MySQLWorkbench.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* MySQLMySqlStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MySQLMySqlStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E4E66F425D697060060A2FA /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = "3rd-party-ce/Python/Python.framework"; sourceTree = SOURCE_ROOT; };
 		8E6F7E832268AEBE00DAFB62 /* grt_inspector_value_specs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = grt_inspector_value_specs.cpp; sourceTree = "<group>"; };
 		8E6F7E87227094C500DAFB62 /* comparer_specs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = comparer_specs.cpp; path = "testing/test-suite/tests/library/grt/comparer_specs.cpp"; sourceTree = "<group>"; };
@@ -7467,7 +7467,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* MySQLWorkbench.app */,
+				8D1107320486CEB800E47090 /* MySQLMySqlStudio.app */,
 				2BD1FB0E0F33D29400FFC762 /* WBExtras.framework */,
 				2B825D290E0B59A100BE52DF /* libwbbase.dylib */,
 				2B825E220E0B662200BE52DF /* libmysql.canvas.dylib */,
@@ -7804,7 +7804,7 @@
 			name = ssh;
 			sourceTree = "<group>";
 		};
-		2797DAC8223BA50200BD1BD6 /* Workbench Tests */ = {
+		2797DAC8223BA50200BD1BD6 /* MySqlStudio Tests */ = {
 			isa = PBXGroup;
 			children = (
 				8E7D7EC1224E172B007B223C /* backend */,
@@ -7826,7 +7826,7 @@
 				44BA831522535EFE0056B7D5 /* wb_test_helpers.cpp */,
 				44BA831622535EFE0056B7D5 /* wb_test_helpers.h */,
 			);
-			name = "Workbench Tests";
+			name = "MySqlStudio Tests";
 			sourceTree = "<group>";
 		};
 		2797DAE3223BA5F100BD1BD6 /* grt */ = {
@@ -8217,7 +8217,7 @@
 			name = "Home Screen Icons";
 			sourceTree = "<group>";
 		};
-		29B97314FDCFA39411CA2CEA /* MySQLWorkbench */ = {
+		29B97314FDCFA39411CA2CEA /* MySQLMySqlStudio */ = {
 			isa = PBXGroup;
 			children = (
 				2744E6780FC1831900E85C33 /* ScintillaFramework.xcodeproj */,
@@ -8228,14 +8228,14 @@
 				2B825EBE0E0B68F500BE52DF /* Modules */,
 				2B825EBF0E0B690400BE52DF /* Plugins */,
 				2BCFD7BA0E88BA6000D2A0CB /* WBExtras */,
-				2B825EBC0E0B68D900BE52DF /* Workbench */,
-				2797DAC8223BA50200BD1BD6 /* Workbench Tests */,
+				2B825EBC0E0B68D900BE52DF /* MySqlStudio */,
+				2797DAC8223BA50200BD1BD6 /* MySqlStudio Tests */,
 				2B2637590E932F9300933149 /* Resource Files */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				2731DE4821A2CBF9002EEE8A /* Tools */,
 			);
-			name = MySQLWorkbench;
+			name = MySQLMySqlStudio;
 			sourceTree = "<group>";
 			wrapsLines = 0;
 		};
@@ -8548,8 +8548,8 @@
 				2B2638050E93B0F700933149 /* mini_notice.png */,
 				2BCEBF9613DBD3F100A23E75 /* mini_ok.png */,
 				2B2638060E93B0F700933149 /* mini_warning.png */,
-				169CCFF10F017969005152CD /* MySQLWorkbench.icns */,
-				169CCFFF0F017A2A005152CD /* MySQLWorkbenchDoc.icns */,
+				169CCFF10F017969005152CD /* MySQLMySqlStudio.icns */,
+				169CCFFF0F017A2A005152CD /* MySQLMySqlStudioDoc.icns */,
 				2B2638100E93B0F700933149 /* properties.png */,
 				2B2638120E93B0F700933149 /* schemata.png */,
 				2BBC385F1235C5A100CACF4C /* tiny_load.png */,
@@ -9804,7 +9804,7 @@
 			path = backend/wbpublic/wbcanvas;
 			sourceTree = "<group>";
 		};
-		2B75103E0E87966E0003120A /* Workbench */ = {
+		2B75103E0E87966E0003120A /* MySqlStudio */ = {
 			isa = PBXGroup;
 			children = (
 				2BD4208B198ACC2D0061895B /* Home */,
@@ -9836,7 +9836,7 @@
 				2BC08B311064836C0069AB9A /* wb_tunnel.h */,
 				2BF049671742CCF400A7EA35 /* wb_version.h */,
 			);
-			name = Workbench;
+			name = MySqlStudio;
 			path = backend/wbprivate/workbench;
 			sourceTree = "<group>";
 		};
@@ -10170,7 +10170,7 @@
 			name = mysql.canvas;
 			sourceTree = "<group>";
 		};
-		2B825EBC0E0B68D900BE52DF /* Workbench */ = {
+		2B825EBC0E0B68D900BE52DF /* MySqlStudio */ = {
 			isa = PBXGroup;
 			children = (
 				2BCFD7BB0E88BA8800D2A0CB /* Main Window */,
@@ -10181,13 +10181,13 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				1617BA220F8E4CD200F5249C /* SQL Query */,
 				27A3EC8C164BA997001B6D8F /* MainMenu.xib */,
-				27BFE4691924C3DB0070B8FB /* MySQLWorkbench_prefix.h */,
+				27BFE4691924C3DB0070B8FB /* MySQLMySqlStudio_prefix.h */,
 				2B263BC90E9463FB00933149 /* WBMainController.h */,
 				2B263BCA0E9463FB00933149 /* WBMainController.mm */,
 				2B0123E61090B617009B2112 /* WBPluginPanelController.h */,
 				2B0123E71090B617009B2112 /* WBPluginPanelController.mm */,
 			);
-			name = Workbench;
+			name = MySqlStudio;
 			sourceTree = "<group>";
 		};
 		2B825EBD0E0B68EC00BE52DF /* Backend */ = {
@@ -10576,7 +10576,7 @@
 				2B3D49480F3E41A7009238A7 /* Common Panels */,
 				2BF87A280FA7CED00012EADA /* Model */,
 				2BF879BA0FA7BDD40012EADA /* SQL IDE */,
-				2B75103E0E87966E0003120A /* Workbench */,
+				2B75103E0E87966E0003120A /* MySqlStudio */,
 				27BFE4601924BC290070B8FB /* wbprivate.be_prefix.h */,
 			);
 			name = Private;
@@ -13204,9 +13204,9 @@
 			productReference = 447271FA1C58F170005F840F /* utilities.grt.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		8D1107260486CEB800E47090 /* MySQLWorkbench */ = {
+		8D1107260486CEB800E47090 /* MySQLMySqlStudio */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MySQLWorkbench" */;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MySQLMySqlStudio" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -13256,10 +13256,10 @@
 				2B35007A152DEC6E00014C0D /* PBXTargetDependency */,
 				2B2E997B158DA3480078D08A /* PBXTargetDependency */,
 			);
-			name = MySQLWorkbench;
+			name = MySQLMySqlStudio;
 			productInstallPath = "$(HOME)/Applications";
-			productName = MySQLWorkbench;
-			productReference = 8D1107320486CEB800E47090 /* MySQLWorkbench.app */;
+			productName = MySQLMySqlStudio;
+			productReference = 8D1107320486CEB800E47090 /* MySQLMySqlStudio.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -13285,7 +13285,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MySQLWorkbench" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MySQLMySqlStudio" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 1;
@@ -13293,7 +13293,7 @@
 				en,
 				Base,
 			);
-			mainGroup = 29B97314FDCFA39411CA2CEA /* MySQLWorkbench */;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* MySQLMySqlStudio */;
 			projectDirPath = "";
 			projectReferences = (
 				{
@@ -13303,7 +13303,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* MySQLWorkbench */,
+				8D1107260486CEB800E47090 /* MySQLMySqlStudio */,
 				2B2E91C8158915DE0078D08A /* wbcopytables */,
 				2797DACC223BA56200BD1BD6 /* wbtests-se */,
 				2797DAD4223BA56A00BD1BD6 /* wbtests-ce */,
@@ -13424,8 +13424,8 @@
 				44DCA28621E62F2200DEC031 /* rubber_dark.png in Resources */,
 				2BF90F1F1979C3410029E1F9 /* ps_switcher_text_light@2x.png in Resources */,
 				2B263B9B0E94210A00933149 /* MainWindow.xib in Resources */,
-				169CCFF20F017969005152CD /* MySQLWorkbench.icns in Resources */,
-				169CD0000F017A2A005152CD /* MySQLWorkbenchDoc.icns in Resources */,
+				169CCFF20F017969005152CD /* MySQLMySqlStudio.icns in Resources */,
+				169CD0000F017A2A005152CD /* MySQLMySqlStudioDoc.icns in Resources */,
 				2B3D56180F4240C4009238A7 /* MacWizardBackground.png in Resources */,
 				2B3D56620F425362009238A7 /* DotBlue.png in Resources */,
 				2B02FEEE183E771B00770CC0 /* image.png in Resources */,
@@ -14393,7 +14393,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# The test binary must be in the MacOS folder to find its resource paths.\ncp ${BUILT_PRODUCTS_DIR}/genobj ${BUILT_PRODUCTS_DIR}/MySQLWorkbench.app/Contents/MacOS/\n\n";
+			shellScript = "# The test binary must be in the MacOS folder to find its resource paths.\ncp ${BUILT_PRODUCTS_DIR}/genobj ${BUILT_PRODUCTS_DIR}/MySQLMySqlStudio.app/Contents/MacOS/\n\n";
 		};
 		2731DE7621A2D50E002EEE8A /* Copy some binaries */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -14411,7 +14411,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# The test binary must be in the MacOS folder to find its resource paths.\ncp ${BUILT_PRODUCTS_DIR}/genwrap ${BUILT_PRODUCTS_DIR}/MySQLWorkbench.app/Contents/MacOS/\n";
+			shellScript = "# The test binary must be in the MacOS folder to find its resource paths.\ncp ${BUILT_PRODUCTS_DIR}/genwrap ${BUILT_PRODUCTS_DIR}/MySQLMySqlStudio.app/Contents/MacOS/\n";
 			showEnvVarsInLog = 0;
 		};
 		27BDFA3A184366000028B97E /* Regenerate ANTLR parsers if necessary */ = {
@@ -14537,7 +14537,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Install commercial plugins (dylibs)\n\n# Put all commercial plugin dylibs in the Input Files list below.\n# For dylibs, you must add it as a dependency in the MySQLWorkbenchCom scheme (not in the project dependencies)\n# so that they get built only for commercial builds\ni=0\nwhile true; do\n    path=$(eval \"echo \\$SCRIPT_INPUT_FILE_$i\")\n    if test \"$path\" = \"\"; then\n        break\n    fi\n    if [ -f $path -o -d $path ]; then\n        echo \"Copy $path to $BUILT_PRODUCTS_DIR/$PLUGINS_FOLDER_PATH\"\n        cp -r $path $BUILT_PRODUCTS_DIR/$PLUGINS_FOLDER_PATH\n    fi\n    i=$(($i+1))\ndone\n";
+			shellScript = "# Install commercial plugins (dylibs)\n\n# Put all commercial plugin dylibs in the Input Files list below.\n# For dylibs, you must add it as a dependency in the MySQLMySqlStudioCom scheme (not in the project dependencies)\n# so that they get built only for commercial builds\ni=0\nwhile true; do\n    path=$(eval \"echo \\$SCRIPT_INPUT_FILE_$i\")\n    if test \"$path\" = \"\"; then\n        break\n    fi\n    if [ -f $path -o -d $path ]; then\n        echo \"Copy $path to $BUILT_PRODUCTS_DIR/$PLUGINS_FOLDER_PATH\"\n        cp -r $path $BUILT_PRODUCTS_DIR/$PLUGINS_FOLDER_PATH\n    fi\n    i=$(($i+1))\ndone\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -15633,7 +15633,7 @@
 		};
 		2731DE7821A2E4D2002EEE8A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8D1107260486CEB800E47090 /* MySQLWorkbench */;
+			target = 8D1107260486CEB800E47090 /* MySQLMySqlStudio */;
 			targetProxy = 2731DE7721A2E4D2002EEE8A /* PBXContainerItemProxy */;
 		};
 		2731DE7A21A2F148002EEE8A /* PBXTargetDependency */ = {
@@ -15648,7 +15648,7 @@
 		};
 		2731DE8221A31552002EEE8A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8D1107260486CEB800E47090 /* MySQLWorkbench */;
+			target = 8D1107260486CEB800E47090 /* MySQLMySqlStudio */;
 			targetProxy = 2731DE8121A31552002EEE8A /* PBXContainerItemProxy */;
 		};
 		27323B461DF1833F00CA4E1B /* PBXTargetDependency */ = {
@@ -15658,12 +15658,12 @@
 		};
 		27366F2022F9D0C600140A7C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8D1107260486CEB800E47090 /* MySQLWorkbench */;
+			target = 8D1107260486CEB800E47090 /* MySQLMySqlStudio */;
 			targetProxy = 27366F1F22F9D0C600140A7C /* PBXContainerItemProxy */;
 		};
 		27366F2222F9D0D400140A7C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8D1107260486CEB800E47090 /* MySQLWorkbench */;
+			target = 8D1107260486CEB800E47090 /* MySQLMySqlStudio */;
 			targetProxy = 27366F2122F9D0D400140A7C /* PBXContainerItemProxy */;
 		};
 		27378CCA1917C71F00DE1AA6 /* PBXTargetDependency */ = {
@@ -19004,8 +19004,8 @@
 					"-Wl,-stack_size,0x10000000",
 					"-headerpad_max_install_names",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.oracle.workbench.MySQLWorkbench;
-				PRODUCT_NAME = MySQLWorkbench;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oracle.workbench.MySQLMySqlStudio;
+				PRODUCT_NAME = MySQLMySqlStudio;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -19059,8 +19059,8 @@
 					"-Wl,-stack_size,0x10000000",
 					"-headerpad_max_install_names",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.oracle.workbench.MySQLWorkbench;
-				PRODUCT_NAME = MySQLWorkbench;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oracle.workbench.MySQLMySqlStudio;
+				PRODUCT_NAME = MySQLMySqlStudio;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -19564,7 +19564,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MySQLWorkbench" */ = {
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MySQLMySqlStudio" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
@@ -19573,7 +19573,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MySQLWorkbench" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MySQLMySqlStudio" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,

@@ -10,14 +10,14 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "# Need to copy some binaries manually. A copy build phase won&apos;t work.&#10;&#10;# This dylib is part of a plugin framework, but can only be used directly.&#10;cp ${BUILT_PRODUCTS_DIR}/db.mysql.editors.mwbplugin/Contents/Frameworks/db.mysql.editors.wbp.dylib ${BUILT_PRODUCTS_DIR}/MySQLWorkbench.app/Contents/Frameworks/&#10;&#10;# In order for the produced binary to find its frameworks, we have to copy it to the&#10;# WB bundle and run it from there.&#10;&#10;cp ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME} ${BUILT_PRODUCTS_DIR}/MySQLWorkbench.app/Contents/MacOS/&#10;">
+               scriptText = "# Need to copy some binaries manually. A copy build phase won&apos;t work.&#10;&#10;# This dylib is part of a plugin framework, but can only be used directly.&#10;cp ${BUILT_PRODUCTS_DIR}/db.mysql.editors.mwbplugin/Contents/Frameworks/db.mysql.editors.wbp.dylib ${BUILT_PRODUCTS_DIR}/MySQLMySqlStudio.app/Contents/Frameworks/&#10;&#10;# In order for the produced binary to find its frameworks, we have to copy it to the&#10;# WB bundle and run it from there.&#10;&#10;cp ${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME} ${BUILT_PRODUCTS_DIR}/MySQLMySqlStudio.app/Contents/MacOS/&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "2797DAD4223BA56A00BD1BD6"
                      BuildableName = "wbtests"
                      BlueprintName = "wbtests-ce"
-                     ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+                     ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "2797DAD4223BA56A00BD1BD6"
                BuildableName = "wbtests"
                BlueprintName = "wbtests-ce"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -51,7 +51,7 @@
             BlueprintIdentifier = "2797DAD4223BA56A00BD1BD6"
             BuildableName = "wbtests"
             BlueprintName = "wbtests-ce"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -72,7 +72,7 @@
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
          runnableDebuggingMode = "0"
-         RemotePath = "/Volumes/Extern/Work/MySQL/workbench/features/DerivedData/MySQLWorkbench/Build/Products/Debug/MySQLWorkbench.app/Contents/MacOS/wbtests">
+         RemotePath = "/Volumes/Extern/Work/MySQL/workbench/features/DerivedData/MySQLMySqlStudio/Build/Products/Debug/MySQLMySqlStudio.app/Contents/MacOS/wbtests">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -80,7 +80,7 @@
             BlueprintIdentifier = "2797DAD4223BA56A00BD1BD6"
             BuildableName = "wbtests"
             BlueprintName = "wbtests-ce"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <CommandLineArguments>
@@ -92,12 +92,12 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "MWB_DATA_DIR"
-            value = "$BUILT_PRODUCTS_DIR/MySQLWorkbench.app/Contents/Resources"
+            value = "$BUILT_PRODUCTS_DIR/MySQLMySqlStudio.app/Contents/Resources"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "TEST_MODULES_DIR"
-            value = "$BUILT_PRODUCTS_DIR/MySQLWorkbench.app/Contents/Plugins"
+            value = "$BUILT_PRODUCTS_DIR/MySQLMySqlStudio.app/Contents/Plugins"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -120,7 +120,7 @@
             BlueprintIdentifier = "2797DAD4223BA56A00BD1BD6"
             BuildableName = "wbtests"
             BlueprintName = "wbtests-ce"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

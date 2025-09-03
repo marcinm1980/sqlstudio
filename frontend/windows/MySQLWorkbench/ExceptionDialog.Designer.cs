@@ -1,4 +1,4 @@
-﻿namespace MySQL.GUI.Workbench
+﻿namespace MySQL.GUI.MySqlStudio
 {
   partial class ExceptionDialog
   {
@@ -45,7 +45,7 @@
       // 
       // pictureBox1
       // 
-      this.pictureBox1.Image = global::MySQL.GUI.Workbench.Properties.Resources.message_wb_bug;
+      this.pictureBox1.Image = global::MySQL.GUI.MySqlStudio.Properties.Resources.message_wb_bug;
       this.pictureBox1.Location = new System.Drawing.Point(12, 12);
       this.pictureBox1.Name = "pictureBox1";
       this.pictureBox1.Size = new System.Drawing.Size(151, 156);
@@ -85,7 +85,7 @@
       this.titleLabel.Name = "titleLabel";
       this.titleLabel.Size = new System.Drawing.Size(332, 17);
       this.titleLabel.TabIndex = 3;
-      this.titleLabel.Text = "MySQL Workbench has encountered a problem";
+      this.titleLabel.Text = "MySql Studio has encountered a problem";
       // 
       // messageLabel
       // 
@@ -156,7 +156,7 @@
       this.MinimumSize = new System.Drawing.Size(650, 38);
       this.Name = "ExceptionDialog";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-      this.Text = "MySQL Workbench Unexpected Error";
+      this.Text = "MySql Studio Unexpected Error";
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
       this.contextMenuStrip1.ResumeLayout(false);
       this.ResumeLayout(false);

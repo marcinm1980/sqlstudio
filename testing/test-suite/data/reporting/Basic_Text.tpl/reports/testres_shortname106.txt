@@ -4,4 +4,4 @@
 View `grtdiff_alter_test`.`v1` was dropped
 View `grtdiff_alter_test`.`v2` was created
 ----------------------------------------------
-End of MySQL Workbench Report
+End of MySql Studio Report

@@ -29,11 +29,11 @@
  *  \anchor MForms
  *
  * \section Introduction
- * MForms is a small GUI toolkit library written for use in the "a href="http://wb.mysql.com""MySQL Workbench"/a"
+ * MForms is a small GUI toolkit library written for use in the "a href="http://wb.mysql.com""MySql Studio"/a"
  * project. It is small and cross-platform,
  * while providing access to fully native controls (through .NET in Windows, GTK in Linux and Cocoa in MacOSX).
  * It is not meant to be a full-fledged control library, but instead a light-weight and simple library that allows
- * writing simple forms that will work in any supported platform. It is used by Workbench in some specific parts where
+ * writing simple forms that will work in any supported platform. It is used by MySqlStudio in some specific parts where
  * the UI requirements are not very complex, such as in wizards, simple confirmation dialogs and the Administrator
  * feature.
  * The library is written in C++, but a Python wrapper is available, making it possible to easily write cross-platform

@@ -21,7 +21,7 @@
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 import grt
-#from grt.modules import Workbench
+#from grt.modules import MySqlStudio
 import mforms
 from wb import wbinputs
 from wb_utils_grt import ModuleInfo
@@ -38,14 +38,14 @@ def copySQLToClipboard(obj):
         else:
             script.append(grt.modules.DbMySQL.makeCreateScriptForObject(obj))
 
-        grt.modules.Workbench.copyToClipboard(''.join(script))
+        grt.modules.MySqlStudio.copyToClipboard(''.join(script))
         return 0
           
 @ModuleInfo.plugin('wb.util.copyColumnNamesToClipboard', caption='Copy Column Names to Clipboard', input= [wbinputs.objectOfClass('db.Table')], groups= ['Catalog/Utilities', 'Menu/Objects'], accessibilityName="Copy Column Names to Clipboard")
 @ModuleInfo.export(grt.INT, grt.classes.db_Table)
 def copyColumnNamesToClipboard(table):
         data = ', '.join([column.name for column in table.columns])
-        grt.modules.Workbench.copyToClipboard(data)
+        grt.modules.MySqlStudio.copyToClipboard(data)
         return 0
 
 @ModuleInfo.plugin('wb.util.copyTableListToClipboard', caption='Copy Table List to Clipboard', input= [wbinputs.currentCatalog()], groups= ['Catalog/Utilities', 'Menu/Catalog'], accessibilityName="Copy Table List to Clipboard")
@@ -56,7 +56,7 @@ def copyTableListToClipboard(cat):
     for schema in cat.schemata:
         insert = insert + ', '.join(['`'+schema.name+'`.`'+tbl.name+'`' for tbl in schema.tables])
              
-    grt.modules.Workbench.copyToClipboard(insert)
+    grt.modules.MySqlStudio.copyToClipboard(insert)
     return 0
 
 def generateName(name_prefix, names_map):
@@ -173,7 +173,7 @@ def changeStorageEngines(cat):
             new_engine = engine_name
 
      if not engine_found:
-        grt.modules.Workbench.confirm('Change Storage Engines', 'Invalid storage engine name: ' + new_engine)
+        grt.modules.MySqlStudio.confirm('Change Storage Engines', 'Invalid storage engine name: ' + new_engine)
         return 2
 
      for schema in cat.schemata:

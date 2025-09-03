@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2B17AFD90F4D94590087ED42"
                BuildableName = "wb.model.editors.mwbplugin"
                BlueprintName = "wb.model.editors"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2B17AFD90F4D94590087ED42"
             BuildableName = "wb.model.editors.mwbplugin"
             BlueprintName = "wb.model.editors"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2B17AFD90F4D94590087ED42"
             BuildableName = "wb.model.editors.mwbplugin"
             BlueprintName = "wb.model.editors"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

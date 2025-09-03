@@ -24,7 +24,7 @@
 
 ﻿using System;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
   [AttributeUsage(AttributeTargets.Assembly, Inherited = false)]
   class AssemblyReleaseTypeAttribute: Attribute

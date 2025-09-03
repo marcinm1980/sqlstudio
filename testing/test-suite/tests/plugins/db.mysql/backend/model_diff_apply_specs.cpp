@@ -262,7 +262,7 @@ struct AllObjectsMWBValidator {
 };
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   std::unique_ptr<DbMySQLScriptSync> syncPlugin;
   std::unique_ptr<DbMySQLSQLExport> fwePlugin;
   SqlFacade::Ref sqlParser;
@@ -348,7 +348,7 @@ $describe("db.mysql plugin") {
   $beforeAll([this]() {
     data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
 
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     data->omf.dontdiff_mask = 3;
@@ -682,7 +682,7 @@ $describe("db.mysql plugin") {
     $expect(objects.t1->indices().count()).toEqual(2U, "new index not added");
     $expect(*objects.t1->indices()[0]->name()).toEqual("newindex", "new index name is wrong");
 
-    // BUG #14588524 - MYSQL WORKBENCH SEGFAULTS WHEN UPDATING MODEL FROM A DATABASE
+    // BUG #14588524 - MySql Studio SEGFAULTS WHEN UPDATING MODEL FROM A DATABASE
     $expect(objects.t1->indices()[0]->columns()[0]->referencedColumn().id())
       .toEqual(objects.t1->columns()[3]->id(), "refcolumn from new index");
   });

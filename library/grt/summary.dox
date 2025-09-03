@@ -1,7 +1,7 @@
 /*! @defgroup GRT GRT Library
 @page GRT GRT Library
 
-@image html grt_overview.png "Workbench architecture"
+@image html grt_overview.png "MySqlStudio architecture"
 
 @section grtctx The GRT Context
 

@@ -6,4 +6,4 @@ Table `grtdiff_alter_test`.`t1` was modified
   - default collate: latin1_swedish_ci --> latin1_swedish_ci
   __
 ----------------------------------------------
-End of MySQL Workbench Report
+End of MySql Studio Report

@@ -76,7 +76,7 @@ public:
 };
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   MySQLEditor::Ref sql_editor;
 
   parsers::MySQLParserContext::Ref autocompleteContext;
@@ -169,9 +169,8 @@ void createDBObjects(SymbolTable &symbolTable) {
 }
 
 $describe("SQL code completion tests") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     GrtVersionRef version = data->tester->getRdbms()->version();

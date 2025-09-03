@@ -23,7 +23,7 @@ def process_script(script):
 
 
 # because of a bug in the wbinputs.currentSQLEditor() input	specifier from the wb module 
-# in Workbench 5.2.26, we include our own version of it here
+# in MySqlStudio 5.2.26, we include our own version of it here
 def currentSQLEditor():
 	arg= grt.classes.app_PluginObjectInput()
     	arg.name= "activeSQLEditor"

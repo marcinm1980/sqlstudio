@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2B6BBEBE16BAC53300F8A39E"
                BuildableName = "db.search.wbp.dylib"
                BlueprintName = "db.search.wbp"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2B6BBEBE16BAC53300F8A39E"
             BuildableName = "db.search.wbp.dylib"
             BlueprintName = "db.search.wbp"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2B6BBEBE16BAC53300F8A39E"
             BuildableName = "db.search.wbp.dylib"
             BlueprintName = "db.search.wbp"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

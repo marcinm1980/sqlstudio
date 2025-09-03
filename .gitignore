@@ -53,7 +53,7 @@ grts/*
 *.Load
 *.NoLoad
 TestResults
-MySQLWorkbench1.vsmdi
+MySQLMySqlStudio1.vsmdi
 [Rr]elease_OSS
 wiztest
 boxtest
@@ -65,7 +65,7 @@ test_all
 Params.inc
 build-stamp
 configure-stamp
-MySQLWorkbench.desktop
+MySQLMySqlStudio.desktop
 build/mysql-workbench.spec
 debian/mysql-workbench
 frontend/linux/shell/grtshell
@@ -97,7 +97,7 @@ mysql-workbench.substvars
 *.mode2v3
 ext/scintilla/cocoa/ScintillaTest/build
 .DS_Store
-MySQLWorkbench.build
+MySQLMySqlStudio.build
 *.perspectivev3
 ext/scintilla/cocoa/ScintillaFramework/build
 mergechset

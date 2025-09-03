@@ -1,7 +1,7 @@
 Connecting to MS SQL Server Databases from Linux
 ####################################################
 
-The MySQL Workbench Migration Tool uses ODBC to communicate to RDBMSes other than MySQL.
+The MySql Studio Migration Tool uses ODBC to communicate to RDBMSes other than MySQL.
 To be able to migrate a database from a given RDBMS you need to setup all the pieces that
 will make this ODBC connection work.
 
@@ -13,17 +13,17 @@ For each RDBMS you need its corresponding ODBC driver. This driver is usually pr
 by the RDBMS manufacturer. Above all these specific ODBC drivers there is the ODBC
 Driver Manager. It ensures that the proper driver is loaded when you specify the
 connection datasource among other things (more on this later). Both the ODBC driver and
-the ODBC driver manager must be installed in the same PC where Workbench is running.
+the ODBC driver manager must be installed in the same PC where MySqlStudio is running.
 
 .. note::
     Since the ODBC driver needs to be installed in the client side you will need an
     ODBC driver that supports your client OS and architecture. So if you are running
-    Workbench from Linux x64 you need a Linux x64 ODBC driver for your RDBMS. Check
+    MySqlStudio from Linux x64 you need a Linux x64 ODBC driver for your RDBMS. Check
     the availability of a suitable ODBC driver.
 
 The rest of this document explains how to set up these components so that you can
 migrate Microsoft SQL Server databases into MySQL using the Linux version of MySQL
-Workbench.
+MySqlStudio.
 
 Installing the Driver Manager
 ******************************
@@ -49,7 +49,7 @@ Microsoft only provided Windows versions of their ODBC drivers for SQL Server. T
 drivers for SQL Server were available long before their release of the Linux version.
 Nowadays you should use the native `Microsoft SQL Server ODBC Driver for Linux <http://msdn.microsoft.com/en-us/library/hh568451.aspx>`_
 whenever possible. Unfortunately the current version of Microsoft's drivers only supports x64
-architectures so you are out of luck if you are running Workbench in a 32 bits Linux distro.
+architectures so you are out of luck if you are running MySqlStudio in a 32 bits Linux distro.
 
 There's one more inconvenience with the native SQL Server ODBC driver for Linux: they are
 designed to be run in RedHat Enterprise Linux (RHEL) and its derivatives. If you are using

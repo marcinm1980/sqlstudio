@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2BD1FB0D0F33D29400FFC762"
                BuildableName = "WBExtras.framework"
                BlueprintName = "WBExtras"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2BD1FB0D0F33D29400FFC762"
             BuildableName = "WBExtras.framework"
             BlueprintName = "WBExtras"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2BD1FB0D0F33D29400FFC762"
             BuildableName = "WBExtras.framework"
             BlueprintName = "WBExtras"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

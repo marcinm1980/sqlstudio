@@ -1,4 +1,4 @@
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
     partial class ModelNavigatorForm
     {
@@ -60,8 +60,8 @@ namespace MySQL.GUI.Workbench
           // zoomInPictureBox
           // 
           this.zoomInPictureBox.Dock = System.Windows.Forms.DockStyle.Left;
-          this.zoomInPictureBox.Image = global::MySQL.GUI.Workbench.Properties.Resources.navigator_zoom_in;
-          this.zoomInPictureBox.Location = new System.Drawing.Point(93, 4);
+      this.zoomInPictureBox.Image = global::MySQL.GUI.MySqlStudio.Properties.Resources.navigator_zoom_in;
+      this.zoomInPictureBox.Location = new System.Drawing.Point(93, 4);
           this.zoomInPictureBox.Margin = new System.Windows.Forms.Padding(0);
           this.zoomInPictureBox.Name = "zoomInPictureBox";
           this.zoomInPictureBox.Size = new System.Drawing.Size(28, 21);
@@ -73,8 +73,8 @@ namespace MySQL.GUI.Workbench
           // zoomOutPictureBox
           // 
           this.zoomOutPictureBox.Dock = System.Windows.Forms.DockStyle.Left;
-          this.zoomOutPictureBox.Image = global::MySQL.GUI.Workbench.Properties.Resources.navigator_zoom_out;
-          this.zoomOutPictureBox.Location = new System.Drawing.Point(121, 4);
+      this.zoomOutPictureBox.Image = global::MySQL.GUI.MySqlStudio.Properties.Resources.navigator_zoom_out;
+      this.zoomOutPictureBox.Location = new System.Drawing.Point(121, 4);
           this.zoomOutPictureBox.Name = "zoomOutPictureBox";
           this.zoomOutPictureBox.Size = new System.Drawing.Size(28, 21);
           this.zoomOutPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;

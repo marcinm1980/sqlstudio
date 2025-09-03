@@ -63,7 +63,7 @@
 
 static GThread *mainthread = 0;
 
-DEFAULT_LOG_DOMAIN("Workbench")
+DEFAULT_LOG_DOMAIN("MySqlStudio")
 
 @interface WBMainController () {
   wb::WBContext *_wb;
@@ -345,13 +345,13 @@ static bool quitApplication(MainWindowController *controller) {
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
-  logInfo("Shutting down Workbench\n");
+  logInfo("Shutting down MySqlStudio\n");
 
   [NSObject cancelPreviousPerformRequestsWithTarget: self];
   [[NSNotificationCenter defaultCenter] removeObserver: self];
 
   wb::WBContextUI::get()->get_wb()->finalize();
-  logInfo("Workbench shutdown done\n");
+  logInfo("MySqlStudio shutdown done\n");
 }
 
 static void call_copy() {
@@ -851,7 +851,7 @@ static NSString *applicationSupportFolder() {
     if (!base::is_directory(_options->user_data_dir)) {
       try {
         if (!base::copyDirectoryRecursive(
-              [applicationSupportFolder() stringByAppendingString:@"/MySQL/Workbench"].fileSystemRepresentation,
+              [applicationSupportFolder() stringByAppendingString:@"/MySQL/MySqlStudio"].fileSystemRepresentation,
               _options->user_data_dir)) {
           logError("Unable to prepare new config directory: %s\n", _options->user_data_dir.c_str());
           exit(1);
@@ -863,7 +863,7 @@ static NSString *applicationSupportFolder() {
     }
   } else
     _options->user_data_dir =
-      [applicationSupportFolder() stringByAppendingString:@"/MySQL/Workbench"].fileSystemRepresentation;
+      [applicationSupportFolder() stringByAppendingString:@"/MySQL/MySqlStudio"].fileSystemRepresentation;
 
   // no dock icon when the app will quit when finished running script
   if (_options->quit_when_done)
@@ -914,8 +914,8 @@ static void init_mforms() {
   // TODO: refactor out classes with own xib files into own controller classes and use them here instead.
   if (mainController == nil) {
     // Prepare the logger to be ready as first part.
-    base::Logger([applicationSupportFolder() stringByAppendingString:@"/MySQL/Workbench"].fileSystemRepresentation);
-    logInfo("Starting up Workbench\n");
+    base::Logger([applicationSupportFolder() stringByAppendingString:@"/MySQL/MySqlStudio"].fileSystemRepresentation);
+    logInfo("Starting up MySqlStudio\n");
 
     [self setupOptionsAndParseCommandline];
 

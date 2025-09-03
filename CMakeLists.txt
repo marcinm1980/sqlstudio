@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 
-# Retrieve current Workbench version
+# Retrieve current MySqlStudio version
 execute_process(COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/get_wb_version.sh full_version
                 OUTPUT_VARIABLE WB_VERSION)
 
@@ -113,7 +113,7 @@ if (UNIX)
       set(ODBC_INCLUDE_DIRS ${UNIXODBC_INCLUDE_DIRS})
       set(ODBC_DEFINITIONS ${UNIXODBC_DEFINITIONS})
     else()
-      message(FATAL_ERROR "Workbench required iodbc or Unixodbc, none was found, CMake will exit.")
+      message(FATAL_ERROR "MySqlStudio required iodbc or Unixodbc, none was found, CMake will exit.")
     endif()
   endif(USE_UNIXODBC)
 endif(UNIX)

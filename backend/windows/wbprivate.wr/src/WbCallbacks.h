@@ -40,7 +40,7 @@ using namespace MySQL::GUI::Mdc;
 using namespace MySQL::Grt;
 
 namespace MySQL {
-  namespace Workbench {
+  namespace MySqlStudio {
 
     struct wb::WBFrontendCallbacks;
   public

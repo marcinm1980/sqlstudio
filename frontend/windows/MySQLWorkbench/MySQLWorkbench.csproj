@@ -7,8 +7,8 @@
     <ProjectGuid>{1EC37D95-8840-4881-8814-6943938B43BF}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MySQL.GUI.Workbench</RootNamespace>
-    <AssemblyName>MySQLWorkbench</AssemblyName>
+    <RootNamespace>MySQL.GUI.MySqlStudio</RootNamespace>
+    <AssemblyName>MySQLMySqlStudio</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
@@ -45,7 +45,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\MySQLWorkbench.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\MySQLMySqlStudio.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -163,7 +163,7 @@
     <Compile Include="UserDatatypesForm.Designer.cs">
       <DependentUpon>UserDatatypesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="WorkbenchMenuManager.cs" />
+    <Compile Include="MySqlStudioMenuManager.cs" />
     <EmbeddedResource Include="DiagramOptionsForm.resx">
       <DependentUpon>DiagramOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -284,7 +284,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\MySQLWorkbench.ico" />
+    <None Include="Resources\MySQLMySqlStudio.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

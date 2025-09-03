@@ -28,7 +28,7 @@ using System.Windows.Forms;
 
 using MySQL.Grt;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
   public partial class PhysicalLayerEditor : ObjectEditorPlugin
   {

@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2B96161A0F2759A400F0B599"
                BuildableName = "libmforms.dylib"
                BlueprintName = "mforms"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2B96161A0F2759A400F0B599"
             BuildableName = "libmforms.dylib"
             BlueprintName = "mforms"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2B96161A0F2759A400F0B599"
             BuildableName = "libmforms.dylib"
             BlueprintName = "mforms"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

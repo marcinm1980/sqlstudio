@@ -34,16 +34,15 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref facade;
   std::string specificsDelimiter;
   std::string userDelimiter;
 };
 
 $describe("MySQL invalid sql parser test suite (yacc)") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     data->facade = SqlFacade::instance_for_rdbms_name("Mysql");

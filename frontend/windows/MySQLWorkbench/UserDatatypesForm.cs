@@ -27,9 +27,9 @@ using System.Windows.Forms;
 using Aga.Controls.Tree;
 
 using MySQL.Controls;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
   public partial class UserDatatypesForm : TabDocument
   {

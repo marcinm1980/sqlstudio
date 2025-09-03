@@ -31,11 +31,11 @@ using namespace System::Collections::Generic;
 
 using namespace base;
 
-using namespace MySQL::Workbench;
+using namespace MySQL::MySqlStudio;
 
 //----------------- InterfacedObserver -------------------------------------------------------------
 
-InterfacedObserver::InterfacedObserver(IWorkbenchObserver ^ native_observer) {
+InterfacedObserver::InterfacedObserver(IMySqlStudioObserver ^ native_observer) {
   _managed_observer = native_observer;
 }
 
@@ -50,13 +50,13 @@ void InterfacedObserver::handle_notification(const std::string &name, void *send
 /**
  * Determines if this object is the interface for the given observer.
  */
-bool InterfacedObserver::WrapsObserver(IWorkbenchObserver ^ observer) {
-  return static_cast<IWorkbenchObserver ^>(_managed_observer) == observer;
+bool InterfacedObserver::WrapsObserver(IMySqlStudioObserver ^ observer) {
+  return static_cast<IMySqlStudioObserver ^>(_managed_observer) == observer;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ManagedNotificationCenter::AddObserver(IWorkbenchObserver ^ observer, String ^ notification) {
+void ManagedNotificationCenter::AddObserver(IMySqlStudioObserver ^ observer, String ^ notification) {
   msclr::lock lock(observer);
   if (!observer_list)
     observer_list = new std::vector<InterfacedObserver *>;
@@ -70,7 +70,7 @@ void ManagedNotificationCenter::AddObserver(IWorkbenchObserver ^ observer, Strin
 
 //--------------------------------------------------------------------------------------------------
 
-void ManagedNotificationCenter::RemoveObserver(IWorkbenchObserver ^ observer, String ^ notification) {
+void ManagedNotificationCenter::RemoveObserver(IMySqlStudioObserver ^ observer, String ^ notification) {
   msclr::lock lock(observer);
   if (!observer_list)
     return;

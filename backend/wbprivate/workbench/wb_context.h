@@ -68,7 +68,7 @@ namespace wb {
   class WBContextUI;
   class WBContextModel;
   class WBContextSQLIDE;
-  class WorkbenchImpl;
+  class MySqlStudioImpl;
   class WBComponent;
 
   class ModelFile;
@@ -197,7 +197,7 @@ namespace wb {
   for (std::vector<WBComponent *>::iterator iter = list.begin(); iter != list.end(); ++iter)
 
   class MYSQLWBBACKEND_PUBLIC_FUNC WBContext : public base::trackable, base::Observer {
-    friend class WorkbenchImpl;
+    friend class MySqlStudioImpl;
     friend class WBComponent;
     friend class WBContextUI;
 
@@ -295,7 +295,7 @@ namespace wb {
 
     void foreach_component(const std::function<void(WBComponent *)> &slot);
 
-    WorkbenchImpl *get_workbench() {
+    MySqlStudioImpl *get_workbench() {
       return _workbench;
     };
 
@@ -303,7 +303,7 @@ namespace wb {
       return _clipboard;
     }
 
-    workbench_WorkbenchRef get_root();
+    workbench_MySqlStudioRef get_root();
     workbench_DocumentRef get_document();
     grt::DictRef get_wb_options();
 
@@ -396,7 +396,7 @@ namespace wb {
 
     std::vector<WBComponent *> _components;
 
-    WorkbenchImpl *_workbench;
+    MySqlStudioImpl *_workbench;
 
     bec::Clipboard *_clipboard;
 

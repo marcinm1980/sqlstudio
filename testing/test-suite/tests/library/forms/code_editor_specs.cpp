@@ -35,14 +35,11 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
 $describe("mforms code editor testing") {
-
-  $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
-  });
+  $beforeAll([this]() { data->tester.reset(new MySqlStudioTester()); });
 
   $it("Editor config loading + MySQL config values", []() {
     // Read a pretty standard code editor configuration file (MySQL section). Actual values don't matter (they

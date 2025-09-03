@@ -26,4 +26,4 @@ Total number of Schemata: {{SCHEMA_COUNT}}
 {{/TABLES}}
 {{/SCHEMATA}}
 =============================================
-End of MySQL Workbench Report
+End of MySql Studio Report

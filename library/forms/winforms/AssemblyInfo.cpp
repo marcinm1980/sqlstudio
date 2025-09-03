@@ -28,7 +28,7 @@ using namespace Runtime::InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly:AssemblyTitleAttribute("MySQL Workbench Windows mforms wrapper")];
+[assembly:AssemblyTitleAttribute("MySql Studio Windows mforms wrapper")];
 [assembly:AssemblyDescriptionAttribute("")];
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("Oracle Corporation")];

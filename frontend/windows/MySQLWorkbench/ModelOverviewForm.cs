@@ -32,15 +32,15 @@ using System.Windows.Forms;
 using MySQL.Base;
 using MySQL.Controls;
 using MySQL.Grt;
-using MySQL.GUI.Workbench.Plugins;
-using MySQL.GUI.Workbench.Properties;
+using MySQL.GUI.MySqlStudio.Plugins;
+using MySQL.GUI.MySqlStudio.Properties;
 using MySQL.Utilities;
 using MySQL.Utilities.SysUtils;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
-  public partial class ModelOverviewForm : TabDocument, IWorkbenchDocument
+  public partial class ModelOverviewForm : TabDocument, IMySqlStudioDocument
   {
     #region Member Variables
     
@@ -70,12 +70,12 @@ namespace MySQL.GUI.Workbench
     // Currently only column widths are stored.
     private Hashtable columnStates = new Hashtable();
 
-    // The Workbench context
+    // The MySqlStudio context
     private WbContext wbContext;
-    // The Workbench overview
+    // The MySqlStudio overview
     private Overview wbOverview;
 
-    private WorkbenchMenuManager workbenchMenuManager;
+    private MySqlStudioMenuManager workbenchMenuManager;
 
     private List<CollapsingPanel> panelList = new List<CollapsingPanel>();
 
@@ -114,7 +114,7 @@ namespace MySQL.GUI.Workbench
       wbOverview = be;
 
       UpdateTabText();
-      workbenchMenuManager = new WorkbenchMenuManager(wbContext);
+      workbenchMenuManager = new MySqlStudioMenuManager(wbContext);
       userDatatypesForm = new UserDatatypesForm(wbContext);
       historyForm = new UndoHistoryForm(wbContext);
       modelObjectDescriptionForm = new ModelObjectDescriptionForm(wbContext);
@@ -183,7 +183,7 @@ namespace MySQL.GUI.Workbench
 
     #endregion
 
-    #region IWorkbenchDocument Interface
+    #region IMySqlStudioDocument Interface
 
     public UIForm BackendForm
     {
@@ -292,8 +292,8 @@ namespace MySQL.GUI.Workbench
     private void bottomTabControl_TabClosing(object sender, TabClosingEventArgs e)
     {
       ITabDocument document = (sender as FlatTabControl).DocumentFromPage(e.page);
-      if (document is IWorkbenchDocument)
-        e.canClose = (document as IWorkbenchDocument).CanCloseDocument();
+      if (document is IMySqlStudioDocument)
+        e.canClose = (document as IMySqlStudioDocument).CanCloseDocument();
       else
         if (document is MySQL.Forms.AppViewDockContent)
         {
@@ -308,8 +308,8 @@ namespace MySQL.GUI.Workbench
         contentSplitContainer.Panel2Collapsed = true;
 
       ITabDocument document = (sender as FlatTabControl).DocumentFromPage(e.page);
-      if (document is IWorkbenchDocument)
-        (document as IWorkbenchDocument).CloseDocument();
+      if (document is IMySqlStudioDocument)
+        (document as IMySqlStudioDocument).CloseDocument();
       else
         if (document is MySQL.Forms.AppViewDockContent)
         {
@@ -1779,8 +1779,8 @@ namespace MySQL.GUI.Workbench
     public bool CanCloseDocument()
     {
       foreach (ITabDocument document in bottomTabControl.Documents)
-        if (document is IWorkbenchDocument)
-          if (!(document as IWorkbenchDocument).CanCloseDocument())
+        if (document is IMySqlStudioDocument)
+          if (!(document as IMySqlStudioDocument).CanCloseDocument())
             return false;
 
       if (!BackendForm.can_close())
@@ -1792,8 +1792,8 @@ namespace MySQL.GUI.Workbench
     public void CloseDocument()
     {
       foreach (ITabDocument document in bottomTabControl.Documents)
-        if (document is IWorkbenchDocument)
-          (document as IWorkbenchDocument).CloseDocument();
+        if (document is IMySqlStudioDocument)
+          (document as IMySqlStudioDocument).CloseDocument();
       BackendForm.close();
     }
 

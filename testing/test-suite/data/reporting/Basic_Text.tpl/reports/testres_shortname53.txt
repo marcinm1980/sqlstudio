@@ -7,4 +7,4 @@ Table `grtdiff_alter_test`.`t1` was modified
   - added index idx2 with columns: id
   __
 ----------------------------------------------
-End of MySQL Workbench Report
+End of MySql Studio Report

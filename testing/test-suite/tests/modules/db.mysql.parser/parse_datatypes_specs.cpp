@@ -40,7 +40,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 
   // Valid id string for unquoted identifiers.
   std::string special_id = "\xE2\x86\xB2\xE2\x86\xB3"; // ↲↳
@@ -373,9 +373,8 @@ $TestData {
 };
 
 $describe("Data type parsing") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
     data->tester->createNewDocument();
   });

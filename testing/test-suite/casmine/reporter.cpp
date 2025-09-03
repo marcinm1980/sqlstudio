@@ -206,8 +206,9 @@ void ConsoleReporter::casmineStarted(size_t totalSpecsDefined) {
 
   Reporter::casmineStarted(totalSpecsDefined);
 
-  std::cout << clearScreen << styleBoldOn << styleUnderlineOn << "Running Workbench Unit and Integration Tests"
-    << stylesReset << std::endl << std::flush;
+  std::cout << clearScreen << styleBoldOn << styleUnderlineOn << "Running MySqlStudio Unit and Integration Tests"
+            << stylesReset << std::endl
+            << std::flush;
 };
 
 //----------------------------------------------------------------------------------------------------------------------

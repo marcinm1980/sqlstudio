@@ -41,7 +41,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   UndoManager *um = nullptr;
   OverviewBE *overview = nullptr;
   size_t lastUndoStackSize = 0;
@@ -158,9 +158,8 @@ $TestData {
 };
 
 $describe("General Undo/Redo") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->createNewDocument();
     data->um = grt::GRT::get()->get_undo_manager();
 

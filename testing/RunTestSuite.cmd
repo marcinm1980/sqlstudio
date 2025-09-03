@@ -12,7 +12,7 @@ if not "%2"=="" set config=%2
 
 set app=..\..\bin\x64\%BUILD%\WBTests.exe
 
-title MySQL Workbench Tests
+title MySql Studio Tests
 
 pushd test-suite
 echo Running test application: %app%

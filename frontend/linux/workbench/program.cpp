@@ -106,7 +106,7 @@ void Program::init(wb::WBOptions& wboptions) {
   }
 #endif
   if (!getenv("MWB_DATA_DIR") || (!getenv("MWB_MODULE_DIR"))) {
-    g_print("Please start Workbench through mysql-workbench instead of calling mysql-workbench-bin directly\n");
+    g_print("Please start MySqlStudio through mysql-workbench instead of calling mysql-workbench-bin directly\n");
     exit(1);
   }
 
@@ -319,7 +319,7 @@ std::string Program::show_file_dialog_becb(const std::string& type, const std::s
       if (default_ext.empty())
         default_ext = "mwb";
       filter->add_pattern("*.mwb");
-      filter->set_name("MySQL Workbench Models (*.mwb)");
+      filter->set_name("MySql Studio Models (*.mwb)");
     } else if (*iter == "sql") {
       if (default_ext.empty())
         default_ext = "sql";

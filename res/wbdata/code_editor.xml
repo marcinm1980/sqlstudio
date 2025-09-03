@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <languages>
   <!--
-    Settings for scintilla-based code editors in MySQL Workbench.
+    Settings for scintilla-based code editors in MySql Studio.
     
     For a list of possible style identifiers see the SciLexer.h file.
     Keyword list identifiers are taken from the various Lex*.cpp files in Scintilla.

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MySQLWorkbenchPlugins")]
+[assembly: AssemblyTitle("MySQLMySqlStudioPlugins")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oracle Corporation")]
-[assembly: AssemblyProduct("MySQLWorkbenchPlugins")]
+[assembly: AssemblyProduct("MySQLMySqlStudioPlugins")]
 [assembly: AssemblyCopyright("Copyright © 2007, 2024, Oracle and/or its affiliates.")]
 [assembly: AssemblyTrademark("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")]
 [assembly: AssemblyCulture("")]

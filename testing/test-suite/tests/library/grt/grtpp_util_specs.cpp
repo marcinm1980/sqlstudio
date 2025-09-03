@@ -35,18 +35,15 @@ using namespace grt;
 $ModuleEnvironment() {};
 
 $describe("GRT: util functions") {
-
   $beforeAll([&]() {
-    WorkbenchTester::reinitGRT();
+    MySqlStudioTester::reinitGRT();
     register_structs_test_xml();
     grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
     $expect(grt::GRT::get()->get_metaclasses().size()).toBe(6U);
   });
 
-  $afterAll([&]() {
-    WorkbenchTester::reinitGRT();
-  });
+  $afterAll([&]() { MySqlStudioTester::reinitGRT(); });
 
   $it("Set value by path", []() {
     test_BookRef book(grt::Initialized);
@@ -75,7 +72,7 @@ $describe("GRT: util functions") {
     }
   });
 
-  $it("Regression test for Bug #17324160 MySQL workbench loses connections list", []() {
+  $it("Regression test for Bug #17324160 MySql Studio loses connections list", []() {
     test_PublisherRef publisher(grt::Initialized);
     test_BookRef book(grt::Initialized);
 
@@ -93,6 +90,5 @@ $describe("GRT: util functions") {
     // The bug was that a shallow_copy would modify the referenced objects that would back-reference the copied object
     $expect(book->publisher().id()).toBe(publisher.id());
   });
-
 }
 }

@@ -220,7 +220,7 @@ void SqlEditorForm::report_connection_failure(const std::string &error, const db
 
   if (error.find("exceeded the 'max_user_connections' resource") != std::string::npos) {
     mforms::Utilities::show_error(_("Could not Connect to Database Server"),
-                                  base::strfmt("%s\n\nMySQL Workbench requires at least 2 connections to the server, "
+                                  base::strfmt("%s\n\nMySql Studio requires at least 2 connections to the server, "
                                                "one for management purposes and another for user queries.",
                                                error.c_str()),
                                   "OK");
@@ -922,7 +922,7 @@ void SqlEditorForm::reset() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void logToWorkbenchLog(int messageType, std::string const &msg) {
+void logToMySqlStudioLog(int messageType, std::string const &msg) {
   switch (messageType) {
     case DbSqlEditorLog::ErrorMsg:
       logError("%s\n", msg.c_str());
@@ -956,7 +956,7 @@ int SqlEditorForm::add_log_message(int messageType, const std::string &msg, cons
   if (messageType == DbSqlEditorLog::ErrorMsg || messageType == DbSqlEditorLog::WarningMsg)
     _exec_sql_error_count++;
 
-  logToWorkbenchLog(messageType, msg);
+  logToMySqlStudioLog(messageType, msg);
   return (int)new_log_message_index;
 }
 
@@ -972,7 +972,7 @@ void SqlEditorForm::set_log_message(RowId log_message_index, int messageType, co
     refresh_log_messages(messageType == DbSqlEditorLog::BusyMsg); // Force refresh only for busy messages.
   }
 
-  logToWorkbenchLog(messageType, msg);
+  logToMySqlStudioLog(messageType, msg);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -3007,7 +3007,7 @@ void SqlEditorForm::active_schema(const std::string &value) {
     else
       bec::GRTManager::get()->replace_status_text(strfmt(_("Active schema changed to %s"), value.c_str()));
 
-    grt::GRT::get()->call_module_function("Workbench", "saveConnections", grt::BaseListRef());
+    grt::GRT::get()->call_module_function("MySqlStudio", "saveConnections", grt::BaseListRef());
   }
   CATCH_ANY_EXCEPTION_AND_DISPATCH(_("Set active schema"))
 }

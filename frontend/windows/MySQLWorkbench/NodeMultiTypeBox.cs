@@ -31,7 +31,7 @@ using Aga.Controls.Tree.NodeControls;
 
 using MySQL.Grt;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
   public class NodeMultiTypeBox : NodeCustomBox
   {

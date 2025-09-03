@@ -27,7 +27,7 @@
 #include "base/log.h"
 
 namespace MySQL {
-  namespace Workbench {
+  namespace MySqlStudio {
 
     /**
      * Wrapper for the base logger class, so we can use it from C# too.
@@ -62,5 +62,5 @@ namespace MySQL {
       }
     };
 
-  } // namespace Workbench
+  } // namespace MySqlStudio
 } // namespace MySQL

@@ -22,9 +22,10 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-﻿namespace MySQL.GUI.Workbench.Properties {
-    
-    
+namespace MySQL.GUI.MySqlStudio.Properties
+{
+
+
     // This class allows you to handle specific events on the settings class:
     //  The SettingChanging event is raised before a setting's value is changed.
     //  The PropertyChanged event is raised after a setting's value is changed.

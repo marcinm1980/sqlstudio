@@ -89,7 +89,7 @@ $describe("DBC: PS tests") {
     std::unique_ptr<sql::Statement> stmt(connection->createStatement());
     stmt->execute("DROP SCHEMA IF EXISTS test;");
 
-    WorkbenchTester::reinitGRT();
+    MySqlStudioTester::reinitGRT();
   });
 
   $it("test connection", [&]() {

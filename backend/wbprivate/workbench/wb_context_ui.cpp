@@ -935,12 +935,12 @@ std::string WBContextUI::get_title() {
   if (_wb->get_model_context()) {
 #ifndef __APPLE__
     if (_wb->has_unsaved_changes())
-      return get_document_name() + "* - MySQL Workbench";
+      return get_document_name() + "* - MySql Studio";
     else
 #endif
-      return get_document_name() + " - MySQL Workbench";
+      return get_document_name() + " - MySql Studio";
   } else
-    return "MySQL Workbench";
+    return "MySql Studio";
 }
 
 #endif // ___others
@@ -962,14 +962,15 @@ bool WBContextUI::start_plugin_install(const std::string &path) {
 static struct RegisterNotifDocs_wb_context_ui {
   RegisterNotifDocs_wb_context_ui() {
     base::NotificationCenter::get()->register_notification(
-      "GNAppStarted", "application", "Sent when Workbench starts up and finishes with various initialization routines.",
-      "", "");
+      "GNAppStarted", "application",
+      "Sent when MySqlStudio starts up and finishes with various initialization routines.", "", "");
 
-    base::NotificationCenter::get()->register_notification("GNAppShouldClose", "application",
-                                                           "Sent when the user requests Workbench to close. Close can "
-                                                           "be cancelled by setting the 'cancel' field in the info "
-                                                           "dict to 1.",
-                                                           "", "cancel - set to 1 if exit should be cancelled");
+    base::NotificationCenter::get()->register_notification(
+      "GNAppShouldClose", "application",
+      "Sent when the user requests MySqlStudio to close. Close can "
+      "be cancelled by setting the 'cancel' field in the info "
+      "dict to 1.",
+      "", "cancel - set to 1 if exit should be cancelled");
 
     base::NotificationCenter::get()->register_notification(
       "GNMainFormChanged", "application", "Sent when the main tab from the application is switched.", "",

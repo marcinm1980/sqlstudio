@@ -60,7 +60,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref sqlSplitter;
 
   sql::DriverManager *dm = sql::DriverManager::getDriverManager();
@@ -82,7 +82,7 @@ $TestData {
 
 $describe("DBC: statement tests") {
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->sqlSplitter = SqlFacade::instance_for_rdbms_name("Mysql");
     $expect(data->sqlSplitter).Not.toBeNull("failed to get sqlparser module");
 

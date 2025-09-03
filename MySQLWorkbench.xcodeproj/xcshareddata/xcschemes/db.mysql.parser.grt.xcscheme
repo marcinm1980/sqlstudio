@@ -17,7 +17,7 @@
                BlueprintIdentifier = "27CE5F921917993B005574D4"
                BuildableName = "db.mysql.parser.grt.dylib"
                BlueprintName = "db.mysql.parser.grt"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "27CE5F921917993B005574D4"
             BuildableName = "db.mysql.parser.grt.dylib"
             BlueprintName = "db.mysql.parser.grt"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "27CE5F921917993B005574D4"
             BuildableName = "db.mysql.parser.grt.dylib"
             BlueprintName = "db.mysql.parser.grt"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

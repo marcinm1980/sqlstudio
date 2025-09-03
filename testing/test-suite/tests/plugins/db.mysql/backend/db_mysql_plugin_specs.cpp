@@ -112,7 +112,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   std::shared_ptr<DbMySQLScriptSync> syncPlugin;
   std::shared_ptr<DbMySQLSQLExport> fwePlugin;
   sql::ConnectionWrapper connection;
@@ -222,7 +222,7 @@ $describe("db.mysql plugin test") {
   $beforeAll([this] () {
     data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
 
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     data->omf.dontdiff_mask = 3;

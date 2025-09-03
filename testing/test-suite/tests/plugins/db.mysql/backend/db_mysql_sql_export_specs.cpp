@@ -38,7 +38,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref sql_facade;
   db_mgmt_RdbmsRef rdbms;
   DictRef options;
@@ -92,7 +92,7 @@ $describe("Forward Engineer") {
 
   $beforeAll([this]() {
     data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
   });
 
   $it("General test for forward engineer of sakila database", [this]() {

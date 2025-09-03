@@ -58,7 +58,7 @@ static mforms::DialogResult message_cancel_callback() {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   UndoManager *um = nullptr;
   OverviewBE *overview = nullptr;
   ModelDiagramForm *diagramForm = nullptr;
@@ -116,9 +116,9 @@ $TestData {
 
 };
 
-$describe("Undo/Redo for Diagram Actions in Workbench") {
+$describe("Undo/Redo for Diagram Actions in MySqlStudio") {
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
     data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
 
@@ -1046,7 +1046,5 @@ $describe("Undo/Redo for Diagram Actions in Workbench") {
 
     data->checkUndo();
   });
-
 };
-
 }

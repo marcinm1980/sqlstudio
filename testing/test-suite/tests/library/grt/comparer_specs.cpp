@@ -109,12 +109,12 @@ void test_table_collation(std::string src, std::string dst, bool equal = false) 
 }
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
 };
 
 $describe("Comparer tests") {
   $beforeAll([&]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
   });
 

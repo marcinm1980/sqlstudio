@@ -163,7 +163,7 @@ context: see wb_context.h for full listing
         <value type="string" key="name">query.preferences</value>
         <value type="string" key="icon">qe_main-tb-icon_preferences.png</value>
         <value type="string" key="itemType">action</value>
-        <value type="string" key="command">call:Workbench.showOptions</value>
+        <value type="string" key="command">call:MySqlStudio.showOptions</value>
         <value type="string" key="tooltip">Show preferences dialog</value>
         <value type="string" key="accessibilityName">Show Preferences</value>
       </value>

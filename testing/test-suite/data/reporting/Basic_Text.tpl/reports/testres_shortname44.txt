@@ -6,4 +6,4 @@ Table `grtdiff_alter_test`.`t1` was modified
   - modified column t2
   __
 ----------------------------------------------
-End of MySQL Workbench Report
+End of MySql Studio Report

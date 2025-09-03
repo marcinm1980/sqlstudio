@@ -154,7 +154,7 @@ static std::string get_special_folder(mforms::FolderType type) {
     case mforms::ApplicationData:
       return NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).lastObject.UTF8String;
     case mforms::ApplicationSettings:
-      return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent: @"MySQL/Workbench"].UTF8String;
+      return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent: @"MySQL/MySqlStudio"].UTF8String;
     case mforms::WinProgramFiles:
     case mforms::WinProgramFilesX86:
       break;

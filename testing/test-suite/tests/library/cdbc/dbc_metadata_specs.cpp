@@ -50,9 +50,7 @@ $describe("DBC: metadata tests") {
     $expect(grt::GRT::get()->get_metaclasses().size()).toBe((size_t)INT_METACLASS_COUNT, "load structs");
   });
 
-  $afterAll([&]() {
-    WorkbenchTester::reinitGRT();
-  });
+  $afterAll([&]() { MySqlStudioTester::reinitGRT(); });
 
   $it("Test DatabaseMetaData::getCatalogs().", [&]() {
     db_mgmt_ConnectionRef connectionProperties(grt::Initialized);

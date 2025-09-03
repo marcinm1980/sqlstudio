@@ -61,7 +61,7 @@ DEFAULT_LOG_DOMAIN(DOMAIN_WB_MODULE)
 
 //--------------------------------------------------------------------------------------------------
 
-WorkbenchImpl::WorkbenchImpl(CPPModuleLoader *loader) : super(loader), _wb(0), _is_other_dbms_initialized(false) {
+MySqlStudioImpl::MySqlStudioImpl(CPPModuleLoader *loader) : super(loader), _wb(0), _is_other_dbms_initialized(false) {
 #ifdef _MSC_VER
   _last_wmi_session_id = 1;
   _last_wmi_monitor_id = 1;
@@ -70,12 +70,12 @@ WorkbenchImpl::WorkbenchImpl(CPPModuleLoader *loader) : super(loader), _wb(0), _
 
 //--------------------------------------------------------------------------------------------------
 
-WorkbenchImpl::~WorkbenchImpl() {
+MySqlStudioImpl::~MySqlStudioImpl() {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WorkbenchImpl::set_context(WBContext *wb) {
+void MySqlStudioImpl::set_context(WBContext *wb) {
   _wb = wb;
 }
 
@@ -84,16 +84,15 @@ void WorkbenchImpl::set_context(WBContext *wb) {
 /**
  * Returns a number of system parameters for use in the log and the debug output.
  */
-std::string WorkbenchImpl::getSystemInfo(bool indent) {
-
+std::string MySqlStudioImpl::getSystemInfo(bool indent) {
 #define ARCHITECTURE "64 bit"
 
 #if defined(_MSC_VER)
-  #define PLATFORM_NAME "Windows"
+#define PLATFORM_NAME "Windows"
 #elif defined(__APPLE__)
-  #define PLATFORM_NAME "macOS"
+#define PLATFORM_NAME "macOS"
 #else
-  #define PLATFORM_NAME "Linux/Unix"
+#define PLATFORM_NAME "Linux/Unix"
 #endif
 
   app_InfoRef info(app_InfoRef::cast_from(grt::GRT::get()->get("/wb/info")));
@@ -186,7 +185,7 @@ std::string WorkbenchImpl::getSystemInfo(bool indent) {
   return result;
 }
 
-std::map<std::string, std::string> WorkbenchImpl::getSystemInfoMap() {
+std::map<std::string, std::string> MySqlStudioImpl::getSystemInfoMap() {
   std::map<std::string, std::string> result;
   int cver = cairo_version();
 
@@ -207,7 +206,7 @@ std::map<std::string, std::string> WorkbenchImpl::getSystemInfoMap() {
   return result;
 }
 
-int WorkbenchImpl::isOsSupported(const std::string &os) {
+int MySqlStudioImpl::isOsSupported(const std::string &os) {
   if (os.find("unknown") != std::string::npos) {
     logWarning("OS detection failed, skipping OS support check. OS string: '%s'\n", os.c_str());
     return true;
@@ -229,7 +228,7 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     "macOS 14"
   };
 
-  for (std::string s : supportedOsList) { 
+  for (std::string s : supportedOsList) {
     if (os.find(s) != std::string::npos) {
       logDebug2("OS '%s' is supported\n", os.c_str());
       return true;
@@ -247,10 +246,10 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                \
     plugin->caption(aCaption);                          \
     plugin->description(descr);                         \
-    plugin->moduleName("Workbench");                    \
+    plugin->moduleName("MySqlStudio");                  \
     plugin->moduleFunctionName(aName);                  \
     plugin->pluginType(type);                           \
-    plugin->groups().insert("Application/Workbench");   \
+    plugin->groups().insert("Application/MySqlStudio"); \
     list.insert(plugin);                                \
   }
 
@@ -260,10 +259,10 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                        \
     plugin->caption(aCaption);                                  \
     plugin->description(descr);                                 \
-    plugin->moduleName("Workbench");                            \
+    plugin->moduleName("MySqlStudio");                          \
     plugin->moduleFunctionName(aName);                          \
     plugin->pluginType(NORMAL_PLUGIN_TYPE);                     \
-    plugin->groups().insert("Application/Workbench");           \
+    plugin->groups().insert("Application/MySqlStudio");         \
     app_PluginObjectInputRef input(grt::Initialized);           \
     input->owner(plugin);                                       \
     input->objectStructName(klass::static_class_name());        \
@@ -277,10 +276,10 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                         \
     plugin->caption(aCaption);                                   \
     plugin->description(descr);                                  \
-    plugin->moduleName("Workbench");                             \
+    plugin->moduleName("MySqlStudio");                           \
     plugin->moduleFunctionName(aName);                           \
     plugin->pluginType(NORMAL_PLUGIN_TYPE);                      \
-    plugin->groups().insert("Application/Workbench");            \
+    plugin->groups().insert("Application/MySqlStudio");          \
     app_PluginObjectInputRef input(grt::Initialized);            \
     input->owner(plugin);                                        \
     input->name("activeDiagram");                                \
@@ -295,10 +294,10 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                       \
     plugin->caption(aCaption);                                 \
     plugin->description(descr);                                \
-    plugin->moduleName("Workbench");                           \
+    plugin->moduleName("MySqlStudio");                         \
     plugin->moduleFunctionName(aName);                         \
     plugin->pluginType(NORMAL_PLUGIN_TYPE);                    \
-    plugin->groups().insert("Application/Workbench");          \
+    plugin->groups().insert("Application/MySqlStudio");        \
     app_PluginObjectInputRef input(grt::Initialized);          \
     input->owner(plugin);                                      \
     input->name("activeModel");                                \
@@ -313,10 +312,10 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                       \
     plugin->caption(aCaption);                                 \
     plugin->description(descr);                                \
-    plugin->moduleName("Workbench");                           \
+    plugin->moduleName("MySqlStudio");                         \
     plugin->moduleFunctionName(aName);                         \
     plugin->pluginType(STANDALONE_GUI_PLUGIN_TYPE);            \
-    plugin->groups().insert("Application/Workbench");          \
+    plugin->groups().insert("Application/MySqlStudio");        \
     app_PluginObjectInputRef input(grt::Initialized);          \
     input->owner(plugin);                                      \
     input->name("activeModel");                                \
@@ -325,17 +324,17 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     list.insert(plugin);                                       \
   }
 
-#define def_form_plugin(group, aName, aCaption, descr) \
-  {                                                    \
-    app_PluginRef plugin(grt::Initialized);            \
-    plugin->name("wb." group "." aName);               \
-    plugin->caption(aCaption);                         \
-    plugin->description(descr);                        \
-    plugin->moduleName("Workbench");                   \
-    plugin->moduleFunctionName(aName);                 \
-    plugin->pluginType(STANDALONE_GUI_PLUGIN_TYPE);    \
-    plugin->groups().insert("Application/Workbench");  \
-    list.insert(plugin);                               \
+#define def_form_plugin(group, aName, aCaption, descr)  \
+  {                                                     \
+    app_PluginRef plugin(grt::Initialized);             \
+    plugin->name("wb." group "." aName);                \
+    plugin->caption(aCaption);                          \
+    plugin->description(descr);                         \
+    plugin->moduleName("MySqlStudio");                  \
+    plugin->moduleFunctionName(aName);                  \
+    plugin->pluginType(STANDALONE_GUI_PLUGIN_TYPE);     \
+    plugin->groups().insert("Application/MySqlStudio"); \
+    list.insert(plugin);                                \
   }
 
 #define def_arg_plugin(group, aName, type, aCaption, descr) \
@@ -345,13 +344,13 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                    \
     plugin->caption(aCaption);                              \
     plugin->description(descr);                             \
-    plugin->moduleName("Workbench");                        \
+    plugin->moduleName("MySqlStudio");                      \
     plugin->moduleFunctionName(aName);                      \
     plugin->pluginType(type);                               \
     pdef->owner(plugin);                                    \
     pdef->name("string");                                   \
     plugin->inputValues().insert(pdef);                     \
-    plugin->groups().insert("Application/Workbench");       \
+    plugin->groups().insert("Application/MySqlStudio");     \
     list.insert(plugin);                                    \
   }
 
@@ -361,7 +360,7 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                          \
     plugin->caption(aCaption);                                    \
     plugin->description(descr);                                   \
-    plugin->moduleName("Workbench");                              \
+    plugin->moduleName("MySqlStudio");                            \
     plugin->moduleFunctionName(aName);                            \
     plugin->pluginType(type);                                     \
     app_PluginInputDefinitionRef pdef(grt::Initialized);          \
@@ -373,7 +372,7 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     model->name("activeModel");                                   \
     model->objectStructName(model_Model::static_class_name());    \
     plugin->inputValues().insert(model);                          \
-    plugin->groups().insert("Application/Workbench");             \
+    plugin->groups().insert("Application/MySqlStudio");           \
     list.insert(plugin);                                          \
   }
 
@@ -384,7 +383,7 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                                                          \
     plugin->caption(aCaption);                                                                    \
     plugin->description(descr);                                                                   \
-    plugin->moduleName("Workbench");                                                              \
+    plugin->moduleName("MySqlStudio");                                                            \
     plugin->moduleFunctionName(aName);                                                            \
     plugin->pluginType(ptype);                                                                    \
     pdef->owner(plugin);                                                                          \
@@ -392,11 +391,11 @@ int WorkbenchImpl::isOsSupported(const std::string &os) {
     pdef->dialogType(aType);                                                                      \
     pdef->fileExtensions(aExtensions);                                                            \
     plugin->inputValues().insert(pdef);                                                           \
-    plugin->groups().insert("Application/Workbench");                                             \
+    plugin->groups().insert("Application/MySqlStudio");                                           \
     list.insert(plugin);                                                                          \
   }
 
-ListRef<app_Plugin> WorkbenchImpl::getPluginInfo() {
+ListRef<app_Plugin> MySqlStudioImpl::getPluginInfo() {
   ListRef<app_Plugin> list(true);
 
   def_plugin("file", "newDocument", INTERNAL_PLUGIN_TYPE, "New Model", "New Document");
@@ -407,7 +406,7 @@ ListRef<app_Plugin> WorkbenchImpl::getPluginInfo() {
   def_arg_plugin("file", "openRecentModel", INTERNAL_PLUGIN_TYPE, "Open Model", "Open Model");
   def_file_plugin("file", "saveModelAs", INTERNAL_PLUGIN_TYPE, "Save As", "Save Model to a New File", "Save Model",
                   "save", "mwb");
-  def_plugin("file", "exit", INTERNAL_PLUGIN_TYPE, "Exit", "Exit Workbench");
+  def_plugin("file", "exit", INTERNAL_PLUGIN_TYPE, "Exit", "Exit MySqlStudio");
 
   def_file_plugin("export", "exportPNG", STANDALONE_GUI_PLUGIN_TYPE, "Export as PNG", "Export Current Diagram as PNG",
                   "Export as PNG", "save", "png");
@@ -472,12 +471,12 @@ ListRef<app_Plugin> WorkbenchImpl::getPluginInfo() {
   def_form_plugin("form", "showConnectionManager", "Manage Database Connections", "Open DB Connection Manager");
   def_form_plugin("form", "showInstanceManager", "Manage Server Instance Profiles", "Open Server Profile Manager");
   def_form_plugin("form", "showQueryConnectDialog", "Query Database...", "Connect to and Query a Database Server");
-  def_form_plugin("form", "showGRTShell", "Show GRT Shell...", "Show Workbench Script Development Shell");
+  def_form_plugin("form", "showGRTShell", "Show GRT Shell...", "Show MySqlStudio Script Development Shell");
   def_plugin("form", "newGRTFile", STANDALONE_GUI_PLUGIN_TYPE, "New Script File...",
-             "Create a new Workbench script/plugin file");
+             "Create a new MySqlStudio script/plugin file");
   def_plugin("form", "openGRTFile", STANDALONE_GUI_PLUGIN_TYPE, "Open Script File...",
-             "Open an existing Workbench script/plugin file");
-  def_form_plugin("form", "showPluginManager", "Plugin Manager...", "Show Workbench Plugin Manager Window");
+             "Open an existing MySqlStudio script/plugin file");
+  def_form_plugin("form", "showPluginManager", "Plugin Manager...", "Show MySqlStudio Plugin Manager Window");
   def_arg_plugin("form", "reportBug", STANDALONE_GUI_PLUGIN_TYPE, "Report Bug...", "Show Report Bug Window");
 
   def_plugin("debug", "debugValidateGRT", NORMAL_PLUGIN_TYPE, "Validate GRT Tree", "Validate Consistency of GRT Tree");
@@ -485,24 +484,24 @@ ListRef<app_Plugin> WorkbenchImpl::getPluginInfo() {
   return list;
 }
 
-int WorkbenchImpl::copyToClipboard(const std::string &astr) {
+int MySqlStudioImpl::copyToClipboard(const std::string &astr) {
   bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<void>(
     std::bind(mforms::Utilities::set_clipboard_text, astr), true, false);
 
   return 1;
 }
 
-int WorkbenchImpl::hasUnsavedChanges() {
+int MySqlStudioImpl::hasUnsavedChanges() {
   return _wb->has_unsaved_changes() ? 1 : 0;
 }
 
-int WorkbenchImpl::newDocument() {
+int MySqlStudioImpl::newDocument() {
   _wb->new_document();
 
   return 0;
 }
 
-int WorkbenchImpl::newDocumentFromDB() {
+int MySqlStudioImpl::newDocumentFromDB() {
   // if there is a model open, do plain reveng, otherwise create one 1st
 
   if (!_wb->get_document().is_valid())
@@ -511,7 +510,7 @@ int WorkbenchImpl::newDocumentFromDB() {
   grt::Module *module = grt::GRT::get()->get_module("MySQLDbModule");
 
   if (module == NULL)
-    throw std::logic_error("Internal error: can't find Workbench DB module.");
+    throw std::logic_error("Internal error: can't find MySqlStudio DB module.");
 
   grt::BaseListRef args(true);
   args.ginsert(_wb->get_document()->physicalModels()[0]->catalog());
@@ -520,60 +519,60 @@ int WorkbenchImpl::newDocumentFromDB() {
   return (int)*resultRef;
 }
 
-int WorkbenchImpl::openModel(const std::string &filename) {
+int MySqlStudioImpl::openModel(const std::string &filename) {
   _wb->open_document(filename);
 
   return 0;
 }
 
-int WorkbenchImpl::openRecentModel(const std::string &index) {
+int MySqlStudioImpl::openRecentModel(const std::string &index) {
   _wb->open_recent_document(base::atoi<int>(index, 0));
 
   return 0;
 }
 
-int WorkbenchImpl::saveModel() {
+int MySqlStudioImpl::saveModel() {
   _wb->save_as(_wb->get_filename());
 
   return 0;
 }
 
-int WorkbenchImpl::saveModelAs(const std::string &filename) {
+int MySqlStudioImpl::saveModelAs(const std::string &filename) {
   _wb->save_as(base::appendExtensionIfNeeded(filename, ".mwb"));
 
   return 0;
 }
 
-int WorkbenchImpl::exportPNG(const std::string &filename) {
+int MySqlStudioImpl::exportPNG(const std::string &filename) {
   _wb->get_model_context()->export_png(base::appendExtensionIfNeeded(filename, ".png"));
 
   return 0;
 }
 
-int WorkbenchImpl::exportPDF(const std::string &filename) {
+int MySqlStudioImpl::exportPDF(const std::string &filename) {
   _wb->get_model_context()->export_pdf(base::appendExtensionIfNeeded(filename, ".pdf"));
 
   return 0;
 }
 
-int WorkbenchImpl::exportSVG(const std::string &filename) {
+int MySqlStudioImpl::exportSVG(const std::string &filename) {
   _wb->get_model_context()->export_svg(base::appendExtensionIfNeeded(filename, ".svg"));
 
   return 0;
 }
 
-int WorkbenchImpl::exportPS(const std::string &filename) {
+int MySqlStudioImpl::exportPS(const std::string &filename) {
   _wb->get_model_context()->export_ps(base::appendExtensionIfNeeded(filename, ".ps"));
 
   return 0;
 }
 
-int WorkbenchImpl::activateDiagram(const model_DiagramRef &diagram) {
+int MySqlStudioImpl::activateDiagram(const model_DiagramRef &diagram) {
   _wb->get_model_context()->switch_diagram(diagram);
   return 0;
 }
 
-int WorkbenchImpl::exportDiagramToPng(const model_DiagramRef &diagram, const std::string &filename) {
+int MySqlStudioImpl::exportDiagramToPng(const model_DiagramRef &diagram, const std::string &filename) {
   _wb->get_model_context()->exportPng(diagram, filename);
   return 0;
 }
@@ -583,20 +582,20 @@ static void quit() {
     wb::WBContextUI::get()->perform_quit();
 }
 
-int WorkbenchImpl::exit() {
+int MySqlStudioImpl::exit() {
   bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<void>(std::bind(quit), false, false);
 
   return 0;
 }
 
-int WorkbenchImpl::selectAll() {
+int MySqlStudioImpl::selectAll() {
   if (dynamic_cast<ModelDiagramForm *>(_wb->get_active_form())) {
     _wb->get_active_form()->select_all();
   }
   return 0;
 }
 
-int WorkbenchImpl::selectSimilar() {
+int MySqlStudioImpl::selectSimilar() {
   if (!dynamic_cast<ModelDiagramForm *>(_wb->get_active_form()))
     return 0;
 
@@ -638,7 +637,7 @@ int WorkbenchImpl::selectSimilar() {
   return 0;
 }
 
-int WorkbenchImpl::selectConnected() {
+int MySqlStudioImpl::selectConnected() {
   if (!dynamic_cast<ModelDiagramForm *>(_wb->get_active_form()))
     return 0;
 
@@ -682,7 +681,7 @@ static void activate_object(WBComponent *compo, const model_ObjectRef &object, b
     compo->activate_canvas_object(object, newwindow);
 }
 
-int WorkbenchImpl::editSelectedFigure(const model_DiagramRef &view) {
+int MySqlStudioImpl::editSelectedFigure(const model_DiagramRef &view) {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_form());
   if (form) {
     ListRef<model_Object> list(form->get_selection());
@@ -694,7 +693,7 @@ int WorkbenchImpl::editSelectedFigure(const model_DiagramRef &view) {
   return 0;
 }
 
-int WorkbenchImpl::editSelectedFigureInNewWindow(const model_DiagramRef &view) {
+int MySqlStudioImpl::editSelectedFigureInNewWindow(const model_DiagramRef &view) {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_form());
   if (form) {
     ListRef<model_Object> list(form->get_selection());
@@ -706,17 +705,17 @@ int WorkbenchImpl::editSelectedFigureInNewWindow(const model_DiagramRef &view) {
   return 0;
 }
 
-int WorkbenchImpl::editObject(const GrtObjectRef &object) {
+int MySqlStudioImpl::editObject(const GrtObjectRef &object) {
   bec::GRTManager::get()->open_object_editor(object, bec::NoFlags);
   return 0;
 }
 
-int WorkbenchImpl::editObjectInNewWindow(const GrtObjectRef &object) {
+int MySqlStudioImpl::editObjectInNewWindow(const GrtObjectRef &object) {
   bec::GRTManager::get()->open_object_editor(object, bec::ForceNewWindowFlag);
   return 0;
 }
 
-int WorkbenchImpl::goToNextSelected() {
+int MySqlStudioImpl::goToNextSelected() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_form());
   if (!form)
     return 0;
@@ -745,7 +744,7 @@ int WorkbenchImpl::goToNextSelected() {
   return 0;
 }
 
-int WorkbenchImpl::goToPreviousSelected() {
+int MySqlStudioImpl::goToPreviousSelected() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_form());
   if (!form)
     return 0;
@@ -771,7 +770,7 @@ int WorkbenchImpl::goToPreviousSelected() {
   return 0;
 }
 
-int WorkbenchImpl::newDiagram(const model_ModelRef &model) {
+int MySqlStudioImpl::newDiagram(const model_ModelRef &model) {
   model->addNewDiagram(false);
 
   return 0;
@@ -779,7 +778,7 @@ int WorkbenchImpl::newDiagram(const model_ModelRef &model) {
 
 // canvas manipulation
 
-int WorkbenchImpl::raiseSelection(const model_DiagramRef &view) {
+int MySqlStudioImpl::raiseSelection(const model_DiagramRef &view) {
   for (size_t c = view->selection().count(), i = 0; i < c; i++) {
     if (view->selection().get(i).is_instance(model_Figure::static_class_name())) {
       model_FigureRef figure(model_FigureRef::cast_from(view->selection()[i]));
@@ -790,7 +789,7 @@ int WorkbenchImpl::raiseSelection(const model_DiagramRef &view) {
   return 0;
 }
 
-int WorkbenchImpl::lowerSelection(const model_DiagramRef &view) {
+int MySqlStudioImpl::lowerSelection(const model_DiagramRef &view) {
   for (size_t c = view->selection().count(), i = 0; i < c; i++) {
     if (view->selection().get(i).is_instance(model_Figure::static_class_name())) {
       model_FigureRef figure(model_FigureRef::cast_from(view->selection()[i]));
@@ -801,7 +800,7 @@ int WorkbenchImpl::lowerSelection(const model_DiagramRef &view) {
   return 0;
 }
 
-int WorkbenchImpl::toggleGridAlign(const model_DiagramRef &view) {
+int MySqlStudioImpl::toggleGridAlign(const model_DiagramRef &view) {
   ModelDiagramForm *form = _wb->get_model_context()->get_diagram_form_for_diagram_id(view->id());
   if (form) {
     form->get_view()->set_grid_snapping(!form->get_view()->get_grid_snapping());
@@ -812,7 +811,7 @@ int WorkbenchImpl::toggleGridAlign(const model_DiagramRef &view) {
   return 0;
 }
 
-int WorkbenchImpl::toggleGrid(const model_DiagramRef &view) {
+int MySqlStudioImpl::toggleGrid(const model_DiagramRef &view) {
   ModelDiagramForm *form = _wb->get_model_context()->get_diagram_form_for_diagram_id(view->id());
   if (form) {
     form->get_view()->get_background_layer()->set_grid_visible(
@@ -823,7 +822,7 @@ int WorkbenchImpl::toggleGrid(const model_DiagramRef &view) {
   return 0;
 }
 
-int WorkbenchImpl::togglePageGrid(const model_DiagramRef &view) {
+int MySqlStudioImpl::togglePageGrid(const model_DiagramRef &view) {
   ModelDiagramForm *form = _wb->get_model_context()->get_diagram_form_for_diagram_id(view->id());
   if (form) {
     form->get_view()->get_background_layer()->set_paper_visible(
@@ -834,7 +833,7 @@ int WorkbenchImpl::togglePageGrid(const model_DiagramRef &view) {
   return 0;
 }
 
-int WorkbenchImpl::toggleFKHighlight(const model_DiagramRef &view) {
+int MySqlStudioImpl::toggleFKHighlight(const model_DiagramRef &view) {
   ModelDiagramForm *form = _wb->get_model_context()->get_diagram_form_for_diagram_id(view->id());
   if (form) {
     form->set_highlight_fks(!form->get_highlight_fks());
@@ -844,7 +843,7 @@ int WorkbenchImpl::toggleFKHighlight(const model_DiagramRef &view) {
   return 0;
 }
 
-int WorkbenchImpl::goToMarker(const std::string &marker) {
+int MySqlStudioImpl::goToMarker(const std::string &marker) {
   model_ModelRef model(_wb->get_model_context()->get_active_model(true));
 
   if (model.is_valid()) {
@@ -870,7 +869,7 @@ int WorkbenchImpl::goToMarker(const std::string &marker) {
   return 0;
 }
 
-int WorkbenchImpl::setMarker(const std::string &marker) {
+int MySqlStudioImpl::setMarker(const std::string &marker) {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(wb::WBContextUI::get()->get_active_main_form());
 
   if (form) {
@@ -904,7 +903,7 @@ grt::Ref<C> get_parent_for_object(const GrtObjectRef &object) {
   return grt::Ref<C>::cast_from(obj);
 }
 
-int WorkbenchImpl::highlightFigure(const model_ObjectRef &figure) {
+int MySqlStudioImpl::highlightFigure(const model_ObjectRef &figure) {
   if (figure.is_valid()) {
     model_DiagramRef view;
 
@@ -925,7 +924,7 @@ int WorkbenchImpl::highlightFigure(const model_ObjectRef &figure) {
   return 0;
 }
 
-int WorkbenchImpl::setFigureNotation(const std::string &name, workbench_physical_ModelRef model) {
+int MySqlStudioImpl::setFigureNotation(const std::string &name, workbench_physical_ModelRef model) {
   //  model_ModelRef model(wb::WBContextUI::get()->get_active_model(true));
 
   if (model.is_valid() && model.is_instance<workbench_physical_Model>())
@@ -935,7 +934,7 @@ int WorkbenchImpl::setFigureNotation(const std::string &name, workbench_physical
   return 0;
 }
 
-int WorkbenchImpl::setRelationshipNotation(const std::string &name, workbench_physical_ModelRef model) {
+int MySqlStudioImpl::setRelationshipNotation(const std::string &name, workbench_physical_ModelRef model) {
   //  model_ModelRef model(wb::WBContextUI::get()->get_active_model(true));
 
   if (model.is_valid() && model.is_instance<workbench_physical_Model>())
@@ -944,7 +943,7 @@ int WorkbenchImpl::setRelationshipNotation(const std::string &name, workbench_ph
   return 0;
 }
 
-int WorkbenchImpl::zoomIn() {
+int MySqlStudioImpl::zoomIn() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
   if (!form)
     return 0;
@@ -953,7 +952,7 @@ int WorkbenchImpl::zoomIn() {
   return 0;
 }
 
-int WorkbenchImpl::zoomOut() {
+int MySqlStudioImpl::zoomOut() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
   if (!form)
     return 0;
@@ -963,7 +962,7 @@ int WorkbenchImpl::zoomOut() {
   return 0;
 }
 
-int WorkbenchImpl::zoomDefault() {
+int MySqlStudioImpl::zoomDefault() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
   if (!form)
     return 0;
@@ -975,100 +974,100 @@ int WorkbenchImpl::zoomDefault() {
   return 0;
 }
 
-int WorkbenchImpl::startTrackingUndo() {
+int MySqlStudioImpl::startTrackingUndo() {
   grt::GRT::get()->begin_undoable_action();
   return 0;
 }
 
-int WorkbenchImpl::finishTrackingUndo(const std::string &description) {
+int MySqlStudioImpl::finishTrackingUndo(const std::string &description) {
   grt::GRT::get()->end_undoable_action(description);
   return 0;
 }
 
-int WorkbenchImpl::cancelTrackingUndo() {
+int MySqlStudioImpl::cancelTrackingUndo() {
   grt::GRT::get()->cancel_undoable_action();
   return 0;
 }
 
-int WorkbenchImpl::addUndoListAdd(const BaseListRef &list) {
+int MySqlStudioImpl::addUndoListAdd(const BaseListRef &list) {
   grt::GRT::get()->get_undo_manager()->add_undo(new grt::UndoListInsertAction(list));
   return 0;
 }
 
-int WorkbenchImpl::addUndoListRemove(const BaseListRef &list, int index) {
+int MySqlStudioImpl::addUndoListRemove(const BaseListRef &list, int index) {
   grt::GRT::get()->get_undo_manager()->add_undo(new grt::UndoListRemoveAction(list, index));
   return 0;
 }
 
-int WorkbenchImpl::addUndoObjectChange(const ObjectRef &object, const std::string &member) {
+int MySqlStudioImpl::addUndoObjectChange(const ObjectRef &object, const std::string &member) {
   grt::GRT::get()->get_undo_manager()->add_undo(new grt::UndoObjectChangeAction(object, member));
   return 0;
 }
 
-int WorkbenchImpl::addUndoDictSet(const DictRef &dict, const std::string &key) {
+int MySqlStudioImpl::addUndoDictSet(const DictRef &dict, const std::string &key) {
   grt::GRT::get()->get_undo_manager()->add_undo(new grt::UndoDictSetAction(dict, key));
   return 0;
 }
 
-int WorkbenchImpl::beginUndoGroup() {
+int MySqlStudioImpl::beginUndoGroup() {
   grt::GRT::get()->get_undo_manager()->begin_undo_group();
   return 0;
 }
 
-int WorkbenchImpl::endUndoGroup() {
+int MySqlStudioImpl::endUndoGroup() {
   grt::GRT::get()->get_undo_manager()->end_undo_group();
   return 0;
 }
 
-int WorkbenchImpl::setUndoDescription(const std::string &text) {
+int MySqlStudioImpl::setUndoDescription(const std::string &text) {
   grt::GRT::get()->get_undo_manager()->set_action_description(text);
   return 0;
 }
 
-std::string WorkbenchImpl::createAttachedFile(const std::string &group, const std::string &tmpl) {
+std::string MySqlStudioImpl::createAttachedFile(const std::string &group, const std::string &tmpl) {
   return _wb->create_attached_file(group, tmpl);
 }
 
-int WorkbenchImpl::setAttachedFileContents(const std::string &filename, const std::string &text) {
+int MySqlStudioImpl::setAttachedFileContents(const std::string &filename, const std::string &text) {
   _wb->save_attached_file_contents(filename, text.data(), text.size());
   return 0;
 }
 
-std::string WorkbenchImpl::getAttachedFileContents(const std::string &filename) {
+std::string MySqlStudioImpl::getAttachedFileContents(const std::string &filename) {
   return _wb->get_attached_file_contents(filename);
 }
 
-std::string WorkbenchImpl::getAttachedFileTmpPath(const std::string &filename) {
+std::string MySqlStudioImpl::getAttachedFileTmpPath(const std::string &filename) {
   return _wb->get_attached_file_tmp_path(filename);
 }
 
-int WorkbenchImpl::exportAttachedFileContents(const std::string &filename, const std::string &export_to) {
+int MySqlStudioImpl::exportAttachedFileContents(const std::string &filename, const std::string &export_to) {
   return _wb->export_attached_file_contents(filename, export_to);
 }
 
-workbench_DocumentRef WorkbenchImpl::openModelFile(const std::string &path) {
+workbench_DocumentRef MySqlStudioImpl::openModelFile(const std::string &path) {
   return _wb->openModelFile(path);
 }
 
-int WorkbenchImpl::closeModelFile() {
+int MySqlStudioImpl::closeModelFile() {
   return _wb->closeModelFile();
 }
 
-std::string WorkbenchImpl::getTempDir() {
+std::string MySqlStudioImpl::getTempDir() {
   return _wb->getTempDir();
 }
 
-std::string WorkbenchImpl::getDbFilePath() {
+std::string MySqlStudioImpl::getDbFilePath() {
   return _wb->getDbFilePath();
 }
 
-int WorkbenchImpl::runScriptFile(const std::string &filename) {
+int MySqlStudioImpl::runScriptFile(const std::string &filename) {
   _wb->run_script_file(filename);
 
   return 0;
 }
 
-int WorkbenchImpl::installModuleFile(const std::string &filename) {
+int MySqlStudioImpl::installModuleFile(const std::string &filename) {
   _wb->install_module_file(filename);
   return 0;
 }
@@ -1142,7 +1141,7 @@ static int traverse_value(const ObjectRef &owner, const std::string &member, con
   return 0;
 }
 
-int WorkbenchImpl::debugValidateGRT() {
+int MySqlStudioImpl::debugValidateGRT() {
   ValueRef root(grt::GRT::get()->root());
   ObjectRef owner;
 
@@ -1159,58 +1158,58 @@ int WorkbenchImpl::debugValidateGRT() {
 
 //--------------------------------------------------------------------------------------------------
 
-int WorkbenchImpl::refreshHomeConnections() {
+int MySqlStudioImpl::refreshHomeConnections() {
   wb::WBContextUI::get()->refresh_home_connections();
   return 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int WorkbenchImpl::confirm(const std::string &title, const std::string &caption) {
+int MySqlStudioImpl::confirm(const std::string &title, const std::string &caption) {
   return bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<int>(
     std::bind(mforms::Utilities::show_message, title, caption, _("OK"), _("Cancel"), ""), true, false);
 }
 
-std::string WorkbenchImpl::requestFileOpen(const std::string &caption, const std::string &extensions) {
+std::string MySqlStudioImpl::requestFileOpen(const std::string &caption, const std::string &extensions) {
   return bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<std::string>(
     std::bind(_wb->_frontendCallbacks->show_file_dialog, "open", caption, extensions), true, false);
 }
 
-std::string WorkbenchImpl::requestFileSave(const std::string &caption, const std::string &extensions) {
+std::string MySqlStudioImpl::requestFileSave(const std::string &caption, const std::string &extensions) {
   return bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<std::string>(
     std::bind(_wb->_frontendCallbacks->show_file_dialog, "save", caption, extensions), true, false);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int WorkbenchImpl::showUserTypeEditor(const workbench_physical_ModelRef &model) {
+int MySqlStudioImpl::showUserTypeEditor(const workbench_physical_ModelRef &model) {
   if (_wb->get_model_context())
     _wb->get_model_context()->show_user_type_editor(model);
 
   return 0;
 }
 
-int WorkbenchImpl::showGRTShell() {
+int MySqlStudioImpl::showGRTShell() {
   wb::WBContextUI::get()->get_shell_window()->show();
 
   return 0;
 }
 
-int WorkbenchImpl::newGRTFile() {
+int MySqlStudioImpl::newGRTFile() {
   wb::WBContextUI::get()->get_shell_window()->show();
   wb::WBContextUI::get()->get_shell_window()->add_new_script();
 
   return 0;
 }
 
-int WorkbenchImpl::openGRTFile() {
+int MySqlStudioImpl::openGRTFile() {
   wb::WBContextUI::get()->get_shell_window()->show();
   wb::WBContextUI::get()->get_shell_window()->open_script_file();
 
   return 0;
 }
 
-int WorkbenchImpl::showDocumentProperties() {
+int MySqlStudioImpl::showDocumentProperties() {
   DocumentPropertiesForm props;
 
   props.show();
@@ -1218,21 +1217,21 @@ int WorkbenchImpl::showDocumentProperties() {
   return 0;
 }
 
-int WorkbenchImpl::showModelOptions(const workbench_physical_ModelRef &model) {
+int MySqlStudioImpl::showModelOptions(const workbench_physical_ModelRef &model) {
   PreferencesForm prefs(model);
   prefs.show();
 
   return 0;
 }
 
-int WorkbenchImpl::showOptions() {
+int MySqlStudioImpl::showOptions() {
   PreferencesForm prefs;
   prefs.show();
 
   return 0;
 }
 
-int WorkbenchImpl::reportBug(const std::string error_info) {
+int MySqlStudioImpl::reportBug(const std::string error_info) {
   unsigned short os_id = 1;
   std::map<std::string, std::string> sys_info = getSystemInfoMap();
 
@@ -1270,7 +1269,7 @@ int WorkbenchImpl::reportBug(const std::string error_info) {
   return 0;
 }
 
-int WorkbenchImpl::showConnectionManager() {
+int MySqlStudioImpl::showConnectionManager() {
   grtui::DbConnectionEditor editor(_wb->get_root()->rdbmsMgmt());
   _wb->_frontendCallbacks->show_status_text("Connection Manager Opened.");
   editor.run();
@@ -1281,7 +1280,7 @@ int WorkbenchImpl::showConnectionManager() {
   return 0;
 }
 
-int WorkbenchImpl::showInstanceManager() {
+int MySqlStudioImpl::showInstanceManager() {
   ServerInstanceEditor editor(_wb->get_root()->rdbmsMgmt());
   _wb->_frontendCallbacks->show_status_text("Server Profile Manager Opened.");
   db_mgmt_ServerInstanceRef instance(editor.run());
@@ -1291,7 +1290,7 @@ int WorkbenchImpl::showInstanceManager() {
   return 0;
 }
 
-int WorkbenchImpl::showInstanceManagerFor(const db_mgmt_ConnectionRef &conn) {
+int MySqlStudioImpl::showInstanceManagerFor(const db_mgmt_ConnectionRef &conn) {
   ServerInstanceEditor editor(_wb->get_root()->rdbmsMgmt());
   _wb->_frontendCallbacks->show_status_text("Server Profile Manager Opened.");
   db_mgmt_ServerInstanceRef instance(editor.run(conn, true));
@@ -1301,23 +1300,23 @@ int WorkbenchImpl::showInstanceManagerFor(const db_mgmt_ConnectionRef &conn) {
   return 0;
 }
 
-int WorkbenchImpl::saveConnections() {
+int MySqlStudioImpl::saveConnections() {
   _wb->save_connections();
   return 0;
 }
 
-int WorkbenchImpl::saveInstances() {
+int MySqlStudioImpl::saveInstances() {
   _wb->save_instances();
   return 0;
 }
 
-int WorkbenchImpl::showQueryConnectDialog() {
+int MySqlStudioImpl::showQueryConnectDialog() {
   _wb->add_new_query_window(db_mgmt_ConnectionRef());
 
   return 0;
 }
 
-int WorkbenchImpl::showPluginManager() {
+int MySqlStudioImpl::showPluginManager() {
   PluginManagerWindow pm(_wb);
 
   pm.run();
@@ -1338,7 +1337,7 @@ int WorkbenchImpl::showPluginManager() {
  * @return A unique id for the new session. Use that for any further call and don't forgot to close the session
  *         once you don't need it anymore or you will get a memory leak. Returns 0 on error.
  */
-int WorkbenchImpl::wmiOpenSession(const std::string server, const std::string &user, const std::string &password) {
+int MySqlStudioImpl::wmiOpenSession(const std::string server, const std::string &user, const std::string &password) {
   logDebug2("Opening wmi session\n");
 
   wmi::WmiServices *services = new wmi::WmiServices(server, user, password);
@@ -1375,7 +1374,7 @@ int WorkbenchImpl::wmiOpenSession(const std::string server, const std::string &u
  * @param session The session that should be closed.
  * @return 1 if the session was successfully closed, -1 if the session is invalid.
  */
-int WorkbenchImpl::wmiCloseSession(int session) {
+int MySqlStudioImpl::wmiCloseSession(int session) {
   logDebug2("Closing wmi session\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end())
     return -1;
@@ -1408,7 +1407,7 @@ int WorkbenchImpl::wmiCloseSession(int session) {
  * @return A list of GRT dicts containing the objects returned by the query, that is, name/value pairs
  *         of object properties.
  */
-grt::DictListRef WorkbenchImpl::wmiQuery(int session, const std::string &query) {
+grt::DictListRef MySqlStudioImpl::wmiQuery(int session, const std::string &query) {
   logDebug2("Running a wmi query\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end()) {
     logWarning("Attempt to run a wmi query against non-existing session\n");
@@ -1440,7 +1439,7 @@ grt::DictListRef WorkbenchImpl::wmiQuery(int session, const std::string &query) 
  *   - stopping
  *   - starting
  */
-std::string WorkbenchImpl::wmiServiceControl(int session, const std::string &service, const std::string &action) {
+std::string MySqlStudioImpl::wmiServiceControl(int session, const std::string &service, const std::string &action) {
   logDebug2("Running wmi service control command\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end())
     return "error - Invalid wmi session";
@@ -1462,7 +1461,7 @@ std::string WorkbenchImpl::wmiServiceControl(int session, const std::string &ser
  * @return The asked for value. If what is invalid then the result is simply 0. The returned value
  *         is formatted as string to cater for different types of return values.
  */
-std::string WorkbenchImpl::wmiSystemStat(int session, const std::string &what) {
+std::string MySqlStudioImpl::wmiSystemStat(int session, const std::string &what) {
   logDebug2("Running wmi system statistics query\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end())
     return "error - Invalid wmi session";
@@ -1485,7 +1484,7 @@ std::string WorkbenchImpl::wmiSystemStat(int session, const std::string &what) {
  * @param what The property/value to monitor. Supported values are: LoadPercentage.
  * @return A unique id describing the new monitor.
  */
-int WorkbenchImpl::wmiStartMonitoring(int session, const std::string &what) {
+int MySqlStudioImpl::wmiStartMonitoring(int session, const std::string &what) {
   logDebug2("Starting new wmi monitor\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end())
     return -1;
@@ -1508,7 +1507,7 @@ int WorkbenchImpl::wmiStartMonitoring(int session, const std::string &what) {
  * @param monitor The monitor set up with wmiStartMonitoring.
  * @return The current value formatted as string.
  */
-std::string WorkbenchImpl::wmiReadValue(int monitor_id) {
+std::string MySqlStudioImpl::wmiReadValue(int monitor_id) {
   logDebug3("Reading wmi value for monitor: %d\n", monitor_id);
   if (_wmi_monitors.find(monitor_id) == _wmi_monitors.end()) {
     logWarning("Attempt to read monitor value for non-existing monitor\n");
@@ -1528,7 +1527,7 @@ std::string WorkbenchImpl::wmiReadValue(int monitor_id) {
  * @param monitor The monitor to stop.
  * @return -1 if monitor_id is invalid, else 1
  */
-int WorkbenchImpl::wmiStopMonitoring(int monitor_id) {
+int MySqlStudioImpl::wmiStopMonitoring(int monitor_id) {
   logDebug2("Stopping wmi monitor %d\n", monitor_id);
   if (_wmi_monitors.find(monitor_id) == _wmi_monitors.end()) {
     logWarning("Attempt to stop non-existing wmi monitor\n");
@@ -1553,9 +1552,10 @@ static const char *DEFAULT_RDBMS_ID = "com.mysql.rdbms.mysql";
  * Creates a new connection ref and adds it to the stored connections collection.
  * The new connection is also returned.
  */
-db_mgmt_ConnectionRef WorkbenchImpl::create_connection(const std::string &host, const std::string &user,
-                                                       const std::string socket_or_pipe_name, int can_use_networking,
-                                                       int can_use_socket_or_pipe, int port, const std::string &name) {
+db_mgmt_ConnectionRef MySqlStudioImpl::create_connection(const std::string &host, const std::string &user,
+                                                         const std::string socket_or_pipe_name, int can_use_networking,
+                                                         int can_use_socket_or_pipe, int port,
+                                                         const std::string &name) {
   logDebug("Creating new connection (%s) to host %s:%d for user %s (socket/pipe: %s)\n", name.c_str(), host.c_str(),
            port, user.c_str(), socket_or_pipe_name.c_str());
 
@@ -1599,7 +1599,7 @@ db_mgmt_ConnectionRef WorkbenchImpl::create_connection(const std::string &host, 
 /**
  * Returns a list of Dicts with data for each locally installed MySQL server.
  */
-grt::DictListRef WorkbenchImpl::getLocalServerList() {
+grt::DictListRef MySqlStudioImpl::getLocalServerList() {
   logDebug("Reading locally installed MySQL servers\n");
 
   grt::DictListRef entries;
@@ -1670,7 +1670,7 @@ grt::DictListRef WorkbenchImpl::getLocalServerList() {
 /**
  * Creates a list of new connections to all local servers found.
  */
-int WorkbenchImpl::createConnectionsFromLocalServers() {
+int MySqlStudioImpl::createConnectionsFromLocalServers() {
   grt::DictListRef servers = getLocalServerList();
   if (!servers.is_valid())
     return -1;
@@ -1722,7 +1722,7 @@ int WorkbenchImpl::createConnectionsFromLocalServers() {
 /**
  * Creates a list of server instance entries for all local servers found.
  */
-int WorkbenchImpl::createInstancesFromLocalServers() {
+int MySqlStudioImpl::createInstancesFromLocalServers() {
   int found_instances = 0;
   try {
     grt::DictListRef servers = getLocalServerList();
@@ -1887,7 +1887,7 @@ int WorkbenchImpl::createInstancesFromLocalServers() {
 /**
  * Returns a short string describing the currently active video adapter, especially the used chipset.
  */
-std::string WorkbenchImpl::getVideoAdapter() {
+std::string MySqlStudioImpl::getVideoAdapter() {
   logDebug("Attempting to determine the current video adaptor and its properties\n");
   std::string result = _("Unknown");
   try {
@@ -1926,7 +1926,7 @@ std::string WorkbenchImpl::getVideoAdapter() {
 /**
  * Returns all available info about the currently active video adapter in human readable format.
  */
-std::string WorkbenchImpl::getFullVideoAdapterInfo(bool indent) {
+std::string MySqlStudioImpl::getFullVideoAdapterInfo(bool indent) {
   std::stringstream result;
   std::string tab = indent ? "\t" : "";
   try {
@@ -1983,7 +1983,7 @@ std::string WorkbenchImpl::getFullVideoAdapterInfo(bool indent) {
   return result.str();
 }
 
-int WorkbenchImpl::initializeOtherRDBMS() {
+int MySqlStudioImpl::initializeOtherRDBMS() {
   if (_is_other_dbms_initialized)
     return 0;
   _is_other_dbms_initialized = true;
@@ -2014,8 +2014,7 @@ int WorkbenchImpl::initializeOtherRDBMS() {
   return 1;
 }
 
-db_mgmt_SSHConnectionRef WorkbenchImpl::createSSHSession(const grt::ObjectRef &val) {
-
+db_mgmt_SSHConnectionRef MySqlStudioImpl::createSSHSession(const grt::ObjectRef &val) {
   if (!db_mgmt_ConnectionRef::can_wrap(val) && !db_mgmt_ServerInstanceRef::can_wrap(val)) {
     logError("Invalid argument, Connection or ServerInstace is required.\n");
     return db_mgmt_SSHConnectionRef();
@@ -2041,7 +2040,7 @@ db_mgmt_SSHConnectionRef WorkbenchImpl::createSSHSession(const grt::ObjectRef &v
 * Removes a connection from the stored connections list along with all associated data
 * (including its server instance entry).
 */
-int WorkbenchImpl::deleteConnection(const db_mgmt_ConnectionRef &connection) {
+int MySqlStudioImpl::deleteConnection(const db_mgmt_ConnectionRef &connection) {
   grt::ListRef<db_mgmt_Connection> connections(_wb->get_root()->rdbmsMgmt()->storedConns());
   grt::ListRef<db_mgmt_ServerInstance> instances = _wb->get_root()->rdbmsMgmt()->storedInstances();
 
@@ -2080,7 +2079,7 @@ int WorkbenchImpl::deleteConnection(const db_mgmt_ConnectionRef &connection) {
   return 0;
 }
 
-int WorkbenchImpl::deleteConnectionGroup(const std::string &group) {
+int MySqlStudioImpl::deleteConnectionGroup(const std::string &group) {
   size_t group_length = group.length();
 
   std::vector<db_mgmt_ConnectionRef> candidates;

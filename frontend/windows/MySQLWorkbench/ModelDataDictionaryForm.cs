@@ -30,7 +30,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
 	public partial class ModelDataDictionaryForm : Form
 	{

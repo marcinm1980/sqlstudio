@@ -61,15 +61,16 @@ base::Logger testLogger(".", getenv("WB_LOG_STDERR") != 0);
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::reinitGRT() {
+void MySqlStudioTester::reinitGRT() {
   grt::GRT::get()->reinitialiseForTests();
   bec::GRTManager::get()->cleanUpAndReinitialize();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-WorkbenchTester::WorkbenchTester(bool initPython, const base::Size &apage_size, const WBFrontendCallbacks &callbacks)
-: wboptions(new wb::WBOptions("test")), lastView(nullptr), _pageSize(apage_size), _guiLock(false) {
+MySqlStudioTester::MySqlStudioTester(bool initPython, const base::Size &apage_size,
+                                     const WBFrontendCallbacks &callbacks)
+  : wboptions(new wb::WBOptions("test")), lastView(nullptr), _pageSize(apage_size), _guiLock(false) {
   // Reset any previously set callback, as this is a singleton and might conflict with other tests.
   mforms::stub::UtilitiesWrapper::set_message_callback(std::function<mforms::DialogResult(void)>());
   _wbcallbacks = callbacks;
@@ -186,7 +187,7 @@ WorkbenchTester::WorkbenchTester(bool initPython, const base::Size &apage_size, 
   {
     db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(
       grt::GRT::get()->unserialize(bec::GRTManager::get()->get_basedir() + "/modules/data/mysql_rdbms_info.xml"));
-    workbench_WorkbenchRef::cast_from(grt::GRT::get()->get("/wb"))->rdbmsMgmt()->rdbms().insert(rdbms);
+    workbench_MySqlStudioRef::cast_from(grt::GRT::get()->get("/wb"))->rdbmsMgmt()->rdbms().insert(rdbms);
   }
 
   mforms::stub::check();
@@ -196,19 +197,19 @@ WorkbenchTester::WorkbenchTester(bool initPython, const base::Size &apage_size, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-WorkbenchTester::~WorkbenchTester() {
+MySqlStudioTester::~MySqlStudioTester() {
   wb->close_document_finish();
   delete wboptions;
   wbui->finalize();
   wbui->cleanUp();
   wb = nullptr;
 
-  WorkbenchTester::reinitGRT();
+  MySqlStudioTester::reinitGRT();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::initializeRuntime() {
+void MySqlStudioTester::initializeRuntime() {
   std::string prefix;
 #ifdef __APPLE__
   prefix = "/../Resources"; // Bundle path.
@@ -216,7 +217,7 @@ void WorkbenchTester::initializeRuntime() {
   std::string rdbmsInfoPath = wboptions->basedir + prefix + "/modules/data/mysql_rdbms_info.xml";
   std::string typeGroupsPath = wboptions->basedir + prefix + "/data/db_datatype_groups.xml";
 
-  workbench_WorkbenchRef workbench = wb->get_root();
+  workbench_MySqlStudioRef workbench = wb->get_root();
   workbench_DocumentRef doc(grt::Initialized);
   doc->owner(workbench);
   workbench->doc(doc);
@@ -247,7 +248,7 @@ void WorkbenchTester::initializeRuntime() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::executeScript(sql::Statement *stmt, const std::string& script) {
+void MySqlStudioTester::executeScript(sql::Statement *stmt, const std::string &script) {
   std::vector<StatementRange> statementRanges;
   MySQLParserServices::get()->determineStatementRanges(script.c_str(), script.size(), ";", statementRanges);
   for (auto &range : statementRanges) {
@@ -258,7 +259,7 @@ void WorkbenchTester::executeScript(sql::Statement *stmt, const std::string& scr
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::createNewDocument() {
+void MySqlStudioTester::createNewDocument() {
   wb->new_document();
 
   // Focus the Physical model in the overview by default.
@@ -269,37 +270,37 @@ void WorkbenchTester::createNewDocument() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::activateOverview() {
+void MySqlStudioTester::activateOverview() {
   wbui->set_active_form(wbui->get_physical_overview());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-workbench_physical_ModelRef WorkbenchTester::getPmodel() {
+workbench_physical_ModelRef MySqlStudioTester::getPmodel() {
   return wb->get_document()->physicalModels()[0];
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_mgmt_RdbmsRef WorkbenchTester::getRdbms() {
+db_mgmt_RdbmsRef MySqlStudioTester::getRdbms() {
   return db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->get("/rdbms"));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-workbench_physical_DiagramRef WorkbenchTester::getPview() {
+workbench_physical_DiagramRef MySqlStudioTester::getPview() {
   return getPmodel()->diagrams().get(0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_CatalogRef WorkbenchTester::getCatalog() {
+db_CatalogRef MySqlStudioTester::getCatalog() {
   return wb->get_document()->physicalModels().get(0)->catalog();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_SchemaRef WorkbenchTester::getSchema() {
+db_SchemaRef MySqlStudioTester::getSchema() {
   return wb->get_document()->physicalModels().get(0)->catalog()->schemata().get(0);
 }
 
@@ -326,7 +327,7 @@ static mforms::DialogResult messageOtherCallback() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool WorkbenchTester::closeDocument() {
+bool MySqlStudioTester::closeDocument() {
   if (!wb->cancel_idle_tasks()) {
     // Idle tasks are currently being executed. Wait a moment and then try again.
     g_usleep((int)(100000));
@@ -338,7 +339,7 @@ bool WorkbenchTester::closeDocument() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool WorkbenchTester::renewDocument() {
+bool MySqlStudioTester::renewDocument() {
   if (!closeDocument())
     return false;
 
@@ -349,13 +350,13 @@ bool WorkbenchTester::renewDocument() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::addFileForFileDialog(const std::string &path) {
+void MySqlStudioTester::addFileForFileDialog(const std::string &path) {
   fileDialogInput.push_back(path);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::addView() {
+void MySqlStudioTester::addView() {
   wb->get_model_context()->add_new_diagram(wb->get_document()->physicalModels()[0]);
 
   syncView();
@@ -365,7 +366,7 @@ void WorkbenchTester::addView() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::syncView() {
+void MySqlStudioTester::syncView() {
   int i = 0;
   g_usleep((int)(10000));
   i = 1;
@@ -378,7 +379,7 @@ void WorkbenchTester::syncView() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_mysql_TableRef WorkbenchTester::addTableFigure(const std::string &name, int x, int y) {
+db_mysql_TableRef MySqlStudioTester::addTableFigure(const std::string &name, int x, int y) {
   db_SchemaRef schema(getSchema());
 
   db_mysql_TableRef table(grt::Initialized);
@@ -389,7 +390,7 @@ db_mysql_TableRef WorkbenchTester::addTableFigure(const std::string &name, int x
   wb::ModelDiagramForm *vform = dynamic_cast<wb::ModelDiagramForm *>(wbui->get_active_main_form());
 
   if (vform == nullptr)
-    throw std::logic_error("WorkbenchTester: adding table figure failed.");
+    throw std::logic_error("MySqlStudioTester: adding table figure failed.");
 
   wb->get_component<WBComponentPhysical>()->place_db_object(vform, vform->get_view()->window_to_canvas(x, y), table);
 
@@ -400,7 +401,7 @@ db_mysql_TableRef WorkbenchTester::addTableFigure(const std::string &name, int x
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::interactivePlaceDbObjects(int x, int y, std::list<db_DatabaseObjectRef> &objects) {
+void MySqlStudioTester::interactivePlaceDbObjects(int x, int y, std::list<db_DatabaseObjectRef> &objects) {
   ModelDiagramForm *form = 0;
   form = wb->get_model_context()->get_diagram_form(lastView);
   if (!form)
@@ -411,7 +412,7 @@ void WorkbenchTester::interactivePlaceDbObjects(int x, int y, std::list<db_Datab
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::openAllDiagrams() {
+void MySqlStudioTester::openAllDiagrams() {
   workbench_DocumentRef doc = wb->get_document();
 
   for (int i = 0; i < (int)doc->physicalModels()[0]->diagrams().count(); i++) {
@@ -423,7 +424,7 @@ void WorkbenchTester::openAllDiagrams() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::flushUntil(float timeout) {
+void MySqlStudioTester::flushUntil(float timeout) {
   time_t start = time(NULL);
   while (time(NULL) - start < timeout) {
     g_usleep((int)(100000 * timeout));
@@ -436,7 +437,7 @@ void WorkbenchTester::flushUntil(float timeout) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::flushUntil(float timeout, std::function<bool()> condition) {
+void MySqlStudioTester::flushUntil(float timeout, std::function<bool()> condition) {
   time_t start = time(NULL);
   while (time(NULL) - start < timeout && !condition()) {
     g_usleep((int)(100000 * timeout));
@@ -448,7 +449,7 @@ void WorkbenchTester::flushUntil(float timeout, std::function<bool()> condition)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::flushWhile(float timeout, std::function<bool()> condition) {
+void MySqlStudioTester::flushWhile(float timeout, std::function<bool()> condition) {
   time_t start = time(NULL);
   while (time(NULL) - start < timeout && condition()) {
     g_usleep((int)(100000 * timeout));
@@ -460,7 +461,7 @@ void WorkbenchTester::flushWhile(float timeout, std::function<bool()> condition)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::flushUntil(float timeout, std::function<size_t()> condition, size_t value) {
+void MySqlStudioTester::flushUntil(float timeout, std::function<size_t()> condition, size_t value) {
   time_t start = time(NULL);
   while ((time(NULL) - start < timeout) && (condition() != value)) {
     g_usleep((int)(100000 * timeout));
@@ -472,13 +473,13 @@ void WorkbenchTester::flushUntil(float timeout, std::function<size_t()> conditio
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WorkbenchTester::exportPNG(const std::string &path) {
+void MySqlStudioTester::exportPNG(const std::string &path) {
   lastView->export_png(path);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_mysql_CatalogRef WorkbenchTester::reverseEngineerSchemas(const std::list<std::string> &schema_names) {
+db_mysql_CatalogRef MySqlStudioTester::reverseEngineerSchemas(const std::list<std::string> &schema_names) {
   db_mgmt_ConnectionRef properties(grt::Initialized);
   setupConnectionEnvironment(properties, getRdbms()->drivers()[0]);
 

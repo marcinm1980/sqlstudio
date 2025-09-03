@@ -118,7 +118,7 @@ public:
 };
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   db_TableRef table;
   //TestTableEditor *editor;
 
@@ -230,9 +230,8 @@ $TestData {
 };
 
 $describe("Table Editor Inserts backend") {
-
   $beforeAll([this]() {
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
     data->tester->createNewDocument();
   });

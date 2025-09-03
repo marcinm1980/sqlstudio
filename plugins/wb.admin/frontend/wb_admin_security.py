@@ -2192,7 +2192,7 @@ class WbAdminSecurity(WbAdminTabBase):
 
             if 'DELETE' in privs or 'CREATE USER' in privs:
                 if Utilities.show_message_and_remember('Anonymous accounts detected',
-                    'Anonymous accounts were detected in the server %s.\nAnonymous accounts can cause great confusion and are also a potential security issue and are advised to be removed. Would you like Workbench to delete them now?.' % logged_servername,
+                    'Anonymous accounts were detected in the server %s.\nAnonymous accounts can cause great confusion and are also a potential security issue and are advised to be removed. Would you like MySqlStudio to delete them now?.' % logged_servername,
                     'Delete', 'Leave Accounts', '',
                     'wb.admin.delete_anonymous_accounts:' + logged_username + '@' + logged_servername,
                     "Don't show this message again") == mforms.ResultOk:

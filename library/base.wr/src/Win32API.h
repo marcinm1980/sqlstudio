@@ -41,7 +41,7 @@ namespace MySQL {
         static void Paste(System::Windows::Forms::ComboBox ^ box);
         static bool CanUndo(System::Windows::Forms::ComboBox ^ box);
 
-        static bool UnblockWorkbenchFiles(System::String ^ folder);
+        static bool UnblockMySqlStudioFiles(System::String ^ folder);
         static bool UnblockFile(System::String ^ file);
 
         static bool RedirectConsole();

@@ -31,7 +31,7 @@ using namespace System;
 using namespace base;
 
 namespace MySQL {
-  namespace Workbench {
+  namespace MySqlStudio {
 
     //--------------------------------------------------------------------------------------------------
 
@@ -101,5 +101,5 @@ namespace MySQL {
 
     //--------------------------------------------------------------------------------------------------
 
-  } // namespace Workbench
+  } // namespace MySqlStudio
 } // namespace MySQL

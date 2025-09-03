@@ -759,7 +759,7 @@ NSView *nsviewForView(mforms::View *view) {
 
 #pragma mark -
 
-@implementation NSPasteboard (MySQLWorkbench)
+@implementation NSPasteboard (MySQLMySqlStudio)
 
 - (void)writeNativeData: (void *)data typeAsString: (NSString *)type {
   PasteboardDataWrapper wrapper;

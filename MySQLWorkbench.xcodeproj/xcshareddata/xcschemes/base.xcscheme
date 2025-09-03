@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2B825D280E0B59A100BE52DF"
                BuildableName = "libwbbase.dylib"
                BlueprintName = "base"
-               ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+               ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "2B825D280E0B59A100BE52DF"
             BuildableName = "libwbbase.dylib"
             BlueprintName = "base"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "2B825D280E0B59A100BE52DF"
             BuildableName = "libwbbase.dylib"
             BlueprintName = "base"
-            ReferencedContainer = "container:MySQLWorkbench.xcodeproj">
+            ReferencedContainer = "container:MySQLMySqlStudio.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

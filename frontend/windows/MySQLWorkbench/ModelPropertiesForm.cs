@@ -27,11 +27,11 @@ using System.Collections.Generic;
 using System.Drawing;
 
 using MySQL.Base;
-using MySQL.Workbench;
+using MySQL.MySqlStudio;
 using MySQL.Grt;
 using MySQL.Controls;
 
-namespace MySQL.GUI.Workbench
+namespace MySQL.GUI.MySqlStudio
 {
   public partial class ModelPropertiesForm : TabDocument
   {

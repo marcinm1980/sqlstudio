@@ -55,11 +55,11 @@ echo "Updating AssemblyInfo.cs"
 sed -e "s/\[assembly: AssemblyVersion(.*)\]/[assembly: AssemblyVersion(\"$major.$minor.$release_number\")]/"\
     -e "s/\[assembly: AssemblyFileVersion(.*)\]/[assembly: AssemblyFileVersion(\"$major.$minor.$release_number\")]/" \
     -e "s/\[assembly: AssemblyReleaseType(.*)\]/[assembly: AssemblyReleaseType(\"$release_type\")]/" \
-    -i.bak frontend/windows/MySQLWorkbench/Properties/AssemblyInfo.cs
+    -i.bak frontend/windows/MySQLMySqlStudio/Properties/AssemblyInfo.cs
 
 if test "$edition_type" != ""; then
 sed -e "s/\[assembly: AssemblyConfiguration(.*)\]/[assembly: AssemblyConfiguration(\"$edition_type\")]/"\
-    -i.bak frontend/windows/MySQLWorkbench/Properties/AssemblyInfo.cs
+    -i.bak frontend/windows/MySQLMySqlStudio/Properties/AssemblyInfo.cs
 fi
 
 echo "Updating Info.plist"

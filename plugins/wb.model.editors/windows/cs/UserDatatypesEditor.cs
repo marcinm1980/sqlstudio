@@ -30,7 +30,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
   public partial class UserDatatypesEditor : Form
   {

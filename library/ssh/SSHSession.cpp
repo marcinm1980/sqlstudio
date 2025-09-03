@@ -357,7 +357,8 @@ namespace ssh {
       }
 
       if (bytesRead > logSize) {
-        throw SSHTunnelException("Too much data to read, limit is: " + std::to_string(logSize) + ". You can change the limit in the Workbench Preferences.");
+        throw SSHTunnelException("Too much data to read, limit is: " + std::to_string(logSize) +
+                                 ". You can change the limit in the MySqlStudio Preferences.");
       }
     } while (true);
 
@@ -476,7 +477,8 @@ namespace ssh {
       }
 
       if (bytesRead > logSize) {
-        throw SSHTunnelException("Too much data to read, limit is: " + std::to_string(logSize) + ". You can change the limit in the Workbench Preferences.");
+        throw SSHTunnelException("Too much data to read, limit is: " + std::to_string(logSize) +
+                                 ". You can change the limit in the MySqlStudio Preferences.");
       }
     } while (true);
 

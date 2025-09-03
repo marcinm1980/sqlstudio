@@ -148,8 +148,8 @@ retry:
       FileCharsetDialog dlg(
         _("Unknown File Encoding"),
         strfmt("The file '%s' is not UTF-8 encoded.\n\n"
-               "Please select the encoding of the file and press OK for Workbench to convert and open it.\n"
-               "Note that as Workbench works with UTF-8 text, if you save back to the original file,\n"
+               "Please select the encoding of the file and press OK for MySqlStudio to convert and open it.\n"
+               "Note that as MySqlStudio works with UTF-8 text, if you save back to the original file,\n"
                "its contents will be replaced with the converted data.\n\n"
                "WARNING: If your file contains binary data, it may become corrupted.\n\n"
                "Click \"Run SQL Script...\" to execute the file without opening for editing.",

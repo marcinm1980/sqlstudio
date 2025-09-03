@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=MySQL Workbench
+Name=MySql Studio
 Comment=MySQL Database Design, Administration and Development Tool
 Exec=mysql-workbench %f
 Terminal=false

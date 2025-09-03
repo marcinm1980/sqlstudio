@@ -57,7 +57,7 @@
 #define UPPER_BOUND(x) ((x == NULL) ? 0 : sizeof(x) / sizeof(x[0]))
 #endif
 
-class WorkbenchTester {
+class MySqlStudioTester {
 private:
   wb::WBFrontendCallbacks _wbcallbacks;
   std::list<std::string> fileDialogInput; // paths to use when show_file_dialog is called
@@ -72,9 +72,9 @@ public:
 
   mdc::CanvasView *lastView;
 
-  WorkbenchTester(bool initPython = false, const base::Size &apage_size = base::Size(800, 600),
-                  const wb::WBFrontendCallbacks &callbacks = wb::WBFrontendCallbacks());
-  ~WorkbenchTester();
+  MySqlStudioTester(bool initPython = false, const base::Size &apage_size = base::Size(800, 600),
+                    const wb::WBFrontendCallbacks &callbacks = wb::WBFrontendCallbacks());
+  ~MySqlStudioTester();
 
   void initializeRuntime();
 

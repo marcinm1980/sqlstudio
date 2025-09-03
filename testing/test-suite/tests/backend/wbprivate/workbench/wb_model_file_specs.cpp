@@ -38,7 +38,7 @@ $ModuleEnvironment() {};
 using namespace wb;
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   std::string tmpDataDir;
   std::string outputDir;
 
@@ -63,7 +63,7 @@ $describe("Tests for WB model file") {
   $beforeAll([&]() {
     data->tmpDataDir = casmine::CasmineContext::get()->tmpDataDir();
     data->outputDir = casmine::CasmineContext::get()->outputDir();
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
   });
 
   $it("Model file creation + rename", [this]() {

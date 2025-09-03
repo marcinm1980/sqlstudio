@@ -362,7 +362,7 @@ class SelectFilePage(WizardPage):
         self.export_local_cb.set_text("Export to local machine")
         self.export_local_cb.set_active(True)
         self.export_local_box.add(self.export_local_cb, False, True)
-        l = mforms.newLabel("""If checked, rows will be exported on the location that started Workbench.\nIf not checked, rows will be exported on the server.\nIf server and computer that started Workbench are different machines, import of that file can be done manual way only.""")
+        l = mforms.newLabel("""If checked, rows will be exported on the location that started MySqlStudio.\nIf not checked, rows will be exported on the server.\nIf server and computer that started MySqlStudio are different machines, import of that file can be done manual way only.""")
         l.set_style(mforms.SmallHelpTextStyle)
         self.export_local_box.add(l, False, True)
         

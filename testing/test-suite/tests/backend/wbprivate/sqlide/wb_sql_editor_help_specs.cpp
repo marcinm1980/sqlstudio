@@ -41,7 +41,7 @@ namespace {
 $ModuleEnvironment() {};
 
 $TestData {
-  std::unique_ptr<WorkbenchTester> tester;
+  std::unique_ptr<MySqlStudioTester> tester;
   help::HelpContext *helpContext;
   db_mysql_CatalogRef catalog;
   unsigned long version;
@@ -903,7 +903,7 @@ static std::vector<HelpTestEntry> complexTests = {
 $describe("sql editor help test") {
   $beforeAll([&]() {
     bec::GRTManager::get();
-    data->tester.reset(new WorkbenchTester());
+    data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
     data->catalog = createEmptyCatalog();

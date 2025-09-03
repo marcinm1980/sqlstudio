@@ -33,7 +33,7 @@ using MySQL.Grt;
 using MySQL.Grt.Db;
 using MySQL.Utilities;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
 	class DbMysqlTableIndicesListModel : GrtListModel
 	{

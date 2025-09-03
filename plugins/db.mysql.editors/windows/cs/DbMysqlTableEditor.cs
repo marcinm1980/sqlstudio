@@ -32,10 +32,10 @@ using Aga.Controls.Tree.NodeControls;
 using MySQL.Forms;
 using MySQL.Grt;
 using MySQL.Grt.Db;
-using MySQL.GUI.Workbench.Plugins.Properties;
+using MySQL.GUI.MySqlStudio.Plugins.Properties;
 using MySQL.Utilities;
 
-namespace MySQL.GUI.Workbench.Plugins
+namespace MySQL.GUI.MySqlStudio.Plugins
 {
   // TODO: remove all stored NodeIds . This is just nonsense.
   //       NodeIds should be created on demand (they are temporary anyway) from tree node indices.
@@ -2043,7 +2043,7 @@ namespace MySQL.GUI.Workbench.Plugins
 
     #endregion
 
-    #region IWorkbenchDocument Interface
+    #region IMySqlStudioDocument Interface
 
     public override bool CanCloseDocument()
     {

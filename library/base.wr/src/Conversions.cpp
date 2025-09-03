@@ -31,7 +31,7 @@ using namespace System;
 using namespace System::Drawing;
 
 using namespace MySQL;
-using namespace MySQL::Workbench;
+using namespace MySQL::MySqlStudio;
 
 //--------------------------------------------------------------------------------------------------
 

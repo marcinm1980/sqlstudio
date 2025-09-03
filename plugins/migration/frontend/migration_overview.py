@@ -32,10 +32,10 @@ class MainView(WizardPage):
         self.main = main
 
         self.main.add_content_page(self, "Overview", "Overview", "migration")
-        grt.modules.Workbench.initializeOtherRDBMS()
+        grt.modules.MySqlStudio.initializeOtherRDBMS()
 
     def create_ui(self):
-        label = mforms.newLabel("Welcome to the MySQL Workbench Migration Wizard")
+        label = mforms.newLabel("Welcome to the MySql Studio Migration Wizard")
         label.set_name("Welcome")
         label.set_style(mforms.BigBoldStyle)
         self.content.add(label, False, True)
@@ -52,7 +52,7 @@ class MainView(WizardPage):
         self.content.add(label, False, True)
         label = mforms.newLabel("Before starting, check the following preparation steps:\n\n"+
               "- The Migration Wizard uses ODBC to connect to the source database. You must have an ODBC driver for\n"
-              "the source database installed and configured, as Workbench does not bundle any such drivers.\n"
+              "the source database installed and configured, as MySqlStudio does not bundle any such drivers.\n"
               "For MySQL connections, the native client library is used.\n\n"+
               "- Ensure you can connect to both source and target RDBMS servers.\n\n"+
               "- Make sure you have privileges to read schema information and data from the source database and\n"+
