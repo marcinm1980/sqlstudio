@@ -158,9 +158,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cairo_wrap.cxx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cairo_wrap.cxx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'">cairo_wrap.cxx</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">swig -ILib -ILib\python -I$(WB_3DPARTY_PATH)\Include -I../../base -fvirtual -fcompact -c++ -python -DCAIRO_HAS_PNG_FUNCTIONS=1 cairo.i </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'">swig -ILib -ILib\python -I$(WB_3DPARTY_PATH)\Include -I../../base -fvirtual -fcompact -c++ -python -DCAIRO_HAS_PNG_FUNCTIONS=1 -DSWIG_PYTHON_LEGACY_BOOL cairo.i </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">swig -ILib -ILib\python -I$(WB_3DPARTY_PATH)\Include -I../../base -fvirtual -fcompact -c++ -python -DCAIRO_HAS_PNG_FUNCTIONS=1 -DSWIG_PYTHON_LEGACY_BOOL cairo.i </Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">swig -ILib -ILib\python -I$(MSS_3DPARTY_PATH)\Include -I../../base -fvirtual -fcompact -c++ -python -DCAIRO_HAS_PNG_FUNCTIONS=1 cairo.i </Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'">swig -ILib -ILib\python -I$(MSS_3DPARTY_PATH)\Include -I../../base -fvirtual -fcompact -c++ -python -DCAIRO_HAS_PNG_FUNCTIONS=1 -DSWIG_PYTHON_LEGACY_BOOL cairo.i </Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">swig -ILib -ILib\python -I$(MSS_3DPARTY_PATH)\Include -I../../base -fvirtual -fcompact -c++ -python -DCAIRO_HAS_PNG_FUNCTIONS=1 -DSWIG_PYTHON_LEGACY_BOOL cairo.i </Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Regenerating SWIG cairo wrapper...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Regenerating SWIG cairo wrapper...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'">Regenerating SWIG cairo wrapper...</Message>

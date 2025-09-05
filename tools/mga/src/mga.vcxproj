@@ -87,7 +87,7 @@
       <PreprocessorDefinitions>UTF8PROC_EXPORTS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;MGA_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>.\;library;aal;utf8proc;aal\windows;aal\windows\accessible.wr;duktape;duktape\extra\module-node;$(WB_3DPARTY_PATH)\include\cppconn</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;library;aal;utf8proc;aal\windows;aal\windows\accessible.wr;duktape;duktape\extra\module-node;$(MSS_3DPARTY_PATH)\include\cppconn</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <OmitFramePointers>false</OmitFramePointers>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -97,7 +97,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>duktape.lib;aal.wr.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(WB_3DPARTY_PATH)\Debug\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(MSS_3DPARTY_PATH)\Debug\lib</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(OutDir)$(TargetName)_lib.pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>UTF8PROC_EXPORTS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;MGA_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>.\;library;aal;utf8proc;aal\windows;aal\windows\accessible.wr;duktape;duktape\extra\module-node;$(WB_3DPARTY_PATH)\include\cppconn</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;library;aal;utf8proc;aal\windows;aal\windows\accessible.wr;duktape;duktape\extra\module-node;$(MSS_3DPARTY_PATH)\include\cppconn</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -122,7 +122,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>duktape.lib;aal.wr.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(WB_3DPARTY_PATH)\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(MSS_3DPARTY_PATH)\lib</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(OutDir)$(TargetName)_lib.pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
