@@ -72,7 +72,7 @@
     <CustomAction Id="SetAdditionalCleanupDir1" Property="LEFTOVERDIR1" Value="[INSTALLDIR]python\encodings" />
     <CustomAction Id="SetAdditionalCleanupDir2" Property="LEFTOVERDIR2" Value="[INSTALLDIR]python\logging" />
     <CustomAction Id="SetAdditionalCleanupDir3" Property="LEFTOVERDIR3" Value="[INSTALLDIR]studio\graphics" />
-    <Binary Id="MySQLCA" SourceFile="$(env.WB_3DPARTY_PATH)\bin\MySQLCA.CA.dll" />
+    <Binary Id="MySQLCA" SourceFile="$(env.MSS_3DPARTY_PATH)\bin\MySQLCA.CA.dll" />
 
     <CustomAction Id="PrecompilePythonFiles" DllEntry="PrecompilePythonFiles" Execute="deferred" Impersonate="no" Return="asyncWait" BinaryRef="MySQLCA" />
     <CustomAction Id="PrecompilePythonFiles.SetProperty" Return="check" Property="PrecompilePythonFiles" Value="[INSTALLDIR]" />

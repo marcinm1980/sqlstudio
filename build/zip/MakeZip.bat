@@ -30,9 +30,9 @@ for %%A in ("%VERSION_DETAIL%") do set VERSION_MAIN=%%~nA
 
 rem Set other variables
 set DIST_DIR=.\distribution
-set UTIL_PATH=%WB_3DPARTY_PATH%\bin
-set PYTHON_EXE_PATH=%WB_3DPARTY_PATH%\python\python.exe
-set PYTHONPATH=%WB_3DPARTY_PATH%\Python
+set UTIL_PATH=%MSS_3DPARTY_PATH%\bin
+set PYTHON_EXE_PATH=%MSS_3DPARTY_PATH%\python\python.exe
+set PYTHONPATH=%MSS_3DPARTY_PATH%\Python
 set OUTPUT_FILENAME=mysql-studio-%SETUP_TYPE%-%VERSION_DETAIL%-%FILENAME_ARCH%.zip
 set OUTPUT_DIRNAME="MySql Studio %VERSION_DETAIL%%SETUP_TYPE_UC% (%FILENAME_ARCH%)"
 set TMP_DIR=.\temp

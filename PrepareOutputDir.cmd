@@ -26,25 +26,25 @@ set SCRIPTS_DIR=%1scripts
 echo Scripts directory: %SCRIPTS_DIR%
 
 if %2 == Debug ( set ADDITIONAL_LIBFOLDER=debug\)
-set EXT_LIB_DIR=%WB_3DPARTY_PATH%\%ADDITIONAL_LIBFOLDER%Lib
+set EXT_LIB_DIR=%MSS_3DPARTY_PATH%\%ADDITIONAL_LIBFOLDER%Lib
 echo Windows resource directory: %EXT_LIB_DIR%
 
-set EXT_BIN_DIR=%WB_3DPARTY_PATH%\bin
+set EXT_BIN_DIR=%MSS_3DPARTY_PATH%\bin
 echo External binary directory: %EXT_BIN_DIR%
 
 set TARGET_DIR=%1bin\%3\%2
 echo Target directory: %TARGET_DIR%
 
-set PYTHON_COMMON_DIR=%WB_3DPARTY_PATH%\Python\lib
+set PYTHON_COMMON_DIR=%MSS_3DPARTY_PATH%\Python\lib
 echo Python common library directory: %PYTHON_COMMON_DIR%
 
-set PYTHON_DIR=%WB_3DPARTY_PATH%\Python
+set PYTHON_DIR=%MSS_3DPARTY_PATH%\Python
 echo Python directory: %PYTHON_DIR%
 
-set PYTHON_LIB_DIR=%WB_3DPARTY_PATH%\Python\Libs
+set PYTHON_LIB_DIR=%MSS_3DPARTY_PATH%\Python\Libs
 echo Python library directory: %PYTHON_LIB_DIR%
 
-set PYTHON_DLLS_DIR=%WB_3DPARTY_PATH%\Python\Dlls
+set PYTHON_DLLS_DIR=%MSS_3DPARTY_PATH%\Python\Dlls
 echo Python dlls directory: %PYTHON_DLLS_DIR%
 
 rem -------------------------------------------------------------------------------
@@ -252,7 +252,7 @@ echo * ffi library ...
 xcopy /i /s /y /d %EXT_LIB_DIR%\libffi.dll %TARGET_DIR%\.
 
 echo * auth plugins ...
-set AUTH_LIB_DIR=%WB_3DPARTY_PATH%\Lib
+set AUTH_LIB_DIR=%MSS_3DPARTY_PATH%\Lib
 xcopy /i /s /y /d %AUTH_LIB_DIR%\authentication_ldap_sasl_client.dll %TARGET_DIR%\.
 xcopy /i /s /y /d %AUTH_LIB_DIR%\authentication_kerberos_client.dll %TARGET_DIR%\.
 xcopy /i /s /y /d %AUTH_LIB_DIR%\mysql_native_password.dll %TARGET_DIR%\.

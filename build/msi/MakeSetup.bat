@@ -44,7 +44,7 @@ set BUILD_SIGNED=1
 
 rem Set other variables
 set DIST_DIR=.\distribution
-set UTIL_PATH=%WB_3DPARTY_PATH%\bin
+set UTIL_PATH=%MSS_3DPARTY_PATH%\bin
 set OUTPUT_FILENAME=mysql-studio-%SETUP_TYPE%-%VERSION_DETAIL%-%FILENAME_ARCH%.msi
 set OUTPUT_FILENAME_UNSIGNED=mysql-studio-%SETUP_TYPE%-%VERSION_DETAIL%-%FILENAME_ARCH%-unsigned.msi
 
