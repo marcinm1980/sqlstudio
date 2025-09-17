@@ -34,13 +34,10 @@
 #include <errno.h>
 #include <string.h>
 #include <fstream>
-#include <boost/locale/encoding_utf.hpp>
 
 DEFAULT_LOG_DOMAIN(DOMAIN_BASE);
 
 namespace base {
-
-#ifdef _MSC_VER
 
   // Win uses C++11 with support for wstring_convert. Other platforms use boost for now.
 
@@ -78,30 +75,30 @@ namespace base {
     return string_to_wstring(s);
   }
 
-#else
-
-  using boost::locale::conv::utf_to_utf;
-
-  std::wstring string_to_wstring(const std::string &str) {
-    return utf_to_utf<wchar_t>(str.c_str(), str.c_str() + str.size());
-  }
-
-  //--------------------------------------------------------------------------------------------------
-
-  std::string wstring_to_string(const std::wstring &str) {
-    if (sizeof(wchar_t) > 2)
-      return utf_to_utf<char>((int32_t *)str.c_str(), (int32_t *)str.c_str() + str.size());
-    else
-      return utf_to_utf<char>(str.c_str(), str.c_str() + str.size());
-  }
-
-  //--------------------------------------------------------------------------------------------------
-
-  std::string path_from_utf8(const std::string &s) {
-    return s;
-  }
-
-#endif
+//#else
+//
+//  using boost::locale::conv::utf_to_utf;
+//
+//  std::wstring string_to_wstring(const std::string &str) {
+//    return utf_to_utf<wchar_t>(str.c_str(), str.c_str() + str.size());
+//  }
+//
+//  //--------------------------------------------------------------------------------------------------
+//
+//  std::string wstring_to_string(const std::wstring &str) {
+//    if (sizeof(wchar_t) > 2)
+//      return utf_to_utf<char>((int32_t *)str.c_str(), (int32_t *)str.c_str() + str.size());
+//    else
+//      return utf_to_utf<char>(str.c_str(), str.c_str() + str.size());
+//  }
+//
+//  //--------------------------------------------------------------------------------------------------
+//
+//  std::string path_from_utf8(const std::string &s) {
+//    return s;
+//  }
+//
+//#endif
 
   //--------------------------------------------------------------------------------------------------
 

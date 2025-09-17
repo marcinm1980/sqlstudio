@@ -26,14 +26,12 @@
 #include "base/string_utilities.h"
 #include <cstdlib>
 #include <algorithm>
-#include <boost/locale/encoding_utf.hpp>
 #include <glib.h>
 #include <cstring>
 #include <functional>
 #include <cctype>
 #include <memory>
 
-using boost::locale::conv::utf_to_utf;
 
 namespace base {
   /*

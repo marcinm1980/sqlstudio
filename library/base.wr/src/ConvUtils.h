@@ -187,8 +187,7 @@ generic<typename S> std::vector<T> marshal_as(System::Collections::Generic::ICol
 
   std::vector<T> result;
   result.reserve(list->Count);
-  for
-    each(S & element in list) result.push_back(marshal_as<T>(element));
+  for each(S & element in list) result.push_back(marshal_as<T>(element));
 
   return result;
 }
