@@ -67,9 +67,8 @@ typedef int ssize_t;
 
 #include <VersionHelpers.h>
 
-#include <boost/locale/encoding_utf.hpp>
 #include <boost/optional.hpp>
-#include <boost/cstdint.hpp>
+//#include <boost/cstdint.hpp>
 
 #include <glib.h>
 #include <glib/gstdio.h>

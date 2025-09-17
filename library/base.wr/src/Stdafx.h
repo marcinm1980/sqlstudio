@@ -35,6 +35,7 @@
 #include <iosfwd>
 #include <fstream>
 #include <iostream>
+#include <boost/optional.hpp>
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
