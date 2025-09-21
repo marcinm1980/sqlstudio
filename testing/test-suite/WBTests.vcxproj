@@ -57,6 +57,7 @@
     <Import Project="..\..\vsprops\wb_cppconn.props" />
     <Import Project="..\..\vsprops\wb_cairo.props" />
     <Import Project="..\..\vsprops\wb_antlr4.props" />
+    <Import Project="..\..\vsprops\wb_mysql.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -67,6 +68,7 @@
     <Import Project="..\..\vsprops\wb_cppconn.props" />
     <Import Project="..\..\vsprops\wb_cairo.props" />
     <Import Project="..\..\vsprops\wb_antlr4.props" />
+    <Import Project="..\..\vsprops\wb_mysql.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -77,6 +79,7 @@
     <Import Project="..\..\vsprops\wb_cppconn.props" />
     <Import Project="..\..\vsprops\wb_cairo.props" />
     <Import Project="..\..\vsprops\wb_antlr4.props" />
+    <Import Project="..\..\vsprops\wb_mysql.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

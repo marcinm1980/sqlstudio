@@ -17,7 +17,7 @@ execute_process(COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/get_wb_version.sh full
 
 string(STRIP ${WB_VERSION} WB_VERSION)
 
-project(WORKBENCH LANGUAGES C CXX)
+project(MYSQLSTUDIO LANGUAGES C CXX)
 
 option(ENABLE_COTIRE "Enable cotire to generate precompiled headers" OFF)
 option(TEST_BUILD "Enable building additonal debug libs" OFF)

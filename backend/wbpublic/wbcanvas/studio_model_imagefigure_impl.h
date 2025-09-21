@@ -22,8 +22,8 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#ifndef _WORKBENCH_MODEL_IMAGEFIGURE_IMPL_H_
-#define _WORKBENCH_MODEL_IMAGEFIGURE_IMPL_H_
+#ifndef _MYSQLSTUDIO_MODEL_IMAGEFIGURE_IMPL_H_
+#define _MYSQLSTUDIO_MODEL_IMAGEFIGURE_IMPL_H_
 
 #include "model_figure_impl.h"
 #include "grts/structs.studio.model.h"

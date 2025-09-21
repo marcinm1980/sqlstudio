@@ -25,41 +25,38 @@
 #pragma once
 
 #include <windows.h>
-#include <shellapi.h>
+//#include <shellapi.h>
 
-#include <stdexcept>
-#include <functional>
-#include <locale>
-#include <algorithm>
-#include <math.h>
-#include <errno.h>
-#include <string.h>
-#include <iostream>
-#include <wchar.h>
-#include <codecvt>
-#include <fcntl.h>
-#include <fstream>
-#include <sstream>
-#include <unordered_set>
-#include <list>
-#include <inttypes.h>
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <sddl.h>
-#include <stdio.h>
-#include <winevt.h>
-#include <memory>
+#include <cstdio>
+//#include <stdexcept>
+//#include <functional>
+//#include <locale>
+//#include <algorithm>
+//#include <math.h>
+//#include <errno.h>
+//#include <string.h>
+//#include <iostream>
+//#include <wchar.h>
+//#include <codecvt>
+//#include <fcntl.h>
+//#include <fstream>
+//#include <sstream>
+//#include <unordered_set>
+//#include <list>
+//#include <inttypes.h>
+//#include <string>
+//#include <map>
+//#include <vector>
+//#include <sstream>
+//#include <sddl.h>
+//#include <stdio.h>
+//#include <winevt.h>
+//#include <memory>
 
-#include <VersionHelpers.h>
-
-#include <boost/locale/encoding_utf.hpp>
-#include <boost/optional.hpp>
-#include <boost/cstdint.hpp>
+//#include <VersionHelpers.h>
 
 #include <glib.h>
 #include <glib/gstdio.h>
-
-#include <iosfwd>
-#include <fstream>
+//
+//#include <iosfwd>
+//#include <fstream>
