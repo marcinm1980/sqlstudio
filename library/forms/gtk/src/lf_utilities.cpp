@@ -247,7 +247,7 @@ namespace mforms {
           break;
         case mforms::ApplicationSettings:
           path = g_get_home_dir();
-          path.append("/.mysql/workbench");
+          path.append("/.mysql/mysqlstudio");
           break;
         case WinProgramFiles:
         case WinProgramFilesX86:
@@ -322,21 +322,19 @@ namespace mforms {
 
     const SecretSchema* getWbSecretSchema() {
       static const SecretSchema wbSchema = {
-          .name = "org.mysql.Workbench.Password",
-          .flags = SECRET_SCHEMA_NONE,
-          .attributes = {
-              { "service", SECRET_SCHEMA_ATTRIBUTE_STRING },
-              { "account", SECRET_SCHEMA_ATTRIBUTE_STRING },
-              { nullptr, SECRET_SCHEMA_ATTRIBUTE_STRING }
-          },
-          .reserved = 0,
-          .reserved1 = 0,
-          .reserved2 = 0,
-          .reserved3 = 0,
-          .reserved4 = 0,
-          .reserved5 = 0,
-          .reserved6 = 0,
-          .reserved7 = 0,
+        .name = "org.mysql.mysqlstudio.Password",
+        .flags = SECRET_SCHEMA_NONE,
+        .attributes = { { "service", SECRET_SCHEMA_ATTRIBUTE_STRING },
+                        { "account", SECRET_SCHEMA_ATTRIBUTE_STRING },
+                        { nullptr, SECRET_SCHEMA_ATTRIBUTE_STRING } },
+        .reserved = 0,
+        .reserved1 = 0,
+        .reserved2 = 0,
+        .reserved3 = 0,
+        .reserved4 = 0,
+        .reserved5 = 0,
+        .reserved6 = 0,
+        .reserved7 = 0,
       };
       return &wbSchema;
     };

@@ -491,6 +491,7 @@
     <ClInclude Include="objimpl\db.mgmt\db_mgmt_SSHFile.h">
       <Filter>Generated Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sqlite_modern_cpp_nil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -925,6 +926,9 @@
     </ClCompile>
     <ClCompile Include="objimpl\db.mgmt\db_mgmt_SSHConnection.cpp">
       <Filter>Generated Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite_modern_cpp_nil.cpp">
+      <Filter>sqlide Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

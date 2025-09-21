@@ -22,8 +22,8 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#ifndef _WORKBENCH_PHYSICAL_ROUTINEGROUPFIGURE_IMPL_H_
-#define _WORKBENCH_PHYSICAL_ROUTINEGROUPFIGURE_IMPL_H_
+#ifndef _MYSQLSTUDIO_PHYSICAL_ROUTINEGROUPFIGURE_IMPL_H_
+#define _MYSQLSTUDIO_PHYSICAL_ROUTINEGROUPFIGURE_IMPL_H_
 
 #include "model_figure_impl.h"
 #include "grts/structs.studio.physical.h"
