@@ -26,7 +26,7 @@ set SCRIPTS_DIR=%1scripts
 echo Scripts directory: %SCRIPTS_DIR%
 
 if %2 == Debug ( set ADDITIONAL_LIBFOLDER=debug\)
-set EXT_LIB_DIR=%MSS_3DPARTY_PATH%\%ADDITIONAL_LIBFOLDER%Lib
+set EXT_LIB_DIR=%MSS_3DPARTY_PATH%\Lib\%ADDITIONAL_LIBFOLDER%
 echo Windows resource directory: %EXT_LIB_DIR%
 
 set EXT_BIN_DIR=%MSS_3DPARTY_PATH%\bin

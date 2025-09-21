@@ -33,13 +33,13 @@
 
 #ifdef _MSC_VER
   #pragma warning(disable: 4355) // 'this' : used in base member initializer list
-  #ifdef GRT_STRUCTS_WORKBENCH_MODEL_EXPORT
-  #define GRT_STRUCTS_WORKBENCH_MODEL_PUBLIC __declspec(dllexport)
+  #ifdef GRT_STRUCTS_MYSQLSTUDIO_MODEL_EXPORT
+  #define GRT_STRUCTS_MYSQLSTUDIO_MODEL_PUBLIC __declspec(dllexport)
 #else
-  #define GRT_STRUCTS_WORKBENCH_MODEL_PUBLIC __declspec(dllimport)
+  #define GRT_STRUCTS_MYSQLSTUDIO_MODEL_PUBLIC __declspec(dllimport)
 #endif
 #else
-  #define GRT_STRUCTS_WORKBENCH_MODEL_PUBLIC
+  #define GRT_STRUCTS_MYSQLSTUDIO_MODEL_PUBLIC
 #endif
 
 #include "grts/structs.h"
@@ -60,7 +60,7 @@ namespace grt {
 }; 
 
 /** a model figure representing an image */
-class GRT_STRUCTS_WORKBENCH_MODEL_PUBLIC studio_model_ImageFigure : public model_Figure {
+class GRT_STRUCTS_MYSQLSTUDIO_MODEL_PUBLIC studio_model_ImageFigure : public model_Figure {
   typedef model_Figure super;
 
 public:
@@ -167,7 +167,7 @@ public:
 };
 
 /** a model figure representing a text box */
-class GRT_STRUCTS_WORKBENCH_MODEL_PUBLIC studio_model_NoteFigure : public model_Figure {
+class GRT_STRUCTS_MYSQLSTUDIO_MODEL_PUBLIC studio_model_NoteFigure : public model_Figure {
   typedef model_Figure super;
 
 public:

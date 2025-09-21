@@ -33,13 +33,13 @@
 
 #ifdef _MSC_VER
   #pragma warning(disable: 4355) // 'this' : used in base member initializer list
-  #ifdef GRT_STRUCTS_WORKBENCH_PHYSICAL_EXPORT
-  #define GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC __declspec(dllexport)
+  #ifdef GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_EXPORT
+  #define GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC __declspec(dllexport)
 #else
-  #define GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC __declspec(dllimport)
+  #define GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC __declspec(dllimport)
 #endif
 #else
-  #define GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC
+  #define GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC
 #endif
 
 #include "grts/structs.h"
@@ -104,7 +104,7 @@ public:
 };
 
 /** a model connection */
-class GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC studio_physical_Connection : public model_Connection {
+class GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC studio_physical_Connection : public model_Connection {
   typedef model_Connection super;
 
 public:
@@ -520,7 +520,7 @@ public:
 };
 
 /** a model figure representing a collection of routines */
-class GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC studio_physical_RoutineGroupFigure : public model_Figure {
+class GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC studio_physical_RoutineGroupFigure : public model_Figure {
   typedef model_Figure super;
 
 public:
@@ -588,7 +588,7 @@ public:
 };
 
 /** a model figure representing a view */
-class GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC studio_physical_ViewFigure : public model_Figure {
+class GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC studio_physical_ViewFigure : public model_Figure {
   typedef model_Figure super;
 
 public:
@@ -656,7 +656,7 @@ public:
 };
 
 /** a model figure representing a table */
-class GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC studio_physical_TableFigure : public model_Figure {
+class GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC studio_physical_TableFigure : public model_Figure {
   typedef model_Figure super;
 
 public:
@@ -869,7 +869,7 @@ public:
 };
 
 /** a model diagram holding layers and figures */
-class GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC studio_physical_Diagram : public model_Diagram {
+class GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC studio_physical_Diagram : public model_Diagram {
   typedef model_Diagram super;
 
 public:
@@ -1013,7 +1013,7 @@ public:
 };
 
 /** a physical model holding diagrams */
-class GRT_STRUCTS_WORKBENCH_PHYSICAL_PUBLIC studio_physical_Model : public model_Model {
+class GRT_STRUCTS_MYSQLSTUDIO_PHYSICAL_PUBLIC studio_physical_Model : public model_Model {
   typedef model_Model super;
 
 public:

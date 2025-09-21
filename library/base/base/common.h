@@ -63,10 +63,10 @@
 #define strncasecmp _strnicmp
 #endif
 
-#ifndef snprintf
-#define HAVE_SNPRINTF 1 // For python libs.
-#define snprintf _snprintf_s
-#endif
+//#ifndef snprintf
+//#define HAVE_SNPRINTF 1 // For python libs.
+//#define snprintf _snprintf_s
+//#endif
 
 #endif // _MSC_VER
 

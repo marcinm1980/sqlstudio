@@ -1,4 +1,4 @@
-set(WORKBENCH_DATA_FILES
+set(MYSQLSTUDIO_DATA_FILES
     res/wb.glade
     res/model_view.glade
     res/diagram_view.glade
@@ -7,7 +7,7 @@ set(WORKBENCH_DATA_FILES
     res/input_dialog.glade
     studio.css
 )
-install(FILES ${WORKBENCH_DATA_FILES} DESTINATION ${WB_PACKAGE_SHARED_DIR})
+install(FILES ${MYSQLSTUDIO_DATA_FILES} DESTINATION ${WB_PACKAGE_SHARED_DIR})
 
 set(libdir          ${LIB_INSTALL_DIR})
 set(utilities_cmd   "")

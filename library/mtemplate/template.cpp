@@ -22,15 +22,15 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "template.h"
-#include <base/file_functions.h>
+
 #include <sstream>
 #include <iostream>
-#include "dictionary.h"
-#include "modifier.h"
+#include <base/file_functions.h>
 
+#include "template.h"
 #include <base/string_utilities.h>
 #include <base/file_utilities.h>
+#include <cstdio>
 
 namespace mtemplate {
 

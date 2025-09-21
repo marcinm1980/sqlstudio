@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.8)
 
-project(WORKBENCH_UNIT_TESTS)
+project(MYSQLSTUDIO_UNIT_TESTS)
 
 set(studio_dir "${CMAKE_SOURCE_DIR}/../..") # This must come from the parent
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${studio_dir}/build/cmake/Modules/")

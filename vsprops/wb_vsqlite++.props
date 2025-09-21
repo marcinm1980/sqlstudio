@@ -8,7 +8,7 @@
       <AdditionalIncludeDirectories>$(MSS_3DPARTY_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>vsqlite++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vsqlitepp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(MSS_3DPARTY_PATH)\Debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -17,7 +17,7 @@
       <AdditionalIncludeDirectories>$(MSS_3DPARTY_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>vsqlite++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vsqlitepp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(MSS_3DPARTY_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -26,7 +26,7 @@
       <AdditionalIncludeDirectories>$(MSS_3DPARTY_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>vsqlite++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vsqlitepp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(MSS_3DPARTY_PATH)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
