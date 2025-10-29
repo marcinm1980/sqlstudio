@@ -42,6 +42,7 @@ typedef int ssize_t;
 #include <functional>
 #include <locale>
 #include <algorithm>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <errno.h>
 #include <string.h>
@@ -68,7 +69,7 @@ typedef int ssize_t;
 
 #include <VersionHelpers.h>
 
-#include <boost/optional.hpp>
+//#include <boost/optional.hpp>
 //#include <boost/cstdint.hpp>
 
 #include <glib.h>
@@ -77,3 +78,4 @@ typedef int ssize_t;
 #include <iosfwd>
 #include <fstream>
 #include <iomanip>
+#include <cairo/cairo.h>

@@ -27,7 +27,6 @@
 #include "base/log.h"
 
 extern void register_all_metaclasses();
-base::Logger testLogger(".", getenv("WB_LOG_STDERR") != 0);
 
 
 int main(int argc, char** argv) {
