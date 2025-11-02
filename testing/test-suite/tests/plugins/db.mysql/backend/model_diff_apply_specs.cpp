@@ -28,11 +28,9 @@
 
 #include "wb_test_helpers.h"
 #include "wb_connection_helpers.h"
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
-
-$ModuleEnvironment() {};
 
 /*
   We override get_model_catalog() method of the original plugin,

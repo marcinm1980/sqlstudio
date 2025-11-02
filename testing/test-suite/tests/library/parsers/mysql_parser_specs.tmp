@@ -731,33 +731,33 @@ TEST_F(MySQLParserTest, StatementSplitterTest) {
     std::string statement_filename = dataDir + "/db/sakila-db/single_statement.sql";
 
     std::ifstream stream(filename, std::ios::binary);
-    EXPECT_TRUE(stream.good()) << "Error loading sql file";
+    $expect(stream.good()).toBeTrue("Error loading sql file");
     std::string sql((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
     std::vector<StatementRange> ranges;
     services->determineStatementRanges(sql.c_str(), sql.size(), ";", ranges);
 
-    EXPECT_EQ(ranges.size(), 57U) << "Unexpected number of statements returned from splitter";
+    $expect(ranges.size()).toBe(57U, "Unexpected number of statements returned from splitter");
 
     std::string s1(sql, ranges[0].start, ranges[0].length);
-    EXPECT_EQ(s1, "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0") << "Wrong statement";
+    EXPECT_EQ(s1, "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0", "Wrong statement");
 
     std::string s3(sql, ranges[56].start, ranges[56].length);
-    EXPECT_EQ(s3, "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS") << "Wrong statement";
+    EXPECT_EQ(s3, "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS", "Wrong statement");
 
     std::string s2(sql, ranges[30].start, ranges[30].length);
 
     stream.close();
     stream.open(statement_filename, std::ios::binary);
-    EXPECT_TRUE(stream.good()) << "Error loading result file";
+    $expect(stream.good()).toBeTrue("Error loading result file");
 
     sql = std::string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
-    EXPECT_EQ(s2, sql) << "Wrong statement";
-}
+    EXPECT_EQ(s2, sql, "Wrong statement");
+  });
 
-//----------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(MySQLParserTest, ParseNumberOfFilesWithVariousStatements) {
+  TEST_F(MySQLParserTest, Parse a number of files with various statements) {
     std::size_t count = 0;
     for (auto entry : testFiles) {
       std::string fileName = dataDir + entry.name;
@@ -767,7 +767,7 @@ TEST_F(MySQLParserTest, ParseNumberOfFilesWithVariousStatements) {
 #else
       std::ifstream stream(fileName, std::ios::binary);
 #endif
-      EXPECT_TRUE(stream.good()) << "Error loading sql file: " + fileName;
+      $expect(stream.good()).toBeTrue("Error loading sql file: " + fileName);
       std::string sql((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
       std::vector<StatementRange> ranges;
@@ -781,47 +781,47 @@ TEST_F(MySQLParserTest, ParseNumberOfFilesWithVariousStatements) {
         if (versionMatches(statement, 50620)) {
           auto result = parse(statement, 50620, "ANSI_QUOTES");
           if (result.first > 0U) {
-            FAIL() << "This query failed to parse (5.6.20:\n" + statement + "\n with error: " + result.second;
+            FAIL() << "This query failed to parse (5.6.20:\n" + statement + "\n with error: " + result.second);
           }
         } else if (versionMatches(statement, 50720)) {
           auto result = parse(statement, 50720, "ANSI_QUOTES");
           if (result.first > 0U) {
-            FAIL() << "This query failed to parse (5.7.20:\n" + statement + "\n with error: " + result.second;
+            FAIL() << "This query failed to parse (5.7.20:\n" + statement + "\n with error: " + result.second);
           }
         } else if (versionMatches(statement, 80021)) {
           auto result = parse(statement, 80021, "ANSI_QUOTES");
           if (result.first > 0U) {
-            FAIL() << "This query failed to parse (8.0.21:\n" + statement + "\n with error: " + result.second;
+            FAIL() << "This query failed to parse (8.0.21:\n" + statement + "\n with error: " + result.second);
           }
         } else
           FAIL() << "Invalid version number found in query: " + statement;
       }
 
     }
-}
+  });
 
-//----------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(MySQLParserTest, QueriesWithFunctionNamesAsIdentifiers) {
+  TEST_F(MySQLParserTest, Queries with function names as identifiers) {
     for (const char *name : functions) {
       std::string query = base::strfmt(query1, name);
       auto result = parse(query, 50530, "ANSI_QUOTES");
-      EXPECT_EQ(result.first, 0U) << "Query: " + query + " failed to parse with error: " + result.second;
+      EXPECT_EQ(result.first, 0U, "Query: " + query + " failed to parse with error: " + result.second);
 
       query = base::strfmt(query2, name, name);
       result = parse(query, 50530, "ANSI_QUOTES");
-      EXPECT_EQ(result.first, 0U) << "Query: " + query + " failed to parse with error: " + result.second;
+      EXPECT_EQ(result.first, 0U, "Query: " + query + " failed to parse with error: " + result.second);
     }
-}
+  });
 
-//----------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(MySQLParserTest, OperatorPrecedenceTests) {
+  TEST_F(MySQLParserTest, Operator precedence tests) {
     // This file is an unmodified copy from the server parser test suite.
     const std::string filename = dataDir + "/parser/parser_precedence.result";
 
     std::ifstream stream(filename, std::ios::binary);
-    EXPECT_TRUE(stream.good()) << "25.0 Could not open precedence test file";
+    $expect(stream.good()).toBeTrue("25.0 Could not open precedence test file");
 
     std::string line;
 
@@ -840,13 +840,13 @@ TEST_F(MySQLParserTest, OperatorPrecedenceTests) {
       // Start of a new test. The test description is optional.
       std::string sql;
       if (base::hasPrefix(line, "Testing ")) {
-        EXPECT_FALSE(std::getline(stream, sql).eof()) << "Invalid test file format";
+        $expect(std::getline(stream, sql).eof()).toBeFalse("Invalid test file format");
       } else
         sql = line;
-      EXPECT_TRUE(base::hasPrefix(sql, "select")) << "Invalid test file format";
+      $expect(base::hasPrefix(sql, "select")).toBeTrue("Invalid test file format");
 
       // The next line either repeats (parts of) the query or contains a server error.
-      EXPECT_FALSE(std::getline(stream, line).eof()) << "Invalid test file format";
+      $expect(std::getline(stream, line).eof()).toBeFalse("Invalid test file format");
 
       bool expectError = false;
       if (base::hasPrefix(line, "ERROR "))
@@ -854,7 +854,7 @@ TEST_F(MySQLParserTest, OperatorPrecedenceTests) {
 
       std::vector<EvalValue> expectedResults;
       if (!expectError) { // No results to compare in an error case.
-        EXPECT_FALSE(std::getline(stream, line).eof()) << "Invalid test file format";
+        $expect(std::getline(stream, line).eof()).toBeFalse("Invalid test file format");
         std::string temp;
         std::stringstream stream(line);
         while (stream >> temp) {
@@ -874,8 +874,8 @@ TEST_F(MySQLParserTest, OperatorPrecedenceTests) {
       }
 
       auto result = parse(sql, 80012, "");
-      EXPECT_EQ(result.first == 0, !expectError) <<
-        "Error status is unexpected for query (" + std::to_string(counter) + "): \n" + sql + "\n";
+      EXPECT_EQ(result.first == 0, !expectError,
+        "Error status is unexpected for query (" + std::to_string(counter) + "): \n" + sql + "\n");
       if (expectError) {
         ++counter;
         continue;
@@ -890,8 +890,8 @@ TEST_F(MySQLParserTest, OperatorPrecedenceTests) {
         throw;
       }
 
-      EXPECT_EQ(evaluator.results.size(), expectedResults.size()) <<
-        "Result counts differ for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n";
+      $expect(evaluator.results.size()).toBe(expectedResults.size(),
+        "Result counts differ for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n");
 
       static std::string dataTypes[] = {"FLOAT", "INT", "NULL", "NOT NULL"};
       for (size_t i = 0; i < expectedResults.size(); ++i) {
@@ -901,31 +901,31 @@ TEST_F(MySQLParserTest, OperatorPrecedenceTests) {
           type = EvalValue::Float;
         EvalValue::ValueType expectedType = expectedResults[i].type;
 
-        EXPECT_EQ(dataTypes[type], dataTypes[expectedType]) <<
-          "Result type " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n";
+        EXPECT_EQ(dataTypes[type], dataTypes[expectedType],
+          "Result type " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n");
         if (!expectedResults[i].isNullType())
-          EXPECT_EQ(evaluator.results[i].number, expectedResults[i].number) <<
-            "Result " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n";
+          EXPECT_EQ(evaluator.results[i].number, expectedResults[i].number,
+            "Result " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n");
       }
       ++counter;
     }
-}
+  });
 
-//----------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(MySQLParserTest, SqlModeDependentParsing) {
+  TEST_F(MySQLParserTest, SQL mode dependent parsing) {
     for (size_t i = 0; i < sqlModeTestQueries.size(); i++) {
       auto &entry = sqlModeTestQueries[i];
       auto result = parseAndCompare(entry.query, 80012, entry.sqlMode, sqlModeTestResults[i], entry.errors);
       if (!result.first) {
-        FAIL() << "SQL mode test " + std::to_string(i + " failed: " + entry.query + "\nwith error: " + result.second;
+        FAIL() << "SQL mode test " + std::to_string(i + " failed: " + entry.query + "\nwith error: " + result.second);
       }
     }
-}
+  });
 
-//----------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(MySQLParserTest, StringConcatenationFeature) {
+  TEST_F(MySQLParserTest, Tests the parser's string concatenation feature) {
     class TestListener : public MySQLParserBaseListener {
     public:
       std::string text;
@@ -936,56 +936,58 @@ TEST_F(MySQLParserTest, StringConcatenationFeature) {
     };
 
     auto result = parse("select \"abc\" \"def\" 'ghi''\\n\\z'", 80012, "");
-    EXPECT_EQ(result.first, 0U) << "String concatenation";
+    EXPECT_EQ(result.first, 0U, "String concatenation");
 
     TestListener listener;
     tree::ParseTreeWalker::DEFAULT.walk(&listener, lastParseTree);
-    EXPECT_EQ(listener.text, "abcdefghi'\nz") << "String concatenation";
-}
+    EXPECT_EQ(listener.text, "abcdefghi'\nz", "String concatenation");
+  });
 
-//----------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(MySQLParserTest, VersionDependentPartsOfGRANT) {
+  TEST_F(MySQLParserTest, Version dependent parts of GRANT) {
     for (size_t i = 0; i < versionTestResults.size(); ++i) {
       auto &entry = versionTestResults[i];
       auto result = parse(entry.sql, entry.version, "");
-      EXPECT_EQ(result.first, entry.errorCount) << "GRANT parsing failed (" +
-        std::to_string(i) + "): ";
+      EXPECT_EQ(result.first, entry.errorCount, "GRANT parsing failed (" +
+        std::to_string(i) + "): ");
     }
-}
+  });
 
 //----------------------------------------------------------------------------------------------------------------------
 
-TEST_F(MySQLParserTest, HexBinaryFloatDecimalAndIntNumberHandling) {
+  TEST_F(MySQLParserTest, Hex, binary, float, decimal and int number handling) {
     for (size_t i = 0; i < numbersTestQueries.size(); i++) {
       auto &entry = numbersTestQueries[i];
       auto result = parseAndCompare(entry.query, 80012, entry.sqlMode, numbersTestResults[i], entry.errors);
       if (!result.first) {
-        FAIL() << "Number test (" + std::to_string(i + ") failed: " + entry.query + "\nwith error: " + result.second;
+        FAIL() << "Number test (" + std::to_string(i + ") failed: " + entry.query + "\nwith error: " + result.second);
       }
     }
-}
+  });
 
-//----------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 
-TEST(MySQLParserStandaloneTest, ParsingOfSubpartsOfTheMySQLLanguage) {
+  TEST(MySQLParserStandaloneTest, Parsing of subparts of the MySQL language) {
     // Restricted content parsing (e.g. routines only, views only etc.).
 
     GTEST_SKIP() << "this must be implemented yet";
-}
+  });
 
-//----------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(MySQLParserTest, Bug30449796) {
+  TEST_F(MySQLParserTest, Bug #30449796) {
     auto result = parse("ANALYZE TABLE emp UPDATE HISTOGRAM ON job WITH 5 BUCKETS;", 50720, "");
     EXPECT_EQ(result.first, 1U);
     EXPECT_EQ(result.second, "line 1:18 no viable alternative at input 'UPDATE'");
     result = parse("ANALYZE TABLE emp UPDATE HISTOGRAM ON job WITH 5 BUCKETS;", 80010, "");
     EXPECT_EQ(result.first, 0U);
     EXPECT_TRUE(result.second.empty());
+  });
+
+  //--------------------------------------------------------------------------------------------------------------------
+
+}
 }
 
-//----------------------------------------------------------------------------------------------------------------------
 
-}
-}

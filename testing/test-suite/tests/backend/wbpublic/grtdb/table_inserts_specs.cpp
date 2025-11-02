@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2025, Oracle and/or its affiliates. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -22,7 +22,11 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "casmine.h"
+/*
+ * Copyright (c) 2025, dev4fun. All rights reserved.
+ */
+
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
 #include "base/string_utilities.h"
@@ -40,7 +44,7 @@ using namespace bec;
 
 namespace {
 
-$ModuleEnvironment() {};
+
 
 class TestTableColumnsListBE : public TableColumnsListBE {
 public:
@@ -117,7 +121,7 @@ public:
   }
 };
 
-$TestData {
+struct TestData {
   std::unique_ptr<MySqlStudioTester> tester;
   db_TableRef table;
   //TestTableEditor *editor;
@@ -189,54 +193,62 @@ $TestData {
 
   void testRsStorage(RecordsetRef rs, int row, int column, const std::string &value,
                      const std::string &other_value) {
-    $expect(rs->count()).toEqual(1U, "rows before");
+    EXPECT_EQ(1U, rs->count()) /* "rows before" */;
 
     rs->set_field(row, column, value);
-    $expect(rs->count()).toEqual(2U, "rows");
+    EXPECT_EQ(2U, rs->count()) /* "rows" */;
 
     std::string msg;
     bool ok = rs->apply_changes_and_gather_messages(msg);
-    $expect(msg).toEqual("Apply complete", "apply changes msg");
-    $expect(ok).toBeTrue("apply changes");
-    $expect(rs->count()).toEqual(2U, "rows after apply");
+    EXPECT_EQ("Apply complete", msg) /* "apply changes msg" */;
+    EXPECT_TRUE(ok) /* "apply changes" */;
+    EXPECT_EQ(2U, rs->count()) /* "rows after apply" */;
 
     std::string s;
     rs->get_field(row, column, s);
-    $expect(s).toEqual(value, "get value back");
+    EXPECT_EQ(value, s) /* "get value back" */;
 
     msg.clear();
     // set another value to make sure that UPDATE also works
     rs->set_field(row, column, other_value);
     ok = rs->apply_changes_and_gather_messages(msg);
-    $expect(msg).toEqual("Apply complete", "apply changes msg 2");
-    $expect(ok).toBeTrue("apply changes 2");
-    $expect(rs->count()).toEqual(2U, "rows after apply 2");
+    EXPECT_EQ("Apply complete", msg) /* "apply changes msg 2" */;
+    EXPECT_TRUE(ok) /* "apply changes 2" */;
+    EXPECT_EQ(2U, rs->count()) /* "rows after apply 2" */;
 
     rs->get_field(row, column, s);
-    $expect(s).toEqual(other_value, "get value back 2");
+    EXPECT_EQ(other_value, s) /* "get value back 2" */;
 
     msg.clear();
     //
     rs->set_field(row, column, value);
     ok = rs->apply_changes_and_gather_messages(msg);
-    $expect(msg).toEqual("Apply complete", "apply changes msg 3");
-    $expect(ok).toBeTrue("apply changes 3");
-    $expect(rs->count()).toEqual(2U, "rows after apply 3");
+    EXPECT_EQ("Apply complete", msg) /* "apply changes msg 3" */;
+    EXPECT_TRUE(ok) /* "apply changes 3" */;
+    EXPECT_EQ(2U, rs->count()) /* "rows after apply 3" */;
 
     rs->get_field(row, column, s);
-    $expect(s).toEqual(value, "get value back 3");
+    EXPECT_EQ(value, s) /* "get value back 3" */;
   }
 
 };
 
-$describe("Table Editor Inserts backend") {
-  $beforeAll([this]() {
+class TableEditorInsertsBackendTest : public ::testing::Test {
+protected:
+  TestData* data = new TestData();
+  
+  void SetUp() override {
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
     data->tester->createNewDocument();
-  });
+  }
+  
+  void TearDown() override {
+    delete data;
+  }
+};
 
-  $it("Storage of values with trivial values", [this]() {
+TEST_F(TableEditorInsertsBackendTest, StorageOfValuesWithTrivialValues) {
     db_TableRef table(data->makeInsertsTestTable(data->tester->getRdbms(), data->tester->getCatalog()));
     {
       TestTableEditor editor(table, data->tester->getRdbms());
@@ -244,8 +256,8 @@ $describe("Table Editor Inserts backend") {
       RecordsetRef rs = editor.get_inserts_model();
 
       // starts with 1 row, which is the placeholder
-      $expect(rs->count()).toEqual(1U, "rows");
-      $expect(rs->get_column_count()).toEqual(5U, "columns");
+      EXPECT_EQ(1U, rs->count()) /* "rows" */;
+      EXPECT_EQ(5U, rs->get_column_count()) /* "columns" */;
 
       std::string s;
       rs->set_field(0, 0, std::string("1"));
@@ -255,46 +267,46 @@ $describe("Table Editor Inserts backend") {
 
       std::string msg;
       bool ok = rs->apply_changes_and_gather_messages(msg);
-      $expect(msg).toEqual("Apply complete", "apply changes msg");
-      $expect(ok).toBeTrue("apply changes");
+      EXPECT_EQ("Apply complete", msg) /* "apply changes msg" */;
+      EXPECT_TRUE(ok) /* "apply changes" */;
     }
     {
       TestTableEditor editor(table, data->tester->getRdbms());
 
       RecordsetRef rs = editor.get_inserts_model();
 
-      $expect(rs->count()).toEqual(2U, "rows");
-      $expect(rs->get_column_count()).toEqual(5U, "columns");
+      EXPECT_EQ(2U, rs->count()) /* "rows" */;
+      EXPECT_EQ(5U, rs->get_column_count()) /* "columns" */;
 
       std::string s;
       rs->get_field(0, 0, s);
-      $expect(s).toEqual("1", "get 0");
+      EXPECT_EQ("1", s) /* "get 0" */;
       rs->get_field(0, 1, s);
-      $expect(s).toEqual("test", "get 1");
+      EXPECT_EQ("test", s) /* "get 1" */;
       rs->get_field(0, 2, s);
-      $expect(s).toEqual("2012-01-01", "get 2");
+      EXPECT_EQ("2012-01-01", s) /* "get 2" */;
       rs->get_field(0, 4, s);
-      $expect(s).toEqual("1", "get 4");
+      EXPECT_EQ("1", s) /* "get 4" */;
 
       rs->set_field(1, 0, std::string("42"));
-      $expect(rs->count()).toEqual(3U, "added temporary");
+      EXPECT_EQ(3U, rs->count()) /* "added temporary" */;
       rs->get_field(1, 0, s);
-      $expect(s).toEqual("42", "get 0 tmp");
+      EXPECT_EQ("42", s) /* "get 0 tmp" */;
       std::string msg;
       rs->rollback_and_gather_messages(msg);
-      $expect(msg).toEqual("", "rollback");
-      $expect(rs->count()).toEqual(2U, "reverted");
+      EXPECT_EQ("", msg) /* "rollback" */;
+      EXPECT_EQ(2U, rs->count()) /* "reverted" */;
 
       // check generation of SQL
       std::string output = table->inserts();
-      $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (1, 'test', '2012-01-01', NULL, 1);\n");
+      EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (1, 'test', '2012-01-01', NULL, 1);\n", output);
 
       output = data->generateSqlLikeForwardEng(table);
-      $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (1, 'test', '2012-01-01', NULL, 1);\n");
+      EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (1, 'test', '2012-01-01', NULL, 1);\n", output);
     }
-  });
+}
 
-  $it("Storage of NULL value", [this]() {
+TEST_F(TableEditorInsertsBackendTest, StorageOfNullValue) {
     db_TableRef table(data->makeInsertsTestTable(data->tester->getRdbms(), data->tester->getCatalog()));
 
     TestTableEditor editor(table, data->tester->getRdbms());
@@ -309,24 +321,24 @@ $describe("Table Editor Inserts backend") {
     // just setting a field to NULL doesn't make it NULL, just the string NULL
     std::string s;
     rs->get_field(0, 0, s);
-    $expect(s).toEqual("NULL", "check null str store");
-    $expect(rs->is_field_null(0, 0)).toBeFalse("check null str store");
+    EXPECT_EQ("NULL", s) /* "check null str store" */;
+    EXPECT_FALSE(rs->is_field_null(0, 0)) /* "check null str store" */;
     rs->get_field(0, 1, s);
-    $expect(s).toEqual("NULL", "check null str store");
-    $expect(rs->is_field_null(0, 1)).toBeFalse("check null str store");
+    EXPECT_EQ("NULL", s) /* "check null str store" */;
+    EXPECT_FALSE(rs->is_field_null(0, 1)) /* "check null str store" */;
     rs->get_field(0, 2, s);
-    $expect(s).toEqual("NULL", "check null str store");
-    $expect(rs->is_field_null(0, 2)).toBeFalse("check null str store");
+    EXPECT_EQ("NULL", s) /* "check null str store" */;
+    EXPECT_FALSE(rs->is_field_null(0, 2)) /* "check null str store" */;
     rs->get_field(0, 4, s);
-    $expect(s).toEqual("NULL", "check null str store");
-    $expect(rs->is_field_null(0, 4)).toBeFalse("check null str store");
+    EXPECT_EQ("NULL", s) /* "check null str store" */;
+    EXPECT_FALSE(rs->is_field_null(0, 4)) /* "check null str store" */;
 
     std::string msg;
     rs->apply_changes_and_gather_messages(msg);
 
     // XXX not sure if setting an int field to the NULL string should result in a real NULL, maybe yes
     std::string output = table->inserts();
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (NULL, 'NULL', 'NULL', NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (NULL, 'NULL', 'NULL', NULL, NULL);\n", output);
 
     // now actually set the fields to NULL
     rs->set_field_null(0, 0);
@@ -334,22 +346,22 @@ $describe("Table Editor Inserts backend") {
     rs->set_field_null(0, 2);
 
     rs->get_field(0, 0, s);
-    $expect(s).toEqual("", "check null  store");
-    $expect(rs->is_field_null(0, 0)).toBeTrue("check null  store");
+    EXPECT_EQ("", s) /* "check null  store" */;
+    EXPECT_TRUE(rs->is_field_null(0, 0)) /* "check null  store" */;
     rs->get_field(0, 1, s);
-    $expect(s).toEqual("", "check null  store");
-    $expect(rs->is_field_null(0, 1)).toBeTrue("check null  store");
+    EXPECT_EQ("", s) /* "check null  store" */;
+    EXPECT_TRUE(rs->is_field_null(0, 1)) /* "check null  store" */;
     rs->get_field(0, 2, s);
-    $expect(s).toEqual("", "check null  store");
-    $expect(rs->is_field_null(0, 2)).toBeTrue("check null  store");
+    EXPECT_EQ("", s) /* "check null  store" */;
+    EXPECT_TRUE(rs->is_field_null(0, 2)) /* "check null  store" */;
 
     rs->apply_changes_and_gather_messages(msg);
 
     output = table->inserts();
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n");
-  });
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n", output);
+}
 
-  $it("Storage of \\func with int column", [this]() {
+TEST_F(TableEditorInsertsBackendTest, StorageOfFuncWithIntColumn) {
     db_TableRef table(data->makeInsertsTestTable(data->tester->getRdbms(), data->tester->getCatalog()));
 
     TestTableEditor editor(table, data->tester->getRdbms());
@@ -360,13 +372,13 @@ $describe("Table Editor Inserts backend") {
 
     // check generation of SQL
     std::string output = table->inserts();
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n");
 
     output = data->generateSqlLikeForwardEng(table);
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n");
-  });
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n");
+}
 
-  $it("Storage of \\func with string column", [this]() {
+TEST_F(TableEditorInsertsBackendTest, StorageOfFuncWithStringColumn) {
     db_TableRef table(data->makeInsertsTestTable(data->tester->getRdbms(), data->tester->getCatalog()));
 
     TestTableEditor editor(table, data->tester->getRdbms());
@@ -377,13 +389,13 @@ $describe("Table Editor Inserts backend") {
 
     // check generation of SQL
     std::string output = table->inserts();
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, DEFAULT, NULL, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NULL, NULL, NULL);\n");
 
     output = data->generateSqlLikeForwardEng(table);
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, DEFAULT, NULL, NULL, NULL);\n");
-  });
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NULL, NULL, NULL);\n");
+}
 
-  $it("Storage of \\func with timestamp column", [this]() {
+TEST_F(TableEditorInsertsBackendTest, StorageOfFuncWithTimestampColumn) {
     db_TableRef table(data->makeInsertsTestTable(data->tester->getRdbms(), data->tester->getCatalog()));
 
     TestTableEditor editor(table, data->tester->getRdbms());
@@ -394,13 +406,13 @@ $describe("Table Editor Inserts backend") {
 
     // check generation of SQL
     std::string output = table->inserts();
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, NULL, DEFAULT, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, DEFAULT, NULL, NULL);\n");
 
     output = data->generateSqlLikeForwardEng(table);
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, NULL, DEFAULT, NULL, NULL);\n");
-  });
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, DEFAULT, NULL, NULL);\n");
+}
 
-  $it("All at once", [this]() {
+TEST_F(TableEditorInsertsBackendTest, AllAtOnce) {
     db_TableRef table(data->makeInsertsTestTable(data->tester->getRdbms(), data->tester->getCatalog()));
 
     TestTableEditor editor(table, data->tester->getRdbms());
@@ -413,16 +425,19 @@ $describe("Table Editor Inserts backend") {
     rs->set_field(0, 4, std::string("\\func DEFAULT"));
     std::string msg;
     rs->apply_changes_and_gather_messages(msg);
-    $expect(msg).toEqual("Apply complete");
+    EXPECT_EQ("Apply complete", msg);
 
     // check generation of SQL
     std::string output = table->inserts();
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, DEFAULT, NOW(), NULL, DEFAULT);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NOW(), NULL, DEFAULT);\n");
 
     output = data->generateSqlLikeForwardEng(table);
-    $expect(output).toEqual("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`) VALUES (DEFAULT, DEFAULT, NOW(), NULL, DEFAULT);\n");
-  });
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NOW(), NULL, DEFAULT);\n");
+  
 
 }
 
 }
+
+
+

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, dev4fun. All rights reserved.
+ * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -19,7 +19,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "pch.h"
+#pragma once
+
+#include "grt.h"
+
+#include "grts/structs.db.mysql.h"
+
+#include "common.h"
+//nclude "expect.h"
+
+namespace bec {
+  class TreeModel;
+}
+
+namespace testing {
+
+void deepCompareGrtValues(std::string const& major_msg, const grt::ValueRef &actual, const grt::ValueRef &expected,
+                          bool compare_obj_id = false, std::list<std::string> *followed_obj_stack = nullptr);
+
+void dumpTreeModel(const std::string &path, bec::TreeModel *tree, const std::vector<ssize_t> &columns,
+                   bool dump_type = false);
+
+//struct GrtEnvironment : casmine::EnvironmentBase {
+//};
+
+}

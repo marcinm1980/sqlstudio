@@ -38,21 +38,22 @@
 #include <cppconn/statement.h>
 #include <cppconn/resultset.h>
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
 
-$ModuleEnvironment() {};
-
-$TestData {
+struct TestData {
   ssh::SSHConnectionConfig connectionConfig;
   ssh::SSHConnectionCredentials connectionCredentials;
 
   casmine::CasmineContext *context = casmine::CasmineContext::get();
 };
 
-$xdescribe("SSH testing") {
-  $beforeAll([this]() {
+class SSHTestingTest : public ::testing::Test {
+protected:
+  TestData *data = new TestData();
+
+  void SetUp() override {
     data->connectionConfig.localhost = "127.0.0.1";
     data->connectionConfig.remoteSSHhost = data->context->getConfigurationStringValue("ssh/host", "127.0.0.1");
     data->connectionConfig.remoteSSHport = data->context->getConfigurationIntValue("ssh/port", 22);
@@ -60,9 +61,14 @@ $xdescribe("SSH testing") {
     data->connectionConfig.optionsDir = data->context->getConfigurationStringValue("ssh/optionsdir");
     data->connectionCredentials.username = data->context->getConfigurationStringValue("ssh/user");
     data->connectionCredentials.password = data->context->getConfigurationStringValue("ssh/password");
-  });
+  }
 
-  $it("Performs connection", [this]() {
+  void TearDown() override {
+    delete data;
+  }
+};
+
+  TEST_F(SSHTestingTest, DISABLED_PerformsConnection) {
     auto file = base::makeTmpFile("/tmp/known_hosts");
     std::string knownHosts = file.getPath();
     file.dispose();
@@ -71,14 +77,13 @@ $xdescribe("SSH testing") {
 
     auto credentials = data->connectionCredentials;
     credentials.auth = ssh::SSHAuthtype::PASSWORD;
-    $expect(credentials.username.empty()).toBe(false, "No SSH user name set");
+    EXPECT_FALSE(credentials.username.empty()) << "No SSH user name set";
 
     auto session = ssh::SSHSession::createSession();
     std::tuple<ssh::SSHReturnType, base::any> retVal;
     try {
       retVal = session->connect(config, credentials);
-      $expect(std::get<0>(retVal) == ssh::SSHReturnType::FINGERPRINT_UNKNOWN)
-        .toBe(true, "fingerprint unknown");
+      EXPECT_TRUE(std::get<0>(retVal) == ssh::SSHReturnType::FINGERPRINT_UNKNOWN) << "fingerprint unknown";
       session->disconnect();
     } catch (std::runtime_error &exc) {
       std::ignore = exc;
@@ -91,16 +96,16 @@ $xdescribe("SSH testing") {
 
     config.fingerprint = tmp;
     retVal = session->connect(config, credentials);
-    $expect(std::get<0>(retVal) == ssh::SSHReturnType::CONNECTED).toBe(true, "Connection failed");
-    $expect(session->isConnected()).toBe(true, "Connection status is wrong");
+    EXPECT_TRUE(std::get<0>(retVal) == ssh::SSHReturnType::CONNECTED) << "Connection failed";
+    EXPECT_TRUE(session->isConnected()) << "Connection status is wrong";
     session->disconnect();
-    $expect(session->isConnected()).toBe(false, "Connection is still valid");
+    EXPECT_FALSE(session->isConnected()) << "Connection is still valid";
 
     if (base::file_exists(knownHosts))
       base::remove(knownHosts);
-  });
+  }
 
-  $it("Tests sftp functionality", [this]() {
+  TEST_F(SSHTestingTest, DISABLED_TestsSftpFunctionality) {
     auto config = data->connectionConfig;
     config.strictHostKeyCheck = false;
     auto credentials = data->connectionCredentials;
@@ -117,18 +122,18 @@ $xdescribe("SSH testing") {
     try {
       sftp.mkdir(randomDir);
     } catch (ssh::SSHSftpException &) {
-      $fail("Unable to create remote directory");
+      FAIL() << "Unable to create remote directory";
     }
 
     try {
       auto info = sftp.stat(randomDir);
     } catch (ssh::SSHSftpException &) {
-      $fail("Unable to stat remote directory");
+      FAIL() << "Unable to stat remote directory";
     }
 
     try {
       sftp.mkdir(randomDir);
-      $fail("Directory was created but it shouldn't");
+      FAIL() << "Directory was created but it shouldn't";
     } catch (ssh::SSHSftpException &) {
       // pass
     }
@@ -136,7 +141,7 @@ $xdescribe("SSH testing") {
     try {
         sftp.rmdir(randomDir);
     } catch (ssh::SSHSftpException &) {
-      $fail("Unable to remove directory");
+      FAIL() << "Unable to remove directory";
     }
 
     std::string sampleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent scelerisque quam ac.";
@@ -144,14 +149,14 @@ $xdescribe("SSH testing") {
     try {
       sftp.setContent(testFile, sampleText);
     } catch (ssh::SSHSftpException &) {
-      $fail("Unable to create file");
+      FAIL() << "Unable to create file";
     }
 
     try {
       std::string content = sftp.getContent(testFile);
-      $expect(content).toBe(sampleText, "File content missmatch");
+      EXPECT_EQ(sampleText, content) << "File content missmatch";
     } catch (ssh::SSHSftpException &) {
-      $fail("Unable to get contents of file: " + testFile);
+      FAIL() << "Unable to get contents of file: " + testFile;
     }
 
     auto file = base::makeTmpFile("tremporary_download");
@@ -164,7 +169,7 @@ $xdescribe("SSH testing") {
     } catch (ssh::SSHSftpException &exc) {
       std::string msg = "Unable to get contents of file: " + testFile + " error:";
       msg.append(exc.what());
-      $fail(msg);
+      FAIL() << msg;
     }
 
     sftp.unlink(testFile);
@@ -181,9 +186,9 @@ $xdescribe("SSH testing") {
     // TODO: This is not portable. Need a better way to check for restricted folders.
     // ensure_true("Dir /etc/ssl/private should be restricted", sftp.cd("/etc/ssl/private") == -2);
     $expect(sftp.pwd()).toBe(currentDir, "Invalid current directory information");
-  });
+  }
 
-  $it("Tests tunnel connection", [this]() {
+  TEST_F(SSHTestingTest, DISABLED_TestsTunnelConnection) {
     auto config = data->connectionConfig;
     config.remotehost = "127.0.0.1";
     config.remoteport = data->context->getConfigurationIntValue("ssh/dbport", 3306);
@@ -208,14 +213,14 @@ $xdescribe("SSH testing") {
     try {
       retVal = manager->createTunnel(session);
     } catch (ssh::SSHTunnelException &exc) {
-      $fail(std::string("Unable to create tunnel: ").append(exc.what()));
+      FAIL() << std::string("Unable to create tunnel: ".append(exc.what()));
     }
 
     uint16_t port = std::get<1>(retVal);
 
     sql::DriverManager *dm = sql::DriverManager::getDriverManager();
     dm->set_testing();
-    $expect(dm).Not.toBe(nullptr, "dm is NULL");
+    EXPECT_NE(nullptr, dm) << "dm is NULL";
 
     db_mgmt_ConnectionRef connectionProperties = db_mgmt_ConnectionRef(grt::Initialized);
     grt::DictRef conn_params(true);
@@ -250,12 +255,11 @@ $xdescribe("SSH testing") {
     } catch (std::exception &exc) {
       manager->setStop();
       manager->pokeWakeupSocket();
-      $fail(std::string("Unable to make tunnel connection. ").append(exc.what()));
+      FAIL() << std::string("Unable to make tunnel connection. ".append(exc.what()));
     }
 
     manager->setStop();
     manager->pokeWakeupSocket();
-  });
-}
+  }
 
 }

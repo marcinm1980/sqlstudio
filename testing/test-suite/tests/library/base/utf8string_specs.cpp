@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -19,17 +20,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include "base/utf8string.h"
 #include "base/string_utilities.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
 
-$ModuleEnvironment() {};
+
 
 struct LangStringDetails {
   const char *const _text = nullptr;
@@ -41,7 +42,8 @@ struct LangStringDetails {
   }
 };
 
-$TestData {
+class Utf8StringTest : public ::testing::Test {
+protected:
   const std::map<std::string, LangStringDetails> languageStrings = {
     { "english", { "This is a lazy test", 19, 19 }},
     { "polish", { "zażółć", 6, 10 }},
@@ -57,355 +59,354 @@ $TestData {
     { "arabic", "ذا ل" },  { "chinese", "可以吞下" }, { "japanese", "はお茶を" }, { "portuguese", "á aç" }};
 };
 
-$describe("utf8string") {
+TEST_F(Utf8StringTest, Constructor) {
+  base::utf8string str1;
+  EXPECT_TRUE(str1.validate());
+  EXPECT_EQ(str1.length(), 0U);
+  EXPECT_EQ(str1.bytes(), 0U);
+  EXPECT_TRUE(str1.empty());
 
-  $it("constructor", []() {
-    base::utf8string str1;
-    $expect(str1.validate()).toBe(true);
-    $expect(str1.length()).toBe(0U);
-    $expect(str1.bytes()).toBe(0U);
-    $expect(str1.empty()).toBe(true);
+  base::utf8string str2 = "";
+  EXPECT_TRUE(str2.validate());
+  EXPECT_EQ(str2.length(), 0U);
+  EXPECT_EQ(str2.bytes(), 0U);
+  EXPECT_TRUE(str2.empty());
+}
 
-    base::utf8string str2 = "";
-    $expect(str2.validate()).toBe(true);
-    $expect(str2.length()).toBe(0U);
-    $expect(str2.bytes()).toBe(0U);
-    $expect(str2.empty()).toBe(true);
-  });
+TEST_F(Utf8StringTest, ConstructorFromCharPointer) {
+  // TODO: update cycle name
+  for (auto iter : languageStrings) {
+    LangStringDetails &current = iter.second;
+    base::utf8string str1(current._text); //  from char *
 
-  $it("utf8string(const char *s)", [this]() {
-    // TODO: update cycle name
-    for (auto iter : data->languageStrings) {
-      LangStringDetails &current = iter.second;
-      base::utf8string str1(current._text); //  from char *
+    EXPECT_TRUE(str1.validate());
+    EXPECT_EQ(str1, current._text);
+    EXPECT_EQ(str1.length(), current._length);
+    EXPECT_EQ(str1.bytes(), current._bytes);
+    EXPECT_FALSE(str1.empty());
+  }
+}
 
-      $expect(str1.validate()).toBe(true);
-      $expect(str1).toEqual(current._text);
-      $expect(str1.length()).toBe(current._length);
-      $expect(str1.bytes()).toBe(current._bytes);
-      $expect(str1.empty()).toBe(false);
-    }
-  });
+TEST_F(Utf8StringTest, ConstructorFromStdString) {
+  for (auto iter : languageStrings) {
+    LangStringDetails &current = iter.second;
+    std::string str_to_init(current._text);
+    base::utf8string str2(str_to_init); //  from std::string
 
-  $it("utf8string(const std::string &s)", [this]() {
-    for (auto iter : data->languageStrings) {
-      LangStringDetails &current = iter.second;
-      std::string str_to_init(current._text);
-      base::utf8string str2(str_to_init); //  from std::string
+    EXPECT_TRUE(str2.validate());
+    EXPECT_EQ(str2, current._text);
+    EXPECT_EQ(str2.length(), current._length);
+    EXPECT_EQ(str2.bytes(), current._bytes);
+    EXPECT_FALSE(str2.empty());
+  }
+}
 
-      $expect(str2.validate()).toBe(true);
-      $expect(str2).toEqual(current._text);
-      $expect(str2.length()).toBe(current._length);
-      $expect(str2.bytes()).toBe(current._bytes);
-      $expect(str2.empty()).toBe(false);
-    }
-  });
+TEST_F(Utf8StringTest, CopyConstructor) {
+  for (auto iter : languageStrings) {
+    LangStringDetails &current = iter.second;
+    base::utf8string str_to_init(current._text);
+    base::utf8string str1(str_to_init); //  copy constructor
 
-  $it("utf8string(const char *s)", [this]() {
-    for (auto iter : data->languageStrings) {
-      LangStringDetails &current = iter.second;
-      base::utf8string str_to_init(current._text);
-      base::utf8string str1(str_to_init); //  from char *
+    EXPECT_TRUE(str1.validate());
+    EXPECT_EQ(str1, current._text);
+    EXPECT_EQ(str1.length(), current._length);
+    EXPECT_EQ(str1.bytes(), current._bytes);
+    EXPECT_FALSE(str1.empty());
+  }
+}
 
-      $expect(str1.validate()).toBe(true);
-      $expect(str1).toEqual(current._text);
-      $expect(str1.length()).toBe(current._length);
-      $expect(str1.bytes()).toBe(current._bytes);
-      $expect(str1.empty()).toBe(false);
-    }
-  });
+TEST_F(Utf8StringTest, ConstructorFromWCharPointer) {
+  // TODO: needs implementation
+  GTEST_SKIP() << "Pending: needs implementation";
+}
 
-  $it("utf8string(const wchar_t *s)", []() {
-    $pending("needs implementation");
-  });
+TEST_F(Utf8StringTest, ConstructorFromWString) {
+  // TODO: needs implementation
+  GTEST_SKIP() << "Pending: needs implementation";
+}
 
-  $it("utf8string(const std::wstring &s)", []() {
-    $pending("needs implementation");
-  });
+TEST_F(Utf8StringTest, SubstringConstructorFromCharPointer) {
+  for (auto iter : languageStrings) {
+    LangStringDetails &current = iter.second;
 
-  $it("utf8string(const char *s, size_t pos, size_t len)", [this]() {
-    for (auto iter : data->languageStrings) {
-      LangStringDetails &current = iter.second;
+    base::utf8string str1(current._text, 1, 4);   //  from char *
+    base::utf8string str2(current._text, 500, 4); //  sub-string from invalid index
+    base::utf8string str3(current._text, 1, 500); //  sub-string with huge length
+    base::utf8string str4(current._text, 1, 0);   //  sub-string with zero length
 
-      base::utf8string str1(current._text, 1, 4);   //  from char *
-      base::utf8string str2(current._text, 500, 4); //  sub-string from invalid index
-      base::utf8string str3(current._text, 1, 500); //  sub-string with huge length
-      base::utf8string str4(current._text, 1, 0);   //  sub-string with zero length
+    base::utf8string right_to_compare = base::utf8string(current._text).right(current._length - 1);
 
-      base::utf8string right_to_compare = base::utf8string(current._text).right(current._length - 1);
+    EXPECT_TRUE(str1.validate());
+    EXPECT_EQ(str1, substrings[iter.first]);
+    EXPECT_EQ(str1.size(), 4U);
+    EXPECT_FALSE(str1.empty());
 
-      $expect(str1.validate()).toBe(true);
-      $expect(str1).toEqual(data->substrings[iter.first]);
-      $expect(str1.size()).toEqual(4U);
-      $expect(str1.empty()).toBe(false);
+    EXPECT_TRUE(str2.validate());
+    EXPECT_EQ(str2.size(), 0U);
+    EXPECT_EQ(str2.length(), 0U);
+    EXPECT_TRUE(str2.empty());
 
-      $expect(str2.validate()).toBe(true);
-      $expect(str2.size()).toEqual(0U);
-      $expect(str2.length()).toEqual(0U);
-      $expect(str2.empty()).toBe(true);
+    EXPECT_TRUE(str3.validate());
+    EXPECT_EQ(str3, right_to_compare);
+    EXPECT_EQ(str3.size(), current._length - 1);
+    EXPECT_EQ(str3.length(), current._length - 1);
+    EXPECT_FALSE(str3.empty());
 
-      $expect(str3.validate()).toBe(true);
-      $expect(str3).toEqual(right_to_compare);
-      $expect(str3.size()).toBe(current._length - 1);
-      $expect(str3.length()).toBe(current._length - 1);
-      $expect(str3.empty()).toBe(false);
+    EXPECT_TRUE(str4.validate());
+    EXPECT_EQ(str4.size(), 0U);
+    EXPECT_EQ(str4.length(), 0U);
+    EXPECT_TRUE(str4.empty());
+  }
+}
 
-      $expect(str4.validate()).toBe(true);
-      $expect(str4.size()).toEqual(0U);
-      $expect(str4.length()).toEqual(0U);
-      $expect(str4.empty()).toBe(true);
-    }
-  });
+TEST_F(Utf8StringTest, SubstringConstructorFromStdString) {
+  for (auto iter : languageStrings) {
+    LangStringDetails &current = iter.second;
 
-  $it("utf8string(const std::string &str, size_t pos, size_t len)", [this]() {
-    for (auto iter : data->languageStrings) {
-      LangStringDetails &current = iter.second;
+    std::string str_to_init(current._text);
 
-      std::string str_to_init(current._text);
+    base::utf8string str1(str_to_init, 1, 4);   //  from std::string
+    base::utf8string str2(str_to_init, 500, 4); //  sub-string from invalid index
+    base::utf8string str3(str_to_init, 1, 500); //  sub-string with huge length
+    base::utf8string str4(str_to_init, 1, 0);   //  sub-string with zero length
 
-      base::utf8string str1(str_to_init, 1, 4);   //  from char *
-      base::utf8string str2(str_to_init, 500, 4); //  sub-string from invalid index
-      base::utf8string str3(str_to_init, 1, 500); //  sub-string with huge length
-      base::utf8string str4(str_to_init, 1, 0);   //  sub-string with zero length
+    base::utf8string right_to_compare = base::utf8string(current._text).right(current._length - 1);
 
-      base::utf8string right_to_compare = base::utf8string(current._text).right(current._length - 1);
+    EXPECT_TRUE(str1.validate());
+    EXPECT_EQ(str1, substrings[iter.first]);
+    EXPECT_EQ(str1.size(), 4U);
+    EXPECT_FALSE(str1.empty());
 
-      $expect(str1.validate()).toBe(true);
-      $expect(str1).toEqual(data->substrings[iter.first]);
-      $expect(str1.size()).toEqual(4U);
-      $expect(str1.empty()).toBe(false);
+    EXPECT_TRUE(str2.validate());
+    EXPECT_EQ(str2.size(), 0U);
+    EXPECT_EQ(str2.length(), 0U);
+    EXPECT_TRUE(str2.empty());
 
-      $expect(str2.validate()).toBe(true);
-      $expect(str2.size()).toEqual(0U);
-      $expect(str2.length()).toEqual(0U);
-      $expect(str2.empty()).toBe(true);
+    EXPECT_TRUE(str3.validate());
+    EXPECT_EQ(str3, right_to_compare);
+    EXPECT_EQ(str3.size(), current._length - 1);
+    EXPECT_EQ(str3.length(), current._length - 1);
+    EXPECT_FALSE(str3.empty());
 
-      $expect(str3.validate()).toBe(true);
-      $expect(str3).toEqual(right_to_compare);
-      $expect(str3.size()).toBe(current._length - 1);
-      $expect(str3.length()).toBe(current._length - 1);
-      $expect(str3.empty()).toBe(false);
+    EXPECT_TRUE(str4.validate());
+    EXPECT_EQ(str4.size(), 0U);
+    EXPECT_EQ(str4.length(), 0U);
+    EXPECT_TRUE(str4.empty());
+  }
+}
 
-      $expect(str4.validate()).toBe(true);
-      $expect(str4.size()).toEqual(0U);
-      $expect(str4.length()).toEqual(0U);
-      $expect(str4.empty()).toBe(true);
-    }
-  });
+TEST_F(Utf8StringTest, SubstringConstructorFromUtf8String) {
+  for (auto iter : languageStrings) {
+    LangStringDetails &current = iter.second;
 
+    base::utf8string str_to_init(current._text);
 
-  $it("utf8string(const utf8string &str, size_t pos, size_t len)", [this]() {
-    for (auto iter : data->languageStrings) {
-      LangStringDetails &current = iter.second;
+    base::utf8string str1(str_to_init, 1, 4);   //  from utf8string
+    base::utf8string str2(str_to_init, 500, 4); //  sub-string from invalid index
+    base::utf8string str3(str_to_init, 1, 500); //  sub-string with huge length
+    base::utf8string str4(str_to_init, 1, 0);   //  sub-string with zero length
 
-      base::utf8string str_to_init(current._text);
+    base::utf8string right_to_compare = base::utf8string(current._text).right(current._length - 1);
 
-      base::utf8string str1(str_to_init, 1, 4);   //  from char *
-      base::utf8string str2(str_to_init, 500, 4); //  sub-string from invalid index
-      base::utf8string str3(str_to_init, 1, 500); //  sub-string with huge length
-      base::utf8string str4(str_to_init, 1, 0);   //  sub-string with zero length
+    EXPECT_TRUE(str1.validate());
+    EXPECT_EQ(str1, substrings[iter.first]);
+    EXPECT_EQ(str1.size(), 4U);
+    EXPECT_FALSE(str1.empty());
 
-      base::utf8string right_to_compare = base::utf8string(current._text).right(current._length - 1);
+    EXPECT_TRUE(str2.validate());
+    EXPECT_EQ(str2.size(), 0U);
+    EXPECT_EQ(str2.length(), 0U);
+    EXPECT_TRUE(str2.empty());
 
-      $expect(str1.validate()).toBe(true);
-      $expect(str1).toEqual(data->substrings[iter.first]);
-      $expect(str1.size()).toEqual(4U);
-      $expect(str1.empty()).toBe(false);
+    EXPECT_TRUE(str3.validate());
+    EXPECT_EQ(str3, right_to_compare);
+    EXPECT_EQ(str3.size(), current._length - 1);
+    EXPECT_EQ(str3.length(), current._length - 1);
+    EXPECT_FALSE(str3.empty());
 
-      $expect(str2.validate()).toBe(true);
-      $expect(str2.size()).toEqual(0U);
-      $expect(str2.length()).toEqual(0U);
-      $expect(str2.empty()).toBe(true);
+    EXPECT_TRUE(str4.validate());
+    EXPECT_EQ(str4.size(), 0U);
+    EXPECT_EQ(str4.length(), 0U);
+    EXPECT_TRUE(str4.empty());
+  }
+}
 
-      $expect(str3.validate()).toBe(true);
-      $expect(str3).toEqual(right_to_compare);
-      $expect(str3.size()).toBe(current._length - 1);
-      $expect(str3.length()).toBe(current._length - 1);
-      $expect(str3.empty()).toBe(false);
+TEST_F(Utf8StringTest, CharacterConstructor) {
+  base::utf8string str(10, 'a');
 
-      $expect(str4.validate()).toBe(true);
-      $expect(str4.size()).toEqual(0U);
-      $expect(str4.length()).toEqual(0U);
-      $expect(str4.empty()).toBe(true);
-    }
-  });
+  EXPECT_TRUE(str.validate());
+  EXPECT_EQ(str, "aaaaaaaaaa");
+  EXPECT_EQ(str.size(), 10U);
+  EXPECT_EQ(str.length(), 10U);
+  EXPECT_EQ(str.bytes(), 10U);
+  EXPECT_FALSE(str.empty());
+}
 
-  $it("utf8string(size_t size, char c)", []() {
-    base::utf8string str(10, 'a');
+TEST_F(Utf8StringTest, Utf8CharacterConstructorUnicode) {
+  base::utf8string str(10, base::utf8string::utf8char("ł"));
 
-    $expect(str.validate()).toBe(true);
-    $expect(str).toEqual("aaaaaaaaaa");
-    $expect(str.size()).toEqual(10U);
-    $expect(str.length()).toEqual(10U);
-    $expect(str.bytes()).toEqual(10U);
-    $expect(str.empty()).toBe(false);
-  });
+  EXPECT_TRUE(str.validate());
+  EXPECT_EQ(str, "łłłłłłłłłł");
+  EXPECT_EQ(str.size(), 10U);
+  EXPECT_EQ(str.length(), 10U);
+  EXPECT_EQ(str.bytes(), 20U);
+  EXPECT_FALSE(str.empty());
+}
 
-  $it("utf8string(size_t size, utf8char c) [unicode]", []() {
-    base::utf8string str(10, base::utf8string::utf8char("ł"));
+TEST_F(Utf8StringTest, Utf8CharacterConstructorNonUnicode) {
+  base::utf8string str(10, base::utf8string::utf8char("a"));
 
-    $expect(str.validate()).toBe(true);
-    $expect(str).toEqual("łłłłłłłłłł");
-    $expect(str.size()).toEqual(10U);
-    $expect(str.length()).toEqual(10U);
-    $expect(str.bytes()).toBe(20U);
-    $expect(str.empty()).toBe(false);
-  });
+  EXPECT_TRUE(str.validate());
+  EXPECT_EQ(str, "aaaaaaaaaa");
+  EXPECT_EQ(str.size(), 10U);
+  EXPECT_EQ(str.length(), 10U);
+  EXPECT_EQ(str.bytes(), 10U);
+  EXPECT_FALSE(str.empty());
+}
 
-  $it("utf8string(size_t size, utf8char c) [non-unicode]", []() {
-    base::utf8string str(10, base::utf8string::utf8char("a"));
+TEST_F(Utf8StringTest, IndexOperatorAndAt) {
+  base::utf8string str = std::string("zażółć");
+  base::utf8string::utf8char res1("ó");
+  base::utf8string::utf8char res2("ć");
+  EXPECT_EQ(str[3], res1);
+  EXPECT_EQ(str[5], res2);
 
-    $expect(str.validate()).toBe(true);
-    $expect(str).toEqual("aaaaaaaaaa");
-    $expect(str.size()).toEqual(10U);
-    $expect(str.length()).toEqual(10U);
-    $expect(str.bytes()).toEqual(10U);
-    $expect(str.empty()).toBe(false);
-  });
+  // TODO: test utf8string::at()
+}
 
-  $it("operator[], at()", []() {
-    base::utf8string str = std::string("zażółć");
-    base::utf8string::utf8char res1("ó");
-    base::utf8string::utf8char res2("ć");
-    $expect(str[3]).toEqual(res1);
-    $expect(str[5]).toEqual(res2);
+TEST_F(Utf8StringTest, SubstrMethod) {
+  base::utf8string str = std::string("zażółć");
+  base::utf8string res1 = "żółć";
+  base::utf8string res2 = "aż";
+  EXPECT_EQ(str.substr(2), res1);
+  EXPECT_EQ(str.substr(1, 2), res2);
+}
 
-    // TODO: test utf8string::at()
-  });
+TEST_F(Utf8StringTest, Operators) {
+  base::utf8string str1 = std::string("zażółć");
+  base::utf8string str2 = std::string("gęślą");
+  base::utf8string result = std::string("zażółćgęślą");
 
-  $it("utf8string substr", []() {
-    base::utf8string str = std::string("zażółć");
-    base::utf8string res1 = "żółć";
-    base::utf8string res2 = "aż";
-    $expect(str.substr(2)).toEqual(res1);
-    $expect(str.substr(1, 2)).toEqual(res2);
-  });
+  EXPECT_EQ(str1 + str2, result);
+  str1 += str2;
+  EXPECT_EQ(str1, result);
+  str1 = str2;
+  EXPECT_EQ(str1, str2);
+  EXPECT_EQ(str1 == str2, true);
+  EXPECT_EQ(str1 != result, true);
+}
 
-  $it("operators +, +=, =, ==, !=", []() {
-    base::utf8string str1 = std::string("zażółć");
-    base::utf8string str2 = std::string("gęślą");
-    base::utf8string result = std::string("zażółćgęślą");
+TEST_F(Utf8StringTest, StringConversion) {
+  for (auto iter : languageStrings) {
+    LangStringDetails &current = iter.second;
 
-    $expect(str1 + str2).toEqual(result);
-    str1 += str2;
-    $expect(str1).toEqual(result);
-    str1 = str2;
-    $expect(str1).toEqual(str2);
-    $expect(str1 == str2).toBe(true);
-    $expect(str1 != result).toBe(true);
-  });
+    base::utf8string str(current._text);
+    EXPECT_EQ(strcmp(str.c_str(), current._text), 0);
+    EXPECT_TRUE(str.to_string() == std::string(current._text));
+    EXPECT_TRUE(str.to_wstring() == base::string_to_wstring(current._text));
+  }
+}
 
-  $it("String conversion", [this]() {
-    for (auto iter : data->languageStrings) {
-      LangStringDetails &current = iter.second;
+TEST_F(Utf8StringTest, MoveConstructorAndOperator) {
+  //  TODO: test in all languages
+  base::utf8string str1(std::string("za") + std::string("żółć"));
+  EXPECT_EQ(str1.length(), 6U);
+  EXPECT_EQ(str1.bytes(), 10U);
+  EXPECT_FALSE(str1.empty());
 
-      base::utf8string str(current._text);
-      $expect(strcmp(str.c_str(), current._text)).toEqual(0);
-      $expect(str.to_string() == std::string(current._text)).toBe(true);
-      $expect(str.to_wstring() == base::string_to_wstring(current._text)).toBe(true);
-    }
-  });
+  base::utf8string str2 = std::move(str1);
+  EXPECT_EQ(str2.length(), 6U);
+  EXPECT_EQ(str2.bytes(), 10U);
+  EXPECT_FALSE(str2.empty());
+}
 
-  $it("move constructor and operator=", []() {
-    //  TODO: test in all languages
-    base::utf8string str1(std::string("za") + std::string("żółć"));
-    $expect(str1.length()).toEqual(6U);
-    $expect(str1.bytes()).toEqual(10U);
-    $expect(str1.empty()).toBe(false);
+TEST_F(Utf8StringTest, TrimFunctions) {
+  //  TODO: test in all languages
+  EXPECT_EQ(base::utf8string("  zażółć    ").trim_left().length(), 10U);
+  EXPECT_EQ(base::utf8string("  zażółć    ").trim_left().bytes(), 14U);
+  EXPECT_EQ(base::utf8string("  zażółć    ").trim_right().length(), 8U);
+  EXPECT_EQ(base::utf8string("  zażółć    ").trim_right().bytes(), 12U);
+  EXPECT_EQ(base::utf8string("  zażółć    ").trim().length(), 6U);
+  EXPECT_EQ(base::utf8string("  zażółć    ").trim().bytes(), 10U);
+}
 
-    base::utf8string str2 = std::move(str1);
-    $expect(str2.length()).toEqual(6U);
-    $expect(str2.bytes()).toEqual(10U);
-    $expect(str2.empty()).toBe(false);
-  });
+TEST_F(Utf8StringTest, CaseConversionAndValidation) {
+  EXPECT_EQ(base::utf8string("zażółć").to_upper(), base::utf8string("ZAŻÓŁĆ"));
+  EXPECT_EQ(base::utf8string("ZAŻÓŁĆ").to_lower(), base::utf8string("zażółć"));
 
-  $it("trim* functions", []() {
-    //  TODO: test in all languages
-    $expect(base::utf8string("  zażółć    ").trim_left().length()).toEqual(10U);
-    $expect(base::utf8string("  zażółć    ").trim_left().bytes()).toEqual(14U);
-    $expect(base::utf8string("  zażółć    ").trim_right().length()).toEqual(8U);
-    $expect(base::utf8string("  zażółć    ").trim_right().bytes()).toBe(12U);
-    $expect(base::utf8string("  zażółć    ").trim().length()).toEqual(6U);
-    $expect(base::utf8string("  zażółć    ").trim().bytes()).toEqual(10U);
-  });
-
-  $it("toUpper, toLower, truncate, toCaseFold, validate", []() {
-    $expect(base::utf8string("zażółć").to_upper()).toEqual(base::utf8string("ZAŻÓŁĆ"));
-    $expect(base::utf8string("ZAŻÓŁĆ").to_lower()).toEqual(base::utf8string("zażółć"));
-
-    $expect(base::utf8string("zAżóŁć").to_case_fold()).toEqual(base::utf8string("zażółć"));
-    $expect(base::utf8string("grüßen").validate()).toBe(true);
-  });
+  EXPECT_EQ(base::utf8string("zAżóŁć").to_case_fold(), base::utf8string("zażółć"));
+  EXPECT_TRUE(base::utf8string("grüßen").validate());
+}
   
-  $it("truncate, substr, left, right", []() {
-    $expect(base::utf8string("zażółć").truncate(0)).toEqual(base::utf8string("..."));
-    $expect(base::utf8string("zażółć").truncate(1)).toEqual(base::utf8string("z..."));
-    $expect(base::utf8string("zażółć").truncate(2)).toEqual(base::utf8string("za..."));
-    $expect(base::utf8string("zażółć").truncate(3)).toEqual("zażółć");
-    $expect(base::utf8string("zażółć").truncate(4)).toEqual("zażółć");
-    $expect(base::utf8string("zażółć").truncate(5)).toEqual("zażółć");
-    $expect(base::utf8string("zażółć").truncate(6)).toEqual("zażółć");
-    $expect(base::utf8string("zażółć").truncate(7)).toEqual("zażółć");
+TEST_F(Utf8StringTest, TruncateSubstrLeftRight) {
+  EXPECT_EQ(base::utf8string("zażółć").truncate(0), base::utf8string("..."));
+  EXPECT_EQ(base::utf8string("zażółć").truncate(1), base::utf8string("z..."));
+  EXPECT_EQ(base::utf8string("zażółć").truncate(2), base::utf8string("za..."));
+  EXPECT_EQ(base::utf8string("zażółć").truncate(3), "zażółć");
+  EXPECT_EQ(base::utf8string("zażółć").truncate(4), "zażółć");
+  EXPECT_EQ(base::utf8string("zażółć").truncate(5), "zażółć");
+  EXPECT_EQ(base::utf8string("zażółć").truncate(6), "zażółć");
+  EXPECT_EQ(base::utf8string("zażółć").truncate(7), "zażółć");
 
-    $expect(base::utf8string("zażółć").left(0)).toEqual("");
-    $expect(base::utf8string("zażółć").left(1)).toEqual("z");
-    $expect(base::utf8string("zażółć").left(2)).toEqual("za");
-    $expect(base::utf8string("zażółć").left(3)).toEqual("zaż");
-    $expect(base::utf8string("zażółć").left(4)).toEqual("zażó");
-    $expect(base::utf8string("zażółć").left(5)).toEqual("zażół");
-    $expect(base::utf8string("zażółć").left(6)).toEqual("zażółć");
-    $expect(base::utf8string("zażółć").left(7)).toEqual("zażółć");
+  EXPECT_EQ(base::utf8string("zażółć").left(0), "");
+  EXPECT_EQ(base::utf8string("zażółć").left(1), "z");
+  EXPECT_EQ(base::utf8string("zażółć").left(2), "za");
+  EXPECT_EQ(base::utf8string("zażółć").left(3), "zaż");
+  EXPECT_EQ(base::utf8string("zażółć").left(4), "zażó");
+  EXPECT_EQ(base::utf8string("zażółć").left(5), "zażół");
+  EXPECT_EQ(base::utf8string("zażółć").left(6), "zażółć");
+  EXPECT_EQ(base::utf8string("zażółć").left(7), "zażółć");
 
-    $expect(base::utf8string("zażółć").right(0)).toEqual("");
-    $expect(base::utf8string("zażółć").right(1)).toEqual("ć");
-    $expect(base::utf8string("zażółć").right(2)).toEqual("łć");
-    $expect(base::utf8string("zażółć").right(3)).toEqual("ółć");
-    $expect(base::utf8string("zażółć").right(4)).toEqual("żółć");
-    $expect(base::utf8string("zażółć").right(5)).toEqual("ażółć");
-    $expect(base::utf8string("zażółć").right(6)).toEqual("zażółć");
-    $expect(base::utf8string("zażółć").right(7)).toEqual("zażółć");
-  });
+  EXPECT_EQ(base::utf8string("zażółć").right(0), "");
+  EXPECT_EQ(base::utf8string("zażółć").right(1), "ć");
+  EXPECT_EQ(base::utf8string("zażółć").right(2), "łć");
+  EXPECT_EQ(base::utf8string("zażółć").right(3), "ółć");
+  EXPECT_EQ(base::utf8string("zażółć").right(4), "żółć");
+  EXPECT_EQ(base::utf8string("zażółć").right(5), "ażółć");
+  EXPECT_EQ(base::utf8string("zażółć").right(6), "zażółć");
+  EXPECT_EQ(base::utf8string("zażółć").right(7), "zażółć");
+}
 
-  $it("starts_with, ends_with and contains", []() {
-    base::utf8string str = std::string("zażółć");
-    $expect(str.starts_with("za")).toBe(true);
-    $expect(str.starts_with("kk")).toBe(false);
-    $expect(str.starts_with("toolongstring")).toBe(false);
-    $expect(str.ends_with("ółć")).toBe(true);
-    $expect(str.ends_with("ÓŁa")).toBe(false);
-    $expect(str.ends_with("toolongstring")).toBe(false);
-    $expect(str.contains("żół")).toBe(true);
-    $expect(str.contains("ŻÓŁ")).toBe(false);
-    $expect(str.contains("ŻÓŁ", false)).toBe(true);
-    $expect(str.contains("", false)).toBe(false);
-  });
+TEST_F(Utf8StringTest, StartsWithEndsWithContains) {
+  base::utf8string str = std::string("zażółć");
+  EXPECT_TRUE(str.starts_with("za"));
+  EXPECT_FALSE(str.starts_with("kk"));
+  EXPECT_FALSE(str.starts_with("toolongstring"));
+  EXPECT_TRUE(str.ends_with("ółć"));
+  EXPECT_FALSE(str.ends_with("ÓŁa"));
+  EXPECT_FALSE(str.ends_with("toolongstring"));
+  EXPECT_TRUE(str.contains("żół"));
+  EXPECT_FALSE(str.contains("ŻÓŁ"));
+  EXPECT_TRUE(str.contains("ŻÓŁ", false));
+  EXPECT_FALSE(str.contains("", false));
+}
 
-  $it("charIndexToByteOffset, byteOffsetToCharIndex", []() {
-    base::utf8string str = std::string("zażółć");
-    $expect(str.charIndexToByteOffset(2)).toEqual(2U);
-    $expect(str.charIndexToByteOffset(3)).toEqual(4U);
-    $expect(str.charIndexToByteOffset(4)).toEqual(6U);
-    $expect(str.byteOffsetToCharIndex(2)).toEqual(2U);
-    $expect(str.byteOffsetToCharIndex(5)).toEqual(4U);
-    $expect(str.byteOffsetToCharIndex(6)).toEqual(4U);
-  });
+TEST_F(Utf8StringTest, CharIndexToByteOffsetConversions) {
+  base::utf8string str = std::string("zażółć");
+  EXPECT_EQ(str.charIndexToByteOffset(2), 2U);
+  EXPECT_EQ(str.charIndexToByteOffset(3), 4U);
+  EXPECT_EQ(str.charIndexToByteOffset(4), 6U);
+  EXPECT_EQ(str.byteOffsetToCharIndex(2), 2U);
+  EXPECT_EQ(str.byteOffsetToCharIndex(5), 4U);
+  EXPECT_EQ(str.byteOffsetToCharIndex(6), 4U);
+}
 
-  $it("iterator", []() {
-    base::utf8string str = std::string("zażółć");
-    base::utf8string::iterator iter = str.begin();
-    
-    $expect(*iter).toEqual(base::utf8string::utf8char("z"));
-    $expect(iter == str.begin()).toBe(true);
-    $expect(iter == str.end()).toBe(false);
+TEST_F(Utf8StringTest, Iterator) {
+  base::utf8string str = std::string("zażółć");
+  base::utf8string::iterator iter = str.begin();
+  
+  EXPECT_EQ(*iter, base::utf8string::utf8char("z"));
+  EXPECT_TRUE(iter == str.begin());
+  EXPECT_FALSE(iter == str.end());
+  ++iter;
+  EXPECT_EQ(*iter, base::utf8string::utf8char("a"));
+  for (size_t i = 0; i < 5; i++) {
     ++iter;
-    $expect(*iter).toEqual(base::utf8string::utf8char("a"));
-    for (size_t i = 0; i < 5; i++) {
-      ++iter;
-    }
-    $expect(iter == str.end()).toBe(true);
-    --iter;
-    $expect(*iter).toEqual(base::utf8string::utf8char("ć"));
-  });
+  }
+  EXPECT_TRUE(iter == str.end());
+  --iter;
+  EXPECT_EQ(*iter, base::utf8string::utf8char("ć"));
 }
 
 }
+

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
 #include "grt/grt_manager.h"
@@ -46,8 +46,6 @@
 #include "db.mysql.sqlparser/src/mysql_sql_parser_fe.h"
 
 namespace {
-
-$ModuleEnvironment() {};
 
 struct A {
   std::string _res;
@@ -79,40 +77,37 @@ private:
   }
 };
 
-const char *sql =
-  "DELIMITER //\n"
-  "CREATE TRIGGER `sakila`.`ins_film` AFTER INSERT ON `film` FOR EACH ROW BEGIN\n"
-  "    INSERT INTO film_text (film_id, title, description)\n"
-  "        VALUES (new.film_id, new.title, new.description);\n"
-  "  END//\n";
-
-$TestData {
+class GrtDiffDbTest : public ::testing::Test {
+protected:
   std::unique_ptr<MySqlStudioTester> tester;
+  void SetUp() override {
+    tester.reset(new MySqlStudioTester());
+    tester->initializeRuntime();
+  }
 };
 
-$describe("GRT diff db") {
-  $beforeAll([&]() {
-    data->tester.reset(new MySqlStudioTester());
-    data->tester->initializeRuntime();
-  });
+TEST_F(GrtDiffDbTest, SqlFormattingAndExpressionChange) {
+  const char *sql =
+    "DELIMITER //\n"
+    "CREATE TRIGGER `sakila`.`ins_film` AFTER INSERT ON `film` FOR EACH ROW BEGIN\n"
+    "    INSERT INTO film_text (film_id, title, description)\n"
+    "        VALUES (new.film_id, new.title, new.description);\n"
+    "  END//\n";
+  const char *sql_after_formatting_change =
+    "DELIMITER //\n CREATE TRIGGER `sakila`.`ins_film` AFTER INSERT ON `film` FOR EACH ROW BEGIN INSERT INTO film_text "
+    "(film_id, title, description) VALUES (new.film_id, new.title, new.description);\n"
+    "  END//\n";
+  const char *sql_after_expression_change =
+    "DELIMITER //\n CREATE TRIGGER `sakila`.`ins_film` AFTER INSERT ON `film` FOR EACH ROW BEGIN INSERT INTO film_text "
+    "(film_id, title, description) VALUES (new.film_id, new.title, 'new.description');\n"
+    "  END//\n";
+  const char *sql_after_same = sql;
 
-  $it("SQL test", []() {
-    const char *sql_after_formatting_change =
-      "DELIMITER //\n CREATE TRIGGER `sakila`.`ins_film` AFTER INSERT ON `film` FOR EACH ROW BEGIN INSERT INTO film_text "
-      "(film_id, title, description) VALUES (new.film_id, new.title, new.description);\n"
-      "  END//\n";
-    const char *sql_after_expression_change =
-      "DELIMITER //\n CREATE TRIGGER `sakila`.`ins_film` AFTER INSERT ON `film` FOR EACH ROW BEGIN INSERT INTO film_text "
-      "(film_id, title, description) VALUES (new.film_id, new.title, 'new.description');\n"
-      "  END//\n";
-    const char *sql_after_same = sql;
-
-    std::string before = A().convert(sql);
-
-    $expect(A().convert(sql_after_formatting_change)).toEqual(before);
-    $expect(A().convert(sql_after_expression_change)).Not.toEqual(before);
-    $expect(A().convert(sql_after_same)).toEqual(before);
-  });
-
+  std::string before = A().convert(sql);
+  EXPECT_EQ(A().convert(sql_after_formatting_change), before);
+  EXPECT_NE(A().convert(sql_after_expression_change), before);
+  EXPECT_EQ(A().convert(sql_after_same), before);
 }
-}
+
+} // namespace
+

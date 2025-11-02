@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -26,67 +27,64 @@
 #include "sqlide/recordset_be.h"
 #include "cppdbc.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 #include "wb_connection_helpers.h"
 
 namespace {
 
-$ModuleEnvironment() {};
-
-$TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
-  sql::Dbc_connection_handler::Ref connection;
-};
-
 static void dummy() {
 }
 
-$describe("Recordset") {
-  $beforeAll([this]() {
-    data->tester.reset(new MySqlStudioTester());
-    data->tester->initializeRuntime();
+class RecordsetTest : public ::testing::Test {
+protected:
+  std::unique_ptr<MySqlStudioTester> tester;
+  sql::Dbc_connection_handler::Ref connection;
+
+  void SetUp() override {
+    tester.reset(new MySqlStudioTester());
+    tester->initializeRuntime();
 
     sql::DriverManager *manager = sql::DriverManager::getDriverManager();
     manager->set_testing();
     sql::Authentication::Ref auth;
 
-    data->connection = sql::Dbc_connection_handler::Ref(new sql::Dbc_connection_handler());
+    connection = sql::Dbc_connection_handler::Ref(new sql::Dbc_connection_handler());
 
     db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
     setupConnectionEnvironment(connectionProperties);
-    data->connection->ref = manager->getConnection(connectionProperties, std::bind(dummy));
+    connection->ref = manager->getConnection(connectionProperties, std::bind(dummy));
 
-    $expect(data->connection->ref.get()).Not.toBeNull("connection");
-  });
+    EXPECT_NE(nullptr, connection->ref.get()) << "connection";
+  }
+};
 
-  $it("Recordset storage", [this]() {
-    Recordset_cdbc_storage::Ref data_storage(Recordset_cdbc_storage::create());
+TEST_F(RecordsetTest, RecordsetStorage) {
+  Recordset_cdbc_storage::Ref data_storage(Recordset_cdbc_storage::create());
 
-    base::RecMutex _connLock;
-    data_storage->setUserConnectionGetter(
-      [&](sql::Dbc_connection_handler::Ref &conn, bool LockOnly = false) -> base::RecMutexLock {
-        base::RecMutexLock lock(_connLock, false);
-        conn = data->connection;
-        return lock;
-      }
-    );
+  base::RecMutex _connLock;
+  data_storage->setUserConnectionGetter(
+    [&](sql::Dbc_connection_handler::Ref &conn, bool LockOnly = false) -> base::RecMutexLock {
+      base::RecMutexLock lock(_connLock, false);
+      conn = connection;
+      return lock;
+    }
+  );
 
-    Recordset::Ref rs = Recordset::create();
-    rs->data_storage(data_storage);
+  Recordset::Ref rs = Recordset::create();
+  rs->data_storage(data_storage);
 
-    std::shared_ptr<sql::Statement> dbc_statement(data->connection->ref->createStatement());
-    dbc_statement->execute("select convert('', binary), convert(NULL, binary)");
+  std::shared_ptr<sql::Statement> dbc_statement(connection->ref->createStatement());
+  dbc_statement->execute("select convert('', binary), convert(NULL, binary)");
 
-    std::shared_ptr<sql::ResultSet> rset(dbc_statement->getResultSet());
-    data_storage->dbc_resultset(rset);
+  std::shared_ptr<sql::ResultSet> rset(dbc_statement->getResultSet());
+  data_storage->dbc_resultset(rset);
 
-    rs->reset(true);
+  rs->reset(true);
 
-    $expect(rs->is_field_null(0, 0)).toBeFalse("empty blob string is not NULL");
-    $expect(rs->is_field_null(0, 1)).toBeTrue("NULL blob is NULL");
-  });
-
+  EXPECT_FALSE(rs->is_field_null(0, 0)) << "empty blob string is not NULL";
+  EXPECT_TRUE(rs->is_field_null(0, 1)) << "NULL blob is NULL";
 }
 
 }
+

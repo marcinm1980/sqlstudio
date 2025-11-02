@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -34,13 +35,11 @@
 #include "backend/diff_tree.h"
 #include "base/util_functions.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 using namespace grt;
 
 namespace {
-
-$ModuleEnvironment() {};
 
 static grt::DictRef get_traits(bool case_sensitive = false) {
   grt::DictRef traits(true);
@@ -51,239 +50,87 @@ static grt::DictRef get_traits(bool case_sensitive = false) {
   return traits;
 }
 
-$TestData {
+class SyncDiffTest : public ::testing::Test {
+protected:
   std::unique_ptr<MySqlStudioTester> tester;
   std::string dataDir;
+  void SetUp() override {
+    tester.reset(new MySqlStudioTester());
+    tester->initializeRuntime();
+    // Set this to a valid path for your test environment
+    dataDir = "./data";
+  }
 };
 
-$describe("Sync diff") {
-  $beforeAll([this]() {
-    data->tester.reset(new MySqlStudioTester());
-    data->tester->initializeRuntime();
-
-    data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
-  });
-
-  $it("Bug #16492371: sync problem when model has difference in schema collation and table collation", [this]() {
-    ValueRef source_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/sync-catalogs-collations/source_catalog.xml"));
-    ValueRef target_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/sync-catalogs-collations/target_catalog.xml"));
-
-    db_mysql_CatalogRef mod_cat = db_mysql_CatalogRef::cast_from(source_val);
-    db_mysql_CatalogRef org_cat = db_mysql_CatalogRef::cast_from(target_val);
-
-    grt::NormalizedComparer normalizer(get_traits(true));
-    grt::DbObjectMatchAlterOmf omf;
-    omf.dontdiff_mask = 3;
-    normalizer.init_omf(&omf);
-    std::shared_ptr<DiffChange> diff_change = diff_make(org_cat, mod_cat, &omf);
-
-    DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>();
-
-    grt::StringListRef alter_map(grt::Initialized);
-    grt::ListRef<GrtNamedObject> alter_object_list(true);
-    grt::DictRef options(true);
-    options.set("UseFilteredLists", grt::IntegerRef(0));
-    options.set("OutputContainer", alter_map);
-    options.set("OutputObjectContainer", alter_object_list);
-    options.set("CaseSensitive", grt::IntegerRef(omf.case_sensitive));
-
-    diffsql_module->generateSQL(org_cat, options, diff_change);
-    std::shared_ptr<DiffTreeBE> diff_tree(new ::DiffTreeBE(std::vector<std::string>(), mod_cat, org_cat, diff_change));
-
-    bool foundSchemaDiff = false;
-    bool foundTableDiff = false;
-    for (std::size_t c = diff_tree->count(), i = 0; i < c; i++) {
-      bec::NodeId schema((int)i);
-      for (size_t j = 0; j < diff_tree->count_children(schema); j++) {
-        bec::NodeId object(diff_tree->get_child(schema, j));
-        std::string name;
-
-        diff_tree->get_field(schema, DiffTreeBE::ModelObjectName, name);
-        if (name == "chartest" && (diff_tree->get_apply_direction(schema) == DiffNode::ApplyToDb)) {
-          foundSchemaDiff = true;
-        }
-        diff_tree->get_field(object, DiffTreeBE::ModelObjectName, name);
-        if (name == "chartable" && (diff_tree->get_apply_direction(object) == DiffNode::ApplyToDb)) {
-          foundTableDiff = true;
-        }
+TEST_F(SyncDiffTest, Bug16492371_SchemaTableCollationDiff) {
+  ValueRef source_val(grt::GRT::get()->unserialize(dataDir + "/diff/sync-catalogs-collations/source_catalog.xml"));
+  ValueRef target_val(grt::GRT::get()->unserialize(dataDir + "/diff/sync-catalogs-collations/target_catalog.xml"));
+  db_mysql_CatalogRef mod_cat = db_mysql_CatalogRef::cast_from(source_val);
+  db_mysql_CatalogRef org_cat = db_mysql_CatalogRef::cast_from(target_val);
+  grt::NormalizedComparer normalizer(get_traits(true));
+  grt::DbObjectMatchAlterOmf omf;
+  omf.dontdiff_mask = 3;
+  normalizer.init_omf(&omf);
+  std::shared_ptr<DiffChange> diff_change = diff_make(org_cat, mod_cat, &omf);
+  DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>();
+  grt::StringListRef alter_map(grt::Initialized);
+  grt::ListRef<GrtNamedObject> alter_object_list(true);
+  grt::DictRef options(true);
+  options.set("UseFilteredLists", grt::IntegerRef(0));
+  options.set("OutputContainer", alter_map);
+  options.set("OutputObjectContainer", alter_object_list);
+  options.set("CaseSensitive", grt::IntegerRef(omf.case_sensitive));
+  diffsql_module->generateSQL(org_cat, options, diff_change);
+  std::shared_ptr<DiffTreeBE> diff_tree(new ::DiffTreeBE(std::vector<std::string>(), mod_cat, org_cat, diff_change));
+  bool foundSchemaDiff = false;
+  bool foundTableDiff = false;
+  for (std::size_t c = diff_tree->count(), i = 0; i < c; i++) {
+    bec::NodeId schema((int)i);
+    for (size_t j = 0; j < diff_tree->count_children(schema); j++) {
+      bec::NodeId object(diff_tree->get_child(schema, j));
+      std::string name;
+      diff_tree->get_field(schema, DiffTreeBE::ModelObjectName, name);
+      if (name == "chartest" && (diff_tree->get_apply_direction(schema) == DiffNode::ApplyToDb)) {
+        foundSchemaDiff = true;
+      }
+      diff_tree->get_field(object, DiffTreeBE::ModelObjectName, name);
+      if (name == "chartable" && (diff_tree->get_apply_direction(object) == DiffNode::ApplyToDb)) {
+        foundTableDiff = true;
       }
     }
-
-    $expect(foundTableDiff && foundSchemaDiff).toBeTrue();
-  });
-
-  $it("Regression test for bug #17454626", [this]() {
-    ValueRef source_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/sync-catalogs-rowformat/source_catalog.xml"));
-    ValueRef target_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/sync-catalogs-rowformat/target_catalog.xml"));
-
-    db_mysql_CatalogRef source_cat = db_mysql_CatalogRef::cast_from(source_val);
-    db_mysql_CatalogRef target_cat = db_mysql_CatalogRef::cast_from(target_val);
-
-    DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>();
-
-    grt::DictRef options(true);
-    options.set("CaseSensitive", grt::IntegerRef(true));
-    options.set("GenerateDocumentProperties", grt::IntegerRef(0));
-
-    std::string script = diffsql_module->makeAlterScript(target_cat, source_cat, options);
-
-    std::string expected_sql = data->dataDir + "/diff/sync-catalogs-rowformat/good.sql";
-    std::ifstream ref(expected_sql.c_str());
-    std::stringstream ss(script);
-
-    std::string line, refline;
-
-    $expect(ref.is_open()).toBeTrue();
-
-    while (ref.good() && ss.good()) {
-      getline(ref, refline);
-      getline(ss, line);
-      $expect(line).toBe(refline);
-    }
-  });
-
-  $it("Test for bug column rename no #19500938", [this]() {
-    ValueRef source_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/column_rename/1_src.xml"));
-    ValueRef target_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/column_rename/1_dst.xml"));
-
-    db_mysql_CatalogRef source_cat = db_mysql_CatalogRef::cast_from(source_val);
-    db_mysql_CatalogRef target_cat = db_mysql_CatalogRef::cast_from(target_val);
-    DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>();
-
-    grt::DictRef options(true);
-    options.set("CaseSensitive", grt::IntegerRef(true));
-    options.set("GenerateDocumentProperties", grt::IntegerRef(0));
-
-    std::string script = diffsql_module->makeAlterScript(target_cat, source_cat, options);
-
-    std::string expected_sql = data->dataDir + "/diff/column_rename/1_expected.sql";
-    std::ifstream ref(expected_sql.c_str());
-    std::stringstream ss(script);
-
-    std::string line, refline;
-
-    $expect(ref.is_open()).toBeTrue();
-
-    while (ref.good() && ss.good()) {
-      getline(ref, refline);
-      getline(ss, line);
-      $expect(line).toBe(refline);
-    }
-  });
-
-  $it("Test for bug column rename and reorder no #20128561", [this]() {
-    ValueRef source_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/column_rename/2_src.xml"));
-    ValueRef target_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/column_rename/2_dst.xml"));
-
-    db_mysql_CatalogRef source_cat = db_mysql_CatalogRef::cast_from(source_val);
-    db_mysql_CatalogRef target_cat = db_mysql_CatalogRef::cast_from(target_val);
-    DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>();
-
-    grt::DictRef options(true);
-    options.set("CaseSensitive", grt::IntegerRef(true));
-    options.set("GenerateDocumentProperties", grt::IntegerRef(0));
-
-    std::string script = diffsql_module->makeAlterScript(target_cat, source_cat, options);
-
-    std::string expected_sql = data->dataDir + "/diff/column_rename/2_expected.sql";
-    std::ifstream ref(expected_sql.c_str());
-    std::stringstream ss(script);
-
-    std::string line, refline;
-
-    $expect(ref.is_open()).toBeTrue();
-
-    while (ref.good() && ss.good()) {
-      getline(ref, refline);
-      getline(ss, line);
-      $expect(line).toBe(refline);
-    }
-  });
-
-  $it("Test for bug index change no #27868813", [this]() {
-    ValueRef source_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/index_change/1_src.xml"));
-    ValueRef target_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/index_change/1_dst.xml"));
-
-    db_mysql_CatalogRef source_cat = db_mysql_CatalogRef::cast_from(source_val);
-    db_mysql_CatalogRef target_cat = db_mysql_CatalogRef::cast_from(target_val);
-    DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>();
-
-    grt::DictRef options(true);
-    options.set("CaseSensitive", grt::IntegerRef(true));
-    options.set("GenerateDocumentProperties", grt::IntegerRef(0));
-
-    std::string script = diffsql_module->makeAlterScript(target_cat, source_cat, options);
-
-    std::string expected_sql = data->dataDir + "/diff/index_change/1_expected.sql";
-    std::ifstream ref(expected_sql.c_str());
-    std::stringstream ss(script);
-
-    std::string line, refline;
-    $expect(ref.is_open()).toBeTrue();
-
-    while (ref.good() && ss.good()) {
-      getline(ref, refline);
-      getline(ss, line);
-      $expect(line).toBe(refline);
-    }
-  });
-
-  $it("Diff test with CaseSensitive option 1", [this]() {
-    ValueRef source_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/index_change/2_src.xml"));
-    ValueRef target_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/index_change/2_dst.xml"));
-
-    db_mysql_CatalogRef source_cat = db_mysql_CatalogRef::cast_from(source_val);
-    db_mysql_CatalogRef target_cat = db_mysql_CatalogRef::cast_from(target_val);
-    DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>();
-
-    grt::DictRef options(true);
-    options.set("CaseSensitive", grt::IntegerRef(true));
-    options.set("GenerateDocumentProperties", grt::IntegerRef(0));
-
-    std::string script = diffsql_module->makeAlterScript(target_cat, source_cat, options);
-
-    std::string expected_sql = data->dataDir + "/diff/index_change/2_expected.sql";
-    std::ifstream ref(expected_sql.c_str());
-    std::stringstream ss(script);
-
-    std::string line, refline;
-    $expect(ref.is_open()).toBeTrue();
-
-    while (ref.good() && ss.good()) {
-      getline(ref, refline);
-      getline(ss, line);
-      $expect(line).toBe(refline);
-    }
-  });
-
-  $it("Diff test with CaseSensitive option 2", [this]() {
-    ValueRef source_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/index_change/3_src.xml"));
-    ValueRef target_val(grt::GRT::get()->unserialize(data->dataDir + "/diff/index_change/3_dst.xml"));
-    db_mysql_CatalogRef source_cat = db_mysql_CatalogRef::cast_from(source_val);
-    db_mysql_CatalogRef target_cat = db_mysql_CatalogRef::cast_from(target_val);
-    source_cat->version(bec::parse_version(base::getVersion()));
-    target_cat->version(bec::parse_version(base::getVersion()));
-    DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>();
-
-    grt::DictRef options(true);
-    options.set("CaseSensitive", grt::IntegerRef(true));
-    options.set("GenerateDocumentProperties", grt::IntegerRef(0));
-
-    std::string script = diffsql_module->makeAlterScript(source_cat, target_cat, options);
-
-    std::string expected_sql = data->dataDir + "/diff/index_change/3_expected.sql";
-    std::ifstream ref(expected_sql.c_str());
-    std::stringstream ss(script);
-
-    std::string line, refline;
-    $expect(ref.is_open()).toBeTrue();
-
-    while (ref.good() && ss.good()) {
-      getline(ref, refline);
-      getline(ss, line);
-      $expect(line).toBe(refline);
-    }
-  });
-
+  }
+  EXPECT_TRUE(foundTableDiff && foundSchemaDiff);
 }
+
+#define DIFF_TREE_TEST(testname, srcfile, dstfile, expectedfile) \
+TEST_F(SyncDiffTest, testname) { \
+  ValueRef source_val(grt::GRT::get()->unserialize(dataDir + srcfile)); \
+  ValueRef target_val(grt::GRT::get()->unserialize(dataDir + dstfile)); \
+  db_mysql_CatalogRef source_cat = db_mysql_CatalogRef::cast_from(source_val); \
+  db_mysql_CatalogRef target_cat = db_mysql_CatalogRef::cast_from(target_val); \
+  DbMySQLImpl *diffsql_module = grt::GRT::get()->get_native_module<DbMySQLImpl>(); \
+  grt::DictRef options(true); \
+  options.set("CaseSensitive", grt::IntegerRef(true)); \
+  options.set("GenerateDocumentProperties", grt::IntegerRef(0)); \
+  std::string script = diffsql_module->makeAlterScript(target_cat, source_cat, options); \
+  std::string expected_sql = dataDir + expectedfile; \
+  std::ifstream ref(expected_sql.c_str()); \
+  std::stringstream ss(script); \
+  std::string line, refline; \
+  ASSERT_TRUE(ref.is_open()); \
+  while (ref.good() && ss.good()) { \
+    getline(ref, refline); \
+    getline(ss, line); \
+    EXPECT_EQ(line, refline); \
+  } \
 }
+
+DIFF_TREE_TEST(RegressionBug17454626, "/diff/sync-catalogs-rowformat/source_catalog.xml", "/diff/sync-catalogs-rowformat/target_catalog.xml", "/diff/sync-catalogs-rowformat/good.sql")
+DIFF_TREE_TEST(BugColumnRename19500938, "/diff/column_rename/1_src.xml", "/diff/column_rename/1_dst.xml", "/diff/column_rename/1_expected.sql")
+DIFF_TREE_TEST(BugColumnRenameReorder20128561, "/diff/column_rename/2_src.xml", "/diff/column_rename/2_dst.xml", "/diff/column_rename/2_expected.sql")
+DIFF_TREE_TEST(BugIndexChange27868813, "/diff/index_change/1_src.xml", "/diff/index_change/1_dst.xml", "/diff/index_change/1_expected.sql")
+DIFF_TREE_TEST(DiffCaseSensitive1, "/diff/index_change/2_src.xml", "/diff/index_change/2_dst.xml", "/diff/index_change/2_expected.sql")
+DIFF_TREE_TEST(DiffCaseSensitive2, "/diff/index_change/3_src.xml", "/diff/index_change/3_dst.xml", "/diff/index_change/3_expected.sql")
+
+} // namespace
+

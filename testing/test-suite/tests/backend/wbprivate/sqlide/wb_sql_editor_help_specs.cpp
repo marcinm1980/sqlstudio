@@ -22,7 +22,6 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "casmine.h"
 #include "helpers.h"
 #include "wb_test_helpers.h"
 
@@ -30,6 +29,7 @@
 #include "grtdb/db_helpers.h"
 #include "sqlide/wb_sql_editor_form.h"
 #include "sqlide/wb_sql_editor_help.h"
+#include "gtest/gtest.h"
 
 using namespace grt;
 using namespace wb;
@@ -38,14 +38,12 @@ using namespace bec;
 
 namespace {
 
-$ModuleEnvironment() {};
-
-$TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
-  help::HelpContext *helpContext;
-  db_mysql_CatalogRef catalog;
-  unsigned long version;
-};
+  struct TestData {
+    std::unique_ptr<MySqlStudioTester> tester;
+    help::HelpContext *helpContext;
+    db_mysql_CatalogRef catalog;
+    unsigned long version;
+  };
 
 struct HelpTestEntry {
   size_t lowVersion;  //  First supported version for this entry
@@ -86,7 +84,7 @@ void checkTopics(size_t start, const std::vector<HelpTestEntry> entries, TestDat
               << std::endl
     ;
 #endif
-    $expect(base::tolower(topic)).toBe(base::tolower(entries[i].topic), message);
+    EXPECT_EQ(base::tolower(entries[i].topic), base::tolower(topic)) << message;
   }
 }
 
@@ -900,8 +898,11 @@ static std::vector<HelpTestEntry> complexTests = {
   { MYSQL_VERSION_LOWER, MYSQL_VERSION_HIGHER, "create definer = mike@'localhost' event if not exists a", 30, "CREATE EVENT", __LINE__ },
 };
 
-$describe("sql editor help test") {
-  $beforeAll([&]() {
+class SqlEditorHelpTest : public ::testing::Test {
+protected:
+  TestData *data = new TestData();
+
+  void SetUp() override {
     bec::GRTManager::get();
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
@@ -914,23 +915,23 @@ $describe("sql editor help test") {
 
     // Wait for the help to load its data.
     help::DbSqlEditorContextHelp::get()->waitForLoading();
-  });
+  }
 
-  $it("Single token topics or those derived from a single token.", [&](){
-    checkTopics(0, singleTokenTests, data.get());
-  });
-
-  $it("Multi token topics.", [&](){
-    checkTopics(0, multiTokenTests, data.get());
-  });
-
-  $it("Complex tests", [&]() {
-    checkTopics(0, complexTests, data.get());
-  });
-
-  $afterAll([&]() {
+  void TearDown() override {
     delete data->helpContext;
-  });
+    delete data;
+  }
 };
 
+TEST_F(SqlEditorHelpTest, SingleTokenTopics) {
+  checkTopics(0, singleTokenTests, data);
+}
+
+TEST_F(SqlEditorHelpTest, MultiTokenTopics) {
+  checkTopics(0, multiTokenTests, data);
+}
+
+TEST_F(SqlEditorHelpTest, ComplexTests) {
+  checkTopics(0, complexTests, data);
+}
 }

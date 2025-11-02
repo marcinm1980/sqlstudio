@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -27,13 +28,11 @@
 #include "base/string_utilities.h"
 #include <fstream>
 
-#include "casmine.h"
-
-using namespace casmine;
+#include "gtest/gtest.h"
 
 namespace {
 
-$ModuleEnvironment() {};
+
 
 bool compare_file_contents(const std::string &filename1, const std::string &filename2) {
   std::ifstream file1(filename1, std::ifstream::binary | std::ifstream::ate);
@@ -82,9 +81,10 @@ struct SQLQuoteModifier : public mtemplate::Modifier {
   }
 };
 
-$TestData {
-  std::string outputDir = CasmineContext::get()->outputDir();
-  std::string dataDir = CasmineContext::get()->tmpDataDir();
+class MTemplateTest : public ::testing::Test {
+protected:
+  std::string outputDir;
+  std::string dataDir;
 
   std::map<std::string, base::utf8string> language_details_map = {
     {"english", base::utf8string("I can eat glass and it doesn't hurt me. ")},
@@ -108,21 +108,23 @@ $TestData {
     {"Japanese", base::utf8string("私はガラスを食べられます。それは私を傷つけません。")}
   };
 
+  void SetUp() override {
+    outputDir = "./output";
+    dataDir = "./data";
+  }
 };
 
-$describe("mtemplate") {
-
-  $it("Create CSV from template", [this]() {
+TEST_F(MTemplateTest, CreateCSVFromTemplate) {
     //    This test creates a CSV file from a template + the data above. Also tests the usage of a modifier
     {
       //    setup modifiers
       mtemplate::Modifier::addModifier<CSVTokenQuoteModifier>("csv_quote");
 
       //    create output streams
-      mtemplate::TemplateOutputFile output(data->outputDir + "/test_result.csv");
+      mtemplate::TemplateOutputFile output(outputDir + "/test_result.csv");
 
       { //   Header of the files
-        mtemplate::Template *template_csv = mtemplate::GetTemplate(data->dataDir + "/mtemplate/CSV_semicolon.pre.tpl");
+        mtemplate::Template *template_csv = mtemplate::GetTemplate(dataDir + "/mtemplate/CSV_semicolon.pre.tpl");
 
         mtemplate::DictionaryInterface *dictionary = mtemplate::CreateMainDictionary();
 
@@ -133,9 +135,9 @@ $describe("mtemplate") {
       }
 
       { //   data
-        mtemplate::Template *template_data = mtemplate::GetTemplate(data->dataDir + "/mtemplate/CSV_semicolon.tpl");
+        mtemplate::Template *template_data = mtemplate::GetTemplate(dataDir + "/mtemplate/CSV_semicolon.tpl");
 
-        for (auto item : data->language_details_map) {
+        for (auto item : language_details_map) {
           mtemplate::DictionaryInterface *data_dictionary = mtemplate::CreateMainDictionary();
           mtemplate::DictionaryInterface *row_dictionary = data_dictionary->addSectionDictionary("ROW");
 
@@ -145,28 +147,28 @@ $describe("mtemplate") {
           mtemplate::DictionaryInterface *field_dictionary_col2 = row_dictionary->addSectionDictionary("FIELD");
           field_dictionary_col2->setValue("FIELD_VALUE", item.second);
 
-          template_data->expand(data_dictionary, &output);
+          template_expand(data_dictionary, &output);
         }
       }
     }
 
-    $expect(compare_file_contents(data->dataDir + "/mtemplate/test_result.csv", data->outputDir + "/test_result.csv")).toBeTrue();
-  });
+    EXPECT_TRUE(compare_file_contents(dataDir + "/mtemplate/test_result.csv", outputDir + "/test_result.csv"));
+}
 
-  $it("Create JSON from template", [this]() {
+TEST_F(MTemplateTest, CreateJSONFromTemplate) {
     {
       mtemplate::SetGlobalValue("INDENT", "\t");
 
       //    create output streams
-      mtemplate::TemplateOutputFile output_json(data->outputDir + "/test_result.json");
+      mtemplate::TemplateOutputFile output_json(outputDir + "/test_result.json");
 
       //   Header of the files (no data)
-      mtemplate::GetTemplate(data->dataDir + "/mtemplate/JSON.pre.tpl")->expand(nullptr, &output_json);
+      mtemplate::GetTemplate(dataDir + "/mtemplate/JSON.pre.tpl")->expand(nullptr, &output_json);
 
       { //   data
-        mtemplate::Template *data_template_json = mtemplate::GetTemplate(data->dataDir + "/mtemplate/JSON.tpl");
+        mtemplate::Template *data_template_json = mtemplate::GetTemplate(dataDir + "/mtemplate/JSON.tpl");
 
-        for (auto item : data->language_details_map) {
+        for (auto item : language_details_map) {
           mtemplate::DictionaryInterface *data_dictionary = mtemplate::CreateMainDictionary();
           mtemplate::DictionaryInterface *row_dictionary = data_dictionary->addSectionDictionary("ROW");
 
@@ -183,12 +185,12 @@ $describe("mtemplate") {
       }
 
       //   Footer for the files (no data)
-      mtemplate::GetTemplate(data->dataDir + "/mtemplate/JSON.post.tpl")->expand(nullptr, &output_json);
+      mtemplate::GetTemplate(dataDir + "/mtemplate/JSON.post.tpl")->expand(nullptr, &output_json);
     }
-    $expect(compare_file_contents(data->dataDir + "/mtemplate/test_result.json", data->outputDir + "/test_result.json")).toBeTrue();
-  });
+    EXPECT_TRUE(compare_file_contents(dataDir + "/mtemplate/test_result.json", outputDir + "/test_result.json"));
+}
 
-  $it("Create SQL from template", [this]() {
+TEST_F(MTemplateTest, CreateSQLFromTemplate) {
     {
       mtemplate::SetGlobalValue("TABLE_NAME", "some_table");
 
@@ -196,18 +198,18 @@ $describe("mtemplate") {
       mtemplate::Modifier::addModifier<SQLQuoteModifier>("sql_quote");
 
       //    create output streams
-      mtemplate::TemplateOutputFile output_json(data->outputDir + "/test_result.sql");
+      mtemplate::TemplateOutputFile output_json(outputDir + "/test_result.sql");
 
       { //   Header of the files
-        mtemplate::Template *header_json = mtemplate::GetTemplate(data->dataDir + "/mtemplate/SQL_inserts.pre.tpl");
+        mtemplate::Template *header_json = mtemplate::GetTemplate(dataDir + "/mtemplate/SQL_inserts.pre.tpl");
         mtemplate::DictionaryInterface *dictionary = mtemplate::CreateMainDictionary();
         header_json->expand(dictionary, &output_json);
       }
 
       { //   data
-        mtemplate::Template *data_template_json = mtemplate::GetTemplate(data->dataDir + "/mtemplate/SQL_inserts.tpl");
+        mtemplate::Template *data_template_json = mtemplate::GetTemplate(dataDir + "/mtemplate/SQL_inserts.tpl");
 
-        for (auto item : data->language_details_map) {
+        for (auto item : language_details_map) {
           mtemplate::DictionaryInterface *data_dictionary = mtemplate::CreateMainDictionary();
           mtemplate::DictionaryInterface *row_dictionary = data_dictionary->addSectionDictionary("ROW");
 
@@ -224,16 +226,16 @@ $describe("mtemplate") {
       }
     }
 
-    $expect(compare_file_contents(data->dataDir + "/mtemplate/test_result.sql", data->outputDir + "/test_result.sql")).toBeTrue();
-  });
+    EXPECT_TRUE(compare_file_contents(dataDir + "/mtemplate/test_result.sql", outputDir + "/test_result.sql"));
+}
 
-  $it("Create HTML from template", [this]() {
+TEST_F(MTemplateTest, CreateHTMLFromTemplate) {
     { // Need outer braces to make output_json flush its data to disk.
       //    create output streams
-      mtemplate::TemplateOutputFile output_json(data->outputDir + "/test_result.html");
+      mtemplate::TemplateOutputFile output_json(outputDir + "/test_result.html");
 
       { //   Header of the files
-        std::unique_ptr<mtemplate::Template> template_json(mtemplate::GetTemplate(data->dataDir + "/mtemplate/HTML.pre.tpl"));
+        std::unique_ptr<mtemplate::Template> template_json(mtemplate::GetTemplate(dataDir + "/mtemplate/HTML.pre.tpl"));
         std::unique_ptr<mtemplate::DictionaryInterface> dictionary(mtemplate::CreateMainDictionary());
         dictionary->setValueAndShowSection("COLUMN_NAME", "Language", "COLUMN");
         dictionary->setValueAndShowSection("COLUMN_NAME", "Phrase", "COLUMN");
@@ -241,9 +243,9 @@ $describe("mtemplate") {
       }
 
       { //   data
-        std::unique_ptr<mtemplate::Template> data_template_json(mtemplate::GetTemplate(data->dataDir + "/mtemplate/HTML.tpl"));
+        std::unique_ptr<mtemplate::Template> data_template_json(mtemplate::GetTemplate(dataDir + "/mtemplate/HTML.tpl"));
 
-        for (auto item : data->language_details_map) {
+        for (auto item : language_details_map) {
           std::unique_ptr<mtemplate::DictionaryInterface> data_dictionary(mtemplate::CreateMainDictionary());
           std::unique_ptr<mtemplate::DictionaryInterface> row_dictionary(data_dictionary->addSectionDictionary("ROW"));
 
@@ -255,12 +257,11 @@ $describe("mtemplate") {
       }
 
       //   Footer for the files(no data)
-      mtemplate::GetTemplate(data->dataDir + "/mtemplate/HTML.post.tpl")->expand(nullptr, &output_json);
+      mtemplate::GetTemplate(dataDir + "/mtemplate/HTML.post.tpl")->expand(nullptr, &output_json);
     }
 
-    $expect(compare_file_contents(data->dataDir + "/mtemplate/test_result.html", data->outputDir + "/test_result.html")).toBeTrue();
-  });
-
+    EXPECT_TRUE(compare_file_contents(dataDir + "/mtemplate/test_result.html", outputDir + "/test_result.html"));
 }
 
 }
+

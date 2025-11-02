@@ -46,18 +46,19 @@ void signal_handler(int sig) {
 }
 #endif
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
 
-$ModuleEnvironment() {};
+  struct TestData {
+    std::unique_ptr<MySqlStudioTester> tester;
+  };
 
-$TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
-};
+class LowLevelTestsForMySqlStudioContextTest : public ::testing::Test {
+protected:
+  TestData *data = new TestData();
 
-$describe("Low-level tests for MySqlStudio context") {
-  $beforeAll([&]() {
+  void SetUp() override {
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 #ifndef _MSC_VER
@@ -65,203 +66,215 @@ $describe("Low-level tests for MySqlStudio context") {
       printf("Failed to setup the signal handler\n");
     }
   #endif
-  });
+  }
 
-  $it("Stored connections test", [this]() {
-    $pending("need investigate why connection is not avaiable");
-    $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().is_valid()).toBeTrue();
+  void TearDown() override {
+    delete data;
+  }
+};
 
-    // We cannot check the exact number because on Windows, if there are no server instances yet,
-    // instances and connections are created automatically from all installed servers.
-    // So we can't know in advance how many connections we will have (but at least 1, that in the test
-    // connection file).
-    $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().count() > 0).toBeTrue();
+TEST_F(LowLevelTestsForMySqlStudioContextTest, StoredConnectionsTest) {
+  GTEST_SKIP() << "need investigate why connection is not avaiable";
+  $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().is_valid()).toBeTrue();
 
-    $expect(data->tester->wb->get_root()->rdbmsMgmt()->rdbms().get(0)->drivers().count() > 0).toBeTrue();
+  // We cannot check the exact number because on Windows, if there are no server instances yet,
+  // instances and connections are created automatically from all installed servers.
+  // So we can't know in advance how many connections we will have (but at least 1, that in the test
+  // connection file).
+  $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().count() > 0).toBeTrue();
 
-    $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().get(0)->driver().is_valid()).toBeTrue();
-  });
+  $expect(data->tester->wb->get_root()->rdbmsMgmt()->rdbms().get(0)->drivers().count() > 0).toBeTrue();
 
-  $it("Check if creating a fk between 2 tables will create the connection", [this]() {
-    data->tester->wb->new_document();
-    data->tester->addView();
+  $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().get(0)->driver().is_valid()).toBeTrue();
+});
 
-    db_mysql_TableRef table1(data->tester->addTableFigure("table1", 10, 10));
-    db_mysql_TableRef table2(data->tester->addTableFigure("table2", 10, 100));
+}
 
-    $expect(data->tester->getPview()->figures().count()).toBe(2U);
-    $expect(data->tester->getPview()->connections().count()).toBe(0U);
+TEST_F(LowLevelTestsForMySqlStudioContextTest, CheckIfCreatingAFkBetween2TablesWillCreateTheConnection) {
+  data->tester->wb->new_document();
+  data->tester->addView();
 
-    db_mysql_ColumnRef column(grt::Initialized);
-    column->owner(table1);
-    column->name("id1");
-    column->setParseType("int", data->tester->getRdbms()->simpleDatatypes());
-    // bec::ColumnHelper::parse_column_type(data->tester->getRdbms(), data->tester->getCatalog()->userDatatypes(), "int", column);
-    table1->columns().insert(column);
+  db_mysql_TableRef table1(data->tester->addTableFigure("table1", 10, 10));
+  db_mysql_TableRef table2(data->tester->addTableFigure("table2", 10, 100));
 
-    column = db_mysql_ColumnRef(grt::Initialized);
-    column->owner(table1);
-    column->name("col1");
-    column->setParseType("varchar(100)", data->tester->getRdbms()->simpleDatatypes());
-    //  bec::ColumnHelper::parse_column_type(data->tester->getRdbms(), data->tester->getCatalog()->userDatatypes(), "varchar(100)",
-    //  column);
-    table1->columns().insert(column);
-    table1->addPrimaryKeyColumn(column);
-    // bec::TableHelper::make_primary_key(table1, column, true);
+  $expect(data->tester->getPview()->figures().count()).toBe(2U);
+  $expect(data->tester->getPview()->connections().count()).toBe(0U);
 
-    column = db_mysql_ColumnRef(grt::Initialized);
-    column->owner(table2);
-    column->name("id2");
-    column->setParseType("int", data->tester->getRdbms()->simpleDatatypes());
-    // bec::ColumnHelper::parse_column_type(data->tester->getRdbms(), data->tester->getCatalog()->userDatatypes(), "int", column);
-    table2->columns().insert(column);
+  db_mysql_ColumnRef column(grt::Initialized);
+  column->owner(table1);
+  column->name("id1");
+  column->setParseType("int", data->tester->getRdbms()->simpleDatatypes());
+  // bec::ColumnHelper::parse_column_type(data->tester->getRdbms(), data->tester->getCatalog()->userDatatypes(), "int",
+  // column);
+  table1->columns().insert(column);
 
-    column = db_mysql_ColumnRef(grt::Initialized);
-    column->owner(table2);
-    column->name("col2");
-    column->setParseType("varchar(100)", data->tester->getRdbms()->simpleDatatypes());
-    // bec::ColumnHelper::parse_column_type(data->tester->getRdbms(), data->tester->getCatalog()->userDatatypes(), "varchar(100)",
-    // column);
-    table2->columns().insert(column);
-    table2->addPrimaryKeyColumn(column);
-    // bec::TableHelper::make_primary_key(table2, column, true);
+  column = db_mysql_ColumnRef(grt::Initialized);
+  column->owner(table1);
+  column->name("col1");
+  column->setParseType("varchar(100)", data->tester->getRdbms()->simpleDatatypes());
+  //  bec::ColumnHelper::parse_column_type(data->tester->getRdbms(), data->tester->getCatalog()->userDatatypes(),
+  //  "varchar(100)", column);
+  table1->columns().insert(column);
+  table1->addPrimaryKeyColumn(column);
+  // bec::TableHelper::make_primary_key(table1, column, true);
 
-    bec::TableHelper::create_foreign_key_to_table(table1, table2, true, true, true, true, data->tester->getRdbms(),
-                                                  grt::DictRef(true), grt::DictRef(true));
+  column = db_mysql_ColumnRef(grt::Initialized);
+  column->owner(table2);
+  column->name("id2");
+  column->setParseType("int", data->tester->getRdbms()->simpleDatatypes());
+  // bec::ColumnHelper::parse_column_type(data->tester->getRdbms(), data->tester->getCatalog()->userDatatypes(), "int",
+  // column);
+  table2->columns().insert(column);
 
-    $expect(table1->foreignKeys().count() > 0).toBeTrue();
-    $expect(table2->foreignKeys().count() == 0).toBeTrue();
+  column = db_mysql_ColumnRef(grt::Initialized);
+  column->owner(table2);
+  column->name("col2");
+  column->setParseType("varchar(100)", data->tester->getRdbms()->simpleDatatypes());
+  // bec::ColumnHelper::parse_column_type(data->tester->getRdbms(), data->tester->getCatalog()->userDatatypes(),
+  // "varchar(100)", column);
+  table2->columns().insert(column);
+  table2->addPrimaryKeyColumn(column);
+  // bec::TableHelper::make_primary_key(table2, column, true);
 
-    grt::ListRef<model_Connection> tmp(data->tester->getPview()->connections());
+  bec::TableHelper::create_foreign_key_to_table(table1, table2, true, true, true, true, data->tester->getRdbms(),
+                                                grt::DictRef(true), grt::DictRef(true));
 
-    data->tester->flushUntil(3, std::bind(&grt::ListRef<model_Connection>::count, tmp), 1);
+  $expect(table1->foreignKeys().count() > 0).toBeTrue();
+  $expect(table2->foreignKeys().count() == 0).toBeTrue();
 
-    $expect(data->tester->getPview()->connections().count()).toBe(1U);
-    data->tester->wb->close_document();
-    data->tester->wb->close_document_finish();
-  });
+  grt::ListRef<model_Connection> tmp(data->tester->getPview()->connections());
 
-  $it("Bug: check if creating a recursive fk will create the connection", [this]() {
-    data->tester->wb->new_document();
-    data->tester->addView();
+  data->tester->flushUntil(3, std::bind(&grt::ListRef<model_Connection>::count, tmp), 1);
 
-    db_mysql_TableRef table = data->tester->addTableFigure("table", 10, 10);
+  $expect(data->tester->getPview()->connections().count()).toBe(1U);
+  data->tester->wb->close_document();
+  data->tester->wb->close_document_finish();
+});
+}
 
-    $expect(data->tester->getPview()->figures().count()).toBe(1U);
-    $expect(data->tester->getPview()->connections().count()).toBe(0U);
+TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfCreatingARecursiveFkWillCreateTheConnection) {
+  data->tester->wb->new_document();
+  data->tester->addView();
 
-    db_mysql_ColumnRef column(grt::Initialized);
-    column->owner(table);
-    column->name("id");
-    table->columns().insert(column);
+  db_mysql_TableRef table = data->tester->addTableFigure("table", 10, 10);
 
-    column = db_mysql_ColumnRef(grt::Initialized);
-    column->owner(table);
-    column->name("col2");
-    table->columns().insert(column);
+  $expect(data->tester->getPview()->figures().count()).toBe(1U);
+  $expect(data->tester->getPview()->connections().count()).toBe(0U);
 
-    table->addPrimaryKeyColumn(column);
-    // bec::TableHelper::make_primary_key(table, column, true);
+  db_mysql_ColumnRef column(grt::Initialized);
+  column->owner(table);
+  column->name("id");
+  table->columns().insert(column);
 
-    bec::TableHelper::create_foreign_key_to_table(table, table, true, true, true, true, data->tester->getRdbms(),
-                                                  grt::DictRef(true), grt::DictRef(true));
+  column = db_mysql_ColumnRef(grt::Initialized);
+  column->owner(table);
+  column->name("col2");
+  table->columns().insert(column);
 
-    $expect(table->foreignKeys().count() > 0).toBeTrue();
+  table->addPrimaryKeyColumn(column);
+  // bec::TableHelper::make_primary_key(table, column, true);
 
-    grt::ListRef<model_Connection> tmp(data->tester->getPview()->connections());
-    data->tester->flushUntil(3, std::bind(&grt::ListRef<model_Connection>::count, tmp), 1);
+  bec::TableHelper::create_foreign_key_to_table(table, table, true, true, true, true, data->tester->getRdbms(),
+                                                grt::DictRef(true), grt::DictRef(true));
 
-    $expect(data->tester->getPview()->connections().count()).toBe(1U);
+  $expect(table->foreignKeys().count() > 0).toBeTrue();
 
-    data->tester->wb->close_document();
-    data->tester->wb->close_document_finish();
-  });
+  grt::ListRef<model_Connection> tmp(data->tester->getPview()->connections());
+  data->tester->flushUntil(3, std::bind(&grt::ListRef<model_Connection>::count, tmp), 1);
 
-  $it("Bug: check if deleting an object with privileges will delete the privs too", [this]() {
-    data->tester->createNewDocument();
+  $expect(data->tester->getPview()->connections().count()).toBe(1U);
 
-    WBComponentPhysical *phys = data->tester->wb->get_component<WBComponentPhysical>();
-    $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(5U);
-    phys->add_new_role(data->tester->getPmodel());
-    phys->add_new_role(data->tester->getPmodel());
+  data->tester->wb->close_document();
+  data->tester->wb->close_document_finish();
+});
+}
 
-    db_SchemaRef schema(data->tester->getPmodel()->catalog()->schemata()[0]);
+TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfDeletingAnObjectWithPrivilegesWillDeleteThePrivsToo) {
+  data->tester->createNewDocument();
 
-    phys->add_new_db_table(schema);
-    phys->add_new_db_table(schema);
+  WBComponentPhysical *phys = data->tester->wb->get_component<WBComponentPhysical>();
+  $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(5U);
+  phys->add_new_role(data->tester->getPmodel());
+  phys->add_new_role(data->tester->getPmodel());
 
-    $expect(schema->tables().count()).toBe(2U);
-    $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(2U + 5);
+  db_SchemaRef schema(data->tester->getPmodel()->catalog()->schemata()[0]);
 
-    // add some privs to the table
-    db_RoleRef role(data->tester->getPmodel()->catalog()->roles().get(5));
-    db_TableRef table(schema->tables().get(0));
+  phys->add_new_db_table(schema);
+  phys->add_new_db_table(schema);
 
-    db_TableRef table2(schema->tables().get(1));
+  $expect(schema->tables().count()).toBe(2U);
+  $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(2U + 5);
 
-    db_RolePrivilegeRef priv(grt::Initialized);
+  // add some privs to the table
+  db_RoleRef role(data->tester->getPmodel()->catalog()->roles().get(5));
+  db_TableRef table(schema->tables().get(0));
 
-    priv->databaseObject(table);
-    priv->databaseObjectType(table.class_name());
-    priv->databaseObjectName(table->name());
-    priv->privileges().insert("CREATE");
-    priv->privileges().insert("DELETE");
+  db_TableRef table2(schema->tables().get(1));
 
-    role->privileges().insert(priv);
+  db_RolePrivilegeRef priv(grt::Initialized);
 
-    db_RolePrivilegeRef priv2(grt::Initialized);
+  priv->databaseObject(table);
+  priv->databaseObjectType(table.class_name());
+  priv->databaseObjectName(table->name());
+  priv->privileges().insert("CREATE");
+  priv->privileges().insert("DELETE");
 
-    priv2->databaseObject(table2);
-    priv2->databaseObjectType(table.class_name());
-    priv2->databaseObjectName(table->name());
-    priv2->privileges().insert("CREATE");
-    priv2->privileges().insert("INSERT");
+  role->privileges().insert(priv);
 
-    role->privileges().insert(priv2);
+  db_RolePrivilegeRef priv2(grt::Initialized);
 
-    $expect(role->privileges().count()).toBe(2U);
+  priv2->databaseObject(table2);
+  priv2->databaseObjectType(table.class_name());
+  priv2->databaseObjectName(table->name());
+  priv2->privileges().insert("CREATE");
+  priv2->privileges().insert("INSERT");
 
-    // delete the 1st table
-    phys->delete_db_object(table);
+  role->privileges().insert(priv2);
 
-    $expect(data->tester->getPmodel()->catalog()->schemata()[0]->tables().count()).toBe(1U);
-    $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(2U + 5);
+  $expect(role->privileges().count()).toBe(2U);
 
-    $expect(role->privileges().count()).toBe(1U);
+  // delete the 1st table
+  phys->delete_db_object(table);
 
-    $expect(role->privileges().get(0)->databaseObject() == table2).toBeTrue();
+  $expect(data->tester->getPmodel()->catalog()->schemata()[0]->tables().count()).toBe(1U);
+  $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(2U + 5);
 
-    data->tester->wb->close_document();
-    data->tester->wb->close_document_finish();
-  });
+  $expect(role->privileges().count()).toBe(1U);
 
-  $it("Bug: undo drop table will not reset TableFigure::table_figure_for_dbtable()", [this]() {
-    db_TableRef table;
+  $expect(role->privileges().get(0)->databaseObject() == table2).toBeTrue();
 
-    data->tester->wb->open_document("data/studio/2tables_1fk.mwb");
-    studio_DocumentRef doc = data->tester->wb->get_document();
-    $expect(doc.is_valid()).toBeTrue();
+  data->tester->wb->close_document();
+  data->tester->wb->close_document_finish();
+});
+}
 
-    data->tester->openAllDiagrams();
+TEST_F(LowLevelTestsForMySqlStudioContextTest, BugUndoDropTableWillNotResetTableFigure) {
+  db_TableRef table;
 
-    $expect(data->tester->getCatalog()->schemata().count()).toBe(1U);
+  data->tester->wb->open_document("data/studio/2tables_1fk.mwb");
+  studio_DocumentRef doc = data->tester->wb->get_document();
+  $expect(doc.is_valid()).toBeTrue();
 
-    std::list<db_DatabaseObjectRef> objects;
-    $expect(data->tester->getSchema()->tables().count()).toBe(2U);
-    objects.push_back(grt::find_named_object_in_list(data->tester->getSchema()->tables(), "table1"));
-    $expect(objects.front().is_valid()).toBeTrue();
-    $expect(*objects.front()->name()).toBe("table1");
-    $expect(doc->physicalModels()[0]->diagrams().count()).toBe(1U);
-    data->tester->interactivePlaceDbObjects(10, 150, objects);
+  data->tester->openAllDiagrams();
 
-    data->tester->flushUntil(2);
-    $expect(data->tester->getPview()->figures().count()).toBe(1U);
+  $expect(data->tester->getCatalog()->schemata().count()).toBe(1U);
 
-    grt::GRT::get()->get_undo_manager()->undo();
+  std::list<db_DatabaseObjectRef> objects;
+  $expect(data->tester->getSchema()->tables().count()).toBe(2U);
+  objects.push_back(grt::find_named_object_in_list(data->tester->getSchema()->tables(), "table1"));
+  $expect(objects.front().is_valid()).toBeTrue();
+  $expect(*objects.front()->name()).toBe("table1");
+  $expect(doc->physicalModels()[0]->diagrams().count()).toBe(1U);
+  data->tester->interactivePlaceDbObjects(10, 150, objects);
 
-    $expect(data->tester->getPview()->figures().count()).toBe(0U);
-    data->tester->wb->close_document();
-    data->tester->wb->close_document_finish();
-  });
+  data->tester->flushUntil(2);
+  $expect(data->tester->getPview()->figures().count()).toBe(1U);
+
+  grt::GRT::get()->get_undo_manager()->undo();
+
+  $expect(data->tester->getPview()->figures().count()).toBe(0U);
+  data->tester->wb->close_document();
+  data->tester->wb->close_document_finish();
+});
 }
 }

@@ -22,7 +22,6 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "casmine.h"
 #include "wb_test_helpers.h"
 #include "grt_test_helpers.h"
 

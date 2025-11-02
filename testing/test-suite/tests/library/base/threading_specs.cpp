@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -24,11 +25,11 @@
 
 #include "base/threading.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
 
-$ModuleEnvironment() {};
+
 
 // The minimum time span on which we base all other timing. Can be changed to counter
 // unpredictable thread switching timing.
@@ -74,79 +75,85 @@ gpointer thread_function2(gpointer data) {
   return NULL;
 }
 
-$describe("threading") {
-  $it("Semaphore test with cooperative semaphore (init count = 0)", [&]() {
-    base::Semaphore semaphore(0);
+class ThreadingTest : public ::testing::Test {
+protected:
+  void SetUp() override {
     counter = 0;
+  }
+};
 
+TEST_F(ThreadingTest, SemaphoreTestWithCooperativeSemaphore) {
+  base::Semaphore semaphore(0);
+  counter = 0;
+
+  GError *error = NULL;
+  GThread *thread = create_thread(thread_function1, &semaphore, &error);
+
+  EXPECT_NE(thread, nullptr);
+
+  // Thread runs. Now wait for a moment. The thread does so too (via the semaphore).
+  g_usleep(100 * BASE_TIME);
+  EXPECT_EQ(counter, 0);
+
+  // Awake the thread and go to sleep.
+  semaphore.post();
+  g_usleep(50 * BASE_TIME); // Wait here. The thread starts working but needs longer than this time.
+  semaphore.wait();         // The thread awakes us here.
+
+  EXPECT_EQ(counter, 10);
+  semaphore.post();          // Give the semaphore back so the thread can continue.
+  g_usleep(100 * BASE_TIME); // Wait a moment so that the thread actually gets CPU time.
+
+  // Wait for the thread to finish (will also release the semaphore).
+  g_thread_join(thread);
+
+  EXPECT_EQ(counter, 15);
+
+  semaphore.post();
+}
+
+TEST_F(ThreadingTest, ConcurrentSemaphoreTest) {
+  base::Semaphore semaphore(5);
+  counter = 0;
+
+  GThread *threads[7];
+  for (int i = 0; i < 7; ++i) {
     GError *error = NULL;
-    GThread *thread = create_thread(thread_function1, &semaphore, &error);
+    threads[i] = create_thread(thread_function2, &semaphore, &error);
 
-    $expect(thread).Not.toBe(nullptr);
+    EXPECT_NE(threads[i], nullptr);
+  }
 
-    // Thread runs. Now wait for a moment. The thread does so too (via the semaphore).
-    g_usleep(100 * BASE_TIME);
-    $expect(counter).toEqual(0);
+  try {
+    g_usleep(10 * BASE_TIME);
 
-    // Awake the thread and go to sleep.
+    // At this point only 5 threads can have done their job. 2 are still waiting.
+    EXPECT_EQ(counter, 5);
+
+    // The threads did not release their allocation. We do this here to see if now the other
+    // 2 threads get their share.
     semaphore.post();
-    g_usleep(50 * BASE_TIME); // Wait here. The thread starts working but needs longer than this time.
-    semaphore.wait();         // The thread awakes us here.
+    g_usleep(50 * BASE_TIME);
+    EXPECT_EQ(counter, 6);
 
-    $expect(counter).toEqual(10);
-    semaphore.post();          // Give the semaphore back so the thread can continue.
-    g_usleep(100 * BASE_TIME); // Wait a moment so that the thread actually gets CPU time.
-
-    // Wait for the thread to finish (will also release the semaphore).
-    g_thread_join(thread);
-
-    $expect(counter).toBe(15);
+    g_usleep(100 * BASE_TIME); // Nothing must happen to the counter during that wait time.
+    EXPECT_EQ(counter, 6);
 
     semaphore.post();
-  });
+    g_usleep(50 * BASE_TIME);
+    EXPECT_EQ(counter, 7);
 
-  $it("Concurrent semaphore test. 7 independent threads try to access 5 counters.", [&]() {
-    base::Semaphore semaphore(5);
-    counter = 0;
+    for (int i = 0; i < 7; ++i)
+      g_thread_join(threads[i]);
+  } catch (...) {
+    // Always wait for the threads to finish or they access invalid memory which results
+    // in a serious error that would require user interaction on Win.
+    for (int i = 0; i < 7; ++i)
+      g_thread_join(threads[i]);
 
-    GThread *threads[7];
-    for (int i = 0; i < 7; ++i) {
-      GError *error = NULL;
-      threads[i] = create_thread(thread_function2, &semaphore, &error);
-
-      $expect(threads[i]).Not.toBe(nullptr);
-    }
-
-    try {
-      g_usleep(10 * BASE_TIME);
-
-      // At this point only 5 threads can have done their job. 2 are still waiting.
-      $expect(counter).toEqual(5);
-
-      // The threads did not release their allocation. We do this here to see if now the other
-      // 2 threads get their share.
-      semaphore.post();
-      g_usleep(50 * BASE_TIME);
-      $expect(counter).toEqual(6);
-
-      g_usleep(100 * BASE_TIME); // Nothing must happen to the counter during that wait time.
-      $expect(counter).toEqual(6);
-
-      semaphore.post();
-      g_usleep(50 * BASE_TIME);
-      $expect(counter).toEqual(7);
-
-      for (int i = 0; i < 7; ++i)
-        g_thread_join(threads[i]);
-    } catch (...) {
-      // Always wait for the threads to finish or they access invalid memory which results
-      // in a serious error that would require user interaction on Win.
-      for (int i = 0; i < 7; ++i)
-        g_thread_join(threads[i]);
-
-      throw;
-    }
-  });
+    throw;
+  }
 }
 
 }
+

@@ -25,26 +25,34 @@
 #include "wb_test_helpers.h"
 #include "studio/wb_module.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
 
-$ModuleEnvironment() {};
 
-$TestData {
+
+struct TestData {
   std::unique_ptr<MySqlStudioTester> tester;
 };
 
-$describe("wb_module tests for MySqlStudio") {
-  $beforeAll([&]() {
+class WbModuleTestsForMySqlStudioTest : public ::testing::Test {
+protected:
+  TestData *data = new TestData();
+
+  void SetUp() override {
+
     data->tester.reset(new MySqlStudioTester());
     // data->tester->initializeRuntime();
-  });
 
-  $afterAll([&]() {
-  });
 
-  $it("Supported OS test", []() {
+  }
+
+  void TearDown() override {
+
+
+  }
+
+  TEST_F(WbModuleTestsForMySqlStudioTest, SupportedOsTest) {
     // As we move out of supporting old operating systems, we will need to update both this test and isOsSupported()
     // So if it's failing and it wasn't before, that's probably why - just update them.
 
@@ -160,6 +168,6 @@ $describe("wb_module tests for MySqlStudio") {
     $expect(isOsSupportedProxy("Fedora release 38 x86_64")).toBeFalse();
     $expect(isOsSupportedProxy("Fedora release 39 x86_64")).toBeTrue();
     $expect(isOsSupportedProxy("Fedora release 40 x86_64")).toBeTrue();
-  });
+
 }
 }

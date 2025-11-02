@@ -29,67 +29,70 @@
 #include "grt/clipboard.h"
 #include "base/string_utilities.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
 
-$ModuleEnvironment(casmine::GrtEnvironment) {};
+  using namespace base;
+  using namespace wb;
 
-using namespace base;
-using namespace wb;
+  static bool match_member(const grt::MetaClass::Member *member, const grt::ObjectRef &copy,
+                           const grt::ObjectRef &source) {
+    if (!grt::is_simple_type(member->type.base.type))
+      return true;
 
-static bool match_member(const grt::MetaClass::Member *member, const grt::ObjectRef &copy,
-                         const grt::ObjectRef &source) {
-  if (!grt::is_simple_type(member->type.base.type))
+    if (member->name == "guid") // it's always true, as it's unique per GrtObject
+      return true;
+    grt::ValueRef value1;
+    grt::ValueRef value2;
+
+    value1 = source.get_member(member->name);
+    value2 = copy.get_member(member->name);
+
+    $expect(value1.toString()).toBe(value2.toString());
+
     return true;
-
-  if (member->name == "guid") // it's always true, as it's unique per GrtObject
-    return true;
-  grt::ValueRef value1;
-  grt::ValueRef value2;
-
-  value1 = source.get_member(member->name);
-  value2 = copy.get_member(member->name);
-
-  $expect(value1.toString()).toBe(value2.toString());
-
-  return true;
-}
-
-static void ensure_simple_contents_match(const grt::ObjectRef &copy, const grt::ObjectRef &source) {
-  grt::MetaClass *mc = copy.get_metaclass();
-
-  mc->foreach_member(std::bind(&match_member, std::placeholders::_1, copy, source));
-}
-
-static void ensure_list_contents_copy(const grt::BaseListRef &copy, const grt::BaseListRef &source) {
-  $expect(copy.valueptr() != source.valueptr()).toBeTrue();
-
-  $expect(copy.count()).toBe(source.count());
-
-  for (size_t c = copy.count(), i = 0; i < c; i++) {
-    $expect(copy[i].valueptr() != source[i].valueptr()).toBeTrue();
-
-    grt::ObjectRef copyRef = grt::ObjectRef::cast_from(copy[i]);
-    grt::ObjectRef sourceRef = grt::ObjectRef::cast_from(source[i]);
-    ensure_simple_contents_match(grt::ObjectRef(copyRef), grt::ObjectRef(sourceRef));
   }
-}
 
-$TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
-};
+  static void ensure_simple_contents_match(const grt::ObjectRef &copy, const grt::ObjectRef &source) {
+    grt::MetaClass *mc = copy.get_metaclass();
 
-$describe("Copy/paste related tests") {
-  $beforeAll([&]() {
-    data->tester.reset(new MySqlStudioTester());
-    data->tester->initializeRuntime();
-  });
+    mc->foreach_member(std::bind(&match_member, std::placeholders::_1, copy, source));
+  }
 
-  $afterAll([&]() {
-  });
+  static void ensure_list_contents_copy(const grt::BaseListRef &copy, const grt::BaseListRef &source) {
+    $expect(copy.valueptr() != source.valueptr()).toBeTrue();
 
-  $it("Copy to clipboard", [this]() {
+    $expect(copy.count()).toBe(source.count());
+
+    for (size_t c = copy.count(), i = 0; i < c; i++) {
+      $expect(copy[i].valueptr() != source[i].valueptr()).toBeTrue();
+
+      grt::ObjectRef copyRef = grt::ObjectRef::cast_from(copy[i]);
+      grt::ObjectRef sourceRef = grt::ObjectRef::cast_from(source[i]);
+      ensure_simple_contents_match(grt::ObjectRef(copyRef), grt::ObjectRef(sourceRef));
+    }
+  }
+
+  struct TestData {
+    std::unique_ptr<MySqlStudioTester> tester;
+  };
+
+  class CopyPasteRelatedTestsTest : public ::testing::Test {
+  protected:
+    TestData *data = new TestData();
+
+    void SetUp() override {
+      data->tester.reset(new MySqlStudioTester());
+      data->tester->initializeRuntime();
+    }
+
+    void TearDown() override {
+      delete data;
+    }
+  };
+
+  TEST_F(CopyPasteRelatedTestsTest, CopyToClipboard) {
     data->tester->wb->open_document("data/studio/all_objects.mwb");
 
     $expect(data->tester->getPview()->figures().count()).toBe(6U);
@@ -101,7 +104,7 @@ $describe("Copy/paste related tests") {
     $expect(source.is_valid()).toBeTrue();
 
     wb::WBComponent *compo = data->tester->wb->get_component_handling(source);
-    $expect(compo != 0).toBeTrue();
+    EXPECT_TRUE(compo != 0);
 
     grt::CopyContext context;
 
@@ -122,9 +125,9 @@ $describe("Copy/paste related tests") {
 
     data->tester->wb->close_document();
     data->tester->wb->close_document_finish();
-  });
+  }
 
-  $it("Make copy of table", [this]() {
+  TEST_F(CopyPasteRelatedTestsTest, MakeCopyOfTable) {
     // create a table with PK and make sure that a copy will contain
     // proper refs to the copied objects
     // data->tester->create_new_document();
@@ -161,13 +164,12 @@ $describe("Copy/paste related tests") {
     $expect(copy->indices().get(0).valueptr() == copy->primaryKey().valueptr()).toBeTrue();
 
     $expect(*copy->columns().get(0)->name()).toBe("col0");
-    $expect( copy->columns().get(0)->owner() == copy).toBeTrue();
+    $expect(copy->columns().get(0)->owner() == copy).toBeTrue();
 
-    $expect(copy->columns().get(0).valueptr()).toBe(copy->primaryKey()->columns().get(0)->referencedColumn().valueptr());
+    $expect(copy->columns().get(0).valueptr())
+      .toBe(copy->primaryKey()->columns().get(0)->referencedColumn().valueptr());
 
     data->tester->wb->close_document();
     data->tester->wb->close_document_finish();
-  });
-}
-
+  }
 }

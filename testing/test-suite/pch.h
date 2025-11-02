@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include "gtest/gtest.h"
 #ifdef _WIN64
 typedef __int64 ssize_t;
 #else
@@ -32,56 +33,49 @@ typedef int ssize_t;
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
+#define RAPIDJSON_HAS_STDSTRING 1
 
 #include <windows.h>
 #include <shellapi.h>
-#include <psapi.h>
-#include <io.h>
 
-#include <type_traits>
+#include <stdexcept>
 #include <functional>
-#include <string>
-#include <variant>
-#include <iostream>
-#include <sstream>
-#include <chrono>
-#include <stdio.h>
-#include <fstream>
-#include <memory>
-#include <regex>
-#include <thread>
-#include <atomic>
-#include <mutex>
-#include <any>
-#include <optional>
-#include <cmath>
-#include <bitset>
-
-#include <array>
-#include <vector>
-#include <list>
-#include <set>
-#include <unordered_set>
-#include <map>
-#include <unordered_map>
-#include <deque>
-#include <forward_list>
-#include <stack>
-#include <queue>
-
-#include <random>
+#include <locale>
 #include <algorithm>
-#include <codecvt>
-#include <filesystem>
-
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <errno.h>
+#include <string.h>
+#include <iostream>
+#include <wchar.h>
+#include <codecvt>
+#include <fcntl.h>
+#include <fstream>
+#include <sstream>
+#include <unordered_set>
+#include <list>
+#include <inttypes.h>
+#include <string>
+#include <map>
+#include <vector>
+#include <sstream>
+#include <sddl.h>
+#include <stdio.h>
+#include <winevt.h>
+#include <iterator>
+#include <cctype>
+#include <memory>
+#include <condition_variable>
+
+#include <VersionHelpers.h>
+
+//#include <boost/optional.hpp>
+//#include <boost/cstdint.hpp>
 
 #include <glib.h>
-#include "cairo/cairo.h"
-
-#include "grts/structs.db.mgmt.h"
-#include "grts/structs.db.query.h"
-
-/* ERROR is defined in wingdi.h */
-#undef ERROR
+#include <glib/gstdio.h>
+#include <glib/gpattern.h>
+#include <iosfwd>
+#include <fstream>
+#include <iomanip>
+#include <cairo/cairo.h>

@@ -29,102 +29,108 @@
 #include "backend/db_mysql_sql_export.h"
 
 #include "wb_test_helpers.h"
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 using namespace grt;
 
 namespace {
 
-$ModuleEnvironment() {};
+  struct TestData {
+    std::unique_ptr<MySqlStudioTester> tester;
+    SqlFacade::Ref sql_facade;
+    db_mgmt_RdbmsRef rdbms;
+    DictRef options;
 
-$TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
-  SqlFacade::Ref sql_facade;
-  db_mgmt_RdbmsRef rdbms;
-  DictRef options;
+    std::string dataDir;
 
-  std::string dataDir;
+    void doForwardEngineering(std::string &modelfile, std::string &expectedFileName,
+                              std::map<std::string, bool> &fwd_opts) {
+      EXPECT_TRUE(base::file_exists(modelfile)) << "Model file not found";
 
-  void doForwardEngineering(std::string &modelfile, std::string &expectedFileName, std::map<std::string, bool> &fwd_opts) {
-    $expect(base::file_exists(modelfile)).toBeTrue("Model file not found");
+      tester->wb->open_document(modelfile);
+      tester->openAllDiagrams();
+      tester->activateOverview();
 
-    tester->wb->open_document(modelfile);
-    tester->openAllDiagrams();
-    tester->activateOverview();
+      DbMySQLSQLExport exp(db_mysql_CatalogRef::cast_from(tester->getCatalog()));
 
-    DbMySQLSQLExport exp(db_mysql_CatalogRef::cast_from(tester->getCatalog()));
+      ValueRef valRef = grt::GRT::get()->get("/wb/doc/physicalModels/0/catalog/schemata/0");
 
-    ValueRef valRef = grt::GRT::get()->get("/wb/doc/physicalModels/0/catalog/schemata/0");
+      db_mysql_SchemaRef schemaRef = db_mysql_SchemaRef::cast_from(valRef);
+      EXPECT_TRUE(schemaRef.is_valid());
 
-    db_mysql_SchemaRef schemaRef = db_mysql_SchemaRef::cast_from(valRef);
-    $expect(schemaRef.is_valid()).toBeTrue();
+      bec::GrtStringListModel *users_model;
+      bec::GrtStringListModel *users_imodel;
+      bec::GrtStringListModel *tables_model;
+      bec::GrtStringListModel *tables_imodel;
+      bec::GrtStringListModel *views_model;
+      bec::GrtStringListModel *views_imodel;
+      bec::GrtStringListModel *routines_model;
+      bec::GrtStringListModel *routines_imodel;
+      bec::GrtStringListModel *triggers_model;
+      bec::GrtStringListModel *triggers_imodel;
 
-    bec::GrtStringListModel *users_model;
-    bec::GrtStringListModel *users_imodel;
-    bec::GrtStringListModel *tables_model;
-    bec::GrtStringListModel *tables_imodel;
-    bec::GrtStringListModel *views_model;
-    bec::GrtStringListModel *views_imodel;
-    bec::GrtStringListModel *routines_model;
-    bec::GrtStringListModel *routines_imodel;
-    bec::GrtStringListModel *triggers_model;
-    bec::GrtStringListModel *triggers_imodel;
+      exp.setup_grt_string_list_models_from_catalog(&users_model, &users_imodel, &tables_model, &tables_imodel,
+                                                    &views_model, &views_imodel, &routines_model, &routines_imodel,
+                                                    &triggers_model, &triggers_imodel);
 
-    exp.setup_grt_string_list_models_from_catalog(&users_model, &users_imodel, &tables_model, &tables_imodel,
-                                                  &views_model, &views_imodel, &routines_model, &routines_imodel,
-                                                  &triggers_model, &triggers_imodel);
+      std::map<std::string, bool>::iterator it;
+      for (it = fwd_opts.begin(); it != fwd_opts.end(); ++it)
+        exp.set_option(it->first, it->second);
 
-    std::map<std::string, bool>::iterator it;
-    for (it = fwd_opts.begin(); it != fwd_opts.end(); ++it)
-      exp.set_option(it->first, it->second);
+      exp.start_export(true);
 
-    exp.start_export(true);
+      std::string output = exp.export_sql_script();
+      EXPECT_EQ(base::getTextFileContent(expectedFileName), output);
 
-    std::string output = exp.export_sql_script();
-    $expect(output).toEqualContentOfFile(expectedFileName);
+      tester->wb->close_document();
+      tester->wb->close_document_finish();
+    }
+  };
 
-    tester->wb->close_document();
-    tester->wb->close_document_finish();
-  }
-};
+  class ForwardEngineerTest : public ::testing::Test {
+  protected:
+    TestData *data = new TestData();
 
-$describe("Forward Engineer") {
+    void SetUp() override {
+      data->dataDir = testing::get_tmp_dir();
+      data->tester.reset(new MySqlStudioTester());
+    }
 
-  $beforeAll([this]() {
-    data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
-    data->tester.reset(new MySqlStudioTester());
-  });
+    void TearDown() override {
+      delete data;
+    }
+  };
 
-  $it("General test for forward engineer of sakila database", [this]() {
-    std::map<std::string, bool> opts;
-    std::string modelfile = data->dataDir + "/forward_engineer/sakila.mwb";
-    std::string expectedFileName = data->dataDir + "/forward_engineer/sakila.expected.sql";
+TEST_F(ForwardEngineerTest, GeneralTestForForwardEngineerOfSakilaDatabase) {
+  std::map<std::string, bool> opts;
+  std::string modelfile = data->dataDir + "/forward_engineer/sakila.mwb";
+  std::string expectedFileName = data->dataDir + "/forward_engineer/sakila.expected.sql";
 
-    opts["GenerateDrops"] = true;
-    opts["GenerateSchemaDrops"] = true;
-    opts["SkipForeignKeys"] = true;
-    opts["SkipFKIndexes"] = true;
-    opts["GenerateWarnings"] = true;
-    opts["GenerateCreateIndex"] = true;
-    opts["NoUsersJustPrivileges"] = false;
-    opts["NoViewPlaceholders"] = false;
-    opts["GenerateInserts"] = false;
-    opts["NoFKForInserts"] = false;
-    opts["TriggersAfterInserts"] = true;
-    opts["OmitSchemata"] = false;
-    opts["GenerateUse"] = true;
+  opts["GenerateDrops"] = true;
+  opts["GenerateSchemaDrops"] = true;
+  opts["SkipForeignKeys"] = true;
+  opts["SkipFKIndexes"] = true;
+  opts["GenerateWarnings"] = true;
+  opts["GenerateCreateIndex"] = true;
+  opts["NoUsersJustPrivileges"] = false;
+  opts["NoViewPlaceholders"] = false;
+  opts["GenerateInserts"] = false;
+  opts["NoFKForInserts"] = false;
+  opts["TriggersAfterInserts"] = true;
+  opts["OmitSchemata"] = false;
+  opts["GenerateUse"] = true;
 
-    opts["TablesAreSelected"] = true;
-    opts["TriggersAreSelected"] = true;
-    opts["RoutinesAreSelected"] = true;
-    opts["ViewsAreSelected"] = true;
-    opts["UsersAreSelected"] = true;
-    opts["GenerateDocumentProperties"] = false;
+  opts["TablesAreSelected"] = true;
+  opts["TriggersAreSelected"] = true;
+  opts["RoutinesAreSelected"] = true;
+  opts["ViewsAreSelected"] = true;
+  opts["UsersAreSelected"] = true;
+  opts["GenerateDocumentProperties"] = false;
 
-    data->doForwardEngineering(modelfile, expectedFileName, opts);
-  });
+  data->doForwardEngineering(modelfile, expectedFileName, opts);
+}
 
-  $it("Forward engineering of routines with ommitSchemata enabled", [this]() {
+  TEST_F(ForwardEngineerTest, ForwardEngineeringOfRoutinesWithOmmitSchemataEnabled1) {
     std::map<std::string, bool> opts;
     std::string modelfile = data->dataDir + "/forward_engineer/omit_schema_routine.mwb";
     std::string expectedFileName = data->dataDir + "/forward_engineer/omit_schema_routine.expected.sql";
@@ -151,9 +157,9 @@ $describe("Forward Engineer") {
     opts["GenerateDocumentProperties"] = false;
 
     data->doForwardEngineering(modelfile, expectedFileName, opts);
-  });
+  }
 
-  $it("Forward engineering of routines with ommitSchemata enabled", [this]() {
+  TEST_F(ForwardEngineerTest, ForwardEngineeringOfRoutinesWithOmmitSchemataEnabled2) {
     std::map<std::string, bool> opts;
     std::string modelfile = data->dataDir + "/forward_engineer/schema_rename.mwb";
     std::string expectedFileName = data->dataDir + "/forward_engineer/schema_rename.expected.sql";
@@ -180,8 +186,5 @@ $describe("Forward Engineer") {
     opts["GenerateDocumentProperties"] = false;
 
     data->doForwardEngineering(modelfile, expectedFileName, opts);
-  });
-
-}
-
+  }
 }

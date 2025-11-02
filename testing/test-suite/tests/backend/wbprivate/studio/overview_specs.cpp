@@ -31,7 +31,7 @@
 #include "grts/structs.studio.logical.h"
 #include "grts/structs.studio.physical.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
 
@@ -39,45 +39,48 @@ using namespace grt;
 using namespace wb;
 using namespace bec;
 
-$ModuleEnvironment() {};
-
 static void ensure_files_equal(const std::string &test, const char *file, const char *reffile) {
   std::string line, refline;
   std::ifstream ref(reffile);
   std::ifstream f(file);
 
-  $expect(ref.is_open()).toBeTrue();
-  $expect(f.is_open()).toBeTrue();
+  EXPECT_TRUE(ref.is_open());
+  EXPECT_TRUE(f.is_open());
 
   while (!ref.eof() && !f.eof()) {
     getline(ref, refline);
     getline(f, line);
 
-    $expect(line).toBe(refline);
+    EXPECT_EQ(refline, line);
   }
 
-  $expect(f.eof() && ref.eof()).toBeTrue();
+  EXPECT_TRUE(f.eof() && ref.eof());
 }
 
-$TestData {
+struct TestData {
   std::unique_ptr<MySqlStudioTester> tester;
 };
 
-$describe("WB overview") {
-  $beforeAll([&]() {
+class WBOverviewTest : public ::testing::Test {
+protected:
+  TestData *data = new TestData();
+
+  void SetUp() override {
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
-  });
+  }
 
-  $afterAll([&]() {
-  });
+  void TearDown() override {
+    delete data;
+  }
+};
 
-  $it("Open document", [this]() {
-    bool flag = data->tester->wb->open_document("data/studio/test_model1.mwb");
-    $expect(flag).toBeTrue();
-  });
+TEST_F(WBOverviewTest, OpenDocument) {
+  bool flag = data->tester->wb->open_document("data/studio/test_model1.mwb");
+  EXPECT_TRUE(flag);
+}
 
-  $it("Dump tree model", [&]() {
+  TEST_F(WBOverviewTest, DumpTreeModel) {
     std::vector<ssize_t> columns;
 
     columns.push_back(wb::OverviewBE::Label);
@@ -85,10 +88,9 @@ $describe("WB overview") {
     columns.push_back(wb::OverviewBE::Expanded);
     columns.push_back(wb::OverviewBE::Height);
     columns.push_back(wb::OverviewBE::DisplayMode);
-    casmine::dumpTreeModel("output/overview_test2.txt", (TreeModel*)wb::WBContextUI::get()->get_physical_overview(), columns);
+    casmine::dumpTreeModel("output/overview_test2.txt", (TreeModel *)wb::WBContextUI::get()->get_physical_overview(),
+                           columns);
 
     ensure_files_equal("initial overview state ", "output/overview_test2.txt", "data/be/overview_test2.txt");
-  });
-}
-
+  }
 }

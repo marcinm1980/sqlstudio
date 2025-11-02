@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
 #include "grt.h"
@@ -31,30 +31,35 @@
 
 using namespace grt;
 using namespace bec;
-using namespace casmine;
 
 namespace {
 
-$ModuleEnvironment() {};
+  struct TestData {
+    std::unique_ptr<MySqlStudioTester> tester;
+  };
 
-$TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
-};
+class MySQLTableEditorTest : public ::testing::Test {
+protected:
+  TestData *data = new TestData();
 
-$describe("MySQL Table Editor") {
-  $beforeAll([this]() {
+  void SetUp() override {
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
     data->tester->flushUntil(0.5);
     data->tester->createNewDocument();
-  });
+  }
 
-  $it("Valid RDBMS after renewing document", [this]() {
-    data->tester->renewDocument();
-    $expect(data->tester->getRdbms().is_valid()).toBeTrue("db_mgmt_RdbmsRef initialization");
-  });
+  void TearDown() override {
+    delete data;
+  }
+};
 
-  $it("Trigger parsing", [this]() {
+TEST_F(MySQLTableEditorTest, ValidRDBMSAfterRenewingDocument) {
+  data->tester->renewDocument();
+  EXPECT_TRUE(data->tester->getRdbms().is_valid()) << "db_mgmt_RdbmsRef initialization";
+  }
+
+  TEST_F(MySQLTableEditorTest, TriggerParsing) {
     // Note: this test relied on content of a code editor (which is checked when setting trigger sql).
     //       However in tests we only have a stub implementation, so this doesn't work.
     //       The test shouldn't be about parsing trigger sql, as this is a low level parser test.
@@ -71,16 +76,16 @@ $describe("MySQL Table Editor") {
     t.add_trigger("before", "delete");
     t.add_trigger("after", "update");
 
-    $expect(model.table->triggers().count()).toEqual(3U);
+    EXPECT_EQ(3U, model.table->triggers().count());
     std::vector<std::string> names = { "film_after_delete", "film_before_delete", "film_after_update" };
 
     for (size_t i = 0, size = model.table->triggers().count(); i < size; i++) {
       std::string name = model.table->triggers().get(i)->name();
-      $expect(name).toEqual(names[i]);
+      EXPECT_EQ(names[i], name);
     }
-  });
+  }
 
-  $it("Add columns/indices/foreign keys by setting name of placeholder items", [this]() {
+  TEST_F(MySQLTableEditorTest, AddColumnsIndicesForeignKeysBySettingNameOfPlaceholderItems) {
     data->tester->renewDocument();
     SyntheticMySQLModel model(data->tester.get());
 
@@ -92,21 +97,19 @@ $describe("MySQL Table Editor") {
 
     MySQLTableEditorBE editor(table);
 
-    $expect(table->columns().count()).toEqual(0U, "add column");
+    EXPECT_EQ(0U, table->columns().count()) << "add column";
     ((bec::TableColumnsListBE *)editor.get_columns())->set_field(0, 0, "newcol");
     ((bec::TableColumnsListBE *)editor.get_columns())->set_field(0, 1, "int(11)");
-    $expect(table->columns().count()).toEqual(1U, "add column");
+    EXPECT_EQ(1U, table->columns().count()) << "add column";
 
     editor.get_indexes()->select_index(0);
-    $expect(table->indices().count()).toEqual(0U, "add index");
+    EXPECT_EQ(0U, table->indices().count()) << "add index";
     editor.get_indexes()->set_field(0, 0, "index");
-    $expect(table->indices().count()).toEqual(1U, "add index");
+    EXPECT_EQ(1U, table->indices().count()) << "add index";
 
     editor.get_fks()->select_fk(0);
-    $expect(table->foreignKeys().count()).toEqual(0U, "add fk");
+    EXPECT_EQ(0U, table->foreignKeys().count()) << "add fk";
     editor.get_fks()->set_field(0, 0, "newfk");
-    $expect(table->foreignKeys().count()).toEqual(1U, "add fk");
-  });
-};
-
+    EXPECT_EQ(1U, table->foreignKeys().count()) << "add fk";
+  }
 }

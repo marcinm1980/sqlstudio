@@ -32,7 +32,6 @@
 
 #include "stub/stub_utilities.h"
 
-#include "casmine.h"
 #include "wb_test_helpers.h"
 #include "grt_test_helpers.h"
 

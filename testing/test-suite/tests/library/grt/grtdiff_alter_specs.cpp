@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -22,7 +23,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 #include "wb_connection_helpers.h"
 
@@ -44,7 +45,7 @@ using namespace parsers;
 #define TRIGGER_TESTS 1
 #define CREATE_TESTS 1
 
-$ModuleEnvironment() {};
+
 
 struct TestEntry {
   std::string description;
@@ -54,7 +55,15 @@ struct TestEntry {
   std::string mod;
 };
 
-$TestData {
+db_mysql_CatalogRef createEmptyCatalog() {
+  db_mysql_CatalogRef catalog(grt::Initialized);
+  catalog->version(bec::parse_version("5.7.10"));
+  catalog->name("mydb");
+  return catalog;
+}
+
+class GRTDiffAlterTest : public ::testing::Test {
+protected:
   std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref sqlParser;
   DbMySQLImpl *diffsqlModule;
@@ -112,7 +121,7 @@ $TestData {
       db_mysql_CatalogRef mod_cat = createEmptyCatalog();
 
       alter_change = createDiff(entry, org_cat, mod_cat);
-      $expect(alter_change).toBeValid("Empty alter change");
+      EXPECT_NE(nullptr, alter_change) << "Empty alter change";
 
       // 1. generate alter
       grt::StringListRef alter_map(grt::Initialized);
@@ -174,14 +183,14 @@ $TestData {
         // We cannot check the changeset to determine if there are no changes, because some changes from the diff
         // don't cause a script to be generated (like foreign keys being reordered).
         // So, it's better to check whether there's any actual alteration.
-        $expect(alter_map.count() + alter_object_list.count()).toEqual(0U, "Unexpected differences found for step \"" + entry.description + "\":");
+        EXPECT_EQ(0U, alter_map.count() + alter_object_list.count()) << "Unexpected differences found for step \"" + entry.description + "\":";
         if (alter_map.count() > 0 || alter_object_list.count() > 0) {
           empty_change->dump_log(0);
           std::string script = options.get_string("OutputScript");
           std::cout << "Output:\n" << script;
         }
       }  else
-        $success();
+        // Success;
 
       // 5. Generate diff report
       {
@@ -196,13 +205,13 @@ $TestData {
         std::string report = diffsqlModule->generateReport(org_cat, options, alter_change);
         std::string reportFile = dataDir + "/reporting/Basic_Text.tpl/reports/testres_longname" + std::to_string(resultIndex) + ".txt";
         std::string expected = base::getTextFileContent(reportFile);
-        $expect(report).toEqual(expected);
+        EXPECT_EQ(report, expected);
 
         options.set("OmitSchemas", grt::IntegerRef(0));
         report = diffsqlModule->generateReport(org_cat, options, alter_change);
         reportFile = dataDir + "/reporting/Basic_Text.tpl/reports/testres_shortname" + std::to_string(resultIndex) + ".txt";
         expected = base::getTextFileContent(reportFile);
-        $expect(report).toEqual(expected);
+        EXPECT_EQ(report, expected);
       }
 
       tester->wb->close_document();
@@ -212,51 +221,47 @@ $TestData {
     }
   }
 
-};
+  void SetUp() override {
+    dataDir = casmine::CasmineContext::get()->tmpDataDir();
 
-$describe("GRT: diff alter") {
-  $beforeAll([this]() {
-    data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
+    tester.reset(new MySqlStudioTester());
+    tester->initializeRuntime();
 
-    data->tester.reset(new MySqlStudioTester());
-    data->tester->initializeRuntime();
-
-    data->omf.dontdiff_mask = 3;
-    data->diffsqlModule = grt::GRT::get()->get_native_module<DbMySQLImpl>();
-    $expect(data->diffsqlModule).Not.toBeNull("DiffSQLGen module initialization");
+    omf.dontdiff_mask = 3;
+    diffsqlModule = grt::GRT::get()->get_native_module<DbMySQLImpl>();
+    EXPECT_NE(nullptr, diffsqlModule) << "DiffSQLGen module initialization";
 
     std::string target_version = bec::GRTManager::get()->get_app_option_string("DefaultTargetMySQLVersion");
     if (target_version.empty())
       target_version = "5.5.49";
-    data->tester->getRdbms()->version(parse_version(target_version));
+    tester->getRdbms()->version(parse_version(target_version));
 
     // Init database connection + clean up any left over.
-    data->connection = createConnectionForImport();
-    $expect(data->connection.get()).Not.toBeNull("Connection invalid");
-    std::unique_ptr<sql::Statement> stmt(data->connection->createStatement());
-    data->tester->executeScript(stmt.get(), "DROP DATABASE IF EXISTS grtdiff_alter_test; DROP DATABASE IF EXISTS grtdiff_alter_test2;");
+    connection = createConnectionForImport();
+    EXPECT_NE(nullptr, connection.get()) << "Connection invalid";
+    std::unique_ptr<sql::Statement> stmt(connection->createStatement());
+    tester->executeScript(stmt.get(), "DROP DATABASE IF EXISTS grtdiff_alter_test; DROP DATABASE IF EXISTS grtdiff_alter_test2;");
 
-    data->sqlParser = SqlFacade::instance_for_rdbms_name("Mysql");
-    $expect(data->sqlParser).Not.toBeNull("failed to get sqlparser module");
+    sqlParser = SqlFacade::instance_for_rdbms_name("Mysql");
+    EXPECT_NE(nullptr, sqlParser) << "failed to get sqlparser module";
 
-    data->services = MySQLParserServices::get();
-    data->context = data->services->createParserContext(data->tester->getRdbms()->characterSets(),
-      data->tester->getRdbms()->version(), "", false);
+    services = MySQLParserServices::get();
+    context = services->createParserContext(tester->getRdbms()->characterSets(),
+      tester->getRdbms()->version(), "", false);
 
-    data->normalizer.init_omf(&data->omf);
-  });
+    normalizer.init_omf(&omf);
 
-  $beforeEach([this]() {
-    std::unique_ptr<sql::Statement> stmt(data->connection->createStatement());
-    data->tester->executeScript(stmt.get(), "CREATE DATABASE grtdiff_alter_test DEFAULT CHARACTER SET latin1");
-  });
+    std::unique_ptr<sql::Statement> stmt2(connection->createStatement());
+    tester->executeScript(stmt2.get(), "CREATE DATABASE grtdiff_alter_test DEFAULT CHARACTER SET latin1");
+  }
 
-  $afterEach([this]() {
-    std::unique_ptr<sql::Statement> stmt(data->connection->createStatement());
-    data->tester->executeScript(stmt.get(), "DROP DATABASE IF EXISTS grtdiff_alter_test; DROP DATABASE IF EXISTS grtdiff_alter_test2;");
-  });
+  void TearDown() override {
+    std::unique_ptr<sql::Statement> stmt(connection->createStatement());
+    tester->executeScript(stmt.get(), "DROP DATABASE IF EXISTS grtdiff_alter_test; DROP DATABASE IF EXISTS grtdiff_alter_test2;");
+  }
+};
 
-  $it("CREATE and DROP schema", [this]() {
+TEST_F(GRTDiffAlterTest, CreateAndDropSchema) {
     std::vector<TestEntry> entries = {
       { "Create database", "grtdiff_alter_test", "DROP DATABASE IF EXISTS grtdiff_alter_test2;",
         "CREATE DATABASE IF NOT EXISTS grtdiff_alter_test;",
@@ -268,10 +273,10 @@ $describe("GRT: diff alter") {
         "CREATE DATABASE IF NOT EXISTS grtdiff_alter_test;" },
     };
 
-    data->runTestsForEntries(entries, 0);
-  });
+    runTestsForEntries(entries, 0);
+}
 
-  $it("ALTER TABLE (ADD COLUMN)", [this]() {
+TEST_F(GRTDiffAlterTest, AlterTableAddColumn) {
     std::vector<TestEntry> entries = {
       { "C C C+", "grtdiff_alter_test.t1", "DROP TABLE IF EXISTS grtdiff_alter_test.t1",
         "CREATE TABLE grtdiff_alter_test.t1 (`id` int(11) DEFAULT NULL, `id2` int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT "
@@ -320,10 +325,10 @@ $describe("GRT: diff alter") {
         "DEFAULT NULL, t5 TEXT, t6 TEXT) ENGINE=InnoDB DEFAULT CHARSET=latin1" },
     };
 
-    data->runTestsForEntries(entries, 2);
-  });
+    runTestsForEntries(entries, 2);
+}
 
-  $it("ALTER TABLE (DROP COLUMN)", [this]() {
+TEST_F(GRTDiffAlterTest, AlterTableDropColumn) {
     std::vector<TestEntry> entries = {
       { "C C C-", "grtdiff_alter_test.t1", "DROP TABLE IF EXISTS grtdiff_alter_test.t1",
         "CREATE TABLE grtdiff_alter_test.t1 (`id` int(11) DEFAULT NULL, `id2` int(11) DEFAULT NULL, t TEXT) ENGINE=InnoDB "
@@ -372,10 +377,10 @@ $describe("GRT: diff alter") {
         "CHARSET=latin1" },
     };
 
-    data->runTestsForEntries(entries, 11);
-  });
+    runTestsForEntries(entries, 11);
+}
 
-  $it("ALTER TABLE (ADD/DROP COLUMN mix)", [this]() {
+TEST_F(GRTDiffAlterTest, AlterTableAddDropColumnMix) {
     std::vector<TestEntry> entries = {
       { "C- C- C+ C C", "grtdiff_alter_test.t1", "DROP TABLE IF EXISTS grtdiff_alter_test.t1",
         "CREATE TABLE grtdiff_alter_test.t1 (t TEXT, t2 TEXT, `id` int(11) DEFAULT NULL, `id2` int(11) DEFAULT NULL) "
@@ -449,10 +454,10 @@ $describe("GRT: diff alter") {
         "DEFAULT CHARSET=latin1" },
     };
 
-    data->runTestsForEntries(entries, 20);
-  });
+    runTestsForEntries(entries, 20);
+}
 
-  $it("ALTER TABLE (Column position + content change)", [this]() {
+TEST_F(GRTDiffAlterTest, AlterTableColumnPositionAndContentChange) {
     std::vector<TestEntry> entries = {
       { "C> C C", "grtdiff_alter_test.t1", "DROP TABLE IF EXISTS grtdiff_alter_test.t1",
         "CREATE TABLE grtdiff_alter_test.t1 (t TEXT, `id` int(11) DEFAULT NULL, `id2` int(11) DEFAULT NULL) ENGINE=InnoDB "
@@ -880,10 +885,10 @@ $describe("GRT: diff alter") {
         "ENGINE = InnoDB DEFAULT CHARSET=latin1;" },
     };
 
-    data->runTestsForEntries(entries, 34);
-  });
+    runTestsForEntries(entries, 34);
+}
 
-  $it("Table partitions", [this]() {
+TEST_F(GRTDiffAlterTest, TablePartitions) {
     std::vector<TestEntry> entries = {
       { "Add HASH partitioning", "grtdiff_alter_test.t1", "DROP TABLE IF EXISTS grtdiff_alter_test.t1;",
         "CREATE TABLE grtdiff_alter_test.t1 (`id` int(11) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=latin1",
@@ -1042,10 +1047,10 @@ $describe("GRT: diff alter") {
         " PARTITION p4 VALUES IN (6,12,18))",
       },    };
 
-    data->runTestsForEntries(entries, 90);
-  });
+    runTestsForEntries(entries, 90);
+}
 
-  $it("Views", [this]() {
+TEST_F(GRTDiffAlterTest, Views) {
     std::vector<TestEntry> entries = {
       { "Create view", "grtdiff_alter_test.v1", "DROP VIEW IF EXISTS grtdiff_alter_test.v1;",
         "CREATE DATABASE IF NOT EXISTS grtdiff_alter_test;",
@@ -1069,10 +1074,10 @@ $describe("GRT: diff alter") {
         "CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `grtdiff_alter_test`.`v2` AS "
         "select 1 AS `1`;" },    };
 
-    data->runTestsForEntries(entries, 103);
-  });
+    runTestsForEntries(entries, 103);
+}
 
-  $it("Routines", [this]() {
+TEST_F(GRTDiffAlterTest, Routines) {
     std::vector<TestEntry> entries = {
       { "Create procedure", "grtdiff_alter_test.p1", "DROP PROCEDURE IF EXISTS grtdiff_alter_test.p1;",
         "CREATE DATABASE IF NOT EXISTS grtdiff_alter_test;",
@@ -1089,10 +1094,10 @@ $describe("GRT: diff alter") {
         "END//" },
     };
 
-    data->runTestsForEntries(entries, 107);
-  });
+    runTestsForEntries(entries, 107);
+}
 
-  $it("Triggers", [this]() {
+TEST_F(GRTDiffAlterTest, Triggers) {
     std::vector<TestEntry> entries = {
       { "Create trigger", "grtdiff_alter_test.tr1",
 
@@ -1129,10 +1134,10 @@ $describe("GRT: diff alter") {
         "`grtdiff_alter_test`.`t1`\nFOR EACH ROW\nBEGIN DELETE FROM t2; END//" },
     };
 
-    data->runTestsForEntries(entries, 110);
-  });
+    runTestsForEntries(entries, 110);
+}
 
-  $it("More complex table creates", [this]() {
+TEST_F(GRTDiffAlterTest, MoreComplexTableCreates) {
     std::vector<TestEntry> entries = {
       { "Create test 1", "grtdiff_alter_test.tr1", "drop table if exists grtdiff_alter_test.create_test_t1;", "",
         "CREATE TABLE grtdiff_alter_test.create_test_t1 ("
@@ -1184,10 +1189,10 @@ $describe("GRT: diff alter") {
         "(`id`) ON DELETE CASCADE ON UPDATE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=latin1;" },
     };
 
-    data->runTestsForEntries(entries, 113);
-  });
+    runTestsForEntries(entries, 113);
+}
 
-  $it("Table charsets", [this]() {
+TEST_F(GRTDiffAlterTest, TableCharsets) {
     std::vector<TestEntry> entries = {
       { "Change CHARSET attribute to server default", "grtdiff_alter_test.t1", "DROP TABLE IF EXISTS grtdiff_alter_test.t1;",
         "CREATE TABLE grtdiff_alter_test.t1 (`id` int(11) NOT NULL DEFAULT '0') ENGINE=MyISAM DEFAULT CHARSET=latin2",
@@ -1199,10 +1204,10 @@ $describe("GRT: diff alter") {
         "CREATE TABLE grtdiff_alter_test.t1 (`id` int(11) NOT NULL DEFAULT '0') ENGINE=MyISAM DEFAULT CHARSET=latin1" },
     };
 
-    data->runTestsForEntries(entries, 117);
-  });
+    runTestsForEntries(entries, 117);
+}
 
-  $it("Column insertion w/o differences", [this]() {
+TEST_F(GRTDiffAlterTest, ColumnInsertionWithoutDifferences) {
     std::vector<TestEntry> testEntries = {
       { "BINARY flag columns", "grtiff_alter_test.t1", "DROP TABLE IF EXISTS grtdiff_alter_test.t1;",
         "CREATE TABLE grtdiff_alter_test.t1 (`a` varchar(20) BINARY) ENGINE=InnoDB DEFAULT CHARSET=latin1",
@@ -1241,7 +1246,7 @@ $describe("GRT: diff alter") {
       db_mysql_CatalogRef mod_cat = createEmptyCatalog();
 
       // This should yield no differences.
-      empty_change = data->createDiff(entry, org_cat, mod_cat);
+      empty_change = createDiff(entry, org_cat, mod_cat);
 
       if (empty_change) {
         grt::StringListRef alter_map(grt::Initialized);
@@ -1250,27 +1255,28 @@ $describe("GRT: diff alter") {
         options.set("UseFilteredLists", grt::IntegerRef(0));
         options.set("OutputContainer", alter_map);
         options.set("OutputObjectContainer", alter_object_list);
-        options.set("CaseSensitive", grt::IntegerRef(data->omf.case_sensitive));
+        options.set("CaseSensitive", grt::IntegerRef(omf.case_sensitive));
 
         alter_map.clear();
         alter_object_list.clear();
-        data->diffsqlModule->generateSQL(mod_cat, options, empty_change);
-        data->diffsqlModule->makeSQLSyncScript(mod_cat, options, alter_map, alter_object_list);
+        diffsqlModule->generateSQL(mod_cat, options, empty_change);
+        diffsqlModule->makeSQLSyncScript(mod_cat, options, alter_map, alter_object_list);
 
         // We cannot check for the changeset to make sure there are no changes, because some changes from the diff
         // don't cause a script to be generated (like foreign keys being reordered).
         // So, it's better to check whether there's any actual alteration.
-        $expect(alter_map.count() + alter_object_list.count()).toEqual(0U, "Unexpected differences found for step \"" + entry.description + "\":");
+        EXPECT_EQ(0U, alter_map.count() + alter_object_list.count()) << "Unexpected differences found for step \"" + entry.description + "\":";
         if (alter_map.count() > 0 || alter_object_list.count() > 0) {
           empty_change->dump_log(0);
           std::string script = options.get_string("OutputScript");
           std::cout << "Output:\n" << script;
         }
       } else
-        $success();
+        // Success;
     }
-  });
 
 }
 
 }
+
+

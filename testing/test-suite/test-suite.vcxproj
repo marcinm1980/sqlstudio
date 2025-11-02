@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EDB0796E-DA05-4207-ADAD-DAF31EA66278}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="..\..\vsprops\wb_gtest.props" />
+    <Import Project="..\..\vsprops\wb_cpp_std.props" />
+    <Import Project="..\..\vsprops\wb_glib.props" />
+    <Import Project="..\..\vsprops\wb_boost.props" />
+    <Import Project="..\..\vsprops\wb_cppconn.props" />
+    <Import Project="..\..\vsprops\wb_cairo.props" />
+    <Import Project="..\..\vsprops\wb_mysql.props" />
+    <Import Project="..\..\vsprops\wb_rapidjson.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="..\..\vsprops\wb_gtest.props" />
+    <Import Project="..\..\vsprops\wb_cpp_std.props" />
+    <Import Project="..\..\vsprops\wb_glib.props" />
+    <Import Project="..\..\vsprops\wb_boost.props" />
+    <Import Project="..\..\vsprops\wb_cppconn.props" />
+    <Import Project="..\..\vsprops\wb_cairo.props" />
+    <Import Project="..\..\vsprops\wb_mysql.props" />
+    <Import Project="..\..\vsprops\wb_rapidjson.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <Optimization>
+      </Optimization>
+      <PreprocessorDefinitions>X64;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <ForcedUsingFiles>
+      </ForcedUsingFiles>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)%(RelativeDir)%(FileName).obj</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>X64;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ForcedUsingFiles>
+      </ForcedUsingFiles>
+      <Optimization>
+      </Optimization>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)%(RelativeDir)%(FileName).obj</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="core\context.h" />
+    <ClInclude Include="core\grt_test_helpers.h" />
+    <ClInclude Include="core\helpers.h" />
+    <ClInclude Include="core\model_mockup.h" />
+    <ClInclude Include="core\structs.test.h" />
+    <ClInclude Include="core\wb_connection_helpers.h" />
+    <ClInclude Include="core\wb_test_helpers.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="tests\backend\wbprivate\studio\wb_undo_helpers.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_app.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_base.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_box.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_button.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_checkbox.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_codeeditor.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_container.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_drawbox.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_filechooser.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_form.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_hypertext.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_imagebox.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_label.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_listbox.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_menu.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_menuitem.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_mforms.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_panel.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_popup.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_progressbar.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_radiobutton.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_scrollpanel.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_selector.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_splitter.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_table.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_tabview.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_textbox.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_textentry.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_toolbar.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_treenode.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_treeview.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_utilities.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_view.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_webbrowser.h" />
+    <ClInclude Include="tests\library\forms\stub\stub_wizard.h" />
+    <ClInclude Include="tests\library\grt\test_modules.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\backend\wbprivate\studio\metaclasses.cpp" />
+    <ClCompile Include="core\context.cpp" />
+    <ClCompile Include="core\grt_test_helpers.cpp" />
+    <ClCompile Include="core\helpers.cpp" />
+    <ClCompile Include="core\model_mockup.cpp" />
+    <ClCompile Include="core\wb_connection_helpers.cpp" />
+    <ClCompile Include="core\wb_references.cpp" />
+    <ClCompile Include="core\wb_test_helpers.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_live_schema_tree_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_sql_editor_form_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_sql_editor_help_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\overview_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\ssh_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_context_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_copy_paste_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_lowlevel_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_model_file_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_module_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_diagram_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_editors_specs.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_others_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\grtdb\editor_table_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\grtdb\table_inserts_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\grt\common_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\grt\grt_dispatcher_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\grt\grt_inspector_value_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\grt\nodeid_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\grt\shell_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\grt\tree_model_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\sqlide\recordset_specs.cpp" />
+    <ClCompile Include="tests\backend\wbpublic\sqlide\sql_editor_be_autocomplete_specs.cpp" />
+    <ClCompile Include="tests\library\base\commandlineparser_specs.cpp" />
+    <ClCompile Include="tests\library\base\config_file_specs.cpp" />
+    <ClCompile Include="tests\library\base\fileutilities_specs.cpp" />
+    <ClCompile Include="tests\library\base\sqlstring_specs.cpp" />
+    <ClCompile Include="tests\library\base\stringutilities_specs.cpp" />
+    <ClCompile Include="tests\library\base\threading_specs.cpp" />
+    <ClCompile Include="tests\library\base\utf8string_specs.cpp" />
+    <ClCompile Include="tests\library\cdbc\dbc_connection_specs.cpp" />
+    <ClCompile Include="tests\library\cdbc\dbc_general_specs.cpp" />
+    <ClCompile Include="tests\library\cdbc\dbc_metadata_specs.cpp" />
+    <ClCompile Include="tests\library\cdbc\dbc_result_set_specs.cpp" />
+    <ClCompile Include="tests\library\cdbc\dbc_statement_specs.cpp" />
+    <ClCompile Include="tests\library\forms\code_editor_specs.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_app.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_base.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_drawbox.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_form.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_listbox.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_menu.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_mforms.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_selector.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_textbox.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_textentry.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_treenode.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_utilities.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_view.cpp" />
+    <ClCompile Include="tests\library\forms\stub\src\stub_wizard.cpp" />
+    <ClCompile Include="tests\library\forms\utilities_specs.cpp" />
+    <ClCompile Include="tests\library\grt\comparer_specs.cpp" />
+    <ClCompile Include="tests\library\grt\diff_tree_specs.cpp" />
+    <ClCompile Include="tests\library\grt\grtdiff_alter_specs.cpp" />
+    <ClCompile Include="tests\library\grt\grtdiff_db_specs.cpp" />
+    <ClCompile Include="tests\library\grt\grtlistdiff_specs.cpp" />
+    <ClCompile Include="tests\library\grt\grtpp_serialization_specs.cpp" />
+    <ClCompile Include="tests\library\grt\grtpp_specs.cpp" />
+    <ClCompile Include="tests\library\grt\grtpp_util_specs.cpp" />
+    <ClCompile Include="tests\library\grt\modulenative_specs.cpp" />
+    <ClCompile Include="tests\library\grt\object_specs.cpp" />
+    <ClCompile Include="tests\library\grt\struct_specs.cpp" />
+    <ClCompile Include="tests\library\grt\sync_profile_specs.cpp" />
+    <ClCompile Include="tests\library\grt\value_specs.cpp" />
+    <ClCompile Include="tests\library\mtemplates\mtemplate_specs.cpp" />
+    <ClCompile Include="tests\library\mysql.canvas\mysqlcanvas_specs.cpp" />
+    <ClCompile Include="tests\library\parsers\mysql_parser_specs.cpp" />
+    <ClCompile Include="tests\library\sql.parser\sqlparser_specs.cpp" />
+    <ClCompile Include="tests\modules\db.mysql.parser\mysql_parser_module_specs.cpp" />
+    <ClCompile Include="tests\modules\db.mysql.parser\parse_datatypes_specs.cpp" />
+    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_invalid_sql_parser_specs.cpp" />
+    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_facade_specs.cpp" />
+    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_parser_specs.cpp" />
+    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_statement_decomposer_specs.cpp" />
+    <ClCompile Include="tests\modules\db.mysql\db_mysql_gen_grant_specs.cpp" />
+    <ClCompile Include="tests\modules\db.mysql\sql_create_specs.cpp" />
+    <ClCompile Include="tests\plugins\db.mysql.editors\backend\mysql_routinegroup_editor_specs.cpp" />
+    <ClCompile Include="tests\plugins\db.mysql.editors\backend\mysql_table_editor_specs.cpp" />
+    <ClCompile Include="tests\plugins\db.mysql\backend\db_mysql_plugin_specs.cpp" />
+    <ClCompile Include="tests\plugins\db.mysql\backend\db_mysql_sql_export_specs.cpp" />
+    <ClCompile Include="tests\plugins\db.mysql\backend\model_diff_apply_specs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\backend\wbprivate\wbprivate.be.vcxproj">
+      <Project>{188dd57c-17e3-462f-b734-390c8ff6f852}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\backend\wbpublic\wbpublic.be.vcxproj">
+      <Project>{55ee797d-2b76-474b-82d6-1f96f7788af8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\frontend\windows\grt.db\grt.db.fe.csproj">
+      <Project>{84d94572-ead9-4839-b16b-699a8c499fe5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\frontend\windows\WBPlugins\WBPlugins.csproj">
+      <Project>{960ef7b9-a96a-4290-aed9-2689eb28bbf7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\base\base.vcxproj">
+      <Project>{c3b85913-b106-40c6-8dde-a7cf52a4ec80}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\cdbc\cdbc.vcxproj">
+      <Project>{2d0409d4-09a1-4776-8dac-3bf778d51734}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\forms\mysql.forms.vcxproj">
+      <Project>{28fcb4e3-8baa-42f2-b2c6-247d9d0745b1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\forms\winforms\mforms.wr.vcxproj">
+      <Project>{1d67c943-0432-4ee0-8ab0-915540c9538f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\grt\grt.vcxproj">
+      <Project>{dc1ddaad-7dc1-4bc4-b6c8-b7cec998c7ed}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\mysql.canvas\mysql.canvas.vcxproj">
+      <Project>{1b17d534-365d-4c93-b3b6-55610df8629a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\parsers\parsers.vcxproj">
+      <Project>{f563e3de-39ba-4a9d-a6c2-9e9222e8f518}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\db.mysql\db.mysql.wbp.vcxproj">
+      <Project>{4aaa077a-2f2f-4d87-9447-030e1ca1002f}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="library\forms\stub\src\stub_base.mm" />
+    <None Include="tests\library\forms\stub\src\stub_base.mm" />
+    <None Include="tests\library\parsers\mysql_parser_specs.tmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="tests\modules\db.mysql.sqlparser\AUTHORS.txt" />
+    <Text Include="tests\modules\db.mysql.sqlparser\ChangeLog.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets'))" />
+  </Target>
+</Project>

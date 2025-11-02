@@ -30,14 +30,14 @@
 
 #include "stub/stub_utilities.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "grt_test_helpers.h"
 #include "wb_test_helpers.h"
 
 using namespace bec;
 using namespace wb;
 using namespace grt;
-using namespace casmine;
+
 
 namespace {
 
@@ -55,9 +55,9 @@ static mforms::DialogResult message_cancel_callback() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-$ModuleEnvironment() {};
 
-$TestData {
+
+struct TestData {
   std::unique_ptr<MySqlStudioTester> tester;
   UndoManager *um = nullptr;
   OverviewBE *overview = nullptr;
@@ -116,11 +116,15 @@ $TestData {
 
 };
 
-$describe("Undo/Redo for Diagram Actions in MySqlStudio") {
-  $beforeAll([this]() {
+class UndoRedoForDiagramActionsInMySqlStudioTest : public ::testing::Test {
+protected:
+  TestData *data = new TestData();
+
+  void SetUp() override {
+
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
-    data->dataDir = casmine::CasmineContext::get()->tmpDataDir();
+    data->dataDir = ".";
 
     data->um = grt::GRT::get()->get_undo_manager();
     data->overview = wb::WBContextUI::get()->get_physical_overview();
@@ -166,7 +170,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place table", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceTable) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
@@ -196,7 +202,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place view", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceView) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
@@ -226,7 +234,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place Routine Group", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceRoutineGroup) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
@@ -256,7 +266,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place Image", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceImage) {
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
 
@@ -282,7 +294,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place text", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceText) {
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
 
@@ -305,7 +319,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place layer", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceLayer) {
     size_t old_layer_count = data->diagram->layers().count();
     size_t old_root_layer_count = data->diagram->rootLayer()->subLayers().count();
 
@@ -331,7 +347,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place something inside a layer", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceSomethingInsideALayer) {
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_layer_count = data->diagram->layers().count();
     size_t old_root_layer_count = data->diagram->rootLayer()->subLayers().count();
@@ -377,7 +395,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place layer around something", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceLayerAroundSomething) {
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_layer_count = data->diagram->layers().count();
     size_t old_root_layer_count = data->diagram->rootLayer()->subLayers().count();
@@ -429,7 +449,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Move object", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveObject) {
     double x, y;
     model_FigureRef figure(data->diagram->figures()[0]);
 
@@ -455,7 +477,9 @@ $describe("Undo/Redo for Diagram Actions in MySqlStudio") {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Move into and out of layer", [this]() {
+  }
+
+  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveIntoAndOutOfLayer) {
     double x, y;
     model_FigureRef figure(data->diagram->figures()[0]);
     model_LayerRef layer(data->diagram->layers()[0]);

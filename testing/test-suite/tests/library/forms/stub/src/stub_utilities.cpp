@@ -26,7 +26,6 @@
 
 #include "base/log.h"
 #include <cerrno>
-#include "casmine.h"
 
 using namespace mforms;
 using namespace stub;
@@ -133,7 +132,8 @@ bool UtilitiesWrapper::find_password(const std::string &service, const std::stri
   bool ret_val = false;
 
   if (!loaded_passwords) {
-    const auto &tutPasswords = casmine::CasmineContext::get()->configuration["tutPasswords"];
+    // FIXME: Load passwords from configuration
+    /*const auto &tutPasswords = casmine::CasmineContext::get()->configuration["tutPasswords"];
     try {
       for (auto &entry: tutPasswords.GetArray()) {
         if (entry.HasMember("service")) {
@@ -145,7 +145,7 @@ bool UtilitiesWrapper::find_password(const std::string &service, const std::stri
       }
     } catch (std::out_of_range &) {
       g_message("Config file is missing service credentials.\n");
-    }
+    }*/
     loaded_passwords = true;
   }
 

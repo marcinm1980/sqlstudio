@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025, dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -26,11 +27,9 @@
 #include "grt/grt_manager.h"
 #include "wb_test_helpers.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 namespace {
-
-$ModuleEnvironment() {};
 
 using namespace grt;
 using namespace bec;
@@ -48,49 +47,46 @@ static grt::ValueRef normal_test_function() {
   return grt::IntegerRef(123);
 }
 
-$TestData {
+class GRTRequestDispatcherTest : public ::testing::Test {
+protected:
   GRTDispatcher::Ref dispatcher;
-};
 
-$describe("GRT request dispatcher") {
-
-  $beforeAll([this]() {
+  void SetUp() override {
     // No need to initialize Python for this test. No need for a module path either.
     grt::GRT::get(); // make sure grt is initialized before Dispatcher is created
-    data->dispatcher = GRTDispatcher::create_dispatcher(false, true);
-    data->dispatcher->start();
-  });
+    dispatcher = GRTDispatcher::create_dispatcher(false, true);
+    dispatcher->start();
+  }
 
-  $afterAll([this]() {
-    data->dispatcher->shutdown();
-    data->dispatcher.reset();
-  });
+  void TearDown() override {
+    dispatcher->shutdown();
+    dispatcher.reset();
+  }
+};
 
+TEST_F(GRTRequestDispatcherTest, TestingCallbacks) {
+  grt::ValueRef result;
+  bool finish_called = false;
 
-  $it("Testing callbacks", [this](){
-    grt::ValueRef result;
-    bool finish_called = false;
+  bec::GRTTask::Ref task = GRTTask::create_task("test", dispatcher, std::bind(normal_test_function));
+  task->signal_finished()->connect(std::bind(&finished, std::placeholders::_1, &finish_called));
 
-    bec::GRTTask::Ref task = GRTTask::create_task("test", data->dispatcher, std::bind(normal_test_function));
-    task->signal_finished()->connect(std::bind(&finished, std::placeholders::_1, &finish_called));
+  result = dispatcher->add_task_and_wait(task);
 
-    result = data->dispatcher->add_task_and_wait(task);
+  EXPECT_TRUE(result.is_valid());
+  EXPECT_EQ(grt::IntegerType, result.type());
+  EXPECT_EQ(123, *grt::IntegerRef::cast_from(result));
 
-    $expect(result.is_valid()).toBeTrue();
-    $expect(result.type()).toEqual(grt::IntegerType);
-    $expect(*grt::IntegerRef::cast_from(result)).toBe(123);
+  EXPECT_TRUE(finish_called);
 
-    $expect(finish_called).toBeTrue();
+  finish_called = false;
+  task = GRTTask::create_task("test", dispatcher, std::bind(normal_test_function));
+  task->signal_finished()->connect(std::bind(&finished_with_wait, std::placeholders::_1, &finish_called));
 
-    finish_called = false;
-    task = GRTTask::create_task("test", data->dispatcher, std::bind(normal_test_function));
-    task->signal_finished()->connect(std::bind(&finished_with_wait, std::placeholders::_1, &finish_called));
+  result = dispatcher->add_task_and_wait(task);
 
-    result = data->dispatcher->add_task_and_wait(task);
-
-    $expect(finish_called).toBeTrue();
-  });
-
+  EXPECT_TRUE(finish_called);
 }
 
 }
+
