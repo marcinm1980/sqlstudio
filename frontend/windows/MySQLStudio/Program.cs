@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -22,13 +23,14 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-using System;
+using System; 
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using System.Runtime.InteropServices; // For DPI awareness native calls
 
 using Microsoft.Win32;
 
@@ -40,6 +42,59 @@ using MySQL.MySqlStudio;
 
 namespace MySQL.GUI.MySqlStudio
 {
+  // High DPI helper: enables Per-Monitor V2 awareness where supported, with safe fallbacks.
+  internal static class DpiHelper
+  {
+    // From WinUser.h (negative values for awareness contexts)
+    private static readonly IntPtr DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = new IntPtr(-4);
+
+    // shcore.dll enum
+    private enum ProcessDpiAwareness
+    {
+      Process_DPI_Unaware = 0,
+      Process_System_DPI_Aware = 1,
+      Process_Per_Monitor_DPI_Aware = 2
+    }
+
+    [DllImport("user32.dll")]
+    private static extern bool SetProcessDPIAware(); // Vista+ legacy system DPI awareness
+
+    [DllImport("shcore.dll")]
+    private static extern int SetProcessDpiAwareness(ProcessDpiAwareness awareness); // Win8.1+
+
+    [DllImport("user32.dll")]
+    private static extern bool SetProcessDpiAwarenessContext(IntPtr dpiContext); // Win10 Anniversary Update (1607 / build 14393)+
+
+    public static void EnableHighDpi()
+    {
+      try
+      {
+        Version os = Environment.OSVersion.Version;
+
+        // Prefer PerMonitorV2 if available (Windows 10 1607+)
+        if (os.Major >= 10 && os.Build >= 14393)
+        {
+          if (SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2))
+            return; // Success
+        }
+
+        // Fall back to Per-Monitor (Windows 8.1+)
+        if (os.Major > 6 || (os.Major == 6 && os.Minor >= 3))
+        {
+          if (SetProcessDpiAwareness(ProcessDpiAwareness.Process_Per_Monitor_DPI_Aware) == 0)
+            return; // S_OK
+        }
+
+        // Final fallback: system DPI awareness (Vista+)
+        SetProcessDPIAware();
+      }
+      catch
+      {
+        // Intentionally swallow exceptions – DPI enablement is best-effort.
+      }
+    }
+  }
+
   static class Program
   {
     #region Static Variables and Enums
@@ -77,6 +132,9 @@ namespace MySQL.GUI.MySqlStudio
     [STAThread]
     static void Main(string[] Args)
     {
+      // Enable High DPI awareness as early as possible, before any Windows Forms initialization.
+      DpiHelper.EnableHighDpi();
+
       // Connect the application to console to have proper output there if requested.
       bool consoleRedirectionWorked = Win32Api.RedirectConsole();
 
