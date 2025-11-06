@@ -79,3 +79,5 @@ typedef int ssize_t;
 #include <fstream>
 #include <iomanip>
 #include <cairo/cairo.h>
+
+#include "core/context.h"

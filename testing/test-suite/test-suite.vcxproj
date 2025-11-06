@@ -65,7 +65,7 @@
       <ForcedUsingFiles>
       </ForcedUsingFiles>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;$(ProjectDir)..\..\modules\;$(ProjectDir)..\..\modules\db.mysql\src\;$(ProjectDir)..\..\plugins\db.mysql\;$(ProjectDir)..\..\library\sql.parser\include\;$(ProjectDir)..\..\library\sql.parser\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)%(RelativeDir)%(FileName).obj</ObjectFileName>
     </ClCompile>
@@ -87,7 +87,7 @@
       <Optimization>
       </Optimization>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;$(ProjectDir)..\..\modules\;$(ProjectDir)..\..\modules\db.mysql\src\;$(ProjectDir)..\..\plugins\db.mysql\;$(ProjectDir)..\..\library\sql.parser\include\;$(ProjectDir)..\..\library\sql.parser\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)%(RelativeDir)%(FileName).obj</ObjectFileName>
     </ClCompile>
@@ -107,7 +107,6 @@
     <ClInclude Include="core\wb_connection_helpers.h" />
     <ClInclude Include="core\wb_test_helpers.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="tests\backend\wbprivate\studio\wb_undo_helpers.h" />
     <ClInclude Include="tests\library\forms\stub\stub_app.h" />
     <ClInclude Include="tests\library\forms\stub\stub_base.h" />
     <ClInclude Include="tests\library\forms\stub\stub_box.h" />
@@ -159,29 +158,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_live_schema_tree_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_sql_editor_form_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_sql_editor_help_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\overview_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\ssh_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\wb_context_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\wb_copy_paste_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\wb_lowlevel_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\wb_model_file_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\wb_module_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_diagram_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_editors_specs.cpp" />
-    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_others_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\grtdb\editor_table_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\grtdb\table_inserts_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\grt\common_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\grt\grt_dispatcher_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\grt\grt_inspector_value_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\grt\nodeid_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\grt\shell_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\grt\tree_model_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\sqlide\recordset_specs.cpp" />
-    <ClCompile Include="tests\backend\wbpublic\sqlide\sql_editor_be_autocomplete_specs.cpp" />
     <ClCompile Include="tests\library\base\commandlineparser_specs.cpp" />
     <ClCompile Include="tests\library\base\config_file_specs.cpp" />
     <ClCompile Include="tests\library\base\fileutilities_specs.cpp" />
@@ -227,19 +203,6 @@
     <ClCompile Include="tests\library\mysql.canvas\mysqlcanvas_specs.cpp" />
     <ClCompile Include="tests\library\parsers\mysql_parser_specs.cpp" />
     <ClCompile Include="tests\library\sql.parser\sqlparser_specs.cpp" />
-    <ClCompile Include="tests\modules\db.mysql.parser\mysql_parser_module_specs.cpp" />
-    <ClCompile Include="tests\modules\db.mysql.parser\parse_datatypes_specs.cpp" />
-    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_invalid_sql_parser_specs.cpp" />
-    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_facade_specs.cpp" />
-    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_parser_specs.cpp" />
-    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_statement_decomposer_specs.cpp" />
-    <ClCompile Include="tests\modules\db.mysql\db_mysql_gen_grant_specs.cpp" />
-    <ClCompile Include="tests\modules\db.mysql\sql_create_specs.cpp" />
-    <ClCompile Include="tests\plugins\db.mysql.editors\backend\mysql_routinegroup_editor_specs.cpp" />
-    <ClCompile Include="tests\plugins\db.mysql.editors\backend\mysql_table_editor_specs.cpp" />
-    <ClCompile Include="tests\plugins\db.mysql\backend\db_mysql_plugin_specs.cpp" />
-    <ClCompile Include="tests\plugins\db.mysql\backend\db_mysql_sql_export_specs.cpp" />
-    <ClCompile Include="tests\plugins\db.mysql\backend\model_diff_apply_specs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\backend\wbprivate\wbprivate.be.vcxproj">
@@ -283,10 +246,6 @@
     <None Include="library\forms\stub\src\stub_base.mm" />
     <None Include="tests\library\forms\stub\src\stub_base.mm" />
     <None Include="tests\library\parsers\mysql_parser_specs.tmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="tests\modules\db.mysql.sqlparser\AUTHORS.txt" />
-    <Text Include="tests\modules\db.mysql.sqlparser\ChangeLog.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

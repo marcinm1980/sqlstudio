@@ -33,8 +33,7 @@
 #include "gtest/gtest.h"
 
 using namespace grt;
-using namespace casmine;
-
+//
 extern void register_all_metaclasses();
 
 namespace {
