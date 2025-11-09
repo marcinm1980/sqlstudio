@@ -66,6 +66,7 @@ typedef int ssize_t;
 #include <cctype>
 #include <memory>
 #include <condition_variable>
+#include <regex>
 
 #include <VersionHelpers.h>
 

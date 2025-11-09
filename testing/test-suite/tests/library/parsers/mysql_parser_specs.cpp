@@ -28,6 +28,8 @@
 #include "wb_version.h"
 #include "wb_test_helpers.h"
 
+#undef ERROR
+
 #include "mysql/MySQLLexer.h"
 #include "mysql/MySQLParser.h"
 #include "mysql/MySQLParserBaseListener.h"
@@ -45,9 +47,7 @@ using namespace antlr4::tree;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-namespace {
-
-
+namespace testing {
 
 struct TestFile {
   std::string name;
@@ -604,7 +604,7 @@ protected:
 
   };
 
-  std::string dataDir = casmine::CasmineContext::get()->tmpDataDir();
+  std::string dataDir = Context::get().tmpDataDir();
 
   std::unique_ptr<MySqlStudioTester> tester;
   std::set<std::string> charsets;
@@ -918,7 +918,7 @@ TEST_F(MySQLParserTest, SqlModeDependentParsing) {
       auto &entry = sqlModeTestQueries[i];
       auto result = parseAndCompare(entry.query, 80012, entry.sqlMode, sqlModeTestResults[i], entry.errors);
       if (!result.first) {
-        FAIL() << "SQL mode test " + std::to_string(i + " failed: " + entry.query + "\nwith error: " + result.second;
+        FAIL() << "SQL mode test " + std::to_string(i) + " failed: " + entry.query + "\nwith error: " + result.second;
       }
     }
 }
@@ -961,7 +961,7 @@ TEST_F(MySQLParserTest, HexBinaryFloatDecimalAndIntNumberHandling) {
       auto &entry = numbersTestQueries[i];
       auto result = parseAndCompare(entry.query, 80012, entry.sqlMode, numbersTestResults[i], entry.errors);
       if (!result.first) {
-        FAIL() << "Number test (" + std::to_string(i + ") failed: " + entry.query + "\nwith error: " + result.second;
+        FAIL() << "Number test (" + std::to_string(i) + ") failed: " + entry.query + "\nwith error: " + result.second;
       }
     }
 }
@@ -987,5 +987,4 @@ TEST_F(MySQLParserTest, Bug30449796) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-}
 }

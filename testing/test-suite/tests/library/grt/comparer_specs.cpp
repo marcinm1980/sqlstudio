@@ -38,6 +38,7 @@
 #include "model_mockup.h"
 
 using namespace grt;
+using namespace testing;
 
 namespace {
 
@@ -51,42 +52,42 @@ static grt::DictRef get_traits(bool case_sensitive = false) {
 }
 
 struct test_params {
-  test_params(const bool cr, const bool clr, const std::function<void(casmine::SyntheticMySQLModel&, casmine::SyntheticMySQLModel&)>& f,
+  test_params(const bool cr, const bool clr, const std::function<void(SyntheticMySQLModel&, SyntheticMySQLModel&)>& f,
               const std::string& c)
     : case_result(cr), caseless_result(clr), model_init(f), comment(c){};
   bool case_result;
   bool caseless_result;
-  std::function<void(casmine::SyntheticMySQLModel&, casmine::SyntheticMySQLModel&)> model_init;
+  std::function<void(SyntheticMySQLModel&, SyntheticMySQLModel&)> model_init;
   std::string comment;
 };
 
-void table_name_case(casmine::SyntheticMySQLModel& model1, casmine::SyntheticMySQLModel& model2) {
+void table_name_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
   model1.table->name("table1");
   model2.table->name("TABLE1");
 }
 
-void columnNameCase(casmine::SyntheticMySQLModel& model1, casmine::SyntheticMySQLModel& model2) {
+void columnNameCase(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
   model1.column->name("col");
   model2.column->name("COL");
 }
 
-void index_cloumn_name(casmine::SyntheticMySQLModel& model1, casmine::SyntheticMySQLModel& model2) {
+void index_cloumn_name(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
   model1.primaryKey->columns().get(0)->name("Iname1");
   model2.primaryKey->columns().get(0)->name("Iname2");
 }
 
-void pack_keys_case(casmine::SyntheticMySQLModel& model1, casmine::SyntheticMySQLModel& model2) {
+void pack_keys_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
   model1.table->packKeys("Test keys");
   model2.table->packKeys("Test Keys");
 }
 
-void pack_keys_defaults(casmine::SyntheticMySQLModel& model1, casmine::SyntheticMySQLModel& model2) {
+void pack_keys_defaults(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
   model1.table->packKeys("");
   model2.table->packKeys("DEFAULT");
 }
 
 // Bug #11889204 60478: CASE CHANGES IN ENUM VALUES ARE NOT RECOGNIZED
-void enum_case(casmine::SyntheticMySQLModel& model1, casmine::SyntheticMySQLModel& model2) {
+void enum_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
   model1.columnEnum->datatypeExplicitParams("(E1,e2)");
   model2.columnEnum->datatypeExplicitParams("(e1,E2)");
 }
@@ -141,8 +142,8 @@ TEST_F(GrtComparerTest, TablesDiffCompare2) {
 }
 
 TEST_F(GrtComparerTest, CatalogsDiffCompare) {
-  casmine::SyntheticMySQLModel model1;
-  casmine::SyntheticMySQLModel model2;
+  SyntheticMySQLModel model1;
+  SyntheticMySQLModel model2;
   grt::DbObjectMatchAlterOmf omf;
   grt::NormalizedComparer case_normalizer(get_traits(true));
   case_normalizer.init_omf(&omf);
@@ -167,8 +168,8 @@ TEST_F(GrtComparerTest, NameCasesTest) {
   test_cases.push_back(test_params(true, true, enum_case, "ENUM case compare"));
   for (std::vector<test_params>::const_iterator It = test_cases.begin(); It != test_cases.end(); ++It) {
     std::shared_ptr<DiffChange> change;
-    casmine::SyntheticMySQLModel model1;
-    casmine::SyntheticMySQLModel model2;
+    SyntheticMySQLModel model1;
+    SyntheticMySQLModel model2;
     It->model_init(model1, model2);
 
     grt::DbObjectMatchAlterOmf omf;
@@ -188,8 +189,8 @@ TEST_F(GrtComparerTest, NameCasesTest) {
 }
 
 TEST_F(GrtComparerTest, CommentsDiffTest) {
-  casmine::SyntheticMySQLModel model1;
-  casmine::SyntheticMySQLModel model2;
+  SyntheticMySQLModel model1;
+  SyntheticMySQLModel model2;
   grt::DictRef traits = get_traits();
   traits.set("maxTableCommentLength", grt::IntegerRef(5));
   model1.table->comment("123456");
@@ -208,8 +209,8 @@ TEST_F(GrtComparerTest, CommentsDiffTest) {
 }
 
 TEST_F(GrtComparerTest, CommentIndexesDiffTest1) {
-  casmine::SyntheticMySQLModel model1;
-  casmine::SyntheticMySQLModel model2;
+  SyntheticMySQLModel model1;
+  SyntheticMySQLModel model2;
   grt::DictRef traits = get_traits();
   traits.set("maxIndexCommentLength", grt::IntegerRef(5));
   model1.indexColumn->comment("123456");
@@ -228,8 +229,8 @@ TEST_F(GrtComparerTest, CommentIndexesDiffTest1) {
 }
 
 TEST_F(GrtComparerTest, CommentIndexesDiffTest2) {
-  casmine::SyntheticMySQLModel model1;
-  casmine::SyntheticMySQLModel model2;
+  SyntheticMySQLModel model1;
+  SyntheticMySQLModel model2;
   grt::DictRef traits = get_traits();
   model1.indexColumn->comment("abcd");
   model2.indexColumn->comment("12345");
@@ -241,8 +242,8 @@ TEST_F(GrtComparerTest, CommentIndexesDiffTest2) {
 }
 
 TEST_F(GrtComparerTest, MaxColumnCommentLengthTest) {
-  casmine::SyntheticMySQLModel model1;
-  casmine::SyntheticMySQLModel model2;
+  SyntheticMySQLModel model1;
+  SyntheticMySQLModel model2;
   grt::DictRef traits = get_traits();
   traits.set("maxColumnCommentLength", grt::IntegerRef(5));
   model1.column->comment("123456");
@@ -279,9 +280,9 @@ TEST_F(GrtComparerTest, TableCollationsTest) {
   test_table_collation("", "latin1_swedish_ci");
   test_table_collation("latin1_swedish_ci", "latin1_swedish_ci", true);
 
-  casmine::SyntheticMySQLModel model1a;
+  SyntheticMySQLModel model1a;
   model1a.column->collationName("latin1_general_ci");
-  casmine::SyntheticMySQLModel model2a;
+  SyntheticMySQLModel model2a;
   model2a.column->collationName("latin1_polish_ci");
   grt::DbObjectMatchAlterOmf omf4a;
   grt::NormalizedComparer caseless_normalizer4a(get_traits(false));
@@ -290,9 +291,9 @@ TEST_F(GrtComparerTest, TableCollationsTest) {
   std::shared_ptr<DiffChange> change4a = diff_make(model1a.column, model2a.column, &omf4a);
   EXPECT_NE(change4a, nullptr);
 
-  casmine::SyntheticMySQLModel model1b;
+  SyntheticMySQLModel model1b;
   model1b.column->characterSetName("latin1");
-  casmine::SyntheticMySQLModel model2b;
+  SyntheticMySQLModel model2b;
   model2b.column->collationName("latin1_german_ci");
   grt::DbObjectMatchAlterOmf omf4b;
   grt::NormalizedComparer caseless_normalizer4b(get_traits(false));
@@ -301,12 +302,12 @@ TEST_F(GrtComparerTest, TableCollationsTest) {
   std::shared_ptr<DiffChange> change4b = diff_make(model1b.column, model2b.column, &omf4b);
   EXPECT_NE(change4b, nullptr);
 
-  casmine::SyntheticMySQLModel model1c;
+  SyntheticMySQLModel model1c;
   model1c.table->set_member("defaultCharacterSetName", grt::StringRef("utf8"));
   model1c.table->set_member("defaultCollationName", grt::StringRef(""));
   model1c.column->characterSetName("latin1");
 
-  casmine::SyntheticMySQLModel model2c;
+  SyntheticMySQLModel model2c;
   model2c.table->set_member("defaultCharacterSetName", grt::StringRef("utf8"));
   model2c.table->set_member("defaultCollationName", grt::StringRef(""));
   model2c.column->characterSetName("latin1");
@@ -319,12 +320,12 @@ TEST_F(GrtComparerTest, TableCollationsTest) {
   std::shared_ptr<DiffChange> change4c = diff_make(model1c.column, model2c.column, &omf4c);
   EXPECT_NE(change4c, nullptr);
 
-  casmine::SyntheticMySQLModel model1d;
+  SyntheticMySQLModel model1d;
   model1d.table->set_member("defaultCharacterSetName", grt::StringRef("utf8"));
   model1d.table->set_member("defaultCollationName", grt::StringRef("utf8_czech_ci"));
   model1d.column->characterSetName("latin1");
 
-  casmine::SyntheticMySQLModel model2d;
+  SyntheticMySQLModel model2d;
   model2d.table->set_member("defaultCharacterSetName", grt::StringRef("utf8"));
   model2d.table->set_member("defaultCollationName", grt::StringRef("utf8_czech_ci"));
   model2d.column->characterSetName("latin1");

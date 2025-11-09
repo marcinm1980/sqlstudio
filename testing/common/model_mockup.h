@@ -34,7 +34,7 @@
 
 #include "wb_test_helpers.h"
 
-namespace casmine {
+namespace testing {
 
   struct SyntheticMySQLModel {
     db_mgmt_RdbmsRef rdbms;

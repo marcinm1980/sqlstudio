@@ -23,19 +23,30 @@
  */
 
 #pragma once
-#include <rapidjson/rapidjson.h>
-#include <rapidjson/document.h> // Include the correct header for rapidjson::Document
+#include <string>
+#include <map>
+#include <mutex>
+namespace rapidjson {
+  // class Document;
+  // class Value;
+} // namespace rapidjson
 
 namespace testing {
 
+  // Test execution context singleton.
+  // Provides access to configuration and directories.
   class Context {
   public:
     virtual ~Context();
-    std::map<std::string, std::string> settings;
-    rapidjson::Document configuration;
 
-    static Context* get();
+    // Returns the single global instance (thread-safe since C++11).
+    static Context& get();
 
+    // Non-copyable / non-movable to enforce singleton semantics.
+    Context(Context const&) = delete;
+    Context& operator=(Context const&) = delete;
+    Context(Context&&) = delete;
+    Context& operator=(Context&&) = delete;
     //void addInitializer(DescribeInit* initializer);
 
     std::string baseDir() {
@@ -58,25 +69,29 @@ namespace testing {
     Context();
 
   private:
+    std::map<std::string, std::string> settings;
+    // Opaque pointer to implementation-specific configuration document to
+    // avoid exposing rapidjson types in the public header.
+    void* _configuration_impl = nullptr; // allocated/deleted in .cpp
     // These objects create the actual test object on demand.
-    //std::vector<DescribeInit*> _initializers;
+    // std::vector<DescribeInit*> _initializers;
 
-    //std::vector<std::unique_ptr<Reporter>> _reporters;
-    //Describe* _currentDescribe = nullptr;
+    // std::vector<std::unique_ptr<Reporter>> _reporters;
+    // Describe* _currentDescribe = nullptr;
     std::string _baseDir;
 
     std::mutex _resultMutex; // Synchronizes result recording across threads.
 
     // Ping support, to ensure regular output also for long lasting tests.
-    //std::atomic<bool> _stopPing; // Set to true when the ping thread has to stop.
-    //size_t _pingCount = 0;       // Counter for intermittant line breaks and the initial message.
-    //std::timed_mutex _pingMutex; // The "semaphore" to signal new output.
-    //std::thread _pingThread;     // The background thread to print the ping dots.
+    // std::atomic<bool> _stopPing; // Set to true when the ping thread has to stop.
+    // size_t _pingCount = 0;       // Counter for intermittant line breaks and the initial message.
+    // std::timed_mutex _pingMutex; // The "semaphore" to signal new output.
+    // std::thread _pingThread;     // The background thread to print the ping dots.
 
-    //void startPing();
-    //void resetPing();
+    // void startPing();
+    // void resetPing();
 
-    rapidjson::Value const* getConfigValueFromPath(std::string const& path) const;
+    // void getConfigValueFromPath(std::string const& path) const;
 
     // The specs that were given on the command line.
     //std::vector<std::string> _specForceList;

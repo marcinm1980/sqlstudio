@@ -34,9 +34,7 @@
 
 #include "gtest/gtest.h"
 
-using namespace casmine;
-
-namespace {
+namespace testing {
 
 base::Logger test_logger(".", getenv("WB_LOG_STDERR") != 0);
 

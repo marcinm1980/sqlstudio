@@ -33,7 +33,7 @@
 #include "diff/changelistobjects.h"
 #include "grtdb/db_helpers.h"
 
-namespace {
+namespace testing {
 
   using namespace parsers;
 
@@ -224,7 +224,7 @@ namespace {
     }
 
     void SetUp() override {
-      dataDir = testing::Context::get()->tmpDataDir();
+      dataDir = Context::get().tmpDataDir();
 
       tester.reset(new MySqlStudioTester());
       tester->initializeRuntime();

@@ -147,7 +147,7 @@ TEST_F(MTemplateTest, CreateCSVFromTemplate) {
           mtemplate::DictionaryInterface *field_dictionary_col2 = row_dictionary->addSectionDictionary("FIELD");
           field_dictionary_col2->setValue("FIELD_VALUE", item.second);
 
-          template_expand(data_dictionary, &output);
+          template_data->expand(data_dictionary, &output);
         }
       }
     }

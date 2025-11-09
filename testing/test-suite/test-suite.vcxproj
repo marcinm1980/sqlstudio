@@ -31,6 +31,7 @@
     <Import Project="..\..\vsprops\wb_cairo.props" />
     <Import Project="..\..\vsprops\wb_mysql.props" />
     <Import Project="..\..\vsprops\wb_rapidjson.props" />
+    <Import Project="..\..\vsprops\wb_antlr4.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="..\..\vsprops\wb_gtest.props" />
@@ -41,6 +42,7 @@
     <Import Project="..\..\vsprops\wb_cairo.props" />
     <Import Project="..\..\vsprops\wb_mysql.props" />
     <Import Project="..\..\vsprops\wb_rapidjson.props" />
+    <Import Project="..\..\vsprops\wb_antlr4.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -65,7 +67,7 @@
       <ForcedUsingFiles>
       </ForcedUsingFiles>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;$(ProjectDir)..\..\modules\;$(ProjectDir)..\..\modules\db.mysql\src\;$(ProjectDir)..\..\plugins\db.mysql\;$(ProjectDir)..\..\library\sql.parser\include\;$(ProjectDir)..\..\library\sql.parser\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;$(ProjectDir)..\..\modules\;$(ProjectDir)..\..\modules\db.mysql\src\;$(ProjectDir)..\..\plugins\db.mysql\;$(ProjectDir)..\..\library\sql.parser\include\;$(ProjectDir)..\..\library\sql.parser\source\;$(ProjectDir)..\..\modules\db.mysql.sqlparser\src\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)%(RelativeDir)%(FileName).obj</ObjectFileName>
     </ClCompile>
@@ -87,7 +89,7 @@
       <Optimization>
       </Optimization>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;$(ProjectDir)..\..\modules\;$(ProjectDir)..\..\modules\db.mysql\src\;$(ProjectDir)..\..\plugins\db.mysql\;$(ProjectDir)..\..\library\sql.parser\include\;$(ProjectDir)..\..\library\sql.parser\source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library;$(ProjectDir)core\;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\ext\scintilla\include\;$(ProjectDir)..\..\plugins\db.mysql\backend\;$(ProjectDir)..\..\backend\wbprivate\studio\;$(ProjectDir)..\..\modules\;$(ProjectDir)..\..\modules\db.mysql\src\;$(ProjectDir)..\..\plugins\db.mysql\;$(ProjectDir)..\..\library\sql.parser\include\;$(ProjectDir)..\..\library\sql.parser\source\;$(ProjectDir)..\..\modules\db.mysql.sqlparser\src\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <ObjectFileName>$(IntDir)%(RelativeDir)%(FileName).obj</ObjectFileName>
     </ClCompile>
@@ -101,6 +103,7 @@
   <ItemGroup>
     <ClInclude Include="core\context.h" />
     <ClInclude Include="core\grt_test_helpers.h" />
+    <ClInclude Include="core\grt_values_test_data.h" />
     <ClInclude Include="core\helpers.h" />
     <ClInclude Include="core\model_mockup.h" />
     <ClInclude Include="core\structs.test.h" />
@@ -232,11 +235,23 @@
     <ProjectReference Include="..\..\library\grt\grt.vcxproj">
       <Project>{dc1ddaad-7dc1-4bc4-b6c8-b7cec998c7ed}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\library\mtemplate\mtemplate.vcxproj">
+      <Project>{85fcf582-b354-4a7d-b31c-534d71bea53a}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\library\mysql.canvas\mysql.canvas.vcxproj">
       <Project>{1b17d534-365d-4c93-b3b6-55610df8629a}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\library\parsers\parsers.vcxproj">
       <Project>{f563e3de-39ba-4a9d-a6c2-9e9222e8f518}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\db.mysql.parser\db.mysql.parser.grt.vcxproj">
+      <Project>{05413b7f-3ee1-4797-8ede-bf4e8e3c4bef}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\db.mysql.sqlparser\db.mysql.sqlparser.grt.vcxproj">
+      <Project>{e3fac4a5-5dcc-43a1-bdd3-0066224ab9a7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\db.mysql\db.mysql.grt.vcxproj">
+      <Project>{500b44c3-7d51-42ea-bd8d-5db34c3160fa}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\plugins\db.mysql\db.mysql.wbp.vcxproj">
       <Project>{4aaa077a-2f2f-4d87-9447-030e1ca1002f}</Project>

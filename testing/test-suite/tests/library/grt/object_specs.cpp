@@ -28,12 +28,15 @@
 #include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
-
+//-----------------------------------------------------------------------------------------------------
 
 static bool count_member(const grt::MetaClass::Member *member, int *count) {
   (*count)++;
   return true;
 }
+
+//-----------------------------------------------------------------------------------------------------
+
 /*
 class TestBridge : public ObjectBridgeBase {
 public:
@@ -99,13 +102,13 @@ public:
 };
 */
 
-namespace {
+namespace testing {
 
 class GRTObjectValuesTest : public ::testing::Test {
 protected:
   void SetUp() override {
     register_structs_test_xml();
-    grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
+    grt::GRT::get()->load_metaclasses(Context::get().tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
   }
 
@@ -114,9 +117,13 @@ protected:
   }
 };
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTObjectValuesTest, LoadStructures) {
   EXPECT_EQ(grt::GRT::get()->get_metaclasses().size(), 6U);
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTObjectValuesTest, MetaClassSupport) {
   test_BookRef book(grt::Initialized);
@@ -140,6 +147,8 @@ TEST_F(GRTObjectValuesTest, MetaClassSupport) {
   EXPECT_NO_THROW(book->authors().insert(author));
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTObjectValuesTest, ExceptionsForInvalidMemberAccess) {
   test_BookRef obj(grt::Initialized);
 
@@ -151,6 +160,8 @@ TEST_F(GRTObjectValuesTest, ExceptionsForInvalidMemberAccess) {
   EXPECT_THROW(obj.set_member("authors", grt::StringRef("joe")), std::exception);
   EXPECT_THROW(obj.set_member("pages", grt::DoubleRef(1234.456)), std::exception);
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTObjectValuesTest, ValueMemberAccess) {
   test_BookRef book(grt::Initialized);
@@ -177,6 +188,8 @@ TEST_F(GRTObjectValuesTest, ValueMemberAccess) {
   EXPECT_EQ(book->authors().count(), 0U);
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTObjectValuesTest, CheckIfInheritedValuesAreProperlyInitialized) {
   test_BookRef book(grt::Initialized);
 
@@ -184,6 +197,8 @@ TEST_F(GRTObjectValuesTest, CheckIfInheritedValuesAreProperlyInitialized) {
   book->get_metaclass()->foreach_member(std::bind(&count_member, std::placeholders::_1, &count));
   EXPECT_EQ(count, 6);
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 /*
 TEST_F(GRTObjectValuesTest, BridgeRegistration) {

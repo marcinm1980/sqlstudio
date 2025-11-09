@@ -33,7 +33,7 @@
 
 #include "gtest/gtest.h"
 
-namespace {
+namespace testing {
 
 static const char *test_function_1_input[] = {
   "CREATE DATABASE IF NOT EXISTS `i-flow_dev` CHARACTER SET latin1 COLLATE latin1_swedish_ci;",

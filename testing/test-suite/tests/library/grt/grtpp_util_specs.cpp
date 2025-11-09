@@ -29,7 +29,7 @@
 #include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
-namespace {
+namespace testing {
 
 using namespace grt;
 
@@ -38,7 +38,7 @@ protected:
   void SetUp() override {
     MySqlStudioTester::reinitGRT();
     register_structs_test_xml();
-    grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
+    grt::GRT::get()->load_metaclasses(Context::get().tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
     EXPECT_EQ(grt::GRT::get()->get_metaclasses().size(), 6U);
   }
@@ -47,6 +47,8 @@ protected:
     MySqlStudioTester::reinitGRT();
   }
 };
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTUtilFunctionsTest, SetValueByPath) {
   test_BookRef book(grt::Initialized);
@@ -75,6 +77,8 @@ TEST_F(GRTUtilFunctionsTest, SetValueByPath) {
   }
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTUtilFunctionsTest, RegressionTestForBug17324160) {
   test_PublisherRef publisher(grt::Initialized);
   test_BookRef book(grt::Initialized);
@@ -93,6 +97,8 @@ TEST_F(GRTUtilFunctionsTest, RegressionTestForBug17324160) {
   // The bug was that a shallow_copy would modify the referenced objects that would back-reference the copied object
   EXPECT_EQ(book->publisher().id(), publisher.id());
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 }
 

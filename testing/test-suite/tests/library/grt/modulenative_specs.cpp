@@ -75,19 +75,19 @@ public:
 
 #include "gtest/gtest.h"
 
-class TestModuleImpl : public grt::ModuleImplBase { // this module does not implement everything from the interface
-public:
-  TestModuleImpl(grt::CPPModuleLoader *ldr) : grt::ModuleImplBase(ldr) {
-  }
+//class TestModuleImpl : public grt::ModuleImplBase { // this module does not implement everything from the interface
+//public:
+//  TestModuleImpl(grt::CPPModuleLoader *ldr) : grt::ModuleImplBase(ldr) {
+//  }
+//
+//  DEFINE_INIT_MODULE("1.0", "", grt::ModuleImplBase, DECLARE_MODULE_FUNCTION(TestModuleImpl::returnNull), NULL);
+//
+//  grt::ObjectRef returnNull() {
+//    return grt::ObjectRef();
+//  }
+//};
 
-  DEFINE_INIT_MODULE("1.0", "", grt::ModuleImplBase, DECLARE_MODULE_FUNCTION(TestModuleImpl::returnNull), NULL);
-
-  grt::ObjectRef returnNull() {
-    return grt::ObjectRef();
-  }
-};
-
-namespace {
+namespace testing {
 
 class GRTCppModulesTest : public ::testing::Test {
 protected:
@@ -96,7 +96,7 @@ protected:
     // otherwise this one will fail.
     grt::GRT::get()->reinitialiseForTests();
     register_structs_test_xml();
-    grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
+    grt::GRT::get()->load_metaclasses(Context::get().tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
   }
 
@@ -104,6 +104,8 @@ protected:
     MySqlStudioTester::reinitGRT();
   }
 };
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTCppModulesTest, LoadStructures) {
   EXPECT_EQ(grt::GRT::get()->get_metaclasses().size(), 6U);
@@ -123,6 +125,8 @@ TEST_F(GRTCppModulesTest, LoadInvalidModule) {
 
   EXPECT_THROW(grt::GRT::get()->get_native_module<BadModuleImpl>(), std::exception);
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTCppModulesTest, ModuleInterfaceRegistration) {
   EXPECT_EQ(grt::GRT::get()->get_interfaces().size(), 2UL);
@@ -172,6 +176,8 @@ TEST_F(GRTCppModulesTest, ModuleInterfaceRegistration) {
   EXPECT_EQ((int)f->ret_type.base.type, grt::IntegerType);
   EXPECT_TRUE(f->ret_type.base.object_class.empty());
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTCppModulesTest, ModuleLoadingAndInteraction) {
   // TODO: this test cannot run alone, as it requires at least one module to be registered.
@@ -279,6 +285,8 @@ TEST_F(GRTCppModulesTest, ModuleLoadingAndInteraction) {
   EXPECT_EQ(f->ret_type.base.object_class, "");
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTCppModulesTest, TestModuleCalling) {
   grt::Module *module = grt::GRT::get()->get_module("SampleModule1");
 
@@ -291,6 +299,8 @@ TEST_F(GRTCppModulesTest, TestModuleCalling) {
   EXPECT_EQ(*grt::IntegerRef::cast_from(result), 42);
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTCppModulesTest, FunctionsReturningNULLValueWereCausingException) {
   grt::Module *module = grt::GRT::get()->get_module("TestModule");
 
@@ -302,6 +312,8 @@ TEST_F(GRTCppModulesTest, FunctionsReturningNULLValueWereCausingException) {
   result = module->call_function("returnNull", args);
   EXPECT_FALSE(result.is_valid());
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 }
 

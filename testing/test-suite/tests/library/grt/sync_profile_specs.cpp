@@ -38,10 +38,11 @@
 #include "wb_connection_helpers.h"
 
 #include "gtest/gtest.h"
+#include "model_mockup.h"
 
 using namespace grt;
 
-namespace {
+namespace testing {
 
 class SyncProfileTest : public ::testing::Test {
 protected:
@@ -72,6 +73,8 @@ protected:
     tester->wb->close_document_finish();
   }
 };
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(SyncProfileTest, ValidationOfMockupData) {
   ValueRef e;
@@ -112,6 +115,8 @@ TEST_F(SyncProfileTest, ValidationOfMockupData) {
   EXPECT_NE(nullptr, diff);
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(SyncProfileTest, CreatePlusReverseEngineerMockupModel) {
   ValueRef e;
   std::unique_ptr<sql::Statement> stmt(connection->createStatement());
@@ -141,7 +146,7 @@ TEST_F(SyncProfileTest, CreatePlusReverseEngineerMockupModel) {
   diffsqlModule->generateSQL(catalog, options, create_change);
 
   options.set("OutputContainer", drop_map);
-  diffsqlModule->generateSQL(catalog, options, drop_change);
+   diffsqlModule->generateSQL(catalog, options, drop_change);
 
   diffsqlModule->makeSQLExportScript(catalog, options, create_map, drop_map);
   std::string export_sql_script = options.get_string("OutputScript");
@@ -160,6 +165,8 @@ TEST_F(SyncProfileTest, CreatePlusReverseEngineerMockupModel) {
   std::shared_ptr<DiffChange> diff = diff_make(cat1, cat2, &omf);
   EXPECT_EQ(nullptr, diff);
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 }
 

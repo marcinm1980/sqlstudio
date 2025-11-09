@@ -38,11 +38,14 @@ extern void register_all_metaclasses();
 
 namespace {
 
+
   class DbcConnectionTest : public ::testing::Test {
   protected:
+    std::unique_ptr<MySqlStudioTester> tester;
     db_mgmt_ConnectionRef connectionProperties;
 
     void SetUp() override {
+      tester.reset(new MySqlStudioTester);
       register_all_metaclasses();
       grt::GRT::get()->scan_metaclasses_in("../../res/grt/");
       grt::GRT::get()->end_loading_metaclasses();

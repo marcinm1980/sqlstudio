@@ -36,7 +36,9 @@ using namespace grt;
 //
 extern void register_all_metaclasses();
 
-namespace {
+//-----------------------------------------------------------------------------------------------------
+
+namespace testing {
 
 class GRTSerializationTest : public ::testing::Test {
 protected:
@@ -44,8 +46,8 @@ protected:
   std::string outputDir;
 
   void SetUp() override {
-    dataDir = CasmineContext::get()->tmpDataDir();
-    outputDir = CasmineContext::get()->outputDir();
+    dataDir = Context::get().tmpDataDir();
+    outputDir = Context::get().outputDir();
     register_all_metaclasses();
     register_structs_test_xml();
     grt::GRT::get()->load_metaclasses(dataDir + "/structs.test.xml");
@@ -66,10 +68,10 @@ protected:
     ValueRef res_val(GRT::get()->unserialize(filename));
     deepCompareGrtValues("serialization test", res_val, val, true);
   }
+
 };
 
-  }
-};
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTSerializationTest, SerializationOfSimpleValuesAndDictionaries) {
   StringRef sv("<tag1>%string_value/</tag1>");
@@ -116,6 +118,8 @@ TEST_F(GRTSerializationTest, SerializationOfSimpleValuesAndDictionaries) {
   runSerialization(obj);
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTSerializationTest, SerializationOfHierarchy) {
   ObjectListRef list(grt::Initialized);
 
@@ -137,6 +141,8 @@ TEST_F(GRTSerializationTest, SerializationOfHierarchy) {
   runSerialization(list);
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTSerializationTest, CatalogSerialization) {
   auto catalog(db_mysql_CatalogRef::cast_from(grt::GRT::get()->unserialize(dataDir + "/serialization/catalog.xml")));
 
@@ -144,6 +150,8 @@ TEST_F(GRTSerializationTest, CatalogSerialization) {
   EXPECT_NE(owner.valueptr(), nullptr);
   EXPECT_EQ(catalog->schemata().get(0)->tables().get(0).valueptr(), owner.valueptr());
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTSerializationTest, SerializationOfListsWithNULLValues) {
   grt::ListRef<db_Table> list(true);
@@ -160,6 +168,8 @@ TEST_F(GRTSerializationTest, SerializationOfListsWithNULLValues) {
   EXPECT_FALSE(list[1].is_valid());
   EXPECT_TRUE(list[2].is_valid());
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 #ifdef badtest
 TEST_F(GRTSerializationTest, DontFollowAttribute) {
@@ -182,6 +192,8 @@ TEST_F(GRTSerializationTest, DontFollowAttribute) {
   deepCompareGrtValues("Check attr:dontfollow=\"1\"", res_catalog, catalog);
 }
 #endif
+
+//-----------------------------------------------------------------------------------------------------
 
 }
 

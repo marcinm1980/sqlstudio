@@ -28,14 +28,14 @@
 #include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
-namespace {
+namespace testing {
 
 class GRTStructsMetaclassesTest : public ::testing::Test {
 protected:
   void SetUp() override {
     EXPECT_THROW({ test_Book book; }, std::exception);
     register_structs_test_xml();
-    grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
+    grt::GRT::get()->load_metaclasses(Context::get().tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
   }
 
@@ -44,9 +44,13 @@ protected:
   }
 };
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTStructsMetaclassesTest, LoadStructures) {
   EXPECT_EQ(grt::GRT::get()->get_metaclasses().size(), 6U);
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTStructsMetaclassesTest, TestValidStructCreationAndComparisonToAnotherStruct) {
   grt::MetaClass *book(grt::GRT::get()->get_metaclass("test.Book"));
@@ -64,6 +68,8 @@ TEST_F(GRTStructsMetaclassesTest, TestValidStructCreationAndComparisonToAnotherS
 
   EXPECT_EQ(book->parent()->name(), "test.Publication");
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTStructsMetaclassesTest, CheckGetMember) {
   grt::MetaClass *book = grt::GRT::get()->get_metaclass("test.Book");
@@ -83,13 +89,19 @@ TEST_F(GRTStructsMetaclassesTest, CheckGetMember) {
   EXPECT_EQ(*book_obj->pages(), 1234);
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTStructsMetaclassesTest, CheckHasMember) {
   GTEST_SKIP() << "it needs an implementation";
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTStructsMetaclassesTest, CheckGetMember2) {
   GTEST_SKIP() << "it needs an implementation";
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTStructsMetaclassesTest, CheckSetMember) {
   GTEST_SKIP() << "it needs an implementation";
@@ -100,17 +112,25 @@ TEST_F(GRTStructsMetaclassesTest, CheckSetMember) {
   // with override
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTStructsMetaclassesTest, CheckAllocation) {
   GTEST_SKIP() << "it needs an implementation";
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTStructsMetaclassesTest, CheckMethodCall) {
   GTEST_SKIP() << "it needs an implementation";
 }
 
+//-----------------------------------------------------------------------------------------------------
+
 TEST_F(GRTStructsMetaclassesTest, CheckForeachMember) {
   GTEST_SKIP() << "it needs an implementation";
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 TEST_F(GRTStructsMetaclassesTest, TestStructMembersAndTheirAttributes) {
   grt::MetaClass *book(grt::GRT::get()->get_metaclass("test.Book"));
@@ -149,6 +169,8 @@ TEST_F(GRTStructsMetaclassesTest, TestStructMembersAndTheirAttributes) {
   a = book->get_member_attribute("title", "group");
   EXPECT_EQ(a, "");
 }
+
+//-----------------------------------------------------------------------------------------------------
 
 }
 
