@@ -27,170 +27,248 @@
 #include "mtemplate/template.h"
 #include "base/string_utilities.h"
 #include <fstream>
+#include <string>
+#include <filesystem>
 
 #include "gtest/gtest.h"
 
-namespace {
+namespace test_suite {
+  //-----------------------------------------------------------------------------------------------------
+  // Read whole file as bytes (binary to avoid platform newline transforms).
+  static bool read_file_bytes(const std::filesystem::path &p, std::string &out) {
+    std::ifstream in(p, std::ios::binary);
+    if (!in) {
+      return false;
+    }
+    in.seekg(0, std::ios::end);
+    const std::streamoff size = in.tellg();
+    in.seekg(0, std::ios::beg);
+    out.resize(static_cast<size_t>(size));
+    if (size > 0)
+      in.read(&out[0], size);
+    return true;
+  }
 
+  //-----------------------------------------------------------------------------------------------------
 
+  // Normalize line endings to '\n'. Optionally trim trailing spaces per-line and ignore final newline.
+  static std::string normalize_text(std::string_view src, bool trim_trailing_space_per_line = false,
+                                    bool ignore_final_newline = true, bool strip_utf8_bom = true) {
+    std::string dst;
+    dst.reserve(src.size());
+    size_t i = 0, n = src.size();
 
-bool compare_file_contents(const std::string &filename1, const std::string &filename2) {
-  std::ifstream file1(filename1, std::ifstream::binary | std::ifstream::ate);
-  std::ifstream file2(filename2, std::ifstream::binary | std::ifstream::ate);
-
-  if (file1.fail() || file2.fail())
-    return false; // file problem
-
-  if (file1.tellg() != file2.tellg())
-    return false; // size mismatch
-
-  // seek back to beginning and use std::equal to compare contents
-  file1.seekg(0, std::ifstream::beg);
-  file2.seekg(0, std::ifstream::beg);
-  return std::equal(std::istreambuf_iterator<char>(file1.rdbuf()), std::istreambuf_iterator<char>(),
-                    std::istreambuf_iterator<char>(file2.rdbuf()));
-}
-
-// string escaper for CSV tokens, encloses fields with " if needed, depending on the separator
-struct CSVTokenQuoteModifier : public mtemplate::Modifier {
-  virtual base::utf8string modify(const base::utf8string &input, const base::utf8string arg = "") {
-    base::utf8string search_for = " \"\t\r\n";
-    base::utf8string result = input;
-
-    if (arg == "=comma")
-      search_for += ',';
-    else if (arg == "=tab")
-      search_for = '\t'; //  TODO: verify if this argument is ever used, since it is in the generic searches
-    else if (arg == "=semicolon")
-      search_for += ';';
-    else
-      search_for += ';';
-
-    if (input.find_first_of(search_for) != std::string::npos) {
-      base::replaceString(result, "\"", "\"\"");
-      result = base::utf8string("\"") + result + base::utf8string("\"");
+    // Strip UTF-8 BOM if present.
+    if (strip_utf8_bom && n >= 3 && static_cast<unsigned char>(src[0]) == 0xEF &&
+        static_cast<unsigned char>(src[1]) == 0xBB && static_cast<unsigned char>(src[2]) == 0xBF) {
+      i = 3;
     }
 
-    return result;
+    auto flush_line = [&](size_t line_start, size_t line_end_exclusive) {
+      // Optionally trim trailing spaces/tabs from the line.
+      if (trim_trailing_space_per_line) {
+        while (line_end_exclusive > line_start) {
+          char c = src[line_end_exclusive - 1];
+          if (c == ' ' || c == '\t') {
+            --line_end_exclusive;
+          } else {
+            break;
+          }
+        }
+      }
+      dst.append(src.substr(line_start, line_end_exclusive - line_start));
+      dst.push_back('\n');
+    };
+
+    size_t line_start = i;
+    while (i < n) {
+      char c = src[i];
+      if (c == '\r') {
+        // CRLF -> treat as single newline
+        if ((i + 1) < n && src[i + 1] == '\n') {
+          flush_line(line_start, i);
+          i += 2;
+          line_start = i;
+        } else {
+          // Lone CR (classic Mac) -> newline
+          flush_line(line_start, i);
+          ++i;
+          line_start = i;
+        }
+      } else if (c == '\n') {
+        // LF -> newline
+        flush_line(line_start, i);
+        ++i;
+        line_start = i;
+      } else {
+        ++i;
+      }
+    }
+
+    // Flush the last line if the file didn't end with a newline
+    if (line_start < n) {
+      // Add line and a canonical '\n'
+      flush_line(line_start, n);
+    }
+
+    // Optionally ignore a single final newline difference
+    if (ignore_final_newline && !dst.empty() && dst.back() == '\n') {
+      dst.pop_back();
+    }
+
+    return dst;
   }
-};
 
-struct SQLQuoteModifier : public mtemplate::Modifier {
-  virtual base::utf8string modify(const base::utf8string &input, const base::utf8string arg = "") {
-    return base::utf8string("\"") + input + base::utf8string("\"");
+  //-----------------------------------------------------------------------------------------------------
+
+  // Returns true if contents are equal after normalization.
+  bool equal_text_files_ignoring_eol(const std::filesystem::path &a, const std::filesystem::path &b,
+                                     bool trim_trailing_space_per_line = false, bool ignore_final_newline = true) {
+    std::string sa, sb;
+    if (!read_file_bytes(a, sa) || !read_file_bytes(b, sb)) {
+      return false; // could also throw if you prefer
+    }
+
+    const std::string na = normalize_text(sa, trim_trailing_space_per_line, ignore_final_newline);
+    const std::string nb = normalize_text(sb, trim_trailing_space_per_line, ignore_final_newline);
+    return na == nb;
   }
-};
 
-class MTemplateTest : public ::testing::Test {
-protected:
-  std::string outputDir;
-  std::string dataDir;
+  //-----------------------------------------------------------------------------------------------------
 
-  std::map<std::string, base::utf8string> language_details_map = {
-    {"english", base::utf8string("I can eat glass and it doesn't hurt me. ")},
-    {"Sanskrit", base::utf8string("काचं शक्नोम्यत्तुम् । नोपहिनस्ति माम् ॥")},
-    {"Sanskrit (standard transcription)", base::utf8string("kācaṃ śaknomyattum; nopahinasti mām.")},
-    {"Greek (polytonic)", base::utf8string("Μπορῶ νὰ φάω σπασμένα γυαλιὰ χωρὶς νὰ πάθω τίποτα.")},
-    {"Spanish", base::utf8string("Puedo comer vidrio, no me hace daño.")},
-    {"Portuguese", base::utf8string("Posso comer vidro, não me faz mal.")},
-    {"Cornish", base::utf8string("Mý a yl dybry gwéder hag éf ny wra ow ankenya.")},
-    {"Welsh", base::utf8string("Dw i'n gallu bwyta gwydr, 'dyw e ddim yn gwneud dolur i mi.")},
-    {"Irish", base::utf8string("Is féidir liom gloinne a ithe. Ní dhéanann sí dochar ar bith dom.")},
-    {"Anglo-Saxon (Runes)", base::utf8string("ᛁᚳ᛫ᛗᚨᚷ᛫ᚷᛚᚨᛋ᛫ᛖᚩᛏᚪᚾ᛫ᚩᚾᛞ᛫ᚻᛁᛏ᛫ᚾᛖ᛫ᚻᛖᚪᚱᛗᛁᚪᚧ᛫ᛗᛖ᛬")},
-    {"Swedish", base::utf8string("Jag kan äta glas utan att skada mig.")},
-    {"Czech", base::utf8string("Mohu jíst sklo, neublíží mi.")},
-    {"Slovak", base::utf8string("Môžem jesť sklo. Nezraní ma.")},
-    {"Polish", base::utf8string("Mogę jeść szkło i mi nie szkodzi.")},
-    {"Russian", base::utf8string("Я могу есть стекло, оно мне не вредит.")},
-    {"Hindi", base::utf8string("मैं काँच खा सकता हूँ और मुझे उससे कोई चोट नहीं पहुंचती.")},
-    {"Tamil", base::utf8string("நான் கண்ணாடி சாப்பிடுவேன், அதனால் எனக்கு ஒரு கேடும் வராது.")},
-    {"Chinese", base::utf8string("我能吞下玻璃而不伤身体。")},
-    {"Japanese", base::utf8string("私はガラスを食べられます。それは私を傷つけません。")}
+  // string escaper for CSV tokens, encloses fields with " if needed, depending on the separator
+  struct CSVTokenQuoteModifier : public mtemplate::Modifier {
+    virtual base::utf8string modify(const base::utf8string &input, const base::utf8string arg = "") {
+      base::utf8string search_for = " \"\t\r\n";
+      base::utf8string result = input;
+
+      if (arg == "=comma")
+        search_for += ',';
+      else if (arg == "=tab")
+        search_for = '\t'; //  TODO: verify if this argument is ever used, since it is in the generic searches
+      else if (arg == "=semicolon")
+        search_for += ';';
+      else
+        search_for += ';';
+
+      if (input.find_first_of(search_for) != std::string::npos) {
+        base::replaceString(result, "\"", "\"\"");
+        result = base::utf8string("\"") + result + base::utf8string("\"");
+      }
+
+      return result;
+    }
   };
 
-  void SetUp() override {
-    outputDir = "./output";
-    dataDir = "./data";
-  }
-};
+  //-----------------------------------------------------------------------------------------------------
 
-TEST_F(MTemplateTest, CreateCSVFromTemplate) {
+  struct SQLQuoteModifier : public mtemplate::Modifier {
+    virtual base::utf8string modify(const base::utf8string &input, const base::utf8string arg = "") {
+      return base::utf8string("\"") + input + base::utf8string("\"");
+    }
+  };
+
+  //-----------------------------------------------------------------------------------------------------
+
+  class MTemplateTest : public ::testing::Test {
+  protected:
+    std::string outputDir;
+    std::string dataDir;
+
+    std::map<std::string, base::utf8string> language_details_map = {
+      { "english", base::utf8string("I can eat glass and it doesn't hurt me. ") },
+      { "Sanskrit", base::utf8string("काचं शक्नोम्यत्तुम् । नोपहिनस्ति माम् ॥") },
+      { "Sanskrit (standard transcription)", base::utf8string("kācaṃ śaknomyattum; nopahinasti mām.") },
+      { "Greek (polytonic)", base::utf8string("Μπορῶ νὰ φάω σπασμένα γυαλιὰ χωρὶς νὰ πάθω τίποτα.") },
+      { "Spanish", base::utf8string("Puedo comer vidrio, no me hace daño.") },
+      { "Portuguese", base::utf8string("Posso comer vidro, não me faz mal.") },
+      { "Cornish", base::utf8string("Mý a yl dybry gwéder hag éf ny wra ow ankenya.") },
+      { "Welsh", base::utf8string("Dw i'n gallu bwyta gwydr, 'dyw e ddim yn gwneud dolur i mi.") },
+      { "Irish", base::utf8string("Is féidir liom gloinne a ithe. Ní dhéanann sí dochar ar bith dom.") },
+      { "Anglo-Saxon (Runes)", base::utf8string("ᛁᚳ᛫ᛗᚨᚷ᛫ᚷᛚᚨᛋ᛫ᛖᚩᛏᚪᚾ᛫ᚩᚾᛞ᛫ᚻᛁᛏ᛫ᚾᛖ᛫ᚻᛖᚪᚱᛗᛁᚪᚧ᛫ᛗᛖ᛬") },
+      { "Swedish", base::utf8string("Jag kan äta glas utan att skada mig.") },
+      { "Czech", base::utf8string("Mohu jíst sklo, neublíží mi.") },
+      { "Slovak", base::utf8string("Môžem jesť sklo. Nezraní ma.") },
+      { "Polish", base::utf8string("Mogę jeść szkło i mi nie szkodzi.") },
+      { "Russian", base::utf8string("Я могу есть стекло, оно мне не вредит.") },
+      { "Hindi", base::utf8string("मैं काँच खा सकता हूँ और मुझे उससे कोई चोट नहीं पहुंचती.") },
+      { "Tamil", base::utf8string("நான் கண்ணாடி சாப்பிடுவேன், அதனால் எனக்கு ஒரு கேடும் வராது.") },
+      { "Chinese", base::utf8string("我能吞下玻璃而不伤身体。") },
+      { "Japanese", base::utf8string("私はガラスを食べられます。それは私を傷つけません。") }
+    };
+
+    void SetUp() override {
+      outputDir = "../output";
+      dataDir = "../data";
+    }
+  };
+
+  //-----------------------------------------------------------------------------------------------------
+
+  TEST_F(MTemplateTest, CreateCSVFromTemplate) {
     //    This test creates a CSV file from a template + the data above. Also tests the usage of a modifier
     {
       //    setup modifiers
       mtemplate::Modifier::addModifier<CSVTokenQuoteModifier>("csv_quote");
-
       //    create output streams
       mtemplate::TemplateOutputFile output(outputDir + "/test_result.csv");
-
       { //   Header of the files
         mtemplate::Template *template_csv = mtemplate::GetTemplate(dataDir + "/mtemplate/CSV_semicolon.pre.tpl");
-
         mtemplate::DictionaryInterface *dictionary = mtemplate::CreateMainDictionary();
-
         dictionary->addSectionDictionary("COLUMN")->setValue("COLUMN_NAME", "Language");
         dictionary->addSectionDictionary("COLUMN")->setValue("COLUMN_NAME", "Phrase");
-
         template_csv->expand(dictionary, &output);
       }
 
       { //   data
         mtemplate::Template *template_data = mtemplate::GetTemplate(dataDir + "/mtemplate/CSV_semicolon.tpl");
-
         for (auto item : language_details_map) {
           mtemplate::DictionaryInterface *data_dictionary = mtemplate::CreateMainDictionary();
           mtemplate::DictionaryInterface *row_dictionary = data_dictionary->addSectionDictionary("ROW");
-
           mtemplate::DictionaryInterface *field_dictionary_col1 = row_dictionary->addSectionDictionary("FIELD");
           field_dictionary_col1->setValue("FIELD_VALUE", item.first);
-
           mtemplate::DictionaryInterface *field_dictionary_col2 = row_dictionary->addSectionDictionary("FIELD");
           field_dictionary_col2->setValue("FIELD_VALUE", item.second);
-
           template_data->expand(data_dictionary, &output);
         }
       }
     }
+    EXPECT_TRUE(equal_text_files_ignoring_eol(dataDir + "/mtemplate/test_result.csv", outputDir + "/test_result.csv"));
+  }
 
-    EXPECT_TRUE(compare_file_contents(dataDir + "/mtemplate/test_result.csv", outputDir + "/test_result.csv"));
-}
+  //-----------------------------------------------------------------------------------------------------
 
-TEST_F(MTemplateTest, CreateJSONFromTemplate) {
+  TEST_F(MTemplateTest, CreateJSONFromTemplate) {
     {
       mtemplate::SetGlobalValue("INDENT", "\t");
-
       //    create output streams
       mtemplate::TemplateOutputFile output_json(outputDir + "/test_result.json");
-
       //   Header of the files (no data)
       mtemplate::GetTemplate(dataDir + "/mtemplate/JSON.pre.tpl")->expand(nullptr, &output_json);
-
       { //   data
         mtemplate::Template *data_template_json = mtemplate::GetTemplate(dataDir + "/mtemplate/JSON.tpl");
-
         for (auto item : language_details_map) {
           mtemplate::DictionaryInterface *data_dictionary = mtemplate::CreateMainDictionary();
           mtemplate::DictionaryInterface *row_dictionary = data_dictionary->addSectionDictionary("ROW");
-
           mtemplate::DictionaryInterface *field_dictionary_col1 = row_dictionary->addSectionDictionary("FIELD");
           field_dictionary_col1->setValue("FIELD_NAME", "Language");
           field_dictionary_col1->setValue("FIELD_VALUE", item.first);
-
           mtemplate::DictionaryInterface *field_dictionary_col2 = row_dictionary->addSectionDictionary("FIELD");
           field_dictionary_col2->setValue("FIELD_NAME", "Phrase");
           field_dictionary_col2->setValue("FIELD_VALUE", item.second);
-
           data_template_json->expand(data_dictionary, &output_json);
         }
       }
-
       //   Footer for the files (no data)
       mtemplate::GetTemplate(dataDir + "/mtemplate/JSON.post.tpl")->expand(nullptr, &output_json);
     }
-    EXPECT_TRUE(compare_file_contents(dataDir + "/mtemplate/test_result.json", outputDir + "/test_result.json"));
-}
+    EXPECT_TRUE(
+      equal_text_files_ignoring_eol(dataDir + "/mtemplate/test_result.json", outputDir + "/test_result.json"));
+  }
 
-TEST_F(MTemplateTest, CreateSQLFromTemplate) {
+  //-----------------------------------------------------------------------------------------------------
+
+  TEST_F(MTemplateTest, CreateSQLFromTemplate) {
     {
       mtemplate::SetGlobalValue("TABLE_NAME", "some_table");
 
@@ -226,10 +304,12 @@ TEST_F(MTemplateTest, CreateSQLFromTemplate) {
       }
     }
 
-    EXPECT_TRUE(compare_file_contents(dataDir + "/mtemplate/test_result.sql", outputDir + "/test_result.sql"));
-}
+    EXPECT_TRUE(equal_text_files_ignoring_eol(dataDir + "/mtemplate/test_result.sql", outputDir + "/test_result.sql"));
+  }
 
-TEST_F(MTemplateTest, CreateHTMLFromTemplate) {
+  //-----------------------------------------------------------------------------------------------------
+
+  TEST_F(MTemplateTest, CreateHTMLFromTemplate) {
     { // Need outer braces to make output_json flush its data to disk.
       //    create output streams
       mtemplate::TemplateOutputFile output_json(outputDir + "/test_result.html");
@@ -243,7 +323,8 @@ TEST_F(MTemplateTest, CreateHTMLFromTemplate) {
       }
 
       { //   data
-        std::unique_ptr<mtemplate::Template> data_template_json(mtemplate::GetTemplate(dataDir + "/mtemplate/HTML.tpl"));
+        std::unique_ptr<mtemplate::Template> data_template_json(
+          mtemplate::GetTemplate(dataDir + "/mtemplate/HTML.tpl"));
 
         for (auto item : language_details_map) {
           std::unique_ptr<mtemplate::DictionaryInterface> data_dictionary(mtemplate::CreateMainDictionary());
@@ -260,8 +341,10 @@ TEST_F(MTemplateTest, CreateHTMLFromTemplate) {
       mtemplate::GetTemplate(dataDir + "/mtemplate/HTML.post.tpl")->expand(nullptr, &output_json);
     }
 
-    EXPECT_TRUE(compare_file_contents(dataDir + "/mtemplate/test_result.html", outputDir + "/test_result.html"));
-}
+    EXPECT_TRUE(
+      equal_text_files_ignoring_eol(dataDir + "/mtemplate/test_result.html", outputDir + "/test_result.html"));
+  }
 
-}
+  //-----------------------------------------------------------------------------------------------------
 
+} // namespace test_suite

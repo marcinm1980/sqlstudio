@@ -42,11 +42,13 @@ namespace {
 
   class DbcGeneralTest : public ::testing::Test {
   protected:
+    std::unique_ptr<MySqlStudioTester> tester;
+
     void SetUp() override {
-      // load structs
       register_all_metaclasses();
       grt::GRT::get()->scan_metaclasses_in("../../res/grt/");
       grt::GRT::get()->end_loading_metaclasses();
+      tester.reset(new MySqlStudioTester);
       EXPECT_EQ((size_t)INT_METACLASS_COUNT, grt::GRT::get()->get_metaclasses().size());
     }
 
@@ -63,118 +65,120 @@ namespace {
       std::unique_ptr<sql::Statement> stmt(connection->createStatement());
       stmt->execute("DROP SCHEMA IF EXISTS test");
 
-      MySqlStudioTester::reinitGRT();
+      //MySqlStudioTester::reinitGRT();
     }
   };
 
-TEST_F(DbcGeneralTest, ChecksInitialFunctionality) {
-  EXPECT_EQ(INT_METACLASS_COUNT, grt::GRT::get()->get_metaclasses().size());
-  db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
+  TEST_F(DbcGeneralTest, ChecksInitialFunctionality) {
+    EXPECT_EQ(INT_METACLASS_COUNT, grt::GRT::get()->get_metaclasses().size());
+    db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
 
-  setupConnectionEnvironment(connectionProperties);
+    setupConnectionEnvironment(connectionProperties);
 
-  sql::DriverManager *dm = sql::DriverManager::getDriverManager();
-  dm->set_testing();
-  sql::ConnectionWrapper wrapper = dm->getConnection(connectionProperties);
-  sql::Connection *connection = wrapper.get();
+    sql::DriverManager *dm = sql::DriverManager::getDriverManager();
+    dm->set_testing();
+    sql::ConnectionWrapper wrapper = dm->getConnection(connectionProperties);
+    sql::Connection *connection = wrapper.get();
 
-  std::unique_ptr<sql::Statement> stmt(connection->createStatement());
-  stmt->execute("DROP SCHEMA IF EXISTS test");
+    std::unique_ptr<sql::Statement> stmt(connection->createStatement());
+    stmt->execute("DROP SCHEMA IF EXISTS test");
 
-  std::unique_ptr<sql::ResultSet> rset1(stmt->executeQuery("SHOW DATABASES like 'test'"));
-  EXPECT_EQ(0U, rset1->rowsCount());
+    std::unique_ptr<sql::ResultSet> rset1(stmt->executeQuery("SHOW DATABASES like 'test'"));
+    EXPECT_EQ(0U, rset1->rowsCount());
 
-  stmt->execute("CREATE SCHEMA test");
+    stmt->execute("CREATE SCHEMA test");
 
-  std::unique_ptr<sql::ResultSet> rset2(stmt->executeQuery("SHOW DATABASES like 'test'"));
-  EXPECT_EQ(1U, rset2->rowsCount());
-}
+    std::unique_ptr<sql::ResultSet> rset2(stmt->executeQuery("SHOW DATABASES like 'test'"));
+    EXPECT_EQ(1U, rset2->rowsCount());
+  }
 
-TEST_F(DbcGeneralTest, MetadataFetchTest) {
-  db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
+  TEST_F(DbcGeneralTest, MetadataFetchTest) {
+    db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
 
-  setupConnectionEnvironment(connectionProperties);
+    setupConnectionEnvironment(connectionProperties);
 
-  sql::DriverManager *dm = sql::DriverManager::getDriverManager();
-  dm->set_testing();
-  sql::ConnectionWrapper wrapper = dm->getConnection(connectionProperties);
-  sql::Connection *connection = wrapper.get();
-  sql::DatabaseMetaData *meta(connection->getMetaData());
-  std::unique_ptr<sql::ResultSet> rset(meta->getSchemata());
+    sql::DriverManager *dm = sql::DriverManager::getDriverManager();
+    dm->set_testing();
+    sql::ConnectionWrapper wrapper = dm->getConnection(connectionProperties);
+    sql::Connection *connection = wrapper.get();
+    sql::DatabaseMetaData *meta(connection->getMetaData());
+    std::unique_ptr<sql::ResultSet> rset(meta->getSchemata());
 
-  while (rset->next()) {
+    while (rset->next()) {
+      if (getenv("VERBOSE")) {
+        std::cout << rset->getString("Database") << std::endl;
+        std::cout << "  Schema Objects:" << std::endl;
+      }
+
+      std::unique_ptr<sql::ResultSet> rset2(meta->getSchemaObjects("", rset->getString("Database")));
+      while (rset2->next()) {
+        if (getenv("VERBOSE"))
+          std::cout << rset2->getString("OBJECT_TYPE") << ": " << rset2->getString("NAME") << ","
+                    << rset2->getString("DDL") << std::endl;
+      }
+    }
+  }
+
+  TEST_F(DbcGeneralTest, TransactionTests) {
+    db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
+
+    setupConnectionEnvironment(connectionProperties);
+
+    sql::DriverManager *dm = sql::DriverManager::getDriverManager();
+    dm->set_testing();
+    sql::ConnectionWrapper wrapper = dm->getConnection(connectionProperties);
+    sql::Connection *connection = wrapper.get();
+
+    std::unique_ptr<sql::Statement> stmt(connection->createStatement());
+
+    stmt->execute("DROP SCHEMA IF EXISTS test");
+    stmt->execute("CREATE SCHEMA test");
+
+    stmt->execute("DROP TABLE IF EXISTS test.product");
+    stmt->execute("CREATE TABLE test.product(idproduct INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(80))");
+
+    connection->setAutoCommit(0);
+
+    if (getenv("VERBOSE"))
+      std::cout << "Insert Data." << std::endl;
+
+    std::unique_ptr<sql::PreparedStatement> prepStmt(
+      connection->prepareStatement("INSERT INTO test.product(idproduct, name)  VALUES(?, ?)"));
+    prepStmt->setInt(1, 1);
+    prepStmt->setString(2, "Harry Potter");
+    prepStmt->executeUpdate();
+
+    if (getenv("VERBOSE"))
+      std::cout << "Display Data." << std::endl;
+
+    std::unique_ptr<sql::ResultSet> rset1(stmt->executeQuery("SELECT * FROM test.product"));
+
+    int i = 0;
+    while (rset1->next()) {
+      if (getenv("VERBOSE"))
+        std::cout << rset1->getString(2) << ", " << rset1->getString("name") << std::endl;
+      i++;
+    }
     if (getenv("VERBOSE")) {
-      std::cout << rset->getString("Database") << std::endl;
-      std::cout << "  Schema Objects:" << std::endl;
+      printf("%d row(s)", i);
+
+      printf("Rollback");
     }
 
-    std::unique_ptr<sql::ResultSet> rset2(meta->getSchemaObjects("", rset->getString("Database")));
+    connection->rollback();
+
+    if (getenv("VERBOSE"))
+      printf("Display Data Again.\n");
+
+    std::unique_ptr<sql::ResultSet> rset2(stmt->executeQuery("SELECT * FROM test.product"));
+
+    i = 0;
     while (rset2->next()) {
       if (getenv("VERBOSE"))
-        std::cout << rset2->getString("OBJECT_TYPE") << ": " << rset2->getString("NAME") << ","
-                  << rset2->getString("DDL") << std::endl;
+        std::cout << rset2->getString(2) << ", " << rset2->getString("name") << std::endl;
+      i++;
     }
-  }
-}
-
-TEST_F(DbcGeneralTest, TransactionTests) {
-  db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
-
-  setupConnectionEnvironment(connectionProperties);
-
-  sql::DriverManager *dm = sql::DriverManager::getDriverManager();
-  dm->set_testing();
-  sql::ConnectionWrapper wrapper = dm->getConnection(connectionProperties);
-  sql::Connection *connection = wrapper.get();
-
-  std::unique_ptr<sql::Statement> stmt(connection->createStatement());
-
-  stmt->execute("DROP TABLE IF EXISTS test.product");
-  stmt->execute("CREATE TABLE test.product(idproduct INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(80))");
-
-  connection->setAutoCommit(0);
-
-  if (getenv("VERBOSE"))
-    std::cout << "Insert Data." << std::endl;
-
-  std::unique_ptr<sql::PreparedStatement> prepStmt(
-    connection->prepareStatement("INSERT INTO test.product(idproduct, name)  VALUES(?, ?)"));
-  prepStmt->setInt(1, 1);
-  prepStmt->setString(2, "Harry Potter");
-  prepStmt->executeUpdate();
-
-  if (getenv("VERBOSE"))
-    std::cout << "Display Data." << std::endl;
-
-  std::unique_ptr<sql::ResultSet> rset1(stmt->executeQuery("SELECT * FROM test.product"));
-
-  int i = 0;
-  while (rset1->next()) {
     if (getenv("VERBOSE"))
-      std::cout << rset1->getString(2) << ", " << rset1->getString("name") << std::endl;
-    i++;
+      std::cout << i << " row(s)" << std::endl;
   }
-  if (getenv("VERBOSE")) {
-    printf("%d row(s)", i);
-
-    printf("Rollback");
-  }
-
-  connection->rollback();
-
-  if (getenv("VERBOSE"))
-    printf("Display Data Again.\n");
-
-  std::unique_ptr<sql::ResultSet> rset2(stmt->executeQuery("SELECT * FROM test.product"));
-
-  i = 0;
-  while (rset2->next()) {
-    if (getenv("VERBOSE"))
-      std::cout << rset2->getString(2) << ", " << rset2->getString("name") << std::endl;
-    i++;
-  }
-  if (getenv("VERBOSE"))
-    std::cout << i << " row(s)" << std::endl;
-}
-}
-
+} // namespace

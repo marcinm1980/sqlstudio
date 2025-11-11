@@ -45,9 +45,7 @@ void load_json_config(const std::string& path, rapidjson::Document& doc) {
 namespace testing {
 
   Context::Context() {
-    // Basic initialization of base dir could be improved; placeholder logic for now.
-    _baseDir = "."; // TODO: inject actual base directory.
-    // Attempt to load optional configuration file.
+    _baseDir = ".."; // TODO: inject actual base directory.
     auto* doc = new rapidjson::Document(rapidjson::kObjectType);
     load_json_config(_baseDir + "/test-config.json", *doc);
     _configuration_impl = doc;

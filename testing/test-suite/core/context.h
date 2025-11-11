@@ -57,7 +57,7 @@ namespace testing {
       return _baseDir + "/output";
     }
     std::string tmpDataDir() {
-      return _baseDir + "/tmpdata";
+      return _baseDir + "/data";
     }
 
     std::string getConfigurationStringValue(std::string const& path, std::string const& defaultValue = "") const;
