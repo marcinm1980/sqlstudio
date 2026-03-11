@@ -167,3 +167,4 @@ library/parsers/antlr
 .vs/
 test-results.json
 packages/
+bundle/
