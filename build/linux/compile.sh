@@ -1,0 +1,334 @@
+#!/usr/bin/env bash
+#
+# compile.sh — Build MySQL Studio (Workbench) on Linux using CMake
+#
+# Environment:
+#   WB_BUNDLE_DIR   Path to the directory containing pre-built 3rd-party
+#                   libraries (headers in include/, libs in lib/, binaries
+#                   in bin/).  When set the script forwards the paths to
+#                   CMake so that Find-modules can locate every bundled
+#                   dependency (MySQL Connector/C++, vsqlitepp, ANTLR4,
+#                   GDAL, libssh, iODBC, Rapidjson …).
+#
+# Usage:
+#   ./compile.sh [options]
+#
+# Options:
+#   -b, --build-type    Debug | Release | RelWithDebInfo  (default: Release)
+#   -j, --jobs          Parallel jobs for make             (default: nproc)
+#   -p, --prefix        CMAKE_INSTALL_PREFIX               (default: /usr/local)
+#   -B, --build-dir     Out-of-source build directory      (default: <source>/build/output)
+#       --bundled-mysql  Pass -DUSE_BUNDLED_MYSQL=ON
+#       --unixodbc       Use unixODBC instead of iODBC
+#       --cotire         Enable cotire pre-compiled headers
+#       --gcov           Instrument for gcov coverage
+#       --test           Enable TEST_BUILD (extra debug libs)
+#       --antlr-jar PATH Explicit path to the ANTLR 4 complete jar
+#       --clean          Remove build directory before configuring
+#       --install        Run 'make install' after build
+#   -h, --help          Show this help message
+#
+set -euo pipefail
+
+###############################################################################
+# Colours
+###############################################################################
+if [[ -t 1 ]]; then
+    C_RESET='\033[0m'
+    C_BOLD='\033[1m'
+    C_RED='\033[1;31m'
+    C_GREEN='\033[1;32m'
+    C_YELLOW='\033[1;33m'
+    C_BLUE='\033[1;34m'
+    C_MAGENTA='\033[1;35m'
+    C_CYAN='\033[1;36m'
+    C_WHITE='\033[1;37m'
+    C_DIM='\033[2m'
+else
+    C_RESET='' C_BOLD='' C_RED='' C_GREEN='' C_YELLOW=''
+    C_BLUE='' C_MAGENTA='' C_CYAN='' C_WHITE='' C_DIM=''
+fi
+
+###############################################################################
+# Logging helpers
+###############################################################################
+info()    { echo -e "${C_CYAN}[INFO]${C_RESET}    $*"; }
+ok()      { echo -e "${C_GREEN}[OK]${C_RESET}      $*"; }
+warn()    { echo -e "${C_YELLOW}[WARN]${C_RESET}    $*"; }
+error()   { echo -e "${C_RED}[ERROR]${C_RESET}   $*" >&2; }
+section() { echo -e "\n${C_MAGENTA}${C_BOLD}── $* ──${C_RESET}"; }
+detail()  { echo -e "  ${C_DIM}$*${C_RESET}"; }
+
+banner() {
+    echo -e "${C_BLUE}${C_BOLD}"
+    echo "╔══════════════════════════════════════════════════════╗"
+    echo "║          MySQL Studio — Linux Build Script          ║"
+    echo "╚══════════════════════════════════════════════════════╝"
+    echo -e "${C_RESET}"
+}
+
+###############################################################################
+# Resolve source root (parent of build/)
+###############################################################################
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+###############################################################################
+# Defaults
+###############################################################################
+BUILD_TYPE="Release"
+JOBS="$(nproc 2>/dev/null || echo 4)"
+INSTALL_PREFIX="/usr/local"
+BUILD_DIR="${SOURCE_DIR}/build/output"
+USE_BUNDLED_MYSQL="OFF"
+USE_UNIXODBC="OFF"
+ENABLE_COTIRE="OFF"
+BUILD_FOR_GCOV="OFF"
+TEST_BUILD="OFF"
+ANTLR_JAR=""
+DO_CLEAN=false
+DO_INSTALL=false
+
+###############################################################################
+# Parse arguments
+###############################################################################
+usage() {
+    sed -n '/^# Usage:/,/^#$/p' "$0" | sed 's/^# \?//'
+    sed -n '/^# Options:/,/^#$/{ /^#$/d; s/^# \?//; p }' "$0"
+    exit 0
+}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -b|--build-type)    BUILD_TYPE="$2";        shift 2 ;;
+        -j|--jobs)          JOBS="$2";              shift 2 ;;
+        -p|--prefix)        INSTALL_PREFIX="$2";    shift 2 ;;
+        -B|--build-dir)     BUILD_DIR="$2";         shift 2 ;;
+        --bundled-mysql)    USE_BUNDLED_MYSQL="ON";  shift   ;;
+        --unixodbc)         USE_UNIXODBC="ON";       shift   ;;
+        --cotire)           ENABLE_COTIRE="ON";      shift   ;;
+        --gcov)             BUILD_FOR_GCOV="ON";     shift   ;;
+        --test)             TEST_BUILD="ON";         shift   ;;
+        --antlr-jar)        ANTLR_JAR="$2";         shift 2 ;;
+        --clean)            DO_CLEAN=true;           shift   ;;
+        --install)          DO_INSTALL=true;         shift   ;;
+        -h|--help)          usage ;;
+        *)
+            error "Unknown option: ${C_BOLD}$1"
+            echo "Run ${C_CYAN}$0 --help${C_RESET} for usage."
+            exit 1
+            ;;
+    esac
+done
+
+###############################################################################
+# Banner & summary
+###############################################################################
+banner
+
+section "Configuration"
+info "Source directory    : ${C_WHITE}${SOURCE_DIR}"
+info "Build directory    : ${C_WHITE}${BUILD_DIR}"
+info "Build type         : ${C_WHITE}${BUILD_TYPE}"
+info "Install prefix     : ${C_WHITE}${INSTALL_PREFIX}"
+info "Parallel jobs      : ${C_WHITE}${JOBS}"
+
+if [[ -n "${WB_BUNDLE_DIR:-}" ]]; then
+    ok   "WB_BUNDLE_DIR      : ${C_WHITE}${WB_BUNDLE_DIR}"
+else
+    warn "WB_BUNDLE_DIR is ${C_BOLD}not set${C_RESET}${C_YELLOW} — system packages will be used for 3rd-party libs"
+fi
+
+[[ "${USE_BUNDLED_MYSQL}" == "ON" ]] && info "Bundled MySQL      : ${C_GREEN}ON"
+[[ "${USE_UNIXODBC}"      == "ON" ]] && info "ODBC driver        : ${C_GREEN}unixODBC"
+[[ "${ENABLE_COTIRE}"     == "ON" ]] && info "Cotire (PCH)       : ${C_GREEN}ON"
+[[ "${BUILD_FOR_GCOV}"    == "ON" ]] && info "gcov coverage      : ${C_GREEN}ON"
+[[ "${TEST_BUILD}"        == "ON" ]] && info "Test build         : ${C_GREEN}ON"
+[[ -n "${ANTLR_JAR}" ]]              && info "ANTLR jar          : ${C_WHITE}${ANTLR_JAR}"
+
+###############################################################################
+# Quick dependency smoke-test
+###############################################################################
+section "Checking host tools"
+
+MISSING_TOOLS=()
+for tool in cmake make gcc g++ pkg-config swig python3; do
+    if command -v "$tool" &>/dev/null; then
+        ok "$(printf '%-14s' "$tool") $(command -v "$tool") ${C_DIM}($(${tool} --version 2>&1 | head -1))"
+    else
+        error "$(printf '%-14s' "$tool") ${C_RED}NOT FOUND"
+        MISSING_TOOLS+=("$tool")
+    fi
+done
+
+if [[ ${#MISSING_TOOLS[@]} -gt 0 ]]; then
+    echo
+    error "Missing required tools: ${C_BOLD}${MISSING_TOOLS[*]}"
+    error "Install them and re-run."
+    exit 1
+fi
+
+###############################################################################
+# Clean (optional)
+###############################################################################
+if $DO_CLEAN && [[ -d "${BUILD_DIR}" ]]; then
+    section "Cleaning previous build"
+    warn "Removing ${C_WHITE}${BUILD_DIR}"
+    rm -rf "${BUILD_DIR}"
+    ok "Clean complete."
+fi
+
+mkdir -p "${BUILD_DIR}"
+
+###############################################################################
+# Build CMAKE_ARGS
+###############################################################################
+section "Preparing CMake arguments"
+
+CMAKE_ARGS=(
+    -G "Unix Makefiles"
+    -DCMAKE_BUILD_TYPE="${BUILD_TYPE}"
+    -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}"
+    -DUSE_BUNDLED_MYSQL="${USE_BUNDLED_MYSQL}"
+    -DUSE_UNIXODBC="${USE_UNIXODBC}"
+    -DENABLE_COTIRE="${ENABLE_COTIRE}"
+    -DBUILD_FOR_GCOV="${BUILD_FOR_GCOV}"
+    -DTEST_BUILD="${TEST_BUILD}"
+)
+
+# ------- WB_BUNDLE_DIR integration -------
+# When WB_BUNDLE_DIR is set we expose its sub-directories via CMAKE_PREFIX_PATH
+# and also set individual hint variables so that Find-modules locate every
+# bundled dependency.
+if [[ -n "${WB_BUNDLE_DIR:-}" ]]; then
+    if [[ ! -d "${WB_BUNDLE_DIR}" ]]; then
+        error "WB_BUNDLE_DIR points to a non-existent directory: ${WB_BUNDLE_DIR}"
+        exit 1
+    fi
+
+    BUNDLE_LIB="${WB_BUNDLE_DIR}/lib"
+    BUNDLE_INC="${WB_BUNDLE_DIR}/include"
+    BUNDLE_BIN="${WB_BUNDLE_DIR}/bin"
+
+    CMAKE_ARGS+=(
+        -DCMAKE_PREFIX_PATH="${WB_BUNDLE_DIR}"
+        # MySQL Connector/C++
+        -DMYSQLCPPCONN_LIBRARY="${BUNDLE_LIB}/libmysqlcppconn.so"
+        -DMYSQLCPPCONN_INCLUDE_DIR="${BUNDLE_INC}"
+        # vsqlite++
+        -DVSQLITE_LIBRARY="${BUNDLE_LIB}/libvsqlitepp.so"
+        -DVSQLITE_INCLUDE_DIR="${BUNDLE_INC}"
+        # ANTLR4 runtime
+        -DANTLR4_LIBRARY="${BUNDLE_LIB}/libantlr4-runtime.so"
+        -DANTLR4_INCLUDE_DIR="${BUNDLE_INC}"
+        # GDAL
+        -DGDAL_LIBRARY="${BUNDLE_LIB}/libgdal.so"
+        -DGDAL_INCLUDE_DIR="${BUNDLE_INC}"
+        # libssh
+        -Dlibssh_DIR="${BUNDLE_LIB}/cmake/libssh"
+        # iODBC (unless unixODBC was requested)
+        -DIODBC_LIBRARY="${BUNDLE_LIB}/libiodbc.so"
+        -DIODBC_INCLUDE_DIR="${BUNDLE_INC}"
+        # Rapidjson
+        -DRAPIDJSON_INCLUDE_DIR="${BUNDLE_INC}"
+        # MySQL client
+        -DMYSQL_LIBRARY="${BUNDLE_LIB}/libmysqlclient.so"
+        -DMYSQL_INCLUDE_DIR="${BUNDLE_INC}/mysql"
+        # Boost (header-only)
+        -DBOOST_ROOT="${WB_BUNDLE_DIR}"
+        # OpenSSL
+        -DOPENSSL_ROOT_DIR="${WB_BUNDLE_DIR}"
+    )
+
+    detail "CMAKE_PREFIX_PATH = ${WB_BUNDLE_DIR}"
+fi
+
+# ANTLR jar override
+if [[ -n "${ANTLR_JAR}" ]]; then
+    CMAKE_ARGS+=(-DWITH_ANTLR_JAR="${ANTLR_JAR}")
+fi
+
+# Print all CMake arguments for transparency
+for arg in "${CMAKE_ARGS[@]}"; do
+    detail "$arg"
+done
+
+###############################################################################
+# CMake configure
+###############################################################################
+section "Configuring (CMake)"
+
+info "Running cmake in ${C_WHITE}${BUILD_DIR}"
+echo
+
+cmake_log="${BUILD_DIR}/cmake_configure.log"
+
+if cmake -S "${SOURCE_DIR}" -B "${BUILD_DIR}" "${CMAKE_ARGS[@]}" 2>&1 | tee "${cmake_log}"; then
+    echo
+    ok "CMake configuration succeeded."
+else
+    echo
+    error "CMake configuration ${C_RED}FAILED${C_RESET}.  Log: ${C_WHITE}${cmake_log}"
+    exit 1
+fi
+
+###############################################################################
+# Build
+###############################################################################
+section "Building (make -j${JOBS})"
+
+build_start=$SECONDS
+
+if cmake --build "${BUILD_DIR}" -- -j"${JOBS}" 2>&1 | \
+    while IFS= read -r line; do
+        # Colourise compiler output on the fly
+        if [[ "$line" =~ ^.*error:.* ]]; then
+            echo -e "${C_RED}${line}${C_RESET}"
+        elif [[ "$line" =~ ^.*warning:.* ]]; then
+            echo -e "${C_YELLOW}${line}${C_RESET}"
+        elif [[ "$line" =~ ^\[\ *[0-9]+%\] ]]; then
+            echo -e "${C_GREEN}${line}${C_RESET}"
+        elif [[ "$line" =~ ^Linking ]]; then
+            echo -e "${C_CYAN}${line}${C_RESET}"
+        elif [[ "$line" =~ ^Scanning|^Building ]]; then
+            echo -e "${C_BLUE}${line}${C_RESET}"
+        else
+            echo "$line"
+        fi
+    done
+then
+    build_elapsed=$(( SECONDS - build_start ))
+    echo
+    ok "Build completed in ${C_BOLD}$(printf '%dm %ds' $((build_elapsed/60)) $((build_elapsed%60)))${C_RESET}"
+else
+    echo
+    error "Build ${C_RED}FAILED${C_RESET}"
+    exit 1
+fi
+
+###############################################################################
+# Install (optional)
+###############################################################################
+if $DO_INSTALL; then
+    section "Installing"
+    info "Installing to ${C_WHITE}${INSTALL_PREFIX}"
+
+    if cmake --install "${BUILD_DIR}" 2>&1 | tee "${BUILD_DIR}/cmake_install.log"; then
+        ok "Installation completed."
+    else
+        error "Installation ${C_RED}FAILED${C_RESET}"
+        exit 1
+    fi
+fi
+
+###############################################################################
+# Done
+###############################################################################
+echo
+echo -e "${C_GREEN}${C_BOLD}╔══════════════════════════════════════════════════════╗${C_RESET}"
+echo -e "${C_GREEN}${C_BOLD}║              Build finished successfully!            ║${C_RESET}"
+echo -e "${C_GREEN}${C_BOLD}╚══════════════════════════════════════════════════════╝${C_RESET}"
+echo
+detail "Build artefacts : ${BUILD_DIR}"
+detail "CMake log       : ${cmake_log}"
+echo
