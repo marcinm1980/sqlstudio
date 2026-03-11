@@ -141,6 +141,7 @@ mforms_wrap.cxx
 library/sql-parser/source/windows/myx_sql_parser.output
 build/msi/distribution/
 build/zip/distribution/
+build/output/
 *.wixpdb
 MySQL.tokens
 config.cnf
@@ -182,3 +183,9 @@ build/output/library/grt/src/libgrt.so.1.0.1
 build/output/library/mtemplate/libmtemplate.so.1.0.1
 build/output/library/mysql.canvas/src/libmdcanvas.so.1.0.1
 build/output/library/ssh/libwbssh.so.1.0.1
+build/output/cmake_install.log
+build/output/install_manifest.txt
+build/output/cmake_install.log
+build/output/cmake_install.log
+build/output/cmake_install.log
+build/output/cmake_install.log
