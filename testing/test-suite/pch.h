@@ -48,7 +48,9 @@ typedef int ssize_t;
 #include <string.h>
 #include <iostream>
 #include <wchar.h>
+#ifdef _MSC_VER
 #include <codecvt>
+#endif
 #include <fcntl.h>
 #include <fstream>
 #include <sstream>

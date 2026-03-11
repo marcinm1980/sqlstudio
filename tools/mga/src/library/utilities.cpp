@@ -225,19 +225,66 @@ void Utilities::replaceStringInplace(std::string &value, std::string const& sear
 //----------------------------------------------------------------------------------------------------------------------
 
 std::string Utilities::ws2s(std::wstring const& wstr) {
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-  std::string narrow = converter.to_bytes(wstr);
-
-  return narrow;
+  // Manual wchar_t (UTF-32 on Linux, UTF-16 on Windows) to UTF-8 conversion.
+  std::string result;
+  result.reserve(wstr.size() * 2);
+  for (wchar_t wc : wstr) {
+    uint32_t cp = static_cast<uint32_t>(wc);
+    if (cp < 0x80) {
+      result.push_back(static_cast<char>(cp));
+    } else if (cp < 0x800) {
+      result.push_back(static_cast<char>(0xC0 | (cp >> 6)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    } else if (cp < 0x10000) {
+      result.push_back(static_cast<char>(0xE0 | (cp >> 12)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    } else {
+      result.push_back(static_cast<char>(0xF0 | (cp >> 18)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 12) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    }
+  }
+  return result;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
 std::wstring Utilities::s2ws(const std::string &str) {
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-  std::wstring wide = converter.from_bytes(str);
-
-  return wide;
+  // Manual UTF-8 to wchar_t (UTF-32 on Linux) conversion.
+  std::wstring result;
+  result.reserve(str.size());
+  size_t i = 0;
+  while (i < str.size()) {
+    uint32_t cp;
+    unsigned char c = static_cast<unsigned char>(str[i]);
+    if (c < 0x80) {
+      cp = c; i += 1;
+    } else if ((c & 0xE0) == 0xC0) {
+      if (i + 1 >= str.size()) break;
+      cp = (c & 0x1Fu) << 6;
+      cp |= (static_cast<unsigned char>(str[i + 1]) & 0x3Fu);
+      i += 2;
+    } else if ((c & 0xF0) == 0xE0) {
+      if (i + 2 >= str.size()) break;
+      cp = (c & 0x0Fu) << 12;
+      cp |= (static_cast<unsigned char>(str[i + 1]) & 0x3Fu) << 6;
+      cp |= (static_cast<unsigned char>(str[i + 2]) & 0x3Fu);
+      i += 3;
+    } else if ((c & 0xF8) == 0xF0) {
+      if (i + 3 >= str.size()) break;
+      cp = (c & 0x07u) << 18;
+      cp |= (static_cast<unsigned char>(str[i + 1]) & 0x3Fu) << 12;
+      cp |= (static_cast<unsigned char>(str[i + 2]) & 0x3Fu) << 6;
+      cp |= (static_cast<unsigned char>(str[i + 3]) & 0x3Fu);
+      i += 4;
+    } else {
+      i += 1; continue;
+    }
+    result.push_back(static_cast<wchar_t>(cp));
+  }
+  return result;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

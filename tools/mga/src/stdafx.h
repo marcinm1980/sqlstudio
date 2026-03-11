@@ -73,7 +73,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <functional>
+#ifdef _MSC_VER
 #include <codecvt>
+#endif
 #include <set>
 #include <sstream>
 #include <stdarg.h>

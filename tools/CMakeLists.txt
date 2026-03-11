@@ -1,2 +1,6 @@
-add_subdirectory(genobj)
-add_subdirectory(genwrap)
+if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/genobj)
+  add_subdirectory(genobj)
+endif()
+if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/genwrap)
+  add_subdirectory(genwrap)
+endif()

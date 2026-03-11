@@ -168,3 +168,17 @@ library/parsers/antlr
 test-results.json
 packages/
 bundle/
+build/build/output/cmake_configure.log
+build/output/cmake_configure.log
+build/output/CMakeCache.txt
+build/output/mysql-studio.desktop
+build/output/ext/scintilla/gtk/libwbscintilla.so.4.1.5
+build/output/frontend/linux/studio/mysql-studio
+build/output/library/base/libwbbase.so.1.0.1
+build/output/library/cdbc/libcdbc.so.1.0.1
+build/output/library/sql.parser/source/libsqlparser.so.1.0.1
+build/output/plugins/migration/wbcopytables
+build/output/library/grt/src/libgrt.so.1.0.1
+build/output/library/mtemplate/libmtemplate.so.1.0.1
+build/output/library/mysql.canvas/src/libmdcanvas.so.1.0.1
+build/output/library/ssh/libwbssh.so.1.0.1

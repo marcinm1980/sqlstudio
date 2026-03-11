@@ -24,7 +24,9 @@
 
 #include <random>
 #include <algorithm>
-#include <codecvt> // TODO: deprecated in C++17, replace with ICU.
+#ifdef _MSC_VER
+#include <codecvt>
+#endif
 
 #ifndef _MSC_VER
 #include <wordexp.h>
@@ -83,23 +85,116 @@ std::u16string utf8ToUtf16(std::string const& s) {
 
 #else
 
-static thread_local std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> utf16Converter;
-static thread_local std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf32Converter;
+// Manual UTF conversion — std::wstring_convert/codecvt removed in GCC 15.
 
 std::string utf32ToUtf8(std::u32string const& text) {
-  return utf32Converter.to_bytes(text);
+  std::string result;
+  result.reserve(text.size() * 2);
+  for (char32_t cp32 : text) {
+    uint32_t cp = static_cast<uint32_t>(cp32);
+    if (cp < 0x80) {
+      result.push_back(static_cast<char>(cp));
+    } else if (cp < 0x800) {
+      result.push_back(static_cast<char>(0xC0 | (cp >> 6)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    } else if (cp < 0x10000) {
+      result.push_back(static_cast<char>(0xE0 | (cp >> 12)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    } else {
+      result.push_back(static_cast<char>(0xF0 | (cp >> 18)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 12) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    }
+  }
+  return result;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
 std::string utf16ToUtf8(std::u16string const& text) {
-  return utf16Converter.to_bytes(text);
+  // Decode UTF-16 (handle surrogate pairs) then encode to UTF-8.
+  std::string result;
+  result.reserve(text.size() * 2);
+  size_t i = 0;
+  while (i < text.size()) {
+    uint32_t cp;
+    char16_t c = text[i];
+    if (c >= 0xD800 && c <= 0xDBFF && i + 1 < text.size()) {
+      char16_t c2 = text[i + 1];
+      if (c2 >= 0xDC00 && c2 <= 0xDFFF) {
+        cp = 0x10000 + ((static_cast<uint32_t>(c) - 0xD800) << 10) + (static_cast<uint32_t>(c2) - 0xDC00);
+        i += 2;
+      } else {
+        cp = static_cast<uint32_t>(c);
+        i += 1;
+      }
+    } else {
+      cp = static_cast<uint32_t>(c);
+      i += 1;
+    }
+    if (cp < 0x80) {
+      result.push_back(static_cast<char>(cp));
+    } else if (cp < 0x800) {
+      result.push_back(static_cast<char>(0xC0 | (cp >> 6)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    } else if (cp < 0x10000) {
+      result.push_back(static_cast<char>(0xE0 | (cp >> 12)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    } else {
+      result.push_back(static_cast<char>(0xF0 | (cp >> 18)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 12) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+      result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+    }
+  }
+  return result;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
 std::u16string utf8ToUtf16(std::string const& s) {
-  return utf16Converter.from_bytes(s);
+  std::u16string result;
+  result.reserve(s.size());
+  size_t i = 0;
+  while (i < s.size()) {
+    uint32_t cp;
+    unsigned char c = static_cast<unsigned char>(s[i]);
+    if (c < 0x80) {
+      cp = c; i += 1;
+    } else if ((c & 0xE0) == 0xC0) {
+      if (i + 1 >= s.size()) break;
+      cp = (c & 0x1Fu) << 6;
+      cp |= (static_cast<unsigned char>(s[i + 1]) & 0x3Fu);
+      i += 2;
+    } else if ((c & 0xF0) == 0xE0) {
+      if (i + 2 >= s.size()) break;
+      cp = (c & 0x0Fu) << 12;
+      cp |= (static_cast<unsigned char>(s[i + 1]) & 0x3Fu) << 6;
+      cp |= (static_cast<unsigned char>(s[i + 2]) & 0x3Fu);
+      i += 3;
+    } else if ((c & 0xF8) == 0xF0) {
+      if (i + 3 >= s.size()) break;
+      cp = (c & 0x07u) << 18;
+      cp |= (static_cast<unsigned char>(s[i + 1]) & 0x3Fu) << 12;
+      cp |= (static_cast<unsigned char>(s[i + 2]) & 0x3Fu) << 6;
+      cp |= (static_cast<unsigned char>(s[i + 3]) & 0x3Fu);
+      i += 4;
+    } else {
+      i += 1; continue;
+    }
+    // Encode as UTF-16, using surrogate pair for codepoints >= 0x10000.
+    if (cp < 0x10000) {
+      result.push_back(static_cast<char16_t>(cp));
+    } else {
+      cp -= 0x10000;
+      result.push_back(static_cast<char16_t>(0xD800 + (cp >> 10)));
+      result.push_back(static_cast<char16_t>(0xDC00 + (cp & 0x3FF)));
+    }
+  }
+  return result;
 }
 
 #endif
