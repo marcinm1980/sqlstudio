@@ -85,8 +85,14 @@ namespace base {
 
     struct bounds;
 
-    class BASELIBRARY_PUBLIC_FUNC iterator : public std::iterator<std::bidirectional_iterator_tag, utf8string> {
+    class BASELIBRARY_PUBLIC_FUNC iterator {
     public:
+      using iterator_category = std::bidirectional_iterator_tag;
+      using value_type = utf8char;
+      using difference_type = std::ptrdiff_t;
+      using pointer = value_type *;
+      using reference = value_type &;
+
       iterator(char *s, char *p = nullptr);
       bool operator==(iterator const &rhs) const;
       bool operator!=(iterator const &rhs) const;

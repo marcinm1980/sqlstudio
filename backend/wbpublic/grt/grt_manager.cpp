@@ -430,33 +430,24 @@ GRTManager::Timer::Timer(const std::function<bool()> &slot, double interval) {
   this->slot = slot;
   this->interval = interval;
 
-  g_get_current_time(&next_trigger);
-  g_time_val_add(&next_trigger, (glong)(interval * G_USEC_PER_SEC));
+  next_trigger_us = g_get_real_time() + static_cast<gint64>(interval * G_USEC_PER_SEC);
 }
 
 bool GRTManager::Timer::trigger() {
   bool flag = slot ? slot() : false;
 
-  g_get_current_time(&next_trigger);
-  g_time_val_add(&next_trigger, (glong)(interval * G_USEC_PER_SEC));
+  next_trigger_us = g_get_real_time() + static_cast<gint64>(interval * G_USEC_PER_SEC);
 
   return flag;
 }
 
-double GRTManager::Timer::delay_for_next_trigger(const GTimeVal &now) {
-  double delay;
-
-  delay = next_trigger.tv_sec - now.tv_sec;
-  delay += (double)(next_trigger.tv_usec - now.tv_usec) / G_USEC_PER_SEC;
-
-  return delay;
+double GRTManager::Timer::delay_for_next_trigger(gint64 now_us) {
+  return static_cast<double>(next_trigger_us - now_us) / G_USEC_PER_SEC;
 }
 
 GRTManager::Timer *GRTManager::run_every(const std::function<bool()> &slot, double seconds) {
   Timer *timer = new Timer(slot, seconds);
-  GTimeVal now;
-
-  g_get_current_time(&now);
+  gint64 now = g_get_real_time();
 
   double delay = timer->delay_for_next_trigger(now);
 
@@ -493,8 +484,7 @@ void GRTManager::cancel_timer(GRTManager::Timer *timer) {
 }
 
 void GRTManager::flush_timers() {
-  GTimeVal now;
-  g_get_current_time(&now);
+  gint64 now = g_get_real_time();
 
   std::list<Timer *> triggered;
 
@@ -560,8 +550,7 @@ double GRTManager::delay_for_next_timeout() {
 
   base::MutexLock lock(_timer_mutex);
   if (!_timers.empty()) {
-    GTimeVal now;
-    g_get_current_time(&now);
+    gint64 now = g_get_real_time();
     delay = _timers.front()->delay_for_next_trigger(now);
     if (delay < 0)
       delay = 0.0;

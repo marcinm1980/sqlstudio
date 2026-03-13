@@ -50,14 +50,14 @@ namespace bec {
 
     struct Timer {
       std::function<bool()> slot;
-      GTimeVal next_trigger;
+      gint64 next_trigger_us;
       double interval;
 
       Timer(const std::function<bool()> &slot, double interval);
 
       bool trigger();
 
-      double delay_for_next_trigger(const GTimeVal &now);
+      double delay_for_next_trigger(gint64 now_us);
     };
 
   protected: // Set those c-tors to protected as we need to have different GRTManager in TUT.
