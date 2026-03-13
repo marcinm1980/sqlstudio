@@ -57,12 +57,12 @@ TEST(GrtTreeModelBase, BaseTests) {
   EXPECT_EQ(node2, node) << "node compare";
 
   node2 = NodeId(5);
-  EXPECT_NE(node2, node) << "node compare";
+  EXPECT_FALSE(node2 == node) << "node compare";
 
   node2.append(7);
   node2.append(11);
 
-  EXPECT_NE(node2, node) << "node compare";
+  EXPECT_FALSE(node2 == node) << "node compare";
 
   node = node2;
   EXPECT_EQ(node2, node) << "node assign/compare";

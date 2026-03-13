@@ -53,7 +53,7 @@ namespace {
   TEST_F(MySQLRoutineGroupEditorTest, EditorWithNoRoutines) {
     const char* routine_sql = "";
 
-    SyntheticMySQLModel model;
+    testing::SyntheticMySQLModel model;
     size_t count = model.routineGroup->routines().count();
     EXPECT_EQ(1U, count) << "Invalid number of routines";
 
@@ -66,7 +66,7 @@ namespace {
 
     count = model.routineGroup->routines().count();
     EXPECT_EQ(1U, count) << "Routine disappeard";
-  });
+  }
 
   TEST_F(MySQLRoutineGroupEditorTest, EditorWithRoutines) {
 #ifndef NL
@@ -87,7 +87,7 @@ namespace {
     "  DECLARE res INTEGER; #FEES PAID TO RENT THE VIDEOS INITIALLY" NL "  SELECT count(*) INTO res" NL "    FROM t1" NL
     "    WHERE id > less_than AND id < greather_than;" NL "  RETURN res;" NL "END //" NL "DELIMITER ;";
 
-    SyntheticMySQLModel model;
+    testing::SyntheticMySQLModel model;
     model.schema->name("test_schema");
     model.routineGroup->name("rg");
     MySQLRoutineGroupEditorBE rg(model.routineGroup);
@@ -98,7 +98,7 @@ namespace {
     rg.use_sql(routine_sql);
 
     std::vector<std::string> names = { "get_count", "get_count1", "get_count2" };
-    $expect(model.routineGroup->routines().count()).toEqual(names.size());
+    EXPECT_EQ(model.routineGroup->routines().count(), names.size());
     for (size_t i = 0, size = model.routineGroup->routines().count(); i < size; i++) {
       db_RoutineRef r = model.routineGroup->routines().get(i);
       std::string name = r->name();
@@ -109,13 +109,13 @@ namespace {
     std::string processed_sql = rg.get_sql();
 
     std::vector<std::string> processed_routines = base::split(processed_sql, "\n\n");
-    $expect(processed_routines.size()).toEqual(5U, "Lines unintentionally removed");
+    EXPECT_EQ(processed_routines.size(), 5U) << "Lines unintentionally removed";
 
     // Do the same steps from above again with the processed sql.
     // There shouldn't be any change.
     rg.use_sql(processed_sql);
 
-    $expect(model.routineGroup->routines().count()).toEqual(names.size());
+    EXPECT_EQ(model.routineGroup->routines().count(), names.size());
     for (size_t i = 0, size = model.routineGroup->routines().count(); i < size; i++) {
       db_RoutineRef r = model.routineGroup->routines().get(i);
       std::string name = r->name();
@@ -124,13 +124,13 @@ namespace {
 
     std::string twice_processed_sql = rg.get_sql();
     std::vector<std::string> twice_processed_routines = base::split(twice_processed_sql, "\n\n");
-    $expect(twice_processed_routines.size()).toEqual(5U, "Lines unintentionally removed");
+    EXPECT_EQ(twice_processed_routines.size(), 5U) << "Lines unintentionally removed";
 
     // Now compares each routine to discard any difference
     for (size_t index = 0; index < processed_routines.size(); index++) {
       EXPECT_EQ(twice_processed_routines[index], processed_routines[index]) << "Routine unintentionally changed";
     }
-  });
+  }
 
   /**
    *	Same test as case 20, but this time with syntax errors.
@@ -150,7 +150,7 @@ TEST_F(MySQLRoutineGroupEditorTest, EditorWithInvalidRoutines) {
     "  DECLARE res INTEGER; #FEES PAID TO RENT THE VIDEOS INITIALLY" NL "  SELECT count(*) INTO res" NL "    FROM t1" NL
     "    WHERE id > less_than AND id < greather_than;" NL "  RETURN res;" NL "END //" NL "DELIMITER ;";
 
-  SyntheticMySQLModel model;
+  testing::SyntheticMySQLModel model;
   model.schema->name("test_schema");
   model.routineGroup->name("rg");
   MySQLRoutineGroupEditorBE rg(model.routineGroup);
@@ -158,7 +158,7 @@ TEST_F(MySQLRoutineGroupEditorTest, EditorWithInvalidRoutines) {
   rg.use_sql(routine_sql);
 
   std::vector<std::string> names = { "rg_SYNTAX_ERROR_1", "get_count1", "get_count2_SYNTAX_ERROR" };
-  $expect(model.routineGroup->routines().count()).toEqual(names.size());
+  EXPECT_EQ(model.routineGroup->routines().count(), names.size());
 
   size_t i = 0;
   for (db_RoutineRef routine : model.routineGroup->routines()) {
@@ -170,14 +170,14 @@ TEST_F(MySQLRoutineGroupEditorTest, EditorWithInvalidRoutines) {
   std::string processed_sql = rg.get_sql();
 
   std::vector<std::string> processed_routines = base::split(processed_sql, "\n\n");
-  $expect(processed_routines.size()).toEqual(5U, "Lines unintentionally removed");
+  EXPECT_EQ(processed_routines.size(), 5U) << "Lines unintentionally removed";
 
   // Do the same steps from above again with the processed sql.
   // There shouldn't be any change.
   rg.use_sql(processed_sql);
 
   i = 0;
-  $expect(model.routineGroup->routines().count()).toEqual(names.size());
+  EXPECT_EQ(model.routineGroup->routines().count(), names.size());
   for (db_RoutineRef routine : model.routineGroup->routines()) {
     std::string name = routine->name();
     EXPECT_EQ(names[i++], name);

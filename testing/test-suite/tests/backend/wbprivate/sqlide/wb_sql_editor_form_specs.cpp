@@ -27,7 +27,11 @@
 #include "grts/structs.db.query.h"
 #include "sqlide/wb_context_sqlide.h"
 #include "sqlide/wb_live_schema_tree.h"
+#define private public
+#define protected public
 #include "sqlide/wb_sql_editor_tree_controller.h"
+#undef protected
+#undef private
 #include "stub/stub_mforms.h"
 
 #include "grt.h"
@@ -40,12 +44,14 @@
 
 #include "sqlide/wb_sql_editor_form.h"
 
+#include "gtest/gtest.h"
+
+#include <thread>
+#include <chrono>
+
 using namespace grt;
 using namespace wb;
 using namespace sql;
-
-$ModuleEnvironment() {};
-
 // This class is a friend of the SqlEditorForm in TESTING mode. This way everything is available for testing.
 class LocalEditorFormTester {
 private:
@@ -129,7 +135,7 @@ public:
 
   bool mock_update_node_children(mforms::TreeNodeRef parent, base::StringListPtr children, wb::LiveSchemaTree::ObjectType type, bool sorted = false,
                                  bool just_append = false) {
-    $expect(_expectUpdateNodeChildren).toBeTrue(_checkId + " : Unexpected call to update_node_children");
+    EXPECT_TRUE(_expectUpdateNodeChildren) << _checkId + " : Unexpected call to update_node_children";
     _expectUpdateNodeChildren = false;
 
     if (_mockPropagateUpdateNodeChildren) {
@@ -141,43 +147,43 @@ public:
 
   void mock_schema_content_arrived(const std::string &schema_name, base::StringListPtr tables, base::StringListPtr views,
     base::StringListPtr procedures, base::StringListPtr functions, bool just_append) {
-    $expect(_expectSchemaContentArrived).toBeTrue(_checkId + " : Unexpected call to schema_content_arrived");
+    EXPECT_TRUE(_expectSchemaContentArrived) << _checkId + " : Unexpected call to schema_content_arrived";
     _expectSchemaContentArrived = false;
 
     if (_mockValidateSchemaContent) {
       _mockValidateSchemaContent = false;
-      $expect(tables->size()).toBe(_expectedTables.size(), _checkId + " : Unexpected number of tables received");
+      EXPECT_EQ(tables->size(), _expectedTables.size()) << _checkId + " : Unexpected number of tables received";
 
       std::list<std::string>::const_iterator index, end = tables->end();
       for (index = tables->begin(); index != end; index++) {
-        $expect(std::find(_expectedTables.begin(), _expectedTables.end(), *index) != _expectedTables.end()).toBeTrue(_checkId + " : Unexpected table retrieved");
+        EXPECT_TRUE(std::find(_expectedTables.begin(), _expectedTables.end(), *index) != _expectedTables.end()) << _checkId + " : Unexpected table retrieved";
       }
 
       _expectedTables.clear();
 
-      $expect(views->size()).toBe(_expectedViews.size(), _checkId + " : Unexpected number of views received");
+      EXPECT_EQ(views->size(), _expectedViews.size()) << _checkId + " : Unexpected number of views received";
 
       end = views->end();
       for (index = views->begin(); index != end; index++) {
-        $expect(std::find(_expectedViews.begin(), _expectedViews.end(), *index) != _expectedViews.end()).toBeTrue(_checkId + " : Unexpected view retrieved");
+        EXPECT_TRUE(std::find(_expectedViews.begin(), _expectedViews.end(), *index) != _expectedViews.end()) << _checkId + " : Unexpected view retrieved";
       }
 
       _expectedViews.clear();
 
-      $expect(procedures->size()).toBe(_expectedProcedures.size(), _checkId + " : Unexpected number of procedures received");
+      EXPECT_EQ(procedures->size(), _expectedProcedures.size()) << _checkId + " : Unexpected number of procedures received";
 
       end = procedures->end();
       for (index = procedures->begin(); index != end; index++) {
-        $expect(std::find(_expectedProcedures.begin(), _expectedProcedures.end(), *index) != _expectedProcedures.end()).toBeTrue(_checkId + " : Unexpected procedure retrieved");
+        EXPECT_TRUE(std::find(_expectedProcedures.begin(), _expectedProcedures.end(), *index) != _expectedProcedures.end()) << _checkId + " : Unexpected procedure retrieved";
       }
 
       _expectedProcedures.clear();
 
-      $expect(functions->size()).toBe(_expectedFunctions.size(), _checkId + " : Unexpected number of functions received");
+      EXPECT_EQ(functions->size(), _expectedFunctions.size()) << _checkId + " : Unexpected number of functions received";
 
       end = functions->end();
       for (index = functions->begin(); index != end; index++) {
-        $expect(std::find(_expectedFunctions.begin(), _expectedFunctions.end(), *index) != _expectedFunctions.end()).toBeTrue(_checkId + " : Unexpected function retrieved");
+        EXPECT_TRUE(std::find(_expectedFunctions.begin(), _expectedFunctions.end(), *index) != _expectedFunctions.end()) << _checkId + " : Unexpected function retrieved";
       }
 
       _expectedFunctions.clear();
@@ -190,11 +196,11 @@ public:
   }
 
   void clean_and_reset() {
-    $expect(_expectSchemaContentArrived).toBeFalse(_checkId + " : Missing call to schema_content_arrived");
+    EXPECT_FALSE(_expectSchemaContentArrived) << _checkId + " : Missing call to schema_content_arrived";
 
     _expectSchemaContentArrived = false;
 
-    $expect(_expectUpdateNodeChildren).toBeFalse(_checkId + " : Missing call to update_node_children");
+    EXPECT_FALSE(_expectUpdateNodeChildren) << _checkId + " : Missing call to update_node_children";
     _expectUpdateNodeChildren = false;
   }
 
@@ -221,7 +227,7 @@ public:
 
 namespace {
 
-$TestData {
+struct WbSqlEditorFormData {
   std::unique_ptr<MySqlStudioTester> tester;
   WBContextSQLIDE *wbContextSqlide;
   sql::ConnectionWrapper connection;
@@ -230,8 +236,12 @@ $TestData {
   mforms::TreeView *pmodelView;
 };
 
-$describe("SQL Editor Form") {
-  $beforeAll([&]() {
+class SQL_Editor_FormTest : public ::testing::Test {
+protected:
+  static std::unique_ptr<WbSqlEditorFormData> data;
+
+  static void SetUpTestSuite() {
+    data = std::make_unique<WbSqlEditorFormData>();
     bec::GRTManager::get(); // Ensure the GRT instance exists.
 
     data->tester.reset(new MySqlStudioTester());
@@ -405,9 +415,9 @@ $describe("SQL Editor Form") {
     // Stay for some time to finish the setup (it's done in a background thread).
     std::this_thread::sleep_for(std::chrono::seconds(1));
     data->formTester->perform_idle_tasks();
-  });
+  }
 
-  $afterAll([&]() {
+  static void TearDownTestSuite() {
     // cleanup
     std::string sql = "DROP DATABASE wb_sql_editor_form_test";
     data->formTester->exec_sql(sql);
@@ -416,265 +426,269 @@ $describe("SQL Editor Form") {
 
     delete data->formTester;
     delete data->wbContextSqlide;
-  });
+    data.reset();
+  }
 
-  $it("Testing fetch_schema_list.", [&]() {
-    std::vector<std::string> schemaList = data->formTester->fetch_schema_list();
+};
 
-    $expect(schemaList.size() > 0).toBeTrue("TF001CHK001: Unexpected number of schemas retrieved");
+std::unique_ptr<WbSqlEditorFormData> SQL_Editor_FormTest::data;
 
-    bool found = false;
+TEST_F(SQL_Editor_FormTest, Testing_fetch_schema_list) {
+  std::vector<std::string> schemaList = data->formTester->fetch_schema_list();
 
-    std::vector<std::string>::iterator index, end = schemaList.end();
-    for (index = schemaList.begin(); !found && index != end; index++)
-      found = (*index) == "wb_sql_editor_form_test";
+  EXPECT_TRUE(schemaList.size() > 0) << "TF001CHK001: Unexpected number of schemas retrieved";
 
-    $expect(found).toBeTrue("TF001CHK002: wb_sql_editor_form_test not found on retrieved list");
+  bool found = false;
 
-  });
+  std::vector<std::string>::iterator index, end = schemaList.end();
+  for (index = schemaList.begin(); !found && index != end; index++)
+    found = (*index) == "wb_sql_editor_form_test";
 
-  $it("Loads the schema list.", [&]() {
-    data->formTester->tree_refresh();
-
-    // Sets the expectations..
-    data->formTester->_expectSchemaContentArrived = true;
-    data->formTester->_mockValidateSchemaContent = true;
-
-    data->formTester->_expectedTables.push_back("language");
-    data->formTester->_expectedTables.push_back("film");
-    data->formTester->_expectedTables.push_back("film_text");
-    data->formTester->_expectedTables.push_back("dummy_table");
-    data->formTester->_expectedTables.push_back("complex_pk_table");
-    data->formTester->_expectedTables.push_back("no_pk_table");
-    data->formTester->_expectedTables.push_back("pk_table_unique_not_null");
-    data->formTester->_expectedTables.push_back("no_pk_table_unique_not_null");
-
-    data->formTester->_expectedViews.push_back("dummy_film_view");
-
-    data->formTester->_expectedProcedures.push_back("get_films");
-
-    data->formTester->_expectedFunctions.push_back("dummy_function");
-    data->formTester->_expectedFunctions.push_back("other_function");
-
-    data->formTester->_checkId = "TF002CHK001";
-
-    // Loads the specific schema...
-    data->formTester->fetch_schema_contents("wb_sql_editor_form_test");
-
-    data->formTester->clean_and_reset();
-  });
-
-  $it("Testing for SqlEditorForm::fetch_column_data.", [&]() {
-    mforms::TreeNodeRef tableNode;
-    mforms::TreeNodeRef collectionNode;
-    mforms::TreeNodeRef childNode;
-    wb::LiveSchemaTree::TableData *pdata;
-    wb::LiveSchemaTree::ColumnData *pchildData;
-
-    // Loads the schema list into the tree...
-    data->formTester->tree_refresh();
-
-    // Loads a specific schema contents...
-    data->formTester->load_schema_data("wb_sql_editor_form_test");
-
-    // Loads the column data from the language table.
-    data->formTester->_expectUpdateNodeChildren = true;
-    data->formTester->_mockPropagateUpdateNodeChildren = true;
-    data->formTester->_checkId = "TF003CHK001";
-    data->formTester->fetch_column_data("wb_sql_editor_form_test", "language", wb::LiveSchemaTree::Table);
-
-    tableNode = data->form->get_live_tree()->get_schema_tree()->get_node_for_object("wb_sql_editor_form_test",
-                                                                                    wb::LiveSchemaTree::Table, "language");
-    pdata = dynamic_cast<wb::LiveSchemaTree::TableData *>(tableNode->get_data());
-
-    $expect(pdata->is_data_loaded(wb::LiveSchemaTree::COLUMN_DATA)).toBeTrue("TF003CHK002 : Columns were not loaded");
-
-    // Gets the columns node...
-    collectionNode = tableNode->get_child(0);
-
-    // Now validates each column...
-    childNode = collectionNode->get_child(0);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::ColumnData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("language_id", "TF003CHK002 : Unexpected column name");
-    $expect(pchildData->is_pk).toBeTrue("TF003CHK002 : Unexpected primary key flag");
-    $expect(pchildData->is_fk).toBeFalse("TF003CHK002 : Unexpected foreign key flag");
-
-    childNode = collectionNode->get_child(1);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::ColumnData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("name", "TF003CHK003 : Unexpected column name");
-    $expect(pchildData->is_pk).toBeFalse("TF003CHK003 : Unexpected primary key flag");
-    $expect(pchildData->is_fk).toBeFalse("TF003CHK003 : Unexpected foreign key flag");
-
-    childNode = collectionNode->get_child(2);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::ColumnData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("last_update", "TF003CHK004 : Unexpected column name");
-    $expect(pchildData->is_pk).toBeFalse("TF003CHK004 : Unexpected primary key flag");
-    $expect(pchildData->is_fk).toBeFalse("TF003CHK004 : Unexpected foreign key flag");
-  });
-
-  $it("Testing for SqlEditorForm::fetch_index_data.", [&]() {
-    mforms::TreeNodeRef tableNode;
-    mforms::TreeNodeRef collectionNode;
-    mforms::TreeNodeRef childNode;
-    wb::LiveSchemaTree::TableData *pdata;
-    wb::LiveSchemaTree::IndexData *pchildData;
-
-    // Loads the schema list into the tree...
-    data->formTester->tree_refresh();
-
-    // Loads a specific schema contents...
-    data->formTester->_checkId = "TF004CHK001";
-    data->formTester->load_schema_data("wb_sql_editor_form_test");
-
-    // Loads the index data from the film table.
-    data->formTester->_expectUpdateNodeChildren = true;
-    data->formTester->_mockPropagateUpdateNodeChildren = true;
-    data->formTester->_checkId = "TF004CHK002";
-    data->formTester->fetch_index_data("wb_sql_editor_form_test", "film", wb::LiveSchemaTree::Table);
-
-    tableNode = data->form->get_live_tree()->get_schema_tree()->get_node_for_object("wb_sql_editor_form_test",
-                                                                                    wb::LiveSchemaTree::Table, "film");
-    pdata = dynamic_cast<wb::LiveSchemaTree::TableData *>(tableNode->get_data());
-
-    $expect(pdata->is_data_loaded(wb::LiveSchemaTree::INDEX_DATA)).toBeTrue("TF004CHK003 : Indexes were not loaded");
-
-    // Gets the indexes node...
-    collectionNode = tableNode->get_child(1);
-    $expect(collectionNode->count()).toEqual(4, "TF004CHK004 : Unexpected nuber of indexes");
-
-    // Now validates each index...
-    childNode = collectionNode->get_child(0);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::IndexData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("PRIMARY", "TF004CHK005 : Unexpected index name");
-    $expect(pchildData->unique).toBeTrue("TF004CHK005 : Unexpected non unique index found");
-    $expect(pchildData->type).toEqual(6U, "TF004CHK005 : Unexpected index type");
-
-    childNode = collectionNode->get_child(1);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::IndexData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("idx_title", "TF004CHK006 : Unexpected index name");
-    $expect(pchildData->unique).toBeFalse("TF004CHK006 : Unexpected unique index found");
-    $expect(pchildData->type).toEqual(6U, "TF004CHK006 : Unexpected index type");
-
-    childNode = collectionNode->get_child(2);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::IndexData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("idx_fk_language_id", "TF004CHK007 : Unexpected index name");
-    $expect(pchildData->unique).toBeFalse("TF004CHK007 : Unexpected non index found");
-    $expect(pchildData->type).toEqual(6U, "TF004CHK007 : Unexpected index type");
-
-    childNode = collectionNode->get_child(3);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::IndexData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("idx_fk_original_language_id", "TF004CHK008 : Unexpected index name");
-    $expect(pchildData->unique).toBeFalse("TF004CHK008 : Unexpected non unique index found");
-    $expect(pchildData->type).toEqual(6U, "TF004CHK008 : Unexpected index type");
-  });
-
-  $it("Testing for SqlEditorForm::fetch_trigger_data.", [&]() {
-    mforms::TreeNodeRef tableNode;
-    mforms::TreeNodeRef collectionNode;
-    mforms::TreeNodeRef childNode;
-    wb::LiveSchemaTree::TableData *pdata;
-    wb::LiveSchemaTree::TriggerData *pchildData;
-
-    // Loads the schema list into the tree...
-    data->formTester->tree_refresh();
-
-    // Loads a specific schema contents...
-    data->formTester->_checkId = "TF005CHK001";
-    data->formTester->load_schema_data("wb_sql_editor_form_test");
-
-    // Loads the trigger data from the film table.
-    data->formTester->_expectUpdateNodeChildren = true;
-    data->formTester->_mockPropagateUpdateNodeChildren = true;
-    data->formTester->_checkId = "TF005CHK002";
-    data->formTester->fetch_trigger_data("wb_sql_editor_form_test", "film", wb::LiveSchemaTree::Table);
-
-    tableNode = data->form->get_live_tree()->get_schema_tree()->get_node_for_object("wb_sql_editor_form_test",
-                                                                                    wb::LiveSchemaTree::Table, "film");
-    pdata = dynamic_cast<wb::LiveSchemaTree::TableData *>(tableNode->get_data());
-
-    $expect(pdata->is_data_loaded(wb::LiveSchemaTree::TRIGGER_DATA)).toBeTrue("TF005CHK003 : Triggers were not loaded");
-
-    // Gets the triggers node...
-    collectionNode = tableNode->get_child(3);
-    $expect(collectionNode->count()).toEqual(3, "TF005CHK004 : Unexpected nuber of triggers");
-
-    // Now validates each index...
-    childNode = collectionNode->get_child(0);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::TriggerData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("ins_film", "TF005CHK004 : Unexpected trigger name");
-    $expect(pchildData->event_manipulation).toBe(11, "TF005CHK004 : Unexpected trigger event");// 11 is INSERT
-    $expect(pchildData->timing).toBe(15, "TF005CHK004 : Unexpected trigger timing");// 15 is AFTER
-
-    childNode = collectionNode->get_child(1);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::TriggerData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("upd_film", "TF005CHK005 : Unexpected trigger name");
-    $expect(pchildData->event_manipulation).toBe(12, "TF005CHK005 : Unexpected trigger event");// 12 is UPDATE
-    $expect(pchildData->timing).toBe(15, "TF005CHK005 : Unexpected trigger timing");// 15 is AFTER
-
-    childNode = collectionNode->get_child(2);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::TriggerData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("del_film", "TF005CHK006 : Unexpected trigger name");
-    $expect(pchildData->event_manipulation).toBe(13, "TF005CHK006 : Unexpected trigger event");// 13 is DELETE
-    $expect(pchildData->timing).toBe(15, "TF005CHK006 : Unexpected trigger timing");// 15 is AFTER
-  });
-
-  $it("Testing for SqlEditorForm::fetch_foreign_key_data.", [&]() {
-    mforms::TreeNodeRef tableNode;
-    mforms::TreeNodeRef collectionNode;
-    mforms::TreeNodeRef childNode;
-    wb::LiveSchemaTree::TableData *pdata;
-    wb::LiveSchemaTree::FKData *pchildData;
-
-    // Loads the schema list into the tree...
-    data->formTester->tree_refresh();
-
-    // Loads a specific schema contents...
-    data->formTester->_checkId = "TF006CHK001";
-    data->formTester->load_schema_data("wb_sql_editor_form_test");
-
-    // Loads the foreign key data from the film table.
-    data->formTester->_expectUpdateNodeChildren = true;
-    data->formTester->_mockPropagateUpdateNodeChildren = true;
-    data->formTester->_checkId = "TF006CHK002";
-    data->formTester->fetch_foreign_key_data("wb_sql_editor_form_test", "film", wb::LiveSchemaTree::Table);
-
-    tableNode = data->form->get_live_tree()->get_schema_tree()->get_node_for_object("wb_sql_editor_form_test",
-                                                                                    wb::LiveSchemaTree::Table, "film");
-    pdata = dynamic_cast<wb::LiveSchemaTree::TableData *>(tableNode->get_data());
-
-    $expect(pdata->is_data_loaded(wb::LiveSchemaTree::FK_DATA)).toBeTrue("TF006CHK003 : Foreign keys were not loaded");
-
-    // Gets the foreign keys node...
-    collectionNode = tableNode->get_child(2);
-    $expect(collectionNode->count()).toEqual(2, "TF006CHK004 : Unexpected nuber of foreign keys");
-
-    // Now validates each index...
-    childNode = collectionNode->get_child(0);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::FKData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("fk_film_language", "TF006CHK004 : Unexpected foreign key name");
-    $expect(pchildData->update_rule).toEqual(1U, "TF006CHK004 : Unexpected foreign key update rule");
-    $expect(pchildData->delete_rule).toEqual(4U, "TF006CHK004 : Unexpected foreign key delete rule");
-    $expect(pchildData->referenced_table).toBe("language", "TF006CHK004 : Unexpected foreign key delete rule");
-
-    childNode = collectionNode->get_child(1);
-    pchildData = dynamic_cast<wb::LiveSchemaTree::FKData *>(childNode->get_data());
-
-    $expect(childNode->get_string(0)).toBe("fk_film_language_original", "TF006CHK005 : Unexpected foreign key name");
-    $expect(pchildData->update_rule).toEqual(1U, "TF006CHK005 : Unexpected foreign key update rule");
-    $expect(pchildData->delete_rule).toEqual(4U, "TF006CHK005 : Unexpected foreign key delete rule");
-    $expect(pchildData->referenced_table).toBe("language", "TF006CHK005 : Unexpected foreign key delete rule");
-  });
+  EXPECT_TRUE(found) << "TF001CHK002: wb_sql_editor_form_test not found on retrieved list";
 }
+
+TEST_F(SQL_Editor_FormTest, Loads_the_schema_list) {
+  data->formTester->tree_refresh();
+
+  // Sets the expectations..
+  data->formTester->_expectSchemaContentArrived = true;
+  data->formTester->_mockValidateSchemaContent = true;
+
+  data->formTester->_expectedTables.push_back("language");
+  data->formTester->_expectedTables.push_back("film");
+  data->formTester->_expectedTables.push_back("film_text");
+  data->formTester->_expectedTables.push_back("dummy_table");
+  data->formTester->_expectedTables.push_back("complex_pk_table");
+  data->formTester->_expectedTables.push_back("no_pk_table");
+  data->formTester->_expectedTables.push_back("pk_table_unique_not_null");
+  data->formTester->_expectedTables.push_back("no_pk_table_unique_not_null");
+
+  data->formTester->_expectedViews.push_back("dummy_film_view");
+
+  data->formTester->_expectedProcedures.push_back("get_films");
+
+  data->formTester->_expectedFunctions.push_back("dummy_function");
+  data->formTester->_expectedFunctions.push_back("other_function");
+
+  data->formTester->_checkId = "TF002CHK001";
+
+  // Loads the specific schema...
+  data->formTester->fetch_schema_contents("wb_sql_editor_form_test");
+
+  data->formTester->clean_and_reset();
+}
+
+TEST_F(SQL_Editor_FormTest, Testing_for_SqlEditorForm_fetch_column_data) {
+  mforms::TreeNodeRef tableNode;
+  mforms::TreeNodeRef collectionNode;
+  mforms::TreeNodeRef childNode;
+  wb::LiveSchemaTree::TableData *pdata;
+  wb::LiveSchemaTree::ColumnData *pchildData;
+
+  // Loads the schema list into the tree...
+  data->formTester->tree_refresh();
+
+  // Loads a specific schema contents...
+  data->formTester->load_schema_data("wb_sql_editor_form_test");
+
+  // Loads the column data from the language table.
+  data->formTester->_expectUpdateNodeChildren = true;
+  data->formTester->_mockPropagateUpdateNodeChildren = true;
+  data->formTester->_checkId = "TF003CHK001";
+  data->formTester->fetch_column_data("wb_sql_editor_form_test", "language", wb::LiveSchemaTree::Table);
+
+  tableNode = data->form->get_live_tree()->get_schema_tree()->get_node_for_object("wb_sql_editor_form_test",
+                                                                                  wb::LiveSchemaTree::Table, "language");
+  pdata = dynamic_cast<wb::LiveSchemaTree::TableData *>(tableNode->get_data());
+
+  EXPECT_TRUE(pdata->is_data_loaded(wb::LiveSchemaTree::COLUMN_DATA)) << "TF003CHK002 : Columns were not loaded";
+
+  // Gets the columns node...
+  collectionNode = tableNode->get_child(0);
+
+  // Now validates each column...
+  childNode = collectionNode->get_child(0);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::ColumnData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "language_id") << "TF003CHK002 : Unexpected column name";
+  EXPECT_TRUE(pchildData->is_pk) << "TF003CHK002 : Unexpected primary key flag";
+  EXPECT_FALSE(pchildData->is_fk) << "TF003CHK002 : Unexpected foreign key flag";
+
+  childNode = collectionNode->get_child(1);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::ColumnData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "name") << "TF003CHK003 : Unexpected column name";
+  EXPECT_FALSE(pchildData->is_pk) << "TF003CHK003 : Unexpected primary key flag";
+  EXPECT_FALSE(pchildData->is_fk) << "TF003CHK003 : Unexpected foreign key flag";
+
+  childNode = collectionNode->get_child(2);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::ColumnData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "last_update") << "TF003CHK004 : Unexpected column name";
+  EXPECT_FALSE(pchildData->is_pk) << "TF003CHK004 : Unexpected primary key flag";
+  EXPECT_FALSE(pchildData->is_fk) << "TF003CHK004 : Unexpected foreign key flag";
+}
+
+TEST_F(SQL_Editor_FormTest, Testing_for_SqlEditorForm_fetch_index_data) {
+  mforms::TreeNodeRef tableNode;
+  mforms::TreeNodeRef collectionNode;
+  mforms::TreeNodeRef childNode;
+  wb::LiveSchemaTree::TableData *pdata;
+  wb::LiveSchemaTree::IndexData *pchildData;
+
+  // Loads the schema list into the tree...
+  data->formTester->tree_refresh();
+
+  // Loads a specific schema contents...
+  data->formTester->_checkId = "TF004CHK001";
+  data->formTester->load_schema_data("wb_sql_editor_form_test");
+
+  // Loads the index data from the film table.
+  data->formTester->_expectUpdateNodeChildren = true;
+  data->formTester->_mockPropagateUpdateNodeChildren = true;
+  data->formTester->_checkId = "TF004CHK002";
+  data->formTester->fetch_index_data("wb_sql_editor_form_test", "film", wb::LiveSchemaTree::Table);
+
+  tableNode = data->form->get_live_tree()->get_schema_tree()->get_node_for_object("wb_sql_editor_form_test",
+                                                                                  wb::LiveSchemaTree::Table, "film");
+  pdata = dynamic_cast<wb::LiveSchemaTree::TableData *>(tableNode->get_data());
+
+  EXPECT_TRUE(pdata->is_data_loaded(wb::LiveSchemaTree::INDEX_DATA)) << "TF004CHK003 : Indexes were not loaded";
+
+  // Gets the indexes node...
+  collectionNode = tableNode->get_child(1);
+  EXPECT_EQ(collectionNode->count(), 4) << "TF004CHK004 : Unexpected nuber of indexes";
+
+  // Now validates each index...
+  childNode = collectionNode->get_child(0);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::IndexData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "PRIMARY") << "TF004CHK005 : Unexpected index name";
+  EXPECT_TRUE(pchildData->unique) << "TF004CHK005 : Unexpected non unique index found";
+  EXPECT_EQ(pchildData->type, 6U) << "TF004CHK005 : Unexpected index type";
+
+  childNode = collectionNode->get_child(1);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::IndexData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "idx_title") << "TF004CHK006 : Unexpected index name";
+  EXPECT_FALSE(pchildData->unique) << "TF004CHK006 : Unexpected unique index found";
+  EXPECT_EQ(pchildData->type, 6U) << "TF004CHK006 : Unexpected index type";
+
+  childNode = collectionNode->get_child(2);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::IndexData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "idx_fk_language_id") << "TF004CHK007 : Unexpected index name";
+  EXPECT_FALSE(pchildData->unique) << "TF004CHK007 : Unexpected non index found";
+  EXPECT_EQ(pchildData->type, 6U) << "TF004CHK007 : Unexpected index type";
+
+  childNode = collectionNode->get_child(3);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::IndexData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "idx_fk_original_language_id") << "TF004CHK008 : Unexpected index name";
+  EXPECT_FALSE(pchildData->unique) << "TF004CHK008 : Unexpected non unique index found";
+  EXPECT_EQ(pchildData->type, 6U) << "TF004CHK008 : Unexpected index type";
+}
+
+TEST_F(SQL_Editor_FormTest, Testing_for_SqlEditorForm_fetch_trigger_data) {
+  mforms::TreeNodeRef tableNode;
+  mforms::TreeNodeRef collectionNode;
+  mforms::TreeNodeRef childNode;
+  wb::LiveSchemaTree::TableData *pdata;
+  wb::LiveSchemaTree::TriggerData *pchildData;
+
+  // Loads the schema list into the tree...
+  data->formTester->tree_refresh();
+
+  // Loads a specific schema contents...
+  data->formTester->_checkId = "TF005CHK001";
+  data->formTester->load_schema_data("wb_sql_editor_form_test");
+
+  // Loads the trigger data from the film table.
+  data->formTester->_expectUpdateNodeChildren = true;
+  data->formTester->_mockPropagateUpdateNodeChildren = true;
+  data->formTester->_checkId = "TF005CHK002";
+  data->formTester->fetch_trigger_data("wb_sql_editor_form_test", "film", wb::LiveSchemaTree::Table);
+
+  tableNode = data->form->get_live_tree()->get_schema_tree()->get_node_for_object("wb_sql_editor_form_test",
+                                                                                  wb::LiveSchemaTree::Table, "film");
+  pdata = dynamic_cast<wb::LiveSchemaTree::TableData *>(tableNode->get_data());
+
+  EXPECT_TRUE(pdata->is_data_loaded(wb::LiveSchemaTree::TRIGGER_DATA)) << "TF005CHK003 : Triggers were not loaded";
+
+  // Gets the triggers node...
+  collectionNode = tableNode->get_child(3);
+  EXPECT_EQ(collectionNode->count(), 3) << "TF005CHK004 : Unexpected nuber of triggers";
+
+  // Now validates each index...
+  childNode = collectionNode->get_child(0);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::TriggerData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "ins_film") << "TF005CHK004 : Unexpected trigger name";
+  EXPECT_EQ(pchildData->event_manipulation, 11) << "TF005CHK004 : Unexpected trigger event";// 11 is INSERT
+  EXPECT_EQ(pchildData->timing, 15) << "TF005CHK004 : Unexpected trigger timing";// 15 is AFTER
+
+  childNode = collectionNode->get_child(1);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::TriggerData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "upd_film") << "TF005CHK005 : Unexpected trigger name";
+  EXPECT_EQ(pchildData->event_manipulation, 12) << "TF005CHK005 : Unexpected trigger event";// 12 is UPDATE
+  EXPECT_EQ(pchildData->timing, 15) << "TF005CHK005 : Unexpected trigger timing";// 15 is AFTER
+
+  childNode = collectionNode->get_child(2);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::TriggerData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "del_film") << "TF005CHK006 : Unexpected trigger name";
+  EXPECT_EQ(pchildData->event_manipulation, 13) << "TF005CHK006 : Unexpected trigger event";// 13 is DELETE
+  EXPECT_EQ(pchildData->timing, 15) << "TF005CHK006 : Unexpected trigger timing";// 15 is AFTER
+}
+
+TEST_F(SQL_Editor_FormTest, Testing_for_SqlEditorForm_fetch_foreign_key_data) {
+  mforms::TreeNodeRef tableNode;
+  mforms::TreeNodeRef collectionNode;
+  mforms::TreeNodeRef childNode;
+  wb::LiveSchemaTree::TableData *pdata;
+  wb::LiveSchemaTree::FKData *pchildData;
+
+  // Loads the schema list into the tree...
+  data->formTester->tree_refresh();
+
+  // Loads a specific schema contents...
+  data->formTester->_checkId = "TF006CHK001";
+  data->formTester->load_schema_data("wb_sql_editor_form_test");
+
+  // Loads the foreign key data from the film table.
+  data->formTester->_expectUpdateNodeChildren = true;
+  data->formTester->_mockPropagateUpdateNodeChildren = true;
+  data->formTester->_checkId = "TF006CHK002";
+  data->formTester->fetch_foreign_key_data("wb_sql_editor_form_test", "film", wb::LiveSchemaTree::Table);
+
+  tableNode = data->form->get_live_tree()->get_schema_tree()->get_node_for_object("wb_sql_editor_form_test",
+                                                                                  wb::LiveSchemaTree::Table, "film");
+  pdata = dynamic_cast<wb::LiveSchemaTree::TableData *>(tableNode->get_data());
+
+  EXPECT_TRUE(pdata->is_data_loaded(wb::LiveSchemaTree::FK_DATA)) << "TF006CHK003 : Foreign keys were not loaded";
+
+  // Gets the foreign keys node...
+  collectionNode = tableNode->get_child(2);
+  EXPECT_EQ(collectionNode->count(), 2) << "TF006CHK004 : Unexpected nuber of foreign keys";
+
+  // Now validates each index...
+  childNode = collectionNode->get_child(0);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::FKData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "fk_film_language") << "TF006CHK004 : Unexpected foreign key name";
+  EXPECT_EQ(pchildData->update_rule, 1U) << "TF006CHK004 : Unexpected foreign key update rule";
+  EXPECT_EQ(pchildData->delete_rule, 4U) << "TF006CHK004 : Unexpected foreign key delete rule";
+  EXPECT_EQ(pchildData->referenced_table, "language") << "TF006CHK004 : Unexpected foreign key delete rule";
+
+  childNode = collectionNode->get_child(1);
+  pchildData = dynamic_cast<wb::LiveSchemaTree::FKData *>(childNode->get_data());
+
+  EXPECT_EQ(childNode->get_string(0), "fk_film_language_original") << "TF006CHK005 : Unexpected foreign key name";
+  EXPECT_EQ(pchildData->update_rule, 1U) << "TF006CHK005 : Unexpected foreign key update rule";
+  EXPECT_EQ(pchildData->delete_rule, 4U) << "TF006CHK005 : Unexpected foreign key delete rule";
+  EXPECT_EQ(pchildData->referenced_table, "language") << "TF006CHK005 : Unexpected foreign key delete rule";
+}
+
 
 }

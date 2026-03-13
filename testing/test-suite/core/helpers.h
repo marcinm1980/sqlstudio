@@ -24,7 +24,13 @@
 
 #pragma once
 
-#include "common.h"
+#include <cmath>
+#include <map>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <type_traits>
+#include <vector>
 
 using namespace std::string_literals;
 

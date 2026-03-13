@@ -161,7 +161,7 @@ namespace {
     }
   };
 
-  TEST_F(TableEditorBackendTest, ) {
+  TEST_F(TableEditorBackendTest, SetNameAndComment) {
     EXPECT_EQ("", *data->table->name()) /* "initial table name" */;
     EXPECT_EQ("", data->editor->get_name()) /* "get table name" */;
 
@@ -174,7 +174,7 @@ namespace {
     EXPECT_EQ("this is a test table", data->editor->get_comment()) /* "table comment" */;
   }
 
-  TEST_F(TableEditorBackendTest, ) {
+  TEST_F(TableEditorBackendTest, EditAndInspectColumns) {
     TableColumnsListBE *clist = data->editor->get_columns();
     NodeId node;
     std::string name;
@@ -355,7 +355,7 @@ namespace {
     EXPECT_EQ("name", name);
   }
 
-  TEST_F(TableEditorBackendTest, ) {
+  TEST_F(TableEditorBackendTest, RemoveColumnKeepsOrder) {
     TableColumnsListBE *clist = data->editor->get_columns();
     bool flag;
 
@@ -381,17 +381,17 @@ namespace {
     EXPECT_EQ("email", name);
   }
 
-  TEST_F(TableEditorBackendTest, ) {
+  TEST_F(TableEditorBackendTest, PendingFeatureOne) {
     // TODO: needs implementation
     GTEST_SKIP() << "needs implementation";
   }
 
-  TEST_F(TableEditorBackendTest, ) {
+  TEST_F(TableEditorBackendTest, PendingFeatureTwo) {
     // TODO: needs implementation
     GTEST_SKIP() << "needs implementation";
   }
 
-TEST_F(TableEditorBackendTest, ) {
+TEST_F(TableEditorBackendTest, AddAndConfigureIndexes) {
   IndexListBE *index = data->editor->get_indexes();
   IndexColumnsListBE *icolumns = index->get_columns();
   std::string name, type, comment;
@@ -467,13 +467,13 @@ TEST_F(TableEditorBackendTest, ) {
   for (size_t i = 0; i < table->columns().count(); i++) {
     flag = icolumns->get_field(i, IndexColumnsListBE::Name, name);
     EXPECT_TRUE(flag) << strfmt("index column[%lu] name", i);
-    EXPECT_EQ(*data->table->columns(, name)[i]->name(), strfmt("index column[%lu] name", i));
+    EXPECT_EQ(*data->table->columns()[i]->name(), name) << strfmt("index column[%lu] name", i);
     flag = icolumns->get_field(i, IndexColumnsListBE::Descending, buf);
     EXPECT_TRUE(flag) << strfmt("index column[%lu] desc", i);
-    EXPECT_EQ("0", strfmt("index column[%lu] desc", i, buf));
+    EXPECT_EQ("0", buf) << strfmt("index column[%lu] desc", i);
     flag = icolumns->get_field(i, IndexColumnsListBE::Length, buf);
     EXPECT_TRUE(flag) << strfmt("index column[%lu] length", i);
-    EXPECT_EQ("0", strfmt("index column[%lu] length", i, buf));
+    EXPECT_EQ("0", buf) << strfmt("index column[%lu] length", i);
     flag = icolumns->get_column_enabled(i);
     if (name == "id") {
       EXPECT_TRUE(flag) << strfmt("index column[%lu] enabled", i);
@@ -498,23 +498,23 @@ TEST_F(TableEditorBackendTest, ) {
     for (size_t i = 0; i < table->columns().count(); i++) {
       flag = icolumns->get_field(i, IndexColumnsListBE::Name, name);
       EXPECT_TRUE(flag) << strfmt("index column[%lu] name", i);
-      EXPECT_EQ(*data->table->columns(, name)[i]->name(), strfmt("index column[%lu] name", i));
+      EXPECT_EQ(*data->table->columns()[i]->name(), name) << strfmt("index column[%lu] name", i);
       if (name == "name") {
         flag = icolumns->get_field(i, IndexColumnsListBE::Descending, buf);
         EXPECT_TRUE(flag) << strfmt("index column[%lu] desc", i);
-        EXPECT_EQ("1", strfmt("index column[%lu] desc", i, buf));
+        EXPECT_EQ("1", buf) << strfmt("index column[%lu] desc", i);
         flag = icolumns->get_field(i, IndexColumnsListBE::Length, buf);
         EXPECT_TRUE(flag) << strfmt("index column[%lu] length", i);
-        EXPECT_EQ("20", strfmt("index column[%lu] length", i, buf));
+        EXPECT_EQ("20", buf) << strfmt("index column[%lu] length", i);
         flag = icolumns->get_column_enabled(i);
         EXPECT_TRUE(flag) << strfmt("index column[%lu] enabled", i);
       } else {
         flag = icolumns->get_field(i, IndexColumnsListBE::Descending, buf);
         EXPECT_TRUE(flag) << strfmt("index column[%lu] desc", i);
-        EXPECT_EQ("0", strfmt("index column[%lu] desc", i, buf));
+        EXPECT_EQ("0", buf) << strfmt("index column[%lu] desc", i);
         flag = icolumns->get_field(i, IndexColumnsListBE::Length, buf);
         EXPECT_TRUE(flag) << strfmt("index column[%lu] length", i);
-        EXPECT_EQ("0", strfmt("index column[%lu] length", i, buf));
+        EXPECT_EQ("0", buf) << strfmt("index column[%lu] length", i);
         flag = icolumns->get_column_enabled(i);
         EXPECT_FALSE(flag) << strfmt("index column[%lu] enabled", i);
       }
@@ -552,13 +552,12 @@ TEST_F(TableEditorBackendTest, ) {
     for (size_t i = 0; i < (size_t)icolumns->count(); i++) {
       flag = icolumns->get_field(i, IndexColumnsListBE::Name, name);
       EXPECT_TRUE(flag) << strfmt("index column[%lu] name", i);
-      EXPECT_EQ(*data->table->columns(, name)[i]->name(), strfmt("index column[%lu] name", i));
       flag = icolumns->get_field(i, IndexColumnsListBE::Descending, buf);
       EXPECT_TRUE(flag) << strfmt("index column[%lu] desc", i);
-      EXPECT_EQ("0", strfmt("index column[%lu] desc", i, buf));
+      EXPECT_EQ("0", buf) << strfmt("index column[%lu] desc", i);
       flag = icolumns->get_field(i, IndexColumnsListBE::Length, buf);
       EXPECT_TRUE(flag) << strfmt("index column[%lu] length", i);
-      EXPECT_EQ("0", strfmt("index column[%lu] length", i, buf));
+      EXPECT_EQ("0", buf) << strfmt("index column[%lu] length", i);
 
       if (name == "name" || name == "email") {
         flag = icolumns->get_column_enabled(i);
@@ -568,17 +567,17 @@ TEST_F(TableEditorBackendTest, ) {
         EXPECT_FALSE(flag) << strfmt("index column[%lu] enabled", i);
       }
     }
-});
+}
 
-TEST_F(TableEditorBackendTest, ) {
+TEST_F(TableEditorBackendTest, IndexesStayConsistentAfterColumnRemoval) {
   IndexListBE *index = data->editor->get_indexes();
   // IndexColumnsListBE *icolumns= index->get_columns();
   std::vector<NodeId> columns;
   columns.push_back(NodeId(3)); // email
   data->editor->add_index_with_columns(columns);
 
-  $expect(index->count()).toEqual(4U, "index count");
-  $expect(data->editor->get_columns()->count()).toEqual(5U, "column count");
+  EXPECT_EQ(index->count(), 4U) << "index count";
+  EXPECT_EQ(data->editor->get_columns()->count(), 5U) << "column count";
 
   std::string name;
   bool flag;
@@ -587,35 +586,35 @@ TEST_F(TableEditorBackendTest, ) {
   EXPECT_TRUE(flag);
   EXPECT_EQ("namemail_index", name);
   index->select_index(1);
-  $expect(data->table->indices().get(1)->columns().count()).toEqual(2U, "get index[1] column.count()");
+  EXPECT_EQ(data->table->indices().get(1)->columns().count(), 2U) << "get index[1] column.count()";
 
   data->editor->remove_column(3); // delete column email
 
-  $expect(data->table->indices().get(1)->columns().count()).toEqual(1U, "column count");
-  $expect(index->count()).toEqual(3U, "index count");
+  EXPECT_EQ(data->table->indices().get(1)->columns().count(), 1U) << "column count";
+  EXPECT_EQ(index->count(), 3U) << "index count";
 
   flag = index->get_field(0, IndexListBE::Name, name);
   EXPECT_TRUE(flag);
   EXPECT_EQ("PRIMARY", name);
   index->select_index(0);
-  $expect(data->table->indices().get(0)->columns().count()).toEqual(1U, "get index[0] column.count()");
+  EXPECT_EQ(data->table->indices().get(0)->columns().count(), 1U) << "get index[0] column.count()";
 
   flag = index->get_field(1, IndexListBE::Name, name);
   EXPECT_TRUE(flag);
   EXPECT_EQ("namemail_index", name);
   index->select_index(1);
-  $expect(data->table->indices().get(0)->columns().count()).toEqual(1U, "get index[1] column.count()");
+  EXPECT_EQ(data->table->indices().get(0)->columns().count(), 1U) << "get index[1] column.count()";
 
   flag = index->get_field(2, IndexListBE::Name, name);
   EXPECT_TRUE(flag);
   EXPECT_EQ("", name);
-});
+}
 
-  TEST_F(TableEditorBackendTest, )) {
+  TEST_F(TableEditorBackendTest, ToggleIndexColumns) {
     db_TableRef table = db_mysql_TableRef(grt::Initialized);
     table->owner(data->tester->getSchema());
 
-    $expect(table.is_valid()).toBeTrue("table ok");
+    EXPECT_TRUE(table.is_valid()) << "table ok";
 
     db_ColumnRef column(grt::Initialized);
     column->owner(table);
@@ -634,42 +633,42 @@ TEST_F(TableEditorBackendTest, ) {
 
     TestTableEditor ed(table, data->tester->getRdbms());
 
-    $expect(ed.get_columns()->count()).toEqual(4U, "column count");
+    EXPECT_EQ(ed.get_columns()->count(), 4U) << "column count";
 
     ed.add_index("hello");
 
-    $expect(ed.get_indexes()->count()).toEqual(2U, "index count");
+    EXPECT_EQ(ed.get_indexes()->count(), 2U) << "index count";
 
     ed.get_indexes()->select_index(0);
 
-    $expect(ed.get_indexes()->get_columns()->count()).toEqual(3U, "index column item count");
+    EXPECT_EQ(ed.get_indexes()->get_columns()->count(), 3U) << "index column item count";
 
     IndexColumnsListBE *ic = ed.get_indexes()->get_columns();
     std::string name;
 
     ic->get_field(0, IndexColumnsListBE::Name, name);
     EXPECT_EQ("col1", name);
-    $expect(ic->get_column_enabled(0)).toBeFalse("col1 disabled");
+    EXPECT_FALSE(ic->get_column_enabled(0)) << "col1 disabled";
 
     ic->get_field(1, IndexColumnsListBE::Name, name);
     EXPECT_EQ("col2", name);
-    $expect(ic->get_column_enabled(1)).toBeFalse("col2 disabled");
+    EXPECT_FALSE(ic->get_column_enabled(1)) << "col2 disabled";
 
     ic->get_field(2, IndexColumnsListBE::Name, name);
     EXPECT_EQ("col3", name);
-    $expect(ic->get_column_enabled(2)).toBeFalse("col3 disabled");
+    EXPECT_FALSE(ic->get_column_enabled(2)) << "col3 disabled";
 
     // enable 2 columns
     ic->set_column_enabled(1, true);
-    $expect(data->findIndexColumnFor(table->indices().get(0)->columns(), "col2").is_valid()).toBeTrue("col2 in list");
+    EXPECT_TRUE(data->findIndexColumnFor(table->indices().get(0)->columns(), "col2").is_valid()) << "col2 in list";
 
     ic->set_column_enabled(0, true);
-    $expect(data->findIndexColumnFor(table->indices().get(0)->columns(), "col1").is_valid()).toBeTrue("col1 in list");
+    EXPECT_TRUE(data->findIndexColumnFor(table->indices().get(0)->columns(), "col1").is_valid()) << "col1 in list";
 
     // disable one of them and make sure the right column is removed
     ic->set_column_enabled(0, false);
-    $expect(data->findIndexColumnFor(table->indices().get(0)->columns(), "col2").is_valid()).toBeTrue("col2 in list");
-    $expect(data->findIndexColumnFor(table->indices().get(0)->columns(), "col1").is_valid()).toBeFalse("col1 not in list");
+    EXPECT_TRUE(data->findIndexColumnFor(table->indices().get(0)->columns(), "col2").is_valid()) << "col2 in list";
+    EXPECT_FALSE(data->findIndexColumnFor(table->indices().get(0)->columns(), "col1").is_valid()) << "col1 not in list";
 
     // disable all
     ic->set_column_enabled(1, false);
@@ -677,9 +676,9 @@ TEST_F(TableEditorBackendTest, ) {
     // toggle last (will crash if buggy)
     ic->set_column_enabled(2, true);
     ic->set_column_enabled(2, false);
-  });
+  }
 
-  TEST_F(TableEditorBackendTest, ) {
+  TEST_F(TableEditorBackendTest, AutoAddsPkIndexAndFkEntries) {
     db_mysql_TableRef table(grt::Initialized);
 
     table->owner(data->tester->getSchema());
@@ -691,23 +690,23 @@ TEST_F(TableEditorBackendTest, ) {
 
     // auto-adds a PK
     editor.get_columns()->set_field(0, 1, "int(11)");
-    $expect(table->indices().count()).toEqual(1U, "autoadd PK index");
-    $expect(table->indices()[0]->name().c_str()).toEqual("PRIMARY", "autoadd PK index");
+    EXPECT_EQ(table->indices().count(), 1U) << "autoadd PK index";
+    EXPECT_EQ(table->indices()[0]->name().c_str(), "PRIMARY") << "autoadd PK index";
 
-    $expect(table->columns().count()).toEqual(1U, "add column");
+    EXPECT_EQ(table->columns().count(), 1U) << "add column";
 
-    $expect(table->indices().count()).toEqual(1U, "add index");
+    EXPECT_EQ(table->indices().count(), 1U) << "add index";
     editor.get_indexes()->set_field(1, 0, "index");
-    $expect(table->indices().count()).toEqual(2U, "add index");
+    EXPECT_EQ(table->indices().count(), 2U) << "add index";
 
-    $expect(table->foreignKeys().count()).toEqual(0U, "add fk");
+    EXPECT_EQ(table->foreignKeys().count(), 0U) << "add fk";
     editor.get_fks()->set_field(0, 0, "newfk");
-    $expect(table->foreignKeys().count()).toEqual(1U, "add fk");
-  });
+    EXPECT_EQ(table->foreignKeys().count(), 1U) << "add fk";
+  }
 
-  TEST_F(TableEditorBackendTest, ) {
+  TEST_F(TableEditorBackendTest, CanAccessCatalogUserTypes) {
     db_mysql_TableRef table(grt::Initialized);
-    $expect(table.is_valid()).toBeTrue("table ok");
+    EXPECT_TRUE(table.is_valid()) << "table ok";
 
     table->name("table");
     table->owner(data->tester->getSchema());
@@ -715,7 +714,7 @@ TEST_F(TableEditorBackendTest, ) {
 
     TestTableEditor editor(table, data->tester->getRdbms());
 
-    $expect(editor.get_catalog().is_valid()).toBeTrue("editor catalog is not ok");
+    EXPECT_TRUE(editor.get_catalog().is_valid()) << "editor catalog is not ok";
 
     grt::ListRef<db_UserDatatype> userTypes(editor.get_catalog()->userDatatypes());
 
@@ -731,19 +730,17 @@ TEST_F(TableEditorBackendTest, ) {
     column->setParseType("int", data->tester->getRdbms()->simpleDatatypes());
     table->columns().insert(column);
 
-    $expect(editor.get_columns()->count()).toEqual(3U, "columns list ok");
+    EXPECT_EQ(editor.get_columns()->count(), 3U) << "columns list ok";
 
     std::vector<bec::NodeId> columns;
     columns.push_back(bec::NodeId(1));
     editor.add_fk_with_columns(columns);
-    $expect(editor.get_fks()->count()).toEqual(2U, "fk added");
+    EXPECT_EQ(editor.get_fks()->count(), 2U) << "fk added";
 
     editor.get_fks()->select_fk(bec::NodeId(0));
 
     editor.get_fks()->set_field(0, bec::FKConstraintListBE::RefTable, "table");
 
-    $expect(editor.get_fks()->get_columns()->count()).toEqual(2U, "columns in fk");
-  });
-}
-
+    EXPECT_EQ(editor.get_fks()->get_columns()->count(), 2U) << "columns in fk";
+  }
 }

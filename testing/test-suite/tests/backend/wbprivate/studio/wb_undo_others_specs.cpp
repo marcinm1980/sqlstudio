@@ -28,8 +28,9 @@
 #include "grtpp_undo_manager.h"
 #include "grtpp_util.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
+#include "context.h"
 #include "grt_test_helpers.h"
 
 using namespace bec;
@@ -37,10 +38,7 @@ using namespace wb;
 using namespace grt;
 
 namespace {
-
-$ModuleEnvironment() {};
-
-$TestData {
+struct WbUndoOthersData {
   std::unique_ptr<MySqlStudioTester> tester;
   UndoManager *um = nullptr;
   OverviewBE *overview = nullptr;
@@ -65,39 +63,39 @@ $TestData {
     std::string name;
     {
       grt::BaseListRef list = grt::BaseListRef::cast_from(get_value_by_path(tester->getPmodel(), list_path));
-      $expect(list.count()).toEqual(initial_count, list_path + " " + what + " initial count");
+      EXPECT_EQ(list.count(), initial_count) << list_path + " " + what + " initial count";
     }
 
     // Add diagram
     overview->get_field(add_node, OverviewBE::Label, name);
-    $expect(name).toEqual("Add " + what, what + " add node");
+    EXPECT_EQ(name, "Add " + what) << what + " add node";
     overview->activate_node(add_node);
 
     checkOnlyOneUndoAdded();
 
     // check that it was added
     overview->refresh_node(base_node, true);
-    $expect(overview->count_children(base_node)).toEqual(initial_count + 2, what + " node count");
+    EXPECT_EQ(overview->count_children(base_node), initial_count + 2) << what + " node count";
     {
       grt::BaseListRef list = grt::BaseListRef::cast_from(get_value_by_path(tester->getPmodel(), list_path));
-      $expect(list.count()).toEqual(initial_count + 1, list_path + " " + what + " count");
+      EXPECT_EQ(list.count(), initial_count + 1) << list_path + " " + what + " count";
     }
     // check undo add
     checkUndo();
     overview->refresh_node(base_node, true);
-    $expect(overview->count_children(base_node)).toEqual(initial_count + 1, what + " node count");
+    EXPECT_EQ(overview->count_children(base_node), initial_count + 1) << what + " node count";
     {
       grt::BaseListRef list = grt::BaseListRef::cast_from(get_value_by_path(tester->getPmodel(), list_path));
-      $expect(list.count()).toEqual(initial_count, list_path + " " + what + " count after undo");
+      EXPECT_EQ(list.count(), initial_count) << list_path + " " + what + " count after undo";
     }
 
     // check redo add
     checkRedo();
     overview->refresh_node(base_node, true);
-    $expect(overview->count_children(base_node)).toEqual(initial_count + 2, "diagram node count");
+    EXPECT_EQ(overview->count_children(base_node), initial_count + 2) << "diagram node count";
     {
       grt::BaseListRef list = grt::BaseListRef::cast_from(get_value_by_path(tester->getPmodel(), list_path));
-      $expect(list.count()).toEqual(initial_count + 1, list_path + " " + what + " count after redo");
+      EXPECT_EQ(list.count(), initial_count + 1) << list_path + " " + what + " count after redo";
     }
 
     // check Renaming
@@ -109,17 +107,17 @@ $TestData {
     checkOnlyOneUndoAdded();
 
     overview->get_field(added_node, OverviewBE::Label, name);
-    $expect(name).toEqual("new name", "rename " + what);
+    EXPECT_EQ(name, "new name") << "rename " + what;
 
     checkUndo();
     overview->refresh_node(added_node, false);
     overview->get_field(added_node, OverviewBE::Label, name);
-    $expect(name).toEqual(old_name, "undo rename " + what);
+    EXPECT_EQ(name, old_name) << "undo rename " + what;
 
     checkRedo();
     overview->refresh_node(added_node, false);
     overview->get_field(added_node, OverviewBE::Label, name);
-    $expect(name).toEqual("new name", "redo rename " + what);
+    EXPECT_EQ(name, "new name") << "redo rename " + what;
 
     // Delete
     overview->request_delete_object(added_node);
@@ -127,28 +125,28 @@ $TestData {
 
     // check delete
     overview->refresh_node(base_node, true);
-    $expect(overview->count_children(base_node)).toEqual(initial_count + 1, what + " node count");
+    EXPECT_EQ(overview->count_children(base_node), initial_count + 1) << what + " node count";
     {
       grt::BaseListRef list = grt::BaseListRef::cast_from(get_value_by_path(tester->getPmodel(), list_path));
-      $expect(list.count()).toEqual(initial_count, list_path + " " + what + " count after delete");
+      EXPECT_EQ(list.count(), initial_count) << list_path + " " + what + " count after delete";
     }
 
     // check undo delete
     checkUndo();
     overview->refresh_node(base_node, true);
-    $expect(overview->count_children(base_node)).toEqual(initial_count + 2, what + " node count");
+    EXPECT_EQ(overview->count_children(base_node), initial_count + 2) << what + " node count";
     {
       grt::BaseListRef list = grt::BaseListRef::cast_from(get_value_by_path(tester->getPmodel(), list_path));
-      $expect(list.count()).toEqual(initial_count + 1, list_path + " " + what + " count after undo");
+      EXPECT_EQ(list.count(), initial_count + 1) << list_path + " " + what + " count after undo";
     }
 
     // check redo delete
     checkRedo();
     overview->refresh_node(base_node, true);
-    $expect(overview->count_children(base_node)).toEqual(initial_count + 1, what + " node count");
+    EXPECT_EQ(overview->count_children(base_node), initial_count + 1) << what + " node count";
     {
       grt::BaseListRef list = grt::BaseListRef::cast_from(get_value_by_path(tester->getPmodel(), list_path));
-      $expect(list.count()).toEqual(initial_count, list_path + " " + what + " count after redo");
+      EXPECT_EQ(list.count(), initial_count) << list_path + " " + what + " count after redo";
     }
 
     checkUndo(); // final undo delete
@@ -157,302 +155,272 @@ $TestData {
   }
 };
 
-$describe("General Undo/Redo") {
-  $beforeAll([this]() {
+class General_Undo_RedoTest : public ::testing::Test {
+protected:
+  static std::unique_ptr<WbUndoOthersData> data;
+
+  static void SetUpTestSuite() {
+    data = std::make_unique<WbUndoOthersData>();
     data->tester.reset(new MySqlStudioTester());
     data->tester->createNewDocument();
     data->um = grt::GRT::get()->get_undo_manager();
 
-    bool flag = data->tester->wb->open_document(casmine::CasmineContext::get()->tmpDataDir() + "/studio/undo_test_model1.mwb");
-    $expect(flag).toBeTrue("open_document");
+    bool flag = data->tester->wb->open_document(testing::Context::get().tmpDataDir() + "/studio/undo_test_model1.mwb");
+    EXPECT_TRUE(flag) << "open_document";
 
     data->overview = wb::WBContextUI::get()->get_physical_overview();
     wb::WBContextUI::get()->set_active_form(data->overview);
 
-    $expect(data->tester->getCatalog()->schemata().count()).toEqual(1U, "schemas");
+    EXPECT_EQ(data->tester->getCatalog()->schemata().count(), 1U) << "schemas";
 
     db_SchemaRef schema(data->tester->getCatalog()->schemata()[0]);
 
     // make sure the loaded model contains expected number of things
-    $expect(schema->tables().count()).toEqual(4U, "tables");
-    $expect(schema->views().count()).toEqual(1U, "views");
-    $expect(schema->routineGroups().count()).toEqual(1U, "groups");
+    EXPECT_EQ(schema->tables().count(), 4U) << "tables";
+    EXPECT_EQ(schema->views().count(), 1U) << "views";
+    EXPECT_EQ(schema->routineGroups().count(), 1U) << "groups";
 
-    $expect(data->tester->getPmodel()->diagrams().count()).toEqual(1U, "diagrams");
+    EXPECT_EQ(data->tester->getPmodel()->diagrams().count(), 1U) << "diagrams";
     model_DiagramRef view(data->tester->getPmodel()->diagrams()[0]);
 
-    $expect(view->figures().count()).toEqual(5U, "figures");
+    EXPECT_EQ(view->figures().count(), 5U) << "figures";
 
-    $expect(data->um->get_undo_stack().size()).toEqual(0U, "undo stack is empty");
-  });
+    EXPECT_EQ(data->um->get_undo_stack().size(), 0U) << "undo stack is empty";
+  }
 
-  // For undo tests we use a single document loaded at the beginning of the group
-  // Each test must do the test and undo everything so that the state of the document
-  // never actually changes.
-  // At the end of the test group, the document is compared to the saved one to check
-  // for unexpected changes (ie, anything but stuff like timestamps)
+  static void TearDownTestSuite() {
+    data.reset();
+  }
 
-  //--------------------------------------------------------------------------------------------------------------------
+};
 
-  $it("Overview manipulations: Diagram", [this]() {
-    data->checkOverviewObject("Diagram", NodeId("0"), "/diagrams", 1);
-    $expect(data->um->get_undo_stack().size()).toEqual(0U, "undo stack size");
-  });
+std::unique_ptr<WbUndoOthersData> General_Undo_RedoTest::data;
 
-  $it("Overview manipulations: Schema", [this]() {
-    std::string s;
-
-    $expect(data->overview->count_children(NodeId("1"))).toEqual(1U, "schema count");
-
-    data->overview->request_add_object(NodeId("1"));
-    data->checkOnlyOneUndoAdded();
-
-    data->overview->refresh_node(NodeId("1"), true);
-    $expect(data->overview->count_children(NodeId("1"))).toEqual(2U, "schema count");
-
-    data->checkUndo();
-    data->overview->refresh_node(NodeId("1"), true);
-    $expect(data->overview->count_children(NodeId("1"))).toEqual(1U, "schema count");
-
-    data->checkRedo();
-    data->overview->refresh_node(NodeId("1"), true);
-    $expect(data->overview->count_children(NodeId("1"))).toEqual(2U, "schema count");
-
-    data->overview->activate_node(NodeId("1.1"));
-
-    data->overview->refresh_node(NodeId("1"), true);
-    data->overview->get_field(NodeId("1.1"), 0, s);
-    $expect(s).toEqual("new_schema1", "overview original name");
-
-    /* cant rename schema directly atm
-     bool flag= overview->set_field(NodeId("1.1"), 0, "sakila");
-     $expect("rename", flag);
-     data->checkOnlyOneUndoAdded();
-
-     overview->refresh_node(NodeId("1"), true);
-     overview->get_field(NodeId("1.1"), 0, s);
-     $expect("overview rename", s, "sakila");
-
-     data->checkUndo();
-     overview->refresh_node(NodeId("1"), true);
-     overview->get_field(NodeId("1.1"), 0, s);
-     $expect("overview original name", s, "new_schema1");
-
-     data->checkRedo();
-     overview->set_field(NodeId("1.1"), 0, "sakila");
-     data->checkOnlyOneUndoAdded();
-     */
-    data->overview->request_delete_object(NodeId("1.1"));
-    data->checkOnlyOneUndoAdded();
-
-    data->overview->refresh_node(NodeId("1"), true);
-    $expect(data->overview->count_children(NodeId("1"))).toEqual(1U, "schema count");
-
-    data->checkUndo();
-    data->overview->refresh_node(NodeId("1"), true);
-    $expect(data->overview->count_children(NodeId("1"))).toEqual(2U, "schema count");
-
-    data->checkRedo();
-    data->overview->refresh_node(NodeId("1"), true);
-    $expect(data->overview->count_children(NodeId("1"))).toEqual(1U, "schema count");
-
-    data->checkUndo();
-    data->checkUndo(); // final undo schema add
-
-    $expect(data->um->get_undo_stack().size()).toEqual(0U, "undo stack size");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Overview manipulations: Table", [this]() {
-    data->checkOverviewObject("Table", NodeId("1.0.0"), "/catalog/schemata/0/tables", 4);
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Overview manipulations: View", [this]() {
-    data->checkOverviewObject("View", NodeId("1.0.1"), "/catalog/schemata/0/views", 1);
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Overview manipulations: Routine", [this]() {
-    data->checkOverviewObject("Routine", NodeId("1.0.2"), "/catalog/schemata/0/routines", 0);
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Overview manipulations: Group", [this]() {
-    data->checkOverviewObject("Group", NodeId("1.0.3"), "/catalog/schemata/0/routineGroups", 1);
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Overview manipulations: User", [this]() {
-    data->checkOverviewObject("User", NodeId("2.0"), "/catalog/users");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Overview manipulations: Role", [this]() {
-    data->checkOverviewObject("Role", NodeId("2.1"), "/catalog/roles");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Overview manipulations: Script", [this]() {
-    data->checkOverviewObject("Script", NodeId("3"), "/scripts");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Overview manipulations: Note", [this]() {
-    data->checkOverviewObject("Note", NodeId("4"), "/notes");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Sidebar", [this]() {
-    data->tester->wb->close_document();
-
-    // reinitialize
-    bool flag = data->tester->wb->open_document(casmine::CasmineContext::get()->tmpDataDir() + "/studio/undo_test_model1.mwb");
-    $expect(flag).toBeTrue("open_document");
-
-    data->overview = wb::WBContextUI::get()->get_physical_overview();
-    wb::WBContextUI::get()->set_active_form(data->overview);
-
-    bec::NodeId node(0);
-    node.append(1);
-    data->overview->activate_node(node);
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Property", [this]() {
-    ModelDiagramForm *view = data->tester->wb->get_model_context()->get_diagram_form_for_diagram_id(data->tester->getPview().id());
-    $expect(view).Not.toBeNull("viewform");
-
-    model_FigureRef table(find_named_object_in_list(data->tester->getPview()->figures(), "table2"));
-
-    data->tester->getPview()->selectObject(table);
-
-    $expect(view->get_selection().count()).toEqual(1U, "selection");
-
-    std::vector<std::string> items;
-
-    ValueInspectorBE *insp = wb::WBContextUI::get()->create_inspector_for_selection(view, items);
-    $expect(insp).Not.toBeNull("prop inspector created");
-    $expect(items.size()).toEqual(1U, "items");
-    $expect(items[0]).toEqual("table2: Table", "item0");
-
-    $expect(*table->name()).toEqual("table2", "table name");
-
-    std::string s;
-
-    insp->get_field(NodeId(7), ValueInspectorBE::Name, s);
-    $expect(s).toEqual("name", "node for name");
-
-    bool flag = insp->set_field(NodeId(7), ValueInspectorBE::Value, "hello");
-    $expect(flag).toBeTrue("rename value");
-    data->checkOnlyOneUndoAdded();
-
-    $expect(*table->name()).toEqual("hello", "table renamed");
-    data->checkUndo();
-    $expect(*table->name()).toEqual("table2", "table renamed back");
-    data->checkRedo();
-    $expect(*table->name()).toEqual("hello", "table renamed");
-
-    data->checkUndo();
-
-    delete insp;
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Description", [this]() {
-    // select table in overview
-    data->overview->refresh_node(NodeId("1.0.0"), true);
-    data->overview->begin_selection_marking();
-    data->overview->select_node(NodeId("1.0.0.1"));
-    data->overview->end_selection_marking();
-
-    std::vector<std::string> items;
-    grt::ListRef<GrtObject> new_object_list;
-    std::string description, old_description;
-
-    old_description = wb::WBContextUI::get()->get_description_for_selection(new_object_list, items);
-
-    $expect(items.size()).toEqual(1U, "selection count");
-
-    wb::WBContextUI::get()->set_description_for_selection(new_object_list, "test description");
-    data->checkOnlyOneUndoAdded();
-
-    $expect(*data->tester->getCatalog()->schemata()[0]->tables()[0]->comment()).toEqual("test description", "description");
-
-    data->checkUndo();
-
-    $expect(*data->tester->getCatalog()->schemata()[0]->tables()[0]->comment()).toEqual("", "description");
-
-    data->checkRedo();
-
-    $expect(*data->tester->getCatalog()->schemata()[0]->tables()[0]->comment()).toEqual("test description", "description");
-
-    // undo change description
-    data->checkUndo();
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Configuration: general settings", []() {
-    $pending("not implemented");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Configuration: model settings", []() {
-    $pending("not implemented");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Configuration: diagram settings", []() {
-    $pending("not implemented");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Configuration: page settings", []()
-  {
-    $pending("not implemented");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Plugin execution", []() {
-    $pending("something wrong with blocked UI events at this point... maybe should split the test");
-    /*
-     model_DiagramRef mview(tester->get_pview());
-
-     //  wb::WBContextUI::get()->set_active_form(tester->tester->get_model_context()->get_diagram_form_for_diagram_id(tester->getPmodel()->diagrams()[0].id()));
-
-     $expect("grid", mview->options().get_int("ShowGrid", -42), -42);
-
-     wb::WBContextUI::get()->get_command_ui()->activate_command("plugin:tester->edit.toggleGrid");
-     data->checkOnlyOneUndoAdded();
-
-     $expect("grid", mview->options().get_int("ShowGrid", -42), 0);
-     data->checkUndo();
-
-     $expect("grid", mview->options().get_int("ShowGrid", -42), -42);
-     data->checkRedo();
-
-     $expect("grid", mview->options().get_int("ShowGrid", -42), 0);
-
-     data->checkUndo();
-     */
-  });
-
+TEST_F(General_Undo_RedoTest, Overview_manipulations_Diagram) {
+  data->checkOverviewObject("Diagram", NodeId("0"), "/diagrams", 1);
+  EXPECT_EQ(data->um->get_undo_stack().size(), 0U) << "undo stack size";
 }
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_Schema) {
+  std::string s;
+
+  EXPECT_EQ(data->overview->count_children(NodeId("1")), 1U) << "schema count";
+
+  data->overview->request_add_object(NodeId("1"));
+  data->checkOnlyOneUndoAdded();
+
+  data->overview->refresh_node(NodeId("1"), true);
+  EXPECT_EQ(data->overview->count_children(NodeId("1")), 2U) << "schema count";
+
+  data->checkUndo();
+  data->overview->refresh_node(NodeId("1"), true);
+  EXPECT_EQ(data->overview->count_children(NodeId("1")), 1U) << "schema count";
+
+  data->checkRedo();
+  data->overview->refresh_node(NodeId("1"), true);
+  EXPECT_EQ(data->overview->count_children(NodeId("1")), 2U) << "schema count";
+
+  data->overview->activate_node(NodeId("1.1"));
+
+  data->overview->refresh_node(NodeId("1"), true);
+  data->overview->get_field(NodeId("1.1"), 0, s);
+  EXPECT_EQ(s, "new_schema1") << "overview original name";
+
+  /* cant rename schema directly atm
+   bool flag= overview->set_field(NodeId("1.1"), 0, "sakila");
+   EXPECT_TRUE(flag) << "rename";
+   data->checkOnlyOneUndoAdded();
+
+   overview->refresh_node(NodeId("1"), true);
+   overview->get_field(NodeId("1.1"), 0, s);
+   EXPECT_EQ(s, "sakila") << "overview rename";
+
+   data->checkUndo();
+   overview->refresh_node(NodeId("1"), true);
+   overview->get_field(NodeId("1.1"), 0, s);
+   EXPECT_EQ(s, "new_schema1") << "overview original name";
+
+   data->checkRedo();
+   overview->set_field(NodeId("1.1"), 0, "sakila");
+   data->checkOnlyOneUndoAdded();
+   */
+  data->overview->request_delete_object(NodeId("1.1"));
+  data->checkOnlyOneUndoAdded();
+
+  data->overview->refresh_node(NodeId("1"), true);
+  EXPECT_EQ(data->overview->count_children(NodeId("1")), 1U) << "schema count";
+
+  data->checkUndo();
+  data->overview->refresh_node(NodeId("1"), true);
+  EXPECT_EQ(data->overview->count_children(NodeId("1")), 2U) << "schema count";
+
+  data->checkRedo();
+  data->overview->refresh_node(NodeId("1"), true);
+  EXPECT_EQ(data->overview->count_children(NodeId("1")), 1U) << "schema count";
+
+  data->checkUndo();
+  data->checkUndo(); // final undo schema add
+
+  EXPECT_EQ(data->um->get_undo_stack().size(), 0U) << "undo stack size";
+}
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_Table) {
+  data->checkOverviewObject("Table", NodeId("1.0.0"), "/catalog/schemata/0/tables", 4);
+}
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_View) {
+  data->checkOverviewObject("View", NodeId("1.0.1"), "/catalog/schemata/0/views", 1);
+}
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_Routine) {
+  data->checkOverviewObject("Routine", NodeId("1.0.2"), "/catalog/schemata/0/routines", 0);
+}
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_Group) {
+  data->checkOverviewObject("Group", NodeId("1.0.3"), "/catalog/schemata/0/routineGroups", 1);
+}
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_User) {
+  data->checkOverviewObject("User", NodeId("2.0"), "/catalog/users");
+}
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_Role) {
+  data->checkOverviewObject("Role", NodeId("2.1"), "/catalog/roles");
+}
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_Script) {
+  data->checkOverviewObject("Script", NodeId("3"), "/scripts");
+}
+
+TEST_F(General_Undo_RedoTest, Overview_manipulations_Note) {
+  data->checkOverviewObject("Note", NodeId("4"), "/notes");
+}
+
+TEST_F(General_Undo_RedoTest, Sidebar) {
+  data->tester->wb->close_document();
+
+  // reinitialize
+  bool flag = data->tester->wb->open_document(testing::Context::get().tmpDataDir() + "/studio/undo_test_model1.mwb");
+  EXPECT_TRUE(flag) << "open_document";
+
+  data->overview = wb::WBContextUI::get()->get_physical_overview();
+  wb::WBContextUI::get()->set_active_form(data->overview);
+
+  bec::NodeId node(0);
+  node.append(1);
+  data->overview->activate_node(node);
+}
+
+TEST_F(General_Undo_RedoTest, Property) {
+  ModelDiagramForm *view = data->tester->wb->get_model_context()->get_diagram_form_for_diagram_id(data->tester->getPview().id());
+  EXPECT_NE(view, nullptr) << "viewform";
+
+  model_FigureRef table(find_named_object_in_list(data->tester->getPview()->figures(), "table2"));
+
+  data->tester->getPview()->selectObject(table);
+
+  EXPECT_EQ(view->get_selection().count(), 1U) << "selection";
+
+  std::vector<std::string> items;
+
+  ValueInspectorBE *insp = wb::WBContextUI::get()->create_inspector_for_selection(view, items);
+  EXPECT_NE(insp, nullptr) << "prop inspector created";
+  EXPECT_EQ(items.size(), 1U) << "items";
+  EXPECT_EQ(items[0], "table2: Table") << "item0";
+
+  EXPECT_EQ(*table->name(), "table2") << "table name";
+
+  std::string s;
+
+  insp->get_field(NodeId(7), ValueInspectorBE::Name, s);
+  EXPECT_EQ(s, "name") << "node for name";
+
+  bool flag = insp->set_field(NodeId(7), ValueInspectorBE::Value, "hello");
+  EXPECT_TRUE(flag) << "rename value";
+  data->checkOnlyOneUndoAdded();
+
+  EXPECT_EQ(*table->name(), "hello") << "table renamed";
+  data->checkUndo();
+  EXPECT_EQ(*table->name(), "table2") << "table renamed back";
+  data->checkRedo();
+  EXPECT_EQ(*table->name(), "hello") << "table renamed";
+
+  data->checkUndo();
+
+  delete insp;
+}
+
+TEST_F(General_Undo_RedoTest, Description) {
+  // select table in overview
+  data->overview->refresh_node(NodeId("1.0.0"), true);
+  data->overview->begin_selection_marking();
+  data->overview->select_node(NodeId("1.0.0.1"));
+  data->overview->end_selection_marking();
+
+  std::vector<std::string> items;
+  grt::ListRef<GrtObject> new_object_list;
+  std::string description, old_description;
+
+  old_description = wb::WBContextUI::get()->get_description_for_selection(new_object_list, items);
+
+  EXPECT_EQ(items.size(), 1U) << "selection count";
+
+  wb::WBContextUI::get()->set_description_for_selection(new_object_list, "test description");
+  data->checkOnlyOneUndoAdded();
+
+  EXPECT_EQ(*data->tester->getCatalog()->schemata()[0]->tables()[0]->comment(), "test description") << "description";
+
+  data->checkUndo();
+
+  EXPECT_EQ(*data->tester->getCatalog()->schemata()[0]->tables()[0]->comment(), "") << "description";
+
+  data->checkRedo();
+
+  EXPECT_EQ(*data->tester->getCatalog()->schemata()[0]->tables()[0]->comment(), "test description") << "description";
+
+  // undo change description
+  data->checkUndo();
+}
+
+TEST_F(General_Undo_RedoTest, Configuration_general_settings) {
+  GTEST_SKIP() << "not implemented";
+}
+
+TEST_F(General_Undo_RedoTest, Configuration_model_settings) {
+  GTEST_SKIP() << "not implemented";
+}
+
+TEST_F(General_Undo_RedoTest, Configuration_diagram_settings) {
+  GTEST_SKIP() << "not implemented";
+}
+
+TEST_F(General_Undo_RedoTest, Configuration_page_settings) {
+  GTEST_SKIP() << "not implemented";
+}
+
+TEST_F(General_Undo_RedoTest, Plugin_execution) {
+  GTEST_SKIP() << "something wrong with blocked UI events at this point... maybe should split the test";
+  /*
+   model_DiagramRef mview(tester->get_pview());
+
+   //  wb::WBContextUI::get()->set_active_form(tester->tester->get_model_context()->get_diagram_form_for_diagram_id(tester->getPmodel()->diagrams()[0].id()));
+
+   EXPECT_EQ(mview->options().get_int("ShowGrid", -42), -42) << "grid";
+
+   wb::WBContextUI::get()->get_command_ui()->activate_command("plugin:tester->edit.toggleGrid");
+   data->checkOnlyOneUndoAdded();
+
+   EXPECT_EQ(mview->options().get_int("ShowGrid", -42), 0) << "grid";
+   data->checkUndo();
+
+   EXPECT_EQ(mview->options().get_int("ShowGrid", -42), -42) << "grid";
+   data->checkRedo();
+
+   EXPECT_EQ(mview->options().get_int("ShowGrid", -42), 0) << "grid";
+
+   data->checkUndo();
+   */
+}
+
 
 }

@@ -36,7 +36,9 @@ using namespace bec;
 #include "structs.test.h"
 
 #include "gtest/gtest.h"
-#include "casmine.h"
+#include "context.h"
+
+#include <fstream>
 
 namespace {
 
@@ -59,12 +61,13 @@ static void expectFilesEqual(const std::string &test, const std::string file, co
 }
 
 class GRTInspectorValueTest : public ::testing::Test {
-protected:
-  std::string dataDir = casmine::CasmineContext::get()->tmpDataDir();
-  std::string outputDir = casmine::CasmineContext::get()->outputDir();
+public:
+  GRTInspectorValueTest *data = this;
+  std::string dataDir = testing::Context::get().tmpDataDir();
+  std::string outputDir = testing::Context::get().outputDir();
 
   void SetUp() override {
-    grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
+    grt::GRT::get()->load_metaclasses(testing::Context::get().tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
   }
 
@@ -97,8 +100,8 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfList) {
     std::vector<ssize_t> columns;
     columns.push_back(ValueInspectorBE::Name);
     columns.push_back(ValueInspectorBE::Value);
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test1.txt", vinsp, columns, true);
-    expectFilesEqual("list contents", data->outputDir + "/grt_inspector_value_test1.txt", data->dataDir + "/be/grt_inspector_value_test1.txt");
+    testing::dumpTreeModel(outputDir + "/grt_inspector_value_test1.txt", vinsp, columns, true);
+    expectFilesEqual("list contents", outputDir + "/grt_inspector_value_test1.txt", dataDir + "/be/grt_inspector_value_test1.txt");
 
     try {
       node = vinsp->get_node(10);
@@ -122,13 +125,13 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfList) {
     EXPECT_EQ(DictType, type);
 
     NodeId nd;
-    $expect(nd.is_valid()).toBeFalse();
+    EXPECT_FALSE(nd.is_valid());
 
     node = vinsp->get_node(-1);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     node = vinsp->get_node(11);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     // test change int value
     flag = vinsp->set_field(0, ValueInspectorBE::Value, (ssize_t)112211);
@@ -161,13 +164,13 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfList) {
     flag = vinsp->set_convert_field(1, ValueInspectorBE::Value, "112233");
     EXPECT_TRUE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test1.1.txt", vinsp, columns, true);
-    expectFilesEqual("list change", data->outputDir + "/grt_inspector_value_test1.1.txt",
-                      data->dataDir + "/be/grt_inspector_value_test1.1.txt");
+    testing::dumpTreeModel(outputDir + "/grt_inspector_value_test1.1.txt", vinsp, columns, true);
+    expectFilesEqual("list change", outputDir + "/grt_inspector_value_test1.1.txt",
+              dataDir + "/be/grt_inspector_value_test1.1.txt");
 
     // item count still ok?
 
-    $expect((int)list.count()).toEqual(10);
+    EXPECT_EQ((int)list.count(), 10);
 
     // test add new value
     NodeId nkey;
@@ -177,17 +180,17 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfList) {
     flag = vinsp->set_field(nkey, ValueInspectorBE::Value, "new value");
     EXPECT_TRUE(flag);
 
-    $expect(list.count()).toBe(11U);
+    EXPECT_EQ(list.count(), 11U);
 
     // test delete value
     flag = vinsp->delete_item(3);
     EXPECT_TRUE(flag);
 
-    $expect(list.count()).toBe(10U);
+    EXPECT_EQ(list.count(), 10U);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test1.2.txt", vinsp, columns, true);
-    expectFilesEqual("list delete", data->outputDir + "/grt_inspector_value_test1.2.txt",
-                      data->dataDir + "/be/grt_inspector_value_test1.2.txt");
+    testing::dumpTreeModel(outputDir + "/grt_inspector_value_test1.2.txt", vinsp, columns, true);
+    expectFilesEqual("list delete", outputDir + "/grt_inspector_value_test1.2.txt",
+              dataDir + "/be/grt_inspector_value_test1.2.txt");
 
     flag = vinsp->delete_item(10);
     EXPECT_FALSE(flag);
@@ -204,9 +207,9 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfStringTypedList) {
     // create a test list
     BaseListRef list(create_string_list(10));
 
-    $expect(list.count()).toBe(10U);
-    $expect(list.type()).toBe(ListType);
-    $expect(list.content_type()).toBe(StringType);
+    EXPECT_EQ(list.count(), 10U);
+    EXPECT_EQ(list.type(), ListType);
+    EXPECT_EQ(list.content_type(), StringType);
 
     ValueInspectorBE *vinsp = ValueInspectorBE::create(list, false, false);
 
@@ -214,14 +217,14 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfStringTypedList) {
     size_t c = vinsp->count();
     EXPECT_EQ(10U, c);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test2.txt", vinsp, columns, true);
-    expectFilesEqual("typed list check", data->outputDir + "/grt_inspector_value_test2.txt",
-                      data->dataDir + "/be/grt_inspector_value_test2.txt");
+    testing::dumpTreeModel(outputDir + "/grt_inspector_value_test2.txt", vinsp, columns, true);
+    expectFilesEqual("typed list check", outputDir + "/grt_inspector_value_test2.txt",
+              dataDir + "/be/grt_inspector_value_test2.txt");
 
     std::string name, value;
 
     NodeId node = vinsp->get_node(-1);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     flag = vinsp->get_field(11, ValueInspectorBE::Name, name);
     EXPECT_FALSE(flag);
@@ -245,14 +248,14 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfStringTypedList) {
     flag = vinsp->set_convert_field(2, ValueInspectorBE::Value, "112233");
     EXPECT_TRUE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test2.1.txt", vinsp, columns, true);
-    expectFilesEqual("typed list setting", data->outputDir + "/grt_inspector_value_test2.1.txt",
-                      data->dataDir + "/be/grt_inspector_value_test2.1.txt");
+    testing::dumpTreeModel(outputDir + "/grt_inspector_value_test2.1.txt", vinsp, columns, true);
+    expectFilesEqual("typed list setting", outputDir + "/grt_inspector_value_test2.1.txt",
+              dataDir + "/be/grt_inspector_value_test2.1.txt");
 
     // item count still ok?
     delete vinsp;
 
-    $expect(list.count()).toEqual(10U);
+    EXPECT_EQ(list.count(), 10U);
 }
 
 TEST_F(GRTInspectorValueTest, TestInspectionOfIntTypedList) {
@@ -264,9 +267,9 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfIntTypedList) {
     // create a test list
     BaseListRef list(create_int_list(10));
 
-    $expect(list.count()).toBe(10U);
-    $expect(list.type()).toBe(ListType);
-    $expect(list.content_type()).toBe(IntegerType);
+    EXPECT_EQ(list.count(), 10U);
+    EXPECT_EQ(list.type(), ListType);
+    EXPECT_EQ(list.content_type(), IntegerType);
 
     ValueInspectorBE *vinsp = ValueInspectorBE::create(list, false, false);
 
@@ -276,24 +279,24 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfIntTypedList) {
 
     std::string name, value;
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test3.txt", vinsp, columns, true);
-    expectFilesEqual("int typed list", data->outputDir + "/grt_inspector_value_test3.txt", data->dataDir + "/be/grt_inspector_value_test3.txt");
+    testing::dumpTreeModel(outputDir + "/grt_inspector_value_test3.txt", vinsp, columns, true);
+    expectFilesEqual("int typed list", outputDir + "/grt_inspector_value_test3.txt", dataDir + "/be/grt_inspector_value_test3.txt");
 
     NodeId node;
     node = vinsp->get_node(-1);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     node = vinsp->get_node(10);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     node = vinsp->get_node(11);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     // node= vinsp->get_child(4, 0);
-    // $expect(node.is_valid()).toBeFalse();
+    // EXPECT_FALSE(node.is_valid());
 
     // node= vinsp->get_child(1, 1);
-    // $expect(node.is_valid()).toBeFalse();
+    // EXPECT_FALSE(node.is_valid());
 
     flag = vinsp->set_field(0, ValueInspectorBE::Name, (ssize_t)123);
     EXPECT_FALSE(flag);
@@ -314,19 +317,19 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfIntTypedList) {
     flag = vinsp->set_convert_field(2, ValueInspectorBE::Value, "112233");
     EXPECT_TRUE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test3.1.txt", vinsp, columns, true);
-    expectFilesEqual("int typed list set", data->outputDir + "/grt_inspector_value_test3.1.txt",
-                      data->dataDir + "/be/grt_inspector_value_test3.1.txt");
+    testing::dumpTreeModel(outputDir + "/grt_inspector_value_test3.1.txt", vinsp, columns, true);
+    expectFilesEqual("int typed list set", outputDir + "/grt_inspector_value_test3.1.txt",
+              dataDir + "/be/grt_inspector_value_test3.1.txt");
 
     delete vinsp;
 
-    $expect(list.count()).toEqual(10U);
-  });
+    EXPECT_EQ(list.count(), 10U);
+}
 
-  // Test Dicts
-  // ----------
+// Test Dicts
+// ----------
 
-  $it("Test inspection of dict", [this]() {
+TEST_F(GRTInspectorValueTest, TestInspectionOfDict) {
     bool flag;
     std::vector<ssize_t> columns;
     columns.push_back(ValueInspectorBE::Name);
@@ -335,8 +338,8 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfIntTypedList) {
     // create a test dict
     DictRef dict(create_dict_with_varied_data());
 
-    $expect(dict.count()).toBe(6U);
-    $expect(dict.type()).toBe(DictType);
+    EXPECT_EQ(dict.count(), 6U);
+    EXPECT_EQ(dict.type(), DictType);
 
     ValueInspectorBE *vinsp = ValueInspectorBE::create(dict, false, false);
 
@@ -346,15 +349,15 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfIntTypedList) {
 
     std::string name, value;
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test10.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test10.txt", vinsp, columns, true);
     expectFilesEqual("dict check", data->outputDir + "/grt_inspector_value_test10.txt", data->dataDir + "/be/grt_inspector_value_test10.txt");
 
     NodeId node;
     node = vinsp->get_node(-1);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     //  node= vinsp->get_child(1, 0);
-    //  $expect(node.is_valid()).toBeFalse();
+    //  EXPECT_FALSE(node.is_valid());
 
     // test change int value
     flag = vinsp->set_field(0, ValueInspectorBE::Value, (ssize_t)112211);
@@ -375,13 +378,13 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfIntTypedList) {
     flag = vinsp->set_convert_field(1, ValueInspectorBE::Value, "112233");
     EXPECT_TRUE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test10.1.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test10.1.txt", vinsp, columns, true);
     expectFilesEqual("dict check set", data->outputDir + "/grt_inspector_value_test10.1.txt",
                       data->dataDir + "/be/grt_inspector_value_test10.1.txt");
 
     // item count still ok?
 
-    $expect(dict.count()).toBe(6U);
+    EXPECT_EQ(dict.count(), 6U);
 
     // test add new value
     NodeId nkey;
@@ -394,27 +397,27 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfIntTypedList) {
     flag = vinsp->set_field(nkey, ValueInspectorBE::Value, "new value");
     EXPECT_TRUE(flag);
 
-    $expect(dict.count()).toBe(7U);
+    EXPECT_EQ(dict.count(), 7U);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test10.2.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test10.2.txt", vinsp, columns, true);
     expectFilesEqual("dict check add", data->outputDir + "/grt_inspector_value_test10.2.txt",
                       data->dataDir + "/be/grt_inspector_value_test10.2.txt");
     // test delete value
     flag = vinsp->delete_item(3);
     EXPECT_TRUE(flag);
 
-    $expect(dict.count()).toBe(6U);
+    EXPECT_EQ(dict.count(), 6U);
 
     flag = vinsp->delete_item(8);
     EXPECT_FALSE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test10.3.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test10.3.txt", vinsp, columns, true);
     expectFilesEqual("dict check del", data->outputDir + "/grt_inspector_value_test10.3.txt",
                       data->dataDir + "/be/grt_inspector_value_test10.3.txt");
 
     delete vinsp;
 
-    $expect(dict.count()).toBe(6U);
+    EXPECT_EQ(dict.count(), 6U);
 }
 
 TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
@@ -426,13 +429,13 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     // create a test dict
     DictRef dict(create_dict_with_int_data());
 
-    $expect(dict.count()).toBe(9U);
-    $expect(dict.type()).toBe(DictType);
-    $expect(dict.content_type()).toBe(IntegerType);
+    EXPECT_EQ(dict.count(), 9U);
+    EXPECT_EQ(dict.type(), DictType);
+    EXPECT_EQ(dict.content_type(), IntegerType);
 
     ValueInspectorBE *vinsp = ValueInspectorBE::create(dict, false, false);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.txt", vinsp, columns, true);
     expectFilesEqual("object check", data->outputDir + "/grt_inspector_value_test11.txt", data->dataDir + "/be/grt_inspector_value_test11.txt");
 
     // test listing
@@ -444,10 +447,10 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
 
     // test get random item
     node = vinsp->get_node(9);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     node = vinsp->get_node(-1);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     // test change int value
     flag = vinsp->set_field(0, ValueInspectorBE::Value, (ssize_t)112211);
@@ -469,12 +472,12 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     EXPECT_TRUE(flag);
     // in this case, the dict is untyped, so it should just appear as string
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.1.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.1.txt", vinsp, columns, true);
     expectFilesEqual("object check set", data->outputDir + "/grt_inspector_value_test11.1.txt",
                       data->dataDir + "/be/grt_inspector_value_test11.1.txt");
 
     // item count still ok?
-    $expect((int)dict.count()).toEqual(9);
+    EXPECT_EQ((int)dict.count(), 9);
 
     // test add new value
     NodeId nkey;
@@ -494,9 +497,9 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     flag = vinsp->set_field(nkey, ValueInspectorBE::Value, (ssize_t)1234);
     EXPECT_TRUE(flag);
 
-    $expect(dict.count()).toEqual(10U);
+    EXPECT_EQ(dict.count(), 10U);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.2.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.2.txt", vinsp, columns, true);
     expectFilesEqual("object check add", data->outputDir + "/grt_inspector_value_test11.2.txt",
                       data->dataDir + "/be/grt_inspector_value_test11.2.txt");
 
@@ -518,7 +521,7 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     flag = vinsp->set_convert_field(nkey, ValueInspectorBE::Value, "22");
     EXPECT_TRUE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.3.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.3.txt", vinsp, columns, true);
     expectFilesEqual("object check add", data->outputDir + "/grt_inspector_value_test11.3.txt",
                       data->dataDir + "/be/grt_inspector_value_test11.3.txt");
 
@@ -526,7 +529,7 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     flag = vinsp->delete_item(3);
     EXPECT_TRUE(flag);
 
-    $expect(dict.count()).toBe(10U);
+    EXPECT_EQ(dict.count(), 10U);
 
     flag = vinsp->delete_item(10);
     EXPECT_FALSE(flag);
@@ -534,27 +537,27 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     flag = vinsp->delete_item(9);
     EXPECT_TRUE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.4.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test11.4.txt", vinsp, columns, true);
     expectFilesEqual("object check del", data->outputDir + "/grt_inspector_value_test11.4.txt",
                       data->dataDir + "/be/grt_inspector_value_test11.4.txt");
 
     delete vinsp;
 
-    $expect(dict.count()).toBe(9U);
-  });
+    EXPECT_EQ(dict.count(), 9U);
+}
 
-  // Test Objects
-  // ------------
+// Test Objects
+// ------------
 
-  $it("Test inspection of object (ungrouped)", [this]() {
-    $pending("require investigation of exception");
+TEST_F(GRTInspectorValueTest, TestInspectionOfObjectUngrouped) {
+    GTEST_SKIP() << "require investigation of exception";
     std::vector<ssize_t> columns;
     columns.push_back(ValueInspectorBE::Name);
     columns.push_back(ValueInspectorBE::Value);
 
     test_BookRef book(grt::Initialized);
 
-    $expect(book.is_valid()).toBeTrue();
+    EXPECT_TRUE(book.is_valid());
 
     ValueInspectorBE *vinsp = ValueInspectorBE::create(book, false, false);
     bool flag;
@@ -566,14 +569,14 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     std::string name, value;
 
     NodeId node;
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test20.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test20.txt", vinsp, columns, true);
     expectFilesEqual("object check", data->outputDir + "/grt_inspector_value_test20.txt", data->dataDir + "/be/grt_inspector_value_test20.txt");
 
     node = vinsp->get_node(9);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     node = vinsp->get_node(-1);
-    $expect(node.is_valid()).toBeFalse();
+    EXPECT_FALSE(node.is_valid());
 
     // test bad change int value
     flag = vinsp->set_field(5, ValueInspectorBE::Value, (ssize_t)112211);
@@ -599,7 +602,7 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     EXPECT_TRUE(flag);
     // in this case, the dict is untyped, so it should just appear as string
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test20.1.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test20.1.txt", vinsp, columns, true);
     expectFilesEqual("object check set", data->outputDir + "/grt_inspector_value_test20.1.txt",
                       data->dataDir + "/be/grt_inspector_value_test20.1.txt");
 
@@ -608,7 +611,7 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     flag = vinsp->add_item(nkey);
     EXPECT_FALSE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test20.2.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test20.2.txt", vinsp, columns, true);
     expectFilesEqual("object check add", data->outputDir + "/grt_inspector_value_test20.2.txt",
                       data->dataDir + "/be/grt_inspector_value_test20.2.txt");
 
@@ -616,7 +619,7 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
     flag = vinsp->delete_item(3);
     EXPECT_FALSE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test20.3.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test20.3.txt", vinsp, columns, true);
     expectFilesEqual("object check del", data->outputDir + "/grt_inspector_value_test20.3.txt",
                       data->dataDir + "/be/grt_inspector_value_test20.3.txt");
 
@@ -624,13 +627,13 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfTypedDict) {
 }
 
 TEST_F(GRTInspectorValueTest, TestInspectionOfObjectGrouped) {
-    $pending("require investigation of exception");
+    GTEST_SKIP() << "require investigation of exception";
     std::vector<ssize_t> columns;
     columns.push_back(ValueInspectorBE::Name);
     columns.push_back(ValueInspectorBE::Value);
 
     test_BookRef book(grt::Initialized);
-    $expect(book.is_valid()).toBeTrue();
+    EXPECT_TRUE(book.is_valid());
 
     ValueInspectorBE *vinsp = ValueInspectorBE::create(book, true, true);
 
@@ -643,13 +646,13 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfObjectGrouped) {
 
     NodeId node, gnode;
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test21.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test21.txt", vinsp, columns, true);
     expectFilesEqual("grouped object check", data->outputDir + "/grt_inspector_value_test21.txt",
                       data->dataDir + "/be/grt_inspector_value_test21.txt");
 
     try {
       node = vinsp->get_child(NodeId(1), 3);
-      $expect(node.is_valid()).toBeFalse();
+      EXPECT_FALSE(node.is_valid());
     } catch (std::range_error &) {
       // expected
     }
@@ -683,7 +686,7 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfObjectGrouped) {
     flag = vinsp->set_convert_field(node, ValueInspectorBE::Value, "HELLO");
     EXPECT_FALSE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test21.1.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test21.1.txt", vinsp, columns, true);
     expectFilesEqual("grouped object check set", data->outputDir + "/grt_inspector_value_test21.1.txt",
                       data->dataDir + "/be/grt_inspector_value_test21.1.txt");
 
@@ -692,7 +695,7 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfObjectGrouped) {
     flag = vinsp->add_item(nkey);
     EXPECT_FALSE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test21.2.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test21.2.txt", vinsp, columns, true);
     expectFilesEqual("grouped object check add", data->outputDir + "/grt_inspector_value_test21.2.txt",
                       data->dataDir + "/be/grt_inspector_value_test21.2.txt");
 
@@ -700,7 +703,7 @@ TEST_F(GRTInspectorValueTest, TestInspectionOfObjectGrouped) {
     flag = vinsp->delete_item(3);
     EXPECT_FALSE(flag);
 
-    casmine::dumpTreeModel(data->outputDir + "/grt_inspector_value_test21.3.txt", vinsp, columns, true);
+    testing::dumpTreeModel(data->outputDir + "/grt_inspector_value_test21.3.txt", vinsp, columns, true);
     expectFilesEqual("grouped object check del", data->outputDir + "/grt_inspector_value_test21.3.txt",
                       data->dataDir + "/be/grt_inspector_value_test21.3.txt");
 

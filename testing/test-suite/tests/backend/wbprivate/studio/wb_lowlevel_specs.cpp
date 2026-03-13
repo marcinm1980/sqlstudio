@@ -54,6 +54,8 @@ namespace {
     std::unique_ptr<MySqlStudioTester> tester;
   };
 
+} // anonymous namespace
+
 class LowLevelTestsForMySqlStudioContextTest : public ::testing::Test {
 protected:
   TestData *data = new TestData();
@@ -75,19 +77,17 @@ protected:
 
 TEST_F(LowLevelTestsForMySqlStudioContextTest, StoredConnectionsTest) {
   GTEST_SKIP() << "need investigate why connection is not avaiable";
-  $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().is_valid()).toBeTrue();
+  EXPECT_TRUE(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().is_valid());
 
   // We cannot check the exact number because on Windows, if there are no server instances yet,
   // instances and connections are created automatically from all installed servers.
   // So we can't know in advance how many connections we will have (but at least 1, that in the test
   // connection file).
-  $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().count() > 0).toBeTrue();
+  EXPECT_TRUE(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().count() > 0);
 
-  $expect(data->tester->wb->get_root()->rdbmsMgmt()->rdbms().get(0)->drivers().count() > 0).toBeTrue();
+  EXPECT_TRUE(data->tester->wb->get_root()->rdbmsMgmt()->rdbms().get(0)->drivers().count() > 0);
 
-  $expect(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().get(0)->driver().is_valid()).toBeTrue();
-});
-
+  EXPECT_TRUE(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().get(0)->driver().is_valid());
 }
 
 TEST_F(LowLevelTestsForMySqlStudioContextTest, CheckIfCreatingAFkBetween2TablesWillCreateTheConnection) {
@@ -97,8 +97,8 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, CheckIfCreatingAFkBetween2TablesW
   db_mysql_TableRef table1(data->tester->addTableFigure("table1", 10, 10));
   db_mysql_TableRef table2(data->tester->addTableFigure("table2", 10, 100));
 
-  $expect(data->tester->getPview()->figures().count()).toBe(2U);
-  $expect(data->tester->getPview()->connections().count()).toBe(0U);
+  EXPECT_EQ(data->tester->getPview()->figures().count(), 2U);
+  EXPECT_EQ(data->tester->getPview()->connections().count(), 0U);
 
   db_mysql_ColumnRef column(grt::Initialized);
   column->owner(table1);
@@ -139,17 +139,16 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, CheckIfCreatingAFkBetween2TablesW
   bec::TableHelper::create_foreign_key_to_table(table1, table2, true, true, true, true, data->tester->getRdbms(),
                                                 grt::DictRef(true), grt::DictRef(true));
 
-  $expect(table1->foreignKeys().count() > 0).toBeTrue();
-  $expect(table2->foreignKeys().count() == 0).toBeTrue();
+  EXPECT_TRUE(table1->foreignKeys().count() > 0);
+  EXPECT_TRUE(table2->foreignKeys().count() == 0);
 
   grt::ListRef<model_Connection> tmp(data->tester->getPview()->connections());
 
   data->tester->flushUntil(3, std::bind(&grt::ListRef<model_Connection>::count, tmp), 1);
 
-  $expect(data->tester->getPview()->connections().count()).toBe(1U);
+  EXPECT_EQ(data->tester->getPview()->connections().count(), 1U);
   data->tester->wb->close_document();
   data->tester->wb->close_document_finish();
-});
 }
 
 TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfCreatingARecursiveFkWillCreateTheConnection) {
@@ -158,8 +157,8 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfCreatingARecursiveFkWil
 
   db_mysql_TableRef table = data->tester->addTableFigure("table", 10, 10);
 
-  $expect(data->tester->getPview()->figures().count()).toBe(1U);
-  $expect(data->tester->getPview()->connections().count()).toBe(0U);
+  EXPECT_EQ(data->tester->getPview()->figures().count(), 1U);
+  EXPECT_EQ(data->tester->getPview()->connections().count(), 0U);
 
   db_mysql_ColumnRef column(grt::Initialized);
   column->owner(table);
@@ -177,23 +176,22 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfCreatingARecursiveFkWil
   bec::TableHelper::create_foreign_key_to_table(table, table, true, true, true, true, data->tester->getRdbms(),
                                                 grt::DictRef(true), grt::DictRef(true));
 
-  $expect(table->foreignKeys().count() > 0).toBeTrue();
+  EXPECT_TRUE(table->foreignKeys().count() > 0);
 
   grt::ListRef<model_Connection> tmp(data->tester->getPview()->connections());
   data->tester->flushUntil(3, std::bind(&grt::ListRef<model_Connection>::count, tmp), 1);
 
-  $expect(data->tester->getPview()->connections().count()).toBe(1U);
+  EXPECT_EQ(data->tester->getPview()->connections().count(), 1U);
 
   data->tester->wb->close_document();
   data->tester->wb->close_document_finish();
-});
 }
 
 TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfDeletingAnObjectWithPrivilegesWillDeleteThePrivsToo) {
   data->tester->createNewDocument();
 
   WBComponentPhysical *phys = data->tester->wb->get_component<WBComponentPhysical>();
-  $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(5U);
+  EXPECT_EQ(data->tester->getPmodel()->catalog()->roles().count(), 5U);
   phys->add_new_role(data->tester->getPmodel());
   phys->add_new_role(data->tester->getPmodel());
 
@@ -202,8 +200,8 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfDeletingAnObjectWithPri
   phys->add_new_db_table(schema);
   phys->add_new_db_table(schema);
 
-  $expect(schema->tables().count()).toBe(2U);
-  $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(2U + 5);
+  EXPECT_EQ(schema->tables().count(), 2U);
+  EXPECT_EQ(data->tester->getPmodel()->catalog()->roles().count(), 2U + 5);
 
   // add some privs to the table
   db_RoleRef role(data->tester->getPmodel()->catalog()->roles().get(5));
@@ -231,21 +229,20 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfDeletingAnObjectWithPri
 
   role->privileges().insert(priv2);
 
-  $expect(role->privileges().count()).toBe(2U);
+  EXPECT_EQ(role->privileges().count(), 2U);
 
   // delete the 1st table
   phys->delete_db_object(table);
 
-  $expect(data->tester->getPmodel()->catalog()->schemata()[0]->tables().count()).toBe(1U);
-  $expect(data->tester->getPmodel()->catalog()->roles().count()).toBe(2U + 5);
+  EXPECT_EQ(data->tester->getPmodel()->catalog()->schemata()[0]->tables().count(), 1U);
+  EXPECT_EQ(data->tester->getPmodel()->catalog()->roles().count(), 2U + 5);
 
-  $expect(role->privileges().count()).toBe(1U);
+  EXPECT_EQ(role->privileges().count(), 1U);
 
-  $expect(role->privileges().get(0)->databaseObject() == table2).toBeTrue();
+  EXPECT_TRUE(role->privileges().get(0)->databaseObject() == table2);
 
   data->tester->wb->close_document();
   data->tester->wb->close_document_finish();
-});
 }
 
 TEST_F(LowLevelTestsForMySqlStudioContextTest, BugUndoDropTableWillNotResetTableFigure) {
@@ -253,28 +250,26 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, BugUndoDropTableWillNotResetTable
 
   data->tester->wb->open_document("data/studio/2tables_1fk.mwb");
   studio_DocumentRef doc = data->tester->wb->get_document();
-  $expect(doc.is_valid()).toBeTrue();
+  EXPECT_TRUE(doc.is_valid());
 
   data->tester->openAllDiagrams();
 
-  $expect(data->tester->getCatalog()->schemata().count()).toBe(1U);
+  EXPECT_EQ(data->tester->getCatalog()->schemata().count(), 1U);
 
   std::list<db_DatabaseObjectRef> objects;
-  $expect(data->tester->getSchema()->tables().count()).toBe(2U);
+  EXPECT_EQ(data->tester->getSchema()->tables().count(), 2U);
   objects.push_back(grt::find_named_object_in_list(data->tester->getSchema()->tables(), "table1"));
-  $expect(objects.front().is_valid()).toBeTrue();
-  $expect(*objects.front()->name()).toBe("table1");
-  $expect(doc->physicalModels()[0]->diagrams().count()).toBe(1U);
+  EXPECT_TRUE(objects.front().is_valid());
+  EXPECT_EQ(*objects.front()->name(), "table1");
+  EXPECT_EQ(doc->physicalModels()[0]->diagrams().count(), 1U);
   data->tester->interactivePlaceDbObjects(10, 150, objects);
 
   data->tester->flushUntil(2);
-  $expect(data->tester->getPview()->figures().count()).toBe(1U);
+  EXPECT_EQ(data->tester->getPview()->figures().count(), 1U);
 
   grt::GRT::get()->get_undo_manager()->undo();
 
-  $expect(data->tester->getPview()->figures().count()).toBe(0U);
+  EXPECT_EQ(data->tester->getPview()->figures().count(), 0U);
   data->tester->wb->close_document();
   data->tester->wb->close_document_finish();
-});
-}
 }

@@ -35,6 +35,7 @@
 #include "backend/diff_tree.h"
 #include "base/util_functions.h"
 
+#include <fstream>
 #include "gtest/gtest.h"
 
 using namespace grt;

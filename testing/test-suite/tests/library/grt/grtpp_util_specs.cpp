@@ -28,6 +28,7 @@
 
 #include "gtest/gtest.h"
 #include "wb_test_helpers.h"
+#include "context.h"
 
 namespace testing {
 

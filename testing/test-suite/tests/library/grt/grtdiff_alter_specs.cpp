@@ -26,6 +26,7 @@
 #include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 #include "wb_connection_helpers.h"
+#include "context.h"
 
 #include "backend/db_rev_eng_be.h"
 #include "module_db_mysql.h"

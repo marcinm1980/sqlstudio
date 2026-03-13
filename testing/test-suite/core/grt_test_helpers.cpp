@@ -29,7 +29,9 @@
 #include "base/string_utilities.h"
 #include "gtest/gtest.h"
 
-#include "common.h"
+#include <sstream>
+#include <string>
+#include <fstream>
 
 namespace testing {
 
@@ -179,8 +181,9 @@ void compareValues(std::string const& major_msg, grt::ValueRef actualValue, grt:
 
       EXPECT_EQ(actualObject.class_name(), expectedObject.class_name()) << msg + ", class names differ";
 
-      if (compare_obj_id)
+      if (compare_obj_id) {
         EXPECT_EQ(actualObject->id(), expectedObject->id()) << msg + ", object ids differ";
+      }
 
       grt::MetaClass *actualMetaData = actualObject.get_metaclass();
       grt::MetaClass *expectedMetaData = expectedObject.get_metaclass();

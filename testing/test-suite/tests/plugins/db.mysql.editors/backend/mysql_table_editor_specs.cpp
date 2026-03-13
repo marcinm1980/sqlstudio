@@ -65,7 +65,7 @@ TEST_F(MySQLTableEditorTest, ValidRDBMSAfterRenewingDocument) {
     //       The test shouldn't be about parsing trigger sql, as this is a low level parser test.
     //       Instead test if trigger addition works (removal is a simple grt call).
     data->tester->renewDocument();
-    SyntheticMySQLModel model(data->tester.get());
+    testing::SyntheticMySQLModel model(data->tester.get());
 
     model.schema->name("test_schema");
     model.table->name("film");
@@ -87,7 +87,7 @@ TEST_F(MySQLTableEditorTest, ValidRDBMSAfterRenewingDocument) {
 
   TEST_F(MySQLTableEditorTest, AddColumnsIndicesForeignKeysBySettingNameOfPlaceholderItems) {
     data->tester->renewDocument();
-    SyntheticMySQLModel model(data->tester.get());
+    testing::SyntheticMySQLModel model(data->tester.get());
 
     db_mysql_TableRef table = model.table;
     table->name("table");

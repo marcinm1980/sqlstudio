@@ -74,6 +74,7 @@ public:
 #include "test_modules.h"
 
 #include "gtest/gtest.h"
+#include "context.h"
 
 //class TestModuleImpl : public grt::ModuleImplBase { // this module does not implement everything from the interface
 //public:

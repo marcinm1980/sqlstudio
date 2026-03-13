@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
 #include "grt.h"
@@ -36,10 +36,7 @@ using namespace grt;
 using namespace bec;
 
 namespace {
-
-$ModuleEnvironment() {};
-
-$TestData {
+struct ParseDatatypesData {
   std::unique_ptr<MySqlStudioTester> tester;
 
   // Valid id string for unquoted identifiers.
@@ -327,7 +324,7 @@ $TestData {
 
     std::map<std::string, RuleAlternatives>::iterator rule = rules.find(rule_name);
     if (rule == rules.end()) {
-      $fail("Rule: " + rule_name + " not found");
+      ADD_FAILURE() << "Rule: " + rule_name + " not found";
       return result;
     }
 
@@ -351,264 +348,270 @@ $TestData {
     if (type->characterMaximumLength() != EMPTY_TYPE_MAXIMUM_LENGTH
         || type->characterOctetLength() != EMPTY_TYPE_OCTET_LENGTH
         || type->dateTimePrecision() != EMPTY_TYPE_MAXIMUM_LENGTH) {
-      $expect(*column->length()).toEqual(precision, "Comparing char or octet length" + numberString);
+      EXPECT_EQ(*column->length(), precision) << "Comparing char or octet length" + numberString;
     } else if (type->numericPrecision() != EMPTY_TYPE_PRECISION) {
       // Precision is optional, so both values must be equal: either both are set to EMTPY_TYPE_PRECISION
       // or both have the same precision value.
-      $expect(*column->precision()).toEqual(precision, "Comparing precisions" + numberString);
+      EXPECT_EQ(*column->precision(), precision) << "Comparing precisions" + numberString;
 
       // Scale can only be given if we also have a precision.
       if (type->numericScale() != EMPTY_TYPE_SCALE) {
         // Scale is optional, so both values must be equal: either both are set to EMTPY_TYPE_SCALE
         // or both have the same scale value.
-        $expect(*column->scale()).toEqual(scale, "Comparing scales" + numberString);
+        EXPECT_EQ(*column->scale(), scale) << "Comparing scales" + numberString;
       } else {
-        $expect(*column->scale()).toEqual(EMPTY_COLUMN_SCALE, "Unexpected scale parameter found" + numberString);
+        EXPECT_EQ(*column->scale(), EMPTY_COLUMN_SCALE) << "Unexpected scale parameter found" + numberString;
       }
     } else {
-      $expect(*column->length()).toEqual(EMPTY_COLUMN_LENGTH, "Unexpected length parameter found" + numberString);
+      EXPECT_EQ(*column->length(), EMPTY_COLUMN_LENGTH) << "Unexpected length parameter found" + numberString;
     }
+  }
+
+}; // struct ParseDatatypesData
+
+} // namespace
+
+class Data_type_parsingTest : public ::testing::Test {
+protected:
+  static std::unique_ptr<ParseDatatypesData> data;
+
+  static void SetUpTestSuite() {
+    data = std::make_unique<ParseDatatypesData>();
+    data->tester.reset(new MySqlStudioTester());
+    data->tester->initializeRuntime();
+    data->tester->createNewDocument();
+  }
+
+  static void TearDownTestSuite() {
+    data.reset();
   }
 
 };
 
-$describe("Data type parsing") {
-  $beforeAll([this]() {
-    data->tester.reset(new MySqlStudioTester());
-    data->tester->initializeRuntime();
-    data->tester->createNewDocument();
-  });
+std::unique_ptr<ParseDatatypesData> Data_type_parsingTest::data;
 
-  // Helper macros for column base types parser tests.
-  #define $expect_parse_ok(str) $expect(*column->setParseType(str, types)).Not.toEqual(0U, str);
-  #define $expect_parse_fail(str) $expect(*column->setParseType(str, types)).toEqual(0U, str);
+TEST_F(Data_type_parsingTest, RDBMS_info_based_data_parsing) {
+  // Go through all our defined datatypes and construct a column definition.
+  // Then see if they all parse successfully.
+  db_SchemaRef schema(grt::Initialized);
 
-  /**
-   * Data type parsing tests based on our rdbms info xml. Does additional checks, e.g. for cardinality,
-   * but does not consider all possible data type definitions, to do a full parser test.
-   */
-  $it("RDBMS info based data parsing", [this]() {
-    // Go through all our defined datatypes and construct a column definition.
-    // Then see if they all parse successfully.
-    db_SchemaRef schema(grt::Initialized);
+  db_CatalogRef catalog = data->tester->getCatalog();
+  schema->owner(catalog);
 
-    db_CatalogRef catalog = data->tester->getCatalog();
-    schema->owner(catalog);
+  db_mysql_TableRef table(grt::Initialized);
+  table->owner(schema);
+  table->name("table");
 
-    db_mysql_TableRef table(grt::Initialized);
-    table->owner(schema);
-    table->name("table");
+  db_mysql_ColumnRef column(grt::Initialized);
+  column->owner(table);
+  column->name("testee");
+  table->columns().insert(column);
 
-    db_mysql_ColumnRef column(grt::Initialized);
-    column->owner(table);
-    column->name("testee");
-    table->columns().insert(column);
+  std::string expected_enum_parameters = "('blah', 'foo', 'bar', 0b11100011011, 0x1234ABCDE)";
+  ListRef<db_SimpleDatatype> types = data->tester->getRdbms()->simpleDatatypes();
 
-    std::string expected_enum_parameters = "('blah', 'foo', 'bar', 0b11100011011, 0x1234ABCDE)";
-    ListRef<db_SimpleDatatype> types = data->tester->getRdbms()->simpleDatatypes();
-    for (size_t i = 0; i < types.count(); i++) {
-      // Try all parameter combinations.
-      std::string no_params = types[i]->name();
-      std::string single_num_param = no_params + "(777)";
-      std::string double_num_params = no_params + "(111, 5)";
-      std::string param_list = no_params + "('blah', 'foo'  ,       'bar'\n, \n0b11100011011,\n\n\n 0x1234ABCDE)";
-      std::string invalid_list = no_params + "(1, a, 'bb')";
+  auto expect_parse_ok = [&](const std::string &type_str) {
+    EXPECT_EQ(column->setParseType(type_str, types), 1) << "Expected parse to succeed for: " << type_str;
+  };
+  auto expect_parse_fail = [&](const std::string &type_str) {
+    EXPECT_EQ(column->setParseType(type_str, types), 0) << "Expected parse to fail for: " << type_str;
+  };
 
-      // Depending on the server version a data type is defined for we need to set the
-      // correct version or parsing will fail where it should succeed.
-      std::string validity = types[i]->validity();
-      $expect(validity.empty() || validity.size() > 2).toBeTrue("Invalid data type validity");
+  for (size_t i = 0; i < types.count(); i++) {
+    // Try all parameter combinations.
+    std::string no_params = types[i]->name();
+    std::string single_num_param = no_params + "(777)";
+    std::string double_num_params = no_params + "(111, 5)";
+    std::string param_list = no_params + "('blah', 'foo'  ,       'bar'\n, \n0b11100011011,\n\n\n 0x1234ABCDE)";
+    std::string invalid_list = no_params + "(1, a, 'bb')";
 
-      if (validity.empty())
-        validity = "<8.0.18"; // Default is latest GA server at this time.
+    // Depending on the server version a data type is defined for we need to set the
+    // correct version or parsing will fail where it should succeed.
+    std::string validity = types[i]->validity();
+    EXPECT_TRUE(validity.empty() || validity.size() > 2) << "Invalid data type validity";
 
-      std::size_t offset = 1;
-      if (validity[1] == '=')
-        ++offset;
+    if (validity.empty())
+      validity = "<8.0.18"; // Default is latest GA server at this time.
 
-      GrtVersionRef version = bec::parse_version(validity.substr(offset));
+    std::size_t offset = 1;
+    if (validity[1] == '=')
+      ++offset;
 
-      // Convert the version so that we get one that matches the validity.
-      switch (validity[0]) {
-        case '<':
-          if (version->buildNumber() > 0)
-            version->buildNumber(version->buildNumber() - 1);
+    GrtVersionRef version = bec::parse_version(validity.substr(offset));
+
+    // Convert the version so that we get one that matches the validity.
+    switch (validity[0]) {
+      case '<':
+        if (version->buildNumber() > 0)
+          version->buildNumber(version->buildNumber() - 1);
+        else {
+          if (version->buildNumber() > -1)
+            version->buildNumber(99);
+          if (version->releaseNumber() > 0)
+            version->releaseNumber(version->releaseNumber() - 1);
           else {
-            if (version->buildNumber() > -1)
-              version->buildNumber(99);
-            if (version->releaseNumber() > 0)
-              version->releaseNumber(version->releaseNumber() - 1);
+            version->releaseNumber(99);
+            if (version->minorNumber() > 0)
+              version->minorNumber(version->minorNumber() - 1);
             else {
-              version->releaseNumber(99);
-              if (version->minorNumber() > 0)
-                version->minorNumber(version->minorNumber() - 1);
-              else {
-                version->minorNumber(99);
-                version->majorNumber(version->majorNumber() - 1); // There's always a valid major number.
-              }
+              version->minorNumber(99);
+              version->majorNumber(version->majorNumber() - 1); // There's always a valid major number.
             }
           }
-          break;
-        case '>':
-          if (version->buildNumber() > 0)
-            version->buildNumber(version->buildNumber() + 1);
-          else {
-            if (version->releaseNumber() > 0)
-              version->releaseNumber(version->releaseNumber() + 1);
-            else if (version->minorNumber() > -1)
-              version->minorNumber(version->minorNumber() + 1);
-            else
-              version->majorNumber(version->majorNumber() + 1);
-          }
-          break;
-      }
-
-      catalog->version(version);
-      auto model = studio_physical_ModelRef::cast_from(catalog->owner());
-      model->options().set("useglobal", grt::IntegerRef(0));
-
-      // The parameter format type tells us which combination is valid.
-      switch (types[i]->parameterFormatType()) {
-        case 0: // no params
-          $expect_parse_ok(no_params);
-          data->checkTypeCardinalities(i, types[i], column, EMPTY_COLUMN_PRECISION, EMPTY_COLUMN_SCALE);
-          $expect_parse_fail(single_num_param);
-          $expect_parse_fail(double_num_params);
-          $expect_parse_fail(param_list);
-          break;
-        case 1: // (n)
-          $expect_parse_fail(no_params);
-          $expect_parse_ok(single_num_param);
-          data->checkTypeCardinalities(i, types[i], column, 777, EMPTY_COLUMN_SCALE);
-          $expect_parse_fail(double_num_params);
-          $expect_parse_fail(param_list);
-          break;
-        case 2: // [(n)]
-          $expect_parse_ok(no_params);
-          data->checkTypeCardinalities(i, types[i], column, EMPTY_COLUMN_PRECISION, EMPTY_COLUMN_SCALE);
-          $expect_parse_ok(single_num_param);
-          data->checkTypeCardinalities(i, types[i], column, 777, EMPTY_COLUMN_SCALE);
-          $expect_parse_fail(double_num_params);
-          $expect_parse_fail(param_list);
-          break;
-        case 3: // (m, n)
-          $expect_parse_fail(no_params);
-          $expect_parse_fail(single_num_param);
-          $expect_parse_ok(double_num_params);
-          data->checkTypeCardinalities(i, types[i], column, 111, 5);
-          $expect_parse_fail(param_list);
-          break;
-        case 4: // (m[,n])
-          $expect_parse_fail(no_params);
-          $expect_parse_ok(single_num_param);
-          data->checkTypeCardinalities(i, types[i], column, 777, EMPTY_COLUMN_SCALE);
-          $expect_parse_ok(double_num_params);
-          data->checkTypeCardinalities(i, types[i], column, 111, 5);
-          $expect_parse_fail(param_list);
-          break;
-        case 5: // [(m,n)]
-          $expect_parse_ok(no_params);
-          data->checkTypeCardinalities(i, types[i], column, EMPTY_COLUMN_PRECISION, EMPTY_COLUMN_SCALE);
-          $expect_parse_fail(single_num_param);
-          $expect_parse_ok(double_num_params);
-          data->checkTypeCardinalities(i, types[i], column, 111, 5);
-          $expect_parse_fail(param_list);
-          break;
-        case 6: // [(m[,n])]
-          $expect_parse_ok(no_params);
-          data->checkTypeCardinalities(i, types[i], column, EMPTY_COLUMN_PRECISION, EMPTY_COLUMN_SCALE);
-          $expect_parse_ok(single_num_param);
-          data->checkTypeCardinalities(i, types[i], column, 777, EMPTY_COLUMN_SCALE);
-          $expect_parse_ok(double_num_params);
-          data->checkTypeCardinalities(i, types[i], column, 111, 5);
-          $expect_parse_fail(param_list);
-          break;
-        case 10: // ('a','b','c' ...)
-          $expect_parse_fail(no_params);
-          column->setParseType(param_list, types);
-
-          // The following tests just check if the parameter list is properly stored.
-          // No type checking takes place for now.
-          grt::StringRef explicitParam = column->datatypeExplicitParams();
-          $expect(*explicitParam).toEqual(expected_enum_parameters, "Parameter list not properly stored");
-          break;
-      }
-
-      // This always must fail regardless of the actual type.
-      // As currently no enum and set parsing is done we don't check invalid parameter lists for them.
-      // TODO: Remove test for a specific parameter format once this has changed.
-      if (types[i]->parameterFormatType() != 10)
-        $expect_parse_fail(invalid_list);
+        }
+        break;
+      case '>':
+        if (version->buildNumber() > 0)
+          version->buildNumber(version->buildNumber() + 1);
+        else {
+          if (version->releaseNumber() > 0)
+            version->releaseNumber(version->releaseNumber() + 1);
+          else if (version->minorNumber() > -1)
+            version->minorNumber(version->minorNumber() + 1);
+          else
+            version->majorNumber(version->majorNumber() + 1);
+        }
+        break;
     }
-  });
 
-  /**
-   *	 Another data type test, but with focus on all possible input and its proper handling,
-   *	 even for corner cases.
-   *	 Based on the MySQL grammar we construct here all possible input combinations.
-   */
-  $it("Grammar based data type permutations", [this]() {
-    // First generate all possible combinations.
-    std::vector<std::string> definitions = data->getVariationsForRule("data_type");
+    catalog->version(version);
+    auto model = studio_physical_ModelRef::cast_from(catalog->owner());
+    model->options().set("useglobal", grt::IntegerRef(0));
 
-    grt::ListRef<db_UserDatatype> user_types;
-    grt::ListRef<db_SimpleDatatype> type_list = data->tester->getCatalog()->simpleDatatypes();
+    // The parameter format type tells us which combination is valid.
+    switch (types[i]->parameterFormatType()) {
+      case 0: // no params
+        expect_parse_ok(no_params);
+        data->checkTypeCardinalities(i, types[i], column, EMPTY_COLUMN_PRECISION, EMPTY_COLUMN_SCALE);
+        expect_parse_fail(single_num_param);
+        expect_parse_fail(double_num_params);
+        expect_parse_fail(param_list);
+        break;
+      case 1: // (n)
+        expect_parse_fail(no_params);
+        expect_parse_ok(single_num_param);
+        data->checkTypeCardinalities(i, types[i], column, 777, EMPTY_COLUMN_SCALE);
+        expect_parse_fail(double_num_params);
+        expect_parse_fail(param_list);
+        break;
+      case 2: // [(n)]
+        expect_parse_ok(no_params);
+        data->checkTypeCardinalities(i, types[i], column, EMPTY_COLUMN_PRECISION, EMPTY_COLUMN_SCALE);
+        expect_parse_ok(single_num_param);
+        data->checkTypeCardinalities(i, types[i], column, 777, EMPTY_COLUMN_SCALE);
+        expect_parse_fail(double_num_params);
+        expect_parse_fail(param_list);
+        break;
+      case 3: // (m, n)
+        expect_parse_fail(no_params);
+        expect_parse_fail(single_num_param);
+        expect_parse_ok(double_num_params);
+        data->checkTypeCardinalities(i, types[i], column, 111, 5);
+        expect_parse_fail(param_list);
+        break;
+      case 4: // (m[,n])
+        expect_parse_fail(no_params);
+        expect_parse_ok(single_num_param);
+        data->checkTypeCardinalities(i, types[i], column, 777, EMPTY_COLUMN_SCALE);
+        expect_parse_ok(double_num_params);
+        data->checkTypeCardinalities(i, types[i], column, 111, 5);
+        expect_parse_fail(param_list);
+        break;
+      case 5: // [(m,n)]
+        expect_parse_ok(no_params);
+        data->checkTypeCardinalities(i, types[i], column, EMPTY_COLUMN_PRECISION, EMPTY_COLUMN_SCALE);
+        expect_parse_fail(single_num_param);
+        expect_parse_ok(double_num_params);
+        data->checkTypeCardinalities(i, types[i], column, 111, 5);
+        expect_parse_fail(param_list);
+        break;
+      case 6: // [(m[,n])]
+        expect_parse_ok(no_params);
+        data->checkTypeCardinalities(i, types[i], column, EMPTY_COLUMN_PRECISION, EMPTY_COLUMN_SCALE);
+        expect_parse_ok(single_num_param);
+        data->checkTypeCardinalities(i, types[i], column, 777, EMPTY_COLUMN_SCALE);
+        expect_parse_ok(double_num_params);
+        data->checkTypeCardinalities(i, types[i], column, 111, 5);
+        expect_parse_fail(param_list);
+        break;
+      case 10: // ('a','b','c' ...)
+        expect_parse_fail(no_params);
+        column->setParseType(param_list, types);
 
-    // The latest version at the point of writing this, to include all possible variations.
-    GrtVersionRef version(grt::Initialized);
-    version->majorNumber(5);
-    version->minorNumber(7);
-    version->releaseNumber(4);
-    version->buildNumber(-1);
-
-    parsers::MySQLParserServices *services = parsers::MySQLParserServices::get();
-    for (auto iterator = definitions.begin(); iterator != definitions.end(); ++iterator) {
-      db_SimpleDatatypeRef simple_type;
-      db_UserDatatypeRef user_type;
-      int precision;
-      int scale;
-      int length;
-      std::string explicit_params;
-
-      std::string sql = *iterator;
-      $expect(services->parseTypeDefinition(sql, version, type_list, user_types, type_list, simple_type, user_type,
-        precision, scale, length, explicit_params)).toBeTrue("Data type parsing failed for: \"" + sql + "\"");
+        // The following tests just check if the parameter list is properly stored.
+        // No type checking takes place for now.
+        grt::StringRef explicitParam = column->datatypeExplicitParams();
+        EXPECT_EQ(*explicitParam, expected_enum_parameters) << "Parameter list not properly stored";
+        break;
     }
-  });
 
-  $it("Comment splitter functions", []() {
-    $expect(bec::TableHelper::get_sync_comment("hello world", 5)).toEqual("hello");
-    $expect(bec::TableHelper::get_sync_comment("hello world", 15)).toEqual("hello world");
-    $expect(bec::TableHelper::get_sync_comment("hell\xE2\x82\xAC world", 5).size()).toBeLessThan(5U);
-    $expect(bec::TableHelper::get_sync_comment("hell\xE2\x82\xAC world", 5)).toEqual("hell");
-    $expect(bec::TableHelper::get_sync_comment("hello\n\nworld", 15)).toEqual("hello\n\nworld");
-    $expect(bec::TableHelper::get_sync_comment("hello\n\nworld long text", 15)).toEqual("hello");
-  });
-
-  $it("Full comment text generation (with quoting etc)", []() {
-    $expect(bec::TableHelper::generate_comment_text("hello world", 5)).toEqual("'hello' /* comment truncated */ /* world*/");
-    $expect(bec::TableHelper::generate_comment_text("hello world", 15)).toEqual("'hello world'");
-    $expect(bec::TableHelper::generate_comment_text("hello\nworld", 12)).toEqual("'hello\\nworld'");
-    $expect(bec::TableHelper::generate_comment_text("hello\n\nworld", 10)).toEqual("'hello' /* comment truncated */ /*\nworld*/");
-    $expect(bec::TableHelper::generate_comment_text("hello wo'rld", 5)).toEqual("'hello' /* comment truncated */ /* wo'rld*/");
-    $expect(bec::TableHelper::generate_comment_text("hell' world", 5)).toEqual("'hell\\'' /* comment truncated */ /* world*/");
-    $expect(bec::TableHelper::generate_comment_text("h'llo world", 5)).toEqual("'h\\'llo' /* comment truncated */ /* world*/");
-    $expect(bec::TableHelper::generate_comment_text("h'llo /* a */", 5)).toEqual("'h\\'llo' /* comment truncated */ /* /* a *\\/*/");
-    $expect(bec::TableHelper::generate_comment_text("h'llo/* a */", 5)).toEqual("'h\\'llo' /* comment truncated */ /*/* a *\\/*/");
-  });
-
-  $it("Version checks", []() {
-    $expect(bec::is_supported_mysql_version("5.5.0")).toBeFalse("5.5.0 not supported");
-    $expect(bec::is_supported_mysql_version("5.6.5")).toBeTrue("5.6.5 supported");
-    $expect(bec::is_supported_mysql_version("3.14.15")).toBeFalse("3.14.15 not supported");
-    $expect(bec::is_supported_mysql_version("5.5")).toBeFalse("5.5 not supported");
-    $expect(bec::is_supported_mysql_version("6.6.6")).toBeFalse("6.6.6 not supported");
-
-    $expect(bec::is_supported_mysql_version_at_least(5, 7, 4, 5, 5, 5)).toBeTrue("5.5.5 vs 5.7.4");
-    $expect(bec::is_supported_mysql_version_at_least(5, 7, 4, 5, 10, 5)).toBeFalse("5.10.5 vs 5.7.4");
-    $expect(bec::is_supported_mysql_version_at_least(5, 5, 4, 5, 5, 5)).toBeFalse("5.5.5 vs 5.5.4");
-    $expect(bec::is_supported_mysql_version_at_least(5, 5, 5, 6, 6, 6)).toBeFalse("5.5.5 vs 6.6.6");
-  });
+    // This always must fail regardless of the actual type.
+    // As currently no enum and set parsing is done we don't check invalid parameter lists for them.
+    // TODO: Remove test for a specific parameter format once this has changed.
+    if (types[i]->parameterFormatType() != 10)
+      expect_parse_fail(invalid_list);
+  }
 }
 
+TEST_F(Data_type_parsingTest, Grammar_based_data_type_permutations) {
+  // First generate all possible combinations.
+  std::vector<std::string> definitions = data->getVariationsForRule("data_type");
+
+  grt::ListRef<db_UserDatatype> user_types;
+  grt::ListRef<db_SimpleDatatype> type_list = data->tester->getCatalog()->simpleDatatypes();
+
+  // The latest version at the point of writing this, to include all possible variations.
+  GrtVersionRef version(grt::Initialized);
+  version->majorNumber(5);
+  version->minorNumber(7);
+  version->releaseNumber(4);
+  version->buildNumber(-1);
+
+  parsers::MySQLParserServices *services = parsers::MySQLParserServices::get();
+  for (auto iterator = definitions.begin(); iterator != definitions.end(); ++iterator) {
+    db_SimpleDatatypeRef simple_type;
+    db_UserDatatypeRef user_type;
+    int precision;
+    int scale;
+    int length;
+    std::string explicit_params;
+
+    std::string sql = *iterator;
+    EXPECT_TRUE(services->parseTypeDefinition(sql, version, type_list, user_types, type_list, simple_type, user_type,
+      precision, scale, length, explicit_params)) << "Data type parsing failed for: \"" + sql + "\"";
+  }
+}
+
+TEST_F(Data_type_parsingTest, Comment_splitter_functions) {
+  EXPECT_EQ(bec::TableHelper::get_sync_comment("hello world", 5), "hello");
+  EXPECT_EQ(bec::TableHelper::get_sync_comment("hello world", 15), "hello world");
+  EXPECT_LT(bec::TableHelper::get_sync_comment("hell\xE2\x82\xAC world", 5).size(), 5U);
+  EXPECT_EQ(bec::TableHelper::get_sync_comment("hell\xE2\x82\xAC world", 5), "hell");
+  EXPECT_EQ(bec::TableHelper::get_sync_comment("hello\n\nworld", 15), "hello\n\nworld");
+  EXPECT_EQ(bec::TableHelper::get_sync_comment("hello\n\nworld long text", 15), "hello");
+}
+
+TEST_F(Data_type_parsingTest, Full_comment_text_generation_with_quoting_etc) {
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("hello world", 5), "'hello' /* comment truncated */ /* world*/");
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("hello world", 15), "'hello world'");
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("hello\nworld", 12), "'hello\\nworld'");
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("hello\n\nworld", 10), "'hello' /* comment truncated */ /*\nworld*/");
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("hello wo'rld", 5), "'hello' /* comment truncated */ /* wo'rld*/");
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("hell' world", 5), "'hell\\'' /* comment truncated */ /* world*/");
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("h'llo world", 5), "'h\\'llo' /* comment truncated */ /* world*/");
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("h'llo /* a */", 5), "'h\\'llo' /* comment truncated */ /* /* a *\\/*/");
+  EXPECT_EQ(bec::TableHelper::generate_comment_text("h'llo/* a */", 5), "'h\\'llo' /* comment truncated */ /*/* a *\\/*/");
+}
+
+TEST_F(Data_type_parsingTest, Version_checks) {
+  EXPECT_FALSE(bec::is_supported_mysql_version("5.5.0")) << "5.5.0 not supported";
+  EXPECT_TRUE(bec::is_supported_mysql_version("5.6.5")) << "5.6.5 supported";
+  EXPECT_FALSE(bec::is_supported_mysql_version("3.14.15")) << "3.14.15 not supported";
+  EXPECT_FALSE(bec::is_supported_mysql_version("5.5")) << "5.5 not supported";
+  EXPECT_FALSE(bec::is_supported_mysql_version("6.6.6")) << "6.6.6 not supported";
+
+  EXPECT_TRUE(bec::is_supported_mysql_version_at_least(5, 7, 4, 5, 5, 5)) << "5.5.5 vs 5.7.4";
+  EXPECT_FALSE(bec::is_supported_mysql_version_at_least(5, 7, 4, 5, 10, 5)) << "5.10.5 vs 5.7.4";
+  EXPECT_FALSE(bec::is_supported_mysql_version_at_least(5, 5, 4, 5, 5, 5)) << "5.5.5 vs 5.5.4";
+  EXPECT_FALSE(bec::is_supported_mysql_version_at_least(5, 5, 5, 6, 6, 6)) << "5.5.5 vs 6.6.6";
 }

@@ -22,7 +22,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "pch.h"  
+//#include "pch.h"  
 #include <gtest/gtest.h> 
 #include "base/log.h"
 
@@ -31,6 +31,6 @@ extern void register_all_metaclasses();
 
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
-  GTEST_FLAG_SET(death_test_style, "fast");
+  ::testing::GTEST_FLAG(death_test_style) = "fast";
   return RUN_ALL_TESTS();
 }

@@ -29,6 +29,7 @@
 #include "grtsqlparser/mysql_parser_services.h"
 
 #include "gtest/gtest.h"
+#include "context.h"
 #include "wb_test_helpers.h"
 
 using namespace parsers;
@@ -48,7 +49,7 @@ namespace {
     DictRef options;
 
     void testImportSQL(size_t test_no, const char *old_schema_name = nullptr, const char *new_schema_name = nullptr) {
-      std::string dataDir = CasmineContext::get()->tmpDataDir() + "/modules_grt/wb_mysql_import/sql/";
+      std::string dataDir = testing::Context::get().tmpDataDir() + "/modules_grt/wb_mysql_import/sql/";
 
       // Set filenames & messages based on test number.
       std::string number_string = std::to_string(test_no);
@@ -91,7 +92,7 @@ namespace {
           // so we would get a test failure on that.
           grt::replace_contents(test_catalog->simpleDatatypes(), tester->getRdbms()->simpleDatatypes());
 
-          deepCompareGrtValues(failureMessage, res_catalog, test_catalog);
+          testing::deepCompareGrtValues(failureMessage, res_catalog, test_catalog);
         }
         //*/
       }
@@ -125,7 +126,7 @@ namespace {
           db_mysql_CatalogRef::cast_from(ValueRef(grt::GRT::get()->unserialize(test_catalog_state_filename)));
         grt::replace_contents(test_catalog->simpleDatatypes(), tester->getRdbms()->simpleDatatypes());
 
-        deepCompareGrtValues(failureMessage, res_catalog, test_catalog);
+        testing::deepCompareGrtValues(failureMessage, res_catalog, test_catalog);
         //*/
       }
     }
@@ -165,65 +166,65 @@ protected:
 TEST_F(MySqlParserTest, TableParsing) {
   for (int i = 0; i <= 18; ++i)
     data->testImportSQL(i);
-});
+}
 
   TEST_F(MySqlParserTest, IndexParsing) {
     for (size_t i : { 50, 51 })
       data->testImportSQL(i);
-  });
+  }
 
   TEST_F(MySqlParserTest, ViewParsing) {
     for (size_t i : { 100, 101 })
       data->testImportSQL(i);
-  });
+  }
 
   TEST_F(MySqlParserTest, RoutineParsing) {
     for (size_t i : { 150, 151, 152 })
       data->testImportSQL(i);
-  });
+  }
 
   TEST_F(MySqlParserTest, TriggerParsing) {
     data->testImportSQL(200);
-  });
+  }
 
   TEST_F(MySqlParserTest, EventParsing) {
     for (size_t i : { 250, 251, 252, 253 })
       data->testImportSQL(i);
-  });
+  }
 
-  TEST_F(MySqlParserTest, Logfile group + table spaceTest) {
+  TEST_F(MySqlParserTest, LogfileGroupAndTablespace) {
     data->testImportSQL(300);
-  });
+  }
 
-  TEST_F(MySqlParserTest, Server linkTest) {
+  TEST_F(MySqlParserTest, ServerLink) {
     data->testImportSQL(350);
-  });
+  }
 
-  TEST_F(MySqlParserTest, Alter statementsTest) {
+  TEST_F(MySqlParserTest, AlterStatements) {
     data->testImportSQL(400);
-  });
+  }
 
-  TEST_F(MySqlParserTest, Drop statementsTest) {
+  TEST_F(MySqlParserTest, DropStatements) {
     data->testImportSQL(450);
-  });
+  }
 
-  TEST_F(MySqlParserTest, Re - use of stub tables & columnsTest) {
+  TEST_F(MySqlParserTest, ReuseStubTablesAndColumns) {
     data->testImportSQL(600);
-  });
+  }
 
-  TEST_F(MySqlParserTest, sakila - db : schema structures(except of triggers) Test) {
+  TEST_F(MySqlParserTest, SakilaDbSchemaStructures) {
     data->testImportSQL(700);
-  });
+  }
 
-  TEST_F(MySqlParserTest, sakila - db : inserts & triggersTest) {
+  TEST_F(MySqlParserTest, SakilaDbInsertsAndTriggers) {
     data->testImportSQL(701);
-  });
+  }
 
-  TEST_F(MySqlParserTest, sakila - db : import dumpTest) {
+  TEST_F(MySqlParserTest, SakilaDbImportDump) {
     data->testImportSQL(702);
-  });
+  }
 
-  TEST_F(MySqlParserTest, sakila - db : import dump with schema renameTest) {
+  TEST_F(MySqlParserTest, SakilaDbImportDumpWithSchemaRename) {
     data->testImportSQL(703, "sakila", "new_schema_name");
   }
 

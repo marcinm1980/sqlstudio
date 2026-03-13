@@ -372,10 +372,10 @@ TEST_F(TableEditorInsertsBackendTest, StorageOfFuncWithIntColumn) {
 
     // check generation of SQL
     std::string output = table->inserts();
-    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n", output);
 
     output = data->generateSqlLikeForwardEng(table);
-    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, NULL, NULL, NULL);\n", output);
 }
 
 TEST_F(TableEditorInsertsBackendTest, StorageOfFuncWithStringColumn) {
@@ -389,10 +389,10 @@ TEST_F(TableEditorInsertsBackendTest, StorageOfFuncWithStringColumn) {
 
     // check generation of SQL
     std::string output = table->inserts();
-    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NULL, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NULL, NULL, NULL);\n", output);
 
     output = data->generateSqlLikeForwardEng(table);
-    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NULL, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NULL, NULL, NULL);\n", output);
 }
 
 TEST_F(TableEditorInsertsBackendTest, StorageOfFuncWithTimestampColumn) {
@@ -406,10 +406,10 @@ TEST_F(TableEditorInsertsBackendTest, StorageOfFuncWithTimestampColumn) {
 
     // check generation of SQL
     std::string output = table->inserts();
-    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, DEFAULT, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, DEFAULT, NULL, NULL);\n", output);
 
     output = data->generateSqlLikeForwardEng(table);
-    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, DEFAULT, NULL, NULL);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, NULL, DEFAULT, NULL, NULL);\n", output);
 }
 
 TEST_F(TableEditorInsertsBackendTest, AllAtOnce) {
@@ -429,10 +429,10 @@ TEST_F(TableEditorInsertsBackendTest, AllAtOnce) {
 
     // check generation of SQL
     std::string output = table->inserts();
-    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NOW(), NULL, DEFAULT);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NOW(), NULL, DEFAULT);\n", output);
 
     output = data->generateSqlLikeForwardEng(table);
-    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NOW(), NULL, DEFAULT);\n");
+    EXPECT_EQ("INSERT INTO `table` (`id`, `name`, `ts`, `pic`, `bitcol`, output) VALUES (DEFAULT, DEFAULT, NOW(), NULL, DEFAULT);\n", output);
   
 
 }

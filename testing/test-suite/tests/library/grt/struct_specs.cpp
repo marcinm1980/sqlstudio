@@ -26,6 +26,7 @@
 #include "structs.test.h"
 
 #include "gtest/gtest.h"
+#include "context.h"
 #include "wb_test_helpers.h"
 
 namespace testing {

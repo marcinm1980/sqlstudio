@@ -76,8 +76,8 @@ inline grt::StringListRef create_string_list(int size) {
   grt::StringListRef list(grt::Initialized);
 
   for (int i = 0; i < size; i++) {
-    char buffer[10];
-    sprintf(buffer, "test%i", i + 1);
+    char buffer[24];
+    snprintf(buffer, sizeof(buffer), "test%i", i + 1);
     list.insert(grt::StringRef(buffer));
   }
 

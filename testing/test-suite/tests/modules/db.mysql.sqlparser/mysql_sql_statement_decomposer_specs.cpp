@@ -135,7 +135,7 @@ protected:
     EXPECT_TRUE(data->sqlFacade != nullptr) << "failed to get sqlparser module";
 
     data->sqlStatementDecomposer = data->sqlFacade->sqlStatementDecomposer();
-    EXPECT_TRUE(data->sqlStatementDecomposer.is_valid()) << "failed to instantiate Sql_statement_decomposer class";
+    EXPECT_TRUE((bool)data->sqlStatementDecomposer) << "failed to instantiate Sql_statement_decomposer class";
 
     data->catalog = db_CatalogRef(grt::Initialized);
     db_SchemaRef schema = data->add_schema("test");
@@ -181,7 +181,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
                  "    dual dual\n"
                  "  } v1\n"
                  "}");
-});
+}
 
   TEST_F(SqlStatementDecomposerTest, Query2) {
     data->test_sql("select 1 as a, 2 b, v1.v1_a, v1.* from (select 1 as v1_a from dual) v1",
@@ -197,7 +197,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "    dual dual\n"
       "  } v1\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query3) {
     data->test_sql("select table1.a, t1.a, table2.b, t2.b from table1 t1, table2 t2",
@@ -210,7 +210,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "  table1 t1\n"
       "  table2 t2\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query4) {
     data->test_sql(
@@ -224,7 +224,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "  table2 t2\n"
       "  table3 t3\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query5) {
     data->test_view2("select 1, '2', 3 as a, 4 b, t1.t1_a, t1.*, 5 c from (select 1 as t1_a from dual) t1",
@@ -243,7 +243,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "    dual dual\n"
       "  } t1\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query6) {
     data->test_view2("select t1.*, v1.* from table1 t1, view1 v1",
@@ -256,7 +256,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "  table1 t1\n"
       "  view1 v1\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query7) {
     data->test_view2("select * from table1 t1, view1 v1",
@@ -269,7 +269,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "  table1 t1\n"
       "  view1 v1\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query8) {
     data->test_view("create view v1 (id_1, name_2, id_2, name_2) as select * from table1 t1, view1 v1",
@@ -282,7 +282,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "  table1 t1\n"
       "  view1 v1\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query9) {
     data->test_view("create or replace view `view2` as select 'hello world' as c",
@@ -290,7 +290,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "  {}.{}.{}.{'hello world'}.{c}.{0}\n"
       "FROM\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query10) {
     data->sqlStatementDecomposer->case_sensitive_identifiers(false);
@@ -301,7 +301,7 @@ TEST_F(SqlStatementDecomposerTest, Query1) {
       "FROM\n"
       "  TABLE1 TABLE1\n"
       "}");
-  });
+  }
 
   TEST_F(SqlStatementDecomposerTest, Query11) {
     data->sqlStatementDecomposer->case_sensitive_identifiers(true);

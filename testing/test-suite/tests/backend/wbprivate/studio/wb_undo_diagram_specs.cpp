@@ -25,8 +25,8 @@
 #include "grtdb/db_object_helpers.h"
 #include "model/wb_history_tree.h"
 #include "wb_overview.h"
-#include "wb_model_diagram_form.h"
-#include "wb_component_basic.h"
+#include "model/wb_model_diagram_form.h"
+#include "model/wb_component_basic.h"
 
 #include "stub/stub_utilities.h"
 
@@ -54,7 +54,6 @@ static mforms::DialogResult message_cancel_callback() {
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-
 
 
 struct TestData {
@@ -132,45 +131,45 @@ protected:
     data->lastUndoStackSize = 0;
     data->lastRedoStackSize = 0;
     bool flag = data->tester->wb->open_document(data->dataDir + "/studio/undo_test_model1.mwb");
-    $expect(flag).toBeTrue("open_document");
-    $expect(data->tester->getCatalog()->schemata().count()).toEqual(1U, "schemas");
+    EXPECT_TRUE(flag) << "open_document";
+    EXPECT_EQ(data->tester->getCatalog()->schemata().count(), 1U) << "schemas";
 
     db_SchemaRef schema(data->tester->getCatalog()->schemata()[0]);
 
     // Make sure the loaded model contains expected number of things.
-    $expect(schema->tables().count()).toEqual(4U, "tables");
-    $expect(schema->views().count()).toEqual(1U, "views");
-    $expect(schema->routineGroups().count()).toEqual(1U, "groups");
+    EXPECT_EQ(schema->tables().count(), 4U) << "tables";
+    EXPECT_EQ(schema->views().count(), 1U) << "views";
+    EXPECT_EQ(schema->routineGroups().count(), 1U) << "groups";
 
-    $expect(data->tester->getPmodel()->diagrams().count()).toEqual(1U, "diagrams");
+    EXPECT_EQ(data->tester->getPmodel()->diagrams().count(), 1U) << "diagrams";
     data->diagram = data->tester->getPmodel()->diagrams()[0];
 
-    $expect(data->diagram->figures().count()).toEqual(5U, "figures");
-    $expect(data->diagram->layers().count()).toEqual(1U, "layers");
+    EXPECT_EQ(data->diagram->figures().count(), 5U) << "figures";
+    EXPECT_EQ(data->diagram->layers().count(), 1U) << "layers";
 
     data->tester->openAllDiagrams();
     data->tester->syncView();
 
     data->diagramForm = data->tester->wb->get_model_context()->get_diagram_form_for_diagram_id(data->tester->getPview().id());
-    $expect(data->diagramForm).Not.toBeNull("Diagram form is invalid");
+    EXPECT_NE(data->diagramForm, nullptr) << "Diagram form is invalid";
 
     mforms::ToolBar *toolbar = data->diagramForm->get_tools_toolbar();
-    $expect(toolbar).Not.toBeNull("Toolbar creation failed");
+    EXPECT_NE(toolbar, nullptr) << "Toolbar creation failed";
 
     wb::WBContextUI::get()->set_active_form(data->diagramForm);
-    $expect(data->um->get_undo_stack().size()).toEqual(0U, "undo stack is empty");
+    EXPECT_EQ(data->um->get_undo_stack().size(), 0U) << "undo stack is empty";
 
     // Model file not closed by intention. It's used in following test cases.
-  });
+  }
 
-  $afterAll([this]() {
-    $expect(data->tester->closeDocument()).toBeTrue("Could not close document");
+  void TearDown() override {
+    EXPECT_TRUE(data->tester->closeDocument()) << "Could not close document";
     data->tester->wb->close_document_finish();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  }
+  };
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceTable) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
@@ -183,26 +182,24 @@ protected:
     compo->place_new_db_object(data->diagramForm, base::Point(10, 10), wb::ObjectTable);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add");
-    $expect(schema->tables().count()).toEqual(old_object_count + 1, "table add");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add";
+    EXPECT_EQ(schema->tables().count(), old_object_count + 1) << "table add";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add";
 
     data->checkUndo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count, "figure add undo");
-    $expect(schema->tables().count()).toEqual(old_object_count, "table add undo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count, "figure root add undo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count) << "figure add undo";
+    EXPECT_EQ(schema->tables().count(), old_object_count) << "table add undo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count) << "figure root add undo";
 
     data->checkRedo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add redo");
-    $expect(schema->tables().count()).toEqual(old_object_count + 1, "table add redo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add redo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add redo";
+    EXPECT_EQ(schema->tables().count(), old_object_count + 1) << "table add redo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add redo";
 
     data->checkUndo();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceView) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
@@ -215,26 +212,24 @@ protected:
     compo->place_new_db_object(data->diagramForm, base::Point(10, 10), wb::ObjectView);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add");
-    $expect(schema->views().count()).toEqual(old_object_count + 1, "data->diagramForm add");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add";
+    EXPECT_EQ(schema->views().count(), old_object_count + 1) << "data->diagramForm add";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add";
 
     data->checkUndo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count, "figure add undo");
-    $expect(schema->views().count()).toEqual(old_object_count, "data->diagramForm add undo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count, "figure root add undo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count) << "figure add undo";
+    EXPECT_EQ(schema->views().count(), old_object_count) << "data->diagramForm add undo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count) << "figure root add undo";
 
     data->checkRedo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add redo");
-    $expect(schema->views().count()).toEqual(old_object_count + 1, "data->diagramForm add redo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add redo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add redo";
+    EXPECT_EQ(schema->views().count(), old_object_count + 1) << "data->diagramForm add redo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add redo";
 
     data->checkUndo();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceRoutineGroup) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
@@ -247,26 +242,24 @@ protected:
     compo->place_new_db_object(data->diagramForm, base::Point(10, 10), wb::ObjectRoutineGroup);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add");
-    $expect(schema->routineGroups().count()).toEqual(old_object_count + 1, "group add");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add";
+    EXPECT_EQ(schema->routineGroups().count(), old_object_count + 1) << "group add";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add";
 
     data->checkUndo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count, "figure add undo");
-    $expect(schema->routineGroups().count()).toEqual(old_object_count, "group add undo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count, "figure root add undo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count) << "figure add undo";
+    EXPECT_EQ(schema->routineGroups().count(), old_object_count) << "group add undo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count) << "figure root add undo";
 
     data->checkRedo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add redo");
-    $expect(schema->routineGroups().count()).toEqual(old_object_count + 1, "group add redo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add redo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add redo";
+    EXPECT_EQ(schema->routineGroups().count(), old_object_count + 1) << "group add redo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add redo";
 
     data->checkUndo();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceImage) {
     size_t old_figure_count = data->diagram->figures().count();
@@ -278,23 +271,21 @@ protected:
     data->placeFigureWithTool(WB_TOOL_IMAGE);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add";
 
     data->checkUndo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count, "figure add undo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count, "figure root add undo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count) << "figure add undo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count) << "figure root add undo";
 
     data->checkRedo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add redo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add redo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add redo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add redo";
 
     data->checkUndo();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceText) {
     size_t old_figure_count = data->diagram->figures().count();
@@ -303,23 +294,21 @@ protected:
     data->placeFigureWithTool(WB_TOOL_NOTE);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add";
 
     data->checkUndo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count, "figure add undo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count, "figure root add undo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count) << "figure add undo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count) << "figure root add undo";
 
     data->checkRedo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "figure add redo");
-    $expect(data->diagram->rootLayer()->figures().count()).toEqual(old_root_figure_count + 1, "figure root add redo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "figure add redo";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().count(), old_root_figure_count + 1) << "figure root add redo";
 
     data->checkUndo();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceLayer) {
     size_t old_layer_count = data->diagram->layers().count();
@@ -331,23 +320,21 @@ protected:
     data->diagramForm->handle_mouse_button(mdc::ButtonLeft, false, 50, 50, (mdc::EventState)0);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->layers().count()).toEqual(old_layer_count + 1, "layer add");
-    $expect(data->diagram->rootLayer()->subLayers().count()).toEqual(old_root_layer_count + 1, "layer root add");
+    EXPECT_EQ(data->diagram->layers().count(), old_layer_count + 1) << "layer add";
+    EXPECT_EQ(data->diagram->rootLayer()->subLayers().count(), old_root_layer_count + 1) << "layer root add";
 
     data->checkUndo();
-    $expect(data->diagram->layers().count()).toEqual(old_layer_count, "layer add undo");
-    $expect(data->diagram->rootLayer()->subLayers().count()).toEqual(old_root_layer_count, "layer root add undo");
+    EXPECT_EQ(data->diagram->layers().count(), old_layer_count) << "layer add undo";
+    EXPECT_EQ(data->diagram->rootLayer()->subLayers().count(), old_root_layer_count) << "layer root add undo";
 
     data->checkRedo();
-    $expect(data->diagram->layers().count()).toEqual(old_layer_count + 1, "layer add redo");
-    $expect(data->diagram->rootLayer()->subLayers().count()).toEqual(old_root_layer_count + 1, "layer root add redo");
+    EXPECT_EQ(data->diagram->layers().count(), old_layer_count + 1) << "layer add redo";
+    EXPECT_EQ(data->diagram->rootLayer()->subLayers().count(), old_root_layer_count + 1) << "layer root add redo";
 
     data->checkUndo();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceSomethingInsideALayer) {
     size_t old_figure_count = data->diagram->figures().count();
@@ -361,41 +348,39 @@ protected:
     data->diagramForm->handle_mouse_button(mdc::ButtonLeft, false, 150, 150, (mdc::EventState)0);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->layers().count()).toEqual(old_layer_count + 1, "layer add");
-    $expect(data->diagram->rootLayer()->subLayers().count()).toEqual(old_root_layer_count + 1, "layer root add");
+    EXPECT_EQ(data->diagram->layers().count(), old_layer_count + 1) << "layer add";
+    EXPECT_EQ(data->diagram->rootLayer()->subLayers().count(), old_root_layer_count + 1) << "layer root add";
 
     model_LayerRef layer(data->diagram->layers()[old_layer_count]);
-    $expect(layer.is_valid()).toBeTrue("layer");
-    $expect(layer->figures().count()).toEqual(0U, "layer empty");
+    EXPECT_TRUE(layer.is_valid()) << "layer";
+    EXPECT_EQ(layer->figures().count(), 0U) << "layer empty";
 
     // place a note inside the layer
     data->placeFigureWithTool(WB_TOOL_NOTE, 50, 50);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "note add");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "note add";
     model_FigureRef figure(data->diagram->figures()[old_figure_count]);
 
-    $expect(*figure->top()).toEqual(40, "new note pos");
-    $expect(*figure->left()).toEqual(40, "new note pos");
+    EXPECT_EQ(*figure->top(), 40) << "new note pos";
+    EXPECT_EQ(*figure->left(), 40) << "new note pos";
 
-    $expect(layer->figures().count()).toEqual(1U, "layer contains figure");
-    $expect(figure->layer()).toEqual(layer, "note layer");
+    EXPECT_EQ(layer->figures().count(), 1U) << "layer contains figure";
+    EXPECT_EQ(figure->layer(), layer) << "note layer";
 
     data->checkUndo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count, "note add undo");
-    $expect(layer->figures().count()).toEqual(0U, "layer contains figure undo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count) << "note add undo";
+    EXPECT_EQ(layer->figures().count(), 0U) << "layer contains figure undo";
 
     data->checkRedo();
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "note add undo");
-    $expect(layer->figures().count()).toEqual(1U, "layer contains figure undo");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "note add undo";
+    EXPECT_EQ(layer->figures().count(), 1U) << "layer contains figure undo";
 
     data->checkUndo();
     data->checkUndo();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceLayerAroundSomething) {
     size_t old_figure_count = data->diagram->figures().count();
@@ -409,7 +394,7 @@ protected:
 
     model_FigureRef figure(data->diagram->figures()[old_figure_count]);
 
-    $expect(data->diagram->figures().count()).toEqual(old_figure_count + 1, "note add");
+    EXPECT_EQ(data->diagram->figures().count(), old_figure_count + 1) << "note add";
 
     // place layer around the note
     data->diagramForm->set_tool(WB_TOOL_LAYER);
@@ -418,38 +403,36 @@ protected:
     data->diagramForm->handle_mouse_button(mdc::ButtonLeft, false, 300, 300, (mdc::EventState)0);
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->layers().count()).toEqual(old_layer_count + 1, "layer add");
-    $expect(data->diagram->rootLayer()->subLayers().count()).toEqual(old_root_layer_count + 1, "layer root add");
+    EXPECT_EQ(data->diagram->layers().count(), old_layer_count + 1) << "layer add";
+    EXPECT_EQ(data->diagram->rootLayer()->subLayers().count(), old_root_layer_count + 1) << "layer root add";
 
     model_LayerRef layer(data->diagram->layers()[old_layer_count]);
-    $expect(layer.is_valid()).toBeTrue("layer");
-    $expect(figure->layer()).toEqual(layer, "note layer");
+    EXPECT_TRUE(layer.is_valid()) << "layer";
+    EXPECT_EQ(figure->layer(), layer) << "note layer";
 
-    $expect(layer->figures().count()).toEqual(1U, "layer contains note only");
-    $expect(layer->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "layer contains note only");
+    EXPECT_EQ(layer->figures().count(), 1U) << "layer contains note only";
+    EXPECT_NE(layer->figures().get_index(figure), BaseListRef::npos) << "layer contains note only";
 
-    $expect(data->diagram->layers().count()).toEqual(old_layer_count + 1, "layer add");
-    $expect(data->diagram->rootLayer()->subLayers().count()).toEqual(old_root_layer_count + 1, "layer root add");
-    $expect(layer->figures().count()).toEqual(1U, "layer note");
-    $expect(layer->figures().count()).toEqual(1U, "root layer note");
+    EXPECT_EQ(data->diagram->layers().count(), old_layer_count + 1) << "layer add";
+    EXPECT_EQ(data->diagram->rootLayer()->subLayers().count(), old_root_layer_count + 1) << "layer root add";
+    EXPECT_EQ(layer->figures().count(), 1U) << "layer note";
+    EXPECT_EQ(layer->figures().count(), 1U) << "root layer note";
 
     data->checkUndo();
-    $expect(data->diagram->layers().count()).toEqual(old_layer_count, "layer add undo");
-    $expect(data->diagram->rootLayer()->subLayers().count()).toEqual(old_root_layer_count, "layer root add undo");
-    $expect(layer->figures().count()).toEqual(0U, "layer note");
+    EXPECT_EQ(data->diagram->layers().count(), old_layer_count) << "layer add undo";
+    EXPECT_EQ(data->diagram->rootLayer()->subLayers().count(), old_root_layer_count) << "layer root add undo";
+    EXPECT_EQ(layer->figures().count(), 0U) << "layer note";
 
     data->checkRedo();
-    $expect(data->diagram->layers().count()).toEqual(old_layer_count + 1, "layer add redo");
-    $expect(data->diagram->rootLayer()->subLayers().count()).toEqual(old_root_layer_count + 1, "layer root add redo");
-    $expect(layer->figures().count()).toEqual(1U, "layer note");
+    EXPECT_EQ(data->diagram->layers().count(), old_layer_count + 1) << "layer add redo";
+    EXPECT_EQ(data->diagram->rootLayer()->subLayers().count(), old_root_layer_count + 1) << "layer root add redo";
+    EXPECT_EQ(layer->figures().count(), 1U) << "layer note";
 
     data->checkUndo(); // undo the layer
     data->checkUndo(); // undo the note place
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveObject) {
     double x, y;
@@ -464,33 +447,31 @@ protected:
     data->diagramForm->handle_mouse_button(mdc::ButtonLeft, false, 50, 50, mdc::SLeftButtonMask);
     data->checkOnlyOneUndoAdded();
 
-    $expect(*figure->left()).Not.toEqual(x, "object moved");
+    EXPECT_NE(*figure->left(), x) << "object moved";
 
     data->checkUndo();
-    $expect(*figure->left()).toEqual(x, "move undo");
+    EXPECT_EQ(*figure->left(), x) << "move undo";
 
     data->checkRedo();
-    $expect(*figure->left()).Not.toEqual(x, "move redo");
+    EXPECT_NE(*figure->left(), x) << "move redo";
 
     data->checkUndo();
-  });
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
-
-  }
 
   TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveIntoAndOutOfLayer) {
     double x, y;
     model_FigureRef figure(data->diagram->figures()[0]);
     model_LayerRef layer(data->diagram->layers()[0]);
 
-    $expect(layer).Not.toEqual(data->diagram->rootLayer(), "layer is not root");
+    EXPECT_NE(layer, data->diagram->rootLayer()) << "layer is not root";
 
     x = figure->left();
     y = figure->top();
 
-    $expect(figure->layer()).toEqual(data->diagram->rootLayer(), "object is in root");
-    $expect(layer->figures().count()).toEqual(0U, "layer begins empty");
+    EXPECT_EQ(figure->layer(), data->diagram->rootLayer()) << "object is in root";
+    EXPECT_EQ(layer->figures().count(), 0U) << "layer begins empty";
 
     // move object into layer
     data->diagramForm->handle_mouse_button(mdc::ButtonLeft, true, static_cast<int>(x + 5), static_cast<int>(y + 5),
@@ -499,24 +480,24 @@ protected:
     data->diagramForm->handle_mouse_button(mdc::ButtonLeft, false, 150, 400, mdc::SLeftButtonMask);
     data->checkOnlyOneUndoAdded();
 
-    $expect(*figure->left()).Not.toEqual(x, "object moved");
-    $expect(figure->layer()).toEqual(layer, "object moved into layer");
-    $expect(layer->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "layer contains object");
-    $expect(data->diagram->rootLayer()->figures()->get_index(figure)).toEqual(BaseListRef::npos, "object not in root");
+    EXPECT_NE(*figure->left(), x) << "object moved";
+    EXPECT_EQ(figure->layer(), layer) << "object moved into layer";
+    EXPECT_NE(layer->figures().get_index(figure), BaseListRef::npos) << "layer contains object";
+    EXPECT_EQ(data->diagram->rootLayer()->figures()->get_index(figure), BaseListRef::npos) << "object not in root";
 
     data->checkUndo();
-    $expect(*figure->left()).toEqual(x, "move undo");
-    $expect(figure->layer()).toEqual(data->diagram->rootLayer(), "object moved into layer undo");
-    $expect(layer->figures().count()).toEqual(0U, "layer empty on undo");
-    $expect(layer->figures().get_index(figure)).toEqual(BaseListRef::npos, "layer does not contain object");
-    $expect(data->diagram->rootLayer()->figures()->get_index(figure)).Not.toEqual(BaseListRef::npos, "object in root");
+    EXPECT_EQ(*figure->left(), x) << "move undo";
+    EXPECT_EQ(figure->layer(), data->diagram->rootLayer()) << "object moved into layer undo";
+    EXPECT_EQ(layer->figures().count(), 0U) << "layer empty on undo";
+    EXPECT_EQ(layer->figures().get_index(figure), BaseListRef::npos) << "layer does not contain object";
+    EXPECT_NE(data->diagram->rootLayer()->figures()->get_index(figure), BaseListRef::npos) << "object in root";
 
     data->checkRedo();
-    $expect(*figure->left()).Not.toEqual(x, "move redo");
-    $expect(figure->layer()).toEqual(layer, "object moved into layer redo");
-    $expect(layer->figures().count()).toEqual(1U, "layer contains stuff after redo");
-    $expect(layer->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "layer contains object");
-    $expect(data->diagram->rootLayer()->figures()->get_index(figure)).toEqual(BaseListRef::npos, "object not in root");
+    EXPECT_NE(*figure->left(), x) << "move redo";
+    EXPECT_EQ(figure->layer(), layer) << "object moved into layer redo";
+    EXPECT_EQ(layer->figures().count(), 1U) << "layer contains stuff after redo";
+    EXPECT_NE(layer->figures().get_index(figure), BaseListRef::npos) << "layer contains object";
+    EXPECT_EQ(data->diagram->rootLayer()->figures()->get_index(figure), BaseListRef::npos) << "object not in root";
 
     // Move object out of layer.
     double new_x = figure->left();
@@ -529,44 +510,44 @@ protected:
     data->diagramForm->handle_mouse_button(mdc::ButtonLeft, false, 10, 10, mdc::SLeftButtonMask);
     data->checkOnlyOneUndoAdded();
 
-    $expect(*figure->left()).Not.toEqual(new_x, "object moved");
-    $expect(figure->layer()).toEqual(data->diagram->rootLayer(), "object moved out of layer");
-    $expect(layer->figures().get_index(figure)).toEqual(BaseListRef::npos, "layer is empty");
-    $expect(data->diagram->rootLayer()->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "object in root layer");
+    EXPECT_NE(*figure->left(), new_x) << "object moved";
+    EXPECT_EQ(figure->layer(), data->diagram->rootLayer()) << "object moved out of layer";
+    EXPECT_EQ(layer->figures().get_index(figure), BaseListRef::npos) << "layer is empty";
+    EXPECT_NE(data->diagram->rootLayer()->figures().get_index(figure), BaseListRef::npos) << "object in root layer";
 
     data->checkUndo();
 
-    $expect(*figure->left()).toEqual(new_x, "object moved undo");
-    $expect(figure->layer()).toEqual(layer, "object moved out of layer undo");
-    $expect(layer->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "layer is not empty");
-    $expect(data->diagram->rootLayer()->figures().get_index(figure)).toEqual(BaseListRef::npos, "object not in root layer");
+    EXPECT_EQ(*figure->left(), new_x) << "object moved undo";
+    EXPECT_EQ(figure->layer(), layer) << "object moved out of layer undo";
+    EXPECT_NE(layer->figures().get_index(figure), BaseListRef::npos) << "layer is not empty";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().get_index(figure), BaseListRef::npos) << "object not in root layer";
 
     data->checkRedo();
-    $expect(*figure->left()).Not.toEqual(new_x, "object moved");
-    $expect(figure->layer()).toEqual(data->diagram->rootLayer(), "object moved out of layer");
-    $expect(layer->figures().get_index(figure)).toEqual(BaseListRef::npos, "layer is empty");
-    $expect(data->diagram->rootLayer()->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "object in root layer");
+    EXPECT_NE(*figure->left(), new_x) << "object moved";
+    EXPECT_EQ(figure->layer(), data->diagram->rootLayer()) << "object moved out of layer";
+    EXPECT_EQ(layer->figures().get_index(figure), BaseListRef::npos) << "layer is empty";
+    EXPECT_NE(data->diagram->rootLayer()->figures().get_index(figure), BaseListRef::npos) << "object in root layer";
 
     // undo both operations
     data->checkUndo();
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Move layer", []() {
-    $pending("not implemented");
-  });
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveLayer) {
+    GTEST_SKIP() << "not implemented";
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Move layer under object to capture it", []() {
-    $pending("not implemented");
-  });
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveLlayerUnderObjectToCaptureIt) {
+    GTEST_SKIP() << "not implemented";
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Resize layer to eat a figure", [this]() {
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, ResizeLayerToEatAFigure) {
     model_LayerRef layer(data->diagram->layers()[0]);
 
     data->placeFigureWithTool(WB_TOOL_NOTE, 580, 480);
@@ -581,8 +562,8 @@ protected:
 
     data->checkOnlyOneUndoAdded();
 
-    $expect(*layer->width()).toEqual(800, "layer resized properly");
-    $expect(*layer->height()).toEqual(800, "layer resized properly");
+    EXPECT_EQ(*layer->width(), 800) << "layer resized properly";
+    EXPECT_EQ(*layer->height(), 800) << "layer resized properly";
 
     // At this point the layer should have captured the text figure, but there's a long term bug
     // pending where figure <-> layer relationship is only updated when a figure was dragged
@@ -591,34 +572,34 @@ protected:
     data->dragObject(data->diagramForm, layer, 10, 10);
     data->checkOnlyOneUndoAdded();
 
-    $expect(layer->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "layer contains object");
-    $expect(data->diagram->rootLayer()->figures().get_index(figure)).toEqual(BaseListRef::npos, "object not in root");
-    $expect(figure->layer()).toEqual(layer, "object layer changed");
+    EXPECT_NE(layer->figures().get_index(figure), BaseListRef::npos) << "layer contains object";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().get_index(figure), BaseListRef::npos) << "object not in root";
+    EXPECT_EQ(figure->layer(), layer) << "object layer changed";
 
     data->checkUndo();
-    $expect(layer->figures().get_index(figure)).toEqual(BaseListRef::npos, "layer not contains object");
-    $expect(data->diagram->rootLayer()->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "object in root");
-    $expect(figure->layer()).Not.toEqual(layer, "object layer changed");
+    EXPECT_EQ(layer->figures().get_index(figure), BaseListRef::npos) << "layer not contains object";
+    EXPECT_NE(data->diagram->rootLayer()->figures().get_index(figure), BaseListRef::npos) << "object in root";
+    EXPECT_NE(figure->layer(), layer) << "object layer changed";
 
     data->checkRedo();
-    $expect(layer->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "layer contains object");
-    $expect(data->diagram->rootLayer()->figures().get_index(figure)).toEqual(BaseListRef::npos, "object not in root");
-    $expect(figure->layer()).toEqual(layer, "object layer changed");
+    EXPECT_NE(layer->figures().get_index(figure), BaseListRef::npos) << "layer contains object";
+    EXPECT_EQ(data->diagram->rootLayer()->figures().get_index(figure), BaseListRef::npos) << "object not in root";
+    EXPECT_EQ(figure->layer(), layer) << "object layer changed";
 
     data->checkUndo(); // Layer dragging.
     data->checkUndo(); // Layer resize.
     data->checkUndo(); // Note add.
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
   //  XXX: for now disabled as there's a bug which must be fixed first (but cannot right now).
   //       Internal bug number #268.
-  // $it(30) // Resize Table
+  // TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, ResizeTable) // Resize Table
   // {
   //   model_FigureRef figure(find_named_object_in_list(data->diagram->figures(), "table1"));
   //
-  //   $expect("table found", figure.is_valid());
+  //   EXPECT_TRUE(figure.is_valid()) << "table found";
   //
   //   double w,h;
   //   w= figure->width();
@@ -628,84 +609,84 @@ protected:
   //   resize_object(data->diagramForm, figure, 150, 200);
   //   data->checkOnlyOneUndoAdded();
   //
-  //   $expect("Table width is wrong", *figure->width(), 150);
-  //   $expect("Table height is wrong", *figure->height(), 200);
+  //   EXPECT_EQ(*figure->width(), 150) << "Table width is wrong";
+  //   EXPECT_EQ(*figure->height(), 200) << "Table height is wrong";
   //
   //   data->checkUndo();
-  //   $expect("Table width is wrong", *figure->width(), w);
-  //   $expect("Table height is wrong", *figure->height(), h);
+  //   EXPECT_EQ(*figure->width(), w) << "Table width is wrong";
+  //   EXPECT_EQ(*figure->height(), h) << "Table height is wrong";
   //
   //   data->checkUndo();
-  //   $expect("Table width is wrong", *figure->width(), 150);
-  //   $expect("Table height is wrong", *figure->height(), 200);
+  //   EXPECT_EQ(*figure->width(), 150) << "Table width is wrong";
+  //   EXPECT_EQ(*figure->height(), 200) << "Table height is wrong";
   //   data->checkUndo();
-  // });
+  // }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete table", [this]() {
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteTable) {
     model_FigureRef figure(find_named_object_in_list(data->diagram->figures(), "table1"));
 
-    $expect(figure.is_valid()).toBeTrue("table found");
+    EXPECT_TRUE(figure.is_valid()) << "table found";
 
     // delete the figure
     mforms::stub::UtilitiesWrapper::set_message_callback(message_ok_callback);
     wb::WBContextUI::get()->get_wb()->get_model_context()->delete_object(figure);
     data->checkOnlyOneUndoAdded();
 
-    $expect(find_named_object_in_list(data->diagram->figures(), "table1").is_valid()).toBeFalse("table delete");
-    $expect(find_named_object_in_list(data->diagram->rootLayer()->figures(), "table1").is_valid()).toBeFalse("table delete");
+    EXPECT_FALSE(find_named_object_in_list(data->diagram->figures(), "table1").is_valid()) << "table delete";
+    EXPECT_FALSE(find_named_object_in_list(data->diagram->rootLayer()->figures(), "table1").is_valid()) << "table delete";
 
     data->checkUndo();
-    $expect(find_named_object_in_list(data->diagram->figures(), "table1").is_valid()).toBeTrue("table delete undo");
-    $expect(find_named_object_in_list(data->diagram->rootLayer()->figures(), "table1").is_valid()).toBeTrue("table delete undo");
+    EXPECT_TRUE(find_named_object_in_list(data->diagram->figures(), "table1").is_valid()) << "table delete undo";
+    EXPECT_TRUE(find_named_object_in_list(data->diagram->rootLayer()->figures(), "table1").is_valid()) << "table delete undo";
 
     data->checkRedo();
-    $expect(find_named_object_in_list(data->diagram->figures(), "table1").is_valid()).toBeFalse("table delete redo");
-    $expect(find_named_object_in_list(data->diagram->rootLayer()->figures(), "table1").is_valid()).toBeFalse("table delete redo");
+    EXPECT_FALSE(find_named_object_in_list(data->diagram->figures(), "table1").is_valid()) << "table delete redo";
+    EXPECT_FALSE(find_named_object_in_list(data->diagram->rootLayer()->figures(), "table1").is_valid()) << "table delete redo";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete layer with stuff inside", []() {
-    $pending("not implemented");
-  });
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteLayerWithStuffInside) {
+    GTEST_SKIP() << "not implemented";
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place with drag/drop", [this]() {
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceWithDragDrop) {
     db_TableRef table(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table3"));
 
-    $expect(table.is_valid()).toBeTrue("table found");
+    EXPECT_TRUE(table.is_valid()) << "table found";
 
     std::list<GrtObjectRef> list;
     list.push_back(table);
     data->diagramForm->perform_drop(10, 10, WB_DBOBJECT_DRAG_TYPE, list);
     data->checkOnlyOneUndoAdded();
 
-    $expect(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()).toBeTrue("table figure added");
+    EXPECT_TRUE(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()) << "table figure added";
     model_FigureRef figure(find_named_object_in_list(data->diagram->figures(), "table3"));
-    $expect(figure->layer().is_valid()).toBeTrue("figure has proper layer set");
-    $expect(figure->layer()).toEqual(data->diagram->rootLayer(), "figure has proper layer set");
-    $expect(figure->owner()).toEqual(data->diagram, "figure has proper owner set");
+    EXPECT_TRUE(figure->layer().is_valid()) << "figure has proper layer set";
+    EXPECT_EQ(figure->layer(), data->diagram->rootLayer()) << "figure has proper layer set";
+    EXPECT_EQ(figure->owner(), data->diagram) << "figure has proper owner set";
 
     data->checkUndo();
-    $expect(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()).toBeFalse("table figure added undo");
+    EXPECT_FALSE(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()) << "table figure added undo";
 
     data->checkRedo();
-    $expect(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()).toBeTrue("table figure added");
+    EXPECT_TRUE(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()) << "table figure added";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Place with drag/drop on a layer", [this]() {
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceWithDragDropOnALayer) {
     db_TableRef table(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table3"));
 
-    $expect(table.is_valid()).toBeTrue("table found");
+    EXPECT_TRUE(table.is_valid()) << "table found";
 
     std::list<GrtObjectRef> list;
     list.push_back(table);
@@ -717,32 +698,32 @@ protected:
 
     figure = find_named_object_in_list(data->diagram->figures(), "table3");
 
-    $expect(figure.is_valid()).toBeTrue("table figure added");
-    $expect(figure->layer()).toEqual(layer, "table in layer");
-    $expect(layer->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "layer contains table");
+    EXPECT_TRUE(figure.is_valid()) << "table figure added";
+    EXPECT_EQ(figure->layer(), layer) << "table in layer";
+    EXPECT_NE(layer->figures().get_index(figure), BaseListRef::npos) << "layer contains table";
 
     data->checkUndo();
-    $expect(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()).toBeFalse("table figure added undo");
-    $expect(layer->figures().get_index(figure)).toEqual(BaseListRef::npos, "layer not contains table");
+    EXPECT_FALSE(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()) << "table figure added undo";
+    EXPECT_EQ(layer->figures().get_index(figure), BaseListRef::npos) << "layer not contains table";
 
     data->checkRedo();
-    $expect(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()).toBeTrue("table figure added");
-    $expect(figure->layer()).toEqual(layer, "table in layer");
-    $expect(layer->figures().get_index(figure)).Not.toEqual(BaseListRef::npos, "layer contains table");
+    EXPECT_TRUE(find_named_object_in_list(data->diagram->figures(), "table3").is_valid()) << "table figure added";
+    EXPECT_EQ(figure->layer(), layer) << "table in layer";
+    EXPECT_NE(layer->figures().get_index(figure), BaseListRef::npos) << "layer contains table";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Create relationship (in diagram)", [this]() {
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipInDiagram) {
     data->diagramForm->set_tool(WB_TOOL_PREL1n);
 
     model_FigureRef table1(find_named_object_in_list(data->diagram->figures(), "table1"));
     model_FigureRef table2(find_named_object_in_list(data->diagram->figures(), "table2"));
 
-    $expect(table1.is_valid() && table2.is_valid()).toBeTrue("found tables");
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+    EXPECT_TRUE(table1.is_valid() && table2.is_valid()) << "found tables";
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     // click table1
     data->diagramForm->handle_mouse_button(mdc::ButtonLeft, true, static_cast<int>(*table1->left() + 20),
@@ -753,25 +734,25 @@ protected:
 
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(2U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 2U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(2U, "rel count after redo");
+    EXPECT_EQ(data->diagram->connections().count(), 2U) << "rel count after redo";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Create relationship (indirectly with FK)", [this]() {
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipIndirectlyWithFK) {
     db_TableRef table1(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table1"));
     db_TableRef table2(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table2"));
 
-    $expect(table1.is_valid() && table2.is_valid()).toBeTrue("table valid");
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+    EXPECT_TRUE(table1.is_valid() && table2.is_valid()) << "table valid";
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     db_ForeignKeyRef fk;
 
@@ -779,26 +760,26 @@ protected:
       data->tester->getRdbms(), DictRef(true), DictRef(true));
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(2U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 2U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(2U, "rel count after redo");
+    EXPECT_EQ(data->diagram->connections().count(), 2U) << "rel count after redo";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Create relationship (dropping table with FK)", [this]() {
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipDroppingTableWithFK) {
     db_TableRef table(
       find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table_with_fk")
     );
 
-    $expect(table.is_valid()).toBeTrue("table found");
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+    EXPECT_TRUE(table.is_valid()) << "table found";
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     std::list<GrtObjectRef> list;
     list.push_back(table);
@@ -809,28 +790,28 @@ protected:
 
     figure = find_named_object_in_list(data->diagram->figures(), "table_with_fk");
 
-    $expect(figure.is_valid()).toBeTrue("table figure added");
-    $expect(data->diagram->connections().count()).toEqual(2U, "rel count");
+    EXPECT_TRUE(figure.is_valid()) << "table figure added";
+    EXPECT_EQ(data->diagram->connections().count(), 2U) << "rel count";
 
     data->checkUndo();
-    $expect(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()).toBeFalse("table figure added undo");
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+    EXPECT_FALSE(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()) << "table figure added undo";
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     data->checkRedo();
-    $expect(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()).toBeTrue("table figure added redo");
-    $expect(data->diagram->connections().count()).toEqual(2U, "rel count");
+    EXPECT_TRUE(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()) << "table figure added redo";
+    EXPECT_EQ(data->diagram->connections().count(), 2U) << "rel count";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Create relationship (dropping table referenced by FK)", [this]() {
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
-    $expect(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()).toBeFalse("Table already in diagram");
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipDroppingTableReferencedByFK) {
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
+    EXPECT_FALSE(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()) << "Table already in diagram";
 
-    $expect(data->diagram->figures().count()).toEqual(5U, "Wrong figure count");
-    $expect(data->diagram->connections().count()).toEqual(1U, "Wrong relationship count");
+    EXPECT_EQ(data->diagram->figures().count(), 5U) << "Wrong figure count";
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "Wrong relationship count";
 
     // Now drag/drop the table to the diagram.
     std::list<GrtObjectRef> list;
@@ -838,159 +819,159 @@ protected:
     data->diagramForm->perform_drop(10, 10, WB_DBOBJECT_DRAG_TYPE, list);
     data->checkOnlyOneUndoAdded();
 
-    $expect(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()).toBeTrue("Table not found");
-    $expect(data->diagram->connections().count()).toEqual(2U, "Wrong relationship count");
+    EXPECT_TRUE(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()) << "Table not found";
+    EXPECT_EQ(data->diagram->connections().count(), 2U) << "Wrong relationship count";
 
     data->checkUndo();
-    $expect(data->diagram->figures().count()).toEqual(5U, "Wrong figure count");
-    $expect(data->diagram->connections().count()).toEqual(1U, "Wrong relationship count");
+    EXPECT_EQ(data->diagram->figures().count(), 5U) << "Wrong figure count";
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "Wrong relationship count";
 
     data->checkRedo();
-    $expect(data->diagram->figures().count()).toEqual(6U, "Wrong figure count");
-    $expect(data->diagram->connections().count()).toEqual(2U, "Wrong relationship count");
+    EXPECT_EQ(data->diagram->figures().count(), 6U) << "Wrong figure count";
+    EXPECT_EQ(data->diagram->connections().count(), 2U) << "Wrong relationship count";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete relationship (in diagram)", [this]() {
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipInDiagram) {
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
 
     data->diagram->unselectAll();
 
     data->diagram->selectObject(conn);
-    $expect(data->diagram->selection().count()).toEqual(1U, "selection");
+    EXPECT_EQ(data->diagram->selection().count(), 1U) << "selection";
 
     // Message callback set in case 32.
     data->diagramForm->delete_selection();
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete relationship (indirectly with FK)", [this]() {
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipIndirectlyWithFK) {
     db_TableRef table2(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table2"));
 
-    $expect(table2.is_valid()).toBeTrue("table valid");
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
-    $expect(table2->foreignKeys().count()).toEqual(1U, "fk count");
+    EXPECT_TRUE(table2.is_valid()) << "table valid";
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
+    EXPECT_EQ(table2->foreignKeys().count(), 1U) << "fk count";
 
     db_ColumnRef column(table2->columns()[1]);
 
     table2->removeColumn(column);
     data->checkOnlyOneUndoAdded();
 
-    $expect(table2->foreignKeys().count()).toEqual(0U, "fk count");
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(table2->foreignKeys().count(), 0U) << "fk count";
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
-    $expect(table2->foreignKeys().count()).toEqual(1U, "fk count");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
+    EXPECT_EQ(table2->foreignKeys().count(), 1U) << "fk count";
 
     data->checkRedo();
-    $expect( data->diagram->connections().count()).toEqual(0U, "rel count after redo");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count after redo";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete relationship (deleted table)", [this]() {
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedTable) {
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
 
     data->diagram->unselectAll();
 
     data->diagram->selectObject(find_named_object_in_list(data->diagram->figures(), "table2"));
-    $expect(data->diagram->selection().count()).toEqual(1U, "selection");
+    EXPECT_EQ(data->diagram->selection().count(), 1U) << "selection";
 
     // Message callback set in case 32.
     data->diagramForm->delete_selection();
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete relationship (deleted table figure only)", [this]() {
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedTableFigureOnly) {
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
 
     data->diagram->unselectAll();
 
     data->diagram->selectObject(find_named_object_in_list(data->diagram->figures(), "table2"));
-    $expect(data->diagram->selection().count()).toEqual(1U, "selection");
+    EXPECT_EQ(data->diagram->selection().count(), 1U) << "selection";
 
     // Keep db objects
     mforms::stub::UtilitiesWrapper::set_message_callback(message_cancel_callback);
     data->diagramForm->delete_selection();
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete relationship (deleted referenced table)", [this]() {
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedReferencedTable) {
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
 
     data->diagram->unselectAll();
 
     data->diagram->selectObject(find_named_object_in_list(data->diagram->figures(), "table1"));
-    $expect(data->diagram->selection().count()).toEqual(1U, "selection");
+    EXPECT_EQ(data->diagram->selection().count(), 1U) << "selection";
 
     data->diagramForm->delete_selection();
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete relationship and Ref Table", [this]() {
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipAndRefTable) {
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
 
@@ -998,26 +979,26 @@ protected:
 
     data->diagram->selectObject(conn->endFigure());
     data->diagram->selectObject(conn);
-    $expect(data->diagram->selection().count()).toEqual(2U, "selection");
+    EXPECT_EQ(data->diagram->selection().count(), 2U) << "selection";
 
     data->diagramForm->delete_selection();
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete relationship and Table", [this]() {
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipAndTable) {
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
 
@@ -1025,27 +1006,27 @@ protected:
 
     data->diagram->selectObject(conn);
     data->diagram->selectObject(conn->startFigure());
-    $expect(data->diagram->selection().count()).toEqual(2U, "selection");
+    EXPECT_EQ(data->diagram->selection().count(), 2U) << "selection";
 
     mforms::stub::UtilitiesWrapper::set_message_callback(message_ok_callback);
     data->diagramForm->delete_selection();
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-  });
+}
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  $it("Delete Relationship and both Tables", [this]() {
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count");
+TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipAndBothTables) {
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
 
@@ -1054,21 +1035,20 @@ protected:
     data->diagram->selectObject(conn->startFigure());
     data->diagram->selectObject(conn);
     data->diagram->selectObject(conn->endFigure());
-    $expect(data->diagram->selection().count()).toEqual(3U, "selection");
+    EXPECT_EQ(data->diagram->selection().count(), 3U) << "selection";
 
     mforms::stub::UtilitiesWrapper::set_message_callback(message_ok_callback);
     data->diagramForm->delete_selection();
     data->checkOnlyOneUndoAdded();
 
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-    $expect(data->diagram->connections().count()).toEqual(1U, "rel count after undo");
+    EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count after undo";
 
     data->checkRedo();
-    $expect(data->diagram->connections().count()).toEqual(0U, "rel count");
+    EXPECT_EQ(data->diagram->connections().count(), 0U) << "rel count";
 
     data->checkUndo();
-  });
-};
+}
 }

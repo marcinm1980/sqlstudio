@@ -28,7 +28,7 @@
 #include "grt/grt_manager.h"
 #include "wb_test_helpers.h"
 #include "gtest/gtest.h"
-#include "casmine.h"
+#include "context.h"
 
 using namespace grt;
 using namespace bec;
@@ -120,7 +120,7 @@ TEST_F(GrtShellBackendTest, AdditionalHistoryLinesTest) {
   ShellBE *shell = new ShellBE(dispatcher);
 
   shell->set_saves_history(10);
-  shell->set_save_directory(casmine::CasmineContext::get()->outputDir());
+  shell->set_save_directory(testing::Context::get().outputDir());
 
   shell->save_history_line("line1");
   shell->save_history_line("line2");
@@ -135,7 +135,7 @@ TEST_F(GrtShellBackendTest, AdditionalHistoryLinesTest) {
 
   shell = new ShellBE(dispatcher);
   shell->set_saves_history(10);
-  shell->set_save_directory(casmine::CasmineContext::get()->outputDir());
+  shell->set_save_directory(testing::Context::get().outputDir());
   shell->restore_state();
 
   std::string line;

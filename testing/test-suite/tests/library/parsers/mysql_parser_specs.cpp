@@ -24,6 +24,9 @@
  */
 
 #include "gtest/gtest.h"
+#include "context.h"
+
+#include <regex>
 
 #include "wb_version.h"
 #include "wb_test_helpers.h"
@@ -903,9 +906,10 @@ TEST_F(MySQLParserTest, OperatorPrecedenceTests) {
 
         EXPECT_EQ(dataTypes[type], dataTypes[expectedType]) <<
           "Result type " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n";
-        if (!expectedResults[i].isNullType())
+        if (!expectedResults[i].isNullType()) {
           EXPECT_EQ(evaluator.results[i].number, expectedResults[i].number) <<
             "Result " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n";
+        }
       }
       ++counter;
     }

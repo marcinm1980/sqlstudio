@@ -24,24 +24,25 @@
 
 #include "grtsqlparser/sql_facade.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
 // This file contains unit tests for the yacc based invalid sql parser.
 
 namespace {
-
-$ModuleEnvironment() {};
-
-$TestData {
+struct MysqlInvalidSqlParserData {
   std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref facade;
   std::string specificsDelimiter;
   std::string userDelimiter;
 };
 
-$describe("MySQL invalid sql parser test suite (yacc)") {
-  $beforeAll([this]() {
+class MySQL_invalid_sql_parser_test_suite_yaccTest : public ::testing::Test {
+protected:
+  static std::unique_ptr<MysqlInvalidSqlParserData> data;
+
+  static void SetUpTestSuite() {
+    data = std::make_unique<MysqlInvalidSqlParserData>();
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
@@ -52,73 +53,80 @@ $describe("MySQL invalid sql parser test suite (yacc)") {
       data->userDelimiter = "%%";
     else
       data->userDelimiter = ";;";
-  });
+  }
 
-  $it("Trigger parsing", [this]() {
-    std::string trigger_sql =
-    "CREATE TRIGGER `ins_film` AFTER INSERT ON `film` FOR EACH ROW BEGIN\n"
-    "  INSERT INTO film_text (film_id, title, description)\n"
-    "  VALUES (new.film_id, new.title, new.description);\n"
-    "END";
+  static void TearDownTestSuite() {
+    data.reset();
+  }
 
-    Invalid_sql_parser::Ref parser = data->facade->invalidSqlParser();
+};
 
-    db_mysql_CatalogRef catalog(grt::Initialized);
-    db_mysql_SchemaRef schema(grt::Initialized);
-    schema->name("sakila");
-    catalog->schemata().insert(schema);
-    schema->owner(catalog);
+std::unique_ptr<MysqlInvalidSqlParserData> MySQL_invalid_sql_parser_test_suite_yaccTest::data;
 
-    db_mysql_TableRef table(grt::Initialized);
-    table->name("film");
-    schema->tables().insert(table);
-    table->owner(schema);
+TEST_F(MySQL_invalid_sql_parser_test_suite_yaccTest, Trigger_parsing) {
+  std::string trigger_sql =
+  "CREATE TRIGGER `ins_film` AFTER INSERT ON `film` FOR EACH ROW BEGIN\n"
+  "  INSERT INTO film_text (film_id, title, description)\n"
+  "  VALUES (new.film_id, new.title, new.description);\n"
+  "END";
 
-    db_mysql_TriggerRef trigger(grt::Initialized);
-    table->triggers().insert(trigger);
-    trigger->owner(table);
+  Invalid_sql_parser::Ref parser = data->facade->invalidSqlParser();
 
-    parser->parse_trigger(trigger, trigger_sql);
+  db_mysql_CatalogRef catalog(grt::Initialized);
+  db_mysql_SchemaRef schema(grt::Initialized);
+  schema->name("sakila");
+  catalog->schemata().insert(schema);
+  schema->owner(catalog);
 
-    // The parsing process returns one line break before the actual sql definition, even if no delimiter
-    // etc. was given. This is due to the way query separation works there.
-    // So we exclude the first char from the result in our comparisons.
-    std::string result = (*trigger->sqlDefinition()).substr(1);
-    $expect(result).toBe(trigger_sql, "Trigger SQL differs");
+  db_mysql_TableRef table(grt::Initialized);
+  table->name("film");
+  schema->tables().insert(table);
+  table->owner(schema);
 
-    std::string sql = "use test;\n" + trigger_sql;
-    parser->parse_trigger(trigger, trigger_sql);
-    result = (*trigger->sqlDefinition()).substr(1);
-    $expect(result).toBe(trigger_sql, "Trigger SQL differs");
+  db_mysql_TriggerRef trigger(grt::Initialized);
+  table->triggers().insert(trigger);
+  trigger->owner(table);
 
-    sql = "DELIMITER ;\n" + trigger_sql;
-    parser->parse_trigger(trigger, trigger_sql);
-    result = (*trigger->sqlDefinition()).substr(1);
-    $expect(result).toBe(trigger_sql, "Trigger SQL differs");
+  parser->parse_trigger(trigger, trigger_sql);
 
-    sql = "DELIMITER " + data->specificsDelimiter + "\n" + trigger_sql;
-    parser->parse_trigger(trigger, trigger_sql);
-    result = (*trigger->sqlDefinition()).substr(1);
-    $expect(result).toBe(trigger_sql, "5.4 Trigger SQL differs");
+  // The parsing process returns one line break before the actual sql definition, even if no delimiter
+  // etc. was given. This is due to the way query separation works there.
+  // So we exclude the first char from the result in our comparisons.
+  std::string result = (*trigger->sqlDefinition()).substr(1);
+  EXPECT_EQ(result, trigger_sql) << "Trigger SQL differs";
 
-    sql = "DELIMITER " + data->specificsDelimiter + "\nuse test" + data->specificsDelimiter + "\n" + trigger_sql;
-    parser->parse_trigger(trigger, trigger_sql);
-    result = (*trigger->sqlDefinition()).substr(1);
-    $expect(result).toBe(trigger_sql, "Trigger SQL differs");
+  std::string sql = "use test;\n" + trigger_sql;
+  parser->parse_trigger(trigger, trigger_sql);
+  result = (*trigger->sqlDefinition()).substr(1);
+  EXPECT_EQ(result, trigger_sql) << "Trigger SQL differs";
 
-    sql = "DELIMITER " + data->specificsDelimiter + "\nDELIMITER " + data->userDelimiter + "\nDELIMITER ;\nDELIMITER " +
-    data->userDelimiter + "\nDELIMITER " + data->specificsDelimiter + "\nDELIMITER " + data->specificsDelimiter +
-    "\nuse test" + data->specificsDelimiter + "\n" + trigger_sql;
-    parser->parse_trigger(trigger, trigger_sql);
-    result = (*trigger->sqlDefinition()).substr(1);
-    $expect(result).toBe(trigger_sql, "Trigger SQL differs");
+  sql = "DELIMITER ;\n" + trigger_sql;
+  parser->parse_trigger(trigger, trigger_sql);
+  result = (*trigger->sqlDefinition()).substr(1);
+  EXPECT_EQ(result, trigger_sql) << "Trigger SQL differs";
 
-    sql = "DELIMITER " + data->userDelimiter + "\nuse test" + data->specificsDelimiter + "\n\n\n\n" + trigger_sql;
-    parser->parse_trigger(trigger, trigger_sql);
-    result = (*trigger->sqlDefinition()).substr(1);
-    $expect(result).toBe(trigger_sql, "Trigger SQL differs");
-  });
+  sql = "DELIMITER " + data->specificsDelimiter + "\n" + trigger_sql;
+  parser->parse_trigger(trigger, trigger_sql);
+  result = (*trigger->sqlDefinition()).substr(1);
+  EXPECT_EQ(result, trigger_sql) << "5.4 Trigger SQL differs";
 
+  sql = "DELIMITER " + data->specificsDelimiter + "\nuse test" + data->specificsDelimiter + "\n" + trigger_sql;
+  parser->parse_trigger(trigger, trigger_sql);
+  result = (*trigger->sqlDefinition()).substr(1);
+  EXPECT_EQ(result, trigger_sql) << "Trigger SQL differs";
+
+  sql = "DELIMITER " + data->specificsDelimiter + "\nDELIMITER " + data->userDelimiter + "\nDELIMITER ;\nDELIMITER " +
+  data->userDelimiter + "\nDELIMITER " + data->specificsDelimiter + "\nDELIMITER " + data->specificsDelimiter +
+  "\nuse test" + data->specificsDelimiter + "\n" + trigger_sql;
+  parser->parse_trigger(trigger, trigger_sql);
+  result = (*trigger->sqlDefinition()).substr(1);
+  EXPECT_EQ(result, trigger_sql) << "Trigger SQL differs";
+
+  sql = "DELIMITER " + data->userDelimiter + "\nuse test" + data->specificsDelimiter + "\n\n\n\n" + trigger_sql;
+  parser->parse_trigger(trigger, trigger_sql);
+  result = (*trigger->sqlDefinition()).substr(1);
+  EXPECT_EQ(result, trigger_sql) << "Trigger SQL differs";
 }
+
 
 }

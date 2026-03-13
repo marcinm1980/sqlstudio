@@ -49,7 +49,7 @@ namespace {
     value1 = source.get_member(member->name);
     value2 = copy.get_member(member->name);
 
-    $expect(value1.toString()).toBe(value2.toString());
+    EXPECT_EQ(value1.toString(), value2.toString());
 
     return true;
   }
@@ -61,12 +61,12 @@ namespace {
   }
 
   static void ensure_list_contents_copy(const grt::BaseListRef &copy, const grt::BaseListRef &source) {
-    $expect(copy.valueptr() != source.valueptr()).toBeTrue();
+    EXPECT_TRUE(copy.valueptr() != source.valueptr());
 
-    $expect(copy.count()).toBe(source.count());
+    EXPECT_EQ(copy.count(), source.count());
 
     for (size_t c = copy.count(), i = 0; i < c; i++) {
-      $expect(copy[i].valueptr() != source[i].valueptr()).toBeTrue();
+      EXPECT_TRUE(copy[i].valueptr() != source[i].valueptr());
 
       grt::ObjectRef copyRef = grt::ObjectRef::cast_from(copy[i]);
       grt::ObjectRef sourceRef = grt::ObjectRef::cast_from(source[i]);
@@ -95,13 +95,13 @@ namespace {
   TEST_F(CopyPasteRelatedTestsTest, CopyToClipboard) {
     data->tester->wb->open_document("data/studio/all_objects.mwb");
 
-    $expect(data->tester->getPview()->figures().count()).toBe(6U);
+    EXPECT_EQ(data->tester->getPview()->figures().count(), 6U);
 
     studio_physical_TableFigureRef source, copy;
     source = studio_physical_TableFigureRef::cast_from(
       grt::find_named_object_in_list(data->tester->getPview()->figures(), "table1"));
 
-    $expect(source.is_valid()).toBeTrue();
+    EXPECT_TRUE(source.is_valid());
 
     wb::WBComponent *compo = data->tester->wb->get_component_handling(source);
     EXPECT_TRUE(compo != 0);
@@ -110,18 +110,18 @@ namespace {
 
     compo->copy_object_to_clipboard(source, context);
 
-    $expect(bec::GRTManager::get()->get_clipboard()->get_data().empty() == false).toBeTrue();
+    EXPECT_TRUE(bec::GRTManager::get()->get_clipboard()->get_data().empty() == false);
     copy = studio_physical_TableFigureRef::cast_from(bec::GRTManager::get()->get_clipboard()->get_data().front());
 
-    $expect(copy.is_valid()).toBeTrue();
-    $expect(copy.id() != source.id()).toBeTrue();
+    EXPECT_TRUE(copy.is_valid());
+    EXPECT_TRUE(copy.id() != source.id());
 
-    $expect(copy->owner() == source->owner()).toBeTrue();
-    $expect(copy->layer() == source->layer()).toBeTrue();
+    EXPECT_TRUE(copy->owner() == source->owner());
+    EXPECT_TRUE(copy->layer() == source->layer());
 
-    $expect(copy.valueptr() != source.valueptr()).toBeTrue();
+    EXPECT_TRUE(copy.valueptr() != source.valueptr());
 
-    $expect(copy->table() == source->table()).toBeTrue();
+    EXPECT_TRUE(copy->table() == source->table());
 
     data->tester->wb->close_document();
     data->tester->wb->close_document_finish();
@@ -153,21 +153,21 @@ namespace {
 
     db_mysql_TableRef copy = db_mysql_TableRef::cast_from(grt::copy_object(table));
 
-    $expect(copy.is_valid()).toBeTrue();
-    $expect(copy.valueptr() != table.valueptr()).toBeTrue();
+    EXPECT_TRUE(copy.is_valid());
+    EXPECT_TRUE(copy.valueptr() != table.valueptr());
 
     ensure_list_contents_copy(table->columns(), copy->columns());
 
-    $expect(copy->primaryKey().is_valid()).toBeTrue();
-    $expect(copy->primaryKey().valueptr() != table->primaryKey().valueptr()).toBeTrue();
-    $expect(copy->primaryKey()->columns()[0].valueptr() != table->primaryKey()->columns()[0].valueptr()).toBeTrue();
-    $expect(copy->indices().get(0).valueptr() == copy->primaryKey().valueptr()).toBeTrue();
+    EXPECT_TRUE(copy->primaryKey().is_valid());
+    EXPECT_TRUE(copy->primaryKey().valueptr() != table->primaryKey().valueptr());
+    EXPECT_TRUE(copy->primaryKey()->columns()[0].valueptr() != table->primaryKey()->columns()[0].valueptr());
+    EXPECT_TRUE(copy->indices().get(0).valueptr() == copy->primaryKey().valueptr());
 
-    $expect(*copy->columns().get(0)->name()).toBe("col0");
-    $expect(copy->columns().get(0)->owner() == copy).toBeTrue();
+    EXPECT_EQ(*copy->columns().get(0)->name(), "col0");
+    EXPECT_TRUE(copy->columns().get(0)->owner() == copy);
 
-    $expect(copy->columns().get(0).valueptr())
-      .toBe(copy->primaryKey()->columns().get(0)->referencedColumn().valueptr());
+    EXPECT_EQ(copy->columns().get(0).valueptr(),
+      copy->primaryKey()->columns().get(0)->referencedColumn().valueptr());
 
     data->tester->wb->close_document();
     data->tester->wb->close_document_finish();

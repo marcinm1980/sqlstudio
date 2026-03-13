@@ -33,6 +33,8 @@
 
 #include "gtest/gtest.h"
 
+#include <fstream>
+
 namespace {
 
 using namespace grt;
@@ -88,7 +90,7 @@ TEST_F(WBOverviewTest, OpenDocument) {
     columns.push_back(wb::OverviewBE::Expanded);
     columns.push_back(wb::OverviewBE::Height);
     columns.push_back(wb::OverviewBE::DisplayMode);
-    casmine::dumpTreeModel("output/overview_test2.txt", (TreeModel *)wb::WBContextUI::get()->get_physical_overview(),
+    testing::dumpTreeModel("output/overview_test2.txt", (TreeModel *)wb::WBContextUI::get()->get_physical_overview(),
                            columns);
 
     ensure_files_equal("initial overview state ", "output/overview_test2.txt", "data/be/overview_test2.txt");

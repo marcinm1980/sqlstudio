@@ -29,6 +29,7 @@
 #include "backend/db_mysql_sql_export.h"
 
 #include "wb_test_helpers.h"
+#include "context.h"
 #include "gtest/gtest.h"
 
 using namespace grt;
@@ -92,7 +93,7 @@ namespace {
     TestData *data = new TestData();
 
     void SetUp() override {
-      data->dataDir = testing::get_tmp_dir();
+      data->dataDir = testing::Context::get().tmpDataDir();
       data->tester.reset(new MySqlStudioTester());
     }
 

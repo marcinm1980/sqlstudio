@@ -103,6 +103,8 @@ namespace wb {
 
 namespace wb {
 
+  struct TestData {
+
   // duleEnvironment() {};
 
   class LiveTreeTestDelegate : public LiveSchemaTree::Delegate, public LiveSchemaTree::FetchDelegate {
@@ -203,8 +205,10 @@ namespace wb {
       EXPECT_TRUE(_expect_fetch_data_for_filter) << _check_id + " : Unexpected call to fetch_data_for_filter";
       _expect_fetch_data_for_filter = false;
 
-      EXPECT_EQ(_mock__schema_pattern, _schema_pattern, _check_id + " : Unexpected schema filter on fetch_schema_list");
-      EXPECT_EQ(_mock__object_pattern, _object_pattern, _check_id + " : Unexpected object filter on fetch_schema_list");
+      EXPECT_EQ(_mock__schema_pattern, _schema_pattern)
+        << _check_id + " : Unexpected schema filter on fetch_schema_list";
+      EXPECT_EQ(_mock__object_pattern, _object_pattern)
+        << _check_id + " : Unexpected object filter on fetch_schema_list";
 
       return true;
     }
@@ -214,8 +218,8 @@ namespace wb {
       EXPECT_TRUE(_expect_fetch_schema_contents_call) << _check_id + " : Unexpected call to fetch_schema_contents";
       _expect_fetch_schema_contents_call = false;
 
-      EXPECT_EQ(schema_name, _mock_schema_name,
-                _check_id + " : Unexpected schema name on call to fetch_schema_contents");
+      EXPECT_EQ(schema_name, _mock_schema_name)
+        << _check_id + " : Unexpected schema name on call to fetch_schema_contents";
 
       if (_mock_call_back_slot)
         arrived_slot(_mock_schema_name, _mock_table_list, _mock_view_list, _mock_procedure_list, _mock_function_list,
@@ -233,10 +237,12 @@ namespace wb {
       EXPECT_TRUE(_expect_fetch_object_details_call) << _check_id + " : Unexpected call to fetch_object_details";
       _expect_fetch_object_details_call = false;
 
-      EXPECT_EQ(schema_name, _mock_schema_name,
-                _check_id + " : Unexpected schema name on call to fetch_object_details");
-      EXPECT_EQ(obj_name, _mock_object_name, _check_id + " : Unexpected object name on call to fetch_object_details");
-      EXPECT_EQ(obj_type, _mock_object_type, _check_id + " : Unexpected object type on call to fetch_object_details");
+      EXPECT_EQ(schema_name, _mock_schema_name)
+        << _check_id + " : Unexpected schema name on call to fetch_object_details";
+      EXPECT_EQ(obj_name, _mock_object_name)
+        << _check_id + " : Unexpected object name on call to fetch_object_details";
+      EXPECT_EQ(obj_type, _mock_object_type)
+        << _check_id + " : Unexpected object type on call to fetch_object_details";
 
       mforms::TreeNodeRef node = ptree->get_node_for_object(schema_name, obj_type, obj_name);
       pviewdata = dynamic_cast<LiveSchemaTree::ViewData*>(node->get_data());
@@ -347,14 +353,14 @@ namespace wb {
         << _check_id + " : Unexpected number of objects " + change;
 
       for (size_t index = 0; index < changes.size(); index++) {
-        EXPECT_EQ(changes[index].type, _mock_expected_changes[index].type,
-                  _check_id + " : Unexpected object type has been " + change);
-        EXPECT_EQ(changes[index].schema, _mock_expected_changes[index].schema,
-                  _check_id + " : Unexpected schema has been " + change);
-        EXPECT_EQ(changes[index].name, _mock_expected_changes[index].name,
-                  _check_id + " : Unexpected object has been " + change);
-        EXPECT_EQ(changes[index].detail, _mock_expected_changes[index].detail,
-                  _check_id + " : Unexpected sub_object has been " + change);
+        EXPECT_EQ(changes[index].type, _mock_expected_changes[index].type)
+          << _check_id + " : Unexpected object type has been " + change;
+        EXPECT_EQ(changes[index].schema, _mock_expected_changes[index].schema)
+          << _check_id + " : Unexpected schema has been " + change;
+        EXPECT_EQ(changes[index].name, _mock_expected_changes[index].name)
+          << _check_id + " : Unexpected object has been " + change;
+        EXPECT_EQ(changes[index].detail, _mock_expected_changes[index].detail)
+          << _check_id + " : Unexpected sub_object has been " + change;
       }
 
       _mock_expected_changes.clear();
@@ -363,7 +369,8 @@ namespace wb {
     virtual void tree_activate_objects(const std::string& action,
                                        const std::vector<LiveSchemaTree::ChangeRecord>& changes) {
       EXPECT_TRUE(_expect_tree_activate_objects) << _check_id + " : Unexpected call to tree_activate_objects.";
-      EXPECT_EQ(action, _mock_expected_action, _check_id + " : Unexpected action received on tree_activate_objects.");
+      EXPECT_EQ(action, _mock_expected_action)
+        << _check_id + " : Unexpected action received on tree_activate_objects.";
       _expect_tree_activate_objects = false;
       EXPECT_EQ(action, _mock_expected_action) << _check_id + " : Unexpected action has been activated";
       check_expected_changes("activated", changes);
@@ -734,44 +741,53 @@ namespace wb {
       EXPECT_TRUE(ensureItemExists(items, "Set as Default Schema")) << check + ": Expected \"Set as Default Schema\" menu item not found";
     }
 
-    if (FIL_TO_SCH & main_items)
+    if (FIL_TO_SCH & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Filter to This Schema"))
         << check + ": Expected \"Filter to This Schema\" menu item not found1";
+    }
 
-    if (COPY_TC & main_items)
+    if (COPY_TC & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Copy to Clipboard"))
         << check + ": Expected \"Copy to Clipboard\" menu item not found";
+    }
 
-    if (SEND_TE & main_items)
+    if (SEND_TE & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Send to SQL Editor"))
         << check + ": Expected \"Send to SQL Editor\" menu item not found";
+    }
 
-    if (CREATE & main_items)
+    if (CREATE & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Create " + custom_caption + "..."))
         << check + ": Expected \"Create " + custom_caption + "...\" menu item not found";
+    }
 
     if (multi.length() > 0)
       custom_caption = multi;
 
-    if (ALTER & main_items)
+    if (ALTER & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Alter " + custom_caption + "..."))
         << check + ": Expected \"Alter " + custom_caption + "...\" menu item not found";
+    }
 
-    if (DROP & main_items)
+    if (DROP & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Drop " + custom_caption + "..."))
         << check + ": Expected \"Drop " + custom_caption + "...\" menu item not found";
+    }
 
-    if (REFRESH & main_items)
+    if (REFRESH & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Refresh All"))
         << check + ": Expected \"Refresh All\" menu item not found";
+    }
 
-    if (SEL_ROWS & main_items)
+    if (SEL_ROWS & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Select Rows"))
         << check + ": Expected \"Select Rows\" menu item not found";
+    }
 
-    if (EDIT & main_items)
+    if (EDIT & main_items) {
       EXPECT_TRUE(ensureItemExists(items, "Edit Table Data"))
         << check + ": Expected \"Edit Table Data\" menu item not found";
+    }
 
     if (SUB_NAME & sub_items) {
       EXPECT_TRUE(ensureSubItemExists("Copy to Clipboard", items, "Name"))
@@ -885,8 +901,8 @@ namespace wb {
     mforms::TreeNodeRef schema_node_f;
     mforms::TreeNodeRef object_node_f;
 
-    EXPECT_EQ(static_cast<size_t>(root->count()), schemas.size(),
-              check + ": Unexpected number of schema nodes after filtering");
+    EXPECT_EQ(static_cast<size_t>(root->count()), schemas.size())
+      << check + ": Unexpected number of schema nodes after filtering";
 
     for (int schema_index = 0; schema_index < root->count(); schema_index++) {
       schema_node_f = root->get_child(schema_index);
@@ -936,8 +952,11 @@ namespace wb {
   }
 };
 
-$describe("Live Schema Tree") {
-  $beforeAll([this]() {
+class Live_Schema_TreeTest : public ::testing::Test {
+protected:
+  static std::unique_ptr<TestData> data;
+
+  static void SetUpTestSuite() {
     data->delegate.reset(new TestData::LiveTreeTestDelegate());
     data->delegateFiltered.reset(new TestData::LiveTreeTestDelegate());
 
@@ -963,9 +982,9 @@ $describe("Live Schema Tree") {
 
     data->delegate->ptree = &data->treeTestHelper;
     data->delegateFiltered->ptree = &data->treeTestHelperFiltered;
-  });
+  }
 
-  $afterAll([this]() {
+  static void TearDownTestSuite() {
     if (data->schemaPattern != nullptr) {
       g_pattern_spec_free(data->schemaPattern);
     }
@@ -973,3328 +992,3332 @@ $describe("Live Schema Tree") {
     if (data->objectPattern != nullptr) {
       g_pattern_spec_free(data->objectPattern);
     }
-  });
-
-  $it("General node tests", [this]() {
-    mforms::TreeNodeRef test_node_ref = data->pModelView->root_node();
-    test_node_ref->set_string(0, "Dummy");
-
-    // Adds a schema node
-
-    // Testing copy and get details at LSTData (data root)
-    {
-      TestData::DummyLST source, target;
-      source.details = "This is a sample";
-
-      EXPECT_EQ(target.details, "");
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample");
-
-      EXPECT_EQ(target.get_details(false, test_node_ref), "This is a sample");
-      EXPECT_EQ(target.get_details(true, test_node_ref),
-                "<b>DummyLST:</b> <font color='#148814'><b>Dummy</b></font><br><br>");
-    }
-
-    // Testing a ColumnData node.
-    {
-      LiveSchemaTree::ColumnData source, target;
-      source.details = "This is a sample";
-      source.default_value = "A default value";
-      source.is_fk = true;
-      source.is_id = true;
-      source.is_pk = true;
-
-      EXPECT_EQ(target.get_object_name(), "Column");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::TableColumn);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_EQ(target.default_value, "");
-      EXPECT_FALSE(target.is_fk);
-      EXPECT_FALSE(target.is_id);
-      EXPECT_FALSE(target.is_pk);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample");
-      EXPECT_EQ(target.default_value, "A default value");
-      EXPECT_TRUE(target.is_fk);
-      EXPECT_TRUE(target.is_id);
-      EXPECT_TRUE(target.is_pk);
-
-      EXPECT_EQ(target.get_details(false, test_node_ref), "This is a sample");
-      EXPECT_EQ(
-        target.get_details(true, test_node_ref),
-        "<b>Column:</b> <font color='#148814'><b>Dummy</b></font><br><br>"
-        "<b>Definition:</b><table style=\"border: none; border-collapse: collapse;\">This is a sample</table><br><br>");
-    }
-
-    // Testing a ForeignKey node.
-    {
-      LiveSchemaTree::FKData source, target;
-      source.details = "This is a sample to test copy";
-      source.delete_rule = 1;
-      source.update_rule = 5;
-      source.referenced_table = "destino";
-      source.from_cols = "one, two";
-      source.to_cols = "uno, dos";
-
-      EXPECT_EQ(target.get_object_name(), "Foreign Key");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::ForeignKey);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_EQ(target.delete_rule, 0);
-      EXPECT_EQ(target.update_rule, 0);
-      EXPECT_EQ(target.referenced_table, "");
-      EXPECT_EQ(target.from_cols, "");
-      EXPECT_EQ(target.to_cols, "");
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample to test copy");
-      EXPECT_EQ(target.delete_rule, 1);
-      EXPECT_EQ(target.update_rule, 5);
-      EXPECT_EQ(target.referenced_table, "destino");
-      EXPECT_EQ(target.from_cols, "one) << two";
-      EXPECT_EQ(target.to_cols, "uno) << dos";
-
-      // Clean details to test dynamic generation.
-      target.details = "";
-
-      std::string expected =
-        "<table style=\"border: none; border-collapse: collapse;\">"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">Target</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>destino (one, two \xE2\x86\x92 uno, "
-        "dos)</font></td>"
-        "</tr>"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">On Update</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>NO ACTION</font></td>"
-        "</tr>"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">On Delete</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>CASCADE</font></td>"
-        "</tr>"
-        "</table>";
-
-      EXPECT_EQ(target.get_details(false, test_node_ref), expected);
-      expected = "<b>Foreign Key:</b> <font color='#148814'><b>Dummy</b></font><br><br><b>Definition:</b><br>" + expected;
-      EXPECT_EQ(target.get_details(true, test_node_ref), expected);
-    }
-
-    // Testing an Index node.
-    {
-      LiveSchemaTree::IndexData source, target;
-      source.details = "This is a sample to test copy";
-      source.columns.push_back("one");
-      source.columns.push_back("two");
-      source.type = 6;
-      source.unique = true;
-
-      EXPECT_EQ(target.get_object_name(), "Index");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::Index);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_EQ(target.columns.size(), 0U);
-      EXPECT_EQ(target.type, 0);
-      EXPECT_FALSE(target.unique);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample to test copy");
-      EXPECT_EQ(target.columns.size(), 2U);
-      EXPECT_EQ(target.columns[0], "one");
-      EXPECT_EQ(target.columns[1], "two");
-      EXPECT_EQ(target.type, 6);
-      EXPECT_TRUE(target.unique);
-
-      // Clean details to test dynamic generation.
-      target.details = "";
-
-      std::string expected =
-        "<table style=\"border: none; border-collapse: collapse;\">"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">Type</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>BTREE</font></td>"
-        "</tr>"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">Unique</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>Yes</font></td>"
-        "</tr>"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">Visible</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>Yes</font></td>"
-        "</tr>"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">Columns</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>one</font></td>"
-        "</tr>"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\"></td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>two</font></td>"
-        "</tr>"
-        "</table>";
-
-      EXPECT_EQ(target.get_details(false, test_node_ref), expected);
-      expected = "<b>Index:</b> <font color='#148814'><b>Dummy</b></font><br><br><b>Definition:</b><br>" + expected;
-      EXPECT_EQ(target.get_details(true, test_node_ref), expected);
-    }
-
-    // Testing copy and get_details for a Trigger node.
-    {
-      LiveSchemaTree::TriggerData source, target;
-      source.details = "This is a sample to test copy";
-      source.event_manipulation = 11;
-      source.timing = 15;
-
-      EXPECT_EQ(target.get_object_name(), "Trigger");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::Trigger);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_EQ(target.event_manipulation, 0);
-      EXPECT_EQ(target.timing, 0);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample to test copy");
-      EXPECT_EQ(target.event_manipulation, 11);
-      EXPECT_EQ(target.timing, 15);
-
-      // Clean details to test dynamic generation.
-      target.details = "";
-
-      std::string expected =
-        "<table style=\"border: none; border-collapse: collapse;\">"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">Event</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>INSERT</font></td>"
-        "</tr>"
-        "<tr>"
-        "<td style=\"border:none; padding-left: 15px;\">Timing</td>"
-        "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>AFTER</font></td>"
-        "</tr>"
-        "</table>";
-      EXPECT_EQ(target.get_details(false, test_node_ref), expected);
-      expected = "<b>Trigger:</b> <font color='#148814'><b>Dummy</b></font><br><br><b>Definition:</b><br>" + expected;
-      EXPECT_EQ(target.get_details(true, test_node_ref), expected);
-    }
-
-    // Testing an Object node
-    {
-      LiveSchemaTree::ObjectData source, target;
-      source.details = "This is a sample";
-      source.fetched = true;
-      source.fetching = true;
-
-      EXPECT_EQ(target.get_object_name(), "Object");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::Any);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_FALSE(target.fetched);
-      EXPECT_FALSE(target.fetching);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample");
-      EXPECT_TRUE(target.fetched);
-      EXPECT_TRUE(target.fetching);
-
-      EXPECT_EQ(target.get_details(false, test_node_ref), "This is a sample");
-      EXPECT_EQ(target.get_details(true, test_node_ref),
-                "<b>Object:</b> <font color='#148814'><b>Dummy</b></font><br><br>");
-    }
-
-    // Testing a Function node
-    // When parameter display was added, the details of a function will be
-    // A concatenation between the formatted header, and the details which should be
-    // html code with the parameter information
-    {
-      LiveSchemaTree::FunctionData source, target;
-      source.details = "This is a sample";
-      source.fetched = true;
-      source.fetching = true;
-
-      EXPECT_EQ(target.get_object_name(), "Function");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::Function);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_FALSE(target.fetched);
-      EXPECT_FALSE(target.fetching);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample");
-      EXPECT_TRUE(target.fetched);
-      EXPECT_TRUE(target.fetching);
-
-      EXPECT_EQ(target.get_details(false, test_node_ref),
-                "<b>Function:</b> <font color='#148814'><b>Dummy</b></font><br><br>This is a sample");
-      EXPECT_EQ(target.get_details(true, test_node_ref),
-                "<b>Function:</b> <font color='#148814'><b>Dummy</b></font><br><br>This is a sample");
-    }
-
-    // Testing a Procedure node
-    // When parameter display was added, the details of a procedure will be
-    // A concatenation between the formatted header, and the details which should be
-    // html code with the parameter information
-    {
-      LiveSchemaTree::ProcedureData source, target;
-      source.details = "This is a sample";
-      source.fetched = true;
-      source.fetching = true;
-
-      EXPECT_EQ(target.get_object_name(), "Procedure");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::Procedure);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_FALSE(target.fetched);
-      EXPECT_FALSE(target.fetching);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample");
-      EXPECT_TRUE(target.fetched);
-      EXPECT_TRUE(target.fetching);
-
-      EXPECT_EQ(target.get_details(false, test_node_ref),
-                "<b>Procedure:</b> <font color='#148814'><b>Dummy</b></font><br><br>This is a sample");
-      EXPECT_EQ(target.get_details(true, test_node_ref),
-                "<b>Procedure:</b> <font color='#148814'><b>Dummy</b></font><br><br>This is a sample");
-    }
-
-    // Testing a View node
-    {
-      LiveSchemaTree::ViewData source, target;
-      source.details = "This is a sample";
-      source.columns_load_error = true;
-      source.fetched = true;
-      source.fetching = true;
-      source._loaded_mask = 1;
-      source._loading_mask = 1;
-
-      EXPECT_EQ(target.get_object_name(), "View");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::View);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_FALSE(target.columns_load_error);
-      EXPECT_FALSE(target.fetched);
-      EXPECT_FALSE(target.fetching);
-      EXPECT_EQ(target._loaded_mask, 0);
-      EXPECT_EQ(target._loading_mask, 0);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample");
-      EXPECT_TRUE(target.columns_load_error);
-      EXPECT_TRUE(target.fetched);
-      EXPECT_TRUE(target.fetching);
-      EXPECT_EQ(target._loaded_mask, 1);
-      EXPECT_EQ(target._loading_mask, 1);
-
-      // Fills the tree using the real structure..
-      base::StringListPtr schemas(new std::list<std::string>());
-      mforms::TreeNodeRef schema;
-      mforms::TreeNodeRef view;
-      LiveSchemaTree::ViewData* pdata;
-
-      schemas->push_back("one");
-
-      data->treeTestHelper.update_schemata(schemas);
-      schema = data->treeTestHelper.get_child_node(test_node_ref, "one");
-
-      data->delegate->expect_fetch_schema_contents_call();
-      data->delegate->_mock_view_list->push_back("view1");
-      data->delegate->_mock_call_back_slot = true;
-      data->delegate->_mock_schema_name = "one";
-      data->delegate->_check_id = "TF001CHK009";
-      data->treeTestHelper.load_schema_content(schema);
-
-      data->delegate->check_and_reset("TF001CHK009");
-
-      data->delegate->_mock_schema_name = "one";
-      data->delegate->_mock_object_name = "view1";
-      data->delegate->_mock_object_type = LiveSchemaTree::View;
-      data->delegate->_expect_fetch_object_details_call = true;
-      data->delegate->_mock_column_list->push_back("first_column");
-      data->delegate->_mock_column_list->push_back("second_column");
-      data->delegate->_mock_call_back_slot_columns = true;
-
-      data->treeTestHelper.load_table_details(LiveSchemaTree::View, "one", "view1", LiveSchemaTree::COLUMN_DATA);
-
-      data->delegate->check_and_reset("TF001CHK009");
-
-      view = data->treeTestHelper.get_node_for_object("one", LiveSchemaTree::View, "view1");
-      pdata = dynamic_cast<LiveSchemaTree::ViewData*>(view->get_data());
-
-      EXPECT_NE(pdata, nullptr);
-
-      EXPECT_EQ(pdata->get_details(true, view),
-                "<b>View:</b> <font color='#148814'><b>view1</b></font><br><br>"
-                "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
-                "MOCK LOADED Column : first_column"
-                "MOCK LOADED Column : second_column"
-                "</table><br><br>");
-
-      test_node_ref->remove_children();
-
-      // Testing the flag setting logic.
-      LiveSchemaTree::ViewData view_node;
-
-      EXPECT_EQ(view_node.get_loaded_mask(), 0);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-
-      view_node.set_loading_mask(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA | LiveSchemaTree::FK_DATA |
-                                 LiveSchemaTree::TRIGGER_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(), 0);
-      EXPECT_EQ(view_node.get_loading_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA |
-                                                LiveSchemaTree::FK_DATA | LiveSchemaTree::TRIGGER_DATA);
-
-      view_node.set_loaded_data(LiveSchemaTree::COLUMN_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(), (short)LiveSchemaTree::COLUMN_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(),
-                LiveSchemaTree::INDEX_DATA | LiveSchemaTree::FK_DATA | LiveSchemaTree::TRIGGER_DATA);
-
-      view_node.set_loaded_data(LiveSchemaTree::INDEX_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), LiveSchemaTree::FK_DATA | LiveSchemaTree::TRIGGER_DATA);
-
-      view_node.set_loaded_data(LiveSchemaTree::FK_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(),
-                LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA | LiveSchemaTree::FK_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), (short)LiveSchemaTree::TRIGGER_DATA);
-
-      view_node.set_loaded_data(LiveSchemaTree::TRIGGER_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA |
-                                               LiveSchemaTree::FK_DATA | LiveSchemaTree::TRIGGER_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-
-      view_node.set_unloaded_data(LiveSchemaTree::TRIGGER_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(),
-                LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA | LiveSchemaTree::FK_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-
-      view_node.set_unloaded_data(LiveSchemaTree::FK_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-
-      view_node.set_unloaded_data(LiveSchemaTree::INDEX_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(), (short)LiveSchemaTree::COLUMN_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-
-      view_node.set_unloaded_data(LiveSchemaTree::COLUMN_DATA);
-      EXPECT_EQ(view_node.get_loaded_mask(), 0);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-
-      // Tests the inconsistency scenarios.
-      // Loading items get cleaned if they get loaded, tho if other items are to be set as loaded they are done.
-      view_node.set_loading_mask(LiveSchemaTree::COLUMN_DATA);
-      view_node.set_loaded_data(LiveSchemaTree::INDEX_DATA);
-      EXPECT_FALSE(view_node.is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-      EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::INDEX_DATA));
-      EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::INDEX_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), LiveSchemaTree::COLUMN_DATA);
-
-      view_node.set_loaded_data(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA));
-      EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::INDEX_DATA));
-      EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-
-      // In order to set data unloaded, must be at loaded state first.
-      view_node.set_loading_mask(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      view_node.set_loaded_data(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      view_node.set_unloaded_data(LiveSchemaTree::FK_DATA);
-      EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-      EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::INDEX_DATA));
-      EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-
-      view_node.set_unloaded_data(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::FK_DATA);
-      EXPECT_FALSE(view_node.is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-      EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::INDEX_DATA));
-      EXPECT_EQ(view_node.get_loaded_mask(), (short)LiveSchemaTree::INDEX_DATA);
-      EXPECT_EQ(view_node.get_loading_mask(), 0);
-    }
-
-    // Testing a Table node.
-    {
-      LiveSchemaTree::TableData source, target;
-      source.details = "This is a sample";
-      source.columns_load_error = true;
-      source.fetched = true;
-      source.fetching = true;
-      source._loaded_mask = 1;
-      source._loading_mask = 1;
-
-      EXPECT_EQ(target.get_object_name(), "Table");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::Table);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_FALSE(target.columns_load_error);
-      EXPECT_FALSE(target.fetched);
-      EXPECT_FALSE(target.fetching);
-      EXPECT_EQ(target._loaded_mask, 0);
-      EXPECT_EQ(target._loading_mask, 0);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample");
-      EXPECT_TRUE(target.columns_load_error);
-      EXPECT_TRUE(target.fetched);
-      EXPECT_TRUE(target.fetching);
-      EXPECT_EQ(target._loaded_mask, 1);
-      EXPECT_EQ(target._loading_mask, 1);
-
-      // Fills the tree using the real structure..
-      base::StringListPtr schemas(new std::list<std::string>());
-      mforms::TreeNodeRef schema;
-      mforms::TreeNodeRef table;
-      LiveSchemaTree::TableData* pdata;
-
-      schemas->push_back("one");
-
-      data->treeTestHelper.update_schemata(schemas);
-      schema = data->treeTestHelper.get_child_node(test_node_ref, "one");
-
-      data->delegate->expect_fetch_schema_contents_call();
-      data->delegate->_mock_table_list->push_back("table1");
-      data->delegate->_mock_call_back_slot = true;
-      data->delegate->_mock_schema_name = "one";
-      data->delegate->_check_id = "TF001CHK011";
-      data->treeTestHelper.load_schema_content(schema);
-
-      data->delegate->check_and_reset("TF001CHK011");
-
-      data->delegate->_mock_schema_name = "one";
-      data->delegate->_mock_object_name = "table1";
-      data->delegate->_mock_object_type = LiveSchemaTree::Table;
-      data->delegate->_expect_fetch_object_details_call = true;
-      data->delegate->_mock_fk_list->push_back("fk_1");
-      data->delegate->_mock_fk_list->push_back("fk_2");
-      data->delegate->_mock_call_back_slot_indexes = true;
-      data->delegate->_mock_index_list->push_back("first_column");
-      data->delegate->_mock_call_back_slot_triggers = true;
-      data->delegate->_mock_trigger_list->push_back("trigger1");
-      data->delegate->_mock_call_back_slot_columns = true;
-      data->delegate->_mock_call_back_slot_foreign_keys = true;
-      data->delegate->_mock_column_list->push_back("first_column");
-      data->delegate->_mock_column_list->push_back("second_column");
-
-      data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table1",
-                                              LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::FK_DATA |
-                                                LiveSchemaTree::TRIGGER_DATA | LiveSchemaTree::INDEX_DATA);
-
-      data->delegate->check_and_reset("TF001CHK011");
-
-      table = data->treeTestHelper.get_node_for_object("one", LiveSchemaTree::Table, "table1");
-      pdata = dynamic_cast<LiveSchemaTree::TableData*>(table->get_data());
-
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_EQ(pdata->get_details(true, table),
-                "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
-                "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
-                "MOCK LOADED Column : first_column"
-                "MOCK LOADED Column : second_column"
-                "</table><br><br>"
-                "<div><b>Related Tables:</b></div>"
-                "MOCK LOADED Foreign Key : fk_1"
-                "MOCK LOADED Foreign Key : fk_2");
-    }
-
-    // Testing copy and get_details for a Schema node.
-    {
-      LiveSchemaTree::SchemaData source, target;
-      source.details = "This is a sample";
-      source.fetched = true;
-      source.fetching = true;
-
-      EXPECT_EQ(target.get_object_name(), "Schema");
-      EXPECT_EQ(target.get_type(), LiveSchemaTree::Schema);
-
-      EXPECT_EQ(target.details, "");
-      EXPECT_FALSE(target.fetched);
-      EXPECT_FALSE(target.fetching);
-
-      target.copy(&source);
-      EXPECT_EQ(target.details, "This is a sample");
-      EXPECT_TRUE(target.fetched);
-      EXPECT_TRUE(target.fetching);
-
-      EXPECT_EQ(target.get_details(false, test_node_ref), "This is a sample");
-      EXPECT_EQ(target.get_details(true, test_node_ref),
-                "<b>Schema:</b> <font color='#148814'><b>Dummy</b></font><br><br>");
-    }
-  });
-
-  $it("Setting up nodes, inclusive their icons", [this]() {
-    std::string path;
-    mforms::TreeNodeRef node = data->pModelView->root_node();
-
-    // Testing SchemaNode.
-    {
-      LiveSchemaTree::SchemaData* pdata = nullptr;
-      LiveSchemaTree::SchemaData* pdata_temp = new LiveSchemaTree::SchemaData();
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data pointer is passed, it is used
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Schema, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Schema);
-      pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
-
-      pdata->fetching = true;
-      data->treeTestHelper.update_node_icon(temp_node);
-      path = bec::IconManager::get_instance()->get_icon_file(
-        bec::IconManager::get_instance()->get_icon_id("db.Schema.loading.side.$.png", bec::Icon16));
-      EXPECT_EQ(temp_node->get_string(1), path);
-
-      pdata->fetched = true;
-      data->treeTestHelper.update_node_icon(temp_node);
-      path = bec::IconManager::get_instance()->get_icon_file(
-        bec::IconManager::get_instance()->get_icon_id("db.Schema.side.$.png", bec::Icon16));
-      EXPECT_EQ(temp_node->get_string(1), path);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing TableNode.
-    {
-      LiveSchemaTree::TableData* pdata = nullptr;
-      LiveSchemaTree::TableData* pdata_temp = new LiveSchemaTree::TableData();
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data pointer is passed, it is used
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Table, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::TableData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Table);
-      pdata = dynamic_cast<LiveSchemaTree::TableData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing ViewNode.
-    {
-      LiveSchemaTree::ViewData* pdata = nullptr;
-      LiveSchemaTree::ViewData* pdata_temp = new LiveSchemaTree::ViewData();
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data pointer is passed, it is used.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::View, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::ViewData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::View);
-      pdata = dynamic_cast<LiveSchemaTree::ViewData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
-
-      // Checking for icon setup.
-      pdata->columns_load_error = true;
-      data->treeTestHelper.update_node_icon(temp_node);
-      path = bec::IconManager::get_instance()->get_icon_file(
-        bec::IconManager::get_instance()->get_icon_id("db.View.broken.side.$.png", bec::Icon16));
-      EXPECT_EQ(temp_node->get_string(1), path);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing ProcedureNode.
-    {
-      LiveSchemaTree::ProcedureData* pdata = nullptr;
-      LiveSchemaTree::ProcedureData* pdata_temp = new LiveSchemaTree::ProcedureData();
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data pointer is passed, it is used.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Procedure, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::ProcedureData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Procedure);
-      pdata = dynamic_cast<LiveSchemaTree::ProcedureData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing FunctionNode.
-    {
-      LiveSchemaTree::FunctionData* pdata = nullptr;
-      LiveSchemaTree::FunctionData* pdata_temp = new LiveSchemaTree::FunctionData();
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data pointer is passed, it is used.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Function, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::FunctionData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Function);
-      pdata = dynamic_cast<LiveSchemaTree::FunctionData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing ViewColumnNode.
-    {
-      LiveSchemaTree::ColumnData* pdata = nullptr;
-      LiveSchemaTree::ColumnData* pdata_temp = new LiveSchemaTree::ColumnData(LiveSchemaTree::ViewColumn);
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data it is requested to not create data if not passed.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ViewColumn, NULL, true);
-      EXPECT_EQ(temp_node->get_data(), nullptr);
-
-      // Testing when a data pointer is passed, it is used.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ViewColumn, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::ColumnData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ViewColumn);
-      pdata = dynamic_cast<LiveSchemaTree::ColumnData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::ViewColumn);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing TableColumnNode.
-    {
-      LiveSchemaTree::ColumnData* pdata = nullptr;
-      LiveSchemaTree::ColumnData* pdata_temp = new LiveSchemaTree::ColumnData(LiveSchemaTree::TableColumn);
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data pointer is passed, it is used.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::TableColumn, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::ColumnData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::TableColumn);
-      pdata = dynamic_cast<LiveSchemaTree::ColumnData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::TableColumn);
-
-      // Checking for icon setup.
-      pdata->is_fk = true;
-      data->treeTestHelper.update_node_icon(temp_node);
-      path = bec::IconManager::get_instance()->get_icon_file(
-        bec::IconManager::get_instance()->get_icon_id("db.Column.fk.side.$.png", bec::Icon16));
-      EXPECT_EQ(temp_node->get_string(1), path);
-
-      pdata->is_pk = true;
-      data->treeTestHelper.update_node_icon(temp_node);
-      path = bec::IconManager::get_instance()->get_icon_file(
-        bec::IconManager::get_instance()->get_icon_id("db.Column.pk.side.$.png", bec::Icon16));
-      EXPECT_EQ(temp_node->get_string(1), path);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing IndexNode.
-    {
-      LiveSchemaTree::IndexData* pdata = nullptr;
-      LiveSchemaTree::IndexData* pdata_temp = new LiveSchemaTree::IndexData();
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data pointer is passed, it is used.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Index, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::IndexData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Index);
-      pdata = dynamic_cast<LiveSchemaTree::IndexData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Index);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing TriggerNode.
-    {
-      LiveSchemaTree::TriggerData* pdata = nullptr;
-      LiveSchemaTree::TriggerData* pdata_temp = new LiveSchemaTree::TriggerData();
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data it is requested to not create data if not passed.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Trigger, NULL, true);
-      EXPECT_EQ(temp_node->get_data(), nullptr);
-
-      // Testing when a data pointer is passed, it is used.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Trigger, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::TriggerData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Trigger);
-      pdata = dynamic_cast<LiveSchemaTree::TriggerData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Trigger);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-
-    // Testing ForeignKeyNode.
-    {
-      LiveSchemaTree::FKData* pdata = nullptr;
-      LiveSchemaTree::FKData* pdata_temp = new LiveSchemaTree::FKData();
-      mforms::TreeNodeRef temp_node = node->add_child();
-
-      // Testing when a data it is requested to not create data if not passed.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ForeignKey, NULL, true);
-      EXPECT_EQ(temp_node->get_data(), nullptr);
-
-      // Testing when a data pointer is passed, it is used.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ForeignKey, pdata_temp);
-      pdata = dynamic_cast<LiveSchemaTree::FKData*>(temp_node->get_data());
-      EXPECT_EQ(pdata, pdata_temp);
-
-      // Testing without data so a new instance is created.
-      data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ForeignKey);
-      pdata = dynamic_cast<LiveSchemaTree::FKData*>(temp_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_TRUE(pdata).Not.toEqual(pdata_temp);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::ForeignKey);
-
-      node->remove_children();
-      delete pdata;
-      delete pdata_temp;
-    }
-  });
-
-  $it("Binary + sequential node search", [this]() {
-    // The Binary Search is used for schemas, tables, views and routines for
-    // which the assumption is that the list of elements is sorted.
-    //
-    // The Sequential search is for the rest of the objects which should keep
-    // the order in which they were created. If specified, the type parameter will
-    // enforce that the searched node is of the specified type. This may not be used
-    // as all the nodes containing unsorted nodes have objects of the same type.
-
-    LiveSchemaTree::LSTData* pdata = nullptr;
-    mforms::TreeNodeRef node = data->pModelView->root_node();
-    mforms::TreeNodeRef child01 = node->add_child();
-    mforms::TreeNodeRef child02 = node->add_child();
-    mforms::TreeNodeRef child03 = node->add_child();
-    mforms::TreeNodeRef child04 = node->add_child();
-    mforms::TreeNodeRef child05 = node->add_child();
-    mforms::TreeNodeRef found_node;
-
-    // All the nodes are added to the tree root as we are not
-    // testing the structure but the search operation.
-    data->treeTestHelper.setup_node(child01, LiveSchemaTree::Schema);
-    data->treeTestHelper.setup_node(child02, LiveSchemaTree::Table);
-    data->treeTestHelper.setup_node(child03, LiveSchemaTree::View);
-    data->treeTestHelper.setup_node(child04, LiveSchemaTree::Table);
-    data->treeTestHelper.setup_node(child05, LiveSchemaTree::View);
-
-    child01->set_string(0, "uno");
-    child02->set_string(0, "uno");
-    child03->set_string(0, "uno");
-    child04->set_string(0, "dos");
-    child05->set_string(0, "dos");
-
-    {
-      found_node = data->treeTestHelper.get_child_node(node, "uno", LiveSchemaTree::Schema, false);
-      EXPECT_EQ(found_node, child01);
-      EXPECT_EQ(found_node->get_string(0), child01->get_string(0));
-      EXPECT_EQ(found_node->get_data(), child01->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(node, "uno", LiveSchemaTree::Table, false);
-      EXPECT_EQ(found_node, child02);
-      EXPECT_EQ(found_node->get_string(0), child02->get_string(0));
-      EXPECT_EQ(found_node->get_data(), child02->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(node, "uno", LiveSchemaTree::View, false);
-      EXPECT_EQ(found_node, child03);
-      EXPECT_EQ(found_node->get_string(0), child03->get_string(0));
-      EXPECT_EQ(found_node->get_data(), child03->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(node, "dos", LiveSchemaTree::Table, false);
-      EXPECT_EQ(found_node, child04);
-      EXPECT_EQ(found_node->get_string(0), child04->get_string(0));
-      EXPECT_EQ(found_node->get_data(), child04->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(node, "dos", LiveSchemaTree::View, false);
-      EXPECT_EQ(found_node, child05);
-      EXPECT_EQ(found_node->get_string(0), child05->get_string(0));
-      EXPECT_EQ(found_node->get_data(), child05->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(node, "tres", LiveSchemaTree::View, false);
-      EXPECT_FALSE(found_node.is_valid());
-    }
-
-    // Now we create a series of tables.
-    std::vector<mforms::TreeNodeRef> tables;
-    for (size_t index = 0; index < 50; index++) {
-      tables.push_back(child01->add_child());
-      data->treeTestHelper.setup_node(tables[index], LiveSchemaTree::Table);
-      tables[index]->set_string(0, base::strfmt("Table%02d", (int)(index + 1)));
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child01, "Table01", LiveSchemaTree::Table, true);
-      EXPECT_EQ(found_node, tables[0]);
-      EXPECT_EQ(found_node->get_string(0), tables[0]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), tables[0]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child01, "Table26", LiveSchemaTree::Table, true);
-      EXPECT_EQ(found_node, tables[25]);
-      EXPECT_EQ(found_node->get_string(0), tables[25]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), tables[25]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child01, "Table50", LiveSchemaTree::Table, true);
-      EXPECT_EQ(found_node, tables[49]);
-      EXPECT_EQ(found_node->get_string(0), tables[49]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), tables[49]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child01, "Table51", LiveSchemaTree::View, true);
-      EXPECT_FALSE(found_node.is_valid());
-    }
-
-    // Now we create a series of procedures and functions.
-    std::vector<mforms::TreeNodeRef> procedures;
-    for (size_t index = 0; index < 25; index++) {
-      procedures.push_back(child02->add_child());
-      data->treeTestHelper.setup_node(procedures[index], LiveSchemaTree::Procedure);
-      procedures[index]->set_string(0, base::strfmt("Procedure%02d", (int)(index + 1)));
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child02, "Procedure01", LiveSchemaTree::Procedure, true);
-      EXPECT_EQ(found_node, procedures[0]);
-      EXPECT_EQ(found_node->get_string(0), procedures[0]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), procedures[0]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child02, "Procedure13", LiveSchemaTree::Procedure, true);
-      EXPECT_EQ(found_node, procedures[12]);
-      EXPECT_EQ(found_node->get_string(0), procedures[12]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), procedures[12]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child02, "Procedure25", LiveSchemaTree::Procedure, true);
-      EXPECT_EQ(found_node, procedures[24]);
-      EXPECT_EQ(found_node->get_string(0), procedures[24]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), procedures[24]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child02, "Procedure26", LiveSchemaTree::Procedure, true);
-      EXPECT_FALSE(found_node.is_valid());
-    }
-
-    std::vector<mforms::TreeNodeRef> functions;
-    for (size_t index = 0; index < 25; index++) {
-      functions.push_back(child03->add_child());
-      data->treeTestHelper.setup_node(functions[index], LiveSchemaTree::Function);
-      functions[index]->set_string(0, base::strfmt("Function%02d", (int)(index + 1)));
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child03, "Function01", LiveSchemaTree::Function, true);
-      EXPECT_EQ(found_node, functions[0]);
-      EXPECT_EQ(found_node->get_string(0), functions[0]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), functions[0]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child03, "Function13", LiveSchemaTree::Function, true);
-      EXPECT_EQ(found_node, functions[12]);
-      EXPECT_EQ(found_node->get_string(0), functions[12]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), functions[12]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child03, "Function25", LiveSchemaTree::Function, true);
-      EXPECT_EQ(found_node, functions[24]);
-      EXPECT_EQ(found_node->get_string(0), functions[24]->get_string(0));
-      EXPECT_EQ(found_node->get_data(), functions[24]->get_data());
-      pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
-    }
-
-    {
-      found_node = data->treeTestHelper.get_child_node(child03, "Function26", LiveSchemaTree::Function, true);
-      EXPECT_FALSE(found_node.is_valid());
-    }
-  });
-
-  $it("Update node children", [this]() {
-    mforms::TreeNodeRef node = data->pModelView->root_node();
-    mforms::TreeNodeRef node_filtered = data->pModelView->root_node();
-    base::StringListPtr children01(new std::list<std::string>());
-    base::StringListPtr children02(new std::list<std::string>());
-    children01->push_back("actor");
-    children01->push_back("address");
-    children01->push_back("client");
-    children02->push_back("client");
-    children02->push_back("film");
-    children02->push_back("movie");
-
-    // Clears the node to have a clean start of the test.
-    node->remove_children();
-    EXPECT_EQ(node->count(), 0);
-
-    // The first update will add the client nodes into the root.
-    EXPECT_TRUE(data->treeTestHelper.update_node_children(node, children01, LiveSchemaTree::Schema));
-    EXPECT_EQ(node->count(), 3);
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "actor"));
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "address"));
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "client"));
-
-    // Testing an operation that will result in no changes.
-    EXPECT_FALSE(data->treeTestHelper.update_node_children(node, children01, LiveSchemaTree::Schema));
-    EXPECT_EQ(node->count(), 3);
-
-    // Testing an update removing nodes for unexisting names and appending new nodes.
-    EXPECT_TRUE(data->treeTestHelper.update_node_children(node, children02, LiveSchemaTree::Schema, true));
-    EXPECT_EQ(node->count(), 3);
-    EXPECT_FALSE(data->treeTestHelper.get_child_node(node, "actor").is_valid());
-    EXPECT_FALSE(data->treeTestHelper.get_child_node(node, "address").is_valid());
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "client").is_valid());
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "film").is_valid());
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "movie").is_valid());
-
-    children01->push_back("actor");
-    children01->push_back("address");
-    children01->push_back("client");
-
-    // Testing an update removing nodes for unexisting names and appending new nodes.
-    EXPECT_TRUE(data->treeTestHelper.update_node_children(node, children01, LiveSchemaTree::Schema, true, true));
-    EXPECT_EQ(node->count(), 5);
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "actor").is_valid());
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "address").is_valid());
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "client").is_valid());
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "film").is_valid());
-    EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "movie").is_valid());
-
-    // Repeat the tests using a filtered tree.
-    data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
-    data->treeTestHelperFiltered.set_filter("*e*.*");
-    data->treeTestHelperFiltered.filter_data();
-
-    node_filtered = data->pModelViewFiltered->root_node();
-
-    EXPECT_EQ(node_filtered->count(), 3);
-
-    // The first update will add the client nodes into the root.
-    children01->push_back("filtered");
-    children01->push_back("finally");
-    children01->push_back("done");
-    EXPECT_TRUE(
-      data->treeTestHelperFiltered.update_node_children(node_filtered, children01, LiveSchemaTree::Schema, true, true));
-    EXPECT_EQ(node->count(), 8);
-    EXPECT_EQ(node_filtered->count(), 5);
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "address").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "client").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "done").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "filtered").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "movie").is_valid());
-
-    // Testing an operation that will result in no changes.
-    EXPECT_FALSE(
-      data->treeTestHelperFiltered.update_node_children(node_filtered, children01, LiveSchemaTree::Schema, true, true));
-    EXPECT_EQ(node->count(), 8);
-    EXPECT_EQ(node_filtered->count(), 5);
-
-    children02->push_back("client");
-    children02->push_back("customer");
-
-    // Testing an update removing nodes for unexisting names and appending new nodes.
-    EXPECT_TRUE(data->treeTestHelperFiltered.update_node_children(node_filtered, children02, LiveSchemaTree::Schema,
-                                                                  true, false));
-    EXPECT_EQ(node->count(), 4);
-    EXPECT_EQ(node_filtered->count(), 3);
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "client").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "customer").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "movie").is_valid());
-
-    children01->push_back("actor");
-    children01->push_back("address");
-    children01->push_back("client");
-    children01->push_back("film");
-    children01->push_back("filtered");
-    children01->push_back("finally");
-    children01->push_back("movie");
-    children01->push_back("done");
-
-    // Testing an update removing nodes for unexisting names and appending new nodes.
-    EXPECT_TRUE(data->treeTestHelperFiltered.update_node_children(node_filtered, children01, LiveSchemaTree::Schema,
-                                                                  true, false));
-    EXPECT_EQ(node->count(), 8);
-    EXPECT_EQ(node_filtered->count(), 5);
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "address").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "client").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "filtered").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "movie").is_valid());
-    EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "done").is_valid());
-
-    node->remove_children();
-    node_filtered->remove_children();
-  });
-
-  $it("Activating a schema", [this]() {
-    mforms::TreeNodeRef node = data->pModelView->root_node();
-    mforms::TreeNodeRef schema;
+  }
+
+};
+
+std::unique_ptr<TestData> Live_Schema_TreeTest::data = std::make_unique<TestData>();
+
+TEST_F(Live_Schema_TreeTest, General_node_tests) {
+  mforms::TreeNodeRef test_node_ref = data->pModelView->root_node();
+  test_node_ref->set_string(0, "Dummy");
+
+  // Adds a schema node
+
+  // Testing copy and get details at LSTData (data root)
+  {
+    TestData::DummyLST source, target;
+    source.details = "This is a sample";
+
+    EXPECT_EQ(target.details, "");
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample");
+
+    EXPECT_EQ(target.get_details(false, test_node_ref), "This is a sample");
+    EXPECT_EQ(target.get_details(true, test_node_ref),
+              "<b>DummyLST:</b> <font color='#148814'><b>Dummy</b></font><br><br>");
+  }
+
+  // Testing a ColumnData node.
+  {
+    LiveSchemaTree::ColumnData source, target;
+    source.details = "This is a sample";
+    source.default_value = "A default value";
+    source.is_fk = true;
+    source.is_id = true;
+    source.is_pk = true;
+
+    EXPECT_EQ(target.get_object_name(), "Column");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::TableColumn);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_EQ(target.default_value, "");
+    EXPECT_FALSE(target.is_fk);
+    EXPECT_FALSE(target.is_id);
+    EXPECT_FALSE(target.is_pk);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample");
+    EXPECT_EQ(target.default_value, "A default value");
+    EXPECT_TRUE(target.is_fk);
+    EXPECT_TRUE(target.is_id);
+    EXPECT_TRUE(target.is_pk);
+
+    EXPECT_EQ(target.get_details(false, test_node_ref), "This is a sample");
+    EXPECT_EQ(
+      target.get_details(true, test_node_ref),
+      "<b>Column:</b> <font color='#148814'><b>Dummy</b></font><br><br>"
+      "<b>Definition:</b><table style=\"border: none; border-collapse: collapse;\">This is a sample</table><br><br>");
+  }
+
+  // Testing a ForeignKey node.
+  {
+    LiveSchemaTree::FKData source, target;
+    source.details = "This is a sample to test copy";
+    source.delete_rule = 1;
+    source.update_rule = 5;
+    source.referenced_table = "destino";
+    source.from_cols = "one, two";
+    source.to_cols = "uno, dos";
+
+    EXPECT_EQ(target.get_object_name(), "Foreign Key");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::ForeignKey);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_EQ(target.delete_rule, 0);
+    EXPECT_EQ(target.update_rule, 0);
+    EXPECT_EQ(target.referenced_table, "");
+    EXPECT_EQ(target.from_cols, "");
+    EXPECT_EQ(target.to_cols, "");
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample to test copy");
+    EXPECT_EQ(target.delete_rule, 1);
+    EXPECT_EQ(target.update_rule, 5);
+    EXPECT_EQ(target.referenced_table, "destino");
+    EXPECT_EQ(target.from_cols, "one, two");
+    EXPECT_EQ(target.to_cols, "uno, dos");
+
+    // Clean details to test dynamic generation.
+    target.details = "";
+
+    std::string expected =
+      "<table style=\"border: none; border-collapse: collapse;\">"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">Target</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>destino (one, two \xE2\x86\x92 uno, "
+      "dos)</font></td>"
+      "</tr>"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">On Update</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>NO ACTION</font></td>"
+      "</tr>"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">On Delete</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>CASCADE</font></td>"
+      "</tr>"
+      "</table>";
+
+    EXPECT_EQ(target.get_details(false, test_node_ref), expected);
+    expected = "<b>Foreign Key:</b> <font color='#148814'><b>Dummy</b></font><br><br><b>Definition:</b><br>" + expected;
+    EXPECT_EQ(target.get_details(true, test_node_ref), expected);
+  }
+
+  // Testing an Index node.
+  {
+    LiveSchemaTree::IndexData source, target;
+    source.details = "This is a sample to test copy";
+    source.columns.push_back("one");
+    source.columns.push_back("two");
+    source.type = 6;
+    source.unique = true;
+
+    EXPECT_EQ(target.get_object_name(), "Index");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::Index);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_EQ(target.columns.size(), 0U);
+    EXPECT_EQ(target.type, 0);
+    EXPECT_FALSE(target.unique);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample to test copy");
+    EXPECT_EQ(target.columns.size(), 2U);
+    EXPECT_EQ(target.columns[0], "one");
+    EXPECT_EQ(target.columns[1], "two");
+    EXPECT_EQ(target.type, 6);
+    EXPECT_TRUE(target.unique);
+
+    // Clean details to test dynamic generation.
+    target.details = "";
+
+    std::string expected =
+      "<table style=\"border: none; border-collapse: collapse;\">"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">Type</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>BTREE</font></td>"
+      "</tr>"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">Unique</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>Yes</font></td>"
+      "</tr>"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">Visible</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>Yes</font></td>"
+      "</tr>"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">Columns</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>one</font></td>"
+      "</tr>"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\"></td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>two</font></td>"
+      "</tr>"
+      "</table>";
+
+    EXPECT_EQ(target.get_details(false, test_node_ref), expected);
+    expected = "<b>Index:</b> <font color='#148814'><b>Dummy</b></font><br><br><b>Definition:</b><br>" + expected;
+    EXPECT_EQ(target.get_details(true, test_node_ref), expected);
+  }
+
+  // Testing copy and get_details for a Trigger node.
+  {
+    LiveSchemaTree::TriggerData source, target;
+    source.details = "This is a sample to test copy";
+    source.event_manipulation = 11;
+    source.timing = 15;
+
+    EXPECT_EQ(target.get_object_name(), "Trigger");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::Trigger);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_EQ(target.event_manipulation, 0);
+    EXPECT_EQ(target.timing, 0);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample to test copy");
+    EXPECT_EQ(target.event_manipulation, 11);
+    EXPECT_EQ(target.timing, 15);
+
+    // Clean details to test dynamic generation.
+    target.details = "";
+
+    std::string expected =
+      "<table style=\"border: none; border-collapse: collapse;\">"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">Event</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>INSERT</font></td>"
+      "</tr>"
+      "<tr>"
+      "<td style=\"border:none; padding-left: 15px;\">Timing</td>"
+      "<td style=\"border:none; padding-left: 15px;\"><font color='#717171'>AFTER</font></td>"
+      "</tr>"
+      "</table>";
+    EXPECT_EQ(target.get_details(false, test_node_ref), expected);
+    expected = "<b>Trigger:</b> <font color='#148814'><b>Dummy</b></font><br><br><b>Definition:</b><br>" + expected;
+    EXPECT_EQ(target.get_details(true, test_node_ref), expected);
+  }
+
+  // Testing an Object node
+  {
+    LiveSchemaTree::ObjectData source, target;
+    source.details = "This is a sample";
+    source.fetched = true;
+    source.fetching = true;
+
+    EXPECT_EQ(target.get_object_name(), "Object");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::Any);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_FALSE(target.fetched);
+    EXPECT_FALSE(target.fetching);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample");
+    EXPECT_TRUE(target.fetched);
+    EXPECT_TRUE(target.fetching);
+
+    EXPECT_EQ(target.get_details(false, test_node_ref), "This is a sample");
+    EXPECT_EQ(target.get_details(true, test_node_ref),
+              "<b>Object:</b> <font color='#148814'><b>Dummy</b></font><br><br>");
+  }
+
+  // Testing a Function node
+  // When parameter display was added, the details of a function will be
+  // A concatenation between the formatted header, and the details which should be
+  // html code with the parameter information
+  {
+    LiveSchemaTree::FunctionData source, target;
+    source.details = "This is a sample";
+    source.fetched = true;
+    source.fetching = true;
+
+    EXPECT_EQ(target.get_object_name(), "Function");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::Function);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_FALSE(target.fetched);
+    EXPECT_FALSE(target.fetching);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample");
+    EXPECT_TRUE(target.fetched);
+    EXPECT_TRUE(target.fetching);
+
+    EXPECT_EQ(target.get_details(false, test_node_ref),
+              "<b>Function:</b> <font color='#148814'><b>Dummy</b></font><br><br>This is a sample");
+    EXPECT_EQ(target.get_details(true, test_node_ref),
+              "<b>Function:</b> <font color='#148814'><b>Dummy</b></font><br><br>This is a sample");
+  }
+
+  // Testing a Procedure node
+  // When parameter display was added, the details of a procedure will be
+  // A concatenation between the formatted header, and the details which should be
+  // html code with the parameter information
+  {
+    LiveSchemaTree::ProcedureData source, target;
+    source.details = "This is a sample";
+    source.fetched = true;
+    source.fetching = true;
+
+    EXPECT_EQ(target.get_object_name(), "Procedure");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::Procedure);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_FALSE(target.fetched);
+    EXPECT_FALSE(target.fetching);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample");
+    EXPECT_TRUE(target.fetched);
+    EXPECT_TRUE(target.fetching);
+
+    EXPECT_EQ(target.get_details(false, test_node_ref),
+              "<b>Procedure:</b> <font color='#148814'><b>Dummy</b></font><br><br>This is a sample");
+    EXPECT_EQ(target.get_details(true, test_node_ref),
+              "<b>Procedure:</b> <font color='#148814'><b>Dummy</b></font><br><br>This is a sample");
+  }
+
+  // Testing a View node
+  {
+    LiveSchemaTree::ViewData source, target;
+    source.details = "This is a sample";
+    source.columns_load_error = true;
+    source.fetched = true;
+    source.fetching = true;
+    source._loaded_mask = 1;
+    source._loading_mask = 1;
+
+    EXPECT_EQ(target.get_object_name(), "View");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::View);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_FALSE(target.columns_load_error);
+    EXPECT_FALSE(target.fetched);
+    EXPECT_FALSE(target.fetching);
+    EXPECT_EQ(target._loaded_mask, 0);
+    EXPECT_EQ(target._loading_mask, 0);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample");
+    EXPECT_TRUE(target.columns_load_error);
+    EXPECT_TRUE(target.fetched);
+    EXPECT_TRUE(target.fetching);
+    EXPECT_EQ(target._loaded_mask, 1);
+    EXPECT_EQ(target._loading_mask, 1);
+
+    // Fills the tree using the real structure..
     base::StringListPtr schemas(new std::list<std::string>());
+    mforms::TreeNodeRef schema;
+    mforms::TreeNodeRef view;
+    LiveSchemaTree::ViewData* pdata;
 
     schemas->push_back("one");
-    schemas->push_back("two");
-    schemas->push_back("three");
-
-    data->treeTestHelper.update_node_children(node, schemas, LiveSchemaTree::Schema, true, true);
-
-    data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
-    data->treeTestHelperFiltered.set_filter("*e*");
-    data->treeTestHelperFiltered.filter_data();
-
-    data->treeTestHelperFiltered.set_active_schema("one");
-    EXPECT_EQ(data->treeTestHelperFiltered._active_schema, "one");
-    EXPECT_EQ(data->treeTestHelper._active_schema, "one");
-
-    data->treeTestHelperFiltered.set_active_schema("three");
-    EXPECT_EQ(data->treeTestHelperFiltered._active_schema, "three");
-    EXPECT_EQ(data->treeTestHelper._active_schema, "three");
-
-    node->remove_children();
-    data->pModelViewFiltered->root_node()->remove_children();
-  });
-
-  $it("Updating schema nodes", [this]() {
-    mforms::TreeNodeRef node = data->pModelView->root_node();
-    mforms::TreeNodeRef schema;
-    base::StringListPtr schemas(new std::list<std::string>());
-    LiveSchemaTree::SchemaData* pdata = nullptr;
-
-    EXPECT_EQ(node->count(), 0);
-
-    schemas->push_back("one");
-    schemas->push_back("two");
-    schemas->push_back("three");
 
     data->treeTestHelper.update_schemata(schemas);
+    schema = data->treeTestHelper.get_child_node(test_node_ref, "one");
 
-    EXPECT_EQ(node->count(), 3);
-
-    schema = data->treeTestHelper.get_child_node(node, "one");
-    EXPECT_TRUE(schema);
-    pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
-    EXPECT_NE(pdata, nullptr);
-    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
-    pdata = nullptr;
-
-    schema = data->treeTestHelper.get_child_node(node, "two");
-    EXPECT_TRUE(schema);
-    pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
-    EXPECT_NE(pdata, nullptr);
-    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
-    pdata = nullptr;
-
-    schema = data->treeTestHelper.get_child_node(node, "three");
-    EXPECT_TRUE(schema);
-    pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
-    EXPECT_NE(pdata, nullptr);
-    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
-
-    // Simulating schema expansion to $expect a loaded schema triggers a data reload.
-    schema->expand();
-    pdata->fetched = true;
     data->delegate->expect_fetch_schema_contents_call();
-    data->delegate->_mock_call_back_slot = false;
-    data->delegate->_mock_schema_name = "three";
-
-    data->treeTestHelper.update_schemata(schemas);
-
-    data->delegate->check_and_reset("TF009CHK004");
-
-    node->remove_children();
-  });
-
-  $it("Loading schema content", [this]() {
-    mforms::TreeNodeRef node_base = data->pModelView->root_node();
-    mforms::TreeNodeRef node = data->pModelViewFiltered->root_node();
-    mforms::TreeNodeRef schema;
-    mforms::TreeNodeRef schema_base;
-    mforms::TreeNodeRef child;
-    base::StringListPtr schemas(new std::list<std::string>());
-    LiveSchemaTree::SchemaData* pdata = nullptr;
-
-    EXPECT_EQ(node->count(), 0);
-
-    schemas->push_back("one");
-    schemas->push_back("two");
-    schemas->push_back("three");
-
-    data->treeTestHelper.update_schemata(schemas);
-
-    data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
-    data->treeTestHelperFiltered.set_filter("one");
-    data->treeTestHelperFiltered.filter_data();
-
-    schema_base = data->treeTestHelper.get_child_node(node_base, "one");
-    schema = data->treeTestHelperFiltered.get_child_node(node, "one");
-    pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
-
-    // Validates the previous state.
-    EXPECT_FALSE(pdata->fetched);
-    EXPECT_FALSE(pdata->fetching);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0), LiveSchemaTree::TABLES_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::PROCEDURES_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::FUNCTIONS_CAPTION);
-
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0), LiveSchemaTree::TABLES_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::PROCEDURES_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::FUNCTIONS_CAPTION);
-
-    // Simulating schema expansion to $expect a loaded schema triggers a data reload
-    data->delegateFiltered->expect_fetch_schema_contents_call();
-    data->delegateFiltered->_mock_call_back_slot = false;
-    data->delegateFiltered->_mock_schema_name = "one";
-
-    data->treeTestHelperFiltered.load_schema_content(schema);
-
-    data->delegateFiltered->check_and_reset("TF010CHK002");
-
-    // Validates the previous state.
-    EXPECT_TRUE(pdata->fetching);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::TABLES_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::VIEWS_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::PROCEDURES_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::FUNCTIONS_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
-
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::TABLES_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::VIEWS_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::PROCEDURES_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::FUNCTIONS_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
-
-    data->pModelView->root_node()->remove_children();
-    data->pModelViewFiltered->root_node()->remove_children();
-  });
-
-  $it("Receiving schema content", [this]() {
-    mforms::TreeNodeRef node_base = data->pModelView->root_node();
-    mforms::TreeNodeRef node = data->pModelViewFiltered->root_node();
-    mforms::TreeNodeRef schema;
-    mforms::TreeNodeRef schema_base;
-    mforms::TreeNodeRef child;
-    base::StringListPtr schemas(new std::list<std::string>());
-    LiveSchemaTree::SchemaData* pdata = nullptr;
-
-    EXPECT_EQ(node->count(), 0);
-
-    schemas->push_back("one");
-    schemas->push_back("two");
-    schemas->push_back("three");
-
-    data->treeTestHelper.update_schemata(schemas);
-
-    data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
-    data->treeTestHelperFiltered.set_filter("one");
-    data->treeTestHelperFiltered.filter_data();
-
-    schema_base = data->treeTestHelper.get_child_node(node_base, "one");
-    schema = data->treeTestHelperFiltered.get_child_node(node, "one");
-    pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
-
-    // Validates the previous state.
-    EXPECT_FALSE(pdata->fetching);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0), LiveSchemaTree::TABLES_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::PROCEDURES_CAPTION);
-    EXPECT_EQ(schema->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::FUNCTIONS_CAPTION);
-
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0), LiveSchemaTree::TABLES_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::PROCEDURES_CAPTION);
-    EXPECT_EQ(schema_base->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
-              LiveSchemaTree::FUNCTIONS_CAPTION);
-
-    // Simulating schema expansion to ensure a loaded schema triggers a data reload.
-    data->delegateFiltered->expect_fetch_schema_contents_call();
-    data->delegateFiltered->_mock_call_back_slot = true;
-    data->delegateFiltered->_mock_schema_name = "one";
-    data->delegateFiltered->_mock_table_list->push_back("table1");
-    data->delegateFiltered->_mock_table_list->push_back("table2");
-    data->delegateFiltered->_mock_table_list->push_back("table3");
-    data->delegateFiltered->_mock_view_list->push_back("view1");
-    data->delegateFiltered->_mock_view_list->push_back("view2");
-    data->delegateFiltered->_mock_procedure_list->push_back("procedure1");
-    data->delegateFiltered->_mock_function_list->push_back("function1");
-
-    data->treeTestHelperFiltered.load_schema_content(schema);
-
-    data->delegateFiltered->check_and_reset("TF011CHK002");
-
-    schema = data->treeTestHelperFiltered.get_child_node(node, "one");
-
-    // Validates the previous state.
-    EXPECT_TRUE(pdata->fetched);
-    EXPECT_FALSE(pdata->fetching);
-
-    child = schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
-    EXPECT_EQ(child->get_string(0), LiveSchemaTree::TABLES_CAPTION);
-    EXPECT_EQ(child->count(), 3);
-
-    child = schema->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
-    EXPECT_EQ(child->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
-    EXPECT_EQ(child->count(), 2);
-
-    child = schema->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
-    EXPECT_EQ(child->get_string(0), LiveSchemaTree::PROCEDURES_CAPTION);
-    EXPECT_EQ(child->count(), 1);
-
-    child = schema->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
-    EXPECT_EQ(child->get_string(0), LiveSchemaTree::FUNCTIONS_CAPTION);
-    EXPECT_EQ(child->count(), 1);
-
-    child = schema_base->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
-    EXPECT_EQ(child->get_string(0), LiveSchemaTree::TABLES_CAPTION);
-    EXPECT_EQ(child->count(), 3);
-
-    child = schema_base->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
-    EXPECT_EQ(child->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
-    EXPECT_EQ(child->count(), 2);
-
-    child = schema_base->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
-    EXPECT_EQ(child->get_string(0), LiveSchemaTree::PROCEDURES_CAPTION);
-    EXPECT_EQ(child->count(), 1);
-
-    child = schema_base->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
-    EXPECT_EQ(child->get_string(0), LiveSchemaTree::FUNCTIONS_CAPTION);
-    EXPECT_EQ(child->count(), 1);
-
-    node->remove_children();
-    node_base->remove_children();
-  });
-
-  $it("Loading table details", [this]() {
-    mforms::TreeNodeRef node = data->pModelView->root_node();
-    mforms::TreeNodeRef schema;
-    mforms::TreeNodeRef table;
-    base::StringListPtr schemas(new std::list<std::string>());
-    LiveSchemaTree::TableData* pdata = nullptr;
-
-    EXPECT_EQ(node->count(), 0);
-
-    schemas->push_back("one");
-
-    data->treeTestHelper.update_schemata(schemas);
-
-    schema = data->treeTestHelper.get_child_node(node, "one");
-
-    // Simulating schema expansion to $expect a loaded schema triggers a data reload.
-    data->delegate->expect_fetch_schema_contents_call();
+    data->delegate->_mock_view_list->push_back("view1");
     data->delegate->_mock_call_back_slot = true;
     data->delegate->_mock_schema_name = "one";
-    data->delegate->_mock_table_list->push_back("table1");
-    data->delegate->_mock_table_list->push_back("table2");
-    data->delegate->_mock_view_list->push_back("view1");
-    data->delegate->_mock_procedure_list->push_back("procedure1");
-    data->delegate->_mock_function_list->push_back("function1");
-    data->delegate->_check_id = "TF012CHK001";
-
+    data->delegate->_check_id = "TF001CHK009";
     data->treeTestHelper.load_schema_content(schema);
-    data->delegate->check_and_reset("TF012CHK001");
 
-    // Initial test, nothing has been loaded.
-    data->delegate->_expect_fetch_object_details_call = true;
-    data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA;
+    data->delegate->check_and_reset("TF001CHK009");
+
     data->delegate->_mock_schema_name = "one";
-    data->delegate->_mock_object_name = "table1";
-    data->delegate->_mock_object_type = LiveSchemaTree::Table;
-    data->delegate->_check_id = "TF012CHK002";
-
-    data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table1",
-                                            LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-
-    data->delegate->check_and_reset("TF012CHK002");
-
-    // Initial test, same loading requested but as it's already in the process of
-    // loading (because of the previous step) no fetch call is done.
-    data->delegate->_expect_fetch_object_details_call = false;
-    data->delegate->_check_id = "TF012CHK003";
-    data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table1",
-                                            LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-    data->delegate->check_and_reset("TF012CHK003");
-
-    // Third test, reloading existing data and additional info, causes only additional info.
-    // to be requested
-    data->delegate->_expect_fetch_object_details_call = true;
-    data->delegate->_mock_flags = LiveSchemaTree::TRIGGER_DATA;
-    data->delegate->_check_id = "TF012CHK004";
-    data->treeTestHelper.load_table_details(
-      LiveSchemaTree::Table, "one", "table1",
-      LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA | LiveSchemaTree::TRIGGER_DATA);
-    data->delegate->check_and_reset("TF012CHK004");
-
-    // Repeat the tests but now marking some information as already loaded.
-    table = data->treeTestHelper.get_child_node(schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX), "table2");
-    pdata = dynamic_cast<LiveSchemaTree::TableData*>(table->get_data());
-
-    pdata->set_loaded_data(LiveSchemaTree::COLUMN_DATA);
-
-    data->delegate->_expect_fetch_object_details_call = true;
-    data->delegate->_mock_flags = LiveSchemaTree::INDEX_DATA;
-    data->delegate->_mock_schema_name = "one";
-    data->delegate->_mock_object_name = "table2";
-    data->delegate->_mock_object_type = LiveSchemaTree::Table;
-    data->delegate->_check_id = "TF012CHK005";
-
-    data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table2",
-                                            LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-
-    data->delegate->check_and_reset("TF012CHK005");
-
-    data->delegate->_expect_fetch_object_details_call = true;
-    data->delegate->_mock_flags = LiveSchemaTree::TRIGGER_DATA | LiveSchemaTree::FK_DATA;
-    data->delegate->_mock_schema_name = "one";
-    data->delegate->_mock_object_name = "table2";
-    data->delegate->_mock_object_type = LiveSchemaTree::Table;
-    data->delegate->_check_id = "TF012CHK006";
-
-    data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table2",
-                                            LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA |
-                                              LiveSchemaTree::TRIGGER_DATA | LiveSchemaTree::FK_DATA);
-
-    data->delegate->check_and_reset("TF012CHK006");
-  });
-
-  $it("Identifier comparisons", [this]() {
-    data->treeTestHelper.set_case_sensitive_identifiers(true);
-
-    EXPECT_TRUE(data->treeTestHelper._case_sensitive_identifiers);
-    EXPECT_FALSE(data->treeTestHelper.identifiers_equal("first", "First"));
-    EXPECT_TRUE(data->treeTestHelper.identifiers_equal("second", "second"));
-
-    data->treeTestHelper.set_case_sensitive_identifiers(false);
-
-    EXPECT_FALSE(data->treeTestHelper._case_sensitive_identifiers);
-    EXPECT_TRUE(data->treeTestHelper.identifiers_equal("first", "First"));
-    EXPECT_TRUE(data->treeTestHelper.identifiers_equal("second", "second"));
-  });
-
-  $it("Object type determination", [this]() {
-    // Testing for database objects.
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Schema));
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Table));
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::View));
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Procedure));
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Function));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::TableCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ViewCollection));
-    EXPECT_FALSE(
-      data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ProcedureCollection));
-    EXPECT_FALSE(
-      data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::FunctionCollection));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ColumnCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::IndexCollection));
-    EXPECT_FALSE(
-      data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::TriggerCollection));
-    EXPECT_FALSE(
-      data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ForeignKeyCollection));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Trigger));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::TableColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ViewColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ForeignKey));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Index));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ForeignKeyColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::IndexColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Any));
-
-    // Testing for schema objects.
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Table));
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::View));
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Procedure));
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Function));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Schema));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::TableCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ViewCollection));
-    EXPECT_FALSE(
-      data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ProcedureCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::FunctionCollection));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ColumnCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::IndexCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::TriggerCollection));
-    EXPECT_FALSE(
-      data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ForeignKeyCollection));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Trigger));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::TableColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ViewColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ForeignKey));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Index));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ForeignKeyColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::IndexColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Any));
-
-    // Testing for table/view objects.
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Table));
-    EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::View));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Schema));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Procedure));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Function));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::TableCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ViewCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ProcedureCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::FunctionCollection));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ColumnCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::IndexCollection));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::TriggerCollection));
-    EXPECT_FALSE(
-      data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ForeignKeyCollection));
-
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Trigger));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::TableColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ViewColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ForeignKey));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Index));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ForeignKeyColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::IndexColumn));
-    EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Any));
-  });
-
-  $it("Setting a model view", [this]() {
-    data->treeTestHelper.set_model_view(NULL);
-    EXPECT_EQ(data->treeTestHelper._model_view, nullptr);
-
-    data->treeTestHelper.set_model_view(data->pModelView);
-    EXPECT_NE(data->treeTestHelper._model_view, nullptr);
-    EXPECT_EQ(data->treeTestHelper._model_view, data->pModelView);
-  });
-
-  $it("Setting a data delegate", [this]() {
-    std::shared_ptr<LiveSchemaTree::Delegate> null_delegate;
-    std::shared_ptr<LiveSchemaTree::FetchDelegate> null_fetch_delegate;
-
-    {
-      data->treeTestHelper.set_delegate(null_delegate);
-      data->treeTestHelper.set_fetch_delegate(null_fetch_delegate);
-
-      std::shared_ptr<LiveSchemaTree::Delegate> found_delegate = data->treeTestHelper._delegate.lock();
-      std::shared_ptr<LiveSchemaTree::FetchDelegate> found_fetch_delegate = data->treeTestHelper._fetch_delegate.lock();
-
-      EXPECT_EQ(found_delegate.get(), nullptr);
-      EXPECT_EQ(found_fetch_delegate.get(), nullptr);
-    }
-
-    {
-      data->treeTestHelper.set_delegate(data->delegate);
-      data->treeTestHelper.set_fetch_delegate(data->delegate);
-
-      std::shared_ptr<LiveSchemaTree::Delegate> found_delegate = data->treeTestHelper._delegate.lock();
-      std::shared_ptr<LiveSchemaTree::FetchDelegate> found_fetch_delegate = data->treeTestHelper._fetch_delegate.lock();
-
-      EXPECT_NE(found_delegate.get(), nullptr);
-      EXPECT_NE(found_fetch_delegate.get(), nullptr);
-
-      EXPECT_EQ(found_delegate.get(), data->delegate.get());
-      EXPECT_EQ(found_fetch_delegate.get(), data->delegate.get());
-    }
-  });
-
-  $it("Internalizing a token", []() {
-    EXPECT_EQ(LiveSchemaTree::internalize_token(""), 0);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("whatever"), 0);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("CASCADE"), 1);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("SET NULL"), 2);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("SET DEFAULT"), 3);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("RESTRICT"), 4);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("NO ACTION"), 5);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("BTREE"), 6);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("FULLTEXT"), 7);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("HASH"), 8);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("RTREE"), 9);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("SPATIAL"), 10);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("INSERT"), 11);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("UPDATE"), 12);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("DELETE"), 13);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("BEFORE"), 14);
-    EXPECT_EQ(LiveSchemaTree::internalize_token("AFTER"), 15);
-  });
-
-  $it("Externalizing a token", []() {
-    EXPECT_EQ(LiveSchemaTree::externalize_token(0), "");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(20), "");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(1), "CASCADE");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(2), "SET NULL");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(3), "SET DEFAULT");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(4), "RESTRICT");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(5), "NO ACTION");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(6), "BTREE");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(7), "FULLTEXT");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(8), "HASH");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(9), "RTREE");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(10), "SPATIAL");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(11), "INSERT");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(12), "UPDATE");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(13), "DELETE");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(14), "BEFORE");
-    EXPECT_EQ(LiveSchemaTree::externalize_token(15), "AFTER");
-  });
-
-  $it("Updating live objects", [this]() {
-    data->treeTestHelper.enable_events(true);
-
-    mforms::TreeNodeRef object_node;
-    // Testing Schema Object.
-    {
-      // Ensures the schema doesn't exist.
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-
-      // Ensures a schema node is created.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Schema, "", "", "schema1");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
-      EXPECT_NE(object_node.ptr(), nullptr);
-
-      LiveSchemaTree::SchemaData* pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(object_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
-
-      // Ensures a schema node is deleted.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Schema, "", "schema1", "");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-    }
-
-    // Adds a schema object.
-    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Schema, "", "", "schema1");
-
-    // Testing View Object.
-    {
-      // Ensures the view doesn't exist.
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view1");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-
-      // Ensures a view node is created.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "", "view1");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view1");
-      EXPECT_NE(object_node.ptr(), nullptr);
-
-      LiveSchemaTree::ViewData* pdata = dynamic_cast<LiveSchemaTree::ViewData*>(object_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
-
-      // Ensures a view node is renamed.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view1", "view2");
-      EXPECT_EQ(object_node->get_string(0), "view2");
-
-      // Ensures a loaded data is NOT reloaded when the node is not expanded.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view2", "view2");
-      EXPECT_EQ(pdata->get_loading_mask(), 0);
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-
-      // Now expands the node operation but expanding the node.
-      data->delegate->_expect_fetch_object_details_call = true;
-      data->delegate->_mock_schema_name = "schema1";
-      data->delegate->_mock_object_name = "view2";
-      data->delegate->_mock_object_type = LiveSchemaTree::View;
-      data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA;
-
-      // Emulates the node expansion.
-      data->treeTestHelper.expand_toggled(object_node, true);
-      object_node->expand();
-
-      // Ensures the needed calls were done.
-      data->delegate->check_and_reset("TF019CHK002");
-
-      // Now as the node was expanded, the data should be reloaded.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view2", "view2");
-      EXPECT_EQ(pdata->get_loading_mask(), LiveSchemaTree::COLUMN_DATA);
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-
-      // Marks the data as already loaded.
-      pdata->set_loading_mask(0);
-      pdata->set_loaded_data(LiveSchemaTree::COLUMN_DATA);
-
-      data->delegate->_expect_fetch_object_details_call = true;
-      data->delegate->_mock_schema_name = "schema1";
-      data->delegate->_mock_object_name = "view2";
-      data->delegate->_mock_object_type = LiveSchemaTree::View;
-      data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA;
-
-      // Now as the node was expanded, the data should be reloaded.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view2", "view2");
-      EXPECT_EQ(pdata->get_loading_mask(), (short)LiveSchemaTree::COLUMN_DATA);
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-
-      // Ensures the needed calls were done.
-      data->delegate->check_and_reset("TF019CHK002");
-
-      // Ensures a view node is deleted.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view2", "");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view2");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-    }
-
-    // Testing Table Object.
-    {
-      // Ensures the table doesn't exist.
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-
-      // Ensures a table node is created.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "", "table1");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
-      EXPECT_NE(object_node.ptr(), nullptr);
-
-      LiveSchemaTree::TableData* pdata = dynamic_cast<LiveSchemaTree::TableData*>(object_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
-
-      // Ensures a view node is renamed.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "table1", "table2");
-      EXPECT_EQ(object_node->get_string(0), "table2");
-
-      // Ensures no data is reloaded on collapsed node.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "table2", "table2");
-      EXPECT_EQ(pdata->get_loading_mask(), 0);
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::FK_DATA));
-
-      // Expands the table to repeat the test on an expanded table.
-      data->delegate->_expect_fetch_object_details_call = true;
-      data->delegate->_mock_schema_name = "schema1";
-      data->delegate->_mock_object_name = "table2";
-      data->delegate->_mock_object_type = LiveSchemaTree::Table;
-      data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::FK_DATA;
-
-      // Emulates the node expansion.
-      data->treeTestHelper.expand_toggled(object_node, true);
-      object_node->expand();
-
-      // Ensures the needed calls were done.
-      data->delegate->check_and_reset("TF019CHK003");
-
-      EXPECT_EQ(pdata->get_loading_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::INDEX_DATA));
-
-      // Marks the data as already loaded.
-      pdata->set_loading_mask(0);
-      pdata->set_loaded_data(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-
-      // Now exnsures the data is actually reloaded if the table was expanded.
-      data->delegate->_expect_fetch_object_details_call = true;
-      data->delegate->_mock_schema_name = "schema1";
-      data->delegate->_mock_object_name = "table2";
-      data->delegate->_mock_object_type = LiveSchemaTree::Table;
-      data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::FK_DATA;
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "table2", "table2");
-
-      EXPECT_EQ(pdata->get_loading_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
-      EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::INDEX_DATA));
-
-      // Ensures the needed calls were done.
-      data->delegate->check_and_reset("TF019CHK003");
-
-      // Ensures a table node is deleted.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "table1", "");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-    }
-
-    // Testing Procedure Object.
-    {
-      // Ensures the procedure doesn't exist.
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure1");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-
-      // Ensures a procedure node is created.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Procedure, "schema1", "", "procedure1");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure1");
-      EXPECT_NE(object_node.ptr(), nullptr);
-
-      LiveSchemaTree::ProcedureData* pdata = dynamic_cast<LiveSchemaTree::ProcedureData*>(object_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
-
-      // Ensures a procedure node is renamed.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Procedure, "schema1", "procedure1", "procedure2");
-      EXPECT_EQ(object_node->get_string(0), "procedure2");
-
-      // Ensures a procedure node is deleted.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Procedure, "schema1", "procedure2", "");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure2");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-    }
-
-    // Testing Function Object.
-    {
-      // Ensures the function doesn't exist
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function1");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-
-      // Ensures a function node is created.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Function, "schema1", "", "function1");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function1");
-      EXPECT_NE(object_node.ptr(), nullptr);
-
-      LiveSchemaTree::FunctionData* pdata = dynamic_cast<LiveSchemaTree::FunctionData*>(object_node->get_data());
-      EXPECT_NE(pdata, nullptr);
-      EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
-
-      // Ensures a function node is renamed.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Function, "schema1", "function1", "function2");
-      EXPECT_EQ(object_node->get_string(0), "function2");
-
-      // Ensures a function node is deleted.
-      data->treeTestHelper.update_live_object_state(LiveSchemaTree::Function, "schema1", "function2", "");
-      object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function2");
-      EXPECT_EQ(object_node.ptr(), nullptr);
-    }
-  });
-
-  $it("Field description", [this]() {
-    // Fills the tree using the real structure.
-    mforms::TreeNodeRef node;
-    mforms::TreeNodeRef child_node;
-    mforms::TreeNodeRef leaf_node;
-
-    data->fillBasicSchema("Field description");
-
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
-
-    // The schema node and it's direct children return the schema description.
-    EXPECT_EQ(data->treeTestHelper.get_field_description(node),
-              "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
-    child_node = node->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
-    child_node = node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
-    child_node = node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
-    child_node = node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
-
-    // The table node and it's direct children return the table description.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
-    EXPECT_EQ(data->treeTestHelper.get_field_description(node),
-              "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
-              "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
-              "MOCK LOADED Column : table_column1"
-              "</table><br><br>"
-              "<div><b>Related Tables:</b></div>"
-              "MOCK LOADED Foreign Key : fk1");
-    child_node = node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
-              "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
-              "MOCK LOADED Column : table_column1"
-              "</table><br><br>"
-              "<div><b>Related Tables:</b></div>"
-              "MOCK LOADED Foreign Key : fk1");
-    leaf_node = child_node->get_child(0);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(leaf_node),
-              "<b>Column:</b> <font color='#148814'><b>table_column1</b></font><br><br>"
-              "<b>Definition:</b><table style=\"border: none; border-collapse: collapse;\">"
-              "MOCK LOADED Column : table_column1"
-              "</table><br><br>");
-
-    child_node = node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
-              "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
-              "MOCK LOADED Column : table_column1"
-              "</table><br><br>"
-              "<div><b>Related Tables:</b></div>"
-              "MOCK LOADED Foreign Key : fk1");
-    leaf_node = child_node->get_child(0);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(leaf_node),
-              "<b>Index:</b> <font color='#148814'><b>index1</b></font><br><br><b>Definition:</b><br>MOCK LOADED Index "
-              ": index1");
-
-    child_node = node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
-              "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
-              "MOCK LOADED Column : table_column1"
-              "</table><br><br>"
-              "<div><b>Related Tables:</b></div>"
-              "MOCK LOADED Foreign Key : fk1");
-    leaf_node = child_node->get_child(0);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(leaf_node),
-              "<b>Trigger:</b> <font color='#148814'><b>trigger1</b></font><br><br><b>Definition:</b><br>MOCK LOADED "
-              "Trigger : trigger1");
-
-    child_node = node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
-              "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
-              "MOCK LOADED Column : table_column1"
-              "</table><br><br>"
-              "<div><b>Related Tables:</b></div>"
-              "MOCK LOADED Foreign Key : fk1");
-    leaf_node = child_node->get_child(0);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(leaf_node),
-              "<b>Foreign Key:</b> <font color='#148814'><b>fk1</b></font><br><br>"
-              "<b>Definition:</b><br>"
-              "MOCK LOADED Foreign Key : fk1");
-
-    // The view node and it's direct children return the table description.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view1");
-    EXPECT_EQ(data->treeTestHelper.get_field_description(node),
-              "<b>View:</b> <font color='#148814'><b>view1</b></font><br><br>"
-              "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
-              "MOCK LOADED Column : view_column1"
-              "</table><br><br>");
-    child_node = node->get_child(0);
-    EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
-              "<b>Column:</b> <font color='#148814'><b>view_column1</b></font><br><br>"
-              "<b>Definition:</b><table style=\"border: none; border-collapse: collapse;\">"
-              "MOCK LOADED Column : view_column1"
-              "</table><br><br>");
-
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure1");
-    EXPECT_EQ(data->treeTestHelper.get_field_description(node),
-              "<b>Procedure:</b> <font color='#148814'><b>procedure1</b></font><br><br>");
-
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function1");
-    EXPECT_EQ(data->treeTestHelper.get_field_description(node),
-              "<b>Function:</b> <font color='#148814'><b>function1</b></font><br><br>");
-
-    data->pModelView->root_node()->remove_children();
-  });
-
-  $it("Node creation for object", [this]() {
-    mforms::TreeNodeRef schema_node;
-    mforms::TreeNodeRef object_node;
-    LiveSchemaTree::LSTData* pdata = nullptr;
-
-    schema_node = data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Schema, "");
-    object_node = data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Table, "table_object");
-
-    EXPECT_EQ(schema_node.ptr(), nullptr);
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    // Tests the schema and object nodes are created if they don't exist.
-    object_node = data->treeTestHelper.create_node_for_object("schema_object", LiveSchemaTree::Table, "table_object");
-    schema_node = data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Schema, "");
-
-    EXPECT_NE(schema_node.ptr(), nullptr);
-    EXPECT_NE(object_node.ptr(), nullptr);
-    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(object_node->get_data());
-    EXPECT_NE(pdata, nullptr);
-    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
-
-    // Tests the view object is created under an existing schema if it already exists.
-    object_node = data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::View, "view_object");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    object_node = data->treeTestHelper.create_node_for_object("schema_object", LiveSchemaTree::View, "view_object");
-    EXPECT_NE(object_node.ptr(), nullptr);
-    EXPECT_EQ(schema_node.ptr(), object_node->get_parent()->get_parent().ptr());
-    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(object_node->get_data());
-    EXPECT_NE(pdata, nullptr);
-    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
-
-    // Tests the procedure object is created under an existing schema if it already exists.
-    object_node =
-      data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Procedure, "procedure_object");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    object_node =
-      data->treeTestHelper.create_node_for_object("schema_object", LiveSchemaTree::Procedure, "procedure_object");
-    EXPECT_NE(object_node.ptr(), nullptr);
-    EXPECT_EQ(schema_node.ptr(), object_node->get_parent()->get_parent().ptr());
-    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(object_node->get_data());
-    EXPECT_NE(pdata, nullptr);
-    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
-
-    // Tests the function object is created under an existing schema if it already exists.
-    object_node =
-      data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Function, "function_object");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    object_node =
-      data->treeTestHelper.create_node_for_object("schema_object", LiveSchemaTree::Function, "function_object");
-    EXPECT_NE(object_node.ptr(), nullptr);
-    EXPECT_EQ(schema_node.ptr(), object_node->get_parent()->get_parent().ptr());
-    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(object_node->get_data());
-    EXPECT_NE(pdata, nullptr);
-    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
-
-    // Ensures no other object types alter the tree structure.
-    object_node = data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::Schema, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::TableCollection, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ViewCollection, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node = data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ProcedureCollection,
-                                                              "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::FunctionCollection, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ColumnCollection, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::IndexCollection, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::TriggerCollection, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node = data->treeTestHelper.create_node_for_object("fake_schema_object",
-                                                              LiveSchemaTree::ForeignKeyCollection, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::Trigger, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::TableColumn, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ViewColumn, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node = data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::Index, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ForeignKey, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ForeignKeyColumn, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node =
-      data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::IndexColumn, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-    object_node = data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::Any, "whatever");
-    EXPECT_EQ(object_node.ptr(), nullptr);
-
-    schema_node = data->treeTestHelper.get_node_for_object("fake_schema_object", LiveSchemaTree::Schema, "");
-    EXPECT_EQ(schema_node.ptr(), nullptr);
-  });
-
-  $it("Enabling/disabling schema content", [this]() {
-    bool backup = data->treeTestHelper.is_schema_contents_enabled();
-
-    data->treeTestHelper.is_schema_contents_enabled(true);
-    EXPECT_TRUE(data->treeTestHelper.is_schema_contents_enabled());
-
-    data->treeTestHelper.is_schema_contents_enabled(false);
-    EXPECT_FALSE(data->treeTestHelper.is_schema_contents_enabled());
-
-    data->treeTestHelper.is_schema_contents_enabled(backup);
-  });
-
-  $it("Recursive schema name search", [this]() {
-    data->fillBasicSchema("Recursive schema name search");
-
-    data->checkGetSchemaNameRecursive(&data->treeTestHelper,
-                                      data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, ""));
-
-    data->pModelView->root_node()->remove_children();
-  });
-
-  $it("Recursive node paths", [this]() {
-    data->fillBasicSchema("Recursive node paths");
-
-    data->checkNodePathsRecursive(&data->treeTestHelper,
-                                  data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, ""));
-
-    data->pModelView->root_node()->remove_children();
-  });
-
-  $it("Enabling/disableing tree events", [this]() {
-    bool backup = data->treeTestHelper.getEnabledEvents();
-
-    data->treeTestHelper.enable_events(true);
-    EXPECT_TRUE(data->treeTestHelper.getEnabledEvents());
-
-    data->treeTestHelper.enable_events(false);
-    EXPECT_FALSE(data->treeTestHelper.getEnabledEvents());
-
-    data->treeTestHelper.enable_events(backup);
-  });
-
-  $it("Expanding/collapsing tree nodes", [this]() {
-    // Fills the tree using the real structure.
-    base::StringListPtr schemas(new std::list<std::string>());
-    mforms::TreeNodeRef schema_node;
-    mforms::TreeNodeRef schema_node_filtered;
-    mforms::TreeNodeRef child_node;
-    mforms::TreeNodeRef child_node_filtered;
-    mforms::TreeNodeRef object_node;
-    mforms::TreeNodeRef object_node_filtered;
-
-    schemas->push_back("schema1");
-    schemas->push_back("schema2");
-    schemas->push_back("schema3");
-
-    data->treeTestHelper.enable_events(true);
-
-    // Fills a schema.
-    data->treeTestHelper.update_schemata(schemas);
-    schema_node = data->treeTestHelper.get_node_for_object("schema2", LiveSchemaTree::Schema, "");
-
-    // Fills the schema content.
-    data->delegate->expect_fetch_schema_contents_call();
-    data->delegate->_mock_view_list->push_back("view1");
-    data->delegate->_mock_table_list->push_back("table1");
-    data->delegate->_mock_table_list->push_back("table2");
-    data->delegate->_mock_table_list->push_back("table3");
-    data->delegate->_mock_procedure_list->push_back("procedure1");
-    data->delegate->_mock_function_list->push_back("function1");
-    data->delegate->_mock_call_back_slot = true;
-    data->delegate->_mock_schema_name = "schema2";
-    data->delegate->_check_id = "TF026CHK001";
-
-    data->treeTestHelper.expand_toggled(schema_node, true);
-    data->delegate->check_and_reset("TF026CHK001");
-
-    data->treeTestHelper.expand_toggled(schema_node, false);
-    data->delegate->check_and_reset("TF026CHK002");
-
-    data->treeTestHelper.expand_toggled(schema_node, true);
-    data->delegate->check_and_reset("TF026CHK003");
-
-    // Ensures nothing happens when the expansion is toglled for the table collection node.
-    child_node = schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
-    data->treeTestHelper.expand_toggled(child_node, true);
-    data->treeTestHelper.expand_toggled(child_node, false);
-    data->treeTestHelper.expand_toggled(child_node, true);
-
-    // Expands a table node.
-    data->delegate->_mock_schema_name = "schema2";
-    data->delegate->_mock_object_name = "table3";
-    data->delegate->_mock_object_type = LiveSchemaTree::Table;
-    data->delegate->_expect_fetch_object_details_call = true;
-    data->delegate->_mock_column_list->clear();
-    data->delegate->_mock_index_list->clear();
-    data->delegate->_mock_column_list->push_back("table_column1");
-    data->delegate->_mock_index_list->push_back("index1");
-    data->delegate->_mock_trigger_list->push_back("trigger1");
-    data->delegate->_mock_fk_list->push_back("fk1");
-    data->delegate->_mock_call_back_slot_columns = true;
-    data->delegate->_mock_call_back_slot_indexes = true;
-    data->delegate->_mock_call_back_slot_triggers = true;
-    data->delegate->_mock_call_back_slot_foreign_keys = true;
-    data->delegate->_check_id = "TF026CHK004";
-
-    // Takes the third table node.
-    object_node = child_node->get_child(2);
-    data->treeTestHelper.expand_toggled(object_node, true);
-    data->treeTestHelper.expand_toggled(object_node, false);
-    data->treeTestHelper.expand_toggled(object_node, true);
-
-    data->delegate->check_and_reset("TF026CHK004");
-
-    // Ensures nothing happens when the expansion is toglled for the column collection node.
-    child_node = object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX);
-    data->treeTestHelper.expand_toggled(child_node, true);
-    data->treeTestHelper.expand_toggled(child_node, false);
-    data->treeTestHelper.expand_toggled(child_node, true);
-
-    // Ensures nothing happens when the expansion is toglled for the index collection node.
-    child_node = object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX);
-    data->treeTestHelper.expand_toggled(child_node, true);
-    data->treeTestHelper.expand_toggled(child_node, false);
-    data->treeTestHelper.expand_toggled(child_node, true);
-
-    // Ensures nothing happens when the expansion is toglled for the trigger collection node.
-    child_node = object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX);
-    data->treeTestHelper.expand_toggled(child_node, true);
-    data->treeTestHelper.expand_toggled(child_node, false);
-    data->treeTestHelper.expand_toggled(child_node, true);
-
-    // Ensures nothing happens when the expansion is toglled for the foreign key collection node.
-    child_node = object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX);
-    data->treeTestHelper.expand_toggled(child_node, true);
-    data->treeTestHelper.expand_toggled(child_node, false);
-    data->treeTestHelper.expand_toggled(child_node, true);
-
-    // Ensures nothing happens when the expansion is toglled for the column collection node.
-    child_node = schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
-    data->treeTestHelper.expand_toggled(child_node, true);
-    data->treeTestHelper.expand_toggled(child_node, false);
-    data->treeTestHelper.expand_toggled(child_node, true);
-
-    // Fills view column.
-    data->delegate->_mock_schema_name = "schema2";
     data->delegate->_mock_object_name = "view1";
     data->delegate->_mock_object_type = LiveSchemaTree::View;
     data->delegate->_expect_fetch_object_details_call = true;
-    data->delegate->_mock_column_list->push_back("view_column1");
+    data->delegate->_mock_column_list->push_back("first_column");
+    data->delegate->_mock_column_list->push_back("second_column");
     data->delegate->_mock_call_back_slot_columns = true;
-    data->delegate->_check_id = "TF026CHK005";
-
-    object_node = child_node->get_child(0);
-    data->treeTestHelper.expand_toggled(object_node, true);
-    data->treeTestHelper.expand_toggled(object_node, false);
-    data->treeTestHelper.expand_toggled(object_node, true);
-
-    data->delegate->check_and_reset("TF026CHK005");
-
-    // Ensures nothing happens when the expansion is toglled for the procedures collection node.
-    child_node = schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
-    data->treeTestHelper.expand_toggled(child_node, true);
-    data->treeTestHelper.expand_toggled(child_node, false);
-    data->treeTestHelper.expand_toggled(child_node, true);
-
-    // Ensures nothing happens when the expansion is toglled for the functions collection node.
-    child_node = schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
-    data->treeTestHelper.expand_toggled(child_node, true);
-    data->treeTestHelper.expand_toggled(child_node, false);
-    data->treeTestHelper.expand_toggled(child_node, true);
-
-    // Now create a filtered tree based on the loaded data to check.
-    // Expansion state is propagated to the base tree.
-    data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
-    data->treeTestHelperFiltered.set_filter("schema2.table3");
-    data->treeTestHelperFiltered.filter_data();
-
-    schema_node_filtered = data->treeTestHelperFiltered.get_node_for_object("schema2", LiveSchemaTree::Schema, "");
-
-    // Ensures the schema expansion state on base tree is propagated from the state at the filtered tree.
-    data->treeTestHelperFiltered.expand_toggled(schema_node_filtered, true);
-    EXPECT_TRUE(schema_node->is_expanded());
-    data->treeTestHelperFiltered.expand_toggled(schema_node_filtered, false);
-    EXPECT_FALSE(schema_node->is_expanded());
-    data->treeTestHelperFiltered.expand_toggled(schema_node_filtered, true);
-    EXPECT_TRUE(schema_node->is_expanded());
-
-    // Ensures the table expansion state on base tree is propagated from the state at the filtered tree.
-    data->treeTestHelperFiltered.expand_toggled(
-      schema_node_filtered->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(0), true);
-    EXPECT_TRUE(schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(2)->is_expanded());
-    data->treeTestHelperFiltered.expand_toggled(
-      schema_node_filtered->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(0), false);
-    EXPECT_FALSE(schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(2)->is_expanded());
-    data->treeTestHelperFiltered.expand_toggled(
-      schema_node_filtered->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(0), true);
-    EXPECT_TRUE(schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(2)->is_expanded());
-
-    data->pModelViewFiltered->root_node()->remove_children();
-    data->pModelView->root_node()->remove_children();
-  });
-
-  $it("Activating a tree node", [this]() {
-    mforms::TreeNodeRef schema_node;
-    mforms::TreeNodeRef child_node;
-    mforms::TreeNodeRef object_node;
-
-    data->fillBasicSchema("Activating a tree node");
-
-    schema_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
-
-    LiveSchemaTree::ChangeRecord change;
-    change.schema = "";
-    change.type = LiveSchemaTree::Schema;
-    change.name = "schema1";
-    data->delegate->_mock_expected_changes.push_back(change);
-    data->delegate->_mock_expected_action = "activate";
-    data->delegate->_expect_tree_activate_objects = true;
-
-    // Test activating a schema.
-    data->treeTestHelper.node_activated(schema_node, 0);
-    data->delegate->check_and_reset("TF027CHK001");
-
-    // Test activating the tables collection.
-    child_node = schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
-    data->treeTestHelper.node_activated(child_node, 0);
-
-    // Test activating a table node.
-    object_node = child_node->get_child(0);
-    data->delegate->_mock_expected_text = "table1";
-    data->treeTestHelper.node_activated(object_node, 0);
-    data->delegate->check_and_reset("TF027CHK003");
-
-    // Test activating the columns collection.
-    child_node = object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX);
-    data->treeTestHelper.node_activated(child_node, 0);
-
-    // Test activating a column node.
-    data->delegate->_mock_expected_text = "table_column1";
-    data->treeTestHelper.node_activated(child_node->get_child(0), 0);
-    data->delegate->check_and_reset("TF027CHK005");
-
-    // Test activating the indexes collection.
-    child_node = object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX);
-    data->treeTestHelper.node_activated(child_node, 0);
-
-    // Test activating an index node.
-    data->delegate->_mock_expected_text = "index1";
-    data->treeTestHelper.node_activated(child_node->get_child(0), 0);
-    data->delegate->check_and_reset("TF027CHK007");
-
-    // Test activating the triggers collection.
-    child_node = object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX);
-    data->treeTestHelper.node_activated(child_node, 0);
-
-    // Test activating a trigger node.
-    data->delegate->_mock_expected_text = "trigger1";
-    data->treeTestHelper.node_activated(child_node->get_child(0), 0);
-    data->delegate->check_and_reset("TF027CHK009");
-
-    // Test activating the triggers collection.
-    child_node = object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX);
-    data->treeTestHelper.node_activated(child_node, 0);
-
-    // Test activating a foreign key node.
-    data->delegate->_mock_expected_text = "fk1";
-    data->treeTestHelper.node_activated(child_node->get_child(0), 0);
-    data->delegate->check_and_reset("TF027CHK011");
-
-    // Test activating the view collection.
-    child_node = schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
-    data->treeTestHelper.node_activated(child_node, 0);
-
-    // Test activating a view node.
-    object_node = child_node->get_child(0);
-    data->delegate->_mock_expected_text = "view1";
-    data->treeTestHelper.node_activated(object_node, 0);
-    data->delegate->check_and_reset("TF027CHK013");
-
-    // Test activating a view column node.
-    data->delegate->_mock_expected_text = "view_column1";
-    data->treeTestHelper.node_activated(object_node->get_child(0), 0);
-    data->delegate->check_and_reset("TF027CHK014");
-
-    // Test activating the routines collection.
-    child_node = schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
-    data->treeTestHelper.node_activated(child_node, 0);
-    data->delegate->check_and_reset("TF027CHK015");
-
-    // Test activating a procedure node.
-    object_node = child_node->get_child(0);
-    data->delegate->_mock_expected_text = "procedure1";
-    data->treeTestHelper.node_activated(object_node, 0);
-    data->delegate->check_and_reset("TF027CHK016");
-
-    // Test activating the routines collection.
-    child_node = schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
-    data->treeTestHelper.node_activated(child_node, 0);
-    data->delegate->check_and_reset("TF027CHK017");
-
-    // Test activating a function node.
-    object_node = child_node->get_child(0);
-    data->delegate->_mock_expected_text = "function1";
-    data->treeTestHelper.node_activated(object_node, 0);
-    data->delegate->check_and_reset("TF027CHK018");
-
-    data->pModelView->root_node()->remove_children();
-  });
-
-  $it("Getting popup items for nodes", [this]() {
-    $pending("test code was never enabled and needs fixes");
-
-    bec::MenuItemList items;
-    std::list<mforms::TreeNodeRef> nodes;
-    mforms::TreeNodeRef schema_node;
-    mforms::TreeNodeRef object_node;
-
-    data->fillBasicSchema("Getting popup items for nodes");
-
-    data->setNodes(&data->treeTestHelper, nodes, SCHEMA);
-
-    //================= Schema and Schema's Collection Nodes =================//
-    // Reviewing items for a schema
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 8 Real items plus 3 separators
-    EXPECT_EQ(items.size(), 11U);
-    data->ensureMenuItemsExist("TF028CHK002", items,
-                               SET_DEF_SCH | FIL_TO_SCH | COPY_TC | SEND_TE | CREATE | ALTER | DROP | REFRESH,
-                               SUB_NAME | SUB_CREATE, "Schema", "");
-
-    // Reviewing items for multiple schemas
-    data->setNodes(&data->treeTestHelper, nodes, SCHEMA);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 6 Real items plus 2 separators
-    EXPECT_EQ(items.size(), 8U);
-    data->ensureMenuItemsExist("TF028CHK003", items, COPY_TC | SEND_TE | CREATE | ALTER | DROP | REFRESH,
-                               SUB_NAME | SUB_CREATE, "Schema", "2 Schemas");
-
-    // Testing the schema table collection options
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, TABLES);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 2 Real items plus 1 separators
-    EXPECT_EQ(items.size(), 3U);
-    data->ensureMenuItemsExist("TF028CHK004", items, CREATE | REFRESH, 0, "Table", "");
-
-    // Testing the schema view collection options
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, VIEWS);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 2 Real items plus 1 separators
-    EXPECT_EQ(items.size(), 3U);
-    data->ensureMenuItemsExist("TF028CHK005", items, CREATE | REFRESH, 0, "View", "");
-
-    // Testing the schema procedures collection options
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, PROCEDURES);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 3 Real items plus 1 separators
-    EXPECT_EQ(items.size(), 3U);
-    data->ensureMenuItemsExist("TF028CHK006", items, CREATE | REFRESH, 0, "Procedure", "");
-
-    // Testing the schema procedures collection options
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, FUNCTIONS);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 3 Real items plus 1 separators
-    EXPECT_EQ(items.size(), 3U);
-    data->ensureMenuItemsExist("TF028CHK006", items, CREATE | REFRESH, 0, "Function", "");
-
-    //================= Table, Table's Collection Nodes  and Nodes on each collection =================//
-    // Testing for a single schema node
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, TABLE);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 7 Real items plus 2 separators
-    EXPECT_EQ(items.size(), 10U);
-    data->ensureMenuItemsExist(
-      "TF028CHK007", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
-      SUB_NAME_S | SUB_NAME_L | SUB_SEL_ALL | SUB_INSERT | SUB_UPDATE | SUB_DELETE | SUB_CREATE, "Table", "");
-
-    // Testing for multiple Table nodes...
-    data->setNodes(&data->treeTestHelper, nodes, TABLE);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 7 Real items plus 2 separators
-    EXPECT_EQ(items.size(), 9U);
-    data->ensureMenuItemsExist(
-      "TF028CHK008", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
-      SUB_NAME_S | SUB_NAME_L | SUB_SEL_ALL | SUB_INSERT | SUB_UPDATE | SUB_DELETE | SUB_CREATE, "Table", "2 Tables");
-
-    // Columns collection...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, COLUMNS);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 5 Real items plus 1 separators
-    EXPECT_EQ(items.size(), 6U);
-    data->ensureMenuItemsExist("TF028CHK009", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_SEL_COL | SUB_INSERT | SUB_UPDATE, "Table", "2 Tables");
-
-    // Column Node
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, TABLE_COLUMN);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 5 Real items plus 1 separators
-    EXPECT_EQ(items.size(), 6U);
-    data->ensureMenuItemsExist("TF028CHK010", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_SEL_COL | SUB_INSERT | SUB_UPDATE, "Table", "2 Tables");
-
-    // Multiple Column Nodes
-    data->setNodes(&data->treeTestHelper, nodes, TABLE_COLUMN);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Just like a single column.
-    EXPECT_EQ(items.size(), 6U);
-    data->ensureMenuItemsExist("TF028CHK010", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_SEL_COL | SUB_INSERT | SUB_UPDATE, "Table", "2 Tables");
-
-    // Index collection...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, INDEXES);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK012", items, REFRESH, 0, "", "");
-
-    // Index Node...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, INDEX);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK013", items, REFRESH, 0, "", "");
-
-    // Multiple Index Nodes...
-    data->setNodes(&data->treeTestHelper, nodes, INDEX);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK014", items, REFRESH, 0, "", "");
-
-    // Trigger collection...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, TRIGGERS);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK015", items, REFRESH, 0, "", "");
-
-    // Trigger Node...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, TRIGGER);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK016", items, REFRESH, 0, "", "");
-
-    // Multiple Trigger Nodes...
-    data->setNodes(&data->treeTestHelper, nodes, TRIGGER);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK017", items, REFRESH, 0, "", "");
-
-    // Foreign Key collection...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, FKS);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK018", items, REFRESH, 0, "", "");
-
-    // Foreign Key Node...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, FK);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK019", items, REFRESH, 0, "", "");
-
-    // Multiple Foreign Key Nodes...
-    data->setNodes(&data->treeTestHelper, nodes, FK);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // Refresh All
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK020", items, REFRESH, 0, "", "");
-
-    //================= View Nodes =================//
-    // Single View Node...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, VIEW);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 7 Real items plus 2 separators
-    EXPECT_EQ(items.size(), 9U);
-    data->ensureMenuItemsExist("TF028CHK021", items, SEL_ROWS | COPY_TC | SEND_TE | CREATE | ALTER | DROP | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_SEL_ALL | SUB_CREATE, "View", "");
-
-    // Multiple View Nodes...
-    data->setNodes(&data->treeTestHelper, nodes, VIEW);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    // 5 Real items plus 2 separators
-    EXPECT_EQ(items.size(), 7U);
-    data->ensureMenuItemsExist("TF028CHK022", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_SEL_ALL | SUB_CREATE, "View", "2 Views");
-
-    //================= Procedure Nodes =================//
-    // Single Procedure Node...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, PROCEDURE);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    EXPECT_EQ(items.size(), 8U);
-    data->ensureMenuItemsExist("TF028CHK023", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_CREATE, "Procedure", "");
-
-    // Multiple Procedure Nodes...
-    data->setNodes(&data->treeTestHelper, nodes, PROCEDURE);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    EXPECT_EQ(items.size(), 7U);
-    data->ensureMenuItemsExist("TF028CHK024", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_CREATE, "Procedure", "2 Procedures");
-
-    //================= Function Nodes =================//
-    // Single Function Node...
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, FUNCTION);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    EXPECT_EQ(items.size(), 8U);
-    data->ensureMenuItemsExist("TF028CHK025", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_CREATE, "Function", "");
-
-    // Multiple Function Nodes...
-    data->setNodes(&data->treeTestHelper, nodes, FUNCTION);
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-
-    EXPECT_EQ(items.size(), 7U);
-    data->ensureMenuItemsExist("TF028CHK026", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
-                               SUB_NAME_S | SUB_NAME_L | SUB_CREATE, "Function", "2 Functions");
-
-    //================= No Nodes =================//
-    nodes.clear();
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-    EXPECT_EQ(items.size(), 1U);
-    data->ensureMenuItemsExist("TF028CHK027", items, REFRESH, 0, "", "");
-
-    //================= Multiple Nodes of Different Type =================//
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, SCHEMA | TABLES | TABLE);
-    data->setNodes(&data->treeTestHelper, nodes, TABLE | TABLE_COLUMN | VIEW | PROCEDURE | FUNCTION);
-
-    items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
-    EXPECT_EQ(items.size(), 4U);
-    data->ensureMenuItemsExist("TF028CHK028", items, COPY_TC | SEND_TE | REFRESH, SUB_NAME_S | SUB_NAME_L, "",
-                               "6 Objects");
-
-    data->pModelView->root_node()->remove_children();
-  });
-
-  $it("Activating a popup item for a node", [this]() {
-    $pending("test code was never enabled and needs fixes");
-
-    std::list<mforms::TreeNodeRef> nodes;
-    mforms::TreeNodeRef schema_node;
-    mforms::TreeNodeRef object_node;
-    LiveSchemaTree::ChangeRecord change;
-
-    data->fillBasicSchema("Activating a popup item for a node");
-
-    // Tests the Refresh All function.
-    data->delegate->_expect_tree_refresh = true;
-    data->delegate->_check_id = "TF029CHK002";
-    data->treeTestHelper.activate_popup_item_for_nodes("refresh", nodes);
-    data->delegate->check_and_reset("TF029CHK002");
-
-    //================= Performs the action for multiple nodes of different type =================//
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, SCHEMA | TABLE);
-    data->setNodes(&data->treeTestHelper, nodes, TABLE | TABLE_COLUMN | VIEW | PROCEDURE | FUNCTION);
-
-    // Tests the Alter function
-    data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA | TABLE);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW | PROCEDURE | FUNCTION);
-
-    data->delegate->_check_id = "TF029CHK003";
-    data->delegate->_expect_tree_alter_objects = true;
-    data->treeTestHelper.activate_popup_item_for_nodes("alter", nodes);
-    data->delegate->check_and_reset("TF029CHK003");
-
-    // Tests the Drop function
-    data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA | TABLE);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW | PROCEDURE | FUNCTION);
-
-    data->delegate->_check_id = "TF029CHK004";
-    data->delegate->_expect_tree_drop_objects = true;
-    data->treeTestHelper.activate_popup_item_for_nodes("drop", nodes);
-    data->delegate->check_and_reset("TF029CHK004");
-
-    // Tests the edit data option with tables
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, TABLE);
-    data->setNodes(&data->treeTestHelper, nodes, TABLE);
-
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
-
-    data->delegate->_check_id = "TF029CHK005";
-    data->delegate->_expect_tree_activate_objects = true;
-    data->delegate->_mock_expected_action = "edit_data";
-    data->treeTestHelper.activate_popup_item_for_nodes("edit_data", nodes);
-    data->delegate->check_and_reset("TF029CHK005");
-
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
-    data->delegate->_check_id = "TF029CHK005.1";
-    data->delegate->_expect_tree_activate_objects = true;
-    data->delegate->_mock_expected_action = "select_data";
-    data->treeTestHelper.activate_popup_item_for_nodes("select_data", nodes);
-    data->delegate->check_and_reset("TF029CHK005.1");
-
-    // Tests the edit data option with views
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, TABLE | VIEW | PROCEDURE | FUNCTION);
-
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW | PROCEDURE | FUNCTION);
-
-    data->delegate->_check_id = "TF029CHK006";
-    data->delegate->_expect_tree_activate_objects = true;
-    data->delegate->_mock_expected_action = "edit_data";
-    data->treeTestHelper.activate_popup_item_for_nodes("edit_data", nodes);
-    data->delegate->check_and_reset("TF029CHK006");
-
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW | PROCEDURE | FUNCTION);
-
-    data->delegate->_check_id = "TF029CHK006.1";
-    data->delegate->_expect_tree_activate_objects = true;
-    data->delegate->_mock_expected_action = "select_data";
-    data->treeTestHelper.activate_popup_item_for_nodes("select_data", nodes);
-    data->delegate->check_and_reset("TF029CHK006.1");
-
-    // Tests the edit data option with table columns
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, COLUMNS | TABLE_COLUMN | VIEW_COLUMN);
-
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW);
-    data->delegate->_mock_expected_changes[0].detail = "table_column1";
-    data->delegate->_mock_expected_changes[1].detail = "table_column1";
-    data->delegate->_mock_expected_changes[2].detail = "view_column1";
-
-    data->delegate->_check_id = "TF029CHK007";
-    data->delegate->_expect_tree_activate_objects = true;
-    data->delegate->_mock_expected_action = "edit_data_columns";
-    data->treeTestHelper.activate_popup_item_for_nodes("edit_data_columns", nodes);
-    data->delegate->check_and_reset("TF029CHK007");
-
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW);
-    data->delegate->_mock_expected_changes[0].detail = "table_column1";
-    data->delegate->_mock_expected_changes[1].detail = "table_column1";
-    data->delegate->_mock_expected_changes[2].detail = "view_column1";
-
-    data->delegate->_check_id = "TF029CHK007.1";
-    data->delegate->_expect_tree_activate_objects = true;
-    data->delegate->_mock_expected_action = "select_data_columns";
-    data->treeTestHelper.activate_popup_item_for_nodes("select_data_columns", nodes);
-    data->delegate->check_and_reset("TF029CHK007.1");
-
-    // Tests the edit data option with the nodes that should be ignored
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes,
-                   SCHEMA | TABLES | VIEWS | PROCEDURES | FUNCTIONS | INDEXES | INDEX | TRIGGERS | TRIGGER | FKS | FK);
-
-    data->delegate->_check_id = "TF029CHK008";
-    data->treeTestHelper.activate_popup_item_for_nodes("edit_data", nodes);
-    data->delegate->check_and_reset("TF029CHK008");
-
-    data->delegate->_check_id = "TF029CHK008.1";
-    data->treeTestHelper.activate_popup_item_for_nodes("select_data", nodes);
-    data->delegate->check_and_reset("TF029CHK008.1");
-
-    // Tests the create function without objects
-    nodes.clear();
-    data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA);
-    data->delegate->_mock_expected_changes[0].schema = "";
-    data->delegate->_mock_expected_changes[0].name = "";
-
-    data->delegate->_check_id = "TF029CHK009";
-    data->delegate->_expect_tree_create_object = true;
-    data->treeTestHelper.activate_popup_item_for_nodes("create", nodes);
-    data->delegate->check_and_reset("TF029CHK009");
-
-    // Tests the create functions for schema object
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, SCHEMA | TABLES | TABLE | VIEWS | VIEW | PROCEDURE | FUNCTION);
-
-    data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA | TABLE);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, VIEW | PROCEDURE | FUNCTION);
-
-    data->delegate->_mock_expected_changes[0].schema = "";
-    while (data->delegate->_mock_expected_changes.size()) {
-      data->delegate->_mock_expected_changes[0].name = "";
-      data->delegate->_check_id = "TF029CHK010";
-      data->delegate->_expect_tree_create_object = true;
-      data->treeTestHelper.activate_popup_item_for_nodes("create", nodes);
-      nodes.erase(nodes.begin());
-    }
-
-    data->delegate->check_and_reset("TF029CHK010");
-
-    // Testing create in routines collection produces a procedure node.
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, PROCEDURES);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, PROCEDURE);
-
-    data->delegate->_check_id = "TF029CHK011";
-    data->delegate->_expect_tree_create_object = true;
-    data->delegate->_mock_expected_changes[0].name = "";
-    data->treeTestHelper.activate_popup_item_for_nodes("create", nodes);
-    data->delegate->check_and_reset("TF029CHK011");
-
-    // Testing create in routines collection produces a procedure node.
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, FUNCTIONS);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, FUNCTION);
-
-    data->delegate->_check_id = "TF029CHK012";
-    data->delegate->_expect_tree_create_object = true;
-    data->delegate->_mock_expected_changes[0].name = "";
-    data->treeTestHelper.activate_popup_item_for_nodes("create", nodes);
-    data->delegate->check_and_reset("TF029CHK012");
-
-    // Tests the set active schema function.
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, SCHEMA);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA);
-    data->delegate->_mock_expected_changes[0].schema = "";
-    data->delegate->_mock_expected_changes[0].name = "schema1";
-
-    data->delegate->_check_id = "TF029CHK013";
-    data->delegate->_expect_tree_activate_objects = true;
-    data->delegate->_mock_expected_action = "activate";
-    data->treeTestHelper.activate_popup_item_for_nodes("set_active_schema", nodes);
-    data->delegate->check_and_reset("TF029CHK013");
-
-    // Tests the set filter schema function.
-    data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA);
-    data->delegate->_mock_expected_changes[0].schema = "";
-    data->delegate->_mock_expected_changes[0].name = "schema1";
-
-    data->delegate->_check_id = "TF029CHK014";
-    data->delegate->_expect_tree_activate_objects = true;
-    data->delegate->_mock_expected_action = "filter";
-    data->treeTestHelper.activate_popup_item_for_nodes("filter_schema", nodes);
-    data->delegate->check_and_reset("TF029CHK014");
-
-    //////////////////////////////////////////////////////////////////////
-    //  deprecated
-    //////////////////////////////////////////////////////////////////////
-
-    // Tests a custom functions for the database objects.
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes, SCHEMA | TABLE | VIEW | PROCEDURE | FUNCTION);
-    data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA | TABLE | VIEW | PROCEDURE | FUNCTION);
-    data->delegate->_mock_expected_changes[0].detail = "schema";
-    data->delegate->_mock_expected_changes[1].detail = "table";
-    data->delegate->_mock_expected_changes[2].detail = "view";
-    data->delegate->_mock_expected_changes[3].detail = "routine";
-    data->delegate->_mock_expected_changes[4].detail = "routine";
-    data->delegate->_mock_expected_changes[0].schema = "schema1";
-    data->delegate->_mock_expected_changes[0].name = "";
-
-    EXPECT_EQ(data->delegate->_mock_expected_changes.size(), nodes.size());
-    while (data->delegate->_mock_expected_changes.size()) {
-      data->delegate->_expect_plugin_item_call = true;
-
-      data->delegate->_check_id = "TF029CHK015";
-      data->delegate->_mock_expected_action = "whatever";
-      data->treeTestHelper.activate_popup_item_for_nodes("whatever", nodes);
-      nodes.erase(nodes.begin());
-    }
-
-    data->delegate->check_and_reset("TF029CHK015");
-
-    // Ensures custom doesn't work for non database nodes.
-    nodes.clear();
-    data->setNodes(&data->treeTestHelper, nodes,
-                   TABLES | VIEWS | PROCEDURES | COLUMNS | TABLE_COLUMN | INDEXES | INDEX | TRIGGERS | TRIGGER | FKS |
-                     FK | VIEW_COLUMN);
-
-    while (nodes.size()) {
-      data->delegate->_check_id = "TF029CHK016";
-      data->treeTestHelper.activate_popup_item_for_nodes("whatever", nodes);
-      nodes.erase(nodes.begin());
-    }
-
-    data->delegate->check_and_reset("TF029CHK016");
-    data->pModelView->root_node()->remove_children();
-  });
-
-  $it("Filter wildcards", [this]() {
-    // Using the default wildcard type.
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard(""), "*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*"), "*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a"), "a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*"), "a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a"), "*a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*"), "*a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema"), "schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*"), "schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema"), "*schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*"), "*schema*");
-
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("", LiveSchemaTree::LocalLike), "*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*", LiveSchemaTree::LocalLike), "*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a", LiveSchemaTree::LocalLike), "a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*", LiveSchemaTree::LocalLike), "a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a", LiveSchemaTree::LocalLike), "*a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*", LiveSchemaTree::LocalLike), "*a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema", LiveSchemaTree::LocalLike), "schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*", LiveSchemaTree::LocalLike), "schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema", LiveSchemaTree::LocalLike), "*schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*", LiveSchemaTree::LocalLike), "*schema*");
-
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("", LiveSchemaTree::LocalRegexp), "*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*", LiveSchemaTree::LocalRegexp), "*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a", LiveSchemaTree::LocalRegexp), "a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*", LiveSchemaTree::LocalRegexp), "a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a", LiveSchemaTree::LocalRegexp), "*a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*", LiveSchemaTree::LocalRegexp), "*a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema", LiveSchemaTree::LocalRegexp), "schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*", LiveSchemaTree::LocalRegexp), "schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema", LiveSchemaTree::LocalRegexp), "*schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*", LiveSchemaTree::LocalRegexp), "*schema*");
-
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("", LiveSchemaTree::RemoteRegexp), "*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*", LiveSchemaTree::RemoteRegexp), "*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a", LiveSchemaTree::RemoteRegexp), "a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*", LiveSchemaTree::RemoteRegexp), "a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a", LiveSchemaTree::RemoteRegexp), "*a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*", LiveSchemaTree::RemoteRegexp), "*a*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema", LiveSchemaTree::RemoteRegexp), "schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*", LiveSchemaTree::RemoteRegexp), "schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema", LiveSchemaTree::RemoteRegexp), "*schema*");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*", LiveSchemaTree::RemoteRegexp), "*schema*");
-
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("", LiveSchemaTree::RemoteLike), "%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*", LiveSchemaTree::RemoteLike), "%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a", LiveSchemaTree::RemoteLike), "a%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*", LiveSchemaTree::RemoteLike), "a%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a", LiveSchemaTree::RemoteLike), "%a%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*", LiveSchemaTree::RemoteLike), "%a%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema", LiveSchemaTree::RemoteLike), "schema%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*", LiveSchemaTree::RemoteLike), "schema%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema", LiveSchemaTree::RemoteLike), "%schema%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*", LiveSchemaTree::RemoteLike), "%schema%");
-
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("?", LiveSchemaTree::RemoteLike), "_%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a?", LiveSchemaTree::RemoteLike), "a_%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("?a", LiveSchemaTree::RemoteLike), "_a%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("?a?", LiveSchemaTree::RemoteLike), "_a_%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("sc?ema", LiveSchemaTree::RemoteLike), "sc_ema%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("sc?e?a*", LiveSchemaTree::RemoteLike), "sc_e_a%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("sc_ema", LiveSchemaTree::RemoteLike), "sc\\_ema%");
-    EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("sch%ma*", LiveSchemaTree::RemoteLike), "sch\\%ma%");
-  });
-
-  $it("Getting a node for an object", [this]() {
-    mforms::TreeNodeRef node;
-    mforms::TreeNodeRef schema_node;
-
-    data->fillBasicSchema("Getting a node for an object");
-
-    schema_node = data->pModelView->root_node()->get_child(0);
-
-    // Searching for invalid schema.
-    node = data->treeTestHelper.get_node_for_object("dummy_schema", LiveSchemaTree::Schema, "");
-    EXPECT_EQ(node.ptr(), nullptr);
-
-    // Searching for a valid schema.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
-    EXPECT_NE(node.ptr(), nullptr);
-    EXPECT_EQ(node.ptr(), schema_node.ptr());
-
-    // Searching for a invalid table.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "tableX");
-    EXPECT_EQ(node.ptr(), nullptr);
-
-    // Searching for a valid table.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
-    EXPECT_NE(node.ptr(), nullptr);
-    EXPECT_EQ(node.ptr(), schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(0).ptr());
-
-    // Searching for a invalid view.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "viewX");
-    EXPECT_EQ(node.ptr(), nullptr);
-
-    // Searching for a valid view.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view1");
-    EXPECT_NE(node.ptr(), nullptr);
-    EXPECT_EQ(node.ptr(), schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_child(0).ptr());
-
-    // Searching for a invalid function.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedureX");
-    EXPECT_EQ(node.ptr(), nullptr);
-
-    // Searching for a valid procedure.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure1");
-    EXPECT_NE(node.ptr(), nullptr);
-    EXPECT_EQ(node.ptr(), schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_child(0).ptr());
-
-    // Searching for a invalid function.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "functionX");
-    EXPECT_EQ(node.ptr(), nullptr);
-
-    // Searching for a valid function.
-    node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function1");
-    EXPECT_NE(node.ptr(), nullptr);
-    EXPECT_EQ(node.ptr(), schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_child(0).ptr());
-
-    data->pModelView->root_node()->remove_children();
-  });
-
-  $it("Switching filtered and unfiltered tree", [this]() {
-    EXPECT_EQ(data->treeTestHelper.getBase(), nullptr);
-
-    data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
-    EXPECT_EQ(data->treeTestHelperFiltered.getBase(), &data->treeTestHelper);
-
-    data->treeTestHelperFiltered.set_base(nullptr);
-    EXPECT_EQ(data->treeTestHelperFiltered.getBase(), nullptr);
-  });
-
-  $it("Children copies when switching filters", [this]() {
-    // Test filter_children and filter_children_collection without filters established to make
-    // sure effectively all the data is copied from one tree to the other.
-    mforms::TreeNodeRef root_node = data->pModelView->root_node();
-    mforms::TreeNodeRef root_node_f = data->pModelViewFiltered->root_node();
-    mforms::TreeNodeRef schema_node;
-    mforms::TreeNodeRef schema_node_f;
-    mforms::TreeNodeRef object_node;
-    mforms::TreeNodeRef object_node_f;
-    mforms::TreeNodeRef sub_node;
-    mforms::TreeNodeRef sub_node_f;
-
-    data->fillComplexSchema("TF033CHK001");
-
-    // Ensure no matter the type, all the children are copied if no filter is specified.
-    EXPECT_EQ(root_node_f->count(), 0);
-    data->treeTestHelper.filter_children(LiveSchemaTree::Schema, root_node, root_node_f);
-    EXPECT_EQ(root_node_f->count(), root_node->count());
-
-    for (int schema_index = 0; schema_index < root_node->count(); schema_index++) {
-      schema_node = root_node->get_child(schema_index);
-      schema_node_f = root_node_f->get_child(schema_index);
-
-      EXPECT_EQ(schema_node_f->get_data(), schema_node->get_data());
-      EXPECT_EQ(schema_node_f->count(), schema_node->count());
-      EXPECT_EQ(schema_node_f->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->count(),
-                schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->count());
-      EXPECT_EQ(schema_node_f->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->count(),
-                schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->count());
-      EXPECT_EQ(schema_node_f->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->count(),
-                schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->count());
-      EXPECT_EQ(schema_node_f->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->count(),
-                schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->count());
-
-      for (int table_index = 0; table_index < schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->count();
-           table_index++) {
-        object_node = schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(table_index);
-        object_node_f = schema_node_f->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(table_index);
-
-        EXPECT_EQ(object_node->get_data(), object_node_f->get_data());
-        EXPECT_EQ(object_node_f->count(), object_node->count());
-        EXPECT_EQ(object_node_f->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->count(),
-                  object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->count());
-        EXPECT_EQ(object_node_f->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->count(),
-                  object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->count());
-        EXPECT_EQ(object_node_f->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->count(),
-                  object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->count());
-        EXPECT_EQ(object_node_f->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->count(),
-                  object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->count());
-
-        for (int column_index = 0;
-             column_index < object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->count(); column_index++) {
-          sub_node = object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->get_child(column_index);
-          sub_node_f = object_node_f->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->get_child(column_index);
-
-          EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
-        }
-
-        for (int index_index = 0;
-             index_index < object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->count(); index_index++) {
-          sub_node = object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->get_child(index_index);
-          sub_node_f = object_node_f->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->get_child(index_index);
-
-          EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
-        }
-
-        for (int trigger_index = 0;
-             trigger_index < object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->count();
-             trigger_index++) {
-          sub_node = object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->get_child(trigger_index);
-          sub_node_f = object_node_f->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->get_child(trigger_index);
-
-          EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
-        }
-
-        for (int fk_index = 0;
-             fk_index < object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->count(); fk_index++) {
-          sub_node = object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->get_child(fk_index);
-          sub_node_f = object_node_f->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->get_child(fk_index);
-
-          EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
-        }
-      }
-
-      for (int view_index = 0; view_index < schema_node_f->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->count();
-           view_index++) {
-        object_node = schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_child(view_index);
-        object_node_f = schema_node_f->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_child(view_index);
-
-        EXPECT_TRUE(object_node_f->get_data() == object_node->get_data());
-        EXPECT_EQ(object_node_f->count(), object_node->count());
-
-        for (int column_index = 0; column_index < object_node->count(); column_index++) {
-          sub_node = object_node->get_child(column_index);
-          sub_node_f = object_node_f->get_child(column_index);
-
-          EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
-        }
-      }
-
-      for (int procedure_index = 0;
-           procedure_index < schema_node_f->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->count();
-           procedure_index++) {
-        object_node = schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_child(procedure_index);
-        object_node_f = schema_node_f->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_child(procedure_index);
-
-        EXPECT_EQ(object_node_f->get_data(), object_node->get_data());
-      }
-
-      for (int function_index = 0;
-           function_index < schema_node_f->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->count(); function_index++) {
-        object_node = schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_child(function_index);
-        object_node_f = schema_node_f->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_child(function_index);
-
-        EXPECT_EQ(object_node_f->get_data(), object_node->get_data());
-      }
-    }
-
-    root_node->remove_children();
-    root_node_f->remove_children();
-  });
-
-  $it("Filtering", [this]() {
-    std::vector<std::string> schemas;
-    std::vector<std::string> tables;
-    std::vector<std::string> views;
-    std::vector<std::string> procedures;
-    std::vector<std::string> functions;
-    mforms::TreeNodeRef root_node_f = data->pModelViewFiltered->root_node();
-
-    data->fillComplexSchema("TF034CHK001");
-
-    // Sets the filter and does the filtering...
-    data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
-
-    // Filtering only specifying a full schema name...
-    schemas.clear();
-
-    schemas.push_back("dev_schema");
-    tables.clear();
-    tables.push_back("client");
-    tables.push_back("customer");
-    tables.push_back("product");
-    tables.push_back("store");
-    views.clear();
-    views.push_back("first_view");
-    views.push_back("second_view");
-    views.push_back("secure_view");
-    views.push_back("third");
-    procedures.clear();
-    procedures.push_back("get_debths");
-    procedures.push_back("get_lazy");
-    procedures.push_back("get_payments");
-    functions.clear();
-    functions.push_back("calc_debth_list");
-    functions.push_back("calc_income");
-    functions.push_back("dummy");
-
-    data->treeTestHelperFiltered.set_filter("dev_schema");
-    data->treeTestHelperFiltered.filter_data();
-    data->verifyFilterResult("TF034CHK002", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
-                             functions);
-
-    // Filtering specifying a schema wildcard...
-    schemas.clear();
-    schemas.push_back("basic_schema");
-    schemas.push_back("dev_schema");
-    schemas.push_back("test_schema");
-    data->treeTestHelperFiltered.set_filter("*schema");
-    data->treeTestHelperFiltered.filter_data();
-    data->verifyFilterResult("TF034CHK003", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
-                             functions);
-
-    // Filtering specifying a different schema wildcard...
-    schemas.clear();
-    schemas.push_back("basic_schema");
-    schemas.push_back("basic_training");
-    data->treeTestHelperFiltered.set_filter("basic*");
-    data->treeTestHelperFiltered.filter_data();
-    data->verifyFilterResult("TF034CHK004", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
-                             functions);
-
-    // Filtering using both schema and object filter
-    schemas.clear();
-    schemas.push_back("basic_schema");
-    schemas.push_back("basic_training");
-    tables.clear();
-    views.clear();
-    views.push_back("second_view");
-    views.push_back("secure_view");
-    procedures.clear();
-    functions.clear();
-    data->treeTestHelperFiltered.set_filter("basic*.sec*");
-    data->treeTestHelperFiltered.filter_data();
-    data->verifyFilterResult("TF034CHK005", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
-                             functions);
-
-    // Filtering using both schema and object filter
-    schemas.clear();
-    schemas.push_back("basic_schema");
-    schemas.push_back("basic_training");
-    tables.clear();
-    tables.push_back("customer");
-    tables.push_back("store");
-    views.clear();
-    views.push_back("first_view");
-    views.push_back("second_view");
-    views.push_back("secure_view");
-    procedures.clear();
-    procedures.push_back("get_debths");
-    procedures.push_back("get_payments");
-    functions.clear();
-    functions.push_back("calc_debth_list");
-
-    data->treeTestHelperFiltered.set_filter("?asic_*.*s*");
-    data->treeTestHelperFiltered.filter_data();
-    data->verifyFilterResult("TF034CHK006", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
-                             functions);
-
-    data->pModelView->root_node()->remove_children();
-    root_node_f->remove_children();
-  });
-
-  $it("Filter patterns", [this]() {
-    data->treeTestHelperFiltered.clean_filter();
-
-    EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "");
-    EXPECT_EQ(data->treeTestHelperFiltered._schema_pattern, nullptr);
-    EXPECT_EQ(data->treeTestHelperFiltered._object_pattern, nullptr);
-
-    data->treeTestHelperFiltered.set_filter("dummy_filter");
-    EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "dummy_filter");
-    EXPECT_NE(data->treeTestHelperFiltered._schema_pattern, nullptr);
-    EXPECT_EQ(data->treeTestHelperFiltered._object_pattern, nullptr);
-
-    data->treeTestHelperFiltered.set_filter("some*.tab?");
-    EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "some*.tab?");
-    EXPECT_NE(data->treeTestHelperFiltered._schema_pattern, nullptr);
-    EXPECT_NE(data->treeTestHelperFiltered._object_pattern, nullptr);
-
-    data->treeTestHelperFiltered.set_filter("sch?ema*");
-    EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "sch?ema*");
-    EXPECT_NE(data->treeTestHelperFiltered._schema_pattern, nullptr);
-    EXPECT_EQ(data->treeTestHelperFiltered._object_pattern, nullptr);
-
-    data->treeTestHelperFiltered.clean_filter();
-    EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "");
-    EXPECT_EQ(data->treeTestHelperFiltered._schema_pattern, nullptr);
-    EXPECT_EQ(data->treeTestHelperFiltered._object_pattern, nullptr);
-  });
-
-  $it("Load data for filters", [this]() {
-    data->delegateFiltered->_expect_fetch_data_for_filter = true;
-    data->delegateFiltered->_check_id = "TF036CHK001";
-    data->delegateFiltered->_mock__schema_pattern = "%sample%";
-    data->delegateFiltered->_mock__object_pattern = "_bject%";
-    data->treeTestHelperFiltered.load_data_for_filter("*sample", "?bject");
-    data->delegateFiltered->check_and_reset("TF036CHK001");
-  });
+
+    data->treeTestHelper.load_table_details(LiveSchemaTree::View, "one", "view1", LiveSchemaTree::COLUMN_DATA);
+
+    data->delegate->check_and_reset("TF001CHK009");
+
+    view = data->treeTestHelper.get_node_for_object("one", LiveSchemaTree::View, "view1");
+    pdata = dynamic_cast<LiveSchemaTree::ViewData*>(view->get_data());
+
+    EXPECT_NE(pdata, nullptr);
+
+    EXPECT_EQ(pdata->get_details(true, view),
+              "<b>View:</b> <font color='#148814'><b>view1</b></font><br><br>"
+              "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
+              "MOCK LOADED Column : first_column"
+              "MOCK LOADED Column : second_column"
+              "</table><br><br>");
+
+    test_node_ref->remove_children();
+
+    // Testing the flag setting logic.
+    LiveSchemaTree::ViewData view_node;
+
+    EXPECT_EQ(view_node.get_loaded_mask(), 0);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+
+    view_node.set_loading_mask(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA | LiveSchemaTree::FK_DATA |
+                               LiveSchemaTree::TRIGGER_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(), 0);
+    EXPECT_EQ(view_node.get_loading_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA |
+                                              LiveSchemaTree::FK_DATA | LiveSchemaTree::TRIGGER_DATA);
+
+    view_node.set_loaded_data(LiveSchemaTree::COLUMN_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(), (short)LiveSchemaTree::COLUMN_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(),
+              LiveSchemaTree::INDEX_DATA | LiveSchemaTree::FK_DATA | LiveSchemaTree::TRIGGER_DATA);
+
+    view_node.set_loaded_data(LiveSchemaTree::INDEX_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), LiveSchemaTree::FK_DATA | LiveSchemaTree::TRIGGER_DATA);
+
+    view_node.set_loaded_data(LiveSchemaTree::FK_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(),
+              LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA | LiveSchemaTree::FK_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), (short)LiveSchemaTree::TRIGGER_DATA);
+
+    view_node.set_loaded_data(LiveSchemaTree::TRIGGER_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA |
+                                             LiveSchemaTree::FK_DATA | LiveSchemaTree::TRIGGER_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+
+    view_node.set_unloaded_data(LiveSchemaTree::TRIGGER_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(),
+              LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA | LiveSchemaTree::FK_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+
+    view_node.set_unloaded_data(LiveSchemaTree::FK_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+
+    view_node.set_unloaded_data(LiveSchemaTree::INDEX_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(), (short)LiveSchemaTree::COLUMN_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+
+    view_node.set_unloaded_data(LiveSchemaTree::COLUMN_DATA);
+    EXPECT_EQ(view_node.get_loaded_mask(), 0);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+
+    // Tests the inconsistency scenarios.
+    // Loading items get cleaned if they get loaded, tho if other items are to be set as loaded they are done.
+    view_node.set_loading_mask(LiveSchemaTree::COLUMN_DATA);
+    view_node.set_loaded_data(LiveSchemaTree::INDEX_DATA);
+    EXPECT_FALSE(view_node.is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+    EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::INDEX_DATA));
+    EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::INDEX_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), LiveSchemaTree::COLUMN_DATA);
+
+    view_node.set_loaded_data(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA));
+    EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::INDEX_DATA));
+    EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+
+    // In order to set data unloaded, must be at loaded state first.
+    view_node.set_loading_mask(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    view_node.set_loaded_data(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    view_node.set_unloaded_data(LiveSchemaTree::FK_DATA);
+    EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+    EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::INDEX_DATA));
+    EXPECT_EQ(view_node.get_loaded_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+
+    view_node.set_unloaded_data(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::FK_DATA);
+    EXPECT_FALSE(view_node.is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+    EXPECT_TRUE(view_node.is_data_loaded(LiveSchemaTree::INDEX_DATA));
+    EXPECT_EQ(view_node.get_loaded_mask(), (short)LiveSchemaTree::INDEX_DATA);
+    EXPECT_EQ(view_node.get_loading_mask(), 0);
+  }
+
+  // Testing a Table node.
+  {
+    LiveSchemaTree::TableData source, target;
+    source.details = "This is a sample";
+    source.columns_load_error = true;
+    source.fetched = true;
+    source.fetching = true;
+    source._loaded_mask = 1;
+    source._loading_mask = 1;
+
+    EXPECT_EQ(target.get_object_name(), "Table");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::Table);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_FALSE(target.columns_load_error);
+    EXPECT_FALSE(target.fetched);
+    EXPECT_FALSE(target.fetching);
+    EXPECT_EQ(target._loaded_mask, 0);
+    EXPECT_EQ(target._loading_mask, 0);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample");
+    EXPECT_TRUE(target.columns_load_error);
+    EXPECT_TRUE(target.fetched);
+    EXPECT_TRUE(target.fetching);
+    EXPECT_EQ(target._loaded_mask, 1);
+    EXPECT_EQ(target._loading_mask, 1);
+
+    // Fills the tree using the real structure..
+    base::StringListPtr schemas(new std::list<std::string>());
+    mforms::TreeNodeRef schema;
+    mforms::TreeNodeRef table;
+    LiveSchemaTree::TableData* pdata;
+
+    schemas->push_back("one");
+
+    data->treeTestHelper.update_schemata(schemas);
+    schema = data->treeTestHelper.get_child_node(test_node_ref, "one");
+
+    data->delegate->expect_fetch_schema_contents_call();
+    data->delegate->_mock_table_list->push_back("table1");
+    data->delegate->_mock_call_back_slot = true;
+    data->delegate->_mock_schema_name = "one";
+    data->delegate->_check_id = "TF001CHK011";
+    data->treeTestHelper.load_schema_content(schema);
+
+    data->delegate->check_and_reset("TF001CHK011");
+
+    data->delegate->_mock_schema_name = "one";
+    data->delegate->_mock_object_name = "table1";
+    data->delegate->_mock_object_type = LiveSchemaTree::Table;
+    data->delegate->_expect_fetch_object_details_call = true;
+    data->delegate->_mock_fk_list->push_back("fk_1");
+    data->delegate->_mock_fk_list->push_back("fk_2");
+    data->delegate->_mock_call_back_slot_indexes = true;
+    data->delegate->_mock_index_list->push_back("first_column");
+    data->delegate->_mock_call_back_slot_triggers = true;
+    data->delegate->_mock_trigger_list->push_back("trigger1");
+    data->delegate->_mock_call_back_slot_columns = true;
+    data->delegate->_mock_call_back_slot_foreign_keys = true;
+    data->delegate->_mock_column_list->push_back("first_column");
+    data->delegate->_mock_column_list->push_back("second_column");
+
+    data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table1",
+                                            LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::FK_DATA |
+                                              LiveSchemaTree::TRIGGER_DATA | LiveSchemaTree::INDEX_DATA);
+
+    data->delegate->check_and_reset("TF001CHK011");
+
+    table = data->treeTestHelper.get_node_for_object("one", LiveSchemaTree::Table, "table1");
+    pdata = dynamic_cast<LiveSchemaTree::TableData*>(table->get_data());
+
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_EQ(pdata->get_details(true, table),
+              "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
+              "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
+              "MOCK LOADED Column : first_column"
+              "MOCK LOADED Column : second_column"
+              "</table><br><br>"
+              "<div><b>Related Tables:</b></div>"
+              "MOCK LOADED Foreign Key : fk_1"
+              "MOCK LOADED Foreign Key : fk_2");
+  }
+
+  // Testing copy and get_details for a Schema node.
+  {
+    LiveSchemaTree::SchemaData source, target;
+    source.details = "This is a sample";
+    source.fetched = true;
+    source.fetching = true;
+
+    EXPECT_EQ(target.get_object_name(), "Schema");
+    EXPECT_EQ(target.get_type(), LiveSchemaTree::Schema);
+
+    EXPECT_EQ(target.details, "");
+    EXPECT_FALSE(target.fetched);
+    EXPECT_FALSE(target.fetching);
+
+    target.copy(&source);
+    EXPECT_EQ(target.details, "This is a sample");
+    EXPECT_TRUE(target.fetched);
+    EXPECT_TRUE(target.fetching);
+
+    EXPECT_EQ(target.get_details(false, test_node_ref), "This is a sample");
+    EXPECT_EQ(target.get_details(true, test_node_ref),
+              "<b>Schema:</b> <font color='#148814'><b>Dummy</b></font><br><br>");
+  }
 }
+
+TEST_F(Live_Schema_TreeTest, Setting_up_nodes_inclusive_their_icons) {
+  std::string path;
+  mforms::TreeNodeRef node = data->pModelView->root_node();
+
+  // Testing SchemaNode.
+  {
+    LiveSchemaTree::SchemaData* pdata = nullptr;
+    LiveSchemaTree::SchemaData* pdata_temp = new LiveSchemaTree::SchemaData();
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data pointer is passed, it is used
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Schema, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Schema);
+    pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
+
+    pdata->fetching = true;
+    data->treeTestHelper.update_node_icon(temp_node);
+    path = bec::IconManager::get_instance()->get_icon_file(
+      bec::IconManager::get_instance()->get_icon_id("db.Schema.loading.side.$.png", bec::Icon16));
+    EXPECT_EQ(temp_node->get_string(1), path);
+
+    pdata->fetched = true;
+    data->treeTestHelper.update_node_icon(temp_node);
+    path = bec::IconManager::get_instance()->get_icon_file(
+      bec::IconManager::get_instance()->get_icon_id("db.Schema.side.$.png", bec::Icon16));
+    EXPECT_EQ(temp_node->get_string(1), path);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing TableNode.
+  {
+    LiveSchemaTree::TableData* pdata = nullptr;
+    LiveSchemaTree::TableData* pdata_temp = new LiveSchemaTree::TableData();
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data pointer is passed, it is used
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Table, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::TableData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Table);
+    pdata = dynamic_cast<LiveSchemaTree::TableData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing ViewNode.
+  {
+    LiveSchemaTree::ViewData* pdata = nullptr;
+    LiveSchemaTree::ViewData* pdata_temp = new LiveSchemaTree::ViewData();
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data pointer is passed, it is used.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::View, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::ViewData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::View);
+    pdata = dynamic_cast<LiveSchemaTree::ViewData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
+
+    // Checking for icon setup.
+    pdata->columns_load_error = true;
+    data->treeTestHelper.update_node_icon(temp_node);
+    path = bec::IconManager::get_instance()->get_icon_file(
+      bec::IconManager::get_instance()->get_icon_id("db.View.broken.side.$.png", bec::Icon16));
+    EXPECT_EQ(temp_node->get_string(1), path);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing ProcedureNode.
+  {
+    LiveSchemaTree::ProcedureData* pdata = nullptr;
+    LiveSchemaTree::ProcedureData* pdata_temp = new LiveSchemaTree::ProcedureData();
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data pointer is passed, it is used.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Procedure, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::ProcedureData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Procedure);
+    pdata = dynamic_cast<LiveSchemaTree::ProcedureData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing FunctionNode.
+  {
+    LiveSchemaTree::FunctionData* pdata = nullptr;
+    LiveSchemaTree::FunctionData* pdata_temp = new LiveSchemaTree::FunctionData();
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data pointer is passed, it is used.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Function, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::FunctionData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Function);
+    pdata = dynamic_cast<LiveSchemaTree::FunctionData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing ViewColumnNode.
+  {
+    LiveSchemaTree::ColumnData* pdata = nullptr;
+    LiveSchemaTree::ColumnData* pdata_temp = new LiveSchemaTree::ColumnData(LiveSchemaTree::ViewColumn);
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data it is requested to not create data if not passed.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ViewColumn, NULL, true);
+    EXPECT_EQ(temp_node->get_data(), nullptr);
+
+    // Testing when a data pointer is passed, it is used.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ViewColumn, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::ColumnData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ViewColumn);
+    pdata = dynamic_cast<LiveSchemaTree::ColumnData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::ViewColumn);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing TableColumnNode.
+  {
+    LiveSchemaTree::ColumnData* pdata = nullptr;
+    LiveSchemaTree::ColumnData* pdata_temp = new LiveSchemaTree::ColumnData(LiveSchemaTree::TableColumn);
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data pointer is passed, it is used.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::TableColumn, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::ColumnData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::TableColumn);
+    pdata = dynamic_cast<LiveSchemaTree::ColumnData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::TableColumn);
+
+    // Checking for icon setup.
+    pdata->is_fk = true;
+    data->treeTestHelper.update_node_icon(temp_node);
+    path = bec::IconManager::get_instance()->get_icon_file(
+      bec::IconManager::get_instance()->get_icon_id("db.Column.fk.side.$.png", bec::Icon16));
+    EXPECT_EQ(temp_node->get_string(1), path);
+
+    pdata->is_pk = true;
+    data->treeTestHelper.update_node_icon(temp_node);
+    path = bec::IconManager::get_instance()->get_icon_file(
+      bec::IconManager::get_instance()->get_icon_id("db.Column.pk.side.$.png", bec::Icon16));
+    EXPECT_EQ(temp_node->get_string(1), path);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing IndexNode.
+  {
+    LiveSchemaTree::IndexData* pdata = nullptr;
+    LiveSchemaTree::IndexData* pdata_temp = new LiveSchemaTree::IndexData();
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data pointer is passed, it is used.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Index, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::IndexData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Index);
+    pdata = dynamic_cast<LiveSchemaTree::IndexData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Index);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing TriggerNode.
+  {
+    LiveSchemaTree::TriggerData* pdata = nullptr;
+    LiveSchemaTree::TriggerData* pdata_temp = new LiveSchemaTree::TriggerData();
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data it is requested to not create data if not passed.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Trigger, NULL, true);
+    EXPECT_EQ(temp_node->get_data(), nullptr);
+
+    // Testing when a data pointer is passed, it is used.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Trigger, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::TriggerData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::Trigger);
+    pdata = dynamic_cast<LiveSchemaTree::TriggerData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Trigger);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+
+  // Testing ForeignKeyNode.
+  {
+    LiveSchemaTree::FKData* pdata = nullptr;
+    LiveSchemaTree::FKData* pdata_temp = new LiveSchemaTree::FKData();
+    mforms::TreeNodeRef temp_node = node->add_child();
+
+    // Testing when a data it is requested to not create data if not passed.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ForeignKey, NULL, true);
+    EXPECT_EQ(temp_node->get_data(), nullptr);
+
+    // Testing when a data pointer is passed, it is used.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ForeignKey, pdata_temp);
+    pdata = dynamic_cast<LiveSchemaTree::FKData*>(temp_node->get_data());
+    EXPECT_EQ(pdata, pdata_temp);
+
+    // Testing without data so a new instance is created.
+    data->treeTestHelper.setup_node(temp_node, LiveSchemaTree::ForeignKey);
+    pdata = dynamic_cast<LiveSchemaTree::FKData*>(temp_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_NE(pdata, pdata_temp);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::ForeignKey);
+
+    node->remove_children();
+    delete pdata;
+    delete pdata_temp;
+  }
+}
+
+TEST_F(Live_Schema_TreeTest, Binary_Plus_sequential_node_search) {
+  // The Binary Search is used for schemas, tables, views and routines for
+  // which the assumption is that the list of elements is sorted.
+  //
+  // The Sequential search is for the rest of the objects which should keep
+  // the order in which they were created. If specified, the type parameter will
+  // enforce that the searched node is of the specified type. This may not be used
+  // as all the nodes containing unsorted nodes have objects of the same type.
+
+  LiveSchemaTree::LSTData* pdata = nullptr;
+  mforms::TreeNodeRef node = data->pModelView->root_node();
+  mforms::TreeNodeRef child01 = node->add_child();
+  mforms::TreeNodeRef child02 = node->add_child();
+  mforms::TreeNodeRef child03 = node->add_child();
+  mforms::TreeNodeRef child04 = node->add_child();
+  mforms::TreeNodeRef child05 = node->add_child();
+  mforms::TreeNodeRef found_node;
+
+  // All the nodes are added to the tree root as we are not
+  // testing the structure but the search operation.
+  data->treeTestHelper.setup_node(child01, LiveSchemaTree::Schema);
+  data->treeTestHelper.setup_node(child02, LiveSchemaTree::Table);
+  data->treeTestHelper.setup_node(child03, LiveSchemaTree::View);
+  data->treeTestHelper.setup_node(child04, LiveSchemaTree::Table);
+  data->treeTestHelper.setup_node(child05, LiveSchemaTree::View);
+
+  child01->set_string(0, "uno");
+  child02->set_string(0, "uno");
+  child03->set_string(0, "uno");
+  child04->set_string(0, "dos");
+  child05->set_string(0, "dos");
+
+  {
+    found_node = data->treeTestHelper.get_child_node(node, "uno", LiveSchemaTree::Schema, false);
+    EXPECT_EQ(found_node, child01);
+    EXPECT_EQ(found_node->get_string(0), child01->get_string(0));
+    EXPECT_EQ(found_node->get_data(), child01->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(node, "uno", LiveSchemaTree::Table, false);
+    EXPECT_EQ(found_node, child02);
+    EXPECT_EQ(found_node->get_string(0), child02->get_string(0));
+    EXPECT_EQ(found_node->get_data(), child02->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(node, "uno", LiveSchemaTree::View, false);
+    EXPECT_EQ(found_node, child03);
+    EXPECT_EQ(found_node->get_string(0), child03->get_string(0));
+    EXPECT_EQ(found_node->get_data(), child03->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(node, "dos", LiveSchemaTree::Table, false);
+    EXPECT_EQ(found_node, child04);
+    EXPECT_EQ(found_node->get_string(0), child04->get_string(0));
+    EXPECT_EQ(found_node->get_data(), child04->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(node, "dos", LiveSchemaTree::View, false);
+    EXPECT_EQ(found_node, child05);
+    EXPECT_EQ(found_node->get_string(0), child05->get_string(0));
+    EXPECT_EQ(found_node->get_data(), child05->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(node, "tres", LiveSchemaTree::View, false);
+    EXPECT_FALSE(found_node.is_valid());
+  }
+
+  // Now we create a series of tables.
+  std::vector<mforms::TreeNodeRef> tables;
+  for (size_t index = 0; index < 50; index++) {
+    tables.push_back(child01->add_child());
+    data->treeTestHelper.setup_node(tables[index], LiveSchemaTree::Table);
+    tables[index]->set_string(0, base::strfmt("Table%02d", (int)(index + 1)));
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child01, "Table01", LiveSchemaTree::Table, true);
+    EXPECT_EQ(found_node, tables[0]);
+    EXPECT_EQ(found_node->get_string(0), tables[0]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), tables[0]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child01, "Table26", LiveSchemaTree::Table, true);
+    EXPECT_EQ(found_node, tables[25]);
+    EXPECT_EQ(found_node->get_string(0), tables[25]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), tables[25]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child01, "Table50", LiveSchemaTree::Table, true);
+    EXPECT_EQ(found_node, tables[49]);
+    EXPECT_EQ(found_node->get_string(0), tables[49]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), tables[49]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child01, "Table51", LiveSchemaTree::View, true);
+    EXPECT_FALSE(found_node.is_valid());
+  }
+
+  // Now we create a series of procedures and functions.
+  std::vector<mforms::TreeNodeRef> procedures;
+  for (size_t index = 0; index < 25; index++) {
+    procedures.push_back(child02->add_child());
+    data->treeTestHelper.setup_node(procedures[index], LiveSchemaTree::Procedure);
+    procedures[index]->set_string(0, base::strfmt("Procedure%02d", (int)(index + 1)));
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child02, "Procedure01", LiveSchemaTree::Procedure, true);
+    EXPECT_EQ(found_node, procedures[0]);
+    EXPECT_EQ(found_node->get_string(0), procedures[0]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), procedures[0]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child02, "Procedure13", LiveSchemaTree::Procedure, true);
+    EXPECT_EQ(found_node, procedures[12]);
+    EXPECT_EQ(found_node->get_string(0), procedures[12]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), procedures[12]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child02, "Procedure25", LiveSchemaTree::Procedure, true);
+    EXPECT_EQ(found_node, procedures[24]);
+    EXPECT_EQ(found_node->get_string(0), procedures[24]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), procedures[24]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child02, "Procedure26", LiveSchemaTree::Procedure, true);
+    EXPECT_FALSE(found_node.is_valid());
+  }
+
+  std::vector<mforms::TreeNodeRef> functions;
+  for (size_t index = 0; index < 25; index++) {
+    functions.push_back(child03->add_child());
+    data->treeTestHelper.setup_node(functions[index], LiveSchemaTree::Function);
+    functions[index]->set_string(0, base::strfmt("Function%02d", (int)(index + 1)));
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child03, "Function01", LiveSchemaTree::Function, true);
+    EXPECT_EQ(found_node, functions[0]);
+    EXPECT_EQ(found_node->get_string(0), functions[0]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), functions[0]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child03, "Function13", LiveSchemaTree::Function, true);
+    EXPECT_EQ(found_node, functions[12]);
+    EXPECT_EQ(found_node->get_string(0), functions[12]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), functions[12]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child03, "Function25", LiveSchemaTree::Function, true);
+    EXPECT_EQ(found_node, functions[24]);
+    EXPECT_EQ(found_node->get_string(0), functions[24]->get_string(0));
+    EXPECT_EQ(found_node->get_data(), functions[24]->get_data());
+    pdata = dynamic_cast<LiveSchemaTree::LSTData*>(found_node->get_data());
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
+  }
+
+  {
+    found_node = data->treeTestHelper.get_child_node(child03, "Function26", LiveSchemaTree::Function, true);
+    EXPECT_FALSE(found_node.is_valid());
+  }
+}
+
+TEST_F(Live_Schema_TreeTest, Update_node_children) {
+  mforms::TreeNodeRef node = data->pModelView->root_node();
+  mforms::TreeNodeRef node_filtered = data->pModelView->root_node();
+  base::StringListPtr children01(new std::list<std::string>());
+  base::StringListPtr children02(new std::list<std::string>());
+  children01->push_back("actor");
+  children01->push_back("address");
+  children01->push_back("client");
+  children02->push_back("client");
+  children02->push_back("film");
+  children02->push_back("movie");
+
+  // Clears the node to have a clean start of the test.
+  node->remove_children();
+  EXPECT_EQ(node->count(), 0);
+
+  // The first update will add the client nodes into the root.
+  EXPECT_TRUE(data->treeTestHelper.update_node_children(node, children01, LiveSchemaTree::Schema));
+  EXPECT_EQ(node->count(), 3);
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "actor"));
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "address"));
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "client"));
+
+  // Testing an operation that will result in no changes.
+  EXPECT_FALSE(data->treeTestHelper.update_node_children(node, children01, LiveSchemaTree::Schema));
+  EXPECT_EQ(node->count(), 3);
+
+  // Testing an update removing nodes for unexisting names and appending new nodes.
+  EXPECT_TRUE(data->treeTestHelper.update_node_children(node, children02, LiveSchemaTree::Schema, true));
+  EXPECT_EQ(node->count(), 3);
+  EXPECT_FALSE(data->treeTestHelper.get_child_node(node, "actor").is_valid());
+  EXPECT_FALSE(data->treeTestHelper.get_child_node(node, "address").is_valid());
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "client").is_valid());
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "film").is_valid());
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "movie").is_valid());
+
+  children01->push_back("actor");
+  children01->push_back("address");
+  children01->push_back("client");
+
+  // Testing an update removing nodes for unexisting names and appending new nodes.
+  EXPECT_TRUE(data->treeTestHelper.update_node_children(node, children01, LiveSchemaTree::Schema, true, true));
+  EXPECT_EQ(node->count(), 5);
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "actor").is_valid());
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "address").is_valid());
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "client").is_valid());
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "film").is_valid());
+  EXPECT_TRUE(data->treeTestHelper.get_child_node(node, "movie").is_valid());
+
+  // Repeat the tests using a filtered tree.
+  data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
+  data->treeTestHelperFiltered.set_filter("*e*.*");
+  data->treeTestHelperFiltered.filter_data();
+
+  node_filtered = data->pModelViewFiltered->root_node();
+
+  EXPECT_EQ(node_filtered->count(), 3);
+
+  // The first update will add the client nodes into the root.
+  children01->push_back("filtered");
+  children01->push_back("finally");
+  children01->push_back("done");
+  EXPECT_TRUE(
+    data->treeTestHelperFiltered.update_node_children(node_filtered, children01, LiveSchemaTree::Schema, true, true));
+  EXPECT_EQ(node->count(), 8);
+  EXPECT_EQ(node_filtered->count(), 5);
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "address").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "client").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "done").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "filtered").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "movie").is_valid());
+
+  // Testing an operation that will result in no changes.
+  EXPECT_FALSE(
+    data->treeTestHelperFiltered.update_node_children(node_filtered, children01, LiveSchemaTree::Schema, true, true));
+  EXPECT_EQ(node->count(), 8);
+  EXPECT_EQ(node_filtered->count(), 5);
+
+  children02->push_back("client");
+  children02->push_back("customer");
+
+  // Testing an update removing nodes for unexisting names and appending new nodes.
+  EXPECT_TRUE(data->treeTestHelperFiltered.update_node_children(node_filtered, children02, LiveSchemaTree::Schema,
+                                                                true, false));
+  EXPECT_EQ(node->count(), 4);
+  EXPECT_EQ(node_filtered->count(), 3);
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "client").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "customer").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "movie").is_valid());
+
+  children01->push_back("actor");
+  children01->push_back("address");
+  children01->push_back("client");
+  children01->push_back("film");
+  children01->push_back("filtered");
+  children01->push_back("finally");
+  children01->push_back("movie");
+  children01->push_back("done");
+
+  // Testing an update removing nodes for unexisting names and appending new nodes.
+  EXPECT_TRUE(data->treeTestHelperFiltered.update_node_children(node_filtered, children01, LiveSchemaTree::Schema,
+                                                                true, false));
+  EXPECT_EQ(node->count(), 8);
+  EXPECT_EQ(node_filtered->count(), 5);
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "address").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "client").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "filtered").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "movie").is_valid());
+  EXPECT_TRUE(data->treeTestHelperFiltered.get_child_node(node_filtered, "done").is_valid());
+
+  node->remove_children();
+  node_filtered->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Activating_a_schema) {
+  mforms::TreeNodeRef node = data->pModelView->root_node();
+  mforms::TreeNodeRef schema;
+  base::StringListPtr schemas(new std::list<std::string>());
+
+  schemas->push_back("one");
+  schemas->push_back("two");
+  schemas->push_back("three");
+
+  data->treeTestHelper.update_node_children(node, schemas, LiveSchemaTree::Schema, true, true);
+
+  data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
+  data->treeTestHelperFiltered.set_filter("*e*");
+  data->treeTestHelperFiltered.filter_data();
+
+  data->treeTestHelperFiltered.set_active_schema("one");
+  EXPECT_EQ(data->treeTestHelperFiltered._active_schema, "one");
+  EXPECT_EQ(data->treeTestHelper._active_schema, "one");
+
+  data->treeTestHelperFiltered.set_active_schema("three");
+  EXPECT_EQ(data->treeTestHelperFiltered._active_schema, "three");
+  EXPECT_EQ(data->treeTestHelper._active_schema, "three");
+
+  node->remove_children();
+  data->pModelViewFiltered->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Updating_schema_nodes) {
+  mforms::TreeNodeRef node = data->pModelView->root_node();
+  mforms::TreeNodeRef schema;
+  base::StringListPtr schemas(new std::list<std::string>());
+  LiveSchemaTree::SchemaData* pdata = nullptr;
+
+  EXPECT_EQ(node->count(), 0);
+
+  schemas->push_back("one");
+  schemas->push_back("two");
+  schemas->push_back("three");
+
+  data->treeTestHelper.update_schemata(schemas);
+
+  EXPECT_EQ(node->count(), 3);
+
+  schema = data->treeTestHelper.get_child_node(node, "one");
+  EXPECT_TRUE(schema);
+  pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
+  EXPECT_NE(pdata, nullptr);
+  EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
+  pdata = nullptr;
+
+  schema = data->treeTestHelper.get_child_node(node, "two");
+  EXPECT_TRUE(schema);
+  pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
+  EXPECT_NE(pdata, nullptr);
+  EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
+  pdata = nullptr;
+
+  schema = data->treeTestHelper.get_child_node(node, "three");
+  EXPECT_TRUE(schema);
+  pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
+  EXPECT_NE(pdata, nullptr);
+  EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
+
+  // Simulating schema expansion to ensure a loaded schema triggers a data reload.
+  schema->expand();
+  pdata->fetched = true;
+  data->delegate->expect_fetch_schema_contents_call();
+  data->delegate->_mock_call_back_slot = false;
+  data->delegate->_mock_schema_name = "three";
+
+  data->treeTestHelper.update_schemata(schemas);
+
+  data->delegate->check_and_reset("TF009CHK004");
+
+  node->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Loading_schema_content) {
+  mforms::TreeNodeRef node_base = data->pModelView->root_node();
+  mforms::TreeNodeRef node = data->pModelViewFiltered->root_node();
+  mforms::TreeNodeRef schema;
+  mforms::TreeNodeRef schema_base;
+  mforms::TreeNodeRef child;
+  base::StringListPtr schemas(new std::list<std::string>());
+  LiveSchemaTree::SchemaData* pdata = nullptr;
+
+  EXPECT_EQ(node->count(), 0);
+
+  schemas->push_back("one");
+  schemas->push_back("two");
+  schemas->push_back("three");
+
+  data->treeTestHelper.update_schemata(schemas);
+
+  data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
+  data->treeTestHelperFiltered.set_filter("one");
+  data->treeTestHelperFiltered.filter_data();
+
+  schema_base = data->treeTestHelper.get_child_node(node_base, "one");
+  schema = data->treeTestHelperFiltered.get_child_node(node, "one");
+  pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
+
+  // Validates the previous state.
+  EXPECT_FALSE(pdata->fetched);
+  EXPECT_FALSE(pdata->fetching);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0), LiveSchemaTree::TABLES_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::PROCEDURES_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::FUNCTIONS_CAPTION);
+
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0), LiveSchemaTree::TABLES_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::PROCEDURES_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::FUNCTIONS_CAPTION);
+
+  // Simulating schema expansion to ensure a loaded schema triggers a data reload
+  data->delegateFiltered->expect_fetch_schema_contents_call();
+  data->delegateFiltered->_mock_call_back_slot = false;
+  data->delegateFiltered->_mock_schema_name = "one";
+
+  data->treeTestHelperFiltered.load_schema_content(schema);
+
+  data->delegateFiltered->check_and_reset("TF010CHK002");
+
+  // Validates the previous state.
+  EXPECT_TRUE(pdata->fetching);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::TABLES_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::VIEWS_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::PROCEDURES_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::FUNCTIONS_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
+
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::TABLES_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::VIEWS_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::PROCEDURES_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::FUNCTIONS_CAPTION + " " + LiveSchemaTree::FETCHING_CAPTION);
+
+  data->pModelView->root_node()->remove_children();
+  data->pModelViewFiltered->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Receiving_schema_content) {
+  mforms::TreeNodeRef node_base = data->pModelView->root_node();
+  mforms::TreeNodeRef node = data->pModelViewFiltered->root_node();
+  mforms::TreeNodeRef schema;
+  mforms::TreeNodeRef schema_base;
+  mforms::TreeNodeRef child;
+  base::StringListPtr schemas(new std::list<std::string>());
+  LiveSchemaTree::SchemaData* pdata = nullptr;
+
+  EXPECT_EQ(node->count(), 0);
+
+  schemas->push_back("one");
+  schemas->push_back("two");
+  schemas->push_back("three");
+
+  data->treeTestHelper.update_schemata(schemas);
+
+  data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
+  data->treeTestHelperFiltered.set_filter("one");
+  data->treeTestHelperFiltered.filter_data();
+
+  schema_base = data->treeTestHelper.get_child_node(node_base, "one");
+  schema = data->treeTestHelperFiltered.get_child_node(node, "one");
+  pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(schema->get_data());
+
+  // Validates the previous state.
+  EXPECT_FALSE(pdata->fetching);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0), LiveSchemaTree::TABLES_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::PROCEDURES_CAPTION);
+  EXPECT_EQ(schema->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::FUNCTIONS_CAPTION);
+
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_string(0), LiveSchemaTree::TABLES_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::PROCEDURES_CAPTION);
+  EXPECT_EQ(schema_base->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_string(0),
+            LiveSchemaTree::FUNCTIONS_CAPTION);
+
+  // Simulating schema expansion to ensure a loaded schema triggers a data reload.
+  data->delegateFiltered->expect_fetch_schema_contents_call();
+  data->delegateFiltered->_mock_call_back_slot = true;
+  data->delegateFiltered->_mock_schema_name = "one";
+  data->delegateFiltered->_mock_table_list->push_back("table1");
+  data->delegateFiltered->_mock_table_list->push_back("table2");
+  data->delegateFiltered->_mock_table_list->push_back("table3");
+  data->delegateFiltered->_mock_view_list->push_back("view1");
+  data->delegateFiltered->_mock_view_list->push_back("view2");
+  data->delegateFiltered->_mock_procedure_list->push_back("procedure1");
+  data->delegateFiltered->_mock_function_list->push_back("function1");
+
+  data->treeTestHelperFiltered.load_schema_content(schema);
+
+  data->delegateFiltered->check_and_reset("TF011CHK002");
+
+  schema = data->treeTestHelperFiltered.get_child_node(node, "one");
+
+  // Validates the previous state.
+  EXPECT_TRUE(pdata->fetched);
+  EXPECT_FALSE(pdata->fetching);
+
+  child = schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
+  EXPECT_EQ(child->get_string(0), LiveSchemaTree::TABLES_CAPTION);
+  EXPECT_EQ(child->count(), 3);
+
+  child = schema->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
+  EXPECT_EQ(child->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
+  EXPECT_EQ(child->count(), 2);
+
+  child = schema->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
+  EXPECT_EQ(child->get_string(0), LiveSchemaTree::PROCEDURES_CAPTION);
+  EXPECT_EQ(child->count(), 1);
+
+  child = schema->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
+  EXPECT_EQ(child->get_string(0), LiveSchemaTree::FUNCTIONS_CAPTION);
+  EXPECT_EQ(child->count(), 1);
+
+  child = schema_base->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
+  EXPECT_EQ(child->get_string(0), LiveSchemaTree::TABLES_CAPTION);
+  EXPECT_EQ(child->count(), 3);
+
+  child = schema_base->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
+  EXPECT_EQ(child->get_string(0), LiveSchemaTree::VIEWS_CAPTION);
+  EXPECT_EQ(child->count(), 2);
+
+  child = schema_base->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
+  EXPECT_EQ(child->get_string(0), LiveSchemaTree::PROCEDURES_CAPTION);
+  EXPECT_EQ(child->count(), 1);
+
+  child = schema_base->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
+  EXPECT_EQ(child->get_string(0), LiveSchemaTree::FUNCTIONS_CAPTION);
+  EXPECT_EQ(child->count(), 1);
+
+  node->remove_children();
+  node_base->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Loading_table_details) {
+  mforms::TreeNodeRef node = data->pModelView->root_node();
+  mforms::TreeNodeRef schema;
+  mforms::TreeNodeRef table;
+  base::StringListPtr schemas(new std::list<std::string>());
+  LiveSchemaTree::TableData* pdata = nullptr;
+
+  EXPECT_EQ(node->count(), 0);
+
+  schemas->push_back("one");
+
+  data->treeTestHelper.update_schemata(schemas);
+
+  schema = data->treeTestHelper.get_child_node(node, "one");
+
+  // Simulating schema expansion to ensure a loaded schema triggers a data reload.
+  data->delegate->expect_fetch_schema_contents_call();
+  data->delegate->_mock_call_back_slot = true;
+  data->delegate->_mock_schema_name = "one";
+  data->delegate->_mock_table_list->push_back("table1");
+  data->delegate->_mock_table_list->push_back("table2");
+  data->delegate->_mock_view_list->push_back("view1");
+  data->delegate->_mock_procedure_list->push_back("procedure1");
+  data->delegate->_mock_function_list->push_back("function1");
+  data->delegate->_check_id = "TF012CHK001";
+
+  data->treeTestHelper.load_schema_content(schema);
+  data->delegate->check_and_reset("TF012CHK001");
+
+  // Initial test, nothing has been loaded.
+  data->delegate->_expect_fetch_object_details_call = true;
+  data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA;
+  data->delegate->_mock_schema_name = "one";
+  data->delegate->_mock_object_name = "table1";
+  data->delegate->_mock_object_type = LiveSchemaTree::Table;
+  data->delegate->_check_id = "TF012CHK002";
+
+  data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table1",
+                                          LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+
+  data->delegate->check_and_reset("TF012CHK002");
+
+  // Initial test, same loading requested but as it's already in the process of
+  // loading (because of the previous step) no fetch call is done.
+  data->delegate->_expect_fetch_object_details_call = false;
+  data->delegate->_check_id = "TF012CHK003";
+  data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table1",
+                                          LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+  data->delegate->check_and_reset("TF012CHK003");
+
+  // Third test, reloading existing data and additional info, causes only additional info.
+  // to be requested
+  data->delegate->_expect_fetch_object_details_call = true;
+  data->delegate->_mock_flags = LiveSchemaTree::TRIGGER_DATA;
+  data->delegate->_check_id = "TF012CHK004";
+  data->treeTestHelper.load_table_details(
+    LiveSchemaTree::Table, "one", "table1",
+    LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA | LiveSchemaTree::TRIGGER_DATA);
+  data->delegate->check_and_reset("TF012CHK004");
+
+  // Repeat the tests but now marking some information as already loaded.
+  table = data->treeTestHelper.get_child_node(schema->get_child(LiveSchemaTree::TABLES_NODE_INDEX), "table2");
+  pdata = dynamic_cast<LiveSchemaTree::TableData*>(table->get_data());
+
+  pdata->set_loaded_data(LiveSchemaTree::COLUMN_DATA);
+
+  data->delegate->_expect_fetch_object_details_call = true;
+  data->delegate->_mock_flags = LiveSchemaTree::INDEX_DATA;
+  data->delegate->_mock_schema_name = "one";
+  data->delegate->_mock_object_name = "table2";
+  data->delegate->_mock_object_type = LiveSchemaTree::Table;
+  data->delegate->_check_id = "TF012CHK005";
+
+  data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table2",
+                                          LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+
+  data->delegate->check_and_reset("TF012CHK005");
+
+  data->delegate->_expect_fetch_object_details_call = true;
+  data->delegate->_mock_flags = LiveSchemaTree::TRIGGER_DATA | LiveSchemaTree::FK_DATA;
+  data->delegate->_mock_schema_name = "one";
+  data->delegate->_mock_object_name = "table2";
+  data->delegate->_mock_object_type = LiveSchemaTree::Table;
+  data->delegate->_check_id = "TF012CHK006";
+
+  data->treeTestHelper.load_table_details(LiveSchemaTree::Table, "one", "table2",
+                                          LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA |
+                                            LiveSchemaTree::TRIGGER_DATA | LiveSchemaTree::FK_DATA);
+
+  data->delegate->check_and_reset("TF012CHK006");
+}
+
+TEST_F(Live_Schema_TreeTest, Identifier_comparisons) {
+  data->treeTestHelper.set_case_sensitive_identifiers(true);
+
+  EXPECT_TRUE(data->treeTestHelper._case_sensitive_identifiers);
+  EXPECT_FALSE(data->treeTestHelper.identifiers_equal("first", "First"));
+  EXPECT_TRUE(data->treeTestHelper.identifiers_equal("second", "second"));
+
+  data->treeTestHelper.set_case_sensitive_identifiers(false);
+
+  EXPECT_FALSE(data->treeTestHelper._case_sensitive_identifiers);
+  EXPECT_TRUE(data->treeTestHelper.identifiers_equal("first", "First"));
+  EXPECT_TRUE(data->treeTestHelper.identifiers_equal("second", "second"));
+}
+
+TEST_F(Live_Schema_TreeTest, Object_type_determination) {
+  // Testing for database objects.
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Schema));
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Table));
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::View));
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Procedure));
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Function));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::TableCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ViewCollection));
+  EXPECT_FALSE(
+    data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ProcedureCollection));
+  EXPECT_FALSE(
+    data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::FunctionCollection));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ColumnCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::IndexCollection));
+  EXPECT_FALSE(
+    data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::TriggerCollection));
+  EXPECT_FALSE(
+    data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ForeignKeyCollection));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Trigger));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::TableColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ViewColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ForeignKey));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Index));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::ForeignKeyColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::IndexColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::DatabaseObject, LiveSchemaTree::Any));
+
+  // Testing for schema objects.
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Table));
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::View));
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Procedure));
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Function));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Schema));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::TableCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ViewCollection));
+  EXPECT_FALSE(
+    data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ProcedureCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::FunctionCollection));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ColumnCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::IndexCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::TriggerCollection));
+  EXPECT_FALSE(
+    data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ForeignKeyCollection));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Trigger));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::TableColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ViewColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ForeignKey));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Index));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::ForeignKeyColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::IndexColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::SchemaObject, LiveSchemaTree::Any));
+
+  // Testing for table/view objects.
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Table));
+  EXPECT_TRUE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::View));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Schema));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Procedure));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Function));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::TableCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ViewCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ProcedureCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::FunctionCollection));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ColumnCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::IndexCollection));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::TriggerCollection));
+  EXPECT_FALSE(
+    data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ForeignKeyCollection));
+
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Trigger));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::TableColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ViewColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ForeignKey));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Index));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::ForeignKeyColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::IndexColumn));
+  EXPECT_FALSE(data->treeTestHelper.is_object_type(LiveSchemaTree::TableOrView, LiveSchemaTree::Any));
+}
+
+TEST_F(Live_Schema_TreeTest, Setting_a_model_view) {
+  data->treeTestHelper.set_model_view(NULL);
+  EXPECT_EQ(data->treeTestHelper._model_view, nullptr);
+
+  data->treeTestHelper.set_model_view(data->pModelView);
+  EXPECT_NE(data->treeTestHelper._model_view, nullptr);
+  EXPECT_EQ(data->treeTestHelper._model_view, data->pModelView);
+}
+
+TEST_F(Live_Schema_TreeTest, Setting_a_data_delegate) {
+  std::shared_ptr<LiveSchemaTree::Delegate> null_delegate;
+  std::shared_ptr<LiveSchemaTree::FetchDelegate> null_fetch_delegate;
+
+  {
+    data->treeTestHelper.set_delegate(null_delegate);
+    data->treeTestHelper.set_fetch_delegate(null_fetch_delegate);
+
+    std::shared_ptr<LiveSchemaTree::Delegate> found_delegate = data->treeTestHelper._delegate.lock();
+    std::shared_ptr<LiveSchemaTree::FetchDelegate> found_fetch_delegate = data->treeTestHelper._fetch_delegate.lock();
+
+    EXPECT_EQ(found_delegate.get(), nullptr);
+    EXPECT_EQ(found_fetch_delegate.get(), nullptr);
+  }
+
+  {
+    data->treeTestHelper.set_delegate(data->delegate);
+    data->treeTestHelper.set_fetch_delegate(data->delegate);
+
+    std::shared_ptr<LiveSchemaTree::Delegate> found_delegate = data->treeTestHelper._delegate.lock();
+    std::shared_ptr<LiveSchemaTree::FetchDelegate> found_fetch_delegate = data->treeTestHelper._fetch_delegate.lock();
+
+    EXPECT_NE(found_delegate.get(), nullptr);
+    EXPECT_NE(found_fetch_delegate.get(), nullptr);
+
+    EXPECT_EQ(found_delegate.get(), data->delegate.get());
+    EXPECT_EQ(found_fetch_delegate.get(), data->delegate.get());
+  }
+}
+
+TEST_F(Live_Schema_TreeTest, Internalizing_a_token) {
+  EXPECT_EQ(LiveSchemaTree::internalize_token(""), 0);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("whatever"), 0);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("CASCADE"), 1);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("SET NULL"), 2);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("SET DEFAULT"), 3);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("RESTRICT"), 4);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("NO ACTION"), 5);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("BTREE"), 6);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("FULLTEXT"), 7);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("HASH"), 8);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("RTREE"), 9);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("SPATIAL"), 10);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("INSERT"), 11);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("UPDATE"), 12);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("DELETE"), 13);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("BEFORE"), 14);
+  EXPECT_EQ(LiveSchemaTree::internalize_token("AFTER"), 15);
+}
+
+TEST_F(Live_Schema_TreeTest, Externalizing_a_token) {
+  EXPECT_EQ(LiveSchemaTree::externalize_token(0), "");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(20), "");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(1), "CASCADE");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(2), "SET NULL");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(3), "SET DEFAULT");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(4), "RESTRICT");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(5), "NO ACTION");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(6), "BTREE");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(7), "FULLTEXT");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(8), "HASH");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(9), "RTREE");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(10), "SPATIAL");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(11), "INSERT");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(12), "UPDATE");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(13), "DELETE");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(14), "BEFORE");
+  EXPECT_EQ(LiveSchemaTree::externalize_token(15), "AFTER");
+}
+
+TEST_F(Live_Schema_TreeTest, Updating_live_objects) {
+  data->treeTestHelper.enable_events(true);
+
+  mforms::TreeNodeRef object_node;
+  // Testing Schema Object.
+  {
+    // Ensures the schema doesn't exist.
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+
+    // Ensures a schema node is created.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Schema, "", "", "schema1");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
+    EXPECT_NE(object_node.ptr(), nullptr);
+
+    LiveSchemaTree::SchemaData* pdata = dynamic_cast<LiveSchemaTree::SchemaData*>(object_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Schema);
+
+    // Ensures a schema node is deleted.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Schema, "", "schema1", "");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+  }
+
+  // Adds a schema object.
+  data->treeTestHelper.update_live_object_state(LiveSchemaTree::Schema, "", "", "schema1");
+
+  // Testing View Object.
+  {
+    // Ensures the view doesn't exist.
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view1");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+
+    // Ensures a view node is created.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "", "view1");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view1");
+    EXPECT_NE(object_node.ptr(), nullptr);
+
+    LiveSchemaTree::ViewData* pdata = dynamic_cast<LiveSchemaTree::ViewData*>(object_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
+
+    // Ensures a view node is renamed.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view1", "view2");
+    EXPECT_EQ(object_node->get_string(0), "view2");
+
+    // Ensures a loaded data is NOT reloaded when the node is not expanded.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view2", "view2");
+    EXPECT_EQ(pdata->get_loading_mask(), 0);
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+
+    // Now expands the node operation but expanding the node.
+    data->delegate->_expect_fetch_object_details_call = true;
+    data->delegate->_mock_schema_name = "schema1";
+    data->delegate->_mock_object_name = "view2";
+    data->delegate->_mock_object_type = LiveSchemaTree::View;
+    data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA;
+
+    // Emulates the node expansion.
+    data->treeTestHelper.expand_toggled(object_node, true);
+    object_node->expand();
+
+    // Ensures the needed calls were done.
+    data->delegate->check_and_reset("TF019CHK002");
+
+    // Now as the node was expanded, the data should be reloaded.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view2", "view2");
+    EXPECT_EQ(pdata->get_loading_mask(), LiveSchemaTree::COLUMN_DATA);
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+
+    // Marks the data as already loaded.
+    pdata->set_loading_mask(0);
+    pdata->set_loaded_data(LiveSchemaTree::COLUMN_DATA);
+
+    data->delegate->_expect_fetch_object_details_call = true;
+    data->delegate->_mock_schema_name = "schema1";
+    data->delegate->_mock_object_name = "view2";
+    data->delegate->_mock_object_type = LiveSchemaTree::View;
+    data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA;
+
+    // Now as the node was expanded, the data should be reloaded.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view2", "view2");
+    EXPECT_EQ(pdata->get_loading_mask(), (short)LiveSchemaTree::COLUMN_DATA);
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+
+    // Ensures the needed calls were done.
+    data->delegate->check_and_reset("TF019CHK002");
+
+    // Ensures a view node is deleted.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::View, "schema1", "view2", "");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view2");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+  }
+
+  // Testing Table Object.
+  {
+    // Ensures the table doesn't exist.
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+
+    // Ensures a table node is created.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "", "table1");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
+    EXPECT_NE(object_node.ptr(), nullptr);
+
+    LiveSchemaTree::TableData* pdata = dynamic_cast<LiveSchemaTree::TableData*>(object_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
+
+    // Ensures a view node is renamed.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "table1", "table2");
+    EXPECT_EQ(object_node->get_string(0), "table2");
+
+    // Ensures no data is reloaded on collapsed node.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "table2", "table2");
+    EXPECT_EQ(pdata->get_loading_mask(), 0);
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::FK_DATA));
+
+    // Expands the table to repeat the test on an expanded table.
+    data->delegate->_expect_fetch_object_details_call = true;
+    data->delegate->_mock_schema_name = "schema1";
+    data->delegate->_mock_object_name = "table2";
+    data->delegate->_mock_object_type = LiveSchemaTree::Table;
+    data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::FK_DATA;
+
+    // Emulates the node expansion.
+    data->treeTestHelper.expand_toggled(object_node, true);
+    object_node->expand();
+
+    // Ensures the needed calls were done.
+    data->delegate->check_and_reset("TF019CHK003");
+
+    EXPECT_EQ(pdata->get_loading_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::INDEX_DATA));
+
+    // Marks the data as already loaded.
+    pdata->set_loading_mask(0);
+    pdata->set_loaded_data(LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+
+    // Now exnsures the data is actually reloaded if the table was expanded.
+    data->delegate->_expect_fetch_object_details_call = true;
+    data->delegate->_mock_schema_name = "schema1";
+    data->delegate->_mock_object_name = "table2";
+    data->delegate->_mock_object_type = LiveSchemaTree::Table;
+    data->delegate->_mock_flags = LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::FK_DATA;
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "table2", "table2");
+
+    EXPECT_EQ(pdata->get_loading_mask(), LiveSchemaTree::COLUMN_DATA | LiveSchemaTree::INDEX_DATA);
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::COLUMN_DATA));
+    EXPECT_FALSE(pdata->is_data_loaded(LiveSchemaTree::INDEX_DATA));
+
+    // Ensures the needed calls were done.
+    data->delegate->check_and_reset("TF019CHK003");
+
+    // Ensures a table node is deleted.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Table, "schema1", "table1", "");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+  }
+
+  // Testing Procedure Object.
+  {
+    // Ensures the procedure doesn't exist.
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure1");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+
+    // Ensures a procedure node is created.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Procedure, "schema1", "", "procedure1");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure1");
+    EXPECT_NE(object_node.ptr(), nullptr);
+
+    LiveSchemaTree::ProcedureData* pdata = dynamic_cast<LiveSchemaTree::ProcedureData*>(object_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
+
+    // Ensures a procedure node is renamed.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Procedure, "schema1", "procedure1", "procedure2");
+    EXPECT_EQ(object_node->get_string(0), "procedure2");
+
+    // Ensures a procedure node is deleted.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Procedure, "schema1", "procedure2", "");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure2");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+  }
+
+  // Testing Function Object.
+  {
+    // Ensures the function doesn't exist
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function1");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+
+    // Ensures a function node is created.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Function, "schema1", "", "function1");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function1");
+    EXPECT_NE(object_node.ptr(), nullptr);
+
+    LiveSchemaTree::FunctionData* pdata = dynamic_cast<LiveSchemaTree::FunctionData*>(object_node->get_data());
+    EXPECT_NE(pdata, nullptr);
+    EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
+
+    // Ensures a function node is renamed.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Function, "schema1", "function1", "function2");
+    EXPECT_EQ(object_node->get_string(0), "function2");
+
+    // Ensures a function node is deleted.
+    data->treeTestHelper.update_live_object_state(LiveSchemaTree::Function, "schema1", "function2", "");
+    object_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function2");
+    EXPECT_EQ(object_node.ptr(), nullptr);
+  }
+}
+
+TEST_F(Live_Schema_TreeTest, Field_description) {
+  // Fills the tree using the real structure.
+  mforms::TreeNodeRef node;
+  mforms::TreeNodeRef child_node;
+  mforms::TreeNodeRef leaf_node;
+
+  data->fillBasicSchema("Field description");
+
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
+
+  // The schema node and it's direct children return the schema description.
+  EXPECT_EQ(data->treeTestHelper.get_field_description(node),
+            "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
+  child_node = node->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
+  child_node = node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
+  child_node = node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
+  child_node = node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Schema:</b> <font color='#148814'><b>schema1</b></font><br><br>");
+
+  // The table node and it's direct children return the table description.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
+  EXPECT_EQ(data->treeTestHelper.get_field_description(node),
+            "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
+            "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
+            "MOCK LOADED Column : table_column1"
+            "</table><br><br>"
+            "<div><b>Related Tables:</b></div>"
+            "MOCK LOADED Foreign Key : fk1");
+  child_node = node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
+            "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
+            "MOCK LOADED Column : table_column1"
+            "</table><br><br>"
+            "<div><b>Related Tables:</b></div>"
+            "MOCK LOADED Foreign Key : fk1");
+  leaf_node = child_node->get_child(0);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(leaf_node),
+            "<b>Column:</b> <font color='#148814'><b>table_column1</b></font><br><br>"
+            "<b>Definition:</b><table style=\"border: none; border-collapse: collapse;\">"
+            "MOCK LOADED Column : table_column1"
+            "</table><br><br>");
+
+  child_node = node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
+            "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
+            "MOCK LOADED Column : table_column1"
+            "</table><br><br>"
+            "<div><b>Related Tables:</b></div>"
+            "MOCK LOADED Foreign Key : fk1");
+  leaf_node = child_node->get_child(0);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(leaf_node),
+            "<b>Index:</b> <font color='#148814'><b>index1</b></font><br><br><b>Definition:</b><br>MOCK LOADED Index "
+            ": index1");
+
+  child_node = node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
+            "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
+            "MOCK LOADED Column : table_column1"
+            "</table><br><br>"
+            "<div><b>Related Tables:</b></div>"
+            "MOCK LOADED Foreign Key : fk1");
+  leaf_node = child_node->get_child(0);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(leaf_node),
+            "<b>Trigger:</b> <font color='#148814'><b>trigger1</b></font><br><br><b>Definition:</b><br>MOCK LOADED "
+            "Trigger : trigger1");
+
+  child_node = node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Table:</b> <font color='#148814'><b>table1</b></font><br><br>"
+            "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
+            "MOCK LOADED Column : table_column1"
+            "</table><br><br>"
+            "<div><b>Related Tables:</b></div>"
+            "MOCK LOADED Foreign Key : fk1");
+  leaf_node = child_node->get_child(0);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(leaf_node),
+            "<b>Foreign Key:</b> <font color='#148814'><b>fk1</b></font><br><br>"
+            "<b>Definition:</b><br>"
+            "MOCK LOADED Foreign Key : fk1");
+
+  // The view node and it's direct children return the table description.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view1");
+  EXPECT_EQ(data->treeTestHelper.get_field_description(node),
+            "<b>View:</b> <font color='#148814'><b>view1</b></font><br><br>"
+            "<b>Columns:</b><table style=\"border: none; border-collapse: collapse;\">"
+            "MOCK LOADED Column : view_column1"
+            "</table><br><br>");
+  child_node = node->get_child(0);
+  EXPECT_EQ(data->treeTestHelper.get_field_description(child_node),
+            "<b>Column:</b> <font color='#148814'><b>view_column1</b></font><br><br>"
+            "<b>Definition:</b><table style=\"border: none; border-collapse: collapse;\">"
+            "MOCK LOADED Column : view_column1"
+            "</table><br><br>");
+
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure1");
+  EXPECT_EQ(data->treeTestHelper.get_field_description(node),
+            "<b>Procedure:</b> <font color='#148814'><b>procedure1</b></font><br><br>");
+
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function1");
+  EXPECT_EQ(data->treeTestHelper.get_field_description(node),
+            "<b>Function:</b> <font color='#148814'><b>function1</b></font><br><br>");
+
+  data->pModelView->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Node_creation_for_object) {
+  mforms::TreeNodeRef schema_node;
+  mforms::TreeNodeRef object_node;
+  LiveSchemaTree::LSTData* pdata = nullptr;
+
+  schema_node = data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Schema, "");
+  object_node = data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Table, "table_object");
+
+  EXPECT_EQ(schema_node.ptr(), nullptr);
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  // Tests the schema and object nodes are created if they don't exist.
+  object_node = data->treeTestHelper.create_node_for_object("schema_object", LiveSchemaTree::Table, "table_object");
+  schema_node = data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Schema, "");
+
+  EXPECT_NE(schema_node.ptr(), nullptr);
+  EXPECT_NE(object_node.ptr(), nullptr);
+  pdata = dynamic_cast<LiveSchemaTree::LSTData*>(object_node->get_data());
+  EXPECT_NE(pdata, nullptr);
+  EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Table);
+
+  // Tests the view object is created under an existing schema if it already exists.
+  object_node = data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::View, "view_object");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  object_node = data->treeTestHelper.create_node_for_object("schema_object", LiveSchemaTree::View, "view_object");
+  EXPECT_NE(object_node.ptr(), nullptr);
+  EXPECT_EQ(schema_node.ptr(), object_node->get_parent()->get_parent().ptr());
+  pdata = dynamic_cast<LiveSchemaTree::LSTData*>(object_node->get_data());
+  EXPECT_NE(pdata, nullptr);
+  EXPECT_EQ(pdata->get_type(), LiveSchemaTree::View);
+
+  // Tests the procedure object is created under an existing schema if it already exists.
+  object_node =
+    data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Procedure, "procedure_object");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  object_node =
+    data->treeTestHelper.create_node_for_object("schema_object", LiveSchemaTree::Procedure, "procedure_object");
+  EXPECT_NE(object_node.ptr(), nullptr);
+  EXPECT_EQ(schema_node.ptr(), object_node->get_parent()->get_parent().ptr());
+  pdata = dynamic_cast<LiveSchemaTree::LSTData*>(object_node->get_data());
+  EXPECT_NE(pdata, nullptr);
+  EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Procedure);
+
+  // Tests the function object is created under an existing schema if it already exists.
+  object_node =
+    data->treeTestHelper.get_node_for_object("schema_object", LiveSchemaTree::Function, "function_object");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  object_node =
+    data->treeTestHelper.create_node_for_object("schema_object", LiveSchemaTree::Function, "function_object");
+  EXPECT_NE(object_node.ptr(), nullptr);
+  EXPECT_EQ(schema_node.ptr(), object_node->get_parent()->get_parent().ptr());
+  pdata = dynamic_cast<LiveSchemaTree::LSTData*>(object_node->get_data());
+  EXPECT_NE(pdata, nullptr);
+  EXPECT_EQ(pdata->get_type(), LiveSchemaTree::Function);
+
+  // Ensures no other object types alter the tree structure.
+  object_node = data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::Schema, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::TableCollection, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ViewCollection, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node = data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ProcedureCollection,
+                                                            "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::FunctionCollection, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ColumnCollection, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::IndexCollection, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::TriggerCollection, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node = data->treeTestHelper.create_node_for_object("fake_schema_object",
+                                                            LiveSchemaTree::ForeignKeyCollection, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::Trigger, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::TableColumn, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ViewColumn, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node = data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::Index, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ForeignKey, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::ForeignKeyColumn, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node =
+    data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::IndexColumn, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+  object_node = data->treeTestHelper.create_node_for_object("fake_schema_object", LiveSchemaTree::Any, "whatever");
+  EXPECT_EQ(object_node.ptr(), nullptr);
+
+  schema_node = data->treeTestHelper.get_node_for_object("fake_schema_object", LiveSchemaTree::Schema, "");
+  EXPECT_EQ(schema_node.ptr(), nullptr);
+}
+
+TEST_F(Live_Schema_TreeTest, Enabling_disabling_schema_content) {
+  bool backup = data->treeTestHelper.is_schema_contents_enabled();
+
+  data->treeTestHelper.is_schema_contents_enabled(true);
+  EXPECT_TRUE(data->treeTestHelper.is_schema_contents_enabled());
+
+  data->treeTestHelper.is_schema_contents_enabled(false);
+  EXPECT_FALSE(data->treeTestHelper.is_schema_contents_enabled());
+
+  data->treeTestHelper.is_schema_contents_enabled(backup);
+}
+
+TEST_F(Live_Schema_TreeTest, Recursive_schema_name_search) {
+  data->fillBasicSchema("Recursive schema name search");
+
+  data->checkGetSchemaNameRecursive(&data->treeTestHelper,
+                                    data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, ""));
+
+  data->pModelView->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Recursive_node_paths) {
+  data->fillBasicSchema("Recursive node paths");
+
+  data->checkNodePathsRecursive(&data->treeTestHelper,
+                                data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, ""));
+
+  data->pModelView->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Enabling_disableing_tree_events) {
+  bool backup = data->treeTestHelper.getEnabledEvents();
+
+  data->treeTestHelper.enable_events(true);
+  EXPECT_TRUE(data->treeTestHelper.getEnabledEvents());
+
+  data->treeTestHelper.enable_events(false);
+  EXPECT_FALSE(data->treeTestHelper.getEnabledEvents());
+
+  data->treeTestHelper.enable_events(backup);
+}
+
+TEST_F(Live_Schema_TreeTest, Expanding_collapsing_tree_nodes) {
+  // Fills the tree using the real structure.
+  base::StringListPtr schemas(new std::list<std::string>());
+  mforms::TreeNodeRef schema_node;
+  mforms::TreeNodeRef schema_node_filtered;
+  mforms::TreeNodeRef child_node;
+  mforms::TreeNodeRef child_node_filtered;
+  mforms::TreeNodeRef object_node;
+  mforms::TreeNodeRef object_node_filtered;
+
+  schemas->push_back("schema1");
+  schemas->push_back("schema2");
+  schemas->push_back("schema3");
+
+  data->treeTestHelper.enable_events(true);
+
+  // Fills a schema.
+  data->treeTestHelper.update_schemata(schemas);
+  schema_node = data->treeTestHelper.get_node_for_object("schema2", LiveSchemaTree::Schema, "");
+
+  // Fills the schema content.
+  data->delegate->expect_fetch_schema_contents_call();
+  data->delegate->_mock_view_list->push_back("view1");
+  data->delegate->_mock_table_list->push_back("table1");
+  data->delegate->_mock_table_list->push_back("table2");
+  data->delegate->_mock_table_list->push_back("table3");
+  data->delegate->_mock_procedure_list->push_back("procedure1");
+  data->delegate->_mock_function_list->push_back("function1");
+  data->delegate->_mock_call_back_slot = true;
+  data->delegate->_mock_schema_name = "schema2";
+  data->delegate->_check_id = "TF026CHK001";
+
+  data->treeTestHelper.expand_toggled(schema_node, true);
+  data->delegate->check_and_reset("TF026CHK001");
+
+  data->treeTestHelper.expand_toggled(schema_node, false);
+  data->delegate->check_and_reset("TF026CHK002");
+
+  data->treeTestHelper.expand_toggled(schema_node, true);
+  data->delegate->check_and_reset("TF026CHK003");
+
+  // Ensures nothing happens when the expansion is toglled for the table collection node.
+  child_node = schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
+  data->treeTestHelper.expand_toggled(child_node, true);
+  data->treeTestHelper.expand_toggled(child_node, false);
+  data->treeTestHelper.expand_toggled(child_node, true);
+
+  // Expands a table node.
+  data->delegate->_mock_schema_name = "schema2";
+  data->delegate->_mock_object_name = "table3";
+  data->delegate->_mock_object_type = LiveSchemaTree::Table;
+  data->delegate->_expect_fetch_object_details_call = true;
+  data->delegate->_mock_column_list->clear();
+  data->delegate->_mock_index_list->clear();
+  data->delegate->_mock_column_list->push_back("table_column1");
+  data->delegate->_mock_index_list->push_back("index1");
+  data->delegate->_mock_trigger_list->push_back("trigger1");
+  data->delegate->_mock_fk_list->push_back("fk1");
+  data->delegate->_mock_call_back_slot_columns = true;
+  data->delegate->_mock_call_back_slot_indexes = true;
+  data->delegate->_mock_call_back_slot_triggers = true;
+  data->delegate->_mock_call_back_slot_foreign_keys = true;
+  data->delegate->_check_id = "TF026CHK004";
+
+  // Takes the third table node.
+  object_node = child_node->get_child(2);
+  data->treeTestHelper.expand_toggled(object_node, true);
+  data->treeTestHelper.expand_toggled(object_node, false);
+  data->treeTestHelper.expand_toggled(object_node, true);
+
+  data->delegate->check_and_reset("TF026CHK004");
+
+  // Ensures nothing happens when the expansion is toglled for the column collection node.
+  child_node = object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX);
+  data->treeTestHelper.expand_toggled(child_node, true);
+  data->treeTestHelper.expand_toggled(child_node, false);
+  data->treeTestHelper.expand_toggled(child_node, true);
+
+  // Ensures nothing happens when the expansion is toglled for the index collection node.
+  child_node = object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX);
+  data->treeTestHelper.expand_toggled(child_node, true);
+  data->treeTestHelper.expand_toggled(child_node, false);
+  data->treeTestHelper.expand_toggled(child_node, true);
+
+  // Ensures nothing happens when the expansion is toglled for the trigger collection node.
+  child_node = object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX);
+  data->treeTestHelper.expand_toggled(child_node, true);
+  data->treeTestHelper.expand_toggled(child_node, false);
+  data->treeTestHelper.expand_toggled(child_node, true);
+
+  // Ensures nothing happens when the expansion is toglled for the foreign key collection node.
+  child_node = object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX);
+  data->treeTestHelper.expand_toggled(child_node, true);
+  data->treeTestHelper.expand_toggled(child_node, false);
+  data->treeTestHelper.expand_toggled(child_node, true);
+
+  // Ensures nothing happens when the expansion is toglled for the column collection node.
+  child_node = schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
+  data->treeTestHelper.expand_toggled(child_node, true);
+  data->treeTestHelper.expand_toggled(child_node, false);
+  data->treeTestHelper.expand_toggled(child_node, true);
+
+  // Fills view column.
+  data->delegate->_mock_schema_name = "schema2";
+  data->delegate->_mock_object_name = "view1";
+  data->delegate->_mock_object_type = LiveSchemaTree::View;
+  data->delegate->_expect_fetch_object_details_call = true;
+  data->delegate->_mock_column_list->push_back("view_column1");
+  data->delegate->_mock_call_back_slot_columns = true;
+  data->delegate->_check_id = "TF026CHK005";
+
+  object_node = child_node->get_child(0);
+  data->treeTestHelper.expand_toggled(object_node, true);
+  data->treeTestHelper.expand_toggled(object_node, false);
+  data->treeTestHelper.expand_toggled(object_node, true);
+
+  data->delegate->check_and_reset("TF026CHK005");
+
+  // Ensures nothing happens when the expansion is toglled for the procedures collection node.
+  child_node = schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
+  data->treeTestHelper.expand_toggled(child_node, true);
+  data->treeTestHelper.expand_toggled(child_node, false);
+  data->treeTestHelper.expand_toggled(child_node, true);
+
+  // Ensures nothing happens when the expansion is toglled for the functions collection node.
+  child_node = schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
+  data->treeTestHelper.expand_toggled(child_node, true);
+  data->treeTestHelper.expand_toggled(child_node, false);
+  data->treeTestHelper.expand_toggled(child_node, true);
+
+  // Now create a filtered tree based on the loaded data to check.
+  // Expansion state is propagated to the base tree.
+  data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
+  data->treeTestHelperFiltered.set_filter("schema2.table3");
+  data->treeTestHelperFiltered.filter_data();
+
+  schema_node_filtered = data->treeTestHelperFiltered.get_node_for_object("schema2", LiveSchemaTree::Schema, "");
+
+  // Ensures the schema expansion state on base tree is propagated from the state at the filtered tree.
+  data->treeTestHelperFiltered.expand_toggled(schema_node_filtered, true);
+  EXPECT_TRUE(schema_node->is_expanded());
+  data->treeTestHelperFiltered.expand_toggled(schema_node_filtered, false);
+  EXPECT_FALSE(schema_node->is_expanded());
+  data->treeTestHelperFiltered.expand_toggled(schema_node_filtered, true);
+  EXPECT_TRUE(schema_node->is_expanded());
+
+  // Ensures the table expansion state on base tree is propagated from the state at the filtered tree.
+  data->treeTestHelperFiltered.expand_toggled(
+    schema_node_filtered->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(0), true);
+  EXPECT_TRUE(schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(2)->is_expanded());
+  data->treeTestHelperFiltered.expand_toggled(
+    schema_node_filtered->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(0), false);
+  EXPECT_FALSE(schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(2)->is_expanded());
+  data->treeTestHelperFiltered.expand_toggled(
+    schema_node_filtered->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(0), true);
+  EXPECT_TRUE(schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(2)->is_expanded());
+
+  data->pModelViewFiltered->root_node()->remove_children();
+  data->pModelView->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Activating_a_tree_node) {
+  mforms::TreeNodeRef schema_node;
+  mforms::TreeNodeRef child_node;
+  mforms::TreeNodeRef object_node;
+
+  data->fillBasicSchema("Activating a tree node");
+
+  schema_node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
+
+  LiveSchemaTree::ChangeRecord change;
+  change.schema = "";
+  change.type = LiveSchemaTree::Schema;
+  change.name = "schema1";
+  data->delegate->_mock_expected_changes.push_back(change);
+  data->delegate->_mock_expected_action = "activate";
+  data->delegate->_expect_tree_activate_objects = true;
+
+  // Test activating a schema.
+  data->treeTestHelper.node_activated(schema_node, 0);
+  data->delegate->check_and_reset("TF027CHK001");
+
+  // Test activating the tables collection.
+  child_node = schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX);
+  data->treeTestHelper.node_activated(child_node, 0);
+
+  // Test activating a table node.
+  object_node = child_node->get_child(0);
+  data->delegate->_mock_expected_text = "table1";
+  data->treeTestHelper.node_activated(object_node, 0);
+  data->delegate->check_and_reset("TF027CHK003");
+
+  // Test activating the columns collection.
+  child_node = object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX);
+  data->treeTestHelper.node_activated(child_node, 0);
+
+  // Test activating a column node.
+  data->delegate->_mock_expected_text = "table_column1";
+  data->treeTestHelper.node_activated(child_node->get_child(0), 0);
+  data->delegate->check_and_reset("TF027CHK005");
+
+  // Test activating the indexes collection.
+  child_node = object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX);
+  data->treeTestHelper.node_activated(child_node, 0);
+
+  // Test activating an index node.
+  data->delegate->_mock_expected_text = "index1";
+  data->treeTestHelper.node_activated(child_node->get_child(0), 0);
+  data->delegate->check_and_reset("TF027CHK007");
+
+  // Test activating the triggers collection.
+  child_node = object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX);
+  data->treeTestHelper.node_activated(child_node, 0);
+
+  // Test activating a trigger node.
+  data->delegate->_mock_expected_text = "trigger1";
+  data->treeTestHelper.node_activated(child_node->get_child(0), 0);
+  data->delegate->check_and_reset("TF027CHK009");
+
+  // Test activating the triggers collection.
+  child_node = object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX);
+  data->treeTestHelper.node_activated(child_node, 0);
+
+  // Test activating a foreign key node.
+  data->delegate->_mock_expected_text = "fk1";
+  data->treeTestHelper.node_activated(child_node->get_child(0), 0);
+  data->delegate->check_and_reset("TF027CHK011");
+
+  // Test activating the view collection.
+  child_node = schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX);
+  data->treeTestHelper.node_activated(child_node, 0);
+
+  // Test activating a view node.
+  object_node = child_node->get_child(0);
+  data->delegate->_mock_expected_text = "view1";
+  data->treeTestHelper.node_activated(object_node, 0);
+  data->delegate->check_and_reset("TF027CHK013");
+
+  // Test activating a view column node.
+  data->delegate->_mock_expected_text = "view_column1";
+  data->treeTestHelper.node_activated(object_node->get_child(0), 0);
+  data->delegate->check_and_reset("TF027CHK014");
+
+  // Test activating the routines collection.
+  child_node = schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX);
+  data->treeTestHelper.node_activated(child_node, 0);
+  data->delegate->check_and_reset("TF027CHK015");
+
+  // Test activating a procedure node.
+  object_node = child_node->get_child(0);
+  data->delegate->_mock_expected_text = "procedure1";
+  data->treeTestHelper.node_activated(object_node, 0);
+  data->delegate->check_and_reset("TF027CHK016");
+
+  // Test activating the routines collection.
+  child_node = schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX);
+  data->treeTestHelper.node_activated(child_node, 0);
+  data->delegate->check_and_reset("TF027CHK017");
+
+  // Test activating a function node.
+  object_node = child_node->get_child(0);
+  data->delegate->_mock_expected_text = "function1";
+  data->treeTestHelper.node_activated(object_node, 0);
+  data->delegate->check_and_reset("TF027CHK018");
+
+  data->pModelView->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Getting_popup_items_for_nodes) {
+  GTEST_SKIP() << "test code was never enabled and needs fixes";
+
+  bec::MenuItemList items;
+  std::list<mforms::TreeNodeRef> nodes;
+  mforms::TreeNodeRef schema_node;
+  mforms::TreeNodeRef object_node;
+
+  data->fillBasicSchema("Getting popup items for nodes");
+
+  data->setNodes(&data->treeTestHelper, nodes, SCHEMA);
+
+  //================= Schema and Schema's Collection Nodes =================//
+  // Reviewing items for a schema
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 8 Real items plus 3 separators
+  EXPECT_EQ(items.size(), 11U);
+  data->ensureMenuItemsExist("TF028CHK002", items,
+                             SET_DEF_SCH | FIL_TO_SCH | COPY_TC | SEND_TE | CREATE | ALTER | DROP | REFRESH,
+                             SUB_NAME | SUB_CREATE, "Schema", "");
+
+  // Reviewing items for multiple schemas
+  data->setNodes(&data->treeTestHelper, nodes, SCHEMA);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 6 Real items plus 2 separators
+  EXPECT_EQ(items.size(), 8U);
+  data->ensureMenuItemsExist("TF028CHK003", items, COPY_TC | SEND_TE | CREATE | ALTER | DROP | REFRESH,
+                             SUB_NAME | SUB_CREATE, "Schema", "2 Schemas");
+
+  // Testing the schema table collection options
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, TABLES);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 2 Real items plus 1 separators
+  EXPECT_EQ(items.size(), 3U);
+  data->ensureMenuItemsExist("TF028CHK004", items, CREATE | REFRESH, 0, "Table", "");
+
+  // Testing the schema view collection options
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, VIEWS);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 2 Real items plus 1 separators
+  EXPECT_EQ(items.size(), 3U);
+  data->ensureMenuItemsExist("TF028CHK005", items, CREATE | REFRESH, 0, "View", "");
+
+  // Testing the schema procedures collection options
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, PROCEDURES);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 3 Real items plus 1 separators
+  EXPECT_EQ(items.size(), 3U);
+  data->ensureMenuItemsExist("TF028CHK006", items, CREATE | REFRESH, 0, "Procedure", "");
+
+  // Testing the schema procedures collection options
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, FUNCTIONS);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 3 Real items plus 1 separators
+  EXPECT_EQ(items.size(), 3U);
+  data->ensureMenuItemsExist("TF028CHK006", items, CREATE | REFRESH, 0, "Function", "");
+
+  //================= Table, Table's Collection Nodes  and Nodes on each collection =================//
+  // Testing for a single schema node
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, TABLE);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 7 Real items plus 2 separators
+  EXPECT_EQ(items.size(), 10U);
+  data->ensureMenuItemsExist(
+    "TF028CHK007", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
+    SUB_NAME_S | SUB_NAME_L | SUB_SEL_ALL | SUB_INSERT | SUB_UPDATE | SUB_DELETE | SUB_CREATE, "Table", "");
+
+  // Testing for multiple Table nodes...
+  data->setNodes(&data->treeTestHelper, nodes, TABLE);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 7 Real items plus 2 separators
+  EXPECT_EQ(items.size(), 9U);
+  data->ensureMenuItemsExist(
+    "TF028CHK008", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
+    SUB_NAME_S | SUB_NAME_L | SUB_SEL_ALL | SUB_INSERT | SUB_UPDATE | SUB_DELETE | SUB_CREATE, "Table", "2 Tables");
+
+  // Columns collection...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, COLUMNS);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 5 Real items plus 1 separators
+  EXPECT_EQ(items.size(), 6U);
+  data->ensureMenuItemsExist("TF028CHK009", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_SEL_COL | SUB_INSERT | SUB_UPDATE, "Table", "2 Tables");
+
+  // Column Node
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, TABLE_COLUMN);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 5 Real items plus 1 separators
+  EXPECT_EQ(items.size(), 6U);
+  data->ensureMenuItemsExist("TF028CHK010", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_SEL_COL | SUB_INSERT | SUB_UPDATE, "Table", "2 Tables");
+
+  // Multiple Column Nodes
+  data->setNodes(&data->treeTestHelper, nodes, TABLE_COLUMN);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Just like a single column.
+  EXPECT_EQ(items.size(), 6U);
+  data->ensureMenuItemsExist("TF028CHK010", items, SEL_ROWS | EDIT | COPY_TC | SEND_TE | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_SEL_COL | SUB_INSERT | SUB_UPDATE, "Table", "2 Tables");
+
+  // Index collection...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, INDEXES);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK012", items, REFRESH, 0, "", "");
+
+  // Index Node...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, INDEX);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK013", items, REFRESH, 0, "", "");
+
+  // Multiple Index Nodes...
+  data->setNodes(&data->treeTestHelper, nodes, INDEX);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK014", items, REFRESH, 0, "", "");
+
+  // Trigger collection...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, TRIGGERS);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK015", items, REFRESH, 0, "", "");
+
+  // Trigger Node...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, TRIGGER);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK016", items, REFRESH, 0, "", "");
+
+  // Multiple Trigger Nodes...
+  data->setNodes(&data->treeTestHelper, nodes, TRIGGER);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK017", items, REFRESH, 0, "", "");
+
+  // Foreign Key collection...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, FKS);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK018", items, REFRESH, 0, "", "");
+
+  // Foreign Key Node...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, FK);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK019", items, REFRESH, 0, "", "");
+
+  // Multiple Foreign Key Nodes...
+  data->setNodes(&data->treeTestHelper, nodes, FK);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // Refresh All
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK020", items, REFRESH, 0, "", "");
+
+  //================= View Nodes =================//
+  // Single View Node...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, VIEW);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 7 Real items plus 2 separators
+  EXPECT_EQ(items.size(), 9U);
+  data->ensureMenuItemsExist("TF028CHK021", items, SEL_ROWS | COPY_TC | SEND_TE | CREATE | ALTER | DROP | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_SEL_ALL | SUB_CREATE, "View", "");
+
+  // Multiple View Nodes...
+  data->setNodes(&data->treeTestHelper, nodes, VIEW);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  // 5 Real items plus 2 separators
+  EXPECT_EQ(items.size(), 7U);
+  data->ensureMenuItemsExist("TF028CHK022", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_SEL_ALL | SUB_CREATE, "View", "2 Views");
+
+  //================= Procedure Nodes =================//
+  // Single Procedure Node...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, PROCEDURE);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  EXPECT_EQ(items.size(), 8U);
+  data->ensureMenuItemsExist("TF028CHK023", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_CREATE, "Procedure", "");
+
+  // Multiple Procedure Nodes...
+  data->setNodes(&data->treeTestHelper, nodes, PROCEDURE);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  EXPECT_EQ(items.size(), 7U);
+  data->ensureMenuItemsExist("TF028CHK024", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_CREATE, "Procedure", "2 Procedures");
+
+  //================= Function Nodes =================//
+  // Single Function Node...
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, FUNCTION);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  EXPECT_EQ(items.size(), 8U);
+  data->ensureMenuItemsExist("TF028CHK025", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_CREATE, "Function", "");
+
+  // Multiple Function Nodes...
+  data->setNodes(&data->treeTestHelper, nodes, FUNCTION);
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+
+  EXPECT_EQ(items.size(), 7U);
+  data->ensureMenuItemsExist("TF028CHK026", items, COPY_TC | SEND_TE | ALTER | DROP | REFRESH,
+                             SUB_NAME_S | SUB_NAME_L | SUB_CREATE, "Function", "2 Functions");
+
+  //================= No Nodes =================//
+  nodes.clear();
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+  EXPECT_EQ(items.size(), 1U);
+  data->ensureMenuItemsExist("TF028CHK027", items, REFRESH, 0, "", "");
+
+  //================= Multiple Nodes of Different Type =================//
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, SCHEMA | TABLES | TABLE);
+  data->setNodes(&data->treeTestHelper, nodes, TABLE | TABLE_COLUMN | VIEW | PROCEDURE | FUNCTION);
+
+  items = data->treeTestHelper.get_popup_items_for_nodes(nodes);
+  EXPECT_EQ(items.size(), 4U);
+  data->ensureMenuItemsExist("TF028CHK028", items, COPY_TC | SEND_TE | REFRESH, SUB_NAME_S | SUB_NAME_L, "",
+                             "6 Objects");
+
+  data->pModelView->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Activating_a_popup_item_for_a_node) {
+  GTEST_SKIP() << "test code was never enabled and needs fixes";
+
+  std::list<mforms::TreeNodeRef> nodes;
+  mforms::TreeNodeRef schema_node;
+  mforms::TreeNodeRef object_node;
+  LiveSchemaTree::ChangeRecord change;
+
+  data->fillBasicSchema("Activating a popup item for a node");
+
+  // Tests the Refresh All function.
+  data->delegate->_expect_tree_refresh = true;
+  data->delegate->_check_id = "TF029CHK002";
+  data->treeTestHelper.activate_popup_item_for_nodes("refresh", nodes);
+  data->delegate->check_and_reset("TF029CHK002");
+
+  //================= Performs the action for multiple nodes of different type =================//
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, SCHEMA | TABLE);
+  data->setNodes(&data->treeTestHelper, nodes, TABLE | TABLE_COLUMN | VIEW | PROCEDURE | FUNCTION);
+
+  // Tests the Alter function
+  data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA | TABLE);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW | PROCEDURE | FUNCTION);
+
+  data->delegate->_check_id = "TF029CHK003";
+  data->delegate->_expect_tree_alter_objects = true;
+  data->treeTestHelper.activate_popup_item_for_nodes("alter", nodes);
+  data->delegate->check_and_reset("TF029CHK003");
+
+  // Tests the Drop function
+  data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA | TABLE);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW | PROCEDURE | FUNCTION);
+
+  data->delegate->_check_id = "TF029CHK004";
+  data->delegate->_expect_tree_drop_objects = true;
+  data->treeTestHelper.activate_popup_item_for_nodes("drop", nodes);
+  data->delegate->check_and_reset("TF029CHK004");
+
+  // Tests the edit data option with tables
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, TABLE);
+  data->setNodes(&data->treeTestHelper, nodes, TABLE);
+
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
+
+  data->delegate->_check_id = "TF029CHK005";
+  data->delegate->_expect_tree_activate_objects = true;
+  data->delegate->_mock_expected_action = "edit_data";
+  data->treeTestHelper.activate_popup_item_for_nodes("edit_data", nodes);
+  data->delegate->check_and_reset("TF029CHK005");
+
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
+  data->delegate->_check_id = "TF029CHK005.1";
+  data->delegate->_expect_tree_activate_objects = true;
+  data->delegate->_mock_expected_action = "select_data";
+  data->treeTestHelper.activate_popup_item_for_nodes("select_data", nodes);
+  data->delegate->check_and_reset("TF029CHK005.1");
+
+  // Tests the edit data option with views
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, TABLE | VIEW | PROCEDURE | FUNCTION);
+
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW | PROCEDURE | FUNCTION);
+
+  data->delegate->_check_id = "TF029CHK006";
+  data->delegate->_expect_tree_activate_objects = true;
+  data->delegate->_mock_expected_action = "edit_data";
+  data->treeTestHelper.activate_popup_item_for_nodes("edit_data", nodes);
+  data->delegate->check_and_reset("TF029CHK006");
+
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW | PROCEDURE | FUNCTION);
+
+  data->delegate->_check_id = "TF029CHK006.1";
+  data->delegate->_expect_tree_activate_objects = true;
+  data->delegate->_mock_expected_action = "select_data";
+  data->treeTestHelper.activate_popup_item_for_nodes("select_data", nodes);
+  data->delegate->check_and_reset("TF029CHK006.1");
+
+  // Tests the edit data option with table columns
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, COLUMNS | TABLE_COLUMN | VIEW_COLUMN);
+
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW);
+  data->delegate->_mock_expected_changes[0].detail = "table_column1";
+  data->delegate->_mock_expected_changes[1].detail = "table_column1";
+  data->delegate->_mock_expected_changes[2].detail = "view_column1";
+
+  data->delegate->_check_id = "TF029CHK007";
+  data->delegate->_expect_tree_activate_objects = true;
+  data->delegate->_mock_expected_action = "edit_data_columns";
+  data->treeTestHelper.activate_popup_item_for_nodes("edit_data_columns", nodes);
+  data->delegate->check_and_reset("TF029CHK007");
+
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW);
+  data->delegate->_mock_expected_changes[0].detail = "table_column1";
+  data->delegate->_mock_expected_changes[1].detail = "table_column1";
+  data->delegate->_mock_expected_changes[2].detail = "view_column1";
+
+  data->delegate->_check_id = "TF029CHK007.1";
+  data->delegate->_expect_tree_activate_objects = true;
+  data->delegate->_mock_expected_action = "select_data_columns";
+  data->treeTestHelper.activate_popup_item_for_nodes("select_data_columns", nodes);
+  data->delegate->check_and_reset("TF029CHK007.1");
+
+  // Tests the edit data option with the nodes that should be ignored
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes,
+                 SCHEMA | TABLES | VIEWS | PROCEDURES | FUNCTIONS | INDEXES | INDEX | TRIGGERS | TRIGGER | FKS | FK);
+
+  data->delegate->_check_id = "TF029CHK008";
+  data->treeTestHelper.activate_popup_item_for_nodes("edit_data", nodes);
+  data->delegate->check_and_reset("TF029CHK008");
+
+  data->delegate->_check_id = "TF029CHK008.1";
+  data->treeTestHelper.activate_popup_item_for_nodes("select_data", nodes);
+  data->delegate->check_and_reset("TF029CHK008.1");
+
+  // Tests the create function without objects
+  nodes.clear();
+  data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA);
+  data->delegate->_mock_expected_changes[0].schema = "";
+  data->delegate->_mock_expected_changes[0].name = "";
+
+  data->delegate->_check_id = "TF029CHK009";
+  data->delegate->_expect_tree_create_object = true;
+  data->treeTestHelper.activate_popup_item_for_nodes("create", nodes);
+  data->delegate->check_and_reset("TF029CHK009");
+
+  // Tests the create functions for schema object
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, SCHEMA | TABLES | TABLE | VIEWS | VIEW | PROCEDURE | FUNCTION);
+
+  data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA | TABLE);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, TABLE | VIEW);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, VIEW | PROCEDURE | FUNCTION);
+
+  data->delegate->_mock_expected_changes[0].schema = "";
+  while (data->delegate->_mock_expected_changes.size()) {
+    data->delegate->_mock_expected_changes[0].name = "";
+    data->delegate->_check_id = "TF029CHK010";
+    data->delegate->_expect_tree_create_object = true;
+    data->treeTestHelper.activate_popup_item_for_nodes("create", nodes);
+    nodes.erase(nodes.begin());
+  }
+
+  data->delegate->check_and_reset("TF029CHK010");
+
+  // Testing create in routines collection produces a procedure node.
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, PROCEDURES);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, PROCEDURE);
+
+  data->delegate->_check_id = "TF029CHK011";
+  data->delegate->_expect_tree_create_object = true;
+  data->delegate->_mock_expected_changes[0].name = "";
+  data->treeTestHelper.activate_popup_item_for_nodes("create", nodes);
+  data->delegate->check_and_reset("TF029CHK011");
+
+  // Testing create in routines collection produces a procedure node.
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, FUNCTIONS);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, FUNCTION);
+
+  data->delegate->_check_id = "TF029CHK012";
+  data->delegate->_expect_tree_create_object = true;
+  data->delegate->_mock_expected_changes[0].name = "";
+  data->treeTestHelper.activate_popup_item_for_nodes("create", nodes);
+  data->delegate->check_and_reset("TF029CHK012");
+
+  // Tests the set active schema function.
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, SCHEMA);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA);
+  data->delegate->_mock_expected_changes[0].schema = "";
+  data->delegate->_mock_expected_changes[0].name = "schema1";
+
+  data->delegate->_check_id = "TF029CHK013";
+  data->delegate->_expect_tree_activate_objects = true;
+  data->delegate->_mock_expected_action = "activate";
+  data->treeTestHelper.activate_popup_item_for_nodes("set_active_schema", nodes);
+  data->delegate->check_and_reset("TF029CHK013");
+
+  // Tests the set filter schema function.
+  data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA);
+  data->delegate->_mock_expected_changes[0].schema = "";
+  data->delegate->_mock_expected_changes[0].name = "schema1";
+
+  data->delegate->_check_id = "TF029CHK014";
+  data->delegate->_expect_tree_activate_objects = true;
+  data->delegate->_mock_expected_action = "filter";
+  data->treeTestHelper.activate_popup_item_for_nodes("filter_schema", nodes);
+  data->delegate->check_and_reset("TF029CHK014");
+
+  //////////////////////////////////////////////////////////////////////
+  //  deprecated
+  //////////////////////////////////////////////////////////////////////
+
+  // Tests a custom functions for the database objects.
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes, SCHEMA | TABLE | VIEW | PROCEDURE | FUNCTION);
+  data->setChangeRecords(data->delegate->_mock_expected_changes, SCHEMA | TABLE | VIEW | PROCEDURE | FUNCTION);
+  data->delegate->_mock_expected_changes[0].detail = "schema";
+  data->delegate->_mock_expected_changes[1].detail = "table";
+  data->delegate->_mock_expected_changes[2].detail = "view";
+  data->delegate->_mock_expected_changes[3].detail = "routine";
+  data->delegate->_mock_expected_changes[4].detail = "routine";
+  data->delegate->_mock_expected_changes[0].schema = "schema1";
+  data->delegate->_mock_expected_changes[0].name = "";
+
+  EXPECT_EQ(data->delegate->_mock_expected_changes.size(), nodes.size());
+  while (data->delegate->_mock_expected_changes.size()) {
+    data->delegate->_expect_plugin_item_call = true;
+
+    data->delegate->_check_id = "TF029CHK015";
+    data->delegate->_mock_expected_action = "whatever";
+    data->treeTestHelper.activate_popup_item_for_nodes("whatever", nodes);
+    nodes.erase(nodes.begin());
+  }
+
+  data->delegate->check_and_reset("TF029CHK015");
+
+  // Ensures custom doesn't work for non database nodes.
+  nodes.clear();
+  data->setNodes(&data->treeTestHelper, nodes,
+                 TABLES | VIEWS | PROCEDURES | COLUMNS | TABLE_COLUMN | INDEXES | INDEX | TRIGGERS | TRIGGER | FKS |
+                   FK | VIEW_COLUMN);
+
+  while (nodes.size()) {
+    data->delegate->_check_id = "TF029CHK016";
+    data->treeTestHelper.activate_popup_item_for_nodes("whatever", nodes);
+    nodes.erase(nodes.begin());
+  }
+
+  data->delegate->check_and_reset("TF029CHK016");
+  data->pModelView->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Filter_wildcards) {
+  // Using the default wildcard type.
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard(""), "*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*"), "*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a"), "a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*"), "a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a"), "*a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*"), "*a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema"), "schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*"), "schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema"), "*schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*"), "*schema*");
+
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("", LiveSchemaTree::LocalLike), "*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*", LiveSchemaTree::LocalLike), "*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a", LiveSchemaTree::LocalLike), "a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*", LiveSchemaTree::LocalLike), "a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a", LiveSchemaTree::LocalLike), "*a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*", LiveSchemaTree::LocalLike), "*a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema", LiveSchemaTree::LocalLike), "schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*", LiveSchemaTree::LocalLike), "schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema", LiveSchemaTree::LocalLike), "*schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*", LiveSchemaTree::LocalLike), "*schema*");
+
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("", LiveSchemaTree::LocalRegexp), "*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*", LiveSchemaTree::LocalRegexp), "*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a", LiveSchemaTree::LocalRegexp), "a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*", LiveSchemaTree::LocalRegexp), "a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a", LiveSchemaTree::LocalRegexp), "*a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*", LiveSchemaTree::LocalRegexp), "*a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema", LiveSchemaTree::LocalRegexp), "schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*", LiveSchemaTree::LocalRegexp), "schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema", LiveSchemaTree::LocalRegexp), "*schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*", LiveSchemaTree::LocalRegexp), "*schema*");
+
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("", LiveSchemaTree::RemoteRegexp), "*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*", LiveSchemaTree::RemoteRegexp), "*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a", LiveSchemaTree::RemoteRegexp), "a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*", LiveSchemaTree::RemoteRegexp), "a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a", LiveSchemaTree::RemoteRegexp), "*a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*", LiveSchemaTree::RemoteRegexp), "*a*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema", LiveSchemaTree::RemoteRegexp), "schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*", LiveSchemaTree::RemoteRegexp), "schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema", LiveSchemaTree::RemoteRegexp), "*schema*");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*", LiveSchemaTree::RemoteRegexp), "*schema*");
+
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("", LiveSchemaTree::RemoteLike), "%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*", LiveSchemaTree::RemoteLike), "%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a", LiveSchemaTree::RemoteLike), "a%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a*", LiveSchemaTree::RemoteLike), "a%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a", LiveSchemaTree::RemoteLike), "%a%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*a*", LiveSchemaTree::RemoteLike), "%a%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema", LiveSchemaTree::RemoteLike), "schema%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("schema*", LiveSchemaTree::RemoteLike), "schema%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema", LiveSchemaTree::RemoteLike), "%schema%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("*schema*", LiveSchemaTree::RemoteLike), "%schema%");
+
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("?", LiveSchemaTree::RemoteLike), "_%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("a?", LiveSchemaTree::RemoteLike), "a_%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("?a", LiveSchemaTree::RemoteLike), "_a%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("?a?", LiveSchemaTree::RemoteLike), "_a_%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("sc?ema", LiveSchemaTree::RemoteLike), "sc_ema%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("sc?e?a*", LiveSchemaTree::RemoteLike), "sc_e_a%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("sc_ema", LiveSchemaTree::RemoteLike), "sc\\_ema%");
+  EXPECT_EQ(data->treeTestHelper.get_filter_wildcard("sch%ma*", LiveSchemaTree::RemoteLike), "sch\\%ma%");
+}
+
+TEST_F(Live_Schema_TreeTest, Getting_a_node_for_an_object) {
+  mforms::TreeNodeRef node;
+  mforms::TreeNodeRef schema_node;
+
+  data->fillBasicSchema("Getting a node for an object");
+
+  schema_node = data->pModelView->root_node()->get_child(0);
+
+  // Searching for invalid schema.
+  node = data->treeTestHelper.get_node_for_object("dummy_schema", LiveSchemaTree::Schema, "");
+  EXPECT_EQ(node.ptr(), nullptr);
+
+  // Searching for a valid schema.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Schema, "");
+  EXPECT_NE(node.ptr(), nullptr);
+  EXPECT_EQ(node.ptr(), schema_node.ptr());
+
+  // Searching for a invalid table.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "tableX");
+  EXPECT_EQ(node.ptr(), nullptr);
+
+  // Searching for a valid table.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Table, "table1");
+  EXPECT_NE(node.ptr(), nullptr);
+  EXPECT_EQ(node.ptr(), schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(0).ptr());
+
+  // Searching for a invalid view.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "viewX");
+  EXPECT_EQ(node.ptr(), nullptr);
+
+  // Searching for a valid view.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::View, "view1");
+  EXPECT_NE(node.ptr(), nullptr);
+  EXPECT_EQ(node.ptr(), schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_child(0).ptr());
+
+  // Searching for a invalid function.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedureX");
+  EXPECT_EQ(node.ptr(), nullptr);
+
+  // Searching for a valid procedure.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Procedure, "procedure1");
+  EXPECT_NE(node.ptr(), nullptr);
+  EXPECT_EQ(node.ptr(), schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_child(0).ptr());
+
+  // Searching for a invalid function.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "functionX");
+  EXPECT_EQ(node.ptr(), nullptr);
+
+  // Searching for a valid function.
+  node = data->treeTestHelper.get_node_for_object("schema1", LiveSchemaTree::Function, "function1");
+  EXPECT_NE(node.ptr(), nullptr);
+  EXPECT_EQ(node.ptr(), schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_child(0).ptr());
+
+  data->pModelView->root_node()->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Switching_filtered_and_unfiltered_tree) {
+  EXPECT_EQ(data->treeTestHelper.getBase(), nullptr);
+
+  data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
+  EXPECT_EQ(data->treeTestHelperFiltered.getBase(), &data->treeTestHelper);
+
+  data->treeTestHelperFiltered.set_base(nullptr);
+  EXPECT_EQ(data->treeTestHelperFiltered.getBase(), nullptr);
+}
+
+TEST_F(Live_Schema_TreeTest, Children_copies_when_switching_filters) {
+  // Test filter_children and filter_children_collection without filters established to make
+  // sure effectively all the data is copied from one tree to the other.
+  mforms::TreeNodeRef root_node = data->pModelView->root_node();
+  mforms::TreeNodeRef root_node_f = data->pModelViewFiltered->root_node();
+  mforms::TreeNodeRef schema_node;
+  mforms::TreeNodeRef schema_node_f;
+  mforms::TreeNodeRef object_node;
+  mforms::TreeNodeRef object_node_f;
+  mforms::TreeNodeRef sub_node;
+  mforms::TreeNodeRef sub_node_f;
+
+  data->fillComplexSchema("TF033CHK001");
+
+  // Ensure no matter the type, all the children are copied if no filter is specified.
+  EXPECT_EQ(root_node_f->count(), 0);
+  data->treeTestHelper.filter_children(LiveSchemaTree::Schema, root_node, root_node_f);
+  EXPECT_EQ(root_node_f->count(), root_node->count());
+
+  for (int schema_index = 0; schema_index < root_node->count(); schema_index++) {
+    schema_node = root_node->get_child(schema_index);
+    schema_node_f = root_node_f->get_child(schema_index);
+
+    EXPECT_EQ(schema_node_f->get_data(), schema_node->get_data());
+    EXPECT_EQ(schema_node_f->count(), schema_node->count());
+    EXPECT_EQ(schema_node_f->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->count(),
+              schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->count());
+    EXPECT_EQ(schema_node_f->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->count(),
+              schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->count());
+    EXPECT_EQ(schema_node_f->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->count(),
+              schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->count());
+    EXPECT_EQ(schema_node_f->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->count(),
+              schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->count());
+
+    for (int table_index = 0; table_index < schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->count();
+         table_index++) {
+      object_node = schema_node->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(table_index);
+      object_node_f = schema_node_f->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->get_child(table_index);
+
+      EXPECT_EQ(object_node->get_data(), object_node_f->get_data());
+      EXPECT_EQ(object_node_f->count(), object_node->count());
+      EXPECT_EQ(object_node_f->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->count(),
+                object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->count());
+      EXPECT_EQ(object_node_f->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->count(),
+                object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->count());
+      EXPECT_EQ(object_node_f->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->count(),
+                object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->count());
+      EXPECT_EQ(object_node_f->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->count(),
+                object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->count());
+
+      for (int column_index = 0;
+           column_index < object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->count(); column_index++) {
+        sub_node = object_node->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->get_child(column_index);
+        sub_node_f = object_node_f->get_child(LiveSchemaTree::TABLE_COLUMNS_NODE_INDEX)->get_child(column_index);
+
+        EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
+      }
+
+      for (int index_index = 0;
+           index_index < object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->count(); index_index++) {
+        sub_node = object_node->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->get_child(index_index);
+        sub_node_f = object_node_f->get_child(LiveSchemaTree::TABLE_INDEXES_NODE_INDEX)->get_child(index_index);
+
+        EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
+      }
+
+      for (int trigger_index = 0;
+           trigger_index < object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->count();
+           trigger_index++) {
+        sub_node = object_node->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->get_child(trigger_index);
+        sub_node_f = object_node_f->get_child(LiveSchemaTree::TABLE_TRIGGERS_NODE_INDEX)->get_child(trigger_index);
+
+        EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
+      }
+
+      for (int fk_index = 0;
+           fk_index < object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->count(); fk_index++) {
+        sub_node = object_node->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->get_child(fk_index);
+        sub_node_f = object_node_f->get_child(LiveSchemaTree::TABLE_FOREIGN_KEYS_NODE_INDEX)->get_child(fk_index);
+
+        EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
+      }
+    }
+
+    for (int view_index = 0; view_index < schema_node_f->get_child(LiveSchemaTree::TABLES_NODE_INDEX)->count();
+         view_index++) {
+      object_node = schema_node->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_child(view_index);
+      object_node_f = schema_node_f->get_child(LiveSchemaTree::VIEWS_NODE_INDEX)->get_child(view_index);
+
+      EXPECT_TRUE(object_node_f->get_data() == object_node->get_data());
+      EXPECT_EQ(object_node_f->count(), object_node->count());
+
+      for (int column_index = 0; column_index < object_node->count(); column_index++) {
+        sub_node = object_node->get_child(column_index);
+        sub_node_f = object_node_f->get_child(column_index);
+
+        EXPECT_EQ(sub_node->get_data(), sub_node_f->get_data());
+      }
+    }
+
+    for (int procedure_index = 0;
+         procedure_index < schema_node_f->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->count();
+         procedure_index++) {
+      object_node = schema_node->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_child(procedure_index);
+      object_node_f = schema_node_f->get_child(LiveSchemaTree::PROCEDURES_NODE_INDEX)->get_child(procedure_index);
+
+      EXPECT_EQ(object_node_f->get_data(), object_node->get_data());
+    }
+
+    for (int function_index = 0;
+         function_index < schema_node_f->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->count(); function_index++) {
+      object_node = schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_child(function_index);
+      object_node_f = schema_node_f->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_child(function_index);
+
+      EXPECT_EQ(object_node_f->get_data(), object_node->get_data());
+    }
+  }
+
+  root_node->remove_children();
+  root_node_f->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Filtering) {
+  std::vector<std::string> schemas;
+  std::vector<std::string> tables;
+  std::vector<std::string> views;
+  std::vector<std::string> procedures;
+  std::vector<std::string> functions;
+  mforms::TreeNodeRef root_node_f = data->pModelViewFiltered->root_node();
+
+  data->fillComplexSchema("TF034CHK001");
+
+  // Sets the filter and does the filtering...
+  data->treeTestHelperFiltered.set_base(&data->treeTestHelper);
+
+  // Filtering only specifying a full schema name...
+  schemas.clear();
+
+  schemas.push_back("dev_schema");
+  tables.clear();
+  tables.push_back("client");
+  tables.push_back("customer");
+  tables.push_back("product");
+  tables.push_back("store");
+  views.clear();
+  views.push_back("first_view");
+  views.push_back("second_view");
+  views.push_back("secure_view");
+  views.push_back("third");
+  procedures.clear();
+  procedures.push_back("get_debths");
+  procedures.push_back("get_lazy");
+  procedures.push_back("get_payments");
+  functions.clear();
+  functions.push_back("calc_debth_list");
+  functions.push_back("calc_income");
+  functions.push_back("dummy");
+
+  data->treeTestHelperFiltered.set_filter("dev_schema");
+  data->treeTestHelperFiltered.filter_data();
+  data->verifyFilterResult("TF034CHK002", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
+                           functions);
+
+  // Filtering specifying a schema wildcard...
+  schemas.clear();
+  schemas.push_back("basic_schema");
+  schemas.push_back("dev_schema");
+  schemas.push_back("test_schema");
+  data->treeTestHelperFiltered.set_filter("*schema");
+  data->treeTestHelperFiltered.filter_data();
+  data->verifyFilterResult("TF034CHK003", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
+                           functions);
+
+  // Filtering specifying a different schema wildcard...
+  schemas.clear();
+  schemas.push_back("basic_schema");
+  schemas.push_back("basic_training");
+  data->treeTestHelperFiltered.set_filter("basic*");
+  data->treeTestHelperFiltered.filter_data();
+  data->verifyFilterResult("TF034CHK004", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
+                           functions);
+
+  // Filtering using both schema and object filter
+  schemas.clear();
+  schemas.push_back("basic_schema");
+  schemas.push_back("basic_training");
+  tables.clear();
+  views.clear();
+  views.push_back("second_view");
+  views.push_back("secure_view");
+  procedures.clear();
+  functions.clear();
+  data->treeTestHelperFiltered.set_filter("basic*.sec*");
+  data->treeTestHelperFiltered.filter_data();
+  data->verifyFilterResult("TF034CHK005", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
+                           functions);
+
+  // Filtering using both schema and object filter
+  schemas.clear();
+  schemas.push_back("basic_schema");
+  schemas.push_back("basic_training");
+  tables.clear();
+  tables.push_back("customer");
+  tables.push_back("store");
+  views.clear();
+  views.push_back("first_view");
+  views.push_back("second_view");
+  views.push_back("secure_view");
+  procedures.clear();
+  procedures.push_back("get_debths");
+  procedures.push_back("get_payments");
+  functions.clear();
+  functions.push_back("calc_debth_list");
+
+  data->treeTestHelperFiltered.set_filter("?asic_*.*s*");
+  data->treeTestHelperFiltered.filter_data();
+  data->verifyFilterResult("TF034CHK006", data->pModelViewFiltered->root_node(), schemas, tables, views, procedures,
+                           functions);
+
+  data->pModelView->root_node()->remove_children();
+  root_node_f->remove_children();
+}
+
+TEST_F(Live_Schema_TreeTest, Filter_patterns) {
+  data->treeTestHelperFiltered.clean_filter();
+
+  EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "");
+  EXPECT_EQ(data->treeTestHelperFiltered._schema_pattern, nullptr);
+  EXPECT_EQ(data->treeTestHelperFiltered._object_pattern, nullptr);
+
+  data->treeTestHelperFiltered.set_filter("dummy_filter");
+  EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "dummy_filter");
+  EXPECT_NE(data->treeTestHelperFiltered._schema_pattern, nullptr);
+  EXPECT_EQ(data->treeTestHelperFiltered._object_pattern, nullptr);
+
+  data->treeTestHelperFiltered.set_filter("some*.tab?");
+  EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "some*.tab?");
+  EXPECT_NE(data->treeTestHelperFiltered._schema_pattern, nullptr);
+  EXPECT_NE(data->treeTestHelperFiltered._object_pattern, nullptr);
+
+  data->treeTestHelperFiltered.set_filter("sch?ema*");
+  EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "sch?ema*");
+  EXPECT_NE(data->treeTestHelperFiltered._schema_pattern, nullptr);
+  EXPECT_EQ(data->treeTestHelperFiltered._object_pattern, nullptr);
+
+  data->treeTestHelperFiltered.clean_filter();
+  EXPECT_EQ(data->treeTestHelperFiltered.getFilter(), "");
+  EXPECT_EQ(data->treeTestHelperFiltered._schema_pattern, nullptr);
+  EXPECT_EQ(data->treeTestHelperFiltered._object_pattern, nullptr);
+}
+
+TEST_F(Live_Schema_TreeTest, Load_data_for_filters) {
+  data->delegateFiltered->_expect_fetch_data_for_filter = true;
+  data->delegateFiltered->_check_id = "TF036CHK001";
+  data->delegateFiltered->_mock__schema_pattern = "%sample%";
+  data->delegateFiltered->_mock__object_pattern = "_bject%";
+  data->treeTestHelperFiltered.load_data_for_filter("*sample", "?bject");
+  data->delegateFiltered->check_and_reset("TF036CHK001");
+}
+
 }

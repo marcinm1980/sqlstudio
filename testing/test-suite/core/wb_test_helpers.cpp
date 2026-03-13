@@ -176,16 +176,16 @@ MySqlStudioTester::MySqlStudioTester(bool initPython, const base::Size &apage_si
 
 #else
 
-  wboptions->basedir = casmine::getEnvVar("MWB_DATA_DIR");
-  auto testModulesDir = casmine::getEnvVar("TEST_MODULES_DIR");
+  wboptions->basedir = testing::getEnvVar("MWB_DATA_DIR");
+  auto testModulesDir = testing::getEnvVar("TEST_MODULES_DIR");
   if (testModulesDir.empty()) {
     std::cerr << "TEST_MODULES_DIR environment variable is not set" << std::endl;
-    wboptions->module_search_path = casmine::getEnvVar("MWB_MODULE_DIR");
+    wboptions->module_search_path = testing::getEnvVar("MWB_MODULE_DIR");
   } else {
-    wboptions->module_search_path = casmine::getEnvVar("TEST_MODULES_DIR");
+    wboptions->module_search_path = testing::getEnvVar("TEST_MODULES_DIR");
   }
 
-  wboptions->library_search_path = casmine::getEnvVar("MWB_LIBRARY_DIR");
+  wboptions->library_search_path = testing::getEnvVar("MWB_LIBRARY_DIR");
   wboptions->struct_search_path = wboptions->basedir + "/grt";
 #endif
   wboptions->user_data_dir = get_temp_data_dir(); // casmine::CasmineContext::get()->tmpDataDir();

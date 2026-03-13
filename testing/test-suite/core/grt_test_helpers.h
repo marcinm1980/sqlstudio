@@ -28,8 +28,9 @@
 
 #include "grts/structs.db.mysql.h"
 
-#include "common.h"
-//nclude "expect.h"
+#include <string>
+#include <list>
+#include <vector>
 
 namespace bec {
   class TreeModel;

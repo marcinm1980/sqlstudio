@@ -35,7 +35,7 @@ void resetUndoAccounting() {
 
 void checkOnlyOneUndoAdded() {
   ++lastUndoStackSize;
-  $expect(um->get_undo_stack().size()).toEqual(lastUndoStackSize, "Added 1 undo action");
+  EXPECT_EQ(um->get_undo_stack().size(), lastUndoStackSize) << "Added 1 undo action";
 
   // Adding new stuff to the undo stack will clear the redo stack.
   lastRedoStackSize = um->get_redo_stack().size();
@@ -44,18 +44,18 @@ void checkOnlyOneUndoAdded() {
 //----------------------------------------------------------------------------------------------------------------------
 
 void checkUndo() {
-  $expect(um->get_undo_stack().size()).toEqual(lastUndoStackSize, "Undo stack size");
-  $expect(um->get_redo_stack().size()).toEqual(lastRedoStackSize, "Redo stack size");
+  EXPECT_EQ(um->get_undo_stack().size(), lastUndoStackSize) << "Undo stack size";
+  EXPECT_EQ(um->get_redo_stack().size(), lastRedoStackSize) << "Redo stack size";
 
   // Check that the latest undo action has a description.
-  $expect(um->get_action_description()).Not.toEqual("", "Undo action description is set");
+  EXPECT_NE(um->get_action_description(), "") << "Undo action description is set";
 
   um->undo();
   --lastUndoStackSize;
 
   // Redo stack should grow by 1 and undo shrink by 1.
-  $expect(um->get_redo_stack().size()).toEqual(lastRedoStackSize + 1, "Redo stack size after undo");
-  $expect(um->get_undo_stack().size()).toEqual(lastUndoStackSize, "Undo stack size after undo");
+  EXPECT_EQ(um->get_redo_stack().size(), lastRedoStackSize + 1) << "Redo stack size after undo";
+  EXPECT_EQ(um->get_undo_stack().size(), lastUndoStackSize) << "Undo stack size after undo";
 
   lastRedoStackSize = um->get_redo_stack().size();
 }
@@ -64,14 +64,14 @@ void checkUndo() {
 
 void checkRedo() {
   // make sure that the undo/redo stack has the expected size
-  $expect(um->get_undo_stack().size()).toEqual(lastUndoStackSize, "Undo stack size");
-  $expect(um->get_redo_stack().size()).toEqual(lastRedoStackSize, "Redo stack size");
+  EXPECT_EQ(um->get_undo_stack().size(), lastUndoStackSize) << "Undo stack size";
+  EXPECT_EQ(um->get_redo_stack().size(), lastRedoStackSize) << "Redo stack size";
 
   um->redo();
   ++lastUndoStackSize;
 
-  $expect(um->get_redo_stack().size()).toEqual(lastRedoStackSize - 1, "Redo stack size after redo");
-  $expect(um->get_undo_stack().size()).toEqual(lastUndoStackSize, "Undo stack size after redo");
+  EXPECT_EQ(um->get_redo_stack().size(), lastRedoStackSize - 1) << "Redo stack size after redo";
+  EXPECT_EQ(um->get_undo_stack().size(), lastUndoStackSize) << "Undo stack size after redo";
 
   lastRedoStackSize = um->get_redo_stack().size();
 }

@@ -30,6 +30,7 @@
 
 #include "grt_test_helpers.h"
 #include "wb_test_helpers.h"
+#include "context.h"
 #include "gtest/gtest.h"
 
 using namespace grt;

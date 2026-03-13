@@ -140,7 +140,7 @@ void test_diff(TTestData src, TTestData dest) {
   normalizer.init_omf(&omf);
   std::shared_ptr<DiffChange> change = diff_make(source, target, &omf);
   apply_change_to_object(source, change.get());
-  casmine::deepCompareGrtValues("test_diff fail", ValueRef(source), ValueRef(target));
+  testing::deepCompareGrtValues("test_diff fail", ValueRef(source), ValueRef(target));
 }
 
 /*
@@ -288,7 +288,7 @@ void test_diff(TTestData src, TTestData dest) {
   std::shared_ptr<DiffChange> change = diff_make(source, target, &omf);
   apply_change_to_object(source, change.get());
   // FIXMEE
-  // casmine::deepCompareGrtValues("test_diff fail", ValueRef(source), ValueRef(target));
+  // testing::deepCompareGrtValues("test_diff fail", ValueRef(source), ValueRef(target));
 }
 
 TEST(GRTListDiffTest, IntValuesTest) {

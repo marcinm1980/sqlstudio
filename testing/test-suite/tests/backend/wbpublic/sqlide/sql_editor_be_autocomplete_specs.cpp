@@ -38,6 +38,8 @@
 #include "sqlide/wb_sql_editor_form.h"
 #include "sqlide/sql_editor_be.h"
 
+using namespace std::string_literals;
+
 #include "grtsqlparser/mysql_parser_services.h"
 
 using namespace bec;
@@ -208,7 +210,7 @@ TEST_F(SqlCodeCompletionTest, TestingProperSymbolRetrievalInSymbolTables) {
   auto iterator = std::find_if(schemas.begin(), schemas.end(), [](Symbol *symbol) { return symbol->name == "sakila"; });
 
   // TODO: need matcher/translator for iterators.
-  //$expect(iterator).Not.toBe(schemas.end(), "Test 10.3");
+  //EXPECT_NE(iterator, schemas.end()) << "Test 10.3";
   EXPECT_TRUE(iterator != schemas.end()) << "Test 10.3";
 
   SchemaSymbol *schema = *iterator;

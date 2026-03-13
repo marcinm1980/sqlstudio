@@ -133,12 +133,12 @@ bool UtilitiesWrapper::find_password(const std::string &service, const std::stri
 
   if (!loaded_passwords) {
     // FIXME: Load passwords from configuration
-    /*const auto &tutPasswords = casmine::CasmineContext::get()->configuration["tutPasswords"];
+    /*const auto &tutPasswords = testing::Context::get().configuration["tutPasswords"];
     try {
       for (auto &entry: tutPasswords.GetArray()) {
         if (entry.HasMember("service")) {
           passwords()[entry["service"].GetString()] = entry["password"].GetString();
-          if (std::get<bool>(casmine::CasmineContext::get()->settings["verbose"])) {
+          if (std::get<bool>(testing::Context::get().settings["verbose"])) {
             g_message("%s=%s", entry["service"].GetString(), entry["password"].GetString());
           }
         }
