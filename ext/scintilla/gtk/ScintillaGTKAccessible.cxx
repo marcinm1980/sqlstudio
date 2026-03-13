@@ -1007,6 +1007,22 @@ static void scintilla_object_accessible_init(ScintillaObjectAccessible *accessib
 static void scintilla_object_accessible_class_init(ScintillaObjectAccessibleClass *klass);
 static gpointer scintilla_object_accessible_parent_class = nullptr;
 
+static void scintilla_object_accessible_class_init_thunk(gpointer klass, gpointer) {
+	scintilla_object_accessible_class_init(static_cast<ScintillaObjectAccessibleClass *>(klass));
+}
+
+static void scintilla_object_accessible_init_thunk(GTypeInstance *instance, gpointer) {
+	scintilla_object_accessible_init(reinterpret_cast<ScintillaObjectAccessible *>(instance));
+}
+
+static void atk_text_iface_init_thunk(gpointer iface, gpointer) {
+	ScintillaGTKAccessible::AtkTextIface::init(static_cast<::AtkTextIface *>(iface));
+}
+
+static void atk_editable_text_iface_init_thunk(gpointer iface, gpointer) {
+	ScintillaGTKAccessible::AtkEditableTextIface::init(static_cast<::AtkEditableTextIface *>(iface));
+}
+
 
 // @p parent_type is only required on GTK 3.2 to 3.6, and only on the first call
 static GType scintilla_object_accessible_get_type(GType parent_type G_GNUC_UNUSED) {
@@ -1017,23 +1033,23 @@ static GType scintilla_object_accessible_get_type(GType parent_type G_GNUC_UNUSE
 			0,															/* class size */
 			(GBaseInitFunc) nullptr,										/* base init */
 			(GBaseFinalizeFunc) nullptr,									/* base finalize */
-			(GClassInitFunc) scintilla_object_accessible_class_init,	/* class init */
+			scintilla_object_accessible_class_init_thunk,	/* class init */
 			(GClassFinalizeFunc) nullptr,									/* class finalize */
 			nullptr,														/* class data */
 			0,															/* instance size */
 			0,															/* nb preallocs */
-			(GInstanceInitFunc) scintilla_object_accessible_init,		/* instance init */
+			scintilla_object_accessible_init_thunk,		/* instance init */
 			nullptr														/* value table */
 		};
 
 		const GInterfaceInfo atk_text_info = {
-			(GInterfaceInitFunc) ScintillaGTKAccessible::AtkTextIface::init,
+			atk_text_iface_init_thunk,
 			(GInterfaceFinalizeFunc) nullptr,
 			nullptr
 		};
 
 		const GInterfaceInfo atk_editable_text_info = {
-			(GInterfaceInitFunc) ScintillaGTKAccessible::AtkEditableTextIface::init,
+			atk_editable_text_iface_init_thunk,
 			(GInterfaceFinalizeFunc) nullptr,
 			nullptr
 		};
