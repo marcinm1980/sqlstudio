@@ -141,8 +141,11 @@ mforms_wrap.cxx
 library/sql-parser/source/windows/myx_sql_parser.output
 build/msi/distribution/
 build/zip/distribution/
-build/output/*
-build/__output/*
+build/
+build/output/
+*.so
+*.so.*
+
 *.wixpdb
 MySQL.tokens
 config.cnf
