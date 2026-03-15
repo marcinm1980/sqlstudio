@@ -23,7 +23,7 @@
  */
 
 /*
- * Copyright (c) 2025, dev4fun. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  */
 
 #include "gtest/gtest.h"

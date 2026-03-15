@@ -12,6 +12,7 @@ using MySQL.GUI.MySqlStudio;
 [assembly: AssemblyCompany("Oracle Corporation")]
 [assembly: AssemblyProduct("MySql Studio")]
 [assembly: AssemblyCopyright("Copyright © 2006, 2024, Oracle and/or its affiliates.")]
+ * Copyright (c) 2026 dev4fun. All rights reserved.
 [assembly: AssemblyTrademark("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")]
 [assembly: AssemblyCulture("")]
 

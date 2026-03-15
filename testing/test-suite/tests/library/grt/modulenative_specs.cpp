@@ -44,7 +44,7 @@ public:
 
 /*
  * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2025, dev4fun. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,

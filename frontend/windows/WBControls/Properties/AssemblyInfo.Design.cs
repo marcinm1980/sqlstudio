@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Oracle Corporation")]
 [assembly: AssemblyProduct("WBControls.Design")]
 [assembly: AssemblyCopyright("Copyright © 2014, 2022, Oracle and/or its affiliates.")]
+ * Copyright (c) 2026 dev4fun. All rights reserved.
 [assembly: AssemblyTrademark("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")]
 [assembly: AssemblyCulture("")]
 

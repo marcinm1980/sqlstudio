@@ -5,6 +5,7 @@
  * Created by Mike Lischke.
  *
  * Copyright 2011, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  * Copyright 2009, 2011 Sun Microsystems, Inc. All rights reserved.
  * This file is dual licensed under LGPL v2.1 and the Scintilla license (http://www.scintilla.org/License.txt).
  */
