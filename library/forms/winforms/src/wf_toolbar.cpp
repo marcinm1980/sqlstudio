@@ -170,7 +170,7 @@ bool MformsToolStripLayout::Layout(Object ^ container, LayoutEventArgs ^ argumen
 
 //----------------- MformsToolStrip-----------------------------------------------------------------
 
-Drawing::Size MformsToolStrip::GetPreferredSize(Drawing::Size proposedSize) {
+auto MformsToolStrip::GetPreferredSize(Drawing::Size proposedSize) -> Drawing::Size {
   return layoutEngine->ComputeLayout(this, proposedSize, true);
 }
 
@@ -199,9 +199,9 @@ public:
   ToolBarItemWrapper(mforms::ToolBarItem *item, mforms::ToolBarItemType type);
   ~ToolBarItemWrapper();
 
-  void UpdateItemImage();
-  void SetItemChecked(bool state);
-  void Focus();
+  auto UpdateItemImage() -> void;
+  auto SetItemChecked(bool state) -> void;
+  auto Focus() -> void;
   void SetNormalImage(Drawing::Image ^ image);
   void SetActiveImage(Drawing::Image ^ image);
   void RegisterDropDown(ToolStripButton ^ button);
@@ -411,7 +411,7 @@ ToolBarItemWrapper::~ToolBarItemWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarItemWrapper::UpdateItemImage() {
+auto ToolBarItemWrapper::UpdateItemImage() -> void {
   ToolStripItem ^ item = GetManagedObject<ToolStripItem>();
   ToolStripButton ^ button = dynamic_cast<ToolStripButton ^>(item);
   bool isChecked = false;
@@ -454,7 +454,7 @@ void ToolBarItemWrapper::UpdateItemImage() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarItemWrapper::SetItemChecked(bool state) {
+auto ToolBarItemWrapper::SetItemChecked(bool state) -> void {
   ToolStripButton ^ button = GetManagedObject<ToolStripButton>();
   if (button != nullptr && button->Checked != state) {
     button->Checked = state;
@@ -464,7 +464,7 @@ void ToolBarItemWrapper::SetItemChecked(bool state) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarItemWrapper::Focus() {
+auto ToolBarItemWrapper::Focus() -> void {
   ToolStripItem ^ item = GetManagedObject<ToolStripItem>();
   ToolStripTextBox ^ textbox = dynamic_cast<ToolStripTextBox ^>(item);
   if (textbox != nullptr && textbox->CanSelect)
@@ -496,7 +496,7 @@ ToolBarWrapper::ToolBarWrapper(mforms::ToolBar *toolbar) : ViewWrapper(toolbar) 
 
 //--------------------------------------------------------------------------------------------------
 
-bool ToolBarWrapper::create_tool_bar(mforms::ToolBar *backend, mforms::ToolBarType type) {
+auto ToolBarWrapper::create_tool_bar(mforms::ToolBar *backend, mforms::ToolBarType type) -> bool {
   ToolBarWrapper *wrapper = new ToolBarWrapper(backend);
 
   ToolStrip ^ toolstrip = nullptr;
@@ -560,7 +560,7 @@ bool ToolBarWrapper::create_tool_bar(mforms::ToolBar *backend, mforms::ToolBarTy
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::insert_item(mforms::ToolBar *backend, int index, mforms::ToolBarItem *item) {
+auto ToolBarWrapper::insert_item(mforms::ToolBar *backend, int index, mforms::ToolBarItem *item) -> void {
   ToolStrip ^ toolstrip = ToolBarWrapper::GetManagedObject<ToolStrip>(backend);
   ToolStripItem ^ native_item = ToolBarWrapper::GetManagedObject<ToolStripItem>(item);
 
@@ -576,7 +576,7 @@ void ToolBarWrapper::insert_item(mforms::ToolBar *backend, int index, mforms::To
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::remove_item(mforms::ToolBar *backend, mforms::ToolBarItem *item) {
+auto ToolBarWrapper::remove_item(mforms::ToolBar *backend, mforms::ToolBarItem *item) -> void {
   ToolStrip ^ toolstrip = ToolBarWrapper::GetManagedObject<ToolStrip>(backend);
   ToolStripItem ^ native_item = ToolBarWrapper::GetManagedObject<ToolStripItem>(item);
 
@@ -585,7 +585,7 @@ void ToolBarWrapper::remove_item(mforms::ToolBar *backend, mforms::ToolBarItem *
 
 //--------------------------------------------------------------------------------------------------
 
-bool ToolBarWrapper::create_tool_item(mforms::ToolBarItem *item, mforms::ToolBarItemType type) {
+auto ToolBarWrapper::create_tool_item(mforms::ToolBarItem *item, mforms::ToolBarItemType type) -> bool {
   // ToolBarItemWrapper will itself create the connections to the backend and its native object.
   ToolBarItemWrapper *toolbar_item = new ToolBarItemWrapper(item, type);
   return true;
@@ -593,7 +593,7 @@ bool ToolBarWrapper::create_tool_item(mforms::ToolBarItem *item, mforms::ToolBar
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::set_item_icon(mforms::ToolBarItem *item, const std::string &path) {
+auto ToolBarWrapper::set_item_icon(mforms::ToolBarItem *item, const std::string &path) -> void {
   String ^ iconPath = CppStringToNative(path);
   if (File::Exists(iconPath)) {
     ToolBarItemWrapper *wrapper = item->get_data<ToolBarItemWrapper>();
@@ -603,7 +603,7 @@ void ToolBarWrapper::set_item_icon(mforms::ToolBarItem *item, const std::string 
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::set_item_alt_icon(mforms::ToolBarItem *item, const std::string &path) {
+auto ToolBarWrapper::set_item_alt_icon(mforms::ToolBarItem *item, const std::string &path) -> void {
   String ^ iconPath = CppStringToNative(path);
   if (File::Exists(iconPath)) {
     ToolBarItemWrapper *wrapper = item->get_data<ToolBarItemWrapper>();
@@ -613,7 +613,7 @@ void ToolBarWrapper::set_item_alt_icon(mforms::ToolBarItem *item, const std::str
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::set_item_text(mforms::ToolBarItem *item, const std::string &text) {
+auto ToolBarWrapper::set_item_text(mforms::ToolBarItem *item, const std::string &text) -> void {
   String ^ native_text = CppStringToNative(text);
 
   switch (item->get_type()) {
@@ -658,42 +658,42 @@ void ToolBarWrapper::set_item_text(mforms::ToolBarItem *item, const std::string 
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ToolBarWrapper::get_item_text(mforms::ToolBarItem *item) {
+auto ToolBarWrapper::get_item_text(mforms::ToolBarItem *item) -> std::string {
   ToolStripItem ^ native_item = ToolBarWrapper::GetManagedObject<ToolStripItem>(item);
   return NativeToCppString(native_item->Text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::set_item_name(mforms::ToolBarItem *item, const std::string &name) {
+auto ToolBarWrapper::set_item_name(mforms::ToolBarItem *item, const std::string &name) -> void {
   ToolStripItem ^ native_item = ToolBarWrapper::GetManagedObject<ToolStripItem>(item);
   native_item->AccessibleName = CppStringToNative(name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::set_item_enabled(mforms::ToolBarItem *item, bool state) {
+auto ToolBarWrapper::set_item_enabled(mforms::ToolBarItem *item, bool state) -> void {
   ToolStripItem ^ native_item = ToolBarWrapper::GetManagedObject<ToolStripItem>(item);
   native_item->Enabled = state;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ToolBarWrapper::get_item_enabled(mforms::ToolBarItem *item) {
+auto ToolBarWrapper::get_item_enabled(mforms::ToolBarItem *item) -> bool {
   ToolStripItem ^ native_item = ToolBarWrapper::GetManagedObject<ToolStripItem>(item);
   return native_item->Enabled;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::set_item_checked(mforms::ToolBarItem *item, bool state) {
+auto ToolBarWrapper::set_item_checked(mforms::ToolBarItem *item, bool state) -> void {
   ToolBarItemWrapper *wrapper = item->get_data<ToolBarItemWrapper>();
   wrapper->SetItemChecked(state);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ToolBarWrapper::get_item_checked(mforms::ToolBarItem *item) {
+auto ToolBarWrapper::get_item_checked(mforms::ToolBarItem *item) -> bool {
   ToolStripButton ^ button = ToolBarWrapper::GetManagedObject<ToolStripButton>(item);
   if (button != nullptr)
     return button->Checked;
@@ -703,14 +703,14 @@ bool ToolBarWrapper::get_item_checked(mforms::ToolBarItem *item) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::set_item_tooltip(mforms::ToolBarItem *item, const std::string &text) {
+auto ToolBarWrapper::set_item_tooltip(mforms::ToolBarItem *item, const std::string &text) -> void {
   ToolStripItem ^ native_item = ToolBarWrapper::GetManagedObject<ToolStripItem>(item);
   native_item->ToolTipText = CppStringToNative(text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::set_selector_items(mforms::ToolBarItem *item, const std::vector<std::string> &values) {
+auto ToolBarWrapper::set_selector_items(mforms::ToolBarItem *item, const std::vector<std::string> &values) -> void {
   switch (item->get_type()) {
     case mforms::SelectorItem: {
       ToolStripComboBox ^ combobox = ToolBarWrapper::GetManagedObject<ToolStripComboBox>(item);
@@ -790,7 +790,7 @@ Bitmap ^ ToolBarWrapper::create_color_image(String ^ color) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarWrapper::init() {
+auto ToolBarWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_tool_bar_impl.create_tool_bar = &ToolBarWrapper::create_tool_bar;

@@ -250,7 +250,7 @@ namespace grt {
         _value->release();
     }
 
-    inline void clear() {
+    inline auto clear() -> void {
       if (_value)
         _value->release();
       _value = 0;
@@ -313,20 +313,20 @@ namespace grt {
     auto refcount() const -> int {
       return _value->refcount();
     }
-    void retain() {
+    auto retain() -> void {
       if (_value)
         _value->retain();
     }
-    void release() {
+    auto release() -> void {
       if (_value)
         _value->release();
     }
 
-    void mark_global() const {
+    auto mark_global() const -> void {
       if (_value)
         _value->mark_global();
     }
-    void unmark_global() const {
+    auto unmark_global() const -> void {
       if (_value)
         _value->unmark_global();
     }
@@ -334,7 +334,7 @@ namespace grt {
   protected:
     internal::Value *_value;
 
-    void swap(internal::Value *nvalue) {
+    auto swap(internal::Value *nvalue) -> void {
       if (nvalue != _value) {
         if (_value)
           _value->release();
@@ -476,7 +476,7 @@ namespace grt {
       return content().get_member(m);
     }
 
-    void set_member(const std::string &m, const ValueRef &new_value) {
+    auto set_member(const std::string &m, const ValueRef &new_value) -> void {
       content().set_member(m, new_value);
     }
 
@@ -547,22 +547,19 @@ namespace grt {
       }
 
       // gets a real usable reference to the object
-      Ref<Class> lock() const
-      {
+      auto lock() const -> Ref<Class> {
         if (!_valid_flag.valid())
           throw std::logic_error("attempt to access invalid weak-reference");
         return Ref<Class>(_content);
       }
 
-      void reset()
-      {
+      auto reset() -> void {
         _content= 0; // pointer was nullified, it's a valid reference to null (ie not undefined)
         _valid_flag= internal::ObjectValidFlag(true);
       }
 
       //! Returns true if the reference is still valid, false if the referenced object is gone
-      bool expired() const
-      {
+      auto expired() const -> bool {
         return _valid_flag.valid();
       }
 
@@ -580,8 +577,7 @@ namespace grt {
         return *this;
       }
 
-      void swap(Ref<Class> &other)
-      {
+      auto swap(Ref<Class> &other) -> void {
         std::swap(_content, other._content);
         _valid_flag.swap(other._valid_flag);
       }
@@ -1112,11 +1108,11 @@ namespace grt {
       return BaseListRef(value);
     }
 
-    inline void remove(size_t index) {
+    inline auto remove(size_t index) -> void {
       content().remove(index);
     }
 
-    inline void remove_all() {
+    inline auto remove_all() -> void {
       while (content().count() > 0)
         content().remove(0);
     }
@@ -1155,28 +1151,28 @@ namespace grt {
       return content().get_index(value);
     }
 
-    inline void reorder(size_t oindex, size_t nindex) {
+    inline auto reorder(size_t oindex, size_t nindex) -> void {
       content().reorder(oindex, nindex);
     }
 
     // methods beginning with g perform type checking at runtime
-    inline void gset(size_t index, const ValueRef &value) {
+    inline auto gset(size_t index, const ValueRef &value) -> void {
       content().set_checked(index, value);
     }
 
-    inline void ginsert(const ValueRef &value, size_t index = npos) {
+    inline auto ginsert(const ValueRef &value, size_t index = npos) -> void {
       content().insert_checked(value, index);
     }
 
-    inline void gremove_value(const ValueRef &value) {
+    inline auto gremove_value(const ValueRef &value) -> void {
       content().remove(value);
     }
 
-    inline void gset_unchecked(size_t index, const ValueRef &value) {
+    inline auto gset_unchecked(size_t index, const ValueRef &value) -> void {
       content().set_unchecked(index, value);
     }
 
-    inline void ginsert_unchecked(const ValueRef &value, size_t index = npos) {
+    inline auto ginsert_unchecked(const ValueRef &value, size_t index = npos) -> void {
       content().insert_unchecked(value, index);
     }
 
@@ -1254,13 +1250,13 @@ namespace grt {
         throw type_error(ListType, value.type());
     }
 
-    static bool can_wrap(const ValueRef &value);
+    static auto can_wrap(const ValueRef &value) -> bool;
 
-    inline void insert(const Ref<O> &value, size_t index = npos) {
+    inline auto insert(const Ref<O> &value, size_t index = npos) -> void {
       content().insert_unchecked(value, index);
     }
 
-    inline void remove_value(const Ref<O> &value) {
+    inline auto remove_value(const Ref<O> &value) -> void {
       content().remove(value);
     }
 
@@ -1273,7 +1269,7 @@ namespace grt {
       return Ref<O>::cast_from(content().get(index));
     }
 
-    inline void set(size_t index, const Ref<O> &value) {
+    inline auto set(size_t index, const Ref<O> &value) -> void {
       content().set_unchecked(index, value);
     }
 
@@ -1352,7 +1348,7 @@ namespace grt {
       return ListRef<internal::Integer>(value);
     }
 
-    inline void insert(const IntegerRef &value, size_t index = npos) {
+    inline auto insert(const IntegerRef &value, size_t index = npos) -> void {
       content().insert_unchecked(value, index);
     }
 
@@ -1364,7 +1360,7 @@ namespace grt {
       return IntegerRef::cast_from(content().get(index));
     }
 
-    inline void set(size_t index, const IntegerRef &value) {
+    inline auto set(size_t index, const IntegerRef &value) -> void {
       content().set_unchecked(index, value);
     }
 
@@ -1378,7 +1374,7 @@ namespace grt {
       return true;
     }
 
-    inline void remove_value(const IntegerRef &value) {
+    inline auto remove_value(const IntegerRef &value) -> void {
       content().remove(value);
     }
 
@@ -1428,7 +1424,7 @@ namespace grt {
       return ListRef<internal::Double>(value);
     }
 
-    inline void insert(const DoubleRef &value, size_t index = npos) {
+    inline auto insert(const DoubleRef &value, size_t index = npos) -> void {
       content().insert_unchecked(value, index);
     }
 
@@ -1440,7 +1436,7 @@ namespace grt {
       return DoubleRef::cast_from(content().get(index));
     }
 
-    inline void set(size_t index, const DoubleRef &value) {
+    inline auto set(size_t index, const DoubleRef &value) -> void {
       content().set_unchecked(index, value);
     }
 
@@ -1454,7 +1450,7 @@ namespace grt {
       return true;
     }
 
-    inline void remove_value(const DoubleRef &value) {
+    inline auto remove_value(const DoubleRef &value) -> void {
       content().remove(value);
     }
 
@@ -1507,7 +1503,7 @@ namespace grt {
       return ListRef<internal::String>(value);
     }
 
-    inline void insert(const StringRef &value, size_t index = npos) {
+    inline auto insert(const StringRef &value, size_t index = npos) -> void {
       content().insert_unchecked(value, index);
     }
 
@@ -1519,7 +1515,7 @@ namespace grt {
       return StringRef::cast_from(content().get(index));
     }
 
-    inline void set(size_t index, const StringRef &value) {
+    inline auto set(size_t index, const StringRef &value) -> void {
       content().set_unchecked(index, value);
     }
 
@@ -1549,7 +1545,7 @@ namespace grt {
       return true;
     }
 
-    inline void remove_value(const StringRef &value) {
+    inline auto remove_value(const StringRef &value) -> void {
       content().remove(value);
     }
 
@@ -1662,11 +1658,11 @@ namespace grt {
       return content().keys();
     }
 
-    inline void remove(const std::string &k) {
+    inline auto remove(const std::string &k) -> void {
       content().remove(k);
     }
 
-    void reset_entries() {
+    auto reset_entries() -> void {
       content().reset_entries();
     }
 
@@ -1706,23 +1702,23 @@ namespace grt {
       return defvalue;
     }
 
-    inline void set(const std::string &k, const ValueRef &value) {
+    inline auto set(const std::string &k, const ValueRef &value) -> void {
       content().set(k, value);
     }
 
-    inline void gset(const std::string &k, const std::string &value) {
+    inline auto gset(const std::string &k, const std::string &value) -> void {
       content().set(k, StringRef(value));
     }
 
-    inline void gset(const std::string &k, long value) {
+    inline auto gset(const std::string &k, long value) -> void {
       content().set(k, IntegerRef(value));
     }
 
-    inline void gset(const std::string &k, int value) {
+    inline auto gset(const std::string &k, int value) -> void {
       content().set(k, IntegerRef(value));
     }
 
-    inline void gset(const std::string &k, internal::Double::storage_type value) {
+    inline auto gset(const std::string &k, internal::Double::storage_type value) -> void {
       content().set(k, DoubleRef(value));
     }
 
@@ -1775,7 +1771,7 @@ namespace grt {
       return ListRef<internal::Dict>(value);
     }
 
-    inline void insert(const DictRef &value, size_t index = npos) {
+    inline auto insert(const DictRef &value, size_t index = npos) -> void {
       content().insert_unchecked(value, index);
     }
 
@@ -1787,7 +1783,7 @@ namespace grt {
       return DictRef::cast_from(content().get(index));
     }
 
-    inline void set(size_t index, const DictRef &value) {
+    inline auto set(size_t index, const DictRef &value) -> void {
       content().set_unchecked(index, value);
     }
 
@@ -1801,7 +1797,7 @@ namespace grt {
       return true;
     }
 
-    inline void remove_value(const DictRef &value) {
+    inline auto remove_value(const DictRef &value) -> void {
       content().remove(value);
     }
 
@@ -1827,7 +1823,7 @@ namespace grt {
 
     virtual auto has_setter() const -> bool = 0;
 
-    virtual void set(internal::Object *obj, const grt::ValueRef &value) = 0;
+    virtual auto set(internal::Object *obj, const grt::ValueRef &value) -> void = 0;
     virtual auto get(const internal::Object *obj) const -> grt::ValueRef = 0;
   };
 
@@ -1917,7 +1913,7 @@ namespace grt {
         return setter != 0;
       }
 
-      virtual void set(internal::Object *obj, const grt::ValueRef &value) {
+      virtual auto set(internal::Object *obj, const grt::ValueRef &value) -> void {
         (((C *)obj)->*setter)(T::cast_from(value));
       }
 
@@ -2094,7 +2090,7 @@ namespace grt {
 
     auto is_abstract() const -> bool;
 
-    void set_member_value(internal::Object *object, const std::string &name, const ValueRef &value);
+    auto set_member_value(internal::Object *object, const std::string &name, const ValueRef &value) -> void;
     auto get_member_value(const internal::Object *object, const std::string &name) -> ValueRef;
     auto get_member_value(const internal::Object *object, const Member *member) -> ValueRef;
 
@@ -2131,22 +2127,22 @@ namespace grt {
       return _impl_data;
     }
 
-    void set_member_internal(internal::Object *object, const std::string &name, const ValueRef &value, bool force);
+    auto set_member_internal(internal::Object *object, const std::string &name, const ValueRef &value, bool force) -> void;
 
   public: // for use by Objects during registration
-    void bind_allocator(Allocator alloc);
-    void bind_member(const std::string &name, PropertyBase *prop);
+    auto bind_allocator(Allocator alloc) -> void;
+    auto bind_member(const std::string &name, PropertyBase *prop) -> void;
 
-    void bind_method(const std::string &name, Method::Function method);
-    void add_validator(Validator *v);
-    void remove_validator(Validator *v);
+    auto bind_method(const std::string &name, Method::Function method) -> void;
+    auto add_validator(Validator *v) -> void;
+    auto remove_validator(Validator *v) -> void;
 
   protected:
     friend class Serializer;
     friend class Unserializer;
 
     MetaClass();
-    void load_xml(xmlNodePtr node);
+    auto load_xml(xmlNodePtr node) -> void;
     void load_attribute_list(xmlNodePtr node, const std::string &member = "");
 
     std::string _name;
@@ -2199,7 +2195,7 @@ namespace grt {
 
     virtual auto init_module(const std::string &path) -> Module * = 0;
 
-    virtual void refresh() = 0;
+    virtual auto refresh() -> void = 0;
 
     virtual auto load_library(const std::string &path) -> bool = 0;
     virtual auto run_script_file(const std::string &path) -> bool = 0;
@@ -2234,7 +2230,7 @@ namespace grt {
     virtual ~Module() {
     }
 
-    virtual void closeModule() noexcept {
+    virtual auto closeModule() noexcept -> void {
     }
 
     virtual auto getModule() const -> GModule * {
@@ -2283,15 +2279,15 @@ namespace grt {
       return _loader;
     }
 
-    void validate() const;
+    auto validate() const -> void;
 
-    void set_global_data(const std::string &key, const std::string &value);
-    void set_global_data(const std::string &key, int value);
+    auto set_global_data(const std::string &key, const std::string &value) -> void;
+    auto set_global_data(const std::string &key, int value) -> void;
     auto global_int_data(const std::string &key, int default_value = 0) -> int;
     auto global_string_data(const std::string &key, const std::string &default_value = "") -> std::string;
 
-    void set_document_data(const std::string &key, const std::string &value);
-    void set_document_data(const std::string &key, int value);
+    auto set_document_data(const std::string &key, const std::string &value) -> void;
+    auto set_document_data(const std::string &key, int value) -> void;
     auto document_int_data(const std::string &key, int default_value = 0) -> int;
     auto document_string_data(const std::string &key, const std::string &default_value = "") -> std::string;
 
@@ -2315,7 +2311,7 @@ namespace grt {
                                          const std::function<ValueRef(BaseListRef, Module *, Module::Function)> &caller)
       -> bool;
 
-    void add_function(const Function &func);
+    auto add_function(const Function &func) -> void;
 
     std::string _name;
     std::string _path;
@@ -2453,13 +2449,13 @@ namespace grt {
      *
      * @return
      */
-    void set_verbose(bool flag);
+    auto set_verbose(bool flag) -> void;
     auto verbose() const -> bool {
       return _verbose;
     }
 
     // Set to true when we are running unit tests.
-    void setTesting(bool flag) {
+    auto setTesting(bool flag) -> void {
       _testing = flag;
     };
     auto testing() -> bool {
@@ -2480,7 +2476,7 @@ namespace grt {
      *
      * @param requires list of other XML files required by the loaded one
      */
-    void load_metaclasses(const std::string &file, std::list<std::string> *requiresList = 0);
+    auto load_metaclasses(const std::string &file, std::list<std::string> *requiresList = 0) -> void;
 
     /**
      * This one should not be used during normal studio run,
@@ -2488,7 +2484,7 @@ namespace grt {
      * Causes all metaclasses to be unloaded,
      * and grt to be recreated.
      */
-    void reinitialiseForTests();
+    auto reinitialiseForTests() -> void;
 
     /** Scans a directory for metaclass definition files and load them.
      * Looks in the directory for files with the structs*.xml pattern and loads metaclasses
@@ -2509,7 +2505,7 @@ namespace grt {
      * also perform initialization of all known implementatin classes by
      * binding properties and method pointers.
      */
-    void end_loading_metaclasses(bool check_class_binding = true);
+    auto end_loading_metaclasses(bool check_class_binding = true) -> void;
 
     auto get_metaclasses() const -> const std::list<MetaClass *> & {
       return _metaclasses_list;
@@ -2534,7 +2530,7 @@ namespace grt {
     auto get_unserializer() -> std::shared_ptr<grt::internal::Unserializer>;
 
     auto load_xml(const std::string &path) -> xmlDocPtr;
-    void get_xml_metainfo(xmlDocPtr doc, std::string &doctype_ret, std::string &version_ret);
+    auto get_xml_metainfo(xmlDocPtr doc, std::string &doctype_ret, std::string &version_ret) -> void;
     auto unserialize_xml(xmlDocPtr doc, const std::string &source_path) -> ValueRef;
 
     auto serialize_xml_data(const ValueRef &value, const std::string &doctype = "", const std::string &version = "",
@@ -2546,43 +2542,43 @@ namespace grt {
     inline auto root() const -> ValueRef {
       return _root;
     }
-    void set_root(const ValueRef &root);
+    auto set_root(const ValueRef &root) -> void;
 
     auto get(const std::string &path) const -> ValueRef;
-    void set(const std::string &path, const ValueRef &value);
+    auto set(const std::string &path, const ValueRef &value) -> void;
 
     auto find_object_by_id(const std::string &id, const std::string &subpath) -> ObjectRef;
 
     // modules
 
     // path in globals tree for modules to store options
-    void set_global_module_data_path(const std::string &path) {
+    auto set_global_module_data_path(const std::string &path) -> void {
       _global_module_options_path = path;
     }
     auto global_module_data_path() -> std::string {
       return _global_module_options_path;
     }
 
-    void set_document_module_data_path(const std::string &path) {
+    auto set_document_module_data_path(const std::string &path) -> void {
       _document_module_options_path = path;
     }
     auto document_module_data_path() -> std::string {
       return _document_module_options_path;
     }
 
-    void add_module_loader(ModuleLoader *loader);
+    auto add_module_loader(ModuleLoader *loader) -> void;
     auto load_module(const std::string &path, const std::string &basePath, bool refresh) -> bool;
-    void end_loading_modules();
+    auto end_loading_modules() -> void;
 
     auto get_module_loader(const std::string &name) -> ModuleLoader *;
     auto get_module_loader_for_file(const std::string &path) -> ModuleLoader *;
-    void refresh_loaders();
+    auto refresh_loaders() -> void;
 
-    void register_new_module(Module *module);
-    void refresh_module(Module *module);
-    void unregister_module(Module *module);
+    auto register_new_module(Module *module) -> void;
+    auto refresh_module(Module *module) -> void;
+    auto unregister_module(Module *module) -> void;
 
-    void register_new_interface(Interface *iface);
+    auto register_new_interface(Interface *iface) -> void;
     auto get_interfaces() const -> const std::map<std::string, Interface *> & {
       return _interfaces;
     }
@@ -2686,8 +2682,8 @@ namespace grt {
 
     // context data
 
-    void set_context_data(const std::string &key, void *value, void (*free_value)(void *) = 0);
-    void unset_context_data(const std::string &key);
+    auto set_context_data(const std::string &key, void *value, void (*free_value)(void *) = 0) -> void;
+    auto unset_context_data(const std::string &key) -> void;
     auto get_context_data(const std::string &key) -> void *;
 
     // shell
@@ -2696,12 +2692,12 @@ namespace grt {
     auto shell_type() -> std::string;
 
     // undo tracking
-    void push_undo_manager(UndoManager *um);
+    auto push_undo_manager(UndoManager *um) -> void;
     auto pop_undo_manager() -> UndoManager *;
 
     auto get_undo_manager() const -> UndoManager *;
-    void start_tracking_changes();
-    void stop_tracking_changes();
+    auto start_tracking_changes() -> void;
+    auto stop_tracking_changes() -> void;
     auto tracking_changes() const -> bool {
       return _tracking_changes > 0;
     }
@@ -2710,19 +2706,19 @@ namespace grt {
      * Use the AutoUndo class for auto-trackign.
      */
     auto begin_undoable_action(UndoGroup *group = 0) -> UndoGroup *;
-    void end_undoable_action(const std::string &group_description);
-    void cancel_undoable_action();
+    auto end_undoable_action(const std::string &group_description) -> void;
+    auto cancel_undoable_action() -> void;
 
     // grt logging/messaging
     auto messageHandlerCount() -> int {
       return (int)_messageSlotStack.size();
     }
-    void pushMessageHandler(SlotHolder *slot);
-    void popMessageHandler();
-    void removeMessageHandler(SlotHolder *slot);
+    auto pushMessageHandler(SlotHolder *slot) -> void;
+    auto popMessageHandler() -> void;
+    auto removeMessageHandler(SlotHolder *slot) -> void;
 
-    void push_status_query_handler(const StatusQuerySlot &slot);
-    void pop_status_query_handler();
+    auto push_status_query_handler(const StatusQuerySlot &slot) -> void;
+    auto pop_status_query_handler() -> void;
     auto query_status() -> bool;
 
     void send_error(const std::string &message, const std::string &details = "", void *sender = NULL);
@@ -2730,12 +2726,12 @@ namespace grt {
     void send_info(const std::string &message, const std::string &details = "", void *sender = NULL);
     void send_progress(float percentage, const std::string &message, const std::string &details = "",
                        void *sender = NULL);
-    void begin_progress_step(float from, float to);
-    void end_progress_step();
-    void reset_progress_steps();
+    auto begin_progress_step(float from, float to) -> void;
+    auto end_progress_step() -> void;
+    auto reset_progress_steps() -> void;
 
-    void send_verbose(const std::string &message, void *sender = NULL);
-    void send_output(const std::string &text, void *sender = NULL);
+    auto send_verbose(const std::string &message, void *sender = NULL) -> void;
+    auto send_output(const std::string &text, void *sender = NULL) -> void;
 
   protected:
     struct AutoLock {
@@ -2746,8 +2742,8 @@ namespace grt {
         grt::GRT::get()->unlock();
       }
     };
-    void lock() const;
-    void unlock() const;
+    auto lock() const -> void;
+    auto unlock() const -> void;
 
   protected:
     friend class MetaClass;
@@ -2770,7 +2766,7 @@ namespace grt {
 
     Shell *_shell;
 
-    void add_metaclass(MetaClass *stru);
+    auto add_metaclass(MetaClass *stru) -> void;
     auto module_path_in_bundle(const std::string &path) -> std::string;
 
     auto handle_message(const Message &msg, void *sender) -> bool;

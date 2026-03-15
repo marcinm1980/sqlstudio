@@ -28,7 +28,7 @@
 #include <string>
 #include "base/string_utilities.h"
 
-void update_numeric(mforms::TextEntry& te) {
+auto update_numeric(mforms::TextEntry& te) -> void {
   long result = base::atoi<long>(te.get_string_value(), -1);
   if (result < 0)
     te.set_value("0");
@@ -98,7 +98,7 @@ DBSearchFilterPanel::DBSearchFilterPanel()
   //  _table.add(&_filter_tree, 1, 2, 3, 4, mforms::FillAndExpand);
 }
 
-void DBSearchFilterPanel::cell_edited(mforms::TreeNodeRef node, int column, const std::string& value) {
+auto DBSearchFilterPanel::cell_edited(mforms::TreeNodeRef node, int column, const std::string& value) -> void {
   if ((_filter_tree.count() > 1) && (value == ""))
     node->remove_from_parent();
 
@@ -109,7 +109,7 @@ void DBSearchFilterPanel::cell_edited(mforms::TreeNodeRef node, int column, cons
   }
 }
 
-void DBSearchFilterPanel::set_searching(bool flag) {
+auto DBSearchFilterPanel::set_searching(bool flag) -> void {
   _search_text.set_enabled(!flag);
   _search_all_type_check.set_enabled(!flag);
   _exclude_check.set_enabled(!flag);

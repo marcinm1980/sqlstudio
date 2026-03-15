@@ -88,7 +88,7 @@ struct normalized_string_builder {
   }
 };
 
-std::string Sql_normalizer::remove_inter_token_spaces(const std::string& text) {
+auto Sql_normalizer::remove_inter_token_spaces(const std::string& text) -> std::string {
   std::string result;
   result.reserve(text.size());
   normalized_string_builder builder(result);

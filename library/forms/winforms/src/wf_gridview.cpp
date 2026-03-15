@@ -47,32 +47,31 @@ public:
     _view = rset;
   }
 
-  IRecordsetView ^ view() { return _view; }
+  auto view() -> IRecordsetView ^ { return _view; }
 
-    Control
-    ^ control() { return _view->control(); }
+    auto control() -> Control ^ { return _view->control(); }
 
-    bool is_resizing() {
+    auto is_resizing() -> bool {
     return _resizing;
   }
 
-  virtual int get_column_count() {
+  virtual auto get_column_count() -> int {
     return _view->get_column_count();
   }
 
-  virtual int get_column_width(int column) {
+  virtual auto get_column_width(int column) -> int {
     return _view->get_column_width(column);
   }
 
-  virtual void set_column_width(int column, int width) {
+  virtual auto set_column_width(int column, int width) -> void {
     _view->set_column_width(column, width);
   }
 
-  virtual void update_columns() {
+  virtual auto update_columns() -> void {
     _view->update_columns();
   }
 
-  virtual bool current_cell(size_t &row, int &column) {
+  virtual auto current_cell(size_t &row, int &column) -> bool {
     row = _view->current_cell_row();
     column = _view->current_cell_column();
     if (_view->current_cell_row() < 0)
@@ -80,15 +79,15 @@ public:
     return true;
   }
 
-  virtual void set_current_cell(size_t row, int column) {
+  virtual auto set_current_cell(size_t row, int column) -> void {
     _view->set_current_cell((int)row, column);
   }
 
-  virtual void set_column_header_indicator(int column, mforms::ColumnHeaderIndicator order) {
+  virtual auto set_column_header_indicator(int column, mforms::ColumnHeaderIndicator order) -> void {
     _view->set_column_header_indicator(column, (IRecordsetView::ColumnHeaderIndicator)order);
   }
 
-  virtual void set_header_menu(mforms::ContextMenu *header_menu) {
+  virtual auto set_header_menu(mforms::ContextMenu *header_menu) -> void {
     System::Windows::Forms::ContextMenuStrip ^ menu =
       MenuBarWrapper::GetManagedObject<System::Windows::Forms::ContextMenuStrip>(header_menu);
     if (Conversions::UseWin8Drawing())
@@ -108,12 +107,12 @@ public:
   ColumnCallbackWrapper(ConcreteGridView *be) : backend(be) {
   }
 
-  void resized(int column) {
+  auto resized(int column) -> void {
     if (!backend->is_resizing())
       (*backend->signal_column_resized())(column);
   }
 
-  System::Windows::Forms::ContextMenuStrip ^ header_right_click(int column) {
+  auto header_right_click(int column) -> System::Windows::Forms::ContextMenuStrip ^ {
     backend->clicked_header_column(column);
     if (backend->header_menu() != NULL) {
       backend->header_menu()->will_show();
@@ -132,7 +131,7 @@ GridViewWrapper::GridViewWrapper(mforms::GridView *backend) : NativeWrapper(back
 GridViewWrapper::~GridViewWrapper() {
 }
 
-mforms::GridView *GridViewWrapper::create(std::shared_ptr<Recordset> rset) {
+auto GridViewWrapper::create(std::shared_ptr<Recordset> rset) -> mforms::GridView * {
   CreateGridViewDelegate ^ create = factory;
   ConcreteGridView *backend = new ConcreteGridView(create(IntPtr(&rset)));
   GridViewWrapper *wrapper = new GridViewWrapper(backend);

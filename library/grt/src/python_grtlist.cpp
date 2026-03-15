@@ -32,7 +32,7 @@
 using namespace grt;
 using namespace base;
 
-static int list_init(PyGRTListObject *self, PyObject *args, PyObject *kwds) {
+static auto list_init(PyGRTListObject *self, PyObject *args, PyObject *kwds) -> int {
   PythonContext *ctx = PythonContext::get_and_check();
   if (ctx) {
     const char *type = nullptr, *class_name = nullptr;
@@ -81,17 +81,17 @@ static int list_init(PyGRTListObject *self, PyObject *args, PyObject *kwds) {
   return -1;
 }
 
-static void list_dealloc(PyGRTListObject *self) {
+static auto list_dealloc(PyGRTListObject *self) -> void {
   delete self->list;
 
   Py_TYPE(self)->tp_free(self);
 }
 
-static Py_ssize_t list_length(PyGRTListObject *self) {
+static auto list_length(PyGRTListObject *self) -> Py_ssize_t {
   return self->list->count();
 }
 
-static PyObject *list_item(PyGRTListObject *self, Py_ssize_t index) {
+static auto list_item(PyGRTListObject *self, Py_ssize_t index) -> PyObject * {
   PythonContext *ctx;
 
   if (!(ctx = PythonContext::get_and_check()))
@@ -113,7 +113,7 @@ static PyObject *list_item(PyGRTListObject *self, Py_ssize_t index) {
   }
 }
 
-static int list_assign(PyGRTListObject *self, Py_ssize_t index, PyObject *value) {
+static auto list_assign(PyGRTListObject *self, Py_ssize_t index, PyObject *value) -> int {
   PythonContext *ctx = PythonContext::get_and_check();
   if (!ctx)
     return -1;
@@ -138,7 +138,7 @@ static int list_assign(PyGRTListObject *self, Py_ssize_t index, PyObject *value)
   return -1;
 }
 
-static int list_contains(PyGRTListObject *self, PyObject *value) {
+static auto list_contains(PyGRTListObject *self, PyObject *value) -> int {
   PythonContext *ctx = PythonContext::get_and_check();
   if (!ctx)
     return -1;
@@ -151,7 +151,7 @@ static int list_contains(PyGRTListObject *self, PyObject *value) {
   return 0;
 }
 
-static PyObject *list_inplace_concat(PyGRTListObject *self, PyObject *other) {
+static auto list_inplace_concat(PyGRTListObject *self, PyObject *other) -> PyObject * {
   PythonContext *ctx = PythonContext::get_and_check();
   if (!ctx)
     return nullptr;
@@ -178,11 +178,11 @@ static PyObject *list_inplace_concat(PyGRTListObject *self, PyObject *other) {
   return (PyObject *)self;
 }
 
-static PyObject *list_printable(PyGRTListObject *self) {
+static auto list_printable(PyGRTListObject *self) -> PyObject * {
   return PyUnicode_FromString(self->list->toString().c_str());
 }
 
-static PyObject *list_append(PyGRTListObject *self, PyObject *v) {
+static auto list_append(PyGRTListObject *self, PyObject *v) -> PyObject * {
   if (!v) {
     PyErr_SetString(PyExc_ValueError, "missing argument");
     return nullptr;
@@ -204,7 +204,7 @@ static PyObject *list_append(PyGRTListObject *self, PyObject *v) {
   return nullptr;
 }
 
-static PyObject *list_insert(PyGRTListObject *self, PyObject *args) {
+static auto list_insert(PyGRTListObject *self, PyObject *args) -> PyObject * {
   int i;
   PythonContext *ctx = PythonContext::get_and_check();
   if (!ctx)
@@ -227,7 +227,7 @@ static PyObject *list_insert(PyGRTListObject *self, PyObject *args) {
   return nullptr;
 }
 
-static PyObject *list_remove(PyGRTListObject *self, PyObject *v) {
+static auto list_remove(PyGRTListObject *self, PyObject *v) -> PyObject * {
   if (!v) {
     PyErr_SetString(PyExc_ValueError, "missing argument");
     return nullptr;
@@ -249,7 +249,7 @@ static PyObject *list_remove(PyGRTListObject *self, PyObject *v) {
   return nullptr;
 }
 
-static PyObject *list_remove_all(PyGRTListObject *self) {
+static auto list_remove_all(PyGRTListObject *self) -> PyObject * {
   PythonContext *ctx = PythonContext::get_and_check();
   if (!ctx)
     return nullptr;
@@ -267,7 +267,7 @@ static PyObject *list_remove_all(PyGRTListObject *self) {
   return nullptr;
 }
 
-static PyObject *list_reorder(PyGRTListObject *self, PyObject *args) {
+static auto list_reorder(PyGRTListObject *self, PyObject *args) -> PyObject * {
   int oldi, newi;
   if (!PyArg_ParseTuple(args, "ii:reorder", &oldi, &newi))
     return nullptr;
@@ -286,7 +286,7 @@ static PyObject *list_reorder(PyGRTListObject *self, PyObject *args) {
   return nullptr;
 }
 
-static PyObject *list_get_contenttype(PyGRTListObject *self, void *closure) {
+static auto list_get_contenttype(PyGRTListObject *self, void *closure) -> PyObject * {
   return Py_BuildValue("(ss)", type_to_str(self->list->content_type()).c_str(),
                        self->list->content_class_name().c_str());
 }
@@ -438,7 +438,7 @@ static PyTypeObject PyGRTListObjectType = {
 #endif
 };
 
-void grt::PythonContext::init_grt_list_type() {
+auto grt::PythonContext::init_grt_list_type() -> void {
   PyGRTListObjectType.tp_new = PyType_GenericNew;
   if (PyType_Ready(&PyGRTListObjectType) < 0) {
     throw std::runtime_error("Could not initialize GRT List type in python");

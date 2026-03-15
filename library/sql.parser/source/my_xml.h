@@ -66,25 +66,25 @@ typedef struct xml_stack_st
   int  (*leave_xml)(struct xml_stack_st *st,const char *val, uint len);
 } MY_XML_PARSER;
 
-void my_xml_parser_create(MY_XML_PARSER *st);
-void my_xml_parser_free(MY_XML_PARSER *st);
-int  my_xml_parse(MY_XML_PARSER *st,const char *str, uint len);
+auto my_xml_parser_create(MY_XML_PARSER *st) -> void;
+auto my_xml_parser_free(MY_XML_PARSER *st) -> void;
+auto my_xml_parse(MY_XML_PARSER *st,const char *str, uint len) -> int;
 
-void my_xml_set_value_handler(MY_XML_PARSER *st, int (*)(MY_XML_PARSER *,
+auto my_xml_set_value_handler(MY_XML_PARSER *st, int (*)(MY_XML_PARSER *,
 							 const char *,
-							 uint len));
-void my_xml_set_enter_handler(MY_XML_PARSER *st, int (*)(MY_XML_PARSER *,
+							 uint len)) -> void;
+auto my_xml_set_enter_handler(MY_XML_PARSER *st, int (*)(MY_XML_PARSER *,
 							 const char *,
-							 uint len));
-void my_xml_set_leave_handler(MY_XML_PARSER *st, int (*)(MY_XML_PARSER *,
+							 uint len)) -> void;
+auto my_xml_set_leave_handler(MY_XML_PARSER *st, int (*)(MY_XML_PARSER *,
 							 const char *,
-							 uint len));
-void my_xml_set_user_data(MY_XML_PARSER *st, void *);
+							 uint len)) -> void;
+auto my_xml_set_user_data(MY_XML_PARSER *st, void *) -> void;
 
-uint my_xml_error_pos(MY_XML_PARSER *st);
-uint my_xml_error_lineno(MY_XML_PARSER *st);
+auto my_xml_error_pos(MY_XML_PARSER *st) -> uint;
+auto my_xml_error_lineno(MY_XML_PARSER *st) -> uint;
 
-const char *my_xml_error_string(MY_XML_PARSER *st);
+auto my_xml_error_string(MY_XML_PARSER *st) -> const char *;
 
 //#ifdef	__cplusplus
 //}

@@ -48,7 +48,7 @@ Mysql_sql_syntax_check::Mysql_sql_syntax_check() {
   NULL_STATE_KEEPER
 }
 
-Mysql_sql_syntax_check::Statement_type Mysql_sql_syntax_check::determine_statement_type(const std::string &sql) {
+auto Mysql_sql_syntax_check::determine_statement_type(const std::string &sql) -> Mysql_sql_syntax_check::Statement_type {
   NULL_STATE_KEEPER
 
   typedef std::map<std::string, Statement_type> KnownStatementTypes;
@@ -79,7 +79,7 @@ Mysql_sql_syntax_check::Statement_type Mysql_sql_syntax_check::determine_stateme
   return (known_statement_types.end() == statement_type) ? sql_unknown : statement_type->second;
 }
 
-int Mysql_sql_syntax_check::check_sql(const char *sql) {
+auto Mysql_sql_syntax_check::check_sql(const char *sql) -> int {
   NULL_STATE_KEEPER
   _messages_enabled = false;
   _use_delimiter = false;
@@ -104,7 +104,7 @@ int Mysql_sql_syntax_check::check_sql(const char *sql) {
   return (err_count ? 0 : 1);
 }
 
-int Mysql_sql_syntax_check::check_trigger(const char *sql) {
+auto Mysql_sql_syntax_check::check_trigger(const char *sql) -> int {
   NULL_STATE_KEEPER
   _messages_enabled = false;
   _use_delimiter = true;
@@ -113,7 +113,7 @@ int Mysql_sql_syntax_check::check_trigger(const char *sql) {
   return (err_count ? 0 : 1);
 }
 
-int Mysql_sql_syntax_check::check_view(const char *sql) {
+auto Mysql_sql_syntax_check::check_view(const char *sql) -> int {
   NULL_STATE_KEEPER
   _messages_enabled = false;
   _use_delimiter = true;
@@ -121,7 +121,7 @@ int Mysql_sql_syntax_check::check_view(const char *sql) {
   return (err_count ? 0 : 1);
 }
 
-int Mysql_sql_syntax_check::check_routine(const char *sql) {
+auto Mysql_sql_syntax_check::check_routine(const char *sql) -> int {
   NULL_STATE_KEEPER
   _messages_enabled = false;
   _use_delimiter = true;
@@ -130,8 +130,8 @@ int Mysql_sql_syntax_check::check_routine(const char *sql) {
   return (err_count ? 0 : 1);
 }
 
-int Mysql_sql_syntax_check::check_sql_statement(const char *sql, Check_sql_statement check_sql_statement,
-                                                ObjectType object_type) {
+auto Mysql_sql_syntax_check::check_sql_statement(const char *sql, Check_sql_statement check_sql_statement,
+                                                ObjectType object_type) -> int {
   _check_sql_statement = check_sql_statement;
   _process_sql_statement = boost::bind(&Mysql_sql_syntax_check::process_sql_statement, this, _1, object_type);
 
@@ -159,7 +159,7 @@ int Mysql_sql_syntax_check::check_sql_statement(const char *sql, Check_sql_state
   return parse_sql_script(sql_parser_fe, actual_sql);
 }
 
-int Mysql_sql_syntax_check::process_sql_statement(const SqlAstNode *tree, ObjectType object_type) {
+auto Mysql_sql_syntax_check::process_sql_statement(const SqlAstNode *tree, ObjectType object_type) -> int {
   if (report_sql_statement_border)
     do_report_sql_statement_border(_stmt_begin_lineno, _stmt_begin_line_pos, _stmt_end_lineno, _stmt_end_line_pos);
 
@@ -183,14 +183,14 @@ int Mysql_sql_syntax_check::process_sql_statement(const SqlAstNode *tree, Object
     return 1;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::do_check_sql(const SqlAstNode *tree) {
+auto Mysql_sql_syntax_check::do_check_sql(const SqlAstNode *tree) -> Mysql_sql_parser_base::Parse_result {
   if (tree)
     return check_sql(tree);
   else
     return pr_invalid;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::do_check_trigger(const SqlAstNode *tree) {
+auto Mysql_sql_syntax_check::do_check_trigger(const SqlAstNode *tree) -> Mysql_sql_parser_base::Parse_result {
   const SqlAstNode *trigger_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -208,7 +208,7 @@ Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::do_check_trigger(con
     return pr_irrelevant;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::do_check_view(const SqlAstNode *tree) {
+auto Mysql_sql_syntax_check::do_check_view(const SqlAstNode *tree) -> Mysql_sql_parser_base::Parse_result {
   const SqlAstNode *view_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -227,7 +227,7 @@ Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::do_check_view(const 
     return pr_irrelevant;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::do_check_routine(const SqlAstNode *tree) {
+auto Mysql_sql_syntax_check::do_check_routine(const SqlAstNode *tree) -> Mysql_sql_parser_base::Parse_result {
   const SqlAstNode *routine_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -250,21 +250,21 @@ Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::do_check_routine(con
     return pr_irrelevant;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::check_sql(const SqlAstNode *tree) {
+auto Mysql_sql_syntax_check::check_sql(const SqlAstNode *tree) -> Mysql_sql_parser_base::Parse_result {
   return pr_processed;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::check_trigger(const SqlAstNode *tree,
-                                                                          const SqlAstNode *trigger_tail) {
+auto Mysql_sql_syntax_check::check_trigger(const SqlAstNode *tree,
+                                                                          const SqlAstNode *trigger_tail) -> Mysql_sql_parser_base::Parse_result {
   return pr_processed;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::check_view(const SqlAstNode *tree,
-                                                                       const SqlAstNode *view_tail) {
+auto Mysql_sql_syntax_check::check_view(const SqlAstNode *tree,
+                                                                       const SqlAstNode *view_tail) -> Mysql_sql_parser_base::Parse_result {
   return pr_processed;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_syntax_check::check_routine(const SqlAstNode *tree,
-                                                                          const SqlAstNode *routine_tail) {
+auto Mysql_sql_syntax_check::check_routine(const SqlAstNode *tree,
+                                                                          const SqlAstNode *routine_tail) -> Mysql_sql_parser_base::Parse_result {
   return pr_processed;
 }

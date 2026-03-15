@@ -73,7 +73,7 @@
 WbPrintingImpl::WbPrintingImpl(grt::CPPModuleLoader *ldr) : super(ldr) {
 }
 
-grt::ListRef<app_Plugin> WbPrintingImpl::getPluginInfo() {
+auto WbPrintingImpl::getPluginInfo() -> grt::ListRef<app_Plugin> {
   grt::ListRef<app_Plugin> list(true);
 
   def_export_plugin("printToPDFFile", "Print Diagram to a PDF File", "Print to PDF", "PDF Files (*.pdf)|*.pdf");
@@ -137,7 +137,7 @@ grt::ListRef<app_Plugin> WbPrintingImpl::getPluginInfo() {
   return list;
 }
 
-int WbPrintingImpl::printToPDFFile(model_DiagramRef view, const std::string &path) {
+auto WbPrintingImpl::printToPDFFile(model_DiagramRef view, const std::string &path) -> int {
   mdc::CanvasViewExtras extras(view->get_data()->get_canvas_view());
 
   app_PageSettingsRef page(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());
@@ -152,8 +152,8 @@ int WbPrintingImpl::printToPDFFile(model_DiagramRef view, const std::string &pat
   return pages;
 }
 
-int WbPrintingImpl::printDiagramsToFile(grt::ListRef<model_Diagram> views, const std::string &path,
-                                        const std::string &format, grt::DictRef options) {
+auto WbPrintingImpl::printDiagramsToFile(grt::ListRef<model_Diagram> views, const std::string &path,
+                                        const std::string &format, grt::DictRef options) -> int {
   int pages = 0;
   base::FileHandle fh(path.c_str(), "wb");
   app_PageSettingsRef page(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());
@@ -204,7 +204,7 @@ int WbPrintingImpl::printDiagramsToFile(grt::ListRef<model_Diagram> views, const
   return pages;
 }
 
-int WbPrintingImpl::printToPSFile(model_DiagramRef view, const std::string &path) {
+auto WbPrintingImpl::printToPSFile(model_DiagramRef view, const std::string &path) -> int {
   mdc::CanvasViewExtras extras(view->get_data()->get_canvas_view());
 
   app_PageSettingsRef page(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());
@@ -219,7 +219,7 @@ int WbPrintingImpl::printToPSFile(model_DiagramRef view, const std::string &path
   return pages;
 }
 
-int WbPrintingImpl::printToPrinter(model_DiagramRef view, const std::string &printer) {
+auto WbPrintingImpl::printToPrinter(model_DiagramRef view, const std::string &printer) -> int {
   return 0;
 }
 

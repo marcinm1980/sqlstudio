@@ -42,8 +42,8 @@ using base::strfmt;
 
 namespace linux_printing {
 
-  static void update_gtk_page_setup_from_grt(Glib::RefPtr<Gtk::PageSetup> &setup, const app_PageSettingsRef &settings,
-                                             bool skip_margins) {
+  static auto update_gtk_page_setup_from_grt(Glib::RefPtr<Gtk::PageSetup> &setup, const app_PageSettingsRef &settings,
+                                             bool skip_margins) -> void {
     Gtk::PaperSize paper_size(base::replaceString(settings->paperType()->name().c_str(), "-", "_"));
 
     setup->set_bottom_margin((skip_margins ? 0 : 1) * settings->marginBottom(), Gtk::UNIT_MM);
@@ -65,8 +65,8 @@ namespace linux_printing {
   public:
     WBPageSetup(const app_PageSettingsRef &ps);
 
-    void propagate_print_settings_to_grt_tree();
-    virtual void run_setup();
+    auto propagate_print_settings_to_grt_tree() -> void;
+    virtual auto run_setup() -> void;
 
     Glib::RefPtr<Gtk::PageSetup> _page_setup;
     Glib::RefPtr<Gtk::PrintSettings> _print_settings;
@@ -88,7 +88,7 @@ namespace linux_printing {
   }
 
   //------------------------------------------------------------------------------
-  void WBPageSetup::run_setup() {
+  auto WBPageSetup::run_setup() -> void {
     if (_app_page_settings.is_valid()) {
       update_gtk_page_setup_from_grt(_page_setup, _app_page_settings, false);
     }
@@ -104,7 +104,7 @@ namespace linux_printing {
   }
 
   //------------------------------------------------------------------------------
-  void WBPageSetup::propagate_print_settings_to_grt_tree() {
+  auto WBPageSetup::propagate_print_settings_to_grt_tree() -> void {
     std::string page_orientation_as_str;
 
     // Set orientation
@@ -145,13 +145,13 @@ namespace linux_printing {
   class WBPrintOperation : public Gtk::PrintOperation {
   public:
     WBPrintOperation(const model_DiagramRef &diagram);
-    static Glib::RefPtr<WBPrintOperation> create(const model_DiagramRef &diagram);
+    static auto create(const model_DiagramRef &diagram) -> Glib::RefPtr<WBPrintOperation>;
     virtual ~WBPrintOperation();
 
   protected:
-    virtual void on_begin_print(const Glib::RefPtr<Gtk::PrintContext> &ctx);
-    virtual void on_draw_page(const Glib::RefPtr<Gtk::PrintContext> &ctx, int page_nr);
-    virtual void on_done(Gtk::PrintOperationResult result);
+    virtual auto on_begin_print(const Glib::RefPtr<Gtk::PrintContext> &ctx) -> void;
+    virtual auto on_draw_page(const Glib::RefPtr<Gtk::PrintContext> &ctx, int page_nr) -> void;
+    virtual auto on_done(Gtk::PrintOperationResult result) -> void;
 
   private:
     model_DiagramRef _diagram;
@@ -171,7 +171,7 @@ namespace linux_printing {
   }
 
   //------------------------------------------------------------------------------
-  Glib::RefPtr<WBPrintOperation> WBPrintOperation::create(const model_DiagramRef &diagram) {
+  auto WBPrintOperation::create(const model_DiagramRef &diagram) -> Glib::RefPtr<WBPrintOperation> {
     return Glib::RefPtr<WBPrintOperation>(new WBPrintOperation(diagram));
   }
 
@@ -181,7 +181,7 @@ namespace linux_printing {
   }
 
   //------------------------------------------------------------------------------
-  void WBPrintOperation::on_begin_print(const Glib::RefPtr<Gtk::PrintContext> &ctx) {
+  auto WBPrintOperation::on_begin_print(const Glib::RefPtr<Gtk::PrintContext> &ctx) -> void {
     app_PageSettingsRef pageSettings(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());
     app_PaperTypeRef paperType(pageSettings->paperType());
 
@@ -227,7 +227,7 @@ namespace linux_printing {
   }
 
   //------------------------------------------------------------------------------
-  void WBPrintOperation::on_draw_page(const Glib::RefPtr<Gtk::PrintContext> &ctx, int page_nr) {
+  auto WBPrintOperation::on_draw_page(const Glib::RefPtr<Gtk::PrintContext> &ctx, int page_nr) -> void {
     Cairo::RefPtr<Cairo::Context> context = ctx->get_cairo_context();
     mdc::CairoCtx cairoctx(context->cobj());
 
@@ -244,7 +244,7 @@ namespace linux_printing {
   }
 
   //------------------------------------------------------------------------------
-  void WBPrintOperation::on_done(Gtk::PrintOperationResult result) {
+  auto WBPrintOperation::on_done(Gtk::PrintOperationResult result) -> void {
     delete _printer;
     _printer = 0;
     PrintOperation::on_done(result);
@@ -254,11 +254,11 @@ namespace linux_printing {
   class WBPrintingLinux : public GUIPluginBase {
   public:
     WBPrintingLinux(grt::Module *m, const grt::BaseListRef &args);
-    virtual void execute();
-    virtual void show_plugin();
+    virtual auto execute() -> void;
+    virtual auto show_plugin() -> void;
 
   private:
-    void on_print_done(Gtk::PrintOperationResult result, Glib::RefPtr<WBPrintOperation> &op);
+    auto on_print_done(Gtk::PrintOperationResult result, Glib::RefPtr<WBPrintOperation> &op) -> void;
     model_DiagramRef _diagram; //!< TODO: use currently selected diagram!
   };
 
@@ -268,11 +268,11 @@ namespace linux_printing {
   }
 
   //------------------------------------------------------------------------------
-  void WBPrintingLinux::execute() {
+  auto WBPrintingLinux::execute() -> void {
   }
 
   //------------------------------------------------------------------------------
-  void WBPrintingLinux::show_plugin() {
+  auto WBPrintingLinux::show_plugin() -> void {
     try {
       if (get_mainwindow() == nullptr)
         throw std::runtime_error("Need main window to continue");
@@ -288,7 +288,7 @@ namespace linux_printing {
   }
 
   //------------------------------------------------------------------------------
-  void WBPrintingLinux::on_print_done(Gtk::PrintOperationResult result, Glib::RefPtr<WBPrintOperation> &op) {
+  auto WBPrintingLinux::on_print_done(Gtk::PrintOperationResult result, Glib::RefPtr<WBPrintOperation> &op) -> void {
     if (result == Gtk::PRINT_OPERATION_RESULT_ERROR) {
       if (get_mainwindow() == nullptr)
         throw std::runtime_error("Need main window to continue");
@@ -305,7 +305,7 @@ namespace linux_printing {
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createPrintDialog(grt::Module *m, const grt::BaseListRef &args) {
+auto createPrintDialog(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   // return new linux_printing::WBPrintingLinux(m, grtm, args);
   linux_printing::WBPrintingLinux lp(m, args);
   lp.show_plugin();
@@ -315,7 +315,7 @@ GUIPluginBase *createPrintDialog(grt::Module *m, const grt::BaseListRef &args) {
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createPrintPreviewDialog(grt::Module *m, const grt::BaseListRef &args) {
+auto createPrintPreviewDialog(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   g_message("print preview");
   //    linux_printing::WBPrintingLinux lp(m, grtm, args);
   //    lp.show_plugin();
@@ -325,7 +325,7 @@ GUIPluginBase *createPrintPreviewDialog(grt::Module *m, const grt::BaseListRef &
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createPrintSetupDialog(grt::Module *m, const grt::BaseListRef &args) {
+auto createPrintSetupDialog(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   studio_DocumentRef doc(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc")));
   if (doc.is_valid()) {
     linux_printing::WBPageSetup ps(doc->pageSettings());

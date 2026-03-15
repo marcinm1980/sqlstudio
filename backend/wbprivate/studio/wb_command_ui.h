@@ -73,52 +73,52 @@ namespace wb {
     bool _include_se;
 
     auto validate_command_item(const app_CommandItemRef &item, const ParsedCommand &cmd) -> bool;
-    void update_item_state(const app_ToolbarItemRef &item, const ParsedCommand &cmd, mforms::ToolBarItem *tb_item);
-    void update_item_state(const app_CommandItemRef &item, const ParsedCommand &cmd, mforms::MenuItem *menu_item);
+    auto update_item_state(const app_ToolbarItemRef &item, const ParsedCommand &cmd, mforms::ToolBarItem *tb_item) -> void;
+    auto update_item_state(const app_CommandItemRef &item, const ParsedCommand &cmd, mforms::MenuItem *menu_item) -> void;
 
-    void append_shortcut_items(const grt::ListRef<app_ShortcutItem> &plist, const std::string &context,
-                               std::vector<WBShortcut> *items);
+    auto append_shortcut_items(const grt::ListRef<app_ShortcutItem> &plist, const std::string &context,
+                               std::vector<WBShortcut> *items) -> void;
 
     auto execute_builtin_command(const std::string &name) -> bool;
     auto validate_builtin_command(const std::string &name) -> bool;
     auto validate_plugin_command(app_PluginRef plugin) -> bool;
 
   private:
-    void add_recent_menu(mforms::MenuItem *parent);
-    void add_plugins_menu_items(mforms::MenuItem *parent, const std::string &group);
-    void add_plugins_menu(mforms::MenuItem *parent, const std::string &context);
-    void add_menu_items_for_context(const std::string &context, mforms::MenuItem *parent, const app_MenuItemRef &menu);
-    void add_scripts_menu(mforms::MenuItem *parent);
+    auto add_recent_menu(mforms::MenuItem *parent) -> void;
+    auto add_plugins_menu_items(mforms::MenuItem *parent, const std::string &group) -> void;
+    auto add_plugins_menu(mforms::MenuItem *parent, const std::string &context) -> void;
+    auto add_menu_items_for_context(const std::string &context, mforms::MenuItem *parent, const app_MenuItemRef &menu) -> void;
+    auto add_scripts_menu(mforms::MenuItem *parent) -> void;
 
-    void menu_will_show(mforms::MenuItem *parent);
+    auto menu_will_show(mforms::MenuItem *parent) -> void;
 
   public:
     auto create_menubar_for_context(const std::string &context) -> mforms::MenuBar *;
 
-    void revalidate_menu_bar(mforms::MenuBar *menu);
-    void revalidate_edit_menu_items();
+    auto revalidate_menu_bar(mforms::MenuBar *menu) -> void;
+    auto revalidate_edit_menu_items() -> void;
 
   public:
     CommandUI(WBContext *wb);
 
-    void clearBuildInCommands();
+    auto clearBuildInCommands() -> void;
 
     auto create_toolbar(const std::string &toolbar_file) -> mforms::ToolBar *;
     auto create_toolbar(const std::string &toolbar_file,
                                     const std::function<void(std::string)> &activate_slot) -> mforms::ToolBar *;
 
-    void load_data();
+    auto load_data() -> void;
 
-    void activate_command(const std::string &command);
+    auto activate_command(const std::string &command) -> void;
     auto activate_command(const std::string &command, bec::ArgumentPool argpool) -> bool;
 
-    std::vector<WBShortcut> get_shortcuts_for_context(const std::string &context);
+    auto get_shortcuts_for_context(const std::string &context) -> std::vector<WBShortcut>;
 
-    void add_frontend_commands(const std::list<std::string> &commands);
-    void remove_frontend_commands(const std::list<std::string> &commands);
-    void add_builtin_command(const std::string &name, const std::function<void()> &slot,
-                             const std::function<bool()> &validate = std::function<bool()>());
-    void remove_builtin_command(const std::string &name);
+    auto add_frontend_commands(const std::list<std::string> &commands) -> void;
+    auto remove_frontend_commands(const std::list<std::string> &commands) -> void;
+    auto add_builtin_command(const std::string &name, const std::function<void()> &slot,
+                             const std::function<bool()> &validate = std::function<bool()>()) -> void;
+    auto remove_builtin_command(const std::string &name) -> void;
   };
 };
 

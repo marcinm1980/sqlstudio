@@ -32,7 +32,7 @@ using namespace base;
 
 static bool inTesting = false;
 
-Color Color::getSystemColor(SystemColor colorType) {
+auto Color::getSystemColor(SystemColor colorType) -> Color {
   DWORD sysColor = 0;
   switch (colorType) {
     case ControlShadowColor:
@@ -134,7 +134,7 @@ Color Color::getSystemColor(SystemColor colorType) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string OSConstants::defaultFontName() {
+auto OSConstants::defaultFontName() -> std::string {
   NONCLIENTMETRICS metrics;
   metrics.cbSize = sizeof(metrics);
   SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0);
@@ -143,7 +143,7 @@ std::string OSConstants::defaultFontName() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-float OSConstants::systemFontSize() {
+auto OSConstants::systemFontSize() -> float {
   NONCLIENTMETRICS metrics;
   metrics.cbSize = sizeof(metrics);
   SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0);
@@ -152,7 +152,7 @@ float OSConstants::systemFontSize() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-float OSConstants::smallSystemFontSize() {
+auto OSConstants::smallSystemFontSize() -> float {
   NONCLIENTMETRICS metrics;
   metrics.cbSize = sizeof(metrics);
   SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0);
@@ -161,7 +161,7 @@ float OSConstants::smallSystemFontSize() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-float OSConstants::labelFontSize() {
+auto OSConstants::labelFontSize() -> float {
   NONCLIENTMETRICS metrics;
   metrics.cbSize = sizeof(metrics);
   SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0);
@@ -170,6 +170,6 @@ float OSConstants::labelFontSize() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Color::prepareForTesting() {
+auto Color::prepareForTesting() -> void {
   inTesting = true;
 }

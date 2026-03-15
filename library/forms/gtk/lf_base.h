@@ -49,7 +49,7 @@ namespace mforms {
         // TODO: Check if we need to free memory here?
       }
 
-      static void free_object(void *obj) {
+      static auto free_object(void *obj) -> void {
         delete (ObjectImpl *)obj;
       }
     };

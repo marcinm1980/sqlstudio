@@ -74,7 +74,7 @@ DEFAULT_LOG_DOMAIN(DOMAIN_WB_CONTEXT_UI)
 
 //--------------------------------------------------------------------------------------------------
 
-std::shared_ptr<WBContextUI> WBContextUI::get() {
+auto WBContextUI::get() -> std::shared_ptr<WBContextUI> {
   static std::shared_ptr<WBContextUI> _singleton(new WBContextUI());
   return _singleton;
 }
@@ -104,7 +104,7 @@ WBContextUI::WBContextUI() : _wb(new WBContext(false)), _command_ui(new CommandU
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::cleanUp() {
+auto WBContextUI::cleanUp() -> void {
   if (_wb != nullptr) {
     _wb->do_close_document(true);
   }
@@ -137,7 +137,7 @@ void WBContextUI::cleanUp() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::reinit() {
+auto WBContextUI::reinit() -> void {
   if (_wb == nullptr) {
     _wb = new WBContext(false);
     _command_ui = new CommandUI(_wb);
@@ -152,7 +152,7 @@ WBContextUI::~WBContextUI() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool WBContextUI::init(WBFrontendCallbacks *callbacks, WBOptions *options) {
+auto WBContextUI::init(WBFrontendCallbacks *callbacks, WBOptions *options) -> bool {
   // Log set folders.
   logInfo(
     "Initializing studio context UI with these values:\n"
@@ -193,7 +193,7 @@ bool WBContextUI::init(WBFrontendCallbacks *callbacks, WBOptions *options) {
 
 //--------------------------------------------------------------------------------------------------
 
-GRTShellWindow *WBContextUI::get_shell_window() {
+auto WBContextUI::get_shell_window() -> GRTShellWindow * {
   if (!_shell_window)
     _shell_window = new GRTShellWindow(_wb);
   return _shell_window;
@@ -201,7 +201,7 @@ GRTShellWindow *WBContextUI::get_shell_window() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::init_finish(WBOptions *options) {
+auto WBContextUI::init_finish(WBOptions *options) -> void {
   g_assert(_wb->get_root().is_valid());
   show_home_screen();
   _wb->init_finish_(options);
@@ -209,14 +209,14 @@ void WBContextUI::init_finish(WBOptions *options) {
   NotificationCenter::get()->send("GNAppStarted", nullptr);
 }
 
-void WBContextUI::finalize() {
+auto WBContextUI::finalize() -> void {
   _wb->finalize();
   _command_ui->clearBuildInCommands();
   if (_home_screen != nullptr)
     mforms::App::get()->undock_view(_home_screen);
 }
 
-bool WBContextUI::request_quit() {
+auto WBContextUI::request_quit() -> bool {
   if (_quitting)
     return true;
 
@@ -245,13 +245,13 @@ bool WBContextUI::request_quit() {
   return true;
 }
 
-void WBContextUI::perform_quit() {
+auto WBContextUI::perform_quit() -> void {
   _quitting = true;
   _wb->do_close_document(true);
   _wb->_frontendCallbacks->quit_application();
 }
 
-void WBContextUI::reset() {
+auto WBContextUI::reset() -> void {
   if (!dynamic_cast<OverviewBE *>(_active_form))
     _active_form = 0;
   if (!dynamic_cast<OverviewBE *>(_active_main_form))
@@ -269,7 +269,7 @@ void WBContextUI::reset() {
   _wb->get_model_context()->refill_catalog_tree();
 }
 
-void WBContextUI::history_changed() {
+auto WBContextUI::history_changed() -> void {
   if (!_wb->_file) // check if model is still opened, if not, leave
     return;
 
@@ -281,7 +281,7 @@ void WBContextUI::history_changed() {
   _last_unsaved_changes_state = _wb->has_unsaved_changes();
 }
 
-void WBContextUI::update_current_diagram(bec::UIForm *form) {
+auto WBContextUI::update_current_diagram(bec::UIForm *form) -> void {
   ModelDiagramForm *dform = dynamic_cast<ModelDiagramForm *>(form);
   if (dform) {
     model_DiagramRef diagram(dform->get_model_diagram());
@@ -290,19 +290,19 @@ void WBContextUI::update_current_diagram(bec::UIForm *form) {
   }
 }
 
-void WBContextUI::overview_selection_changed() {
+auto WBContextUI::overview_selection_changed() -> void {
   if (get_active_main_form() == get_physical_overview()) {
     _wb->request_refresh(RefreshSelection, "", (NativeHandle)get_physical_overview()->get_frontend_data());
     get_command_ui()->revalidate_edit_menu_items();
   }
 }
 
-void WBContextUI::load_app_options(bool update) {
+auto WBContextUI::load_app_options(bool update) -> void {
   if (!update)
     _command_ui->load_data();
 }
 
-static void add_script_file(WBContextUI *wbui) {
+static auto add_script_file(WBContextUI *wbui) -> void {
   std::string file = wbui->get_wb()->_frontendCallbacks->show_file_dialog("open", _("Add SQL Script File"), "sql");
   if (!file.empty()) {
     studio_physical_ModelRef model;
@@ -313,7 +313,7 @@ static void add_script_file(WBContextUI *wbui) {
   }
 }
 
-static void add_note_file(WBContextUI *wbui) {
+static auto add_note_file(WBContextUI *wbui) -> void {
   std::string file =
     wbui->get_wb()->_frontendCallbacks->show_file_dialog("open", _("Add Note File"), "Text Files (*.txt)|*.txt");
   if (!file.empty()) {
@@ -327,7 +327,7 @@ static void add_note_file(WBContextUI *wbui) {
 
 /** builtin: commands for use in menus and toolbars that are handled by ourselves
   */
-void WBContextUI::add_backend_builtin_commands() {
+auto WBContextUI::add_backend_builtin_commands() -> void {
   _command_ui->add_builtin_command("show_about", std::bind(&WBContextUI::show_about, this));
   _command_ui->add_builtin_command("overview.home", std::bind(&WBContextUI::show_home_screen, this));
 
@@ -359,7 +359,7 @@ void WBContextUI::add_backend_builtin_commands() {
 
 //--------------------------------------------------------------------------------------------------
 
-PhysicalOverviewBE *WBContextUI::get_physical_overview() {
+auto WBContextUI::get_physical_overview() -> PhysicalOverviewBE * {
   return get_wb()->get_model_context() ? get_wb()->get_model_context()->get_overview() : 0;
 }
 
@@ -368,13 +368,13 @@ PhysicalOverviewBE *WBContextUI::get_physical_overview() {
 /*
  * Opens the given web page in the system's default browser.
  */
-void WBContextUI::show_web_page(const std::string &url, bool internal_browser) {
+auto WBContextUI::show_web_page(const std::string &url, bool internal_browser) -> void {
   mforms::Utilities::open_url(url);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::showLicense() {
+auto WBContextUI::showLicense() -> void {
   LicenseView *view = mforms::manage(new LicenseView(this));
   mforms::App::get()->dock_view(view, "maintab");
   view->set_title(_("License Info"));
@@ -382,7 +382,7 @@ void WBContextUI::showLicense() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::show_help_index() {
+auto WBContextUI::show_help_index() -> void {
   GUILock lock(_wb, _("Starting Doc Lib"), _("The MySQL Doc Library is opening currently, "
                                              "which should be finished in a moment .\n\nPlease stand by..."));
 
@@ -391,21 +391,21 @@ void WBContextUI::show_help_index() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::locate_log_file() {
+auto WBContextUI::locate_log_file() -> void {
   if (!base::Logger::log_dir().empty())
     mforms::Utilities::open_url(base::Logger::log_dir());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::show_log_file() {
+auto WBContextUI::show_log_file() -> void {
   if (!base::Logger::log_filename().empty())
     mforms::Utilities::open_url(base::Logger::log_filename());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::activate_figure(const grt::ValueRef &value) {
+auto WBContextUI::activate_figure(const grt::ValueRef &value) -> void {
   ModelDiagramForm *form = 0;
   if (model_FigureRef::can_wrap(value)) {
     model_FigureRef figure(model_FigureRef::cast_from(value));
@@ -427,7 +427,7 @@ void WBContextUI::activate_figure(const grt::ValueRef &value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::form_changed() {
+auto WBContextUI::form_changed() -> void {
   _wb->request_refresh(RefreshZoom, "", (NativeHandle)0);
 
   bec::UIForm *form = get_active_main_form();
@@ -435,7 +435,7 @@ void WBContextUI::form_changed() {
     get_command_ui()->revalidate_menu_bar(form->get_menubar());
 }
 
-bec::ValueInspectorBE *WBContextUI::create_inspector_for_selection(bec::UIForm *form, std::vector<std::string> &items) {
+auto WBContextUI::create_inspector_for_selection(bec::UIForm *form, std::vector<std::string> &items) -> bec::ValueInspectorBE * {
   grt::ListRef<model_Object> selection;
 
   // grt::ListRef<model_Object> selection(form->get_selection());
@@ -468,7 +468,7 @@ bec::ValueInspectorBE *WBContextUI::create_inspector_for_selection(bec::UIForm *
   return 0;
 }
 
-bec::ValueInspectorBE *WBContextUI::create_inspector_for_selection(std::vector<std::string> &items) {
+auto WBContextUI::create_inspector_for_selection(std::vector<std::string> &items) -> bec::ValueInspectorBE * {
   std::string res;
 
   grt::ListRef<GrtObject> selection(get_physical_overview()->get_selection());
@@ -502,8 +502,8 @@ bec::ValueInspectorBE *WBContextUI::create_inspector_for_selection(std::vector<s
   return 0;
 }
 
-std::string WBContextUI::get_description_for_selection(grt::ListRef<GrtObject> &activeObjList,
-                                                       std::vector<std::string> &items) {
+auto WBContextUI::get_description_for_selection(grt::ListRef<GrtObject> &activeObjList,
+                                                       std::vector<std::string> &items) -> std::string {
   std::string res;
 
   if (get_physical_overview() != nullptr) {
@@ -542,8 +542,8 @@ std::string WBContextUI::get_description_for_selection(grt::ListRef<GrtObject> &
   return res;
 }
 
-std::string WBContextUI::get_description_for_selection(bec::UIForm *form, grt::ListRef<GrtObject> &activeObjList,
-                                                       std::vector<std::string> &items) {
+auto WBContextUI::get_description_for_selection(bec::UIForm *form, grt::ListRef<GrtObject> &activeObjList,
+                                                       std::vector<std::string> &items) -> std::string {
   grt::ListRef<model_Object> selection;
 
   if (dynamic_cast<ModelDiagramForm *>(form))
@@ -604,7 +604,7 @@ std::string WBContextUI::get_description_for_selection(bec::UIForm *form, grt::L
   return res;
 }
 
-void WBContextUI::set_description_for_selection(const grt::ListRef<GrtObject> &objList, const std::string &val) {
+auto WBContextUI::set_description_for_selection(const grt::ListRef<GrtObject> &objList, const std::string &val) -> void {
   if (objList.is_valid() && objList.count() > 0) {
     std::string comment_mem_name("comment");
     std::string descr_mem_name("description");
@@ -628,7 +628,7 @@ void WBContextUI::set_description_for_selection(const grt::ListRef<GrtObject> &o
   }
 }
 
-DiagramOptionsBE *WBContextUI::create_diagram_options_be(mdc::CanvasView *view) {
+auto WBContextUI::create_diagram_options_be(mdc::CanvasView *view) -> DiagramOptionsBE * {
   model_DiagramRef model_diagram(get_wb()->get_model_context()->get_active_model_diagram(true));
 
   if (model_diagram.is_valid())
@@ -637,7 +637,7 @@ DiagramOptionsBE *WBContextUI::create_diagram_options_be(mdc::CanvasView *view) 
     return 0;
 }
 
-std::string WBContextUI::get_active_diagram_info() {
+auto WBContextUI::get_active_diagram_info() -> std::string {
   wb::ModelDiagramForm *form = dynamic_cast<wb::ModelDiagramForm *>(get_active_main_form());
 
   if (form)
@@ -652,9 +652,9 @@ std::string WBContextUI::get_active_diagram_info() {
 //-----------------------------------------------------------------------------------
 // utility functions for user preferences
 
-void WBContextUI::get_doc_properties(std::string &caption, std::string &version, std::string &author,
+auto WBContextUI::get_doc_properties(std::string &caption, std::string &version, std::string &author,
                                      std::string &project, std::string &date_created, std::string &date_changed,
-                                     std::string &description) {
+                                     std::string &description) -> void {
   app_DocumentInfoRef info = _wb->get_document()->info();
 
   caption = info->caption();
@@ -666,9 +666,9 @@ void WBContextUI::get_doc_properties(std::string &caption, std::string &version,
   description = info->description();
 }
 
-void WBContextUI::set_doc_properties(const std::string &caption, const std::string &version, const std::string &author,
+auto WBContextUI::set_doc_properties(const std::string &caption, const std::string &version, const std::string &author,
                                      const std::string &project, const std::string &date_created,
-                                     const std::string &date_changed, const std::string &description) {
+                                     const std::string &date_changed, const std::string &description) -> void {
   app_DocumentInfoRef info = _wb->get_document()->info();
 
   grt::AutoUndo undo;
@@ -682,7 +682,7 @@ void WBContextUI::set_doc_properties(const std::string &caption, const std::stri
   undo.end("Change document properties");
 }
 
-std::list<WBPaperSize> WBContextUI::get_paper_sizes(bool descr_in_inches) {
+auto WBContextUI::get_paper_sizes(bool descr_in_inches) -> std::list<WBPaperSize> {
   std::list<WBPaperSize> sizes;
 
   grt::ListRef<app_PaperType> types(_wb->get_root()->options()->paperTypes());
@@ -710,8 +710,8 @@ std::list<WBPaperSize> WBContextUI::get_paper_sizes(bool descr_in_inches) {
   return sizes;
 }
 
-bool WBContextUI::add_paper_size(const std::string &name, double width, double height, bool margins, double margin_top,
-                                 double margin_bottom, double margin_left, double margin_right) {
+auto WBContextUI::add_paper_size(const std::string &name, double width, double height, bool margins, double margin_top,
+                                 double margin_bottom, double margin_left, double margin_right) -> bool {
   if (grt::find_named_object_in_list(_wb->get_root()->options()->paperTypes(), name).is_valid())
     return false;
 
@@ -730,7 +730,7 @@ bool WBContextUI::add_paper_size(const std::string &name, double width, double h
   return true;
 }
 
-app_PageSettingsRef WBContextUI::get_page_settings() {
+auto WBContextUI::get_page_settings() -> app_PageSettingsRef {
   if (_wb->get_document().is_valid())
     return _wb->get_document()->pageSettings();
   else {
@@ -743,7 +743,7 @@ app_PageSettingsRef WBContextUI::get_page_settings() {
   }
 }
 
-grt::DictRef WBContextUI::get_model_options(const std::string &model_id) {
+auto WBContextUI::get_model_options(const std::string &model_id) -> grt::DictRef {
   grt::ListRef<studio_physical_Model> pmodels(_wb->get_document()->physicalModels());
 
   for (size_t c = pmodels.count(), i = 0; i < c; i++) {
@@ -754,7 +754,7 @@ grt::DictRef WBContextUI::get_model_options(const std::string &model_id) {
   return grt::DictRef();
 }
 
-std::vector<std::string> WBContextUI::get_wb_options_keys(const std::string &model) {
+auto WBContextUI::get_wb_options_keys(const std::string &model) -> std::vector<std::string> {
   std::vector<std::string> keylist;
   grt::DictRef options = _wb->get_wb_options();
 
@@ -765,7 +765,7 @@ std::vector<std::string> WBContextUI::get_wb_options_keys(const std::string &mod
   return keylist;
 }
 
-bool WBContextUI::get_wb_options_value(const std::string &model, const std::string &key, std::string &value) {
+auto WBContextUI::get_wb_options_value(const std::string &model, const std::string &key, std::string &value) -> bool {
   grt::DictRef options = _wb->get_wb_options();
   grt::ValueRef val;
 
@@ -800,8 +800,8 @@ bool WBContextUI::get_wb_options_value(const std::string &model, const std::stri
   }
 }
 
-void WBContextUI::set_wb_options_value(const std::string &model, const std::string &key, const std::string &value,
-                                       const grt::Type default_type) {
+auto WBContextUI::set_wb_options_value(const std::string &model, const std::string &key, const std::string &value,
+                                       const grt::Type default_type) -> void {
   grt::DictRef options;
   grt::Type type;
   if (_wb->get_wb_options().has_key(key))
@@ -845,7 +845,7 @@ void WBContextUI::set_wb_options_value(const std::string &model, const std::stri
   }
 }
 
-void WBContextUI::discard_wb_model_options(const std::string &model) {
+auto WBContextUI::discard_wb_model_options(const std::string &model) -> void {
   grt::DictRef opts = get_model_options(model);
   if (opts.is_valid()) {
     for (grt::DictRef::const_iterator item = opts.begin(); item != opts.end(); ++item) {
@@ -862,7 +862,7 @@ void WBContextUI::discard_wb_model_options(const std::string &model) {
 //--------------------------------------------------------------------------------
 // Form Management
 
-void *WBContextUI::form_destroyed(void *data) {
+auto WBContextUI::form_destroyed(void *data) -> void * {
   UIForm *form = reinterpret_cast<UIForm *>(data);
   WBContextUI *wb = reinterpret_cast<WBContextUI *>(form->get_owner_data());
 
@@ -874,7 +874,7 @@ void *WBContextUI::form_destroyed(void *data) {
   return 0;
 }
 
-std::string WBContextUI::get_active_context(bool main_context) {
+auto WBContextUI::get_active_context(bool main_context) -> std::string {
   bec::UIForm *form = main_context ? get_active_main_form() : get_active_form();
 
   if (form)
@@ -883,7 +883,7 @@ std::string WBContextUI::get_active_context(bool main_context) {
   return "";
 }
 
-void WBContextUI::set_active_form(bec::UIForm *form) {
+auto WBContextUI::set_active_form(bec::UIForm *form) -> void {
   if (_active_form == form)
     return;
   // register callbacks to form if needed
@@ -910,11 +910,11 @@ void WBContextUI::set_active_form(bec::UIForm *form) {
   _form_change_signal(form);
 }
 
-bec::UIForm *WBContextUI::get_active_main_form() {
+auto WBContextUI::get_active_main_form() -> bec::UIForm * {
   return _active_main_form;
 }
 
-bec::UIForm *WBContextUI::get_active_form() {
+auto WBContextUI::get_active_form() -> bec::UIForm * {
   return _active_form;
 }
 
@@ -925,14 +925,14 @@ bec::UIForm *WBContextUI::get_active_form() {
 //-----------------------------------------------------------------------------------
 // other functionality for UI
 
-std::string WBContextUI::get_document_name() {
+auto WBContextUI::get_document_name() -> std::string {
   if (_wb->get_filename().empty())
     return "Untitled";
   else
     return base::basename(_wb->get_filename());
 }
 
-std::string WBContextUI::get_title() {
+auto WBContextUI::get_title() -> std::string {
   if (_wb->get_model_context()) {
 #ifndef __APPLE__
     if (_wb->has_unsaved_changes())
@@ -946,13 +946,13 @@ std::string WBContextUI::get_title() {
 
 #endif // ___others
 
-void WBContextUI::start_plugin_net_install(const std::string &url) {
+auto WBContextUI::start_plugin_net_install(const std::string &url) -> void {
   if (!_addon_download_window)
     _addon_download_window = new AddOnDownloadWindow(this);
   _addon_download_window->install_addon_from_url(url);
 }
 
-bool WBContextUI::start_plugin_install(const std::string &path) {
+auto WBContextUI::start_plugin_install(const std::string &path) -> bool {
   if (!_plugin_install_window)
     _plugin_install_window = new PluginInstallWindow(this);
   return _plugin_install_window->install_plugin(path);

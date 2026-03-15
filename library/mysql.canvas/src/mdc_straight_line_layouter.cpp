@@ -42,7 +42,7 @@ StraightLineLayouter::~StraightLineLayouter() {
   delete _end_conn;
 }
 
-std::vector<Point> StraightLineLayouter::get_points() {
+auto StraightLineLayouter::get_points() -> std::vector<Point> {
   std::vector<Point> p(2);
   p[0] = _start;
   p[1] = _end;
@@ -50,19 +50,19 @@ std::vector<Point> StraightLineLayouter::get_points() {
   return p;
 }
 
-Point StraightLineLayouter::get_start_point() {
+auto StraightLineLayouter::get_start_point() -> Point {
   return _start;
 }
 
-Point StraightLineLayouter::get_end_point() {
+auto StraightLineLayouter::get_end_point() -> Point {
   return _end;
 }
 
-void StraightLineLayouter::update() {
+auto StraightLineLayouter::update() -> void {
   connector_changed(_start_conn);
 }
 
-void StraightLineLayouter::connector_changed(Connector *conn) {
+auto StraightLineLayouter::connector_changed(Connector *conn) -> void {
   Point p = conn->get_position();
   bool changed = false;
 

@@ -41,7 +41,7 @@ class SchemaEditor : public PluginEditorBase {
   MySQLSchemaEditorBE *_be;
   std::string _old_name;
 
-  virtual bec::BaseEditor *get_be() {
+  virtual auto get_be() -> bec::BaseEditor * {
     return _be;
   }
 
@@ -105,7 +105,7 @@ public:
     refresh_form_data();
   }
   
-  void charset_combo_changed(const std::string &name, const std::string &value) {
+  auto charset_combo_changed(const std::string &name, const std::string &value) -> void {
     if (name != "CHARACTER SET")
       return;
     
@@ -118,7 +118,7 @@ public:
     set_selected_combo_item(collation_combo, DEFAULT_COLLATION_CAPTION);
   }
 
-  void set_name(const std::string &name) {
+  auto set_name(const std::string &name) -> void {
     if (_be) {
       _be->set_name(name);
       Gtk::Button *btn;
@@ -127,7 +127,7 @@ public:
     }
   }
 
-  void refactor_schema() {
+  auto refactor_schema() -> void {
     if (_be) {
       _be->refactor_catalog();
       Gtk::Button *btn;
@@ -136,12 +136,12 @@ public:
     }
   }
 
-  void set_comment(const std::string &text) {
+  auto set_comment(const std::string &text) -> void {
     if (_be)
       _be->set_comment(text);
   }
 
-  void set_schema_option_by_name(const std::string &name, const std::string &value) {
+  auto set_schema_option_by_name(const std::string &name, const std::string &value) -> void {
     if (!_be)
       return;
     
@@ -153,7 +153,7 @@ public:
       _be->set_schema_option_by_name(name, value);    
   }
 
-  virtual void do_refresh_form_data() {
+  virtual auto do_refresh_form_data() -> void {
     Gtk::Entry *entry;
     xml()->get_widget("name_entry", entry);
 
@@ -181,11 +181,11 @@ public:
     }
   }
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args);
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool;
 };
 
 //------------------------------------------------------------------------------
-bool SchemaEditor::switch_edited_object(const grt::BaseListRef &args) {
+auto SchemaEditor::switch_edited_object(const grt::BaseListRef &args) -> bool {
   MySQLSchemaEditorBE *old_be = _be;
   _be = new MySQLSchemaEditorBE(db_mysql_SchemaRef::cast_from(args[0]));
 
@@ -201,7 +201,7 @@ bool SchemaEditor::switch_edited_object(const grt::BaseListRef &args) {
 }
 
 extern "C" {
-GUIPluginBase *createDbMysqlSchemaEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createDbMysqlSchemaEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new SchemaEditor(m, args));
 }
 };

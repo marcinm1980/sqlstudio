@@ -195,7 +195,7 @@ void DbConnectPanel::connection_user_input(std::string &text_entry, bool &create
   }
 }
 
-void DbConnectPanel::change_connection_name() {
+auto DbConnectPanel::change_connection_name() -> void {
   if (_create_group)
     return;
   std::string text = _name_entry.get_string_value();
@@ -203,18 +203,18 @@ void DbConnectPanel::change_connection_name() {
   _name_entry.set_value(text);
 }
 
-void DbConnectPanel::set_skip_schema_name(bool flag) {
+auto DbConnectPanel::set_skip_schema_name(bool flag) -> void {
   _skip_schema_name = flag;
 }
 
-void DbConnectPanel::suspend_view_layout(bool flag) {
+auto DbConnectPanel::suspend_view_layout(bool flag) -> void {
   if (flag)
     suspend_layout();
   else
     resume_layout();
 }
 
-void DbConnectPanel::init(DbConnection *conn, const db_mgmt_ConnectionRef &default_conn) {
+auto DbConnectPanel::init(DbConnection *conn, const db_mgmt_ConnectionRef &default_conn) -> void {
   _connection = conn;
   _delete_connection_be = false;
 
@@ -255,8 +255,8 @@ void DbConnectPanel::init(DbConnection *conn, const db_mgmt_ConnectionRef &defau
   }
 }
 
-void DbConnectPanel::init(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &allowed_rdbms,
-                          const db_mgmt_ConnectionRef &default_conn) {
+auto DbConnectPanel::init(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &allowed_rdbms,
+                          const db_mgmt_ConnectionRef &default_conn) -> void {
   if (!mgmt.is_valid())
     throw std::invalid_argument("DbConnectPanel::init() called with invalid db mgmt object");
 
@@ -269,14 +269,14 @@ void DbConnectPanel::init(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<
   _delete_connection_be = true;
 }
 
-void DbConnectPanel::init(const db_mgmt_ManagementRef &mgmt, const db_mgmt_ConnectionRef &default_conn) {
+auto DbConnectPanel::init(const db_mgmt_ManagementRef &mgmt, const db_mgmt_ConnectionRef &default_conn) -> void {
   if (!mgmt.is_valid())
     throw std::invalid_argument("DbConnectPanel::init() called with invalid db mgmt object");
 
   init(mgmt, mgmt->rdbms(), default_conn);
 }
 
-db_mgmt_ConnectionRef DbConnectPanel::get_connection(bool initInvalid) {
+auto DbConnectPanel::get_connection(bool initInvalid) -> db_mgmt_ConnectionRef {
   if (!_connection->get_connection().is_valid() && initInvalid) {
     db_mgmt_ConnectionRef connection(grt::Initialized);
     connection->owner(get_be()->get_db_mgmt());
@@ -287,7 +287,7 @@ db_mgmt_ConnectionRef DbConnectPanel::get_connection(bool initInvalid) {
   return _connection->get_connection();
 }
 
-grt::ListRef<db_mgmt_Connection> DbConnectPanel::connection_list() {
+auto DbConnectPanel::connection_list() -> grt::ListRef<db_mgmt_Connection> {
   if (_rdbms_sel.get_item_count() > 0) {
     int i = _rdbms_sel.get_selected_index();
     if (i >= 0 && i < (int)_allowed_rdbms->count()) {
@@ -306,7 +306,7 @@ grt::ListRef<db_mgmt_Connection> DbConnectPanel::connection_list() {
     return _connection->get_db_mgmt()->otherStoredConns();
 }
 
-void DbConnectPanel::set_connection(const db_mgmt_ConnectionRef &conn) {
+auto DbConnectPanel::set_connection(const db_mgmt_ConnectionRef &conn) -> void {
   const grt::ListRef<db_mgmt_Connection> list(connection_list());
 
   int count = 0;
@@ -322,7 +322,7 @@ void DbConnectPanel::set_connection(const db_mgmt_ConnectionRef &conn) {
   }
 }
 
-void DbConnectPanel::set_enabled(bool flag) {
+auto DbConnectPanel::set_enabled(bool flag) -> void {
   _name_entry.set_enabled(flag);
   _stored_connection_sel.set_enabled(flag);
   _rdbms_sel.set_enabled(flag);
@@ -332,7 +332,7 @@ void DbConnectPanel::set_enabled(bool flag) {
     (*iter)->set_enabled(flag);
 }
 
-void DbConnectPanel::set_default_host_name(const std::string &host, bool update) {
+auto DbConnectPanel::set_default_host_name(const std::string &host, bool update) -> void {
   _default_host_name = host;
   /*
  if (update)
@@ -351,7 +351,7 @@ void DbConnectPanel::set_default_host_name(const std::string &host, bool update)
  }*/
 }
 
-void DbConnectPanel::param_value_changed(mforms::View *sender, bool trim_whitespace) {
+auto DbConnectPanel::param_value_changed(mforms::View *sender, bool trim_whitespace) -> void {
   std::string param_name = sender->getInternalName();
 
   if (!_allow_edit_connections && !_updating) {
@@ -378,7 +378,7 @@ void DbConnectPanel::param_value_changed(mforms::View *sender, bool trim_whitesp
   _last_validation = error;
 }
 
-void DbConnectPanel::enum_param_value_changed(mforms::Selector *sender, std::vector<std::string> options) {
+auto DbConnectPanel::enum_param_value_changed(mforms::Selector *sender, std::vector<std::string> options) -> void {
   std::string param_name = sender->getInternalName();
 
   if (!_allow_edit_connections && !_updating) {
@@ -407,7 +407,7 @@ void DbConnectPanel::enum_param_value_changed(mforms::Selector *sender, std::vec
   }
 }
 
-void DbConnectPanel::change_active_rdbms() {
+auto DbConnectPanel::change_active_rdbms() -> void {
   if (_initialized && !_updating) {
     if (!_allow_edit_connections) {
       _connection->set_connection_keeping_parameters(_anonymous_connection);
@@ -450,21 +450,21 @@ void DbConnectPanel::change_active_rdbms() {
   }
 }
 
-db_mgmt_RdbmsRef DbConnectPanel::selected_rdbms() {
+auto DbConnectPanel::selected_rdbms() -> db_mgmt_RdbmsRef {
   int i = _rdbms_sel.get_selected_index();
   if (i >= 0 && i < (int)_allowed_rdbms.count())
     return _allowed_rdbms[i];
   return db_mgmt_RdbmsRef();
 }
 
-db_mgmt_DriverRef DbConnectPanel::selected_driver() {
+auto DbConnectPanel::selected_driver() -> db_mgmt_DriverRef {
   int i = _driver_sel.get_selected_index();
   if (i >= 0 && i < (int)selected_rdbms()->drivers().count())
     return selected_rdbms()->drivers()[i];
   return db_mgmt_DriverRef();
 }
 
-void DbConnectPanel::change_active_driver() {
+auto DbConnectPanel::change_active_driver() -> void {
   if (_initialized && !_updating) {
     if (!_allow_edit_connections) {
       _connection->set_connection_keeping_parameters(_anonymous_connection);
@@ -533,7 +533,7 @@ void DbConnectPanel::change_active_driver() {
   }
 }
 
-void DbConnectPanel::refresh_stored_connections() {
+auto DbConnectPanel::refresh_stored_connections() -> void {
   grt::ListRef<db_mgmt_Connection> list(connection_list());
   db_mgmt_RdbmsRef rdbms = selected_rdbms();
 
@@ -563,7 +563,7 @@ void DbConnectPanel::refresh_stored_connections() {
 /**
  Save the current connection with the given name.
  */
-void DbConnectPanel::save_connection_as(const std::string &name) {
+auto DbConnectPanel::save_connection_as(const std::string &name) -> void {
   _connection->save_changes();
 
   db_mgmt_ConnectionRef conn(_connection->get_connection());
@@ -590,7 +590,7 @@ void DbConnectPanel::save_connection_as(const std::string &name) {
   change_active_stored_conn();
 }
 
-bool DbConnectPanel::test_connection() {
+auto DbConnectPanel::test_connection() -> bool {
   std::string message = "Information related to this connection:\n\n";
 
   bool failed = false;
@@ -681,14 +681,14 @@ bool DbConnectPanel::test_connection() {
   return ret_val;
 }
 
-void DbConnectPanel::set_active_stored_conn(const std::string &name) {
+auto DbConnectPanel::set_active_stored_conn(const std::string &name) -> void {
   if (name.empty())
     _connection->set_connection_keeping_parameters(_anonymous_connection);
   else
     set_active_stored_conn(find_named_object_in_list(connection_list(), name, true, "name"));
 }
 
-void DbConnectPanel::set_active_stored_conn(db_mgmt_ConnectionRef connection) {
+auto DbConnectPanel::set_active_stored_conn(db_mgmt_ConnectionRef connection) -> void {
   _warning.set_text("");
   if (!connection.is_valid())
     connection = _anonymous_connection;
@@ -730,7 +730,7 @@ void DbConnectPanel::set_active_stored_conn(db_mgmt_ConnectionRef connection) {
     _name_entry.set_value(connection->name());
 }
 
-void DbConnectPanel::change_active_stored_conn() {
+auto DbConnectPanel::change_active_stored_conn() -> void {
   static bool choosing = false;
   if (_initialized && !choosing) {
     _updating = true;
@@ -764,7 +764,7 @@ void DbConnectPanel::change_active_stored_conn() {
   }
 }
 
-void DbConnectPanel::launch_ssl_wizard() {
+auto DbConnectPanel::launch_ssl_wizard() -> void {
   mforms::Form *parent = get_parent_form();
   grt::BaseListRef args(true);
   args.ginsert(mforms_to_grt(parent, "Form"));
@@ -774,7 +774,7 @@ void DbConnectPanel::launch_ssl_wizard() {
   _connection->update();
 }
 
-void DbConnectPanel::open_ssl_wizard_directory() {
+auto DbConnectPanel::open_ssl_wizard_directory() -> void {
   std::string path = base::joinPath(mforms::App::get()->get_user_data_folder().c_str(), "certificates",
                                     get_connection()->id().c_str(), "");
 
@@ -787,7 +787,7 @@ void DbConnectPanel::open_ssl_wizard_directory() {
       _("OK"));
 }
 
-db_mgmt_ConnectionRef DbConnectPanel::open_editor() {
+auto DbConnectPanel::open_editor() -> db_mgmt_ConnectionRef {
   grt::ListRef<db_mgmt_Rdbms> rdbms_list(true);
   rdbms_list.ginsert(selected_rdbms());
   DbConnectionEditor editor(_connection->get_db_mgmt());
@@ -795,7 +795,7 @@ db_mgmt_ConnectionRef DbConnectPanel::open_editor() {
   return editor.run(_connection->get_connection());
 }
 
-void DbConnectPanel::begin_layout() {
+auto DbConnectPanel::begin_layout() -> void {
   _last_active_tab = _tab.get_active_tab();
   if (_params_table) {
     _params_panel.remove(_params_table);
@@ -854,7 +854,7 @@ void DbConnectPanel::begin_layout() {
   _options_rows.clear();
 }
 
-void DbConnectPanel::end_layout() {
+auto DbConnectPanel::end_layout() -> void {
   if (!_param_rows.empty()) {
     _params_panel.add(_params_table);
     _tab.add_page(&_params_panel, _("Parameters"));
@@ -879,7 +879,7 @@ void DbConnectPanel::end_layout() {
     _tab.set_active_tab(_last_active_tab);
 }
 
-void DbConnectPanel::set_keychain_password(DbDriverParam *param, bool clear) {
+auto DbConnectPanel::set_keychain_password(DbDriverParam *param, bool clear) -> void {
   std::string storageKey;
   std::string userName;
   grt::DictRef paramValues(get_connection(true)->parameterValues());
@@ -928,8 +928,8 @@ void DbConnectPanel::set_keychain_password(DbDriverParam *param, bool clear) {
   }
 }
 
-void DbConnectPanel::create_control(::DbDriverParam *driver_param, const ::ControlType ctrl_type,
-                                    const ControlBounds &bounds, const std::string &caption) {
+auto DbConnectPanel::create_control(::DbDriverParam *driver_param, const ::ControlType ctrl_type,
+                                    const ControlBounds &bounds, const std::string &caption) -> void {
   bool is_new_line = false;
   Table *table = NULL;
   Box *box = NULL;
@@ -1237,7 +1237,7 @@ void DbConnectPanel::create_control(::DbDriverParam *driver_param, const ::Contr
 
 //--------------------------------------------------------------------------------------------------
 
-bool DbConnectPanel::is_connectable_driver_type(db_mgmt_DriverRef driver) {
+auto DbConnectPanel::is_connectable_driver_type(db_mgmt_DriverRef driver) -> bool {
   if (driver.is_valid()) {
     std::string d = driver->id();
 

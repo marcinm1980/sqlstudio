@@ -29,7 +29,7 @@ using namespace mdc;
 using namespace wbfig;
 using namespace base;
 
-void Separator::draw_contents(mdc::CairoCtx *cr) {
+auto Separator::draw_contents(mdc::CairoCtx *cr) -> void {
   cr->translate(get_position());
 
   if (_top_empty) {
@@ -44,7 +44,7 @@ void Separator::draw_contents(mdc::CairoCtx *cr) {
   cr->stroke();
 }
 
-Size Separator::calc_min_size() {
+auto Separator::calc_min_size() -> Size {
   if (_top_empty && _bottom_empty)
     return Size(80, 40);
   else if (_top_empty || _bottom_empty)
@@ -53,12 +53,12 @@ Size Separator::calc_min_size() {
     return Size(80, 2);
 }
 
-void Separator::set_top_empty(bool flag) {
+auto Separator::set_top_empty(bool flag) -> void {
   _top_empty = flag;
   set_needs_relayout();
 }
 
-void Separator::set_bottom_empty(bool flag) {
+auto Separator::set_bottom_empty(bool flag) -> void {
   _bottom_empty = flag;
   set_needs_relayout();
 }
@@ -85,13 +85,13 @@ Idef1xTable::Idef1xTable(mdc::Layer *layer, FigureEventHub *hub, const model_Obj
   add(&_column_box, true, true, true);
 }
 
-void Idef1xTable::set_color(const Color &color) {
+auto Idef1xTable::set_color(const Color &color) -> void {
   _column_box.set_background_color(color);
   set_background_color(color);
   set_needs_render();
 }
 
-void Idef1xTable::set_dependant(bool flag) {
+auto Idef1xTable::set_dependant(bool flag) -> void {
   if (flag)
     _column_box.set_background_corners(mdc::CAll, 8.0);
   else
@@ -100,13 +100,13 @@ void Idef1xTable::set_dependant(bool flag) {
   set_needs_render();
 }
 
-Table::ItemList::iterator Idef1xTable::begin_columns_sync() {
+auto Idef1xTable::begin_columns_sync() -> Table::ItemList::iterator {
   _unique_oids.clear();
   return begin_sync(_column_box, _columns);
 }
 
-Table::ItemList::iterator Idef1xTable::sync_next_column(ItemList::iterator iter, const std::string &id,
-                                                        ColumnFlags flags, const std::string &text) {
+auto Idef1xTable::sync_next_column(ItemList::iterator iter, const std::string &id,
+                                                        ColumnFlags flags, const std::string &text) -> Table::ItemList::iterator {
   if (flags & wbfig::ColumnPK) {
     _unique_oids.insert(id);
     if (flags & wbfig::ColumnFK)
@@ -127,11 +127,11 @@ Table::ItemList::iterator Idef1xTable::sync_next_column(ItemList::iterator iter,
                      std::bind(&Idef1xTable::update_column_item, this, std::placeholders::_1, flags));
 }
 
-void Idef1xTable::end_columns_sync(ItemList::iterator iter) {
+auto Idef1xTable::end_columns_sync(ItemList::iterator iter) -> void {
   end_sync(_column_box, _columns, iter);
 }
 
-void Idef1xTable::end_sync(mdc::Box &box, ItemList &list, ItemList::iterator iter) {
+auto Idef1xTable::end_sync(mdc::Box &box, ItemList &list, ItemList::iterator iter) -> void {
   // everything after iter is outdated, so just delete everything
   while (iter != list.end()) {
     ItemList::iterator next = iter;

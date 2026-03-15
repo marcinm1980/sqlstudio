@@ -49,19 +49,19 @@ StoredNoteEditorWrapper::~StoredNoteEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-StoredNoteEditorBE *StoredNoteEditorWrapper::get_unmanaged_object() {
+auto StoredNoteEditorWrapper::get_unmanaged_object() -> StoredNoteEditorBE * {
   return static_cast<StoredNoteEditorBE *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void StoredNoteEditorWrapper::commit_changes() {
+auto StoredNoteEditorWrapper::commit_changes() -> void {
   get_unmanaged_object()->commit_changes();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void StoredNoteEditorWrapper::load_text() {
+auto StoredNoteEditorWrapper::load_text() -> void {
   get_unmanaged_object()->load_text();
 }
 
@@ -73,13 +73,13 @@ void StoredNoteEditorWrapper::set_name(String ^ name) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ StoredNoteEditorWrapper::get_name() {
+auto StoredNoteEditorWrapper::get_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_name());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool StoredNoteEditorWrapper::is_sql_script() {
+auto StoredNoteEditorWrapper::is_sql_script() -> bool {
   return _is_script;
 }
 

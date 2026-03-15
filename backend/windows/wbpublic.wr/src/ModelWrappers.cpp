@@ -61,7 +61,7 @@ NodeIdWrapper::~NodeIdWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::NodeId *NodeIdWrapper::get_unmanaged_object() {
+auto NodeIdWrapper::get_unmanaged_object() -> ::bec::NodeId * {
   return inner;
 }
 
@@ -85,50 +85,50 @@ int NodeIdWrapper::operator[](int i) {
 
 //--------------------------------------------------------------------------------------------------
 
-int NodeIdWrapper::get_by_index(int i) {
+auto NodeIdWrapper::get_by_index(int i) -> int {
   return (int)inner->operator[](i);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int NodeIdWrapper::depth() {
+auto NodeIdWrapper::depth() -> int {
   return (int)inner->depth();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int NodeIdWrapper::end() {
+auto NodeIdWrapper::end() -> int {
   return (int)inner->end();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool NodeIdWrapper::previous() {
+auto NodeIdWrapper::previous() -> bool {
   return inner->previous();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool NodeIdWrapper::next() {
+auto NodeIdWrapper::next() -> bool {
   return inner->next();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-NodeIdWrapper ^ NodeIdWrapper::append(int i) {
+auto NodeIdWrapper::append(int i) -> NodeIdWrapper ^ {
   inner->append(i);
   return this;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool NodeIdWrapper::is_valid() {
+auto NodeIdWrapper::is_valid() -> bool {
   return inner->is_valid();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ NodeIdWrapper::toString() {
+auto NodeIdWrapper::toString() -> String ^ {
   return CppStringToNative(inner->toString());
 }
 
@@ -153,7 +153,7 @@ ListModelWrapper::~ListModelWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModelWrapper::is_valid() {
+auto ListModelWrapper::is_valid() -> bool {
   return inner != NULL;
 }
 
@@ -165,13 +165,13 @@ bool ListModelWrapper::equals(ListModelWrapper ^ other) {
 
 //--------------------------------------------------------------------------------------------------
 
-int ListModelWrapper::count() {
+auto ListModelWrapper::count() -> int {
   return (int)inner->count();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-NodeIdWrapper ^ ListModelWrapper::get_node(int index) {
+auto ListModelWrapper::get_node(int index) -> NodeIdWrapper ^ {
   return gcnew NodeIdWrapper(&inner->get_node(index));
 }
 
@@ -225,13 +225,13 @@ GrtValue ^ ListModelWrapper::get_grt_value(NodeIdWrapper ^ node, int column) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ListModelWrapper::refresh() {
+auto ListModelWrapper::refresh() -> void {
   inner->refresh();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListModelWrapper::reset() {
+auto ListModelWrapper::reset() -> void {
   inner->reset();
 }
 
@@ -364,13 +364,13 @@ TreeModelWrapper::TreeModelWrapper(::bec::TreeModel *inn) : ListModelWrapper(inn
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::TreeModel *TreeModelWrapper::get_unmanaged_object() {
+auto TreeModelWrapper::get_unmanaged_object() -> ::bec::TreeModel * {
   return static_cast<::bec::TreeModel *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-NodeIdWrapper ^ TreeModelWrapper::get_root() {
+auto TreeModelWrapper::get_root() -> NodeIdWrapper ^ {
   return gcnew NodeIdWrapper(&get_unmanaged_object()->get_root());
 }
 
@@ -423,37 +423,37 @@ GridModelWrapper::GridModelWrapper(::bec::GridModel *inn) : ListModelWrapper(inn
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::GridModel *GridModelWrapper::get_unmanaged_object() {
+auto GridModelWrapper::get_unmanaged_object() -> ::bec::GridModel * {
   return static_cast<::bec::GridModel *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int GridModelWrapper::get_column_count() {
+auto GridModelWrapper::get_column_count() -> int {
   return (int)get_unmanaged_object()->get_column_count();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ GridModelWrapper::get_column_caption(int column) {
+auto GridModelWrapper::get_column_caption(int column) -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_column_caption(column));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-GridModelWrapper::ColumnType GridModelWrapper::get_column_type(int column) {
+auto GridModelWrapper::get_column_type(int column) -> GridModelWrapper::ColumnType {
   return (GridModelWrapper::ColumnType)get_unmanaged_object()->get_column_type(column);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool GridModelWrapper::is_readonly() {
+auto GridModelWrapper::is_readonly() -> bool {
   return get_unmanaged_object()->is_readonly();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ GridModelWrapper::readonly_reason() {
+auto GridModelWrapper::readonly_reason() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->readonly_reason());
 }
 
@@ -480,7 +480,7 @@ bool GridModelWrapper::get_field_repr(NodeIdWrapper ^ node, int column, [Out] St
 
 //--------------------------------------------------------------------------------------------------
 
-void GridModelWrapper::set_edited_field(int row_index, int col_index) {
+auto GridModelWrapper::set_edited_field(int row_index, int col_index) -> void {
   get_unmanaged_object()->set_edited_field(row_index, col_index);
 }
 

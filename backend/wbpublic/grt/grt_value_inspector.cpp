@@ -42,21 +42,21 @@ using namespace base;
 
 //--------------------------------------------------------------------------------------------------
 
-void ValueInspectorBE::monitor_object_changes(const grt::ObjectRef &obj) {
+auto ValueInspectorBE::monitor_object_changes(const grt::ObjectRef &obj) -> void {
   _changed_conn = obj->signal_changed()->connect(
     std::bind(&ValueInspectorBE::changed_slot, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ValueInspectorBE::changed_slot(const std::string &name, const grt::ValueRef &value) {
+auto ValueInspectorBE::changed_slot(const std::string &name, const grt::ValueRef &value) -> void {
   refresh();
   do_ui_refresh();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-inline bool is_compatible(Type cont_type, Type type) {
+inline auto is_compatible(Type cont_type, Type type) -> bool {
   if (cont_type == type || cont_type == AnyType)
     return true;
   return false;
@@ -64,7 +64,7 @@ inline bool is_compatible(Type cont_type, Type type) {
 
 //--------------------------------------------------------------------------------------------------
 
-inline bool is_multiple_value(const std::string &value) {
+inline auto is_multiple_value(const std::string &value) -> bool {
   if (!value.empty() && ('<' == value[0])) {
     static std::string suff = " uniques>";
     std::string::size_type off = value.find(suff);
@@ -115,7 +115,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  bool setup_member(const MetaClass::Member *mem, const ObjectRef &object) {
+  auto setup_member(const MetaClass::Member *mem, const ObjectRef &object) -> bool {
     std::string k(mem->name);
     ValueRef v(object.get_member(k));
     std::string desc, readonly, editas, group;
@@ -175,7 +175,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  std::vector<std::string> get_keys() {
+  auto get_keys() -> std::vector<std::string> {
     std::vector<std::string> keys;
 
     for (std::map<std::string, Field>::const_iterator i = _fields.begin(); i != _fields.end(); ++i)
@@ -185,49 +185,49 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  Type get_type(const std::string &field) {
+  auto get_type(const std::string &field) -> Type {
     return _fields[field].type;
   }
 
   //------------------------------------------------------------------------------------------------
 
-  std::string get_desc(const std::string &field) {
+  auto get_desc(const std::string &field) -> std::string {
     return _fields[field].desc;
   }
 
   //------------------------------------------------------------------------------------------------
 
-  std::string is_readonly(const std::string &field) {
+  auto is_readonly(const std::string &field) -> std::string {
     return _fields[field].is_readonly;
   }
 
   //------------------------------------------------------------------------------------------------
 
-  std::string get_edit_method(const std::string &field) {
+  auto get_edit_method(const std::string &field) -> std::string {
     return _fields[field].edit_method;
   }
 
   //------------------------------------------------------------------------------------------------
 
-  std::string get_group(const std::string &field) {
+  auto get_group(const std::string &field) -> std::string {
     return _fields[field].group;
   }
 
   //------------------------------------------------------------------------------------------------
 
-  size_t count() {
+  auto count() -> size_t {
     return _fields.size();
   }
 
   //------------------------------------------------------------------------------------------------
 
-  virtual ValueRef get(const std::string &field) {
+  virtual auto get(const std::string &field) -> ValueRef {
     return _fields[field].source.get_member(field);
   }
 
   //------------------------------------------------------------------------------------------------
 
-  virtual void set(const std::string &field, const ValueRef &value) {
+  virtual auto set(const std::string &field, const ValueRef &value) -> void {
     grt::AutoUndo undo(!_object->is_global());
 
     _fields[field].source.set_member(field, value);
@@ -256,7 +256,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual size_t count_children(const NodeId &parent) {
+  virtual auto count_children(const NodeId &parent) -> size_t {
     if (parent == NodeId())
       return _value.count();
     return 0;
@@ -264,7 +264,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual NodeId get_child(const NodeId &parent, size_t index) {
+  virtual auto get_child(const NodeId &parent, size_t index) -> NodeId {
     if ((ssize_t)index < 0 || index >= _value.count())
       return NodeId();
 
@@ -273,7 +273,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool get_field(const NodeId &node, ColumnId column, std::string &value) {
+  virtual auto get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
     if (node.depth() < 1 || node[0] >= _value.count())
       return false;
 
@@ -289,18 +289,18 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual void refresh(){};
+  virtual auto refresh() -> void {};
 
   //------------------------------------------------------------------------------------------------
 
-  bool add_item(NodeId &new_node) {
+  auto add_item(NodeId &new_node) -> bool {
     new_node = NodeId(_value.count());
     return true;
   }
 
   //------------------------------------------------------------------------------------------------
 
-  bool delete_item(const NodeId &node) {
+  auto delete_item(const NodeId &node) -> bool {
     if (node.depth() < 1 || node[0] >= _value.count())
       return false;
 
@@ -314,7 +314,7 @@ private:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool get_field_grt(const NodeId &node, ColumnId column, ValueRef &value) {
+  virtual auto get_field_grt(const NodeId &node, ColumnId column, ValueRef &value) -> bool {
     if (node.depth() < 1 || node[0] >= _value.count())
       return false;
 
@@ -335,7 +335,7 @@ private:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual Type get_field_type(const NodeId &node, ColumnId column) {
+  virtual auto get_field_type(const NodeId &node, ColumnId column) -> Type {
     if (node[0] == _value.count())
       return _value.content_type();
     return _value[node[0]].type();
@@ -343,13 +343,13 @@ private:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual Type get_canonical_type(const NodeId &node) {
+  virtual auto get_canonical_type(const NodeId &node) -> Type {
     return _value.content_type();
   }
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool set_value(const NodeId &node, const ValueRef &value) {
+  virtual auto set_value(const NodeId &node, const ValueRef &value) -> bool {
     if (node.depth() < 1 || node[0] > _value.count())
       return false;
 
@@ -372,7 +372,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual size_t count_children(const NodeId &parent) {
+  virtual auto count_children(const NodeId &parent) -> size_t {
     if (parent == NodeId())
       return _items.size();
     return 0;
@@ -380,7 +380,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual NodeId get_child(const NodeId &parent, size_t index) {
+  virtual auto get_child(const NodeId &parent, size_t index) -> NodeId {
     if ((ssize_t)index < 0 || index >= _items.size())
       return NodeId();
     return NodeId(index);
@@ -388,7 +388,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool get_field(const NodeId &node, ColumnId column, std::string &value) {
+  virtual auto get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
     if (node.depth() < 1 || node[0] >= _items.size())
       return false;
 
@@ -401,7 +401,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual void refresh() {
+  virtual auto refresh() -> void {
     _has_new_item = false;
 
     _items.clear();
@@ -413,7 +413,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool add_item(NodeId &new_node) {
+  virtual auto add_item(NodeId &new_node) -> bool {
     if (_has_new_item)
       return false;
 
@@ -425,7 +425,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool delete_item(const NodeId &node) {
+  virtual auto delete_item(const NodeId &node) -> bool {
     if (node[0] == _items.size() - 1 && _has_new_item) {
       _has_new_item = false;
       _items.pop_back();
@@ -448,7 +448,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool get_field_grt(const NodeId &node, ColumnId column, ValueRef &value) {
+  virtual auto get_field_grt(const NodeId &node, ColumnId column, ValueRef &value) -> bool {
     if (node.depth() < 1 || node[0] >= _items.size())
       return false;
 
@@ -465,7 +465,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual Type get_field_type(const NodeId &node, ColumnId column) {
+  virtual auto get_field_type(const NodeId &node, ColumnId column) -> Type {
     if (_has_new_item && node[0] == _items.size() - 1)
       return _value.content_type();
     return _value.get(_items[node[0]]).type();
@@ -473,13 +473,13 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual Type get_canonical_type(const NodeId &node) {
+  virtual auto get_canonical_type(const NodeId &node) -> Type {
     return _value.content_type();
   }
 
   //------------------------------------------------------------------------------------------------
 
-  bool set_field(const NodeId &node, ColumnId column, const std::string &value) {
+  auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
     if (column == Name) {
       if (_items[node[0]] == value)
         return true;
@@ -504,7 +504,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool set_value(const NodeId &node, const ValueRef &value) {
+  virtual auto set_value(const NodeId &node, const ValueRef &value) -> bool {
     try {
       if (_has_new_item && node[0] == _items.size() - 1) {
         _value.set(_items[node[0]], value);
@@ -532,7 +532,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual size_t count_children(const NodeId &parent) {
+  virtual auto count_children(const NodeId &parent) -> size_t {
     if (_grouping) {
       switch (get_node_depth(parent)) {
         case 0:
@@ -550,7 +550,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual NodeId get_child(const NodeId &parent, size_t index) {
+  virtual auto get_child(const NodeId &parent, size_t index) -> NodeId {
     if (_grouping) {
       if (parent.depth() == 1) {
         if ((ssize_t)index >= 0 && index < _keys[_groups[parent[0]]].size()) {
@@ -569,7 +569,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool get_field(const NodeId &node, ColumnId column, std::string &value) {
+  virtual auto get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
     switch (column) {
       case Name: {
         if (_grouping) {
@@ -622,7 +622,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual void refresh() {
+  virtual auto refresh() -> void {
     _groups.clear();
     _keys.clear();
 
@@ -661,11 +661,11 @@ public:
     }
   }
 
-  virtual bool add_item(NodeId &new_name) {
+  virtual auto add_item(NodeId &new_name) -> bool {
     return false;
   }
 
-  virtual bool delete_item(const NodeId &node) {
+  virtual auto delete_item(const NodeId &node) -> bool {
     return false;
   }
 
@@ -684,7 +684,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool get_field_grt(const NodeId &node, ColumnId column, ValueRef &value) {
+  virtual auto get_field_grt(const NodeId &node, ColumnId column, ValueRef &value) -> bool {
     if (_grouping) {
       if (get_node_depth(node) < 2)
         return false;
@@ -740,7 +740,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual Type get_field_type(const NodeId &node, ColumnId column) {
+  virtual auto get_field_type(const NodeId &node, ColumnId column) -> Type {
     if (_grouping) {
       if (get_node_depth(node) < 2)
         return AnyType;
@@ -756,13 +756,13 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual Type get_canonical_type(const NodeId &node) {
+  virtual auto get_canonical_type(const NodeId &node) -> Type {
     return get_field_type(node, Value);
   }
 
   //------------------------------------------------------------------------------------------------
 
-  bool set_value(const NodeId &node, const ValueRef &value) {
+  auto set_value(const NodeId &node, const ValueRef &value) -> bool {
     std::string name;
 
     if (_grouping && get_node_depth(node) < 2)
@@ -787,7 +787,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual size_t count_children(const NodeId &parent) {
+  virtual auto count_children(const NodeId &parent) -> size_t {
     if (parent == NodeId())
       return _items.size();
     return 0;
@@ -795,7 +795,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual NodeId get_child(const NodeId &parent, size_t index) {
+  virtual auto get_child(const NodeId &parent, size_t index) -> NodeId {
     if ((ssize_t)index < 0 || index >= _items.size())
       return NodeId();
     return NodeId(index);
@@ -803,7 +803,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool get_field(const NodeId &node, ColumnId column, std::string &value) {
+  virtual auto get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
     if (node[0] >= _items.size())
       return false;
 
@@ -826,9 +826,9 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  bool refresh_member(const MetaClass::Member *member,
+  auto refresh_member(const MetaClass::Member *member,
                       std::map<std::string, boost::tuple<int, std::string, std::string, std::string> > *keys,
-                      MetaClass *meta) {
+                      MetaClass *meta) -> bool {
     std::string name(member->name);
     ValueRef value;
     std::string editas;
@@ -852,7 +852,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual void refresh() {
+  virtual auto refresh() -> void {
     size_t i, c = _list.size();
     std::map<std::string, boost::tuple<int, std::string, std::string, std::string> >
       keys; // key -> (count, desc, readonly, editas)
@@ -884,13 +884,13 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool add_item(NodeId &new_node) {
+  virtual auto add_item(NodeId &new_node) -> bool {
     return false;
   }
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool delete_item(const NodeId &node) {
+  virtual auto delete_item(const NodeId &node) -> bool {
     return false;
   }
 
@@ -915,7 +915,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool get_field_grt(const NodeId &node, ColumnId column, ValueRef &value) {
+  virtual auto get_field_grt(const NodeId &node, ColumnId column, ValueRef &value) -> bool {
     switch (column) {
       case Name:
         value = StringRef(_items[node[0]].key);
@@ -957,7 +957,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual Type get_field_type(const NodeId &node, ColumnId column) {
+  virtual auto get_field_type(const NodeId &node, ColumnId column) -> Type {
     MetaClass *meta = _list[0].get_metaclass();
 
     if (meta) {
@@ -971,7 +971,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual Type get_canonical_type(const NodeId &node) {
+  virtual auto get_canonical_type(const NodeId &node) -> Type {
     MetaClass *meta = _list[0].get_metaclass();
 
     if (meta) {
@@ -985,7 +985,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  bool set_field(const NodeId &node, ColumnId column, const std::string &value) {
+  auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
     if (column == Name)
       return false;
 
@@ -997,7 +997,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual bool set_value(const NodeId &node, const ValueRef &value) {
+  virtual auto set_value(const NodeId &node, const ValueRef &value) -> bool {
     grt::AutoUndo undo;
 
     for (std::vector<ObjectRef>::iterator iter = _list.begin(); iter != _list.end(); ++iter) {
@@ -1017,7 +1017,7 @@ ValueInspectorBE::ValueInspectorBE() {
 
 //--------------------------------------------------------------------------------------------------
 
-ValueRef ValueInspectorBE::get_grt_value(const NodeId &node, ColumnId column) {
+auto ValueInspectorBE::get_grt_value(const NodeId &node, ColumnId column) -> ValueRef {
   if (column == Value) {
     ValueRef value;
     if (get_field_grt(node, column, value))
@@ -1028,7 +1028,7 @@ ValueRef ValueInspectorBE::get_grt_value(const NodeId &node, ColumnId column) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ValueInspectorBE::set_convert_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto ValueInspectorBE::set_convert_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   if (column == Name)
     return set_field(node, column, value);
   else if (column == Value && !is_multiple_value(value))
@@ -1041,7 +1041,7 @@ bool ValueInspectorBE::set_convert_field(const NodeId &node, ColumnId column, co
 
 //--------------------------------------------------------------------------------------------------
 
-bool ValueInspectorBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto ValueInspectorBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   if (column == Value && is_compatible(get_canonical_type(node), StringType))
     return set_value(node, StringRef(value));
 
@@ -1051,7 +1051,7 @@ bool ValueInspectorBE::set_field(const NodeId &node, ColumnId column, const std:
 
 //--------------------------------------------------------------------------------------------------
 
-bool ValueInspectorBE::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto ValueInspectorBE::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   if (column == Value && is_compatible(get_canonical_type(node), IntegerType))
     return set_value(node, IntegerRef(value));
 
@@ -1061,7 +1061,7 @@ bool ValueInspectorBE::set_field(const NodeId &node, ColumnId column, ssize_t va
 
 //--------------------------------------------------------------------------------------------------
 
-bool ValueInspectorBE::set_field(const NodeId &node, ColumnId column, double value) {
+auto ValueInspectorBE::set_field(const NodeId &node, ColumnId column, double value) -> bool {
   if (column == Value && is_compatible(get_canonical_type(node), DoubleType))
     return set_value(node, DoubleRef(value));
 
@@ -1071,7 +1071,7 @@ bool ValueInspectorBE::set_field(const NodeId &node, ColumnId column, double val
 
 //--------------------------------------------------------------------------------------------------
 
-IconId ValueInspectorBE::get_field_icon(const NodeId &node, ColumnId column, IconSize size) {
+auto ValueInspectorBE::get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId {
   if (column == Name) {
     switch (get_field_type(node, column)) {
       case ListType:
@@ -1089,7 +1089,7 @@ IconId ValueInspectorBE::get_field_icon(const NodeId &node, ColumnId column, Ico
 
 //--------------------------------------------------------------------------------------------------
 
-ValueInspectorBE *ValueInspectorBE::create(const ValueRef &value, bool grouped, bool process_editas_flag) {
+auto ValueInspectorBE::create(const ValueRef &value, bool grouped, bool process_editas_flag) -> ValueInspectorBE * {
   switch (value.type()) {
     case DictType:
       return new GRTDictRefInspectorBE(DictRef::cast_from(value));
@@ -1107,7 +1107,7 @@ ValueInspectorBE *ValueInspectorBE::create(const ValueRef &value, bool grouped, 
 
 //--------------------------------------------------------------------------------------------------
 
-ValueInspectorBE *ValueInspectorBE::create(const std::vector<ObjectRef> &objects) {
+auto ValueInspectorBE::create(const std::vector<ObjectRef> &objects) -> ValueInspectorBE * {
   return new GRTObjectListValueInspectorBE(objects);
 }
 

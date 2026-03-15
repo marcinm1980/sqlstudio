@@ -52,16 +52,16 @@ View::View(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self)
 View::~View() {
 }
 
-void View::set_title(const std::string &title) {
+auto View::set_title(const std::string &title) -> void {
   _title.set_title(title);
 }
 
-void View::set_color(const Color &color) {
+auto View::set_color(const Color &color) -> void {
   _title.set_color(color);
   set_needs_render();
 }
 
-void View::set_title_font(const mdc::FontSpec &font) {
+auto View::set_title_font(const mdc::FontSpec &font) -> void {
   _title.set_font(font);
   set_needs_render();
 }

@@ -105,7 +105,7 @@ extern void (*my_str_free)(void *);
 #if defined(HAVE_STPCPY) && !defined(HAVE_mit_thread)
 #define strmov(A,B) stpcpy((A),(B))
 #ifndef stpcpy
-extern char *stpcpy(char *, const char *);	/* For AIX with gcc 2.95.3 */
+extern auto stpcpy(char *, const char *) -> char *;	/* For AIX with gcc 2.95.3 */
 #endif
 #endif
 
@@ -129,7 +129,7 @@ extern char NEAR _dig_vec_lower[];
 #ifdef MSDOS
 #undef bmove_align
 #define bmove512(A,B,C) bmove_align(A,B,C)
-extern	void bmove_align(gptr dst,const gptr src,uint len);
+extern	auto bmove_align(gptr dst,const gptr src,uint len) -> void;
 #endif
 
 #if (!defined(USE_BMOVE512) || defined(HAVE_purify)) && !defined(bmove512)
@@ -139,53 +139,53 @@ extern	void bmove_align(gptr dst,const gptr src,uint len);
 	/* Prototypes for string functions */
 
 #if !defined(bfill) && !defined(HAVE_BFILL)
-extern	void bfill(gptr dst,uint len,pchar fill);
+extern	auto bfill(gptr dst,uint len,pchar fill) -> void;
 #endif
 
 #if !defined(bzero) && !defined(HAVE_BZERO)
-extern	void bzero(gptr dst,uint len);
+extern	auto bzero(gptr dst,uint len) -> void;
 #endif
 
 #if !defined(bcmp) && !defined(HAVE_BCMP)
-extern	int bcmp(const char *s1,const char *s2,uint len);
+extern	auto bcmp(const char *s1,const char *s2,uint len) -> int;
 #endif
 #ifdef HAVE_purify
-extern	int my_bcmp(const char *s1,const char *s2,uint len);
+extern	auto my_bcmp(const char *s1,const char *s2,uint len) -> int;
 #undef bcmp
 #define bcmp(A,B,C) my_bcmp((A),(B),(C))
 #endif
 
 #ifndef bmove512
-extern	void bmove512(gptr dst,const gptr src,uint len);
+extern	auto bmove512(gptr dst,const gptr src,uint len) -> void;
 #endif
 
 #if !defined(HAVE_BMOVE) && !defined(bmove)
-extern	void bmove(char *dst, const char *src,uint len);
+extern	auto bmove(char *dst, const char *src,uint len) -> void;
 #endif
 
-extern	void bmove_upp(char *dst,const char *src,uint len);
-extern	void bchange(char *dst,uint old_len,const char *src,
-		     uint new_len,uint tot_len);
-extern	void strappend(char *s,uint len,pchar fill);
+extern	auto bmove_upp(char *dst,const char *src,uint len) -> void;
+extern	auto bchange(char *dst,uint old_len,const char *src,
+		     uint new_len,uint tot_len) -> void;
+extern	auto strappend(char *s,uint len,pchar fill) -> void;
 //unused extern	char *strend(const char *s);
-extern  char *strcend(const char *, pchar);
-extern	char *strfield(char *src,int fields,int chars,int blanks,
-			   int tabch);
-extern	char *strfill(my_string s,uint len,pchar fill);
-extern	uint strinstr(const char *str,const char *search);
-extern  uint r_strinstr(reg1 my_string str,int from, reg4 my_string search);
-extern	char *strkey(char *dst,char *head,char *tail,char *flags);
-extern	char *strmake(char *dst,const char *src,uint length);
+extern  auto strcend(const char *, pchar) -> char *;
+extern	auto strfield(char *src,int fields,int chars,int blanks,
+			   int tabch) -> char *;
+extern	auto strfill(my_string s,uint len,pchar fill) -> char *;
+extern	auto strinstr(const char *str,const char *search) -> uint;
+extern  auto r_strinstr(reg1 my_string str,int from, reg4 my_string search) -> uint;
+extern	auto strkey(char *dst,char *head,char *tail,char *flags) -> char *;
+extern	auto strmake(char *dst,const char *src,uint length) -> char *;
 #ifndef strmake_overlapp
-extern	char *strmake_overlapp(char *dst,const char *src, uint length);
+extern	auto strmake_overlapp(char *dst,const char *src, uint length) -> char *;
 #endif
 
 #ifndef strmov
-extern	char *strmov(char *dst,const char *src);
+extern	auto strmov(char *dst,const char *src) -> char *;
 #endif
-extern	char *strnmov(char *dst,const char *src,uint n);
-extern	char *strsuff(const char *src,const char *suffix);
-extern	char *strcont(const char *src,const char *set);
+extern	auto strnmov(char *dst,const char *src,uint n) -> char *;
+extern	auto strsuff(const char *src,const char *suffix) -> char *;
+extern	auto strcont(const char *src,const char *set) -> char *;
 extern	char *strxcat _VARARGS((char *dst,const char *src, ...));
 extern	char *strxmov _VARARGS((char *dst,const char *src, ...));
 extern	char *strxcpy _VARARGS((char *dst,const char *src, ...));
@@ -196,44 +196,44 @@ extern	char *strxncpy _VARARGS((char *dst,uint len, const char *src, ...));
 /* Prototypes of normal stringfunctions (with may ours) */
 
 #ifdef WANT_STRING_PROTOTYPES
-extern char *strcat(char *, const char *);
-extern char *strchr(const char *, pchar);
-extern char *strrchr(const char *, pchar);
-extern char *strcpy(char *, const char *);
-extern int strcmp(const char *, const char *);
+extern auto strcat(char *, const char *) -> char *;
+extern auto strchr(const char *, pchar) -> char *;
+extern auto strrchr(const char *, pchar) -> char *;
+extern auto strcpy(char *, const char *) -> char *;
+extern auto strcmp(const char *, const char *) -> int;
 #ifndef __GNUC__
-extern size_t strlen(const char *);
+extern auto strlen(const char *) -> size_t;
 #endif
 #endif
 #ifndef HAVE_STRNLEN
-extern uint strnlen(const char *s, uint n);
+extern auto strnlen(const char *s, uint n) -> uint;
 #endif
 
 #if !defined(__cplusplus)
 #ifndef HAVE_STRPBRK
-extern char *strpbrk(const char *, const char *);
+extern auto strpbrk(const char *, const char *) -> char *;
 #endif
 #ifndef HAVE_STRSTR
-extern char *strstr(const char *, const char *);
+extern auto strstr(const char *, const char *) -> char *;
 #endif
 #endif
-extern int is_prefix(const char *, const char *);
+extern auto is_prefix(const char *, const char *) -> int;
 
 /* Conversion routines */
-double my_strtod(const char *str, char **end, int *error);
-double my_atof(const char *nptr);
+auto my_strtod(const char *str, char **end, int *error) -> double;
+auto my_atof(const char *nptr) -> double;
 
-extern char *llstr(longlong value,char *buff);
+extern auto llstr(longlong value,char *buff) -> char *;
 #ifndef HAVE_STRTOUL
-extern long strtol(const char *str, char **ptr, int base);
-extern ulong strtoul(const char *str, char **ptr, int base);
+extern auto strtol(const char *str, char **ptr, int base) -> long;
+extern auto strtoul(const char *str, char **ptr, int base) -> ulong;
 #endif
 
-extern char *int2str(long val, char *dst, int radix, int upcase);
-extern char *int10_to_str(long val,char *dst,int radix);
-extern char *str2int(const char *src,int radix,long lower,long upper,
-			 long *val);
-longlong my_strtoll10(const char *nptr, char **endptr, int *error);
+extern auto int2str(long val, char *dst, int radix, int upcase) -> char *;
+extern auto int10_to_str(long val,char *dst,int radix) -> char *;
+extern auto str2int(const char *src,int radix,long lower,long upper,
+			 long *val) -> char *;
+auto my_strtoll10(const char *nptr, char **endptr, int *error) -> longlong;
 #if SIZEOF_LONG == SIZEOF_LONG_LONG
 #define longlong2str(A,B,C) int2str((A),(B),(C),1)
 #define longlong10_to_str(A,B,C) int10_to_str((A),(B),(C))
@@ -248,20 +248,20 @@ longlong my_strtoll10(const char *nptr, char **endptr, int *error);
 #endif
 #else
 #ifdef HAVE_LONG_LONG
-extern char *longlong2str(longlong val,char *dst,int radix);
-extern char *longlong10_to_str(longlong val,char *dst,int radix);
+extern auto longlong2str(longlong val,char *dst,int radix) -> char *;
+extern auto longlong10_to_str(longlong val,char *dst,int radix) -> char *;
 #if (!defined(HAVE_STRTOULL) || defined(HAVE_mit_thread)) || defined(NO_STRTOLL_PROTO)
-extern longlong strtoll(const char *str, char **ptr, int base);
-extern ulonglong strtoull(const char *str, char **ptr, int base);
+extern auto strtoll(const char *str, char **ptr, int base) -> longlong;
+extern auto strtoull(const char *str, char **ptr, int base) -> ulonglong;
 #endif
 #endif
 #endif
 
 /* my_vsnprintf.c */
 
-extern int my_vsnprintf( char *str, size_t n,
-                                const char *format, va_list ap );
-extern int my_snprintf(char* to, size_t n, const char* fmt, ...);
+extern auto my_vsnprintf( char *str, size_t n,
+                                const char *format, va_list ap ) -> int;
+extern auto my_snprintf(char* to, size_t n, const char* fmt, ...) -> int;
 
 //#if defined(__cplusplus) && !defined(OS2)
 //}

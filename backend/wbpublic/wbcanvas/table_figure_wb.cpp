@@ -104,17 +104,17 @@ WBTable::~WBTable() {
     delete *i;
 }
 
-void WBTable::set_color(const Color &color) {
+auto WBTable::set_color(const Color &color) -> void {
   _title.set_color(color);
   _footer.set_color(color);
   set_needs_render();
 }
 
-void WBTable::set_max_columns_shown(int count) {
+auto WBTable::set_max_columns_shown(int count) -> void {
   _column_box.set_item_count_limit(count);
 }
 
-void WBTable::set_allow_manual_resizing(bool flag) {
+auto WBTable::set_allow_manual_resizing(bool flag) -> void {
   _title.set_auto_sizing(!flag);
   _index_title.set_auto_sizing(!flag);
   _trigger_title.set_auto_sizing(!flag);
@@ -135,18 +135,18 @@ void WBTable::set_allow_manual_resizing(bool flag) {
     relayout();
 }
 
-void WBTable::set_dependant(bool flag) {
+auto WBTable::set_dependant(bool flag) -> void {
 }
 
-void WBTable::hide_columns() {
+auto WBTable::hide_columns() -> void {
   _hide_columns = true;
 }
 
-bool WBTable::get_expanded() {
+auto WBTable::get_expanded() -> bool {
   return _content_box.get_visible();
 }
 
-void WBTable::toggle(bool flag) {
+auto WBTable::toggle(bool flag) -> void {
   // save the original height of the column box
   if (!flag)
     _original_column_box_height = _column_box.get_size().height;
@@ -176,27 +176,27 @@ void WBTable::toggle(bool flag) {
   }
 }
 
-void WBTable::hide_indices() {
+auto WBTable::hide_indices() -> void {
   _hide_indexes = true;
   _index_title.set_visible(false);
   _index_box.set_visible(false);
 }
 
-void WBTable::hide_triggers() {
+auto WBTable::hide_triggers() -> void {
   _hide_triggers = true;
   _trigger_title.set_visible(false);
   _trigger_box.set_visible(false);
 }
 
-bool WBTable::get_indexes_expanded() {
+auto WBTable::get_indexes_expanded() -> bool {
   return _index_box.get_visible();
 }
 
-bool WBTable::get_triggers_expanded() {
+auto WBTable::get_triggers_expanded() -> bool {
   return _trigger_box.get_visible();
 }
 
-void WBTable::toggle_indexes(bool flag) {
+auto WBTable::toggle_indexes(bool flag) -> void {
   _index_title.set_expanded(flag);
   if (!_hide_indexes) {
     Size size(get_size());
@@ -215,7 +215,7 @@ void WBTable::toggle_indexes(bool flag) {
   }
 }
 
-void WBTable::toggle_triggers(bool flag) {
+auto WBTable::toggle_triggers(bool flag) -> void {
   _trigger_title.set_expanded(flag);
   if (!_hide_triggers) {
     Size size(get_size());
@@ -235,7 +235,7 @@ void WBTable::toggle_triggers(bool flag) {
   }
 }
 
-wbfig::FigureItem *WBTable::create_truncated_item(mdc::Layer *layer, wbfig::FigureEventHub *hub) {
+auto WBTable::create_truncated_item(mdc::Layer *layer, wbfig::FigureEventHub *hub) -> wbfig::FigureItem * {
   wbfig::FigureItem *item = new wbfig::FigureItem(layer, hub, this);
 
   item->set_font(mdc::FontSpec("Helvetica", mdc::SNormal, mdc::WBold, 14.0));
@@ -244,12 +244,12 @@ wbfig::FigureItem *WBTable::create_truncated_item(mdc::Layer *layer, wbfig::Figu
   return item;
 }
 
-WBTable::ItemList::iterator WBTable::begin_columns_sync() {
+auto WBTable::begin_columns_sync() -> WBTable::ItemList::iterator {
   return begin_sync(_column_box, _columns);
 }
 
-WBTable::ItemList::iterator WBTable::sync_next_column(ItemList::iterator iter, const std::string &id, ColumnFlags flags,
-                                                      const std::string &text) {
+auto WBTable::sync_next_column(ItemList::iterator iter, const std::string &id, ColumnFlags flags,
+                                                      const std::string &text) -> WBTable::ItemList::iterator {
   if (_hide_columns && (flags & (wbfig::ColumnPK | wbfig::ColumnFK)) == 0)
     return iter;
 
@@ -293,41 +293,41 @@ WBTable::ItemList::iterator WBTable::sync_next_column(ItemList::iterator iter, c
   return iter;
 }
 
-void WBTable::end_columns_sync(ItemList::iterator iter) {
+auto WBTable::end_columns_sync(ItemList::iterator iter) -> void {
   end_sync(_column_box, _columns, iter);
 }
 
-WBTable::ItemList::iterator WBTable::begin_indexes_sync() {
+auto WBTable::begin_indexes_sync() -> WBTable::ItemList::iterator {
   return begin_sync(_index_box, _indexes);
 }
 
-WBTable::ItemList::iterator WBTable::sync_next_index(ItemList::iterator iter, const std::string &id,
-                                                     const std::string &text) {
+auto WBTable::sync_next_index(ItemList::iterator iter, const std::string &id,
+                                                     const std::string &text) -> WBTable::ItemList::iterator {
   return sync_next(_index_box, _indexes, iter, id, NULL, text,
                    std::bind(&WBTable::create_index_item, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void WBTable::end_indexes_sync(ItemList::iterator iter) {
+auto WBTable::end_indexes_sync(ItemList::iterator iter) -> void {
   end_sync(_index_box, _indexes, iter);
 }
 
-WBTable::ItemList::iterator WBTable::begin_triggers_sync() {
+auto WBTable::begin_triggers_sync() -> WBTable::ItemList::iterator {
   if (!_hide_triggers && !_trigger_title.get_visible())
     _trigger_title.set_visible(true);
 
   return begin_sync(_trigger_box, _triggers);
 }
 
-WBTable::ItemList::iterator WBTable::sync_next_trigger(ItemList::iterator iter, const std::string &id,
-                                                       const std::string &text) {
+auto WBTable::sync_next_trigger(ItemList::iterator iter, const std::string &id,
+                                                       const std::string &text) -> WBTable::ItemList::iterator {
   return sync_next(_trigger_box, _triggers, iter, id, NULL, text);
 }
 
-void WBTable::end_triggers_sync(ItemList::iterator iter) {
+auto WBTable::end_triggers_sync(ItemList::iterator iter) -> void {
   end_sync(_trigger_box, _triggers, iter);
 }
 
-void WBTable::set_content_font(const mdc::FontSpec &font) {
+auto WBTable::set_content_font(const mdc::FontSpec &font) -> void {
   super::set_content_font(font);
 
   for (ItemList::iterator i = _columns.begin(); i != _columns.end(); ++i)

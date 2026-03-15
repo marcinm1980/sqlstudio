@@ -45,17 +45,17 @@ Db_frw_eng::Db_frw_eng() : Db_plugin(), DbMySQLValidationPage() {
   _catalog = db_mysql_CatalogRef::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0/catalog"));
 }
 
-void Db_frw_eng::start_apply_script_to_db() {
+auto Db_frw_eng::start_apply_script_to_db() -> void {
   sql_script(_sql_script);
   Db_plugin::exec_task();
 }
 
-void Db_frw_eng::setup_grt_string_list_models_from_catalog(
+auto Db_frw_eng::setup_grt_string_list_models_from_catalog(
   bec::GrtStringListModel **users_model, bec::GrtStringListModel **users_exc_model,
   bec::GrtStringListModel **tables_model, bec::GrtStringListModel **tables_exc_model,
   bec::GrtStringListModel **views_model, bec::GrtStringListModel **views_exc_model,
   bec::GrtStringListModel **routines_model, bec::GrtStringListModel **routines_exc_model,
-  bec::GrtStringListModel **triggers_model, bec::GrtStringListModel **triggers_exc_model) {
+  bec::GrtStringListModel **triggers_model, bec::GrtStringListModel **triggers_exc_model) -> void {
   _export.setup_grt_string_list_models_from_catalog(users_model, users_exc_model, tables_model, tables_exc_model,
                                                     views_model, views_exc_model, routines_model, routines_exc_model,
                                                     triggers_model, triggers_exc_model);

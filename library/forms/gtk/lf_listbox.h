@@ -47,32 +47,32 @@ namespace mforms {
       Gtk::TreeView _lbox;
       Gtk::ScrolledWindow _swin;
 
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return &(const_cast<Gtk::ScrolledWindow &>(_swin));
       }
-      virtual Gtk::Widget *get_inner() const {
+      virtual auto get_inner() const -> Gtk::Widget * {
         return &(const_cast<Gtk::TreeView &>(_lbox));
       }
 
     protected:
       ListBoxImpl(::mforms::ListBox *self, bool multi_select);
-      static void selection_changed(::mforms::ListBox *self);
-      static bool create(::mforms::ListBox *self, bool multi_select);
-      static void clear(::mforms::ListBox *self);
-      static size_t add_item(::mforms::ListBox *self, const std::string &item);
-      static void add_items(::mforms::ListBox *self, const std::list<std::string> &items);
-      static void remove_indices(mforms::ListBox *backend, const std::vector<size_t> &indices);
-      static void remove_index(mforms::ListBox *backend, size_t index);
-      static std::string get_text(::mforms::ListBox *self);
-      static void set_index(::mforms::ListBox *self, ssize_t index);
-      static ssize_t get_index(::mforms::ListBox *self);
-      static void set_heading(ListBox *self, const std::string &text);
-      static std::vector<size_t> get_selected_indices(ListBox *self);
-      static size_t get_count(ListBox *self);
-      static std::string get_string_value_from_index(ListBox *self, size_t index);
+      static auto selection_changed(::mforms::ListBox *self) -> void;
+      static auto create(::mforms::ListBox *self, bool multi_select) -> bool;
+      static auto clear(::mforms::ListBox *self) -> void;
+      static auto add_item(::mforms::ListBox *self, const std::string &item) -> size_t;
+      static auto add_items(::mforms::ListBox *self, const std::list<std::string> &items) -> void;
+      static auto remove_indices(mforms::ListBox *backend, const std::vector<size_t> &indices) -> void;
+      static auto remove_index(mforms::ListBox *backend, size_t index) -> void;
+      static auto get_text(::mforms::ListBox *self) -> std::string;
+      static auto set_index(::mforms::ListBox *self, ssize_t index) -> void;
+      static auto get_index(::mforms::ListBox *self) -> ssize_t;
+      static auto set_heading(ListBox *self, const std::string &text) -> void;
+      static auto get_selected_indices(ListBox *self) -> std::vector<size_t>;
+      static auto get_count(ListBox *self) -> size_t;
+      static auto get_string_value_from_index(ListBox *self, size_t index) -> std::string;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   }
 }

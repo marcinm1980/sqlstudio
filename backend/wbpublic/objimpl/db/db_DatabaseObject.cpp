@@ -35,13 +35,13 @@
 //================================================================================
 // db_DatabaseObject
 
-void db_DatabaseObject::init() {
+auto db_DatabaseObject::init() -> void {
 }
 
 db_DatabaseObject::~db_DatabaseObject() {
 }
 
-void db_DatabaseObject::lastChangeDate(const grt::StringRef &value) {
+auto db_DatabaseObject::lastChangeDate(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_lastChangeDate);
 
   _lastChangeDate = value;
@@ -54,7 +54,7 @@ void db_DatabaseObject::lastChangeDate(const grt::StringRef &value) {
   }
 }
 
-void db_DatabaseObject::name(const grt::StringRef &value) {
+auto db_DatabaseObject::name(const grt::StringRef &value) -> void {
   grt::StringRef oname(_name);
 
   grt::AutoUndo undo(!is_global());
@@ -73,7 +73,7 @@ void db_DatabaseObject::name(const grt::StringRef &value) {
   }
 }
 
-void db_DatabaseObject::owner(const grt::Ref<GrtNamedObject> &value) {
+auto db_DatabaseObject::owner(const grt::Ref<GrtNamedObject> &value) -> void {
   grt::ValueRef ovalue(_owner);
   _owner = value;
   member_changed("owner", ovalue, value);

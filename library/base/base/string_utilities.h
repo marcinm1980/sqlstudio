@@ -56,7 +56,7 @@ namespace base {
   BASELIBRARY_PUBLIC_FUNC auto string_to_wstring(const std::string &s) -> std::wstring;
   BASELIBRARY_PUBLIC_FUNC auto wstring_to_string(const std::wstring &s) -> std::string;
 #ifdef _MSC_VER
-  BASELIBRARY_PUBLIC_FUNC std::wstring path_from_utf8(const std::string &s);
+  BASELIBRARY_PUBLIC_FUNC auto path_from_utf8(const std::string &s) -> std::wstring;
 #else
   BASELIBRARY_PUBLIC_FUNC auto path_from_utf8(const std::string &s) -> std::string;
 #endif
@@ -108,8 +108,8 @@ namespace base {
   BASELIBRARY_PUBLIC_FUNC auto right(const std::string &s, size_t len) -> std::string;
   BASELIBRARY_PUBLIC_FUNC auto hasPrefix(const std::string &s, const std::string &part) -> bool;
   BASELIBRARY_PUBLIC_FUNC auto hasSuffix(const std::string &s, const std::string &part) -> bool;
-  BASELIBRARY_PUBLIC_FUNC void replaceStringInplace(std::string &value, const std::string &search,
-                                                    const std::string &replacement);
+  BASELIBRARY_PUBLIC_FUNC auto replaceStringInplace(std::string &value, const std::string &search,
+                                                    const std::string &replacement) -> void;
   BASELIBRARY_PUBLIC_FUNC auto replaceString(const std::string &s, const std::string &from, const std::string &to)
     -> std::string;
 
@@ -157,7 +157,7 @@ namespace base {
     return s;
   }
 
-  BASELIBRARY_PUBLIC_FUNC void setTextFileContent(const std::string &filename, const std::string &data);
+  BASELIBRARY_PUBLIC_FUNC auto setTextFileContent(const std::string &filename, const std::string &data) -> void;
   BASELIBRARY_PUBLIC_FUNC auto getTextFileContent(const std::string &filename) -> std::string;
 
   BASELIBRARY_PUBLIC_FUNC auto quote_identifier(const std::string &identifier, const char quote_char) -> std::string;
@@ -191,11 +191,11 @@ namespace base {
       -> int; // counts lines in the text, even if line endings are inconsistent
     static auto check(const std::string &text)
       -> bool; // checks whether line endings are consistent (same throughout the text)
-    static void conv(
+    static auto conv(
       const std::string &src_text, Eol_format src_eol_format, std::string &dest_text,
-      Eol_format dest_eol_format); // converts between 2 known eol formats, line endings consistency is implied
-    static void fix(const std::string &src_text, std::string &dest_text,
-                    Eol_format eol_format); // aligns eol format to the specified
+      Eol_format dest_eol_format) -> void; // converts between 2 known eol formats, line endings consistency is implied
+    static auto fix(const std::string &src_text, std::string &dest_text,
+                    Eol_format eol_format) -> void; // aligns eol format to the specified
 
     static auto is_eol(const char *sym_ptr) -> bool // reliably determines whether the given string position contains
                                                     // last symbol of eol sequence, line ending inconsistency is allowed

@@ -33,14 +33,14 @@
 #include <string>
 
 // Helper to get env var or default
-static std::string getEnvOrDefault(const char* var, const char* def) {
+static auto getEnvOrDefault(const char* var, const char* def) -> std::string {
   const char* val = std::getenv(var);
   return val ? std::string(val) : std::string(def);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void setupConnectionEnvironment(const db_mgmt_ConnectionRef &connectionProperties, db_mgmt_DriverRef driver) {
+auto setupConnectionEnvironment(const db_mgmt_ConnectionRef &connectionProperties, db_mgmt_DriverRef driver) -> void {
   grt::DictRef conn_params(true);
   conn_params.set("hostName", grt::StringRef(getEnvOrDefault("DB_HOST", "localhost")));
   conn_params.set("port", grt::IntegerRef(std::stoi(getEnvOrDefault("DB_PORT", "3306"))));
@@ -60,7 +60,7 @@ void setupConnectionEnvironment(const db_mgmt_ConnectionRef &connectionPropertie
 
 //----------------------------------------------------------------------------------------------------------------------
 
-sql::ConnectionWrapper createConnectionForImport() {
+auto createConnectionForImport() -> sql::ConnectionWrapper {
   db_mgmt_ConnectionRef properties(grt::Initialized);
   setupConnectionEnvironment(properties);
 

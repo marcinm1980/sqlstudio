@@ -50,7 +50,7 @@ GRT_MODULE_ENTRY_POINT(WbModelImpl);
 
 // plugin registration
 
-static void def_export_view_plugin(const char *aName, const char *aCaption, grt::ListRef<app_Plugin> &list) {
+static auto def_export_view_plugin(const char *aName, const char *aCaption, grt::ListRef<app_Plugin> &list) -> void {
   app_PluginRef plugin(grt::Initialized);
   app_PluginObjectInputRef pdef(grt::Initialized);
 
@@ -92,7 +92,7 @@ static void def_export_view_plugin(const char *aName, const char *aCaption, grt:
   }
 */
 
-static void def_export_catalog_plugin(const char *aName, const char *aCaption, grt::ListRef<app_Plugin> &list) {
+static auto def_export_catalog_plugin(const char *aName, const char *aCaption, grt::ListRef<app_Plugin> &list) -> void {
   app_PluginRef plugin(grt::Initialized);
   app_PluginObjectInputRef pdef1(grt::Initialized);
   app_PluginObjectInputRef pdef2(grt::Initialized);
@@ -137,8 +137,8 @@ static void def_export_catalog_plugin(const char *aName, const char *aCaption, g
   }
 */
 
-static void def_figure_selection_plugin(const std::string &aName, const std::string &aCaption, const std::string &aCard,
-                                        grt::ListRef<app_Plugin> &list) {
+static auto def_figure_selection_plugin(const std::string &aName, const std::string &aCaption, const std::string &aCard,
+                                        grt::ListRef<app_Plugin> &list) -> void {
   app_PluginRef plugin(grt::Initialized);
   app_PluginSelectionInputRef pdef(grt::Initialized);
 
@@ -159,7 +159,7 @@ static void def_figure_selection_plugin(const std::string &aName, const std::str
   list.insert(plugin);
 }
 
-ListRef<app_Plugin> WbModelImpl::getPluginInfo() {
+auto WbModelImpl::getPluginInfo() -> ListRef<app_Plugin> {
   ListRef<app_Plugin> list(true);
 
   def_export_view_plugin("center", "Center Diagram Contents", list);
@@ -188,7 +188,7 @@ struct Rect {
   double height;
 };
 
-inline Rect figure_coords(const model_FigureRef &figure) {
+inline auto figure_coords(const model_FigureRef &figure) -> Rect {
   return Rect(figure->left(), figure->top(), figure->width(), figure->height());
 }
 
@@ -210,7 +210,7 @@ void overwrite_default_option(T &value, const std::string &name, const grt::Dict
 
 //----------------------------------------------------------------------
 
-std::string WbModelImpl::getTemplateDirFromName(const std::string &template_name) {
+auto WbModelImpl::getTemplateDirFromName(const std::string &template_name) -> std::string {
   // get pointer to the GRT
 
   std::string template_base_dir =
@@ -234,20 +234,20 @@ WbModelImpl::WbModelImpl(grt::CPPModuleLoader *ldr)
   : grt::ModuleImplBase(ldr), _use_objects_from_catalog(false), _undo_man(NULL) {
 }
 
-void WbModelImpl::begin_undo_group() {
+auto WbModelImpl::begin_undo_group() -> void {
   _undo_man = grt::GRT::get()->get_undo_manager();
   if (_undo_man)
     _undo_man->begin_undo_group();
 }
 
-void WbModelImpl::end_undo_group(const std::string &action_desc) {
+auto WbModelImpl::end_undo_group(const std::string &action_desc) -> void {
   if (_undo_man) {
     _undo_man->end_undo_group();
     _undo_man->set_action_description(action_desc);
   }
 }
 
-int WbModelImpl::autolayout(model_DiagramRef view) {
+auto WbModelImpl::autolayout(model_DiagramRef view) -> int {
   int result = 0;
   ListRef<model_Object> selection = view->selection();
   ListRef<model_Layer> layers = view->layers();
@@ -278,31 +278,31 @@ class Layouter {
 public:
   Layouter(const model_LayerRef &layer);
 
-  void add_figure_to_layout(const model_FigureRef &figure);
-  void connect(const model_FigureRef &f1, const model_FigureRef &f2);
+  auto add_figure_to_layout(const model_FigureRef &figure) -> void;
+  auto connect(const model_FigureRef &f1, const model_FigureRef &f2) -> void;
 
-  int do_layout();
+  auto do_layout() -> int;
 
 private:
   struct Node;
 
-  static bool compare_node_links(const Node &n1, const Node &n2);
+  static auto compare_node_links(const Node &n1, const Node &n2) -> bool;
 
-  bool shuffle();
-  double calc_energy();
-  double calc_node_energy(const std::size_t i, const Node &n);
-  long distance_to_node(const std::size_t n1, const std::size_t n2, bool *is_horiz = NULL);
-  double calc_node_pair(const std::size_t i1, const std::size_t i2);
-  void prepare_layout_stages();
+  auto shuffle() -> bool;
+  auto calc_energy() -> double;
+  auto calc_node_energy(const std::size_t i, const Node &n) -> double;
+  auto distance_to_node(const std::size_t n1, const std::size_t n2, bool *is_horiz = NULL) -> long;
+  auto calc_node_pair(const std::size_t i1, const std::size_t i2) -> double;
+  auto prepare_layout_stages() -> void;
 
   const double _w;
   const double _h;
 
   struct Node {
     Node(const model_FigureRef &figure);
-    void move_by(const long dx, const long dy);
-    void move(const long x, const long y);
-    bool is_linked_to(const ssize_t node) const;
+    auto move_by(const long dx, const long dy) -> void;
+    auto move(const long x, const long y) -> void;
+    auto is_linked_to(const ssize_t node) const -> bool;
 
     long w;
     long h;
@@ -335,7 +335,7 @@ Layouter::Node::Node(const model_FigureRef &figure)
 }
 
 //------------------------------------------------------------------------------
-void Layouter::Node::move(const long x, const long y) {
+auto Layouter::Node::move(const long x, const long y) -> void {
   x1 = x;
   y1 = y;
   x2 = x1 + w;
@@ -343,7 +343,7 @@ void Layouter::Node::move(const long x, const long y) {
 }
 
 //------------------------------------------------------------------------------
-void Layouter::Node::move_by(const long dx, const long dy) {
+auto Layouter::Node::move_by(const long dx, const long dy) -> void {
   x1 += dx;
   y1 += dy;
   x2 += dx;
@@ -351,7 +351,7 @@ void Layouter::Node::move_by(const long dx, const long dy) {
 }
 
 //------------------------------------------------------------------------------
-bool Layouter::Node::is_linked_to(const ssize_t node) const {
+auto Layouter::Node::is_linked_to(const ssize_t node) const -> bool {
   bool found = false;
 
   for (ssize_t i = linked.size() - 1; i >= 0; --i) {
@@ -374,7 +374,7 @@ Layouter::Layouter(const model_LayerRef &layer)
 }
 
 //------------------------------------------------------------------------------
-void Layouter::add_figure_to_layout(const model_FigureRef &figure) {
+auto Layouter::add_figure_to_layout(const model_FigureRef &figure) -> void {
   for (std::size_t i = 0; i < _all_figures.size(); ++i) {
     if (_all_figures[i].fig == figure) {
       _figures.push_back(figure);
@@ -383,7 +383,7 @@ void Layouter::add_figure_to_layout(const model_FigureRef &figure) {
 }
 
 //------------------------------------------------------------------------------
-void Layouter::connect(const model_FigureRef &f1, const model_FigureRef &f2) {
+auto Layouter::connect(const model_FigureRef &f1, const model_FigureRef &f2) -> void {
   ssize_t n1 = -1;
   ssize_t n2 = -1;
 
@@ -406,7 +406,7 @@ void Layouter::connect(const model_FigureRef &f1, const model_FigureRef &f2) {
 }
 
 //------------------------------------------------------------------------------
-long Layouter::distance_to_node(const std::size_t i1, const std::size_t i2, bool *is_horiz) {
+auto Layouter::distance_to_node(const std::size_t i1, const std::size_t i2, bool *is_horiz) -> long {
   const Node &n1 = _figures[i1];
   const Node &n2 = _figures[i2];
   const long x11 = n1.x1;
@@ -471,12 +471,12 @@ long Layouter::distance_to_node(const std::size_t i1, const std::size_t i2, bool
 }
 
 //------------------------------------------------------------------------------
-inline double line_len2(long x1, long y1, long x2, long y2) {
+inline auto line_len2(long x1, long y1, long x2, long y2) -> double {
   return sqrt(pow((double)(x2 - x1), 2) + pow((double)(y2 - y1), 2));
 }
 
 //------------------------------------------------------------------------------
-double Layouter::calc_node_pair(const std::size_t i1, const std::size_t i2) {
+auto Layouter::calc_node_pair(const std::size_t i1, const std::size_t i2) -> double {
   const Node *n1 = &(_figures[i1]);
   const Node *n2 = &(_figures[i2]);
   const bool is_linked = n1->is_linked_to(i2) || n2->is_linked_to(i1);
@@ -552,7 +552,7 @@ double Layouter::calc_node_pair(const std::size_t i1, const std::size_t i2) {
 }
 
 //------------------------------------------------------------------------------
-double Layouter::calc_energy() {
+auto Layouter::calc_energy() -> double {
   double e = 0.0;
 
   std::size_t size = _figures.size();
@@ -572,7 +572,7 @@ double Layouter::calc_energy() {
 }
 
 //------------------------------------------------------------------------------
-double Layouter::calc_node_energy(const std::size_t node_i, const Node &node) {
+auto Layouter::calc_node_energy(const std::size_t node_i, const Node &node) -> double {
   double e = 0.0;
 
   if ((node.x1 < 0) || (node.y1 < 0) || (node.x2 + 20 > _w) || (node.y2 + 20 > _h))
@@ -587,7 +587,7 @@ double Layouter::calc_node_energy(const std::size_t node_i, const Node &node) {
 }
 
 //------------------------------------------------------------------------------
-bool Layouter::shuffle() {
+auto Layouter::shuffle() -> bool {
   bool found_smaller_energy = false;
   const int step = (rand() % 5) + 1;
 
@@ -617,12 +617,12 @@ bool Layouter::shuffle() {
 }
 
 //------------------------------------------------------------------------------
-bool Layouter::compare_node_links(const Node &n1, const Node &n2) {
+auto Layouter::compare_node_links(const Node &n1, const Node &n2) -> bool {
   return n1.linked.size() > n2.linked.size();
 }
 
 //------------------------------------------------------------------------------
-void Layouter::prepare_layout_stages() {
+auto Layouter::prepare_layout_stages() -> void {
   double total_w = 0;
   double total_h = 0;
   std::sort(_figures.begin(), _figures.end(), compare_node_links);
@@ -645,7 +645,7 @@ void Layouter::prepare_layout_stages() {
 }
 
 //------------------------------------------------------------------------------
-int Layouter::do_layout() {
+auto Layouter::do_layout() -> int {
   prepare_layout_stages();
 
   _min_energy = calc_energy();
@@ -674,7 +674,7 @@ int Layouter::do_layout() {
 }
 
 //------------------------------------------------------------------------------
-int WbModelImpl::do_autolayout(const model_LayerRef &layer, ListRef<model_Object> &selection) {
+auto WbModelImpl::do_autolayout(const model_LayerRef &layer, ListRef<model_Object> &selection) -> int {
   Layouter layout(layer);
   if (selection.count() > 0) {
     for (std::size_t i = 0; i < selection->count(); ++i) {
@@ -700,7 +700,7 @@ int WbModelImpl::do_autolayout(const model_LayerRef &layer, ListRef<model_Object
   return layout.do_layout();
 }
 
-static bool calculate_view_size(const app_PageSettingsRef &page, double &width, double &height) {
+static auto calculate_view_size(const app_PageSettingsRef &page, double &width, double &height) -> bool {
   if (page->paperType().is_valid()) {
     width = page->paperType()->width();
     height = page->paperType()->height();
@@ -722,9 +722,9 @@ static bool calculate_view_size(const app_PageSettingsRef &page, double &width, 
   }
 }
 
-studio_physical_DiagramRef WbModelImpl::add_model_view(
+auto WbModelImpl::add_model_view(
   const db_CatalogRef &catalog, int xpages,
-  int ypages) { // XXX TODO move this to MySqlStudio module so we can reuse the same code as from wb_component
+  int ypages) -> studio_physical_DiagramRef { // XXX TODO move this to MySqlStudio module so we can reuse the same code as from wb_component
   // also add code to place db objects or figures in canvas
   studio_physical_DiagramRef view(grt::Initialized);
 
@@ -749,7 +749,7 @@ studio_physical_DiagramRef WbModelImpl::add_model_view(
   return view;
 }
 
-static studio_physical_DiagramRef create_view_for_object_count(studio_physical_ModelRef model, int object_count) {
+static auto create_view_for_object_count(studio_physical_ModelRef model, int object_count) -> studio_physical_DiagramRef {
   int xpages = 2, ypages = 1;
   int pages;
   // guesstimate about 15 objects per page
@@ -768,7 +768,7 @@ static studio_physical_DiagramRef create_view_for_object_count(studio_physical_M
   return view;
 }
 
-int WbModelImpl::createDiagramWithObjects(studio_physical_ModelRef model, grt::ListRef<GrtObject> objects) {
+auto WbModelImpl::createDiagramWithObjects(studio_physical_ModelRef model, grt::ListRef<GrtObject> objects) -> int {
   std::size_t object_count = objects.count();
 
   if (object_count > 0) {
@@ -794,7 +794,7 @@ int WbModelImpl::createDiagramWithObjects(studio_physical_ModelRef model, grt::L
   return 0;
 }
 
-int WbModelImpl::createDiagramWithCatalog(studio_physical_ModelRef model, db_CatalogRef catalog) {
+auto WbModelImpl::createDiagramWithCatalog(studio_physical_ModelRef model, db_CatalogRef catalog) -> int {
   std::size_t object_count = 0;
   ListRef<db_Schema> schemata = catalog->schemata();
   for (std::size_t n = 0, count = schemata.count(); n < count; ++n) {
@@ -842,7 +842,7 @@ int WbModelImpl::createDiagramWithCatalog(studio_physical_ModelRef model, db_Cat
   return 0;
 }
 
-int WbModelImpl::do_autoplace_any_list(const model_DiagramRef &view, ListRef<GrtObject> &obj_list) {
+auto WbModelImpl::do_autoplace_any_list(const model_DiagramRef &view, ListRef<GrtObject> &obj_list) -> int {
   if (!obj_list.is_valid())
     return 0;
   std::size_t count = obj_list.count();
@@ -875,9 +875,9 @@ int WbModelImpl::do_autoplace_any_list(const model_DiagramRef &view, ListRef<Grt
   return 0;
 }
 
-int WbModelImpl::autoplace_relations(
+auto WbModelImpl::autoplace_relations(
   const model_DiagramRef &view,
-  const ListRef<db_Table> &tables) { // XXX TODO remove this (should be handled automatically by wb_component_physical)
+  const ListRef<db_Table> &tables) -> int { // XXX TODO remove this (should be handled automatically by wb_component_physical)
   for (std::size_t t = 0, count = tables.count(); t < count; ++t) {
     db_TableRef table = tables.get(t);
     ListRef<db_ForeignKey> fkeys = table->foreignKeys();
@@ -887,8 +887,8 @@ int WbModelImpl::autoplace_relations(
   return 0;
 }
 
-void WbModelImpl::handle_fklist_change(const model_DiagramRef &view, const db_TableRef &table,
-                                       const db_ForeignKeyRef &fk, bool added) { // XXX TODO remove this
+auto WbModelImpl::handle_fklist_change(const model_DiagramRef &view, const db_TableRef &table,
+                                       const db_ForeignKeyRef &fk, bool added) -> void { // XXX TODO remove this
   if (!view.is_valid())
     return;
 
@@ -978,7 +978,7 @@ void WbModelImpl::handle_fklist_change(const model_DiagramRef &view, const db_Ta
   }
 }
 
-int WbModelImpl::center(model_DiagramRef view) {
+auto WbModelImpl::center(model_DiagramRef view) -> int {
   Rect model_bounds;
   model_LayerRef rootLayer(view->rootLayer());
   double view_width = rootLayer->width();
@@ -1042,7 +1042,7 @@ int WbModelImpl::center(model_DiagramRef view) {
   return 0;
 }
 
-int WbModelImpl::fitObjectsToContents(const grt::ListRef<model_Object> &selection) {
+auto WbModelImpl::fitObjectsToContents(const grt::ListRef<model_Object> &selection) -> int {
   for (std::size_t c = selection.count(), i = 0; i < c; i++) {
     if (selection[i].is_instance<model_Figure>()) {
       model_FigureRef figure(model_FigureRef::cast_from(selection[i]));
@@ -1055,7 +1055,7 @@ int WbModelImpl::fitObjectsToContents(const grt::ListRef<model_Object> &selectio
   return 0;
 }
 
-int WbModelImpl::expandAllObjects(model_DiagramRef view) {
+auto WbModelImpl::expandAllObjects(model_DiagramRef view) -> int {
   grt::ListRef<model_Figure> figures(view->figures());
 
   for (std::size_t c = figures.count(), i = 0; i < c; i++) {
@@ -1065,7 +1065,7 @@ int WbModelImpl::expandAllObjects(model_DiagramRef view) {
   return 0;
 }
 
-int WbModelImpl::collapseAllObjects(model_DiagramRef view) {
+auto WbModelImpl::collapseAllObjects(model_DiagramRef view) -> int {
   grt::ListRef<model_Figure> figures(view->figures());
 
   for (std::size_t c = figures.count(), i = 0; i < c; i++) {

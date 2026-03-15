@@ -41,7 +41,7 @@ DiagramSizeForm::~DiagramSizeForm() {
   delete _be;
 }
 
-void DiagramSizeForm::spin_changed() {
+auto DiagramSizeForm::spin_changed() -> void {
   Gtk::SpinButton *spin;
   _xml->get_widget("spinbutton1", spin);
   _be->set_xpages(spin->get_value());
@@ -50,7 +50,7 @@ void DiagramSizeForm::spin_changed() {
   _be->set_ypages(spin->get_value());
 }
 
-void DiagramSizeForm::changed() {
+auto DiagramSizeForm::changed() -> void {
   Gtk::SpinButton *spin;
   _xml->get_widget("spinbutton1", spin);
   spin->set_value(_be->get_xpages());
@@ -59,7 +59,7 @@ void DiagramSizeForm::changed() {
   spin->set_value(_be->get_ypages());
 }
 
-void DiagramSizeForm::realize_be() {
+auto DiagramSizeForm::realize_be() -> void {
   _be = wb::WBContextUI::get()->create_diagram_options_be(_canvas->get_canvas());
   _be->update_size();
 
@@ -83,7 +83,7 @@ void DiagramSizeForm::realize_be() {
   btn->signal_clicked().connect(sigc::mem_fun(this, &DiagramSizeForm::ok_clicked));
 }
 
-void DiagramSizeForm::ok_clicked() {
+auto DiagramSizeForm::ok_clicked() -> void {
   Gtk::Entry *entry = 0;
   _xml->get_widget("name_entry", entry);
   _be->set_name(entry->get_text());
@@ -91,7 +91,7 @@ void DiagramSizeForm::ok_clicked() {
   _be->commit();
 }
 
-void DiagramSizeForm::init() {
+auto DiagramSizeForm::init() -> void {
   Gtk::Frame *frame = 0;
 
   _xml->get_widget("frame", frame);
@@ -103,7 +103,7 @@ void DiagramSizeForm::init() {
   _canvas->signal_realize().connect_notify(sigc::mem_fun(this, &DiagramSizeForm::realize_be));
 }
 
-DiagramSizeForm *DiagramSizeForm::create() {
+auto DiagramSizeForm::create() -> DiagramSizeForm * {
   Glib::RefPtr<Gtk::Builder> ui =
     Gtk::Builder::create_from_file(bec::GRTManager::get()->get_data_file_path("diagram_size_form.glade"));
 

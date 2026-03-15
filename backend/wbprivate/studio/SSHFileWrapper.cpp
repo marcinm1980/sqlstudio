@@ -41,11 +41,11 @@ ssh::SSHFileWrapper::~SSHFileWrapper() {
   sftp_close(_file);
 }
 
-grt::StringRef ssh::SSHFileWrapper::getPath() {
+auto ssh::SSHFileWrapper::getPath() -> grt::StringRef {
   return _path;
 }
 
-grt::StringRef ssh::SSHFileWrapper::read(const size_t length) {
+auto ssh::SSHFileWrapper::read(const size_t length) -> grt::StringRef {
   auto lock = _session->lockSession();
   std::vector<char> buffer;
   logDebug3("Resizing read buffer: %zu\n", length);
@@ -60,7 +60,7 @@ grt::StringRef ssh::SSHFileWrapper::read(const size_t length) {
   return buff;
 }
 
-grt::StringRef ssh::SSHFileWrapper::readline() {
+auto ssh::SSHFileWrapper::readline() -> grt::StringRef {
   auto lock = _session->lockSession();
   std::string buff;
   size_t bytesCount = 0;
@@ -84,12 +84,12 @@ grt::StringRef ssh::SSHFileWrapper::readline() {
   return buff;
 }
 
-grt::IntegerRef ssh::SSHFileWrapper::seek(const size_t offset) {
+auto ssh::SSHFileWrapper::seek(const size_t offset) -> grt::IntegerRef {
   auto lock = _session->lockSession();
   return sftp_seek64(_file, offset);
 }
 
-grt::IntegerRef ssh::SSHFileWrapper::tell() {
+auto ssh::SSHFileWrapper::tell() -> grt::IntegerRef {
   auto lock = _session->lockSession();
   return (std::size_t)sftp_tell64(_file);
 }

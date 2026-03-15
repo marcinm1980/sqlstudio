@@ -53,9 +53,9 @@ namespace base {
     auto load(const std::string &file_name) -> bool;
     auto save(const std::string &file_name) -> bool;
 
-    void clear_includes(const std::string &section_name);
-    void add_include(const std::string &section_name, const std::string &include);
-    void add_include_dir(const std::string &section_name, const std::string &include);
+    auto clear_includes(const std::string &section_name) -> void;
+    auto add_include(const std::string &section_name, const std::string &include) -> void;
+    auto add_include_dir(const std::string &section_name, const std::string &include) -> void;
     auto get_includes(const std::string &section_name) -> std::vector<std::string>;
 
     auto get_value(std::string key, std::string section = "") -> std::string;
@@ -81,7 +81,7 @@ namespace base {
     auto section_count() -> int;
     auto key_count() -> int;
     auto key_count_for_secton(const std::string &section_name) -> int;
-    void clear();
+    auto clear() -> void;
     auto is_dirty() -> bool;
     auto has_key(const std::string &key, const std::string &section) -> bool;
     auto has_section(const std::string &section_name) -> bool;

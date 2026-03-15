@@ -131,7 +131,7 @@ Manager::~Manager() {
 
 //--------------------------------------------------------------------------------------------------
 
-Manager ^ MySQL::Forms::Manager::get_instance() {
+auto MySQL::Forms::Manager::get_instance() -> Manager ^ {
   // The manager is created very early in the app startup process from the main thread, so this
   // should never be a concurrency problem here.
   if (singleton == nullptr)
@@ -141,7 +141,7 @@ Manager ^ MySQL::Forms::Manager::get_instance() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Manager::instance_created() {
+auto Manager::instance_created() -> void {
   // Atomic increment shouldn't be necessary as we always create and destroy wrappers in the
   // main thread. But better safe than sorry.
   Interlocked::Increment(created);
@@ -149,7 +149,7 @@ void Manager::instance_created() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Manager::instance_destroyed() {
+auto Manager::instance_destroyed() -> void {
   Interlocked::Increment(destroyed);
 }
 

@@ -39,9 +39,9 @@ namespace mtemplate {
 
   static const base::utf8string TEMPLATE_TAG_CHARACTERS("#/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 
-  std::size_t GetTextLength(const base::utf8string &temp_template, bool check_new_lines = true);
-  bool IsBlankString(const base::utf8string &text);
-  base::utf8string FormatErrorLog(const base::utf8string &template_string, std::size_t pos);
+  auto GetTextLength(const base::utf8string &temp_template, bool check_new_lines = true) -> std::size_t;
+  auto IsBlankString(const base::utf8string &text) -> bool;
+  auto FormatErrorLog(const base::utf8string &template_string, std::size_t pos) -> base::utf8string;
 
   //-----------------------------------------------------------------------------------
   //  NodeText stuff
@@ -50,7 +50,7 @@ namespace mtemplate {
     : NodeTextInterface(TemplateObject_Text, text, length) {
   }
 
-  bool NodeText::expand(TemplateOutput *output, DictionaryInterface *dict) {
+  auto NodeText::expand(TemplateOutput *output, DictionaryInterface *dict) -> bool {
     if (isHidden())
       return true;
 
@@ -58,13 +58,13 @@ namespace mtemplate {
     return true;
   }
   //-----------------------------------------------------------------------------------
-  void NodeText::dump(int indent) {
+  auto NodeText::dump(int indent) -> void {
     base::utf8string hidden = isHidden() ? "[hidden]" : "";
     base::utf8string indent_str(indent * 2, ' ');
     std::cout << indent_str << "[Text]" << hidden << " = " << _text << std::endl;
   }
   //-----------------------------------------------------------------------------------
-  NodeText *NodeText::parse(const base::utf8string &template_string, PARSE_TYPE type) {
+  auto NodeText::parse(const base::utf8string &template_string, PARSE_TYPE type) -> NodeText * {
     std::size_t end = GetTextLength(template_string);
 
     if (end == base::utf8string::npos)
@@ -78,13 +78,13 @@ namespace mtemplate {
   //-----------------------------------------------------------------------------------
   //  NodeNewLine stuff
   //-----------------------------------------------------------------------------------
-  void NodeNewLine::dump(int indent) {
+  auto NodeNewLine::dump(int indent) -> void {
     base::utf8string hidden = isHidden() ? "[hidden]" : "";
     base::utf8string indent_str(indent * 2, ' ');
     std::cout << indent_str << "[NewLine]" << hidden << std::endl;
   }
 
-  bool NodeNewLine::expand(TemplateOutput *output, DictionaryInterface *dict) {
+  auto NodeNewLine::expand(TemplateOutput *output, DictionaryInterface *dict) -> bool {
     if (isHidden())
       return true;
 
@@ -92,13 +92,13 @@ namespace mtemplate {
     return true;
   }
 
-  NodeNewLine *NodeNewLine::parse(const base::utf8string &template_string, PARSE_TYPE type) {
+  auto NodeNewLine::parse(const base::utf8string &template_string, PARSE_TYPE type) -> NodeNewLine * {
     return new NodeNewLine();
   }
   //-----------------------------------------------------------------------------------
   //  NodeVariable stuff
   //-----------------------------------------------------------------------------------
-  bool NodeVariable::expand(TemplateOutput *output, DictionaryInterface *dict) {
+  auto NodeVariable::expand(TemplateOutput *output, DictionaryInterface *dict) -> bool {
     if (isHidden())
       return true;
 
@@ -117,13 +117,13 @@ namespace mtemplate {
     return true;
   }
   //-----------------------------------------------------------------------------------
-  void NodeVariable::dump(int indent) {
+  auto NodeVariable::dump(int indent) -> void {
     base::utf8string hidden = isHidden() ? "[hidden]" : "";
     base::utf8string indent_str(indent * 2, ' ');
     std::cout << indent_str << "[Variable]" << hidden << " = " << _text << std::endl;
   }
   //-----------------------------------------------------------------------------------
-  NodeVariable *NodeVariable::parse(const base::utf8string &template_string, PARSE_TYPE type) {
+  auto NodeVariable::parse(const base::utf8string &template_string, PARSE_TYPE type) -> NodeVariable * {
     base::utf8string::size_type end = template_string.find(TEMPLATE_TAG_END);
 
     if (end == base::utf8string::npos)
@@ -163,7 +163,7 @@ namespace mtemplate {
     : NodeInterface(TemplateObject_Section, text, length), _contents(contents), _is_separator(false) {
   }
   //-----------------------------------------------------------------------------------
-  bool NodeSection::expand(TemplateOutput *output, DictionaryInterface *dict) {
+  auto NodeSection::expand(TemplateOutput *output, DictionaryInterface *dict) -> bool {
     if (isHidden())
       return true;
 
@@ -186,7 +186,7 @@ namespace mtemplate {
     return true;
   }
   //-----------------------------------------------------------------------------------
-  void NodeSection::dump(int indent) {
+  auto NodeSection::dump(int indent) -> void {
     base::utf8string hidden = isHidden() ? "[hidden]" : "";
     base::utf8string indent_str(indent * 2, ' ');
     std::cout << indent_str << "[Section]" << hidden << " = " << _text << std::endl << indent_str << "{" << std::endl;
@@ -197,7 +197,7 @@ namespace mtemplate {
     std::cout << indent_str << "}" << std::endl;
   }
   //-----------------------------------------------------------------------------------
-  NodeSection *NodeSection::parse(const base::utf8string &template_string, PARSE_TYPE type) {
+  auto NodeSection::parse(const base::utf8string &template_string, PARSE_TYPE type) -> NodeSection * {
     base::utf8string::size_type end = template_string.find(TEMPLATE_TAG_END);
 
     if (end == base::utf8string::npos)
@@ -241,7 +241,7 @@ namespace mtemplate {
   //-----------------------------------------------------------------------------------
   //  Template stuff
   //-----------------------------------------------------------------------------------
-  std::size_t GetTextLength(const base::utf8string &temp_template, bool check_new_lines) {
+  auto GetTextLength(const base::utf8string &temp_template, bool check_new_lines) -> std::size_t {
     std::size_t begin = 0;
 
     while (begin < temp_template.size()) {
@@ -272,7 +272,7 @@ namespace mtemplate {
     return base::utf8string::npos;
   }
 
-  TemplateDocument parseTemplate(const base::utf8string &template_string, PARSE_TYPE type) {
+  auto parseTemplate(const base::utf8string &template_string, PARSE_TYPE type) -> TemplateDocument {
     TemplateDocument doc;
     base::utf8string temp_template = template_string;
 
@@ -354,12 +354,12 @@ namespace mtemplate {
     return doc;
   }
 
-  bool IsBlankString(const base::utf8string &text) {
+  auto IsBlankString(const base::utf8string &text) -> bool {
     return text.find_first_not_of(" \t\n\v\f\r") == base::utf8string::npos;
   }
 
-  base::utf8string FormatErrorLog(const base::utf8string &template_string, std::size_t pos,
-                                  const base::utf8string &error) {
+  auto FormatErrorLog(const base::utf8string &template_string, std::size_t pos,
+                                  const base::utf8string &error) -> base::utf8string {
     std::size_t eol = template_string.find('\n');
     if (eol == base::utf8string::npos)
       eol = template_string.length();

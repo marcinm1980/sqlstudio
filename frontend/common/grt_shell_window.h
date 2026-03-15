@@ -52,34 +52,34 @@ class GRTShellWindow : public mforms::Form {
 public:
   GRTShellWindow(wb::WBContext *context);
 
-  virtual void show(bool flag = true);
+  virtual auto show(bool flag = true) -> void;
 
-  bool execute_script(const std::string &script, const std::string &language);
+  auto execute_script(const std::string &script, const std::string &language) -> bool;
 
-  GRTCodeEditor *add_editor(bool is_script, const std::string &language);
-  void add_new_script();
-  void open_script_file();
+  auto add_editor(bool is_script, const std::string &language) -> GRTCodeEditor *;
+  auto add_new_script() -> void;
+  auto open_script_file() -> void;
 
-  GRTCodeEditor *show_file_at_line(const std::string &path, int line);
+  auto show_file_at_line(const std::string &path, int line) -> GRTCodeEditor *;
 
-  void open_file_in_editor(const std::string &path, bool is_script);
+  auto open_file_in_editor(const std::string &path, bool is_script) -> void;
 
-  void close_editor(GRTCodeEditor *editor);
-  void refresh_files();
+  auto close_editor(GRTCodeEditor *editor) -> void;
+  auto refresh_files() -> void;
 
-  void set_editor_title(GRTCodeEditor *editor, const std::string &title);
+  auto set_editor_title(GRTCodeEditor *editor, const std::string &title) -> void;
 
-  bool request_quit();
+  auto request_quit() -> bool;
 
-  bool add_output(const std::string &text);
-  void activate_output_tab();
+  auto add_output(const std::string &text) -> bool;
+  auto activate_output_tab() -> void;
 
-  GRTCodeEditor *get_editor_for(const std::string &path, bool select_tab);
-  GRTCodeEditor *get_active_editor();
+  auto get_editor_for(const std::string &path, bool select_tab) -> GRTCodeEditor *;
+  auto get_active_editor() -> GRTCodeEditor *;
 
-  void on_file_save(const std::string &file);
+  auto on_file_save(const std::string &file) -> void;
 
-  bool can_close();
+  auto can_close() -> bool;
 
 protected:
   wb::WBContext *_context;
@@ -172,98 +172,98 @@ protected:
   bool _userSnippetsLoaded;
   bool _snippetClicked;
 
-  void refresh_all();
-  void side_tab_changed();
+  auto refresh_all() -> void;
+  auto side_tab_changed() -> void;
 
-  void set_splitter_positions();
+  auto set_splitter_positions() -> void;
 
-  bool capture_output(const grt::Message &msg, void *sender, bool send_to_output);
+  auto capture_output(const grt::Message &msg, void *sender, bool send_to_output) -> bool;
 
-  void shell_action(mforms::TextEntryAction action);
+  auto shell_action(mforms::TextEntryAction action) -> void;
 
-  void handle_prompt(const std::string &text);
-  void handle_output(const std::string &text);
-  void handle_error(const std::string &text, const std::string &detail);
+  auto handle_prompt(const std::string &text) -> void;
+  auto handle_output(const std::string &text) -> void;
+  auto handle_error(const std::string &text, const std::string &detail) -> void;
 
-  void handle_global_menu(const std::string &action);
+  auto handle_global_menu(const std::string &action) -> void;
 
-  void global_selected();
-  void class_selected();
-  void module_selected();
-  void notif_selected();
+  auto global_selected() -> void;
+  auto class_selected() -> void;
+  auto module_selected() -> void;
+  auto notif_selected() -> void;
 
-  void delete_selected_file();
+  auto delete_selected_file() -> void;
 
-  void file_list_activated(mforms::TreeNodeRef node, int column);
-  void add_files_from_dir(mforms::TreeNodeRef parent, const std::string &dir, bool is_script);
+  auto file_list_activated(mforms::TreeNodeRef node, int column) -> void;
+  auto add_files_from_dir(mforms::TreeNodeRef parent, const std::string &dir, bool is_script) -> void;
 
-  void load_snippets_from(const std::string &path);
-  void save_snippets();
-  void refresh_snippets();
-  void add_snippet();
-  void del_snippet();
-  void copy_snippet();
-  void run_snippet();
-  void scriptize_snippet();
-  void snippet_selected();
-  void snippet_changed(int line, int linesAdded);
+  auto load_snippets_from(const std::string &path) -> void;
+  auto save_snippets() -> void;
+  auto refresh_snippets() -> void;
+  auto add_snippet() -> void;
+  auto del_snippet() -> void;
+  auto copy_snippet() -> void;
+  auto run_snippet() -> void;
+  auto scriptize_snippet() -> void;
+  auto snippet_selected() -> void;
+  auto snippet_changed(int line, int linesAdded) -> void;
 
-  void snippet_menu_activate(const std::string &action);
-  void file_menu_activate(const std::string &action);
+  auto snippet_menu_activate(const std::string &action) -> void;
+  auto file_menu_activate(const std::string &action) -> void;
 
-  void shell_closed();
+  auto shell_closed() -> void;
 
-  void load_state();
-  void save_state();
+  auto load_state() -> void;
+  auto save_state() -> void;
 
-  void on_tab_changed();
-  bool on_tab_closing(int index);
+  auto on_tab_changed() -> void;
+  auto on_tab_closing(int index) -> bool;
 
-  virtual mforms::MenuBar *get_menubar() {
+  virtual auto get_menubar() -> mforms::MenuBar * {
     return &_menu;
   }
 
 private:
-  void cut();
-  void copy();
-  void paste();
-  void select_all();
+  auto cut() -> void;
+  auto copy() -> void;
+  auto paste() -> void;
+  auto select_all() -> void;
 
-  mforms::Button *add_tool_button(const std::string &image, const std::function<void()> &action,
-                                  const std::string &tooltip, bool left = true);
-  void add_tool_separator();
+  auto add_tool_button(const std::string &image, const std::function<void()> &action,
+                                  const std::string &tooltip, bool left = true) -> mforms::Button *;
+  auto add_tool_separator() -> void;
 
-  void execute_file();
-  void save_file(bool save_as);
-  void close_tab();
-  void show_find_panel();
-  void show_replace_panel();
+  auto execute_file() -> void;
+  auto save_file(bool save_as) -> void;
+  auto close_tab() -> void;
+  auto show_find_panel() -> void;
+  auto show_replace_panel() -> void;
 
-  void refresh_modules_tree();
-  std::string get_module_node_description(const mforms::TreeNodeRef &node);
+  auto refresh_modules_tree() -> void;
+  auto get_module_node_description(const mforms::TreeNodeRef &node) -> std::string;
 
-  void refresh_classes_tree();
-  void refresh_classes_tree_by_name();
-  void refresh_classes_tree_by_hierarchy();
-  void refresh_classes_tree_by_package();
-  std::string get_class_node_description(const mforms::TreeNodeRef &node);
+  auto refresh_classes_tree() -> void;
+  auto refresh_classes_tree_by_name() -> void;
+  auto refresh_classes_tree_by_hierarchy() -> void;
+  auto refresh_classes_tree_by_package() -> void;
+  auto get_class_node_description(const mforms::TreeNodeRef &node) -> std::string;
 
-  void globals_expand_toggle(const mforms::TreeNodeRef &node, bool expanded);
-  std::string get_global_path_at_node(const mforms::TreeNodeRef &node);
-  grt::ValueRef get_global_at_node(const mforms::TreeNodeRef &node);
-  void refresh_globals_tree();
+  auto globals_expand_toggle(const mforms::TreeNodeRef &node, bool expanded) -> void;
+  auto get_global_path_at_node(const mforms::TreeNodeRef &node) -> std::string;
+  auto get_global_at_node(const mforms::TreeNodeRef &node) -> grt::ValueRef;
+  auto refresh_globals_tree() -> void;
 
-  void refresh_global_list();
+  auto refresh_global_list() -> void;
 
-  void refresh_notifs_list();
+  auto refresh_notifs_list() -> void;
 
 private:
-  void debug_step();
-  void debug_step_into();
-  void debug_step_out();
-  void debug_continue();
-  void debug_stop();
-  void debug_pause();
+  auto debug_step() -> void;
+  auto debug_step_into() -> void;
+  auto debug_step_out() -> void;
+  auto debug_continue() -> void;
+  auto debug_stop() -> void;
+  auto debug_pause() -> void;
 };
 
 #endif

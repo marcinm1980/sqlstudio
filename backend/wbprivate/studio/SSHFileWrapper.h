@@ -42,10 +42,10 @@ namespace ssh {
   public:
     SSHFileWrapper(std::shared_ptr<SSHSession> session, std::shared_ptr<SSHSftp> ftp, const std::string &path, const std::size_t maxFileLimit);
     virtual ~SSHFileWrapper();
-    virtual grt::StringRef getPath();
-    virtual grt::StringRef read(const size_t length);
-    virtual grt::StringRef readline();
-    virtual grt::IntegerRef seek(const size_t offset);
-    virtual grt::IntegerRef tell();
+    virtual auto getPath() -> grt::StringRef;
+    virtual auto read(const size_t length) -> grt::StringRef;
+    virtual auto readline() -> grt::StringRef;
+    virtual auto seek(const size_t offset) -> grt::IntegerRef;
+    virtual auto tell() -> grt::IntegerRef;
   };
 }  /* namespace ssh */

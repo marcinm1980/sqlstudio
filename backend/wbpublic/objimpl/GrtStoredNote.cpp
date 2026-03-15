@@ -30,20 +30,20 @@
 //================================================================================
 // GrtStoredNote
 
-void GrtStoredNote::init() {
+auto GrtStoredNote::init() -> void {
 }
 
 GrtStoredNote::~GrtStoredNote() {
 }
 
-grt::StringRef GrtStoredNote::getText() {
+auto GrtStoredNote::getText() -> grt::StringRef {
   grt::BaseListRef args(true);
   args.ginsert(filename());
   return grt::StringRef::cast_from(
     grt::GRT::get()->call_module_function("MySqlStudio", "getAttachedFileContents", args));
 }
 
-void GrtStoredNote::setText(const std::string &text) {
+auto GrtStoredNote::setText(const std::string &text) -> void {
   grt::BaseListRef args(true);
   args.ginsert(filename());
   args.ginsert(grt::StringRef(text));

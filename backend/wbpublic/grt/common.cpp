@@ -42,7 +42,7 @@ using namespace base;
 
 namespace bec {
 
-  static bool validate_member(const grt::ClassMember *member, const GrtObjectRef &object, bool &failed) {
+  static auto validate_member(const grt::ClassMember *member, const GrtObjectRef &object, bool &failed) -> bool {
     GrtObjectRef child;
     switch (member->type.base.type) {
       case grt::DictType:
@@ -122,7 +122,7 @@ namespace bec {
 
   /** Validates a GRT object tree for correct owner values
    */
-  bool validate_tree_structure(const grt::ObjectRef &object) {
+  auto validate_tree_structure(const grt::ObjectRef &object) -> bool {
     bool failed = false;
     grt::MetaClass *mc = object->get_metaclass();
     mc->foreach_member(std::bind(validate_member, std::placeholders::_1, GrtObjectRef::cast_from(object), failed));

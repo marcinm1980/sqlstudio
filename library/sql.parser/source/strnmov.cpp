@@ -27,8 +27,7 @@
 namespace mysql_parser
 {
 
-char *strnmov(register char *dst, register const char *src, uint n)
-{
+auto strnmov(register char *dst, register const char *src, uint n) -> char * {
   while (n-- != 0) {
     if (!(*dst++ = *src++)) {
       return (char*) dst-1;

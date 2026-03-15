@@ -43,31 +43,31 @@ namespace mforms {
       Gtk::RadioButtonGroup _radio_group;
       bool _radio_group_set;
 
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         if (_frame)
           return _frame;
         else
           return _evbox;
       }
-      virtual Gtk::Widget *get_inner() const {
+      virtual auto get_inner() const -> Gtk::Widget * {
         return _evbox;
       }
 
     protected:
       PanelImpl(::mforms::Panel *self, ::mforms::PanelType type);
-      static bool create(::mforms::Panel *self, ::mforms::PanelType type);
-      static void set_title(::mforms::Panel *self, const std::string &title);
-      static void set_active(::mforms::Panel *self, bool flag);
-      static bool get_active(::mforms::Panel *self);
-      static void set_back_color(::mforms::Panel *self, const std::string &color);
-      static void add(::mforms::Panel *self, ::mforms::View *child);
-      static void remove(::mforms::Panel *self, ::mforms::View *child);
+      static auto create(::mforms::Panel *self, ::mforms::PanelType type) -> bool;
+      static auto set_title(::mforms::Panel *self, const std::string &title) -> void;
+      static auto set_active(::mforms::Panel *self, bool flag) -> void;
+      static auto get_active(::mforms::Panel *self) -> bool;
+      static auto set_back_color(::mforms::Panel *self, const std::string &color) -> void;
+      static auto add(::mforms::Panel *self, ::mforms::View *child) -> void;
+      static auto remove(::mforms::Panel *self, ::mforms::View *child) -> void;
 
-      virtual void set_padding_impl(int left, int top, int right, int bottom);
+      virtual auto set_padding_impl(int left, int top, int right, int bottom) -> void;
 
     public:
-      static void init();
-      void add_to_radio_group(Gtk::RadioButton *radio); // called by radiobutton to add itself to a radio group
+      static auto init() -> void;
+      auto add_to_radio_group(Gtk::RadioButton *radio) -> void; // called by radiobutton to add itself to a radio group
       ~PanelImpl();
     };
   };

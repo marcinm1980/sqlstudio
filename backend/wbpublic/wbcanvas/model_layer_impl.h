@@ -44,38 +44,38 @@ class WBPUBLICBACKEND_PUBLIC_FUNC model_Layer::ImplData : public model_Object::I
 protected:
   mdc::AreaGroup *_area_group;
 
-  mdc::CanvasView *get_canvas_view() const;
-  bool is_canvas_view_valid();
+  auto get_canvas_view() const -> mdc::CanvasView *;
+  auto is_canvas_view_valid() -> bool;
 
-  void layer_bounds_changed(const base::Rect &rect);
-  void interactive_layer_resized(const base::Rect &rect);
+  auto layer_bounds_changed(const base::Rect &rect) -> void;
+  auto interactive_layer_resized(const base::Rect &rect) -> void;
 
-  virtual bool is_realizable();
+  virtual auto is_realizable() -> bool;
 
-  void member_changed(const std::string &name, const grt::ValueRef &ovalue);
+  auto member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void;
 
 public:
   ImplData(model_Layer *owner);
 
   virtual ~ImplData();
 
-  void raise_figure(const model_FigureRef &figure);
-  void lower_figure(const model_FigureRef &figure);
+  auto raise_figure(const model_FigureRef &figure) -> void;
+  auto lower_figure(const model_FigureRef &figure) -> void;
 
 public:
-  mdc::AreaGroup *get_area_group() const {
+  auto get_area_group() const -> mdc::AreaGroup * {
     return _area_group;
   }
-  virtual mdc::CanvasItem *get_canvas_item() const {
+  virtual auto get_canvas_item() const -> mdc::CanvasItem * {
     return _area_group;
   }
 
-  virtual void render_mini(mdc::CairoCtx *cr);
-  virtual bool realize();
-  virtual void unrealize();
+  virtual auto render_mini(mdc::CairoCtx *cr) -> void;
+  virtual auto realize() -> bool;
+  virtual auto unrealize() -> void;
 
 private:
-  model_Layer *self() const {
+  auto self() const -> model_Layer * {
     return (model_Layer *)_self;
   }
 };

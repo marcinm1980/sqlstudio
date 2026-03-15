@@ -111,7 +111,7 @@ bool NodeId::operator<(const NodeId &r) const {
 
 //--------------------------------------------------------------------------------------------------
 
-bool NodeId::equals(const NodeId &node) const {
+auto NodeId::equals(const NodeId &node) const -> bool {
   // TODO: Check if we need to compare content of the index and node.index vectors
   return node.index == index;
 }
@@ -134,7 +134,7 @@ const size_t &NodeId::operator[](size_t i) const {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t NodeId::end() const {
+auto NodeId::end() const -> size_t {
   if (!index.empty())
     return index.back();
   throw std::logic_error("invalid node id. NodeId::end applied to an empty NodeId instance.");
@@ -145,7 +145,7 @@ size_t NodeId::end() const {
 /**
  * Sets leaf to the previous index, e.g. for node with path "1.3.2" it will become "1.3.1".
  */
-bool NodeId::previous() {
+auto NodeId::previous() -> bool {
   bool ret = false;
   if (!index.empty()) {
     --index.back();
@@ -159,7 +159,7 @@ bool NodeId::previous() {
 /**
  *	Sets leaf to the next index, e.g. for node with path "1.3.2" it will become "1.3.3".
  */
-bool NodeId::next() {
+auto NodeId::next() -> bool {
   bool ret = false;
   if (!index.empty()) {
     ++index.back();
@@ -170,7 +170,7 @@ bool NodeId::next() {
 
 //--------------------------------------------------------------------------------------------------
 
-NodeId NodeId::parent() const {
+auto NodeId::parent() const -> NodeId {
   if (depth() < 2)
     return NodeId();
   NodeId copy(*this);
@@ -180,13 +180,13 @@ NodeId NodeId::parent() const {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string NodeId::description() const {
+auto NodeId::description() const -> std::string {
   return toString();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string NodeId::toString(const char separator) const {
+auto NodeId::toString(const char separator) const -> std::string {
   std::stringstream out;
   for (size_t i = 0; i < index.size(); i++) {
     if (i > 0)
@@ -198,7 +198,7 @@ std::string NodeId::toString(const char separator) const {
 
 //--------------------------------------------------------------------------------------------------
 
-NodeId &NodeId::append(size_t i) {
+auto NodeId::append(size_t i) -> NodeId & {
   // TODO: does it really make sense to cast to a signed type if the parameter can only be unsigned?
   //       It would require that the caller takes a signed value and casts it to an unsigned one.
   //       Very unlikely to happen.
@@ -211,7 +211,7 @@ NodeId &NodeId::append(size_t i) {
 
 //--------------------------------------------------------------------------------------------------
 
-NodeId &NodeId::prepend(size_t i) {
+auto NodeId::prepend(size_t i) -> NodeId & {
   if ((ssize_t)i < 0)
     throw std::invalid_argument("negative node index is invalid");
   index.insert(index.begin(), i);
@@ -220,19 +220,19 @@ NodeId &NodeId::prepend(size_t i) {
 
 //----------------- ListModel ----------------------------------------------------------------------
 
-Type ListModel::get_field_type(const NodeId &node, ColumnId column) {
+auto ListModel::get_field_type(const NodeId &node, ColumnId column) -> Type {
   throw std::logic_error("not implemented");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto ListModel::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::get_field(const NodeId &node, ColumnId column, std::string &value) {
+auto ListModel::get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
   ValueRef v;
 
   if (!get_field_grt(node, column, v))
@@ -245,7 +245,7 @@ bool ListModel::get_field(const NodeId &node, ColumnId column, std::string &valu
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::get_field(const NodeId &node, ColumnId column, ssize_t &value) {
+auto ListModel::get_field(const NodeId &node, ColumnId column, ssize_t &value) -> bool {
   ValueRef v(0);
 
   if (!get_field_grt(node, column, v))
@@ -263,7 +263,7 @@ bool ListModel::get_field(const NodeId &node, ColumnId column, ssize_t &value) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::get_field(const NodeId &node, ColumnId column, bool &value) {
+auto ListModel::get_field(const NodeId &node, ColumnId column, bool &value) -> bool {
   ssize_t i;
   if (!get_field(node, column, i))
     return false;
@@ -274,7 +274,7 @@ bool ListModel::get_field(const NodeId &node, ColumnId column, bool &value) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::get_field(const NodeId &node, ColumnId column, double &value) {
+auto ListModel::get_field(const NodeId &node, ColumnId column, double &value) -> bool {
   ValueRef v(0);
 
   if (!get_field_grt(node, column, v))
@@ -296,7 +296,7 @@ bool ListModel::get_field(const NodeId &node, ColumnId column, double &value) {
 
 //--------------------------------------------------------------------------------------------------
 
-ValueRef ListModel::get_grt_value(const NodeId &node, ColumnId column) {
+auto ListModel::get_grt_value(const NodeId &node, ColumnId column) -> ValueRef {
   ValueRef value;
 
   get_field_grt(node, column, value);
@@ -306,37 +306,37 @@ ValueRef ListModel::get_grt_value(const NodeId &node, ColumnId column) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ListModel::get_field_description(const NodeId &node, ColumnId column) {
+auto ListModel::get_field_description(const NodeId &node, ColumnId column) -> std::string {
   return "";
 }
 
 //--------------------------------------------------------------------------------------------------
 
-IconId ListModel::get_field_icon(const NodeId &node, ColumnId column, IconSize size) {
+auto ListModel::get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId {
   return 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto ListModel::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto ListModel::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::set_field(const NodeId &node, ColumnId column, double value) {
+auto ListModel::set_field(const NodeId &node, ColumnId column, double value) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::set_convert_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto ListModel::set_convert_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   try {
     switch (get_field_type(node, column)) {
       case IntegerType:
@@ -360,19 +360,19 @@ bool ListModel::set_convert_field(const NodeId &node, ColumnId column, const std
 
 //--------------------------------------------------------------------------------------------------
 
-NodeId ListModel::get_node(size_t index) {
+auto ListModel::get_node(size_t index) -> NodeId {
   return index;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListModel::has_next(const NodeId &node) {
+auto ListModel::has_next(const NodeId &node) -> bool {
   return node[0] + 1 < count();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-NodeId ListModel::get_next(const NodeId &node) {
+auto ListModel::get_next(const NodeId &node) -> NodeId {
   if (node[0] + 1 < count())
     return node[0] + 1;
   throw std::out_of_range("invalid child");
@@ -380,7 +380,7 @@ NodeId ListModel::get_next(const NodeId &node) {
 
 //--------------------------------------------------------------------------------------------------
 
-ValueRef ListModel::parse_value(Type type, const std::string &value) {
+auto ListModel::parse_value(Type type, const std::string &value) -> ValueRef {
   switch (type) {
     case IntegerType:
       try {
@@ -411,7 +411,7 @@ ValueRef ListModel::parse_value(Type type, const std::string &value) {
 /**
  * Move the given node one index down in this list.
  */
-void ListModel::reorder_up(const NodeId &node) {
+auto ListModel::reorder_up(const NodeId &node) -> void {
   if (node.end() > 0)
     reorder(node, node.end() - 1);
 }
@@ -421,13 +421,13 @@ void ListModel::reorder_up(const NodeId &node) {
 /**
  * Move the given node one index up in this list.
  */
-void ListModel::reorder_down(const NodeId &node) {
+auto ListModel::reorder_down(const NodeId &node) -> void {
   reorder(node, node.end() + 1);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListModel::dump(int show_field) {
+auto ListModel::dump(int show_field) -> void {
   g_print("\nDumping list model:\n");
   for (size_t i = 0, c = count(); i < c; i++) {
     NodeId child(i);
@@ -443,19 +443,19 @@ void ListModel::dump(int show_field) {
 
 //----------------- TreeModel ----------------------------------------------------------------------
 
-size_t TreeModel::count() {
+auto TreeModel::count() -> size_t {
   return count_children(get_root());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-NodeId TreeModel::get_node(size_t index) {
+auto TreeModel::get_node(size_t index) -> NodeId {
   return get_child(get_root(), index);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeModel::has_next(const NodeId &node) {
+auto TreeModel::has_next(const NodeId &node) -> bool {
   NodeId parent(get_parent(node));
 
   return node.end() < count_children(parent) - 1;
@@ -463,7 +463,7 @@ bool TreeModel::has_next(const NodeId &node) {
 
 //--------------------------------------------------------------------------------------------------
 
-NodeId TreeModel::get_next(const NodeId &node) {
+auto TreeModel::get_next(const NodeId &node) -> NodeId {
   if (node.depth() < 2)
     return ListModel::get_next(node);
   else {
@@ -478,42 +478,42 @@ NodeId TreeModel::get_next(const NodeId &node) {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t TreeModel::get_node_depth(const NodeId &node) {
+auto TreeModel::get_node_depth(const NodeId &node) -> size_t {
   return node.depth();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-NodeId TreeModel::get_root() const {
+auto TreeModel::get_root() const -> NodeId {
   return NodeId();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeModel::expand_node(const NodeId &node) {
+auto TreeModel::expand_node(const NodeId &node) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeModel::collapse_node(const NodeId &node) {
+auto TreeModel::collapse_node(const NodeId &node) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeModel::is_expanded(const NodeId &node) {
+auto TreeModel::is_expanded(const NodeId &node) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeModel::is_expandable(const NodeId &node_id) {
+auto TreeModel::is_expandable(const NodeId &node_id) -> bool {
   return count_children(node_id) > 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-static void dump_node(TreeModel *model, int show_field, const NodeId &node_id) {
+static auto dump_node(TreeModel *model, int show_field, const NodeId &node_id) -> void {
   for (size_t i = 0, c = model->count_children(node_id); i < c; i++) {
     NodeId child = model->get_child(node_id, i);
     std::string value;
@@ -536,7 +536,7 @@ static void dump_node(TreeModel *model, int show_field, const NodeId &node_id) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeModel::dump(int show_field) {
+auto TreeModel::dump(int show_field) -> void {
   g_print("\nDumping tree model:\n");
   dump_node(this, show_field, NodeId());
   g_print("\nFinished dumping tree model.");

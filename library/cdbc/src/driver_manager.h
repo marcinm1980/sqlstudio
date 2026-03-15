@@ -53,16 +53,16 @@ namespace sql {
     ConnectionWrapper(std::shared_ptr<Connection> conn, std::shared_ptr<wb::SSHTunnel> tunn_conn)
       : _conn(conn), _tunnel_conn(tunn_conn) {
     }
-    void reset() {
+    auto reset() -> void {
       _conn.reset();
     }
     Connection *operator->() {
       return _conn.get();
     }
-    Connection *get() {
+    auto get() -> Connection * {
       return _conn.get();
     }
-    ConnectionPtr get_ptr() {
+    auto get_ptr() -> ConnectionPtr {
       return _conn;
     }
   };
@@ -82,22 +82,22 @@ namespace sql {
     static Ref create(const db_mgmt_ConnectionRef &props, const std::string &service = "");
     ~Authentication();
 
-    db_mgmt_ConnectionRef connectionProperties() const {
+    auto connectionProperties() const -> db_mgmt_ConnectionRef {
       return _props;
     }
-    std::string service() const {
+    auto service() const -> std::string {
       return _service;
     }
 
-    void set_password(const char *password);
-    const char *password() const {
+    auto set_password(const char *password) -> void;
+    auto password() const -> const char * {
       return _password;
     }
-    void invalidate();
-    bool is_valid() const {
+    auto invalidate() -> void;
+    auto is_valid() const -> bool {
       return _password != NULL;
     }
-    std::string uri(bool withPassword = false);
+    auto uri(bool withPassword = false) -> std::string;
   };
 
   using AuthenticationSet = std::set<Authentication::Ref>;
@@ -114,7 +114,7 @@ namespace sql {
     virtual ~AuthenticationError() {
     }
 
-    Authentication::Ref authentication() {
+    auto authentication() -> Authentication::Ref {
       return _authobj;
     }
   };
@@ -128,53 +128,53 @@ namespace sql {
 
   public:
     // Returns the DriverManager singleton
-    static DriverManager *getDriverManager();
+    static auto getDriverManager() -> DriverManager *;
 
     DriverManager();
 
     // Sets the path to the directory where drivers are located
-    void set_driver_dir(const std::string &path);
+    auto set_driver_dir(const std::string &path) -> void;
 
     // Callback to initialize connection with DBMS specific startup script
     using ConnectionInitSlot = std::function<void(Connection *, const db_mgmt_ConnectionRef &)>;
 
     // Returns a Connection object for the give connection params
-    ConnectionWrapper getConnection(const db_mgmt_ConnectionRef &connectionProperties,
-                                    ConnectionInitSlot connection_init_slot = ConnectionInitSlot());
+    auto getConnection(const db_mgmt_ConnectionRef &connectionProperties,
+                                    ConnectionInitSlot connection_init_slot = ConnectionInitSlot()) -> ConnectionWrapper;
 
-    ConnectionWrapper getConnection(const db_mgmt_ConnectionRef &connectionProperties,
+    auto getConnection(const db_mgmt_ConnectionRef &connectionProperties,
                                     std::shared_ptr<wb::SSHTunnel> tunnel, Authentication::Ref password,
-                                    ConnectionInitSlot connection_init_slot = ConnectionInitSlot());
+                                    ConnectionInitSlot connection_init_slot = ConnectionInitSlot()) -> ConnectionWrapper;
 
-    void thread_cleanup();
-    void set_testing();
+    auto thread_cleanup() -> void;
+    auto set_testing() -> void;
 
-    std::shared_ptr<wb::SSHTunnel> getTunnel(const db_mgmt_ConnectionRef &connectionProperties);
+    auto getTunnel(const db_mgmt_ConnectionRef &connectionProperties) -> std::shared_ptr<wb::SSHTunnel>;
 
     // Returns the list of available drivers
-    std::list<Driver *> getDrivers();
+    auto getDrivers() -> std::list<Driver *>;
 
   public:
     using TunnelFactoryFunction = std::function<std::shared_ptr<wb::SSHTunnel>(const db_mgmt_ConnectionRef &)>;
     using PasswordFindFunction = std::function<bool(const db_mgmt_ConnectionRef &, std::string &)>;
     using PasswordRequestFunction = std::function<std::string(const db_mgmt_ConnectionRef &, bool)>;
 
-    void setTunnelFactoryFunction(TunnelFactoryFunction function);
-    void setPasswordFindFunction(PasswordFindFunction function);
-    void setPasswordRequestFunction(PasswordRequestFunction function);
+    auto setTunnelFactoryFunction(TunnelFactoryFunction function) -> void;
+    auto setPasswordFindFunction(PasswordFindFunction function) -> void;
+    auto setPasswordRequestFunction(PasswordRequestFunction function) -> void;
 
-    bool findStoredPassword(const db_mgmt_ConnectionRef &conn, std::string &password) {
+    auto findStoredPassword(const db_mgmt_ConnectionRef &conn, std::string &password) -> bool {
       return _findPassword(conn, password);
     }
-    std::string requestPassword(const db_mgmt_ConnectionRef &conn, bool forceAsk) {
+    auto requestPassword(const db_mgmt_ConnectionRef &conn, bool forceAsk) -> std::string {
       return _requestPassword(conn, forceAsk);
     }
 
-    const std::string &getClientLibVersion() const;
+    auto getClientLibVersion() const -> const std::string &;
 
   private:
-    void getClientLibVersion(Driver *driver);
-    unsigned int getClientLibVersionNumeric(Driver *driver);
+    auto getClientLibVersion(Driver *driver) -> void;
+    auto getClientLibVersionNumeric(Driver *driver) -> unsigned int;
 
     TunnelFactoryFunction _createTunnel;
     PasswordFindFunction _findPassword;

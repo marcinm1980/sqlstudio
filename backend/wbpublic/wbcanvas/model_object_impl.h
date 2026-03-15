@@ -43,26 +43,26 @@ protected:
   ImplData(model_Object *object) : _self(object), _in_view(false), _notified_unrealize(false) {
   }
 
-  virtual GrtObject *get_object() {
+  virtual auto get_object() -> GrtObject * {
     return _self;
   }
 
-  void notify_realized();
-  void notify_will_unrealize();
+  auto notify_realized() -> void;
+  auto notify_will_unrealize() -> void;
 
 public:
-  virtual mdc::CanvasItem *get_canvas_item() const = 0;
-  virtual void highlight(const base::Color *color = 0);
-  virtual void unhighlight();
+  virtual auto get_canvas_item() const -> mdc::CanvasItem * = 0;
+  virtual auto highlight(const base::Color *color = 0) -> void;
+  virtual auto unhighlight() -> void;
 
-  virtual void set_in_view(bool flag);
-  virtual bool in_view() {
+  virtual auto set_in_view(bool flag) -> void;
+  virtual auto in_view() -> bool {
     return _in_view;
   }
 
-  virtual bool try_realize();
+  virtual auto try_realize() -> bool;
 
-  virtual bool is_realizable() = 0;
-  virtual bool realize() = 0;
-  virtual void unrealize() = 0;
+  virtual auto is_realizable() -> bool = 0;
+  virtual auto realize() -> bool = 0;
+  virtual auto unrealize() -> void = 0;
 };

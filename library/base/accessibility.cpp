@@ -31,71 +31,71 @@ Accessible::~Accessible() {
 
 //---------------------------------------------------------------------------------------------------------------------
 
-std::string Accessible::getAccessibilityIdentifier() {
+auto Accessible::getAccessibilityIdentifier() -> std::string {
   return "";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-std::string Accessible::getAccessibilityTitle() {
+auto Accessible::getAccessibilityTitle() -> std::string {
   return "";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-std::string Accessible::getAccessibilityDescription() {
+auto Accessible::getAccessibilityDescription() -> std::string {
   return "";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-std::string Accessible::getAccessibilityValue() {
+auto Accessible::getAccessibilityValue() -> std::string {
   return "";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-size_t Accessible::getAccessibilityChildCount() {
+auto Accessible::getAccessibilityChildCount() -> size_t {
   return 0;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-Accessible* Accessible::getAccessibilityChild(size_t index) {
+auto Accessible::getAccessibilityChild(size_t index) -> Accessible* {
   return nullptr;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-base::Rect Accessible::getAccessibilityBounds() {
+auto Accessible::getAccessibilityBounds() -> base::Rect {
   return base::Rect();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-Accessible* Accessible::accessibilityHitTest(ssize_t x, ssize_t y) {
+auto Accessible::accessibilityHitTest(ssize_t x, ssize_t y) -> Accessible* {
   return nullptr;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-std::string Accessible::getAccessibilityDefaultAction() {
+auto Accessible::getAccessibilityDefaultAction() -> std::string {
   return "";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-void Accessible::accessibilityDoDefaultAction() {
+auto Accessible::accessibilityDoDefaultAction() -> void {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-void Accessible::accessibilityShowMenu() {
+auto Accessible::accessibilityShowMenu() -> void {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-bool Accessible::accessibilityGrabFocus() {
+auto Accessible::accessibilityGrabFocus() -> bool {
   return false;
 }
 

@@ -63,7 +63,7 @@ public:
     _right.signal_changed()->connect(std::bind(&MultiSchemaSelectionPage::validate, this));
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       std::string icon = bec::IconManager::get_instance()->get_icon_path("db.Schema.16x16.png");
       grt::StringListRef schemata(grt::StringListRef::cast_from(values().get("schemata")));
@@ -85,7 +85,7 @@ public:
     }
   }
 
-  virtual void leave(bool advancing) {
+  virtual auto leave(bool advancing) -> void {
     if (advancing) {
       {
         grt::StringListRef slist(grt::Initialized);
@@ -100,7 +100,7 @@ public:
     }
   }
 
-  virtual bool allow_next() {
+  virtual auto allow_next() -> bool {
     return _left.get_selected_node() && _right.get_selected_node();
   }
 
@@ -122,19 +122,19 @@ public:
     _text.set_language(mforms::LanguageNone);
   }
 
-  void set_generate_text_slot(const std::function<std::string()> &slot) {
+  auto set_generate_text_slot(const std::function<std::string()> &slot) -> void {
     _generate = slot;
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing)
       _text.set_value(_generate());
   }
 
-  virtual bool allow_cancel() {
+  virtual auto allow_cancel() -> bool {
     return false;
   }
-  virtual bool next_closes_wizard() {
+  virtual auto next_closes_wizard() -> bool {
     return true;
   }
 
@@ -196,13 +196,13 @@ public:
     set_title(_("Compare and Report Differences in Catalogs"));
   }
 
-  std::vector<std::string> load_schemata(Db_plugin *db) {
+  auto load_schemata(Db_plugin *db) -> std::vector<std::string> {
     std::vector<std::string> names;
     db->load_schemata(names);
     return names;
   }
 
-  std::string generate_report() {
+  auto generate_report() -> std::string {
     db_CatalogRef left_catalog, right_catalog;
 
     if (_source_page->get_left_source() == DataSourceSelector::ServerSource)
@@ -229,7 +229,7 @@ public:
     return report;
   }
 
-  virtual WizardPage *get_next_page(WizardPage *current) {
+  virtual auto get_next_page(WizardPage *current) -> WizardPage * {
     std::string curid = current->get_id();
     std::string nextid;
 
@@ -255,13 +255,13 @@ protected:
   MultiSourceSelectPage *_source_page;
   MultiSchemaSelectionPage *_schema_pick_page;
 
-  std::vector<std::string> load_schemas(Db_plugin *db) {
+  auto load_schemas(Db_plugin *db) -> std::vector<std::string> {
     std::vector<std::string> names;
     db->load_schemata(names);
     return names;
   }
 };
 
-WizardPlugin *createWbPluginDiffReport(grt::Module *module) {
+auto createWbPluginDiffReport(grt::Module *module) -> WizardPlugin * {
   return new WbPluginDiffReport(module);
 }

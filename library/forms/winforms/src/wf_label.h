@@ -40,11 +40,10 @@ namespace MySQL {
     public:
       WrapControlLabel();
 
-      property bool AutoWrapping {
-        bool get() {
+      auto get() -> property bool AutoWrapping { bool {
           return autoWrapping;
         };
-        void set(bool value) {
+        auto set(bool value) -> void {
           autoWrapping = value;
         };
       }
@@ -63,15 +62,15 @@ namespace MySQL {
     protected:
       LabelWrapper(mforms::Label *backend);
 
-      static bool create(mforms::Label *backend);
-      static void set_style(mforms::Label *backend, mforms::LabelStyle style);
-      static void set_text(mforms::Label *backend, const std::string &text);
-      static void set_text_align(mforms::Label *backend, mforms::Alignment align);
-      static void set_color(mforms::Label *backend, const std::string &color);
-      static void set_wrap_text(mforms::Label *backend, bool flag);
+      static auto create(mforms::Label *backend) -> bool;
+      static auto set_style(mforms::Label *backend, mforms::LabelStyle style) -> void;
+      static auto set_text(mforms::Label *backend, const std::string &text) -> void;
+      static auto set_text_align(mforms::Label *backend, mforms::Alignment align) -> void;
+      static auto set_color(mforms::Label *backend, const std::string &color) -> void;
+      static auto set_wrap_text(mforms::Label *backend, bool flag) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

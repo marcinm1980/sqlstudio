@@ -103,16 +103,16 @@ class SpatialDrawBox : public mforms::DrawBox {
 
   GThread *_renderThread;
 
-  static void *do_render_layers(void *data);
+  static auto do_render_layers(void *data) -> void *;
 
-  void render_in_thread(bool reproject);
+  auto render_in_thread(bool reproject) -> void;
 
-  void *render_done();
+  auto render_done() -> void *;
 
-  void render(bool reproject = false);
-  bool get_progress(std::string &action, float &pct);
+  auto render(bool reproject = false) -> void;
+  auto get_progress(std::string &action, float &pct) -> bool;
 
-  void restrict_displayed_area(int x1, int y1, int x2, int y2, bool no_invalidate = false);
+  auto restrict_displayed_area(int x1, int y1, int x2, int y2, bool no_invalidate = false) -> void;
 
 public:
   std::function<void(mforms::View *, bool reprojecting)> work_started;
@@ -127,60 +127,60 @@ public:
   std::function<void(base::Point)> position_changed_cb;
   std::function<void(base::Point)> position_clicked_cb;
 
-  void set_context_menu(mforms::ContextMenu *menu);
-  std::pair<double, double> clicked_coordinates() {
+  auto set_context_menu(mforms::ContextMenu *menu) -> void;
+  auto clicked_coordinates() -> std::pair<double, double> {
     return _clicked_coordinates;
   }
-  int clicked_row_id();
+  auto clicked_row_id() -> int;
 
-  std::deque<spatial::Layer *> get_layers() {
+  auto get_layers() -> std::deque<spatial::Layer *> {
     return _layers;
   }
 
-  void set_projection(spatial::ProjectionType proj);
+  auto set_projection(spatial::ProjectionType proj) -> void;
 
-  void reset_view();
-  void zoom_out();
-  void zoom_in();
-  void auto_zoom(const spatial::LayerId layer_idx = 0);
-  void select_area(bool flag);
+  auto reset_view() -> void;
+  auto zoom_out() -> void;
+  auto zoom_in() -> void;
+  auto auto_zoom(const spatial::LayerId layer_idx = 0) -> void;
+  auto select_area(bool flag) -> void;
 
-  void center_on(double lat, double lon);
+  auto center_on(double lat, double lon) -> void;
 
-  void clear();
-  void set_background(spatial::Layer *layer);
-  spatial::Layer *get_background() {
+  auto clear() -> void;
+  auto set_background(spatial::Layer *layer) -> void;
+  auto get_background() -> spatial::Layer * {
     return _background_layer;
   }
 
-  void add_layer(spatial::Layer *layer);
-  void remove_layer(spatial::Layer *layer);
-  void change_layer_order(const std::vector<spatial::LayerId> &order);
+  auto add_layer(spatial::Layer *layer) -> void;
+  auto remove_layer(spatial::Layer *layer) -> void;
+  auto change_layer_order(const std::vector<spatial::LayerId> &order) -> void;
 
-  spatial::Layer *get_layer(spatial::LayerId layer_id);
+  auto get_layer(spatial::LayerId layer_id) -> spatial::Layer *;
 
-  void show_layer(spatial::LayerId layer_id, bool flag);
+  auto show_layer(spatial::LayerId layer_id, bool flag) -> void;
 
-  void activate();
+  auto activate() -> void;
 
-  void invalidate(bool reproject = false);
+  auto invalidate(bool reproject = false) -> void;
 
-  virtual bool mouse_double_click(mforms::MouseButton button, int x, int y);
-  virtual bool mouse_down(mforms::MouseButton button, int x, int y);
-  virtual bool mouse_up(mforms::MouseButton button, int x, int y);
-  virtual bool mouse_move(mforms::MouseButton button, int x, int y);
-  virtual void repaint(cairo_t *crt, int x, int y, int w, int h);
+  virtual auto mouse_double_click(mforms::MouseButton button, int x, int y) -> bool;
+  virtual auto mouse_down(mforms::MouseButton button, int x, int y) -> bool;
+  virtual auto mouse_up(mforms::MouseButton button, int x, int y) -> bool;
+  virtual auto mouse_move(mforms::MouseButton button, int x, int y) -> bool;
+  virtual auto repaint(cairo_t *crt, int x, int y, int w, int h) -> void;
 
-  base::Point offset() {
+  auto offset() -> base::Point {
     return base::Point(_offset_x, _offset_y);
   }
 
-  bool screen_to_world(const int &x, const int &y, double &lat, double &lon);
-  void world_to_screen(const double &lat, const double &lon, int &x, int &y);
+  auto screen_to_world(const int &x, const int &y, double &lat, double &lon) -> bool;
+  auto world_to_screen(const double &lat, const double &lon, int &x, int &y) -> void;
 
-  base::Point apply_cairo_transformation(const base::Point &p) const;
-  base::Point unapply_cairo_transformation(const base::Point &p) const;
-  void clear_pins();
-  void place_pin(cairo_surface_t *pin, const base::Point &p);
-  void save_to_png(const std::string &destination);
+  auto apply_cairo_transformation(const base::Point &p) const -> base::Point;
+  auto unapply_cairo_transformation(const base::Point &p) const -> base::Point;
+  auto clear_pins() -> void;
+  auto place_pin(cairo_surface_t *pin, const base::Point &p) -> void;
+  auto save_to_png(const std::string &destination) -> void;
 };

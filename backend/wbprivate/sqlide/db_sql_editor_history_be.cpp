@@ -60,17 +60,17 @@ DbSqlEditorHistory::DbSqlEditorHistory() : _current_entry_index(-1) {
 DbSqlEditorHistory::~DbSqlEditorHistory() {
 }
 
-void DbSqlEditorHistory::reset() {
+auto DbSqlEditorHistory::reset() -> void {
   _details_model->reset();
   _entries_model->reset();
   _current_entry_index = -1;
 }
 
-void DbSqlEditorHistory::load() {
+auto DbSqlEditorHistory::load() -> void {
   _entries_model->load();
 }
 
-void DbSqlEditorHistory::add_entry(const std::list<std::string> &statements) {
+auto DbSqlEditorHistory::add_entry(const std::list<std::string> &statements) -> void {
   size_t old_date_count = _details_model->count();
   _entries_model->add_statements(statements);
 
@@ -81,7 +81,7 @@ void DbSqlEditorHistory::add_entry(const std::list<std::string> &statements) {
   }
 }
 
-void DbSqlEditorHistory::current_entry(int index) {
+auto DbSqlEditorHistory::current_entry(int index) -> void {
   if (index < 0)
     _details_model->reset();
   else {
@@ -98,7 +98,7 @@ void DbSqlEditorHistory::current_entry(int index) {
   _details_model->refresh();
 }
 
-std::string DbSqlEditorHistory::restore_sql_from_history(int entry_index, std::list<int> &detail_indexes) {
+auto DbSqlEditorHistory::restore_sql_from_history(int entry_index, std::list<int> &detail_indexes) -> std::string {
   std::string sql;
   if (entry_index >= 0) {
     DetailsModel::Ref details_model;
@@ -124,7 +124,7 @@ DbSqlEditorHistory::EntriesModel::EntriesModel(DbSqlEditorHistory *owner)
   reset();
 }
 
-void DbSqlEditorHistory::EntriesModel::reset() {
+auto DbSqlEditorHistory::EntriesModel::reset() -> void {
   VarGridModel::reset();
 
   _readonly = true;
@@ -136,7 +136,7 @@ void DbSqlEditorHistory::EntriesModel::reset() {
   refresh_ui();
 }
 
-void DbSqlEditorHistory::EntriesModel::load() {
+auto DbSqlEditorHistory::EntriesModel::load() -> void {
   std::string sql_history_dir = base::makePath(bec::GRTManager::get()->get_user_datadir(), SQL_HISTORY_DIR_NAME);
   g_mkdir_with_parents(sql_history_dir.c_str(), 0700);
   {
@@ -172,7 +172,7 @@ void DbSqlEditorHistory::EntriesModel::load() {
   }
 }
 
-void DbSqlEditorHistory::EntriesModel::add_statements(const std::list<std::string> &statements) {
+auto DbSqlEditorHistory::EntriesModel::add_statements(const std::list<std::string> &statements) -> void {
   if (statements.empty())
     return;
 
@@ -199,7 +199,7 @@ void DbSqlEditorHistory::EntriesModel::add_statements(const std::list<std::strin
     _owner->write_only_details_model()->add_entries(timed_statements);
 }
 
-bool DbSqlEditorHistory::EntriesModel::insert_entry(const std::tm &t) {
+auto DbSqlEditorHistory::EntriesModel::insert_entry(const std::tm &t) -> bool {
   std::string newest_date;
   if (_row_count > 0)
     get_field(NodeId(0), 0, newest_date);
@@ -214,7 +214,7 @@ bool DbSqlEditorHistory::EntriesModel::insert_entry(const std::tm &t) {
   return false;
 }
 
-bec::MenuItemList DbSqlEditorHistory::EntriesModel::get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) {
+auto DbSqlEditorHistory::EntriesModel::get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) -> bec::MenuItemList {
   bec::MenuItemList items;
   bec::MenuItem item;
 
@@ -233,8 +233,8 @@ bec::MenuItemList DbSqlEditorHistory::EntriesModel::get_popup_items_for_nodes(co
   return items;
 }
 
-bool DbSqlEditorHistory::EntriesModel::activate_popup_item_for_nodes(const std::string &action,
-                                                                     const std::vector<bec::NodeId> &orig_nodes) {
+auto DbSqlEditorHistory::EntriesModel::activate_popup_item_for_nodes(const std::string &action,
+                                                                     const std::vector<bec::NodeId> &orig_nodes) -> bool {
   if (action == "delete_selection") {
     std::vector<std::size_t> rows;
     rows.reserve(orig_nodes.size());
@@ -251,7 +251,7 @@ bool DbSqlEditorHistory::EntriesModel::activate_popup_item_for_nodes(const std::
   return false;
 }
 
-void DbSqlEditorHistory::EntriesModel::delete_all_entries() {
+auto DbSqlEditorHistory::EntriesModel::delete_all_entries() -> void {
   if (mforms::Utilities::show_message(
         "Clear History", "Do you really want to delete the entire query history?\nThis operation cannot be undone.",
         "Delete All", "Cancel", "") == mforms::ResultCancel)
@@ -264,7 +264,7 @@ void DbSqlEditorHistory::EntriesModel::delete_all_entries() {
   delete_entries(rows);
 }
 
-void DbSqlEditorHistory::EntriesModel::delete_entries(const std::vector<std::size_t> &rows) {
+auto DbSqlEditorHistory::EntriesModel::delete_entries(const std::vector<std::size_t> &rows) -> void {
   if (rows.empty())
     return;
   {
@@ -285,7 +285,7 @@ void DbSqlEditorHistory::EntriesModel::delete_entries(const std::vector<std::siz
   _owner->current_entry(-1);
 }
 
-std::string DbSqlEditorHistory::EntriesModel::entry_path(std::size_t index) {
+auto DbSqlEditorHistory::EntriesModel::entry_path(std::size_t index) -> std::string {
   std::string name;
   get_field(index, 0, name);
   std::string storage_file_path = base::makePath(bec::GRTManager::get()->get_user_datadir(), SQL_HISTORY_DIR_NAME);
@@ -293,7 +293,7 @@ std::string DbSqlEditorHistory::EntriesModel::entry_path(std::size_t index) {
   return storage_file_path;
 }
 
-std::tm DbSqlEditorHistory::EntriesModel::entry_date(std::size_t index) {
+auto DbSqlEditorHistory::EntriesModel::entry_date(std::size_t index) -> std::tm {
   tm t;
   std::string name;
   get_field(index, 0, name);
@@ -316,7 +316,7 @@ DbSqlEditorHistory::DetailsModel::DetailsModel() : VarGridModel() {
   _context_menu.add_item(_("Replace SQL Script With Selected Items"), "replace_sql_script");
 }
 
-void DbSqlEditorHistory::DetailsModel::reset() {
+auto DbSqlEditorHistory::DetailsModel::reset() -> void {
   VarGridModel::reset();
 
   _last_loaded_row = -1;
@@ -335,7 +335,7 @@ void DbSqlEditorHistory::DetailsModel::reset() {
   refresh_ui();
 }
 
-void DbSqlEditorHistory::DetailsModel::load(const std::string &storage_file_path) {
+auto DbSqlEditorHistory::DetailsModel::load(const std::string &storage_file_path) -> void {
   if (base::file_exists(storage_file_path)) {
     std::ifstream historyXml(storage_file_path);
     if (historyXml.is_open()) {
@@ -394,13 +394,13 @@ void DbSqlEditorHistory::DetailsModel::load(const std::string &storage_file_path
     logError("Can't open SQL history file %s\n", storage_file_path.c_str());
 }
 
-std::string DbSqlEditorHistory::DetailsModel::storage_file_path() const {
+auto DbSqlEditorHistory::DetailsModel::storage_file_path() const -> std::string {
   std::string storage_file_path = base::makePath(bec::GRTManager::get()->get_user_datadir(), SQL_HISTORY_DIR_NAME);
   storage_file_path = base::makePath(storage_file_path, format_time(_datestamp, "%Y-%m-%d"));
   return storage_file_path;
 }
 
-void DbSqlEditorHistory::DetailsModel::save() {
+auto DbSqlEditorHistory::DetailsModel::save() -> void {
   std::string storage_file_path = this->storage_file_path();
   std::ofstream ofs;
   {
@@ -456,7 +456,7 @@ void DbSqlEditorHistory::DetailsModel::save() {
   ofs.flush();
 }
 
-void DbSqlEditorHistory::DetailsModel::add_entries(const std::list<std::string> &statements) {
+auto DbSqlEditorHistory::DetailsModel::add_entries(const std::list<std::string> &statements) -> void {
   if (statements.empty())
     return;
 
@@ -497,7 +497,7 @@ void DbSqlEditorHistory::DetailsModel::add_entries(const std::list<std::string> 
   // refresh_ui();
 }
 
-void DbSqlEditorHistory::update_timestamp(std::tm timestamp) {
+auto DbSqlEditorHistory::update_timestamp(std::tm timestamp) -> void {
   details_model()->datestamp(timestamp);
   write_only_details_model()->datestamp(timestamp);
 }

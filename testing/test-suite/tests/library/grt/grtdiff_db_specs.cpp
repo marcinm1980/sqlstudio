@@ -51,7 +51,7 @@ namespace {
 struct A {
   std::string _res;
 
-  std::string convert(const char *s, int *err_count = 0) {
+  auto convert(const char *s, int *err_count = 0) -> std::string {
     _res = "";
     int _err_count = 0;
 
@@ -65,10 +65,10 @@ struct A {
   }
 
 private:
-  static int process_sql_statement_cb(void *user_data, const MyxStatementParser *splitter, const char *sql,
+  static auto process_sql_statement_cb(void *user_data, const MyxStatementParser *splitter, const char *sql,
                                       const SqlAstNode *tree, int stmt_begin_lineno, int stmt_begin_line_pos,
                                       int stmt_end_lineno, int stmt_end_line_pos, int err_tok_lineno,
-                                      int err_tok_line_pos, int err_tok_len, const std::string &err_msg) {
+                                      int err_tok_line_pos, int err_tok_len, const std::string &err_msg) -> int {
     A &parser_be = *(reinterpret_cast<A *>(user_data));
     if (tree) {
       tree->build_sql(parser_be._res);

@@ -37,7 +37,7 @@
 #include "helpers.h"
 #include "gtest/gtest.h"
 
-extern void register_all_metaclasses();
+extern auto register_all_metaclasses() -> void;
 
 namespace {
 

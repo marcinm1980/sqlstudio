@@ -147,7 +147,7 @@ namespace bec {
     NodeIds() = default;
 
     //! Resets map of NodeId paths to uid
-    void flush();
+    auto flush() -> void;
 
     //! Maps path with type of std::string from NodeId. This function is used for
     //! convenience. See map_node_id(const NodeId&)
@@ -166,7 +166,7 @@ namespace bec {
   };
 
   //------------------------------------------------------------------------------
-  inline void NodeIds::flush() {
+  inline auto NodeIds::flush() -> void {
     _map.clear();
   }
 
@@ -243,18 +243,18 @@ namespace bec {
     virtual auto get_field_description(const NodeId &node, ColumnId column) -> std::string;
     virtual auto get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId;
 
-    virtual void refresh() = 0;
-    virtual void refresh_node(const NodeId &node) {
+    virtual auto refresh() -> void = 0;
+    virtual auto refresh_node(const NodeId &node) -> void {
     }
 
-    virtual void reset() {
+    virtual auto reset() -> void {
     } //!
 
-    virtual void reorder(const NodeId &node, size_t index) {
+    virtual auto reorder(const NodeId &node, size_t index) -> void {
       throw std::logic_error("not implemented");
     }
-    void reorder_up(const NodeId &node);
-    void reorder_down(const NodeId &node);
+    auto reorder_up(const NodeId &node) -> void;
+    auto reorder_down(const NodeId &node) -> void;
 
     virtual auto activate_node(const NodeId &node) -> bool {
       throw std::logic_error("not implemented");
@@ -262,7 +262,7 @@ namespace bec {
     }
 
     // Parent can be NULL if the root node is meant.
-    virtual void update_menu_items_for_nodes(mforms::MenuBase *parent, const std::vector<NodeId> &nodes) {};
+    virtual auto update_menu_items_for_nodes(mforms::MenuBase *parent, const std::vector<NodeId> &nodes) -> void {};
 
     // Deprecated. Use update_menu_items_for_nodes for new code. MenuItemList and related code will go.
     virtual auto get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList {
@@ -306,7 +306,7 @@ namespace bec {
       return false;
     }
 
-    virtual void dump(int show_field);
+    virtual auto dump(int show_field) -> void;
 
   protected:
     // for internal use only
@@ -337,12 +337,12 @@ namespace bec {
 
     virtual auto is_expandable(const NodeId &node_id) -> bool;
     virtual auto expand_node(const NodeId &node) -> bool;
-    virtual void collapse_node(const NodeId &node);
+    virtual auto collapse_node(const NodeId &node) -> void;
     virtual auto is_expanded(const NodeId &node) -> bool;
 
-    void save_expand_info(const std::string &path);
+    auto save_expand_info(const std::string &path) -> void;
 
-    virtual void dump(int show_field);
+    virtual auto dump(int show_field) -> void;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC GridModel : public ListModel {
@@ -366,12 +366,12 @@ namespace bec {
     virtual auto set_field_null(const bec::NodeId &node, ColumnId column) -> bool {
       return set_convert_field(node, column, "");
     } //!
-    virtual void set_edited_field(RowId row_index, ColumnId col_index) {
+    virtual auto set_edited_field(RowId row_index, ColumnId col_index) -> void {
     }
 
   public:
     typedef std::list<std::pair<ColumnId, int> > SortColumns;
-    virtual void sort_by(ColumnId column, int direction, bool retaining) {
+    virtual auto sort_by(ColumnId column, int direction, bool retaining) -> void {
     }
     virtual auto sort_columns() const -> SortColumns {
       return SortColumns();

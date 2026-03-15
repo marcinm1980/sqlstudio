@@ -66,18 +66,18 @@ namespace mforms {
       return tag;
     }*/
 
-    bool TextBoxImpl::create(::mforms::TextBox *self, mforms::ScrollBars scroll_type) {
+    auto TextBoxImpl::create(::mforms::TextBox *self, mforms::ScrollBars scroll_type) -> bool {
       return new TextBoxImpl(self, scroll_type) != 0;
     }
 
-    void TextBoxImpl::set_text(::mforms::TextBox *self, const std::string &text) {
+    auto TextBoxImpl::set_text(::mforms::TextBox *self, const std::string &text) -> void {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
 
       if (cb)
         cb->_text->get_buffer()->set_text(text);
     }
 
-    void TextBoxImpl::append_text(::mforms::TextBox *self, const std::string &text, bool scroll_to_end) {
+    auto TextBoxImpl::append_text(::mforms::TextBox *self, const std::string &text, bool scroll_to_end) -> void {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
 
       if (cb) {
@@ -115,7 +115,7 @@ namespace mforms {
       }
     }*/
 
-    std::string TextBoxImpl::get_text(::mforms::TextBox *self) {
+    auto TextBoxImpl::get_text(::mforms::TextBox *self) -> std::string {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
       std::string ret("");
       if (cb) {
@@ -124,25 +124,25 @@ namespace mforms {
       return ret;
     }
 
-    void TextBoxImpl::set_read_only(::mforms::TextBox *self, bool flag) {
+    auto TextBoxImpl::set_read_only(::mforms::TextBox *self, bool flag) -> void {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
       if (cb && cb->_text)
         cb->_text->set_editable(!flag);
     }
 
-    void TextBoxImpl::set_padding(::mforms::TextBox *self, int pad) {
+    auto TextBoxImpl::set_padding(::mforms::TextBox *self, int pad) -> void {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
       if (cb && cb->_swin)
         cb->_swin->set_border_width(pad);
     }
 
-    void TextBoxImpl::set_bordered(::mforms::TextBox *self, bool flag) {
+    auto TextBoxImpl::set_bordered(::mforms::TextBox *self, bool flag) -> void {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
       if (cb)
         cb->_swin->set_shadow_type(flag ? Gtk::SHADOW_IN : Gtk::SHADOW_NONE);
     }
 
-    void TextBoxImpl::set_monospaced(::mforms::TextBox *self, bool flag) {
+    auto TextBoxImpl::set_monospaced(::mforms::TextBox *self, bool flag) -> void {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
       if (cb) {
         Pango::FontDescription font = cb->_text->get_pango_context()->get_font_description();
@@ -155,7 +155,7 @@ namespace mforms {
       }
     }
 
-    void TextBoxImpl::get_selected_range(::mforms::TextBox *self, int &start, int &end) {
+    auto TextBoxImpl::get_selected_range(::mforms::TextBox *self, int &start, int &end) -> void {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
       if (cb) {
         Gtk::TextBuffer::iterator sbegin, send;
@@ -169,13 +169,13 @@ namespace mforms {
       }
     }
 
-    void TextBoxImpl::clear(::mforms::TextBox *self) {
+    auto TextBoxImpl::clear(::mforms::TextBox *self) -> void {
       TextBoxImpl *cb = self->get_data<TextBoxImpl>();
       if (cb && cb->_text)
         cb->_text->get_buffer()->set_text("");
     }
 
-    void TextBoxImpl::set_front_color(const std::string &color) {
+    auto TextBoxImpl::set_front_color(const std::string &color) -> void {
       this->_text->override_color(color_to_rgba(Gdk::Color(color)), Gtk::STATE_FLAG_NORMAL);
     }
 
@@ -225,11 +225,11 @@ namespace mforms {
       setup();
     }
 
-    bool TextBoxImpl::on_key_press(GdkEventKey *event, mforms::TextBox *self) {
+    auto TextBoxImpl::on_key_press(GdkEventKey *event, mforms::TextBox *self) -> bool {
       return !self->key_event(GetKeys(event->keyval), GetModifiers(event->state, event->keyval), "");
     }
 
-    void TextBoxImpl::init() {
+    auto TextBoxImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_textbox_impl.create = &TextBoxImpl::create;

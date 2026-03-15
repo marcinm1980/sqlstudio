@@ -52,7 +52,7 @@ ListBoxWrapper::ListBoxWrapper(mforms::ListBox *backend) : ViewWrapper(backend) 
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListBoxWrapper::create(mforms::ListBox *backend, bool multi_select) {
+auto ListBoxWrapper::create(mforms::ListBox *backend, bool multi_select) -> bool {
   ListBoxWrapper *wrapper = new ListBoxWrapper(backend);
 
   MformsListBox ^ listbox = ListBoxWrapper::Create<MformsListBox>(backend, wrapper);
@@ -71,19 +71,19 @@ bool ListBoxWrapper::create(mforms::ListBox *backend, bool multi_select) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::clear(mforms::ListBox *backend) {
+auto ListBoxWrapper::clear(mforms::ListBox *backend) -> void {
   ListBoxWrapper::GetManagedObject<ListBox>(backend)->Items->Clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::set_heading(mforms::ListBox *backend, const std::string &text) {
+auto ListBoxWrapper::set_heading(mforms::ListBox *backend, const std::string &text) -> void {
   // TODO: what's the heading of a listbox?
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::add_items(mforms::ListBox *backend, const std::list<std::string> &items) {
+auto ListBoxWrapper::add_items(mforms::ListBox *backend, const std::list<std::string> &items) -> void {
   ListBox ^ listbox = ListBoxWrapper::GetManagedObject<ListBox>(backend);
   listbox->BeginUpdate();
   try {
@@ -95,13 +95,13 @@ void ListBoxWrapper::add_items(mforms::ListBox *backend, const std::list<std::st
 
 //--------------------------------------------------------------------------------------------------
 
-size_t ListBoxWrapper::add_item(mforms::ListBox *backend, const std::string &item) {
+auto ListBoxWrapper::add_item(mforms::ListBox *backend, const std::string &item) -> size_t {
   return ListBoxWrapper::GetManagedObject<ListBox>(backend)->Items->Add(CppStringToNative(item));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::remove_indexes(mforms::ListBox *backend, const std::vector<size_t> &indices) {
+auto ListBoxWrapper::remove_indexes(mforms::ListBox *backend, const std::vector<size_t> &indices) -> void {
   ListBox ^ listbox = ListBoxWrapper::GetManagedObject<ListBox>(backend);
   listbox->BeginUpdate();
   try {
@@ -116,13 +116,13 @@ void ListBoxWrapper::remove_indexes(mforms::ListBox *backend, const std::vector<
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::remove_index(mforms::ListBox *backend, size_t index) {
+auto ListBoxWrapper::remove_index(mforms::ListBox *backend, size_t index) -> void {
   return ListBoxWrapper::GetManagedObject<ListBox>(backend)->Items->RemoveAt((int)index);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ListBoxWrapper::get_text(mforms::ListBox *backend) {
+auto ListBoxWrapper::get_text(mforms::ListBox *backend) -> std::string {
   ListBox ^ listbox = ListBoxWrapper::GetManagedObject<ListBox>(backend);
   if (listbox->SelectedIndex < 0)
     return "";
@@ -132,19 +132,19 @@ std::string ListBoxWrapper::get_text(mforms::ListBox *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::set_index(mforms::ListBox *backend, ssize_t index) {
+auto ListBoxWrapper::set_index(mforms::ListBox *backend, ssize_t index) -> void {
   ListBoxWrapper::GetManagedObject<ListBox>(backend)->SelectedIndex = (int)index;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-ssize_t ListBoxWrapper::get_index(mforms::ListBox *backend) {
+auto ListBoxWrapper::get_index(mforms::ListBox *backend) -> ssize_t {
   return ListBoxWrapper::GetManagedObject<ListBox>(backend)->SelectedIndex;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<size_t> ListBoxWrapper::get_selected_indices(mforms::ListBox *backend) {
+auto ListBoxWrapper::get_selected_indices(mforms::ListBox *backend) -> std::vector<size_t> {
   std::vector<size_t> result;
   ListBox ^ listbox = ListBoxWrapper::GetManagedObject<ListBox>(backend);
   for each(int index in listbox->SelectedIndices) // It's an array of Int32. Don't change to size_t.
@@ -154,14 +154,14 @@ std::vector<size_t> ListBoxWrapper::get_selected_indices(mforms::ListBox *backen
 
 //--------------------------------------------------------------------------------------------------
 
-size_t ListBoxWrapper::get_count(mforms::ListBox *backend) {
+auto ListBoxWrapper::get_count(mforms::ListBox *backend) -> size_t {
   ListBox ^ listbox = ListBoxWrapper::GetManagedObject<ListBox>(backend);
   return listbox->Items->Count;
 }
 
 //------------------------------------------------------------------------------
 
-std::string ListBoxWrapper::get_string_value_from_index(mforms::ListBox *backend, size_t index) {
+auto ListBoxWrapper::get_string_value_from_index(mforms::ListBox *backend, size_t index) -> std::string {
   ListBox ^ listbox = ListBoxWrapper::GetManagedObject<ListBox>(backend);
   if ((size_t)listbox->Items->Count < index)
     return "";
@@ -171,7 +171,7 @@ std::string ListBoxWrapper::get_string_value_from_index(mforms::ListBox *backend
 
 //------------------------------------------------------------------------------
 
-void ListBoxWrapper::init() {
+auto ListBoxWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_listbox_impl.create = &ListBoxWrapper::create;

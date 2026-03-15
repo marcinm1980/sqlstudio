@@ -32,18 +32,18 @@
 
 class studio_logical_Model::ImplData {};
 
-void studio_logical_Model::init() {
+auto studio_logical_Model::init() -> void {
   // if (!_data) _data= new studio_logical_Model::ImplData();
 }
 
-void studio_logical_Model::set_data(ImplData *data) {
+auto studio_logical_Model::set_data(ImplData *data) -> void {
 }
 
 studio_logical_Model::~studio_logical_Model() {
   delete _data;
 }
 
-model_DiagramRef studio_logical_Model::addNewDiagram(ssize_t) {
+auto studio_logical_Model::addNewDiagram(ssize_t) -> model_DiagramRef {
   // add code here
   return model_DiagramRef();
 }

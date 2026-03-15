@@ -32,14 +32,14 @@
 class WBPUBLICBACKEND_PUBLIC_FUNC ActionList {
 public:
   ActionList();
-  void reset();
+  auto reset() -> void;
 
   /* actions that doesn't require context node(s) */
 public:
   using ActionSlot = std::function<void()>;
-  void register_action(const std::string &name, const ActionSlot &slot);
-  void unregister_action(const std::string &name);
-  bool trigger_action(const std::string &name);
+  auto register_action(const std::string &name, const ActionSlot &slot) -> void;
+  auto unregister_action(const std::string &name) -> void;
+  auto trigger_action(const std::string &name) -> bool;
 
 private:
   using ActionSlots = std::map<std::string, ActionSlot>;
@@ -48,9 +48,9 @@ private:
   /* actions for single node */
 public:
   using NodeActionSlot = std::function<void(const bec::NodeId &)>;
-  void register_node_action(const std::string &name, const NodeActionSlot &slot);
-  void unregister_node_action(const std::string &name);
-  bool trigger_action(const std::string &name, const bec::NodeId &node);
+  auto register_node_action(const std::string &name, const NodeActionSlot &slot) -> void;
+  auto unregister_node_action(const std::string &name) -> void;
+  auto trigger_action(const std::string &name, const bec::NodeId &node) -> bool;
 
 private:
   using NodeActionSlots = std::map<std::string, NodeActionSlot>;
@@ -59,9 +59,9 @@ private:
   /* actions for multiple nodes */
 public:
   using NodesActionSlot = std::function<void(const std::vector<bec::NodeId> &)>;
-  void register_nodes_action(const std::string &name, const NodesActionSlot &slot);
-  void unregister_nodes_action(const std::string &name);
-  bool trigger_action(const std::string &name, const std::vector<bec::NodeId> &nodes);
+  auto register_nodes_action(const std::string &name, const NodesActionSlot &slot) -> void;
+  auto unregister_nodes_action(const std::string &name) -> void;
+  auto trigger_action(const std::string &name, const std::vector<bec::NodeId> &nodes) -> bool;
 
 private:
   using NodesActionSlots = std::map<std::string, NodesActionSlot>;
@@ -70,9 +70,9 @@ private:
   /* actions for multiple row indexes plus column index */
 public:
   using RowsColActionSlot = std::function<void(const std::vector<int> &, int)>;
-  void register_rows_col_action(const std::string &name, const RowsColActionSlot &slot);
-  void unregister_rows_col_action(const std::string &name);
-  bool trigger_action(const std::string &name, const std::vector<int> &rows, int column);
+  auto register_rows_col_action(const std::string &name, const RowsColActionSlot &slot) -> void;
+  auto unregister_rows_col_action(const std::string &name) -> void;
+  auto trigger_action(const std::string &name, const std::vector<int> &rows, int column) -> bool;
 
 private:
   using RowsColActionSlots = std::map<std::string, RowsColActionSlot>;

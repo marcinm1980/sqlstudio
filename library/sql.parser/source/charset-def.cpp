@@ -76,8 +76,7 @@ extern CHARSET_INFO my_charset_utf8_general_cs;
 
 #endif /* HAVE_UCA_COLLATIONS */
 
-my_bool init_compiled_charsets(myf flags __attribute__((unused)))
-{
+auto init_compiled_charsets(myf flags __attribute__((unused))) -> my_bool {
   CHARSET_INFO *cs;
 
   add_compiled_collation(&my_charset_bin);

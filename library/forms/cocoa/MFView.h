@@ -155,6 +155,4 @@ namespace mforms {
 - (void)relayout;
 - (mforms::ModifierKey)modifiersFromEvent:(NSEvent *)event;
 
-@end
-
-NSView *nsviewForView(mforms::View *view);
+auto nsviewForView(mforms::View *view) -> @end NSView *;

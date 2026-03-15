@@ -45,7 +45,7 @@ Recordset_sqlite_storage::Recordset_sqlite_storage() : Recordset_sql_storage() {
 Recordset_sqlite_storage::~Recordset_sqlite_storage() {
 }
 
-std::string Recordset_sqlite_storage::decorated_sql_query(Recordset::Column_names &column_names) {
+auto Recordset_sqlite_storage::decorated_sql_query(Recordset::Column_names &column_names) -> std::string {
   std::string sql_query;
   if (_sql_query.empty()) {
     if (column_names.empty())
@@ -62,7 +62,7 @@ std::string Recordset_sqlite_storage::decorated_sql_query(Recordset::Column_name
   return sql_query;
 }
 
-void Recordset_sqlite_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_sqlite_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   Recordset_sql_storage::do_unserialize(recordset, data_swap_db);
 
   Recordset::Column_names &column_names = get_column_names(recordset);
@@ -167,7 +167,7 @@ void Recordset_sqlite_storage::do_unserialize(Recordset *recordset, sqlite::conn
   }
 }
 
-void Recordset_sqlite_storage::do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_sqlite_storage::do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   Recordset_sql_storage::do_serialize(recordset, data_swap_db);
 
   SqlFacade::Ref sql_facade = SqlFacade::instance_for_rdbms_name("Mysql"); //!
@@ -176,7 +176,7 @@ void Recordset_sqlite_storage::do_serialize(const Recordset *recordset, sqlite::
   run_sql_script(sql_script, false);
 }
 
-void Recordset_sqlite_storage::run_sql_script(const Sql_script &sql_script, bool skip_commit) {
+auto Recordset_sqlite_storage::run_sql_script(const Sql_script &sql_script, bool skip_commit) -> void {
   sqlite::connection conn(_db_path);
   sqlide::optimize_sqlite_connection_for_speed(&conn);
   {
@@ -197,8 +197,8 @@ void Recordset_sqlite_storage::run_sql_script(const Sql_script &sql_script, bool
   //! sqlite::execute(conn, "vacuum", true); //! do it in cleanup proc
 }
 
-void Recordset_sqlite_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
-                                                   ColumnId column, sqlite::variant_t &blob_value) {
+auto Recordset_sqlite_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
+                                                   ColumnId column, sqlite::variant_t &blob_value) -> void {
   Recordset::Column_names &column_names = get_column_names(recordset);
   // unused  Recordset::Column_types &column_types= get_column_types(recordset);
   // unused  Recordset::Column_types &real_column_types= get_real_column_types(recordset);

@@ -78,7 +78,7 @@ public:
     : mforms::TabViewDockingPoint(tabview, name), _switcher(switcher) {
   }
 
-  virtual void undock_view(AppView *view) {
+  virtual auto undock_view(AppView *view) -> void {
     for (int i = 0; i < view_count(); i++)
       if (view_at_index(i) == view) {
         _switcher->remove_item(i);
@@ -88,7 +88,7 @@ public:
     mforms::TabViewDockingPoint::undock_view(view);
   }
 
-  virtual void dock_view(AppView *view, const std::string &icon, int arg2) {
+  virtual auto dock_view(AppView *view, const std::string &icon, int arg2) -> void {
     mforms::TabViewDockingPoint::dock_view(view, icon, arg2);
     _switcher->add_item(view->get_title(), "", icon, "");
   }
@@ -152,7 +152,7 @@ SqlEditorResult::SqlEditorResult(SqlEditorPanel *owner)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto SqlEditorResult::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   if (name == "GNColorsChanged") {
     updateColors();
   }
@@ -160,7 +160,7 @@ void SqlEditorResult::handle_notification(const std::string &name, void *sender,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::updateColors() {
+auto SqlEditorResult::updateColors() -> void {
   std::string background = base::Color::getSystemColor(TextBackgroundColor).to_html();
   if (_resultset_placeholder != nullptr)
     _resultset_placeholder->set_back_color(background);
@@ -178,7 +178,7 @@ void SqlEditorResult::updateColors() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::reset_sorting() {
+auto SqlEditorResult::reset_sorting() -> void {
   Recordset::Ref rset(recordset());
   if (rset)
     rset->sort_by(0, 0, false);
@@ -190,7 +190,7 @@ void SqlEditorResult::reset_sorting() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::copy_column_name() {
+auto SqlEditorResult::copy_column_name() -> void {
   int column = _result_grid->get_clicked_header_column();
   Recordset::Ref rset(recordset());
   if (rset)
@@ -199,7 +199,7 @@ void SqlEditorResult::copy_column_name() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::copy_all_column_names() {
+auto SqlEditorResult::copy_all_column_names() -> void {
   Recordset::Ref rset(recordset());
   if (rset) {
     std::string text;
@@ -216,7 +216,7 @@ void SqlEditorResult::copy_all_column_names() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::open_field_editor(int row, int column) {
+auto SqlEditorResult::open_field_editor(int row, int column) -> void {
   Recordset::Ref rset(recordset());
   if (rset) {
     Recordset_cdbc_storage::Ref storage(std::dynamic_pointer_cast<Recordset_cdbc_storage>(rset->data_storage()));
@@ -228,8 +228,8 @@ void SqlEditorResult::open_field_editor(int row, int column) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows,
-                                                      int column) {
+auto SqlEditorResult::update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows,
+                                                      int column) -> void {
   mforms::MenuItem *item = menu->find_item("edit_cell");
   if (item) {
     if (item->signal_clicked()->empty() && !rows.empty())
@@ -239,7 +239,7 @@ void SqlEditorResult::update_selection_for_menu_extra(mforms::ContextMenu *menu,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::set_recordset(Recordset::Ref rset) {
+auto SqlEditorResult::set_recordset(Recordset::Ref rset) -> void {
   if (_resultset_placeholder) {
     _tabdock_delegate->undock_view(_resultset_placeholder);
     _resultset_placeholder = NULL;
@@ -323,13 +323,13 @@ SqlEditorResult::~SqlEditorResult() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Recordset::Ref SqlEditorResult::recordset() const {
+auto SqlEditorResult::recordset() const -> Recordset::Ref {
   return _rset.lock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool SqlEditorResult::has_pending_changes() {
+auto SqlEditorResult::has_pending_changes() -> bool {
   Recordset::Ref rset(recordset());
   if (rset)
     return rset->has_pending_changes();
@@ -338,7 +338,7 @@ bool SqlEditorResult::has_pending_changes() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::apply_changes() {
+auto SqlEditorResult::apply_changes() -> void {
   Recordset::Ref rset(recordset());
   if (rset)
     rset->apply_changes();
@@ -346,7 +346,7 @@ void SqlEditorResult::apply_changes() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::discard_changes() {
+auto SqlEditorResult::discard_changes() -> void {
   Recordset::Ref rset(recordset());
   if (rset)
     rset->rollback();
@@ -354,7 +354,7 @@ void SqlEditorResult::discard_changes() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string SqlEditorResult::caption() const {
+auto SqlEditorResult::caption() const -> std::string {
   RETVAL_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, _rset, rs, "") {
     return rs->caption();
   }
@@ -362,7 +362,7 @@ std::string SqlEditorResult::caption() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::vector<SpatialDataView::SpatialDataSource> SqlEditorResult::get_spatial_columns() {
+auto SqlEditorResult::get_spatial_columns() -> std::vector<SpatialDataView::SpatialDataSource> {
   std::vector<SpatialDataView::SpatialDataSource> spatial_columns;
   int i = 0;
   Recordset_cdbc_storage::Ref storage(std::dynamic_pointer_cast<Recordset_cdbc_storage>(_rset.lock()->data_storage()));
@@ -384,14 +384,14 @@ std::vector<SpatialDataView::SpatialDataSource> SqlEditorResult::get_spatial_col
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::set_title(const std::string &title) {
+auto SqlEditorResult::set_title(const std::string &title) -> void {
   grtobj()->name(title);
   mforms::AppView::set_title(title);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool SqlEditorResult::can_close() {
+auto SqlEditorResult::can_close() -> bool {
   if (Recordset::Ref rs = recordset())
     if (!rs->can_close(true))
       return false;
@@ -404,7 +404,7 @@ bool SqlEditorResult::can_close() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::close() { // called by DockingPoint::close_view()
+auto SqlEditorResult::close() -> void { // called by DockingPoint::close_view()
   if (Recordset::Ref rs = recordset())
     rs->close();
   _tabdock.close_all_views();
@@ -414,7 +414,7 @@ void SqlEditorResult::close() { // called by DockingPoint::close_view()
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::switch_tab() {
+auto SqlEditorResult::switch_tab() -> void {
   mforms::AppView *tab = _tabdock.selected_view();
 
   if (tab) {
@@ -469,7 +469,7 @@ void SqlEditorResult::switch_tab() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::add_switch_toggle_toolbar_item(mforms::ToolBar *tbar) {
+auto SqlEditorResult::add_switch_toggle_toolbar_item(mforms::ToolBar *tbar) -> void {
   _collapse_toggled_sig.disconnect();
   mforms::App *app = mforms::App::get();
   tbar->add_item(mforms::manage(new mforms::ToolBarItem(mforms::ExpanderItem)));
@@ -487,7 +487,7 @@ void SqlEditorResult::add_switch_toggle_toolbar_item(mforms::ToolBar *tbar) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::switcher_collapsed() {
+auto SqlEditorResult::switcher_collapsed() -> void {
   bool state = _switcher.get_collapsed();
   for (std::list<mforms::ToolBar *>::const_iterator it = _toolbars.begin(); it != _toolbars.end(); ++it) {
     (*it)->find_item("sidetoggle")->set_checked(state);
@@ -499,7 +499,7 @@ void SqlEditorResult::switcher_collapsed() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::show_export_recordset() {
+auto SqlEditorResult::show_export_recordset() -> void {
   try {
     RETURN_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, _rset, rs) {
       grt::ValueRef option(bec::GRTManager::get()->get_app_option("Recordset:LastExportPath"));
@@ -530,7 +530,7 @@ void SqlEditorResult::show_export_recordset() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::show_import_recordset() {
+auto SqlEditorResult::show_import_recordset() -> void {
   try {
     RETURN_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, _rset, rs) {
       grt::BaseListRef args(true);
@@ -549,7 +549,7 @@ void SqlEditorResult::show_import_recordset() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::toggle_switcher_collapsed() {
+auto SqlEditorResult::toggle_switcher_collapsed() -> void {
   bool flag = !_switcher.get_collapsed();
   _switcher.set_collapsed(flag);
   _collapse_toggled(flag);
@@ -557,7 +557,7 @@ void SqlEditorResult::toggle_switcher_collapsed() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::on_recordset_column_resized(int column) {
+auto SqlEditorResult::on_recordset_column_resized(int column) -> void {
   if (column >= 0) {
     std::string column_id = _column_width_storage_ids[column];
     int width = _result_grid->get_column_width(column);
@@ -567,7 +567,7 @@ void SqlEditorResult::on_recordset_column_resized(int column) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::onRecordsetColumnsResized(const std::vector<int> cols) {
+auto SqlEditorResult::onRecordsetColumnsResized(const std::vector<int> cols) -> void {
   std::vector<int>::const_iterator it;
   std::map<std::string, int> widths;
   for (it = cols.begin(); it != cols.end(); ++it) {
@@ -587,7 +587,7 @@ void SqlEditorResult::onRecordsetColumnsResized(const std::vector<int> cols) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::reset_column_widths() {
+auto SqlEditorResult::reset_column_widths() -> void {
   ColumnWidthCache *cache = _owner->owner()->column_width_cache();
 
   RETURN_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, _rset, rs) {
@@ -608,7 +608,7 @@ void SqlEditorResult::reset_column_widths() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::vector<float> SqlEditorResult::get_autofit_column_widths(Recordset *rs) {
+auto SqlEditorResult::get_autofit_column_widths(Recordset *rs) -> std::vector<float> {
   std::vector<float> widths(rs->get_column_count());
   std::string font = bec::GRTManager::get()->get_app_option_string("studio.general.Resultset:Font");
 
@@ -629,7 +629,7 @@ std::vector<float> SqlEditorResult::get_autofit_column_widths(Recordset *rs) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::restore_grid_column_widths() {
+auto SqlEditorResult::restore_grid_column_widths() -> void {
   ColumnWidthCache *cache = _owner->owner()->column_width_cache();
 
   RETURN_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, _rset, rs) {
@@ -665,7 +665,7 @@ void SqlEditorResult::restore_grid_column_widths() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::dock_result_grid(mforms::GridView *view) {
+auto SqlEditorResult::dock_result_grid(mforms::GridView *view) -> void {
   _result_grid = view;
   view->set_name("Result Grid Wrapper");
   view->setInternalName("result-grid-wrapper");
@@ -741,7 +741,7 @@ void SqlEditorResult::dock_result_grid(mforms::GridView *view) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::create_spatial_view_panel_if_needed() {
+auto SqlEditorResult::create_spatial_view_panel_if_needed() -> void {
   if (Recordset::Ref rset = _rset.lock()) {
     Recordset_cdbc_storage::Ref storage(std::dynamic_pointer_cast<Recordset_cdbc_storage>(rset->data_storage()));
     bool has_geometry = false;
@@ -777,7 +777,7 @@ void SqlEditorResult::create_spatial_view_panel_if_needed() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::string format_ps_time(std::int64_t t) {
+static auto format_ps_time(std::int64_t t) -> std::string {
   int hours, mins;
   double secs;
 
@@ -790,7 +790,7 @@ static std::string format_ps_time(std::int64_t t) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static mforms::Label *bold_label(const std::string text) {
+static auto bold_label(const std::string text) -> mforms::Label * {
   mforms::Label *l = mforms::manage(new mforms::Label(text));
   l->set_style(mforms::BoldStyle);
   return l;
@@ -798,7 +798,7 @@ static mforms::Label *bold_label(const std::string text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::copy_column_info(mforms::TreeView *tree) {
+auto SqlEditorResult::copy_column_info(mforms::TreeView *tree) -> void {
   std::list<mforms::TreeNodeRef> nodes(tree->get_selection());
   std::string text;
 
@@ -817,7 +817,7 @@ void SqlEditorResult::copy_column_info(mforms::TreeView *tree) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::copy_column_info_name(mforms::TreeView *tree) {
+auto SqlEditorResult::copy_column_info_name(mforms::TreeView *tree) -> void {
   std::list<mforms::TreeNodeRef> nodes(tree->get_selection());
   std::string text;
 
@@ -829,7 +829,7 @@ void SqlEditorResult::copy_column_info_name(mforms::TreeView *tree) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::create_column_info_panel() {
+auto SqlEditorResult::create_column_info_panel() -> void {
   RETURN_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, _rset, rs) {
     Recordset_cdbc_storage::Ref storage(std::dynamic_pointer_cast<Recordset_cdbc_storage>(rs->data_storage()));
 
@@ -902,7 +902,7 @@ static struct ColorDefinitions {
   {0.37, 0.64, 0.64}, {0.64, 0.37, 0.64}, {0.64, 0.64, 0.37},
 };
 
-static std::string render_stages(std::vector<SqlEditorForm::PSStage> &stages) {
+static auto render_stages(std::vector<SqlEditorForm::PSStage> &stages) -> std::string {
   std::string path = mforms::Utilities::get_special_folder(mforms::ApplicationData) + "/stages.png";
 
   int ncolors = sizeof(colors) / sizeof(ColorDefinitions);
@@ -969,7 +969,7 @@ static std::string render_stages(std::vector<SqlEditorForm::PSStage> &stages) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::string render_waits(std::vector<SqlEditorForm::PSWait> &waits) {
+static auto render_waits(std::vector<SqlEditorForm::PSWait> &waits) -> std::string {
   std::string path = mforms::Utilities::get_special_folder(mforms::ApplicationData) + "/waits.png";
 
   int ncolors = sizeof(colors) / sizeof(ColorDefinitions);
@@ -1032,7 +1032,7 @@ static std::string render_waits(std::vector<SqlEditorForm::PSWait> &waits) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::create_query_stats_panel() {
+auto SqlEditorResult::create_query_stats_panel() -> void {
   RETURN_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, _rset, rs) {
     SqlEditorForm::RecordsetData *rsdata = dynamic_cast<SqlEditorForm::RecordsetData *>(rs->client_data());
     std::string info;
@@ -1182,7 +1182,7 @@ void SqlEditorResult::create_query_stats_panel() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SqlEditorResult::view_record_in_form(int row_id) {
+auto SqlEditorResult::view_record_in_form(int row_id) -> void {
   if (_form_result_view) {
     _tabview.set_active_tab(1);
     switch_tab();

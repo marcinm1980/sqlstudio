@@ -28,7 +28,7 @@
 
 #include "base/string_utilities.h"
 
-inline std::string get_qualified_schema_object_name(const GrtNamedObjectRef object) {
+inline auto get_qualified_schema_object_name(const GrtNamedObjectRef object) -> std::string {
   if (object.is_instance("db.Catalog"))
     return std::string("`").append(object->name().c_str()).append("`");
   else if (object.is_instance("db.Trigger"))
@@ -55,19 +55,19 @@ inline std::string get_qualified_schema_object_name(const GrtNamedObjectRef obje
     .append("`");
 }
 
-inline std::string get_object_old_name(GrtNamedObjectRef object) {
+inline auto get_object_old_name(GrtNamedObjectRef object) -> std::string {
   if (strlen(object->oldName().c_str()) > 0 && (!db_mysql_SchemaRef::can_wrap(object)))
     return std::string(object->oldName().c_str());
   return std::string(object->name().c_str());
 }
 
-inline std::string get_object_old_name(GrtObjectRef object) {
+inline auto get_object_old_name(GrtObjectRef object) -> std::string {
   if (GrtNamedObjectRef::can_wrap(object) && (!db_mysql_SchemaRef::can_wrap(object)))
     return get_object_old_name(GrtNamedObjectRef::cast_from(object));
   return std::string(object->name().c_str());
 }
 
-inline std::string get_qualified_schema_object_old_name(GrtNamedObjectRef object) {
+inline auto get_qualified_schema_object_old_name(GrtNamedObjectRef object) -> std::string {
   if (object.is_instance("db.Catalog"))
     return std::string("`").append(get_object_old_name(object)).append("`");
   else if (object.is_instance("db.Trigger"))
@@ -94,7 +94,7 @@ inline std::string get_qualified_schema_object_old_name(GrtNamedObjectRef object
     .append("`");
 }
 
-inline std::string get_full_object_name_for_key(GrtNamedObjectRef object, const bool case_sensitive) {
+inline auto get_full_object_name_for_key(GrtNamedObjectRef object, const bool case_sensitive) -> std::string {
   const std::string result =
     std::string(object.class_name())
       .append("::")
@@ -102,7 +102,7 @@ inline std::string get_full_object_name_for_key(GrtNamedObjectRef object, const 
   return case_sensitive ? result : base::toupper(result);
 }
 
-inline std::string get_old_object_name_for_key(GrtNamedObjectRef object, const bool case_sensitive) {
+inline auto get_old_object_name_for_key(GrtNamedObjectRef object, const bool case_sensitive) -> std::string {
   std::string old_name = object->oldName().empty() ? object->name() : object->oldName();
 
   const std::string result = std::string(object.class_name())

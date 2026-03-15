@@ -36,29 +36,29 @@ protected:
   }
 
 public:
-  static const char *static_get_name() {
+  static auto static_get_name() -> const char * {
     return "WbModelReportingInterface";
   }
 
-  ssize_t getAvailableReportingTemplates(const grt::StringListRef& param0) {
+  auto getAvailableReportingTemplates(const grt::StringListRef& param0) -> ssize_t {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(param0);
     grt::ValueRef ret = _module->call_function("getAvailableReportingTemplates", args);
     return *grt::IntegerRef::cast_from(ret);
   }
-  std::string getTemplateDirFromName(const std::string & param0) {
+  auto getTemplateDirFromName(const std::string & param0) -> std::string {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(grt::StringRef(param0));
     grt::ValueRef ret = _module->call_function("getTemplateDirFromName", args);
     return *grt::StringRef::cast_from(ret);
   }
-  studio_model_reporting_TemplateInfoRef getReportingTemplateInfo(const std::string & param0) {
+  auto getReportingTemplateInfo(const std::string & param0) -> studio_model_reporting_TemplateInfoRef {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(grt::StringRef(param0));
     grt::ValueRef ret = _module->call_function("getReportingTemplateInfo", args);
     return studio_model_reporting_TemplateInfoRef::cast_from(ret);
   }
-  ssize_t generateReport(const studio_physical_ModelRef& param0, const grt::DictRef& param1) {
+  auto generateReport(const studio_physical_ModelRef& param0, const grt::DictRef& param1) -> ssize_t {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(param0);
     args.ginsert(param1);

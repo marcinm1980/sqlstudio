@@ -37,7 +37,7 @@ GLXCanvasView::GLXCanvasView(Display *dpy, Window win, Visual *visual, int width
   cairo_set_tolerance(_cairo->get_cr(), 0.1);
 }
 
-bool GLXCanvasView::initialize() {
+auto GLXCanvasView::initialize() -> bool {
   XVisualInfo *visinfo;
   XWindowAttributes xwa;
   int attribs[] = {GLX_RGBA, GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1,
@@ -82,19 +82,19 @@ GLXCanvasView::~GLXCanvasView() {
   }
 }
 
-void GLXCanvasView::make_current() {
+auto GLXCanvasView::make_current() -> void {
   glXMakeCurrent(_display, _window, _glxcontext);
 }
 
-void GLXCanvasView::remove_current() {
+auto GLXCanvasView::remove_current() -> void {
   // glXMakeCurrent(_display, 0, 0);
 }
 
-void GLXCanvasView::swap_buffers() {
+auto GLXCanvasView::swap_buffers() -> void {
   glXSwapBuffers(_display, _window);
 }
 
-void GLXCanvasView::update_view_size(int width, int height) {
+auto GLXCanvasView::update_view_size(int width, int height) -> void {
   if (_view_width != width || _view_height != height) {
     _view_width = width;
     _view_height = height;

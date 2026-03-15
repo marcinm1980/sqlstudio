@@ -40,34 +40,34 @@ protected:
 public:
   SynchronizeDifferencesPageBEInterface(){};
   virtual ~SynchronizeDifferencesPageBEInterface(){};
-  grt::StringRef get_sync_profile_name() {
+  auto get_sync_profile_name() -> grt::StringRef {
     return _sync_profile_name;
   };
-  void set_sync_profile_name(grt::StringRef sync_profile_name) {
+  auto set_sync_profile_name(grt::StringRef sync_profile_name) -> void {
     _sync_profile_name = sync_profile_name;
   };
-  grt::ValueRef get_model_object(const bec::NodeId &node) const {
+  auto get_model_object(const bec::NodeId &node) const -> grt::ValueRef {
     return _diff_tree->get_node_with_id(node)->get_model_part().get_object();
   };
-  grt::ValueRef get_db_object(const bec::NodeId &node) const {
+  auto get_db_object(const bec::NodeId &node) const -> grt::ValueRef {
     return _diff_tree->get_node_with_id(node)->get_db_part().get_object();
   };
-  void set_next_apply_direction(bec::NodeId nodeid) {
+  auto set_next_apply_direction(bec::NodeId nodeid) -> void {
     _diff_tree->set_next_apply_direction(nodeid);
   }
-  void set_apply_direction(bec::NodeId nodeid, DiffNode::ApplicationDirection dir, bool recursive) {
+  auto set_apply_direction(bec::NodeId nodeid, DiffNode::ApplicationDirection dir, bool recursive) -> void {
     _diff_tree->set_apply_direction(nodeid, dir, recursive);
   }
-  DiffNode::ApplicationDirection get_apply_direction(bec::NodeId nodeid) {
+  auto get_apply_direction(bec::NodeId nodeid) -> DiffNode::ApplicationDirection {
     return _diff_tree->get_apply_direction(nodeid);
   }
-  virtual db_mysql_CatalogRef get_model_catalog() = 0;
-  virtual void get_compared_catalogs(db_CatalogRef &left, db_CatalogRef &right) = 0;
-  virtual std::string get_col_name(const size_t col_id) = 0;
-  virtual std::string get_sql_for_object(GrtNamedObjectRef obj) = 0;
-  virtual std::shared_ptr<DiffTreeBE> init_diff_tree(const std::vector<std::string> &schemata,
+  virtual auto get_model_catalog() -> db_mysql_CatalogRef = 0;
+  virtual auto get_compared_catalogs(db_CatalogRef &left, db_CatalogRef &right) -> void = 0;
+  virtual auto get_col_name(const size_t col_id) -> std::string = 0;
+  virtual auto get_sql_for_object(GrtNamedObjectRef obj) -> std::string = 0;
+  virtual auto init_diff_tree(const std::vector<std::string> &schemata,
                                                      const grt::ValueRef &ext_cat, const grt::ValueRef &cat2,
-                                                     grt::StringListRef SchemaSkipList, grt::DictRef options) = 0;
+                                                     grt::StringListRef SchemaSkipList, grt::DictRef options) -> std::shared_ptr<DiffTreeBE> = 0;
 };
 
 struct WBPLUGINDBMYSQLBE_PUBLIC_FUNC DbMySQLScriptSyncException : public std::logic_error {
@@ -92,53 +92,53 @@ class WBPLUGINDBMYSQLBE_PUBLIC_FUNC DbMySQLScriptSync : public DbMySQLValidation
 
   std::shared_ptr<grt::DiffChange> _alter_change;
 
-  void sync_finished(grt::ValueRef res);
+  auto sync_finished(grt::ValueRef res) -> void;
   grt::ValueRef sync_task(grt::StringRef);
-  db_mysql_CatalogRef get_cat_from_file_or_tree(std::string filename, std::string &error_msg);
+  auto get_cat_from_file_or_tree(std::string filename, std::string &error_msg) -> db_mysql_CatalogRef;
 
 protected:
-  virtual db_mysql_CatalogRef get_model_catalog();
-  virtual void get_compared_catalogs(db_CatalogRef &left, db_CatalogRef &right);
+  virtual auto get_model_catalog() -> db_mysql_CatalogRef;
+  virtual auto get_compared_catalogs(db_CatalogRef &left, db_CatalogRef &right) -> void;
 
 public:
   DbMySQLScriptSync();
   virtual ~DbMySQLScriptSync();
 
-  void start_sync();
+  auto start_sync() -> void;
 
-  void set_option(const std::string &name, const std::string &value);
+  auto set_option(const std::string &name, const std::string &value) -> void;
 
-  std::shared_ptr<DiffTreeBE> init_diff_tree(const std::vector<std::string> &schemata, const grt::ValueRef &left,
+  auto init_diff_tree(const std::vector<std::string> &schemata, const grt::ValueRef &left,
                                              const grt::ValueRef &right, grt::StringListRef SchemaSkipList = grt::StringListRef(),
-                                             grt::DictRef options = grt::DictRef());
+                                             grt::DictRef options = grt::DictRef()) -> std::shared_ptr<DiffTreeBE>;
 
-  std::string get_sql_for_object(GrtNamedObjectRef obj);
+  auto get_sql_for_object(GrtNamedObjectRef obj) -> std::string;
 
-  void set_options(grt::DictRef options) {
+  auto set_options(grt::DictRef options) -> void {
     _options = options;
   }
-  grt::DictRef get_options() const {
+  auto get_options() const -> grt::DictRef {
     return _options.is_valid() ? _options : grt::DictRef(true);
   }
 
-  void set_db_options(grt::DictRef db_options) {
+  auto set_db_options(grt::DictRef db_options) -> void {
     _db_options = db_options;
   };
-  grt::DictRef get_db_options() const {
+  auto get_db_options() const -> grt::DictRef {
     return _db_options.is_valid() ? _db_options : grt::DictRef(true);
   }
 
-  grt::StringRef generate_alter(db_mysql_CatalogRef org_cat, db_mysql_CatalogRef org_cat_copy,
-                                db_mysql_CatalogRef mod_cat_copy);
+  auto generate_alter(db_mysql_CatalogRef org_cat, db_mysql_CatalogRef org_cat_copy,
+                                db_mysql_CatalogRef mod_cat_copy) -> grt::StringRef;
 
-  std::string generate_diff_tree_script();
-  std::string generate_diff_tree_report();
+  auto generate_diff_tree_script() -> std::string;
+  auto generate_diff_tree_report() -> std::string;
 
-  void apply_changes_to_model();
+  auto apply_changes_to_model() -> void;
 
-  void save_sync_profile();
-  void restore_sync_profile(db_CatalogRef catalog);
-  std::string get_col_name(const size_t col_id);
+  auto save_sync_profile() -> void;
+  auto restore_sync_profile(db_CatalogRef catalog) -> void;
+  auto get_col_name(const size_t col_id) -> std::string;
 
-  void restore_overriden_names();
+  auto restore_overriden_names() -> void;
 };

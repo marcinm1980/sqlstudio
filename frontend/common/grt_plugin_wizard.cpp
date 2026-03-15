@@ -215,7 +215,7 @@ NewPluginDialog::NewPluginDialog(Form* owner, const std::string& template_dir)
   set_size(-1, 450);
   changed_type();
 }
-bool NewPluginDialog::advance() {
+auto NewPluginDialog::advance() -> bool {
   if (_python_script.get_active()) {
     std::string value = _filename.get_string_value();
 
@@ -234,7 +234,7 @@ bool NewPluginDialog::advance() {
   }
   return true;
 }
-bool NewPluginDialog::run(std::string& filename, std::string& code, bool& is_script, std::string& language) {
+auto NewPluginDialog::run(std::string& filename, std::string& code, bool& is_script, std::string& language) -> bool {
   if (!run_modal(&_ok, &_cancel))
     return false;
 
@@ -271,7 +271,7 @@ bool NewPluginDialog::run(std::string& filename, std::string& code, bool& is_scr
 
   return true;
 }
-void NewPluginDialog::changed_type() {
+auto NewPluginDialog::changed_type() -> void {
   if (_python_script.get_active()) {
     _tab.set_active_tab(0);
   } else if (_python_module.get_active()) {
@@ -281,20 +281,20 @@ void NewPluginDialog::changed_type() {
   }
   validate();
 }
-bool NewPluginDialog::is_valid_id(const std::string& s) {
+auto NewPluginDialog::is_valid_id(const std::string& s) -> bool {
   for (std::string::const_iterator i = s.begin(); i != s.end(); ++i) {
     if (!isalnum(*i) && *i != '_')
       return false;
   }
   return !s.empty();
 }
-bool NewPluginDialog::is_valid_filename(const std::string& file, const std::string& ext) {
+auto NewPluginDialog::is_valid_filename(const std::string& file, const std::string& ext) -> bool {
   if (!g_str_has_suffix(file.c_str(), ext.c_str()))
     return is_valid_id(file);
 
   return is_valid_id(file.substr(0, file.size() - ext.size()));
 }
-void NewPluginDialog::validate() {
+auto NewPluginDialog::validate() -> void {
   bool ok = true;
 
   _error_label.set_text("");
@@ -339,7 +339,7 @@ void NewPluginDialog::validate() {
   }
   _ok.set_enabled(ok);
 }
-void NewPluginDialog::name_changed(TextEntry* entry) {
+auto NewPluginDialog::name_changed(TextEntry* entry) -> void {
   std::string name = entry->get_string_value();
   std::string filename;
 
@@ -359,7 +359,7 @@ void NewPluginDialog::name_changed(TextEntry* entry) {
 
   validate();
 }
-void NewPluginDialog::load_plugin_templates(const std::string& template_dir) {
+auto NewPluginDialog::load_plugin_templates(const std::string& template_dir) -> void {
   _plugin_template_list.clear();
 
   GDir* dir = g_dir_open(template_dir.c_str(), 0, NULL);
@@ -401,12 +401,12 @@ void NewPluginDialog::load_plugin_templates(const std::string& template_dir) {
   t.name = "Empty File";
   _plugin_template_list.insert(_plugin_template_list.begin(), t);
 }
-Label* NewPluginDialog::newLabel(const std::string& text) {
+auto NewPluginDialog::newLabel(const std::string& text) -> Label* {
   Label* l = new Label(text);
   l->set_wrap_text(true);
   return l;
 }
-Label* NewPluginDialog::newDescr(const std::string& text) {
+auto NewPluginDialog::newDescr(const std::string& text) -> Label* {
   Label* l = new Label(text);
   l->set_style(SmallHelpTextStyle);
   return l;

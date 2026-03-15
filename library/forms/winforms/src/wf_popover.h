@@ -34,24 +34,24 @@ namespace MySQL {
     class PopoverWrapper : public ObjectWrapper {
     private:
       boost::signals2::connection _track_connection;
-      bool mouse_left_tracked_object();
+      auto mouse_left_tracked_object() -> bool;
 
     protected:
       PopoverWrapper(mforms::Popover *backend);
 
-      static bool create(mforms::Popover *backend, mforms::View *relative, mforms::PopoverStyle style);
-      static void destroy(mforms::Popover *backend);
-      static void set_content(mforms::Popover *backend, mforms::View *content);
-      static void set_size(mforms::Popover *backend, int width, int height);
-      static void show(mforms::Popover *backend, int spot_x, int spot_y, mforms::StartPosition position);
-      static void show_and_track(mforms::Popover *backend, mforms::View *owner, int spot_x, int spot_y,
-                                 mforms::StartPosition position);
-      static base::Rect get_content_rect(mforms::Popover *backend);
-      static void setName(mforms::Popover *backend, const std::string &name);
-      static void close(mforms::Popover *backend);
+      static auto create(mforms::Popover *backend, mforms::View *relative, mforms::PopoverStyle style) -> bool;
+      static auto destroy(mforms::Popover *backend) -> void;
+      static auto set_content(mforms::Popover *backend, mforms::View *content) -> void;
+      static auto set_size(mforms::Popover *backend, int width, int height) -> void;
+      static auto show(mforms::Popover *backend, int spot_x, int spot_y, mforms::StartPosition position) -> void;
+      static auto show_and_track(mforms::Popover *backend, mforms::View *owner, int spot_x, int spot_y,
+                                 mforms::StartPosition position) -> void;
+      static auto get_content_rect(mforms::Popover *backend) -> base::Rect;
+      static auto setName(mforms::Popover *backend, const std::string &name) -> void;
+      static auto close(mforms::Popover *backend) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

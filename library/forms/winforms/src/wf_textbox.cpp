@@ -144,7 +144,7 @@ TextBoxWrapper::TextBoxWrapper(mforms::TextBox *text) : ViewWrapper(text) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TextBoxWrapper::create(mforms::TextBox *backend, mforms::ScrollBars scroll_bars) {
+auto TextBoxWrapper::create(mforms::TextBox *backend, mforms::ScrollBars scroll_bars) -> bool {
   TextBoxWrapper *wrapper = new TextBoxWrapper(backend);
 
   TextBoxEx ^ textbox = TextBoxWrapper::Create<TextBoxEx>(backend, wrapper);
@@ -166,14 +166,14 @@ bool TextBoxWrapper::create(mforms::TextBox *backend, mforms::ScrollBars scroll_
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::set_bordered(mforms::TextBox *backend, bool bordered) {
+auto TextBoxWrapper::set_bordered(mforms::TextBox *backend, bool bordered) -> void {
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
   textbox->BorderStyle = bordered ? BorderStyle::FixedSingle : BorderStyle::None;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::set_text(mforms::TextBox *backend, const std::string &text) {
+auto TextBoxWrapper::set_text(mforms::TextBox *backend, const std::string &text) -> void {
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
   textbox->Text = CppStringToNative(text);
   textbox->Select(0, 0);
@@ -181,7 +181,7 @@ void TextBoxWrapper::set_text(mforms::TextBox *backend, const std::string &text)
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::append_text(mforms::TextBox *backend, const std::string &text, bool scroll_to_end) {
+auto TextBoxWrapper::append_text(mforms::TextBox *backend, const std::string &text, bool scroll_to_end) -> void {
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
 
   if (!textbox->IsDisposed) {
@@ -195,35 +195,35 @@ void TextBoxWrapper::append_text(mforms::TextBox *backend, const std::string &te
 
 //--------------------------------------------------------------------------------------------------
 
-std::string TextBoxWrapper::get_text(mforms::TextBox *backend) {
+auto TextBoxWrapper::get_text(mforms::TextBox *backend) -> std::string {
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
   return NativeToCppString(textbox->Text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::set_read_only(mforms::TextBox *backend, bool flag) {
+auto TextBoxWrapper::set_read_only(mforms::TextBox *backend, bool flag) -> void {
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
   textbox->ReadOnly = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::set_padding(mforms::TextBox *backend, int pad) {
+auto TextBoxWrapper::set_padding(mforms::TextBox *backend, int pad) -> void {
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
   textbox->Padding = Padding(pad); // Doesn't have any effect.
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::clear(mforms::TextBox *backend) {
+auto TextBoxWrapper::clear(mforms::TextBox *backend) -> void {
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
   textbox->Clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::set_monospaced(mforms::TextBox *backend, bool flag) {
+auto TextBoxWrapper::set_monospaced(mforms::TextBox *backend, bool flag) -> void {
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
 
   if (flag)
@@ -239,7 +239,7 @@ void TextBoxWrapper::set_monospaced(mforms::TextBox *backend, bool flag) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::get_selected_range(mforms::TextBox *backend, int &start, int &end) {
+auto TextBoxWrapper::get_selected_range(mforms::TextBox *backend, int &start, int &end) -> void {
   // TODO: convert signature to return a std::pair<int, int> instead.
   TextBoxEx ^ textbox = TextBoxWrapper::GetManagedObject<TextBoxEx>(backend);
   start = textbox->SelectionStart;
@@ -248,7 +248,7 @@ void TextBoxWrapper::get_selected_range(mforms::TextBox *backend, int &start, in
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBoxWrapper::init() {
+auto TextBoxWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_textbox_impl.create = &TextBoxWrapper::create;

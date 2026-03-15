@@ -29,4 +29,4 @@ namespace mforms {
   class View;
 };
 
-NSView *NSViewForMFormsView(mforms::View *view);
+auto NSViewForMFormsView(mforms::View *view) -> NSView *;

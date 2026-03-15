@@ -64,26 +64,26 @@ namespace grt {
 
     ChangeList changes;
 
-    inline const_iterator begin() const {
+    inline auto begin() const -> const_iterator {
       return changes.begin();
     }
-    inline const_iterator end() const {
+    inline auto end() const -> const_iterator {
       return changes.end();
     }
 
-    inline const_reverse_iterator rbegin() const {
+    inline auto rbegin() const -> const_reverse_iterator {
       return changes.rbegin();
     }
-    inline const_reverse_iterator rend() const {
+    inline auto rend() const -> const_reverse_iterator {
       return changes.rend();
     }
 
-    inline void append(std::shared_ptr<DiffChange> change) {
+    inline auto append(std::shared_ptr<DiffChange> change) -> void {
       if (change.get())
         changes.push_back(change);
     }
 
-    inline bool empty() const {
+    inline auto empty() const -> bool {
       return changes.empty();
     }
   };
@@ -107,27 +107,27 @@ namespace grt {
     }
 
   public:
-    void set_parent(DiffChange* parent) {
+    auto set_parent(DiffChange* parent) -> void {
       _parent = parent;
     }
-    DiffChange* parent() const {
+    auto parent() const -> DiffChange* {
       return _parent;
     }
 
-    virtual const ChangeSet* subchanges() const {
+    virtual auto subchanges() const -> const ChangeSet* {
       return NULL;
     }
 
     // dumps to stdout text for of change tree
-    virtual void dump_log(int level) const {
+    virtual auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name() << std::endl;
     }
 
-    ChangeType get_change_type() const;
+    auto get_change_type() const -> ChangeType;
 
     // string representation of ChangeType
-    std::string get_type_name() const {
+    auto get_type_name() const -> std::string {
 #define CASE(v) \
   case v:       \
     return #v;
@@ -171,11 +171,11 @@ namespace grt {
     virtual ~MultiChange() { /*TODO release changes*/
     }
 
-    virtual const ChangeSet* subchanges() const {
+    virtual auto subchanges() const -> const ChangeSet* {
       return &_changes;
     }
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name() << std::endl;
       for (ChangeSet::const_iterator iter = _changes.begin(); iter != _changes.end(); ++iter) {

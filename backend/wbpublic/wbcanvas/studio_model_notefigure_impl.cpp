@@ -34,7 +34,7 @@ studio_model_NoteFigure::ImplData::ImplData(studio_model_NoteFigure *self) : sup
   _resizable = true;
 }
 
-void studio_model_NoteFigure::ImplData::set_text(const std::string &text) {
+auto studio_model_NoteFigure::ImplData::set_text(const std::string &text) -> void {
   self()->_text = text;
 
   if (_figure) {
@@ -57,7 +57,7 @@ void studio_model_NoteFigure::ImplData::set_text(const std::string &text) {
   }
 }
 
-void studio_model_NoteFigure::ImplData::set_text_color(const std::string &color) {
+auto studio_model_NoteFigure::ImplData::set_text_color(const std::string &color) -> void {
   self()->_textColor = color;
 
   if (_figure) {
@@ -65,7 +65,7 @@ void studio_model_NoteFigure::ImplData::set_text_color(const std::string &color)
   }
 }
 
-void studio_model_NoteFigure::ImplData::set_font(const std::string &font) {
+auto studio_model_NoteFigure::ImplData::set_font(const std::string &font) -> void {
   self()->_font = font;
 
   if (_figure) {
@@ -88,7 +88,7 @@ void studio_model_NoteFigure::ImplData::set_font(const std::string &font) {
   }
 }
 
-void studio_model_NoteFigure::ImplData::unrealize() {
+auto studio_model_NoteFigure::ImplData::unrealize() -> void {
   notify_will_unrealize();
 
   super::unrealize();
@@ -97,7 +97,7 @@ void studio_model_NoteFigure::ImplData::unrealize() {
   _figure = 0;
 }
 
-bool studio_model_NoteFigure::ImplData::realize() {
+auto studio_model_NoteFigure::ImplData::realize() -> bool {
   if (_figure)
     return true;
   if (!is_realizable())

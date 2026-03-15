@@ -61,7 +61,7 @@ namespace MySQL {
           delete inner;
       }
 
-      inline ::bec::ValueInspectorBE *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::bec::ValueInspectorBE * {
         return static_cast<::bec::ValueInspectorBE *>(inner);
       }
 

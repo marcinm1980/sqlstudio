@@ -168,14 +168,14 @@ namespace base {
 
     static auto getSystemColor(SystemColor colorType) -> Color;
 
-    static void set_active_scheme(ColorScheme scheme);
+    static auto set_active_scheme(ColorScheme scheme) -> void;
     static auto get_active_scheme() -> ColorScheme;
     static auto is_high_contrast_scheme() -> bool;
-    static void prepareForTesting();
+    static auto prepareForTesting() -> void;
 
     // Persistence support. Also called when colors were changed in preferences.
-    static void load_custom_colors(const std::map<std::string, std::string> &colors);
-    static void save_custom_colors(std::map<std::string, std::string> &colors);
+    static auto load_custom_colors(const std::map<std::string, std::string> &colors) -> void;
+    static auto save_custom_colors(std::map<std::string, std::string> &colors) -> void;
   };
 
   struct BASELIBRARY_PUBLIC_FUNC HSVColor {

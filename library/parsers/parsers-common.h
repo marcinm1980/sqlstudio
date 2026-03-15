@@ -133,13 +133,13 @@ namespace parsers {
     auto lookAhead(bool skipHidden = true) -> size_t;
     auto lookBack(bool skipHidden = true) -> size_t;
 
-    void seek(size_t index);
+    auto seek(size_t index) -> void;
 
     // Stacking.
-    void reset();
-    void push();
+    auto reset() -> void;
+    auto push() -> void;
     auto pop() -> bool;
-    void removeTos();
+    auto removeTos() -> void;
 
     // Properties of current token.
     auto is(size_t type) const -> bool;

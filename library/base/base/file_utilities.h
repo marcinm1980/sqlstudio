@@ -97,7 +97,7 @@ namespace base {
     }
 
     auto getPath() const -> std::string;
-    void swap(FileHandle &fh);
+    auto swap(FileHandle &fh) -> void;
     operator bool() const {
       return (!_file);
     }
@@ -107,7 +107,7 @@ namespace base {
     auto file() -> FILE * {
       return _file;
     }
-    void dispose();
+    auto dispose() -> void;
   };
 
   // creates the directory, returns false if the directory exists.. throws exception on error
@@ -128,7 +128,7 @@ namespace base {
 
   BASELIBRARY_PUBLIC_FUNC auto remove_recursive(const std::string &path) -> bool;
 
-  BASELIBRARY_PUBLIC_FUNC void rename(const std::string &from, const std::string &to);
+  BASELIBRARY_PUBLIC_FUNC auto rename(const std::string &from, const std::string &to) -> void;
 
   BASELIBRARY_PUBLIC_FUNC auto file_exists(const std::string &path) -> bool;
   BASELIBRARY_PUBLIC_FUNC auto is_directory(const std::string &path) -> bool;

@@ -47,7 +47,7 @@ ImageEditorWrapper::~ImageEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-ImageEditorBE *ImageEditorWrapper::get_unmanaged_object() {
+auto ImageEditorWrapper::get_unmanaged_object() -> ImageEditorBE * {
   return static_cast<::ImageEditorBE *>(inner);
 }
 
@@ -59,13 +59,13 @@ void ImageEditorWrapper::set_filename(String ^ text) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ ImageEditorWrapper::get_filename() {
+auto ImageEditorWrapper::get_filename() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_filename());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ ImageEditorWrapper::get_attached_image_path() {
+auto ImageEditorWrapper::get_attached_image_path() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_attached_image_path());
 }
 
@@ -80,31 +80,31 @@ void ImageEditorWrapper::get_size([Out] int % w, [Out] int % h) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageEditorWrapper::set_size(int w, int h) {
+auto ImageEditorWrapper::set_size(int w, int h) -> void {
   get_unmanaged_object()->set_size(w, h);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageEditorWrapper::set_width(int w) {
+auto ImageEditorWrapper::set_width(int w) -> void {
   get_unmanaged_object()->set_width(w);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageEditorWrapper::set_height(int h) {
+auto ImageEditorWrapper::set_height(int h) -> void {
   get_unmanaged_object()->set_height(h);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ImageEditorWrapper::get_keep_aspect_ratio() {
+auto ImageEditorWrapper::get_keep_aspect_ratio() -> bool {
   return get_unmanaged_object()->get_keep_aspect_ratio();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageEditorWrapper::set_keep_aspect_ratio(bool flag) {
+auto ImageEditorWrapper::set_keep_aspect_ratio(bool flag) -> void {
   get_unmanaged_object()->set_keep_aspect_ratio(flag);
 }
 

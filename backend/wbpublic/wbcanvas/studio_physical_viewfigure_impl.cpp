@@ -35,8 +35,8 @@ studio_physical_ViewFigure::ImplData::ImplData(studio_physical_ViewFigure *owner
   _resizable = false;
 }
 
-void studio_physical_ViewFigure::ImplData::view_member_changed(const std::string &name,
-                                                                  const grt::ValueRef &ovalue) {
+auto studio_physical_ViewFigure::ImplData::view_member_changed(const std::string &name,
+                                                                  const grt::ValueRef &ovalue) -> void {
   if (name == "name") {
     self()->_name = self()->view()->name();
 
@@ -45,7 +45,7 @@ void studio_physical_ViewFigure::ImplData::view_member_changed(const std::string
   }
 }
 
-void studio_physical_ViewFigure::ImplData::set_in_view(bool flag) {
+auto studio_physical_ViewFigure::ImplData::set_in_view(bool flag) -> void {
   if (!self()->owner().is_valid())
     throw std::logic_error("adding figure to diagram before setting owner");
 
@@ -60,7 +60,7 @@ void studio_physical_ViewFigure::ImplData::set_in_view(bool flag) {
   model_Figure::ImplData::set_in_view(flag);
 }
 
-void studio_physical_ViewFigure::ImplData::set_view(const db_ViewRef &view) {
+auto studio_physical_ViewFigure::ImplData::set_view(const db_ViewRef &view) -> void {
   // Check if we had a valid view before and revert the previous setup if so.
   if (self()->_view.is_valid()) {
     if (self()->_owner.is_valid())
@@ -91,7 +91,7 @@ void studio_physical_ViewFigure::ImplData::set_view(const db_ViewRef &view) {
   }
 }
 
-void studio_physical_ViewFigure::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) {
+auto studio_physical_ViewFigure::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void {
   /*  dont rename view from figure
 else if (name == "name")
 {
@@ -111,7 +111,7 @@ else if (name == "name")
   }
 }
 
-bool studio_physical_ViewFigure::ImplData::is_realizable() {
+auto studio_physical_ViewFigure::ImplData::is_realizable() -> bool {
   if (!super::is_realizable())
     return false;
 
@@ -121,7 +121,7 @@ bool studio_physical_ViewFigure::ImplData::is_realizable() {
   return false;
 }
 
-void studio_physical_ViewFigure::ImplData::unrealize() {
+auto studio_physical_ViewFigure::ImplData::unrealize() -> void {
   studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(self()->owner()->owner()));
 
   notify_will_unrealize();
@@ -138,7 +138,7 @@ void studio_physical_ViewFigure::ImplData::unrealize() {
   _figure = 0;
 }
 
-bool studio_physical_ViewFigure::ImplData::realize() {
+auto studio_physical_ViewFigure::ImplData::realize() -> bool {
   if (_figure)
     return true;
   if (!is_realizable())

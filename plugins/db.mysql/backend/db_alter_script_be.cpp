@@ -59,7 +59,7 @@ DbMySQLDiffAlter::DbMySQLDiffAlter() : _alter_list(grt::Initialized), _alter_obj
 DbMySQLDiffAlter::~DbMySQLDiffAlter() {
 }
 
-std::string DbMySQLDiffAlter::generate_alter() {
+auto DbMySQLDiffAlter::generate_alter() -> std::string {
   SQLGeneratorInterfaceImpl *diffsql_module =
     dynamic_cast<SQLGeneratorInterfaceImpl *>(grt::GRT::get()->get_module("DbMySQL"));
 
@@ -135,9 +135,9 @@ std::string DbMySQLDiffAlter::generate_alter() {
   return *script;
 };
 
-std::shared_ptr<DiffTreeBE> DbMySQLDiffAlter::init_diff_tree(const std::vector<std::string> &schemata,
+auto DbMySQLDiffAlter::init_diff_tree(const std::vector<std::string> &schemata,
                                                              const grt::ValueRef &left, const grt::ValueRef &right,
-                                                             grt::StringListRef SchemaSkipList, grt::DictRef options) {
+                                                             grt::StringListRef SchemaSkipList, grt::DictRef options) -> std::shared_ptr<DiffTreeBE> {
 
   db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->get("/wb/rdbmsMgmt/rdbms/0"));
   std::string default_engine_name;
@@ -246,7 +246,7 @@ std::shared_ptr<DiffTreeBE> DbMySQLDiffAlter::init_diff_tree(const std::vector<s
            new ::DiffTreeBE(schemata, _left_cat_copy, right_cat_copy, _alter_change, apply_directions_map));
 }
 
-std::string DbMySQLDiffAlter::get_col_name(const size_t col_id) {
+auto DbMySQLDiffAlter::get_col_name(const size_t col_id) -> std::string {
   switch (col_id) {
     case 0:
       return "Source";
@@ -261,7 +261,7 @@ std::string DbMySQLDiffAlter::get_col_name(const size_t col_id) {
   return "No Column Name Defined";
 }
 
-void DbMySQLDiffAlter::restore_overriden_names() {
+auto DbMySQLDiffAlter::restore_overriden_names() -> void {
   db_mysql_CatalogRef mod_cat = get_model_catalog();
   for (size_t i = 0; i < mod_cat->schemata().count(); i++) {
     db_SchemaRef schema(mod_cat->schemata()[i]);

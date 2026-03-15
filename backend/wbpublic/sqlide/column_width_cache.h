@@ -33,14 +33,14 @@ class WBPUBLICBACKEND_PUBLIC_FUNC ColumnWidthCache {
   std::string _connection_id;
   sqlite::connection *_sqconn;
 
-  void init_db();
+  auto init_db() -> void;
 
 public:
   ColumnWidthCache(const std::string &connection_id, const std::string &cache_dir);
   virtual ~ColumnWidthCache();
 
-  void save_column_width(const std::string &column_id, int width);
-  void save_columns_width(const std::map<std::string, int> &columns);
-  int get_column_width(const std::string &column_id);
-  void delete_column_width(const std::string &column_id);
+  auto save_column_width(const std::string &column_id, int width) -> void;
+  auto save_columns_width(const std::map<std::string, int> &columns) -> void;
+  auto get_column_width(const std::string &column_id) -> int;
+  auto delete_column_width(const std::string &column_id) -> void;
 };

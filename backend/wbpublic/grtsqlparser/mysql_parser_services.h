@@ -52,8 +52,8 @@ namespace parsers {
     virtual ~MySQLParserContext() {};
 
     virtual auto isCaseSensitive() -> bool = 0;
-    virtual void updateServerVersion(GrtVersionRef newVersion) = 0;
-    virtual void updateSqlMode(const std::string &mode) = 0;
+    virtual auto updateServerVersion(GrtVersionRef newVersion) -> void = 0;
+    virtual auto updateSqlMode(const std::string &mode) -> void = 0;
 
     virtual auto serverVersion() const -> GrtVersionRef = 0;
     virtual auto sqlMode() const -> std::string = 0;

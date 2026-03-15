@@ -55,52 +55,52 @@ namespace mdc {
 
     virtual ~CanvasView();
 
-    void lock_ui();
-    void unlock_ui();
+    auto lock_ui() -> void;
+    auto unlock_ui() -> void;
 
-    void lock();
-    void unlock();
+    auto lock() -> void;
+    auto unlock() -> void;
 
-    void lock_redraw();
-    void unlock_redraw();
+    auto lock_redraw() -> void;
+    auto unlock_redraw() -> void;
 
-    void pre_destroy();
+    auto pre_destroy() -> void;
 
-    inline void set_user_data(void *data) {
+    inline auto set_user_data(void *data) -> void {
       _user_data = data;
     }
     auto get_user_data() -> void * {
       return _user_data;
     }
 
-    void set_tag(const std::string &tag);
+    auto set_tag(const std::string &tag) -> void;
     auto get_tag() const -> std::string {
       return _tag;
     }
 
     auto find_item_with_tag(const std::string &tag) -> mdc::CanvasItem *;
 
-    void set_printout_mode(bool flag);
+    auto set_printout_mode(bool flag) -> void;
     auto is_printout() -> bool {
       return _printout_mode;
     }
 
-    virtual void update_view_size(int width, int height) = 0;
+    virtual auto update_view_size(int width, int height) -> void = 0;
 
-    void set_offset(const base::Point &offs);
-    virtual void scroll_to(const base::Point &offs);
+    auto set_offset(const base::Point &offs) -> void;
+    virtual auto scroll_to(const base::Point &offs) -> void;
 
-    void set_zoom(float zoom);
+    auto set_zoom(float zoom) -> void;
     auto get_zoom() const -> float {
       return _zoom;
     };
 
-    void set_page_size(const base::Size &size);
+    auto set_page_size(const base::Size &size) -> void;
     auto get_page_size() const -> base::Size {
       return _page_size;
     };
-    void set_page_layout(Count xpages, Count ypages);
-    void get_page_layout(Count &xpages, Count &ypages) {
+    auto set_page_layout(Count xpages, Count ypages) -> void;
+    auto get_page_layout(Count &xpages, Count &ypages) -> void {
       xpages = _x_page_num;
       ypages = _y_page_num;
     }
@@ -109,7 +109,7 @@ namespace mdc {
     auto get_total_view_size() const -> base::Size;
 
     // physical view size
-    inline void get_view_size(int &w, int &h) const {
+    inline auto get_view_size(int &w, int &h) const -> void {
       w = _view_width;
       h = _view_height;
     }
@@ -124,23 +124,23 @@ namespace mdc {
 
     virtual auto window_to_canvas(int x, int y) const -> base::Point;
     virtual auto window_to_canvas(int x, int y, int w, int h) const -> base::Rect;
-    virtual void canvas_to_window(const base::Point &pt, int &x, int &y) const;
-    virtual void canvas_to_window(const base::Rect &rect, int &x, int &y, int &w, int &h) const;
+    virtual auto canvas_to_window(const base::Point &pt, int &x, int &y) const -> void;
+    virtual auto canvas_to_window(const base::Rect &rect, int &x, int &y, int &w, int &h) const -> void;
 
-    void show_grid();
-    void hide_grid();
+    auto show_grid() -> void;
+    auto hide_grid() -> void;
     auto get_grid_shown() -> bool;
 
-    void set_grid_snapping(bool flag);
+    auto set_grid_snapping(bool flag) -> void;
     auto get_grid_snapping() -> bool;
 
     auto snap_to_grid(const base::Point &pos) -> base::Point;
     auto snap_to_grid(const base::Size &size) -> base::Size;
 
-    void set_draws_line_hops(bool flag);
+    auto set_draws_line_hops(bool flag) -> void;
 
     auto new_layer(const std::string &name) -> Layer *;
-    void set_current_layer(Layer *layer);
+    auto set_current_layer(Layer *layer) -> void;
     auto get_current_layer() const -> Layer * {
       return _current_layer;
     }
@@ -152,14 +152,14 @@ namespace mdc {
       return _ilayer;
     }
 
-    void add_layer(Layer *layer);
-    void remove_layer(Layer *layer);
+    auto add_layer(Layer *layer) -> void;
+    auto remove_layer(Layer *layer) -> void;
     virtual auto get_layers() -> LayerList &;
 
-    void remove_item(mdc::CanvasItem *item);
+    auto remove_item(mdc::CanvasItem *item) -> void;
 
-    virtual void raise_layer(Layer *layer, Layer *above = 0);
-    virtual void lower_layer(Layer *layer);
+    virtual auto raise_layer(Layer *layer, Layer *above = 0) -> void;
+    virtual auto lower_layer(Layer *layer) -> void;
 
     auto get_item_at(int x, int y) -> CanvasItem *;
     auto get_item_at(const base::Point &point) -> CanvasItem *;
@@ -171,36 +171,36 @@ namespace mdc {
     auto get_items_bounded_by(const base::Rect &rect, const ItemCheckFunc &pred = ItemCheckFunc())
       -> std::list<CanvasItem *>;
 
-    void repaint();
-    void repaint(int x, int y, int width, int height);
+    auto repaint() -> void;
+    auto repaint(int x, int y, int width, int height) -> void;
 
-    void set_needs_repaint_all_items();
+    auto set_needs_repaint_all_items() -> void;
 
-    void queue_repaint();
-    void queue_repaint(const base::Rect &bounds);
+    auto queue_repaint() -> void;
+    auto queue_repaint(const base::Rect &bounds) -> void;
 
-    virtual void handle_mouse_move(int x, int y, EventState state);
-    virtual void handle_mouse_button(MouseButton button, bool press, int x, int y, EventState state);
-    virtual void handle_mouse_double_click(MouseButton button, int x, int y, EventState state);
-    virtual void handle_mouse_enter(int x, int y, EventState state);
-    virtual void handle_mouse_leave(int x, int y, EventState state);
+    virtual auto handle_mouse_move(int x, int y, EventState state) -> void;
+    virtual auto handle_mouse_button(MouseButton button, bool press, int x, int y, EventState state) -> void;
+    virtual auto handle_mouse_double_click(MouseButton button, int x, int y, EventState state) -> void;
+    virtual auto handle_mouse_enter(int x, int y, EventState state) -> void;
+    virtual auto handle_mouse_leave(int x, int y, EventState state) -> void;
 
     auto handle_key(const KeyInfo &key, bool press, EventState state) -> bool;
 
-    void start_dragging_rectangle(const base::Point &pos);
+    auto start_dragging_rectangle(const base::Point &pos) -> void;
     auto finish_dragging_rectangle() -> base::Rect;
 
     auto focus_item(CanvasItem *item) -> bool;
     auto get_focused_item() -> CanvasItem *;
 
-    void select_items_inside(const base::Rect &rect, SelectType type, Group *group = 0);
+    auto select_items_inside(const base::Rect &rect, SelectType type, Group *group = 0) -> void;
 
     auto get_selection() const -> Selection * {
       return _selection;
     };
     auto get_selected_items() -> Selection::ContentType;
 
-    void update_line_crossings(Line *line);
+    auto update_line_crossings(Line *line) -> void;
 
     virtual auto initialize() -> bool;
 
@@ -215,7 +215,7 @@ namespace mdc {
       return base::Color(0.85, 0.5, 0.5, 0.8);
     }
 
-    void setBackgroundColor(base::Color const &color);
+    auto setBackgroundColor(base::Color const &color) -> void;
 
     inline auto cairoctx() const -> CairoCtx * {
       return _cairo;
@@ -224,15 +224,15 @@ namespace mdc {
 
     virtual auto create_temp_surface(const base::Size &size) const -> Surface *;
 
-    void export_png(const std::string &filename, bool crop = false);
-    void export_pdf(const std::string &filename, const base::Size &size_in_pt);
-    void export_ps(const std::string &filename, const base::Size &size_in_pt);
-    void export_svg(const std::string &filename, const base::Size &size_in_pt);
+    auto export_png(const std::string &filename, bool crop = false) -> void;
+    auto export_pdf(const std::string &filename, const base::Size &size_in_pt) -> void;
+    auto export_ps(const std::string &filename, const base::Size &size_in_pt) -> void;
+    auto export_svg(const std::string &filename, const base::Size &size_in_pt) -> void;
 
-    void set_event_callbacks(
+    auto set_event_callbacks(
       const std::function<bool(CanvasView *, MouseButton, bool, base::Point, EventState)> &button_handler,
       const std::function<bool(CanvasView *, base::Point, EventState)> &motion_handler,
-      const std::function<bool(CanvasView *, KeyInfo, EventState, bool)> &key_handler);
+      const std::function<bool(CanvasView *, KeyInfo, EventState, bool)> &key_handler) -> void;
 
     auto signal_resized() -> boost::signals2::signal<void()> * {
       return &_resized_signal;
@@ -247,7 +247,7 @@ namespace mdc {
       return &_zoom_changed_signal;
     }
 
-    void enable_debug(bool flag) {
+    auto enable_debug(bool flag) -> void {
       _debug = flag;
     }
     inline auto debug_enabled() -> bool {
@@ -257,11 +257,11 @@ namespace mdc {
     auto get_fps() -> double {
       return _fps;
     }
-    inline void bookkeep_cache_mem(int amount) {
+    inline auto bookkeep_cache_mem(int amount) -> void {
       _total_item_cache_mem += amount;
     }
 
-    void paint_item_cache(CairoCtx *cr, double x, double y, cairo_surface_t *cached_item, double alpha = 1.0);
+    auto paint_item_cache(CairoCtx *cr, double x, double y, cairo_surface_t *cached_item, double alpha = 1.0) -> void;
 
   protected:
     void *_user_data;
@@ -319,20 +319,20 @@ namespace mdc {
 
     CanvasView(int width, int height);
 
-    virtual void begin_repaint(int wx, int wy, int ww, int wh) = 0;
-    virtual void end_repaint() = 0;
+    virtual auto begin_repaint(int wx, int wy, int ww, int wh) -> void = 0;
+    virtual auto end_repaint() -> void = 0;
 
-    void repaint_area(const base::Rect &rect, int wx, int wy, int ww, int wh);
+    auto repaint_area(const base::Rect &rect, int wx, int wy, int ww, int wh) -> void;
 
-    void update_offsets();
-    void apply_transformations();
-    void apply_transformations_gl();
-    void reset_transformations_gl();
-    void apply_transformations_for_conversion(cairo_matrix_t *matrix) const;
+    auto update_offsets() -> void;
+    auto apply_transformations() -> void;
+    auto apply_transformations_gl() -> void;
+    auto reset_transformations_gl() -> void;
+    auto apply_transformations_for_conversion(cairo_matrix_t *matrix) const -> void;
 
     auto perform_auto_scroll(const base::Point &mouse_pos) -> bool;
 
-    void render_for_export(const base::Rect &bounds, CairoCtx *cr);
+    auto render_for_export(const base::Rect &bounds, CairoCtx *cr) -> void;
 
   private:
     struct ClickInfo {
@@ -348,8 +348,8 @@ namespace mdc {
     base::RecMutex _lock;
 
     static auto canvas_item_destroyed(void *data) -> void *;
-    void set_last_click_item(CanvasItem *item);
-    void set_last_over_item(CanvasItem *item);
+    auto set_last_click_item(CanvasItem *item) -> void;
+    auto set_last_over_item(CanvasItem *item) -> void;
   };
 
 } // namespace mdc

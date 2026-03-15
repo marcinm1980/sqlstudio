@@ -50,20 +50,20 @@ public:
     set_status_text("");
   }
 
-  void set_db_connection(DbConnection *dbc) {
+  auto set_db_connection(DbConnection *dbc) -> void {
     _dbconn = dbc;
   }
 
-  void set_load_schemas_slot(const std::function<std::vector<std::string>()> &slot) {
+  auto set_load_schemas_slot(const std::function<std::vector<std::string>()> &slot) -> void {
     _load_schemas = slot;
   }
 
-  void set_check_case_slot(const std::function<int()> &slot) {
+  auto set_check_case_slot(const std::function<int()> &slot) -> void {
     _check_case_problems = slot;
   }
 
 protected:
-  bool perform_connect() {
+  auto perform_connect() -> bool {
     db_mgmt_ConnectionRef conn = _dbconn->get_connection();
 
     execute_grt_task(std::bind(&FetchSchemaNamesProgressPage::do_connect, this), false);
@@ -71,7 +71,7 @@ protected:
     return true;
   }
 
-  grt::ValueRef do_connect() {
+  auto do_connect() -> grt::ValueRef {
     if (!_dbconn)
       throw std::logic_error("must call set_db_connection() 1st");
     _dbconn->test_connection();
@@ -79,16 +79,16 @@ protected:
     return grt::ValueRef();
   }
 
-  bool perform_fetch() {
+  auto perform_fetch() -> bool {
     execute_grt_task(std::bind(&FetchSchemaNamesProgressPage::do_fetch, this), false);
     return true;
   }
 
-  static bool collate(const std::string &a, const std::string &b) {
+  static auto collate(const std::string &a, const std::string &b) -> bool {
     return g_utf8_collate(a.c_str(), b.c_str()) < 0;
   }
 
-  grt::ValueRef do_fetch() {
+  auto do_fetch() -> grt::ValueRef {
     std::vector<std::string> schema_names = _load_schemas();
 
     // order the schema names alphabetically
@@ -103,12 +103,12 @@ protected:
     return grt::ValueRef();
   }
 
-  bool perform_check_case() {
+  auto perform_check_case() -> bool {
     execute_grt_task(std::bind(&FetchSchemaNamesProgressPage::do_check_case, this), false);
     return true;
   }
 
-  grt::ValueRef do_check_case() {
+  auto do_check_case() -> grt::ValueRef {
     if (_check_case_problems) {
       int resp = _check_case_problems();
       if (resp == -1)
@@ -125,7 +125,7 @@ protected:
     return grt::ValueRef();
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       _finished = false;
       reset_tasks();
@@ -134,7 +134,7 @@ protected:
     WizardProgressPage::enter(advancing);
   }
 
-  virtual bool allow_next() {
+  virtual auto allow_next() -> bool {
     return _finished;
   }
 

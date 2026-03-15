@@ -60,42 +60,42 @@ namespace Gtk {
 //!
 class TextListColumnsModel;
 class TreeModelWrapper;
-void expand_tree_nodes_as_in_be(const Glib::RefPtr<TreeModelWrapper> &model, Gtk::TreeView *tv);
+auto expand_tree_nodes_as_in_be(const Glib::RefPtr<TreeModelWrapper> &model, Gtk::TreeView *tv) -> void;
 
-Gtk::Box &create_icon_label(const std::string &icon, const std::string &label);
+auto create_icon_label(const std::string &icon, const std::string &label) -> Gtk::Box &;
 
 // Gtk::Widget *create_closeable_tab(const Glib::ustring &title, const sigc::slot<void> &close_callback,
 //                                  Gtk::Label **title_label);
 
-void swap_panned_children(Gtk::Paned *paned, bool fixed_size1);
+auto swap_panned_children(Gtk::Paned *paned, bool fixed_size1) -> void;
 
-Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::vector<std::string> &list,
-                                                    TextListColumnsModel *columns);
-Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::vector<std::string> &list,
-                                                    TextListColumnsModel **columns = 0);
-Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::list<std::string> &list,
-                                                    TextListColumnsModel **columns = 0);
-void recreate_model_from_string_list(Glib::RefPtr<Gtk::ListStore>, const std::vector<std::string> &list);
-void setup_combo_for_string_list(Gtk::ComboBox *combo);
+auto model_from_string_list(const std::vector<std::string> &list,
+                                                    TextListColumnsModel *columns) -> Glib::RefPtr<Gtk::ListStore>;
+auto model_from_string_list(const std::vector<std::string> &list,
+                                                    TextListColumnsModel **columns = 0) -> Glib::RefPtr<Gtk::ListStore>;
+auto model_from_string_list(const std::list<std::string> &list,
+                                                    TextListColumnsModel **columns = 0) -> Glib::RefPtr<Gtk::ListStore>;
+auto recreate_model_from_string_list(Glib::RefPtr<Gtk::ListStore>, const std::vector<std::string> &list) -> void;
+auto setup_combo_for_string_list(Gtk::ComboBox *combo) -> void;
 
-std::string get_selected_combo_item(Gtk::ComboBox *combo);
-bool set_selected_combo_item(Gtk::ComboBox *combo, const std::string &value);
+auto get_selected_combo_item(Gtk::ComboBox *combo) -> std::string;
+auto set_selected_combo_item(Gtk::ComboBox *combo, const std::string &value) -> bool;
 
 //! Wrapper to set string values to a Glib::ValueBase
 //! Used in ListModelWrapper
-void set_glib_string(Glib::ValueBase &value, const std::string &str, bool escape_nuls = false);
-void set_glib_int(Glib::ValueBase &value, const int i);
-void set_glib_bool(Glib::ValueBase &value, const bool b);
-void set_glib_double(Glib::ValueBase &value, const double d);
+auto set_glib_string(Glib::ValueBase &value, const std::string &str, bool escape_nuls = false) -> void;
+auto set_glib_int(Glib::ValueBase &value, const int i) -> void;
+auto set_glib_bool(Glib::ValueBase &value, const bool b) -> void;
+auto set_glib_double(Glib::ValueBase &value, const double d) -> void;
 
-void fill_combo_from_string_list(Gtk::ComboBox *combo, const std::vector<std::string> &list);
-void fill_combo_from_string_list(Gtk::ComboBoxText *combo, const std::vector<std::string> &list);
+auto fill_combo_from_string_list(Gtk::ComboBox *combo, const std::vector<std::string> &list) -> void;
+auto fill_combo_from_string_list(Gtk::ComboBoxText *combo, const std::vector<std::string> &list) -> void;
 
 //! get_mainwindow is declared here as extern while it is implemented in frontend/linux/studio/Program.cpp
 //! and frontend/linux/shell/shell.cpp. get_mainwindow is needed by some functions/methods to
 //! set dialog transient. Returns ptr to Gtk::Window
-extern void *get_mainwindow_impl();
-inline Gtk::Window *get_mainwindow() {
+extern auto get_mainwindow_impl() -> void *;
+inline auto get_mainwindow() -> Gtk::Window * {
   return (Gtk::Window *)get_mainwindow_impl();
 }
 
@@ -116,17 +116,17 @@ private:
   MutexType &_m;
 };
 
-void run_popup_menu(const bec::MenuItemList &items, const int time, const sigc::slot<void, std::string> &activate_slot,
-                    Gtk::Menu *popup);
+auto run_popup_menu(const bec::MenuItemList &items, const int time, const sigc::slot<void, std::string> &activate_slot,
+                    Gtk::Menu *popup) -> void;
 
-void fix_broken_gtk_selection_handling(Gtk::TreeView *tree);
+auto fix_broken_gtk_selection_handling(Gtk::TreeView *tree) -> void;
 
-Glib::RefPtr<Gtk::ListStore> get_empty_model();
+auto get_empty_model() -> Glib::RefPtr<Gtk::ListStore>;
 
-void gtk_paned_set_pos_ratio(Gtk::Paned *paned, const float ratio);
-float gtk_paned_get_pos_ratio(Gtk::Paned *paned);
+auto gtk_paned_set_pos_ratio(Gtk::Paned *paned, const float ratio) -> void;
+auto gtk_paned_get_pos_ratio(Gtk::Paned *paned) -> float;
 
-void gtk_reparent_realized(Gtk::Widget *widget, Gtk::Container *new_parent);
+auto gtk_reparent_realized(Gtk::Widget *widget, Gtk::Container *new_parent) -> void;
 
 Gdk::RGBA color_to_rgba(Gdk::Color);
 
@@ -150,15 +150,15 @@ public:
      * @return PanedContrainer* Pointer to PanedConstrainer. The pointer will be automagically freed when Gtk::Paned is
   desotryed.
      */
-  static PanedConstrainer *make_constrainer(Gtk::Paned *paned, int top_or_left_limit, int bottom_or_right_limit);
+  static auto make_constrainer(Gtk::Paned *paned, int top_or_left_limit, int bottom_or_right_limit) -> PanedConstrainer *;
 
-  void disable_sticky(bool disable);
-  void set_state_cb(const state_notifier &cb);
+  auto disable_sticky(bool disable) -> void;
+  auto set_state_cb(const state_notifier &cb) -> void;
   ~PanedConstrainer();
-  static void *destroy(void *data);
+  static auto destroy(void *data) -> void *;
 
-  void set_limit(int top_or_left = 0, int bottom_or_right = 0);
-  Gtk::Paned *get();
+  auto set_limit(int top_or_left = 0, int bottom_or_right = 0) -> void;
+  auto get() -> Gtk::Paned *;
 
 private:
   Gtk::Paned *_pan;
@@ -172,7 +172,7 @@ private:
 
   state_notifier _state_notifier_cb;
 
-  void size_alloc(Gtk::Allocation &_alloc);
+  auto size_alloc(Gtk::Allocation &_alloc) -> void;
   PanedConstrainer(Gtk::Paned *pan);
 };
 

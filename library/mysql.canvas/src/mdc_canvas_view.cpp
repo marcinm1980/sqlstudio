@@ -143,19 +143,19 @@ CanvasView::~CanvasView() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_tag(const std::string &tag) {
+auto CanvasView::set_tag(const std::string &tag) -> void {
   _tag = tag;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_printout_mode(bool flag) {
+auto CanvasView::set_printout_mode(bool flag) -> void {
   _printout_mode = flag;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool CanvasView::initialize() {
+auto CanvasView::initialize() -> bool {
   update_view_size(_view_width, _view_height);
 
   return true;
@@ -163,7 +163,7 @@ bool CanvasView::initialize() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::pre_destroy() {
+auto CanvasView::pre_destroy() -> void {
   _destroying = true;
 
   LayerList::const_iterator next, iter = _layers.begin();
@@ -177,13 +177,13 @@ void CanvasView::pre_destroy() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::lock_ui() {
+auto CanvasView::lock_ui() -> void {
   _ui_lock++;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::unlock_ui() {
+auto CanvasView::unlock_ui() -> void {
   _ui_lock--;
 }
 
@@ -203,25 +203,25 @@ void CanvasView::unlock_ui() {
  *
  * @return
  */
-void CanvasView::lock() {
+auto CanvasView::lock() -> void {
   _lock.lock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::unlock() {
+auto CanvasView::unlock() -> void {
   _lock.unlock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::lock_redraw() {
+auto CanvasView::lock_redraw() -> void {
   _repaint_lock++;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::unlock_redraw() {
+auto CanvasView::unlock_redraw() -> void {
   if (_repaint_lock == 0)
     throw std::logic_error("unlock_redraw() called without matching lock_redraw()");
   _repaint_lock--;
@@ -235,19 +235,19 @@ void CanvasView::unlock_redraw() {
 
 // Geometry Handling
 
-Size CanvasView::get_total_view_size() const {
+auto CanvasView::get_total_view_size() const -> Size {
   return Size(_x_page_num * _page_size.width, _y_page_num * _page_size.height);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Rect CanvasView::get_viewport_range() const {
+auto CanvasView::get_viewport_range() const -> Rect {
   return Rect(0, 0, _x_page_num * _page_size.width, _y_page_num * _page_size.height);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Rect CanvasView::get_viewport() const {
+auto CanvasView::get_viewport() const -> Rect {
   Rect rect = window_to_canvas(0, 0, _view_width, _view_height);
   Size size = get_total_view_size();
 
@@ -264,13 +264,13 @@ Rect CanvasView::get_viewport() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Size CanvasView::get_viewable_size() const {
+auto CanvasView::get_viewable_size() const -> Size {
   return window_to_canvas(0, 0, _view_width, _view_height).size;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_offset(const Point &offs) {
+auto CanvasView::set_offset(const Point &offs) -> void {
   Size viewable_size(get_viewable_size());
   Size total_size(get_total_view_size());
   Point new_offset;
@@ -291,13 +291,13 @@ void CanvasView::set_offset(const Point &offs) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::scroll_to(const Point &pos) {
+auto CanvasView::scroll_to(const Point &pos) -> void {
   set_offset(pos);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_zoom(float zoom) {
+auto CanvasView::set_zoom(float zoom) -> void {
   if (_zoom != zoom) {
     _zoom = zoom;
     update_offsets();
@@ -312,7 +312,7 @@ void CanvasView::set_zoom(float zoom) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_page_size(const Size &size) {
+auto CanvasView::set_page_size(const Size &size) -> void {
   if (_page_size != size) {
     _page_size = size;
     update_offsets();
@@ -330,7 +330,7 @@ void CanvasView::set_page_size(const Size &size) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_page_layout(Count xpages, Count ypages) {
+auto CanvasView::set_page_layout(Count xpages, Count ypages) -> void {
   _x_page_num = xpages;
   _y_page_num = ypages;
   update_offsets();
@@ -343,7 +343,7 @@ void CanvasView::set_page_layout(Count xpages, Count ypages) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::update_offsets() {
+auto CanvasView::update_offsets() -> void {
   Size total_size(get_total_view_size());
   Size view_size(get_viewable_size());
 
@@ -361,7 +361,7 @@ void CanvasView::update_offsets() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::apply_transformations_for_conversion(cairo_matrix_t *matrix) const {
+auto CanvasView::apply_transformations_for_conversion(cairo_matrix_t *matrix) const -> void {
   Point offs;
 
   cairo_matrix_init_scale(matrix, _zoom, _zoom);
@@ -371,7 +371,7 @@ void CanvasView::apply_transformations_for_conversion(cairo_matrix_t *matrix) co
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::apply_transformations() {
+auto CanvasView::apply_transformations() -> void {
   Point offs;
 
   cairo_matrix_init_scale(&_trmatrix, _zoom, _zoom);
@@ -382,7 +382,7 @@ void CanvasView::apply_transformations() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::apply_transformations_gl() {
+auto CanvasView::apply_transformations_gl() -> void {
 #ifndef __APPLE__
   glViewport(0, 0, _view_width, _view_height);
 
@@ -402,7 +402,7 @@ void CanvasView::apply_transformations_gl() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::reset_transformations_gl() {
+auto CanvasView::reset_transformations_gl() -> void {
 #ifndef __APPLE__
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -416,19 +416,19 @@ void CanvasView::reset_transformations_gl() {
 
 // Grid
 
-void CanvasView::set_grid_snapping(bool flag) {
+auto CanvasView::set_grid_snapping(bool flag) -> void {
   _grid_snapping = flag;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool CanvasView::get_grid_snapping() {
+auto CanvasView::get_grid_snapping() -> bool {
   return _grid_snapping;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Point CanvasView::snap_to_grid(const Point &pos) {
+auto CanvasView::snap_to_grid(const Point &pos) -> Point {
   if (_grid_snapping) {
     return Point((int)((pos.x + _grid_size / 2) / _grid_size) * _grid_size,
                  (int)((pos.y + _grid_size / 2) / _grid_size) * _grid_size);
@@ -438,7 +438,7 @@ Point CanvasView::snap_to_grid(const Point &pos) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Size CanvasView::snap_to_grid(const Size &size) {
+auto CanvasView::snap_to_grid(const Size &size) -> Size {
   if (_grid_snapping) {
     return Size(std::max((int)(size.width / _grid_size) * _grid_size, _grid_size),
                 std::max((int)(size.height / _grid_size) * _grid_size, _grid_size));
@@ -448,19 +448,19 @@ Size CanvasView::snap_to_grid(const Size &size) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::show_grid() {
+auto CanvasView::show_grid() -> void {
   _blayer->set_grid_visible(true);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::hide_grid() {
+auto CanvasView::hide_grid() -> void {
   _blayer->set_grid_visible(false);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool CanvasView::get_grid_shown() {
+auto CanvasView::get_grid_shown() -> bool {
   return _blayer->visible();
 }
 
@@ -468,7 +468,7 @@ bool CanvasView::get_grid_shown() {
 
 // Layer Handling
 
-static void *layer_destroyed_cb(void *data) {
+static auto layer_destroyed_cb(void *data) -> void * {
   std::pair<Layer *, CanvasView *> *pair = reinterpret_cast<std::pair<Layer *, CanvasView *> *>(data);
 
   pair->second->remove_layer(pair->first);
@@ -480,7 +480,7 @@ static void *layer_destroyed_cb(void *data) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Layer *CanvasView::new_layer(const std::string &name) {
+auto CanvasView::new_layer(const std::string &name) -> Layer * {
   Layer *layer = new Layer(this);
 
   layer->add_destroy_notify_callback(new std::pair<Layer *, CanvasView *>(layer, this), layer_destroyed_cb);
@@ -494,13 +494,13 @@ Layer *CanvasView::new_layer(const std::string &name) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_current_layer(Layer *layer) {
+auto CanvasView::set_current_layer(Layer *layer) -> void {
   _current_layer = layer;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Layer *CanvasView::get_layer(const std::string &name) {
+auto CanvasView::get_layer(const std::string &name) -> Layer * {
   for (std::list<mdc::Layer *>::const_iterator iter = _layers.begin(); iter != _layers.end(); ++iter) {
     if ((*iter)->get_name() == name)
       return (*iter);
@@ -510,7 +510,7 @@ Layer *CanvasView::get_layer(const std::string &name) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::add_layer(Layer *layer) {
+auto CanvasView::add_layer(Layer *layer) -> void {
   CanvasAutoLock lock(this);
 
   _layers.push_front(layer);
@@ -520,7 +520,7 @@ void CanvasView::add_layer(Layer *layer) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::remove_layer(Layer *layer) {
+auto CanvasView::remove_layer(Layer *layer) -> void {
   CanvasAutoLock lock(this);
 
   _layers.erase(std::find(_layers.begin(), _layers.end(), layer));
@@ -536,20 +536,20 @@ void CanvasView::remove_layer(Layer *layer) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_needs_repaint_all_items() {
+auto CanvasView::set_needs_repaint_all_items() -> void {
   for (std::list<mdc::Layer *>::const_iterator iter = _layers.begin(); iter != _layers.end(); ++iter)
     (*iter)->set_needs_repaint_all_items();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CanvasView::LayerList &CanvasView::get_layers() {
+auto CanvasView::get_layers() -> CanvasView::LayerList & {
   return _layers;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::raise_layer(Layer *layer, Layer *above) {
+auto CanvasView::raise_layer(Layer *layer, Layer *above) -> void {
   CanvasAutoLock lock(this);
 
   restack_up(_layers, layer, above);
@@ -559,7 +559,7 @@ void CanvasView::raise_layer(Layer *layer, Layer *above) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::lower_layer(Layer *layer) {
+auto CanvasView::lower_layer(Layer *layer) -> void {
   CanvasAutoLock lock(this);
 
   restack_down(_layers, layer);
@@ -569,7 +569,7 @@ void CanvasView::lower_layer(Layer *layer) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool is_line(CanvasItem *item) {
+static auto is_line(CanvasItem *item) -> bool {
   if (item->get_visible()) {
     Line *line = dynamic_cast<Line *>(item);
     if (line && line->get_hops_crossings())
@@ -580,14 +580,14 @@ static bool is_line(CanvasItem *item) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_draws_line_hops(bool flag) {
+auto CanvasView::set_draws_line_hops(bool flag) -> void {
   _line_hop_rendering = flag;
   queue_repaint();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::update_line_crossings(Line *line) {
+auto CanvasView::update_line_crossings(Line *line) -> void {
   if (!_line_hop_rendering)
     return;
 
@@ -611,7 +611,7 @@ void CanvasView::update_line_crossings(Line *line) {
   }
 }
 
-void CanvasView::remove_item(mdc::CanvasItem *item) {
+auto CanvasView::remove_item(mdc::CanvasItem *item) -> void {
   if (item->get_layer())
     item->get_layer()->remove_item(item);
 
@@ -626,7 +626,7 @@ void CanvasView::remove_item(mdc::CanvasItem *item) {
 
 // Coordinate Transformation
 
-Point CanvasView::window_to_canvas(int x, int y) const {
+auto CanvasView::window_to_canvas(int x, int y) const -> Point {
   cairo_matrix_t mtx;
   Point pt;
   double xx = x;
@@ -645,7 +645,7 @@ Point CanvasView::window_to_canvas(int x, int y) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Rect CanvasView::window_to_canvas(int x, int y, int w, int h) const {
+auto CanvasView::window_to_canvas(int x, int y, int w, int h) const -> Rect {
   cairo_matrix_t mtx;
   Rect rect;
   double xx = x;
@@ -669,7 +669,7 @@ Rect CanvasView::window_to_canvas(int x, int y, int w, int h) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::canvas_to_window(const Point &pt, int &x, int &y) const {
+auto CanvasView::canvas_to_window(const Point &pt, int &x, int &y) const -> void {
   cairo_matrix_t mtx;
   double xx = pt.x;
   double yy = pt.y;
@@ -684,7 +684,7 @@ void CanvasView::canvas_to_window(const Point &pt, int &x, int &y) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::canvas_to_window(const Rect &rect, int &x, int &y, int &w, int &h) const {
+auto CanvasView::canvas_to_window(const Rect &rect, int &x, int &y, int &w, int &h) const -> void {
   cairo_matrix_t mtx;
   double xx = rect.left();
   double yy = rect.top();
@@ -706,7 +706,7 @@ void CanvasView::canvas_to_window(const Rect &rect, int &x, int &y, int &w, int 
 
 // Font Management
 
-const FontSpec &CanvasView::get_default_font() {
+auto CanvasView::get_default_font() -> const FontSpec & {
   return _default_font;
 }
 
@@ -714,11 +714,11 @@ const FontSpec &CanvasView::get_default_font() {
 
 // Dragging Rectangle
 
-void CanvasView::start_dragging_rectangle(const Point &pos) {
+auto CanvasView::start_dragging_rectangle(const Point &pos) -> void {
   _ilayer->start_dragging_rectangle(pos);
 }
 
-Rect CanvasView::finish_dragging_rectangle() {
+auto CanvasView::finish_dragging_rectangle() -> Rect {
   return _ilayer->finish_dragging_rectangle();
 }
 
@@ -726,7 +726,7 @@ Rect CanvasView::finish_dragging_rectangle() {
 
 // Rendering
 
-void CanvasView::paint_item_cache(CairoCtx *cr, double x, double y, cairo_surface_t *cached_item, double alpha) {
+auto CanvasView::paint_item_cache(CairoCtx *cr, double x, double y, cairo_surface_t *cached_item, double alpha) -> void {
   cairo_matrix_t mtx;
 
   cairo_user_to_device(cr->get_cr(), &x, &y);
@@ -760,7 +760,7 @@ void CanvasView::paint_item_cache(CairoCtx *cr, double x, double y, cairo_surfac
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::repaint() {
+auto CanvasView::repaint() -> void {
   if (_ui_lock > 0)
     return;
 
@@ -769,7 +769,7 @@ void CanvasView::repaint() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::repaint(int x, int y, int width, int height) {
+auto CanvasView::repaint(int x, int y, int width, int height) -> void {
   if (_ui_lock > 0)
     return;
 
@@ -779,7 +779,7 @@ void CanvasView::repaint(int x, int y, int width, int height) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::repaint_area(const Rect &aBounds, int wx, int wy, int ww, int wh) {
+auto CanvasView::repaint_area(const Rect &aBounds, int wx, int wy, int ww, int wh) -> void {
   if (_destroying || _ui_lock > 0)
     return;
 
@@ -841,7 +841,7 @@ void CanvasView::repaint_area(const Rect &aBounds, int wx, int wy, int ww, int w
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::queue_repaint() {
+auto CanvasView::queue_repaint() -> void {
   if (_repaint_lock > 0 || _destroying) {
     _repaints_missed++;
     return;
@@ -855,7 +855,7 @@ void CanvasView::queue_repaint() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::queue_repaint(const Rect &bounds) {
+auto CanvasView::queue_repaint(const Rect &bounds) -> void {
   if (_repaint_lock > 0 || _destroying) {
     _repaints_missed++;
     return;
@@ -874,7 +874,7 @@ void CanvasView::queue_repaint(const Rect &bounds) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Rect CanvasView::get_content_bounds() const {
+auto CanvasView::get_content_bounds() const -> Rect {
   Size vs = get_total_view_size();
   double minx = vs.width, miny = vs.height, maxx = 0.0, maxy = 0.0;
 
@@ -897,7 +897,7 @@ Rect CanvasView::get_content_bounds() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::export_png(const std::string &filename, bool crop) {
+auto CanvasView::export_png(const std::string &filename, bool crop) -> void {
   CanvasAutoLock lock(this);
 
   base::FileHandle fh(filename.c_str(), "wb");
@@ -937,7 +937,7 @@ void CanvasView::export_png(const std::string &filename, bool crop) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::export_pdf(const std::string &filename, const Size &size_in_pt) {
+auto CanvasView::export_pdf(const std::string &filename, const Size &size_in_pt) -> void {
   CanvasAutoLock lock(this);
 
   FileHandle fh(filename.c_str(), "wb");
@@ -964,7 +964,7 @@ void CanvasView::export_pdf(const std::string &filename, const Size &size_in_pt)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::export_ps(const std::string &filename, const Size &size_in_pt) {
+auto CanvasView::export_ps(const std::string &filename, const Size &size_in_pt) -> void {
   CanvasAutoLock lock(this);
 
   FileHandle fh(filename.c_str(), "wb");
@@ -991,7 +991,7 @@ void CanvasView::export_ps(const std::string &filename, const Size &size_in_pt) 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::export_svg(const std::string &filename, const Size &size_in_pt) {
+auto CanvasView::export_svg(const std::string &filename, const Size &size_in_pt) -> void {
   CanvasAutoLock lock(this);
 
   FileHandle fh(filename.c_str(), "wb");
@@ -1018,7 +1018,7 @@ void CanvasView::export_svg(const std::string &filename, const Size &size_in_pt)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::render_for_export(const Rect &bounds, CairoCtx *ctx) {
+auto CanvasView::render_for_export(const Rect &bounds, CairoCtx *ctx) -> void {
   CairoCtx *oldcr = _cairo;
 
   if (ctx)
@@ -1050,7 +1050,7 @@ void CanvasView::render_for_export(const Rect &bounds, CairoCtx *ctx) {
 
 // Selection/Focusing
 
-bool CanvasView::focus_item(CanvasItem *item) {
+auto CanvasView::focus_item(CanvasItem *item) -> bool {
   if (get_focused_item() != item) {
     CanvasItem *old_item = _focused_item;
 
@@ -1077,11 +1077,11 @@ bool CanvasView::focus_item(CanvasItem *item) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CanvasItem *CanvasView::get_focused_item() {
+auto CanvasView::get_focused_item() -> CanvasItem * {
   return _focused_item;
 }
 
-void CanvasView::select_items_inside(const Rect &rect, SelectType type, Group *group) {
+auto CanvasView::select_items_inside(const Rect &rect, SelectType type, Group *group) -> void {
   if (type == SelectAdd) {
     for (std::list<Layer *>::iterator it = _layers.begin(); it != _layers.end(); ++it) {
       std::list<CanvasItem *> selection((*it)->get_items_bounded_by(rect, mdc::Layer::ItemCheckFunc(), group));
@@ -1110,7 +1110,7 @@ void CanvasView::select_items_inside(const Rect &rect, SelectType type, Group *g
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Selection::ContentType CanvasView::get_selected_items() {
+auto CanvasView::get_selected_items() -> Selection::ContentType {
   if (_selection)
     return _selection->get_contents();
   return Selection::ContentType();
@@ -1120,13 +1120,13 @@ Selection::ContentType CanvasView::get_selected_items() {
 
 // Item Finding
 
-CanvasItem *CanvasView::get_item_at(int x, int y) {
+auto CanvasView::get_item_at(int x, int y) -> CanvasItem * {
   return get_item_at(window_to_canvas(x, y));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CanvasItem *CanvasView::get_item_at(const Point &point) {
+auto CanvasView::get_item_at(const Point &point) -> CanvasItem * {
   for (LayerList::iterator iter = _layers.begin(); iter != _layers.end(); ++iter) {
     CanvasItem *item;
 
@@ -1140,13 +1140,13 @@ CanvasItem *CanvasView::get_item_at(const Point &point) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CanvasItem *CanvasView::get_leaf_item_at(int x, int y) {
+auto CanvasView::get_leaf_item_at(int x, int y) -> CanvasItem * {
   return get_leaf_item_at(window_to_canvas(x, y));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CanvasItem *CanvasView::get_leaf_item_at(const Point &point) {
+auto CanvasView::get_leaf_item_at(const Point &point) -> CanvasItem * {
   CanvasItem *item = get_item_at(point);
   Layouter *layouter = dynamic_cast<Layouter *>(item);
 
@@ -1160,7 +1160,7 @@ CanvasItem *CanvasView::get_leaf_item_at(const Point &point) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::list<CanvasItem *> CanvasView::get_items_bounded_by(const Rect &rect, const ItemCheckFunc &pred) {
+auto CanvasView::get_items_bounded_by(const Rect &rect, const ItemCheckFunc &pred) -> std::list<CanvasItem *> {
   std::list<CanvasItem *> result;
 
   for (LayerList::iterator iter = _layers.begin(); iter != _layers.end(); ++iter) {
@@ -1178,10 +1178,10 @@ std::list<CanvasItem *> CanvasView::get_items_bounded_by(const Rect &rect, const
 
 // Base Event Handling
 
-void CanvasView::set_event_callbacks(
+auto CanvasView::set_event_callbacks(
   const std::function<bool(CanvasView *, MouseButton, bool, Point, EventState)> &button_handler,
   const std::function<bool(CanvasView *, Point, EventState)> &motion_handler,
-  const std::function<bool(CanvasView *, KeyInfo, EventState, bool)> &key_handler) {
+  const std::function<bool(CanvasView *, KeyInfo, EventState, bool)> &key_handler) -> void {
   _button_event_relay = button_handler;
   _motion_event_relay = motion_handler;
   _key_event_relay = key_handler;
@@ -1189,8 +1189,8 @@ void CanvasView::set_event_callbacks(
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool propagate_event(mdc::CanvasItem *item,
-  const std::function<bool(mdc::CanvasItem *, mdc::CanvasItem *, const Point &)> &functor, const Point &pos) {
+static auto propagate_event(mdc::CanvasItem *item,
+  const std::function<bool(mdc::CanvasItem *, mdc::CanvasItem *, const Point &)> &functor, const Point &pos) -> bool {
   mdc::CanvasItem *target = item;
 
   while (item) {
@@ -1214,10 +1214,10 @@ static bool propagate_event(mdc::CanvasItem *item,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool propagate_event(
+static auto propagate_event(
   mdc::CanvasItem *item,
   const std::function<bool(mdc::CanvasItem *, mdc::CanvasItem *, const Point &, mdc::EventState)> &functor,
-  const Point &pos, mdc::EventState arg1) {
+  const Point &pos, mdc::EventState arg1) -> bool {
   mdc::CanvasItem *target = item;
 
   while (item) {
@@ -1241,9 +1241,9 @@ static bool propagate_event(
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool propagate_event(mdc::CanvasItem *item,
+static auto propagate_event(mdc::CanvasItem *item,
   const std::function<bool(mdc::CanvasItem *, mdc::CanvasItem *, const Point &,
-  mdc::MouseButton, mdc::EventState)> &functor, const Point &pos, mdc::MouseButton arg1, mdc::EventState arg2) {
+  mdc::MouseButton, mdc::EventState)> &functor, const Point &pos, mdc::MouseButton arg1, mdc::EventState arg2) -> bool {
   mdc::CanvasItem *target = item;
 
   while (item) {
@@ -1267,7 +1267,7 @@ static bool propagate_event(mdc::CanvasItem *item,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool CanvasView::perform_auto_scroll(const Point &mouse_pos) {
+auto CanvasView::perform_auto_scroll(const Point &mouse_pos) -> bool {
   double dx = 0.0;
   double dy = 0.0;
 
@@ -1302,7 +1302,7 @@ bool CanvasView::perform_auto_scroll(const Point &mouse_pos) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::handle_mouse_move(int x, int y, EventState state) {
+auto CanvasView::handle_mouse_move(int x, int y, EventState state) -> void {
   if (_destroying || _ui_lock > 0)
     return;
 
@@ -1407,7 +1407,7 @@ void CanvasView::handle_mouse_move(int x, int y, EventState state) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::handle_mouse_button(MouseButton button, bool press, int x, int y, EventState state) {
+auto CanvasView::handle_mouse_button(MouseButton button, bool press, int x, int y, EventState state) -> void {
   if (_destroying || _ui_lock > 0)
     return;
 
@@ -1471,7 +1471,7 @@ void CanvasView::handle_mouse_button(MouseButton button, bool press, int x, int 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::handle_mouse_double_click(MouseButton button, int x, int y, EventState state) {
+auto CanvasView::handle_mouse_double_click(MouseButton button, int x, int y, EventState state) -> void {
   if (_destroying || _ui_lock > 0)
     return;
 
@@ -1494,12 +1494,12 @@ void CanvasView::handle_mouse_double_click(MouseButton button, int x, int y, Eve
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::handle_mouse_enter(int x, int y, EventState state) {
+auto CanvasView::handle_mouse_enter(int x, int y, EventState state) -> void {
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::handle_mouse_leave(int x, int y, EventState state) {
+auto CanvasView::handle_mouse_leave(int x, int y, EventState state) -> void {
   if (_destroying || _ui_lock > 0)
     return;
   Point point = window_to_canvas(x, y);
@@ -1539,9 +1539,9 @@ void CanvasView::handle_mouse_leave(int x, int y, EventState state) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool CanvasView::handle_key(const KeyInfo &key, bool press, EventState state) {
+auto CanvasView::handle_key(const KeyInfo &key, bool press, EventState state) -> bool {
 #ifdef ___TRACE
-  extern void ___enable_tracing(bool flag);
+  extern auto ___enable_tracing(bool flag) -> void;
 
   if (press && key.keycode == KF11) {
     ___enable_tracing(true);
@@ -1560,7 +1560,7 @@ bool CanvasView::handle_key(const KeyInfo &key, bool press, EventState state) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void *CanvasView::canvas_item_destroyed(void *data) {
+auto CanvasView::canvas_item_destroyed(void *data) -> void * {
   CanvasView *view = (CanvasView *)data;
 
   view->_last_click_item = NULL;
@@ -1571,7 +1571,7 @@ void *CanvasView::canvas_item_destroyed(void *data) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_last_click_item(CanvasItem *item) {
+auto CanvasView::set_last_click_item(CanvasItem *item) -> void {
   if (_last_click_item != item) {
     // Remove the notification callback for this item if it isn't also stored as hot item
     // (otherwise we still need the notification).
@@ -1588,7 +1588,7 @@ void CanvasView::set_last_click_item(CanvasItem *item) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::set_last_over_item(CanvasItem *item) {
+auto CanvasView::set_last_over_item(CanvasItem *item) -> void {
   if (_last_over_item != item) {
     if (_last_over_item && _last_over_item != _last_click_item)
       _last_over_item->remove_destroy_notify_callback(this);
@@ -1601,7 +1601,7 @@ void CanvasView::set_last_over_item(CanvasItem *item) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CanvasItem *CanvasView::find_item_with_tag(const std::string &tag) {
+auto CanvasView::find_item_with_tag(const std::string &tag) -> CanvasItem * {
   for (LayerList::reverse_iterator iter = _layers.rbegin(); iter != _layers.rend(); ++iter) {
     CanvasItem *item;
     item = (*iter)->get_root_area_group()->find_item_with_tag(tag);
@@ -1613,13 +1613,13 @@ CanvasItem *CanvasView::find_item_with_tag(const std::string &tag) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Surface* CanvasView::create_temp_surface(const Size &size) const {
+auto CanvasView::create_temp_surface(const Size &size) const -> Surface* {
   return new ImageSurface(size.width, size.height, CAIRO_FORMAT_ARGB32);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasView::setBackgroundColor(base::Color const& color) {
+auto CanvasView::setBackgroundColor(base::Color const& color) -> void {
   _blayer->set_color(color);
 }
 

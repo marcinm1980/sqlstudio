@@ -46,12 +46,12 @@ namespace wbfig {
     View(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self);
     virtual ~View();
 
-    virtual void set_color(const base::Color &color);
-    void set_title(const std::string &title);
+    virtual auto set_color(const base::Color &color) -> void;
+    auto set_title(const std::string &title) -> void;
 
-    virtual void set_title_font(const mdc::FontSpec &font);
+    virtual auto set_title_font(const mdc::FontSpec &font) -> void;
 
-    Titlebar *get_title() {
+    auto get_title() -> Titlebar * {
       return &_title;
     }
   };

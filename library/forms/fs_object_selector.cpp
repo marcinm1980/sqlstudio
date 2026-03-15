@@ -71,8 +71,8 @@ FsObjectSelector::~FsObjectSelector() {
 
 //--------------------------------------------------------------------------------------------------
 
-void FsObjectSelector::initialize(const std::string& initial_path, FileChooserType type, const std::string& extensions,
-                                  bool show_hidden, std::function<void()> on_validate) {
+auto FsObjectSelector::initialize(const std::string& initial_path, FileChooserType type, const std::string& extensions,
+                                  bool show_hidden, std::function<void()> on_validate) -> void {
   _type = type;
   _show_hidden = show_hidden;
   _extensions = extensions;
@@ -103,13 +103,13 @@ void FsObjectSelector::initialize(const std::string& initial_path, FileChooserTy
 
 //--------------------------------------------------------------------------------------------------
 
-void FsObjectSelector::set_filename(const std::string& path) {
+auto FsObjectSelector::set_filename(const std::string& path) -> void {
   _edit->set_value(path);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void FsObjectSelector::enable_file_browsing() {
+auto FsObjectSelector::enable_file_browsing() -> void {
   scoped_connect(_edit->signal_changed(), std::bind(&FsObjectSelector::filename_changed, this));
   _browse_connection =
     _browse_button->signal_clicked()->connect(std::bind(&FsObjectSelector::browse_file_callback, this));
@@ -119,7 +119,7 @@ void FsObjectSelector::enable_file_browsing() {
 
 static std::set<mforms::TextEntry*> file_entries_set_from_browse_dialog;
 
-void FsObjectSelector::filename_changed() {
+auto FsObjectSelector::filename_changed() -> void {
   file_entries_set_from_browse_dialog.erase(_edit);
   if (_on_validate)
     _on_validate();
@@ -133,13 +133,13 @@ void FsObjectSelector::filename_changed() {
  * Note: setting a different browse callback moves reponsibilities to this callback (e.g. setting
  * the text of the edit control, triggering validation).
  */
-void FsObjectSelector::set_browse_callback(std::function<void()> browse_callback) {
+auto FsObjectSelector::set_browse_callback(std::function<void()> browse_callback) -> void {
   _browse_connection = _browse_button->signal_clicked()->connect(browse_callback);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void FsObjectSelector::browse_file_callback() {
+auto FsObjectSelector::browse_file_callback() -> void {
   FileChooser fsel(_type, _show_hidden);
 
   if (!_extensions.empty())
@@ -177,7 +177,7 @@ void FsObjectSelector::browse_file_callback() {
 /**
  * Returns the currently set fs object name, appending the extension if needed.
  */
-std::string FsObjectSelector::get_filename() {
+auto FsObjectSelector::get_filename() -> std::string {
   return base::normalize_path_extension(_edit->get_string_value(), _default_extension);
 }
 
@@ -186,26 +186,26 @@ std::string FsObjectSelector::get_filename() {
 /**
  * Used to enable or disable edit box and browse button.
  */
-void FsObjectSelector::set_enabled(bool value) {
+auto FsObjectSelector::set_enabled(bool value) -> void {
   _edit->set_enabled(value);
   _browse_button->set_enabled(value);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string FsObjectSelector::get_string_value() {
+auto FsObjectSelector::get_string_value() -> std::string {
   return _edit->get_string_value();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int FsObjectSelector::get_int_value() {
+auto FsObjectSelector::get_int_value() -> int {
   return -1;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool FsObjectSelector::get_bool_value() {
+auto FsObjectSelector::get_bool_value() -> bool {
   return false;
 }
 
@@ -216,7 +216,7 @@ bool FsObjectSelector::get_bool_value() {
  * overwritten if used. Entries which were previously selected via the selector itself are kept
  * in the file entry list and do not trigger a confirmation.
  */
-bool FsObjectSelector::check_and_confirm_file_overwrite(TextEntry* entry, const std::string& extension) {
+auto FsObjectSelector::check_and_confirm_file_overwrite(TextEntry* entry, const std::string& extension) -> bool {
   if (file_entries_set_from_browse_dialog.find(entry) != file_entries_set_from_browse_dialog.end())
     return true;
 
@@ -234,7 +234,7 @@ bool FsObjectSelector::check_and_confirm_file_overwrite(TextEntry* entry, const 
 
 //--------------------------------------------------------------------------------------------------
 
-bool FsObjectSelector::check_and_confirm_file_overwrite() {
+auto FsObjectSelector::check_and_confirm_file_overwrite() -> bool {
   return check_and_confirm_file_overwrite(_edit, _default_extension);
 }
 
@@ -243,7 +243,7 @@ bool FsObjectSelector::check_and_confirm_file_overwrite() {
 /**
  * Clears the internal list of stored filenames, which is used to check for overwrite confirmations.
  */
-void FsObjectSelector::clear_stored_filenames() {
+auto FsObjectSelector::clear_stored_filenames() -> void {
   file_entries_set_from_browse_dialog.clear();
 }
 

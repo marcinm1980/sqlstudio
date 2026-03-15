@@ -45,40 +45,40 @@ protected:
 
   bool _highlighting;
 
-  void fk_changed(const db_ForeignKeyRef &fk);
-  void member_changed(const std::string &name, const grt::ValueRef &ovalue);
+  auto fk_changed(const db_ForeignKeyRef &fk) -> void;
+  auto member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void;
 
-  virtual bool realize();
-  virtual void unrealize();
+  virtual auto realize() -> bool;
+  virtual auto unrealize() -> void;
 
-  void update_line_ends();
-  void layout_changed();
-  void table_changed(const std::string &detail);
+  auto update_line_ends() -> void;
+  auto layout_changed() -> void;
+  auto table_changed(const std::string &detail) -> void;
 
-  virtual mdc::CanvasItem *get_start_canvas_item();
-  virtual mdc::CanvasItem *get_end_canvas_item();
+  virtual auto get_start_canvas_item() -> mdc::CanvasItem *;
+  virtual auto get_end_canvas_item() -> mdc::CanvasItem *;
 
-  virtual void caption_bounds_changed(const base::Rect &obounds, mdc::TextFigure *figure);
+  virtual auto caption_bounds_changed(const base::Rect &obounds, mdc::TextFigure *figure) -> void;
 
-  void fk_member_changed(const std::string &member, const grt::ValueRef &ovalue);
+  auto fk_member_changed(const std::string &member, const grt::ValueRef &ovalue) -> void;
 
-  void object_realized(const model_ObjectRef &object);
+  auto object_realized(const model_ObjectRef &object) -> void;
 
-  void update_connected_tables();
+  auto update_connected_tables() -> void;
 
 public:
   ImplData(studio_physical_Connection *self);
   virtual ~ImplData();
 
-  virtual void highlight(const base::Color *color = 0);
-  virtual void unhighlight();
+  virtual auto highlight(const base::Color *color = 0) -> void;
+  virtual auto unhighlight() -> void;
 
-  virtual void set_in_view(bool flag);
+  virtual auto set_in_view(bool flag) -> void;
 
-  void set_foreign_key(const db_ForeignKeyRef &fk);
+  auto set_foreign_key(const db_ForeignKeyRef &fk) -> void;
 
 private:
-  studio_physical_Connection *self() const {
+  auto self() const -> studio_physical_Connection * {
     return (studio_physical_Connection *)_self;
   }
 };

@@ -297,147 +297,147 @@ extern CHARSET_INFO my_charset_cp1250_czech_ci;
 extern CHARSET_INFO my_charset_filename;
 
 /* declarations for simple charsets */
-extern int  my_strnxfrm_simple(CHARSET_INFO *, uchar *, uint, const uchar *,
-                               uint); 
+extern auto my_strnxfrm_simple(CHARSET_INFO *, uchar *, uint, const uchar *,
+                               uint) -> int; 
 uint  my_strnxfrmlen_simple(CHARSET_INFO *, uint); 
-extern int  my_strnncoll_simple(CHARSET_INFO *, const uchar *, uint,
-				const uchar *, uint, my_bool);
+extern auto my_strnncoll_simple(CHARSET_INFO *, const uchar *, uint,
+				const uchar *, uint, my_bool) -> int;
 
-extern int  my_strnncollsp_simple(CHARSET_INFO *, const uchar *, uint,
+extern auto my_strnncollsp_simple(CHARSET_INFO *, const uchar *, uint,
                                   const uchar *, uint,
-                                  my_bool diff_if_only_endspace_difference);
+                                  my_bool diff_if_only_endspace_difference) -> int;
 
-extern void my_hash_sort_simple(CHARSET_INFO *cs,
+extern auto my_hash_sort_simple(CHARSET_INFO *cs,
 				const uchar *key, uint len,
-				ulong *nr1, ulong *nr2); 
+				ulong *nr1, ulong *nr2) -> void; 
 
-extern uint my_lengthsp_8bit(CHARSET_INFO *cs, const char *ptr, uint length);
+extern auto my_lengthsp_8bit(CHARSET_INFO *cs, const char *ptr, uint length) -> uint;
 
-extern uint my_instr_simple(struct charset_info_st *,
+extern auto my_instr_simple(struct charset_info_st *,
                             const char *b, uint b_length,
                             const char *s, uint s_length,
-                            my_match_t *match, uint nmatch);
+                            my_match_t *match, uint nmatch) -> uint;
 
 
 /* Functions for 8bit */
 extern void my_caseup_str_8bit(CHARSET_INFO *, char *);
 extern void my_casedn_str_8bit(CHARSET_INFO *, char *);
-extern uint my_caseup_8bit(CHARSET_INFO *, char *src, uint srclen,
-                                           char *dst, uint dstlen);
-extern uint my_casedn_8bit(CHARSET_INFO *, char *src, uint srclen,
-                                           char *dst, uint dstlen);
+extern auto my_caseup_8bit(CHARSET_INFO *, char *src, uint srclen,
+                                           char *dst, uint dstlen) -> uint;
+extern auto my_casedn_8bit(CHARSET_INFO *, char *src, uint srclen,
+                                           char *dst, uint dstlen) -> uint;
 
-extern int my_strcasecmp_8bit(CHARSET_INFO * cs, const char *, const char *);
+extern auto my_strcasecmp_8bit(CHARSET_INFO * cs, const char *, const char *) -> int;
 
-int my_mb_wc_8bit(CHARSET_INFO *cs,my_wc_t *wc, const uchar *s,const uchar *e);
-int my_wc_mb_8bit(CHARSET_INFO *cs,my_wc_t wc, uchar *s, uchar *e);
+auto my_mb_wc_8bit(CHARSET_INFO *cs,my_wc_t *wc, const uchar *s,const uchar *e) -> int;
+auto my_wc_mb_8bit(CHARSET_INFO *cs,my_wc_t wc, uchar *s, uchar *e) -> int;
 
-int my_mb_ctype_8bit(CHARSET_INFO *,int *, const uchar *,const uchar *);
-int my_mb_ctype_mb(CHARSET_INFO *,int *, const uchar *,const uchar *);
+auto my_mb_ctype_8bit(CHARSET_INFO *,int *, const uchar *,const uchar *) -> int;
+auto my_mb_ctype_mb(CHARSET_INFO *,int *, const uchar *,const uchar *) -> int;
 
-ulong my_scan_8bit(CHARSET_INFO *cs, const char *b, const char *e, int sq);
+auto my_scan_8bit(CHARSET_INFO *cs, const char *b, const char *e, int sq) -> ulong;
 
-int my_snprintf_8bit(struct charset_info_st *, char *to, uint n,
-		     const char *fmt, ...);
+auto my_snprintf_8bit(struct charset_info_st *, char *to, uint n,
+		     const char *fmt, ...) -> int;
 
-long        my_strntol_8bit(CHARSET_INFO *, const char *s, uint l, int base,
-			    char **e, int *err);
-ulong      my_strntoul_8bit(CHARSET_INFO *, const char *s, uint l, int base,
-			    char **e, int *err);
-longlong   my_strntoll_8bit(CHARSET_INFO *, const char *s, uint l, int base,
-			    char **e, int *err);
-ulonglong my_strntoull_8bit(CHARSET_INFO *, const char *s, uint l, int base,
-			    char **e, int *err);
-double      my_strntod_8bit(CHARSET_INFO *, char *s, uint l,char **e,
-			    int *err);
-int  my_long10_to_str_8bit(CHARSET_INFO *, char *to, uint l, int radix,
-			   long int val);
-int my_longlong10_to_str_8bit(CHARSET_INFO *, char *to, uint l, int radix,
-			      longlong val);
+auto my_strntol_8bit(CHARSET_INFO *, const char *s, uint l, int base,
+			    char **e, int *err) -> long;
+auto my_strntoul_8bit(CHARSET_INFO *, const char *s, uint l, int base,
+			    char **e, int *err) -> ulong;
+auto my_strntoll_8bit(CHARSET_INFO *, const char *s, uint l, int base,
+			    char **e, int *err) -> longlong;
+auto my_strntoull_8bit(CHARSET_INFO *, const char *s, uint l, int base,
+			    char **e, int *err) -> ulonglong;
+auto my_strntod_8bit(CHARSET_INFO *, char *s, uint l,char **e,
+			    int *err) -> double;
+auto my_long10_to_str_8bit(CHARSET_INFO *, char *to, uint l, int radix,
+			   long int val) -> int;
+auto my_longlong10_to_str_8bit(CHARSET_INFO *, char *to, uint l, int radix,
+			      longlong val) -> int;
 
-longlong my_strtoll10_8bit(CHARSET_INFO *cs,
-                           const char *nptr, char **endptr, int *error);
-longlong my_strtoll10_ucs2(CHARSET_INFO *cs, 
-                           const char *nptr, char **endptr, int *error);
+auto my_strtoll10_8bit(CHARSET_INFO *cs,
+                           const char *nptr, char **endptr, int *error) -> longlong;
+auto my_strtoll10_ucs2(CHARSET_INFO *cs, 
+                           const char *nptr, char **endptr, int *error) -> longlong;
 
-void my_fill_8bit(CHARSET_INFO *cs, char* to, uint l, int fill);
+auto my_fill_8bit(CHARSET_INFO *cs, char* to, uint l, int fill) -> void;
 
-my_bool  my_like_range_simple(CHARSET_INFO *cs,
+auto my_like_range_simple(CHARSET_INFO *cs,
 			      const char *ptr, uint ptr_length,
 			      pbool escape, pbool w_one, pbool w_many,
 			      uint res_length,
 			      char *min_str, char *max_str,
-			      uint *min_length, uint *max_length);
+			      uint *min_length, uint *max_length) -> my_bool;
 
-my_bool  my_like_range_mb(CHARSET_INFO *cs,
+auto my_like_range_mb(CHARSET_INFO *cs,
 			  const char *ptr, uint ptr_length,
 			  pbool escape, pbool w_one, pbool w_many,
 			  uint res_length,
 			  char *min_str, char *max_str,
-			  uint *min_length, uint *max_length);
+			  uint *min_length, uint *max_length) -> my_bool;
 
-my_bool  my_like_range_ucs2(CHARSET_INFO *cs,
+auto my_like_range_ucs2(CHARSET_INFO *cs,
 			    const char *ptr, uint ptr_length,
 			    pbool escape, pbool w_one, pbool w_many,
 			    uint res_length,
 			    char *min_str, char *max_str,
-			    uint *min_length, uint *max_length);
+			    uint *min_length, uint *max_length) -> my_bool;
 
 
-int my_wildcmp_8bit(CHARSET_INFO *,
+auto my_wildcmp_8bit(CHARSET_INFO *,
 		    const char *str,const char *str_end,
 		    const char *wildstr,const char *wildend,
-		    int escape, int w_one, int w_many);
+		    int escape, int w_one, int w_many) -> int;
 
-int my_wildcmp_bin(CHARSET_INFO *,
+auto my_wildcmp_bin(CHARSET_INFO *,
 		   const char *str,const char *str_end,
 		   const char *wildstr,const char *wildend,
-		   int escape, int w_one, int w_many);
+		   int escape, int w_one, int w_many) -> int;
 
-uint my_numchars_8bit(CHARSET_INFO *, const char *b, const char *e);
-uint my_numcells_8bit(CHARSET_INFO *, const char *b, const char *e);
-uint my_charpos_8bit(CHARSET_INFO *, const char *b, const char *e, uint pos);
-uint my_well_formed_len_8bit(CHARSET_INFO *, const char *b, const char *e,
-                             uint pos, int *error);
-int my_mbcharlen_8bit(CHARSET_INFO *, uint c);
+auto my_numchars_8bit(CHARSET_INFO *, const char *b, const char *e) -> uint;
+auto my_numcells_8bit(CHARSET_INFO *, const char *b, const char *e) -> uint;
+auto my_charpos_8bit(CHARSET_INFO *, const char *b, const char *e, uint pos) -> uint;
+auto my_well_formed_len_8bit(CHARSET_INFO *, const char *b, const char *e,
+                             uint pos, int *error) -> uint;
+auto my_mbcharlen_8bit(CHARSET_INFO *, uint c) -> int;
 
 
 /* Functions for multibyte charsets */
 extern void my_caseup_str_mb(CHARSET_INFO *, char *);
 extern void my_casedn_str_mb(CHARSET_INFO *, char *);
-extern uint my_caseup_mb(CHARSET_INFO *, char *src, uint srclen,
-                                         char *dst, uint dstlen);
-extern uint my_casedn_mb(CHARSET_INFO *, char *src, uint srclen,
-                                         char *dst, uint dstlen);
-extern int my_strcasecmp_mb(CHARSET_INFO * cs,const char *, const char *);
+extern auto my_caseup_mb(CHARSET_INFO *, char *src, uint srclen,
+                                         char *dst, uint dstlen) -> uint;
+extern auto my_casedn_mb(CHARSET_INFO *, char *src, uint srclen,
+                                         char *dst, uint dstlen) -> uint;
+extern auto my_strcasecmp_mb(CHARSET_INFO * cs,const char *, const char *) -> int;
 
-int my_wildcmp_mb(CHARSET_INFO *,
+auto my_wildcmp_mb(CHARSET_INFO *,
 		  const char *str,const char *str_end,
 		  const char *wildstr,const char *wildend,
-		  int escape, int w_one, int w_many);
-uint my_numchars_mb(CHARSET_INFO *, const char *b, const char *e);
-uint my_numcells_mb(CHARSET_INFO *, const char *b, const char *e);
-uint my_charpos_mb(CHARSET_INFO *, const char *b, const char *e, uint pos);
-uint my_well_formed_len_mb(CHARSET_INFO *, const char *b, const char *e,
-                           uint pos, int *error);
-uint my_instr_mb(struct charset_info_st *,
+		  int escape, int w_one, int w_many) -> int;
+auto my_numchars_mb(CHARSET_INFO *, const char *b, const char *e) -> uint;
+auto my_numcells_mb(CHARSET_INFO *, const char *b, const char *e) -> uint;
+auto my_charpos_mb(CHARSET_INFO *, const char *b, const char *e, uint pos) -> uint;
+auto my_well_formed_len_mb(CHARSET_INFO *, const char *b, const char *e,
+                           uint pos, int *error) -> uint;
+auto my_instr_mb(struct charset_info_st *,
                  const char *b, uint b_length,
                  const char *s, uint s_length,
-                 my_match_t *match, uint nmatch);
+                 my_match_t *match, uint nmatch) -> uint;
 
-int my_wildcmp_unicode(CHARSET_INFO *cs,
+auto my_wildcmp_unicode(CHARSET_INFO *cs,
                        const char *str, const char *str_end,
                        const char *wildstr, const char *wildend,
                        int escape, int w_one, int w_many,
-                       MY_UNICASE_INFO **weights);
+                       MY_UNICASE_INFO **weights) -> int;
 
-extern my_bool my_parse_charset_xml(const char *bug, uint len,
-				    int (*add)(CHARSET_INFO *cs));
-extern char *my_strchr(CHARSET_INFO *cs, const char *str, const char *end,
-                       char c);
+extern auto my_parse_charset_xml(const char *bug, uint len,
+				    int (*add)(CHARSET_INFO *cs)) -> my_bool;
+extern auto my_strchr(CHARSET_INFO *cs, const char *str, const char *end,
+                       char c) -> char *;
 
-my_bool my_propagate_simple(CHARSET_INFO *cs, const uchar *str, uint len);
-my_bool my_propagate_complex(CHARSET_INFO *cs, const uchar *str, uint len);
+auto my_propagate_simple(CHARSET_INFO *cs, const uchar *str, uint len) -> my_bool;
+auto my_propagate_complex(CHARSET_INFO *cs, const uchar *str, uint len) -> my_bool;
 
 
 #define	_MY_U	01	/* Upper case */

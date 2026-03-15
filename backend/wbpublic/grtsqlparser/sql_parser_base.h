@@ -54,10 +54,10 @@ protected:
   }
 
 public:
-  const std::string &eol() const {
+  auto eol() const -> const std::string & {
     return EOL;
   }
-  void eol(const std::string &value) {
+  auto eol(const std::string &value) -> void {
     EOL = value;
   }
 
@@ -65,26 +65,26 @@ protected:
   std::string EOL;
 
 public:
-  virtual void sql_mode(const std::string &value) {
+  virtual auto sql_mode(const std::string &value) -> void {
   }
 
 public:
   typedef std::function<int(int, int, int, const std::string &)> Parse_error_cb;
-  void parse_error_cb(Parse_error_cb cb);
-  Parse_error_cb &parse_error_cb();
+  auto parse_error_cb(Parse_error_cb cb) -> void;
+  auto parse_error_cb() -> Parse_error_cb &;
 
 public:
   typedef std::function<int(int, int, int, int)> Report_sql_statement_border;
   Report_sql_statement_border report_sql_statement_border;
 
 protected:
-  void do_report_sql_statement_border(int begin_lineno, int begin_line_pos, int end_lineno, int end_line_pos);
+  auto do_report_sql_statement_border(int begin_lineno, int begin_line_pos, int end_lineno, int end_line_pos) -> void;
 
 public:
-  bool is_ast_generation_enabled() const {
+  auto is_ast_generation_enabled() const -> bool {
     return _is_ast_generation_enabled;
   }
-  void is_ast_generation_enabled(bool value) {
+  auto is_ast_generation_enabled(bool value) -> void {
     _is_ast_generation_enabled = value;
   }
 
@@ -92,7 +92,7 @@ protected:
   bool _is_ast_generation_enabled;
 
 public:
-  bool stop() {
+  auto stop() -> bool {
     return _stopped = _stop_cb ? _stop_cb() : false;
   }
 
@@ -117,10 +117,10 @@ private:
   Parse_error_cb _parse_error_cb;
 
 public:
-  void case_sensitive_identifiers(bool val) {
+  auto case_sensitive_identifiers(bool val) -> void {
     _case_sensitive_identifiers = val;
   }
-  bool case_sensitive_identifiers() {
+  auto case_sensitive_identifiers() -> bool {
     return _case_sensitive_identifiers;
   }
 
@@ -128,29 +128,29 @@ protected:
   bool _case_sensitive_identifiers;
 
 protected:
-  std::string normalize_identifier_case(const std::string &ident);
+  auto normalize_identifier_case(const std::string &ident) -> std::string;
 
 public:
-  void messages_enabled(bool value);
-  bool messages_enabled();
+  auto messages_enabled(bool value) -> void;
+  auto messages_enabled() -> bool;
 
 protected:
   // aux types
   enum Parse_result { pr_irrelevant = 0, pr_processed, pr_invalid };
 
   // initialization
-  virtual void set_options(const grt::DictRef &options);
+  virtual auto set_options(const grt::DictRef &options) -> void;
 
   // state monitoring
-  void add_log_message(const std::string &text, int entry_type);
+  auto add_log_message(const std::string &text, int entry_type) -> void;
   void report_sql_error(int lineno, bool calc_abs_lineno, int err_tok_line_pos, int err_tok_len,
                         const std::string &err_msg, int entry_type, std::string resolution = "Statement skipped.");
-  void step_progress(const std::string &text);
-  void set_progress_state(float state, const std::string &text);
+  auto step_progress(const std::string &text) -> void;
+  auto set_progress_state(float state, const std::string &text) -> void;
 
   // misc
-  const std::string &sql_statement();
-  virtual int total_line_count() = 0;
+  auto sql_statement() -> const std::string &;
+  virtual auto total_line_count() -> int = 0;
 
   // data members
   std::string _sql_statement;
@@ -171,10 +171,10 @@ protected:
     const char *what() const throw() {
       return _msg_text.c_str();
     }
-    int flag() const {
+    auto flag() const -> int {
       return _flag;
     }
-    void flag(int val) {
+    auto flag(int val) -> void {
       _flag = val;
     }
 

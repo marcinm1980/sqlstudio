@@ -90,7 +90,7 @@ using namespace base;
 
 const std::string ModelFile::lock_filename("lock");
 
-void ModelFile::copy_file(const std::string &srcfile, const std::string &destfile) {
+auto ModelFile::copy_file(const std::string &srcfile, const std::string &destfile) -> void {
   char buffer[4098];
   FILE *sf = base_fopen(srcfile.c_str(), "rb");
   if (!sf)
@@ -116,7 +116,7 @@ void ModelFile::copy_file(const std::string &srcfile, const std::string &destfil
   fclose(tf);
 }
 
-static int rmdir_recursively(const char *path) {
+static auto rmdir_recursively(const char *path) -> int {
   int res = 0;
   GError *error = NULL;
   GDir *dir;
@@ -149,7 +149,7 @@ static int rmdir_recursively(const char *path) {
   return res;
 }
 
-std::string ModelFile::create_document_dir(const std::string &dir, const std::string &prefix) {
+auto ModelFile::create_document_dir(const std::string &dir, const std::string &prefix) -> std::string {
   std::string path;
   char s[12];
   int i = 0;
@@ -184,11 +184,11 @@ ModelFile::~ModelFile() {
   cleanup();
 }
 
-void ModelFile::copy_file_to(const std::string &file, const std::string &dest) {
+auto ModelFile::copy_file_to(const std::string &file, const std::string &dest) -> void {
   copy_file(get_path_for(file), dest);
 }
 
-void ModelFile::open(const std::string &path) {
+auto ModelFile::open(const std::string &path) -> void {
   bool file_is_zip;
   bool file_is_autosave = false;
 
@@ -346,7 +346,7 @@ void ModelFile::open(const std::string &path) {
 /**
  * Returns a previously set zip file comment (if any) without unzipping the file.
  */
-std::string ModelFile::read_comment(const std::string &path) {
+auto ModelFile::read_comment(const std::string &path) -> std::string {
   std::string schemas;
   int err;
   zip *z = zip_open(path.c_str(), 0, &err);
@@ -374,7 +374,7 @@ std::string ModelFile::read_comment(const std::string &path) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ModelFile::create() {
+auto ModelFile::create() -> void {
   RecMutexLock lock(_mutex);
 
   _content_dir = create_document_dir(_temp_dir, "newmodel.mwb");
@@ -383,14 +383,14 @@ void ModelFile::create() {
   _dirty = false;
 }
 
-std::string ModelFile::get_path_for(const std::string &file) {
+auto ModelFile::get_path_for(const std::string &file) -> std::string {
   return _content_dir + "/" + file;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 // reading
-studio_DocumentRef ModelFile::retrieve_document() {
+auto ModelFile::retrieve_document() -> studio_DocumentRef {
   RecMutexLock lock(_mutex);
 
   xmlDocPtr xmldoc = grt::GRT::get()->load_xml(get_path_for(MAIN_DOCUMENT_NAME));
@@ -421,7 +421,7 @@ retry:
 
 //--------------------------------------------------------------------------------------------------
 
-bool ModelFile::semantic_check(studio_DocumentRef doc) {
+auto ModelFile::semantic_check(studio_DocumentRef doc) -> bool {
   // 1) Is there a valid physical model in the document?
   if (!doc->physicalModels().is_valid() || doc->physicalModels().count() == 0)
     return false;
@@ -431,7 +431,7 @@ bool ModelFile::semantic_check(studio_DocumentRef doc) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::list<std::string> ModelFile::unpack_zip(const std::string &zipfile, const std::string &destdir) {
+auto ModelFile::unpack_zip(const std::string &zipfile, const std::string &destdir) -> std::list<std::string> {
   std::list<std::string> unpacked_files;
 
   if (g_mkdir_with_parents(destdir.c_str(), 0700) < 0)
@@ -552,7 +552,7 @@ std::list<std::string> ModelFile::unpack_zip(const std::string &zipfile, const s
   return unpacked_files;
 }
 
-static void zip_dir_contents(zip *z, const std::string &destdir, const std::string &partial) {
+static auto zip_dir_contents(zip *z, const std::string &destdir, const std::string &partial) -> void {
   GError *error = 0;
   GDir *dir = g_dir_open(destdir.empty() ? "." : destdir.c_str(), 0, &error);
   if (!dir) {
@@ -606,7 +606,7 @@ static void zip_dir_contents(zip *z, const std::string &destdir, const std::stri
   g_dir_close(dir);
 }
 
-void ModelFile::pack_zip(const std::string &zipfile, const std::string &destdir, const std::string &comment) {
+auto ModelFile::pack_zip(const std::string &zipfile, const std::string &destdir, const std::string &comment) -> void {
   std::string curdir;
 
   {
@@ -672,7 +672,7 @@ void ModelFile::pack_zip(const std::string &zipfile, const std::string &destdir,
   }
 }
 
-studio_DocumentRef ModelFile::unserialize_document(xmlDocPtr xmldoc, const std::string &path) {
+auto ModelFile::unserialize_document(xmlDocPtr xmldoc, const std::string &path) -> studio_DocumentRef {
   std::string doctype, version;
 
   grt::GRT::get()->get_xml_metainfo(xmldoc, doctype, version);
@@ -720,7 +720,7 @@ studio_DocumentRef ModelFile::unserialize_document(xmlDocPtr xmldoc, const std::
  * (if there is one). Checks are performed to ensure existing backup files can be removed and existing
  * model files can be renamed to .bak.
  */
-bool ModelFile::save_to(const std::string &path, const std::string &comment) {
+auto ModelFile::save_to(const std::string &path, const std::string &comment) -> bool {
   RecMutexLock lock(_mutex);
 #ifdef _MSC_VER
   const int read_write = _S_IWRITE | _S_IREAD;
@@ -801,7 +801,7 @@ bool ModelFile::save_to(const std::string &path, const std::string &comment) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ModelFile::cleanup() {
+auto ModelFile::cleanup() -> void {
   RecMutexLock lock(_mutex);
 
   delete _temp_dir_lock;
@@ -811,27 +811,27 @@ void ModelFile::cleanup() {
     rmdir_recursively(_content_dir.c_str());
 }
 
-void ModelFile::add_db_file(const std::string &content_dir) {
+auto ModelFile::add_db_file(const std::string &content_dir) -> void {
   std::string db_tpl_file_path = bec::GRTManager::get()->get_data_file_path("data/" DB_FILE);
   std::string db_file_dir_path = content_dir + "/" + DB_DIR;
   add_attachment_file(db_file_dir_path, db_tpl_file_path);
 }
 
-std::string ModelFile::get_rel_db_file_path() {
+auto ModelFile::get_rel_db_file_path() -> std::string {
   return DB_DIR "/" DB_FILE;
 }
 
-std::string ModelFile::get_db_file_dir_path() {
+auto ModelFile::get_db_file_dir_path() -> std::string {
   return _content_dir + "/" + DB_DIR;
 }
 
-std::string ModelFile::get_db_file_path() {
+auto ModelFile::get_db_file_path() -> std::string {
   return get_db_file_dir_path() + "/" + DB_FILE;
 }
 
 /** Adds an external file to the document.
 */
-std::string ModelFile::add_attachment_file(const std::string &destdir, const std::string &path) {
+auto ModelFile::add_attachment_file(const std::string &destdir, const std::string &path) -> std::string {
   std::string prefix = destdir + "/";
   if (!path.empty()) {
     prefix += base::basename(path);
@@ -871,35 +871,35 @@ std::string ModelFile::add_attachment_file(const std::string &destdir, const std
   return destfile;
 }
 
-std::string ModelFile::add_image_file(const std::string &path) {
+auto ModelFile::add_image_file(const std::string &path) -> std::string {
   _dirty = true;
 
   return add_attachment_file(_content_dir + "/" + IMAGES_DIR, path);
 }
 
-std::string ModelFile::add_script_file(const std::string &path) {
+auto ModelFile::add_script_file(const std::string &path) -> std::string {
   _dirty = true;
 
   return add_attachment_file(_content_dir + "/" + SCRIPTS_DIR, path);
 }
 
-std::string ModelFile::add_note_file(const std::string &path) {
+auto ModelFile::add_note_file(const std::string &path) -> std::string {
   _dirty = true;
 
   return add_attachment_file(_content_dir + "/" + NOTES_DIR, path);
 }
 
-bool ModelFile::has_file(const std::string &name) {
+auto ModelFile::has_file(const std::string &name) -> bool {
   RecMutexLock lock(_mutex);
 
   return g_file_test(get_path_for(name).c_str(), G_FILE_TEST_EXISTS) != 0;
 }
 
-void ModelFile::set_file_contents(const std::string &path, const std::string &data) {
+auto ModelFile::set_file_contents(const std::string &path, const std::string &data) -> void {
   set_file_contents(path, data.c_str(), data.size());
 }
 
-void ModelFile::set_file_contents(const std::string &path, const char *data, size_t size) {
+auto ModelFile::set_file_contents(const std::string &path, const char *data, size_t size) -> void {
   std::string fpath = get_path_for(path);
 
   GError *error = NULL;
@@ -908,7 +908,7 @@ void ModelFile::set_file_contents(const std::string &path, const char *data, siz
     throw std::runtime_error(std::string("Error while setting file contents: ") + error->message);
 }
 
-std::string ModelFile::get_file_contents(const std::string &path) {
+auto ModelFile::get_file_contents(const std::string &path) -> std::string {
   gchar *contents = 0;
   gsize length;
   std::string tmp;
@@ -923,24 +923,24 @@ std::string ModelFile::get_file_contents(const std::string &path) {
 }
 
 // writing
-void ModelFile::store_document(const studio_DocumentRef &doc) {
+auto ModelFile::store_document(const studio_DocumentRef &doc) -> void {
   grt::GRT::get()->serialize(doc, get_path_for(MAIN_DOCUMENT_NAME), DOCUMENT_FORMAT, DOCUMENT_VERSION);
 
   _dirty = true;
 }
 
-void ModelFile::store_document_autosave(const studio_DocumentRef &doc) {
+auto ModelFile::store_document_autosave(const studio_DocumentRef &doc) -> void {
   grt::GRT::get()->serialize(doc, get_path_for("document-autosave.mwb.xml"), DOCUMENT_FORMAT, DOCUMENT_VERSION);
 }
 
-void ModelFile::delete_file(const std::string &path) {
+auto ModelFile::delete_file(const std::string &path) -> void {
   if (std::find(_delete_queue.begin(), _delete_queue.end(), path) == _delete_queue.end()) {
     _dirty = true;
     _delete_queue.push_back(path);
   }
 }
 
-bool ModelFile::undelete_file(const std::string &path) {
+auto ModelFile::undelete_file(const std::string &path) -> bool {
   std::list<std::string>::iterator iter;
 
   if ((iter = std::find(_delete_queue.begin(), _delete_queue.end(), path)) == _delete_queue.end())
@@ -954,13 +954,13 @@ bool ModelFile::undelete_file(const std::string &path) {
 
 //--------------------------------------------------------------------------------------------------
 
-cairo_surface_t *ModelFile::get_image(const std::string &path) {
+auto ModelFile::get_image(const std::string &path) -> cairo_surface_t * {
   return mdc::surface_from_png_image(get_path_for(path));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ModelFile::check_and_fix_data_file_bug() {
+auto ModelFile::check_and_fix_data_file_bug() -> void {
 // WB up to 5.2.21 used G_DIR_SEPARATOR for data file paths. This was incorrect
 // as the @db\data.db was being treated as a filename outside Windows, instead
 // of a file in a subdirectory called @db. The issue was corrected, but the problem

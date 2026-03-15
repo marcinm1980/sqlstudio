@@ -37,9 +37,9 @@
 #include "helpers.h"
 #include "gtest/gtest.h"
 
-extern void register_all_metaclasses();
+extern auto register_all_metaclasses() -> void;
 
-static bool populate_test_table(std::unique_ptr<sql::Statement> &stmt) {
+static auto populate_test_table(std::unique_ptr<sql::Statement> &stmt) -> bool {
   stmt->execute("USE test");
   stmt->execute("DROP TABLE IF EXISTS test_function");
   if (true == stmt->execute("CREATE TABLE test_function (a integer, b integer, c integer default null)"))
@@ -52,7 +52,7 @@ static bool populate_test_table(std::unique_ptr<sql::Statement> &stmt) {
   return true;
 }
 
-static bool populate_tx_test_table(std::unique_ptr<sql::Statement> &stmt) {
+static auto populate_tx_test_table(std::unique_ptr<sql::Statement> &stmt) -> bool {
   stmt->execute("USE test");
   stmt->execute("DROP TABLE IF EXISTS test_function_tx");
   if (true ==

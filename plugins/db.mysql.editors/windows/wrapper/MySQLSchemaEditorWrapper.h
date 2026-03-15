@@ -37,12 +37,12 @@ namespace MySQL {
         MySQLSchemaEditorWrapper(GrtValue ^ arglist);
         ~MySQLSchemaEditorWrapper();
 
-        MySQLSchemaEditorBE *get_unmanaged_object();
-        bool is_new_object();
+        auto get_unmanaged_object() -> MySQLSchemaEditorBE *;
+        auto is_new_object() -> bool;
         void refactor_catalog_upon_schema_rename(System::String ^ old_name, System::String ^ new_name);
 
-        bool refactor_possible();
-        void refactor_catalog();
+        auto refactor_possible() -> bool;
+        auto refactor_catalog() -> void;
       };
 
     } // namespace Db

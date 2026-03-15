@@ -46,41 +46,41 @@ namespace MySQL {
         MySQLRelationshipEditorWrapper(MySQL::Grt::GrtValue ^ arglist);
         ~MySQLRelationshipEditorWrapper();
 
-        RelationshipEditorBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> RelationshipEditorBE *;
 
         void set_caption(String ^ caption);
-        String ^ get_caption();
-        String ^ get_caption_long();
+        auto get_caption() -> String ^;
+        auto get_caption_long() -> String ^;
         void set_extra_caption(String ^ caption);
-        String ^ get_extra_caption();
-        String ^ get_extra_caption_long();
+        auto get_extra_caption() -> String ^;
+        auto get_extra_caption_long() -> String ^;
 
-        String ^ get_right_table_name();
-        String ^ get_left_table_name();
-        String ^ get_right_table_info();
-        String ^ get_left_table_info();
+        auto get_right_table_name() -> String ^;
+        auto get_left_table_name() -> String ^;
+        auto get_right_table_info() -> String ^;
+        auto get_left_table_info() -> String ^;
 
-        String ^ get_left_table_fk();
+        auto get_left_table_fk() -> String ^;
 
-        void set_left_mandatory(bool flag);
-        bool get_left_mandatory();
-        void set_right_mandatory(bool flag);
-        bool get_right_mandatory();
+        auto set_left_mandatory(bool flag) -> void;
+        auto get_left_mandatory() -> bool;
+        auto set_right_mandatory(bool flag) -> void;
+        auto get_right_mandatory() -> bool;
 
-        void set_to_many(bool flag);
-        bool get_to_many();
+        auto set_to_many(bool flag) -> void;
+        auto get_to_many() -> bool;
 
         void set_comment(String ^ comment);
-        String ^ get_comment();
+        auto get_comment() -> String ^;
 
-        RelationshipVisibilityType get_visibility();
-        void set_visibility(RelationshipVisibilityType v);
+        auto get_visibility() -> RelationshipVisibilityType;
+        auto set_visibility(RelationshipVisibilityType v) -> void;
 
-        void open_editor_for_left_table();
-        void open_editor_for_right_table();
+        auto open_editor_for_left_table() -> void;
+        auto open_editor_for_right_table() -> void;
 
-        bool get_is_identifying();
-        void set_is_identifying(bool identifying);
+        auto get_is_identifying() -> bool;
+        auto set_is_identifying(bool identifying) -> void;
       };
 
     } // namespace Db

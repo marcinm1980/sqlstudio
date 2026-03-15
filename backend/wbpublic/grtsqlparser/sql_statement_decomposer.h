@@ -50,8 +50,8 @@ struct WBPUBLICBACKEND_PUBLIC_FUNC SelectItem {
   std::string expr;
   std::string alias;
   bool wildcard;
-  std::string effective_alias() const;
-  std::string state_as_string() const;
+  auto effective_alias() const -> std::string;
+  auto state_as_string() const -> std::string;
 };
 
 struct WBPUBLICBACKEND_PUBLIC_FUNC FromItem {
@@ -77,7 +77,7 @@ protected:
   Sql_statement_decomposer();
 
 public:
-  virtual int decompose_query(const std::string &sql, SelectStatement::Ref select_statement) = 0;
-  virtual int decompose_view(const std::string &ddl, SelectStatement::Ref select_statement) = 0;
-  virtual int decompose_view(db_ViewRef view, SelectStatement::Ref select_statement) = 0;
+  virtual auto decompose_query(const std::string &sql, SelectStatement::Ref select_statement) -> int = 0;
+  virtual auto decompose_view(const std::string &ddl, SelectStatement::Ref select_statement) -> int = 0;
+  virtual auto decompose_view(db_ViewRef view, SelectStatement::Ref select_statement) -> int = 0;
 };

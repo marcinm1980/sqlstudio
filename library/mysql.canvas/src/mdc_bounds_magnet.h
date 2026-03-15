@@ -40,7 +40,7 @@ namespace mdc {
     virtual auto get_position_for_connector(Connector *conn, const base::Point &srcpos) const -> base::Point;
 
   protected:
-    virtual void owner_bounds_changed(const base::Rect &obounds);
+    virtual auto owner_bounds_changed(const base::Rect &obounds) -> void;
   };
 }
 

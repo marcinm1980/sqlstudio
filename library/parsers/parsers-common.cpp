@@ -48,7 +48,7 @@ Scanner::Scanner(BufferedTokenStream *input) {
  * @param skipHidden If true ignore hidden tokens.
  * @return False if we hit the last token before we could advance, true otherwise.
  */
-bool Scanner::next(bool skipHidden) {
+auto Scanner::next(bool skipHidden) -> bool {
   while (_index < _tokens.size() - 1) {
     ++_index;
     if (_tokens[_index]->getChannel() == Token::DEFAULT_CHANNEL || !skipHidden)
@@ -65,7 +65,7 @@ bool Scanner::next(bool skipHidden) {
  * @param skipHidden If true ignore hidden tokens.
  * @return False if we hit the last token before we could fully go back, true otherwise.
  */
-bool Scanner::previous(bool skipHidden) {
+auto Scanner::previous(bool skipHidden) -> bool {
   while (_index > 0) {
     --_index;
     if (_tokens[_index]->getChannel() == 0 || !skipHidden)
@@ -84,7 +84,7 @@ bool Scanner::previous(bool skipHidden) {
  *
  * @return True if such a node exists, false otherwise (no change performed then).
  */
-bool Scanner::advanceToPosition(size_t line, size_t offset) {
+auto Scanner::advanceToPosition(size_t line, size_t offset) -> bool {
   if (_tokens.empty())
     return false;
 
@@ -125,7 +125,7 @@ bool Scanner::advanceToPosition(size_t line, size_t offset) {
  * @param type The token type to search.
  * @return True if such a node exists, false otherwise (no change performed then).
  */
-bool Scanner::advanceToType(size_t type) {
+auto Scanner::advanceToType(size_t type) -> bool {
   for (size_t i = _index; i < _tokens.size(); ++i) {
     if (_tokens[i]->getType() == type) {
       _index = i;
@@ -147,7 +147,7 @@ bool Scanner::advanceToType(size_t type) {
  *         in the list, false otherwise. If the token sequence could not be found or there is no more
  *         token the internal state is undefined.
  */
-bool Scanner::skipTokenSequence(std::initializer_list<size_t> sequence) {
+auto Scanner::skipTokenSequence(std::initializer_list<size_t> sequence) -> bool {
   if (_index >= _tokens.size())
     return false;
 
@@ -169,7 +169,7 @@ bool Scanner::skipTokenSequence(std::initializer_list<size_t> sequence) {
 /**
  * Returns the type of the next token without changing the internal state.
  */
-size_t Scanner::lookAhead(bool skipHidden) {
+auto Scanner::lookAhead(bool skipHidden) -> size_t {
   size_t index = _index;
   while (index < _tokens.size() - 1) {
     ++index;
@@ -186,7 +186,7 @@ size_t Scanner::lookAhead(bool skipHidden) {
  * Look back in the stream (physical order) what was before the current token, without
  * modifying the current position.
  */
-size_t Scanner::lookBack(bool skipHidden) {
+auto Scanner::lookBack(bool skipHidden) -> size_t {
   size_t index = _index;
   while (index > 0) {
     --index;
@@ -199,7 +199,7 @@ size_t Scanner::lookBack(bool skipHidden) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Scanner::seek(size_t index) {
+auto Scanner::seek(size_t index) -> void {
   if (index < _tokens.size())
     _index = index;
 }
@@ -209,7 +209,7 @@ void Scanner::seek(size_t index) {
 /**
  * Resets the walker to be at the original location.
  */
-void Scanner::reset() {
+auto Scanner::reset() -> void {
   _index = 0;
   while (!_tokenStack.empty())
     _tokenStack.pop();
@@ -220,7 +220,7 @@ void Scanner::reset() {
 /**
  * Store the current node on the stack, so we can easily come back when needed.
  */
-void Scanner::push() {
+auto Scanner::push() -> void {
   _tokenStack.push(_index);
 }
 
@@ -229,7 +229,7 @@ void Scanner::push() {
 /**
  * Returns to the location at the top of the token stack (if any).
  */
-bool Scanner::pop() {
+auto Scanner::pop() -> bool {
   if (_tokenStack.empty())
     return false;
 
@@ -244,7 +244,7 @@ bool Scanner::pop() {
  * Removes the current top of stack entry without restoring the internal state.
  * Does nothing if the stack is empty.
  */
-void Scanner::removeTos() {
+auto Scanner::removeTos() -> void {
   if (!_tokenStack.empty())
     _tokenStack.pop();
 }
@@ -254,7 +254,7 @@ void Scanner::removeTos() {
 /**
  * Returns true if the current token is of the given type.
  */
-bool Scanner::is(size_t type) const {
+auto Scanner::is(size_t type) const -> bool {
   return _tokens[_index]->getType() == type;
 }
 
@@ -263,7 +263,7 @@ bool Scanner::is(size_t type) const {
 /**
  * Returns the textual expression of the token.
  */
-std::string Scanner::tokenText(bool keepQuotes) const {
+auto Scanner::tokenText(bool keepQuotes) const -> std::string {
   return _tokens[_index]->getText();
 }
 
@@ -272,7 +272,7 @@ std::string Scanner::tokenText(bool keepQuotes) const {
 /**
  * Returns the type of the current token. Same as the type you can specify in advance_to().
  */
-size_t Scanner::tokenType() const {
+auto Scanner::tokenType() const -> size_t {
   return _tokens[_index]->getType();
 }
 
@@ -281,7 +281,7 @@ size_t Scanner::tokenType() const {
 /**
  * Returns the (one-base) line number of the token.
  */
-size_t Scanner::tokenLine() const {
+auto Scanner::tokenLine() const -> size_t {
   return _tokens[_index]->getLine();
 }
 
@@ -290,7 +290,7 @@ size_t Scanner::tokenLine() const {
 /**
  * Returns the (zero-based) character offset of the token on its line.
  */
-size_t Scanner::tokenStart() const {
+auto Scanner::tokenStart() const -> size_t {
   return _tokens[_index]->getCharPositionInLine();
 }
 
@@ -299,7 +299,7 @@ size_t Scanner::tokenStart() const {
 /**
  * Returns the (zero-based) index of the current token within the input.
  */
-size_t Scanner::tokenIndex() const {
+auto Scanner::tokenIndex() const -> size_t {
   return _tokens[_index]->getTokenIndex(); // Usually the same as _index.
 }
 
@@ -308,7 +308,7 @@ size_t Scanner::tokenIndex() const {
 /**
  * Returns the offset of the token in its source string.
  */
-size_t Scanner::tokenOffset() const {
+auto Scanner::tokenOffset() const -> size_t {
   return _tokens[_index]->getStartIndex();
 }
 
@@ -317,7 +317,7 @@ size_t Scanner::tokenOffset() const {
 /**
  * Returns the length of the token in bytes.
  */
-size_t Scanner::tokenLength() const {
+auto Scanner::tokenLength() const -> size_t {
   Token *token = _tokens[_index];
 
   return token->getStopIndex() - token->getStartIndex() + 1;
@@ -328,7 +328,7 @@ size_t Scanner::tokenLength() const {
 /**
  * Returns the channel of the current token.
  */
-size_t Scanner::tokenChannel() const {
+auto Scanner::tokenChannel() const -> size_t {
   return _tokens[_index]->getChannel();
 }
 
@@ -337,7 +337,7 @@ size_t Scanner::tokenChannel() const {
 /**
  * This is a special purpose function to return all the input text from the current token to the end.
  */
-std::string Scanner::tokenSubText() const {
+auto Scanner::tokenSubText() const -> std::string {
   CharStream *cs = _tokens[_index]->getTokenSource()->getInputStream();
   return cs->getText(misc::Interval((ssize_t)_tokens[_index]->getStartIndex(), std::numeric_limits<ssize_t>::max()));
 }

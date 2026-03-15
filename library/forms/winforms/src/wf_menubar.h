@@ -34,26 +34,26 @@ namespace MySQL {
       MenuBarWrapper(mforms::MenuBase *backend);
 
       // Only one of those can be called to create a native menu.
-      static bool create_menu_bar(mforms::MenuBar *backend);
-      static bool create_context_menu(mforms::ContextMenu *backend);
+      static auto create_menu_bar(mforms::MenuBar *backend) -> bool;
+      static auto create_context_menu(mforms::ContextMenu *backend) -> bool;
 
-      static bool create_menu_item(mforms::MenuItem *item, const std::string &title, const mforms::MenuItemType type);
-      static void set_title(mforms::MenuItem *item, const std::string &title);
-      static std::string get_title(mforms::MenuItem *item);
-      static void set_name(mforms::MenuItem *item, const std::string &title);
-      static void set_shortcut(mforms::MenuItem *item, const std::string &value);
-      static void set_enabled(mforms::MenuBase *item, bool state);
-      static bool get_enabled(mforms::MenuBase *item);
-      static void set_checked(mforms::MenuItem *item, bool state);
-      static bool get_checked(mforms::MenuItem *item);
+      static auto create_menu_item(mforms::MenuItem *item, const std::string &title, const mforms::MenuItemType type) -> bool;
+      static auto set_title(mforms::MenuItem *item, const std::string &title) -> void;
+      static auto get_title(mforms::MenuItem *item) -> std::string;
+      static auto set_name(mforms::MenuItem *item, const std::string &title) -> void;
+      static auto set_shortcut(mforms::MenuItem *item, const std::string &value) -> void;
+      static auto set_enabled(mforms::MenuBase *item, bool state) -> void;
+      static auto get_enabled(mforms::MenuBase *item) -> bool;
+      static auto set_checked(mforms::MenuItem *item, bool state) -> void;
+      static auto get_checked(mforms::MenuItem *item) -> bool;
 
-      static void insert_item(mforms::MenuBase *menu, int index, mforms::MenuItem *item);
-      static void remove_item(mforms::MenuBase *menu, mforms::MenuItem *item); // NULL item to remove all
+      static auto insert_item(mforms::MenuBase *menu, int index, mforms::MenuItem *item) -> void;
+      static auto remove_item(mforms::MenuBase *menu, mforms::MenuItem *item) -> void; // NULL item to remove all
 
-      static void popup_at(mforms::ContextMenu *menu, mforms::View *owner, base::Point location);
+      static auto popup_at(mforms::ContextMenu *menu, mforms::View *owner, base::Point location) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

@@ -34,38 +34,38 @@ namespace grt {
   struct ChangeSet;
 
   struct ChangeFactory {
-    static std::shared_ptr<DiffChange> create_value_added_change(std::shared_ptr<DiffChange> parent,
+    static auto create_value_added_change(std::shared_ptr<DiffChange> parent,
                                                                  const ValueRef &source, const ValueRef &target,
-                                                                 bool dupvalue = true);
-    static std::shared_ptr<DiffChange> create_value_removed_change(std::shared_ptr<DiffChange> parent,
-                                                                   const ValueRef &source, const ValueRef &target);
+                                                                 bool dupvalue = true) -> std::shared_ptr<DiffChange>;
+    static auto create_value_removed_change(std::shared_ptr<DiffChange> parent,
+                                                                   const ValueRef &source, const ValueRef &target) -> std::shared_ptr<DiffChange>;
 
-    static std::shared_ptr<DiffChange> create_object_attr_modified_change(std::shared_ptr<DiffChange> parent,
+    static auto create_object_attr_modified_change(std::shared_ptr<DiffChange> parent,
                                                                           const ObjectRef &source,
                                                                           const ObjectRef &target,
                                                                           const std::string &attr,
-                                                                          std::shared_ptr<DiffChange> change);
-    static std::shared_ptr<MultiChange> create_object_modified_change(std::shared_ptr<DiffChange> parent,
+                                                                          std::shared_ptr<DiffChange> change) -> std::shared_ptr<DiffChange>;
+    static auto create_object_modified_change(std::shared_ptr<DiffChange> parent,
                                                                       const ObjectRef &source, const ObjectRef &target,
-                                                                      ChangeSet &changes);
+                                                                      ChangeSet &changes) -> std::shared_ptr<MultiChange>;
 
-    static std::shared_ptr<MultiChange> create_dict_change(std::shared_ptr<DiffChange> parent, const DictRef &source,
-                                                           const DictRef &target, ChangeSet &changes);
+    static auto create_dict_change(std::shared_ptr<DiffChange> parent, const DictRef &source,
+                                                           const DictRef &target, ChangeSet &changes) -> std::shared_ptr<MultiChange>;
 
-    static std::shared_ptr<DiffChange> create_dict_item_added_change(std::shared_ptr<DiffChange> parent,
+    static auto create_dict_item_added_change(std::shared_ptr<DiffChange> parent,
                                                                      const DictRef &source, const DictRef &target,
                                                                      const std::string &key, ValueRef v,
-                                                                     bool dupvalue = true);
-    static std::shared_ptr<DiffChange> create_dict_item_modified_change(std::shared_ptr<DiffChange> parent,
+                                                                     bool dupvalue = true) -> std::shared_ptr<DiffChange>;
+    static auto create_dict_item_modified_change(std::shared_ptr<DiffChange> parent,
                                                                         const DictRef &source, const DictRef &target,
                                                                         const std::string &key,
-                                                                        std::shared_ptr<DiffChange> change);
-    static std::shared_ptr<DiffChange> create_dict_item_removed_change(std::shared_ptr<DiffChange> parent,
+                                                                        std::shared_ptr<DiffChange> change) -> std::shared_ptr<DiffChange>;
+    static auto create_dict_item_removed_change(std::shared_ptr<DiffChange> parent,
                                                                        const DictRef &source, const DictRef &target,
-                                                                       const std::string &key);
+                                                                       const std::string &key) -> std::shared_ptr<DiffChange>;
 
-    static std::shared_ptr<DiffChange> create_simple_value_change(std::shared_ptr<DiffChange> parent,
-                                                                  const ValueRef &source, const ValueRef &target);
+    static auto create_simple_value_change(std::shared_ptr<DiffChange> parent,
+                                                                  const ValueRef &source, const ValueRef &target) -> std::shared_ptr<DiffChange>;
   };
 }
 

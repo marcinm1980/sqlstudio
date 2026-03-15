@@ -31,8 +31,7 @@ using namespace std;
 extern char *yytext;
 extern bool html_gen_mode;
 
-int main(int argc, const char *argv[])
-{
+auto main(int argc, const char *argv[]) -> int {
   (void) argc;
   (void) argv;
 

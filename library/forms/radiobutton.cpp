@@ -30,7 +30,7 @@ using namespace mforms;
 static boost::signals2::signal<void(int)> _radio_activated;
 static int radio_group_id = 0;
 
-int RadioButton::new_id() {
+auto RadioButton::new_id() -> int {
   return ++radio_group_id;
 }
 
@@ -42,7 +42,7 @@ RadioButton::RadioButton(int group_id) : _group_id(group_id) {
   scoped_connect(&_radio_activated, std::bind(&RadioButton::radio_activated, this, std::placeholders::_1));
 }
 
-void RadioButton::set_active(bool flag) {
+auto RadioButton::set_active(bool flag) -> void {
   _updating = true;
   (*_radio_impl->set_active)(this, flag);
   if (flag)
@@ -50,16 +50,16 @@ void RadioButton::set_active(bool flag) {
   _updating = false;
 }
 
-bool RadioButton::get_active() {
+auto RadioButton::get_active() -> bool {
   return (*_radio_impl->get_active)(this);
 }
 
-void RadioButton::radio_activated(int group_id) {
+auto RadioButton::radio_activated(int group_id) -> void {
   if (group_id == _group_id && !_updating)
     set_active(false);
 }
 
-void RadioButton::callback() {
+auto RadioButton::callback() -> void {
   if (!_updating) {
     _updating = true;
     _radio_activated(_group_id);

@@ -49,7 +49,7 @@ namespace {
     TestTableColumnsListBE(TableEditorBE *ed) : TableColumnsListBE(ed) {
     }
 
-    virtual std::vector<std::string> get_datatype_names() {
+    virtual auto get_datatype_names() -> std::vector<std::string> {
       return std::vector<std::string>();
     }
   };
@@ -71,22 +71,22 @@ namespace {
 #pragma warning(pop)
 #endif
 
-    db_TableRef get_table() {
+    auto get_table() -> db_TableRef {
       return _table;
     }
 
-    virtual TableColumnsListBE *get_columns() {
+    virtual auto get_columns() -> TableColumnsListBE * {
       return &_columns;
     }
 
-    virtual IndexListBE *get_indexes() {
+    virtual auto get_indexes() -> IndexListBE * {
       return &_indexes;
     }
 
-    virtual void edit_object(const ObjectRef &v) {
+    virtual auto edit_object(const ObjectRef &v) -> void {
     }
 
-    virtual std::vector<std::string> get_index_types() {
+    virtual auto get_index_types() -> std::vector<std::string> {
       std::vector<std::string> index_types;
       index_types.push_back("type1");
       index_types.push_back("type2");
@@ -95,25 +95,25 @@ namespace {
       return index_types;
     }
 
-    void set_table_option_by_name(const std::string &name, const std::string &value) {
+    auto set_table_option_by_name(const std::string &name, const std::string &value) -> void {
       // TODO: implement
     }
 
-    std::string get_table_option_by_name(const std::string &name) {
+    auto get_table_option_by_name(const std::string &name) -> std::string {
       // TODO: implement
       return std::string();
     }
 
-    std::vector<std::string> get_charsets_list() {
+    auto get_charsets_list() -> std::vector<std::string> {
       return std::vector<std::string>();
     }
 
-    virtual bool check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) {
+    virtual auto check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) -> bool {
       // TODO: implement
       return false;
     }
 
-    virtual db_TableRef create_stub_table(const std::string &schema, const std::string &table) {
+    virtual auto create_stub_table(const std::string &schema, const std::string &table) -> db_TableRef {
       return db_TableRef(); // TODO: implement and add tests.
     }
   };
@@ -123,7 +123,7 @@ namespace {
     db_TableRef table;
     std::unique_ptr<TestTableEditor> editor;
 
-    db_IndexColumnRef findIndexColumnFor(const grt::ListRef<db_IndexColumn> &cols, const std::string &name) {
+    auto findIndexColumnFor(const grt::ListRef<db_IndexColumn> &cols, const std::string &name) -> db_IndexColumnRef {
       for (size_t c = cols.count(), i = 0; i < c; i++) {
         if (cols[i]->referencedColumn()->name() == name)
           return cols[i];

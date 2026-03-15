@@ -60,64 +60,64 @@ class TreeNodeWrapper : public mforms::TreeNode {
   int _index;
 
 protected:
-  bool is_root() const;
+  auto is_root() const -> bool;
 
 public:
   TreeNodeWrapper();
 
-  int node_index() const {
+  auto node_index() const -> int {
     return _index;
   }
 
-  virtual void release();
-  virtual void retain();
+  virtual auto release() -> void;
+  virtual auto retain() -> void;
 
-  virtual bool equals(const mforms::TreeNode &other);
-  virtual bool is_valid() const;
-  virtual int level() const;
+  virtual auto equals(const mforms::TreeNode &other) -> bool;
+  virtual auto is_valid() const -> bool;
+  virtual auto level() const -> int;
 
-  virtual void set_icon_path(int column, const std::string &icon);
+  virtual auto set_icon_path(int column, const std::string &icon) -> void;
 
-  virtual void set_attributes(int column, const mforms::TreeNodeTextAttributes &attrs);
-  virtual void set_string(int column, const std::string &value);
-  virtual void set_int(int column, int value);
-  virtual void set_long(int column, std::int64_t value);
-  virtual void set_bool(int column, bool value);
-  virtual void set_float(int column, double value);
+  virtual auto set_attributes(int column, const mforms::TreeNodeTextAttributes &attrs) -> void;
+  virtual auto set_string(int column, const std::string &value) -> void;
+  virtual auto set_int(int column, int value) -> void;
+  virtual auto set_long(int column, std::int64_t value) -> void;
+  virtual auto set_bool(int column, bool value) -> void;
+  virtual auto set_float(int column, double value) -> void;
 
-  virtual std::string get_string(int column) const;
-  virtual int get_int(int column) const;
-  virtual std::int64_t get_long(int column) const;
-  virtual bool get_bool(int column) const;
-  virtual double get_float(int column) const;
+  virtual auto get_string(int column) const -> std::string;
+  virtual auto get_int(int column) const -> int;
+  virtual auto get_long(int column) const -> std::int64_t;
+  virtual auto get_bool(int column) const -> bool;
+  virtual auto get_float(int column) const -> double;
 
-  virtual int count() const;
-  virtual mforms::TreeNodeRef insert_child(int index);
-  virtual void insert_child(int index, const mforms::TreeNode &node);
-  virtual void move_child(mforms::TreeNodeRef child, int new_index);
-  virtual void remove_from_parent();
-  virtual mforms::TreeNodeRef get_child(int index) const;
-  virtual int get_child_index(mforms::TreeNodeRef child) const;
-  virtual mforms::TreeNodeRef get_parent() const;
-  virtual mforms::TreeNodeRef previous_sibling() const;
-  virtual mforms::TreeNodeRef next_sibling() const;
-  virtual void remove_children();
-  virtual void move_node(mforms::TreeNodeRef node, bool before);
+  virtual auto count() const -> int;
+  virtual auto insert_child(int index) -> mforms::TreeNodeRef;
+  virtual auto insert_child(int index, const mforms::TreeNode &node) -> void;
+  virtual auto move_child(mforms::TreeNodeRef child, int new_index) -> void;
+  virtual auto remove_from_parent() -> void;
+  virtual auto get_child(int index) const -> mforms::TreeNodeRef;
+  virtual auto get_child_index(mforms::TreeNodeRef child) const -> int;
+  virtual auto get_parent() const -> mforms::TreeNodeRef;
+  virtual auto previous_sibling() const -> mforms::TreeNodeRef;
+  virtual auto next_sibling() const -> mforms::TreeNodeRef;
+  virtual auto remove_children() -> void;
+  virtual auto move_node(mforms::TreeNodeRef node, bool before) -> void;
 
   virtual std::vector<mforms::TreeNodeRef> add_node_collection(const mforms::TreeNodeCollectionSkeleton &nodes,
                                                                int position = -1);
-  void add_children_from_skeletons(std::vector<TreeNodeWrapper *> &parents,
-                                   const std::vector<mforms::TreeNodeSkeleton> &children);
+  auto add_children_from_skeletons(std::vector<TreeNodeWrapper *> &parents,
+                                   const std::vector<mforms::TreeNodeSkeleton> &children) -> void;
 
-  virtual void expand();
-  virtual void collapse();
-  virtual bool is_expanded();
+  virtual auto expand() -> void;
+  virtual auto collapse() -> void;
+  virtual auto is_expanded() -> bool;
 
-  virtual void toggle();
+  virtual auto toggle() -> void;
 
-  virtual void set_tag(const std::string &tag);
-  virtual std::string get_tag() const;
+  virtual auto set_tag(const std::string &tag) -> void;
+  virtual auto get_tag() const -> std::string;
 
-  virtual void set_data(mforms::TreeNodeData *data);
-  virtual mforms::TreeNodeData *get_data() const;
+  virtual auto set_data(mforms::TreeNodeData *data) -> void;
+  virtual auto get_data() const -> mforms::TreeNodeData *;
 };

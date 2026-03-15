@@ -83,58 +83,58 @@ namespace bec {
 
     TableColumnsListBE(TableEditorBE *owner);
 
-    bool get_row(const NodeId &node, std::string &name, std::string &type, bool &ispk, bool &notnull, bool &isunique,
+    auto get_row(const NodeId &node, std::string &name, std::string &type, bool &ispk, bool &notnull, bool &isunique,
                  bool &isbinary, bool &isunsigned, bool &iszerofill, std::string &flags, std::string &defvalue,
-                 std::string &charset, std::string &collation, std::string &comment);
+                 std::string &charset, std::string &collation, std::string &comment) -> bool;
 
-    virtual IconId get_field_icon(const NodeId &node, size_t column, IconSize size);
+    virtual auto get_field_icon(const NodeId &node, size_t column, IconSize size) -> IconId;
 
-    virtual void refresh();
-    virtual size_t count();
-    size_t real_count();
+    virtual auto refresh() -> void;
+    virtual auto count() -> size_t;
+    auto real_count() -> size_t;
 
-    bool set_column_type(const NodeId &node, const GrtObjectRef &type);
+    auto set_column_type(const NodeId &node, const GrtObjectRef &type) -> bool;
 
-    bool set_column_type_from_string(db_ColumnRef &column, const std::string &type);
+    auto set_column_type_from_string(db_ColumnRef &column, const std::string &type) -> bool;
 
-    virtual bool set_field(const NodeId &node, ColumnId column, const std::string &value);
-    virtual bool set_field(const NodeId &node, ColumnId column, ssize_t value);
+    virtual auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool;
+    virtual auto set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool;
 
     /**
      * This is needed so we can reset placeholder info when then user cancelled the edit operation.
      * Used in gtk frontend.
      */
-    void reset_placeholder();
+    auto reset_placeholder() -> void;
 
-    virtual void reorder(const NodeId &node, size_t nindex);
-    void reorder_many(const std::vector<std::size_t> &rows, std::size_t nindex);
+    virtual auto reorder(const NodeId &node, size_t nindex) -> void;
+    auto reorder_many(const std::vector<std::size_t> &rows, std::size_t nindex) -> void;
 
-    std::vector<std::string> get_datatype_flags(const ::bec::NodeId &node, bool all = false);
-    bool set_column_flag(const ::bec::NodeId &node, const std::string &flag_name, int is_set);
-    int get_column_flag(const ::bec::NodeId &node, const std::string &flag_name);
+    auto get_datatype_flags(const ::bec::NodeId &node, bool all = false) -> std::vector<std::string>;
+    auto set_column_flag(const ::bec::NodeId &node, const std::string &flag_name, int is_set) -> bool;
+    auto get_column_flag(const ::bec::NodeId &node, const std::string &flag_name) -> int;
 
-    virtual std::string quote_value_if_needed(const db_ColumnRef &column, const std::string &value);
-    virtual MenuItemList get_popup_items_for_nodes(const std::vector<NodeId> &nodes);
-    virtual bool activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes);
+    virtual auto quote_value_if_needed(const db_ColumnRef &column, const std::string &value) -> std::string;
+    virtual auto get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList;
+    virtual auto activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool;
 
-    virtual bool can_delete_node(const NodeId &node);
-    virtual bool delete_node(const NodeId &node);
+    virtual auto can_delete_node(const NodeId &node) -> bool;
+    virtual auto delete_node(const NodeId &node) -> bool;
 
-    virtual std::vector<std::string> get_datatype_names();
+    virtual auto get_datatype_names() -> std::vector<std::string>;
 
-    ColumnNamesSet get_column_names_completion_list() const;
+    auto get_column_names_completion_list() const -> ColumnNamesSet;
 
-    bool has_unique_index(const db_ColumnRef &col);
-    bool make_unique_index(const db_ColumnRef &col, bool flag);
+    auto has_unique_index(const db_ColumnRef &col) -> bool;
+    auto make_unique_index(const db_ColumnRef &col, bool flag) -> bool;
 
   protected:
     TableEditorBE *_owner;
     size_t _editing_placeholder_row;
 
-    void update_primary_index_order();
+    auto update_primary_index_order() -> void;
 
     // for internal use only
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC IndexColumnsListBE : public ListModel {
@@ -143,26 +143,26 @@ namespace bec {
 
     IndexColumnsListBE(IndexListBE *owner);
 
-    virtual void refresh();
-    virtual size_t count();
+    virtual auto refresh() -> void;
+    virtual auto count() -> size_t;
 
-    void set_column_enabled(const NodeId &node, bool flag);
-    bool get_column_enabled(const NodeId &node);
+    auto set_column_enabled(const NodeId &node, bool flag) -> void;
+    auto get_column_enabled(const NodeId &node) -> bool;
 
-    virtual bool set_field(const NodeId &node, ColumnId column, ssize_t value);
-    virtual bool set_field(const NodeId &node, ColumnId column, const std::string &value);
+    virtual auto set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool;
+    virtual auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool;
 
-    size_t get_max_order_index();
+    auto get_max_order_index() -> size_t;
 
   protected:
     IndexListBE *_owner;
 
     // for internal use only
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
 
-    db_IndexColumnRef get_index_column(const db_ColumnRef &column);
-    size_t get_index_column_index(const db_ColumnRef &column);
-    void set_index_column_order(const db_IndexColumnRef &column, size_t order);
+    auto get_index_column(const db_ColumnRef &column) -> db_IndexColumnRef;
+    auto get_index_column_index(const db_ColumnRef &column) -> size_t;
+    auto set_index_column_order(const db_IndexColumnRef &column, size_t order) -> void;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC IndexListBE : public ListModel {
@@ -174,39 +174,39 @@ namespace bec {
 
     IndexListBE(TableEditorBE *owner);
 
-    virtual void refresh();
-    virtual size_t count();
-    size_t real_count();
+    virtual auto refresh() -> void;
+    virtual auto count() -> size_t;
+    auto real_count() -> size_t;
 
     // for editable lists only
-    virtual bool set_field(const NodeId &node, ColumnId column, const std::string &value);
+    virtual auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool;
 
-    IndexColumnsListBE *get_columns() {
+    auto get_columns() -> IndexColumnsListBE * {
       return &_column_list;
     }
 
-    db_IndexRef get_selected_index();
-    void select_index(const NodeId &node);
+    auto get_selected_index() -> db_IndexRef;
+    auto select_index(const NodeId &node) -> void;
 
-    bool index_editable(const db_IndexRef &index);
-    db_ForeignKeyRef index_belongs_to_fk(const db_IndexRef &index);
+    auto index_editable(const db_IndexRef &index) -> bool;
+    auto index_belongs_to_fk(const db_IndexRef &index) -> db_ForeignKeyRef;
 
-    TableEditorBE *get_owner() {
+    auto get_owner() -> TableEditorBE * {
       return _owner;
     }
 
-    virtual MenuItemList get_popup_items_for_nodes(const std::vector<NodeId> &nodes);
-    virtual bool activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes);
+    virtual auto get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList;
+    virtual auto activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool;
 
-    virtual bool can_delete_node(const NodeId &node);
-    virtual bool delete_node(const NodeId &node);
+    virtual auto can_delete_node(const NodeId &node) -> bool;
+    virtual auto delete_node(const NodeId &node) -> bool;
 
   protected:
     // for internal use only
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
 
-    NodeId add_column(const db_ColumnRef &column, const db_IndexRef &index = db_IndexRef());
-    void remove_column(const NodeId &node);
+    auto add_column(const db_ColumnRef &column, const db_IndexRef &index = db_IndexRef()) -> NodeId;
+    auto remove_column(const NodeId &node) -> void;
 
   protected:
     IndexColumnsListBE _column_list;
@@ -220,28 +220,28 @@ namespace bec {
 
     FKConstraintColumnsListBE(FKConstraintListBE *owner);
 
-    virtual void refresh();
-    virtual size_t count();
+    virtual auto refresh() -> void;
+    virtual auto count() -> size_t;
 
-    std::vector<std::string> get_ref_columns_list(const NodeId &node, bool filtered = true);
+    auto get_ref_columns_list(const NodeId &node, bool filtered = true) -> std::vector<std::string>;
 
     // for editable lists only
-    virtual bool set_field(const NodeId &node, ColumnId column, const std::string &value);
-    virtual bool set_field(const NodeId &node, ColumnId column, ssize_t value);
+    virtual auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool;
+    virtual auto set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool;
 
-    bool set_column_is_fk(const NodeId &node, bool flag);
-    ssize_t get_fk_column_index(const NodeId &node);
-    bool get_column_is_fk(const NodeId &node);
+    auto set_column_is_fk(const NodeId &node, bool flag) -> bool;
+    auto get_fk_column_index(const NodeId &node) -> ssize_t;
+    auto get_column_is_fk(const NodeId &node) -> bool;
 
-    FKConstraintListBE *get_owner() {
+    auto get_owner() -> FKConstraintListBE * {
       return _owner;
     }
 
   protected:
     // for internal use only
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
 
-    bool set_fk_column_pair(const db_ColumnRef &column, const db_ColumnRef &refcolumn);
+    auto set_fk_column_pair(const db_ColumnRef &column, const db_ColumnRef &refcolumn) -> bool;
 
     // temporary list of referenced columns for each FK column
     // if id is in the map, then it's enabled, if column is nil, it's unset
@@ -258,39 +258,39 @@ namespace bec {
     enum FKConstraintListColumns { Name, OnDelete, OnUpdate, RefTable, Comment, Index, ModelOnly };
     FKConstraintListBE(TableEditorBE *owner);
 
-    NodeId add_column(const db_ColumnRef &column, const db_ColumnRef &refcolumn,
-                      const db_ForeignKeyRef &fk = db_ForeignKeyRef());
+    auto add_column(const db_ColumnRef &column, const db_ColumnRef &refcolumn,
+                      const db_ForeignKeyRef &fk = db_ForeignKeyRef()) -> NodeId;
 
-    virtual void remove_column(const NodeId &node);
+    virtual auto remove_column(const NodeId &node) -> void;
 
-    virtual void refresh();
-    virtual size_t count();
-    size_t real_count();
+    virtual auto refresh() -> void;
+    virtual auto count() -> size_t;
+    auto real_count() -> size_t;
 
     // for editable lists only
-    virtual bool set_field(const NodeId &node, ColumnId column, const std::string &value);
-    virtual bool set_field(const NodeId &node, ColumnId column, ssize_t value);
+    virtual auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool;
+    virtual auto set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool;
 
-    void select_fk(const NodeId &node);
-    db_ForeignKeyRef get_selected_fk();
+    auto select_fk(const NodeId &node) -> void;
+    auto get_selected_fk() -> db_ForeignKeyRef;
 
-    TableEditorBE *get_owner() {
+    auto get_owner() -> TableEditorBE * {
       return _owner;
     }
 
-    FKConstraintColumnsListBE *get_columns() {
+    auto get_columns() -> FKConstraintColumnsListBE * {
       return &_column_list;
     }
 
-    virtual bool can_delete_node(const NodeId &node);
-    virtual bool delete_node(const NodeId &node);
+    virtual auto can_delete_node(const NodeId &node) -> bool;
+    virtual auto delete_node(const NodeId &node) -> bool;
 
-    virtual MenuItemList get_popup_items_for_nodes(const std::vector<NodeId> &nodes);
-    virtual bool activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes);
+    virtual auto get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList;
+    virtual auto activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool;
 
   protected:
     // for internal use only
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
 
   protected:
     FKConstraintColumnsListBE _column_list;
@@ -305,68 +305,68 @@ namespace bec {
 
     TableEditorBE(const db_TableRef &table);
 
-    virtual std::string get_title();
-    virtual bool can_close();
+    virtual auto get_title() -> std::string;
+    virtual auto can_close() -> bool;
 
-    db_TableRef get_table() {
+    auto get_table() -> db_TableRef {
       return db_TableRef::cast_from(get_object());
     };
 
-    virtual TableColumnsListBE *get_columns() = 0;
-    virtual IndexListBE *get_indexes() = 0;
-    FKConstraintListBE *get_fks() {
+    virtual auto get_columns() -> TableColumnsListBE * = 0;
+    virtual auto get_indexes() -> IndexListBE * = 0;
+    auto get_fks() -> FKConstraintListBE * {
       return &_fk_list;
     }
 
-    RecordsetRef get_inserts_model();
-    mforms::View *get_inserts_panel();
+    auto get_inserts_model() -> RecordsetRef;
+    auto get_inserts_panel() -> mforms::View *;
 
-    virtual void set_name(const std::string &name);
+    virtual auto set_name(const std::string &name) -> void;
 
     // table options
-    virtual void set_table_option_by_name(const std::string &name, const std::string &value) = 0;
-    virtual std::string get_table_option_by_name(const std::string &name) = 0;
+    virtual auto set_table_option_by_name(const std::string &name, const std::string &value) -> void = 0;
+    virtual auto get_table_option_by_name(const std::string &name) -> std::string = 0;
 
     // column editing
-    virtual NodeId add_column(const std::string &name);
-    virtual void remove_column(const NodeId &column);
-    void rename_column(const db_ColumnRef &column, const std::string &name);
+    virtual auto add_column(const std::string &name) -> NodeId;
+    virtual auto remove_column(const NodeId &column) -> void;
+    auto rename_column(const db_ColumnRef &column, const std::string &name) -> void;
     NodeId duplicate_column(const db_ColumnRef &col, ssize_t insert_after = -1);
 
-    db_ColumnRef get_column_with_name(const std::string &name);
+    auto get_column_with_name(const std::string &name) -> db_ColumnRef;
 
     // fk editing
-    virtual NodeId add_fk(const std::string &name);
-    virtual bool remove_fk(const NodeId &fk);
-    virtual NodeId add_fk_with_columns(const std::vector<NodeId> &columns);
-    virtual bool check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) = 0;
+    virtual auto add_fk(const std::string &name) -> NodeId;
+    virtual auto remove_fk(const NodeId &fk) -> bool;
+    virtual auto add_fk_with_columns(const std::vector<NodeId> &columns) -> NodeId;
+    virtual auto check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) -> bool = 0;
 
     // index editing
-    virtual NodeId add_index(const std::string &name);
-    virtual bool remove_index(const NodeId &index, bool delete_even_if_foreign);
+    virtual auto add_index(const std::string &name) -> NodeId;
+    virtual auto remove_index(const NodeId &index, bool delete_even_if_foreign) -> bool;
 
-    virtual NodeId add_index_with_columns(const std::vector<NodeId> &columns);
+    virtual auto add_index_with_columns(const std::vector<NodeId> &columns) -> NodeId;
 
     // helper utils for columns
-    virtual bool parse_column_type(const std::string &str, db_ColumnRef &column);
-    virtual std::string format_column_type(db_ColumnRef &column);
+    virtual auto parse_column_type(const std::string &str, db_ColumnRef &column) -> bool;
+    virtual auto format_column_type(db_ColumnRef &column) -> std::string;
 
-    virtual std::vector<std::string> get_index_types() = 0;
+    virtual auto get_index_types() -> std::vector<std::string> = 0;
 
-    void show_export_wizard(mforms::Form *owner);
-    void show_import_wizard();
+    auto show_export_wizard(mforms::Form *owner) -> void;
+    auto show_import_wizard() -> void;
 
-    virtual MySQLEditor::Ref get_sql_editor();
+    virtual auto get_sql_editor() -> MySQLEditor::Ref;
 
-    virtual db_TableRef create_stub_table(const std::string &schema, const std::string &table) = 0;
+    virtual auto create_stub_table(const std::string &schema, const std::string &table) -> db_TableRef = 0;
 
-    void column_count_changed();
-    bool showErrorMessage(const std::string &type);
+    auto column_count_changed() -> void;
+    auto showErrorMessage(const std::string &type) -> bool;
 
   protected:
     FKConstraintListBE _fk_list;
 
-    void undo_called(grt::UndoAction *action, grt::UndoAction *expected);
+    auto undo_called(grt::UndoAction *action, grt::UndoAction *expected) -> void;
 
   private:
     mforms::Box *_inserts_panel;
@@ -375,10 +375,10 @@ namespace bec {
     RecordsetTableInsertsStorageRef _inserts_storage;
 
     void inserts_column_resized(int);
-    void restore_inserts_columns();
-    void catalogChanged(const std::string &member, const grt::ValueRef &value);
+    auto restore_inserts_columns() -> void;
+    auto catalogChanged(const std::string &member, const grt::ValueRef &value) -> void;
 
-    void update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows, int column);
-    void open_field_editor(int row, int column);
+    auto update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows, int column) -> void;
+    auto open_field_editor(int row, int column) -> void;
   };
 }; // namespace bec

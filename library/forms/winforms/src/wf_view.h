@@ -48,60 +48,60 @@ namespace MySQL {
     protected:
       ViewWrapper(mforms::View *view);
 
-      static void destroy(mforms::View *backend);
-      static void show(mforms::View *backend, bool show);
-      static int get_width(const mforms::View *backend);
-      static int get_height(const mforms::View *backend);
-      static int get_preferred_width(mforms::View *backend);
-      static int get_preferred_height(mforms::View *backend);
-      static int get_x(const mforms::View *backend);
-      static int get_y(const mforms::View *backend);
-      static void set_size(mforms::View *backend, int w, int h);
-      static void set_min_size(mforms::View *backend, int w, int h);
-      static void set_padding(mforms::View *backend, int left, int top, int right, int bottom);
-      static void set_position(mforms::View *backend, int x, int y);
-      static std::pair<int, int> client_to_screen(mforms::View *backend, int x, int y);
-      static std::pair<int, int> screen_to_client(mforms::View *backend, int x, int y);
+      static auto destroy(mforms::View *backend) -> void;
+      static auto show(mforms::View *backend, bool show) -> void;
+      static auto get_width(const mforms::View *backend) -> int;
+      static auto get_height(const mforms::View *backend) -> int;
+      static auto get_preferred_width(mforms::View *backend) -> int;
+      static auto get_preferred_height(mforms::View *backend) -> int;
+      static auto get_x(const mforms::View *backend) -> int;
+      static auto get_y(const mforms::View *backend) -> int;
+      static auto set_size(mforms::View *backend, int w, int h) -> void;
+      static auto set_min_size(mforms::View *backend, int w, int h) -> void;
+      static auto set_padding(mforms::View *backend, int left, int top, int right, int bottom) -> void;
+      static auto set_position(mforms::View *backend, int x, int y) -> void;
+      static auto client_to_screen(mforms::View *backend, int x, int y) -> std::pair<int, int>;
+      static auto screen_to_client(mforms::View *backend, int x, int y) -> std::pair<int, int>;
 
-      static void set_enabled(mforms::View *backend, bool flag);
-      static bool is_enabled(mforms::View *backend);
-      static mforms::View *find_subview(mforms::View *backend, std::string &name);
-      static void set_name(mforms::View *backend, const std::string &text);
-      static void relayout(mforms::View *backend);
-      static void set_needs_repaint(mforms::View *backend);
-      static void set_tooltip(mforms::View *backend, const std::string &text);
-      static void set_font(mforms::View *backend, const std::string &text);
-      static bool is_shown(mforms::View *backend);
-      static bool is_fully_visible(mforms::View *backend);
-      static void suspend_layout(mforms::View *backend, bool flag);
-      static void set_front_color(mforms::View *backend, const std::string &color);
-      static std::string get_front_color(mforms::View *backend);
-      static void set_back_color(mforms::View *backend, const std::string &color);
-      static std::string get_back_color(mforms::View *backend);
-      static void set_back_image(mforms::View *backend, const std::string &path, mforms::Alignment alignment);
-      static void flush_events(mforms::View *backend);
+      static auto set_enabled(mforms::View *backend, bool flag) -> void;
+      static auto is_enabled(mforms::View *backend) -> bool;
+      static auto find_subview(mforms::View *backend, std::string &name) -> mforms::View *;
+      static auto set_name(mforms::View *backend, const std::string &text) -> void;
+      static auto relayout(mforms::View *backend) -> void;
+      static auto set_needs_repaint(mforms::View *backend) -> void;
+      static auto set_tooltip(mforms::View *backend, const std::string &text) -> void;
+      static auto set_font(mforms::View *backend, const std::string &text) -> void;
+      static auto is_shown(mforms::View *backend) -> bool;
+      static auto is_fully_visible(mforms::View *backend) -> bool;
+      static auto suspend_layout(mforms::View *backend, bool flag) -> void;
+      static auto set_front_color(mforms::View *backend, const std::string &color) -> void;
+      static auto get_front_color(mforms::View *backend) -> std::string;
+      static auto set_back_color(mforms::View *backend, const std::string &color) -> void;
+      static auto get_back_color(mforms::View *backend) -> std::string;
+      static auto set_back_image(mforms::View *backend, const std::string &path, mforms::Alignment alignment) -> void;
+      static auto flush_events(mforms::View *backend) -> void;
 
-      static void register_drop_formats(mforms::View *backend, mforms::DropDelegate *target,
-                                        const std::vector<std::string> &formats);
-      static mforms::DragOperation drag_text(mforms::View *backend, mforms::DragDetails details,
-                                             const std::string &text);
-      static mforms::DragOperation drag_data(mforms::View *backend, mforms::DragDetails details, void *data,
-                                             const std::string &format);
-      static mforms::DropPosition get_drop_position(mforms::View *backend);
+      static auto register_drop_formats(mforms::View *backend, mforms::DropDelegate *target,
+                                        const std::vector<std::string> &formats) -> void;
+      static auto drag_text(mforms::View *backend, mforms::DragDetails details,
+                                             const std::string &text) -> mforms::DragOperation;
+      static auto drag_data(mforms::View *backend, mforms::DragDetails details, void *data,
+                                             const std::string &format) -> mforms::DragOperation;
+      static auto get_drop_position(mforms::View *backend) -> mforms::DropPosition;
 
       static void SetDragImage(System::Windows::Forms::DataObject ^ data, mforms::DragDetails details);
 
-      static void focus(mforms::View *backend);
-      static bool has_focus(mforms::View *backend);
+      static auto focus(mforms::View *backend) -> void;
+      static auto has_focus(mforms::View *backend) -> bool;
 
-      virtual void Initialize();
+      virtual auto Initialize() -> void;
 
       virtual void set_front_color(String ^ color);
-      virtual void set_padding(int left, int top, int right, int bottom);
-      virtual void set_font(const std::string &fontDescription);
+      virtual auto set_padding(int left, int top, int right, int bottom) -> void;
+      virtual auto set_font(const std::string &fontDescription) -> void;
 
-      virtual void register_file_drop(mforms::DropDelegate *target){};
-      virtual mforms::DropPosition get_drop_position() {
+      virtual auto register_file_drop(mforms::DropDelegate *target) -> void {};
+      virtual auto get_drop_position() -> mforms::DropPosition {
         return mforms::DropPositionUnknown;
       };
 
@@ -109,7 +109,7 @@ namespace MySQL {
       // Only containers allow drawing a background (restriction imposed by other platforms)
       // so we simulate this here by triggering background drawing only for those classes.
       void DrawBackground(System::Windows::Forms::PaintEventArgs ^ args);
-      void set_resize_mode(AutoResizeMode mode);
+      auto set_resize_mode(AutoResizeMode mode) -> void;
 
       // Utility functions need for event handlers.
       static bool use_min_width_for_layout(System::Windows::Forms::Control ^ control);
@@ -127,9 +127,9 @@ namespace MySQL {
       static bool can_layout(System::Windows::Forms::Control ^ control, String ^ reason);
 
       static mforms::View *source_view_from_data(System::Windows::Forms::IDataObject ^ data);
-      static mforms::ModifierKey GetModifiers(System::Windows::Forms::Keys keyData);
+      static auto GetModifiers(System::Windows::Forms::Keys keyData) -> mforms::ModifierKey;
 
-      static void init();
+      static auto init() -> void;
     };
   };
 };

@@ -32,20 +32,20 @@
 //================================================================================
 // studio_physical_RoutineGroupFigure
 
-void studio_physical_RoutineGroupFigure::init() {
+auto studio_physical_RoutineGroupFigure::init() -> void {
   if (!_data)
     _data = new studio_physical_RoutineGroupFigure::ImplData(this);
   model_Figure::set_data(_data);
 }
 
-void studio_physical_RoutineGroupFigure::set_data(ImplData *data) {
+auto studio_physical_RoutineGroupFigure::set_data(ImplData *data) -> void {
 }
 
 studio_physical_RoutineGroupFigure::~studio_physical_RoutineGroupFigure() {
   delete _data;
 }
 
-void studio_physical_RoutineGroupFigure::routineGroup(const db_RoutineGroupRef &value) {
+auto studio_physical_RoutineGroupFigure::routineGroup(const db_RoutineGroupRef &value) -> void {
   if (_routineGroup == value)
     return;
   if (_routineGroup.is_valid() && value.is_valid())

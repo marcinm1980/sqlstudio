@@ -46,53 +46,53 @@ class QueryView;
 class DbSqlEditorView : public Gtk::Box, public FormViewBase {
 public:
   DbSqlEditorView(SqlEditorForm::Ref editor_be);
-  static DbSqlEditorView *create(SqlEditorForm::Ref editor_be);
+  static auto create(SqlEditorForm::Ref editor_be) -> DbSqlEditorView *;
   virtual ~DbSqlEditorView();
 
-  virtual void init();
-  virtual bool on_close();
-  virtual void dispose();
+  virtual auto init() -> void;
+  virtual auto on_close() -> bool;
+  virtual auto dispose() -> void;
 
-  virtual bec::BaseEditor *get_be() {
+  virtual auto get_be() -> bec::BaseEditor * {
     return NULL;
   }
-  virtual bec::UIForm *get_form() const {
+  virtual auto get_form() const -> bec::UIForm * {
     return _be.get();
   }
-  virtual Gtk::Widget *get_panel() {
+  virtual auto get_panel() -> Gtk::Widget * {
     return this;
   }
   // virtual void toggle_sidebar();
 
-  virtual bool perform_command(const std::string &command);
+  virtual auto perform_command(const std::string &command) -> bool;
 
-  SqlEditorForm::Ref be() {
+  auto be() -> SqlEditorForm::Ref {
     return _be;
   }
 
-  void close_appview_tab(mforms::AppView *aview);
-  void output_text(const std::string &text, bool bring_to_front);
+  auto close_appview_tab(mforms::AppView *aview) -> void;
+  auto output_text(const std::string &text, bool bring_to_front) -> void;
 
-  virtual bool close_focused_tab();
+  virtual auto close_focused_tab() -> bool;
 
 protected:
-  virtual void plugin_tab_added(PluginEditorBase *plugin);
+  virtual auto plugin_tab_added(PluginEditorBase *plugin) -> void;
 
 private:
-  void polish();
+  auto polish() -> void;
   void set_busy_tab(int);
-  void on_exec_sql_done();
+  auto on_exec_sql_done() -> void;
 
-  void editor_page_switched(Gtk::Widget *page, guint index);
-  void editor_page_reordered(Gtk::Widget *page, guint index);
-  void editor_page_added(Gtk::Widget *page, guint index);
-  void editor_page_removed(Gtk::Widget *page, guint index);
+  auto editor_page_switched(Gtk::Widget *page, guint index) -> void;
+  auto editor_page_reordered(Gtk::Widget *page, guint index) -> void;
+  auto editor_page_added(Gtk::Widget *page, guint index) -> void;
+  auto editor_page_removed(Gtk::Widget *page, guint index) -> void;
 
-  mforms::Menu *init_tab_menu(Gtk::Widget *w);
-  void tab_menu_handler(const std::string &action, ActiveLabel *sender, Gtk::Widget *widget);
-  void reenable_items_in_tab_menus();
+  auto init_tab_menu(Gtk::Widget *w) -> mforms::Menu *;
+  auto tab_menu_handler(const std::string &action, ActiveLabel *sender, Gtk::Widget *widget) -> void;
+  auto reenable_items_in_tab_menus() -> void;
 
-  void set_maximized_editor_mode(bool flag, bool hide_schemas = false);
+  auto set_maximized_editor_mode(bool flag, bool hide_schemas = false) -> void;
 
   SqlEditorForm::Ref _be;
   Gtk::Paned _top_pane;

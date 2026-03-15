@@ -52,7 +52,7 @@ ProgressBarWrapper::ProgressBarWrapper(mforms::ProgressBar *pbar) : ViewWrapper(
 
 //--------------------------------------------------------------------------------------------------
 
-bool ProgressBarWrapper::create(mforms::ProgressBar *backend) {
+auto ProgressBarWrapper::create(mforms::ProgressBar *backend) -> bool {
   ProgressBarWrapper *wrapper = new ProgressBarWrapper(backend);
   _ProgressBar ^ progressbar = ProgressBarWrapper::Create<_ProgressBar>(backend, wrapper);
   progressbar->Maximum = 1000;
@@ -65,7 +65,7 @@ bool ProgressBarWrapper::create(mforms::ProgressBar *backend) {
 
 delegate void RunProgressDelegate(ProgressBar ^ sender, int value);
 
-void ProgressBarWrapper::set_value(mforms::ProgressBar *backend, float pct) {
+auto ProgressBarWrapper::set_value(mforms::ProgressBar *backend, float pct) -> void {
   _ProgressBar ^ progressbar = ProgressBarWrapper::GetManagedObject<_ProgressBar>(backend);
   int value = (int)(pct * 1000);
   if (value < progressbar->Minimum)
@@ -85,7 +85,7 @@ void ProgressBarWrapper::set_value(mforms::ProgressBar *backend, float pct) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ProgressBarWrapper::set_indeterminate(mforms::ProgressBar *backend, bool flag) {
+auto ProgressBarWrapper::set_indeterminate(mforms::ProgressBar *backend, bool flag) -> void {
   ProgressBar ^ progressbar = ProgressBarWrapper::GetManagedObject<ProgressBar>(backend);
   if (flag) {
     progressbar->Style = ProgressBarStyle::Marquee;
@@ -99,14 +99,14 @@ void ProgressBarWrapper::set_indeterminate(mforms::ProgressBar *backend, bool fl
 
 //--------------------------------------------------------------------------------------------------
 
-void ProgressBarWrapper::set_started(mforms::ProgressBar *backend, bool flag) {
+auto ProgressBarWrapper::set_started(mforms::ProgressBar *backend, bool flag) -> void {
   ProgressBar ^ progressbar = ProgressBarWrapper::GetManagedObject<ProgressBar>(backend);
   progressbar->Value = 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ProgressBarWrapper::init() {
+auto ProgressBarWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_progressbar_impl.create = &ProgressBarWrapper::create;

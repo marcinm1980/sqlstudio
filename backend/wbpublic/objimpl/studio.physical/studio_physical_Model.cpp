@@ -38,20 +38,20 @@ using namespace base;
 //================================================================================
 // studio_physical_Model
 
-void studio_physical_Model::init() {
+auto studio_physical_Model::init() -> void {
   if (!_data)
     _data = new studio_physical_Model::ImplData(this);
   model_Model::set_data(_data);
 }
 
-void studio_physical_Model::set_data(ImplData *data) {
+auto studio_physical_Model::set_data(ImplData *data) -> void {
 }
 
 studio_physical_Model::~studio_physical_Model() {
   delete _data;
 }
 
-model_DiagramRef studio_physical_Model::addNewDiagram(ssize_t defer_realize) {
+auto studio_physical_Model::addNewDiagram(ssize_t defer_realize) -> model_DiagramRef {
   grt::AutoUndo undo(!is_global());
 
   model_DiagramRef view;

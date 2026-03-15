@@ -109,7 +109,7 @@ VarGridModel::~VarGridModel() {
 
 //--------------------------------------------------------------------------------------------------
 
-void VarGridModel::reset() {
+auto VarGridModel::reset() -> void {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   _data_swap_db.reset();
   if (_data_swap_db_path.empty()) {
@@ -144,14 +144,14 @@ void VarGridModel::reset() {
 
 //--------------------------------------------------------------------------------------------------
 
-int VarGridModel::floating_point_visible_scale() {
+auto VarGridModel::floating_point_visible_scale() -> int {
   grt::DictRef options = grt::DictRef::cast_from(grt::GRT::get()->get("/wb/options/options"));
   return (int)options.get_int("Recordset:FloatingPointVisibleScale");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::shared_ptr<sqlite::connection> VarGridModel::data_swap_db() const {
+auto VarGridModel::data_swap_db() const -> std::shared_ptr<sqlite::connection> {
   if (GRTManager::get()->in_main_thread())
     return (_data_swap_db) ? _data_swap_db : _data_swap_db = create_data_swap_db_connection();
   else
@@ -160,7 +160,7 @@ std::shared_ptr<sqlite::connection> VarGridModel::data_swap_db() const {
 
 //--------------------------------------------------------------------------------------------------
 
-std::shared_ptr<sqlite::connection> VarGridModel::create_data_swap_db_connection() const {
+auto VarGridModel::create_data_swap_db_connection() const -> std::shared_ptr<sqlite::connection> {
   std::shared_ptr<sqlite::connection> data_swap_db;
   if (!_data_swap_db_path.empty()) {
     data_swap_db.reset(new sqlite::connection(_data_swap_db_path));
@@ -171,7 +171,7 @@ std::shared_ptr<sqlite::connection> VarGridModel::create_data_swap_db_connection
 
 //--------------------------------------------------------------------------------------------------
 
-int VarGridModel::refresh_ui() {
+auto VarGridModel::refresh_ui() -> int {
   if (GRTManager::get()->in_main_thread())
     refresh_ui_signal();
   else
@@ -181,7 +181,7 @@ int VarGridModel::refresh_ui() {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t VarGridModel::count() {
+auto VarGridModel::count() -> size_t {
   return _row_count + (_readonly ? 0 : 1);
 }
 
@@ -210,7 +210,7 @@ public:
 
 //--------------------------------------------------------------------------------------------------
 
-VarGridModel::ColumnType VarGridModel::get_column_type(ColumnId column) {
+auto VarGridModel::get_column_type(ColumnId column) -> VarGridModel::ColumnType {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   static VarType vt;
   return boost::apply_visitor(vt, _column_types[column]);
@@ -218,26 +218,25 @@ VarGridModel::ColumnType VarGridModel::get_column_type(ColumnId column) {
 
 //--------------------------------------------------------------------------------------------------
 
-VarGridModel::ColumnType VarGridModel::get_real_column_type(ColumnId column) {
+auto VarGridModel::get_real_column_type(ColumnId column) -> VarGridModel::ColumnType {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   static VarType vt;
   return boost::apply_visitor(vt, _real_column_types[column]);
 }
 
-bool VarGridModel::isGeometry(ColumnId column)
-{
+auto VarGridModel::isGeometry(ColumnId column) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED (_data_mutex);
   return column < _dbColumnTypes.size() && _dbColumnTypes[column] == "GEOMETRY";
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string VarGridModel::get_column_caption(ColumnId column) {
+auto VarGridModel::get_column_caption(ColumnId column) -> std::string {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   return _column_names.at(column);
 }
 
-VarGridModel::Cell VarGridModel::cell(RowId row, ColumnId column) {
+auto VarGridModel::cell(RowId row, ColumnId column) -> VarGridModel::Cell {
   if (row >= _row_count)
     return _data.end();
 
@@ -250,7 +249,7 @@ VarGridModel::Cell VarGridModel::cell(RowId row, ColumnId column) {
   return _data.begin() + cell_index;
 }
 
-bool VarGridModel::get_cell(VarGridModel::Cell &cell, const NodeId &node, ColumnId column, bool allow_new_row) {
+auto VarGridModel::get_cell(VarGridModel::Cell &cell, const NodeId &node, ColumnId column, bool allow_new_row) -> bool {
   if (!node.is_valid())
     return false;
 
@@ -265,7 +264,7 @@ bool VarGridModel::get_cell(VarGridModel::Cell &cell, const NodeId &node, Column
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::is_field_null(const NodeId &node, ColumnId column) {
+auto VarGridModel::is_field_null(const NodeId &node, ColumnId column) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
 
   // returns true for out of the range addresses
@@ -282,13 +281,13 @@ bool VarGridModel::is_field_null(const NodeId &node, ColumnId column) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::set_field_null(const bec::NodeId &node, ColumnId column) {
+auto VarGridModel::set_field_null(const bec::NodeId &node, ColumnId column) -> bool {
   return is_field_null(node, column) ? true : set_field(node, column, sqlite::null_t());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-IconId VarGridModel::get_field_icon(const NodeId &node, ColumnId column, IconSize size) {
+auto VarGridModel::get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
 
   Cell cell;
@@ -301,14 +300,14 @@ IconId VarGridModel::get_field_icon(const NodeId &node, ColumnId column, IconSiz
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field(const NodeId &node, ColumnId column, std::string &value) {
+auto VarGridModel::get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   return get_field_(node, column, value);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field_(const NodeId &node, ColumnId column, std::string &value) {
+auto VarGridModel::get_field_(const NodeId &node, ColumnId column, std::string &value) -> bool {
   Cell cell;
   bool res = get_cell(cell, node, column, false);
   if (res)
@@ -318,14 +317,14 @@ bool VarGridModel::get_field_(const NodeId &node, ColumnId column, std::string &
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field_repr(const NodeId &node, ColumnId column, std::string &value) {
+auto VarGridModel::get_field_repr(const NodeId &node, ColumnId column, std::string &value) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   return get_field_repr_(node, column, value);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field_repr_no_truncate(const bec::NodeId &node, ColumnId column, std::string &value) {
+auto VarGridModel::get_field_repr_no_truncate(const bec::NodeId &node, ColumnId column, std::string &value) -> bool {
   Cell cell;
   bool res = get_cell(cell, node, column, false);
   if (res)
@@ -335,7 +334,7 @@ bool VarGridModel::get_field_repr_no_truncate(const bec::NodeId &node, ColumnId 
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field_repr_(const NodeId &node, ColumnId column, std::string &value) {
+auto VarGridModel::get_field_repr_(const NodeId &node, ColumnId column, std::string &value) -> bool {
   Cell cell;
   bool res = get_cell(cell, node, column, false);
   if (res) {
@@ -350,19 +349,19 @@ bool VarGridModel::get_field_repr_(const NodeId &node, ColumnId column, std::str
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field(const NodeId &node, ColumnId column, sqlite::variant_t &value) {
+auto VarGridModel::get_field(const NodeId &node, ColumnId column, sqlite::variant_t &value) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   return get_field_(node, column, value);
 }
 
-bool VarGridModel::get_field(const NodeId &node, ColumnId column, bool &value) {
+auto VarGridModel::get_field(const NodeId &node, ColumnId column, bool &value) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   return get_field_(node, column, value);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field_(const NodeId &node, ColumnId column, sqlite::variant_t &value) {
+auto VarGridModel::get_field_(const NodeId &node, ColumnId column, sqlite::variant_t &value) -> bool {
   Cell cell;
   bool res = get_cell(cell, node, column, false);
   if (res)
@@ -370,7 +369,7 @@ bool VarGridModel::get_field_(const NodeId &node, ColumnId column, sqlite::varia
   return res;
 }
 
-bool VarGridModel::get_field_(const NodeId &node, ColumnId column, bool &value) {
+auto VarGridModel::get_field_(const NodeId &node, ColumnId column, bool &value) -> bool {
   Cell cell;
   bool res = get_cell(cell, node, column, false);
   if (res)
@@ -380,14 +379,14 @@ bool VarGridModel::get_field_(const NodeId &node, ColumnId column, bool &value) 
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field(const NodeId &node, ColumnId column, ssize_t &value) {
+auto VarGridModel::get_field(const NodeId &node, ColumnId column, ssize_t &value) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   return get_field_(node, column, value);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field_(const NodeId &node, ColumnId column, ssize_t &value) {
+auto VarGridModel::get_field_(const NodeId &node, ColumnId column, ssize_t &value) -> bool {
   Cell cell;
   bool res = get_cell(cell, node, column, false);
   if (res)
@@ -397,14 +396,14 @@ bool VarGridModel::get_field_(const NodeId &node, ColumnId column, ssize_t &valu
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field(const NodeId &node, ColumnId column, double &value) {
+auto VarGridModel::get_field(const NodeId &node, ColumnId column, double &value) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   return get_field_(node, column, value);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field_(const NodeId &node, ColumnId column, double &value) {
+auto VarGridModel::get_field_(const NodeId &node, ColumnId column, double &value) -> bool {
   Cell cell;
   bool res = get_cell(cell, node, column, false);
   if (res)
@@ -414,7 +413,7 @@ bool VarGridModel::get_field_(const NodeId &node, ColumnId column, double &value
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto VarGridModel::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   std::string val;
   bool res = get_field(node, column, val);
   if (res)
@@ -424,7 +423,7 @@ bool VarGridModel::get_field_grt(const NodeId &node, ColumnId column, grt::Value
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::set_field(const NodeId &node, ColumnId column, const sqlite::variant_t &value) {
+auto VarGridModel::set_field(const NodeId &node, ColumnId column, const sqlite::variant_t &value) -> bool {
   bool res = false;
 
   {
@@ -452,28 +451,28 @@ bool VarGridModel::set_field(const NodeId &node, ColumnId column, const sqlite::
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto VarGridModel::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   return set_field(node, column, sqlite::variant_t(value));
 }
 
-bool VarGridModel::set_field(const NodeId &node, ColumnId column, bool value) {
+auto VarGridModel::set_field(const NodeId &node, ColumnId column, bool value) -> bool {
   return set_field(node, column, sqlite::variant_t((bool)value));
 }
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::set_field(const NodeId &node, ColumnId column, double value) {
+auto VarGridModel::set_field(const NodeId &node, ColumnId column, double value) -> bool {
   return set_field(node, column, sqlite::variant_t((long double)value));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto VarGridModel::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   return set_field(node, column, sqlite::variant_t((std::int64_t)value));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void VarGridModel::add_column(const std::string &name, const sqlite::variant_t &type) {
+auto VarGridModel::add_column(const std::string &name, const sqlite::variant_t &type) -> void {
   _column_names.push_back(name);
   _column_types.push_back(type);
   _real_column_types.push_back(type);
@@ -482,7 +481,7 @@ void VarGridModel::add_column(const std::string &name, const sqlite::variant_t &
 
 //--------------------------------------------------------------------------------------------------
 
-void VarGridModel::cache_data_frame(RowId center_row, bool force_reload) {
+auto VarGridModel::cache_data_frame(RowId center_row, bool force_reload) -> void {
   static const RowId half_row_count = 500; //! load from options
   RowId row_count = half_row_count * 2;
 
@@ -562,33 +561,33 @@ void VarGridModel::cache_data_frame(RowId center_row, bool force_reload) {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t VarGridModel::data_swap_db_partition_count() const {
+auto VarGridModel::data_swap_db_partition_count() const -> size_t {
   return data_swap_db_partition_count(_column_count);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-size_t VarGridModel::data_swap_db_partition_count(ColumnId column_count) {
+auto VarGridModel::data_swap_db_partition_count(ColumnId column_count) -> size_t {
   std::div_t d = std::div((int)column_count, DATA_SWAP_DB_TABLE_MAX_COL_COUNT);
   return d.quot + (size_t)(d.rem > 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string VarGridModel::data_swap_db_partition_suffix(size_t partition_index) {
+auto VarGridModel::data_swap_db_partition_suffix(size_t partition_index) -> std::string {
   return (partition_index > 0) ? strfmt("_%u", (unsigned int)partition_index) : std::string("");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-size_t VarGridModel::data_swap_db_column_partition(ColumnId column) {
+auto VarGridModel::data_swap_db_column_partition(ColumnId column) -> size_t {
   std::div_t d = std::div((int)column, DATA_SWAP_DB_TABLE_MAX_COL_COUNT);
   return d.quot;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bec::ListModel::ColumnId VarGridModel::translate_data_swap_db_column(ListModel::ColumnId column, size_t *partition) {
+auto VarGridModel::translate_data_swap_db_column(ListModel::ColumnId column, size_t *partition) -> bec::ListModel::ColumnId {
   std::div_t d = std::div((int)column, DATA_SWAP_DB_TABLE_MAX_COL_COUNT);
   if (partition)
     *partition = d.quot;
@@ -597,8 +596,8 @@ bec::ListModel::ColumnId VarGridModel::translate_data_swap_db_column(ListModel::
 
 //--------------------------------------------------------------------------------------------------
 
-void VarGridModel::prepare_partition_queries(sqlite::connection *data_swap_db, const std::string &query_text_template,
-                                             std::list<std::shared_ptr<sqlite::query> > &queries) {
+auto VarGridModel::prepare_partition_queries(sqlite::connection *data_swap_db, const std::string &query_text_template,
+                                             std::list<std::shared_ptr<sqlite::query> > &queries) -> void {
   size_t partition = 0;
   for (auto &query : queries) {
     std::string partition_suffix = data_swap_db_partition_suffix(partition);
@@ -609,10 +608,10 @@ void VarGridModel::prepare_partition_queries(sqlite::connection *data_swap_db, c
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::emit_partition_queries(sqlite::connection *data_swap_db,
+auto VarGridModel::emit_partition_queries(sqlite::connection *data_swap_db,
                                           std::list<std::shared_ptr<sqlite::query> > &queries,
                                           std::vector<std::shared_ptr<sqlite::result> > &results,
-                                          const std::list<sqlite::variant_t> &bind_vars) {
+                                          const std::list<sqlite::variant_t> &bind_vars) -> bool {
   //  bool no_results_returned= false;
   size_t partition = 0;
   for (auto &query : queries) {
@@ -634,9 +633,9 @@ bool VarGridModel::emit_partition_queries(sqlite::connection *data_swap_db,
 
 //--------------------------------------------------------------------------------------------------
 
-void VarGridModel::emit_partition_commands(sqlite::connection *data_swap_db, size_t partition_count,
+auto VarGridModel::emit_partition_commands(sqlite::connection *data_swap_db, size_t partition_count,
                                            const std::string &command_text_template,
-                                           const std::list<sqlite::variant_t> &bind_vars) {
+                                           const std::list<sqlite::variant_t> &bind_vars) -> void {
   for (std::size_t partition = 0; partition < partition_count; ++partition) {
     std::string partition_suffix = data_swap_db_partition_suffix(partition);
     sqlite::command command(*data_swap_db, strfmt(command_text_template.c_str(), partition_suffix.c_str()));
@@ -650,14 +649,14 @@ void VarGridModel::emit_partition_commands(sqlite::connection *data_swap_db, siz
 
 //--------------------------------------------------------------------------------------------------
 
-void VarGridModel::set_edited_field(RowId row_index, ColumnId col_index) {
+auto VarGridModel::set_edited_field(RowId row_index, ColumnId col_index) -> void {
   _edited_field_row = row_index;
   _edited_field_col = col_index;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool VarGridModel::is_field_value_truncation_enabled(bool val) {
+auto VarGridModel::is_field_value_truncation_enabled(bool val) -> bool {
   _is_field_value_truncation_enabled = val;
   if (_is_field_value_truncation_enabled) {
     grt::DictRef options = grt::DictRef::cast_from(grt::GRT::get()->get("/wb/options/options"));

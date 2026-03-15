@@ -44,14 +44,14 @@ namespace grt {
       subchange->set_parent(this);
     }
 
-    const std::string& get_attr_name() const {
+    auto get_attr_name() const -> const std::string& {
       return _attr;
     }
-    const std::shared_ptr<DiffChange> get_subchange() const {
+    auto get_subchange() const -> const std::shared_ptr<DiffChange> {
       return subchange;
     }
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name() << "::" << _attr << std::endl;
       subchange->dump_log(level + 1);
@@ -64,7 +64,7 @@ namespace grt {
     bool _free_value;
 
   public:
-    const ValueRef get_value() const {
+    auto get_value() const -> const ValueRef {
       return _v;
     }
 
@@ -95,7 +95,7 @@ namespace grt {
       subchange->set_parent(this);
     }
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name() << "::" << key << std::endl;
       subchange->dump_log(level + 1);
@@ -118,7 +118,7 @@ namespace grt {
         _v.valueptr()->reset_references();
     }
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name() << "::" << key << std::endl;
     }
@@ -132,7 +132,7 @@ namespace grt {
     DictItemRemovedChange(const std::string& i) : DiffChange(DictItemRemoved), key(i) {
     }
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name() << "::" << key << std::endl;
     }
@@ -147,14 +147,14 @@ namespace grt {
     SimpleValueChange(ValueRef old, ValueRef v) : DiffChange(SimpleValue), _old(old), _v(v) {
     }
 
-    ValueRef get_new_value() const {
+    auto get_new_value() const -> ValueRef {
       return _v;
     }
-    ValueRef get_old_value() const {
+    auto get_old_value() const -> ValueRef {
       return _old;
     }
 
-    virtual void dump_log(int level) const {
+    virtual auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name();
       std::cout << " new:" << _v.debugDescription();

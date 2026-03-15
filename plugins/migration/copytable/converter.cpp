@@ -33,7 +33,7 @@
 
 DEFAULT_LOG_DOMAIN("copytable");
 
-void BaseConverter::init_mysql_time(MYSQL_TIME* target) {
+auto BaseConverter::init_mysql_time(MYSQL_TIME* target) -> void {
   target->year = 0;
   target->month = 0;
   target->day = 0;
@@ -45,7 +45,7 @@ void BaseConverter::init_mysql_time(MYSQL_TIME* target) {
   target->neg = 0;
 }
 
-void BaseConverter::convert_date(DATE_STRUCT* source, MYSQL_TIME* target) {
+auto BaseConverter::convert_date(DATE_STRUCT* source, MYSQL_TIME* target) -> void {
   init_mysql_time(target);
 
   target->year = source->year;
@@ -55,7 +55,7 @@ void BaseConverter::convert_date(DATE_STRUCT* source, MYSQL_TIME* target) {
   target->time_type = MYSQL_TIMESTAMP_DATE;
 }
 
-void BaseConverter::convert_date(const char* source, MYSQL_TIME* target) {
+auto BaseConverter::convert_date(const char* source, MYSQL_TIME* target) -> void {
   init_mysql_time(target);
 
   // Date could come in the format of YYYY-MM-DD
@@ -78,7 +78,7 @@ void BaseConverter::convert_date(const char* source, MYSQL_TIME* target) {
   target->time_type = MYSQL_TIMESTAMP_DATE;
 }
 
-void BaseConverter::convert_time(const char* source, MYSQL_TIME* target) {
+auto BaseConverter::convert_time(const char* source, MYSQL_TIME* target) -> void {
   init_mysql_time(target);
 
   // time comes in the format of
@@ -107,7 +107,7 @@ void BaseConverter::convert_time(const char* source, MYSQL_TIME* target) {
   target->time_type = MYSQL_TIMESTAMP_TIME;
 }
 
-void BaseConverter::convert_timestamp(TIMESTAMP_STRUCT* source, MYSQL_TIME* target) {
+auto BaseConverter::convert_timestamp(TIMESTAMP_STRUCT* source, MYSQL_TIME* target) -> void {
   target->year = source->year;
   target->month = source->month;
   target->day = source->day;
@@ -121,7 +121,7 @@ void BaseConverter::convert_timestamp(TIMESTAMP_STRUCT* source, MYSQL_TIME* targ
   target->neg = 0;
 }
 
-void BaseConverter::convert_timestamp(const char* source, MYSQL_TIME* target) {
+auto BaseConverter::convert_timestamp(const char* source, MYSQL_TIME* target) -> void {
   init_mysql_time(target);
 
   // Timestamp comes in the format of YYYY-MM-DD HH:MM:SS:mmm...
@@ -154,7 +154,7 @@ void BaseConverter::convert_timestamp(const char* source, MYSQL_TIME* target) {
   target->time_type = MYSQL_TIMESTAMP_DATETIME;
 }
 
-void BaseConverter::convert_date_time(const char* source, MYSQL_TIME* target, int type) {
+auto BaseConverter::convert_date_time(const char* source, MYSQL_TIME* target, int type) -> void {
   switch (type) {
     case MYSQL_TYPE_DATE:
       convert_date(source, target);

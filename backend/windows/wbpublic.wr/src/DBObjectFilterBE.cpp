@@ -41,11 +41,11 @@ namespace MySQL {
         get_unmanaged_object()->set_object_type_name(NativeToCppString(type_name));
       }
 
-      String ^ DBObjectFilterBE::get_full_type_name() {
+      auto DBObjectFilterBE::get_full_type_name() -> String ^ {
         return CppStringToNative(get_unmanaged_object()->get_full_type_name());
       }
 
-      int DBObjectFilterBE::icon_id(MySQL::Grt::IconSize icon_size) {
+      auto DBObjectFilterBE::icon_id(MySQL::Grt::IconSize icon_size) -> int {
         return (int)get_unmanaged_object()->icon_id((bec::IconSize)icon_size);
       }
 
@@ -53,7 +53,7 @@ namespace MySQL {
         get_unmanaged_object()->filter_model(filter_model->get_unmanaged_object());
       }
 
-      GrtStringListModel ^ DBObjectFilterBE::filter_model() {
+      auto DBObjectFilterBE::filter_model() -> GrtStringListModel ^ {
         return gcnew GrtStringListModel(get_unmanaged_object()->filter_model());
       }
 
@@ -61,11 +61,11 @@ namespace MySQL {
         get_unmanaged_object()->add_stored_filter_set(NativeToCppString(name));
       }
 
-      void DBObjectFilterBE::remove_stored_filter_set(int index) {
+      auto DBObjectFilterBE::remove_stored_filter_set(int index) -> void {
         get_unmanaged_object()->remove_stored_filter_set(index);
       }
 
-      void DBObjectFilterBE::load_stored_filter_set(int index) {
+      auto DBObjectFilterBE::load_stored_filter_set(int index) -> void {
         get_unmanaged_object()->load_stored_filter_set(index);
       }
 

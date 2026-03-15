@@ -18,5 +18,5 @@
 * 02110-1301  USA
 */
 
-void test() {
+auto test() -> void {
 }

@@ -28,7 +28,7 @@
 #include "grt.h"
 #include "structs.test.h"
 
-inline grt::BaseListRef create_list_with_varied_data() {
+inline auto create_list_with_varied_data() -> grt::BaseListRef {
   grt::BaseListRef l(true);
 
   // 1
@@ -73,7 +73,7 @@ inline grt::BaseListRef create_list_with_varied_data() {
   return l;
 }
 
-inline grt::StringListRef create_string_list(int size) {
+inline auto create_string_list(int size) -> grt::StringListRef {
   grt::StringListRef list(grt::Initialized);
 
   for (int i = 0; i < size; i++) {
@@ -85,7 +85,7 @@ inline grt::StringListRef create_string_list(int size) {
   return list;
 }
 
-inline grt::IntegerListRef create_int_list(int size) {
+inline auto create_int_list(int size) -> grt::IntegerListRef {
   grt::IntegerListRef list(grt::Initialized);
 
   for (int i = 0; i < size; i++) {
@@ -94,7 +94,7 @@ inline grt::IntegerListRef create_int_list(int size) {
   return list;
 }
 
-inline grt::DictRef create_dict_with_varied_data() {
+inline auto create_dict_with_varied_data() -> grt::DictRef {
   grt::DictRef dict(true);
 
   // out of alphabetical order on purpose
@@ -114,7 +114,7 @@ inline grt::DictRef create_dict_with_varied_data() {
   return dict;
 }
 
-inline grt::DictRef create_dict_with_int_data() {
+inline auto create_dict_with_int_data() -> grt::DictRef {
   grt::DictRef dict(grt::IntegerType);
 
   // out of alphabetical order on purpose
@@ -129,7 +129,7 @@ inline grt::DictRef create_dict_with_int_data() {
   return dict;
 }
 
-inline grt::ValueRef create_grt_tree1() {
+inline auto create_grt_tree1() -> grt::ValueRef {
   grt::DictRef root(true);
 
   grt::ListRef<test_Book> book_list(true);

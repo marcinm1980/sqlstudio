@@ -44,7 +44,7 @@ MessageListStorage::MessageListStorage(GRTManager *grtm) : _grtm(grtm) {
 
 //--------------------------------------------------------------------------------------------------
 
-MessageListBE *MessageListStorage::create_list(const std::string &filter_to_source) {
+auto MessageListStorage::create_list(const std::string &filter_to_source) -> MessageListBE * {
   MessageListBE *list = new MessageListBE(this);
 
   return list;
@@ -52,13 +52,13 @@ MessageListBE *MessageListStorage::create_list(const std::string &filter_to_sour
 
 //--------------------------------------------------------------------------------------------------
 
-void MessageListStorage::clear_all() {
+auto MessageListStorage::clear_all() -> void {
   _entries.clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MessageListStorage::handle_message(const grt::Message &msg) {
+auto MessageListStorage::handle_message(const grt::Message &msg) -> void {
   if (msg.type == grt::OutputMsg) {
     if (_output_handler)
       _grtm->run_once_when_idle(std::bind(_output_handler, msg.text));
@@ -103,14 +103,14 @@ void MessageListStorage::handle_message(const grt::Message &msg) {
 
 //--------------------------------------------------------------------------------------------------
 
-void MessageListStorage::set_output_handler(const std::function<void(std::string)> &handler) {
+auto MessageListStorage::set_output_handler(const std::function<void(std::string)> &handler) -> void {
   _output_handler = handler;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MessageListStorage::validation_notify(const grt::Validator::Tag &, const grt::ObjectRef &o, const std::string &m,
-                                           const int level) {
+auto MessageListStorage::validation_notify(const grt::Validator::Tag &, const grt::ObjectRef &o, const std::string &m,
+                                           const int level) -> void {
   if (level != grt::NoErrorMsg) {
     grt::Message msg;
 
@@ -133,7 +133,7 @@ MessageListBE::MessageListBE(MessageListStorage *owner) : _owner(owner) {
 
 //--------------------------------------------------------------------------------------------------
 
-void MessageListBE::add_message(MessageListStorage::MessageEntryRef message) {
+auto MessageListBE::add_message(MessageListStorage::MessageEntryRef message) -> void {
   if (message->icon == -1)
     return; // Ignore control messages.
 
@@ -149,25 +149,25 @@ void MessageListBE::add_message(MessageListStorage::MessageEntryRef message) {
 
 //--------------------------------------------------------------------------------------------------
 
-void MessageListBE::add_source(const std::string &source) {
+auto MessageListBE::add_source(const std::string &source) -> void {
   _wanted_sources.insert(source);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MessageListBE::remove_source(const std::string &source) {
+auto MessageListBE::remove_source(const std::string &source) -> void {
   _wanted_sources.erase(source);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MessageListBE::clear() {
+auto MessageListBE::clear() -> void {
   _entries.clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-size_t MessageListBE::count_children(const NodeId &node) {
+auto MessageListBE::count_children(const NodeId &node) -> size_t {
   if (node.depth() == 0)
     return (int)_entries.size();
   return 0;
@@ -175,7 +175,7 @@ size_t MessageListBE::count_children(const NodeId &node) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool MessageListBE::get_field(const NodeId &node, ColumnId column, std::string &value) {
+auto MessageListBE::get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
   switch ((Column)column) {
     case Time:
       if (node[0] < _entries.size()) {
@@ -205,7 +205,7 @@ bool MessageListBE::get_field(const NodeId &node, ColumnId column, std::string &
 
 //--------------------------------------------------------------------------------------------------
 
-IconId MessageListBE::get_field_icon(const NodeId &node, ColumnId column, IconSize size) {
+auto MessageListBE::get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId {
   if (node[0] < _entries.size())
     return _entries[node[0]]->icon;
 
@@ -218,7 +218,7 @@ IconId MessageListBE::get_field_icon(const NodeId &node, ColumnId column, IconSi
  *  Returns the type of the message in the list. Since only error, info and warning messages
  *  are handled here only these 3 types are returned.
  */
-grt::MessageType bec::MessageListBE::get_message_type(const NodeId &node) {
+auto bec::MessageListBE::get_message_type(const NodeId &node) -> grt::MessageType {
   if (node[0] < _entries.size())
     return _entries[node[0]]->type;
 
@@ -227,14 +227,14 @@ grt::MessageType bec::MessageListBE::get_message_type(const NodeId &node) {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t MessageListBE::count() {
+auto MessageListBE::count() -> size_t {
   _notified = false;
   return _entries.size();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-MenuItemList MessageListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) {
+auto MessageListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList {
   MenuItemList menu;
   MenuItem item;
 
@@ -250,7 +250,7 @@ MenuItemList MessageListBE::get_popup_items_for_nodes(const std::vector<NodeId> 
 
 //--------------------------------------------------------------------------------------------------
 
-bool MessageListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) {
+auto MessageListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool {
   if (name == "clear_messages") {
     clear();
     do_ui_refresh();

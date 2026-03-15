@@ -44,7 +44,7 @@ class WBPUBLICBACKEND_PUBLIC_FUNC BinaryDataViewer : public mforms::Box {
 public:
   BinaryDataViewer(BinaryDataEditor *owner);
 
-  virtual void data_changed() = 0;
+  virtual auto data_changed() -> void = 0;
 
 protected:
   BinaryDataEditor *_owner;
@@ -57,10 +57,10 @@ public:
                    bool read_only = true);
   virtual ~BinaryDataEditor();
 
-  const char *data() const {
+  auto data() const -> const char * {
     return _data;
   }
-  size_t length() const {
+  auto length() const -> size_t {
     return _length;
   }
 
@@ -68,16 +68,16 @@ public:
   boost::signals2::signal<void()> signal_saved;
 
 public:
-  void add_viewer(BinaryDataViewer *viewer, const std::string &title);
-  void add_json_viewer(bool read_only, const std::string &text_encoding, const std::string &title);
+  auto add_viewer(BinaryDataViewer *viewer, const std::string &title) -> void;
+  auto add_json_viewer(bool read_only, const std::string &text_encoding, const std::string &title) -> void;
 
-  void assign_data(const char *data, size_t length, bool steal_pointer = false);
-  void notify_edit();
+  auto assign_data(const char *data, size_t length, bool steal_pointer = false) -> void;
+  auto notify_edit() -> void;
 
-  bool read_only() {
+  auto read_only() -> bool {
     return _read_only;
   }
-  bool isJson() {
+  auto isJson() -> bool {
     return _type == "JSON";
   }
 
@@ -101,10 +101,10 @@ protected:
 
   bool _read_only;
 
-  void setup();
-  void save();
-  void tab_changed();
+  auto setup() -> void;
+  auto save() -> void;
+  auto tab_changed() -> void;
 
-  void import_value();
-  void export_value();
+  auto import_value() -> void;
+  auto export_value() -> void;
 };

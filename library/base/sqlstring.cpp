@@ -56,7 +56,7 @@ sqlstring::sqlstring() : _format(0) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string sqlstring::consume_until_next_escape() {
+auto sqlstring::consume_until_next_escape() -> std::string {
   std::string::size_type e = _format_string_left.length(), p = 0;
   while (p < e) {
     char ch = _format_string_left[p];
@@ -77,7 +77,7 @@ std::string sqlstring::consume_until_next_escape() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int sqlstring::next_escape() {
+auto sqlstring::next_escape() -> int {
   if (_format_string_left.empty())
     throw std::invalid_argument("Error formatting SQL query: more arguments than escapes");
   int c = _format_string_left[0];
@@ -87,7 +87,7 @@ int sqlstring::next_escape() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-sqlstring &sqlstring::append(const std::string &s) {
+auto sqlstring::append(const std::string &s) -> sqlstring & {
   _formatted.append(s);
   return *this;
 }
@@ -100,7 +100,7 @@ sqlstring::operator std::string() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool sqlstring::done() const {
+auto sqlstring::done() const -> bool {
   if (_format_string_left.empty())
     return true;
   return _format_string_left[0] != '!' && _format_string_left[0] != '?';

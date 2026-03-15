@@ -35,11 +35,11 @@ BoxSideMagnet::BoxSideMagnet(CanvasItem *owner) : Magnet(owner) {
     _counts[i] = 0;
 }
 
-void BoxSideMagnet::set_compare_slot(const std::function<bool(Connector *, Connector *, Side)> &compare) {
+auto BoxSideMagnet::set_compare_slot(const std::function<bool(Connector *, Connector *, Side)> &compare) -> void {
   _compare = compare;
 }
 
-double BoxSideMagnet::constrain_angle(double angle) const { /*
+auto BoxSideMagnet::constrain_angle(double angle) const -> double { /*
                                                              switch (_side)
                                                              {
                                                              case Top:
@@ -54,7 +54,7 @@ double BoxSideMagnet::constrain_angle(double angle) const { /*
   return angle;
 }
 
-void BoxSideMagnet::set_connector_side(Connector *conn, Side side) {
+auto BoxSideMagnet::set_connector_side(Connector *conn, Side side) -> void {
   Side oside = Unknown;
   bool changed = false;
 
@@ -107,7 +107,7 @@ void BoxSideMagnet::set_connector_side(Connector *conn, Side side) {
   }
 }
 
-BoxSideMagnet::Side BoxSideMagnet::get_connector_side(Connector *conn) const {
+auto BoxSideMagnet::get_connector_side(Connector *conn) const -> BoxSideMagnet::Side {
   std::map<Connector *, Side>::const_iterator iter;
 
   if ((iter = _connector_info.find(conn)) != _connector_info.end())
@@ -116,7 +116,7 @@ BoxSideMagnet::Side BoxSideMagnet::get_connector_side(Connector *conn) const {
   return Unknown;
 }
 
-double BoxSideMagnet::connector_position(Side side, Connector *conn, double length) const {
+auto BoxSideMagnet::connector_position(Side side, Connector *conn, double length) const -> double {
   size_t pos = 0;
 
   for (std::list<Connector *>::const_iterator iter = _connectors.begin(); iter != _connectors.end(); ++iter) {
@@ -130,7 +130,7 @@ double BoxSideMagnet::connector_position(Side side, Connector *conn, double leng
   return (length / (_counts[side] + 1)) * (pos + 1);
 }
 
-Point BoxSideMagnet::get_position_for_connector(Connector *conn, const Point &srcpos) const {
+auto BoxSideMagnet::get_position_for_connector(Connector *conn, const Point &srcpos) const -> Point {
   Rect bounds(_owner->get_root_bounds());
   Point pos;
   Side side;
@@ -171,20 +171,20 @@ Point BoxSideMagnet::get_position_for_connector(Connector *conn, const Point &sr
   return pos;
 }
 
-void BoxSideMagnet::remove_connector(Connector *conn) {
+auto BoxSideMagnet::remove_connector(Connector *conn) -> void {
   Magnet::remove_connector(conn);
   _counts[_connector_info[conn]]--;
   _connector_info.erase(_connector_info.find(conn));
 }
 
-void BoxSideMagnet::notify_connectors(Side side) {
+auto BoxSideMagnet::notify_connectors(Side side) -> void {
   for (std::map<Connector *, Side>::iterator iter = _connector_info.begin(); iter != _connector_info.end(); ++iter) {
     if (iter->second == side)
       iter->first->magnet_moved(this);
   }
 }
 
-void BoxSideMagnet::reorder_connector_closer_to(Connector *conn, const Point &pos) {
+auto BoxSideMagnet::reorder_connector_closer_to(Connector *conn, const Point &pos) -> void {
   Rect bounds(_owner->get_root_bounds());
   Side side = get_connector_side(conn);
   int order, i;
@@ -226,7 +226,7 @@ void BoxSideMagnet::reorder_connector_closer_to(Connector *conn, const Point &po
 * be ordered according to that.
 *********************************************************************************
 */
-void BoxSideMagnet::reorder_connectors() {
+auto BoxSideMagnet::reorder_connectors() -> void {
   if (_compare) {
     // since we only have 1 list of connectors for all 4 sides
     // we do comparison in 2 steps, 1st by side and then by the callback

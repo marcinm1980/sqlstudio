@@ -36,13 +36,13 @@ using namespace base;
 ItemMagnet::ItemMagnet(mdc::CanvasItem *owner) : mdc::Magnet(owner) {
 }
 
-double ItemMagnet::constrain_angle(double angle) const {
+auto ItemMagnet::constrain_angle(double angle) const -> double {
   if (angle > 90 && angle < 270)
     return 180;
   return 0;
 }
 
-void ItemMagnet::owner_parent_bounds_changed(mdc::CanvasItem *item, const Rect &obounds) {
+auto ItemMagnet::owner_parent_bounds_changed(mdc::CanvasItem *item, const Rect &obounds) -> void {
   /*
   if (_owner->get_parents_visible())
   {
@@ -61,8 +61,8 @@ void ItemMagnet::owner_parent_bounds_changed(mdc::CanvasItem *item, const Rect &
   notify_connected();
 }
 
-void ItemMagnet::owner_bounds_changed(
-  const Rect &obounds) { /*
+auto ItemMagnet::owner_bounds_changed(
+  const Rect &obounds) -> void { /*
                           if (_owner->get_parents_visible())
                           {
                             Rect bounds(_owner->get_root_bounds());
@@ -88,14 +88,14 @@ TableColumnItem::TableColumnItem(mdc::Layer *layer, FigureEventHub *hub, Table *
   add_magnet(_magnet);
 }
 
-void TableColumnItem::set_column_flags(ColumnFlags flags) {
+auto TableColumnItem::set_column_flags(ColumnFlags flags) -> void {
   if (_flags != flags) {
     _flags = flags;
     set_needs_relayout();
   }
 }
 
-Size TableColumnItem::calc_min_size() {
+auto TableColumnItem::calc_min_size() -> Size {
   Size size = FigureItem::calc_min_size();
   cairo_text_extents_t extents;
   mdc::CairoCtx *cr = get_layer()->get_view()->cairoctx();
@@ -120,7 +120,7 @@ Size TableColumnItem::calc_min_size() {
   return size;
 }
 
-void TableColumnItem::draw_contents(mdc::CairoCtx *cr) {
+auto TableColumnItem::draw_contents(mdc::CairoCtx *cr) -> void {
   FigureItem::draw_contents(cr);
 
   cairo_text_extents_t extents;
@@ -181,39 +181,39 @@ Table::Table(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self
                                             std::placeholders::_2, std::placeholders::_3));
 }
 
-void Table::set_title_font(const mdc::FontSpec &font) {
+auto Table::set_title_font(const mdc::FontSpec &font) -> void {
   _title.set_font(font);
 }
 
-void Table::set_section_font(const mdc::FontSpec &font) {
+auto Table::set_section_font(const mdc::FontSpec &font) -> void {
   if (get_index_title())
     get_index_title()->set_font(font);
   if (get_trigger_title())
     get_trigger_title()->set_font(font);
 }
 
-void Table::set_content_font(const mdc::FontSpec &font) {
+auto Table::set_content_font(const mdc::FontSpec &font) -> void {
   super::set_content_font(font);
 }
 
-void Table::set_show_flags(bool flag) {
+auto Table::set_show_flags(bool flag) -> void {
   _show_flags = flag;
 }
 
-wbfig::FigureItem *Table::create_column_item(mdc::Layer *layer, FigureEventHub *hub) {
+auto Table::create_column_item(mdc::Layer *layer, FigureEventHub *hub) -> wbfig::FigureItem * {
   return new TableColumnItem(layer, hub, this);
 }
 
-void Table::update_column_item(wbfig::FigureItem *item, ColumnFlags flags) {
+auto Table::update_column_item(wbfig::FigureItem *item, ColumnFlags flags) -> void {
   if (_show_flags)
     dynamic_cast<TableColumnItem *>(item)->set_column_flags(flags);
 }
 
-wbfig::FigureItem *Table::create_index_item(mdc::Layer *layer, FigureEventHub *hub) {
+auto Table::create_index_item(mdc::Layer *layer, FigureEventHub *hub) -> wbfig::FigureItem * {
   return new FigureItem(layer, hub, this);
 }
 
-bool Table::compare_connection_position(mdc::Connector *a, mdc::Connector *b, mdc::BoxSideMagnet::Side side) {
+auto Table::compare_connection_position(mdc::Connector *a, mdc::Connector *b, mdc::BoxSideMagnet::Side side) -> bool {
   wbfig::ConnectionLineLayouter *layouter;
   Point a_pos, b_pos;
   mdc::CanvasItem *item;

@@ -42,7 +42,7 @@ using namespace grt;
 using namespace wb;
 using namespace bec;
 
-static void ensure_files_equal(const std::string &test, const char *file, const char *reffile) {
+static auto ensure_files_equal(const std::string &test, const char *file, const char *reffile) -> void {
   std::string line, refline;
   std::ifstream ref(reffile);
   std::ifstream f(file);

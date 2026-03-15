@@ -67,11 +67,11 @@ private:
   bool _shared_snippets_active;
 
 private:
-  DbSqlEditorSnippets *model() {
+  auto model() -> DbSqlEditorSnippets * {
     return dynamic_cast<DbSqlEditorSnippets *>(_model);
   }
 
-  void popover_closed() {
+  auto popover_closed() -> void {
     if (getPopover()->has_changed()) {
       std::string title = getPopover()->get_heading();
       model()->set_field(bec::NodeId(_selected_index), DbSqlEditorSnippets::Description, title);
@@ -88,7 +88,7 @@ private:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void prepare_context_menu() {
+  auto prepare_context_menu() -> void {
     _context_menu = manage(new Menu());
     _context_menu->set_handler(std::bind(&SnippetListView::on_action, this, std::placeholders::_1));
     _context_menu->signal_will_show()->connect(std::bind(&SnippetListView::menu_will_show, this));
@@ -108,7 +108,7 @@ private:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void menu_will_show() {
+  auto menu_will_show() -> void {
     bool shared_usable = model()->shared_snippets_usable();
 
     _context_menu->set_item_enabled(0, _selected_index > -1);
@@ -123,7 +123,7 @@ private:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void on_action(const std::string &action) {
+  auto on_action(const std::string &action) -> void {
     if (action == "edit_snippet") {
       if (_selected_snippet)
         edit_snippet(_selected_snippet);
@@ -155,7 +155,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  wb::SnippetPopover* getPopover() {
+  auto getPopover() -> wb::SnippetPopover* {
     if (_snippetPopover != nullptr) {
       return _snippetPopover;
     }
@@ -176,7 +176,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void edit_new_snippet() {
+  auto edit_new_snippet() -> void {
     if (!_snippets.empty()) {
       _selected_index = 0;
       _selected_snippet = _snippets.front();
@@ -187,11 +187,11 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::string selected_category() {
+  auto selected_category() -> std::string {
     return model()->selected_category();
   }
 
-  bool shared_snippets_active() const {
+  auto shared_snippets_active() const -> bool {
     return _shared_snippets_active;
   }
 
@@ -200,7 +200,7 @@ public:
   /**
    * Updates the content depending on the selected snippet group.
    */
-  void show_category(std::string category) {
+  auto show_category(std::string category) -> void {
     _user_snippets_active = (category == USER_SNIPPETS);
     _shared_snippets_active = (category == SHARED_SNIPPETS);
     try {
@@ -213,7 +213,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void edit_snippet(Snippet *snippet) {
+  auto edit_snippet(Snippet *snippet) -> void {
     base::Rect bounds = snippet_bounds(snippet);
 
     std::pair<int, int> left_top = client_to_screen((int)bounds.left(), (int)bounds.top());
@@ -233,7 +233,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual bool mouse_double_click(mforms::MouseButton button, int x, int y) {
+  virtual auto mouse_double_click(mforms::MouseButton button, int x, int y) -> bool {
     bool result = BaseSnippetList::mouse_double_click(button, x, y);
 
     if (!result) {
@@ -250,7 +250,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void close_popover() {
+  auto close_popover() -> void {
     // Check if it's at least created cause maybe we don't need to close it.
     if (_snippetPopover != nullptr) {
       getPopover()->close();
@@ -369,14 +369,14 @@ QuerySidePalette::~QuerySidePalette() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::cancel_timer() {
+auto QuerySidePalette::cancel_timer() -> void {
   if (_help_timer != NULL)
     bec::GRTManager::get()->cancel_timer(_help_timer);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto QuerySidePalette::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   // Selection and caret changes notification.
   // Only act if this side palette is actually visible.
   if ((name == "GNTextSelectionChanged") && _automatic_help && (get_active_tab() == 0) && is_fully_visible()) {
@@ -399,7 +399,7 @@ void QuerySidePalette::handle_notification(const std::string &name, void *sender
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::updateColors() {
+auto QuerySidePalette::updateColors() -> void {
 #if _MSC_VER
   std::string backgroundColor = base::Color::getApplicationColorAsString(AppColorPanelContentArea, false);
   _help_text->set_font("Tahoma 8");
@@ -431,7 +431,7 @@ void QuerySidePalette::updateColors() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::show_help_text_for_topic(const std::string &topic) {
+auto QuerySidePalette::show_help_text_for_topic(const std::string &topic) -> void {
   if (_currentHelpTopic != topic) {
     _currentHelpTopic = topic;
     if (_currentHelpTopic.empty()) {
@@ -451,7 +451,7 @@ void QuerySidePalette::show_help_text_for_topic(const std::string &topic) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::show_help_hint_or_update() {
+auto QuerySidePalette::show_help_hint_or_update() -> void {
   if (!_automatic_help) {
     _help_text->set_markup_text(
       std::string("<hmtl><body style=\"font-family:") + DEFAULT_FONT_FAMILY + ";\">"
@@ -468,7 +468,7 @@ void QuerySidePalette::show_help_hint_or_update() {
 /**
  * Triggered by timer or manually to find a help topic from the given editor's text + position.
  */
-bool QuerySidePalette::find_context_help(MySQLEditor *editor) {
+auto QuerySidePalette::find_context_help(MySQLEditor *editor) -> bool {
   _help_timer = nullptr;
 
   // If no editor was given use the currently active one in the SQL editor form.
@@ -500,7 +500,7 @@ bool QuerySidePalette::find_context_help(MySQLEditor *editor) {
  * Adds the given topic to the topic history if the current topic is not the same and updates
  * the forward/backward buttons.
  */
-void QuerySidePalette::update_help_history(const std::string &topic) {
+auto QuerySidePalette::update_help_history(const std::string &topic) -> void {
   std::string topic_upper = base::toupper(topic);
   if (_current_topic_index > 0 && _topic_history[_current_topic_index] == topic_upper)
     return;
@@ -518,7 +518,7 @@ void QuerySidePalette::update_help_history(const std::string &topic) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::click_link(const std::string &link) {
+auto QuerySidePalette::click_link(const std::string &link) -> void {
   if (link.find("local:") == 0) {
     // Internal link.
     std::string topic = base::trim(link.substr(6, link.size() - 6));
@@ -534,7 +534,7 @@ void QuerySidePalette::click_link(const std::string &link) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-ToolBar *QuerySidePalette::prepare_snippet_toolbar() {
+auto QuerySidePalette::prepare_snippet_toolbar() -> ToolBar * {
   ToolBar *toolbar = manage(new ToolBar(mforms::SecondaryToolBar));
   toolbar->set_name("Snippet Toolbar");
   toolbar->setInternalName("snippet_toolbar");
@@ -591,7 +591,7 @@ ToolBar *QuerySidePalette::prepare_snippet_toolbar() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::snippet_toolbar_item_activated(ToolBarItem *item) {
+auto QuerySidePalette::snippet_toolbar_item_activated(ToolBarItem *item) -> void {
   std::string action = item->getInternalName();
   if (action == "select_category") {
     _snippet_list->show_category(item->get_text());
@@ -608,7 +608,7 @@ void QuerySidePalette::snippet_toolbar_item_activated(ToolBarItem *item) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::snippet_selection_changed() {
+auto QuerySidePalette::snippet_selection_changed() -> void {
   bool has_selection = _snippet_list->selected_index() > -1;
   _snippet_toolbar->set_item_enabled("copy_to_clipboard", has_selection);
   _snippet_toolbar->set_item_enabled("replace_text", has_selection);
@@ -620,13 +620,13 @@ void QuerySidePalette::snippet_selection_changed() {
 /**
  * Called by the owning form if the main form changes to remove the popover.
  */
-void QuerySidePalette::close_popover() {
+auto QuerySidePalette::close_popover() -> void {
   _snippet_list->close_popover();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-ToolBar *QuerySidePalette::prepare_help_toolbar() {
+auto QuerySidePalette::prepare_help_toolbar() -> ToolBar * {
   ToolBar *toolbar = manage(new ToolBar(mforms::SecondaryToolBar));
   toolbar->set_name("Help Toolbar");
   toolbar->setInternalName("help_toolbar");
@@ -706,7 +706,7 @@ ToolBar *QuerySidePalette::prepare_help_toolbar() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::help_toolbar_item_activated(ToolBarItem *item) {
+auto QuerySidePalette::help_toolbar_item_activated(ToolBarItem *item) -> void {
   if (_switching_help)
     return;
 
@@ -762,7 +762,7 @@ void QuerySidePalette::help_toolbar_item_activated(ToolBarItem *item) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::refresh_snippets() {
+auto QuerySidePalette::refresh_snippets() -> void {
   if (_pending_snippets_refresh && _snippet_list->shared_snippets_active()) {
     SqlEditorForm::Ref owner(_owner.lock());
 
@@ -778,7 +778,7 @@ void QuerySidePalette::refresh_snippets() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void QuerySidePalette::edit_last_snippet() {
+auto QuerySidePalette::edit_last_snippet() -> void {
   _snippet_list->edit_new_snippet();
 }
 

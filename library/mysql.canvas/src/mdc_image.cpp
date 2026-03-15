@@ -39,11 +39,11 @@ ImageFigure::~ImageFigure() {
   cairo_surface_destroy(_image);
 }
 
-Size ImageFigure::get_image_size() const {
+auto ImageFigure::get_image_size() const -> Size {
   return Size(cairo_image_surface_get_width(_image), cairo_image_surface_get_height(_image));
 }
 
-Size ImageFigure::calc_min_size() {
+auto ImageFigure::calc_min_size() -> Size {
   Size size(1, 1);
   if (_image && _auto_sizing) {
     size = get_image_size();
@@ -54,7 +54,7 @@ Size ImageFigure::calc_min_size() {
   return size;
 }
 
-void ImageFigure::draw_contents(CairoCtx *cr) {
+auto ImageFigure::draw_contents(CairoCtx *cr) -> void {
   if (_image) {
     int w = cairo_image_surface_get_width(_image);
     int h = cairo_image_surface_get_height(_image);
@@ -74,7 +74,7 @@ void ImageFigure::draw_contents(CairoCtx *cr) {
   }
 }
 
-bool ImageFigure::set_image(cairo_surface_t *surface) {
+auto ImageFigure::set_image(cairo_surface_t *surface) -> bool {
   if (_image != surface) {
     if (_image)
       cairo_surface_destroy(_image);
@@ -86,7 +86,7 @@ bool ImageFigure::set_image(cairo_surface_t *surface) {
   return true;
 }
 
-bool ImageFigure::set_image(const std::string &path) {
+auto ImageFigure::set_image(const std::string &path) -> bool {
   cairo_surface_t *image = ImageManager::get_instance()->get_image_nocache(path);
   if (image) {
     bool flag = set_image(image);
@@ -101,7 +101,7 @@ bool ImageFigure::set_image(const std::string &path) {
 /**
 *	Helper function to read data from a given file.
 */
-cairo_status_t read_png_data(void *closure, unsigned char *data, unsigned int length) {
+auto read_png_data(void *closure, unsigned char *data, unsigned int length) -> cairo_status_t {
   FILE *png_file = (FILE *)closure;
   if (fread(data, 1, length, png_file) == length)
     return CAIRO_STATUS_SUCCESS;
@@ -115,7 +115,7 @@ cairo_status_t read_png_data(void *closure, unsigned char *data, unsigned int le
 *	Creates a cairo image surface and fills it with data from a png file.
 *	The code can load from utf-8 encoded paths.
 */
-cairo_surface_t *mdc::surface_from_png_image(const std::string &file_name) {
+auto mdc::surface_from_png_image(const std::string &file_name) -> cairo_surface_t * {
   FILE *png_file = base_fopen(file_name.c_str(), "r");
   if (png_file == NULL)
     return NULL;

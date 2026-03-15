@@ -36,30 +36,30 @@ namespace mforms {
       BoxWrapper(::mforms::Box *self, bool horiz) : ViewWrapper(self) {
       }
 
-      static bool create(::mforms::Box *self, bool horiz) {
+      static auto create(::mforms::Box *self, bool horiz) -> bool {
         return true;
       }
 
-      static void add(Box *self, View *child, bool expand, bool fill) {
+      static auto add(Box *self, View *child, bool expand, bool fill) -> void {
       }
 
-      static void add_end(Box *self, View *child, bool expand, bool fill) {
+      static auto add_end(Box *self, View *child, bool expand, bool fill) -> void {
       }
 
-      static void remove(Box *self, View *child) {
+      static auto remove(Box *self, View *child) -> void {
       }
 
-      static void set_homogeneous(Box *self, bool flag) {
+      static auto set_homogeneous(Box *self, bool flag) -> void {
       }
 
-      static void set_spacing(Box *self, int spc) {
+      static auto set_spacing(Box *self, int spc) -> void {
       }
 
-      static void set_padding(Box *self, int pad) {
+      static auto set_padding(Box *self, int pad) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_box_impl.create = &BoxWrapper::create;

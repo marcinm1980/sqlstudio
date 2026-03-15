@@ -32,12 +32,12 @@
 //================================================================================
 // model_Layer
 
-void model_Layer::init() {
+auto model_Layer::init() -> void {
   _data = new ImplData(this);
   model_Object::set_data(_data);
 }
 
-void model_Layer::set_data(ImplData *data) {
+auto model_Layer::set_data(ImplData *data) -> void {
   throw std::logic_error("unexpected");
 }
 
@@ -45,10 +45,10 @@ model_Layer::~model_Layer() {
   delete _data;
 }
 
-void model_Layer::lowerFigure(const model_FigureRef &figure) {
+auto model_Layer::lowerFigure(const model_FigureRef &figure) -> void {
   get_data()->lower_figure(figure);
 }
 
-void model_Layer::raiseFigure(const model_FigureRef &figure) {
+auto model_Layer::raiseFigure(const model_FigureRef &figure) -> void {
   get_data()->raise_figure(figure);
 }

@@ -79,7 +79,7 @@ DEFAULT_LOG_DOMAIN("TableEditorBE")
  - So, to distinguish between real UDTs and corrupt-UDTs you should check if the object id.
  */
 
-static std::string getTemplate(studio_physical_ModelRef model, const std::string &name, bool isEditingLiveObject) {
+static auto getTemplate(studio_physical_ModelRef model, const std::string &name, bool isEditingLiveObject) -> std::string {
   if (isEditingLiveObject)
     return bec::GRTManager::get()->get_app_option_string(name);
   else
@@ -94,7 +94,7 @@ TableColumnsListBE::TableColumnsListBE(TableEditorBE *owner) : _owner(owner) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool sort_simple_type(const db_SimpleDatatypeRef &a, const db_SimpleDatatypeRef &b) {
+static auto sort_simple_type(const db_SimpleDatatypeRef &a, const db_SimpleDatatypeRef &b) -> bool {
   int i = strcmp(a->group()->name().c_str(), b->group()->name().c_str());
   if (i == 0)
     i = strcmp(a->name().c_str(), b->name().c_str());
@@ -103,7 +103,7 @@ static bool sort_simple_type(const db_SimpleDatatypeRef &a, const db_SimpleDatat
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::vector<std::string> TableColumnsListBE::get_datatype_names() {
+auto TableColumnsListBE::get_datatype_names() -> std::vector<std::string> {
   std::vector<std::string> types;
 
   // TODO replace this hard coded list with a dynamically generated top-used types list (same for charset).
@@ -161,7 +161,7 @@ std::vector<std::string> TableColumnsListBE::get_datatype_names() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bec::ColumnNamesSet TableColumnsListBE::get_column_names_completion_list() const {
+auto TableColumnsListBE::get_column_names_completion_list() const -> bec::ColumnNamesSet {
   bec::ColumnNamesSet column_names;
 
   db_SchemaRef schema = db_SchemaRef::cast_from(_owner->get_table()->owner());
@@ -196,10 +196,10 @@ bec::ColumnNamesSet TableColumnsListBE::get_column_names_completion_list() const
  *
  * @return false if row is invalid
  */
-bool TableColumnsListBE::get_row(const NodeId &node, std::string &name, std::string &type, bool &ispk, bool &notnull,
+auto TableColumnsListBE::get_row(const NodeId &node, std::string &name, std::string &type, bool &ispk, bool &notnull,
                                  bool &isunique, bool &isbinary, bool &isunsigned, bool &iszerofill, std::string &flags,
                                  std::string &defvalue, std::string &charset, std::string &collation,
-                                 std::string &comment) {
+                                 std::string &comment) -> bool {
   if (node[0] < real_count()) {
     db_ColumnRef col = _owner->get_table()->columns().get(node[0]);
 
@@ -223,7 +223,7 @@ bool TableColumnsListBE::get_row(const NodeId &node, std::string &name, std::str
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableColumnsListBE::reorder(const NodeId &node, size_t nindex) {
+auto TableColumnsListBE::reorder(const NodeId &node, size_t nindex) -> void {
   if (node[0] < real_count()) {
     AutoUndoEdit undo(_owner);
 
@@ -247,7 +247,7 @@ void TableColumnsListBE::reorder(const NodeId &node, size_t nindex) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableColumnsListBE::reorder_many(const std::vector<std::size_t> &rows, std::size_t targetIndex) {
+auto TableColumnsListBE::reorder_many(const std::vector<std::size_t> &rows, std::size_t targetIndex) -> void {
   if (!rows.empty()) {
     std::vector<size_t> indices(rows);
     std::sort(indices.begin(), indices.end());
@@ -285,7 +285,7 @@ void TableColumnsListBE::reorder_many(const std::vector<std::size_t> &rows, std:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableColumnsListBE::update_primary_index_order() {
+auto TableColumnsListBE::update_primary_index_order() -> void {
   if (_owner->get_table()->primaryKey().is_valid()) {
     ListRef<db_Column> columns(_owner->get_table()->columns());
     ListRef<db_IndexColumn> icolumns(_owner->get_table()->primaryKey()->columns());
@@ -313,7 +313,7 @@ void TableColumnsListBE::update_primary_index_order() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::set_column_type(const NodeId &node, const GrtObjectRef &type) {
+auto TableColumnsListBE::set_column_type(const NodeId &node, const GrtObjectRef &type) -> bool {
   if (type.is_instance(db_UserDatatype::static_class_name())) {
     db_UserDatatypeRef utype(db_UserDatatypeRef::cast_from(type));
 
@@ -334,7 +334,7 @@ bool TableColumnsListBE::set_column_type(const NodeId &node, const GrtObjectRef 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-IconId TableColumnsListBE::get_field_icon(const NodeId &node, size_t column, IconSize size) {
+auto TableColumnsListBE::get_field_icon(const NodeId &node, size_t column, IconSize size) -> IconId {
   if (node[0] < real_count()) {
     if (column == Type) {
       return 0;
@@ -361,20 +361,20 @@ IconId TableColumnsListBE::get_field_icon(const NodeId &node, size_t column, Ico
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableColumnsListBE::refresh() {
+auto TableColumnsListBE::refresh() -> void {
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t TableColumnsListBE::real_count() {
+auto TableColumnsListBE::real_count() -> size_t {
   return _owner->get_table()->columns().count();
 }
 
-size_t TableColumnsListBE::count() {
+auto TableColumnsListBE::count() -> size_t {
   return _owner->get_table()->columns().count() + 1;
 }
 
-bool TableColumnsListBE::set_column_type_from_string(db_ColumnRef &col, const std::string &type) {
+auto TableColumnsListBE::set_column_type_from_string(db_ColumnRef &col, const std::string &type) -> bool {
   bool flag = _owner->parse_column_type(type, col);
   if (flag) {
     if (col->simpleType().is_valid()) {
@@ -402,7 +402,7 @@ bool TableColumnsListBE::set_column_type_from_string(db_ColumnRef &col, const st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::has_unique_index(const db_ColumnRef &col) {
+auto TableColumnsListBE::has_unique_index(const db_ColumnRef &col) -> bool {
   db_TableRef table(_owner->get_table());
 
   for (size_t c = table->indices().count(), i = 0; i < c; i++) {
@@ -417,7 +417,7 @@ bool TableColumnsListBE::has_unique_index(const db_ColumnRef &col) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::make_unique_index(const db_ColumnRef &col, bool flag) {
+auto TableColumnsListBE::make_unique_index(const db_ColumnRef &col, bool flag) -> bool {
   if (flag == has_unique_index(col))
     return false;
 
@@ -471,7 +471,7 @@ bool TableColumnsListBE::make_unique_index(const db_ColumnRef &col, bool flag) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto TableColumnsListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   RefreshUI::Blocker __centry(*_owner);
 
   std::string old;
@@ -652,13 +652,13 @@ bool TableColumnsListBE::set_field(const NodeId &node, ColumnId column, const st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableColumnsListBE::reset_placeholder() {
+auto TableColumnsListBE::reset_placeholder() -> void {
   _editing_placeholder_row = -1;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto TableColumnsListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   RefreshUI::Blocker __centry(*_owner);
   db_ColumnRef col;
 
@@ -753,7 +753,7 @@ bool TableColumnsListBE::set_field(const NodeId &node, ColumnId column, ssize_t 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto TableColumnsListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   if (node[0] < real_count()) {
     db_ColumnRef col = _owner->get_table()->columns().get(node[0]);
 
@@ -848,7 +848,7 @@ bool TableColumnsListBE::get_field_grt(const NodeId &node, ColumnId column, grt:
 /**
  * Returns a list of flags that are available for a column type.
  */
-std::vector<std::string> TableColumnsListBE::get_datatype_flags(const ::bec::NodeId &node, bool all) {
+auto TableColumnsListBE::get_datatype_flags(const ::bec::NodeId &node, bool all) -> std::vector<std::string> {
   db_ColumnRef col;
   std::vector<std::string> retval;
 
@@ -891,7 +891,7 @@ std::vector<std::string> TableColumnsListBE::get_datatype_flags(const ::bec::Nod
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::set_column_flag(const ::bec::NodeId &node, const std::string &flag_name, int is_set) {
+auto TableColumnsListBE::set_column_flag(const ::bec::NodeId &node, const std::string &flag_name, int is_set) -> bool {
   db_ColumnRef col;
   std::vector<std::string> retval;
 
@@ -942,7 +942,7 @@ bool TableColumnsListBE::set_column_flag(const ::bec::NodeId &node, const std::s
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int TableColumnsListBE::get_column_flag(const ::bec::NodeId &node, const std::string &flag_name) {
+auto TableColumnsListBE::get_column_flag(const ::bec::NodeId &node, const std::string &flag_name) -> int {
   db_ColumnRef col;
   std::vector<std::string> retval;
 
@@ -970,7 +970,7 @@ int TableColumnsListBE::get_column_flag(const ::bec::NodeId &node, const std::st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string TableColumnsListBE::quote_value_if_needed(const db_ColumnRef &column, const std::string &value) {
+auto TableColumnsListBE::quote_value_if_needed(const db_ColumnRef &column, const std::string &value) -> std::string {
   std::string datatypeName;
   std::string datatypeGroupName;
 
@@ -997,7 +997,7 @@ std::string TableColumnsListBE::quote_value_if_needed(const db_ColumnRef &column
 
 //----------------------------------------------------------------------------------------------------------------------
 
-MenuItemList TableColumnsListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) {
+auto TableColumnsListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList {
   MenuItemList items;
   MenuItem sep;
   sep.type = MenuSeparator;
@@ -1077,7 +1077,7 @@ MenuItemList TableColumnsListBE::get_popup_items_for_nodes(const std::vector<Nod
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &orig_nodes) {
+auto TableColumnsListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &orig_nodes) -> bool {
   std::vector<NodeId> nodes(orig_nodes);
   std::sort(nodes.begin(), nodes.end());
 
@@ -1187,13 +1187,13 @@ bool TableColumnsListBE::activate_popup_item_for_nodes(const std::string &name, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::can_delete_node(const NodeId &node) {
+auto TableColumnsListBE::can_delete_node(const NodeId &node) -> bool {
   return node.is_valid() && node[0] < real_count();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableColumnsListBE::delete_node(const NodeId &node) {
+auto TableColumnsListBE::delete_node(const NodeId &node) -> bool {
   if (!can_delete_node(node))
     return false;
 
@@ -1209,18 +1209,18 @@ IndexColumnsListBE::IndexColumnsListBE(IndexListBE *owner) : _owner(owner) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexColumnsListBE::refresh() {
+auto IndexColumnsListBE::refresh() -> void {
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t IndexColumnsListBE::count() {
+auto IndexColumnsListBE::count() -> size_t {
   return _owner->get_owner()->get_table()->columns().count();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_IndexColumnRef IndexColumnsListBE::get_index_column(const db_ColumnRef &column) {
+auto IndexColumnsListBE::get_index_column(const db_ColumnRef &column) -> db_IndexColumnRef {
   if (column.is_valid() && _owner->get_selected_index().is_valid()) {
     grt::ListRef<db_IndexColumn> index_columns(_owner->get_selected_index()->columns());
 
@@ -1236,7 +1236,7 @@ db_IndexColumnRef IndexColumnsListBE::get_index_column(const db_ColumnRef &colum
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t IndexColumnsListBE::get_index_column_index(const db_ColumnRef &column) {
+auto IndexColumnsListBE::get_index_column_index(const db_ColumnRef &column) -> size_t {
   if (column.is_valid() && _owner->get_selected_index().is_valid()) {
     grt::ListRef<db_IndexColumn> index_columns(_owner->get_selected_index()->columns());
 
@@ -1252,7 +1252,7 @@ size_t IndexColumnsListBE::get_index_column_index(const db_ColumnRef &column) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexColumnsListBE::set_index_column_order(const db_IndexColumnRef &column, size_t order) {
+auto IndexColumnsListBE::set_index_column_order(const db_IndexColumnRef &column, size_t order) -> void {
   grt::ListRef<db_IndexColumn> index_columns(_owner->get_selected_index()->columns());
   size_t index = index_columns.get_index(column); // Check, we may get a BaseListRef::npos (-1) index
 
@@ -1262,7 +1262,7 @@ void IndexColumnsListBE::set_index_column_order(const db_IndexColumnRef &column,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexColumnsListBE::set_column_enabled(const NodeId &node, bool flag) {
+auto IndexColumnsListBE::set_column_enabled(const NodeId &node, bool flag) -> void {
   if (get_column_enabled(node) != flag) {
     if (flag)
       _owner->add_column(_owner->get_owner()->get_table()->columns()[node[0]]);
@@ -1273,14 +1273,14 @@ void IndexColumnsListBE::set_column_enabled(const NodeId &node, bool flag) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexColumnsListBE::get_column_enabled(const NodeId &node) {
+auto IndexColumnsListBE::get_column_enabled(const NodeId &node) -> bool {
   db_ColumnRef column(_owner->get_owner()->get_table()->columns()[node[0]]);
   return get_index_column(column).is_valid();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t IndexColumnsListBE::get_max_order_index() {
+auto IndexColumnsListBE::get_max_order_index() -> size_t {
   size_t order = 0;
 
   if (_owner) {
@@ -1295,7 +1295,7 @@ size_t IndexColumnsListBE::get_max_order_index() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexColumnsListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto IndexColumnsListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   db_IndexColumnRef icolumn;
 
   if (node[0] >= count())
@@ -1355,7 +1355,7 @@ bool IndexColumnsListBE::set_field(const NodeId &node, ColumnId column, ssize_t 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexColumnsListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto IndexColumnsListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   db_IndexColumnRef icolumn;
 
   if (node[0] >= count())
@@ -1383,7 +1383,7 @@ bool IndexColumnsListBE::set_field(const NodeId &node, ColumnId column, const st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexColumnsListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto IndexColumnsListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   db_TableRef table = _owner->get_owner()->get_table();
   db_ColumnRef dbcolumn;
 
@@ -1446,7 +1446,7 @@ IndexListBE::IndexListBE(TableEditorBE *owner) : _column_list(this), _owner(owne
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_IndexRef IndexListBE::get_selected_index() {
+auto IndexListBE::get_selected_index() -> db_IndexRef {
   if (_selected.is_valid() && _selected[0] < real_count())
     return _owner->get_table()->indices().get(_selected[0]);
   return db_IndexRef();
@@ -1454,7 +1454,7 @@ db_IndexRef IndexListBE::get_selected_index() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexListBE::index_editable(const db_IndexRef &index) {
+auto IndexListBE::index_editable(const db_IndexRef &index) -> bool {
   if (index.is_valid()) {
     // check if index is PRIMARY (primary key index) or FOREIGN (fk index)
     // FK indices can now have the type changed, as they dont depend on indexType for
@@ -1467,7 +1467,7 @@ bool IndexListBE::index_editable(const db_IndexRef &index) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_ForeignKeyRef IndexListBE::index_belongs_to_fk(const db_IndexRef &index) {
+auto IndexListBE::index_belongs_to_fk(const db_IndexRef &index) -> db_ForeignKeyRef {
   // check if the index belongs to a FK
   if (index.is_valid()) {
     ListRef<db_ForeignKey> fks(db_TableRef::cast_from(index->owner())->foreignKeys());
@@ -1480,7 +1480,7 @@ db_ForeignKeyRef IndexListBE::index_belongs_to_fk(const db_IndexRef &index) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-MenuItemList IndexListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) {
+auto IndexListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList {
   db_IndexRef index;
 
   if (!nodes.empty() && nodes[0][0] < _owner->get_table()->indices().count())
@@ -1499,7 +1499,7 @@ MenuItemList IndexListBE::get_popup_items_for_nodes(const std::vector<NodeId> &n
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &unsorted_nodes) {
+auto IndexListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &unsorted_nodes) -> bool {
   std::vector<NodeId> nodes(unsorted_nodes);
   std::sort(nodes.begin(), nodes.end());
 
@@ -1533,13 +1533,13 @@ bool IndexListBE::activate_popup_item_for_nodes(const std::string &name, const s
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexListBE::can_delete_node(const NodeId &node) {
+auto IndexListBE::can_delete_node(const NodeId &node) -> bool {
   return node.is_valid() && node[0] < real_count();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexListBE::delete_node(const NodeId &node) {
+auto IndexListBE::delete_node(const NodeId &node) -> bool {
   if (!can_delete_node(node))
     return false;
 
@@ -1550,7 +1550,7 @@ bool IndexListBE::delete_node(const NodeId &node) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NodeId IndexListBE::add_column(const db_ColumnRef &column, const db_IndexRef &aIndex) {
+auto IndexListBE::add_column(const db_ColumnRef &column, const db_IndexRef &aIndex) -> NodeId {
   db_IndexRef index = aIndex.is_valid() ? aIndex : get_selected_index();
 
   if (!index.is_valid())
@@ -1587,7 +1587,7 @@ NodeId IndexListBE::add_column(const db_ColumnRef &column, const db_IndexRef &aI
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListBE::remove_column(const NodeId &node) {
+auto IndexListBE::remove_column(const NodeId &node) -> void {
   RefreshUI::Blocker __centry(*_owner);
 
   db_IndexRef index = get_selected_index();
@@ -1623,24 +1623,24 @@ void IndexListBE::remove_column(const NodeId &node) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListBE::refresh() {
+auto IndexListBE::refresh() -> void {
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t IndexListBE::count() {
+auto IndexListBE::count() -> size_t {
   return real_count() + 1;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t IndexListBE::real_count() {
+auto IndexListBE::real_count() -> size_t {
   return _owner->get_table()->indices().count();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto IndexListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   if (!node.is_valid())
     return false;
 
@@ -1707,7 +1707,7 @@ bool IndexListBE::set_field(const NodeId &node, ColumnId column, const std::stri
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool IndexListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto IndexListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   db_IndexRef index;
 
   if (node[0] < real_count())
@@ -1738,7 +1738,7 @@ bool IndexListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueR
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListBE::select_index(const NodeId &node) {
+auto IndexListBE::select_index(const NodeId &node) -> void {
   _selected = node;
   _column_list.refresh();
 }
@@ -1750,7 +1750,7 @@ FKConstraintColumnsListBE::FKConstraintColumnsListBE(FKConstraintListBE *owner) 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void FKConstraintColumnsListBE::refresh() {
+auto FKConstraintColumnsListBE::refresh() -> void {
   _referenced_columns.clear();
 
   db_ForeignKeyRef fk(_owner->get_selected_fk());
@@ -1779,7 +1779,7 @@ void FKConstraintColumnsListBE::refresh() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::set<std::string> get_indexed_column_ids(const db_TableRef &table) {
+static auto get_indexed_column_ids(const db_TableRef &table) -> std::set<std::string> {
   std::set<std::string> set;
   for (size_t c = table->indices().count(), i = 0; i < c; i++) {
     db_IndexRef index(table->indices()[i]);
@@ -1797,7 +1797,7 @@ static std::set<std::string> get_indexed_column_ids(const db_TableRef &table) {
  * @param node of the source column in the FK column list.
  * @return List of possible column names.
  */
-std::vector<std::string> FKConstraintColumnsListBE::get_ref_columns_list(const NodeId &node, bool filtered) {
+auto FKConstraintColumnsListBE::get_ref_columns_list(const NodeId &node, bool filtered) -> std::vector<std::string> {
   db_ForeignKeyRef fk(_owner->get_selected_fk());
 
   if (fk.is_valid() && fk->referencedTable().is_valid() &&
@@ -1832,7 +1832,7 @@ std::vector<std::string> FKConstraintColumnsListBE::get_ref_columns_list(const N
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t FKConstraintColumnsListBE::count() {
+auto FKConstraintColumnsListBE::count() -> size_t {
   if (_owner->get_selected_fk().is_valid())
     return _owner->get_owner()->get_table()->columns().count();
   return 0;
@@ -1840,7 +1840,7 @@ size_t FKConstraintColumnsListBE::count() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintColumnsListBE::set_fk_column_pair(const db_ColumnRef &column, const db_ColumnRef &refcolumn) {
+auto FKConstraintColumnsListBE::set_fk_column_pair(const db_ColumnRef &column, const db_ColumnRef &refcolumn) -> bool {
   _referenced_columns[column.id()] = refcolumn;
 
   db_ForeignKeyRef fk(_owner->get_selected_fk());
@@ -1884,7 +1884,7 @@ bool FKConstraintColumnsListBE::set_fk_column_pair(const db_ColumnRef &column, c
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintColumnsListBE::set_column_is_fk(const NodeId &node, bool flag) {
+auto FKConstraintColumnsListBE::set_column_is_fk(const NodeId &node, bool flag) -> bool {
   if (get_column_is_fk(node) != flag) {
     if (flag) {
       // disallow
@@ -1938,7 +1938,7 @@ bool FKConstraintColumnsListBE::set_column_is_fk(const NodeId &node, bool flag) 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-ssize_t FKConstraintColumnsListBE::get_fk_column_index(const NodeId &node) {
+auto FKConstraintColumnsListBE::get_fk_column_index(const NodeId &node) -> ssize_t {
   db_TableRef table = _owner->get_owner()->get_table();
   db_ForeignKeyRef fk(_owner->get_selected_fk());
 
@@ -1956,7 +1956,7 @@ ssize_t FKConstraintColumnsListBE::get_fk_column_index(const NodeId &node) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintColumnsListBE::get_column_is_fk(const NodeId &node) {
+auto FKConstraintColumnsListBE::get_column_is_fk(const NodeId &node) -> bool {
   if (node[0] < _owner->get_owner()->get_table()->columns().count()) {
     db_ColumnRef srccolumn(_owner->get_owner()->get_table()->columns()[node[0]]);
 
@@ -1967,7 +1967,7 @@ bool FKConstraintColumnsListBE::get_column_is_fk(const NodeId &node) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintColumnsListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto FKConstraintColumnsListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   db_ForeignKeyRef fk(_owner->get_selected_fk());
   db_ColumnRef tcolumn;
 
@@ -2067,7 +2067,7 @@ bool FKConstraintColumnsListBE::set_field(const NodeId &node, ColumnId column, c
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintColumnsListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto FKConstraintColumnsListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   db_ForeignKeyRef fk(_owner->get_selected_fk());
 
   switch (column) {
@@ -2124,7 +2124,7 @@ bool FKConstraintColumnsListBE::set_field(const NodeId &node, ColumnId column, s
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintColumnsListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto FKConstraintColumnsListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   switch (column) {
     case Enabled:
       value = grt::IntegerRef(get_column_is_fk(node) ? 1 : 0);
@@ -2174,8 +2174,8 @@ FKConstraintListBE::FKConstraintListBE(TableEditorBE *owner)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NodeId FKConstraintListBE::add_column(const db_ColumnRef &column, const db_ColumnRef &refcolumn,
-                                      const db_ForeignKeyRef &aFk) {
+auto FKConstraintListBE::add_column(const db_ColumnRef &column, const db_ColumnRef &refcolumn,
+                                      const db_ForeignKeyRef &aFk) -> NodeId {
   db_ForeignKeyRef fk = aFk.is_valid() ? aFk : get_selected_fk();
 
   if (fk.is_valid()) {
@@ -2207,7 +2207,7 @@ NodeId FKConstraintListBE::add_column(const db_ColumnRef &column, const db_Colum
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void FKConstraintListBE::remove_column(const NodeId &node) {
+auto FKConstraintListBE::remove_column(const NodeId &node) -> void {
   db_ForeignKeyRef fk = get_selected_fk();
 
   db_ColumnRef column(_owner->get_table()->columns().get(node[0]));
@@ -2234,7 +2234,7 @@ void FKConstraintListBE::remove_column(const NodeId &node) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void FKConstraintListBE::select_fk(const NodeId &node) {
+auto FKConstraintListBE::select_fk(const NodeId &node) -> void {
   _selected_fk = node;
   if (_owner->is_editing_live_object()) {
     db_ForeignKeyRef fkey = get_selected_fk();
@@ -2252,7 +2252,7 @@ void FKConstraintListBE::select_fk(const NodeId &node) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_ForeignKeyRef FKConstraintListBE::get_selected_fk() {
+auto FKConstraintListBE::get_selected_fk() -> db_ForeignKeyRef {
   if (_selected_fk.is_valid() && _selected_fk[0] < real_count())
     return _owner->get_table()->foreignKeys().get(_selected_fk[0]);
   else
@@ -2261,24 +2261,24 @@ db_ForeignKeyRef FKConstraintListBE::get_selected_fk() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void FKConstraintListBE::refresh() {
+auto FKConstraintListBE::refresh() -> void {
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t FKConstraintListBE::count() {
+auto FKConstraintListBE::count() -> size_t {
   return real_count() + 1;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t FKConstraintListBE::real_count() {
+auto FKConstraintListBE::real_count() -> size_t {
   return _owner->get_table()->foreignKeys().count();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto FKConstraintListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   db_ForeignKeyRef fk;
 
   if (node[0] == count() - 1)
@@ -2307,7 +2307,7 @@ bool FKConstraintListBE::set_field(const NodeId &node, ColumnId column, ssize_t 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool check_if_null(TableEditorBE *_owner, db_ForeignKeyRef &fk, std::string caption) {
+static auto check_if_null(TableEditorBE *_owner, db_ForeignKeyRef &fk, std::string caption) -> bool {
   bool one_col_is_not_null = false;
   for (size_t i = 0; i < fk->columns().count(); i++) {
     if (fk->columns()[i]->isNotNull()) {
@@ -2339,7 +2339,7 @@ static bool check_if_null(TableEditorBE *_owner, db_ForeignKeyRef &fk, std::stri
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto FKConstraintListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   db_ForeignKeyRef fk;
 
   if (node[0] == real_count() && column == Name) {
@@ -2482,7 +2482,7 @@ bool FKConstraintListBE::set_field(const NodeId &node, ColumnId column, const st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto FKConstraintListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   db_ForeignKeyRef fk;
 
   if (node[0] < real_count())
@@ -2555,13 +2555,13 @@ bool FKConstraintListBE::get_field_grt(const NodeId &node, ColumnId column, grt:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintListBE::can_delete_node(const NodeId &node) {
+auto FKConstraintListBE::can_delete_node(const NodeId &node) -> bool {
   return node.is_valid() && node[0] < real_count();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintListBE::delete_node(const NodeId &node) {
+auto FKConstraintListBE::delete_node(const NodeId &node) -> bool {
   if (!can_delete_node(node))
     return false;
 
@@ -2572,7 +2572,7 @@ bool FKConstraintListBE::delete_node(const NodeId &node) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-MenuItemList FKConstraintListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) {
+auto FKConstraintListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList {
   MenuItemList items;
 
   MenuItem item;
@@ -2587,7 +2587,7 @@ MenuItemList FKConstraintListBE::get_popup_items_for_nodes(const std::vector<Nod
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool FKConstraintListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) {
+auto FKConstraintListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool {
   std::vector<NodeId> sorted_nodes(nodes);
   std::sort(sorted_nodes.begin(), sorted_nodes.end());
 
@@ -2625,7 +2625,7 @@ TableEditorBE::TableEditorBE(const db_TableRef &table) : DBObjectEditorBE(table)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::set_name(const std::string &name) {
+auto TableEditorBE::set_name(const std::string &name) -> void {
   if (name != get_name()) {
     RefreshUI::Blocker __centry(*this);
 
@@ -2639,7 +2639,7 @@ void TableEditorBE::set_name(const std::string &name) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NodeId TableEditorBE::add_column(const std::string &name) {
+auto TableEditorBE::add_column(const std::string &name) -> NodeId {
   db_ColumnRef column;
 
   column = grt::GRT::get()->create_object<db_Column>(
@@ -2663,7 +2663,7 @@ NodeId TableEditorBE::add_column(const std::string &name) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NodeId TableEditorBE::duplicate_column(const db_ColumnRef &column, ssize_t insert_after) {
+auto TableEditorBE::duplicate_column(const db_ColumnRef &column, ssize_t insert_after) -> NodeId {
   db_ColumnRef new_column = shallow_copy_object(column);
   new_column->oldName(""); // It's new column, so it shouldn't have any old name set.
 
@@ -2691,13 +2691,13 @@ NodeId TableEditorBE::duplicate_column(const db_ColumnRef &column, ssize_t inser
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_ColumnRef TableEditorBE::get_column_with_name(const std::string &name) {
+auto TableEditorBE::get_column_with_name(const std::string &name) -> db_ColumnRef {
   return grt::find_named_object_in_list<db_Column>(get_table()->columns(), name, "name");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::rename_column(const db_ColumnRef &column, const std::string &name) {
+auto TableEditorBE::rename_column(const db_ColumnRef &column, const std::string &name) -> void {
   std::string old_name = column->name();
 
   AutoUndoEdit undo(this);
@@ -2713,7 +2713,7 @@ void TableEditorBE::rename_column(const db_ColumnRef &column, const std::string 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::remove_column(const NodeId &node) {
+auto TableEditorBE::remove_column(const NodeId &node) -> void {
   db_TableRef table = get_table();
   if (node[0] >= table->columns().count())
     return;
@@ -2734,7 +2734,7 @@ void TableEditorBE::remove_column(const NodeId &node) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NodeId TableEditorBE::add_fk(const std::string &name) {
+auto TableEditorBE::add_fk(const std::string &name) -> NodeId {
   if (!get_table()->columns().count()) {
     mforms::Utilities::show_warning("FK Creation", "Cannot add FK on empty table, add some columns first", "OK");
     return NodeId();
@@ -2766,7 +2766,7 @@ NodeId TableEditorBE::add_fk(const std::string &name) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableEditorBE::remove_fk(const NodeId &fk) {
+auto TableEditorBE::remove_fk(const NodeId &fk) -> bool {
   ListRef<db_ForeignKey> fklist = get_table()->foreignKeys();
 
   if (fk[0] >= fklist.count())
@@ -2792,7 +2792,7 @@ bool TableEditorBE::remove_fk(const NodeId &fk) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NodeId TableEditorBE::add_index(const std::string &name) {
+auto TableEditorBE::add_index(const std::string &name) -> NodeId {
   if (!get_table()->columns().count()) {
     mforms::Utilities::show_warning("Index Creation", "Cannot add Index on empty table, add some columns first", "OK");
     return NodeId();
@@ -2830,7 +2830,7 @@ NodeId TableEditorBE::add_index(const std::string &name) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableEditorBE::remove_index(const NodeId &index, bool delete_even_if_foreign) {
+auto TableEditorBE::remove_index(const NodeId &index, bool delete_even_if_foreign) -> bool {
   if (index[0] >= get_table()->indices().count())
     return false;
 
@@ -2857,7 +2857,7 @@ bool TableEditorBE::remove_index(const NodeId &index, bool delete_even_if_foreig
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NodeId TableEditorBE::add_index_with_columns(const std::vector<NodeId> &columns) {
+auto TableEditorBE::add_index_with_columns(const std::vector<NodeId> &columns) -> NodeId {
   AutoUndoEdit undo(this);
 
   NodeId id = add_index(get_name_suggestion_for_list_object(get_table()->indices(), "index"));
@@ -2881,7 +2881,7 @@ NodeId TableEditorBE::add_index_with_columns(const std::vector<NodeId> &columns)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NodeId TableEditorBE::add_fk_with_columns(const std::vector<NodeId> &columns) {
+auto TableEditorBE::add_fk_with_columns(const std::vector<NodeId> &columns) -> NodeId {
   AutoUndoEdit undo(this);
 
   NodeId id = add_fk(get_name_suggestion_for_list_object(get_table()->foreignKeys(), "fk"));
@@ -2903,14 +2903,14 @@ NodeId TableEditorBE::add_fk_with_columns(const std::vector<NodeId> &columns) {
   return id;
 }
 
-void TableEditorBE::undo_called(grt::UndoAction *action, grt::UndoAction *expected) {
+auto TableEditorBE::undo_called(grt::UndoAction *action, grt::UndoAction *expected) -> void {
   if (action == expected)
     do_ui_refresh();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableEditorBE::showErrorMessage(const std::string &type) {
+auto TableEditorBE::showErrorMessage(const std::string &type) -> bool {
   bool ret = false;
   std::string key = base::tolower(type);
   if (key == "json") {
@@ -2928,7 +2928,7 @@ bool TableEditorBE::showErrorMessage(const std::string &type) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::catalogChanged(const std::string &member, const grt::ValueRef &value) {
+auto TableEditorBE::catalogChanged(const std::string &member, const grt::ValueRef &value) -> void {
   if (member == "version") {
     GrtVersionRef version = GrtVersionRef::cast_from(value);
     GrtVersionRef actualVersion = get_catalog()->version();
@@ -2979,7 +2979,7 @@ void TableEditorBE::catalogChanged(const std::string &member, const grt::ValueRe
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableEditorBE::parse_column_type(const std::string &str, db_ColumnRef &column) {
+auto TableEditorBE::parse_column_type(const std::string &str, db_ColumnRef &column) -> bool {
   db_CatalogRef catalog(get_catalog());
 
   bool flag = column->setParseType(str, catalog->simpleDatatypes()) == 1;
@@ -2996,13 +2996,13 @@ bool TableEditorBE::parse_column_type(const std::string &str, db_ColumnRef &colu
   return flag;
 }
 
-std::string TableEditorBE::format_column_type(db_ColumnRef &column) {
+auto TableEditorBE::format_column_type(db_ColumnRef &column) -> std::string {
   return column->formattedRawType();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::inserts_column_resized(int column) {
+auto TableEditorBE::inserts_column_resized(int column) -> void {
   int width = _inserts_grid->get_column_width(column);
 
   grt::IntegerListRef widths;
@@ -3021,7 +3021,7 @@ void TableEditorBE::inserts_column_resized(int column) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::restore_inserts_columns() {
+auto TableEditorBE::restore_inserts_columns() -> void {
   grt::IntegerListRef widths;
   if (grt::IntegerListRef::can_wrap(get_table()->customData().get("InsertsColumnWidths")))
     widths = grt::IntegerListRef::cast_from(get_table()->customData().get("InsertsColumnWidths"));
@@ -3054,7 +3054,7 @@ void TableEditorBE::restore_inserts_columns() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::open_field_editor(int row, int column) {
+auto TableEditorBE::open_field_editor(int row, int column) -> void {
   Recordset::Ref rset(get_inserts_model());
   if (rset) {
     std::string type;
@@ -3071,8 +3071,8 @@ void TableEditorBE::open_field_editor(int row, int column) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows,
-                                                    int column) {
+auto TableEditorBE::update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows,
+                                                    int column) -> void {
   mforms::MenuItem *item = menu->find_item("edit_cell");
   if (item != NULL && !rows.empty()) {
     if (item->signal_clicked()->empty())
@@ -3083,7 +3083,7 @@ void TableEditorBE::update_selection_for_menu_extra(mforms::ContextMenu *menu, c
 //----------------------------------------------------------------------------------------------------------------------
 
 // used in unit-tests
-Recordset::Ref TableEditorBE::get_inserts_model() {
+auto TableEditorBE::get_inserts_model() -> Recordset::Ref {
   if (!_inserts_model) {
     if (get_table().class_name() == "db.Table")
       throw std::logic_error("table object is abstract");
@@ -3104,7 +3104,7 @@ Recordset::Ref TableEditorBE::get_inserts_model() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::View *TableEditorBE::get_inserts_panel() {
+auto TableEditorBE::get_inserts_panel() -> mforms::View * {
   if (!_inserts_panel) {
     mforms::ToolBar *tbar = get_inserts_model()->get_toolbar();
     tbar->find_item("record_export")
@@ -3129,7 +3129,7 @@ mforms::View *TableEditorBE::get_inserts_panel() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::show_export_wizard(mforms::Form *owner) {
+auto TableEditorBE::show_export_wizard(mforms::Form *owner) -> void {
   if (_inserts_model && _inserts_model->count() > 0) {
     grt::ValueRef option(bec::GRTManager::get()->get_app_option("TableEditor:LastExportDirectory"));
     std::string path = option.is_valid() ? grt::StringRef::cast_from(option) : "";
@@ -3160,7 +3160,7 @@ void TableEditorBE::show_export_wizard(mforms::Form *owner) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::show_import_wizard() {
+auto TableEditorBE::show_import_wizard() -> void {
   grt::BaseListRef args(true);
 
   db_TableRef table(get_table());
@@ -3184,7 +3184,7 @@ void TableEditorBE::show_import_wizard() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-MySQLEditor::Ref TableEditorBE::get_sql_editor() {
+auto TableEditorBE::get_sql_editor() -> MySQLEditor::Ref {
   MySQLEditor::Ref sql_editor = DBObjectEditorBE::get_sql_editor();
   if (sql_editor)
     sql_editor->restrict_content_to(MySQLEditor::ContentTypeTrigger);
@@ -3193,13 +3193,13 @@ MySQLEditor::Ref TableEditorBE::get_sql_editor() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string TableEditorBE::get_title() {
+auto TableEditorBE::get_title() -> std::string {
   return base::strfmt("%s - Table", get_name().c_str());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool TableEditorBE::can_close() {
+auto TableEditorBE::can_close() -> bool {
   if (_inserts_grid && _inserts_model->has_pending_changes()) {
     int ret = mforms::Utilities::show_message(
       "Close Table Editor",
@@ -3220,7 +3220,7 @@ bool TableEditorBE::can_close() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableEditorBE::column_count_changed() {
+auto TableEditorBE::column_count_changed() -> void {
   if (_inserts_model)
     _inserts_model->refresh();
   if (_inserts_grid)

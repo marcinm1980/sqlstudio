@@ -85,7 +85,7 @@ FileCharsetDialog::FileCharsetDialog(const std::string &title, const std::string
   center();
 }
 
-std::string FileCharsetDialog::run(const std::string &default_encoding) {
+auto FileCharsetDialog::run(const std::string &default_encoding) -> std::string {
   grt::ListRef<db_CharacterSet> charsets(
     grt::ListRef<db_CharacterSet>::cast_from(grt::GRT::get()->get("/wb/rdbmsMgmt/rdbms/0/characterSets")));
   std::list<std::string> chlist;
@@ -102,15 +102,15 @@ std::string FileCharsetDialog::run(const std::string &default_encoding) {
   return "";
 }
 
-void FileCharsetDialog::run_clicked() {
+auto FileCharsetDialog::run_clicked() -> void {
   _run_clicked = true;
   end_modal(false);
 }
 
-FileCharsetDialog::Result FileCharsetDialog::ensure_filedata_utf8(const char *data, size_t length,
+auto FileCharsetDialog::ensure_filedata_utf8(const char *data, size_t length,
                                                                   const std::string &encoding,
                                                                   const std::string &filename, char *&utf8_data,
-                                                                  std::string *original_encoding) {
+                                                                  std::string *original_encoding) -> FileCharsetDialog::Result {
   // Byte order marks.
   const char *utf16le_bom = "\xff\xfe";
   const char *utf16be_bom = "\xfe\xff";

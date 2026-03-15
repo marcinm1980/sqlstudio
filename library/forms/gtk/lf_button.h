@@ -41,21 +41,21 @@ namespace mforms {
       Gtk::Button *_button;
       Gtk::Image *_icon;
 
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _button;
       }
 
       ButtonImpl(::mforms::Button *self, ::mforms::ButtonType btype = ::mforms::PushButton, bool concrete = false);
-      static void callback(::mforms::Button *self);
-      static bool create(::mforms::Button *self, ::mforms::ButtonType btype);
-      static void set_text(::mforms::Button *self, const std::string &text);
-      static void set_icon(::mforms::Button *self, const std::string &path);
-      static void enable_internal_padding(Button *self, bool enabled);
+      static auto callback(::mforms::Button *self) -> void;
+      static auto create(::mforms::Button *self, ::mforms::ButtonType btype) -> bool;
+      static auto set_text(::mforms::Button *self, const std::string &text) -> void;
+      static auto set_icon(::mforms::Button *self, const std::string &path) -> void;
+      static auto enable_internal_padding(Button *self, bool enabled) -> void;
 
-      virtual void set_text(const std::string &text);
+      virtual auto set_text(const std::string &text) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   }
 }

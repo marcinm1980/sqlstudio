@@ -65,7 +65,7 @@ namespace parsers {
 
     // Returns true if the given mode (one of the enums above) is set.
     auto isSqlModeActive(size_t mode) -> bool;
-    void sqlModeFromString(std::string modes);
+    auto sqlModeFromString(std::string modes) -> void;
 
     static auto dumpTree(antlr4::RuleContext *context, const antlr4::dfa::Vocabulary &vocabulary) -> std::string;
     static auto sourceTextForContext(antlr4::ParserRuleContext *ctx, bool keepQuotes = false) -> std::string;

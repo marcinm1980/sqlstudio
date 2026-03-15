@@ -36,7 +36,7 @@ db_mgmt_SSHConnection::ImplData::~ImplData() {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::init() {
+auto db_mgmt_SSHConnection::init() -> void {
 //  if (!_data) _data= new db_mgmt_SSHConnection::ImplData();
 }
 
@@ -48,18 +48,18 @@ db_mgmt_SSHConnection::~db_mgmt_SSHConnection() {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::set_data(ImplData *data) {
+auto db_mgmt_SSHConnection::set_data(ImplData *data) -> void {
   _data = data;
 }
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::disconnect() {
+auto db_mgmt_SSHConnection::disconnect() -> void {
   if (_data)
     _data->disconnect();
 }
 
-grt::IntegerRef db_mgmt_SSHConnection::isConnected() {
+auto db_mgmt_SSHConnection::isConnected() -> grt::IntegerRef {
   if (_data)
     return _data->isConnected();
   return 0;
@@ -67,7 +67,7 @@ grt::IntegerRef db_mgmt_SSHConnection::isConnected() {
 
 //------------------------------------------------------------------------------------------------
 
-grt::IntegerRef db_mgmt_SSHConnection::connect() {
+auto db_mgmt_SSHConnection::connect() -> grt::IntegerRef {
   if (_data)
     return _data->connect();
   return -1;
@@ -75,7 +75,7 @@ grt::IntegerRef db_mgmt_SSHConnection::connect() {
 
 //------------------------------------------------------------------------------------------------
 
-grt::DictRef db_mgmt_SSHConnection::executeCommand(const std::string &text) {
+auto db_mgmt_SSHConnection::executeCommand(const std::string &text) -> grt::DictRef {
   if (_data)
     return _data->executeCommand(text);
   grt::DictRef dict(true);
@@ -87,7 +87,7 @@ grt::DictRef db_mgmt_SSHConnection::executeCommand(const std::string &text) {
 
 //------------------------------------------------------------------------------------------------
 
-grt::DictRef db_mgmt_SSHConnection::executeSudoCommand(const std::string &text, const std::string &user) {
+auto db_mgmt_SSHConnection::executeSudoCommand(const std::string &text, const std::string &user) -> grt::DictRef {
   if (_data)
     return _data->executeSudoCommand(text, user);
   grt::DictRef dict(true);
@@ -99,7 +99,7 @@ grt::DictRef db_mgmt_SSHConnection::executeSudoCommand(const std::string &text, 
 
 //------------------------------------------------------------------------------------------------
 
-grt::IntegerRef db_mgmt_SSHConnection::cd(const std::string &directory) {
+auto db_mgmt_SSHConnection::cd(const std::string &directory) -> grt::IntegerRef {
   if (_data)
     return _data->cd(directory);
   return 0;
@@ -107,14 +107,14 @@ grt::IntegerRef db_mgmt_SSHConnection::cd(const std::string &directory) {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::get(const std::string &src, const std::string &dest) {
+auto db_mgmt_SSHConnection::get(const std::string &src, const std::string &dest) -> void {
   if (_data)
     _data->get(src, dest);
 }
 
 //------------------------------------------------------------------------------------------------
 
-grt::StringRef db_mgmt_SSHConnection::getContent(const std::string &src) {
+auto db_mgmt_SSHConnection::getContent(const std::string &src) -> grt::StringRef {
   if (_data)
     return _data->getContent(src);
   return "";
@@ -122,7 +122,7 @@ grt::StringRef db_mgmt_SSHConnection::getContent(const std::string &src) {
 
 //------------------------------------------------------------------------------------------------
 
-grt::DictListRef db_mgmt_SSHConnection::ls(const std::string &path) {
+auto db_mgmt_SSHConnection::ls(const std::string &path) -> grt::DictListRef {
   if (_data)
     return _data->ls(path);
   return grt::DictListRef();
@@ -130,14 +130,14 @@ grt::DictListRef db_mgmt_SSHConnection::ls(const std::string &path) {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::mkdir(const std::string &directory) {
+auto db_mgmt_SSHConnection::mkdir(const std::string &directory) -> void {
   if (_data)
     _data->mkdir(directory);
 }
 
 //------------------------------------------------------------------------------------------------
 
-db_mgmt_SSHFileRef db_mgmt_SSHConnection::open(const std::string &path) {
+auto db_mgmt_SSHConnection::open(const std::string &path) -> db_mgmt_SSHFileRef {
   if (_data)
     return _data->open(path);
   return db_mgmt_SSHFileRef();
@@ -145,14 +145,14 @@ db_mgmt_SSHFileRef db_mgmt_SSHConnection::open(const std::string &path) {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::put(const std::string &src, const std::string &dest) {
+auto db_mgmt_SSHConnection::put(const std::string &src, const std::string &dest) -> void {
   if (_data)
     _data->put(src, dest);
 }
 
 //------------------------------------------------------------------------------------------------
 
-grt::StringRef db_mgmt_SSHConnection::pwd() {
+auto db_mgmt_SSHConnection::pwd() -> grt::StringRef {
   if (_data)
     return _data->pwd();
   return "";
@@ -160,21 +160,21 @@ grt::StringRef db_mgmt_SSHConnection::pwd() {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::rmdir(const std::string &directory) {
+auto db_mgmt_SSHConnection::rmdir(const std::string &directory) -> void {
   if (_data)
     _data->rmdir(directory);
 }
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::setContent(const std::string &path, const std::string &content) {
+auto db_mgmt_SSHConnection::setContent(const std::string &path, const std::string &content) -> void {
   if (_data)
     _data->setContent(path, content);
 }
 
 //------------------------------------------------------------------------------------------------
 
-grt::DictRef db_mgmt_SSHConnection::stat(const std::string &path) {
+auto db_mgmt_SSHConnection::stat(const std::string &path) -> grt::DictRef {
   if (_data)
     return _data->stat(path);
   return grt::DictRef();
@@ -182,7 +182,7 @@ grt::DictRef db_mgmt_SSHConnection::stat(const std::string &path) {
 
 //------------------------------------------------------------------------------------------------
 
-grt::IntegerRef db_mgmt_SSHConnection::fileExists(const std::string &path) {
+auto db_mgmt_SSHConnection::fileExists(const std::string &path) -> grt::IntegerRef {
   if (_data)
     return _data->fileExists(path);
 
@@ -191,7 +191,7 @@ grt::IntegerRef db_mgmt_SSHConnection::fileExists(const std::string &path) {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHConnection::unlink(const std::string &file) {
+auto db_mgmt_SSHConnection::unlink(const std::string &file) -> void {
   if (_data)
     _data->unlink(file);
 }

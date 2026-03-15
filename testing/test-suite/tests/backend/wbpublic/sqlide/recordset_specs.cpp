@@ -33,7 +33,7 @@
 
 namespace {
 
-static void dummy() {
+static auto dummy() -> void {
 }
 
 class RecordsetTest : public ::testing::Test {

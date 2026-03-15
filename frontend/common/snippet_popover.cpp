@@ -123,7 +123,7 @@ SnippetPopover::~SnippetPopover() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SnippetPopover::revert_clicked() {
+auto SnippetPopover::revert_clicked() -> void {
   _heading_label->set_text(_original_heading);
   _heading_entry->set_value(_original_heading);
   _editor->set_value(_original_text);
@@ -133,26 +133,26 @@ void SnippetPopover::revert_clicked() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SnippetPopover::edit_clicked() {
+auto SnippetPopover::edit_clicked() -> void {
   set_read_only(false);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SnippetPopover::close_clicked() {
+auto SnippetPopover::close_clicked() -> void {
   close();
   _closed();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SnippetPopover::text_changed(int start_line, int lines_changed) {
+auto SnippetPopover::text_changed(int start_line, int lines_changed) -> void {
   _revert_button->set_enabled(true);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SnippetPopover::set_heading(const std::string& text) {
+auto SnippetPopover::set_heading(const std::string& text) -> void {
   _original_heading = text;
   _heading_entry->set_value(text);
   _heading_label->set_text(text);
@@ -160,7 +160,7 @@ void SnippetPopover::set_heading(const std::string& text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SnippetPopover::set_text(const std::string& text) {
+auto SnippetPopover::set_text(const std::string& text) -> void {
   _original_text = text;
   _editor->set_value(text);
   _revert_button->set_enabled(false);
@@ -168,7 +168,7 @@ void SnippetPopover::set_text(const std::string& text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SnippetPopover::set_read_only(bool flag) {
+auto SnippetPopover::set_read_only(bool flag) -> void {
   // We have to exchange a label and a text entry, depending on the read-only state
   // because we cannot give the text entry a display format and cannot edit a label.
   if (flag) {
@@ -190,26 +190,26 @@ void SnippetPopover::set_read_only(bool flag) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string SnippetPopover::get_text() {
+auto SnippetPopover::get_text() -> std::string {
   return _editor->get_text(false);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string SnippetPopover::get_heading() {
+auto SnippetPopover::get_heading() -> std::string {
   return _heading_entry->get_string_value();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool SnippetPopover::has_changed() {
+auto SnippetPopover::has_changed() -> bool {
   // We don't have a change event from the text entry so we compare the content instead.
   return _revert_button->is_enabled() || (_heading_entry->get_string_value() != _original_heading);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SnippetPopover::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto SnippetPopover::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   if (name == "GNColorsChanged") {
     base::Color backgroundColor = base::Color::getSystemColor(base::WindowBackgroundColor);
     _borderPanel->set_back_color(backgroundColor.to_html());

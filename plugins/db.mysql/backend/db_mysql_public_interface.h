@@ -44,6 +44,6 @@
 
 typedef std::map<std::string, GrtNamedObjectRef> CatalogMap;
 
-WBPLUGINDBMYSQLBE_PUBLIC_FUNC void update_all_old_names(db_mysql_CatalogRef cat, bool update_only_empty,
-                                                        CatalogMap& map);
-WBPLUGINDBMYSQLBE_PUBLIC_FUNC void build_catalog_map(db_mysql_CatalogRef catalog, CatalogMap& map);
+auto update_all_old_names(db_mysql_CatalogRef cat, bool update_only_empty,
+                                                        CatalogMap& map) -> WBPLUGINDBMYSQLBE_PUBLIC_FUNC void;
+auto build_catalog_map(db_mysql_CatalogRef catalog, CatalogMap& map) -> WBPLUGINDBMYSQLBE_PUBLIC_FUNC void;

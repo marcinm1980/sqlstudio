@@ -63,7 +63,7 @@ PasswordCache::PasswordCache() {
 PasswordCache PasswordCache::instance;
 static base::Mutex cache_mutex;
 
-PasswordCache *PasswordCache::get() {
+auto PasswordCache::get() -> PasswordCache * {
   return &instance;
 }
 
@@ -78,7 +78,7 @@ PasswordCache::~PasswordCache() {
   }
 }
 
-void PasswordCache::add_password(const std::string &service, const std::string &account, const char *password) {
+auto PasswordCache::add_password(const std::string &service, const std::string &account, const char *password) -> void {
   if (storage) {
     if (!password)
       password = "";
@@ -142,7 +142,7 @@ void PasswordCache::add_password(const std::string &service, const std::string &
     throw std::runtime_error("Password storage is not available");
 }
 
-size_t PasswordCache::find_block(const std::string &service, const std::string &account) {
+auto PasswordCache::find_block(const std::string &service, const std::string &account) -> size_t {
   size_t offset = 0;
   while (offset < storage_len) {
     size_t recsize = *(size_t *)(storage + offset);
@@ -157,7 +157,7 @@ size_t PasswordCache::find_block(const std::string &service, const std::string &
   return (size_t)-1;
 }
 
-void PasswordCache::remove_password(const std::string &service, const std::string &account) {
+auto PasswordCache::remove_password(const std::string &service, const std::string &account) -> void {
   if (storage) {
     base::MutexLock lock(cache_mutex);
 
@@ -171,7 +171,7 @@ void PasswordCache::remove_password(const std::string &service, const std::strin
   }
 }
 
-const char *PasswordCache::find_password(const std::string &service, const std::string &account) {
+auto PasswordCache::find_password(const std::string &service, const std::string &account) -> const char * {
   if (storage) {
     size_t offset = find_block(service, account);
     if (offset != (size_t)-1) {
@@ -182,7 +182,7 @@ const char *PasswordCache::find_password(const std::string &service, const std::
   return 0;
 }
 
-bool PasswordCache::get_password(const std::string &service, const std::string &account, std::string &ret_password) {
+auto PasswordCache::get_password(const std::string &service, const std::string &account, std::string &ret_password) -> bool {
   base::MutexLock lock(cache_mutex);
   const char *tmp = find_password(service, account);
   if (tmp)

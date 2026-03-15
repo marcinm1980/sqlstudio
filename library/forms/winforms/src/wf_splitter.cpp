@@ -72,7 +72,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------
 
-  void SafeAssignSplitterDistance(int distance) {
+  auto SafeAssignSplitterDistance(int distance) -> void {
     // If the splitter is within any of the min size areas of the two panels set it to the center
     // between both. If that still fails it can only mean the container is smaller than the sum of
     // the min sizes. In that case don't assign a splitter position at all.
@@ -93,7 +93,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void SafeAssignMinSize(int min_size, bool first) {
+  auto SafeAssignMinSize(int min_size, bool first) -> void {
     // Similar as for the splitter distance the split container will throw an exception if the
     // min sizes don't match the size.
     int size = (Orientation == System::Windows::Forms::Orientation::Horizontal) ? Height : Width;
@@ -128,7 +128,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void SetPosition(int position) {
+  auto SetPosition(int position) -> void {
     if (IsHandleCreated && Visible)
       SafeAssignSplitterDistance(position);
     else
@@ -137,7 +137,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  int GetPosition() {
+  auto GetPosition() -> int {
     if (pendingSplitterDistance == -1)
       return SplitterDistance;
     else
@@ -154,7 +154,7 @@ SplitterWrapper::SplitterWrapper(mforms::Splitter *backend) : ViewWrapper(backen
 
 //--------------------------------------------------------------------------------------------------
 
-bool SplitterWrapper::create(mforms::Splitter *backend, bool horizontal) {
+auto SplitterWrapper::create(mforms::Splitter *backend, bool horizontal) -> bool {
   SplitterWrapper *wrapper = new SplitterWrapper(backend);
   MformsSplitContainer ^ container = SplitterWrapper::Create<MformsSplitContainer>(backend, wrapper);
   container->backend = backend;
@@ -173,7 +173,7 @@ bool SplitterWrapper::create(mforms::Splitter *backend, bool horizontal) {
  * - If not and the right panel is empty add to this.
  * - If no panel is empty then we have an error.
  */
-void SplitterWrapper::add(mforms::Splitter *backend, mforms::View *child, int min_size, bool fixed) {
+auto SplitterWrapper::add(mforms::Splitter *backend, mforms::View *child, int min_size, bool fixed) -> void {
   MformsSplitContainer ^ container = SplitterWrapper::GetManagedObject<MformsSplitContainer>(backend);
   ViewWrapper *view = child->get_data<ViewWrapper>();
   Control ^ control = view->GetControl();
@@ -202,7 +202,7 @@ void SplitterWrapper::add(mforms::Splitter *backend, mforms::View *child, int mi
 
 //--------------------------------------------------------------------------------------------------
 
-void SplitterWrapper::remove(mforms::Splitter *backend, mforms::View *child) {
+auto SplitterWrapper::remove(mforms::Splitter *backend, mforms::View *child) -> void {
   MformsSplitContainer ^ container = SplitterWrapper::GetManagedObject<MformsSplitContainer>(backend);
   Control ^ control = SplitterWrapper::GetControl(child);
 
@@ -222,21 +222,21 @@ void SplitterWrapper::remove(mforms::Splitter *backend, mforms::View *child) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SplitterWrapper::set_divider_position(mforms::Splitter *backend, int position) {
+auto SplitterWrapper::set_divider_position(mforms::Splitter *backend, int position) -> void {
   MformsSplitContainer ^ container = SplitterWrapper::GetManagedObject<MformsSplitContainer>(backend);
   container->SetPosition(position);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int SplitterWrapper::get_divider_position(mforms::Splitter *backend) {
+auto SplitterWrapper::get_divider_position(mforms::Splitter *backend) -> int {
   MformsSplitContainer ^ container = SplitterWrapper::GetManagedObject<MformsSplitContainer>(backend);
   return container->GetPosition();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SplitterWrapper::set_expanded(mforms::Splitter *backend, bool first, bool expand) {
+auto SplitterWrapper::set_expanded(mforms::Splitter *backend, bool first, bool expand) -> void {
   MformsSplitContainer ^ container = SplitterWrapper::GetManagedObject<MformsSplitContainer>(backend);
   if (first)
     container->Panel1Collapsed = !expand;
@@ -246,7 +246,7 @@ void SplitterWrapper::set_expanded(mforms::Splitter *backend, bool first, bool e
 
 //--------------------------------------------------------------------------------------------------
 
-void SplitterWrapper::init() {
+auto SplitterWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_splitter_impl.create = &SplitterWrapper::create;

@@ -36,14 +36,14 @@ class StoredNoteEditor : public PluginEditorBase {
   StoredNoteEditorBE *_be;
   Glib::RefPtr<Gtk::Builder> _xml;
 
-  virtual bec::BaseEditor *get_be() {
+  virtual auto get_be() -> bec::BaseEditor * {
     return _be;
   }
 
-  void apply();
-  void discard();
+  auto apply() -> void;
+  auto discard() -> void;
 
-  virtual bool can_close();
+  virtual auto can_close() -> bool;
 
 public:
   StoredNoteEditor(grt::Module *m, const grt::BaseListRef &args) : PluginEditorBase(m, args), _be(0) {
@@ -72,7 +72,7 @@ public:
     delete _be;
   }
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args) {
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool {
     Gtk::Box *vbox;
     _xml->get_widget("editor_placeholder", vbox);
 
@@ -86,17 +86,17 @@ public:
 };
 
 //------------------------------------------------------------------------------
-void StoredNoteEditor::apply() {
+auto StoredNoteEditor::apply() -> void {
   _be->commit_changes();
 }
 
 //------------------------------------------------------------------------------
-void StoredNoteEditor::discard() {
+auto StoredNoteEditor::discard() -> void {
   _be->load_text();
 }
 
 //------------------------------------------------------------------------------
-bool StoredNoteEditor::can_close() {
+auto StoredNoteEditor::can_close() -> bool {
   if (!_be->can_close()) {
     Gtk::MessageDialog dlg(
       "<b>There are unsaved changes in the editor</b>\nPlease Apply or Revert these changes before closing.", true,
@@ -110,7 +110,7 @@ bool StoredNoteEditor::can_close() {
 }
 
 extern "C" {
-GUIPluginBase *createStoredNoteEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createStoredNoteEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new StoredNoteEditor(m, args));
 }
 };

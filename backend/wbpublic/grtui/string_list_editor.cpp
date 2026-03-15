@@ -69,35 +69,35 @@ StringListEditor::StringListEditor(mforms::Form *owner, const bool reorderable)
   set_size(400, 320);
 }
 
-void StringListEditor::add() {
+auto StringListEditor::add() -> void {
   _tree.select_node(_tree.add_node());
 }
 
-void StringListEditor::del() {
+auto StringListEditor::del() -> void {
   mforms::TreeNodeRef node = _tree.get_selected_node();
   if (node)
     node->remove_from_parent();
 }
 
-bool StringListEditor::run() {
+auto StringListEditor::run() -> bool {
   return run_modal(&_ok_button, &_cancel_button);
 }
 
-void StringListEditor::set_string_list(const std::vector<std::string> &strings) {
+auto StringListEditor::set_string_list(const std::vector<std::string> &strings) -> void {
   _tree.clear();
   for (std::vector<std::string>::const_iterator r = strings.begin(); r != strings.end(); ++r) {
     _tree.add_node()->set_string(0, *r);
   }
 }
 
-void StringListEditor::set_grt_string_list(const grt::StringListRef &strings) {
+auto StringListEditor::set_grt_string_list(const grt::StringListRef &strings) -> void {
   _tree.clear();
   for (grt::StringListRef::const_iterator r = strings.begin(); r != strings.end(); ++r) {
     _tree.add_node()->set_string(0, (*r).c_str());
   }
 }
 
-std::vector<std::string> StringListEditor::get_string_list() {
+auto StringListEditor::get_string_list() -> std::vector<std::string> {
   std::vector<std::string> list;
 
   for (int c = _tree.count(), i = 0; i < c; i++) {
@@ -107,7 +107,7 @@ std::vector<std::string> StringListEditor::get_string_list() {
   return list;
 }
 
-grt::StringListRef StringListEditor::get_grt_string_list() {
+auto StringListEditor::get_grt_string_list() -> grt::StringListRef {
   grt::StringListRef list(grt::Initialized);
 
   for (int c = _tree.count(), i = 0; i < c; i++) {

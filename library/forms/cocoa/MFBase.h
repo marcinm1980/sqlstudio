@@ -27,7 +27,7 @@
 
 #include <mforms/base.h>
 
-NSString *wrap_nsstring(const std::string &s);
+auto wrap_nsstring(const std::string &s) -> NSString *;
 
 @interface NSObject (MFormsBase)
 

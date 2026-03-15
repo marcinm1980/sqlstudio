@@ -35,7 +35,7 @@ using namespace base;
 
 DEFAULT_LOG_DOMAIN("upgrade_helper.cpp")
 
-void XMLTraverser::cache_object_nodes(xmlNodePtr node) {
+auto XMLTraverser::cache_object_nodes(xmlNodePtr node) -> void {
   if (node == NULL) {
     logError("XMLTraverser::cache_object_nodes node is NULL");
     return;
@@ -58,7 +58,7 @@ XMLTraverser::XMLTraverser(xmlDocPtr adoc) : doc(adoc) {
   cache_object_nodes(root);
 }
 
-xmlNodePtr XMLTraverser::get_root() {
+auto XMLTraverser::get_root() -> xmlNodePtr {
   xmlNodePtr node = root->children;
 
   while (node) {
@@ -69,14 +69,14 @@ xmlNodePtr XMLTraverser::get_root() {
   return NULL;
 }
 
-std::string XMLTraverser::node_prop(xmlNodePtr node, const char *prop) {
+auto XMLTraverser::node_prop(xmlNodePtr node, const char *prop) -> std::string {
   xmlChar *s = xmlGetProp(node, (xmlChar *)prop);
   std::string str(s ? (char *)s : "");
   xmlFree(s);
   return str;
 }
 
-bool XMLTraverser::delete_object_item(xmlNodePtr objnode, const char *name) {
+auto XMLTraverser::delete_object_item(xmlNodePtr objnode, const char *name) -> bool {
   xmlNodePtr item = objnode->children;
   bool found = false;
 
@@ -97,13 +97,13 @@ bool XMLTraverser::delete_object_item(xmlNodePtr objnode, const char *name) {
   return found;
 }
 
-xmlNodePtr XMLTraverser::get_object(const char *id) {
+auto XMLTraverser::get_object(const char *id) -> xmlNodePtr {
   if (nodes_by_id.find(id) == nodes_by_id.end())
     return 0;
   return nodes_by_id[id];
 }
 
-xmlNodePtr XMLTraverser::get_object_by_path(const char *path) {
+auto XMLTraverser::get_object_by_path(const char *path) -> xmlNodePtr {
   gchar **parts = g_strsplit(path, "/", -1);
   xmlNodePtr node = get_root();
 
@@ -126,7 +126,7 @@ xmlNodePtr XMLTraverser::get_object_by_path(const char *path) {
   return node;
 }
 
-xmlNodePtr XMLTraverser::get_object_child(xmlNodePtr object, const char *key) {
+auto XMLTraverser::get_object_child(xmlNodePtr object, const char *key) -> xmlNodePtr {
   xmlNodePtr child = object->children;
   while (child) {
     if (object->type == XML_ELEMENT_NODE) {
@@ -147,7 +147,7 @@ xmlNodePtr XMLTraverser::get_object_child(xmlNodePtr object, const char *key) {
   return NULL;
 }
 
-xmlNodePtr XMLTraverser::get_object_child_by_index(xmlNodePtr object, int index) {
+auto XMLTraverser::get_object_child_by_index(xmlNodePtr object, int index) -> xmlNodePtr {
   xmlNodePtr child = object->children;
   while (child) {
     if (child->type == XML_ELEMENT_NODE) {
@@ -171,7 +171,7 @@ xmlNodePtr XMLTraverser::get_object_child_by_index(xmlNodePtr object, int index)
   return NULL;
 }
 
-double XMLTraverser::get_object_double_value(xmlNodePtr object, const char *key) {
+auto XMLTraverser::get_object_double_value(xmlNodePtr object, const char *key) -> double {
   xmlNodePtr node = get_object_child(object, key);
   if (node) {
     xmlChar *content = xmlNodeGetContent(node);
@@ -182,13 +182,13 @@ double XMLTraverser::get_object_double_value(xmlNodePtr object, const char *key)
   return 0.0;
 }
 
-void XMLTraverser::set_object_child(xmlNodePtr object, const char *key, xmlNodePtr value) {
+auto XMLTraverser::set_object_child(xmlNodePtr object, const char *key, xmlNodePtr value) -> void {
   value = xmlAddChild(object, value);
 
   xmlSetProp(value, (xmlChar *)"key", (xmlChar *)key);
 }
 
-void XMLTraverser::set_object_link(xmlNodePtr object, const char *key, xmlNodePtr target_object) {
+auto XMLTraverser::set_object_link(xmlNodePtr object, const char *key, xmlNodePtr target_object) -> void {
   xmlNodePtr link;
   std::string target_id = node_prop(target_object, "id");
   std::string struct_name = node_prop(target_object, "struct-name");
@@ -201,8 +201,8 @@ void XMLTraverser::set_object_link(xmlNodePtr object, const char *key, xmlNodePt
   xmlNewProp(link, (xmlChar *)"key", (xmlChar *)key);
 }
 
-void XMLTraverser::set_object_link_literal(xmlNodePtr object, const char *key, const char *value,
-                                           const char *struct_name) {
+auto XMLTraverser::set_object_link_literal(xmlNodePtr object, const char *key, const char *value,
+                                           const char *struct_name) -> void {
   xmlNodePtr link;
 
   delete_object_item(object, key);
@@ -213,7 +213,7 @@ void XMLTraverser::set_object_link_literal(xmlNodePtr object, const char *key, c
   xmlNewProp(link, (xmlChar *)"key", (xmlChar *)key);
 }
 
-std::vector<xmlNodePtr> XMLTraverser::scan_objects_of_type(const char *struct_name) {
+auto XMLTraverser::scan_objects_of_type(const char *struct_name) -> std::vector<xmlNodePtr> {
   std::vector<xmlNodePtr> list;
 
   for (std::map<std::string, xmlNodePtr>::iterator iter = nodes_by_id.begin(); iter != nodes_by_id.end(); ++iter) {
@@ -224,7 +224,7 @@ std::vector<xmlNodePtr> XMLTraverser::scan_objects_of_type(const char *struct_na
   return list;
 }
 
-std::list<xmlNodePtr> XMLTraverser::scan_nodes_with_key(const char *name, xmlNodePtr parent) {
+auto XMLTraverser::scan_nodes_with_key(const char *name, xmlNodePtr parent) -> std::list<xmlNodePtr> {
   std::list<xmlNodePtr> list;
   xmlNodePtr node;
 
@@ -244,7 +244,7 @@ std::list<xmlNodePtr> XMLTraverser::scan_nodes_with_key(const char *name, xmlNod
   return list;
 }
 
-static void traverse_subtree_node(xmlNodePtr parent, const std::function<bool(xmlNodePtr, xmlNodePtr)> &callback) {
+static auto traverse_subtree_node(xmlNodePtr parent, const std::function<bool(xmlNodePtr, xmlNodePtr)> &callback) -> void {
   for (xmlNodePtr node = parent->children; node != NULL; node = node->next) {
     if (node->type == XML_ELEMENT_NODE &&
         (xmlStrcmp(node->name, (xmlChar *)"value") == 0 || xmlStrcmp(node->name, (xmlChar *)"link") == 0)) {
@@ -254,14 +254,14 @@ static void traverse_subtree_node(xmlNodePtr parent, const std::function<bool(xm
   }
 }
 
-void XMLTraverser::traverse_subtree(const char *path, const std::function<bool(xmlNodePtr, xmlNodePtr)> &callback) {
+auto XMLTraverser::traverse_subtree(const char *path, const std::function<bool(xmlNodePtr, xmlNodePtr)> &callback) -> void {
   xmlNodePtr node = get_object_by_path(path);
 
   if (node)
     traverse_subtree_node(node, callback);
 }
 
-xmlNodePtr create_grt_object_node(const char *id, const char *struct_type) {
+auto create_grt_object_node(const char *id, const char *struct_type) -> xmlNodePtr {
   xmlNodePtr node = xmlNewNode(NULL, (xmlChar *)"value");
 
   xmlNewProp(node, (xmlChar *)"type", (xmlChar *)"object");
@@ -271,13 +271,13 @@ xmlNodePtr create_grt_object_node(const char *id, const char *struct_type) {
   return node;
 }
 
-void set_grt_object_item(xmlNodePtr objnode, const char *name, xmlNodePtr item) {
+auto set_grt_object_item(xmlNodePtr objnode, const char *name, xmlNodePtr item) -> void {
   xmlAddChild(objnode, item);
 
   xmlNewProp(item, (xmlChar *)"key", (xmlChar *)name);
 }
 
-void set_grt_object_item_link(xmlNodePtr objnode, const char *name, const char *struct_type, const char *oid) {
+auto set_grt_object_item_link(xmlNodePtr objnode, const char *name, const char *struct_type, const char *oid) -> void {
   xmlNodePtr node = xmlNewTextChild(objnode, NULL, (xmlChar *)"link", (xmlChar *)oid);
 
   xmlNewProp(node, (xmlChar *)"key", (xmlChar *)name);
@@ -285,21 +285,21 @@ void set_grt_object_item_link(xmlNodePtr objnode, const char *name, const char *
   xmlNewProp(node, (xmlChar *)"struct-name", (xmlChar *)struct_type);
 }
 
-void set_grt_object_item_value(xmlNodePtr objnode, const char *name, const char *value) {
+auto set_grt_object_item_value(xmlNodePtr objnode, const char *name, const char *value) -> void {
   xmlNodePtr node = xmlNewTextChild(objnode, NULL, (xmlChar *)"value", (xmlChar *)value);
 
   xmlNewProp(node, (xmlChar *)"key", (xmlChar *)name);
   xmlNewProp(node, (xmlChar *)"type", (xmlChar *)"string");
 }
 
-void set_grt_object_item_value(xmlNodePtr objnode, const char *name, double value) {
+auto set_grt_object_item_value(xmlNodePtr objnode, const char *name, double value) -> void {
   xmlNodePtr node = xmlNewTextChild(objnode, NULL, (xmlChar *)"value", (xmlChar *)strfmt("%f", value).c_str());
 
   xmlNewProp(node, (xmlChar *)"key", (xmlChar *)name);
   xmlNewProp(node, (xmlChar *)"type", (xmlChar *)"real");
 }
 
-void find_replace_xml_attribute(xmlNodePtr root, const char *attr, const char *from, const char *to) {
+auto find_replace_xml_attribute(xmlNodePtr root, const char *attr, const char *from, const char *to) -> void {
   xmlChar *tmp = xmlGetProp(root, (xmlChar *)attr);
   if (tmp && strcmp((char *)tmp, from) == 0)
     xmlSetProp(root, (xmlChar *)attr, (xmlChar *)to);
@@ -315,8 +315,8 @@ void find_replace_xml_attribute(xmlNodePtr root, const char *attr, const char *f
 }
 
 // from_list and to_list must have the same number of items
-void find_replace_xml_attributes(xmlNodePtr root, const char **attr_list, const char **from_list,
-                                 const char **to_list) {
+auto find_replace_xml_attributes(xmlNodePtr root, const char **attr_list, const char **from_list,
+                                 const char **to_list) -> void {
   for (const char **attr = attr_list; *attr != NULL; attr++) {
     xmlChar *tmp = xmlGetProp(root, (xmlChar *)*attr);
 
@@ -342,7 +342,7 @@ void find_replace_xml_attributes(xmlNodePtr root, const char **attr_list, const 
   }
 }
 
-void rename_xml_grt_members(xmlNodePtr root, const char **klass, const char **name_from, const char **name_to) {
+auto rename_xml_grt_members(xmlNodePtr root, const char **klass, const char **name_from, const char **name_to) -> void {
   xmlChar *klass_name = xmlGetProp(root, (xmlChar *)"struct-name");
 
   xmlNodePtr child = root->children;
@@ -370,7 +370,7 @@ void rename_xml_grt_members(xmlNodePtr root, const char **klass, const char **na
     xmlFree(klass_name);
 }
 
-void delete_xml_grt_members(xmlNodePtr root, const char **klass, const char **name) {
+auto delete_xml_grt_members(xmlNodePtr root, const char **klass, const char **name) -> void {
   xmlChar *klass_name = xmlGetProp(root, (xmlChar *)"struct-name");
 
   xmlNodePtr child = root->children;

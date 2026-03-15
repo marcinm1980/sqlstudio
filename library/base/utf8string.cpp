@@ -58,8 +58,8 @@ namespace base {
   }
   */
   // Second overload: stop when reaching maxlen.
-  static utf8string::size_type utf8_byte_offset(const char* str, utf8string::size_type offset,
-                                                utf8string::size_type maxlen) {
+  static auto utf8_byte_offset(const char* str, utf8string::size_type offset,
+                                                utf8string::size_type maxlen) -> utf8string::size_type {
     if (offset == utf8string::npos)
       return utf8string::npos;
 
@@ -79,12 +79,12 @@ namespace base {
 
   // Third overload: stop when reaching str.size().
   //
-  inline utf8string::size_type utf8_byte_offset(const std::string& str, utf8string::size_type offset) {
+  inline auto utf8_byte_offset(const std::string& str, utf8string::size_type offset) -> utf8string::size_type {
     return utf8_byte_offset(str.data(), offset, str.size());
   }
 
   // Converts byte offset to UTF-8 character offset.
-  inline utf8string::size_type utf8_char_offset(const std::string& str, utf8string::size_type offset) {
+  inline auto utf8_char_offset(const std::string& str, utf8string::size_type offset) -> utf8string::size_type {
     if (offset == utf8string::npos)
       return utf8string::npos;
 
@@ -94,8 +94,8 @@ namespace base {
 
   // Helper to implement ustring::find_first_of() and find_first_not_of().
   // Returns the UTF-8 character offset, or ustring::npos if not found.
-  static utf8string::size_type utf8_find_first_of(const std::string& str, utf8string::size_type offset,
-                                                  const char* utf8_match, long utf8_match_size, bool find_not_of) {
+  static auto utf8_find_first_of(const std::string& str, utf8string::size_type offset,
+                                                  const char* utf8_match, long utf8_match_size, bool find_not_of) -> utf8string::size_type {
     const utf8string::size_type byte_offset = utf8_byte_offset(str, offset);
     if (byte_offset == utf8string::npos)
       return utf8string::npos;
@@ -139,10 +139,10 @@ namespace base {
         _count = utf8_byte_offset(str.data() + _index, count, str.size() - _index);
     }
 
-    utf8string::size_type index() const {
+    auto index() const -> utf8string::size_type {
       return _index;
     }
-    utf8string::size_type count() const {
+    auto count() const -> utf8string::size_type {
       return _count;
     }
   };
@@ -205,7 +205,7 @@ namespace base {
     return _buffer;
   }
 
-  size_t utf8string::utf8char::length() const {
+  auto utf8string::utf8char::length() const -> size_t {
     return _length;
   }
 
@@ -261,34 +261,34 @@ namespace base {
     _inner_string.assign(str._inner_string, b.index(), b.count());
   }
 
-  size_t utf8string::bytes() const {
+  auto utf8string::bytes() const -> size_t {
     return _inner_string.size();
   }
 
-  std::string utf8string::to_string() const {
+  auto utf8string::to_string() const -> std::string {
     return _inner_string;
   }
 
-  std::wstring utf8string::to_wstring() const {
+  auto utf8string::to_wstring() const -> std::wstring {
     return base::string_to_wstring(_inner_string);
   }
 
-  utf8string utf8string::substr(const size_t start, size_t count) const {
+  auto utf8string::substr(const size_t start, size_t count) const -> utf8string {
     return utf8string(*this, start, count);
   }
 
-  bool utf8string::validate() const {
+  auto utf8string::validate() const -> bool {
     return g_utf8_validate(_inner_string.c_str(), -1, nullptr) == TRUE;
   }
 
-  utf8string utf8string::normalize() const {
+  auto utf8string::normalize() const -> utf8string {
     gchar* norm = g_utf8_normalize(_inner_string.c_str(), -1, G_NORMALIZE_DEFAULT);
     utf8string result = norm;
     g_free(norm);
     return result;
   }
 
-  utf8string utf8string::trim_right() {
+  auto utf8string::trim_right() -> utf8string {
     for (std::string::reverse_iterator iter = _inner_string.rbegin(); iter != _inner_string.rend(); ++iter) {
       if (std::isspace((unsigned char)*iter))
         continue;
@@ -297,7 +297,7 @@ namespace base {
     return "";
   }
 
-  utf8string utf8string::trim_left() {
+  auto utf8string::trim_left() -> utf8string {
     for (std::string::iterator iter = _inner_string.begin(); iter != _inner_string.end(); ++iter) {
       if (std::isspace((unsigned char)*iter))
         continue;
@@ -306,11 +306,11 @@ namespace base {
     return "";
   }
 
-  utf8string utf8string::trim() {
+  auto utf8string::trim() -> utf8string {
     return trim_left().trim_right();
   }
 
-  int utf8string::compareNormalized(const utf8string& s) const {
+  auto utf8string::compareNormalized(const utf8string& s) const -> int {
     return g_utf8_collate(normalize().c_str(), s.normalize().c_str());
   }
 
@@ -351,28 +351,28 @@ namespace base {
     return !(*this < s);
   }
 
-  utf8string utf8string::to_lower() const {
+  auto utf8string::to_lower() const -> utf8string {
     gchar* down = g_utf8_strdown(_inner_string.c_str(), _inner_string.size());
     utf8string result(down);
     g_free(down);
     return result;
   }
 
-  utf8string utf8string::to_upper() const {
+  auto utf8string::to_upper() const -> utf8string {
     gchar* up = g_utf8_strup(_inner_string.c_str(), _inner_string.size());
     utf8string result(up);
     g_free(up);
     return result;
   }
 
-  utf8string utf8string::to_case_fold() const {
+  auto utf8string::to_case_fold() const -> utf8string {
     gchar* casefold = g_utf8_casefold(_inner_string.c_str(), _inner_string.size());
     utf8string result(casefold);
     g_free(casefold);
     return result;
   }
 
-  utf8string utf8string::strfmt(const char* fmt, ...) {
+  auto utf8string::strfmt(const char* fmt, ...) -> utf8string {
     va_list args;
     char* str;
     utf8string result;
@@ -387,7 +387,7 @@ namespace base {
     return result;
   }
 
-  utf8string utf8string::truncate(const size_t max_length) {
+  auto utf8string::truncate(const size_t max_length) -> utf8string {
     if (length() <=
         (max_length +
          3)) // Account for current length + "..."...it's not worth to truncate if the resulting string is bigger
@@ -397,7 +397,7 @@ namespace base {
     return shortened;
   }
 
-  std::vector<utf8string> utf8string::split(const utf8string& sep, int count) {
+  auto utf8string::split(const utf8string& sep, int count) -> std::vector<utf8string> {
     std::vector<utf8string> parts;
 
     if (empty())
@@ -422,18 +422,18 @@ namespace base {
     return parts;
   }
 
-  bool utf8string::starts_with(const utf8string& s) const {
+  auto utf8string::starts_with(const utf8string& s) const -> bool {
     return 0 == compare(0, s.bytes(), s);
   }
 
-  bool utf8string::ends_with(const utf8string& s) const {
+  auto utf8string::ends_with(const utf8string& s) const -> bool {
     if (s.bytes() > bytes())
       return false;
 
     return compare(size() - s.size(), std::string::npos, s) == 0;
   }
 
-  bool utf8string::contains(const utf8string& s, const bool case_sensitive) const {
+  auto utf8string::contains(const utf8string& s, const bool case_sensitive) const -> bool {
     if (bytes() == 0 || s.bytes() == 0)
       return false;
 
@@ -479,11 +479,11 @@ namespace base {
     return result;
   }
 
-  size_t utf8string::charIndexToByteOffset(const size_t index) const {
+  auto utf8string::charIndexToByteOffset(const size_t index) const -> size_t {
     return g_utf8_offset_to_pointer(this->c_str(), (glong)index) - this->c_str();
   }
 
-  size_t utf8string::byteOffsetToCharIndex(const size_t offset) const {
+  auto utf8string::byteOffsetToCharIndex(const size_t offset) const -> size_t {
     return g_utf8_pointer_to_offset(this->c_str(), this->c_str() + offset);
   }
 
@@ -519,11 +519,11 @@ namespace base {
     return result;
   }
 
-  utf8string::iterator utf8string::begin() const {
+  auto utf8string::begin() const -> utf8string::iterator {
     return iterator(const_cast<char*>(_inner_string.c_str()));
   }
 
-  utf8string::iterator utf8string::end() const {
+  auto utf8string::end() const -> utf8string::iterator {
     char* s = const_cast<char*>(_inner_string.c_str());
     return iterator(s, s + _inner_string.size());
   }
@@ -531,7 +531,7 @@ namespace base {
   //////////////////////////////////////////////////////////////////////////////
   //  Operations
   //////////////////////////////////////////////////////////////////////////////
-  utf8string& utf8string::erase(size_type index, size_type count) {
+  auto utf8string::erase(size_type index, size_type count) -> utf8string& {
     const bounds b(_inner_string, index, count);
     _inner_string.erase(b.index(), b.count());
     return *this;
@@ -539,22 +539,22 @@ namespace base {
   //
   //  Append
   //
-  utf8string& utf8string::append(const char* s) {
+  auto utf8string::append(const char* s) -> utf8string& {
     _inner_string += s;
     return *this;
   }
 
-  utf8string& utf8string::append(size_type count, char ch) {
+  auto utf8string::append(size_type count, char ch) -> utf8string& {
     _inner_string.append(count, ch);
     return *this;
   }
 
-  utf8string& utf8string::append(size_type count, utf8string::utf8char ch) {
+  auto utf8string::append(size_type count, utf8string::utf8char ch) -> utf8string& {
     _inner_string.append(utf8string(count, ch)._inner_string);
     return *this;
   }
 
-  utf8string& utf8string::append(const utf8string& str) {
+  auto utf8string::append(const utf8string& str) -> utf8string& {
     _inner_string += str._inner_string;
     return *this;
   }
@@ -580,30 +580,30 @@ namespace base {
   //
   //  Compare
   //
-  int utf8string::compare(const utf8string& s) const {
+  auto utf8string::compare(const utf8string& s) const -> int {
     return g_utf8_collate(_inner_string.c_str(), s._inner_string.c_str());
   }
 
-  int utf8string::compare(const char* s) const {
+  auto utf8string::compare(const char* s) const -> int {
     return g_utf8_collate(_inner_string.c_str(), s);
   }
 
-  int utf8string::compare(size_type pos1, size_type count1, const utf8string& str) const {
+  auto utf8string::compare(size_type pos1, size_type count1, const utf8string& str) const -> int {
     return utf8string(*this, pos1, count1).compare(str);
   }
 
   //////////////////////////////////////////////////////////////////////////////
   // Element access
   //////////////////////////////////////////////////////////////////////////////
-  const char* utf8string::c_str() const {
+  auto utf8string::c_str() const -> const char* {
     return _inner_string.c_str();
   }
 
-  const char* utf8string::data() const {
+  auto utf8string::data() const -> const char* {
     return _inner_string.data();
   }
 
-  base::utf8string::const_reference utf8string::at(size_type pos) const {
+  auto utf8string::at(size_type pos) const -> base::utf8string::const_reference {
     const size_type byte_offset = utf8_byte_offset(_inner_string, pos);
 
     // Throws std::out_of_range if the index is invalid.
@@ -617,18 +617,18 @@ namespace base {
   //////////////////////////////////////////////////////////////////////////////
   //  Capacity
   //////////////////////////////////////////////////////////////////////////////
-  size_t utf8string::size() const {
+  auto utf8string::size() const -> size_t {
     const char* ptr = _inner_string.data();
     return g_utf8_pointer_to_offset(ptr, ptr + _inner_string.size());
   }
 
-  size_t utf8string::length() const {
+  auto utf8string::length() const -> size_t {
     const char* ptr = _inner_string.data();
     // return g_utf8_pointer_to_offset(ptr, ptr + _inner_string.size());
     return g_utf8_strlen(ptr, _inner_string.size());
   }
 
-  void utf8string::resize(size_t n) {
+  auto utf8string::resize(size_t n) -> void {
     const size_type size_now = size();
     if (n < size_now)
       erase(n, npos);
@@ -636,7 +636,7 @@ namespace base {
       append(n - size_now, 0);
   }
 
-  void utf8string::resize(size_t n, char c) {
+  auto utf8string::resize(size_t n, char c) -> void {
     const size_type size_now = size();
     if (n < size_now)
       erase(n, npos);
@@ -644,56 +644,56 @@ namespace base {
       _inner_string.append(n - size_now, c);
   }
 
-  bool utf8string::empty() const {
+  auto utf8string::empty() const -> bool {
     return _inner_string.empty();
   }
 
-  size_t utf8string::capacity() const {
+  auto utf8string::capacity() const -> size_t {
     return _inner_string.capacity();
   }
 
-  size_t utf8string::max_size() {
+  auto utf8string::max_size() -> size_t {
     return _inner_string.max_size();
   }
 
   //////////////////////////////////////////////////////////////////////////////
   //  Search
   //////////////////////////////////////////////////////////////////////////////
-  utf8string::size_type utf8string::find(const char* s, size_type pos) const {
+  auto utf8string::find(const char* s, size_type pos) const -> utf8string::size_type {
     return utf8_char_offset(_inner_string, _inner_string.find(s, utf8_byte_offset(_inner_string, pos)));
   }
 
-  utf8string::size_type utf8string::find(const utf8string& s, size_type pos) const {
+  auto utf8string::find(const utf8string& s, size_type pos) const -> utf8string::size_type {
     return utf8_char_offset(_inner_string, _inner_string.find(s._inner_string, utf8_byte_offset(_inner_string, pos)));
   }
 
-  utf8string::size_type utf8string::find(char ch, size_type pos) const {
+  auto utf8string::find(char ch, size_type pos) const -> utf8string::size_type {
     return utf8_char_offset(_inner_string, _inner_string.find(ch, utf8_byte_offset(_inner_string, pos)));
   }
 
-  utf8string::size_type utf8string::find(const utf8string::utf8char& ch, size_type pos) const {
+  auto utf8string::find(const utf8string::utf8char& ch, size_type pos) const -> utf8string::size_type {
     return utf8_char_offset(_inner_string,
                             _inner_string.find((const char*)ch, utf8_byte_offset(_inner_string, pos), ch.length()));
   }
 
-  utf8string::size_type utf8string::find_first_of(const utf8string& str, size_type pos) const {
+  auto utf8string::find_first_of(const utf8string& str, size_type pos) const -> utf8string::size_type {
     return utf8_find_first_of(_inner_string, pos, str._inner_string.data(), (long)str._inner_string.size(), false);
   }
 
-  utf8string::size_type utf8string::find_first_not_of(const char* s, size_type pos) const {
+  auto utf8string::find_first_not_of(const char* s, size_type pos) const -> utf8string::size_type {
     return utf8_find_first_of(_inner_string, pos, s, -1, true);
   }
 
   //////////////////////////////////////////////////////////////////////////////
   //  New functionality
   //////////////////////////////////////////////////////////////////////////////
-  utf8string utf8string::left(size_t s) {
+  auto utf8string::left(size_t s) -> utf8string {
     if (s >= length())
       return *this;
     return substr(0, s);
   }
 
-  utf8string utf8string::right(size_t s) {
+  auto utf8string::right(size_t s) -> utf8string {
     if (s >= length())
       return *this;
     return substr(length() - s);

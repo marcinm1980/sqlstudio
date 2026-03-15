@@ -57,12 +57,12 @@ PluginEditorBase::~PluginEditorBase() {
 
 //------------------------------------------------------------------------------
 
-std::string PluginEditorBase::get_title() {
+auto PluginEditorBase::get_title() -> std::string {
   return get_be()->get_title();
 }
 
 //------------------------------------------------------------------------------
-void PluginEditorBase::load_glade(const char *glade_xml_filename) {
+auto PluginEditorBase::load_glade(const char *glade_xml_filename) -> void {
   if (_xml)
     throw std::logic_error("XML already created"); // TODO: better message here
 
@@ -74,7 +74,7 @@ void PluginEditorBase::load_glade(const char *glade_xml_filename) {
 }
 
 //------------------------------------------------------------------------------
-void PluginEditorBase::refresh_form_data() {
+auto PluginEditorBase::refresh_form_data() -> void {
   if (_refreshing)
     return;
 
@@ -88,11 +88,11 @@ void PluginEditorBase::refresh_form_data() {
 }
 
 //------------------------------------------------------------------------------
-bool PluginEditorBase::is_editing_live_object() {
+auto PluginEditorBase::is_editing_live_object() -> bool {
   return get_be()->is_editing_live_object();
 }
 //------------------------------------------------------------------------------
-void PluginEditorBase::decorate_object_editor() {
+auto PluginEditorBase::decorate_object_editor() -> void {
   if (!_editor_notebook)
     return;
 
@@ -131,7 +131,7 @@ void PluginEditorBase::decorate_object_editor() {
   }
 }
 //------------------------------------------------------------------------------
-void PluginEditorBase::apply_changes_to_live_object() {
+auto PluginEditorBase::apply_changes_to_live_object() -> void {
   // make sure changes to a treeview are committed
   Gtk::Widget *focus = dynamic_cast<Gtk::Window *>(_editor_notebook->get_toplevel())->get_focus();
   if (focus && dynamic_cast<Gtk::Entry *>(focus)) {
@@ -144,11 +144,11 @@ void PluginEditorBase::apply_changes_to_live_object() {
   editor->apply_changes_to_live_object();
 }
 //------------------------------------------------------------------------------
-void PluginEditorBase::revert_changes_to_live_object() {
+auto PluginEditorBase::revert_changes_to_live_object() -> void {
   get_be()->revert_changes_to_live_object();
 }
 //------------------------------------------------------------------------------
-void PluginEditorBase::close_live_object_editor() {
+auto PluginEditorBase::close_live_object_editor() -> void {
   if (get_be()->can_close()) {
     Gtk::Notebook *notebook = dynamic_cast<Gtk::Notebook *>(get_parent());
     if (notebook) {
@@ -170,15 +170,15 @@ void PluginEditorBase::close_live_object_editor() {
 }
 //------------------------------------------------------------------------------
 
-void PluginEditorBase::add_option_combo_change_handler(Gtk::ComboBox *combo, const std::string &option,
-                                                       const sigc::slot<void, std::string, std::string> &setter) {
+auto PluginEditorBase::add_option_combo_change_handler(Gtk::ComboBox *combo, const std::string &option,
+                                                       const sigc::slot<void, std::string, std::string> &setter) -> void {
   combo->signal_changed().connect(
     sigc::bind(sigc::mem_fun(this, &PluginEditorBase::combo_changed), combo, option, setter));
 }
 
 //------------------------------------------------------------------------------
-sigc::connection PluginEditorBase::add_entry_change_timer(Gtk::Entry *entry,
-                                                          const sigc::slot<void, std::string> &setter) {
+auto PluginEditorBase::add_entry_change_timer(Gtk::Entry *entry,
+                                                          const sigc::slot<void, std::string> &setter) -> sigc::connection {
   TextChangeTimer timer;
 
   timer.commit = sigc::bind(sigc::mem_fun(this, &PluginEditorBase::entry_timeout), entry);
@@ -189,8 +189,8 @@ sigc::connection PluginEditorBase::add_entry_change_timer(Gtk::Entry *entry,
 }
 
 //------------------------------------------------------------------------------
-sigc::connection PluginEditorBase::add_text_change_timer(Gtk::TextView *text,
-                                                         const sigc::slot<void, std::string> &setter) {
+auto PluginEditorBase::add_text_change_timer(Gtk::TextView *text,
+                                                         const sigc::slot<void, std::string> &setter) -> sigc::connection {
   TextChangeTimer timer;
 
   timer.commit = sigc::bind(sigc::mem_fun(this, &PluginEditorBase::text_timeout), text);
@@ -202,19 +202,19 @@ sigc::connection PluginEditorBase::add_text_change_timer(Gtk::TextView *text,
 }
 
 //------------------------------------------------------------------------------
-bool PluginEditorBase::entry_timeout(Gtk::Entry *entry) {
+auto PluginEditorBase::entry_timeout(Gtk::Entry *entry) -> bool {
   _timers[entry].setter(entry->get_text());
   return false;
 }
 
 //------------------------------------------------------------------------------
-bool PluginEditorBase::text_timeout(Gtk::TextView *text) {
+auto PluginEditorBase::text_timeout(Gtk::TextView *text) -> bool {
   _timers[text].setter(text->get_buffer()->get_text());
   return false;
 }
 
 //------------------------------------------------------------------------------
-void PluginEditorBase::entry_changed(Gtk::Entry *entry) {
+auto PluginEditorBase::entry_changed(Gtk::Entry *entry) -> void {
   if (!_refreshing) {
     if (_timers[entry].conn)
       _timers[entry].conn.disconnect();
@@ -224,7 +224,7 @@ void PluginEditorBase::entry_changed(Gtk::Entry *entry) {
 }
 
 //------------------------------------------------------------------------------
-void PluginEditorBase::text_changed(Gtk::TextView *text) {
+auto PluginEditorBase::text_changed(Gtk::TextView *text) -> void {
   if (!_refreshing) {
     if (_timers[text].conn)
       _timers[text].conn.disconnect();
@@ -234,7 +234,7 @@ void PluginEditorBase::text_changed(Gtk::TextView *text) {
 }
 
 //------------------------------------------------------------------------------
-void PluginEditorBase::commit_text_changes() {
+auto PluginEditorBase::commit_text_changes() -> void {
   for (std::map<Gtk::Widget *, TextChangeTimer>::iterator iter = _timers.begin(); iter != _timers.end(); ++iter) {
     if (iter->second.conn) {
       iter->second.commit();
@@ -244,8 +244,8 @@ void PluginEditorBase::commit_text_changes() {
 }
 
 //------------------------------------------------------------------------------
-void PluginEditorBase::combo_changed(Gtk::ComboBox *combo, const std::string &option,
-                                     const sigc::slot<void, std::string, std::string> &setter) {
+auto PluginEditorBase::combo_changed(Gtk::ComboBox *combo, const std::string &option,
+                                     const sigc::slot<void, std::string, std::string> &setter) -> void {
   if (!_refreshing) {
     Gtk::TreeModel::iterator iter = combo->get_active();
     if (iter) {
@@ -257,12 +257,12 @@ void PluginEditorBase::combo_changed(Gtk::ComboBox *combo, const std::string &op
   }
 }
 
-bool PluginEditorBase::should_close_on_delete_of(const std::string &oid) {
+auto PluginEditorBase::should_close_on_delete_of(const std::string &oid) -> bool {
   return get_be()->should_close_on_delete_of(oid);
 }
 
 //------------------------------------------------------------------------------
-void PluginEditorBase::embed_code_editor(mforms::View *container, Gtk::Box *vbox, bool commit_on_focus_out) {
+auto PluginEditorBase::embed_code_editor(mforms::View *container, Gtk::Box *vbox, bool commit_on_focus_out) -> void {
   if (_old_embedded_editor)
     vbox->remove(*_old_embedded_editor);
   if (_old_embedded_find)
@@ -284,6 +284,6 @@ void PluginEditorBase::embed_code_editor(mforms::View *container, Gtk::Box *vbox
   }
 }
 
-void PluginEditorBase::focus_widget_when_idle(Gtk::Widget *w) {
+auto PluginEditorBase::focus_widget_when_idle(Gtk::Widget *w) -> void {
   Glib::signal_idle().connect(sigc::bind_return(sigc::mem_fun(w, &Gtk::Widget::grab_focus), false));
 }

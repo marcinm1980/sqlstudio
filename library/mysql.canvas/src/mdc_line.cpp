@@ -43,7 +43,7 @@ LineLayouter::LineLayouter() {
 LineLayouter::~LineLayouter() {
 }
 
-std::vector<ItemHandle *> LineLayouter::create_handles(Line *line, InteractionLayer *ilayer) {
+auto LineLayouter::create_handles(Line *line, InteractionLayer *ilayer) -> std::vector<ItemHandle *> {
   std::vector<ItemHandle *> handles;
   ItemHandle *hdl;
 
@@ -66,7 +66,7 @@ std::vector<ItemHandle *> LineLayouter::create_handles(Line *line, InteractionLa
   return handles;
 }
 
-void LineLayouter::update_handles(Line *line, std::vector<ItemHandle *> &handles) {
+auto LineLayouter::update_handles(Line *line, std::vector<ItemHandle *> &handles) -> void {
   if (!handles.empty()) {
     for (std::vector<ItemHandle *>::iterator hdl = handles.begin(); hdl != handles.end(); ++hdl) {
       if ((*hdl)->get_tag() == 1)
@@ -77,7 +77,7 @@ void LineLayouter::update_handles(Line *line, std::vector<ItemHandle *> &handles
   }
 }
 
-bool LineLayouter::handle_dragged(Line *line, ItemHandle *handle, const Point &pos, bool dragging) {
+auto LineLayouter::handle_dragged(Line *line, ItemHandle *handle, const Point &pos, bool dragging) -> bool {
   return false;
 }
 
@@ -108,7 +108,7 @@ Line::~Line() {
   delete _layouter;
 }
 
-void Line::set_layouter(LineLayouter *layouter) {
+auto Line::set_layouter(LineLayouter *layouter) -> void {
   _layouter = layouter;
 
   scoped_connect(_layouter->signal_changed(), std::bind(&Line::update_layout, this));
@@ -116,7 +116,7 @@ void Line::set_layouter(LineLayouter *layouter) {
   _layouter->update();
 }
 
-void Line::update_layout() {
+auto Line::update_layout() -> void {
   set_vertices(_layouter->get_points());
 
   if (_hop_crossings)
@@ -140,7 +140,7 @@ static double dashes[9][5] = {
   {4, 10, 2, 4, 2}  // DashDot2Pattern
 };
 
-void Line::set_line_pattern(CairoCtx *cr, LinePatternType pattern) {
+auto Line::set_line_pattern(CairoCtx *cr, LinePatternType pattern) -> void {
   if (pattern != SolidPattern) {
     if (dashes[pattern][0] != 0.0)
       cr->set_dash(dashes[pattern] + 1, (int)dashes[pattern][0], 0.0);
@@ -152,7 +152,7 @@ void Line::set_line_pattern(CairoCtx *cr, LinePatternType pattern) {
 /**
  * Converts the given internal patter type to a bit pattern that can be used by OpenGL.
  */
-GLushort Line::get_gl_pattern(LinePatternType pattern) {
+auto Line::get_gl_pattern(LinePatternType pattern) -> GLushort {
   if (pattern == SolidPattern)
     return 0xFFFF;
 
@@ -187,7 +187,7 @@ GLushort Line::get_gl_pattern(LinePatternType pattern) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Line::draw_contents(CairoCtx *cr) {
+auto Line::draw_contents(CairoCtx *cr) -> void {
   cr->translate(get_position());
 
 #if 0
@@ -226,7 +226,7 @@ void Line::draw_contents(CairoCtx *cr) {
   draw_line_ends(cr);
 }
 
-bool Line::contains_point(const Point &point) const {
+auto Line::contains_point(const Point &point) const -> bool {
   Point p;
 
   // if the line is horizontal or vertical, the bounding box is too small, so we give some slack
@@ -284,7 +284,7 @@ bool Line::contains_point(const Point &point) const {
 
 //--------------------------------------------------------------------------------------------------
 
-void Line::draw_outline_ring(CairoCtx *cr, const Color &color) {
+auto Line::draw_outline_ring(CairoCtx *cr, const Color &color) -> void {
   Point position = get_position();
   cr->save();
 
@@ -304,7 +304,7 @@ void Line::draw_outline_ring(CairoCtx *cr, const Color &color) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Line::draw_outline_ring_gl(const Color &color) {
+auto Line::draw_outline_ring_gl(const Color &color) -> void {
 #ifndef __APPLE__
   Point position = get_position();
   glMatrixMode(GL_MODELVIEW);
@@ -325,7 +325,7 @@ void Line::draw_outline_ring_gl(const Color &color) {
 
 //--------------------------------------------------------------------------------------------------
 
-static void draw_line_end(CairoCtx *cr, LineEndType type, const Color &lcolor, const Color &bcolor) {
+static auto draw_line_end(CairoCtx *cr, LineEndType type, const Color &lcolor, const Color &bcolor) -> void {
   switch (type) {
     case DashedNormalEnd:
     case NormalEnd:
@@ -459,7 +459,7 @@ static void draw_line_end(CairoCtx *cr, LineEndType type, const Color &lcolor, c
 //--------------------------------------------------------------------------------------------------
 
 #ifndef __APPLE__
-static void draw_line_end_gl(LineEndType type, const Color &lcolor, const Color &bcolor) {
+static auto draw_line_end_gl(LineEndType type, const Color &lcolor, const Color &bcolor) -> void {
   switch (type) {
     case DashedNormalEnd:
     case NormalEnd:
@@ -590,7 +590,7 @@ static void draw_line_end_gl(LineEndType type, const Color &lcolor, const Color 
 
 //--------------------------------------------------------------------------------------------------
 
-void Line::stroke_outline(CairoCtx *cr, float offset) const {
+auto Line::stroke_outline(CairoCtx *cr, float offset) const -> void {
   std::vector<SegmentPoint>::const_iterator pv, v = _segments.begin();
 
   if (v == _segments.end())
@@ -624,7 +624,7 @@ void Line::stroke_outline(CairoCtx *cr, float offset) const {
 
 //--------------------------------------------------------------------------------------------------
 
-void Line::stroke_outline_gl(float offset) const {
+auto Line::stroke_outline_gl(float offset) const -> void {
 #ifndef __APPLE__
   glBegin(GL_LINE_STRIP);
 
@@ -664,7 +664,7 @@ void Line::stroke_outline_gl(float offset) const {
 
 //--------------------------------------------------------------------------------------------------
 
-double Line::get_line_start_angle() {
+auto Line::get_line_start_angle() -> double {
   std::vector<Point>::const_iterator iter = _vertices.begin();
   ++iter;
 
@@ -673,7 +673,7 @@ double Line::get_line_start_angle() {
 
 //--------------------------------------------------------------------------------------------------
 
-double Line::get_line_end_angle() {
+auto Line::get_line_end_angle() -> double {
   std::vector<Point>::const_reverse_iterator iter = _vertices.rbegin();
   ++iter;
 
@@ -682,7 +682,7 @@ double Line::get_line_end_angle() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Line::draw_line_ends(CairoCtx *cr) {
+auto Line::draw_line_ends(CairoCtx *cr) -> void {
   cr->save();
 
   cr->translate(_segments.front().pos);
@@ -701,7 +701,7 @@ void Line::draw_line_ends(CairoCtx *cr) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Line::draw_line_ends_gl() {
+auto Line::draw_line_ends_gl() -> void {
 #ifndef __APPLE__
   glMatrixMode(GL_MODELVIEW);
 
@@ -723,44 +723,44 @@ void Line::draw_line_ends_gl() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Line::set_hops_crossings(bool flag) {
+auto Line::set_hops_crossings(bool flag) -> void {
   _hop_crossings = flag;
 }
 
-void Line::set_end_type(LineEndType start, LineEndType end) {
+auto Line::set_end_type(LineEndType start, LineEndType end) -> void {
   _start_type = start;
   _end_type = end;
   set_needs_render();
 }
 
-void Line::set_line_pattern(LinePatternType pattern) {
+auto Line::set_line_pattern(LinePatternType pattern) -> void {
   _line_pattern = pattern;
   if (_line_pattern >= LastPattern)
     _line_pattern = SolidPattern;
 }
 
-void Line::set_vertices(const std::vector<Point> &points) {
+auto Line::set_vertices(const std::vector<Point> &points) -> void {
   _vertices = points;
 
   update_bounds();
   set_needs_render();
 }
 
-void Line::add_vertex(const Point &pos) {
+auto Line::add_vertex(const Point &pos) -> void {
   _vertices.push_back(pos);
 
   update_bounds();
   set_needs_render();
 }
 
-void Line::set_vertex(size_t vertex, const Point &pos) {
+auto Line::set_vertex(size_t vertex, const Point &pos) -> void {
   _vertices[vertex] = pos;
 
   update_bounds();
   set_needs_render();
 }
 
-void Line::mark_crossings(Line *line) {
+auto Line::mark_crossings(Line *line) -> void {
   // nothing to cross with
   if (_segments.size() < 2)
     return;
@@ -828,7 +828,7 @@ void Line::mark_crossings(Line *line) {
   set_needs_render();
 }
 
-void Line::update_bounds() {
+auto Line::update_bounds() -> void {
   if (_vertices.size() <= 1) {
     set_bounds(Rect());
   } else {
@@ -859,15 +859,15 @@ void Line::update_bounds() {
   _layout_changed();
 }
 
-void Line::resize_to(const Size &size) {
+auto Line::resize_to(const Size &size) -> void {
   CanvasItem::resize_to(size);
 }
 
-void Line::move_to(const Point &pos) {
+auto Line::move_to(const Point &pos) -> void {
   CanvasItem::move_to(pos);
 }
 
-void Line::create_handles(InteractionLayer *ilayer) {
+auto Line::create_handles(InteractionLayer *ilayer) -> void {
   if (_layouter) {
     _handles = _layouter->create_handles(this, ilayer);
 
@@ -876,12 +876,12 @@ void Line::create_handles(InteractionLayer *ilayer) {
   }
 }
 
-void Line::update_handles() {
+auto Line::update_handles() -> void {
   if (_layouter)
     _layouter->update_handles(this, _handles);
 }
 
-bool Line::on_drag_handle(ItemHandle *handle, const Point &pos, bool dragging) {
+auto Line::on_drag_handle(ItemHandle *handle, const Point &pos, bool dragging) -> bool {
   if (_layouter) {
     bool flag = _layouter->handle_dragged(this, handle, pos, dragging);
     if (flag) {

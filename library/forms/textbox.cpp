@@ -37,13 +37,13 @@ TextBox::TextBox(ScrollBars scroll_bars) : _updating(false) {
   _textbox_impl->create(this, scroll_bars);
 }
 
-void TextBox::set_value(const std::string &text) {
+auto TextBox::set_value(const std::string &text) -> void {
   _updating = true;
   _textbox_impl->set_text(this, text);
   _updating = false;
 }
 
-void TextBox::append_text(const std::string &text, bool scroll_to_end) {
+auto TextBox::append_text(const std::string &text, bool scroll_to_end) -> void {
   _textbox_impl->append_text(this, text, scroll_to_end);
 }
 
@@ -53,7 +53,7 @@ void TextBox::append_text(const std::string &text, bool scroll_to_end) {
  * Convert the given text to utf-8, using the given encoding.
  * If this conversion fails simply add the text as it is to the text box.
  */
-void TextBox::append_text_with_encoding(const std::string &text, const std::string &encoding, bool scroll_to_end) {
+auto TextBox::append_text_with_encoding(const std::string &text, const std::string &encoding, bool scroll_to_end) -> void {
     if (encoding.empty() || base::tolower(encoding) == "utf8" || base::tolower(encoding) == "utf-8")
     _textbox_impl->append_text(this, text, scroll_to_end);
   else {
@@ -73,42 +73,42 @@ void TextBox::append_text_with_encoding(const std::string &text, const std::stri
 
 //--------------------------------------------------------------------------------------------------
 
-void TextBox::set_bordered(bool flag) {
+auto TextBox::set_bordered(bool flag) -> void {
   _textbox_impl->set_bordered(this, flag);
 }
 
-void TextBox::set_read_only(bool flag) {
+auto TextBox::set_read_only(bool flag) -> void {
   _textbox_impl->set_read_only(this, flag);
 }
 
-void TextBox::set_padding(int pad) {
+auto TextBox::set_padding(int pad) -> void {
   _textbox_impl->set_padding(this, pad);
 }
 
-void TextBox::set_monospaced(bool flag) {
+auto TextBox::set_monospaced(bool flag) -> void {
   _textbox_impl->set_monospaced(this, flag);
 }
 
-std::string TextBox::get_string_value() {
+auto TextBox::get_string_value() -> std::string {
   return _textbox_impl->get_text(this);
 }
 
-void TextBox::get_selected_range(int &start, int &end) {
+auto TextBox::get_selected_range(int &start, int &end) -> void {
   _textbox_impl->get_selected_range(this, start, end);
 }
 
-void TextBox::clear() {
+auto TextBox::clear() -> void {
   _textbox_impl->clear(this);
 }
 
-void TextBox::callback() {
+auto TextBox::callback() -> void {
   if (!_updating)
     _signal_changed();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TextBox::key_event(KeyCode code, ModifierKey modifiers, const std::string &text) {
+auto TextBox::key_event(KeyCode code, ModifierKey modifiers, const std::string &text) -> bool {
   // Return true if the key event can be further processed by the sender.
   // Return false if it is handled in backend code.
   if (_key_event_signal.empty())

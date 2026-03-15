@@ -57,7 +57,7 @@ grtui::DbConnectionEditor::DbConnectionEditor(const db_mgmt_ManagementRef &mgmt)
   init();
 }
 
-void grtui::DbConnectionEditor::init() {
+auto grtui::DbConnectionEditor::init() -> void {
   set_title(_("Manage DB Connections"));
 
   _top_vbox.set_padding(MF_WINDOW_PADDING);
@@ -125,7 +125,7 @@ grtui::DbConnectionEditor::~DbConnectionEditor() {
 }
 
 //------------------------------------------------------------------------------
-db_mgmt_ConnectionRef grtui::DbConnectionEditor::run(const db_mgmt_ConnectionRef &connection) {
+auto grtui::DbConnectionEditor::run(const db_mgmt_ConnectionRef &connection) -> db_mgmt_ConnectionRef {
   size_t index;
   // check if the connection is a pre-saved one and if so, just select it in the list
   if ((index = _connection_list.get_index(connection)) != grt::BaseListRef::npos) {
@@ -150,7 +150,7 @@ db_mgmt_ConnectionRef grtui::DbConnectionEditor::run(const db_mgmt_ConnectionRef
 }
 
 //--------------------------------------------------------------------------------------------------
-void grtui::DbConnectionEditor::run() {
+auto grtui::DbConnectionEditor::run() -> void {
   reset_stored_conn_list();
 
   if (run_modal(&_ok_button, &_cancel_button))
@@ -159,7 +159,7 @@ void grtui::DbConnectionEditor::run() {
 
 //--------------------------------------------------------------------------------------------------
 
-void grtui::DbConnectionEditor::reset_stored_conn_list() {
+auto grtui::DbConnectionEditor::reset_stored_conn_list() -> void {
   grt::ListRef<db_mgmt_Connection> list(_connection_list);
   std::string selected_name;
 
@@ -190,7 +190,7 @@ void grtui::DbConnectionEditor::reset_stored_conn_list() {
 }
 
 //------------------------------------------------------------------------------
-void grtui::DbConnectionEditor::add_stored_conn(bool copy) {
+auto grtui::DbConnectionEditor::add_stored_conn(bool copy) -> void {
   grt::ListRef<db_mgmt_Connection> list(_connection_list);
   size_t length = std::string("New connection 1").length() - 1;
   int max_conn_nr = 0;
@@ -227,7 +227,7 @@ void grtui::DbConnectionEditor::add_stored_conn(bool copy) {
 }
 
 //------------------------------------------------------------------------------
-void grtui::DbConnectionEditor::del_stored_conn() {
+auto grtui::DbConnectionEditor::del_stored_conn() -> void {
   int idx = _stored_connection_list.get_selected_row();
   if (idx >= 0 && idx < (int)_connection_list.count()) {
     grt::ListRef<db_mgmt_Connection> conns(_connection_list);
@@ -287,7 +287,7 @@ void grtui::DbConnectionEditor::del_stored_conn() {
 }
 
 //------------------------------------------------------------------------------
-void grtui::DbConnectionEditor::change_active_stored_conn() {
+auto grtui::DbConnectionEditor::change_active_stored_conn() -> void {
   mforms::TreeNodeRef selected = _stored_connection_list.get_selected_node();
   if (selected) {
     _panel.set_enabled(true);
@@ -311,7 +311,7 @@ void grtui::DbConnectionEditor::change_active_stored_conn() {
 }
 
 //------------------------------------------------------------------------------
-void grtui::DbConnectionEditor::name_changed() {
+auto grtui::DbConnectionEditor::name_changed() -> void {
   std::string name = _conn_name->get_string_value();
   mforms::TreeNodeRef selnode(_stored_connection_list.get_selected_node());
 
@@ -324,16 +324,16 @@ void grtui::DbConnectionEditor::name_changed() {
 }
 
 //------------------------------------------------------------------------------
-void grtui::DbConnectionEditor::ok_clicked() {
+auto grtui::DbConnectionEditor::ok_clicked() -> void {
   // dont need to do anything, the modal handler will interpret the close butto
 }
 
 //------------------------------------------------------------------------------
-void grtui::DbConnectionEditor::cancel_clicked() {
+auto grtui::DbConnectionEditor::cancel_clicked() -> void {
 }
 
 //------------------------------------------------------------------------------
-bool grtui::DbConnectionEditor::rename_stored_conn(const std::string &oname, const std::string &name) {
+auto grtui::DbConnectionEditor::rename_stored_conn(const std::string &oname, const std::string &name) -> bool {
   if (name == oname)
     return true;
 
@@ -353,7 +353,7 @@ bool grtui::DbConnectionEditor::rename_stored_conn(const std::string &oname, con
 
 //------------------------------------------------------------------------------
 
-void grtui::DbConnectionEditor::reorder_conn(bool up) {
+auto grtui::DbConnectionEditor::reorder_conn(bool up) -> void {
   grt::ListRef<db_mgmt_Connection> conns = _connection_list;
   int row = _stored_connection_list.get_selected_row();
 

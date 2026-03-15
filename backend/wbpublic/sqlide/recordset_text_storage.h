@@ -41,11 +41,11 @@ public:
     bool pre_quote_strings;
     std::string quote;
   };
-  static std::vector<Recordset_storage_info> storage_types();
+  static auto storage_types() -> std::vector<Recordset_storage_info>;
 
 public:
   typedef std::shared_ptr<Recordset_text_storage> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Recordset_text_storage());
   }
   virtual ~Recordset_text_storage();
@@ -54,27 +54,27 @@ protected:
   Recordset_text_storage();
 
 protected:
-  virtual void do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db, bool skip_commit);
-  virtual void do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db);
-  virtual void do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db);
-  virtual void do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
-                                   sqlite::variant_t &blob_value);
+  virtual auto do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db, bool skip_commit) -> void;
+  virtual auto do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  virtual auto do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  virtual auto do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
+                                   sqlite::variant_t &blob_value) -> void;
 
 public:
-  virtual ColumnId aux_column_count();
+  virtual auto aux_column_count() -> ColumnId;
 
 public:
   typedef std::map<std::string, std::string> Parameters;
 
-  void parameters(const Parameters &val) {
+  auto parameters(const Parameters &val) -> void {
     _parameters = val;
   }
-  const Parameters &parameters() const {
+  auto parameters() const -> const Parameters & {
     return _parameters;
   }
 
-  std::string parameter_value(const std::string &name) const;
-  void parameter_value(const std::string &name, const std::string &value) {
+  auto parameter_value(const std::string &name) const -> std::string;
+  auto parameter_value(const std::string &name, const std::string &value) -> void {
     _parameters[name] = value;
   }
 
@@ -82,13 +82,13 @@ protected:
   Parameters _parameters;
 
 public:
-  void data_format(const std::string &val) {
+  auto data_format(const std::string &val) -> void {
     _data_format = val;
   }
-  void file_path(const std::string &val) {
+  auto file_path(const std::string &val) -> void {
     _file_path = val;
   }
-  const std::string &file_path() const {
+  auto file_path() const -> const std::string & {
     return _file_path;
   }
 

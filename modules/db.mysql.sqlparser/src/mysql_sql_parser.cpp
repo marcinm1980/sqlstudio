@@ -50,7 +50,7 @@ class TableStorageEngines {
 public:
   TableStorageEngines() {
   }
-  void init() {
+  auto init() -> void {
     grt::ListRef<db_mysql_StorageEngine> engines;
     grt::Module *module = grt::GRT::get()->get_module("DbMySQL");
     if (!module)
@@ -65,7 +65,7 @@ public:
     }
   }
 
-  std::string normalize_name(const std::string &name) const {
+  auto normalize_name(const std::string &name) const -> std::string {
     std::string lower_cased_name = tolower(name);
     std::map<std::string, std::string>::const_iterator i = _names_index.find(lower_cased_name);
     return (_names_index.end() == i) ? name : i->second;
@@ -139,7 +139,7 @@ Mysql_sql_parser::Mysql_sql_parser()
   NULL_STATE_KEEPER
 }
 
-void Mysql_sql_parser::set_options(const grt::DictRef &options) {
+auto Mysql_sql_parser::set_options(const grt::DictRef &options) -> void {
   Mysql_sql_parser_base::set_options(options);
 
   if (!options.is_valid())
@@ -155,16 +155,16 @@ void Mysql_sql_parser::set_options(const grt::DictRef &options) {
   overwrite_default_option<grt::IntegerRef>(_reuse_existing_objects, "reuse_existing_objects", options);
 }
 
-int Mysql_sql_parser::parse_sql_script(db_CatalogRef catalog, const std::string &sql, grt::DictRef options) {
+auto Mysql_sql_parser::parse_sql_script(db_CatalogRef catalog, const std::string &sql, grt::DictRef options) -> int {
   return parse_sql_script(catalog, sql, false, options);
 }
 
-int Mysql_sql_parser::parse_sql_script_file(db_CatalogRef catalog, const std::string &filename, grt::DictRef options) {
+auto Mysql_sql_parser::parse_sql_script_file(db_CatalogRef catalog, const std::string &filename, grt::DictRef options) -> int {
   return parse_sql_script(catalog, filename, true, options);
 }
 
-int Mysql_sql_parser::parse_sql_script(db_CatalogRef &catalog, const std::string &sql, bool from_file,
-                                       grt::DictRef &options) {
+auto Mysql_sql_parser::parse_sql_script(db_CatalogRef &catalog, const std::string &sql, bool from_file,
+                                       grt::DictRef &options) -> int {
   if (!catalog.is_valid())
     return pr_invalid;
 
@@ -254,7 +254,7 @@ int Mysql_sql_parser::parse_sql_script(db_CatalogRef &catalog, const std::string
   return res;
 }
 
-int Mysql_sql_parser::process_sql_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_sql_statement(const SqlAstNode *tree) -> int {
   _reusing_existing_obj = false;
   _last_parse_result = pr_irrelevant;
 
@@ -291,7 +291,7 @@ int Mysql_sql_parser::process_sql_statement(const SqlAstNode *tree) {
   return 0; // error count
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   typedef Parse_result (Mysql_sql_parser::*statement_processor)(const SqlAstNode *);
   static statement_processor proc_arr[] = {
     &Mysql_sql_parser::process_create_table_statement,      &Mysql_sql_parser::process_create_index_statement,
@@ -315,7 +315,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_statement(const 
   return pr_irrelevant;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_drop_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   typedef Parse_result (Mysql_sql_parser::*statement_processor)(const SqlAstNode *);
   static statement_processor proc_arr[] = {
     &Mysql_sql_parser::process_drop_schema_statement,  &Mysql_sql_parser::process_drop_table_statement,
@@ -333,7 +333,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_statement(const Sq
   return pr_irrelevant;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_alter_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_alter_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   typedef Parse_result (Mysql_sql_parser::*statement_processor)(const SqlAstNode *);
   static statement_processor proc_arr[] = {
     &Mysql_sql_parser::process_alter_table_statement,
@@ -349,7 +349,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_alter_statement(const S
   return pr_irrelevant;
 }
 
-void Mysql_sql_parser::build_datatype_cache() {
+auto Mysql_sql_parser::build_datatype_cache() -> void {
   _datatype_cache = DictRef(true);
   ListRef<db_SimpleDatatype> datatypes = _catalog->simpleDatatypes();
   db_SimpleDatatypeRef datatype;
@@ -359,7 +359,7 @@ void Mysql_sql_parser::build_datatype_cache() {
   }
 }
 
-void Mysql_sql_parser::do_transactable_list_insert(ListRef<GrtObject> list, GrtObjectRef object) {
+auto Mysql_sql_parser::do_transactable_list_insert(ListRef<GrtObject> list, GrtObjectRef object) -> void {
   // this insert is important to be before check of _reusing_existing_obj
   // other classes rely on this order
   if (_created_objects.is_valid())
@@ -372,20 +372,20 @@ void Mysql_sql_parser::do_transactable_list_insert(ListRef<GrtObject> list, GrtO
   list.insert(object);
 }
 
-void Mysql_sql_parser::log_db_obj_created(const GrtNamedObjectRef &obj1, const GrtNamedObjectRef &obj2,
-                                          const GrtNamedObjectRef &obj3) {
+auto Mysql_sql_parser::log_db_obj_created(const GrtNamedObjectRef &obj1, const GrtNamedObjectRef &obj2,
+                                          const GrtNamedObjectRef &obj3) -> void {
   if (_reusing_existing_obj)
     return;
   log_db_obj_operation("Created", obj1, obj2, obj3);
 }
 
-void Mysql_sql_parser::log_db_obj_dropped(const GrtNamedObjectRef &obj1, const GrtNamedObjectRef &obj2,
-                                          const GrtNamedObjectRef &obj3) {
+auto Mysql_sql_parser::log_db_obj_dropped(const GrtNamedObjectRef &obj1, const GrtNamedObjectRef &obj2,
+                                          const GrtNamedObjectRef &obj3) -> void {
   log_db_obj_operation("Dropped", obj1, obj2, obj3);
 }
 
-void Mysql_sql_parser::log_db_obj_operation(const std::string &op_name, const GrtNamedObjectRef &obj1,
-                                            const GrtNamedObjectRef &obj2, const GrtNamedObjectRef &obj3) {
+auto Mysql_sql_parser::log_db_obj_operation(const std::string &op_name, const GrtNamedObjectRef &obj1,
+                                            const GrtNamedObjectRef &obj2, const GrtNamedObjectRef &obj3) -> void {
   const GrtNamedObjectRef obj = obj3.is_valid() ? obj3 : (obj2.is_valid() ? obj2 : obj1);
 
   std::string text;
@@ -399,7 +399,7 @@ void Mysql_sql_parser::log_db_obj_operation(const std::string &op_name, const Gr
   add_log_message(text, 3);
 }
 
-void Mysql_sql_parser::set_fk_references() {
+auto Mysql_sql_parser::set_fk_references() -> void {
   grt::ListRef<db_mysql_Schema> schemata = _catalog->schemata();
 
   for (Fk_ref_collection::iterator i = _fk_refs.begin(); i != _fk_refs.end(); ++i) {
@@ -520,22 +520,22 @@ void Mysql_sql_parser::set_fk_references() {
   }
 }
 
-void Mysql_sql_parser::set_obj_sql_def(db_DatabaseDdlObjectRef obj) {
+auto Mysql_sql_parser::set_obj_sql_def(db_DatabaseDdlObjectRef obj) -> void {
   obj->sqlDefinition(strip_sql_statement(sql_statement(), _strip_sql));
 }
 
-void Mysql_sql_parser::set_obj_name(GrtNamedObjectRef obj, const std::string &val) {
+auto Mysql_sql_parser::set_obj_name(GrtNamedObjectRef obj, const std::string &val) -> void {
   SET_STR(obj->name, val)
   if (_set_old_names)
     obj->oldName(obj->name());
 }
 
-db_mysql_SchemaRef Mysql_sql_parser::set_active_schema(const std::string &schema_name) {
+auto Mysql_sql_parser::set_active_schema(const std::string &schema_name) -> db_mysql_SchemaRef {
   return _active_schema = ensure_schema_created(schema_name, false);
 }
 
-db_mysql_SchemaRef Mysql_sql_parser::ensure_schema_created(const std::string &schema_name,
-                                                           bool check_obj_name_uniqueness) {
+auto Mysql_sql_parser::ensure_schema_created(const std::string &schema_name,
+                                                           bool check_obj_name_uniqueness) -> db_mysql_SchemaRef {
   if (schema_name.empty())
     return _active_schema;
 
@@ -568,8 +568,8 @@ db_mysql_SchemaRef Mysql_sql_parser::ensure_schema_created(const std::string &sc
   return schema;
 }
 
-void Mysql_sql_parser::create_stub_table(db_mysql_SchemaRef &schema, db_mysql_TableRef &obj,
-                                         const std::string &obj_name) {
+auto Mysql_sql_parser::create_stub_table(db_mysql_SchemaRef &schema, db_mysql_TableRef &obj,
+                                         const std::string &obj_name) -> void {
   obj = db_mysql_TableRef(grt::Initialized);
   obj->owner(schema);
   obj->isStub(1);
@@ -577,8 +577,8 @@ void Mysql_sql_parser::create_stub_table(db_mysql_SchemaRef &schema, db_mysql_Ta
   schema->tables().insert(obj);
 }
 
-void Mysql_sql_parser::create_stub_column(db_mysql_TableRef &table, db_mysql_ColumnRef &obj,
-                                          const std::string &obj_name, db_mysql_ColumnRef tpl_obj) {
+auto Mysql_sql_parser::create_stub_column(db_mysql_TableRef &table, db_mysql_ColumnRef &obj,
+                                          const std::string &obj_name, db_mysql_ColumnRef tpl_obj) -> void {
   obj = db_mysql_ColumnRef(grt::Initialized);
   obj->owner(table);
   set_obj_name(obj, obj_name);
@@ -603,7 +603,7 @@ void Mysql_sql_parser::create_stub_column(db_mysql_TableRef &table, db_mysql_Col
   table->columns().insert(obj);
 }
 
-void Mysql_sql_parser::process_field_type_item(const SqlAstNode *item, db_mysql_ColumnRef &column) {
+auto Mysql_sql_parser::process_field_type_item(const SqlAstNode *item, db_mysql_ColumnRef &column) -> void {
   if (item) {
     // datatype
     {
@@ -705,8 +705,8 @@ void Mysql_sql_parser::process_field_type_item(const SqlAstNode *item, db_mysql_
   }
 }
 
-void Mysql_sql_parser::process_field_attributes_item(const SqlAstNode *item, db_mysql_ColumnRef &column,
-                                                     db_mysql_TableRef &table) {
+auto Mysql_sql_parser::process_field_attributes_item(const SqlAstNode *item, db_mysql_ColumnRef &column,
+                                                     db_mysql_TableRef &table) -> void {
   bool explicitDefaultValue = false;
   bool explicitNullValue = false;
 
@@ -816,8 +816,8 @@ void Mysql_sql_parser::process_field_attributes_item(const SqlAstNode *item, db_
     bec::ColumnHelper::set_default_value(column, "NULL");
 }
 
-std::string Mysql_sql_parser::process_field_name_item(const SqlAstNode *item, GrtNamedObjectRef obj, std::string *name3,
-                                                      std::string *name2, std::string *name1) {
+auto Mysql_sql_parser::process_field_name_item(const SqlAstNode *item, GrtNamedObjectRef obj, std::string *name3,
+                                                      std::string *name2, std::string *name1) -> std::string {
   std::string name = "";
 
   if (name1)
@@ -863,8 +863,8 @@ std::string Mysql_sql_parser::process_field_name_item(const SqlAstNode *item, Gr
   return name;
 }
 
-std::string Mysql_sql_parser::process_float_options_item(const SqlAstNode *item, std::string *precision,
-                                                         std::string *scale) {
+auto Mysql_sql_parser::process_float_options_item(const SqlAstNode *item, std::string *precision,
+                                                         std::string *scale) -> std::string {
   std::string precision_ = "";
 
   if (precision)
@@ -895,7 +895,7 @@ std::string Mysql_sql_parser::process_float_options_item(const SqlAstNode *item,
   return precision_;
 }
 
-std::string Mysql_sql_parser::process_obj_full_name_item(const SqlAstNode *item, db_mysql_SchemaRef *schema) {
+auto Mysql_sql_parser::process_obj_full_name_item(const SqlAstNode *item, db_mysql_SchemaRef *schema) -> std::string {
   std::string obj_name;
   std::string schema_name = "";
 
@@ -926,7 +926,7 @@ std::string Mysql_sql_parser::process_obj_full_name_item(const SqlAstNode *item,
   return obj_name;
 }
 
-void Mysql_sql_parser::process_index_item(const SqlAstNode *tree, db_mysql_TableRef &table) {
+auto Mysql_sql_parser::process_index_item(const SqlAstNode *tree, db_mysql_TableRef &table) -> void {
   db_mysql_IndexRef obj(grt::Initialized);
   obj->owner(table);
 
@@ -1022,7 +1022,7 @@ void Mysql_sql_parser::process_index_item(const SqlAstNode *tree, db_mysql_Table
   table->indices().insert(obj);
 }
 
-void Mysql_sql_parser::process_fk_item(const SqlAstNode *tree, db_mysql_TableRef &table) {
+auto Mysql_sql_parser::process_fk_item(const SqlAstNode *tree, db_mysql_TableRef &table) -> void {
   db_mysql_ForeignKeyRef obj(grt::Initialized);
   obj->owner(table);
   Fk_ref fk_ref(obj);
@@ -1088,7 +1088,7 @@ void Mysql_sql_parser::process_fk_item(const SqlAstNode *tree, db_mysql_TableRef
   _fk_refs.push_back(fk_ref);
 }
 
-void Mysql_sql_parser::process_fk_references_item(const SqlAstNode *tree, db_mysql_ForeignKeyRef &fk, Fk_ref &fk_ref) {
+auto Mysql_sql_parser::process_fk_references_item(const SqlAstNode *tree, db_mysql_ForeignKeyRef &fk, Fk_ref &fk_ref) -> void {
   // tree is a 'references' item
   if (!tree)
     return;
@@ -1131,7 +1131,7 @@ void Mysql_sql_parser::process_fk_references_item(const SqlAstNode *tree, db_mys
   }
 }
 
-void Mysql_sql_parser::process_index_options_item(db_mysql_IndexRef &obj, const SqlAstNode *item) {
+auto Mysql_sql_parser::process_index_options_item(db_mysql_IndexRef &obj, const SqlAstNode *item) -> void {
   static sql::symbol path1[] = {sql::_normal_key_options, sql::_normal_key_opts, sql::_};
   static sql::symbol path2[] = {sql::_fulltext_key_options, sql::_fulltext_key_opts, sql::_};
   static sql::symbol path3[] = {sql::_spatial_key_options, sql::_spatial_key_opts, sql::_};
@@ -1161,7 +1161,7 @@ void Mysql_sql_parser::process_index_options_item(db_mysql_IndexRef &obj, const 
   }
 }
 
-void Mysql_sql_parser::process_index_kind_item(db_mysql_IndexRef &obj, const SqlAstNode *item) {
+auto Mysql_sql_parser::process_index_kind_item(db_mysql_IndexRef &obj, const SqlAstNode *item) -> void {
   if (!item)
     return;
 
@@ -1170,7 +1170,7 @@ void Mysql_sql_parser::process_index_kind_item(db_mysql_IndexRef &obj, const Sql
     obj->indexKind(shape_index_kind(index_kind));
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_table_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_table_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   const SqlAstNode *create2_item = tree->subitem(sql::_create2);
 
   // check if statement is relevant
@@ -1310,7 +1310,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_table_statement(
   // partitioning
   {
     class Partition_definition {
-      static void parse_options(db_mysql_PartitionDefinitionRef part_obj, const SqlAstNode *part_options) {
+      static auto parse_options(db_mysql_PartitionDefinitionRef part_obj, const SqlAstNode *part_options) -> void {
         for (SqlAstNode::SubItemList::const_iterator it = part_options->subitems()->begin(),
                                                      it_end = part_options->subitems()->end();
              it != it_end; ++it) {
@@ -1335,7 +1335,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_table_statement(
       }
 
       // returns count of subpartitions
-      static void parse_subpartitions(db_mysql_PartitionDefinitionRef part_obj, const SqlAstNode *subpart_list) {
+      static auto parse_subpartitions(db_mysql_PartitionDefinitionRef part_obj, const SqlAstNode *subpart_list) -> void {
         for (SqlAstNode::SubItemList::const_iterator it = subpart_list->subitems()->begin(),
                                                      it_end = subpart_list->subitems()->end();
              it != it_end; ++it) {
@@ -1353,7 +1353,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_table_statement(
       }
 
     public:
-      static db_mysql_PartitionDefinitionRef parse(const SqlAstNode *part_item, const std::string &_sql_statement) {
+      static auto parse(const SqlAstNode *part_item, const std::string &_sql_statement) -> db_mysql_PartitionDefinitionRef {
         db_mysql_PartitionDefinitionRef part_obj(grt::Initialized);
 
         const SqlAstNode *part_attr;
@@ -1564,7 +1564,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_table_statement(
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_view_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_view_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   const SqlAstNode *view_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -1635,7 +1635,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_view_statement(c
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_routine_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_routine_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   const SqlAstNode *routine_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -1750,7 +1750,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_routine_statemen
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_index_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_index_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->find_subseq(sql::_INDEX_SYM, sql::_ident))
     return pr_irrelevant;
@@ -1864,7 +1864,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_index_statement(
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_logfile_group_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_logfile_group_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_CREATE, sql::_LOGFILE_SYM, sql::_GROUP_SYM))
     return pr_irrelevant;
@@ -1908,7 +1908,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_logfile_group_st
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_tablespace_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_tablespace_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_CREATE, sql::_TABLESPACE))
     return pr_irrelevant;
@@ -1964,7 +1964,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_tablespace_state
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_server_link_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_server_link_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_CREATE, sql::_server_def))
     return pr_irrelevant;
@@ -2015,7 +2015,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_server_link_stat
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_trigger_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_trigger_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   const SqlAstNode *trigger_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -2107,7 +2107,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_trigger_statemen
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_schema_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_create_schema_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_CREATE, sql::_DATABASE))
     return pr_irrelevant;
@@ -2144,7 +2144,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_create_schema_statement
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_schema_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_drop_schema_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_DROP, sql::_DATABASE))
     return pr_irrelevant;
@@ -2163,7 +2163,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_schema_statement(c
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_table_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_drop_table_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subitem(sql::_table_or_tables))
     return pr_irrelevant;
@@ -2187,7 +2187,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_table_statement(co
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_view_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_drop_view_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_DROP, sql::_VIEW_SYM))
     return pr_irrelevant;
@@ -2211,7 +2211,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_view_statement(con
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_routine_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_drop_routine_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_DROP, sql::_FUNCTION_SYM) || !tree->subseq(sql::_DROP, sql::_PROCEDURE_SYM))
     return pr_irrelevant;
@@ -2228,7 +2228,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_routine_statement(
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_drop_trigger_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_drop_trigger_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_DROP, sql::_TRIGGER_SYM))
     return pr_irrelevant;
@@ -2272,7 +2272,7 @@ bool Mysql_sql_parser::drop_obj(grt::ListRef<T> obj_list, const std::string &obj
   return false;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_alter_table_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_alter_table_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   const SqlAstNode *alter_list = tree->subitem(sql::_alter_commands, sql::_alter_list);
   if (!alter_list)
@@ -2306,7 +2306,7 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_alter_table_statement(c
   return pr_processed;
 }
 
-Mysql_sql_parser::Parse_result Mysql_sql_parser::process_use_schema_statement(const SqlAstNode *tree) {
+auto Mysql_sql_parser::process_use_schema_statement(const SqlAstNode *tree) -> Mysql_sql_parser::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_USE_SYM))
     return pr_irrelevant;
@@ -2321,8 +2321,8 @@ Mysql_sql_parser::Parse_result Mysql_sql_parser::process_use_schema_statement(co
   return pr_processed;
 }
 
-void Mysql_sql_parser::blame_existing_obj(bool critical, const GrtNamedObjectRef &obj,
-                                          const GrtNamedObjectRef &container1, const GrtNamedObjectRef &container2) {
+auto Mysql_sql_parser::blame_existing_obj(bool critical, const GrtNamedObjectRef &obj,
+                                          const GrtNamedObjectRef &container1, const GrtNamedObjectRef &container2) -> void {
   if (_reuse_existing_objects)
     return;
 

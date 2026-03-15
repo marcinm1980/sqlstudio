@@ -33,22 +33,22 @@ namespace MySQL {
     protected:
       ListBoxWrapper(mforms::ListBox *backend);
 
-      static bool create(mforms::ListBox *backend, bool multi_select);
-      static void clear(mforms::ListBox *backend);
-      static void set_heading(mforms::ListBox *backend, const std::string &text);
-      static void add_items(mforms::ListBox *backend, const std::list<std::string> &items);
-      static size_t add_item(mforms::ListBox *backend, const std::string &item);
-      static void remove_indexes(mforms::ListBox *backend, const std::vector<size_t> &indices);
-      static void remove_index(mforms::ListBox *backend, size_t index);
-      static std::string get_text(mforms::ListBox *backend);
-      static void set_index(mforms::ListBox *backend, ssize_t index);
-      static ssize_t get_index(mforms::ListBox *backend);
-      static std::vector<size_t> get_selected_indices(mforms::ListBox *backend);
-      static size_t get_count(mforms::ListBox *self);
-      static std::string get_string_value_from_index(mforms::ListBox *self, size_t index);
+      static auto create(mforms::ListBox *backend, bool multi_select) -> bool;
+      static auto clear(mforms::ListBox *backend) -> void;
+      static auto set_heading(mforms::ListBox *backend, const std::string &text) -> void;
+      static auto add_items(mforms::ListBox *backend, const std::list<std::string> &items) -> void;
+      static auto add_item(mforms::ListBox *backend, const std::string &item) -> size_t;
+      static auto remove_indexes(mforms::ListBox *backend, const std::vector<size_t> &indices) -> void;
+      static auto remove_index(mforms::ListBox *backend, size_t index) -> void;
+      static auto get_text(mforms::ListBox *backend) -> std::string;
+      static auto set_index(mforms::ListBox *backend, ssize_t index) -> void;
+      static auto get_index(mforms::ListBox *backend) -> ssize_t;
+      static auto get_selected_indices(mforms::ListBox *backend) -> std::vector<size_t>;
+      static auto get_count(mforms::ListBox *self) -> size_t;
+      static auto get_string_value_from_index(mforms::ListBox *self, size_t index) -> std::string;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   }
 }

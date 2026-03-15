@@ -37,7 +37,7 @@ public:
 
   DEFINE_INIT_MODULE("1.0", "", grt::ModuleImplBase, DECLARE_MODULE_FUNCTION(TestModuleImpl::returnNull), NULL);
 
-  grt::ObjectRef returnNull() {
+  auto returnNull() -> grt::ObjectRef {
     return grt::ObjectRef();
   }
 };

@@ -54,7 +54,7 @@ public:
   NewServerInstancePage(WizardForm* form, const std::string& pageid);
 
 protected:
-  NewServerInstanceWizard* wizard();
+  auto wizard() -> NewServerInstanceWizard*;
 };
 
 class IntroductionPage : public WizardPage {
@@ -65,17 +65,17 @@ public:
 class TestDatabaseSettingsPage : public WizardProgressPage {
 public:
   TestDatabaseSettingsPage(WizardForm* host);
-  virtual void enter(bool advancing);
+  virtual auto enter(bool advancing) -> void;
 
 protected:
   sql::ConnectionWrapper _dbc_conn;
   std::string _message;
-  bool open_connection();
-  virtual void tasks_finished(bool success);
-  bool get_server_version();
-  bool get_server_platform();
+  auto open_connection() -> bool;
+  virtual auto tasks_finished(bool success) -> void;
+  auto get_server_version() -> bool;
+  auto get_server_platform() -> bool;
 
-  NewServerInstanceWizard* wizard();
+  auto wizard() -> NewServerInstanceWizard*;
 };
 
 class HostAndRemoteTypePage : public NewServerInstancePage {
@@ -83,12 +83,12 @@ public:
   HostAndRemoteTypePage(WizardForm* host);
 
 protected:
-  virtual void enter(bool advancing);
-  virtual bool advance();
-  virtual bool skip_page();
+  virtual auto enter(bool advancing) -> void;
+  virtual auto advance() -> bool;
+  virtual auto skip_page() -> bool;
 
-  void refresh_profile_list();
-  void toggle_remote_admin();
+  auto refresh_profile_list() -> void;
+  auto toggle_remote_admin() -> void;
 
 private:
   Panel _management_type_panel; // Border.
@@ -116,12 +116,12 @@ public:
   SSHConfigurationPage(WizardForm* host);
 
 protected:
-  void use_ssh_key_changed();
+  auto use_ssh_key_changed() -> void;
 
-  virtual void enter(bool advancing);
-  virtual bool advance();
-  virtual void leave(bool advancing);
-  virtual bool skip_page();
+  virtual auto enter(bool advancing) -> void;
+  virtual auto advance() -> bool;
+  virtual auto leave(bool advancing) -> void;
+  virtual auto skip_page() -> bool;
 
 private:
   Label _main_description1;
@@ -150,13 +150,13 @@ public:
   WindowsManagementPage(WizardForm* host, wb::WBContext* context);
 
 protected:
-  void refresh_config_path();
+  auto refresh_config_path() -> void;
 
-  virtual void enter(bool advancing);
-  virtual void leave(bool advancing);
+  virtual auto enter(bool advancing) -> void;
+  virtual auto leave(bool advancing) -> void;
 
-  virtual bool advance();
-  virtual bool skip_page();
+  virtual auto advance() -> bool;
+  virtual auto skip_page() -> bool;
 
 private:
   wb::WBContext* _context;
@@ -184,18 +184,18 @@ class TestHostMachineSettingsPage : public WizardProgressPage {
 public:
   TestHostMachineSettingsPage(WizardForm* host);
 
-  virtual void enter(bool advance);
-  virtual void leave(bool advancing);
+  virtual auto enter(bool advance) -> void;
+  virtual auto leave(bool advancing) -> void;
 
 protected:
-  bool connect_to_host();
-  bool find_config_file();
-  bool find_error_files();
-  bool check_admin_commands();
-  virtual void tasks_finished(bool success);
-  virtual bool skip_page();
+  auto connect_to_host() -> bool;
+  auto find_config_file() -> bool;
+  auto find_error_files() -> bool;
+  auto check_admin_commands() -> bool;
+  virtual auto tasks_finished(bool success) -> void;
+  virtual auto skip_page() -> bool;
 
-  NewServerInstanceWizard* wizard();
+  auto wizard() -> NewServerInstanceWizard*;
 
 private:
   TaskRow* _connect_task;
@@ -207,15 +207,15 @@ public:
   ReviewPage(WizardForm* host);
 
 protected:
-  virtual void enter(bool advancing);
-  virtual void leave(bool advancing);
-  virtual bool skip_page();
-  virtual bool next_closes_wizard();
-  virtual std::string close_caption() const {
+  virtual auto enter(bool advancing) -> void;
+  virtual auto leave(bool advancing) -> void;
+  virtual auto skip_page() -> bool;
+  virtual auto next_closes_wizard() -> bool;
+  virtual auto close_caption() const -> std::string {
     return finish_caption();
   }
 
-  void customize_changed();
+  auto customize_changed() -> void;
 
 private:
   Label _description;
@@ -232,12 +232,12 @@ public:
   PathsPage(WizardForm* host, wb::WBContext* context);
 
 protected:
-  virtual void enter(bool advancing);
-  virtual bool advance();
-  virtual bool skip_page();
-  void browse_remote_config_file();
-  void test_path();
-  void test_section();
+  virtual auto enter(bool advancing) -> void;
+  virtual auto advance() -> bool;
+  virtual auto skip_page() -> bool;
+  auto browse_remote_config_file() -> void;
+  auto test_path() -> void;
+  auto test_section() -> void;
 
 private:
   wb::WBContext* _context;
@@ -266,14 +266,14 @@ public:
   CommandsPage(WizardForm* host);
 
 protected:
-  virtual void enter(bool advancing);
-  virtual void leave(bool advancing);
-  virtual bool advance();
-  virtual bool skip_page();
-  virtual bool next_closes_wizard() {
+  virtual auto enter(bool advancing) -> void;
+  virtual auto leave(bool advancing) -> void;
+  virtual auto advance() -> bool;
+  virtual auto skip_page() -> bool;
+  virtual auto next_closes_wizard() -> bool {
     return true;
   }
-  virtual std::string close_caption() const {
+  virtual auto close_caption() const -> std::string {
     return finish_caption();
   }
 
@@ -294,21 +294,21 @@ public:
   NewServerInstanceWizard(wb::WBContext* context, db_mgmt_ConnectionRef connection);
   ~NewServerInstanceWizard();
 
-  db_mgmt_ServerInstanceRef assemble_server_instance();
-  grt::ValueRef test_setting_grt(const std::string& name);
+  auto assemble_server_instance() -> db_mgmt_ServerInstanceRef;
+  auto test_setting_grt(const std::string& name) -> grt::ValueRef;
 
-  void load_defaults();
-  std::string get_server_info(const std::string& key);
+  auto load_defaults() -> void;
+  auto get_server_info(const std::string& key) -> std::string;
 
-  wb::WBContext* wb() {
+  auto wb() -> wb::WBContext* {
     return _context;
   }
 
-  bool is_admin_enabled();
-  bool is_local();
-  bool test_setting(const std::string& name, std::string& detail);
+  auto is_admin_enabled() -> bool;
+  auto is_local() -> bool;
+  auto test_setting(const std::string& name, std::string& detail) -> bool;
 
-  void create_instance();
+  auto create_instance() -> void;
 
 protected:
   wb::WBContext* _context;

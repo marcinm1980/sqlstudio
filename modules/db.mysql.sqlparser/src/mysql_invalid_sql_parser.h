@@ -36,7 +36,7 @@
 class Mysql_invalid_sql_parser : protected Mysql_sql_parser, public Invalid_sql_parser {
 public:
   typedef std::shared_ptr<Mysql_invalid_sql_parser> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_invalid_sql_parser());
   }
   virtual ~Mysql_invalid_sql_parser() {
@@ -46,36 +46,36 @@ protected:
   Mysql_invalid_sql_parser();
 
 public:
-  int parse_inserts(db_TableRef table, const std::string &sql);
-  int parse_triggers(db_TableRef table, const std::string &sql);
-  int parse_trigger(db_TriggerRef trigger, const std::string &sql);
-  int parse_routines(db_RoutineGroupRef routine_group, const std::string &sql);
-  int parse_routine(db_RoutineRef routine, const std::string &sql);
-  int parse_view(db_ViewRef view, const std::string &sql);
+  auto parse_inserts(db_TableRef table, const std::string &sql) -> int;
+  auto parse_triggers(db_TableRef table, const std::string &sql) -> int;
+  auto parse_trigger(db_TriggerRef trigger, const std::string &sql) -> int;
+  auto parse_routines(db_RoutineGroupRef routine_group, const std::string &sql) -> int;
+  auto parse_routine(db_RoutineRef routine, const std::string &sql) -> int;
+  auto parse_view(db_ViewRef view, const std::string &sql) -> int;
 
 protected:
-  int parse_invalid_sql_script(const std::string &sql);
-  int process_sql_statement(const SqlAstNode *tree);
-  Parse_result process_create_trigger_statement(const SqlAstNode *tree);
-  Parse_result process_create_routine_statement(const SqlAstNode *tree) {
+  auto parse_invalid_sql_script(const std::string &sql) -> int;
+  auto process_sql_statement(const SqlAstNode *tree) -> int;
+  auto process_create_trigger_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_routine_statement(const SqlAstNode *tree) -> Parse_result {
     return Mysql_sql_parser::process_create_routine_statement(tree);
   }
-  Parse_result process_create_view_statement(const SqlAstNode *tree) {
+  auto process_create_view_statement(const SqlAstNode *tree) -> Parse_result {
     return Mysql_sql_parser::process_create_view_statement(tree);
   }
 
-  void create_stub_routine(db_DatabaseDdlObjectRef &obj);
-  void create_stub_group_routine(db_DatabaseDdlObjectRef &obj);
-  void remove_stub_group_routine(db_DatabaseDdlObjectRef &obj);
-  void shape_group_routine(db_mysql_RoutineRef &obj);
-  void create_stub_trigger(db_DatabaseDdlObjectRef &obj);
-  void create_stub_view(db_DatabaseDdlObjectRef &obj);
-  void shape_trigger(db_mysql_TriggerRef &obj);
+  auto create_stub_routine(db_DatabaseDdlObjectRef &obj) -> void;
+  auto create_stub_group_routine(db_DatabaseDdlObjectRef &obj) -> void;
+  auto remove_stub_group_routine(db_DatabaseDdlObjectRef &obj) -> void;
+  auto shape_group_routine(db_mysql_RoutineRef &obj) -> void;
+  auto create_stub_trigger(db_DatabaseDdlObjectRef &obj) -> void;
+  auto create_stub_view(db_DatabaseDdlObjectRef &obj) -> void;
+  auto shape_trigger(db_mysql_TriggerRef &obj) -> void;
 
-  void setup_stub_obj(db_DatabaseDdlObjectRef obj, bool set_name);
-  std::string stub_obj_name();
+  auto setup_stub_obj(db_DatabaseDdlObjectRef obj, bool set_name) -> void;
+  auto stub_obj_name() -> std::string;
 
-  virtual GrtNamedObjectRef get_active_object() {
+  virtual auto get_active_object() -> GrtNamedObjectRef {
     return _active_obj;
   };
 

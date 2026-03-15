@@ -44,12 +44,12 @@
   g_signal_handlers_disconnect_matched((instance), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, (data))
 #endif
 
-static void notify_signal(GtkWidget *w, gint wParam, gpointer lParam, mforms::gtk::CodeEditorImpl *editor) {
+static auto notify_signal(GtkWidget *w, gint wParam, gpointer lParam, mforms::gtk::CodeEditorImpl *editor) -> void {
   SCNotification *event = reinterpret_cast<SCNotification *>(lParam);
   editor->notify(event);
 }
 
-static void command_signal(GtkWidget *w, gint wParam, gpointer lParam, mforms::gtk::CodeEditorImpl *editor) {
+static auto command_signal(GtkWidget *w, gint wParam, gpointer lParam, mforms::gtk::CodeEditorImpl *editor) -> void {
   editor->command(wParam, reinterpret_cast<long>(lParam));
 }
 
@@ -86,16 +86,16 @@ mforms::gtk::CodeEditorImpl::~CodeEditorImpl() {
 }
 
 //------------------------------------------------------------------------------
-Gtk::Widget *mforms::gtk::CodeEditorImpl::get_outer() const {
+auto mforms::gtk::CodeEditorImpl::get_outer() const -> Gtk::Widget * {
   return _sci_gtkmm_widget;
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::CodeEditorImpl::create(CodeEditor *self, bool showInfo) {
+auto mforms::gtk::CodeEditorImpl::create(CodeEditor *self, bool showInfo) -> bool {
   return new mforms::gtk::CodeEditorImpl(self);
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::CodeEditorImpl::keyboard_event(GdkEventKey *event, CodeEditor *editor) {
+auto mforms::gtk::CodeEditorImpl::keyboard_event(GdkEventKey *event, CodeEditor *editor) -> void {
   if (event->type == GDK_KEY_RELEASE && event->keyval == GDK_KEY_Menu) {
     if (editor->get_context_menu() != NULL) {
       mforms::Menu *menu = editor->get_context_menu();
@@ -107,7 +107,7 @@ void mforms::gtk::CodeEditorImpl::keyboard_event(GdkEventKey *event, CodeEditor 
   }
 }
 
-void mforms::gtk::CodeEditorImpl::mouse_button_event(GdkEventButton *event, CodeEditor *editor) {
+auto mforms::gtk::CodeEditorImpl::mouse_button_event(GdkEventButton *event, CodeEditor *editor) -> void {
   if (event->type == GDK_BUTTON_PRESS && event->button == 3) // right mouse click
   {
     if (editor->get_context_menu() != NULL) {
@@ -118,16 +118,16 @@ void mforms::gtk::CodeEditorImpl::mouse_button_event(GdkEventButton *event, Code
   }
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::CodeEditorImpl::notify(SCNotification *scn) {
+auto mforms::gtk::CodeEditorImpl::notify(SCNotification *scn) -> void {
   // Pass this to mforms::on_notify.
   _owner->on_notify(scn);
 }
 
-void mforms::gtk::CodeEditorImpl::command(unsigned long wParam, long) {
+auto mforms::gtk::CodeEditorImpl::command(unsigned long wParam, long) -> void {
   _owner->on_command(wParam >> 16);
 }
 
-sptr_t mforms::gtk::CodeEditorImpl::send_editor(CodeEditor *self, unsigned int msg, uptr_t uparam, sptr_t sparam) {
+auto mforms::gtk::CodeEditorImpl::send_editor(CodeEditor *self, unsigned int msg, uptr_t uparam, sptr_t sparam) -> sptr_t {
   CodeEditorImpl *ce = self->get_data<CodeEditorImpl>();
   if (ce) {
     return scintilla_send_message(ce->_sci, msg, uparam, sparam);
@@ -135,7 +135,7 @@ sptr_t mforms::gtk::CodeEditorImpl::send_editor(CodeEditor *self, unsigned int m
   return 0;
 }
 
-void mforms::gtk::CodeEditorImpl::set_status_text(CodeEditor *self, const std::string &text) {
+auto mforms::gtk::CodeEditorImpl::set_status_text(CodeEditor *self, const std::string &text) -> void {
   CodeEditorImpl *ce = self->get_data<CodeEditorImpl>();
   if (ce) {
     // no-op for now
@@ -144,7 +144,7 @@ void mforms::gtk::CodeEditorImpl::set_status_text(CodeEditor *self, const std::s
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::CodeEditorImpl::init() {
+auto mforms::gtk::CodeEditorImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_code_editor_impl.create = mforms::gtk::CodeEditorImpl::create;

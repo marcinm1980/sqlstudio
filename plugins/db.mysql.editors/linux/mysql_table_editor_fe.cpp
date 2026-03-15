@@ -131,7 +131,7 @@ DbMySQLTableEditor::~DbMySQLTableEditor() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditor::decorate_object_editor() {
+auto DbMySQLTableEditor::decorate_object_editor() -> void {
   if (is_editing_live_object()) {
     PluginEditorBase::decorate_object_editor();
     Gtk::Box *header_part = 0;
@@ -161,7 +161,7 @@ void DbMySQLTableEditor::decorate_object_editor() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditor::toggle_header_part() {
+auto DbMySQLTableEditor::toggle_header_part() -> void {
   Gtk::Button *hide_button = 0;
   xml()->get_widget("hide_button", hide_button);
 
@@ -198,7 +198,7 @@ void DbMySQLTableEditor::toggle_header_part() {
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLTableEditor::switch_edited_object(const grt::BaseListRef &args) {
+auto DbMySQLTableEditor::switch_edited_object(const grt::BaseListRef &args) -> bool {
   MySQLTableEditorBE *old_be = _be;
   _be = new MySQLTableEditorBE(db_mysql_TableRef::cast_from(args[0]));
 
@@ -236,19 +236,19 @@ bool DbMySQLTableEditor::switch_edited_object(const grt::BaseListRef &args) {
 }
 
 //------------------------------------------------------------------------------
-bec::BaseEditor *DbMySQLTableEditor::get_be() {
+auto DbMySQLTableEditor::get_be() -> bec::BaseEditor * {
   return _be;
 }
 
 //------------------------------------------------------------------------------
 
-void DbMySQLTableEditor::set_table_name(const std::string &name) {
+auto DbMySQLTableEditor::set_table_name(const std::string &name) -> void {
   _be->set_name(name);
   _signal_title_changed.emit(_be->get_title());
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditor::set_table_option_by_name(const std::string &name, const std::string &value) {
+auto DbMySQLTableEditor::set_table_option_by_name(const std::string &name, const std::string &value) -> void {
     if (!_be)
       return;
     
@@ -261,7 +261,7 @@ void DbMySQLTableEditor::set_table_option_by_name(const std::string &name, const
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditor::create_table_page() {
+auto DbMySQLTableEditor::create_table_page() -> void {
   // Connect Table tab widgets
   bind_entry_and_be_setter("table_name", this, &DbMySQLTableEditor::set_table_name);
 
@@ -295,7 +295,7 @@ void DbMySQLTableEditor::create_table_page() {
 
 //------------------------------------------------------------------------------
 
-void DbMySQLTableEditor::charset_combo_changed(const std::string &name, const std::string &value) {
+auto DbMySQLTableEditor::charset_combo_changed(const std::string &name, const std::string &value) -> void {
   if (name != "CHARACTER SET")
     return;
   
@@ -310,17 +310,17 @@ void DbMySQLTableEditor::charset_combo_changed(const std::string &name, const st
 
 //------------------------------------------------------------------------------
 
-bool DbMySQLTableEditor::can_close() {
+auto DbMySQLTableEditor::can_close() -> bool {
   return _be->can_close();
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditor::set_comment(const std::string &cmt) {
+auto DbMySQLTableEditor::set_comment(const std::string &cmt) -> void {
   _be->set_comment(cmt);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditor::partial_refresh(const int what) {
+auto DbMySQLTableEditor::partial_refresh(const int what) -> void {
   switch (what) {
     case ::bec::TableEditorBE::RefreshColumnCollation:
     case ::bec::TableEditorBE::RefreshColumnMoveUp:
@@ -333,7 +333,7 @@ void DbMySQLTableEditor::partial_refresh(const int what) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditor::refresh_table_page() {
+auto DbMySQLTableEditor::refresh_table_page() -> void {
   Gtk::Entry *entry(0);
   xml()->get_widget("table_name", entry);
 
@@ -363,7 +363,7 @@ void DbMySQLTableEditor::refresh_table_page() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditor::do_refresh_form_data() {
+auto DbMySQLTableEditor::do_refresh_form_data() -> void {
   refresh_table_page();
 
   _columns_page->refresh();
@@ -390,13 +390,13 @@ void DbMySQLTableEditor::do_refresh_form_data() {
 
 // TESTING
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditor::refresh_indices() {
+auto DbMySQLTableEditor::refresh_indices() -> void {
   _indexes_page->refresh();
 }
 //\TESTING
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditor::page_changed(Gtk::Widget *page, guint page_num) {
+auto DbMySQLTableEditor::page_changed(Gtk::Widget *page, guint page_num) -> void {
   switch (page_num) {
     case 0: // general stuff
       break;
@@ -435,7 +435,7 @@ void DbMySQLTableEditor::page_changed(Gtk::Widget *page, guint page_num) {
 }
 
 //--------------------------------------------------------------------------------
-bool DbMySQLTableEditor::event_from_table_name_entry(GdkEvent *event) {
+auto DbMySQLTableEditor::event_from_table_name_entry(GdkEvent *event) -> bool {
   if (event->type == GDK_KEY_RELEASE &&
       (event->key.keyval == GDK_KEY_Return || event->key.keyval == GDK_KEY_KP_Enter)) {
     Gtk::Notebook *editor_window(0);
@@ -449,7 +449,7 @@ bool DbMySQLTableEditor::event_from_table_name_entry(GdkEvent *event) {
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createDbMysqlTableEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createDbMysqlTableEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new DbMySQLTableEditor(m, args));
 }
 };

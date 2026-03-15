@@ -33,7 +33,7 @@
 using namespace grt;
 using namespace bec;
 
-extern void register_all_metaclasses();
+extern auto register_all_metaclasses() -> void;
 
 namespace {
 

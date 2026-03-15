@@ -69,13 +69,13 @@ namespace bec {
     auto find_match(const app_PluginInputDefinitionRef &pdef, std::string &searched_key_name_ret,
                     bool strict = true) const -> grt::ValueRef;
 
-    void dump_keys(const std::function<void(std::string)> &dump_function) const;
+    auto dump_keys(const std::function<void(std::string)> &dump_function) const -> void;
 
-    void add_file_input(const app_PluginFileInputRef &pdef, const std::string &value);
+    auto add_file_input(const app_PluginFileInputRef &pdef, const std::string &value) -> void;
 
-    void add_simple_value(const std::string &name, const grt::ValueRef &value);
+    auto add_simple_value(const std::string &name, const grt::ValueRef &value) -> void;
 
-    void add_list_for_selection(const std::string &source_name, const grt::ObjectListRef &list);
+    auto add_list_for_selection(const std::string &source_name, const grt::ObjectListRef &list) -> void;
 
     void add_entries_for_object(const std::string &name, const grt::ObjectRef &object,
                                 const std::string &topmost_class_name = "");
@@ -96,9 +96,9 @@ namespace bec {
     virtual ~PluginManagerImpl() {
     }
 
-    void set_registry_paths(const std::string &plugins_path, const std::string &groups_path);
+    auto set_registry_paths(const std::string &plugins_path, const std::string &groups_path) -> void;
 
-    void rescan_plugins();
+    auto rescan_plugins() -> void;
 
     DEFINE_INIT_MODULE(PluginManager_VERSION, "Oracle and/or its affiliates", grt::ModuleImplBase,
                        DECLARE_MODULE_FUNCTION(PluginManagerImpl::show_plugin),
@@ -110,7 +110,7 @@ namespace bec {
     std::vector<app_PluginRef> get_plugins_for_objects(const grt::ObjectListRef &objects,
                                                        const std::string &group = "");
 
-    std::vector<app_PluginRef> get_plugins_for_group(const std::string &group);
+    auto get_plugins_for_group(const std::string &group) -> std::vector<app_PluginRef>;
 
     auto get_plugin(const std::string &name) -> app_PluginRef;
 
@@ -131,19 +131,19 @@ namespace bec {
 
     auto check_plugin_input(const app_PluginInputDefinitionRef &def, const grt::ValueRef &value) -> bool;
 
-    void set_plugin_enabled(const app_PluginRef &plugin, bool flag);
+    auto set_plugin_enabled(const app_PluginRef &plugin, bool flag) -> void;
     auto plugin_enabled(const std::string &plugin_name) -> bool;
 
   public: // for frontends
-    void register_plugins(grt::ListRef<app_Plugin> plugins);
+    auto register_plugins(grt::ListRef<app_Plugin> plugins) -> void;
 
-    void set_gui_plugin_callbacks(const OpenGUIPluginSlot &open, const ShowGUIPluginSlot &show,
-                                  const CloseGUIPluginSlot &close);
+    auto set_gui_plugin_callbacks(const OpenGUIPluginSlot &open, const ShowGUIPluginSlot &show,
+                                  const CloseGUIPluginSlot &close) -> void;
 
-    void forget_gui_plugin_handle(NativeHandle handle);
-    void close_and_forget_gui_plugin(NativeHandle handle);
+    auto forget_gui_plugin_handle(NativeHandle handle) -> void;
+    auto close_and_forget_gui_plugin(NativeHandle handle) -> void;
 
-    std::vector<NativeHandle> get_similar_open_plugins(grt::Module *, const std::string &class_name, grt::BaseListRef);
+    auto get_similar_open_plugins(grt::Module *, const std::string &class_name, grt::BaseListRef) -> std::vector<NativeHandle>;
 
     auto get_plugin_list(const std::string &group = "") -> grt::ListRef<app_Plugin>;
 
@@ -173,10 +173,10 @@ namespace bec {
     auto show_gui_plugin_main(const std::string &handle) -> int;
     auto close_gui_plugin_main(const std::string &handle) -> int;
 
-    void open_standalone_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args);
+    auto open_standalone_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args) -> void;
 
     auto get_group(const std::string &path) -> app_PluginGroupRef;
-    void add_plugin_to_group(const app_PluginRef &plugin, const std::string &path);
+    auto add_plugin_to_group(const app_PluginRef &plugin, const std::string &path) -> void;
 
     auto check_plugin_validity(const app_PluginRef &plugin, grt::Module *module) -> bool;
 

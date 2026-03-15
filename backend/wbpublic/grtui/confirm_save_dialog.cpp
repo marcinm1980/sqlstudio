@@ -72,12 +72,12 @@ ConfirmSaveDialog::ConfirmSaveDialog(mforms::Form *owner, const std::string &win
   center();
 }
 
-void ConfirmSaveDialog::discard_clicked() {
+auto ConfirmSaveDialog::discard_clicked() -> void {
   _result = DiscardChanges;
   end_modal(true);
 }
 
-void ConfirmSaveDialog::add_item(const std::string &group, const std::string &name) {
+auto ConfirmSaveDialog::add_item(const std::string &group, const std::string &name) -> void {
   if (_last_group != group) {
     _last_group = group;
     mforms::Label *label = mforms::manage(new mforms::Label(group));
@@ -86,7 +86,7 @@ void ConfirmSaveDialog::add_item(const std::string &group, const std::string &na
   add_item(name);
 }
 
-void ConfirmSaveDialog::add_item(const std::string &name) {
+auto ConfirmSaveDialog::add_item(const std::string &name) -> void {
   mforms::Label *cb = mforms::manage(new mforms::Label(name));
 
   if (_last_group.empty())
@@ -98,7 +98,7 @@ void ConfirmSaveDialog::add_item(const std::string &name) {
   _checkboxes.add(cb, false, true);
 }
 
-ConfirmSaveDialog::Result ConfirmSaveDialog::run() {
+auto ConfirmSaveDialog::run() -> ConfirmSaveDialog::Result {
   if (!mforms::Form::run_modal(&_review_button, &_cancel_button))
     return Cancel;
 

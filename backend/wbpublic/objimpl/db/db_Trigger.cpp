@@ -30,13 +30,13 @@
 //================================================================================
 // db_Trigger
 
-void db_Trigger::init() {
+auto db_Trigger::init() -> void {
 }
 
 db_Trigger::~db_Trigger() {
 }
 
-void db_Trigger::event(const grt::StringRef &value) {
+auto db_Trigger::event(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_event);
 
   if (_owner.is_valid() && _event != value)
@@ -46,7 +46,7 @@ void db_Trigger::event(const grt::StringRef &value) {
   member_changed("event", ovalue, value);
 }
 
-void db_Trigger::name(const grt::StringRef &value) {
+auto db_Trigger::name(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_name);
 
   if (_owner.is_valid() && _name != value)
@@ -56,7 +56,7 @@ void db_Trigger::name(const grt::StringRef &value) {
   member_changed("name", ovalue, value);
 }
 
-void db_Trigger::timing(const grt::StringRef &value) {
+auto db_Trigger::timing(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_timing);
 
   if (_owner.is_valid() && _timing != value)

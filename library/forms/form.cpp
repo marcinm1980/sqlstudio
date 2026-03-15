@@ -55,7 +55,7 @@ Form::Form() {
 
 //--------------------------------------------------------------------------------------------------
 
-Form *Form::main_form() {
+auto Form::main_form() -> Form * {
   static Form *main_form = new Form();
   // the platform specific code should initialize the main_form stub with whatever it wants (namely,
   // call set_data() with a pointer to the real main window
@@ -75,7 +75,7 @@ Form::~Form() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::set_menubar(MenuBar *menu) {
+auto Form::set_menubar(MenuBar *menu) -> void {
   if (!_content || !dynamic_cast<Box *>(_content))
     throw std::logic_error("set_menubar() must be called on a window with a Box as it's toplevel content");
 
@@ -91,21 +91,21 @@ void Form::set_menubar(MenuBar *menu) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::set_title(const std::string &title) {
+auto Form::set_title(const std::string &title) -> void {
   if (_form_impl)
     _form_impl->set_title(this, title);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::set_release_on_close(bool flag) {
+auto Form::set_release_on_close(bool flag) -> void {
   if (_form_impl)
     _release_on_close = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Form::run_modal(Button *accept, Button *cancel) {
+auto Form::run_modal(Button *accept, Button *cancel) -> bool {
   if (_form_impl)
     return _form_impl->run_modal(this, accept, cancel);
   return false;
@@ -113,35 +113,35 @@ bool Form::run_modal(Button *accept, Button *cancel) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::show_modal(Button *accept, Button *cancel) {
+auto Form::show_modal(Button *accept, Button *cancel) -> void {
   if (_form_impl)
     _form_impl->show_modal(this, accept, cancel);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::end_modal(bool result) {
+auto Form::end_modal(bool result) -> void {
   if (_form_impl)
     _form_impl->end_modal(this, result);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::close() {
+auto Form::close() -> void {
   if (_form_impl)
     _form_impl->close(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::center() {
+auto Form::center() -> void {
   if (_form_impl)
     _form_impl->center(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::set_content(View *view) {
+auto Form::set_content(View *view) -> void {
   if (_content != view && _form_impl) {
     if (_content)
       _content->release();
@@ -158,14 +158,14 @@ void Form::set_content(View *view) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::flush_events() {
+auto Form::flush_events() -> void {
   if (_form_impl)
     _form_impl->flush_events(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::activated() {
+auto Form::activated() -> void {
   current_active_form = this;
   _active = true;
   _activated_signal();
@@ -173,20 +173,20 @@ void Form::activated() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Form::deactivated() {
+auto Form::deactivated() -> void {
   _active = false;
   _deactivated_signal();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Form::is_active() {
+auto Form::is_active() -> bool {
   return _active;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Form::can_close() {
+auto Form::can_close() -> bool {
   if (_can_close_slot)
     return _can_close_slot();
   return true;
@@ -194,6 +194,6 @@ bool Form::can_close() {
 
 //--------------------------------------------------------------------------------------------------
 
-Form *Form::active_form() {
+auto Form::active_form() -> Form * {
   return current_active_form;
 }

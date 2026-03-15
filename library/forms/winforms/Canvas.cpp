@@ -49,19 +49,19 @@ BaseWindowsCanvasView::~BaseWindowsCanvasView() {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::on_queue_repaint_wrapper(int x, int y, int w, int h) {
+auto BaseWindowsCanvasView::on_queue_repaint_wrapper(int x, int y, int w, int h) -> void {
   on_queue_repaint_delegate(x, y, w, h);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::on_viewport_changed_wrapper() {
+auto BaseWindowsCanvasView::on_viewport_changed_wrapper() -> void {
   on_viewport_changed_delegate();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-::mdc::CanvasView* BaseWindowsCanvasView::get_unmanaged_object() {
+auto BaseWindowsCanvasView::get_unmanaged_object() -> ::mdc::CanvasView* {
   return inner;
 }
 
@@ -70,7 +70,7 @@ void BaseWindowsCanvasView::on_viewport_changed_wrapper() {
 /**
  * Returns a fixed pointer to this object that will not be modified by the GC.
  */
-IntPtr BaseWindowsCanvasView::GetFixedId() {
+auto BaseWindowsCanvasView::GetFixedId() -> IntPtr {
   if (!m_gch.IsAllocated)
     m_gch = GCHandle::Alloc(this);
   return GCHandle::ToIntPtr(m_gch);
@@ -81,7 +81,7 @@ IntPtr BaseWindowsCanvasView::GetFixedId() {
 /**
  * Needs to be called when destroying the object.
  */
-void BaseWindowsCanvasView::ReleaseHandle() {
+auto BaseWindowsCanvasView::ReleaseHandle() -> void {
   m_gch.Free();
 }
 
@@ -90,7 +90,7 @@ void BaseWindowsCanvasView::ReleaseHandle() {
 /**
  * Returns the object based on the fixed pointer retrieved by GetFixedId().
  */
-BaseWindowsCanvasView ^ BaseWindowsCanvasView::GetFromFixedId(IntPtr ip) {
+auto BaseWindowsCanvasView::GetFromFixedId(IntPtr ip) -> BaseWindowsCanvasView ^ {
   GCHandle gcHandle = GCHandle::FromIntPtr(ip);
   return (BaseWindowsCanvasView ^)gcHandle.Target;
 }
@@ -119,31 +119,31 @@ void BaseWindowsCanvasView::set_on_viewport_changed(VoidVoidDelegate ^ dt) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool BaseWindowsCanvasView::initialize() {
+auto BaseWindowsCanvasView::initialize() -> bool {
   return get_unmanaged_object()->initialize();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::repaint(IntPtr hdc, int x, int y, int width, int height) {
+auto BaseWindowsCanvasView::repaint(IntPtr hdc, int x, int y, int width, int height) -> void {
   set_target_context((HDC)hdc.ToPointer());
   get_unmanaged_object()->repaint(x, y, width, height);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::repaint(IntPtr hdc) {
+auto BaseWindowsCanvasView::repaint(IntPtr hdc) -> void {
   set_target_context((HDC)hdc.ToPointer());
   get_unmanaged_object()->repaint();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::set_target_context(HDC hdc){};
+auto BaseWindowsCanvasView::set_target_context(HDC hdc) -> void {};
 
 //--------------------------------------------------------------------------------------------------
 
-double BaseWindowsCanvasView::get_fps() {
+auto BaseWindowsCanvasView::get_fps() -> double {
   return get_unmanaged_object()->get_fps();
 }
 
@@ -221,7 +221,7 @@ void BaseWindowsCanvasView::OnKeyUp(KeyEventArgs ^ e, Keys keystate) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::OnSizeChanged(int w, int h) {
+auto BaseWindowsCanvasView::OnSizeChanged(int w, int h) -> void {
   ::mdc::CanvasView* canvas = get_unmanaged_object();
 
   if (w < 1)
@@ -241,7 +241,7 @@ void BaseWindowsCanvasView::SetOwnerForm(System::Windows::Forms::Form ^ ownerFor
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::Form ^ BaseWindowsCanvasView::GetOwnerForm() {
+auto BaseWindowsCanvasView::GetOwnerForm() -> System::Windows::Forms::Form ^ {
   return owner_form;
 }
 
@@ -269,13 +269,13 @@ void BaseWindowsCanvasView::get_viewport([Out] double % x, [Out] double % y, [Ou
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::set_offset(double x, double y) {
+auto BaseWindowsCanvasView::set_offset(double x, double y) -> void {
   get_unmanaged_object()->set_offset(base::Point(x, y));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::scroll_to(double x, double y) {
+auto BaseWindowsCanvasView::scroll_to(double x, double y) -> void {
   get_unmanaged_object()->scroll_to(base::Point(x, y));
 }
 
@@ -309,13 +309,13 @@ void BaseWindowsCanvasView::window_to_canvas(int x, int y, int w, int h, [Out] d
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWindowsCanvasView::update_view_size(int w, int h) {
+auto BaseWindowsCanvasView::update_view_size(int w, int h) -> void {
   get_unmanaged_object()->update_view_size(w, h);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mdc::EventState BaseWindowsCanvasView::getEventState(Keys keys, MouseButtons buttons) {
+auto BaseWindowsCanvasView::getEventState(Keys keys, MouseButtons buttons) -> mdc::EventState {
   mdc::EventState state = ((mdc::EventState)0);
 
   if ((keys & Keys::Control) == Keys::Control)

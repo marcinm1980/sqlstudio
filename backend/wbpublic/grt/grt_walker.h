@@ -45,7 +45,7 @@ namespace bec {
     typedef int (T::*CGrtCb)(const GrtObjectRef &);
     typedef std::function<int(GrtObjectRef)> CGrtSlot;
     std::vector<CGrtSlot> allTypesSlots;
-    void append_allTypesCb(T *self, CGrtCb cb) {
+    auto append_allTypesCb(T *self, CGrtCb cb) -> void {
       allTypesSlots.push_back(std::bind(cb, self, std::placeholders::_1));
     }
 
@@ -134,8 +134,8 @@ namespace bec {
     }                                                          \
   }
 
-    int iterate(T &Self, const studio_logical_ModelRef &model, bool breakOnError = false,
-                bool model_diagrams = true) {
+    auto iterate(T &Self, const studio_logical_ModelRef &model, bool breakOnError = false,
+                bool model_diagrams = true) -> int {
       stack_item _centry(model, call_stack);
 
       int res = 1;
@@ -149,8 +149,8 @@ namespace bec {
       return res;
     }
 
-    int iterate(T &Self, const studio_physical_ModelRef &model, bool breakOnError = false,
-                bool model_diagrams = true) {
+    auto iterate(T &Self, const studio_physical_ModelRef &model, bool breakOnError = false,
+                bool model_diagrams = true) -> int {
       stack_item _centry(model, call_stack);
 
       int res = 1;
@@ -166,7 +166,7 @@ namespace bec {
       return res;
     }
 
-    int iterate(T &Self, const model_ObjectRef &figure, bool breakOnError = false) {
+    auto iterate(T &Self, const model_ObjectRef &figure, bool breakOnError = false) -> int {
       int res = 1;
       stack_item _centry(figure, call_stack);
 
@@ -206,7 +206,7 @@ namespace bec {
       return res;
     }
 
-    int iterate(T &Self, const model_DiagramRef &view, bool breakOnError = false) {
+    auto iterate(T &Self, const model_DiagramRef &view, bool breakOnError = false) -> int {
       stack_item _centry(view, call_stack);
       int res = 1;
       ITERATE_LIST(model_Layer, layers, view);
@@ -215,14 +215,14 @@ namespace bec {
       return res;
     }
 
-    int iterate_diagrams(T &Self, const model_ModelRef &model, bool breakOnError = false) {
+    auto iterate_diagrams(T &Self, const model_ModelRef &model, bool breakOnError = false) -> int {
       stack_item _centry(model, call_stack);
       int res = 1;
       ITERATE_LIST_DEEP(model_Diagram, diagrams, model);
       return res;
     }
 
-    int iterate(T &Self, const db_TableRef &table, bool breakOnError = false) {
+    auto iterate(T &Self, const db_TableRef &table, bool breakOnError = false) -> int {
       if (!EXIST_CB(db_Column) && !EXIST_CB(db_Index) && !EXIST_CB(db_ForeignKey) && !EXIST_CB(db_Trigger))
         return 1;
       stack_item _centry(table, call_stack);
@@ -237,7 +237,7 @@ namespace bec {
       return res;
     }
 
-    int iterate(T &Self, const db_SchemaRef &schema, bool breakOnError = false) {
+    auto iterate(T &Self, const db_SchemaRef &schema, bool breakOnError = false) -> int {
       stack_item _centry(schema, call_stack);
       int res = 1;
       ITERATE_LIST_DEEP(db_Table, tables, schema);
@@ -247,7 +247,7 @@ namespace bec {
       return res;
     }
 
-    int iterate(T &Self, const db_CatalogRef &catalog, bool breakOnError = false) {
+    auto iterate(T &Self, const db_CatalogRef &catalog, bool breakOnError = false) -> int {
       int res = 1;
       stack_item _centry(catalog, call_stack);
 
@@ -258,7 +258,7 @@ namespace bec {
       return res;
     }
 
-    int iterate(T &Self, const db_RoleRef &role, bool breakOnError = false) {
+    auto iterate(T &Self, const db_RoleRef &role, bool breakOnError = false) -> int {
       int res = 1;
       stack_item _centry(role, call_stack);
 
@@ -275,7 +275,7 @@ namespace bec {
   if (grt::Ref<type>::can_wrap(object))          \
     return iterate(Self, grt::Ref<type>::cast_from(object), breakOnError, model_diagrams);
 
-    int iterate(T &Self, const GrtObjectRef &object, bool breakOnError = false, bool model_diagrams = true) {
+    auto iterate(T &Self, const GrtObjectRef &object, bool breakOnError = false, bool model_diagrams = true) -> int {
       stack_item _centry(object, call_stack);
       CASE_ITERATE_MODEL(studio_logical_Model, model_diagrams);
       CASE_ITERATE_MODEL(studio_physical_Model, model_diagrams);

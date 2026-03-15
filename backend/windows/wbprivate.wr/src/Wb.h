@@ -71,7 +71,7 @@ namespace MySQL {
           orientation(CppStringToNative(settings->orientation())) {
       }
 
-      void update_object(grt::ListRef<app_PaperType> paperTypes, app_PageSettingsRef settings) {
+      auto update_object(grt::ListRef<app_PaperType> paperTypes, app_PageSettingsRef settings) -> void {
         settings->paperType(grt::find_named_object_in_list(paperTypes, NativeToCppString(paper_type)));
 
         settings->marginTop(grt::DoubleRef(margin_top));
@@ -128,23 +128,21 @@ namespace MySQL {
     public:
       WbOptions(String ^ baseDir, String ^ userDir, bool full_init);
 
-      wb::WBOptions* get_unmanaged_object() {
+      auto get_unmanaged_object() -> wb::WBOptions* {
         return inner;
       };
       bool parse_args(array<String ^> ^ args, String ^ app_path);
 
-      void analyzeCommandLineArguments();
+      auto analyzeCommandLineArguments() -> void;
 
-      property bool Verbose {
-        bool get() {
+      auto get() -> property bool Verbose { bool {
           return !inner->verbose;
         }
       }
 
-      property String ^ OpenAtStartup { String ^ get(); }
+      auto get() -> property String ^ OpenAtStartup { String ^; }
 
-        property String ^
-        OpenAtStartupType { String ^ get(); }
+        auto get() -> property String ^ OpenAtStartupType { String ^; }
     };
 
     class WbContextUiHolder {
@@ -199,138 +197,138 @@ namespace MySQL {
       VoidStrUIFormDelegate ^ create_main_form_view_delegate;
       VoidStrUIFormWrapperDelegate ^ create_main_form_view_wrapper_delegate;
       void set_create_main_form_view(MySQL::MySqlStudio::WbFrontendCallbacks ^ cbacks, VoidStrUIFormDelegate ^ dt);
-      void create_main_form_view_wrapper(const std::string& view_name, std::shared_ptr<bec::UIForm> form_be);
+      auto create_main_form_view_wrapper(const std::string& view_name, std::shared_ptr<bec::UIForm> form_be) -> void;
 
     public:
       WbContext(bool verbose);
       ~WbContext();
 
-      bool is_commercial() {
+      auto is_commercial() -> bool {
         return wb::WBContextUI::get()->get_wb()->is_commercial();
       };
 
       bool init(MySQL::MySqlStudio::WbFrontendCallbacks ^ callbacks, WbOptions ^ options,
                 VoidStrUIFormDelegate ^ create_main_form_view);
 
-      bool opengl_rendering_enforced() {
+      auto opengl_rendering_enforced() -> bool {
         return wb::WBContextUI::get()->get_wb()->opengl_rendering_enforced();
       }
-      bool software_rendering_enforced() {
+      auto software_rendering_enforced() -> bool {
         return wb::WBContextUI::get()->get_wb()->software_rendering_enforced();
       }
-      bool is_busy() {
+      auto is_busy() -> bool {
         return bec::GRTManager::get()->get_dispatcher()->get_busy();
       }
-      bool request_quit() {
+      auto request_quit() -> bool {
         return wb::WBContextUI::get()->request_quit();
       }
-      void perform_quit() {
+      auto perform_quit() -> void {
         wb::WBContextUI::get()->perform_quit();
       }
-      bool is_quitting() {
+      auto is_quitting() -> bool {
         return wb::WBContextUI::get()->is_quitting();
       }
-      void finalize() {
+      auto finalize() -> void {
         wb::WBContextUI::get()->finalize();
       }
 
-      GrtManager ^ get_grt_manager();
+      auto get_grt_manager() -> GrtManager ^;
 
       System::Windows::Forms::MenuStrip ^ menu_for_form(MySQL::Base::UIForm ^ form);
       System::Windows::Forms::MenuStrip ^ menu_for_appview(MySQL::Forms::AppViewDockContent ^ content);
       void validate_menu_for_form(MySQL::Base::UIForm ^ form);
       System::Windows::Forms::ToolStrip ^ toolbar_for_form(MySQL::Base::UIForm ^ form);
-      System::Windows::Forms::Control ^ shared_secondary_sidebar();
+      auto shared_secondary_sidebar() -> System::Windows::Forms::Control ^;
 
       void focus_search_box(MySQL::Base::UIForm ^ form);
       String ^ get_search_string(MySQL::Base::UIForm ^ form);
-      String ^ get_title();
-      bool has_unsaved_changes();
+      auto get_title() -> String ^;
+      auto has_unsaved_changes() -> bool;
       void open_document(String ^ file);
-      bool save_changes();
-      void flush_idle_tasks(bool force);
-      double delay_for_next_timer();
-      void flush_timers();
+      auto save_changes() -> bool;
+      auto flush_idle_tasks(bool force) -> void;
+      auto delay_for_next_timer() -> double;
+      auto flush_timers() -> void;
 
       // ----- Edit menu handling
-      void validate_edit_menu() {
+      auto validate_edit_menu() -> void {
         wb::WBContextUI::get()->get_command_ui()->revalidate_edit_menu_items();
       }
 
-      void edit_undo() {
+      auto edit_undo() -> void {
         if (wb::WBContextUI::get()->get_active_main_form())
           wb::WBContextUI::get()->get_active_main_form()->undo();
       }
 
-      bool edit_can_undo() {
+      auto edit_can_undo() -> bool {
         if (wb::WBContextUI::get()->get_active_main_form() &&
             wb::WBContextUI::get()->get_active_main_form()->can_undo())
           return true;
         return false;
       }
 
-      void edit_redo() {
+      auto edit_redo() -> void {
         if (wb::WBContextUI::get()->get_active_main_form())
           wb::WBContextUI::get()->get_active_main_form()->redo();
       }
 
-      bool edit_can_redo() {
+      auto edit_can_redo() -> bool {
         if (wb::WBContextUI::get()->get_active_main_form() &&
             wb::WBContextUI::get()->get_active_main_form()->can_redo())
           return true;
         return false;
       }
 
-      void edit_copy() {
+      auto edit_copy() -> void {
         if (wb::WBContextUI::get()->get_active_form())
           wb::WBContextUI::get()->get_active_form()->copy();
       }
 
-      bool edit_can_copy() {
+      auto edit_can_copy() -> bool {
         if (wb::WBContextUI::get()->get_active_form())
           return wb::WBContextUI::get()->get_active_form()->can_copy();
         return false;
       }
 
-      void edit_cut() {
+      auto edit_cut() -> void {
         if (wb::WBContextUI::get()->get_active_form())
           wb::WBContextUI::get()->get_active_form()->cut();
       }
 
-      bool edit_can_cut() {
+      auto edit_can_cut() -> bool {
         if (wb::WBContextUI::get()->get_active_form() && wb::WBContextUI::get()->get_active_form()->can_cut())
           return true;
         return false;
       }
 
-      void edit_paste() {
+      auto edit_paste() -> void {
         if (wb::WBContextUI::get()->get_active_form())
           wb::WBContextUI::get()->get_active_form()->paste();
       }
 
-      bool edit_can_paste() {
+      auto edit_can_paste() -> bool {
         if (wb::WBContextUI::get()->get_active_form())
           return wb::WBContextUI::get()->get_active_form()->can_paste();
         return false;
       }
 
-      void edit_select_all() {
+      auto edit_select_all() -> void {
         if (wb::WBContextUI::get()->get_active_form())
           wb::WBContextUI::get()->get_active_form()->select_all();
       }
 
-      bool edit_can_select_all() {
+      auto edit_can_select_all() -> bool {
         if (wb::WBContextUI::get()->get_active_form() && wb::WBContextUI::get()->get_active_form()->can_select_all())
           return true;
         return false;
       }
 
-      void edit_delete() {
+      auto edit_delete() -> void {
         if (wb::WBContextUI::get()->get_active_form())
           wb::WBContextUI::get()->get_active_form()->delete_selection();
       }
 
-      bool edit_can_delete() {
+      auto edit_can_delete() -> bool {
         if (wb::WBContextUI::get()->get_active_form() && wb::WBContextUI::get()->get_active_form()->can_delete())
           return true;
         return false;
@@ -411,9 +409,9 @@ namespace MySQL {
       void activate_command(String ^ name);
 
       // Overview.
-      Overview ^ get_physical_overview();
-      Aga::Controls::Tree::TreeViewAdv ^ get_history_tree();
-      Aga::Controls::Tree::TreeViewAdv ^ get_usertypes_tree();
+      auto get_physical_overview() -> Overview ^;
+      auto get_history_tree() -> Aga::Controls::Tree::TreeViewAdv ^;
+      auto get_usertypes_tree() -> Aga::Controls::Tree::TreeViewAdv ^;
       MySQL::Grt::GrtValueInspector ^
         get_inspector_for_selection(MySQL::Base::UIForm ^ form, [Out] List<String ^> ^ % items);
       bool are_lists_equal(GrtValue ^ v1, GrtValue ^ v2);
@@ -424,8 +422,8 @@ namespace MySQL {
       ::MySQL::MySqlStudio::ModelDiagramFormWrapper ^ get_diagram_form_for_diagram(String ^ id);
       void set_active_form(MySQL::Base::UIForm ^ uiform);
       void set_active_form_from_appview(MySQL::Forms::AppViewDockContent ^ form);
-      String ^ get_active_context();
-      void close_gui_plugin(IntPtr handle);
+      auto get_active_context() -> String ^;
+      auto close_gui_plugin(IntPtr handle) -> void;
       void execute_plugin(String ^ name);
       void report_bug(String ^ errorInfo);
 
@@ -444,15 +442,12 @@ namespace MySQL {
       String ^ read_option_value(String ^ model, String ^ key, String ^ default_value);
 
       // Paper.
-      List<PaperSize ^> ^
-        get_paper_sizes() {
+      auto get_paper_sizes() -> List<PaperSize ^> ^ {
           return MySQL::Grt::CppListToObjectList<::wb::WBPaperSize, PaperSize>(
             wb::WBContextUI::get()->get_paper_sizes(false));
         }
 
-        PageSettings
-        ^
-        get_page_settings() {
+        auto get_page_settings() -> PageSettings ^ {
           app_PageSettingsRef settings(wb::WBContextUI::get()->get_page_settings());
           if (settings.is_valid())
             return gcnew PageSettings(settings);
@@ -472,7 +467,7 @@ namespace MySQL {
         wb::WBContextUI::get()->init_finish(options->get_unmanaged_object());
       }
 
-      void close_document_finish() {
+      auto close_document_finish() -> void {
         wb::WBContextUI::get()->get_wb()->close_document_finish();
 
         // Explicitly delete the overview object to avoid garbage collection to kick in after
@@ -481,19 +476,19 @@ namespace MySQL {
         physical_overview = nullptr;
       }
 
-      void new_model_finish() {
+      auto new_model_finish() -> void {
         wb::WBContextUI::get()->get_wb()->new_model_finish();
       }
 
       String ^ get_filename() { return CppStringToNative(wb::WBContextUI::get()->get_wb()->get_filename()); }
 
-        void mainform_activated() {
+        auto mainform_activated() -> void {
         mforms::Form::main_form()->activated();
       }
-      void mainform_deactivated() {
+      auto mainform_deactivated() -> void {
         mforms::Form::main_form()->deactivated();
       }
-      bool mainform_active() {
+      auto mainform_active() -> bool {
         return mforms::Form::main_form()->is_active();
       }
     };
@@ -528,27 +523,27 @@ namespace MySQL {
         inner->set_name(NativeToCppString(name));
       }
 
-      int get_xpages() {
+      auto get_xpages() -> int {
         return inner->get_xpages();
       }
 
-      int get_ypages() {
+      auto get_ypages() -> int {
         return inner->get_ypages();
       }
 
-      void set_xpages(int c) {
+      auto set_xpages(int c) -> void {
         inner->set_xpages(c);
       }
 
-      void set_ypages(int c) {
+      auto set_ypages(int c) -> void {
         inner->set_ypages(c);
       }
 
-      void commit() {
+      auto commit() -> void {
         inner->commit();
       }
 
-      void update_size() {
+      auto update_size() -> void {
         inner->update_size();
       }
     };

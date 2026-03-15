@@ -77,7 +77,7 @@ public:
 
   virtual ~ui_db_ConnectPanel();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "ui.db.ConnectPanel";
   }
 
@@ -88,7 +88,7 @@ public:
    * \par In Python:
    *    value = obj.connection
    */
-  db_mgmt_ConnectionRef connection() const;
+  auto connection() const -> db_mgmt_ConnectionRef;
 
   /**
    * Setter for attribute connection
@@ -97,7 +97,7 @@ public:
    * \par In Python:
    *   obj.connection = value
    */
-  virtual void connection(const db_mgmt_ConnectionRef &value);
+  virtual auto connection(const db_mgmt_ConnectionRef &value) -> void;
 
   /**
    * Getter for attribute view (read-only)
@@ -106,7 +106,7 @@ public:
    * \par In Python:
    *    value = obj.view
    */
-  mforms_ObjectReferenceRef view() const;
+  auto view() const -> mforms_ObjectReferenceRef;
 
 
 private: // The next attribute is read-only.
@@ -117,26 +117,26 @@ public:
    * \param mgmt 
    * \return 
    */
-  virtual void initialize(const db_mgmt_ManagementRef &mgmt);
+  virtual auto initialize(const db_mgmt_ManagementRef &mgmt) -> void;
   /**
    * Method. initializes the Connection Panel
    * \param mgmt 
    * \param allowedRdbmsList 
    * \return 
    */
-  virtual void initializeWithRDBMSSelector(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &allowedRdbmsList);
+  virtual auto initializeWithRDBMSSelector(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &allowedRdbmsList) -> void;
   /**
    * Method. save the connection with the given name. Throws an exception if the connection name is duplicate or on other errors
    * \param name 
    * \return 
    */
-  virtual void saveConnectionAs(const std::string &name);
+  virtual auto saveConnectionAs(const std::string &name) -> void;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -144,7 +144,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new ui_db_ConnectPanel());
   }
 
@@ -155,7 +155,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_saveConnectionAs(grt::internal::Object *self, const grt::BaseListRef &args){ dynamic_cast<ui_db_ConnectPanel*>(self)->saveConnectionAs(grt::StringRef::cast_from(args[0])); return grt::ValueRef(); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -186,7 +186,7 @@ public:
 
   virtual ~ui_ObjectEditor();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "ui.ObjectEditor";
   }
 
@@ -197,11 +197,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -215,7 +215,7 @@ public:
    * \par In Python:
    *    value = obj.dockingPoint
    */
-  mforms_ObjectReferenceRef dockingPoint() const { return _dockingPoint; }
+  auto dockingPoint() const -> mforms_ObjectReferenceRef { return _dockingPoint; }
 
   /**
    * Setter for attribute dockingPoint
@@ -224,7 +224,7 @@ public:
    * \par In Python:
    *   obj.dockingPoint = value
    */
-  virtual void dockingPoint(const mforms_ObjectReferenceRef &value) {
+  virtual auto dockingPoint(const mforms_ObjectReferenceRef &value) -> void {
     grt::ValueRef ovalue(_dockingPoint);
     _dockingPoint = value;
     member_changed("dockingPoint", ovalue, value);
@@ -237,7 +237,7 @@ public:
    * \par In Python:
    *    value = obj.object
    */
-  GrtObjectRef object() const { return _object; }
+  auto object() const -> GrtObjectRef { return _object; }
 
   /**
    * Setter for attribute object
@@ -246,18 +246,18 @@ public:
    * \par In Python:
    *   obj.object = value
    */
-  virtual void object(const GrtObjectRef &value) {
+  virtual auto object(const GrtObjectRef &value) -> void {
     grt::ValueRef ovalue(_object);
     _object = value;
     member_changed("object", ovalue, value);
   }
 
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -268,12 +268,12 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new ui_ObjectEditor());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -305,7 +305,7 @@ public:
       _customData(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "ui.ModelPanel";
   }
 
@@ -316,7 +316,7 @@ public:
    * \par In Python:
    *    value = obj.commonSidebar
    */
-  mforms_ObjectReferenceRef commonSidebar() const { return _commonSidebar; }
+  auto commonSidebar() const -> mforms_ObjectReferenceRef { return _commonSidebar; }
 
   /**
    * Setter for attribute commonSidebar
@@ -325,7 +325,7 @@ public:
    * \par In Python:
    *   obj.commonSidebar = value
    */
-  virtual void commonSidebar(const mforms_ObjectReferenceRef &value) {
+  virtual auto commonSidebar(const mforms_ObjectReferenceRef &value) -> void {
     grt::ValueRef ovalue(_commonSidebar);
     _commonSidebar = value;
     member_changed("commonSidebar", ovalue, value);
@@ -338,11 +338,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -356,7 +356,7 @@ public:
    * \par In Python:
    *    value = obj.model
    */
-  model_ModelRef model() const { return _model; }
+  auto model() const -> model_ModelRef { return _model; }
 
   /**
    * Setter for attribute model
@@ -365,7 +365,7 @@ public:
    * \par In Python:
    *   obj.model = value
    */
-  virtual void model(const model_ModelRef &value) {
+  virtual auto model(const model_ModelRef &value) -> void {
     grt::ValueRef ovalue(_model);
     _model = value;
     member_changed("model", ovalue, value);
@@ -378,12 +378,12 @@ protected:
   model_ModelRef _model;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new ui_ModelPanel());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -408,7 +408,7 @@ public:
 
 
 
-inline void register_structs_ui_xml() {
+inline auto register_structs_ui_xml() -> void {
   grt::internal::ClassRegistry::register_class<ui_db_ConnectPanel>();
   grt::internal::ClassRegistry::register_class<ui_ObjectEditor>();
   grt::internal::ClassRegistry::register_class<ui_ModelPanel>();

@@ -72,11 +72,11 @@
 #endif
 
 struct ssh_threads_callbacks_struct * ssh_threads_get_std_threads(void);
-void sshLogCallback(int priority, const char *function, const char *buffer, void *userdata);
+auto sshLogCallback(int priority, const char *function, const char *buffer, void *userdata) -> void;
 
 namespace ssh {
 
-  inline void wbCloseSocket(int socket) {
+  inline auto wbCloseSocket(int socket) -> void {
 #if _MSC_VER
     closesocket(socket);
 #else
@@ -84,7 +84,7 @@ namespace ssh {
 #endif
   }
 
-  inline int wbPoll(pollfd *data, size_t size) {
+  inline auto wbPoll(pollfd *data, size_t size) -> int {
 #if _MSC_VER
     return WSAPoll(data, static_cast<ULONG>(size), -1);
 #else
@@ -94,10 +94,10 @@ namespace ssh {
 
   const std::size_t LOG_SIZE_100MB = 104857600;
   static std::once_flag sshInitOnce;
-  std::string getError();
-  std::string getSftpErrorDescription(int rc);
-  void setSocketNonBlocking(int sock);
-  void initLibSSH();
+  auto getError() -> std::string;
+  auto getSftpErrorDescription(int rc) -> std::string;
+  auto setSocketNonBlocking(int sock) -> void;
+  auto initLibSSH() -> void;
 
   class WBSSHLIBRARY_PUBLIC_FUNC SSHConnectionConfig {
   public:
@@ -121,11 +121,11 @@ namespace ssh {
 
     SSHConnectionConfig();
 
-    std::string getServer() {
+    auto getServer() -> std::string {
       return remoteSSHhost + ":" + std::to_string(remoteSSHport);
     }
 
-    void dumpConfig() const;
+    auto dumpConfig() const -> void;
     friend bool operator==(const SSHConnectionConfig &tun1, const SSHConnectionConfig &tun2);
     friend bool operator!=(const SSHConnectionConfig &tun1, const SSHConnectionConfig &tun2);
   };
@@ -170,7 +170,7 @@ namespace ssh {
     }
     virtual ~SSHTunnelException() NOEXCEPT {
     }
-    virtual const char *what() const NOEXCEPT {
+    virtual auto what() const NOEXCEPT -> const char * {
       return _msgText.c_str();
     }
   protected:
@@ -187,7 +187,7 @@ namespace ssh {
     }
     virtual ~SSHSftpException() NOEXCEPT {
     }
-    virtual const char *what() const NOEXCEPT {
+    virtual auto what() const NOEXCEPT -> const char * {
       return _msgText.c_str();
     }
   protected:
@@ -204,7 +204,7 @@ namespace ssh {
     }
     virtual ~SSHAuthException() NOEXCEPT {
     }
-    virtual const char *what() const NOEXCEPT {
+    virtual auto what() const NOEXCEPT -> const char * {
       return _msgText.c_str();
     }
   protected:
@@ -215,17 +215,17 @@ namespace ssh {
   public:
     SSHThread();
     virtual ~SSHThread();
-    virtual void stop();
-    bool isRunning();
-    void start();
-    void join();
+    virtual auto stop() -> void;
+    auto isRunning() -> bool;
+    auto start() -> void;
+    auto join() -> void;
 
   protected:
     std::atomic<bool> _stop;
     std::atomic<bool> _finished;
     base::Semaphore _initializationSem;
-    virtual void run() = 0;
-    void _run();
+    virtual auto run() -> void = 0;
+    auto _run() -> void;
 
   private:
     std::thread _thread;

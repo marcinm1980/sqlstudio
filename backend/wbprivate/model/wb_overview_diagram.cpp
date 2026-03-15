@@ -38,7 +38,7 @@ class AddDiagramNode : public OverviewBE::Node {
 public:
   model_ModelRef model;
 
-  virtual bool activate(WBContext *wb) {
+  virtual auto activate(WBContext *wb) -> bool {
     wb->get_model_context()->add_new_diagram(model);
     return true;
   }
@@ -50,20 +50,20 @@ public:
     object = view;
   }
 
-  virtual bool activate(WBContext *wb) {
+  virtual auto activate(WBContext *wb) -> bool {
     wb->get_model_context()->switch_diagram(model_DiagramRef::cast_from(object));
     return true;
   }
 
-  virtual bool is_deletable() {
+  virtual auto is_deletable() -> bool {
     return true;
   }
 
-  virtual void delete_object(WBContext *wb) {
+  virtual auto delete_object(WBContext *wb) -> void {
     wb->get_model_context()->delete_diagram(model_DiagramRef::cast_from(object));
   }
 
-  virtual bool rename(WBContext *wb, const std::string &name) {
+  virtual auto rename(WBContext *wb, const std::string &name) -> bool {
     grt::AutoUndo undo;
 
     object->name(name);
@@ -73,11 +73,11 @@ public:
     return true;
   }
 
-  virtual bool is_renameable() {
+  virtual auto is_renameable() -> bool {
     return true;
   }
 
-  virtual int get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) {
+  virtual auto get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int {
     return OverviewBE::ObjectNode::get_popup_menu_items(wb, items);
   }
 };
@@ -97,7 +97,7 @@ DiagramListNode::DiagramListNode(model_ModelRef model) : ContainerNode(OverviewB
   refresh_children();
 }
 
-void DiagramListNode::refresh_children() {
+auto DiagramListNode::refresh_children() -> void {
   clear_children();
 
   if (_model->diagrams().is_valid()) {

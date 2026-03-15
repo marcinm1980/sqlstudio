@@ -50,7 +50,7 @@ Group::Group(Layer *layer) : Layouter(layer) {
 Group::~Group() {
 }
 
-void Group::repaint(const Rect &clipArea, bool direct) {
+auto Group::repaint(const Rect &clipArea, bool direct) -> void {
   CairoCtx *cr = _layer->get_view()->cairoctx();
   Rect clipRect = clipArea;
 
@@ -81,7 +81,7 @@ void Group::repaint(const Rect &clipArea, bool direct) {
   cr->restore();
 }
 
-void Group::add(CanvasItem *item) {
+auto Group::add(CanvasItem *item) -> void {
   Group *parent_group = dynamic_cast<Group *>(item->get_parent());
 
   assert(item != this);
@@ -108,7 +108,7 @@ void Group::add(CanvasItem *item) {
   _content_info[item] = info;
 }
 
-void Group::remove(CanvasItem *item) {
+auto Group::remove(CanvasItem *item) -> void {
   _content_info[item].connection.disconnect();
 
   _content_info.erase(item);
@@ -118,7 +118,7 @@ void Group::remove(CanvasItem *item) {
   update_bounds();
 }
 
-void Group::dissolve() {
+auto Group::dissolve() -> void {
   Point delta = get_position();
   Group *parent_group = dynamic_cast<Group *>(get_parent());
 
@@ -136,11 +136,11 @@ void Group::dissolve() {
   }
 }
 
-void Group::freeze() {
+auto Group::freeze() -> void {
   _freeze_bounds_updates++;
 }
 
-void Group::thaw() {
+auto Group::thaw() -> void {
   assert(_freeze_bounds_updates > 0);
 
   _freeze_bounds_updates--;
@@ -148,16 +148,16 @@ void Group::thaw() {
     update_bounds();
 }
 
-bool Group::has_item(CanvasItem *item) {
+auto Group::has_item(CanvasItem *item) -> bool {
   return std::find(_contents.begin(), _contents.end(), item) != _contents.end();
 }
 
-void Group::move_to(const Point &point) {
+auto Group::move_to(const Point &point) -> void {
   Layouter::move_to(point);
   update_bounds();
 }
 
-void Group::update_bounds() {
+auto Group::update_bounds() -> void {
   if (_freeze_bounds_updates == 0) {
     std::list<CanvasItem *>::const_iterator it = _contents.begin();
     Rect rect;
@@ -183,7 +183,7 @@ void Group::update_bounds() {
   }
 }
 
-void Group::foreach (const std::function<void(CanvasItem *)> &slot) {
+auto Group::foreach (const std::function<void(CanvasItem *)> &slot) -> void {
   for (std::list<CanvasItem *>::const_iterator it = _contents.begin(); it != _contents.end();) {
     std::list<CanvasItem *>::const_iterator next = it;
     ++next;
@@ -192,7 +192,7 @@ void Group::foreach (const std::function<void(CanvasItem *)> &slot) {
   }
 }
 
-void Group::set_selected(bool flag) {
+auto Group::set_selected(bool flag) -> void {
   if ((_selected != 0) == flag)
     return;
 
@@ -204,7 +204,7 @@ void Group::set_selected(bool flag) {
   _layer->queue_repaint(get_bounds());
 }
 
-CanvasItem *Group::get_direct_subitem_at(const Point &point) {
+auto Group::get_direct_subitem_at(const Point &point) -> CanvasItem * {
   Point npoint = point - get_position();
 
   for (std::list<CanvasItem *>::const_iterator iter = _contents.begin(); iter != _contents.end(); ++iter) {
@@ -222,7 +222,7 @@ CanvasItem *Group::get_direct_subitem_at(const Point &point) {
   return 0;
 }
 
-CanvasItem *Group::get_other_item_at(const Point &point, CanvasItem *other_item) {
+auto Group::get_other_item_at(const Point &point, CanvasItem *other_item) -> CanvasItem * {
   Point npoint = point - get_position();
 
   for (std::list<CanvasItem *>::const_iterator iter = _contents.begin(); iter != _contents.end(); ++iter) {
@@ -240,24 +240,24 @@ CanvasItem *Group::get_other_item_at(const Point &point, CanvasItem *other_item)
   return 0;
 }
 
-CanvasItem *Group::get_item_at(const Point &point) {
+auto Group::get_item_at(const Point &point) -> CanvasItem * {
   return get_other_item_at(point, 0);
 }
 
-void Group::raise_item(CanvasItem *item, CanvasItem *above) {
+auto Group::raise_item(CanvasItem *item, CanvasItem *above) -> void {
   restack_up(_contents, item, above);
 }
 
-void Group::lower_item(CanvasItem *item) {
+auto Group::lower_item(CanvasItem *item) -> void {
   restack_down(_contents, item);
 }
 
-void Group::move_item(CanvasItem *item, const Point &pos) {
+auto Group::move_item(CanvasItem *item, const Point &pos) -> void {
   move_to(pos + get_position());
 }
 
 #ifdef no_group_activate
-void Group::activate_group(bool flag) {
+auto Group::activate_group(bool flag) -> void {
   if (flag != _activated) {
     if (flag) {
       _activated = true;
@@ -270,7 +270,7 @@ void Group::activate_group(bool flag) {
 }
 #endif
 
-void Group::focus_changed(bool f, CanvasItem *item) {
+auto Group::focus_changed(bool f, CanvasItem *item) -> void {
   if (_parent != 0) {
     if (item == this) {
 #ifdef no_group_activate

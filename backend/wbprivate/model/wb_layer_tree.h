@@ -49,21 +49,21 @@ namespace wb {
     std::multimap<std::string, studio_physical_ConnectionRef> _figure_connections;
     bool _updating_selection;
 
-    void activate_node(const mforms::TreeNodeRef &node, int column);
-    void handle_menu_action(const std::string &name);
+    auto activate_node(const mforms::TreeNodeRef &node, int column) -> void;
+    auto handle_menu_action(const std::string &name) -> void;
 
-    void selection_changed();
+    auto selection_changed() -> void;
 
     void add_figure_node(mforms::TreeNodeRef parent, model_FigureRef figure, int insertion_point = -1);
 
-    void object_changed(const std::string &key, const grt::ValueRef &value, mforms::TreeNodeRef node);
-    void diagram_objects_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value);
+    auto object_changed(const std::string &key, const grt::ValueRef &value, mforms::TreeNodeRef node) -> void;
+    auto diagram_objects_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) -> void;
 
   public:
     LayerTree(ModelDiagramForm *_form, const model_DiagramRef &diagram);
-    void refresh();
+    auto refresh() -> void;
 
-    void refresh_selection_status();
+    auto refresh_selection_status() -> void;
   };
 };
 

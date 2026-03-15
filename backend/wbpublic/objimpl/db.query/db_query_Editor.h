@@ -40,30 +40,30 @@ public:
   ImplData();
   virtual ~ImplData() {
   }
-  virtual db_mgmt_ConnectionRef connection() const = 0;
-  virtual db_mgmt_SSHConnectionRef sshConnection() const = 0;
-  virtual grt::IntegerRef getSSHTunnelPort() const = 0;
-  virtual grt::IntegerRef isConnected() const = 0;
-  virtual db_query_QueryEditorRef addQueryEditor() = 0;
-  virtual grt::IntegerRef addToOutput(const std::string &text, long bringToFront) = 0;
-  virtual grt::ListRef<db_query_Resultset> executeScript(const std::string &sql) = 0;
-  virtual grt::IntegerRef executeScriptAndOutputToGrid(const std::string &sql) = 0;
-  virtual db_query_EditableResultsetRef createTableEditResultset(const std::string &schema, const std::string &table,
-                                                                 const std::string &where, bool showGrid) = 0;
+  virtual auto connection() const -> db_mgmt_ConnectionRef = 0;
+  virtual auto sshConnection() const -> db_mgmt_SSHConnectionRef = 0;
+  virtual auto getSSHTunnelPort() const -> grt::IntegerRef = 0;
+  virtual auto isConnected() const -> grt::IntegerRef = 0;
+  virtual auto addQueryEditor() -> db_query_QueryEditorRef = 0;
+  virtual auto addToOutput(const std::string &text, long bringToFront) -> grt::IntegerRef = 0;
+  virtual auto executeScript(const std::string &sql) -> grt::ListRef<db_query_Resultset> = 0;
+  virtual auto executeScriptAndOutputToGrid(const std::string &sql) -> grt::IntegerRef = 0;
+  virtual auto createTableEditResultset(const std::string &schema, const std::string &table,
+                                                                 const std::string &where, bool showGrid) -> db_query_EditableResultsetRef = 0;
 
-  virtual void activeSchema(const std::string &schema) = 0;
-  virtual std::string activeSchema() = 0;
-  virtual db_query_QueryEditorRef activeQueryEditor() = 0;
-  virtual grt::ListRef<db_query_LiveDBObject> schemaTreeSelection() const = 0;
-  virtual void editLiveObject(const grt::Ref<db_DatabaseObject> &object, const db_CatalogRef &catalog) = 0;
-  virtual void alterLiveObject(const std::string &type, const std::string &schemaName,
-                               const std::string &objectName) = 0;
+  virtual auto activeSchema(const std::string &schema) -> void = 0;
+  virtual auto activeSchema() -> std::string = 0;
+  virtual auto activeQueryEditor() -> db_query_QueryEditorRef = 0;
+  virtual auto schemaTreeSelection() const -> grt::ListRef<db_query_LiveDBObject> = 0;
+  virtual auto editLiveObject(const grt::Ref<db_DatabaseObject> &object, const db_CatalogRef &catalog) -> void = 0;
+  virtual auto alterLiveObject(const std::string &type, const std::string &schemaName,
+                               const std::string &objectName) -> void = 0;
 
-  virtual db_query_ResultsetRef executeQuery(const std::string &sql, bool log) = 0;
-  virtual void executeCommand(const std::string &sql, bool log, bool background) = 0;
+  virtual auto executeQuery(const std::string &sql, bool log) -> db_query_ResultsetRef = 0;
+  virtual auto executeCommand(const std::string &sql, bool log, bool background) -> void = 0;
 
-  virtual db_query_ResultsetRef executeManagementQuery(const std::string &sql, bool log) = 0;
-  virtual void executeManagementCommand(const std::string &sql, bool log) = 0;
+  virtual auto executeManagementQuery(const std::string &sql, bool log) -> db_query_ResultsetRef = 0;
+  virtual auto executeManagementCommand(const std::string &sql, bool log) -> void = 0;
 };
 
 #endif

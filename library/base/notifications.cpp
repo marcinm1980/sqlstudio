@@ -44,7 +44,7 @@ Observer::~Observer() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void NotificationCenter::set_instance(NotificationCenter *center) {
+auto NotificationCenter::set_instance(NotificationCenter *center) -> void {
   std::map<std::string, NotificationHelp> help;
 
   if (nc) {
@@ -57,7 +57,7 @@ void NotificationCenter::set_instance(NotificationCenter *center) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-NotificationCenter *NotificationCenter::get() {
+auto NotificationCenter::get() -> NotificationCenter * {
   if (!nc)
     nc = new NotificationCenter();
   return nc;
@@ -76,9 +76,9 @@ NotificationCenter::~NotificationCenter() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void NotificationCenter::register_notification(const std::string &name, const std::string &context,
+auto NotificationCenter::register_notification(const std::string &name, const std::string &context,
                                                const std::string &general_info, const std::string &sender_info,
-                                               const std::string &info_info) {
+                                               const std::string &info_info) -> void {
   NotificationHelp help;
   help.context = context;
   help.summary = general_info;
@@ -89,7 +89,7 @@ void NotificationCenter::register_notification(const std::string &name, const st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void NotificationCenter::add_observer(Observer *observer, const std::string &name) {
+auto NotificationCenter::add_observer(Observer *observer, const std::string &name) -> void {
   ObserverEntry entry;
   entry.observer = observer;
   entry.observed_notification = name;
@@ -98,7 +98,7 @@ void NotificationCenter::add_observer(Observer *observer, const std::string &nam
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool NotificationCenter::remove_observer(Observer *observer, const std::string &name) {
+auto NotificationCenter::remove_observer(Observer *observer, const std::string &name) -> bool {
   auto iter = std::remove_if(_observers.begin(), _observers.end(), [&](auto &value) {
     return value.observer == observer && (name.empty() || name == value.observed_notification);
   });
@@ -112,7 +112,7 @@ bool NotificationCenter::remove_observer(Observer *observer, const std::string &
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool NotificationCenter::is_registered(Observer *observer) {
+auto NotificationCenter::is_registered(Observer *observer) -> bool {
   for (std::list<ObserverEntry>::iterator next, iter = _observers.begin(); iter != _observers.end(); ++iter) {
     if (iter->observer == observer)
       return true;
@@ -123,7 +123,7 @@ bool NotificationCenter::is_registered(Observer *observer) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void NotificationCenter::send(const std::string &name, void *sender, NotificationInfo &info) {
+auto NotificationCenter::send(const std::string &name, void *sender, NotificationInfo &info) -> void {
   if (name.substr(0, 2) != "GN")
     throw std::invalid_argument("Attempt to send notification with a name that doesn't start with GN\n");
 
@@ -144,7 +144,7 @@ void NotificationCenter::send(const std::string &name, void *sender, Notificatio
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void NotificationCenter::send(const std::string &name, void *sender) {
+auto NotificationCenter::send(const std::string &name, void *sender) -> void {
   NotificationInfo info;
   send(name, sender, info);
 }

@@ -27,8 +27,8 @@
 
 #include <python_context.h>
 
-GRT_STRUCTS_UI_PUBLIC grt::AutoPyObject pyobject_from_grt(grt_PyObjectRef object);
-GRT_STRUCTS_UI_PUBLIC grt_PyObjectRef pyobject_to_grt(grt::AutoPyObject object);
-GRT_STRUCTS_UI_PUBLIC grt_PyObjectRef pyobject_to_grt(PyObject *object);
+auto pyobject_from_grt(grt_PyObjectRef object) -> GRT_STRUCTS_UI_PUBLIC grt::AutoPyObject;
+auto pyobject_to_grt(grt::AutoPyObject object) -> GRT_STRUCTS_UI_PUBLIC grt_PyObjectRef;
+auto pyobject_to_grt(PyObject *object) -> GRT_STRUCTS_UI_PUBLIC grt_PyObjectRef;
 
-void pyobject_initialize();
+auto pyobject_initialize() -> void;

@@ -46,7 +46,7 @@ namespace bec {
   public:
     UndoObjectChangeGroup(const std::string &object_id, const std::string &member);
 
-    virtual bool matches_group(UndoGroup *group) const;
+    virtual auto matches_group(UndoGroup *group) const -> bool;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC BaseEditor : public UIForm, public RefreshUI {
@@ -59,45 +59,45 @@ namespace bec {
     BaseEditor(const grt::Ref<GrtObject> &object);
     virtual ~BaseEditor();
 
-    virtual std::string get_form_context_name() const;
+    virtual auto get_form_context_name() const -> std::string;
 
-    virtual MySQLEditor::Ref get_sql_editor() {
+    virtual auto get_sql_editor() -> MySQLEditor::Ref {
       return MySQLEditor::Ref();
     }
 
-    virtual bool should_close_on_delete_of(const std::string &oid) {
+    virtual auto should_close_on_delete_of(const std::string &oid) -> bool {
       return get_object().id() == oid;
     }
 
-    GrtObjectRef get_object() {
+    auto get_object() -> GrtObjectRef {
       return _object;
     };
-    void set_object(GrtObjectRef value);
+    auto set_object(GrtObjectRef value) -> void;
 
-    virtual bool has_editor() {
+    virtual auto has_editor() -> bool {
       return false;
     }
-    virtual bool is_editing_live_object() {
+    virtual auto is_editing_live_object() -> bool {
       return false;
     }
-    virtual void apply_changes_to_live_object();
-    virtual void revert_changes_to_live_object();
-    virtual void refresh_live_object() {
+    virtual auto apply_changes_to_live_object() -> void;
+    virtual auto revert_changes_to_live_object() -> void;
+    virtual auto refresh_live_object() -> void {
     }
-    virtual void commit_changes() {
+    virtual auto commit_changes() -> void {
     } // Store changes in the backend but don't reset any dirty state
       // so we still can undo. Live editors reload content to reset the undo stack.
-    virtual void reset_editor_undo_stack() {
+    virtual auto reset_editor_undo_stack() -> void {
     } // Called after changes were applied (mostly live objects).
 
-    virtual void on_object_changed();
+    virtual auto on_object_changed() -> void;
 
-    void freeze_refresh_on_object_change();
-    bool is_refresh_frozen();
-    void thaw_refresh_on_object_change(bool discard_pending = false);
+    auto freeze_refresh_on_object_change() -> void;
+    auto is_refresh_frozen() -> bool;
+    auto thaw_refresh_on_object_change(bool discard_pending = false) -> void;
 
-    virtual bool is_editor_dirty();
-    virtual bool can_close();
+    virtual auto is_editor_dirty() -> bool;
+    virtual auto can_close() -> bool;
 
   protected:
     boost::signals2::scoped_connection _ui_refresh_conn;
@@ -106,17 +106,17 @@ namespace bec {
     int _ignore_object_changes_for_ui_refresh;
     int _ignored_object_changes_for_ui_refresh;
 
-    void add_listeners(const grt::Ref<GrtObject> &object);
+    auto add_listeners(const grt::Ref<GrtObject> &object) -> void;
 
-    void run_from_grt(const std::function<void()> &slot);
+    auto run_from_grt(const std::function<void()> &slot) -> void;
 
   private:
     friend class AutoUndoEdit;
 
     grt::Ref<GrtObject> _object;
-    void object_member_changed(const std::string &member, const grt::ValueRef &ovalue);
+    auto object_member_changed(const std::string &member, const grt::ValueRef &ovalue) -> void;
 
-    void undo_applied();
+    auto undo_applied() -> void;
   };
 
   struct FreezeRefresh {
@@ -132,7 +132,7 @@ namespace bec {
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC AutoUndoEdit : public grt::AutoUndo {
-    static void undo_applied(grt::UndoAction *applied, grt::UndoGroup *group, BaseEditor *editor) {
+    static auto undo_applied(grt::UndoAction *applied, grt::UndoGroup *group, BaseEditor *editor) -> void {
       if (group == applied)
         editor->undo_applied();
     }

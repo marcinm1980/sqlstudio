@@ -46,14 +46,14 @@ bec::ValidationMessagesBE::ValidationMessagesBE() {
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::ValidationMessagesBE::clear() {
+auto bec::ValidationMessagesBE::clear() -> void {
   _errors.clear();
   _warnings.clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool bec::ValidationMessagesBE::get_field(const bec::NodeId& node, ColumnId column, std::string& value) {
+auto bec::ValidationMessagesBE::get_field(const bec::NodeId& node, ColumnId column, std::string& value) -> bool {
   bool ret = false;
   if (column == bec::ValidationMessagesBE::Description) {
     const MessageList::size_type idx = node.end();
@@ -71,7 +71,7 @@ bool bec::ValidationMessagesBE::get_field(const bec::NodeId& node, ColumnId colu
 
 //--------------------------------------------------------------------------------------------------
 
-bec::IconId bec::ValidationMessagesBE::get_field_icon(const bec::NodeId& node, ColumnId column, IconSize) {
+auto bec::ValidationMessagesBE::get_field_icon(const bec::NodeId& node, ColumnId column, IconSize) -> bec::IconId {
   bec::IconId icon_id = _info_icon;
 
   if (column == bec::ValidationMessagesBE::Description) {
@@ -88,32 +88,32 @@ bec::IconId bec::ValidationMessagesBE::get_field_icon(const bec::NodeId& node, C
 
 //--------------------------------------------------------------------------------------------------
 
-size_t bec::ValidationMessagesBE::count() {
+auto bec::ValidationMessagesBE::count() -> size_t {
   return (_errors.size() + _warnings.size());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int bec::ValidationMessagesBE::get_node_popup_items(const bec::NodeId& node, bec::MenuItemList& menu) {
+auto bec::ValidationMessagesBE::get_node_popup_items(const bec::NodeId& node, bec::MenuItemList& menu) -> int {
   return 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::ValidationMessagesBE::activate_node_popup_item(const bec::NodeId& node, const std::string& name) {
+auto bec::ValidationMessagesBE::activate_node_popup_item(const bec::NodeId& node, const std::string& name) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool bec::ValidationMessagesBE::match_message(const bec::ValidationMessagesBE::Message& m, const grt::ObjectRef& obj,
-                                              const grt::Validator::Tag& tag) {
+auto bec::ValidationMessagesBE::match_message(const bec::ValidationMessagesBE::Message& m, const grt::ObjectRef& obj,
+                                              const grt::Validator::Tag& tag) -> bool {
   return (obj == m.obj && tag == m.tag);
 };
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::ValidationMessagesBE::remove_messages(bec::ValidationMessagesBE::MessageList* ml, const grt::ObjectRef& obj,
-                                                const grt::Validator::Tag& tag) {
+auto bec::ValidationMessagesBE::remove_messages(bec::ValidationMessagesBE::MessageList* ml, const grt::ObjectRef& obj,
+                                                const grt::Validator::Tag& tag) -> void {
   bec::ValidationMessagesBE::MessageList::iterator it = ml->end();
   bool was_remove = true;
 
@@ -130,8 +130,8 @@ void bec::ValidationMessagesBE::remove_messages(bec::ValidationMessagesBE::Messa
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::ValidationMessagesBE::validation_message(const grt::Validator::Tag& tag, const grt::ObjectRef& obj,
-                                                   const std::string& msg, const int type) {
+auto bec::ValidationMessagesBE::validation_message(const grt::Validator::Tag& tag, const grt::ObjectRef& obj,
+                                                   const std::string& msg, const int type) -> void {
   switch (type) {
     case grt::NoErrorMsg: {
       if ("*" != tag) {
@@ -160,13 +160,13 @@ bec::ValidationManager::MessageSignal* bec::ValidationManager::_signal_notify = 
 
 //--------------------------------------------------------------------------------------------------
 
-bool bec::ValidationManager::is_validation_plugin(const app_PluginRef& plugin) {
+auto bec::ValidationManager::is_validation_plugin(const app_PluginRef& plugin) -> bool {
   return plugin->attributes().has_key("ValidationRT");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::ValidationManager::register_validator(const std::string& type, grt::Validator* v) {
+auto bec::ValidationManager::register_validator(const std::string& type, grt::Validator* v) -> void {
   grt::MetaClass* mc = grt::GRT::get()->get_metaclass(type);
   if (mc)
     mc->add_validator(v);
@@ -176,7 +176,7 @@ void bec::ValidationManager::register_validator(const std::string& type, grt::Va
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::ValidationManager::scan() {
+auto bec::ValidationManager::scan() -> void {
   const std::vector<app_PluginRef> plugins = bec::GRTManager::get()->get_plugin_manager()->get_plugins_for_group("");
 
   for (size_t i = 0; i < plugins.size(); ++i) {
@@ -196,7 +196,7 @@ void bec::ValidationManager::scan() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool bec::ValidationManager::validate_instance(const grt::ObjectRef& obj, const grt::Validator::Tag& tag) {
+auto bec::ValidationManager::validate_instance(const grt::ObjectRef& obj, const grt::Validator::Tag& tag) -> bool {
   bool ret = true;
 
   // Clear messages with corresponding tag from the object.
@@ -215,15 +215,15 @@ bool bec::ValidationManager::validate_instance(const grt::ObjectRef& obj, const 
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::ValidationManager::message(const grt::Validator::Tag& tag, const grt::ObjectRef& o, const std::string& m,
-                                     const int level) {
+auto bec::ValidationManager::message(const grt::Validator::Tag& tag, const grt::ObjectRef& o, const std::string& m,
+                                     const int level) -> void {
   // Add message to the Object
   (*signal_notify())(tag, o, m, level);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::ValidationManager::clear() {
+auto bec::ValidationManager::clear() -> void {
   // Clear messages from listeners
   (*signal_notify())("*", grt::ObjectRef(), "", grt::NoErrorMsg);
 }

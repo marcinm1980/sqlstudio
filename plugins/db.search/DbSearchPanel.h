@@ -49,21 +49,21 @@ protected:
   bec::GRTManager::Timer* _update_timer;
   std::map<std::string, std::list<std::string> > _key_columns;
 
-  void prepare_menu();
-  void activate_menu_item(const std::string& action);
+  auto prepare_menu() -> void;
+  auto activate_menu_item(const std::string& action) -> void;
 
-  void load_model(mforms::TreeNodeRef tnode);
+  auto load_model(mforms::TreeNodeRef tnode) -> void;
 
 public:
   DBSearchPanel();
   ~DBSearchPanel();
-  void search(sql::ConnectionWrapper connection, const std::string& search_keyword,
+  auto search(sql::ConnectionWrapper connection, const std::string& search_keyword,
               const grt::StringListRef& filter_list, const SearchMode search_mode, const int limit_total,
               const int limt_per_table, const bool invert, const int search_data_type, const std::string cast_to,
-              std::function<void(grt::ValueRef)> finished_callback, std::function<void()> failed_callback);
-  void toggle_pause();
-  bool stop_search_if_working();
-  bool update();
+              std::function<void(grt::ValueRef)> finished_callback, std::function<void()> failed_callback) -> void;
+  auto toggle_pause() -> void;
+  auto stop_search_if_working() -> bool;
+  auto update() -> bool;
   bool _search_finished;
 };
 

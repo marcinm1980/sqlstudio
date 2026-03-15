@@ -40,7 +40,7 @@ namespace grtui {
   public:
     DbConnectionDialog(const db_mgmt_ManagementRef &mgmt);
 
-    db_mgmt_ConnectionRef run();
+    auto run() -> db_mgmt_ConnectionRef;
 
   protected:
     db_mgmt_ManagementRef _mgmt;
@@ -54,14 +54,14 @@ namespace grtui {
     mforms::Button _test_button;
 
     //! Called from selector/list of connections to tell that things changed
-    void change_active_stored_conn();
+    auto change_active_stored_conn() -> void;
 
   private:
-    void ok_clicked();
-    void cancel_clicked();
-    void test_clicked();
+    auto ok_clicked() -> void;
+    auto cancel_clicked() -> void;
+    auto test_clicked() -> void;
 
-    void reset_stored_conn_list();
+    auto reset_stored_conn_list() -> void;
   };
 };
 

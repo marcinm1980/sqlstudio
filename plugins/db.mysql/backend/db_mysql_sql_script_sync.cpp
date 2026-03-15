@@ -170,7 +170,7 @@ void replace_list_objects(grt::ListRef<db_mysql_IndexColumn> list, CatalogMap& o
   }
 }*/
 
-static inline void update_old_name(GrtNamedObjectRef obj, bool update_only_empty) {
+static inline auto update_old_name(GrtNamedObjectRef obj, bool update_only_empty) -> void {
   if (!update_only_empty || (strlen(obj->oldName().c_str()) == 0))
     obj->oldName(obj->name());
 }
@@ -263,8 +263,7 @@ namespace {
   };
 }
 
-WBPLUGINDBMYSQLBE_PUBLIC_FUNC
-void update_all_old_names(db_mysql_CatalogRef cat, bool update_only_empty, CatalogMap& map) {
+auto update_all_old_names(db_mysql_CatalogRef cat, bool update_only_empty, CatalogMap& map) -> WBPLUGINDBMYSQLBE_PUBLIC_FUNC void {
   update_old_name(cat, update_only_empty);
 
   SchemaAction sa(cat, update_only_empty, map);
@@ -280,16 +279,16 @@ DbMySQLScriptSync::~DbMySQLScriptSync() {
     _mod_cat_copy->reset_references();
 }
 
-db_mysql_CatalogRef DbMySQLScriptSync::get_model_catalog() {
+auto DbMySQLScriptSync::get_model_catalog() -> db_mysql_CatalogRef {
   return db_mysql_CatalogRef::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0/catalog"));
 }
 
-void DbMySQLScriptSync::get_compared_catalogs(db_CatalogRef& left, db_CatalogRef& right) {
+auto DbMySQLScriptSync::get_compared_catalogs(db_CatalogRef& left, db_CatalogRef& right) -> void {
   left = _org_cat;
   right = _mod_cat_copy;
 }
 
-void DbMySQLScriptSync::set_option(const std::string& name, const std::string& value) {
+auto DbMySQLScriptSync::set_option(const std::string& name, const std::string& value) -> void {
   if (name.compare("InputFileName1") == 0)
     _input_filename1 = value;
   else if (name.compare("InputFileName2") == 0)
@@ -298,7 +297,7 @@ void DbMySQLScriptSync::set_option(const std::string& name, const std::string& v
     _output_filename = value;
 }
 
-void DbMySQLScriptSync::start_sync() {
+auto DbMySQLScriptSync::start_sync() -> void {
   bec::GRTTask::Ref task = bec::GRTTask::create_task("SQL sync", bec::GRTManager::get()->get_dispatcher(),
                                                      std::bind(&DbMySQLScriptSync::sync_task, this, grt::StringRef()));
 
@@ -306,13 +305,12 @@ void DbMySQLScriptSync::start_sync() {
   bec::GRTManager::get()->get_dispatcher()->add_task(task);
 }
 
-void DbMySQLScriptSync::sync_finished(grt::ValueRef res) {
+auto DbMySQLScriptSync::sync_finished(grt::ValueRef res) -> void {
   logInfo("%s\n", grt::StringRef::cast_from(res).c_str());
 }
 
 #if 0
-static void dump_alter_map(grt::DictRef alter_map)
-{
+static auto dump_alter_map(grt::DictRef alter_map) -> void {
   for(DictRef::const_iterator iterator= alter_map.begin(); iterator != alter_map.end(); iterator++)
   {
     std::string key= iterator->first;
@@ -335,7 +333,7 @@ static void dump_alter_map(grt::DictRef alter_map)
 #endif
 
 // this function gets catalog from file or (if filename is empty) from the GRT tree
-db_mysql_CatalogRef DbMySQLScriptSync::get_cat_from_file_or_tree(std::string filename, std::string& error_msg) {
+auto DbMySQLScriptSync::get_cat_from_file_or_tree(std::string filename, std::string& error_msg) -> db_mysql_CatalogRef {
   db_mysql_CatalogRef ref_cat = get_model_catalog();
 
   if (filename.empty()) {
@@ -382,7 +380,7 @@ db_mysql_CatalogRef DbMySQLScriptSync::get_cat_from_file_or_tree(std::string fil
   return cat;
 }
 
-ValueRef DbMySQLScriptSync::sync_task(grt::StringRef) {
+auto DbMySQLScriptSync::sync_task(grt::StringRef) -> ValueRef {
   std::string err;
 
   db_mysql_CatalogRef mod_cat = get_cat_from_file_or_tree(std::string(), err);
@@ -410,8 +408,8 @@ ValueRef DbMySQLScriptSync::sync_task(grt::StringRef) {
   }
 }
 
-grt::StringRef DbMySQLScriptSync::generate_alter(db_mysql_CatalogRef org_cat, db_mysql_CatalogRef org_cat_copy,
-                                                 db_mysql_CatalogRef mod_cat_copy) {
+auto DbMySQLScriptSync::generate_alter(db_mysql_CatalogRef org_cat, db_mysql_CatalogRef org_cat_copy,
+                                                 db_mysql_CatalogRef mod_cat_copy) -> grt::StringRef {
   DbMySQLImpl* diffsql_module = grt::GRT::get()->find_native_module<DbMySQLImpl>("DbMySQL");
 
   grt::DbObjectMatchAlterOmf omf;
@@ -444,7 +442,7 @@ grt::StringRef DbMySQLScriptSync::generate_alter(db_mysql_CatalogRef org_cat, db
 
 // Called once sync is finished, if there were no errors
 // This saves oldNames and sqlDefinition for views in syncProfile
-void DbMySQLScriptSync::save_sync_profile() {
+auto DbMySQLScriptSync::save_sync_profile() -> void {
   db_mysql_CatalogRef mod_cat = get_model_catalog();
   GrtObjectRef model_obj = mod_cat->owner();
   if (_sync_profile_name.is_valid() && model_obj.is_valid() && studio_physical_ModelRef::can_wrap(model_obj)) {
@@ -464,7 +462,7 @@ void DbMySQLScriptSync::save_sync_profile() {
 
 // Called when starting sync, to load previously saved oldNames and other info
 // for this specific connection
-void DbMySQLScriptSync::restore_sync_profile(db_CatalogRef catalog) {
+auto DbMySQLScriptSync::restore_sync_profile(db_CatalogRef catalog) -> void {
   GrtObjectRef model_obj = catalog->owner();
   if (_sync_profile_name.is_valid() && model_obj.is_valid() && studio_physical_ModelRef::can_wrap(model_obj)) {
     for (size_t i = 0; i < catalog->schemata().count(); i++) {
@@ -481,7 +479,7 @@ void DbMySQLScriptSync::restore_sync_profile(db_CatalogRef catalog) {
   }
 }
 
-void DbMySQLScriptSync::restore_overriden_names() {
+auto DbMySQLScriptSync::restore_overriden_names() -> void {
   db_mysql_CatalogRef mod_cat = get_model_catalog();
   for (size_t i = 0; i < mod_cat->schemata().count(); i++) {
     db_SchemaRef schema(mod_cat->schemata()[i]);
@@ -495,9 +493,9 @@ void DbMySQLScriptSync::restore_overriden_names() {
   }
 }
 
-std::shared_ptr<DiffTreeBE> DbMySQLScriptSync::init_diff_tree(const std::vector<std::string>& schemata,
+auto DbMySQLScriptSync::init_diff_tree(const std::vector<std::string>& schemata,
                                                               const ValueRef& left, const ValueRef& right,
-                                                              StringListRef SchemaSkipList, grt::DictRef options) {
+                                                              StringListRef SchemaSkipList, grt::DictRef options) -> std::shared_ptr<DiffTreeBE> {
   db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->get("/wb/rdbmsMgmt/rdbms/0"));
   std::string default_engine_name;
   grt::ValueRef default_engine = bec::GRTManager::get()->get_app_option("db.mysql.Table:tableEngine");
@@ -611,7 +609,7 @@ std::shared_ptr<DiffTreeBE> DbMySQLScriptSync::init_diff_tree(const std::vector<
   return _diff_tree = std::shared_ptr<DiffTreeBE>(new ::DiffTreeBE(schemata, _mod_cat_copy, _org_cat, _alter_change));
 }
 
-std::string DbMySQLScriptSync::get_sql_for_object(GrtNamedObjectRef obj) {
+auto DbMySQLScriptSync::get_sql_for_object(GrtNamedObjectRef obj) -> std::string {
   std::string result;
   for (size_t i = 0; i < _alter_list.count(); ++i)
     if (_alter_object_list.get(i) == obj) {
@@ -620,11 +618,11 @@ std::string DbMySQLScriptSync::get_sql_for_object(GrtNamedObjectRef obj) {
   return result;
 };
 
-inline void save_id(const GrtObjectRef& obj, std::set<std::string>& map) {
+inline auto save_id(const GrtObjectRef& obj, std::set<std::string>& map) -> void {
   map.insert(obj->id());
 };
 
-std::string DbMySQLScriptSync::generate_diff_tree_script() {
+auto DbMySQLScriptSync::generate_diff_tree_script() -> std::string {
   DbMySQLImpl* diffsql_module = grt::GRT::get()->find_native_module<DbMySQLImpl>("DbMySQL");
   if (diffsql_module == NULL)
     return NULL;
@@ -695,7 +693,7 @@ std::string DbMySQLScriptSync::generate_diff_tree_script() {
   return std::string(script.c_str());
 }
 
-std::string DbMySQLScriptSync::generate_diff_tree_report() {
+auto DbMySQLScriptSync::generate_diff_tree_report() -> std::string {
   DbMySQLImpl* diffsql_module = grt::GRT::get()->find_native_module<DbMySQLImpl>("DbMySQL");
 
   if (diffsql_module == NULL)
@@ -781,14 +779,14 @@ public:
     schema_mc = grt::GRT::get()->get_metaclass("db.mysql.Schema");
   }
 
-  void set_case_sensitive(bool flag) {
+  auto set_case_sensitive(bool flag) -> void {
     case_sensitive = flag;
   }
 
   // Changes being applied from db side to model so everything goes backward
   // Added values being removed, removed being added and old values are restored
 
-  void apply_change_to_model(const std::shared_ptr<DiffChange> change, GrtNamedObjectRef owner) {
+  auto apply_change_to_model(const std::shared_ptr<DiffChange> change, GrtNamedObjectRef owner) -> void {
     if (processed_changes.find(change) != processed_changes.end())
       return;
     processed_changes.insert(change);
@@ -922,7 +920,7 @@ public:
     }
   };
 
-  void consolidate_mapping() {
+  auto consolidate_mapping() -> void {
     for (std::map<std::string, GrtObjectRef>::const_iterator iter = secondary_mapping.begin();
          iter != secondary_mapping.end(); ++iter) {
       if (mapping.find(iter->first) == mapping.end()) {
@@ -932,7 +930,7 @@ public:
     }
   }
 
-  void apply_node_to_model(const DiffNode* node) {
+  auto apply_node_to_model(const DiffNode* node) -> void {
     GrtNamedObjectRef changeobj =
       node->get_model_part().is_valid_object() ? node->get_model_part().get_object() : node->get_db_part().get_object();
     if (node->get_change() && (node->get_application_direction() == DiffNode::ApplyToModel)) {
@@ -944,7 +942,7 @@ public:
                   std::bind(&ChangesApplier::apply_node_to_model, this, std::placeholders::_1));
   }
 
-  bool compare_names(const GrtObjectRef& obj1, const GrtObjectRef& obj2) {
+  auto compare_names(const GrtObjectRef& obj1, const GrtObjectRef& obj2) -> bool {
     // if the DB server is case-insensitive, then tables and schemas should be compared case insensitively
     if (obj1->get_metaclass() == table_mc || obj1->get_metaclass() == schema_mc)
       return base::same_string(obj1->name(), obj2->name(), case_sensitive);
@@ -953,7 +951,7 @@ public:
     return base::same_string(obj1->name(), obj2->name(), false);
   }
 
-  bool build_obj_mapping(const GrtObjectRef& obj1, const GrtObjectRef& obj2, bool overwrite = false) {
+  auto build_obj_mapping(const GrtObjectRef& obj1, const GrtObjectRef& obj2, bool overwrite = false) -> bool {
     // std::cout<<obj1->name().c_str()<<std::endl;
     if (!compare_names(obj1, obj2))
       return false;
@@ -1065,7 +1063,7 @@ public:
     return true;
   }
 
-  void update_catalog(db_mysql_CatalogRef cat) {
+  auto update_catalog(db_mysql_CatalogRef cat) -> void {
     for (size_t i = 0; i < cat->schemata().count(); i++) {
       db_mysql_SchemaRef schema = cat->schemata().get(i);
       for (size_t j = 0; j < schema->tables().count(); j++) {
@@ -1158,7 +1156,7 @@ public:
   }
 };
 
-void DbMySQLScriptSync::apply_changes_to_model() {
+auto DbMySQLScriptSync::apply_changes_to_model() -> void {
   grt::AutoUndo undo;
   NodeId rootnodeid = _diff_tree->get_root();
   DiffNode* rootnode = _diff_tree->get_node_with_id(rootnodeid);
@@ -1184,7 +1182,7 @@ void DbMySQLScriptSync::apply_changes_to_model() {
   undo.end(_("Apply Changes from DB to Model"));
 }
 
-std::string DbMySQLScriptSync::get_col_name(const size_t col_id) {
+auto DbMySQLScriptSync::get_col_name(const size_t col_id) -> std::string {
   switch (col_id) {
     case 0:
       return "Model";

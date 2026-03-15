@@ -36,7 +36,7 @@ class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_inserts_loader : protected Mysql_sq
                                                               public Sql_inserts_loader {
 public:
   typedef std::shared_ptr<Mysql_sql_inserts_loader> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_sql_inserts_loader());
   }
   virtual ~Mysql_sql_inserts_loader() {
@@ -46,14 +46,14 @@ protected:
   Mysql_sql_inserts_loader();
 
 public:
-  void load(const std::string &sql, const std::string &schema_name);
+  auto load(const std::string &sql, const std::string &schema_name) -> void;
 
 protected:
   // higher level
-  int process_sql_statement(const SqlAstNode *tree);
+  auto process_sql_statement(const SqlAstNode *tree) -> int;
 
   // parse tree core
-  Parse_result process_insert_statement(const SqlAstNode *tree);
+  auto process_insert_statement(const SqlAstNode *tree) -> Parse_result;
 
   // context
   std::string _schema_name;

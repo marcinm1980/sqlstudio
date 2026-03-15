@@ -55,8 +55,8 @@ class WBPUBLICBACKEND_PUBLIC_FUNC Recordset : public VarGridModel {
 public:
   using Ref = std::shared_ptr<Recordset>;
   using Ptr = std::weak_ptr<Recordset>;
-  static Ref create();
-  static Ref create(GrtThreadedTask::Ref parent_task);
+  static auto create() -> Ref;
+  static auto create(GrtThreadedTask::Ref parent_task) -> Ref;
   virtual ~Recordset();
 
 protected:
@@ -64,9 +64,9 @@ protected:
   Recordset(GrtThreadedTask::Ref parent_task);
 
 public:
-  bool can_close();
-  bool can_close(bool interactive);
-  bool close();
+  auto can_close() -> bool;
+  auto can_close(bool interactive) -> bool;
+  auto close() -> bool;
   boost::signals2::signal<void(Ptr)> on_close;
 
 public:
@@ -75,7 +75,7 @@ public:
   friend class Recordset_data_storage;
 
 public:
-  long key() const {
+  auto key() const -> long {
     return _id;
   }
 
@@ -84,40 +84,40 @@ public:
     virtual ~ClientData();
   };
 
-  void set_client_data(ClientData *cdata) {
+  auto set_client_data(ClientData *cdata) -> void {
     _client_data = cdata;
   }
-  ClientData *client_data() {
+  auto client_data() -> ClientData * {
     return _client_data;
   }
 
 public:
-  bool reset(bool rethrow);
-  virtual void reset();
-  virtual void refresh();
+  auto reset(bool rethrow) -> bool;
+  virtual auto reset() -> void;
+  virtual auto refresh() -> void;
   boost::signals2::signal<void()> data_edited_signal;
 
 private:
-  bool reset(Recordset_data_storage_Ptr data_storage_ptr, bool rethrow);
-  void data_edited();
+  auto reset(Recordset_data_storage_Ptr data_storage_ptr, bool rethrow) -> bool;
+  auto data_edited() -> void;
 
 public:
-  RowId real_row_count() const;
+  auto real_row_count() const -> RowId;
 
 private:
-  void recalc_row_count(sqlite::connection *data_swap_db);
+  auto recalc_row_count(sqlite::connection *data_swap_db) -> void;
 
 private:
   size_t _real_row_count;
 
 public:
-  const Column_names *column_names() const {
+  auto column_names() const -> const Column_names * {
     return &_column_names;
   }
-  virtual size_t get_column_count() const {
+  virtual auto get_column_count() const -> size_t {
     return (int)(_column_count - _aux_column_count);
   }
-  size_t aux_column_count() const {
+  auto aux_column_count() const -> size_t {
     return _aux_column_count;
   }
 
@@ -126,7 +126,7 @@ protected:
   ColumnId _rowid_column;
 
 public:
-  RowId min_new_rowid() const {
+  auto min_new_rowid() const -> RowId {
     return _min_new_rowid;
   }
 
@@ -138,19 +138,19 @@ private:
   static std::string _add_change_record_statement;
 
 public:
-  virtual void after_set_field(const bec::NodeId &node, ColumnId column, const sqlite::variant_t &value);
-  virtual bool delete_node(const bec::NodeId &node);
-  virtual bool delete_nodes(std::vector<bec::NodeId> &nodes);
+  virtual auto after_set_field(const bec::NodeId &node, ColumnId column, const sqlite::variant_t &value) -> void;
+  virtual auto delete_node(const bec::NodeId &node) -> bool;
+  virtual auto delete_nodes(std::vector<bec::NodeId> &nodes) -> bool;
 
 private:
-  virtual Cell cell(RowId row, ColumnId column);
-  void mark_dirty(RowId row, ColumnId column, const sqlite::variant_t &new_value);
+  virtual auto cell(RowId row, ColumnId column) -> Cell;
+  auto mark_dirty(RowId row, ColumnId column, const sqlite::variant_t &new_value) -> void;
 
 public:
-  Recordset_data_storage_Ref data_storage() {
+  auto data_storage() -> Recordset_data_storage_Ref {
     return _data_storage;
   }
-  void data_storage(const Recordset_data_storage_Ref &data_storage) {
+  auto data_storage(const Recordset_data_storage_Ref &data_storage) -> void {
     _data_storage = data_storage;
   }
 
@@ -163,40 +163,40 @@ public:
   std::function<void()> flush_ui_changes_cb;
 
 public:
-  bool apply_changes_and_gather_messages(std::string &messages);
-  void rollback_and_gather_messages(std::string &messages);
+  auto apply_changes_and_gather_messages(std::string &messages) -> bool;
+  auto rollback_and_gather_messages(std::string &messages) -> void;
 
-  void apply_changes_();
-  grt::StringRef do_apply_changes(Ptr self_ptr, Recordset_data_storage_Ptr data_storage_ptr, bool skip_commit);
-  bool has_pending_changes();
-  void pending_changes(int &upd_count, int &ins_count, int &del_count) const;
-  void rollback();
-  void apply_changes();
+  auto apply_changes_() -> void;
+  auto do_apply_changes(Ptr self_ptr, Recordset_data_storage_Ptr data_storage_ptr, bool skip_commit) -> grt::StringRef;
+  auto has_pending_changes() -> bool;
+  auto pending_changes(int &upd_count, int &ins_count, int &del_count) const -> void;
+  auto rollback() -> void;
+  auto apply_changes() -> void;
 
 private:
-  int on_apply_changes_finished();
-  void apply_changes_(Recordset_data_storage_Ptr data_storage_ptr);
+  auto on_apply_changes_finished() -> int;
+  auto apply_changes_(Recordset_data_storage_Ptr data_storage_ptr) -> void;
 
 public:
-  bool limit_rows();
-  void limit_rows(bool value);
-  void toggle_limit_rows();
-  int limit_rows_count();
-  void limit_rows_count(int value);
-  bool limit_rows_applicable();
-  void scroll_rows_frame_forward();
-  void scroll_rows_frame_backward();
+  auto limit_rows() -> bool;
+  auto limit_rows(bool value) -> void;
+  auto toggle_limit_rows() -> void;
+  auto limit_rows_count() -> int;
+  auto limit_rows_count(int value) -> void;
+  auto limit_rows_applicable() -> bool;
+  auto scroll_rows_frame_forward() -> void;
+  auto scroll_rows_frame_backward() -> void;
 
 public:
-  mforms::ContextMenu *get_context_menu();
+  auto get_context_menu() -> mforms::ContextMenu *;
 
-  void update_selection_for_menu(const std::vector<int> &rows, int clicked_column);
+  auto update_selection_for_menu(const std::vector<int> &rows, int clicked_column) -> void;
   std::function<void(mforms::ContextMenu *, const std::vector<int> &, int)> update_selection_for_menu_extra;
 
-  std::vector<int> selected_rows() {
+  auto selected_rows() -> std::vector<int> {
     return _selected_rows;
   }
-  int selected_column() {
+  auto selected_column() -> int {
     return _selected_column;
   }
 
@@ -204,35 +204,35 @@ private:
   std::vector<int> _selected_rows;
   int _selected_column;
 
-  void activate_menu_item(const std::string &action, const std::vector<int> &rows, int clicked_column);
+  auto activate_menu_item(const std::string &action, const std::vector<int> &rows, int clicked_column) -> void;
 
 public:
   void copy_rows_to_clipboard(const std::vector<int> &indeces, std::string sep = ", ", bool quoted = true,
                               bool with_header = false);
-  void copy_field_to_clipboard(int row, ColumnId column, bool quoted = true);
+  auto copy_field_to_clipboard(int row, ColumnId column, bool quoted = true) -> void;
 
-  void paste_rows_from_clipboard(ssize_t dest_row);
-  void showPointInBrowser(const bec::NodeId &node, ColumnId column);
-  std::vector<Recordset_storage_info> data_storages_for_export();
-  Recordset_data_storage_Ref data_storage_for_export(const std::string &format_name);
+  auto paste_rows_from_clipboard(ssize_t dest_row) -> void;
+  auto showPointInBrowser(const bec::NodeId &node, ColumnId column) -> void;
+  auto data_storages_for_export() -> std::vector<Recordset_storage_info>;
+  auto data_storage_for_export(const std::string &format_name) -> Recordset_data_storage_Ref;
 
 protected:
   Recordset_data_storage_Ref _data_storage_for_export;
   using Data_storages_for_export = std::map<std::string, std::string>;
   Data_storages_for_export _data_storages_for_export;
 
-  void load_from_file(const bec::NodeId &node, ColumnId column);
-  void save_to_file(const bec::NodeId &node, ColumnId column);
+  auto load_from_file(const bec::NodeId &node, ColumnId column) -> void;
+  auto save_to_file(const bec::NodeId &node, ColumnId column) -> void;
 
 public:
-  void load_from_file(const bec::NodeId &node, ColumnId column, const std::string &file);
-  void save_to_file(const bec::NodeId &node, ColumnId column, const std::string &file);
+  auto load_from_file(const bec::NodeId &node, ColumnId column, const std::string &file) -> void;
+  auto save_to_file(const bec::NodeId &node, ColumnId column, const std::string &file) -> void;
 
-  bool get_raw_field(const bec::NodeId &node, ColumnId column, std::string &data_ret);
+  auto get_raw_field(const bec::NodeId &node, ColumnId column, std::string &data_ret) -> bool;
 
 public:
-  virtual void sort_by(ColumnId column, int direction, bool retaining);
-  virtual SortColumns sort_columns() const {
+  virtual auto sort_by(ColumnId column, int direction, bool retaining) -> void;
+  virtual auto sort_columns() const -> SortColumns {
     return _sort_columns;
   }
 
@@ -240,25 +240,25 @@ private:
   SortColumns _sort_columns; // column:direction(asc/desc)
 
 public:
-  bool has_column_filters() const;
-  bool has_column_filter(ColumnId column) const;
-  std::string get_column_filter_expr(ColumnId column) const;
-  void set_column_filter(ColumnId column, const std::string &filter_expr);
-  void reset_column_filter(ColumnId column);
-  void reset_column_filters();
-  size_t column_filter_icon_id() const;
+  auto has_column_filters() const -> bool;
+  auto has_column_filter(ColumnId column) const -> bool;
+  auto get_column_filter_expr(ColumnId column) const -> std::string;
+  auto set_column_filter(ColumnId column, const std::string &filter_expr) -> void;
+  auto reset_column_filter(ColumnId column) -> void;
+  auto reset_column_filters() -> void;
+  auto column_filter_icon_id() const -> size_t;
 
 private:
   using Column_filter_expr_map = std::map<ColumnId, std::string>;
   Column_filter_expr_map _column_filter_expr_map; // column:filter_expr
 
-  void search_activated(mforms::ToolBarItem *item);
+  auto search_activated(mforms::ToolBarItem *item) -> void;
 
 public:
-  const std::string &data_search_string() const;
-  void set_data_search_string(const std::string &value);
-  void reset_data_search_string();
-  void setPreserveRowFilter(bool value) {
+  auto data_search_string() const -> const std::string &;
+  auto set_data_search_string(const std::string &value) -> void;
+  auto reset_data_search_string() -> void;
+  auto setPreserveRowFilter(bool value) -> void {
     _preserveRowFilters = value;
   }
 
@@ -267,28 +267,28 @@ private:
   bool _preserveRowFilters;
 
 private:
-  void rebuild_data_index(sqlite::connection *data_swap_db, bool do_cache_data_frame, bool do_refresh_ui);
+  auto rebuild_data_index(sqlite::connection *data_swap_db, bool do_cache_data_frame, bool do_refresh_ui) -> void;
 
 public:
-  void caption(const std::string &val) {
+  auto caption(const std::string &val) -> void {
     _caption = val;
   }
-  std::string caption();
-  void set_inserts_editor(bool flag) {
+  auto caption() -> std::string;
+  auto set_inserts_editor(bool flag) -> void {
     _inserts_editor = flag;
   }
-  bool inserts_editor() {
+  auto inserts_editor() -> bool {
     return _inserts_editor;
   }
 
-  std::string generator_query() const {
+  auto generator_query() const -> std::string {
     return _generator_query;
   }
-  void generator_query(const std::string &query) {
+  auto generator_query(const std::string &query) -> void {
     _generator_query = query;
   }
 
-  std::string status_text();
+  auto status_text() -> std::string;
   std::string status_text_trailer;
 
 private:
@@ -306,33 +306,33 @@ public:
   mforms::ContextMenu *_context_menu;
 
 public:
-  ::ActionList &action_list();
+  auto action_list() -> ::ActionList &;
 
 private:
   ::ActionList _action_list;
 
 public:
-  mforms::ToolBar *get_toolbar();
-  void rebuild_toolbar();
+  auto get_toolbar() -> mforms::ToolBar *;
+  auto rebuild_toolbar() -> void;
 
 private:
-  void register_default_actions();
+  auto register_default_actions() -> void;
 
 public:
-  void open_field_data_editor(RowId row, ColumnId column, const std::string &logical_type);
+  auto open_field_data_editor(RowId row, ColumnId column, const std::string &logical_type) -> void;
 
 protected:
-  void set_field_value(RowId row, ColumnId column, BinaryDataEditor *data_editor);
-  void set_field_raw_data(RowId row, ColumnId column, const char *data, size_t data_length, bool isJson = false);
+  auto set_field_value(RowId row, ColumnId column, BinaryDataEditor *data_editor) -> void;
+  auto set_field_raw_data(RowId row, ColumnId column, const char *data, size_t data_length, bool isJson = false) -> void;
 
 public:
-  const std::string &getFont() const {
+  auto getFont() const -> const std::string & {
     return _font;
   }
-  float getFontSize() const {
+  auto getFontSize() const -> float {
     return _size;
   }
-  void setFont(const std::string &font, float size) {
+  auto setFont(const std::string &font, float size) -> void {
     _font = font;
     _size = size;
   }

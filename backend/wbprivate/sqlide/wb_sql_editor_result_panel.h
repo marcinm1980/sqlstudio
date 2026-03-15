@@ -61,59 +61,59 @@ class MYSQLWBBACKEND_PUBLIC_FUNC SqlEditorResult : public mforms::AppView, publi
 
 public:
   SqlEditorResult(SqlEditorPanel *owner);
-  void set_recordset(Recordset::Ref rset);
+  auto set_recordset(Recordset::Ref rset) -> void;
 
   virtual ~SqlEditorResult();
 
-  Recordset::Ref recordset() const;
+  auto recordset() const -> Recordset::Ref;
 
-  std::string caption() const;
+  auto caption() const -> std::string;
 
-  db_query_ResultPanelRef grtobj() {
+  auto grtobj() -> db_query_ResultPanelRef {
     return _grtobj;
   }
-  db_query_ResultsetRef result_grtobj() {
+  auto result_grtobj() -> db_query_ResultsetRef {
     return _grtobj->resultset();
   }
 
-  virtual bool can_close();
-  virtual void close();
+  virtual auto can_close() -> bool;
+  virtual auto close() -> void;
 
-  void show_export_recordset();
-  void show_import_recordset();
-  void dock_result_grid(mforms::View *view);
+  auto show_export_recordset() -> void;
+  auto show_import_recordset() -> void;
+  auto dock_result_grid(mforms::View *view) -> void;
   //  mforms::View *result_grid() { return _result_grid; }
 
-  SqlEditorPanel *owner() {
+  auto owner() -> SqlEditorPanel * {
     return _owner;
   }
 
-  std::vector<SpatialDataView::SpatialDataSource> get_spatial_columns();
+  auto get_spatial_columns() -> std::vector<SpatialDataView::SpatialDataSource>;
 
-  mforms::GridView *result_grid() {
+  auto result_grid() -> mforms::GridView * {
     return _result_grid;
   }
 
-  mforms::DockingPoint *dock() {
+  auto dock() -> mforms::DockingPoint * {
     return &_tabdock;
   }
 
-  void apply_changes();
-  void discard_changes();
-  bool has_pending_changes();
+  auto apply_changes() -> void;
+  auto discard_changes() -> void;
+  auto has_pending_changes() -> bool;
 
-  virtual void set_title(const std::string &title);
+  virtual auto set_title(const std::string &title) -> void;
 
-  void set_pinned(bool flag) {
+  auto set_pinned(bool flag) -> void {
     _pinned = flag;
   }
-  bool pinned() const {
+  auto pinned() const -> bool {
     return _pinned;
   }
 
-  void view_record_in_form(int row_id);
+  auto view_record_in_form(int row_id) -> void;
 
-  void open_field_editor(int row, int column);
+  auto open_field_editor(int row, int column) -> void;
 
 private:
   mforms::TabView _tabview;
@@ -146,34 +146,34 @@ private:
 
   bool _pinned;
 
-  void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
-  void updateColors();
+  auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
+  auto updateColors() -> void;
 
-  void update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows, int column);
-  void switch_tab();
+  auto update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows, int column) -> void;
+  auto switch_tab() -> void;
 
-  void toggle_switcher_collapsed();
-  void switcher_collapsed();
+  auto toggle_switcher_collapsed() -> void;
+  auto switcher_collapsed() -> void;
 
-  void create_query_stats_panel();
-  void create_column_info_panel();
-  void create_spatial_view_panel_if_needed();
+  auto create_query_stats_panel() -> void;
+  auto create_column_info_panel() -> void;
+  auto create_spatial_view_panel_if_needed() -> void;
 
-  void dock_result_grid(mforms::GridView *view);
+  auto dock_result_grid(mforms::GridView *view) -> void;
 
-  void restore_grid_column_widths();
-  std::vector<float> get_autofit_column_widths(Recordset *rs);
-  void reset_column_widths();
+  auto restore_grid_column_widths() -> void;
+  auto get_autofit_column_widths(Recordset *rs) -> std::vector<float>;
+  auto reset_column_widths() -> void;
 
-  void add_switch_toggle_toolbar_item(mforms::ToolBar *tbar);
+  auto add_switch_toggle_toolbar_item(mforms::ToolBar *tbar) -> void;
 
-  void copy_column_info_name(mforms::TreeView *tree);
-  void copy_column_info(mforms::TreeView *tree);
+  auto copy_column_info_name(mforms::TreeView *tree) -> void;
+  auto copy_column_info(mforms::TreeView *tree) -> void;
 
-  void copy_column_name();
-  void copy_all_column_names();
+  auto copy_column_name() -> void;
+  auto copy_all_column_names() -> void;
 
-  void reset_sorting();
-  void on_recordset_column_resized(int column);
-  void onRecordsetColumnsResized(const std::vector<int> cols);
+  auto reset_sorting() -> void;
+  auto on_recordset_column_resized(int column) -> void;
+  auto onRecordsetColumnsResized(const std::vector<int> cols) -> void;
 };

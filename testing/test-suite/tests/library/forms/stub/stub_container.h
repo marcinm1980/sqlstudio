@@ -38,7 +38,7 @@ namespace mforms {
       void add(::mforms::View *child) {
       }
 
-      void remove() {
+      auto remove() -> void {
       }
 
       void remove(::mforms::View *child) {

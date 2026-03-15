@@ -36,53 +36,53 @@ namespace mforms {
       MenuItemWrapper(::mforms::MenuItem *self) : ObjectWrapper(self) {
       }
 
-      static bool create_menu_bar(MenuBar *item) {
+      static auto create_menu_bar(MenuBar *item) -> bool {
         return true;
       }
 
-      static bool create_menu_item(MenuItem *item, const std::string &, const MenuItemType type) {
+      static auto create_menu_item(MenuItem *item, const std::string &, const MenuItemType type) -> bool {
         return true;
       }
 
-      static void set_title(MenuItem *item, const std::string &) {
+      static auto set_title(MenuItem *item, const std::string &) -> void {
       }
 
-      static void set_name(MenuItem *item, const std::string &) {
+      static auto set_name(MenuItem *item, const std::string &) -> void {
       }
 
-      static std::string get_title(MenuItem *item) {
+      static auto get_title(MenuItem *item) -> std::string {
         return "";
       }
 
-      static void set_shortcut(MenuItem *item, const std::string &) {
+      static auto set_shortcut(MenuItem *item, const std::string &) -> void {
       }
 
-      static void set_enabled(MenuBase *item, bool) {
+      static auto set_enabled(MenuBase *item, bool) -> void {
       }
 
-      static bool get_enabled(MenuBase *item) {
+      static auto get_enabled(MenuBase *item) -> bool {
         return true;
       }
 
-      static void set_checked(MenuItem *item, bool) {
+      static auto set_checked(MenuItem *item, bool) -> void {
       }
 
-      static bool get_checked(MenuItem *item) {
+      static auto get_checked(MenuItem *item) -> bool {
         return true;
       }
 
-      static void insert_item(MenuBase *menu, int index, MenuItem *item) {
+      static auto insert_item(MenuBase *menu, int index, MenuItem *item) -> void {
       }
 
-      static void remove_item(MenuBase *menu, MenuItem *item) {
+      static auto remove_item(MenuBase *menu, MenuItem *item) -> void {
       }
 
-      static bool create_context_menu(mforms::ContextMenu *item) {
+      static auto create_context_menu(mforms::ContextMenu *item) -> bool {
         return false;
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_menu_item_impl.create_menu_bar = &MenuItemWrapper::create_menu_bar;

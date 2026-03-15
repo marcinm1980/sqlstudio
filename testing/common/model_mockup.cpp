@@ -133,7 +133,7 @@ SyntheticMySQLModel::SyntheticMySQLModel()
   fillDocumentWithData();
 }
 
-void SyntheticMySQLModel::fillDocumentWithData() {
+auto SyntheticMySQLModel::fillDocumentWithData() -> void {
   // MODEL DATA
   schema->name("test_schema");
   schema->tables().insert(table);
@@ -276,7 +276,7 @@ void SyntheticMySQLModel::fillDocumentWithData() {
   physicalDiagram->figures().insert(routineGroupFigure);
 }
 
-void casmine::addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, db_DatabaseObjectRef obj, const char *priv) {
+auto casmine::addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, db_DatabaseObjectRef obj, const char *priv) -> void {
   db_RolePrivilegeRef privilege(grt::Initialized);
   role->privileges().insert(privilege);
   privilege->owner(role);
@@ -285,8 +285,8 @@ void casmine::addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, db_Data
   privilege->privileges().insert(priv);
 }
 
-void casmine::addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, const char* objectType, const char* objectName,
-  const char *priv) {
+auto casmine::addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, const char* objectType, const char* objectName,
+  const char *priv) -> void {
   db_RolePrivilegeRef privilege(grt::Initialized);
   role->privileges().insert(privilege);
   privilege->owner(role);
@@ -296,6 +296,6 @@ void casmine::addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, const c
   privilege->privileges().insert(priv);
 }
 
-void casmine::assignRole(db_UserRef user, db_RoleRef role) {
+auto casmine::assignRole(db_UserRef user, db_RoleRef role) -> void {
   user->roles().insert(role);
 }

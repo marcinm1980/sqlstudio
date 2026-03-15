@@ -39,7 +39,7 @@ public:
 
 class DBMYSQLDIFFREPORTINGWBPBE_PUBLIC_FUNC DbMySQLDiffReporting {
 public:
-  inline db_mysql_CatalogRef get_model_catalog() {
+  inline auto get_model_catalog() -> db_mysql_CatalogRef {
     return db_mysql_CatalogRef::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0/catalog"));
   }
 
@@ -47,5 +47,5 @@ public:
   DbMySQLDiffReporting();
   virtual ~DbMySQLDiffReporting();
 
-  std::string generate_report(const db_mysql_CatalogRef& left_cat, const db_mysql_CatalogRef& right_cat);
+  auto generate_report(const db_mysql_CatalogRef& left_cat, const db_mysql_CatalogRef& right_cat) -> std::string;
 };

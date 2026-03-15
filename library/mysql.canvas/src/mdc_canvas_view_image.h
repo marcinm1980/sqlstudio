@@ -35,11 +35,11 @@ namespace mdc {
     ImageCanvasView(int width, int height, cairo_format_t format = CAIRO_FORMAT_RGB24);
     virtual ~ImageCanvasView();
 
-    virtual void begin_repaint(int x, int y, int w, int h);
-    virtual void end_repaint();
-    virtual void update_view_size(int width, int height);
+    virtual auto begin_repaint(int x, int y, int w, int h) -> void;
+    virtual auto end_repaint() -> void;
+    virtual auto update_view_size(int width, int height) -> void;
 
-    void save_to(const std::string &path);
+    auto save_to(const std::string &path) -> void;
 
     auto get_image_data(size_t &size) -> const unsigned char *;
 

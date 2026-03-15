@@ -44,14 +44,14 @@ namespace bec {
     using RefreshSlot = std::function<void()>;
     using PartialRefreshSlot = std::function<void(const int)>;
 
-    void set_refresh_ui_slot(const RefreshSlot &slot);
+    auto set_refresh_ui_slot(const RefreshSlot &slot) -> void;
 
     // Refreshes a part of the editor. This is preferred over a full UI refresh and should hence
     // be used most of the time.
-    void set_partial_refresh_ui_slot(const PartialRefreshSlot &slot);
+    auto set_partial_refresh_ui_slot(const PartialRefreshSlot &slot) -> void;
 
-    void do_partial_ui_refresh(const int what);
-    void do_ui_refresh();
+    auto do_partial_ui_refresh(const int what) -> void;
+    auto do_ui_refresh() -> void;
 
     struct Blocker {
       Blocker(RefreshUI &o) : _obj(&o) {
@@ -64,10 +64,10 @@ namespace bec {
       RefreshUI *_obj;
     };
 
-    void block_auto_refresh() {
+    auto block_auto_refresh() -> void {
       _partial_refresh_blocked = true;
     }
-    void unblock_auto_refresh() {
+    auto unblock_auto_refresh() -> void {
       _partial_refresh_blocked = false;
     }
 

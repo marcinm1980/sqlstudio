@@ -41,14 +41,14 @@ namespace sql {
 namespace grt {
 
   struct WBPUBLICBACKEND_PUBLIC_FUNC DbObjectMatchAlterOmf : public Omf {
-    virtual bool less(const ValueRef&, const ValueRef&) const;
-    virtual bool equal(const ValueRef&, const ValueRef&) const;
+    virtual auto less(const ValueRef&, const ValueRef&) const -> bool;
+    virtual auto equal(const ValueRef&, const ValueRef&) const -> bool;
   };
 
   typedef std::function<bool(const ValueRef obj1, const ValueRef obj2, const std::string name)> comparison_rule;
   class WBPUBLICBACKEND_PUBLIC_FUNC NormalizedComparer {
   protected:
-    bool comment_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) const;
+    auto comment_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) const -> bool;
     std::map<std::string, std::list<comparison_rule> > rules;
     int _maxTableCommentLength;
     int _maxIndexCommentLength;
@@ -56,21 +56,21 @@ namespace grt {
 
     bool _case_sensitive;
     bool _skip_routine_definer;
-    void load_rules();
+    auto load_rules() -> void;
 
   public:
-    void init_omf(Omf* omf);
-    void load_db_options(sql::DatabaseMetaData* dbc_meta);
+    auto init_omf(Omf* omf) -> void;
+    auto load_db_options(sql::DatabaseMetaData* dbc_meta) -> void;
     NormalizedComparer(const grt::DictRef options = grt::DictRef());
-    void add_comparison_rule(const std::string& name, comparison_rule rule) {
+    auto add_comparison_rule(const std::string& name, comparison_rule rule) -> void {
       rules[name].push_back(rule);
     };
-    bool normalizedComparison(const ValueRef obj1, const ValueRef obj2, const std::string name);
-    grt::DictRef get_options_dict() const;
-    bool is_case_sensitive() const {
+    auto normalizedComparison(const ValueRef obj1, const ValueRef obj2, const std::string name) -> bool;
+    auto get_options_dict() const -> grt::DictRef;
+    auto is_case_sensitive() const -> bool {
       return _case_sensitive;
     };
-    bool skip_routine_definer() const {
+    auto skip_routine_definer() const -> bool {
       return _skip_routine_definer;
     };
   };

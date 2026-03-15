@@ -43,7 +43,7 @@ CodeCompletionCore::CodeCompletionCore(Parser *parser)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CandidatesCollection CodeCompletionCore::collectCandidates(size_t caretTokenIndex, ParserRuleContext *context) {
+auto CodeCompletionCore::collectCandidates(size_t caretTokenIndex, ParserRuleContext *context) -> CandidatesCollection {
   _shortcutMap.clear();
   _candidates.rules.clear();
   _candidates.tokens.clear();
@@ -103,7 +103,7 @@ CandidatesCollection CodeCompletionCore::collectCandidates(size_t caretTokenInde
 /**
  * Checks if the predicate associated with the given transition evaluates to true.
  */
-bool CodeCompletionCore::checkPredicate(const PredicateTransition *transition) const {
+auto CodeCompletionCore::checkPredicate(const PredicateTransition *transition) const -> bool {
   return transition->getPredicate()->eval(_parser, &ParserRuleContext::EMPTY);
 };
 
@@ -113,7 +113,7 @@ bool CodeCompletionCore::checkPredicate(const PredicateTransition *transition) c
  * Walks the rule chain upwards to see if that matches any of the preferred rules.
  * If found, that rule is added to the collection candidates and true is returned.
  */
-bool CodeCompletionCore::translateToRuleIndex(std::vector<size_t> const& ruleStack) {
+auto CodeCompletionCore::translateToRuleIndex(std::vector<size_t> const& ruleStack) -> bool {
   if (preferredRules.empty())
     return false;
 
@@ -153,7 +153,7 @@ bool CodeCompletionCore::translateToRuleIndex(std::vector<size_t> const& ruleSta
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CodeCompletionCore::printRuleState(std::vector<size_t> const& stack) const {
+auto CodeCompletionCore::printRuleState(std::vector<size_t> const& stack) const -> void {
   if (stack.empty()) {
     std::cout << "<empty stack>" << std::endl;
     return;
@@ -169,7 +169,7 @@ void CodeCompletionCore::printRuleState(std::vector<size_t> const& stack) const 
  * This method follows the given transition and collects all symbols within the same rule that directly follow it
  * without intermediate transitions to other rules and only if there is a single symbol for a transition.
  */
-std::vector<size_t> CodeCompletionCore::getFollowingTokens(const ConstTransitionPtr& transition) const {
+auto CodeCompletionCore::getFollowingTokens(const ConstTransitionPtr& transition) const -> std::vector<size_t> {
   std::vector<size_t> result;
 
   std::vector<ATNState *> seen;
@@ -203,7 +203,7 @@ std::vector<size_t> CodeCompletionCore::getFollowingTokens(const ConstTransition
 /**
  * Entry point for the recursive follow set collection function.
  */
-CodeCompletionCore::FollowSetsList CodeCompletionCore::determineFollowSets(ATNState *start, ATNState *stop) const {
+auto CodeCompletionCore::determineFollowSets(ATNState *start, ATNState *stop) const -> CodeCompletionCore::FollowSetsList {
   FollowSetsList result;
 
   std::unordered_set<ATNState *> seen;
@@ -219,8 +219,8 @@ CodeCompletionCore::FollowSetsList CodeCompletionCore::determineFollowSets(ATNSt
  * Collects possible tokens which could be matched following the given ATN state. This is essentially the same
  * algorithm as used in the LL1Analyzer class, but here we consider predicates also and use no parser rule context.
  */
-void CodeCompletionCore::collectFollowSets(ATNState *s, ATNState *stopState, FollowSetsList &followSets,
-  std::unordered_set<ATNState *> &seen, std::vector<size_t> &ruleStack) const {
+auto CodeCompletionCore::collectFollowSets(ATNState *s, ATNState *stopState, FollowSetsList &followSets,
+  std::unordered_set<ATNState *> &seen, std::vector<size_t> &ruleStack) const -> void {
 
   if (seen.count(s) > 0)
     return;
@@ -269,8 +269,8 @@ void CodeCompletionCore::collectFollowSets(ATNState *s, ATNState *stopState, Fol
  * The result can be empty in case we hit only non-epsilon transitions that didn't match the current input or if we
  * hit the caret position.
  */
-CodeCompletionCore::RuleEndStatus CodeCompletionCore::processRule(ATNState *startState, size_t tokenIndex,
-  std::vector<size_t> &callStack, std::string indentation) {
+auto CodeCompletionCore::processRule(ATNState *startState, size_t tokenIndex,
+  std::vector<size_t> &callStack, std::string indentation) -> CodeCompletionCore::RuleEndStatus {
 
   // Start with rule specific handling before going into the ATN walk.
 
@@ -465,15 +465,15 @@ CodeCompletionCore::RuleEndStatus CodeCompletionCore::processRule(ATNState *star
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string CodeCompletionCore::generateBaseDescription(ATNState *state) const {
+auto CodeCompletionCore::generateBaseDescription(ATNState *state) const -> std::string {
   std::string stateValue = state->stateNumber == ATNState::INVALID_STATE_NUMBER ? "Invalid" : std::to_string(state->stateNumber);
   return "[" + stateValue + " " + antlr4::atn::atnStateTypeName(state->getStateType()) + "] in " + _ruleNames[state->ruleIndex];
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CodeCompletionCore::printDescription(std::string const& currentIndent, ATNState *state,
-  std::string const& baseDescription, size_t tokenIndex) const {
+auto CodeCompletionCore::printDescription(std::string const& currentIndent, ATNState *state,
+  std::string const& baseDescription, size_t tokenIndex) const -> void {
 
   std::cout << currentIndent;
 

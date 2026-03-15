@@ -39,7 +39,7 @@ using namespace grt::internal;
 internal::Unserializer::Unserializer(bool check_crc) : _check_serialized_crc(check_crc) {
 }
 
-ValueRef internal::Unserializer::find_cached(const std::string &id) {
+auto internal::Unserializer::find_cached(const std::string &id) -> ValueRef {
   std::map<std::string, ValueRef>::const_iterator iter;
   if ((iter = _cache.find(id)) == _cache.end())
     return ValueRef();
@@ -47,7 +47,7 @@ ValueRef internal::Unserializer::find_cached(const std::string &id) {
   return iter->second;
 }
 
-ValueRef internal::Unserializer::load_from_xml(const std::string &path, std::string *doctype, std::string *docversion) {
+auto internal::Unserializer::load_from_xml(const std::string &path, std::string *doctype, std::string *docversion) -> ValueRef {
   xmlDocPtr doc = base::xml::loadXMLDoc(path);
 
   ValueRef value = unserialize_xmldoc(doc, path);
@@ -60,7 +60,7 @@ ValueRef internal::Unserializer::load_from_xml(const std::string &path, std::str
   return value;
 }
 
-ValueRef internal::Unserializer::unserialize_xmldoc(xmlDocPtr doc, const std::string &source_path) {
+auto internal::Unserializer::unserialize_xmldoc(xmlDocPtr doc, const std::string &source_path) -> ValueRef {
   xmlNodePtr root;
   ValueRef value;
 
@@ -79,13 +79,13 @@ ValueRef internal::Unserializer::unserialize_xmldoc(xmlDocPtr doc, const std::st
   return value;
 }
 
-ValueRef internal::Unserializer::unserialize_from_xml(xmlNodePtr node) {
+auto internal::Unserializer::unserialize_from_xml(xmlNodePtr node) -> ValueRef {
   traverse_xml_creating_objects(node);
 
   return traverse_xml_recreating_tree(node);
 }
 
-void internal::Unserializer::traverse_xml_creating_objects(xmlNodePtr node) {
+auto internal::Unserializer::traverse_xml_creating_objects(xmlNodePtr node) -> void {
   xmlNodePtr child;
   std::string prop;
 
@@ -123,7 +123,7 @@ void internal::Unserializer::traverse_xml_creating_objects(xmlNodePtr node) {
   }
 }
 
-ValueRef internal::Unserializer::traverse_xml_recreating_tree(xmlNodePtr node) {
+auto internal::Unserializer::traverse_xml_recreating_tree(xmlNodePtr node) -> ValueRef {
   if (strcmp((char *)node->name, "link") == 0) {
     std::string link_id;
 
@@ -295,7 +295,7 @@ ValueRef internal::Unserializer::traverse_xml_recreating_tree(xmlNodePtr node) {
   return value;
 }
 
-ObjectRef internal::Unserializer::unserialize_object_step1(xmlNodePtr node) {
+auto internal::Unserializer::unserialize_object_step1(xmlNodePtr node) -> ObjectRef {
   MetaClass *gstruct;
   std::string id;
 
@@ -333,7 +333,7 @@ ObjectRef internal::Unserializer::unserialize_object_step1(xmlNodePtr node) {
   return value;
 }
 
-ObjectRef internal::Unserializer::unserialize_object_step2(xmlNodePtr node) {
+auto internal::Unserializer::unserialize_object_step2(xmlNodePtr node) -> ObjectRef {
   std::string id = base::xml::getProp(node, "id");
 
   if (id.empty())
@@ -347,7 +347,7 @@ ObjectRef internal::Unserializer::unserialize_object_step2(xmlNodePtr node) {
   return value;
 }
 
-void internal::Unserializer::unserialize_object_contents(const ObjectRef &object, xmlNodePtr node) {
+auto internal::Unserializer::unserialize_object_contents(const ObjectRef &object, xmlNodePtr node) -> void {
   std::string prop;
   // load values
   xmlNodePtr child;
@@ -399,7 +399,7 @@ void internal::Unserializer::unserialize_object_contents(const ObjectRef &object
   }
 }
 
-ValueRef internal::Unserializer::unserialize_xmldata(const char *data, size_t size) {
+auto internal::Unserializer::unserialize_xmldata(const char *data, size_t size) -> ValueRef {
   xmlDocPtr doc = xmlReadMemory(data, (int)size, NULL, NULL, XML_PARSE_NOENT);
 
   if (!doc) {

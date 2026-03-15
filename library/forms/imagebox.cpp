@@ -33,18 +33,18 @@ ImageBox::ImageBox() {
   _imagebox_impl->create(this);
 }
 
-void ImageBox::set_image(const std::string &file) {
+auto ImageBox::set_image(const std::string &file) -> void {
   _imagebox_impl->set_image(this, file);
 }
 
-void ImageBox::set_image_data(const char *data, size_t length) {
+auto ImageBox::set_image_data(const char *data, size_t length) -> void {
   _imagebox_impl->set_image_data(this, data, length);
 }
 
-void ImageBox::set_scale_contents(bool flag) {
+auto ImageBox::set_scale_contents(bool flag) -> void {
   _imagebox_impl->set_scale_contents(this, flag);
 }
 
-void ImageBox::set_image_align(Alignment alignment) {
+auto ImageBox::set_image_align(Alignment alignment) -> void {
   _imagebox_impl->set_image_align(this, alignment);
 }

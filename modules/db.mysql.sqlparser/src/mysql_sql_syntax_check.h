@@ -36,7 +36,7 @@ class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_syntax_check : virtual protected My
                                                             virtual public Sql_syntax_check {
 public:
   typedef std::shared_ptr<Mysql_sql_syntax_check> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_sql_syntax_check());
   }
   virtual ~Mysql_sql_syntax_check() {
@@ -46,30 +46,30 @@ protected:
   Mysql_sql_syntax_check();
 
 public:
-  Statement_type determine_statement_type(const std::string &sql);
+  auto determine_statement_type(const std::string &sql) -> Statement_type;
 
 public:
-  int check_sql(const char *sql);
-  int check_trigger(const char *sql);
-  int check_view(const char *sql);
-  int check_routine(const char *sql);
+  auto check_sql(const char *sql) -> int;
+  auto check_trigger(const char *sql) -> int;
+  auto check_view(const char *sql) -> int;
+  auto check_routine(const char *sql) -> int;
 
 protected:
   typedef boost::function<Parse_result(const SqlAstNode *)> Check_sql_statement;
   Check_sql_statement _check_sql_statement;
 
-  int process_sql_statement(const SqlAstNode *tree, ObjectType object_type);
-  int check_sql_statement(const char *sql, Check_sql_statement check_sql_statement, ObjectType object_type);
+  auto process_sql_statement(const SqlAstNode *tree, ObjectType object_type) -> int;
+  auto check_sql_statement(const char *sql, Check_sql_statement check_sql_statement, ObjectType object_type) -> int;
 
-  Parse_result do_check_sql(const SqlAstNode *tree);
-  Parse_result do_check_trigger(const SqlAstNode *tree);
-  Parse_result do_check_view(const SqlAstNode *tree);
-  Parse_result do_check_routine(const SqlAstNode *tree);
+  auto do_check_sql(const SqlAstNode *tree) -> Parse_result;
+  auto do_check_trigger(const SqlAstNode *tree) -> Parse_result;
+  auto do_check_view(const SqlAstNode *tree) -> Parse_result;
+  auto do_check_routine(const SqlAstNode *tree) -> Parse_result;
 
-  virtual Parse_result check_sql(const SqlAstNode *tree);
-  virtual Parse_result check_trigger(const SqlAstNode *tree, const SqlAstNode *trigger_tail);
-  virtual Parse_result check_view(const SqlAstNode *tree, const SqlAstNode *view_tail);
-  virtual Parse_result check_routine(const SqlAstNode *tree, const SqlAstNode *routine_tail);
+  virtual auto check_sql(const SqlAstNode *tree) -> Parse_result;
+  virtual auto check_trigger(const SqlAstNode *tree, const SqlAstNode *trigger_tail) -> Parse_result;
+  virtual auto check_view(const SqlAstNode *tree, const SqlAstNode *view_tail) -> Parse_result;
+  virtual auto check_routine(const SqlAstNode *tree, const SqlAstNode *routine_tail) -> Parse_result;
 
   bool _use_delimiter;
 

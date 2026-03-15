@@ -58,24 +58,24 @@ class MainForm;
 class Program {
 public:
   Program();
-  void init(wb::WBOptions& options);
+  auto init(wb::WBOptions& options) -> void;
   ~Program();
 
-  void shutdown();
+  auto shutdown() -> void;
 
-  static Program* get_instance() {
+  static auto get_instance() -> Program* {
     return _instance;
   }
-  Gtk::Window* get_mainwindow() const;
+  auto get_mainwindow() const -> Gtk::Window*;
 
 private: // Callbacks for backend
-  int confirm_action_becb(const std::string& title, const std::string& msg, const std::string& default_btn,
-                          const std::string& alt_btn, const std::string& other_btn);
-  std::string show_file_dialog_becb(const std::string& type, const std::string& title, const std::string& extensions);
+  auto confirm_action_becb(const std::string& title, const std::string& msg, const std::string& default_btn,
+                          const std::string& alt_btn, const std::string& other_btn) -> int;
+  auto show_file_dialog_becb(const std::string& type, const std::string& title, const std::string& extensions) -> std::string;
 
-  void finalize_initialization(wb::WBOptions* options);
+  auto finalize_initialization(wb::WBOptions* options) -> void;
 
-  bool idle_stuff();
+  auto idle_stuff() -> bool;
 
 private:
   std::deque<sigc::connection> _idleConnections;

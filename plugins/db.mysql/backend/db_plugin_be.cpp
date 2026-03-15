@@ -41,7 +41,7 @@
 
 DEFAULT_LOG_DOMAIN("Db Plugin")
 
-void Db_plugin::grtm(bool reveng) {
+auto Db_plugin::grtm(bool reveng) -> void {
   _doc = studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
 
   db_mgmt_ManagementRef mgmt = studio_MySqlStudioRef::cast_from(_doc->owner())->rdbmsMgmt();
@@ -57,15 +57,15 @@ void Db_plugin::grtm(bool reveng) {
   _catalog = db_CatalogRef(grt::Initialized);
 }
 
-std::string Db_plugin::task_desc() {
+auto Db_plugin::task_desc() -> std::string {
   return _("Apply SQL script to server");
 }
 
-db_mgmt_RdbmsRef Db_plugin::selected_rdbms() {
+auto Db_plugin::selected_rdbms() -> db_mgmt_RdbmsRef {
   return db_mgmt_RdbmsRef::cast_from(_db_conn->get_connection()->driver()->owner());
 }
 
-db_CatalogRef Db_plugin::model_catalog() {
+auto Db_plugin::model_catalog() -> db_CatalogRef {
   db_mgmt_RdbmsRef rdbms = selected_rdbms();
 
   // find first appropriate model catalog for selected rdbms
@@ -81,7 +81,7 @@ db_CatalogRef Db_plugin::model_catalog() {
   return _catalog;
 }
 
-Db_plugin::Db_objects_setup *Db_plugin::db_objects_setup_by_type(Db_object_type db_object_type) {
+auto Db_plugin::db_objects_setup_by_type(Db_object_type db_object_type) -> Db_plugin::Db_objects_setup * {
   switch (db_object_type) {
     case dbotTable:
       return &_tables;
@@ -98,7 +98,7 @@ Db_plugin::Db_objects_setup *Db_plugin::db_objects_setup_by_type(Db_object_type 
   }
 }
 
-const char *Db_plugin::db_objects_type_to_string(Db_object_type db_object_type) {
+auto Db_plugin::db_objects_type_to_string(Db_object_type db_object_type) -> const char * {
   switch (db_object_type) {
     case dbotTable:
       return "table";
@@ -115,7 +115,7 @@ const char *Db_plugin::db_objects_type_to_string(Db_object_type db_object_type) 
   }
 }
 
-std::string Db_plugin::db_objects_struct_name_by_type(Db_object_type db_object_type) {
+auto Db_plugin::db_objects_struct_name_by_type(Db_object_type db_object_type) -> std::string {
   grt::ObjectRef obj = grt::GRT::get()->create_object<grt::internal::Object>(
     model_catalog().get_metaclass()->get_member_type("schemata").content.object_class);
   std::string attr_name = db_objects_type_to_string(db_object_type);
@@ -134,7 +134,7 @@ std::string Db_plugin::db_objects_struct_name_by_type(Db_object_type db_object_t
  * return 0 if everything is ok
  * return 1 if there can be some problems
  */
-int Db_plugin::check_case_sensitivity_problems() {
+auto Db_plugin::check_case_sensitivity_problems() -> int {
   sql::ConnectionWrapper dbc_conn = _db_conn->get_dbc_connection();
   std::unique_ptr<sql::Statement> statement(dbc_conn->createStatement());
 
@@ -164,7 +164,7 @@ int Db_plugin::check_case_sensitivity_problems() {
   return 0;
 }
 
-void Db_plugin::load_schemata(std::vector<std::string> &schemata) {
+auto Db_plugin::load_schemata(std::vector<std::string> &schemata) -> void {
   _schemata.clear();
   _schemata_ddl.clear();
 
@@ -232,14 +232,14 @@ void Db_plugin::load_schemata(std::vector<std::string> &schemata) {
 //  */
 //}
 
-void Db_plugin::schemata_selection(const std::vector<std::string> &selection, bool sel_none_means_sel_all) {
+auto Db_plugin::schemata_selection(const std::vector<std::string> &selection, bool sel_none_means_sel_all) -> void {
   _schemata_selection = selection;
 
   if (sel_none_means_sel_all && !_schemata_selection.size())
     _schemata_selection = _schemata;
 }
 
-void Db_plugin::load_db_objects(Db_object_type db_object_type) {
+auto Db_plugin::load_db_objects(Db_object_type db_object_type) -> void {
   Db_objects_setup *setup = db_objects_setup_by_type(db_object_type);
   setup->reset();
 
@@ -331,7 +331,7 @@ void Db_plugin::load_db_objects(Db_object_type db_object_type) {
  the snapshot for the server. We need to do that separately for every target server that synchronization is
  used with (using the db.SyncProfile object).
  */
-void Db_plugin::read_back_view_ddl() {
+auto Db_plugin::read_back_view_ddl() -> void {
   Db_objects_setup *setup = db_objects_setup_by_type(dbotView);
   setup->reset();
 
@@ -383,7 +383,7 @@ void Db_plugin::read_back_view_ddl() {
   grt::GRT::get()->send_info(base::strfmt("%i views were read back.", current_view));
 }
 
-bool Db_plugin::validate_db_objects_selection(std::list<std::string> *messages) {
+auto Db_plugin::validate_db_objects_selection(std::list<std::string> *messages) -> bool {
   // check if there are selected triggers without selected owner table
   Db_objects_setup *tables_setup = db_objects_setup_by_type(dbotTable);
   Db_objects_setup *triggers_setup = db_objects_setup_by_type(dbotTrigger);
@@ -421,7 +421,7 @@ bool Db_plugin::validate_db_objects_selection(std::list<std::string> *messages) 
   return true;
 }
 
-void Db_plugin::dump_ddl(Db_object_type db_object_type, std::string &sql_script) {
+auto Db_plugin::dump_ddl(Db_object_type db_object_type, std::string &sql_script) -> void {
   std::string _non_std_sql_delimiter;
   {
     SqlFacade::Ref sql_facade = SqlFacade::instance_for_rdbms(selected_rdbms());
@@ -459,7 +459,7 @@ void Db_plugin::dump_ddl(Db_object_type db_object_type, std::string &sql_script)
   }
 }
 
-void Db_plugin::dump_ddl(std::string &sql_script) {
+auto Db_plugin::dump_ddl(std::string &sql_script) -> void {
   /*
   alter/diff/sync module requirement: create selected schemata first.
   even if schema is empty the corresponding object must be created.
@@ -476,7 +476,7 @@ void Db_plugin::dump_ddl(std::string &sql_script) {
   dump_ddl(dbotTrigger, sql_script);
 }
 
-db_CatalogRef Db_plugin::db_catalog() {
+auto Db_plugin::db_catalog() -> db_CatalogRef {
   db_CatalogRef mod_cat = model_catalog();
 
   if (!mod_cat.is_valid())
@@ -514,11 +514,11 @@ db_CatalogRef Db_plugin::db_catalog() {
   return catalog;
 }
 
-void Db_plugin::set_task_proc() {
+auto Db_plugin::set_task_proc() -> void {
   _task_proc_cb = std::bind(&Db_plugin::apply_script_to_db, this);
 }
 
-grt::StringRef Db_plugin::apply_script_to_db() {
+auto Db_plugin::apply_script_to_db() -> grt::StringRef {
   sql::ConnectionWrapper conn = db_conn()->get_dbc_connection();
   std::unique_ptr<sql::Statement> stmt(conn->createStatement());
 
@@ -542,7 +542,7 @@ grt::StringRef Db_plugin::apply_script_to_db() {
   return grt::StringRef(_("The SQL script was successfully applied to server"));
 }
 
-int Db_plugin::process_sql_script_error(long long err_no, const std::string &err_msg, const std::string &statement) {
+auto Db_plugin::process_sql_script_error(long long err_no, const std::string &err_msg, const std::string &statement) -> int {
   std::ostringstream oss;
   std::string stmt = base::trim(statement, "\n");
 
@@ -554,12 +554,12 @@ int Db_plugin::process_sql_script_error(long long err_no, const std::string &err
   return 0;
 }
 
-int Db_plugin::process_sql_script_progress(float progress_state) {
+auto Db_plugin::process_sql_script_progress(float progress_state) -> int {
   grt::GRT::get()->send_progress(progress_state, "");
   return 0;
 }
 
-int Db_plugin::process_sql_script_statistics(long success_count, long err_count) {
+auto Db_plugin::process_sql_script_statistics(long success_count, long err_count) -> int {
   std::ostringstream oss;
   oss << _("SQL script execution finished: statements: ") << success_count << _(" succeeded, ") << err_count
       << _(" failed") << std::endl;

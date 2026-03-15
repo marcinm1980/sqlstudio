@@ -46,7 +46,7 @@ struct WbModelFileData {
   const base::utf8string UnicodeDirectory = "/studio/pqŃńдфصض◒◓";
   const base::utf8string UnicodeBaseModelFile = "/studio/pqŃńдфصض◒◓/☀☁☂☘_model.mwb";
 
- void testModelSavingAndLoading(const base::utf8string &modelFile) {
+ auto testModelSavingAndLoading(const base::utf8string &modelFile) -> void {
     wb::ModelFile mf(outputDir);
 
     base::utf8string tempPath = base::strip_extension(modelFile) + "_tmp" + base::extension(modelFile);
@@ -65,14 +65,14 @@ class Tests_for_WB_model_fileTest : public ::testing::Test {
 protected:
   static std::unique_ptr<WbModelFileData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<WbModelFileData>();
     data->tmpDataDir = testing::Context::get().tmpDataDir();
     data->outputDir = testing::Context::get().outputDir();
     data->tester.reset(new MySqlStudioTester());
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

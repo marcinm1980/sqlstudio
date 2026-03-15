@@ -70,7 +70,7 @@
 #include "mforms/mforms.h"
 
 extern "C" {
-void mforms_cocoa_init();
+auto mforms_cocoa_init() -> void;
 
-void mforms_cocoa_check();
+auto mforms_cocoa_check() -> void;
 };

@@ -36,72 +36,72 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::cancel(::mforms::Wizard *wiz) {
+    auto WizardWrapper::cancel(::mforms::Wizard *wiz) -> void {
     }
 
     //------------------------------------------------------------------------------
-    bool WizardWrapper::create(::mforms::Wizard *self, Form *owner) {
+    auto WizardWrapper::create(::mforms::Wizard *self, Form *owner) -> bool {
       return true;
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_title(::mforms::Wizard *self, const std::string &title) {
+    auto WizardWrapper::set_title(::mforms::Wizard *self, const std::string &title) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::run_modal(::mforms::Wizard *self) {
+    auto WizardWrapper::run_modal(::mforms::Wizard *self) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::close(::mforms::Wizard *self) {
+    auto WizardWrapper::close(::mforms::Wizard *self) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_content(::mforms::Wizard *self, View *view) {
+    auto WizardWrapper::set_content(::mforms::Wizard *self, View *view) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_heading(::mforms::Wizard *self, const std::string &heading) {
+    auto WizardWrapper::set_heading(::mforms::Wizard *self, const std::string &heading) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_step_list(::mforms::Wizard *self, const std::vector<std::string> &steps) {
+    auto WizardWrapper::set_step_list(::mforms::Wizard *self, const std::vector<std::string> &steps) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::refresh_step_list(const std::vector<std::string> &steps) {
+    auto WizardWrapper::refresh_step_list(const std::vector<std::string> &steps) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_icon_path(const std::string &path) {
+    auto WizardWrapper::set_icon_path(const std::string &path) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_allow_cancel(::mforms::Wizard *self, bool flag) {
+    auto WizardWrapper::set_allow_cancel(::mforms::Wizard *self, bool flag) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_allow_back(::mforms::Wizard *self, bool flag) {
+    auto WizardWrapper::set_allow_back(::mforms::Wizard *self, bool flag) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_allow_next(::mforms::Wizard *self, bool flag) {
+    auto WizardWrapper::set_allow_next(::mforms::Wizard *self, bool flag) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_show_extra(::mforms::Wizard *self, bool flag) {
+    auto WizardWrapper::set_show_extra(::mforms::Wizard *self, bool flag) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_extra_caption(::mforms::Wizard *self, const std::string &caption) {
+    auto WizardWrapper::set_extra_caption(::mforms::Wizard *self, const std::string &caption) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::set_next_caption(::mforms::Wizard *self, const std::string &caption) {
+    auto WizardWrapper::set_next_caption(::mforms::Wizard *self, const std::string &caption) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void WizardWrapper::init() {
+    auto WizardWrapper::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_wizard_impl.create = &WizardWrapper::create;

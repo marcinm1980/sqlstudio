@@ -51,7 +51,7 @@ struct SqlCreateData {
 
   std::string dataDir;
 
-  std::string strrange(const std::string &s, const std::string &start, const std::string &end) {
+  auto strrange(const std::string &s, const std::string &start, const std::string &end) -> std::string {
     try {
       std::string res = s.substr(s.find(start));
       if (end.empty())
@@ -67,7 +67,7 @@ class SQL_code_generationTest : public ::testing::Test {
 protected:
   static std::unique_ptr<SqlCreateData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<SqlCreateData>();
     data->dataDir = testing::Context::get().tmpDataDir();
     data->tester.reset(new MySqlStudioTester());
@@ -85,7 +85,7 @@ protected:
     stmt->execute("DROP SCHEMA IF EXISTS `B`;");
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

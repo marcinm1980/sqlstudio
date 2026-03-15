@@ -31,19 +31,19 @@ class db_migration_Migration::ImplData {
 public:
   ImplData(){};
   virtual ~ImplData(){};
-  void addSourceObject(const std::string &id, const grt::Ref<GrtObject> &object) {
+  auto addSourceObject(const std::string &id, const grt::Ref<GrtObject> &object) -> void {
     source_objects[id] = object;
   }
 
-  grt::Ref<GrtObject> &getSourceObject(const std::string &id) {
+  auto getSourceObject(const std::string &id) -> grt::Ref<GrtObject> & {
     return source_objects[id];
   }
 
-  void addTargetObject(const std::string &id, const grt::Ref<GrtObject> &object) {
+  auto addTargetObject(const std::string &id, const grt::Ref<GrtObject> &object) -> void {
     target_objects[id] = object;
   }
 
-  grt::Ref<GrtObject> &getTargetObject(const std::string &id) {
+  auto getTargetObject(const std::string &id) -> grt::Ref<GrtObject> & {
     return target_objects[id];
   }
 
@@ -55,7 +55,7 @@ private:
 //================================================================================
 // db_migration_Migration
 
-void db_migration_Migration::init() {
+auto db_migration_Migration::init() -> void {
   if (!_data)
     _data = new db_migration_Migration::ImplData();
 }
@@ -64,10 +64,10 @@ db_migration_Migration::~db_migration_Migration() {
   delete _data;
 }
 
-grt::Ref<GrtLogObject> db_migration_Migration::addMigrationLogEntry(ssize_t type,
+auto db_migration_Migration::addMigrationLogEntry(ssize_t type,
                                                                     const grt::Ref<GrtObject> &sourceObject,
                                                                     const grt::Ref<GrtObject> &targetObject,
-                                                                    const std::string &message) {
+                                                                    const std::string &message) -> grt::Ref<GrtLogObject> {
   GrtLogObjectRef log = findMigrationLogEntry(sourceObject, targetObject);
   if (!log.is_valid()) {
     log = GrtLogObjectRef(grt::Initialized);
@@ -92,8 +92,8 @@ grt::Ref<GrtLogObject> db_migration_Migration::addMigrationLogEntry(ssize_t type
   return log;
 }
 
-grt::Ref<GrtLogObject> db_migration_Migration::findMigrationLogEntry(const grt::Ref<GrtObject> &sourceObject,
-                                                                     const grt::Ref<GrtObject> &targetObject) {
+auto db_migration_Migration::findMigrationLogEntry(const grt::Ref<GrtObject> &sourceObject,
+                                                                     const grt::Ref<GrtObject> &targetObject) -> grt::Ref<GrtLogObject> {
   for (size_t c = migrationLog().count(), i = 0; i < c; i++) {
     GrtLogObjectRef log(migrationLog()[i]);
     if (log->logObject() == sourceObject && log->refObject() == targetObject)
@@ -102,10 +102,10 @@ grt::Ref<GrtLogObject> db_migration_Migration::findMigrationLogEntry(const grt::
   return GrtLogObjectRef();
 }
 
-grt::Ref<GrtObject> db_migration_Migration::lookupMigratedObject(const grt::Ref<GrtObject> &sourceObject) {
+auto db_migration_Migration::lookupMigratedObject(const grt::Ref<GrtObject> &sourceObject) -> grt::Ref<GrtObject> {
   return this->_data->getTargetObject(sourceObject->id());
 }
 
-grt::Ref<GrtObject> db_migration_Migration::lookupSourceObject(const grt::Ref<GrtObject> &targetObject) {
+auto db_migration_Migration::lookupSourceObject(const grt::Ref<GrtObject> &targetObject) -> grt::Ref<GrtObject> {
   return this->_data->getSourceObject(targetObject->id());
 }

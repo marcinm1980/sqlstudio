@@ -55,7 +55,7 @@ namespace mforms {
       * We need to use our implemenation of g_environ_unsetenv function because on OL6 that function is not avaiable.
       * TODO: replace that function with g_environ_unsetenv when OL6 support will be dropped
       */
-    static gchar **wb_environ_unsetenv_internal(gchar **envp, const gchar *variable) {
+    static auto wb_environ_unsetenv_internal(gchar **envp, const gchar *variable) -> gchar ** {
       g_return_val_if_fail(variable != NULL, NULL);
       g_return_val_if_fail(strchr(variable, '=') == NULL, NULL);
 
@@ -87,7 +87,7 @@ namespace mforms {
     /**
       * Get the current active window for this application
       */
-    GtkWindow *get_current_window() {
+    auto get_current_window() -> GtkWindow * {
       GList *window_list = gtk_window_list_toplevels();
       do {
         GtkWindow *wnd = (GtkWindow *)window_list->data;
@@ -109,7 +109,7 @@ namespace mforms {
      *  To find the proper parent window, we're searching for the current active window
      *  on this application.
      */
-    void set_dialog_transcient(Gtk::MessageDialog &dialog) {
+    auto set_dialog_transcient(Gtk::MessageDialog &dialog) -> void {
       GtkWindow *parent_window = get_current_window();
 
       //  Check if a parent was found and only set transcient if it was. Passing
@@ -121,8 +121,8 @@ namespace mforms {
     }
     //--------------------------------------------------------------------------------
 
-    static int gtkDialog(Gtk::MessageType type, const std::string &title, const std::string &text,
-                         const std::string &ok, const std::string &cancel, const std::string &other) {
+    static auto gtkDialog(Gtk::MessageType type, const std::string &title, const std::string &text,
+                         const std::string &ok, const std::string &cancel, const std::string &other) -> int {
       Gtk::MessageDialog dlg("<b>" + title + "</b>", true, type, Gtk::BUTTONS_NONE, true);
       dlg.set_secondary_text(text);
       dlg.add_button(ok, mforms::ResultOk);
@@ -139,22 +139,22 @@ namespace mforms {
       return r;
     }
 
-    int UtilitiesImpl::show_message(const std::string &title, const std::string &text, const std::string &ok,
-                                    const std::string &cancel, const std::string &other) {
+    auto UtilitiesImpl::show_message(const std::string &title, const std::string &text, const std::string &ok,
+                                    const std::string &cancel, const std::string &other) -> int {
       return gtkDialog(Gtk::MESSAGE_INFO, title, text, ok, cancel, other);
     }
 
-    int UtilitiesImpl::show_error(const std::string &title, const std::string &text, const std::string &ok,
-                                  const std::string &cancel, const std::string &other) {
+    auto UtilitiesImpl::show_error(const std::string &title, const std::string &text, const std::string &ok,
+                                  const std::string &cancel, const std::string &other) -> int {
       return gtkDialog(Gtk::MESSAGE_ERROR, title, text, ok, cancel, other);
     }
 
-    int UtilitiesImpl::show_warning(const std::string &title, const std::string &text, const std::string &ok,
-                                    const std::string &cancel, const std::string &other) {
+    auto UtilitiesImpl::show_warning(const std::string &title, const std::string &text, const std::string &ok,
+                                    const std::string &cancel, const std::string &other) -> int {
       return gtkDialog(Gtk::MESSAGE_WARNING, title, text, ok, cancel, other);
     }
 
-    static void handle_click(Gtk::CheckButton *btn, bool *state) {
+    static auto handle_click(Gtk::CheckButton *btn, bool *state) -> void {
       *state = btn->get_active();
     }
 
@@ -189,15 +189,15 @@ namespace mforms {
       return r;
     }
 
-    void UtilitiesImpl::set_clipboard_text(const std::string &text) {
+    auto UtilitiesImpl::set_clipboard_text(const std::string &text) -> void {
       Gtk::Clipboard::get()->set_text(text);
     }
 
-    std::string UtilitiesImpl::get_clipboard_text() {
+    auto UtilitiesImpl::get_clipboard_text() -> std::string {
       return Gtk::Clipboard::get()->wait_for_text();
     }
 
-    void UtilitiesImpl::open_url(const std::string &url) {
+    auto UtilitiesImpl::open_url(const std::string &url) -> void {
       char *quoted_url = g_uri_escape_string(
         url.c_str(), G_URI_RESERVED_CHARS_GENERIC_DELIMITERS G_URI_RESERVED_CHARS_SUBCOMPONENT_DELIMITERS, FALSE);
 
@@ -220,7 +220,7 @@ namespace mforms {
       }
     }
 
-    std::string UtilitiesImpl::get_special_folder(mforms::FolderType type) {
+    auto UtilitiesImpl::get_special_folder(mforms::FolderType type) -> std::string {
       std::string path;
       const char *t;
 
@@ -268,7 +268,7 @@ namespace mforms {
     static TimeoutHandle last_timeout_handle = 0;
     static base::Mutex timeout_mutex;
 
-    inline bool run_slot(const std::function<bool()> slot, TimeoutHandle handle) {
+    inline auto run_slot(const std::function<bool()> slot, TimeoutHandle handle) -> bool {
       if (!slot()) {
         base::MutexLock lock(timeout_mutex);
         std::map<TimeoutHandle, sigc::connection>::iterator it;
@@ -280,7 +280,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    TimeoutHandle UtilitiesImpl::add_timeout(float interval, const std::function<bool()> &slot) {
+    auto UtilitiesImpl::add_timeout(float interval, const std::function<bool()> &slot) -> TimeoutHandle {
       try {
         if (slot) {
           base::MutexLock lock(timeout_mutex);
@@ -296,7 +296,7 @@ namespace mforms {
       return 0;
     }
 
-    void UtilitiesImpl::cancel_timeout(TimeoutHandle h) {
+    auto UtilitiesImpl::cancel_timeout(TimeoutHandle h) -> void {
       base::MutexLock lock(timeout_mutex);
       std::map<TimeoutHandle, sigc::connection>::iterator it;
       if ((it = timeouts.find(h)) != timeouts.end()) {
@@ -309,7 +309,7 @@ namespace mforms {
 
 #ifdef HAVE_LIBSECRET_KEYRING
 
-    static std::string convertAndFreeString(gchar *txt) {
+    static auto convertAndFreeString(gchar *txt) -> std::string {
       std::string ret;
       if (txt) {
         ret = txt;
@@ -321,7 +321,7 @@ namespace mforms {
 
     //-----------------------------------------------------------------------------------------------------------------------
 
-    const SecretSchema* getWbSecretSchema() {
+    auto getWbSecretSchema() -> const SecretSchema* {
       static const SecretSchema wbSchema = {
         .name = "org.mysql.mysqlstudio.Password",
         .flags = SECRET_SCHEMA_NONE,
@@ -342,8 +342,8 @@ namespace mforms {
 
     //-----------------------------------------------------------------------------------------------------------------------
 
-    void UtilitiesImpl::store_password(const std::string &service, const std::string &account,
-                                       const std::string &password) {
+    auto UtilitiesImpl::store_password(const std::string &service, const std::string &account,
+                                       const std::string &password) -> void {
       if (getenv("WB_NO_KEYRING")) {
         return;
       }
@@ -358,7 +358,7 @@ namespace mforms {
 
     //-----------------------------------------------------------------------------------------------------------------------
 
-    bool UtilitiesImpl::find_password(const std::string &service, const std::string &account, std::string &password) {
+    auto UtilitiesImpl::find_password(const std::string &service, const std::string &account, std::string &password) -> bool {
       if (getenv("WB_NO_KEYRING")) {
         return false;
       }
@@ -384,7 +384,7 @@ namespace mforms {
 
     //-----------------------------------------------------------------------------------------------------------------------
 
-    void UtilitiesImpl::forget_password(const std::string &service, const std::string &account) {
+    auto UtilitiesImpl::forget_password(const std::string &service, const std::string &account) -> void {
       if (getenv("WB_NO_KEYRING")) {
         return;
       }
@@ -403,16 +403,16 @@ namespace mforms {
     }
 #else
 
-    void UtilitiesImpl::store_password(const std::string &service, const std::string &account,
-                                       const std::string &password) {
+    auto UtilitiesImpl::store_password(const std::string &service, const std::string &account,
+                                       const std::string &password) -> void {
     }
 
-    bool UtilitiesImpl::find_password(const std::string &service, const std::string &account, std::string &password) {
+    auto UtilitiesImpl::find_password(const std::string &service, const std::string &account, std::string &password) -> bool {
       g_message("no gnome keyring support");
       return false;
     }
 
-    void UtilitiesImpl::forget_password(const std::string &service, const std::string &account) {
+    auto UtilitiesImpl::forget_password(const std::string &service, const std::string &account) -> void {
     }
 
 #endif // !USE_KEYRING
@@ -433,10 +433,10 @@ namespace mforms {
     class TransparentMessage : public Gtk::Window {
     public:
       TransparentMessage();
-      void show_message(const std::string &title, const std::string &text,
-                        const sigc::slot<bool> &cancel_slot = sigc::slot<bool>());
-      void run();
-      void stop();
+      auto show_message(const std::string &title, const std::string &text,
+                        const sigc::slot<bool> &cancel_slot = sigc::slot<bool>()) -> void;
+      auto run() -> void;
+      auto stop() -> void;
       bool response;
       bool running_modal;
 
@@ -448,9 +448,9 @@ namespace mforms {
       runtime::loop _loop;
       std::string _title;
       std::string _description;
-      virtual bool on_button_release_event(GdkEventButton *ev);
+      virtual auto on_button_release_event(GdkEventButton *ev) -> bool;
       bool on_signal_draw(const ::Cairo::RefPtr< ::Cairo::Context> &ctx);
-      void cancel_clicked();
+      auto cancel_clicked() -> void;
     };
 
     //------------------------------------------------------------------------------
@@ -488,7 +488,7 @@ namespace mforms {
 
       override_background_color(Gdk::RGBA("Black"), Gtk::STATE_FLAG_NORMAL);
     }
-    bool TransparentMessage::on_signal_draw(const ::Cairo::RefPtr< ::Cairo::Context> &ctx) {
+    auto TransparentMessage::on_signal_draw(const ::Cairo::RefPtr< ::Cairo::Context> &ctx) -> bool {
       cairo_surface_t *mask =
         cairo_image_surface_create(CAIRO_FORMAT_A1, this->get_window()->get_width(), this->get_window()->get_height());
       cairo_t *cr = cairo_create(mask);
@@ -583,8 +583,8 @@ namespace mforms {
       return false;
     }
     //------------------------------------------------------------------------------
-    void TransparentMessage::show_message(const std::string &title, const std::string &text,
-                                          const sigc::slot<bool> &cancel_slot) {
+    auto TransparentMessage::show_message(const std::string &title, const std::string &text,
+                                          const sigc::slot<bool> &cancel_slot) -> void {
       this->cancel_slot = cancel_slot;
       if (cancel_slot)
         cancel_button->show();
@@ -606,13 +606,13 @@ namespace mforms {
       window->process_updates(true);
     }
 
-    void TransparentMessage::run() {
+    auto TransparentMessage::run() -> void {
       _is_runing = true;
       _loop.run();
     }
 
     //------------------------------------------------------------------------------
-    void TransparentMessage::stop() {
+    auto TransparentMessage::stop() -> void {
       Glib::Mutex::Lock lock(mutex);
       if (running_modal) {
         unrealize();
@@ -625,7 +625,7 @@ namespace mforms {
       response = true;
     }
 
-    void TransparentMessage::cancel_clicked() {
+    auto TransparentMessage::cancel_clicked() -> void {
       Glib::Mutex::Lock lock(mutex);
       if (cancel_slot && cancel_slot()) {
         if (running_modal) {
@@ -642,7 +642,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool TransparentMessage::on_button_release_event(GdkEventButton *ev) {
+    auto TransparentMessage::on_button_release_event(GdkEventButton *ev) -> bool {
       hide();
       return false;
     }
@@ -652,7 +652,7 @@ namespace mforms {
 #endif
 
     //------------------------------------------------------------------------------
-    void UtilitiesImpl::show_wait_message(const std::string &title, const std::string &text) {
+    auto UtilitiesImpl::show_wait_message(const std::string &title, const std::string &text) -> void {
 #ifdef USE_TRANSPARENT_MESSAGE
       if (!tm)
         tm = new TransparentMessage();
@@ -663,7 +663,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool UtilitiesImpl::hide_wait_message() {
+    auto UtilitiesImpl::hide_wait_message() -> bool {
 #ifdef USE_TRANSPARENT_MESSAGE
       if (tm) {
         tm->hide();
@@ -676,7 +676,7 @@ namespace mforms {
 
     //-------------------------------------------------------------------------------
 
-    bool UtilitiesImpl::move_to_trash(const std::string &path) {
+    auto UtilitiesImpl::move_to_trash(const std::string &path) -> bool {
       // trash in linux is chaos, just delete it
       if (g_file_test(path.c_str(), G_FILE_TEST_IS_DIR))
         base_rmdir_recursively(path.c_str());
@@ -686,7 +686,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void UtilitiesImpl::reveal_file(const std::string &path) {
+    auto UtilitiesImpl::reveal_file(const std::string &path) -> void {
       std::string dirname = base::dirname(path);
       const gchar *argv[] = {"xdg-open", dirname.c_str(), NULL};
 
@@ -706,23 +706,23 @@ namespace mforms {
       }
     }
 
-    void UtilitiesImpl::set_thread_name(const std::string &name) {
+    auto UtilitiesImpl::set_thread_name(const std::string &name) -> void {
 #ifdef HAVE_PRCTL_H
       if (!name.empty())
         prctl(PR_SET_NAME, name.c_str(), 0, 0, 0);
 #endif
     }
 
-    void UtilitiesImpl::beep() {
+    auto UtilitiesImpl::beep() -> void {
       if (get_mainwindow())
         get_mainwindow()->get_window()->beep();
     }
 
     //------------------------------------------------------------------------------
 
-    bool UtilitiesImpl::run_cancelable_wait_message(const std::string &title, const std::string &text,
+    auto UtilitiesImpl::run_cancelable_wait_message(const std::string &title, const std::string &text,
                                                     const std::function<void()> &start_task,
-                                                    const std::function<bool()> &cancel_task) {
+                                                    const std::function<bool()> &cancel_task) -> bool {
       if (!start_task)
         throw std::invalid_argument("start_task param cannot be empty");
 
@@ -744,7 +744,7 @@ namespace mforms {
       return false;
     }
 
-    void UtilitiesImpl::stop_cancelable_wait_message() {
+    auto UtilitiesImpl::stop_cancelable_wait_message() -> void {
       if (tmc) {
         if (Utilities::in_main_thread())
           tmc->stop();
@@ -759,7 +759,7 @@ namespace mforms {
 
     static std::map<std::string, Glib::RefPtr<Gdk::Pixbuf> > icon_cache;
 
-    Glib::RefPtr<Gdk::Pixbuf> UtilitiesImpl::get_cached_icon(const std::string &icon) {
+    auto UtilitiesImpl::get_cached_icon(const std::string &icon) -> Glib::RefPtr<Gdk::Pixbuf> {
       if (icon_cache.find(icon) != icon_cache.end())
         return icon_cache[icon];
 
@@ -807,7 +807,7 @@ namespace mforms {
 
     std::map<std::string, FontMeasurement *> FontMeasurementDescriptors;
 
-    double UtilitiesImpl::get_text_width(const std::string &text, const std::string &font_desc) {
+    auto UtilitiesImpl::get_text_width(const std::string &text, const std::string &font_desc) -> double {
       std::string font;
       float size = 0;
       bool bold = false;
@@ -849,7 +849,7 @@ namespace mforms {
 
     //------------------------------------------------------------------------------
 
-    void UtilitiesImpl::init() {
+    auto UtilitiesImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_utilities_impl.show_message = &UtilitiesImpl::show_message;
@@ -882,7 +882,7 @@ namespace mforms {
 
     //---------------------------------------------------------------------------------
 
-    void MainThreadRequestQueue::from_main_thread() {
+    auto MainThreadRequestQueue::from_main_thread() -> void {
       std::shared_ptr<Request> req;
       {
         Glib::Mutex::Lock lock(_mutex);
@@ -902,12 +902,12 @@ namespace mforms {
       _disp.connect(sigc::mem_fun(this, &MainThreadRequestQueue::from_main_thread));
     }
 
-    MainThreadRequestQueue *MainThreadRequestQueue::get() {
+    auto MainThreadRequestQueue::get() -> MainThreadRequestQueue * {
       static MainThreadRequestQueue *q = new MainThreadRequestQueue();
       return q;
     }
 
-    void *MainThreadRequestQueue::perform(const std::function<void *()> &slot, bool wait) {
+    auto MainThreadRequestQueue::perform(const std::function<void *()> &slot, bool wait) -> void * {
       if (Utilities::in_main_thread())
         return slot();
       else {

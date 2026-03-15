@@ -30,15 +30,15 @@
 
 namespace base {
   namespace xml {
-    BASELIBRARY_PUBLIC_FUNC xmlDocPtr loadXMLDoc(const std::string &path);
-    BASELIBRARY_PUBLIC_FUNC xmlDocPtr xmlParseFragment(const std::string &buff);
-    BASELIBRARY_PUBLIC_FUNC xmlNodePtr getXmlRoot(xmlDocPtr doc);
-    BASELIBRARY_PUBLIC_FUNC bool nameIs(xmlNodePtr node, const std::string &name);
-    BASELIBRARY_PUBLIC_FUNC bool nameIs(xmlAttrPtr attrib, const std::string &name);
-    BASELIBRARY_PUBLIC_FUNC void getXMLDocMetainfo(xmlDocPtr doc, std::string &doctype, std::string &docversion);
-    BASELIBRARY_PUBLIC_FUNC std::string getProp(xmlNodePtr node, const std::string &name);
-    BASELIBRARY_PUBLIC_FUNC std::string getContent(xmlNodePtr node);
-    BASELIBRARY_PUBLIC_FUNC std::string getContentRecursive(xmlNodePtr node);
-    BASELIBRARY_PUBLIC_FUNC std::string encodeEntities(const std::string &input);
+    BASELIBRARY_PUBLIC_FUNC auto loadXMLDoc(const std::string &path) -> xmlDocPtr;
+    BASELIBRARY_PUBLIC_FUNC auto xmlParseFragment(const std::string &buff) -> xmlDocPtr;
+    BASELIBRARY_PUBLIC_FUNC auto getXmlRoot(xmlDocPtr doc) -> xmlNodePtr;
+    BASELIBRARY_PUBLIC_FUNC auto nameIs(xmlNodePtr node, const std::string &name) -> bool;
+    BASELIBRARY_PUBLIC_FUNC auto nameIs(xmlAttrPtr attrib, const std::string &name) -> bool;
+    BASELIBRARY_PUBLIC_FUNC auto getXMLDocMetainfo(xmlDocPtr doc, std::string &doctype, std::string &docversion) -> void;
+    BASELIBRARY_PUBLIC_FUNC auto getProp(xmlNodePtr node, const std::string &name) -> std::string;
+    BASELIBRARY_PUBLIC_FUNC auto getContent(xmlNodePtr node) -> std::string;
+    BASELIBRARY_PUBLIC_FUNC auto getContentRecursive(xmlNodePtr node) -> std::string;
+    BASELIBRARY_PUBLIC_FUNC auto encodeEntities(const std::string &input) -> std::string;
   }; /* end of namespace xml */
 };   /* end of namespace base */

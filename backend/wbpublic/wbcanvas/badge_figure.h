@@ -42,22 +42,22 @@ class WBPUBLICBACKEND_PUBLIC_FUNC BadgeFigure : public mdc::Figure {
   cairo_pattern_t *_gradient;
   base::Size _text_size;
 
-  virtual base::Size calc_min_size();
+  virtual auto calc_min_size() -> base::Size;
 
 public:
   BadgeFigure(mdc::Layer *layer);
   virtual ~BadgeFigure();
-  virtual void draw_contents(mdc::CairoCtx *cr);
+  virtual auto draw_contents(mdc::CairoCtx *cr) -> void;
 
-  void set_badge_id(const std::string &bid);
-  std::string badge_id() const {
+  auto set_badge_id(const std::string &bid) -> void;
+  auto badge_id() const -> std::string {
     return _badge_id;
   }
 
-  void set_text(const std::string &text);
-  void set_gradient_from_color(const base::Color &color);
-  void set_fill_color2(const base::Color &color);
-  void set_text_color(const base::Color &color);
+  auto set_text(const std::string &text) -> void;
+  auto set_gradient_from_color(const base::Color &color) -> void;
+  auto set_fill_color2(const base::Color &color) -> void;
+  auto set_text_color(const base::Color &color) -> void;
 
   boost::signals2::scoped_connection updater_connection;
 };

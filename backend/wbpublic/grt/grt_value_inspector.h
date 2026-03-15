@@ -70,10 +70,10 @@ namespace bec {
 
     virtual auto set_value(const NodeId &node, const grt::ValueRef &value) -> bool = 0;
 
-    void monitor_object_changes(const grt::ObjectRef &obj);
+    auto monitor_object_changes(const grt::ObjectRef &obj) -> void;
 
   private:
-    void changed_slot(const std::string &name, const grt::ValueRef &value);
+    auto changed_slot(const std::string &name, const grt::ValueRef &value) -> void;
     boost::signals2::scoped_connection _changed_conn;
   };
 };

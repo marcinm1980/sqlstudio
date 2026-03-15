@@ -59,7 +59,7 @@ Mysql_sql_parser_base::Mysql_sql_parser_base() : _override_sql_mode(false) {
   _non_std_sql_delimiter = sql_specifics->non_std_sql_delimiter();
 }
 
-void Mysql_sql_parser_base::set_options(const grt::DictRef &options) {
+auto Mysql_sql_parser_base::set_options(const grt::DictRef &options) -> void {
   Sql_parser_base::set_options(options);
 
   if (!options.is_valid())
@@ -69,12 +69,12 @@ void Mysql_sql_parser_base::set_options(const grt::DictRef &options) {
     sql_mode(grt::StringRef::cast_from(options.get("sql_mode")));
 }
 
-void Mysql_sql_parser_base::sql_mode(const std::string &value) {
+auto Mysql_sql_parser_base::sql_mode(const std::string &value) -> void {
   _override_sql_mode = true;
   _sql_mode = value;
 }
 
-int Mysql_sql_parser_base::parse_sql_script(Mysql_sql_parser_fe &sql_parser_fe, const char *sql) {
+auto Mysql_sql_parser_base::parse_sql_script(Mysql_sql_parser_fe &sql_parser_fe, const char *sql) -> int {
   SlotAutoDisconnector<boost::function<bool()> > on_stop_slot_disconnector(_stop_cb);
   _stop_cb = boost::bind(&Mysql_sql_parser_base::on_stop, this, &sql_parser_fe);
   if (_override_sql_mode)
@@ -82,7 +82,7 @@ int Mysql_sql_parser_base::parse_sql_script(Mysql_sql_parser_fe &sql_parser_fe, 
   return sql_parser_fe.parse_sql_script(sql, &process_sql_statement, this);
 }
 
-int Mysql_sql_parser_base::parse_sql_script_file(Mysql_sql_parser_fe &sql_parser_fe, const std::string &filename) {
+auto Mysql_sql_parser_base::parse_sql_script_file(Mysql_sql_parser_fe &sql_parser_fe, const std::string &filename) -> int {
   SlotAutoDisconnector<boost::function<bool()> > on_stop_slot_disconnector(_stop_cb);
   _stop_cb = boost::bind(&Mysql_sql_parser_base::on_stop, this, &sql_parser_fe);
   if (_override_sql_mode)
@@ -90,15 +90,15 @@ int Mysql_sql_parser_base::parse_sql_script_file(Mysql_sql_parser_fe &sql_parser
   return sql_parser_fe.parse_sql_script_file(filename, &process_sql_statement, this);
 }
 
-bool Mysql_sql_parser_base::on_stop(Mysql_sql_parser_fe *sql_parser_fe) {
+auto Mysql_sql_parser_base::on_stop(Mysql_sql_parser_fe *sql_parser_fe) -> bool {
   return (0 != sql_parser_fe->stop());
 }
 
-int Mysql_sql_parser_base::process_sql_statement(void *sql_parser_ptr, const MyxStatementParser *splitter,
+auto Mysql_sql_parser_base::process_sql_statement(void *sql_parser_ptr, const MyxStatementParser *splitter,
                                                  const char *sql_statement, const SqlAstNode *tree,
                                                  int stmt_begin_lineno, int stmt_begin_line_pos, int stmt_end_lineno,
                                                  int stmt_end_line_pos, int err_tok_lineno, int err_tok_line_pos,
-                                                 int err_tok_len, const std::string &err_msg) {
+                                                 int err_tok_len, const std::string &err_msg) -> int {
   Mysql_sql_parser_base *sql_parser = reinterpret_cast<Mysql_sql_parser_base *>(sql_parser_ptr);
 
   sql_parser->_splitter = splitter;
@@ -115,11 +115,11 @@ int Mysql_sql_parser_base::process_sql_statement(void *sql_parser_ptr, const Myx
   return sql_parser->_process_sql_statement(tree);
 }
 
-int Mysql_sql_parser_base::total_line_count() {
+auto Mysql_sql_parser_base::total_line_count() -> int {
   return _splitter->total_line_count();
 }
 
-void Mysql_sql_parser_base::report_semantic_error(const SqlAstNode *item, const std::string &err_msg, int entry_type) {
+auto Mysql_sql_parser_base::report_semantic_error(const SqlAstNode *item, const std::string &err_msg, int entry_type) -> void {
   int lineno = -1;
   int token_line_pos = 0;
   int token_len = 0;
@@ -129,8 +129,8 @@ void Mysql_sql_parser_base::report_semantic_error(const SqlAstNode *item, const 
   report_sql_error(lineno, true, token_line_pos, token_len, err_msg, entry_type, "");
 }
 
-void Mysql_sql_parser_base::process_obj_full_name_item(const SqlAstNode *item, std::string &schema_name,
-                                                       std::string &obj_name) {
+auto Mysql_sql_parser_base::process_obj_full_name_item(const SqlAstNode *item, std::string &schema_name,
+                                                       std::string &obj_name) -> void {
   if (!item)
     return;
 

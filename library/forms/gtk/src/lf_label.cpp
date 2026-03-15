@@ -39,18 +39,18 @@ mforms::gtk::LabelImpl::LabelImpl(::mforms::Label *self) : ViewImpl(self), _font
   _label->show();
 }
 
-bool mforms::gtk::LabelImpl::create(::mforms::Label *self) {
+auto mforms::gtk::LabelImpl::create(::mforms::Label *self) -> bool {
   return new LabelImpl(self) != 0;
 }
 
-void mforms::gtk::LabelImpl::set_style(::mforms::Label *self, ::mforms::LabelStyle style) {
+auto mforms::gtk::LabelImpl::set_style(::mforms::Label *self, ::mforms::LabelStyle style) -> void {
   LabelImpl *label = self->get_data<LabelImpl>();
   label->_style = style;
   if (label->_label->get_realized())
     label->realized();
 }
 
-void mforms::gtk::LabelImpl::realized() {
+auto mforms::gtk::LabelImpl::realized() -> void {
   if (!_font_set) {
     _font = _label->get_pango_context()->get_font_description();
     _font_set = true;
@@ -111,20 +111,20 @@ void mforms::gtk::LabelImpl::realized() {
   }
 }
 
-void mforms::gtk::LabelImpl::set_text(::mforms::Label *self, const std::string &text) {
+auto mforms::gtk::LabelImpl::set_text(::mforms::Label *self, const std::string &text) -> void {
   LabelImpl *label = self->get_data<LabelImpl>();
 
   if (label)
     ((Gtk::Label *)label->_label)->set_text(text);
 }
 
-void mforms::gtk::LabelImpl::set_color(::mforms::Label *self, const std::string &text) {
+auto mforms::gtk::LabelImpl::set_color(::mforms::Label *self, const std::string &text) -> void {
   LabelImpl *label = self->get_data<LabelImpl>();
   if (label)
     ((Gtk::Label *)label->_label)->override_color(color_to_rgba(Gdk::Color(text)), Gtk::STATE_FLAG_NORMAL);
 }
 
-void mforms::gtk::LabelImpl::set_wrap_text(::mforms::Label *self, bool flag) {
+auto mforms::gtk::LabelImpl::set_wrap_text(::mforms::Label *self, bool flag) -> void {
   LabelImpl *label = self->get_data<LabelImpl>();
 
   if (label) {
@@ -132,7 +132,7 @@ void mforms::gtk::LabelImpl::set_wrap_text(::mforms::Label *self, bool flag) {
   }
 }
 
-void mforms::gtk::LabelImpl::set_text_align(::mforms::Label *self, ::mforms::Alignment align) {
+auto mforms::gtk::LabelImpl::set_text_align(::mforms::Label *self, ::mforms::Alignment align) -> void {
   LabelImpl *label = self->get_data<LabelImpl>();
 
   if (label) {
@@ -191,7 +191,7 @@ void mforms::gtk::LabelImpl::set_text_align(::mforms::Label *self, ::mforms::Ali
   }
 }
 
-void mforms::gtk::LabelImpl::init() {
+auto mforms::gtk::LabelImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_label_impl.create = &LabelImpl::create;

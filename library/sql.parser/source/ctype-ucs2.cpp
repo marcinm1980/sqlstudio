@@ -94,9 +94,8 @@ static uchar to_upper_ucs2[] = {
 };
 
 
-static int my_ucs2_uni(CHARSET_INFO *cs __attribute__((unused)),
-		       my_wc_t * pwc, const uchar *s, const uchar *e)
-{
+static auto my_ucs2_uni(CHARSET_INFO *cs __attribute__((unused)),
+		       my_wc_t * pwc, const uchar *s, const uchar *e) -> int {
   if (s+2 > e) /* Need 2 characters */
     return MY_CS_TOOSMALL2;
   
@@ -104,9 +103,8 @@ static int my_ucs2_uni(CHARSET_INFO *cs __attribute__((unused)),
   return 2;
 }
 
-static int my_uni_ucs2(CHARSET_INFO *cs __attribute__((unused)) ,
-		       my_wc_t wc, uchar *r, uchar *e)
-{
+static auto my_uni_ucs2(CHARSET_INFO *cs __attribute__((unused)) ,
+		       my_wc_t wc, uchar *r, uchar *e) -> int {
   if ( r+2 > e ) 
     return MY_CS_TOOSMALL2;
   
@@ -116,10 +114,9 @@ static int my_uni_ucs2(CHARSET_INFO *cs __attribute__((unused)) ,
 }
 
 
-static uint my_caseup_ucs2(CHARSET_INFO *cs, char *src, uint srclen,
+static auto my_caseup_ucs2(CHARSET_INFO *cs, char *src, uint srclen,
                            char *dst __attribute__((unused)),
-                           uint dstlen __attribute__((unused)))
-{
+                           uint dstlen __attribute__((unused))) -> uint {
   my_wc_t wc;
   int res;
   char *srcend= src + srclen;
@@ -139,9 +136,8 @@ static uint my_caseup_ucs2(CHARSET_INFO *cs, char *src, uint srclen,
 }
 
 
-static void my_hash_sort_ucs2(CHARSET_INFO *cs, const uchar *s, uint slen,
-			      ulong *n1, ulong *n2)
-{
+static auto my_hash_sort_ucs2(CHARSET_INFO *cs, const uchar *s, uint slen,
+			      ulong *n1, ulong *n2) -> void {
   my_wc_t wc;
   int res;
   const uchar *e=s+slen;
@@ -163,17 +159,15 @@ static void my_hash_sort_ucs2(CHARSET_INFO *cs, const uchar *s, uint slen,
 }
 
 
-static void my_caseup_str_ucs2(CHARSET_INFO * cs  __attribute__((unused)), 
-			       char * s __attribute__((unused)))
-{
+static auto my_caseup_str_ucs2(CHARSET_INFO * cs  __attribute__((unused)), 
+			       char * s __attribute__((unused))) -> void {
 }
 
 
 
-static uint my_casedn_ucs2(CHARSET_INFO *cs, char *src, uint srclen,
+static auto my_casedn_ucs2(CHARSET_INFO *cs, char *src, uint srclen,
                            char *dst __attribute__((unused)),
-                           uint dstlen __attribute__((unused)))
-{
+                           uint dstlen __attribute__((unused))) -> uint {
   my_wc_t wc;
   int res;
   char *srcend= src + srclen;
@@ -192,17 +186,15 @@ static uint my_casedn_ucs2(CHARSET_INFO *cs, char *src, uint srclen,
   return srclen;
 }
 
-static void my_casedn_str_ucs2(CHARSET_INFO *cs __attribute__((unused)), 
-			       char * s __attribute__((unused)))
-{
+static auto my_casedn_str_ucs2(CHARSET_INFO *cs __attribute__((unused)), 
+			       char * s __attribute__((unused))) -> void {
 }
 
 
-static int my_strnncoll_ucs2(CHARSET_INFO *cs, 
+static auto my_strnncoll_ucs2(CHARSET_INFO *cs, 
 			     const uchar *s, uint slen, 
                              const uchar *t, uint tlen,
-                             my_bool t_is_prefix)
-{
+                             my_bool t_is_prefix) -> int {
   int s_res,t_res;
   my_wc_t s_wc,t_wc;
   const uchar *se=s+slen;
@@ -263,12 +255,11 @@ static int my_strnncoll_ucs2(CHARSET_INFO *cs,
     > 0  a > b
 */
 
-static int my_strnncollsp_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnncollsp_ucs2(CHARSET_INFO *cs __attribute__((unused)),
                                const uchar *s, uint slen,
                                const uchar *t, uint tlen,
                                my_bool diff_if_only_endspace_difference
-			       __attribute__((unused)))
-{
+			       __attribute__((unused))) -> int {
   const uchar *se, *te;
   uint minlen;
   MY_UNICASE_INFO **uni_plane= cs->caseinfo;
@@ -314,9 +305,8 @@ static int my_strnncollsp_ucs2(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-static int my_strncasecmp_ucs2(CHARSET_INFO *cs,
-			       const char *s, const char *t,  uint len)
-{
+static auto my_strncasecmp_ucs2(CHARSET_INFO *cs,
+			       const char *s, const char *t,  uint len) -> int {
   int s_res,t_res;
   my_wc_t s_wc,t_wc;
   const char *se=s+len;
@@ -352,8 +342,7 @@ static int my_strncasecmp_ucs2(CHARSET_INFO *cs,
 }
 
 
-static int my_strcasecmp_ucs2(CHARSET_INFO *cs, const char *s, const char *t)
-{
+static auto my_strcasecmp_ucs2(CHARSET_INFO *cs, const char *s, const char *t) -> int {
   uint s_len= (uint) strlen(s);
   uint t_len= (uint) strlen(t);
   uint len = (s_len > t_len) ? s_len : t_len;
@@ -361,9 +350,8 @@ static int my_strcasecmp_ucs2(CHARSET_INFO *cs, const char *s, const char *t)
 }
 
 
-static int my_strnxfrm_ucs2(CHARSET_INFO *cs, 
-	uchar *dst, uint dstlen, const uchar *src, uint srclen)
-{
+static auto my_strnxfrm_ucs2(CHARSET_INFO *cs, 
+	uchar *dst, uint dstlen, const uchar *src, uint srclen) -> int {
   my_wc_t wc;
   int res;
   int plane;
@@ -395,17 +383,15 @@ static int my_strnxfrm_ucs2(CHARSET_INFO *cs,
 }
 
 
-static int my_ismbchar_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_ismbchar_ucs2(CHARSET_INFO *cs __attribute__((unused)),
                      const char *b __attribute__((unused)),
-                     const char *e __attribute__((unused)))
-{
+                     const char *e __attribute__((unused))) -> int {
   return 2;
 }
 
 
-static int my_mbcharlen_ucs2(CHARSET_INFO *cs  __attribute__((unused)) , 
-                      uint c __attribute__((unused)))
-{
+static auto my_mbcharlen_ucs2(CHARSET_INFO *cs  __attribute__((unused)) , 
+                      uint c __attribute__((unused))) -> int {
   return 2;
 }
 
@@ -418,8 +404,7 @@ static int my_mbcharlen_ucs2(CHARSET_INFO *cs  __attribute__((unused)) ,
 namespace mysql_parser
 {
 
-static int my_vsnprintf_ucs2(char *dst, uint n, const char* fmt, va_list ap)
-{
+static auto my_vsnprintf_ucs2(char *dst, uint n, const char* fmt, va_list ap) -> int {
   char *start=dst, *end=dst+n-1;
   for (; *fmt ; fmt++)
   {
@@ -492,19 +477,17 @@ static int my_vsnprintf_ucs2(char *dst, uint n, const char* fmt, va_list ap)
   return (uint) (dst - start);
 }
 
-static int my_snprintf_ucs2(CHARSET_INFO *cs __attribute__((unused)),
-			    char* to, uint n, const char* fmt, ...)
-{
+static auto my_snprintf_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+			    char* to, uint n, const char* fmt, ...) -> int {
   va_list args;
   va_start(args,fmt);
   return my_vsnprintf_ucs2(to, n, fmt, args);
 }
 
 
-long my_strntol_ucs2(CHARSET_INFO *cs,
+auto my_strntol_ucs2(CHARSET_INFO *cs,
 		     const char *nptr, uint l, int base,
-		     char **endptr, int *err)
-{
+		     char **endptr, int *err) -> long {
   int      negative=0;
   int      overflow;
   int      cnv;
@@ -616,10 +599,9 @@ bs:
 }
 
 
-ulong my_strntoul_ucs2(CHARSET_INFO *cs,
+auto my_strntoul_ucs2(CHARSET_INFO *cs,
 		       const char *nptr, uint l, int base, 
-		       char **endptr, int *err)
-{
+		       char **endptr, int *err) -> ulong {
   int      negative=0;
   int      overflow;
   int      cnv;
@@ -725,10 +707,9 @@ bs:
 
 
 
-longlong  my_strntoll_ucs2(CHARSET_INFO *cs,
+auto my_strntoll_ucs2(CHARSET_INFO *cs,
 			   const char *nptr, uint l, int base,
-			   char **endptr, int *err)
-{
+			   char **endptr, int *err) -> longlong {
   int      negative=0;
   int      overflow;
   int      cnv;
@@ -842,10 +823,9 @@ bs:
 
 
 
-ulonglong  my_strntoull_ucs2(CHARSET_INFO *cs,
+auto my_strntoull_ucs2(CHARSET_INFO *cs,
 			   const char *nptr, uint l, int base,
-			   char **endptr, int *err)
-{
+			   char **endptr, int *err) -> ulonglong {
   int      negative=0;
   int      overflow;
   int      cnv;
@@ -950,10 +930,9 @@ bs:
 }
 
 
-double my_strntod_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+auto my_strntod_ucs2(CHARSET_INFO *cs __attribute__((unused)),
                        char *nptr, uint length, 
-                       char **endptr, int *err)
-{
+                       char **endptr, int *err) -> double {
   char     buf[256];
   double   res;
   register char *b=buf;
@@ -987,9 +966,8 @@ double my_strntod_ucs2(CHARSET_INFO *cs __attribute__((unused)),
   This is a fast version optimized for the case of radix 10 / -10
 */
 
-int my_l10tostr_ucs2(CHARSET_INFO *cs,
-		     char *dst, uint len, int radix, long int val)
-{
+auto my_l10tostr_ucs2(CHARSET_INFO *cs,
+		     char *dst, uint len, int radix, long int val) -> int {
   char buffer[66];
   register char *p, *db, *de;
   long int new_val;
@@ -1034,9 +1012,8 @@ int my_l10tostr_ucs2(CHARSET_INFO *cs,
   return (int) (dst-db);
 }
 
-int my_ll10tostr_ucs2(CHARSET_INFO *cs __attribute__((unused)),
-		      char *dst, uint len, int radix, longlong val)
-{
+auto my_ll10tostr_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+		      char *dst, uint len, int radix, longlong val) -> int {
   char buffer[65];
   register char *p, *db, *de;
   long long_val;
@@ -1108,9 +1085,8 @@ static unsigned long lfactor[9]=
 };
 
 
-longlong my_strtoll10_ucs2(CHARSET_INFO *cs __attribute__((unused)),
-                           const char *nptr, char **endptr, int *error)
-{
+auto my_strtoll10_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+                           const char *nptr, char **endptr, int *error) -> longlong {
   const char *s, *end, *start, *n_end, *true_end;
   unsigned char c;
   unsigned long i, j, k;
@@ -1277,29 +1253,26 @@ no_conv:
 
 
 static
-uint my_numchars_ucs2(CHARSET_INFO *cs __attribute__((unused)),
-		      const char *b, const char *e)
-{
+auto my_numchars_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+		      const char *b, const char *e) -> uint {
   return (uint) (e-b)/2;
 }
 
 
 static
-uint my_charpos_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+auto my_charpos_ucs2(CHARSET_INFO *cs __attribute__((unused)),
 		     const char *b  __attribute__((unused)),
 		     const char *e  __attribute__((unused)),
-		     uint pos)
-{
+		     uint pos) -> uint {
   uint string_length= (uint) (e - b);
   return pos > string_length ? string_length + 2 : pos * 2;
 }
 
 
 static
-uint my_well_formed_len_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+auto my_well_formed_len_ucs2(CHARSET_INFO *cs __attribute__((unused)),
                              const char *b, const char *e,
-                             uint nchars, int *error)
-{
+                             uint nchars, int *error) -> uint {
   /* Ensure string length is dividable with 2 */
   uint nbytes= ((uint) (e-b)) & ~(uint) 1;
   *error= 0;
@@ -1309,17 +1282,15 @@ uint my_well_formed_len_ucs2(CHARSET_INFO *cs __attribute__((unused)),
 
 
 static
-void my_fill_ucs2(CHARSET_INFO *cs __attribute__((unused)),
-		   char *s, uint l, int fill)
-{
+auto my_fill_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+		   char *s, uint l, int fill) -> void {
   for ( ; l >= 2; s[0]= 0, s[1]= fill, s+=2, l-=2);
 }
 
 
 static
-uint my_lengthsp_ucs2(CHARSET_INFO *cs __attribute__((unused)),
-		      const char *ptr, uint length)
-{
+auto my_lengthsp_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+		      const char *ptr, uint length) -> uint {
   const char *end= ptr+length;
   while (end > ptr+1 && end[-1] == ' ' && end[-2] == '\0')
     end-=2;
@@ -1328,11 +1299,10 @@ uint my_lengthsp_ucs2(CHARSET_INFO *cs __attribute__((unused)),
 
 
 static
-int my_wildcmp_ucs2_ci(CHARSET_INFO *cs,
+auto my_wildcmp_ucs2_ci(CHARSET_INFO *cs,
 		    const char *str,const char *str_end,
 		    const char *wildstr,const char *wildend,
-		    int escape, int w_one, int w_many)
-{
+		    int escape, int w_one, int w_many) -> int {
   MY_UNICASE_INFO **uni_plane= cs->caseinfo;
   return my_wildcmp_unicode(cs,str,str_end,wildstr,wildend,
                             escape,w_one,w_many,uni_plane); 
@@ -1340,22 +1310,20 @@ int my_wildcmp_ucs2_ci(CHARSET_INFO *cs,
 
 
 static
-int my_wildcmp_ucs2_bin(CHARSET_INFO *cs,
+auto my_wildcmp_ucs2_bin(CHARSET_INFO *cs,
 		    const char *str,const char *str_end,
 		    const char *wildstr,const char *wildend,
-		    int escape, int w_one, int w_many)
-{
+		    int escape, int w_one, int w_many) -> int {
   return my_wildcmp_unicode(cs,str,str_end,wildstr,wildend,
                             escape,w_one,w_many,NULL); 
 }
 
 
 static
-int my_strnncoll_ucs2_bin(CHARSET_INFO *cs, 
+auto my_strnncoll_ucs2_bin(CHARSET_INFO *cs, 
                           const uchar *s, uint slen,
                           const uchar *t, uint tlen,
-                          my_bool t_is_prefix)
-{
+                          my_bool t_is_prefix) -> int {
   int s_res,t_res;
   my_wc_t s_wc,t_wc;
   const uchar *se=s+slen;
@@ -1382,12 +1350,11 @@ int my_strnncoll_ucs2_bin(CHARSET_INFO *cs,
   return (int) (t_is_prefix ? t-te : ((se-s) - (te-t)));
 }
 
-static int my_strnncollsp_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)), 
+static auto my_strnncollsp_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)), 
                                    const uchar *s, uint slen, 
                                    const uchar *t, uint tlen,
                                    my_bool diff_if_only_endspace_difference
-                                   __attribute__((unused)))
-{
+                                   __attribute__((unused))) -> int {
   const uchar *se, *te;
   uint minlen;
 
@@ -1430,8 +1397,7 @@ static int my_strnncollsp_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)),
 
 
 static
-int my_strcasecmp_ucs2_bin(CHARSET_INFO *cs, const char *s, const char *t)
-{
+auto my_strcasecmp_ucs2_bin(CHARSET_INFO *cs, const char *s, const char *t) -> int {
   uint s_len= (uint) strlen(s);
   uint t_len= (uint) strlen(t);
   uint len = (s_len > t_len) ? s_len : t_len;
@@ -1440,10 +1406,9 @@ int my_strcasecmp_ucs2_bin(CHARSET_INFO *cs, const char *s, const char *t)
 
 
 static
-int my_strnxfrm_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)),
+auto my_strnxfrm_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)),
 			 uchar *dst, uint dstlen,
-			 const uchar *src, uint srclen)
-{
+			 const uchar *src, uint srclen) -> int {
   if (dst != src)
     memcpy(dst,src,srclen= min(dstlen,srclen));
   if (dstlen > srclen)
@@ -1453,9 +1418,8 @@ int my_strnxfrm_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)),
 
 
 static
-void my_hash_sort_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)),
-			   const uchar *key, uint len,ulong *nr1, ulong *nr2)
-{
+auto my_hash_sort_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)),
+			   const uchar *key, uint len,ulong *nr1, ulong *nr2) -> void {
   const uchar *pos = key;
   
   key+= len;
@@ -1485,13 +1449,12 @@ void my_hash_sort_ucs2_bin(CHARSET_INFO *cs __attribute__((unused)),
 ** optimized !
 */
 
-my_bool my_like_range_ucs2(CHARSET_INFO *cs,
+auto my_like_range_ucs2(CHARSET_INFO *cs,
 			   const char *ptr,uint ptr_length,
 			   pbool escape, pbool w_one, pbool w_many,
 			   uint res_length,
 			   char *min_str,char *max_str,
-			   uint *min_length,uint *max_length)
-{
+			   uint *min_length,uint *max_length) -> my_bool {
   const char *end=ptr+ptr_length;
   char *min_org=min_str;
   char *min_end=min_str+res_length;
@@ -1558,9 +1521,8 @@ my_bool my_like_range_ucs2(CHARSET_INFO *cs,
 
 
 
-ulong my_scan_ucs2(CHARSET_INFO *cs __attribute__((unused)),
-                   const char *str, const char *end, int sequence_type)
-{
+auto my_scan_ucs2(CHARSET_INFO *cs __attribute__((unused)),
+                   const char *str, const char *end, int sequence_type) -> ulong {
   const char *str0= str;
   end--; /* for easier loop condition, because of two bytes per character */
   

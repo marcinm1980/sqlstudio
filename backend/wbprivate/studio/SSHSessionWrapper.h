@@ -50,13 +50,13 @@ namespace ssh {
     virtual grt::IntegerRef connect() override;
     virtual grt::DictRef executeCommand(const std::string &command) override;
     virtual grt::DictRef executeSudoCommand(const std::string &command, const std::string &user) override;
-    static std::tuple<ssh::SSHConnectionConfig, ssh::SSHConnectionCredentials> getConnectionInfo(
-        db_mgmt_ConnectionRef connectionProperties);
-    static std::tuple<ssh::SSHConnectionConfig, ssh::SSHConnectionCredentials> getConnectionInfo(
-            db_mgmt_ServerInstanceRef serverInstanceProperties);
+    static auto getConnectionInfo(
+        db_mgmt_ConnectionRef connectionProperties) -> std::tuple<ssh::SSHConnectionConfig, ssh::SSHConnectionCredentials>;
+    static auto getConnectionInfo(
+            db_mgmt_ServerInstanceRef serverInstanceProperties) -> std::tuple<ssh::SSHConnectionConfig, ssh::SSHConnectionCredentials>;
 
-    static std::string fillupAuthInfo(ssh::SSHConnectionConfig &config, ssh::SSHConnectionCredentials &credentials,
-                                      bool resetPassword);
+    static auto fillupAuthInfo(ssh::SSHConnectionConfig &config, ssh::SSHConnectionCredentials &credentials,
+                                      bool resetPassword) -> std::string;
     virtual grt::IntegerRef cd(const std::string &directory) override;
     virtual void get(const std::string &src, const std::string &dest) override;
     virtual grt::StringRef getContent(const std::string &src) override;
@@ -72,9 +72,9 @@ namespace ssh {
     virtual grt::IntegerRef fileExists(const std::string &path) override;
   protected:
     mutable base::RecMutex _timeoutMutex;
-    base::RecMutexLock lockTimeout();
-    void makeSessionPoll();
-    bool pollSession();
+    auto lockTimeout() -> base::RecMutexLock;
+    auto makeSessionPoll() -> void;
+    auto pollSession() -> bool;
 
   };
 

@@ -153,15 +153,15 @@ WBContextModel::~WBContextModel() {
   delete _overview;
 }
 
-void WBContextModel::setup_secondary_sidebar() {
+auto WBContextModel::setup_secondary_sidebar() -> void {
   // Setup the secondary model sidebar, which should be shared between all model tabs
   _secondary_sidebar = mforms::manage(new mforms::TabView(mforms::TabViewSelectorSecondary));
   _template_panel = new TableTemplatePanel(this);
   _secondary_sidebar->add_page(_template_panel, _("Templates"));
 }
 
-void WBContextModel::notify_catalog_tree_view(const CatalogNodeNotificationType &notify_type, grt::ValueRef value,
-                                              const std::string &diagram_id) {
+auto WBContextModel::notify_catalog_tree_view(const CatalogNodeNotificationType &notify_type, grt::ValueRef value,
+                                              const std::string &diagram_id) -> void {
   std::map<std::string, ModelDiagramForm *>::iterator it;
   if (diagram_id.empty()) {
     for (it = _model_forms.begin(); it != _model_forms.end(); ++it)
@@ -174,13 +174,13 @@ void WBContextModel::notify_catalog_tree_view(const CatalogNodeNotificationType 
   }
 }
 
-void WBContextModel::refill_catalog_tree() {
+auto WBContextModel::refill_catalog_tree() -> void {
   std::map<std::string, ModelDiagramForm *>::iterator it;
   for (it = _model_forms.begin(); it != _model_forms.end(); ++it)
     it->second->refill_catalog_tree();
 }
 
-mforms::TreeView *WBContextModel::create_user_type_list() {
+auto WBContextModel::create_user_type_list() -> mforms::TreeView * {
   UserDatatypeList *type_list;
 
   type_list = new UserDatatypeList(wb::WBContextUI::get()->get_wb());
@@ -194,7 +194,7 @@ mforms::TreeView *WBContextModel::create_user_type_list() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeView *WBContextModel::create_history_tree() {
+auto WBContextModel::create_history_tree() -> mforms::TreeView * {
   HistoryTree *history_tree = new HistoryTree(grt::GRT::get()->get_undo_manager());
   history_tree->refresh();
   return history_tree;
@@ -202,14 +202,14 @@ mforms::TreeView *WBContextModel::create_history_tree() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextModel::option_changed(grt::internal::OwnedDict *dict, bool, const std::string &key) {
+auto WBContextModel::option_changed(grt::internal::OwnedDict *dict, bool, const std::string &key) -> void {
   if (key == "studio:AutoSaveModelInterval" &&
       dict == wb::WBContextUI::get()->get_wb()->get_wb_options().valueptr()) {
     auto_save_document();
   }
 }
 
-bool WBContextModel::auto_save_document() {
+auto WBContextModel::auto_save_document() -> bool {
   WBContext *wb = wb::WBContextUI::get()->get_wb();
   ssize_t interval = wb->get_root()->options()->options().get_int("studio:AutoSaveModelInterval", 60);
   if (interval <= 0)
@@ -243,7 +243,7 @@ bool WBContextModel::auto_save_document() {
   return true;
 }
 
-void WBContextModel::detect_auto_save_files(const std::string &autosave_dir) {
+auto WBContextModel::detect_auto_save_files(const std::string &autosave_dir) -> void {
   std::map<std::string, std::string> files;
 
   // look for .mwbd folders with autosave files
@@ -284,11 +284,11 @@ void WBContextModel::detect_auto_save_files(const std::string &autosave_dir) {
   ::auto_save_files = files;
 }
 
-std::map<std::string, std::string> WBContextModel::auto_save_files() {
+auto WBContextModel::auto_save_files() -> std::map<std::string, std::string> {
   return ::auto_save_files;
 }
 
-void WBContextModel::unrealize() {
+auto WBContextModel::unrealize() -> void {
   _page_settings_conn.disconnect();
 
   // unrealize all models
@@ -299,7 +299,7 @@ void WBContextModel::unrealize() {
   }
 }
 
-model_DiagramRef WBContextModel::get_active_model_diagram(bool main_form) {
+auto WBContextModel::get_active_model_diagram(bool main_form) -> model_DiagramRef {
   bec::UIForm *form =
     main_form ? wb::WBContextUI::get()->get_active_main_form() : wb::WBContextUI::get()->get_active_form();
 
@@ -309,7 +309,7 @@ model_DiagramRef WBContextModel::get_active_model_diagram(bool main_form) {
   return model_DiagramRef();
 }
 
-model_ModelRef WBContextModel::get_active_model(bool main_form) {
+auto WBContextModel::get_active_model(bool main_form) -> model_ModelRef {
   bec::UIForm *form =
     main_form ? wb::WBContextUI::get()->get_active_main_form() : wb::WBContextUI::get()->get_active_form();
 
@@ -320,7 +320,7 @@ model_ModelRef WBContextModel::get_active_model(bool main_form) {
   return model_ModelRef();
 }
 
-void WBContextModel::model_created(ModelFile *file, studio_DocumentRef doc) {
+auto WBContextModel::model_created(ModelFile *file, studio_DocumentRef doc) -> void {
   _file = file;
   _doc = doc;
 
@@ -353,7 +353,7 @@ void WBContextModel::model_created(ModelFile *file, studio_DocumentRef doc) {
   grt::GRTNotificationCenter::get()->send_grt("GRNModelCreated", _grtmodel_panel, info);
 }
 
-void WBContextModel::model_loaded(ModelFile *file, studio_DocumentRef doc) {
+auto WBContextModel::model_loaded(ModelFile *file, studio_DocumentRef doc) -> void {
   _file = file;
   _doc = doc;
 
@@ -388,19 +388,19 @@ void WBContextModel::model_loaded(ModelFile *file, studio_DocumentRef doc) {
   grt::GRTNotificationCenter::get()->send_grt("GRNModelOpened", _grtmodel_panel, info);
 }
 
-void WBContextModel::model_closed() {
+auto WBContextModel::model_closed() -> void {
   grt::DictRef info(true);
   grt::GRTNotificationCenter::get()->send_grt("GRNModelClosed", _grtmodel_panel, info);
 }
 
-void WBContextModel::realize() {
+auto WBContextModel::realize() -> void {
   _page_settings_conn = _doc->pageSettings()->signal_changed()->connect(
     std::bind(&WBContextModel::page_settings_changed, this, std::placeholders::_1, std::placeholders::_2));
 
   _doc->physicalModels()[0]->get_data()->realize();
 }
 
-void WBContextModel::page_settings_changed(const std::string &field, const grt::ValueRef &value) {
+auto WBContextModel::page_settings_changed(const std::string &field, const grt::ValueRef &value) -> void {
   if (field == "paperType") {
     update_page_settings();
   }
@@ -414,7 +414,7 @@ void WBContextModel::page_settings_changed(const std::string &field, const grt::
  * to the page/print settings.
  ****************************************************************************
  */
-void WBContextModel::update_page_settings() {
+auto WBContextModel::update_page_settings() -> void {
   if (!_doc.is_valid() || !_doc->logicalModel().is_valid())
     return;
 
@@ -432,15 +432,15 @@ void WBContextModel::update_page_settings() {
   }
 }
 
-cairo_surface_t *WBContextModel::fetch_image(const std::string &file) {
+auto WBContextModel::fetch_image(const std::string &file) -> cairo_surface_t * {
   return wb::WBContextUI::get()->get_wb()->get_file()->get_image(file);
 }
 
-std::string WBContextModel::attach_image(const std::string &file) {
+auto WBContextModel::attach_image(const std::string &file) -> std::string {
   return wb::WBContextUI::get()->get_wb()->get_file()->add_image_file(file);
 }
 
-void WBContextModel::release_image(const std::string &file) {
+auto WBContextModel::release_image(const std::string &file) -> void {
   // QQQ
   // wb::WBContextUI::get()->get_wb()->get_file()->release_image(file);
 }
@@ -458,7 +458,7 @@ void WBContextModel::release_image(const std::string &file) {
  *
  * @param name the name of the canvas. Will be the object-id of the view.
  */
-mdc::CanvasView *WBContextModel::create_diagram(const model_DiagramRef &view) {
+auto WBContextModel::create_diagram(const model_DiagramRef &view) -> mdc::CanvasView * {
   return wb::WBContextUI::get()->get_wb()->execute_in_main_thread<mdc::CanvasView *>(
     "create_diagram", std::bind(&WBContextModel::create_diagram_main, this, view));
 }
@@ -470,7 +470,7 @@ mdc::CanvasView *WBContextModel::create_diagram(const model_DiagramRef &view) {
  * If called from the front end (because the UI caused closing the editor) then the diagram form
  * is already unregistered and we don't need to call the UI again (it was the trigger after all).
  */
-void WBContextModel::free_canvas_view(mdc::CanvasView *view) {
+auto WBContextModel::free_canvas_view(mdc::CanvasView *view) -> void {
   ModelDiagramForm *diagram = get_diagram_form(view);
   if (diagram != NULL) {
     // This function is expected to be called from the main thread.
@@ -487,7 +487,7 @@ void WBContextModel::free_canvas_view(mdc::CanvasView *view) {
 
 //--------------------------------------------------------------------------------------------------
 
-mdc::CanvasView *WBContextModel::create_diagram_main(const model_DiagramRef &diagram_reference) {
+auto WBContextModel::create_diagram_main(const model_DiagramRef &diagram_reference) -> mdc::CanvasView * {
   ModelDiagramForm *diagram = 0;
   WBContext *wb = wb::WBContextUI::get()->get_wb();
 
@@ -543,7 +543,7 @@ mdc::CanvasView *WBContextModel::create_diagram_main(const model_DiagramRef &dia
   return view;
 }
 
-void WBContextModel::activate_canvas_object(const model_ObjectRef &object, ssize_t flags) {
+auto WBContextModel::activate_canvas_object(const model_ObjectRef &object, ssize_t flags) -> void {
   bool newwindow = flags & 1;
 
   FOREACH_COMPONENT(wb::WBContextUI::get()->get_wb()->_components, iter) {
@@ -552,12 +552,12 @@ void WBContextModel::activate_canvas_object(const model_ObjectRef &object, ssize
   }
 }
 
-void WBContextModel::register_diagram_form(ModelDiagramForm *view) {
+auto WBContextModel::register_diagram_form(ModelDiagramForm *view) -> void {
   _model_forms[view->get_model_diagram().id()] = view;
   view->refill_catalog_tree();
 }
 
-ModelDiagramForm *WBContextModel::get_diagram_form(mdc::CanvasView *view) {
+auto WBContextModel::get_diagram_form(mdc::CanvasView *view) -> ModelDiagramForm * {
   for (std::map<std::string, ModelDiagramForm *>::const_iterator iter = _model_forms.begin();
        iter != _model_forms.end(); ++iter) {
     if (iter->second->get_view() == view)
@@ -566,7 +566,7 @@ ModelDiagramForm *WBContextModel::get_diagram_form(mdc::CanvasView *view) {
   return 0;
 }
 
-void WBContextModel::notify_diagram_created(ModelDiagramForm *view) {
+auto WBContextModel::notify_diagram_created(ModelDiagramForm *view) -> void {
   view->scoped_connect(
     view->get_model_diagram()->signal_changed(),
     std::bind(&WBContextModel::diagram_object_changed, this, std::placeholders::_1, std::placeholders::_2, view));
@@ -575,7 +575,7 @@ void WBContextModel::notify_diagram_created(ModelDiagramForm *view) {
   // wb::WBContextUI::get()->get_physical_overview()->send_refresh_diagram(model_DiagramRef());
 }
 
-void WBContextModel::notify_diagram_destroyed(ModelDiagramForm *diagram) {
+auto WBContextModel::notify_diagram_destroyed(ModelDiagramForm *diagram) -> void {
   if (diagram != NULL) {
     std::string id = diagram->get_model_diagram().id();
     delete diagram;
@@ -586,12 +586,12 @@ void WBContextModel::notify_diagram_destroyed(ModelDiagramForm *diagram) {
   // wb::WBContextUI::get()->get_physical_overview()->send_refresh_diagram(model_DiagramRef());
 }
 
-void WBContextModel::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto WBContextModel::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   if (name == "GNMainFormChanged")
     update_current_diagram(wb::WBContextUI::get()->get_active_main_form());
 }
 
-void WBContextModel::update_current_diagram(bec::UIForm *form) {
+auto WBContextModel::update_current_diagram(bec::UIForm *form) -> void {
   ModelDiagramForm *dform = dynamic_cast<ModelDiagramForm *>(form);
   if (dform) {
     model_DiagramRef diagram(dform->get_model_diagram());
@@ -602,8 +602,8 @@ void WBContextModel::update_current_diagram(bec::UIForm *form) {
   }
 }
 
-void WBContextModel::diagram_object_changed(const std::string &member, const grt::ValueRef &ovalue,
-                                            ModelDiagramForm *view) {
+auto WBContextModel::diagram_object_changed(const std::string &member, const grt::ValueRef &ovalue,
+                                            ModelDiagramForm *view) -> void {
   if (member == "name") {
     if (view->get_model_diagram().is_valid()) {
       base::NotificationInfo info;
@@ -617,8 +617,8 @@ void WBContextModel::diagram_object_changed(const std::string &member, const grt
   }
 }
 
-void WBContextModel::diagram_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                                                 ModelDiagramForm *vform) {
+auto WBContextModel::diagram_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                                                 ModelDiagramForm *vform) -> void {
   if (vform == wb::WBContextUI::get()->get_active_main_form()) {
     if (vform->get_model_diagram()->selection().valueptr() == list)
       wb::WBContextUI::get()->get_wb()->request_refresh(RefreshSelection, "",
@@ -626,7 +626,7 @@ void WBContextModel::diagram_object_list_changed(grt::internal::OwnedList *list,
   }
 }
 
-bool WBContextModel::has_selected_schema() {
+auto WBContextModel::has_selected_schema() -> bool {
   PhysicalOverviewBE *active_form = dynamic_cast<PhysicalOverviewBE *>(wb::WBContextUI::get()->get_active_main_form());
   if (active_form == _overview && _overview->get_active_schema_node())
     return true;
@@ -634,7 +634,7 @@ bool WBContextModel::has_selected_schema() {
   return false;
 }
 
-bool WBContextModel::has_selected_figures() {
+auto WBContextModel::has_selected_figures() -> bool {
   ModelDiagramForm *view;
   model_DiagramRef diagram(get_active_model_diagram(false));
   if (!diagram.is_valid()) // in case an editor in a diagram tab is active
@@ -648,37 +648,37 @@ bool WBContextModel::has_selected_figures() {
   return false;
 }
 
-bool WBContextModel::has_selected_model() {
+auto WBContextModel::has_selected_model() -> bool {
   if (wb::WBContextUI::get()->get_active_main_form() == _overview)
     return true;
   return false;
 }
 
-void WBContextModel::add_model_schema() {
+auto WBContextModel::add_model_schema() -> void {
   wb::WBContextUI::get()->get_wb()->get_component<WBComponentPhysical>()->add_new_db_schema(
     studio_physical_ModelRef::cast_from(get_active_model(true)));
 }
 
-void WBContextModel::add_model_diagram() {
+auto WBContextModel::add_model_diagram() -> void {
   add_new_diagram(get_active_model(true));
 }
 
-void WBContextModel::add_model_table() {
+auto WBContextModel::add_model_table() -> void {
   if (_overview->get_active_schema_node())
     _overview->get_active_schema_node()->add_new_db_table(wb::WBContextUI::get()->get_wb());
 }
 
-void WBContextModel::add_model_view() {
+auto WBContextModel::add_model_view() -> void {
   if (_overview->get_active_schema_node())
     _overview->get_active_schema_node()->add_new_db_view(wb::WBContextUI::get()->get_wb());
 }
 
-void WBContextModel::add_model_rgroup() {
+auto WBContextModel::add_model_rgroup() -> void {
   if (_overview->get_active_schema_node())
     _overview->get_active_schema_node()->add_new_db_routine(wb::WBContextUI::get()->get_wb());
 }
 
-void WBContextModel::remove_figure() {
+auto WBContextModel::remove_figure() -> void {
   ModelDiagramForm *view;
   model_DiagramRef diagram(get_active_model_diagram(false));
   if (!diagram.is_valid()) { // in case an editor in a diagram tab is active
@@ -690,7 +690,7 @@ void WBContextModel::remove_figure() {
     view->remove_selection();
 }
 
-GrtObjectRef WBContextModel::duplicate_object(const db_DatabaseObjectRef &object, grt::CopyContext &copy_context) {
+auto WBContextModel::duplicate_object(const db_DatabaseObjectRef &object, grt::CopyContext &copy_context) -> GrtObjectRef {
   std::set<std::string> skip;
   skip.insert("oldName");
 
@@ -761,7 +761,7 @@ GrtObjectRef WBContextModel::duplicate_object(const db_DatabaseObjectRef &object
   return GrtObjectRef();
 }
 
-void WBContextModel::update_plugin_arguments_pool(ArgumentPool &args) {
+auto WBContextModel::update_plugin_arguments_pool(ArgumentPool &args) -> void {
   model_ModelRef model(get_active_model(true));
 
   if (!model.is_valid())
@@ -828,9 +828,9 @@ void WBContextModel::update_plugin_arguments_pool(ArgumentPool &args) {
 /**
  * Adds a list of common menu entries to the menu item list. Returns the number of items added.
  */
-int WBContextModel::get_object_list_popup_items(bec::UIForm *form, const std::vector<bec::NodeId> &nodes,
+auto WBContextModel::get_object_list_popup_items(bec::UIForm *form, const std::vector<bec::NodeId> &nodes,
                                                 const grt::ListRef<GrtObject> &objects, const std::string &label,
-                                                const std::list<std::string> &groups, bec::MenuItemList &items) {
+                                                const std::list<std::string> &groups, bec::MenuItemList &items) -> int {
   size_t initial_count = items.size();
   bec::TreeModel *model = dynamic_cast<bec::TreeModel *>(form);
   WBContext *wb = wb::WBContextUI::get()->get_wb();
@@ -949,8 +949,8 @@ struct sortplugin {
   }
 };
 
-int WBContextModel::add_object_plugins_to_popup_menu(const grt::ListRef<GrtObject> &objects,
-                                                     const std::list<std::string> &groups, bec::MenuItemList &items) {
+auto WBContextModel::add_object_plugins_to_popup_menu(const grt::ListRef<GrtObject> &objects,
+                                                     const std::list<std::string> &groups, bec::MenuItemList &items) -> int {
   bec::ArgumentPool argpool;
   wb::WBContextUI::get()->get_wb()->update_plugin_arguments_pool(argpool);
   if (objects.count() > 0)
@@ -1026,7 +1026,7 @@ int WBContextModel::add_object_plugins_to_popup_menu(const grt::ListRef<GrtObjec
   return count;
 }
 
-void WBContextModel::history_changed() {
+auto WBContextModel::history_changed() -> void {
   std::string undo_description(grt::GRT::get()->get_undo_manager()->undo_description());
   std::string redo_description(grt::GRT::get()->get_undo_manager()->redo_description());
 
@@ -1060,7 +1060,7 @@ void WBContextModel::history_changed() {
   }
 }
 
-void WBContextModel::selection_changed() {
+auto WBContextModel::selection_changed() -> void {
   if (!bec::GRTManager::get()->in_main_thread()) {
     bec::GRTManager::get()->run_once_when_idle(std::bind(&WBContextModel::selection_changed, this));
     return;
@@ -1119,7 +1119,7 @@ void WBContextModel::selection_changed() {
   wb::WBContextUI::get()->get_command_ui()->revalidate_edit_menu_items();
 }
 
-GrtVersionRef WBContextModel::get_target_version() {
+auto WBContextModel::get_target_version() -> GrtVersionRef {
   if (get_active_model(true).is_valid()) {
     return GrtVersionRef::cast_from(bec::getModelOption(studio_physical_ModelRef::cast_from(get_active_model(true)), "CatalogVersion"));
   }
@@ -1128,7 +1128,7 @@ GrtVersionRef WBContextModel::get_target_version() {
 
 #ifndef BasicExport____
 
-void WBContextModel::export_png(const std::string &path) {
+auto WBContextModel::export_png(const std::string &path) -> void {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(wb::WBContextUI::get()->get_active_main_form());
   if (form) {
     wb::WBContextUI::get()->get_wb()->_frontendCallbacks->show_status_text(
@@ -1146,7 +1146,7 @@ void WBContextModel::export_png(const std::string &path) {
       _("Cannot Export Diagram"), _("Current diagram cannot be exported as image, please select a diagram first."));
 }
 
-void WBContextModel::export_pdf(const std::string &path) {
+auto WBContextModel::export_pdf(const std::string &path) -> void {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(wb::WBContextUI::get()->get_active_main_form());
   if (form) {
     Size size = form->get_view()->get_total_view_size();
@@ -1171,7 +1171,7 @@ void WBContextModel::export_pdf(const std::string &path) {
       _("Cannot Export Diagram"), _("Current diagram cannot be exported as image, please select a diagram first."));
 }
 
-void WBContextModel::export_svg(const std::string &path) {
+auto WBContextModel::export_svg(const std::string &path) -> void {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(wb::WBContextUI::get()->get_active_main_form());
   if (form) {
     Size size = form->get_view()->get_total_view_size();
@@ -1196,7 +1196,7 @@ void WBContextModel::export_svg(const std::string &path) {
       _("Cannot Export Diagram"), _("Current diagram cannot be exported as image, please select a diagram first."));
 }
 
-void WBContextModel::exportPng(const model_DiagramRef &diagram, const std::string &path) {
+auto WBContextModel::exportPng(const model_DiagramRef &diagram, const std::string &path) -> void {
   wb::WBContextUI::get()->get_wb()->_frontendCallbacks->show_status_text(
         strfmt(_("Exporting full model diagram to %s..."), path.c_str()));
   try {
@@ -1209,7 +1209,7 @@ void WBContextModel::exportPng(const model_DiagramRef &diagram, const std::strin
   }
 }
 
-void WBContextModel::export_ps(const std::string &path) {
+auto WBContextModel::export_ps(const std::string &path) -> void {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(wb::WBContextUI::get()->get_active_main_form());
   if (form) {
     Size size = form->get_view()->get_total_view_size();
@@ -1241,7 +1241,7 @@ void WBContextModel::export_ps(const std::string &path) {
 //--------------------------------------------------------------------------------
 // Canvas Management
 
-void WBContextModel::add_new_diagram(const model_ModelRef &model) {
+auto WBContextModel::add_new_diagram(const model_ModelRef &model) -> void {
   wb::WBContextUI::get()->get_wb()->_frontendCallbacks->show_status_text(_("Creating Diagram..."));
 
   wb::WBContextUI::get()->get_wb()->_frontendCallbacks->lock_gui(true);
@@ -1254,7 +1254,7 @@ void WBContextModel::add_new_diagram(const model_ModelRef &model) {
   wb::WBContextUI::get()->get_wb()->_frontendCallbacks->show_status_text(_("Diagram added."));
 }
 
-void WBContextModel::switch_diagram(const model_DiagramRef &view) {
+auto WBContextModel::switch_diagram(const model_DiagramRef &view) -> void {
   wb::WBContextUI::get()->get_wb()->_frontendCallbacks->switched_view(view->get_data()->get_canvas_view());
 }
 
@@ -1273,7 +1273,7 @@ void WBContextModel::switch_diagram(const model_DiagramRef &view) {
  * @param figure to be removed
  ****************************************************************************
  */
-bool WBContextModel::delete_object(model_ObjectRef object) {
+auto WBContextModel::delete_object(model_ObjectRef object) -> bool {
   model_DiagramRef view(model_DiagramRef::cast_from(object->owner()));
 
   FOREACH_COMPONENT(wb::WBContextUI::get()->get_wb()->_components, iter) {
@@ -1295,7 +1295,7 @@ bool WBContextModel::delete_object(model_ObjectRef object) {
   return false;
 }
 
-bool WBContextModel::remove_figure(model_ObjectRef object) {
+auto WBContextModel::remove_figure(model_ObjectRef object) -> bool {
   model_DiagramRef view(model_DiagramRef::cast_from(object->owner()));
 
   FOREACH_COMPONENT(wb::WBContextUI::get()->get_wb()->_components, iter) {
@@ -1316,11 +1316,11 @@ bool WBContextModel::remove_figure(model_ObjectRef object) {
 
 #endif // Canvas_Objects____
 
-model_DiagramRef WBContextModel::get_view_with_id(const std::string &id) {
+auto WBContextModel::get_view_with_id(const std::string &id) -> model_DiagramRef {
   return model_DiagramRef::cast_from(grt::GRT::get()->find_object_by_id(id, "/wb/doc"));
 }
 
-bool WBContextModel::delete_diagram(const model_DiagramRef &view) {
+auto WBContextModel::delete_diagram(const model_DiagramRef &view) -> bool {
   grt::AutoUndo undo;
   view->owner()->diagrams().remove_value(view);
   undo.end(strfmt(_("Delete Diagram '%s'"), view->name().c_str()));
@@ -1337,7 +1337,7 @@ bool WBContextModel::delete_diagram(const model_DiagramRef &view) {
   return true;
 }
 
-void WBContextModel::begin_plugin_exec() {
+auto WBContextModel::begin_plugin_exec() -> void {
   // lock the canvas so that it doesn't keep refreshing all the time.
   // XXX we have to find some way to allow plugins control refresh freezing
   ModelDiagramForm *view = dynamic_cast<ModelDiagramForm *>(wb::WBContextUI::get()->get_active_main_form());
@@ -1349,7 +1349,7 @@ void WBContextModel::begin_plugin_exec() {
   }
 }
 
-void WBContextModel::end_plugin_exec() {
+auto WBContextModel::end_plugin_exec() -> void {
   // form can get destroyed after a plugin is executed
   if (_locked_view_for_plugin_exec && get_diagram_form(_locked_view_for_plugin_exec))
     _locked_view_for_plugin_exec->unlock_redraw();
@@ -1359,11 +1359,11 @@ void WBContextModel::end_plugin_exec() {
 /**
  * Called by the front end when the user data type editor has been closed. We can then remove our reference to it.
  */
-static void userTypeEditorClosed(UserDefinedTypeEditor **editor_ptr) {
+static auto userTypeEditorClosed(UserDefinedTypeEditor **editor_ptr) -> void {
   *editor_ptr = NULL;
 }
 
-void WBContextModel::show_user_type_editor(studio_physical_ModelRef model) {
+auto WBContextModel::show_user_type_editor(studio_physical_ModelRef model) -> void {
   if (_current_user_type_editor == NULL) {
     _current_user_type_editor = new UserDefinedTypeEditor(model);
     scoped_connect(_current_user_type_editor->signal_closed(),
@@ -1372,7 +1372,7 @@ void WBContextModel::show_user_type_editor(studio_physical_ModelRef model) {
   _current_user_type_editor->show_modal(NULL, NULL);
 }
 
-mforms::View *WBContextModel::shared_secondary_sidebar() {
+auto WBContextModel::shared_secondary_sidebar() -> mforms::View * {
   return _secondary_sidebar;
 }
 

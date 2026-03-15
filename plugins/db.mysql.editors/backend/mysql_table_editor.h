@@ -47,17 +47,17 @@ public:
     GeneratedExpression
   };
 
-  virtual bool set_field(const ::bec::NodeId &node, ColumnId column, const std::string &value);
-  virtual bool set_field(const ::bec::NodeId &node, ColumnId column, ssize_t value);
+  virtual auto set_field(const ::bec::NodeId &node, ColumnId column, const std::string &value) -> bool;
+  virtual auto set_field(const ::bec::NodeId &node, ColumnId column, ssize_t value) -> bool;
 
   MySQLTableColumnsListBE(MySQLTableEditorBE *owner);
 
-  virtual bool activate_popup_item_for_nodes(const std::string &name, const std::vector<bec::NodeId> &orig_nodes);
-  virtual bec::MenuItemList get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes);
+  virtual auto activate_popup_item_for_nodes(const std::string &name, const std::vector<bec::NodeId> &orig_nodes) -> bool;
+  virtual auto get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) -> bec::MenuItemList;
 
 protected:
   // for internal use only
-  virtual bool get_field_grt(const ::bec::NodeId &node, ColumnId column, ::grt::ValueRef &value);
+  virtual auto get_field_grt(const ::bec::NodeId &node, ColumnId column, ::grt::ValueRef &value) -> bool;
 };
 
 class MYSQLWBMYSQLSUPPORTBACKEND_PUBLIC_FUNC MySQLTableIndexListBE : public bec::IndexListBE {
@@ -66,11 +66,11 @@ public:
 
   MySQLTableIndexListBE(MySQLTableEditorBE *owner);
 
-  virtual bool set_field(const ::bec::NodeId &node, ColumnId column, const std::string &value);
-  virtual bool set_field(const ::bec::NodeId &node, ColumnId column, ssize_t value);
+  virtual auto set_field(const ::bec::NodeId &node, ColumnId column, const std::string &value) -> bool;
+  virtual auto set_field(const ::bec::NodeId &node, ColumnId column, ssize_t value) -> bool;
 
 protected:
-  virtual bool get_field_grt(const ::bec::NodeId &node, ColumnId column, grt::ValueRef &value);
+  virtual auto get_field_grt(const ::bec::NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
 };
 
 class MYSQLWBMYSQLSUPPORTBACKEND_PUBLIC_FUNC MySQLTablePartitionTreeBE : public bec::TreeModel {
@@ -82,16 +82,16 @@ public:
 
   MySQLTablePartitionTreeBE(MySQLTableEditorBE *owner);
 
-  virtual void refresh(){};
+  virtual auto refresh() -> void {};
 
-  virtual size_t count_children(const ::bec::NodeId &parent);
-  virtual ::bec::NodeId get_child(const ::bec::NodeId &parent, size_t index);
+  virtual auto count_children(const ::bec::NodeId &parent) -> size_t;
+  virtual auto get_child(const ::bec::NodeId &parent, size_t index) -> ::bec::NodeId;
 
-  virtual bool set_field(const ::bec::NodeId &node, ColumnId column, const std::string &value);
+  virtual auto set_field(const ::bec::NodeId &node, ColumnId column, const std::string &value) -> bool;
 
 protected:
-  virtual bool get_field_grt(const ::bec::NodeId &node, ColumnId column, grt::ValueRef &value);
-  virtual grt::Type get_field_type(const ::bec::NodeId &node, ColumnId column);
+  virtual auto get_field_grt(const ::bec::NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
+  virtual auto get_field_type(const ::bec::NodeId &node, ColumnId column) -> grt::Type;
 
   db_mysql_PartitionDefinitionRef get_definition(const ::bec::NodeId &node);
 };
@@ -105,68 +105,68 @@ public:
   MySQLTableEditorBE(db_mysql_TableRef table);
   virtual ~MySQLTableEditorBE();
 
-  virtual void refresh_live_object();
-  virtual void commit_changes();
+  virtual auto refresh_live_object() -> void;
+  virtual auto commit_changes() -> void;
 
-  virtual MySQLTableColumnsListBE *get_columns() {
+  virtual auto get_columns() -> MySQLTableColumnsListBE * {
     return &_columns;
   }
-  virtual MySQLTableIndexListBE *get_indexes() {
+  virtual auto get_indexes() -> MySQLTableIndexListBE * {
     return &_indexes;
   }
 
-  virtual std::vector<std::string> get_index_types();
-  virtual std::vector<std::string> get_index_storage_types();
-  virtual std::vector<std::string> get_fk_action_options();
+  virtual auto get_index_types() -> std::vector<std::string>;
+  virtual auto get_index_storage_types() -> std::vector<std::string>;
+  virtual auto get_fk_action_options() -> std::vector<std::string>;
 
   // table options
-  virtual void set_table_option_by_name(const std::string &name, const std::string &value);
-  virtual std::string get_table_option_by_name(const std::string &name);
-  std::vector<std::string> get_engines_list();
-  bool engine_supports_foreign_keys();
+  virtual auto set_table_option_by_name(const std::string &name, const std::string &value) -> void;
+  virtual auto get_table_option_by_name(const std::string &name) -> std::string;
+  auto get_engines_list() -> std::vector<std::string>;
+  auto engine_supports_foreign_keys() -> bool;
 
-  virtual bool check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2);
+  virtual auto check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) -> bool;
 
-  void load_trigger_sql();
+  auto load_trigger_sql() -> void;
 
   // triggers
-  mforms::View *get_trigger_panel();
-  void add_trigger(const std::string &timing, const std::string &event);
+  auto get_trigger_panel() -> mforms::View *;
+  auto add_trigger(const std::string &timing, const std::string &event) -> void;
 
-  virtual bool can_close();
+  virtual auto can_close() -> bool;
 
   // partitioning
-  bool set_partition_type(const std::string &type);
-  std::string get_partition_type();
+  auto set_partition_type(const std::string &type) -> bool;
+  auto get_partition_type() -> std::string;
 
-  void set_partition_expression(const std::string &expr);
-  std::string get_partition_expression();
+  auto set_partition_expression(const std::string &expr) -> void;
+  auto get_partition_expression() -> std::string;
 
-  void set_partition_count(int count);
-  int get_partition_count();
+  auto set_partition_count(int count) -> void;
+  auto get_partition_count() -> int;
 
-  bool set_subpartition_type(const std::string &type);
-  std::string get_subpartition_type();
+  auto set_subpartition_type(const std::string &type) -> bool;
+  auto get_subpartition_type() -> std::string;
 
-  bool set_subpartition_expression(const std::string &expr);
-  std::string get_subpartition_expression();
+  auto set_subpartition_expression(const std::string &expr) -> bool;
+  auto get_subpartition_expression() -> std::string;
 
-  bool subpartition_count_allowed();
-  void set_subpartition_count(int count);
-  int get_subpartition_count();
+  auto subpartition_count_allowed() -> bool;
+  auto set_subpartition_count(int count) -> void;
+  auto get_subpartition_count() -> int;
 
-  MySQLTablePartitionTreeBE *get_partitions() {
+  auto get_partitions() -> MySQLTablePartitionTreeBE * {
     return &_partitions;
   }
 
   // whether partitions and sub partitions will be defined by the user or not
   // if false, only count is needed otherwise the partitions list must be defined
-  void set_explicit_partitions(bool flag);
-  bool get_explicit_partitions();
-  void set_explicit_subpartitions(bool flag);
-  bool get_explicit_subpartitions();
+  auto set_explicit_partitions(bool flag) -> void;
+  auto get_explicit_partitions() -> bool;
+  auto set_explicit_subpartitions(bool flag) -> void;
+  auto get_explicit_subpartitions() -> bool;
 
-  virtual db_TableRef create_stub_table(const std::string &schema, const std::string &table);
+  virtual auto create_stub_table(const std::string &schema, const std::string &table) -> db_TableRef;
 
 protected:
   MySQLTableColumnsListBE _columns;
@@ -175,5 +175,5 @@ protected:
   MySQLTriggerPanel *_trigger_panel;
   bool _updating_triggers;
 
-  void reset_partition_definitions(int parts, int subparts);
+  auto reset_partition_definitions(int parts, int subparts) -> void;
 };

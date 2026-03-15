@@ -29,8 +29,7 @@
 
     uses constant BASE_PUBLIC_INTERFACE_VERSION
 *//////////////////////////////////////////////////////////////////////////////
-int get_base_public_interface_version()
-{
+auto get_base_public_interface_version() -> int {
   return BASE_PUBLIC_INTERFACE_VERSION;
 }
 

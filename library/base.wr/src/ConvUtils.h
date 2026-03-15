@@ -31,8 +31,7 @@ namespace MySQL {
   //       You won't be able to use any of the functions outside this assembly.
   //       The reason is the native types which are since VS 2005 private by default
   //       and you cannot use pragma make_public() for templated types (big sigh!).
-  static System::String ^
-    CppStringToNative(const std::string &str) {
+  static auto CppStringToNative(const std::string &str) -> System::String ^ {
       if (str.length() == 0)
         return "";
 
@@ -44,9 +43,7 @@ namespace MySQL {
       return gcnew System::String(str.c_str(), 0, (int)str.size(), System::Text::Encoding::UTF8);
     }
 
-    static System::String
-    ^
-    CppStringToNativeRaw(const std::string &str) {
+    static auto CppStringToNativeRaw(const std::string &str) -> System::String ^ {
       if (str.length() == 0)
         return "";
 
@@ -79,8 +76,7 @@ namespace MySQL {
     return result;
   }
 
-  static System::Collections::Generic::List<System::String ^> ^
-    CppStringListToNative(const std::vector<std::string> &input) {
+  static auto CppStringListToNative(const std::vector<std::string> &input) -> System::Collections::Generic::List<System::String ^> ^ {
       int cap = static_cast<int>(input.size());
       System::Collections::Generic::List<System::String ^> ^ result =
         gcnew System::Collections::Generic::List<System::String ^>(cap);
@@ -105,8 +101,7 @@ namespace MySQL {
     return result;
   }
 
-  static System::Collections::Generic::List<System::String ^> ^
-    CppStringListToNative2(const std::list<std::string> &input) {
+  static auto CppStringListToNative2(const std::list<std::string> &input) -> System::Collections::Generic::List<System::String ^> ^ {
       int cap = static_cast<int>(input.size());
       System::Collections::Generic::List<System::String ^> ^ result =
         gcnew System::Collections::Generic::List<System::String ^>(cap);
@@ -117,8 +112,7 @@ namespace MySQL {
       return result;
     }
 
-    static System::Collections::Generic::List<int> ^
-    CppVectorToIntList(const std::vector<int> &input) {
+    static auto CppVectorToIntList(const std::vector<int> &input) -> System::Collections::Generic::List<int> ^ {
       typedef const std::vector<int> SourceContainerType;
       typedef System::Collections::Generic::List<int> TargetContainerType;
 
@@ -155,8 +149,7 @@ namespace MySQL {
     return result;
   }
 
-  static System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^
-    CppStringMapToDictionary(const std::map<std::string, std::string> &input) {
+  static auto CppStringMapToDictionary(const std::map<std::string, std::string> &input) -> System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^ {
       typedef const std::map<std::string, std::string> SourceContainerType;
       typedef System::Collections::Generic::Dictionary<System::String ^, System::String ^> TargetContainerType;
 

@@ -53,7 +53,7 @@ namespace bec {
           delete *iter;
       }
 
-      void insert_child_after(Node *after, Node *child) {
+      auto insert_child_after(Node *after, Node *child) -> void {
         if (after == NULL)
           children.push_back(child);
         else {
@@ -75,7 +75,7 @@ namespace bec {
         child->role->parentRole(this->role);
       }
 
-      void insert_child_before(Node *before, Node *child) {
+      auto insert_child_before(Node *before, Node *child) -> void {
         if (before == NULL) {
           children.push_back(child);
         } else {
@@ -96,7 +96,7 @@ namespace bec {
         child->role->parentRole(this->role);
       }
 
-      void append_child(Node *child) {
+      auto append_child(Node *child) -> void {
         children.push_back(child);
         child->parent = this;
 
@@ -106,7 +106,7 @@ namespace bec {
         child->role->parentRole(this->role);
       }
 
-      void erase_child(Node *child) {
+      auto erase_child(Node *child) -> void {
         std::vector<Node *>::iterator erase_point = std::find(children.begin(), children.end(), child);
         if (erase_point != children.end()) {
           children.erase(erase_point);
@@ -124,39 +124,39 @@ namespace bec {
     Node *_root;
     std::string _object_id;
 
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
-    virtual grt::Type get_field_type(const NodeId &node, ColumnId column);
-    virtual bool set_field(const NodeId &node, ColumnId column, const std::string &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
+    virtual auto get_field_type(const NodeId &node, ColumnId column) -> grt::Type;
+    virtual auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool;
 
-    Node *get_node_with_id(const NodeId &node);
-    bool find_role(const RoleTreeBE::Node *node, const db_RoleRef &role, bec::NodeId &path);
+    auto get_node_with_id(const NodeId &node) -> Node *;
+    auto find_role(const RoleTreeBE::Node *node, const db_RoleRef &role, bec::NodeId &path) -> bool;
 
-    void add_role_children_to_node(Node *parent_node);
-    bool is_parent_child(Node *parent, Node *child);
+    auto add_role_children_to_node(Node *parent_node) -> void;
+    auto is_parent_child(Node *parent, Node *child) -> bool;
 
   public:
     RoleTreeBE(const db_CatalogRef &catalog);
 
-    void set_object(const db_DatabaseObjectRef &object);
+    auto set_object(const db_DatabaseObjectRef &object) -> void;
 
     virtual ~RoleTreeBE();
 
-    virtual void refresh();
-    virtual size_t count_children(const NodeId &parent);
-    virtual NodeId get_child(const NodeId &parent, size_t index);
+    virtual auto refresh() -> void;
+    virtual auto count_children(const NodeId &parent) -> size_t;
+    virtual auto get_child(const NodeId &parent, size_t index) -> NodeId;
 
-    db_RoleRef get_role_with_id(const NodeId &node) {
+    auto get_role_with_id(const NodeId &node) -> db_RoleRef {
       Node *n = get_node_with_id(node);
       return (n ? n->role : db_RoleRef());
     }
 
-    NodeId node_id_for_role(const db_RoleRef &role);
+    auto node_id_for_role(const db_RoleRef &role) -> NodeId;
 
-    void erase_node(const NodeId &node);
-    void insert_node_after(const NodeId &after, const NodeId &node);
-    void insert_node_before(const NodeId &before, const NodeId &node);
-    void append_child(const NodeId &parent, const NodeId &child);
-    void move_to_top_level(const NodeId &node);
+    auto erase_node(const NodeId &node) -> void;
+    auto insert_node_after(const NodeId &after, const NodeId &node) -> void;
+    auto insert_node_before(const NodeId &before, const NodeId &node) -> void;
+    auto append_child(const NodeId &parent, const NodeId &child) -> void;
+    auto move_to_top_level(const NodeId &node) -> void;
   };
 };
 

@@ -36,14 +36,14 @@
 //#include "util_functions.h"
 #include "grtpp_util.h"
 
-std::string unquot(std::string text, const std::string quot_sym) {
+auto unquot(std::string text, const std::string quot_sym) -> std::string {
   if (!text.empty())
     if ((std::string::npos != quot_sym.find(text[0]) && (std::string::npos != quot_sym.find(*text.rbegin()))))
       text = text.substr(1, text.size() - 2);
   return text;
 }
 
-std::string quot(std::string &text, char quot_sym) {
+auto quot(std::string &text, char quot_sym) -> std::string {
   if (!text.empty()) {
     text.insert(0, 1, quot_sym);
     text.append(1, quot_sym);
@@ -51,11 +51,11 @@ std::string quot(std::string &text, char quot_sym) {
   return text;
 }
 
-inline bool rulename2typename(const SqlAstNode *item, std::string &type_name);
-inline bool get_type_token_name(const SqlAstNode *item, std::string &type_token_name);
-inline bool translate_type_synonym(std::string &type_name);
+inline auto rulename2typename(const SqlAstNode *item, std::string &type_name) -> bool;
+inline auto get_type_token_name(const SqlAstNode *item, std::string &type_token_name) -> bool;
+inline auto translate_type_synonym(std::string &type_name) -> bool;
 
-db_SimpleDatatypeRef map_datatype(const SqlAstNode *item, DictRef &datatype_cache) {
+auto map_datatype(const SqlAstNode *item, DictRef &datatype_cache) -> db_SimpleDatatypeRef {
   std::string type_name;
 
   if (!rulename2typename(item, type_name) && !get_type_token_name(item, type_name))
@@ -71,7 +71,7 @@ db_SimpleDatatypeRef map_datatype(const SqlAstNode *item, DictRef &datatype_cach
   return db_SimpleDatatypeRef();
 }
 
-bool rulename2typename(const SqlAstNode *item, std::string &type_name) {
+auto rulename2typename(const SqlAstNode *item, std::string &type_name) -> bool {
   static std::map<sql::symbol, std::string> subst_rules;
 
   class Subst_rules_initializer {
@@ -101,7 +101,7 @@ bool rulename2typename(const SqlAstNode *item, std::string &type_name) {
   return false;
 }
 
-bool get_type_token_name(const SqlAstNode *item, std::string &type_token_name) {
+auto get_type_token_name(const SqlAstNode *item, std::string &type_token_name) -> bool {
   static std::map<sql::symbol, bool> type_token_names;
 
   class Type_token_names_initializer {
@@ -131,7 +131,7 @@ bool get_type_token_name(const SqlAstNode *item, std::string &type_token_name) {
   return false;
 }
 
-bool translate_type_synonym(std::string &type_name) {
+auto translate_type_synonym(std::string &type_name) -> bool {
   static const char *subst_rules[][2] = {
     {"INTEGER", "INT"},  {"DEC", "DECIMAL"},  {"NUMERIC", "DECIMAL"},
     {"FLOAT4", "FLOAT"}, {"BOOL", "BOOLEAN"}, {"CHARACTER", "CHAR"},
@@ -146,11 +146,11 @@ bool translate_type_synonym(std::string &type_name) {
   return false;
 }
 
-char toupper_(char c) {
+auto toupper_(char c) -> char {
   return std::toupper(c);
 }
 
-void concatenate_items(const SqlAstNode *item, StringListRef &list, bool toupper) {
+auto concatenate_items(const SqlAstNode *item, StringListRef &list, bool toupper) -> void {
   if (item) {
     for (SqlAstNode::SubItemList::const_iterator it = item->subitems()->begin(); it != item->subitems()->end(); ++it) {
       if ((*it)->value_length()) {
@@ -167,7 +167,7 @@ void concatenate_items(const SqlAstNode *item, StringListRef &list, bool toupper
   }
 }
 
-std::string get_str_attr_from_subitem_(const SqlAstNode *item, sql::symbol name, ...) { // item, name1, name2, ...
+auto get_str_attr_from_subitem_(const SqlAstNode *item, sql::symbol name, ...) -> std::string { // item, name1, name2, ...
   va_list args;
   va_start(args, name);
   item = item->subitem__(name, args);
@@ -176,23 +176,23 @@ std::string get_str_attr_from_subitem_(const SqlAstNode *item, sql::symbol name,
   return item ? item->value() : "";
 }
 
-Cs_collation_setter cs_collation_setter(db_SchemaRef obj, db_CatalogRef container, bool explicit_cs) {
+auto cs_collation_setter(db_SchemaRef obj, db_CatalogRef container, bool explicit_cs) -> Cs_collation_setter {
   return CS_COLLATION_SETTER(db_Schema, obj.content(), defaultCharacterSetName, defaultCollationName, db_Catalog,
                              container.content(), defaultCharacterSetName, defaultCollationName, explicit_cs);
 }
 
-Cs_collation_setter cs_collation_setter(db_mysql_TableRef obj, db_SchemaRef container, bool explicit_cs) {
+auto cs_collation_setter(db_mysql_TableRef obj, db_SchemaRef container, bool explicit_cs) -> Cs_collation_setter {
   return CS_COLLATION_SETTER(db_mysql_Table, obj.content(), defaultCharacterSetName, defaultCollationName, db_Schema,
                              container.content(), defaultCharacterSetName, defaultCollationName, explicit_cs);
 }
 
-Cs_collation_setter cs_collation_setter(db_ColumnRef obj, db_mysql_TableRef container, bool explicit_cs) {
+auto cs_collation_setter(db_ColumnRef obj, db_mysql_TableRef container, bool explicit_cs) -> Cs_collation_setter {
   return CS_COLLATION_SETTER(db_Column, obj.content(), characterSetName, collationName, db_mysql_Table,
                              container.content(), defaultCharacterSetName, defaultCollationName, explicit_cs);
 }
 
 // in general, this could also include stripping of leading/trailing comments
-std::string strip_sql_statement(const std::string &text, bool confirmation) {
+auto strip_sql_statement(const std::string &text, bool confirmation) -> std::string {
   if (!confirmation)
     return text;
 
@@ -212,20 +212,20 @@ std::string strip_sql_statement(const std::string &text, bool confirmation) {
   return text.substr(start_idx, npos);
 }
 
-std::string cut_sql_statement(std::string text) {
+auto cut_sql_statement(std::string text) -> std::string {
   static const size_t MAX_TEXT_LENGTH = 255U;
   if (MAX_TEXT_LENGTH < text.size())
     text.replace(MAX_TEXT_LENGTH, std::string::npos, "...");
   return text;
 }
 
-std::string qualify_obj_name(std::string obj_name, std::string schema_name) {
+auto qualify_obj_name(std::string obj_name, std::string schema_name) -> std::string {
   std::string qualified_obj_name;
   qualified_obj_name.append("`").append(schema_name).append("`.`").append(obj_name).append("`");
   return qualified_obj_name;
 }
 
-std::string shape_index_type(std::string index_type) {
+auto shape_index_type(std::string index_type) -> std::string {
   index_type = index_type.substr(0, index_type.find(' ')); // only first word is meaningful
   index_type = base::toupper(index_type);
   if (0 == index_type.compare("KEY"))
@@ -233,6 +233,6 @@ std::string shape_index_type(std::string index_type) {
   return index_type;
 }
 
-std::string shape_index_kind(const std::string &index_kind) {
+auto shape_index_kind(const std::string &index_kind) -> std::string {
   return base::toupper(index_kind);
 }

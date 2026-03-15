@@ -482,7 +482,7 @@ GRTShellWindow::GRTShellWindow(wb::WBContext *context)
   side_tab_changed();
 }
 
-bool GRTShellWindow::can_close() {
+auto GRTShellWindow::can_close() -> bool {
   // Because there's no other way to know if the window is about to close, we'll use this event to stop debugger.
   if (_stop_button->is_enabled() && _debugger)
     _debugger->stop();
@@ -491,7 +491,7 @@ bool GRTShellWindow::can_close() {
   return request_quit();
 }
 
-void GRTShellWindow::set_splitter_positions() {
+auto GRTShellWindow::set_splitter_positions() -> void {
   _hsplitter.set_divider_position(300);
   _global_splitter.set_divider_position(400);
   _modules_splitter.set_divider_position(400);
@@ -502,7 +502,7 @@ void GRTShellWindow::set_splitter_positions() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::shell_action(mforms::TextEntryAction action) {
+auto GRTShellWindow::shell_action(mforms::TextEntryAction action) -> void {
   switch (action) {
     case mforms::EntryActivate: {
       std::string command = _shell_entry.get_string_value();
@@ -534,7 +534,7 @@ void GRTShellWindow::shell_action(mforms::TextEntryAction action) {
   }
 }
 
-void GRTShellWindow::show(bool flag) {
+auto GRTShellWindow::show(bool flag) -> void {
   if (flag)
     refresh_all();
 
@@ -542,7 +542,7 @@ void GRTShellWindow::show(bool flag) {
   mforms::Form::show(flag);
 }
 
-void GRTShellWindow::refresh_all() {
+auto GRTShellWindow::refresh_all() -> void {
   refresh_files();
 
   int idx = 0;
@@ -574,7 +574,7 @@ void GRTShellWindow::refresh_all() {
 }
 
 //--------------------------------------------------------------------------------------------------
-bool GRTShellWindow::capture_output(const grt::Message &msg, void *sender, bool send_to_output) {
+auto GRTShellWindow::capture_output(const grt::Message &msg, void *sender, bool send_to_output) -> bool {
   if (msg.type == grt::OutputMsg) {
     if (bec::GRTManager::get()->in_main_thread()) {
       if (send_to_output)
@@ -592,7 +592,7 @@ bool GRTShellWindow::capture_output(const grt::Message &msg, void *sender, bool 
   return false;
 }
 
-void GRTShellWindow::execute_file() {
+auto GRTShellWindow::execute_file() -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (!editor)
     return;
@@ -627,7 +627,7 @@ void GRTShellWindow::execute_file() {
   grt::GRT::get()->popMessageHandler();
 }
 
-void GRTShellWindow::debug_step() {
+auto GRTShellWindow::debug_step() -> void {
   GRTCodeEditor *editor = get_active_editor();
 
   if (editor && _debugger && g_str_has_suffix(editor->get_path().c_str(), ".py")) {
@@ -659,38 +659,38 @@ void GRTShellWindow::debug_step() {
   }
 }
 
-void GRTShellWindow::debug_step_into() {
+auto GRTShellWindow::debug_step_into() -> void {
   if (_debugger)
     _debugger->step_into();
 }
 
-void GRTShellWindow::debug_step_out() {
+auto GRTShellWindow::debug_step_out() -> void {
   if (_debugger)
     _debugger->step_out();
 }
 
-void GRTShellWindow::debug_continue() {
+auto GRTShellWindow::debug_continue() -> void {
   if (_debugger)
     _debugger->continue_();
 }
 
-void GRTShellWindow::debug_stop() {
+auto GRTShellWindow::debug_stop() -> void {
   if (_debugger)
     _debugger->stop();
 }
 
-void GRTShellWindow::debug_pause() {
+auto GRTShellWindow::debug_pause() -> void {
   if (_debugger)
     _debugger->pause();
 }
 
-void GRTShellWindow::save_file(bool save_as) {
+auto GRTShellWindow::save_file(bool save_as) -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (editor)
     editor->save(save_as);
 }
 
-void GRTShellWindow::close_tab() {
+auto GRTShellWindow::close_tab() -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (editor) {
     if (editor->can_close())
@@ -698,14 +698,14 @@ void GRTShellWindow::close_tab() {
   }
 }
 
-void GRTShellWindow::show_find_panel() {
+auto GRTShellWindow::show_find_panel() -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (editor) {
     editor->get_editor()->show_find_panel(false);
   }
 }
 
-void GRTShellWindow::show_replace_panel() {
+auto GRTShellWindow::show_replace_panel() -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (editor) {
     editor->get_editor()->show_find_panel(true);
@@ -714,7 +714,7 @@ void GRTShellWindow::show_replace_panel() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::side_tab_changed() {
+auto GRTShellWindow::side_tab_changed() -> void {
 #ifdef _MSC_VER
   static std::string side_bar_titles[] = {_("File Browser"), _("Globals Tree"), _("Classes List"), _("Modules List"),
                                           _("Notifications")};
@@ -725,21 +725,21 @@ void GRTShellWindow::side_tab_changed() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::handle_output(const std::string &text) {
+auto GRTShellWindow::handle_output(const std::string &text) -> void {
   _shell_text.append_text(text, true);
 }
 
-void GRTShellWindow::handle_error(const std::string &text, const std::string &detail) {
+auto GRTShellWindow::handle_error(const std::string &text, const std::string &detail) -> void {
   _shell_text.append_text(text);
 
   _shell_text.append_text(detail);
 }
 
-void GRTShellWindow::handle_prompt(const std::string &text) {
+auto GRTShellWindow::handle_prompt(const std::string &text) -> void {
   _shell_prompt.set_text(text);
 }
 
-void GRTShellWindow::global_selected() {
+auto GRTShellWindow::global_selected() -> void {
   if (_inspector) {
     delete _inspector;
     _inspector = 0;
@@ -764,7 +764,7 @@ void GRTShellWindow::global_selected() {
   }
 }
 
-void GRTShellWindow::class_selected() {
+auto GRTShellWindow::class_selected() -> void {
   mforms::TreeNodeRef selected;
 
   if ((selected = _classes_tree.get_selected_node()))
@@ -773,7 +773,7 @@ void GRTShellWindow::class_selected() {
     _classes_text.set_value("");
 }
 
-void GRTShellWindow::module_selected() {
+auto GRTShellWindow::module_selected() -> void {
   mforms::TreeNodeRef selected;
 
   if ((selected = _modules_tree.get_selected_node())) {
@@ -783,7 +783,7 @@ void GRTShellWindow::module_selected() {
     _modules_text.set_value("");
 }
 
-void GRTShellWindow::notif_selected() {
+auto GRTShellWindow::notif_selected() -> void {
   mforms::TreeNodeRef selected;
 
   if ((selected = _notifs_tree.get_selected_node()) && selected->get_parent() != _notifs_tree.root_node()) {
@@ -805,7 +805,7 @@ void GRTShellWindow::notif_selected() {
     _notifs_text.set_value("");
 }
 
-void GRTShellWindow::handle_global_menu(const std::string &action) {
+auto GRTShellWindow::handle_global_menu(const std::string &action) -> void {
   mforms::TreeNodeRef selected;
 
   if ((selected = _global_tree.get_selected_node())) {
@@ -834,7 +834,7 @@ void GRTShellWindow::handle_global_menu(const std::string &action) {
   }
 }
 
-void GRTShellWindow::save_snippets() {
+auto GRTShellWindow::save_snippets() -> void {
   //  If the user snippets were not loaded yet, a save is invalid
   if (!_userSnippetsLoaded || _snippetClicked)
     return;
@@ -858,7 +858,7 @@ void GRTShellWindow::save_snippets() {
   }
 }
 
-void GRTShellWindow::load_snippets_from(const std::string &path) {
+auto GRTShellWindow::load_snippets_from(const std::string &path) -> void {
   FILE *f = base_fopen(path.c_str(), "r");
   if (f) {
     char line[4096];
@@ -885,7 +885,7 @@ void GRTShellWindow::load_snippets_from(const std::string &path) {
   }
 }
 
-void GRTShellWindow::refresh_snippets() {
+auto GRTShellWindow::refresh_snippets() -> void {
   _snippet_list->clear();
 
   load_snippets_from(bec::GRTManager::get()->get_data_file_path("shell_snippets" + _script_extension + ".txt"));
@@ -896,7 +896,7 @@ void GRTShellWindow::refresh_snippets() {
   snippet_selected();
 }
 
-void GRTShellWindow::open_script_file() {
+auto GRTShellWindow::open_script_file() -> void {
   mforms::FileChooser chooser(mforms::OpenFile);
   chooser.set_title(_("Open GRT Script"));
   if (chooser.run_modal()) {
@@ -904,14 +904,14 @@ void GRTShellWindow::open_script_file() {
   }
 }
 
-bool GRTShellWindow::execute_script(const std::string &script, const std::string &language) {
+auto GRTShellWindow::execute_script(const std::string &script, const std::string &language) -> bool {
   bool result = bec::GRTManager::get()->get_shell()->run_script(script, language);
   save_state();
 
   return result;
 }
 
-void GRTShellWindow::add_snippet() {
+auto GRTShellWindow::add_snippet() -> void {
   std::string snippet = _comment_prefix + " new snippet\n";
 
   mforms::TreeNodeRef node = _snippet_list->add_node();
@@ -924,7 +924,7 @@ void GRTShellWindow::add_snippet() {
   save_state();
 }
 
-void GRTShellWindow::del_snippet() {
+auto GRTShellWindow::del_snippet() -> void {
   mforms::TreeNodeRef node = _snippet_list->get_selected_node();
   if (node) {
     node->remove_from_parent();
@@ -933,13 +933,13 @@ void GRTShellWindow::del_snippet() {
   }
 }
 
-void GRTShellWindow::copy_snippet() {
+auto GRTShellWindow::copy_snippet() -> void {
   mforms::TreeNodeRef node = _snippet_list->get_selected_node();
   if (node)
     mforms::Utilities::set_clipboard_text(node->get_tag());
 }
 
-void GRTShellWindow::scriptize_snippet() {
+auto GRTShellWindow::scriptize_snippet() -> void {
   mforms::TreeNodeRef node = _snippet_list->get_selected_node();
   if (node) {
     std::string snippet = node->get_tag();
@@ -950,12 +950,12 @@ void GRTShellWindow::scriptize_snippet() {
   }
 }
 
-bool run_return_true(std::function<void(const std::string &)> f, const std::string &param) {
+auto run_return_true(std::function<void(const std::string &)> f, const std::string &param) -> bool {
   f(param);
   return true;
 }
 
-void GRTShellWindow::run_snippet() {
+auto GRTShellWindow::run_snippet() -> void {
   mforms::TreeNodeRef node = _snippet_list->get_selected_node();
   if (node) {
     std::string script = node->get_tag();
@@ -989,7 +989,7 @@ void GRTShellWindow::run_snippet() {
   save_state();
 }
 
-void GRTShellWindow::snippet_selected() {
+auto GRTShellWindow::snippet_selected() -> void {
   bool read_only = false;
   _snippetClicked = true;
 
@@ -1030,7 +1030,7 @@ void GRTShellWindow::snippet_selected() {
   _snippetClicked = false;
 }
 
-void GRTShellWindow::snippet_changed(int line, int linesAdded) {
+auto GRTShellWindow::snippet_changed(int line, int linesAdded) -> void {
   std::string snippet = _snippet_text.get_string_value();
   mforms::TreeNodeRef node = _snippet_list->get_selected_node();
 
@@ -1048,7 +1048,7 @@ void GRTShellWindow::snippet_changed(int line, int linesAdded) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::snippet_menu_activate(const std::string &action) {
+auto GRTShellWindow::snippet_menu_activate(const std::string &action) -> void {
   if (action == "execute")
     run_snippet();
   else if (action == "new_with_snippet")
@@ -1061,7 +1061,7 @@ void GRTShellWindow::snippet_menu_activate(const std::string &action) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::file_menu_activate(const std::string &action) {
+auto GRTShellWindow::file_menu_activate(const std::string &action) -> void {
   if (action == "file-from-template")
     add_new_script();
   else if (action == "open-script")
@@ -1072,7 +1072,7 @@ void GRTShellWindow::file_menu_activate(const std::string &action) {
 
 //--------------------------------------------------------------------------------------------------
 
-GRTCodeEditor *GRTShellWindow::add_editor(bool is_script, const std::string &language) {
+auto GRTShellWindow::add_editor(bool is_script, const std::string &language) -> GRTCodeEditor * {
   GRTCodeEditor *editor = manage(new GRTCodeEditor(this, !is_script, language));
 
   _editors.push_back(editor);
@@ -1090,7 +1090,7 @@ GRTCodeEditor *GRTShellWindow::add_editor(bool is_script, const std::string &lan
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::close_editor(GRTCodeEditor *editor) {
+auto GRTShellWindow::close_editor(GRTCodeEditor *editor) -> void {
   for (std::vector<GRTCodeEditor *>::iterator iter = _editors.begin(); iter != _editors.end(); ++iter) {
     if ((*iter) == editor) {
       _editors.erase(iter);
@@ -1106,7 +1106,7 @@ void GRTShellWindow::close_editor(GRTCodeEditor *editor) {
   save_state();
 }
 
-void GRTShellWindow::open_file_in_editor(const std::string &path, bool is_script) {
+auto GRTShellWindow::open_file_in_editor(const std::string &path, bool is_script) -> void {
   if (get_editor_for(path, true) != NULL)
     return;
 
@@ -1142,7 +1142,7 @@ void GRTShellWindow::open_file_in_editor(const std::string &path, bool is_script
 #endif
 }
 
-GRTCodeEditor *GRTShellWindow::show_file_at_line(const std::string &path, int line) {
+auto GRTShellWindow::show_file_at_line(const std::string &path, int line) -> GRTCodeEditor * {
   open_file_in_editor(path, true);
   GRTCodeEditor *editor = get_editor_for(path, true);
   if (!editor)
@@ -1155,7 +1155,7 @@ GRTCodeEditor *GRTShellWindow::show_file_at_line(const std::string &path, int li
   return editor;
 }
 
-void GRTShellWindow::add_new_script() {
+auto GRTShellWindow::add_new_script() -> void {
   NewPluginDialog wizard(this, bec::GRTManager::get()->get_data_file_path("script_templates"));
   std::string path;
   std::string code;
@@ -1173,14 +1173,14 @@ void GRTShellWindow::add_new_script() {
   save_state();
 }
 
-bool GRTShellWindow::add_output(const std::string &text) {
+auto GRTShellWindow::add_output(const std::string &text) -> bool {
   _output_text.append_text(text, true);
   return true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::set_editor_title(GRTCodeEditor *editor, const std::string &title) {
+auto GRTShellWindow::set_editor_title(GRTCodeEditor *editor, const std::string &title) -> void {
   int index = _main_tab.get_page_index(editor);
   if (index >= 0)
     _main_tab.set_tab_title(index, editor->get_title());
@@ -1192,7 +1192,7 @@ void GRTShellWindow::set_editor_title(GRTCodeEditor *editor, const std::string &
  * Called from the UI context when WB is about to quit. Check if we have pending changes.
  * Return true if we are clear, false otherwise.
  */
-bool GRTShellWindow::request_quit() {
+auto GRTShellWindow::request_quit() -> bool {
   std::vector<GRTCodeEditor *>::reverse_iterator editor;
   while ((editor = _editors.rbegin()) != _editors.rend()) {
     if (!(*editor)->can_close())
@@ -1205,7 +1205,7 @@ bool GRTShellWindow::request_quit() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::add_files_from_dir(mforms::TreeNodeRef parent, const std::string &dirname, bool is_script) {
+auto GRTShellWindow::add_files_from_dir(mforms::TreeNodeRef parent, const std::string &dirname, bool is_script) -> void {
   GDir *dir = g_dir_open(dirname.c_str(), 0, NULL);
   if (!dir)
     return;
@@ -1224,7 +1224,7 @@ void GRTShellWindow::add_files_from_dir(mforms::TreeNodeRef parent, const std::s
   g_dir_close(dir);
 }
 
-void GRTShellWindow::refresh_files() {
+auto GRTShellWindow::refresh_files() -> void {
   mforms::TreeNodeRef node;
 
   _files_tree->clear();
@@ -1248,7 +1248,7 @@ void GRTShellWindow::refresh_files() {
   node->expand();
 }
 
-void GRTShellWindow::file_list_activated(mforms::TreeNodeRef node, int column) {
+auto GRTShellWindow::file_list_activated(mforms::TreeNodeRef node, int column) -> void {
   if (node) {
     std::string path = node->get_tag();
     if (!path.empty()) {
@@ -1257,7 +1257,7 @@ void GRTShellWindow::file_list_activated(mforms::TreeNodeRef node, int column) {
   }
 }
 
-void GRTShellWindow::on_file_save(const std::string &file) {
+auto GRTShellWindow::on_file_save(const std::string &file) -> void {
   refresh_files();
   if (_debugger)
     _debugger->refresh_file(file);
@@ -1265,7 +1265,7 @@ void GRTShellWindow::on_file_save(const std::string &file) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::delete_selected_file() {
+auto GRTShellWindow::delete_selected_file() -> void {
   mforms::TreeNodeRef node(_files_tree->get_selected_node());
   if (node) {
     std::string path = node->get_tag();
@@ -1285,8 +1285,8 @@ void GRTShellWindow::delete_selected_file() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::Button *GRTShellWindow::add_tool_button(const std::string &image, const std::function<void()> &action,
-                                                const std::string &tooltip, bool left) {
+auto GRTShellWindow::add_tool_button(const std::string &image, const std::function<void()> &action,
+                                                const std::string &tooltip, bool left) -> mforms::Button * {
   App *app = App::get();
   Button *b = manage(new Button(ToolButton));
   b->set_icon(app->get_resource_path(image));
@@ -1304,7 +1304,7 @@ mforms::Button *GRTShellWindow::add_tool_button(const std::string &image, const 
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::add_tool_separator() {
+auto GRTShellWindow::add_tool_separator() -> void {
   App *app = App::get();
   ImageBox *image = manage(new ImageBox());
   image->set_image(app->get_resource_path("statusbar_separator.png"));
@@ -1314,7 +1314,7 @@ void GRTShellWindow::add_tool_separator() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::load_state() {
+auto GRTShellWindow::load_state() -> void {
   int x = _context->read_state("left", "scripting-shell", 100);
   int y = _context->read_state("top", "scripting-shell", 100);
   int width = _context->read_state("width", "scripting-shell", 800);
@@ -1341,7 +1341,7 @@ void GRTShellWindow::load_state() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::save_state() {
+auto GRTShellWindow::save_state() -> void {
   // Store form's size and position.
   _context->save_state("left", "scripting-shell", get_x());
   _context->save_state("top", "scripting-shell", get_y());
@@ -1361,7 +1361,7 @@ void GRTShellWindow::save_state() {
 /**
  *  Triggered when the shell window was closed by the user. We can use this event to store our state.
  */
-void GRTShellWindow::shell_closed() {
+auto GRTShellWindow::shell_closed() -> void {
   save_state();
 }
 
@@ -1371,7 +1371,7 @@ void GRTShellWindow::shell_closed() {
  * Triggered when a tab is about to close. Don't allow shell and snippets to close and check if
  * editors are dirty.
  */
-bool GRTShellWindow::on_tab_closing(int index) {
+auto GRTShellWindow::on_tab_closing(int index) -> bool {
   if (index == 0 || index == 1)
     return false;
 
@@ -1385,7 +1385,7 @@ bool GRTShellWindow::on_tab_closing(int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::on_tab_changed() {
+auto GRTShellWindow::on_tab_changed() -> void {
   GRTCodeEditor *editor = get_active_editor();
   mforms::MenuItem *_run = _menu.find_item("run");
   if (editor) {
@@ -1423,7 +1423,7 @@ void GRTShellWindow::on_tab_changed() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::activate_output_tab() {
+auto GRTShellWindow::activate_output_tab() -> void {
   _lower_tab.set_active_tab(0);
 }
 
@@ -1432,7 +1432,7 @@ void GRTShellWindow::activate_output_tab() {
 /**
  * Returns the editor which is currently editing the given file.
  */
-GRTCodeEditor *GRTShellWindow::get_editor_for(const std::string &path, bool select_tab) {
+auto GRTShellWindow::get_editor_for(const std::string &path, bool select_tab) -> GRTCodeEditor * {
 #ifdef _MSC_VER
   // We probably would need g_utf8_normalize too if we want it really good, but since this is
   // supposed to be a temporary solution...
@@ -1463,7 +1463,7 @@ GRTCodeEditor *GRTShellWindow::get_editor_for(const std::string &path, bool sele
   return NULL;
 }
 
-GRTCodeEditor *GRTShellWindow::get_active_editor() {
+auto GRTShellWindow::get_active_editor() -> GRTCodeEditor * {
   int index = _main_tab.get_active_tab() - EDITOR_TAB_OFFSET;
   if (index >= 0 && index < (int)_editors.size())
     return _editors[index];
@@ -1479,7 +1479,7 @@ struct CompareNamedObject {
   }
 };
 
-void GRTShellWindow::refresh_modules_tree() {
+auto GRTShellWindow::refresh_modules_tree() -> void {
   IconManager *im = IconManager::get_instance();
   std::string mod_icon = im->get_icon_path("grt_module.png");
   ;
@@ -1510,7 +1510,7 @@ void GRTShellWindow::refresh_modules_tree() {
   }
 }
 
-std::string GRTShellWindow::get_module_node_description(const mforms::TreeNodeRef &node) {
+auto GRTShellWindow::get_module_node_description(const mforms::TreeNodeRef &node) -> std::string {
   std::string value;
   if (node->get_parent() == _modules_tree.root_node()) {
     std::string name = node->get_string(0);
@@ -1561,7 +1561,7 @@ std::string GRTShellWindow::get_module_node_description(const mforms::TreeNodeRe
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellWindow::refresh_classes_tree() {
+auto GRTShellWindow::refresh_classes_tree() -> void {
   _classes_tree.clear();
   switch (_classes_sorting.get_selected_index()) {
     case 0:
@@ -1576,7 +1576,7 @@ void GRTShellWindow::refresh_classes_tree() {
   }
 }
 
-static std::string struct_member_icon(grt::TypeSpec type) {
+static auto struct_member_icon(grt::TypeSpec type) -> std::string {
   IconManager *im = IconManager::get_instance();
   switch (type.base.type) {
     case grt::ListType:
@@ -1603,7 +1603,7 @@ struct SortableClassMember {
   }
 };
 
-static void scan_class_members(mforms::TreeNodeRef node, grt::MetaClass *gstruct) {
+static auto scan_class_members(mforms::TreeNodeRef node, grt::MetaClass *gstruct) -> void {
   IconManager *im = IconManager::get_instance();
   std::vector<SortableClassMember> members;
   for (grt::MetaClass::MethodList::const_iterator mem = gstruct->get_methods_partial().begin();
@@ -1660,7 +1660,7 @@ static void scan_class_members(mforms::TreeNodeRef node, grt::MetaClass *gstruct
   }
 }
 
-void GRTShellWindow::refresh_classes_tree_by_name() {
+auto GRTShellWindow::refresh_classes_tree_by_name() -> void {
   std::list<grt::MetaClass *> metaclasses(grt::GRT::get()->get_metaclasses());
 
   std::string struct_icon = IconManager::get_instance()->get_icon_path("grt_struct.png");
@@ -1683,8 +1683,8 @@ void GRTShellWindow::refresh_classes_tree_by_name() {
   }
 }
 
-static void scan_subclasses(const std::list<grt::MetaClass *> &metaclasses, mforms::TreeNodeRef parnode,
-                            grt::MetaClass *parent) {
+static auto scan_subclasses(const std::list<grt::MetaClass *> &metaclasses, mforms::TreeNodeRef parnode,
+                            grt::MetaClass *parent) -> void {
   std::string struct_icon = IconManager::get_instance()->get_icon_path("grt_struct.png");
 
   for (std::list<grt::MetaClass *>::const_iterator iter = metaclasses.begin(); iter != metaclasses.end(); ++iter) {
@@ -1705,7 +1705,7 @@ static void scan_subclasses(const std::list<grt::MetaClass *> &metaclasses, mfor
   }
 }
 
-void GRTShellWindow::refresh_classes_tree_by_hierarchy() {
+auto GRTShellWindow::refresh_classes_tree_by_hierarchy() -> void {
   std::list<grt::MetaClass *> metaclasses(grt::GRT::get()->get_metaclasses());
   metaclasses.sort(CompareNamedObject<grt::MetaClass>());
 
@@ -1713,7 +1713,7 @@ void GRTShellWindow::refresh_classes_tree_by_hierarchy() {
                   grt::GRT::get()->get_metaclass(grt::internal::Object::static_class_name()));
 }
 
-void GRTShellWindow::refresh_classes_tree_by_package() {
+auto GRTShellWindow::refresh_classes_tree_by_package() -> void {
   IconManager *im = IconManager::get_instance();
   std::map<std::string, mforms::TreeNodeRef> package_nodes;
   std::list<grt::MetaClass *> metaclasses(grt::GRT::get()->get_metaclasses());
@@ -1749,19 +1749,19 @@ void GRTShellWindow::refresh_classes_tree_by_package() {
   }
 }
 
-std::string GRTShellWindow::get_class_node_description(const mforms::TreeNodeRef &selected) {
+auto GRTShellWindow::get_class_node_description(const mforms::TreeNodeRef &selected) -> std::string {
   return selected->get_tag();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-static bool find_expandable_member(const grt::MetaClass::Member *member, bool *expandable) {
+static auto find_expandable_member(const grt::MetaClass::Member *member, bool *expandable) -> bool {
   if (!grt::is_simple_type(member->type.base.type))
     *expandable = true;
   return !*expandable;
 }
 
-static void globals_get_node_info(const grt::ValueRef &value, std::string &type, std::string &icon, bool &expandable) {
+static auto globals_get_node_info(const grt::ValueRef &value, std::string &type, std::string &icon, bool &expandable) -> void {
   IconManager *im = IconManager::get_instance();
   type = grt::type_to_str(value.type());
   expandable = false;
@@ -1842,7 +1842,7 @@ static void globals_get_node_info(const grt::ValueRef &value, std::string &type,
   }
 }
 
-static void globals_rescan_list(mforms::TreeNodeRef &node, const std::string &path, const grt::BaseListRef &value) {
+static auto globals_rescan_list(mforms::TreeNodeRef &node, const std::string &path, const grt::BaseListRef &value) -> void {
   char buffer[30];
 
   node->remove_children();
@@ -1881,7 +1881,7 @@ static void globals_rescan_list(mforms::TreeNodeRef &node, const std::string &pa
   }
 }
 
-static void globals_rescan_dict(mforms::TreeNodeRef &node, const std::string &path, const grt::DictRef &value) {
+static auto globals_rescan_dict(mforms::TreeNodeRef &node, const std::string &path, const grt::DictRef &value) -> void {
   node->remove_children();
   for (grt::DictRef::const_iterator item = value.begin(); item != value.end(); ++item) {
     std::string key(item->first);
@@ -1913,8 +1913,8 @@ static void globals_rescan_dict(mforms::TreeNodeRef &node, const std::string &pa
   }
 }
 
-static bool globals_rescan_member(const grt::MetaClass::Member *mem, mforms::TreeNodeRef &node,
-                                  const grt::ObjectRef &value) {
+static auto globals_rescan_member(const grt::MetaClass::Member *mem, mforms::TreeNodeRef &node,
+                                  const grt::ObjectRef &value) -> bool {
   std::string name(mem->name);
   grt::ValueRef v(value.get_member(name));
   std::string label;
@@ -1936,14 +1936,14 @@ static bool globals_rescan_member(const grt::MetaClass::Member *mem, mforms::Tre
   return true;
 }
 
-static void globals_rescan_object(mforms::TreeNodeRef &node, const std::string &path, const grt::ObjectRef &value) {
+static auto globals_rescan_object(mforms::TreeNodeRef &node, const std::string &path, const grt::ObjectRef &value) -> void {
   grt::MetaClass *meta = value.get_metaclass();
 
   node->remove_children();
   meta->foreach_member(std::bind(&globals_rescan_member, std::placeholders::_1, node, value));
 }
 
-static void globals_rescan_value(mforms::TreeNodeRef &node, const std::string &path, const grt::ValueRef &value) {
+static auto globals_rescan_value(mforms::TreeNodeRef &node, const std::string &path, const grt::ValueRef &value) -> void {
   switch (value.type()) {
     case grt::ListType:
       globals_rescan_list(node, path, grt::BaseListRef::cast_from(value));
@@ -1959,7 +1959,7 @@ static void globals_rescan_value(mforms::TreeNodeRef &node, const std::string &p
   }
 }
 
-void GRTShellWindow::refresh_globals_tree() {
+auto GRTShellWindow::refresh_globals_tree() -> void {
   std::string path = _global_combo.get_string_value();
 
   if (path.empty())
@@ -1988,7 +1988,7 @@ void GRTShellWindow::refresh_globals_tree() {
   }
 }
 
-void GRTShellWindow::globals_expand_toggle(const mforms::TreeNodeRef &node, bool expanded) {
+auto GRTShellWindow::globals_expand_toggle(const mforms::TreeNodeRef &node, bool expanded) -> void {
   if (expanded) {
     grt::ValueRef value = get_global_at_node(node);
     if (value.is_valid()) {
@@ -1998,11 +1998,11 @@ void GRTShellWindow::globals_expand_toggle(const mforms::TreeNodeRef &node, bool
   }
 }
 
-grt::ValueRef GRTShellWindow::get_global_at_node(const mforms::TreeNodeRef &node) {
+auto GRTShellWindow::get_global_at_node(const mforms::TreeNodeRef &node) -> grt::ValueRef {
   return grt::GRT::get()->get(get_global_path_at_node(node));
 }
 
-std::string GRTShellWindow::get_global_path_at_node(const mforms::TreeNodeRef &node) {
+auto GRTShellWindow::get_global_path_at_node(const mforms::TreeNodeRef &node) -> std::string {
   std::string path;
   mforms::TreeNodeRef parent = node;
 
@@ -2020,7 +2020,7 @@ std::string GRTShellWindow::get_global_path_at_node(const mforms::TreeNodeRef &n
   return path;
 }
 
-void GRTShellWindow::refresh_global_list() {
+auto GRTShellWindow::refresh_global_list() -> void {
   _global_list.clear();
   if (_inspector) {
     for (size_t c = _inspector->count(), i = 0; i < c; i++) {
@@ -2036,7 +2036,7 @@ void GRTShellWindow::refresh_global_list() {
   }
 }
 
-void GRTShellWindow::refresh_notifs_list() {
+auto GRTShellWindow::refresh_notifs_list() -> void {
   const std::map<std::string, base::NotificationCenter::NotificationHelp> &info =
     base::NotificationCenter::get()->get_registered_notifications();
   std::map<std::string, std::vector<std::string> > contexts;
@@ -2060,7 +2060,7 @@ void GRTShellWindow::refresh_notifs_list() {
   }
 }
 
-void GRTShellWindow::cut() {
+auto GRTShellWindow::cut() -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (editor)
     editor->get_editor()->cut();
@@ -2068,7 +2068,7 @@ void GRTShellWindow::cut() {
     _shell_entry.cut();
 }
 
-void GRTShellWindow::copy() {
+auto GRTShellWindow::copy() -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (editor)
     editor->get_editor()->copy();
@@ -2076,7 +2076,7 @@ void GRTShellWindow::copy() {
     _shell_entry.copy();
 }
 
-void GRTShellWindow::paste() {
+auto GRTShellWindow::paste() -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (editor)
     editor->get_editor()->paste();
@@ -2084,7 +2084,7 @@ void GRTShellWindow::paste() {
     _shell_entry.paste();
 }
 
-void GRTShellWindow::select_all() {
+auto GRTShellWindow::select_all() -> void {
   GRTCodeEditor *editor = get_active_editor();
   if (editor)
     editor->get_editor()->select_all();

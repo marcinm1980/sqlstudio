@@ -57,7 +57,7 @@ public:
     : spatial::Layer(layer_id, color), _rset(rset), _geom_column(column), _loaded(false) {
   }
 
-  virtual void load_data() {
+  virtual auto load_data() -> void {
     Recordset::Ref rs(recordset());
     if (rs && !_loaded) {
       _loaded = true;
@@ -78,7 +78,7 @@ public:
     }
   }
 
-  Recordset::Ref recordset() {
+  auto recordset() -> Recordset::Ref {
     return _rset.lock();
   }
 };
@@ -146,7 +146,7 @@ public:
     add_feature(0, data, true);
   }
 
-  virtual void repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area) {
+  virtual auto repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area) -> void {
     std::deque<spatial::ShapeContainer>::const_iterator it;
 
     cr.save();
@@ -345,13 +345,13 @@ SpatialDataView::SpatialDataView(SqlEditorResult *owner) : mforms::Box(false), _
   add(_splitter, true, true);
 }
 
-std::vector<std::string> SpatialDataView::layer_overlay_handler(mforms::TreeNodeRef node) {
+auto SpatialDataView::layer_overlay_handler(mforms::TreeNodeRef node) -> std::vector<std::string> {
   std::vector<std::string> icons;
   icons.push_back(mforms::App::get()->get_resource_path("wb_item_overlay_autozoom.png"));
   return icons;
 }
 
-void SpatialDataView::call_refresh_viewer() {
+auto SpatialDataView::call_refresh_viewer() -> void {
   if (!_rendering) {
     if (_spliter_change_timeout != 0) {
       mforms::Utilities::cancel_timeout(_spliter_change_timeout);
@@ -361,7 +361,7 @@ void SpatialDataView::call_refresh_viewer() {
   }
 }
 
-bool SpatialDataView::refresh_viewer() {
+auto SpatialDataView::refresh_viewer() -> bool {
   if (_rendering)
     return false;
   _spliter_change_timeout = 0;
@@ -370,7 +370,7 @@ bool SpatialDataView::refresh_viewer() {
   return false;
 }
 
-void SpatialDataView::change_tool(mforms::ToolBarItem *item) {
+auto SpatialDataView::change_tool(mforms::ToolBarItem *item) -> void {
   item->set_checked(true);
   if (item->getInternalName() == "reset_tool") {
     _toolbar->set_item_checked("zoom_to_area", false);
@@ -381,17 +381,17 @@ void SpatialDataView::change_tool(mforms::ToolBarItem *item) {
   }
 }
 
-int SpatialDataView::get_option(const char *opt_name, int default_value) {
+auto SpatialDataView::get_option(const char *opt_name, int default_value) -> int {
   return bec::GRTManager::get()->get_app_option_int(opt_name, default_value) != 0;
 }
 
-void SpatialDataView::area_selected() {
+auto SpatialDataView::area_selected() -> void {
   _toolbar->set_item_checked("zoom_to_area", false);
   _toolbar->set_item_checked("reset_tool", true);
   _viewer->select_area(false);
 }
 
-void SpatialDataView::fillup_polygon(mforms::MenuItem *mitem) {
+auto SpatialDataView::fillup_polygon(mforms::MenuItem *mitem) -> void {
   if (_layer_tree->is_enabled()) {
     spatial::Layer *layer = _viewer->get_layer(get_selected_layer_id());
     if (layer)
@@ -401,7 +401,7 @@ void SpatialDataView::fillup_polygon(mforms::MenuItem *mitem) {
   }
 }
 
-void SpatialDataView::projection_item_activated(mforms::ToolBarItem *item) {
+auto SpatialDataView::projection_item_activated(mforms::ToolBarItem *item) -> void {
   std::string action = item->get_text();
   if (action == "Mercator")
     _viewer->set_projection(spatial::ProjMercator);
@@ -421,7 +421,7 @@ SpatialDataView::~SpatialDataView() {
   delete _layer_menu;
 }
 
-static double parse_latitude(const std::string &s) {
+static auto parse_latitude(const std::string &s) -> double {
   double parsed = 0.0;
 
   if (s.empty())
@@ -449,7 +449,7 @@ static double parse_latitude(const std::string &s) {
   return parsed;
 }
 
-static double parse_longitude(const std::string &s) {
+static auto parse_longitude(const std::string &s) -> double {
   double parsed = 0.0;
 
   if (s.empty())
@@ -477,7 +477,7 @@ static double parse_longitude(const std::string &s) {
   return parsed;
 }
 
-void SpatialDataView::jump_to() {
+auto SpatialDataView::jump_to() -> void {
   std::string ret;
   bool badformat = false;
   if (mforms::Utilities::request_input("Jump to Coordinates", "Enter coordinates in Lat, Lon:", "", ret)) {
@@ -498,7 +498,7 @@ void SpatialDataView::jump_to() {
   }
 }
 
-void SpatialDataView::export_image() {
+auto SpatialDataView::export_image() -> void {
   mforms::FileChooser fc(mforms::SaveFile);
   fc.set_title("Save Spatial View Image to File");
   fc.set_extensions("PNG Files (*.png)|*.png", "png");
@@ -515,26 +515,26 @@ void SpatialDataView::export_image() {
   }
 }
 
-spatial::LayerId SpatialDataView::get_selected_layer_id() {
+auto SpatialDataView::get_selected_layer_id() -> spatial::LayerId {
   mforms::TreeNodeRef node(_layer_tree->get_selected_node());
   if (node)
     return base::atoi<int>(node->get_tag(), 0);
   return 0;
 }
 
-void SpatialDataView::auto_zoom(LayerId layer) {
+auto SpatialDataView::auto_zoom(LayerId layer) -> void {
   _viewer->clear_pins();
   _viewer->auto_zoom(layer);
   _viewer->invalidate(true);
 }
 
-void SpatialDataView::copy_coordinates() {
+auto SpatialDataView::copy_coordinates() -> void {
   std::pair<double, double> p = _viewer->clicked_coordinates();
 
   mforms::Utilities::set_clipboard_text(base::strfmt("%.6f, %.6f", p.first, p.second));
 }
 
-RecordsetLayer *SpatialDataView::active_layer() {
+auto SpatialDataView::active_layer() -> RecordsetLayer * {
   std::deque<spatial::Layer *> layers(_viewer->get_layers());
 
   for (std::deque<spatial::Layer *>::const_iterator l = layers.begin(); l != layers.end(); ++l) {
@@ -544,17 +544,17 @@ RecordsetLayer *SpatialDataView::active_layer() {
   return NULL;
 }
 
-int SpatialDataView::row_id_for_action(RecordsetLayer *&layer) {
+auto SpatialDataView::row_id_for_action(RecordsetLayer *&layer) -> int {
   layer = active_layer();
   if (layer)
     return _viewer->clicked_row_id();
   return -1;
 }
 
-void SpatialDataView::map_menu_will_show() {
+auto SpatialDataView::map_menu_will_show() -> void {
 }
 
-void SpatialDataView::layer_menu_will_show() {
+auto SpatialDataView::layer_menu_will_show() -> void {
   spatial::Layer *layer = _viewer->get_layer(get_selected_layer_id());
 
   _layer_menu->set_item_enabled("set_active", layer && layer->layer_id() != _grid_layer);
@@ -574,7 +574,7 @@ void SpatialDataView::layer_menu_will_show() {
   }
 }
 
-void SpatialDataView::copy_record() {
+auto SpatialDataView::copy_record() -> void {
   RecordsetLayer *layer = NULL;
   int row_id = row_id_for_action(layer);
   if (layer) {
@@ -601,7 +601,7 @@ void SpatialDataView::copy_record() {
     mforms::App::get()->set_status_text("No visible layers.");
 }
 
-void SpatialDataView::view_record() {
+auto SpatialDataView::view_record() -> void {
   RecordsetLayer *layer = NULL;
   int row_id = row_id_for_action(layer);
   if (layer) {
@@ -613,7 +613,7 @@ void SpatialDataView::view_record() {
     mforms::App::get()->set_status_text("No visible layers.");
 }
 
-void SpatialDataView::work_started(mforms::View *progress_panel, bool reprojecting) {
+auto SpatialDataView::work_started(mforms::View *progress_panel, bool reprojecting) -> void {
   _rendering = true;
   _layer_tree->set_enabled(false);
   _layer_menu->set_item_enabled("refresh", false);
@@ -627,7 +627,7 @@ void SpatialDataView::work_started(mforms::View *progress_panel, bool reprojecti
   }
 }
 
-void SpatialDataView::work_finished(mforms::View *progress_panel) {
+auto SpatialDataView::work_finished(mforms::View *progress_panel) -> void {
   _rendering = false;
   _layer_tree->set_enabled(true);
   _layer_menu->set_item_enabled("refresh", true);
@@ -635,7 +635,7 @@ void SpatialDataView::work_finished(mforms::View *progress_panel) {
   _main_box->show(true);
 }
 
-void SpatialDataView::activate() {
+auto SpatialDataView::activate() -> void {
   if (!_activated) {
     _activated = true;
     if (_splitter->get_divider_position() != this->get_width() - 200)
@@ -644,7 +644,7 @@ void SpatialDataView::activate() {
   _viewer->activate();
 }
 
-void SpatialDataView::refresh_layers() {
+auto SpatialDataView::refresh_layers() -> void {
   std::vector<SpatialDataView::SpatialDataSource> spatial_columns; // = _owner->get_spatial_columns();
 
   for (int c = _owner->owner()->owner()->sql_editor_count(), editor = 0; editor < c; editor++) {
@@ -665,7 +665,7 @@ void SpatialDataView::refresh_layers() {
     _viewer->auto_zoom(_active_layer);
 }
 
-mforms::TreeNodeRef static move_node_to(mforms::TreeNodeRef &node, mforms::TreeNodeRef &new_parent, int index) {
+static auto move_node_to(mforms::TreeNodeRef &node, mforms::TreeNodeRef &new_parent, int index) -> mforms::TreeNodeRef {
   mforms::TreeNodeRef new_node = new_parent->insert_child(index);
   new_node->set_bool(0, node->get_bool(0));
   new_node->set_string(1, node->get_string(1));
@@ -676,7 +676,7 @@ mforms::TreeNodeRef static move_node_to(mforms::TreeNodeRef &node, mforms::TreeN
   return new_node;
 }
 
-void SpatialDataView::layer_menu_action(const std::string &action) {
+auto SpatialDataView::layer_menu_action(const std::string &action) -> void {
   mforms::TreeNodeRef node = _layer_tree->get_selected_node();
   mforms::TreeNodeRef group_node = node->get_parent();
   size_t node_index = node->get_child_index(node), new_index = node_index;
@@ -708,7 +708,7 @@ void SpatialDataView::layer_menu_action(const std::string &action) {
   _viewer->invalidate(false);
 }
 
-void SpatialDataView::set_color_icon(mforms::TreeNodeRef node, int column, const base::Color &color) {
+auto SpatialDataView::set_color_icon(mforms::TreeNodeRef node, int column, const base::Color &color) -> void {
   static std::string path;
   if (path.empty()) {
     path = mforms::Utilities::get_special_folder(mforms::ApplicationData) + "/tmpicons";
@@ -729,7 +729,7 @@ void SpatialDataView::set_color_icon(mforms::TreeNodeRef node, int column, const
   node->set_icon_path(column, p);
 }
 
-void SpatialDataView::tree_toggled(const mforms::TreeNodeRef &node, const std::string &value) {
+auto SpatialDataView::tree_toggled(const mforms::TreeNodeRef &node, const std::string &value) -> void {
   if (_layer_tree->is_enabled()) {
     bool show = value == "1";
     node->set_bool(0, show);
@@ -738,7 +738,7 @@ void SpatialDataView::tree_toggled(const mforms::TreeNodeRef &node, const std::s
   }
 }
 
-void SpatialDataView::activate_layer(mforms::TreeNodeRef node, int column) {
+auto SpatialDataView::activate_layer(mforms::TreeNodeRef node, int column) -> void {
   if (!node)
     node = _layer_tree->get_selected_node();
 
@@ -750,7 +750,7 @@ void SpatialDataView::activate_layer(mforms::TreeNodeRef node, int column) {
   }
 }
 
-static spatial::Layer *find_layer_for(std::deque<spatial::Layer *> &layers, Recordset::Ref rset, int column) {
+static auto find_layer_for(std::deque<spatial::Layer *> &layers, Recordset::Ref rset, int column) -> spatial::Layer * {
   for (std::deque<spatial::Layer *>::iterator l = layers.begin(); l != layers.end(); ++l) {
     RecordsetLayer *rsl = dynamic_cast<RecordsetLayer *>(*l);
     if (rsl && rsl->recordset() == rset)
@@ -759,7 +759,7 @@ static spatial::Layer *find_layer_for(std::deque<spatial::Layer *> &layers, Reco
   return NULL;
 }
 
-void SpatialDataView::set_active_layer(spatial::LayerId layer) {
+auto SpatialDataView::set_active_layer(spatial::LayerId layer) -> void {
   if (_grid_layer == layer)
     return;
 
@@ -782,7 +782,7 @@ void SpatialDataView::set_active_layer(spatial::LayerId layer) {
   }
 }
 
-void SpatialDataView::set_geometry_columns(const std::vector<SpatialDataSource> &sources) {
+auto SpatialDataView::set_geometry_columns(const std::vector<SpatialDataSource> &sources) -> void {
   static base::Color layer_colors[] = {
     base::Color::parse("#b8ddf3"), // background color
 
@@ -871,7 +871,7 @@ void SpatialDataView::set_geometry_columns(const std::vector<SpatialDataSource> 
   }
 }
 
-void SpatialDataView::update_coordinates(base::Point p) {
+auto SpatialDataView::update_coordinates(base::Point p) -> void {
   double lat, lon;
   if (_viewer->screen_to_world((int)p.x, (int)p.y, lat, lon))
     _mouse_pos_label->set_text(base::strfmt("Lat:  %s\nLon: %s",
@@ -881,7 +881,7 @@ void SpatialDataView::update_coordinates(base::Point p) {
     _mouse_pos_label->set_text("Lat: \nLon: ");
 }
 
-void SpatialDataView::handle_click(base::Point p) {
+auto SpatialDataView::handle_click(base::Point p) -> void {
   RecordsetLayer *layer = active_layer();
   std::string text;
 

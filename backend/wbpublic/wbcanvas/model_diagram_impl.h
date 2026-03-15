@@ -64,73 +64,73 @@ protected:
 
   virtual ~ImplData();
 
-  void member_changed(const std::string &name, const grt::ValueRef &ovalue);
-  virtual void member_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value);
+  auto member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void;
+  virtual auto member_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) -> void;
 
-  bool begin_selection_update();
-  void end_selection_update();
+  auto begin_selection_update() -> bool;
+  auto end_selection_update() -> void;
 
-  void canvas_selection_changed(bool added, mdc::CanvasItem *item);
+  auto canvas_selection_changed(bool added, mdc::CanvasItem *item) -> void;
 
-  void realize_contents();
-  void realize_selection();
+  auto realize_contents() -> void;
+  auto realize_selection() -> void;
 
-  void update_options(const std::string &key);
+  auto update_options(const std::string &key) -> void;
 
-  virtual bool is_realizable();
+  virtual auto is_realizable() -> bool;
 
-  virtual GrtObject *get_object() {
+  virtual auto get_object() -> GrtObject * {
     return _self;
   }
 
-  model_LayerRef get_layer_under_figure(const model_FigureRef &figure);
+  auto get_layer_under_figure(const model_FigureRef &figure) -> model_LayerRef;
 
-  virtual bool figure_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
-                            mdc::MouseButton button, mdc::EventState state);
-  virtual bool figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
-                                   mdc::MouseButton button, mdc::EventState state);
-  virtual bool figure_button_press(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
-                                   mdc::MouseButton button, mdc::EventState state);
-  virtual bool figure_button_release(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
-                                     mdc::MouseButton button, mdc::EventState state);
-  virtual bool figure_enter(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point);
-  virtual bool figure_leave(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point);
+  virtual auto figure_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
+                            mdc::MouseButton button, mdc::EventState state) -> bool;
+  virtual auto figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
+                                   mdc::MouseButton button, mdc::EventState state) -> bool;
+  virtual auto figure_button_press(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
+                                   mdc::MouseButton button, mdc::EventState state) -> bool;
+  virtual auto figure_button_release(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
+                                     mdc::MouseButton button, mdc::EventState state) -> bool;
+  virtual auto figure_enter(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point) -> bool;
+  virtual auto figure_leave(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point) -> bool;
 
 public:
   ImplData(model_Diagram *self);
 
-  void set_page_counts(int x, int y);
+  auto set_page_counts(int x, int y) -> void;
 
-  void block_updates(bool flag);
+  auto block_updates(bool flag) -> void;
 
-  void add_figure(const model_FigureRef &figure);
-  virtual void add_connection(const model_ConnectionRef &conn);
+  auto add_figure(const model_FigureRef &figure) -> void;
+  virtual auto add_connection(const model_ConnectionRef &conn) -> void;
 
-  void remove_figure(const model_FigureRef &figure);
-  virtual void remove_connection(const model_ConnectionRef &conn);
+  auto remove_figure(const model_FigureRef &figure) -> void;
+  virtual auto remove_connection(const model_ConnectionRef &conn) -> void;
 
-  void delete_layer(const model_LayerRef &layer);
+  auto delete_layer(const model_LayerRef &layer) -> void;
 
-  bool update_layer_of_figure(const model_FigureRef &figure);
+  auto update_layer_of_figure(const model_FigureRef &figure) -> bool;
 
-  void select_object(const model_ObjectRef &object);
-  void unselect_object(const model_ObjectRef &object);
-  void unselect_all();
+  auto select_object(const model_ObjectRef &object) -> void;
+  auto unselect_object(const model_ObjectRef &object) -> void;
+  auto unselect_all() -> void;
 
-  virtual bool realize();
-  virtual void unrealize();
+  virtual auto realize() -> bool;
+  virtual auto unrealize() -> void;
 
 public:
-  mdc::CanvasView *get_canvas_view();
-  bool is_canvas_view_valid() {
+  auto get_canvas_view() -> mdc::CanvasView *;
+  auto is_canvas_view_valid() -> bool {
     return _canvas_view != NULL;
   };
 
-  static base::Size get_size_for_page(const app_PageSettingsRef &page);
+  static auto get_size_for_page(const app_PageSettingsRef &page) -> base::Size;
 
-  void stack_layer(const model_LayerRef &layer, mdc::CanvasItem *item);
-  void stack_connection(const model_ConnectionRef &conn, mdc::CanvasItem *item);
-  void stack_figure(const model_FigureRef &figure, mdc::CanvasItem *item);
+  auto stack_layer(const model_LayerRef &layer, mdc::CanvasItem *item) -> void;
+  auto stack_connection(const model_ConnectionRef &conn, mdc::CanvasItem *item) -> void;
+  auto stack_figure(const model_FigureRef &figure, mdc::CanvasItem *item) -> void;
 
   boost::signals2::signal<void(model_DiagramRef)> *signal_selection_changed() {
     return &_selection_changed_signal;
@@ -156,21 +156,21 @@ public:
   boost::signals2::signal<void(model_ObjectRef)> *signal_object_realized() {
     return &_realize_object_signal;
   }
-  void notify_object_realize(const model_ObjectRef &object);
+  auto notify_object_realize(const model_ObjectRef &object) -> void;
 
   boost::signals2::signal<void(model_ObjectRef)> *signal_object_will_unrealize() {
     return &_will_unrealize_object_signal;
   }
-  void notify_object_will_unrealize(const model_ObjectRef &object);
+  auto notify_object_will_unrealize(const model_ObjectRef &object) -> void;
 
-  void update_size();
-  void update_from_page_size();
+  auto update_size() -> void;
+  auto update_from_page_size() -> void;
 
-  void add_tag_badge_to_figure(const model_FigureRef &figure, const meta_TagRef &tag);
-  void remove_tag_badge_from_figure(const model_FigureRef &figure, const meta_TagRef &tag);
+  auto add_tag_badge_to_figure(const model_FigureRef &figure, const meta_TagRef &tag) -> void;
+  auto remove_tag_badge_from_figure(const model_FigureRef &figure, const meta_TagRef &tag) -> void;
 
 private:
-  model_Diagram *self() const {
+  auto self() const -> model_Diagram * {
     return _self;
   }
 };

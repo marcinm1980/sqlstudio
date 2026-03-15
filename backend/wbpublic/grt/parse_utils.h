@@ -38,8 +38,8 @@
 #include "wbpublic_public_interface.h"
 
 namespace bec {
-  WBPUBLICBACKEND_PUBLIC_FUNC bool tokenize_string_list(const std::string &str, int quote_char, bool quoted_only,
-                                                        std::list<std::string> &tokens);
+  WBPUBLICBACKEND_PUBLIC_FUNC auto tokenize_string_list(const std::string &str, int quote_char, bool quoted_only,
+                                                        std::list<std::string> &tokens) -> bool;
 };
 
 #endif

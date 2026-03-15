@@ -28,42 +28,42 @@
 namespace mforms {
   namespace stub {
 
-    bool TextBoxWrapper::create(::mforms::TextBox *self, mforms::ScrollBars scroll_type) {
+    auto TextBoxWrapper::create(::mforms::TextBox *self, mforms::ScrollBars scroll_type) -> bool {
       return true;
     }
 
-    void TextBoxWrapper::set_text(::mforms::TextBox *self, const std::string &text) {
+    auto TextBoxWrapper::set_text(::mforms::TextBox *self, const std::string &text) -> void {
     }
 
-    void TextBoxWrapper::append_text(::mforms::TextBox *self, const std::string &text, bool scroll_to_end) {
+    auto TextBoxWrapper::append_text(::mforms::TextBox *self, const std::string &text, bool scroll_to_end) -> void {
     }
 
-    std::string TextBoxWrapper::get_text(::mforms::TextBox *self) {
+    auto TextBoxWrapper::get_text(::mforms::TextBox *self) -> std::string {
       return "";
     }
 
-    void TextBoxWrapper::set_read_only(::mforms::TextBox *self, bool flag) {
+    auto TextBoxWrapper::set_read_only(::mforms::TextBox *self, bool flag) -> void {
     }
 
-    void TextBoxWrapper::set_padding(::mforms::TextBox *self, int pad) {
+    auto TextBoxWrapper::set_padding(::mforms::TextBox *self, int pad) -> void {
     }
 
-    void TextBoxWrapper::set_bordered(::mforms::TextBox *self, bool flag) {
+    auto TextBoxWrapper::set_bordered(::mforms::TextBox *self, bool flag) -> void {
     }
 
-    void TextBoxWrapper::clear(::mforms::TextBox *self) {
+    auto TextBoxWrapper::clear(::mforms::TextBox *self) -> void {
     }
 
-    void TextBoxWrapper::set_monospaced(::mforms::TextBox *self, bool flag) {
+    auto TextBoxWrapper::set_monospaced(::mforms::TextBox *self, bool flag) -> void {
     }
 
-    void TextBoxWrapper::get_selected_range(TextBox *self, int &start, int &end) {
+    auto TextBoxWrapper::get_selected_range(TextBox *self, int &start, int &end) -> void {
     }
 
     TextBoxWrapper::TextBoxWrapper(::mforms::TextBox *self, mforms::ScrollBars scroll_type) : ViewWrapper(self) {
     }
 
-    void TextBoxWrapper::init() {
+    auto TextBoxWrapper::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_textbox_impl.create = &TextBoxWrapper::create;

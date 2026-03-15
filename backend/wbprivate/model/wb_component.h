@@ -47,100 +47,100 @@ namespace wb {
     WBComponent(WBContext *context);
     virtual ~WBComponent(){};
 
-    inline WBContext *get_wb() {
+    inline auto get_wb() -> WBContext * {
       return _wb;
     }
 
-    virtual std::string get_name() = 0;
-    virtual std::string get_diagram_class_name() {
+    virtual auto get_name() -> std::string = 0;
+    virtual auto get_diagram_class_name() -> std::string {
       return "";
     }
 
-    virtual void setup_context_grt(WBOptions *options) {
+    virtual auto setup_context_grt(WBOptions *options) -> void {
     }
-    virtual void load_app_options(bool update) {
+    virtual auto load_app_options(bool update) -> void {
     }
-    virtual void save_app_options() {
-    }
-
-    virtual void close_document() {
-    }
-    virtual void reset_document() {
-    }
-    virtual void document_loaded() {
-    }
-    virtual void block_model_notifications() {
-    }
-    virtual void unblock_model_notifications() {
+    virtual auto save_app_options() -> void {
     }
 
-    virtual bool handles_figure(const model_ObjectRef &figure) = 0;
-    virtual GrtObjectRef get_object_for_figure(const model_ObjectRef &figure) {
+    virtual auto close_document() -> void {
+    }
+    virtual auto reset_document() -> void {
+    }
+    virtual auto document_loaded() -> void {
+    }
+    virtual auto block_model_notifications() -> void {
+    }
+    virtual auto unblock_model_notifications() -> void {
+    }
+
+    virtual auto handles_figure(const model_ObjectRef &figure) -> bool = 0;
+    virtual auto get_object_for_figure(const model_ObjectRef &figure) -> GrtObjectRef {
       return GrtObjectRef();
     }
 
-    virtual bool can_paste_object(const grt::ObjectRef &object) {
+    virtual auto can_paste_object(const grt::ObjectRef &object) -> bool {
       return false;
     }
-    virtual model_ObjectRef paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
-                                         grt::CopyContext &copy_context) {
+    virtual auto paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
+                                         grt::CopyContext &copy_context) -> model_ObjectRef {
       throw std::logic_error("not implemented");
       return model_ObjectRef();
     }
-    virtual void copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context) {
+    virtual auto copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context) -> void {
       throw std::logic_error("not implemented");
     }
 
     // toolbar/menubar handling
-    virtual grt::ListRef<app_ShortcutItem> get_shortcut_items() {
+    virtual auto get_shortcut_items() -> grt::ListRef<app_ShortcutItem> {
       return grt::ListRef<app_ShortcutItem>();
     }
-    virtual app_ToolbarRef get_tools_toolbar() {
+    virtual auto get_tools_toolbar() -> app_ToolbarRef {
       return app_ToolbarRef();
     }
-    virtual app_ToolbarRef get_tool_options(const std::string &tool) {
+    virtual auto get_tool_options(const std::string &tool) -> app_ToolbarRef {
       return app_ToolbarRef();
     }
 
-    virtual std::vector<std::string> get_command_dropdown_items(const std::string &option) {
+    virtual auto get_command_dropdown_items(const std::string &option) -> std::vector<std::string> {
       return std::vector<std::string>();
     }
 
-    virtual std::string get_command_option_value(const std::string &option);
-    virtual void set_command_option_value(const std::string &option, const std::string &item);
+    virtual auto get_command_option_value(const std::string &option) -> std::string;
+    virtual auto set_command_option_value(const std::string &option, const std::string &item) -> void;
 
-    virtual std::string get_object_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item) {
+    virtual auto get_object_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item) -> std::string {
       return "";
     }
 
     // tool handling
-    virtual void setup_canvas_tool(ModelDiagramForm *view, const std::string &tool) = 0;
+    virtual auto setup_canvas_tool(ModelDiagramForm *view, const std::string &tool) -> void = 0;
 
-    virtual bool delete_model_object(const model_ObjectRef &object, bool figure_only) = 0;
+    virtual auto delete_model_object(const model_ObjectRef &object, bool figure_only) -> bool = 0;
 
     // drag&
-    virtual bool accepts_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
-                              const std::list<GrtObjectRef> &objects) {
+    virtual auto accepts_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
+                              const std::list<GrtObjectRef> &objects) -> bool {
       return false;
     }
-    virtual bool accepts_drop(ModelDiagramForm *view, int x, int y, const std::string &type, const std::string &text) {
+    virtual auto accepts_drop(ModelDiagramForm *view, int x, int y, const std::string &type, const std::string &text) -> bool {
       return false;
     }
 
-    virtual bool perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
-                              const std::list<GrtObjectRef> &objects) {
+    virtual auto perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
+                              const std::list<GrtObjectRef> &objects) -> bool {
       return false;
     }
-    virtual bool perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type, const std::string &text) {
+    virtual auto perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type, const std::string &text) -> bool {
       return false;
     }
 
   protected:
-    grt::ValueRef place_object(ModelDiagramForm *view, const base::Point &pos, const std::string &object_struct,
-                               const grt::DictRef &args = grt::DictRef());
+    auto place_object(ModelDiagramForm *view, const base::Point &pos, const std::string &object_struct,
+                               const grt::DictRef &args = grt::DictRef()) -> grt::ValueRef;
 
   public:
-    virtual void activate_canvas_object(const model_ObjectRef &figure, bool newwindow) = 0;
+    virtual auto activate_canvas_object(const model_ObjectRef &figure, bool newwindow) -> void = 0;
 
   protected:
     WBContext *_wb;

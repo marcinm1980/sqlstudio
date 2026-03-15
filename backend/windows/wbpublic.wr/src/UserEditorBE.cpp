@@ -56,7 +56,7 @@ UserEditorBE::UserEditorBE(MySQL::Grt::GrtValue ^ arglist)
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::UserEditorBE *UserEditorBE::get_unmanaged_object() {
+auto UserEditorBE::get_unmanaged_object() -> ::bec::UserEditorBE * {
   return static_cast<::bec::UserEditorBE *>(inner);
 }
 
@@ -68,7 +68,7 @@ void UserEditorBE::set_name(String ^ name) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ UserEditorBE::get_name() {
+auto UserEditorBE::get_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_name());
 }
 
@@ -80,7 +80,7 @@ void UserEditorBE::set_password(String ^ pass) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ UserEditorBE::get_password() {
+auto UserEditorBE::get_password() -> String ^ {
   return gcnew String(get_unmanaged_object()->get_password().c_str());
 }
 
@@ -92,13 +92,13 @@ void UserEditorBE::set_comment(String ^ comment) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ UserEditorBE::get_comment() {
+auto UserEditorBE::get_comment() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_comment());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-RoleTreeBE ^ UserEditorBE::get_role_tree() {
+auto UserEditorBE::get_role_tree() -> RoleTreeBE ^ {
   return gcnew RoleTreeBE(get_unmanaged_object()->get_role_tree());
 }
 
@@ -116,7 +116,7 @@ void UserEditorBE::remove_role(String ^ pass) {
 
 //--------------------------------------------------------------------------------------------------
 
-List<String ^> ^ UserEditorBE::get_roles() {
+auto UserEditorBE::get_roles() -> List<String ^> ^ {
   return CppStringListToNative(get_unmanaged_object()->get_roles());
 }
 

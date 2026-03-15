@@ -44,25 +44,25 @@ void list_from_container(TValueIter It, TValueIter ItEnd, TContainer& target) {
     target.insert(*It);
 }
 
-void apply_change(BaseListRef source, const grt::ListItemAddedChange* change) {
+auto apply_change(BaseListRef source, const grt::ListItemAddedChange* change) -> void {
   size_t index = change->get_prev_item().is_valid() ? source.get_index(change->get_prev_item()) + 1 : 0;
   source.ginsert(change->get_value(), index);
 }
 
-void apply_change(BaseListRef source, const grt::ListItemRemovedChange* change) {
+auto apply_change(BaseListRef source, const grt::ListItemRemovedChange* change) -> void {
   source.gremove_value(change->get_value());
 }
 
-void apply_change(BaseListRef source, const grt::ListItemModifiedChange* change) {
+auto apply_change(BaseListRef source, const grt::ListItemModifiedChange* change) -> void {
 }
 
-void apply_change(BaseListRef source, const grt::ListItemOrderChange* change) {
+auto apply_change(BaseListRef source, const grt::ListItemOrderChange* change) -> void {
   source.gremove_value(change->get_old_value());
   size_t index = change->get_prev_item().is_valid() ? source.get_index(change->get_prev_item()) + 1 : 0;
   source.ginsert(change->get_new_value(), index);
 }
 
-void apply_change(BaseListRef source, const grt::MultiChange* change) {
+auto apply_change(BaseListRef source, const grt::MultiChange* change) -> void {
   const grt::ChangeSet* change_list = change->subchanges();
   for (grt::ChangeSet::const_iterator e2 = change_list->end(), jt = change_list->begin(); jt != e2; jt++) {
     const grt::DiffChange* subchange = jt->get();
@@ -119,7 +119,7 @@ void resolve_change_type(TValue source, DiffChange* change) {
   }
 }
 
-void apply_change_to_object(ValueRef source, DiffChange* change) {
+auto apply_change_to_object(ValueRef source, DiffChange* change) -> void {
   if (!change) // No changes detected
     return;
   if (BaseListRef::can_wrap(source))
@@ -191,25 +191,25 @@ void list_from_container(TValueIter It, TValueIter ItEnd, TContainer& target) {
     target.insert(*It);
 }
 
-void apply_change(BaseListRef source, const grt::ListItemAddedChange* change) {
+auto apply_change(BaseListRef source, const grt::ListItemAddedChange* change) -> void {
   size_t index = change->get_prev_item().is_valid() ? source.get_index(change->get_prev_item()) + 1 : 0;
   source.ginsert(change->get_value(), index);
 }
 
-void apply_change(BaseListRef source, const grt::ListItemRemovedChange* change) {
+auto apply_change(BaseListRef source, const grt::ListItemRemovedChange* change) -> void {
   source.gremove_value(change->get_value());
 }
 
-void apply_change(BaseListRef source, const grt::ListItemModifiedChange* change) {
+auto apply_change(BaseListRef source, const grt::ListItemModifiedChange* change) -> void {
 }
 
-void apply_change(BaseListRef source, const grt::ListItemOrderChange* change) {
+auto apply_change(BaseListRef source, const grt::ListItemOrderChange* change) -> void {
   source.gremove_value(change->get_old_value());
   size_t index = change->get_prev_item().is_valid() ? source.get_index(change->get_prev_item()) + 1 : 0;
   source.ginsert(change->get_new_value(), index);
 }
 
-void apply_change(BaseListRef source, const grt::MultiChange* change) {
+auto apply_change(BaseListRef source, const grt::MultiChange* change) -> void {
   const grt::ChangeSet* change_list = change->subchanges();
   for (grt::ChangeSet::const_iterator e2 = change_list->end(), jt = change_list->begin(); jt != e2; jt++) {
     const grt::DiffChange* subchange = jt->get();
@@ -266,7 +266,7 @@ void resolve_change_type(TValue source, DiffChange* change) {
   }
 }
 
-void apply_change_to_object(ValueRef source, DiffChange* change) {
+auto apply_change_to_object(ValueRef source, DiffChange* change) -> void {
   if (!change) // No changes detected
     return;
   if (BaseListRef::can_wrap(source))

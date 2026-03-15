@@ -65,11 +65,11 @@ class ModelDiagramPanel : public Gtk::Paned, public FormViewBase {
     Gtk::Entry *_edit_field;
     bool _editing;
 
-    virtual void begin_editing(int x, int y, int width, int height, const std::string &text);
-    virtual void end_editing();
+    virtual auto begin_editing(int x, int y, int width, int height, const std::string &text) -> void;
+    virtual auto end_editing() -> void;
 
-    virtual void set_font_size(float size);
-    virtual void set_multiline(bool flag);
+    virtual auto set_font_size(float size) -> void;
+    virtual auto set_multiline(bool flag) -> void;
 
   public:
     InlineEditor(ModelDiagramPanel *owner);
@@ -101,55 +101,55 @@ class ModelDiagramPanel : public Gtk::Paned, public FormViewBase {
   PropertiesTree *_properties_tree;
   Glib::RefPtr<Gtk::Builder> _xml;
 
-  bool drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time);
+  auto drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) -> bool;
 
-  void drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                          const Gtk::SelectionData &selection_data, guint, guint time);
+  auto drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                          const Gtk::SelectionData &selection_data, guint, guint time) -> void;
 
-  bool drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time);
+  auto drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) -> bool;
 
-  void view_realized();
+  auto view_realized() -> void;
 
-  void post_construct();
+  auto post_construct() -> void;
 
   sigc::connection _sig_restore_sidebar;
 
 public:
-  static ModelDiagramPanel *create();
+  static auto create() -> ModelDiagramPanel *;
 
   ModelDiagramPanel(GtkPaned *paned, const Glib::RefPtr<Gtk::Builder> &xml);
 
   ~ModelDiagramPanel();
 
-  void init(const std::string &view_id);
-  virtual bec::UIForm *get_form() const {
+  auto init(const std::string &view_id) -> void;
+  virtual auto get_form() const -> bec::UIForm * {
     return _be;
   }
-  virtual Gtk::Widget *get_panel() {
+  virtual auto get_panel() -> Gtk::Widget * {
     return &_top_box;
   }
-  virtual bool on_close();
-  virtual void on_activate();
+  virtual auto on_close() -> bool;
+  virtual auto on_activate() -> void;
 
-  wb::ModelDiagramForm *get_diagram_form() const {
+  auto get_diagram_form() const -> wb::ModelDiagramForm * {
     return _be;
   }
 
-  mdc::CanvasView *get_canvas() const {
+  auto get_canvas() const -> mdc::CanvasView * {
     return _canvas->get_canvas();
   }
 
-  void update_tool_cursor();
+  auto update_tool_cursor() -> void;
 
-  void setup_navigator();
-  void refresh_catalog(bool hard);
-  void refresh_zoom();
+  auto setup_navigator() -> void;
+  auto refresh_catalog(bool hard) -> void;
+  auto refresh_zoom() -> void;
 
-  void selection_changed();
+  auto selection_changed() -> void;
 
-  virtual void find_text(const std::string &text);
+  virtual auto find_text(const std::string &text) -> void;
 
-  virtual void reset_layout() {
+  virtual auto reset_layout() -> void {
     _editor_paned->set_position(_editor_paned->get_height() - 300);
   }
 };

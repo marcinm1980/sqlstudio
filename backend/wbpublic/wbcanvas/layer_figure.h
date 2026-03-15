@@ -54,38 +54,38 @@ namespace wbfig {
 
     boost::signals2::signal<void(base::Rect)> _resize_signal;
 
-    virtual bool on_drag_handle(mdc::ItemHandle *handle, const base::Point &pos, bool dragging);
+    virtual auto on_drag_handle(mdc::ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
 
-    virtual bool on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                   mdc::EventState state);
-    virtual bool on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                          mdc::EventState state);
-    virtual bool on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_enter(mdc::CanvasItem *target, const base::Point &point);
-    virtual bool on_leave(mdc::CanvasItem *target, const base::Point &point);
+    virtual auto on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                   mdc::EventState state) -> bool;
+    virtual auto on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                          mdc::EventState state) -> bool;
+    virtual auto on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_enter(mdc::CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_leave(mdc::CanvasItem *target, const base::Point &point) -> bool;
 
-    virtual void move_item(mdc::CanvasItem *item, const base::Point &pos);
+    virtual auto move_item(mdc::CanvasItem *item, const base::Point &pos) -> void;
 
-    virtual void render(mdc::CairoCtx *cr);
-    virtual void render_gl(mdc::CairoCtx *cr);
+    virtual auto render(mdc::CairoCtx *cr) -> void;
+    virtual auto render_gl(mdc::CairoCtx *cr) -> void;
 
-    base::Rect get_title_bounds() const;
+    auto get_title_bounds() const -> base::Rect;
 
   public:
     LayerAreaGroup(mdc::Layer *layer, FigureEventHub *hub, model_Object *represented_object);
     ~LayerAreaGroup();
 
-    void set_title(const std::string &title);
-    void set_font(const mdc::FontSpec &font);
+    auto set_title(const std::string &title) -> void;
+    auto set_font(const mdc::FontSpec &font) -> void;
 
     boost::signals2::signal<void(base::Rect)> *signal_interactive_resize() {
       return &_resize_signal;
     }
 
-    bool in_user_resize() const {
+    auto in_user_resize() const -> bool {
       return _resizing;
     }
   };

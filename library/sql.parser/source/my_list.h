@@ -31,13 +31,13 @@ typedef struct st_list {
 
 typedef int (*list_walk_action)(void *,void *);
 
-extern LIST *list_add(LIST *root,LIST *element);
-extern LIST *list_delete(LIST *root,LIST *element);
-extern LIST *list_cons(void *data,LIST *root);
-extern LIST *list_reverse(LIST *root);
-extern void list_free(LIST *root,unsigned int free_data);
+extern auto list_add(LIST *root,LIST *element) -> LIST *;
+extern auto list_delete(LIST *root,LIST *element) -> LIST *;
+extern auto list_cons(void *data,LIST *root) -> LIST *;
+extern auto list_reverse(LIST *root) -> LIST *;
+extern auto list_free(LIST *root,unsigned int free_data) -> void;
 extern unsigned int list_length(LIST *);
-extern int list_walk(LIST *,list_walk_action action,gptr argument);
+extern auto list_walk(LIST *,list_walk_action action,gptr argument) -> int;
 
 #define list_rest(a) ((a)->next)
 #define list_push(a,b) (a)=list_cons((b),(a))

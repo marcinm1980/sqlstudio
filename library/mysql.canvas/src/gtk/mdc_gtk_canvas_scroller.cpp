@@ -41,17 +41,17 @@ GtkCanvasScroller::GtkCanvasScroller() : Gtk::Table(2, 2) {
   _vscroll.get_adjustment()->set_step_increment(5.0);
 }
 
-void GtkCanvasScroller::add(GtkCanvas &canvas) {
+auto GtkCanvasScroller::add(GtkCanvas &canvas) -> void {
   attach(canvas, 0, 1, 0, 1, Gtk::FILL | Gtk::EXPAND, Gtk::FILL | Gtk::EXPAND);
   canvas.show();
   canvas.set_vadjustment(_vscroll.get_adjustment());
   canvas.set_hadjustment(_hscroll.get_adjustment());
 }
 
-Glib::RefPtr<Gtk::Adjustment> GtkCanvasScroller::get_hadjustment() {
+auto GtkCanvasScroller::get_hadjustment() -> Glib::RefPtr<Gtk::Adjustment> {
   return _hscroll.get_adjustment();
 }
 
-Glib::RefPtr<Gtk::Adjustment> GtkCanvasScroller::get_vadjustment() {
+auto GtkCanvasScroller::get_vadjustment() -> Glib::RefPtr<Gtk::Adjustment> {
   return _vscroll.get_adjustment();
 }

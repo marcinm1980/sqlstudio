@@ -26,29 +26,29 @@ namespace mysql_parser
 //#if !defined(DBUG_OFF) && !defined(_lint)
 #if 0
 struct _db_code_state_;
-extern	int _db_keyword_(struct _db_code_state_ *cs, const char *keyword);
-extern  int _db_strict_keyword_(const char *keyword);
-extern  int _db_explain_(struct _db_code_state_ *cs, char *buf, int len);
-extern  int _db_explain_init_(char *buf, int len);
-extern	void _db_setjmp_(void);
-extern	void _db_longjmp_(void);
-extern  void _db_process_(const char *name);
-extern	void _db_push_(const char *control);
-extern	void _db_pop_(void);
-extern  void _db_set_(struct _db_code_state_ *cs, const char *control);
-extern  void _db_set_init_(const char *control);
-extern	void _db_enter_(const char *_func_,const char *_file_,uint _line_,
+extern	auto _db_keyword_(struct _db_code_state_ *cs, const char *keyword) -> int;
+extern  auto _db_strict_keyword_(const char *keyword) -> int;
+extern  auto _db_explain_(struct _db_code_state_ *cs, char *buf, int len) -> int;
+extern  auto _db_explain_init_(char *buf, int len) -> int;
+extern	auto _db_setjmp_(void) -> void;
+extern	auto _db_longjmp_(void) -> void;
+extern  auto _db_process_(const char *name) -> void;
+extern	auto _db_push_(const char *control) -> void;
+extern	auto _db_pop_(void) -> void;
+extern  auto _db_set_(struct _db_code_state_ *cs, const char *control) -> void;
+extern  auto _db_set_init_(const char *control) -> void;
+extern	auto _db_enter_(const char *_func_,const char *_file_,uint _line_,
 			const char **_sfunc_,const char **_sfile_,
-			uint *_slevel_, char ***);
-extern	void _db_return_(uint _line_,const char **_sfunc_,const char **_sfile_,
-			 uint *_slevel_);
-extern	void _db_pargs_(uint _line_,const char *keyword);
+			uint *_slevel_, char ***) -> void;
+extern	auto _db_return_(uint _line_,const char **_sfunc_,const char **_sfile_,
+			 uint *_slevel_) -> void;
+extern	auto _db_pargs_(uint _line_,const char *keyword) -> void;
 extern	void _db_doprnt_ _VARARGS((const char *format,...));
-extern	void _db_dump_(uint _line_,const char *keyword,const char *memory,
-		       uint length);
-extern	void _db_lock_file_(void);
-extern	void _db_unlock_file_(void);
-extern FILE *_db_fp_(void);
+extern	auto _db_dump_(uint _line_,const char *keyword,const char *memory,
+		       uint length) -> void;
+extern	auto _db_lock_file_(void) -> void;
+extern	auto _db_unlock_file_(void) -> void;
+extern auto _db_fp_(void) -> FILE *;
 
 #define DBUG_ENTER(a) const char *_db_func_, *_db_file_; uint _db_level_; \
 	char **_db_framep_; \

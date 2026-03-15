@@ -89,7 +89,7 @@ public:
       _tabInfoFunction("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.OverviewPanel";
   }
 
@@ -100,7 +100,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const {
+  auto caption() const -> grt::StringRef {
     return _caption;
   }
 
@@ -111,7 +111,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -124,7 +124,7 @@ public:
    * \par In Python:
    *    value = obj.expanded
    */
-  grt::IntegerRef expanded() const {
+  auto expanded() const -> grt::IntegerRef {
     return _expanded;
   }
 
@@ -135,7 +135,7 @@ public:
    * \par In Python:
    *   obj.expanded = value
    */
-  virtual void expanded(const grt::IntegerRef &value) {
+  virtual auto expanded(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_expanded);
     _expanded = value;
     member_changed("expanded", ovalue, value);
@@ -148,7 +148,7 @@ public:
    * \par In Python:
    *    value = obj.expandedHeight
    */
-  grt::IntegerRef expandedHeight() const {
+  auto expandedHeight() const -> grt::IntegerRef {
     return _expandedHeight;
   }
 
@@ -159,7 +159,7 @@ public:
    * \par In Python:
    *   obj.expandedHeight = value
    */
-  virtual void expandedHeight(const grt::IntegerRef &value) {
+  virtual auto expandedHeight(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_expandedHeight);
     _expandedHeight = value;
     member_changed("expandedHeight", ovalue, value);
@@ -172,7 +172,7 @@ public:
    * \par In Python:
    *    value = obj.hasTabSelection
    */
-  grt::IntegerRef hasTabSelection() const {
+  auto hasTabSelection() const -> grt::IntegerRef {
     return _hasTabSelection;
   }
 
@@ -183,7 +183,7 @@ public:
    * \par In Python:
    *   obj.hasTabSelection = value
    */
-  virtual void hasTabSelection(const grt::IntegerRef &value) {
+  virtual auto hasTabSelection(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_hasTabSelection);
     _hasTabSelection = value;
     member_changed("hasTabSelection", ovalue, value);
@@ -196,7 +196,7 @@ public:
    * \par In Python:
    *    value = obj.implModule
    */
-  grt::StringRef implModule() const {
+  auto implModule() const -> grt::StringRef {
     return _implModule;
   }
 
@@ -207,7 +207,7 @@ public:
    * \par In Python:
    *   obj.implModule = value
    */
-  virtual void implModule(const grt::StringRef &value) {
+  virtual auto implModule(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_implModule);
     _implModule = value;
     member_changed("implModule", ovalue, value);
@@ -220,7 +220,7 @@ public:
    * \par In Python:
    *    value = obj.itemActivationFunction
    */
-  grt::StringRef itemActivationFunction() const {
+  auto itemActivationFunction() const -> grt::StringRef {
     return _itemActivationFunction;
   }
 
@@ -231,7 +231,7 @@ public:
    * \par In Python:
    *   obj.itemActivationFunction = value
    */
-  virtual void itemActivationFunction(const grt::StringRef &value) {
+  virtual auto itemActivationFunction(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_itemActivationFunction);
     _itemActivationFunction = value;
     member_changed("itemActivationFunction", ovalue, value);
@@ -244,7 +244,7 @@ public:
    * \par In Python:
    *    value = obj.itemCountFunction
    */
-  grt::StringRef itemCountFunction() const {
+  auto itemCountFunction() const -> grt::StringRef {
     return _itemCountFunction;
   }
 
@@ -255,7 +255,7 @@ public:
    * \par In Python:
    *   obj.itemCountFunction = value
    */
-  virtual void itemCountFunction(const grt::StringRef &value) {
+  virtual auto itemCountFunction(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_itemCountFunction);
     _itemCountFunction = value;
     member_changed("itemCountFunction", ovalue, value);
@@ -269,7 +269,7 @@ public:
    * \par In Python:
    *    value = obj.itemDisplayMode
    */
-  grt::IntegerRef itemDisplayMode() const {
+  auto itemDisplayMode() const -> grt::IntegerRef {
     return _itemDisplayMode;
   }
 
@@ -281,7 +281,7 @@ public:
    * \par In Python:
    *   obj.itemDisplayMode = value
    */
-  virtual void itemDisplayMode(const grt::IntegerRef &value) {
+  virtual auto itemDisplayMode(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_itemDisplayMode);
     _itemDisplayMode = value;
     member_changed("itemDisplayMode", ovalue, value);
@@ -294,7 +294,7 @@ public:
    * \par In Python:
    *    value = obj.itemInfoFunction
    */
-  grt::StringRef itemInfoFunction() const {
+  auto itemInfoFunction() const -> grt::StringRef {
     return _itemInfoFunction;
   }
 
@@ -305,7 +305,7 @@ public:
    * \par In Python:
    *   obj.itemInfoFunction = value
    */
-  virtual void itemInfoFunction(const grt::StringRef &value) {
+  virtual auto itemInfoFunction(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_itemInfoFunction);
     _itemInfoFunction = value;
     member_changed("itemInfoFunction", ovalue, value);
@@ -318,7 +318,7 @@ public:
    * \par In Python:
    *    value = obj.nodeId
    */
-  grt::StringRef nodeId() const {
+  auto nodeId() const -> grt::StringRef {
     return _nodeId;
   }
 
@@ -329,7 +329,7 @@ public:
    * \par In Python:
    *   obj.nodeId = value
    */
-  virtual void nodeId(const grt::StringRef &value) {
+  virtual auto nodeId(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_nodeId);
     _nodeId = value;
     member_changed("nodeId", ovalue, value);
@@ -342,12 +342,12 @@ public:
    * \par In Python:
    *    value = obj.selectedItems
    */
-  grt::IntegerListRef selectedItems() const {
+  auto selectedItems() const -> grt::IntegerListRef {
     return _selectedItems;
   }
 
 private: // The next attribute is read-only.
-  virtual void selectedItems(const grt::IntegerListRef &value) {
+  virtual auto selectedItems(const grt::IntegerListRef &value) -> void {
     grt::ValueRef ovalue(_selectedItems);
     _selectedItems = value;
     member_changed("selectedItems", ovalue, value);
@@ -361,7 +361,7 @@ public:
    * \par In Python:
    *    value = obj.tabActivationFunction
    */
-  grt::StringRef tabActivationFunction() const {
+  auto tabActivationFunction() const -> grt::StringRef {
     return _tabActivationFunction;
   }
 
@@ -372,7 +372,7 @@ public:
    * \par In Python:
    *   obj.tabActivationFunction = value
    */
-  virtual void tabActivationFunction(const grt::StringRef &value) {
+  virtual auto tabActivationFunction(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tabActivationFunction);
     _tabActivationFunction = value;
     member_changed("tabActivationFunction", ovalue, value);
@@ -385,7 +385,7 @@ public:
    * \par In Python:
    *    value = obj.tabCountFunction
    */
-  grt::StringRef tabCountFunction() const {
+  auto tabCountFunction() const -> grt::StringRef {
     return _tabCountFunction;
   }
 
@@ -396,7 +396,7 @@ public:
    * \par In Python:
    *   obj.tabCountFunction = value
    */
-  virtual void tabCountFunction(const grt::StringRef &value) {
+  virtual auto tabCountFunction(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tabCountFunction);
     _tabCountFunction = value;
     member_changed("tabCountFunction", ovalue, value);
@@ -409,7 +409,7 @@ public:
    * \par In Python:
    *    value = obj.tabInfoFunction
    */
-  grt::StringRef tabInfoFunction() const {
+  auto tabInfoFunction() const -> grt::StringRef {
     return _tabInfoFunction;
   }
 
@@ -420,7 +420,7 @@ public:
    * \par In Python:
    *   obj.tabInfoFunction = value
    */
-  virtual void tabInfoFunction(const grt::StringRef &value) {
+  virtual auto tabInfoFunction(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tabInfoFunction);
     _tabInfoFunction = value;
     member_changed("tabInfoFunction", ovalue, value);
@@ -443,12 +443,12 @@ protected:
   grt::StringRef _tabInfoFunction;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_OverviewPanel());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -551,7 +551,7 @@ public:
       _physicalModels(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.Document";
   }
 
@@ -563,7 +563,7 @@ public:
    * \par In Python:
    *    value = obj.logicalModel
    */
-  studio_logical_ModelRef logicalModel() const {
+  auto logicalModel() const -> studio_logical_ModelRef {
     return _logicalModel;
   }
 
@@ -574,7 +574,7 @@ public:
    * \par In Python:
    *   obj.logicalModel = value
    */
-  virtual void logicalModel(const studio_logical_ModelRef &value) {
+  virtual auto logicalModel(const studio_logical_ModelRef &value) -> void {
     grt::ValueRef ovalue(_logicalModel);
 
     _logicalModel = value;
@@ -588,7 +588,7 @@ public:
    * \par In Python:
    *    value = obj.overviewCurrentModelType
    */
-  model_ModelRef overviewCurrentModelType() const {
+  auto overviewCurrentModelType() const -> model_ModelRef {
     return _overviewCurrentModelType;
   }
 
@@ -599,7 +599,7 @@ public:
    * \par In Python:
    *   obj.overviewCurrentModelType = value
    */
-  virtual void overviewCurrentModelType(const model_ModelRef &value) {
+  virtual auto overviewCurrentModelType(const model_ModelRef &value) -> void {
     grt::ValueRef ovalue(_overviewCurrentModelType);
     _overviewCurrentModelType = value;
     member_changed("overviewCurrentModelType", ovalue, value);
@@ -613,12 +613,12 @@ public:
    * \par In Python:
    *    value = obj.overviewPanels
    */
-  grt::ListRef<studio_OverviewPanel> overviewPanels() const {
+  auto overviewPanels() const -> grt::ListRef<studio_OverviewPanel> {
     return _overviewPanels;
   }
 
 private: // The next attribute is read-only.
-  virtual void overviewPanels(const grt::ListRef<studio_OverviewPanel> &value) {
+  virtual auto overviewPanels(const grt::ListRef<studio_OverviewPanel> &value) -> void {
     grt::ValueRef ovalue(_overviewPanels);
 
     _overviewPanels = value;
@@ -634,12 +634,12 @@ public:
    * \par In Python:
    *    value = obj.physicalModels
    */
-  grt::ListRef<studio_physical_Model> physicalModels() const {
+  auto physicalModels() const -> grt::ListRef<studio_physical_Model> {
     return _physicalModels;
   }
 
 private: // The next attribute is read-only.
-  virtual void physicalModels(const grt::ListRef<studio_physical_Model> &value) {
+  virtual auto physicalModels(const grt::ListRef<studio_physical_Model> &value) -> void {
     grt::ValueRef ovalue(_physicalModels);
 
     _physicalModels = value;
@@ -654,12 +654,12 @@ protected:
   grt::ListRef<studio_physical_Model> _physicalModels; // owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_Document());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -707,7 +707,7 @@ public:
       _sqlEditors(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.MySqlStudio";
   }
 
@@ -719,7 +719,7 @@ public:
    * \par In Python:
    *    value = obj.doc
    */
-  studio_DocumentRef doc() const {
+  auto doc() const -> studio_DocumentRef {
     return studio_DocumentRef::cast_from(_doc);
   }
 
@@ -730,7 +730,7 @@ public:
    * \par In Python:
    *   obj.doc = value
    */
-  virtual void doc(const studio_DocumentRef &value) {
+  virtual auto doc(const studio_DocumentRef &value) -> void {
     super::doc(value);
   }
 
@@ -741,7 +741,7 @@ public:
    * \par In Python:
    *    value = obj.docPath
    */
-  grt::StringRef docPath() const {
+  auto docPath() const -> grt::StringRef {
     return _docPath;
   }
 
@@ -752,7 +752,7 @@ public:
    * \par In Python:
    *   obj.docPath = value
    */
-  virtual void docPath(const grt::StringRef &value) {
+  virtual auto docPath(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_docPath);
     _docPath = value;
     member_changed("docPath", ovalue, value);
@@ -766,7 +766,7 @@ public:
    * \par In Python:
    *    value = obj.migration
    */
-  db_migration_MigrationRef migration() const {
+  auto migration() const -> db_migration_MigrationRef {
     return _migration;
   }
 
@@ -777,7 +777,7 @@ public:
    * \par In Python:
    *   obj.migration = value
    */
-  virtual void migration(const db_migration_MigrationRef &value) {
+  virtual auto migration(const db_migration_MigrationRef &value) -> void {
     grt::ValueRef ovalue(_migration);
 
     _migration = value;
@@ -792,7 +792,7 @@ public:
    * \par In Python:
    *    value = obj.rdbmsMgmt
    */
-  db_mgmt_ManagementRef rdbmsMgmt() const {
+  auto rdbmsMgmt() const -> db_mgmt_ManagementRef {
     return _rdbmsMgmt;
   }
 
@@ -803,7 +803,7 @@ public:
    * \par In Python:
    *   obj.rdbmsMgmt = value
    */
-  virtual void rdbmsMgmt(const db_mgmt_ManagementRef &value) {
+  virtual auto rdbmsMgmt(const db_mgmt_ManagementRef &value) -> void {
     grt::ValueRef ovalue(_rdbmsMgmt);
 
     _rdbmsMgmt = value;
@@ -818,12 +818,12 @@ public:
    * \par In Python:
    *    value = obj.sqlEditors
    */
-  grt::ListRef<db_query_Editor> sqlEditors() const {
+  auto sqlEditors() const -> grt::ListRef<db_query_Editor> {
     return _sqlEditors;
   }
 
 private: // The next attribute is read-only.
-  virtual void sqlEditors(const grt::ListRef<db_query_Editor> &value) {
+  virtual auto sqlEditors(const grt::ListRef<db_query_Editor> &value) -> void {
     grt::ValueRef ovalue(_sqlEditors);
 
     _sqlEditors = value;
@@ -838,12 +838,12 @@ protected:
   grt::ListRef<db_query_Editor> _sqlEditors; // owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_MySqlStudio());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -881,7 +881,7 @@ public:
   }
 };
 
-inline void register_structs_studio_xml() {
+inline auto register_structs_studio_xml() -> void {
   grt::internal::ClassRegistry::register_class<studio_OverviewPanel>();
   grt::internal::ClassRegistry::register_class<studio_Document>();
   grt::internal::ClassRegistry::register_class<studio_MySqlStudio>();

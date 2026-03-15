@@ -35,13 +35,13 @@ namespace mdc {
     WindowsGLCanvasView(HWND window, int width, int height);
     virtual ~WindowsGLCanvasView();
 
-    virtual bool initialize();
+    virtual auto initialize() -> bool;
 
-    virtual void make_current();
-    virtual void remove_current();
-    virtual void swap_buffers();
+    virtual auto make_current() -> void;
+    virtual auto remove_current() -> void;
+    virtual auto swap_buffers() -> void;
 
-    virtual void update_view_size(int width, int height);
+    virtual auto update_view_size(int width, int height) -> void;
 
   protected:
     HWND _window;
@@ -56,20 +56,20 @@ namespace mdc {
     WindowsCanvasView(int width, int height);
     virtual ~WindowsCanvasView();
 
-    virtual bool initialize();
-    virtual bool has_gl() const {
+    virtual auto initialize() -> bool;
+    virtual auto has_gl() const -> bool {
       return false;
     }
-    void set_target_context(HDC hdc);
+    auto set_target_context(HDC hdc) -> void;
 
   protected:
     HDC _hdc;
 
     cairo_surface_t *_offline_surface;
 
-    virtual void update_view_size(int width, int height);
-    virtual void begin_repaint(int x, int y, int w, int h);
-    virtual void end_repaint();
+    virtual auto update_view_size(int width, int height) -> void;
+    virtual auto begin_repaint(int x, int y, int w, int h) -> void;
+    virtual auto end_repaint() -> void;
   };
 };
 

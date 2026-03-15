@@ -33,7 +33,7 @@ private:
   DataSourceSelector _result;
   bool _has_result;
 
-  void left_changed() {
+  auto left_changed() -> void {
     if (_left.model_radio->get_active())
       _right.model_radio->set_enabled(false);
     else
@@ -42,7 +42,7 @@ private:
     _left.file_selector.set_enabled(_left.file_radio->get_active());
   }
 
-  void right_changed() {
+  auto right_changed() -> void {
     if (_right.model_radio->get_active())
       _left.model_radio->set_enabled(false);
     else
@@ -57,7 +57,7 @@ private:
     }
   }
 
-  inline DataSourceSelector::SourceType source_for_name(std::string s, const std::string &default_name) {
+  inline auto source_for_name(std::string s, const std::string &default_name) -> DataSourceSelector::SourceType {
     if (s.empty())
       s = default_name;
 
@@ -69,7 +69,7 @@ private:
       return DataSourceSelector::FileSource;
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       _left.set_source(
         source_for_name(bec::GRTManager::get()->get_app_option_string("db.mysql.synchronizeAny:left_source"), "model"));
@@ -89,7 +89,7 @@ private:
     }
   }
 
-  virtual bool advance() {
+  virtual auto advance() -> bool {
     const char *sources[] = {"model", "server", "file"};
 
     // Remember defaults
@@ -207,13 +207,13 @@ public:
     }
   }
 
-  DataSourceSelector::SourceType get_left_source() {
+  auto get_left_source() -> DataSourceSelector::SourceType {
     return _left.get_source();
   }
-  DataSourceSelector::SourceType get_right_source() {
+  auto get_right_source() -> DataSourceSelector::SourceType {
     return _right.get_source();
   }
-  DataSourceSelector::SourceType get_result() {
+  auto get_result() -> DataSourceSelector::SourceType {
     return _result.get_source();
   }
 };

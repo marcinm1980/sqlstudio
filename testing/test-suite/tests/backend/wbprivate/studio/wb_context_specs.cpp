@@ -45,13 +45,13 @@ using namespace bec;
 namespace {
 //----------------------------------------------------------------------------------------------------------------------
 
-static mforms::DialogResult messageOtherCallback() {
+static auto messageOtherCallback() -> mforms::DialogResult {
   return mforms::ResultOther;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void set_note_content(GrtStoredNoteRef note, const std::string &text) {
+static auto set_note_content(GrtStoredNoteRef note, const std::string &text) -> void {
   grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
   if (!module)
     throw std::runtime_error("MySqlStudio module not found");
@@ -68,7 +68,7 @@ static void set_note_content(GrtStoredNoteRef note, const std::string &text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::string get_note_content(const GrtStoredNoteRef &note) {
+static auto get_note_content(const GrtStoredNoteRef &note) -> std::string {
   grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
   if (!module)
     throw std::runtime_error("MySqlStudio module not found");
@@ -94,7 +94,7 @@ class MySqlStudio_model_document_integration_testsTest : public ::testing::Test 
 protected:
   static std::unique_ptr<WbContextData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<WbContextData>();
         data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
@@ -107,7 +107,7 @@ protected:
     data->tester->getRdbms()->version(parse_version(target_version));
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

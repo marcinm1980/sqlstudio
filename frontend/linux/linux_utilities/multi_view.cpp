@@ -72,7 +72,7 @@ MultiView::MultiView(bool tree_view, bool icon_view) : Gtk::Grid(), _tree_view(0
 MultiView::~MultiView() {
 }
 
-void MultiView::set_icon_mode(bool flag, bool horizontal_icons) {
+auto MultiView::set_icon_mode(bool flag, bool horizontal_icons) -> void {
   if (_tree_view && _icon_view) {
     if (flag) {
       _tree_view->hide();
@@ -92,28 +92,28 @@ void MultiView::set_icon_mode(bool flag, bool horizontal_icons) {
     _icon_view->set_item_orientation(horizontal_icons ? Gtk::ORIENTATION_HORIZONTAL : Gtk::ORIENTATION_VERTICAL);
 }
 
-void MultiView::set_tree_model(const Glib::RefPtr<TreeModelWrapper>& model) {
+auto MultiView::set_tree_model(const Glib::RefPtr<TreeModelWrapper>& model) -> void {
   _tv_model = model;
 
   if (_tree_view)
     _tree_view->set_model(model);
 }
 
-void MultiView::set_icon_model(const Glib::RefPtr<TreeModelWrapper>& model) {
+auto MultiView::set_icon_model(const Glib::RefPtr<TreeModelWrapper>& model) -> void {
   _iv_model = model;
 
   if (_icon_view)
     _icon_view->set_model(model);
 }
 
-void MultiView::unset_models() {
+auto MultiView::unset_models() -> void {
   if (_icon_view)
     _icon_view->unset_model();
   if (_tree_view)
     _tree_view->unset_model();
 }
 
-void MultiView::select_node(const bec::NodeId& node) {
+auto MultiView::select_node(const bec::NodeId& node) -> void {
   if (!node.is_valid()) {
     if (_tree_view)
       _tree_view->get_selection()->unselect_all();
@@ -130,7 +130,7 @@ void MultiView::select_node(const bec::NodeId& node) {
     _icon_view->select_path(path);
 }
 
-void MultiView::refresh() {
+auto MultiView::refresh() -> void {
   if (_tree_view) {
     bec::ListModel* m = _tv_model->get_be_model();
     _tv_model->set_be_model(0);
@@ -148,15 +148,15 @@ void MultiView::refresh() {
   }
 }
 
-void MultiView::tree_row_activated(const Gtk::TreeModel::Path& path, const Gtk::TreeViewColumn* column) {
+auto MultiView::tree_row_activated(const Gtk::TreeModel::Path& path, const Gtk::TreeViewColumn* column) -> void {
   _activate_item(path);
 }
 
-void MultiView::icon_activated(const Gtk::TreeModel::Path& path) {
+auto MultiView::icon_activated(const Gtk::TreeModel::Path& path) -> void {
   _activate_item(path);
 }
 
-void MultiView::icon_button_release_event(GdkEventButton* event) {
+auto MultiView::icon_button_release_event(GdkEventButton* event) -> void {
   if (GDK_BUTTON_RELEASE == event->type && 3 == event->button) {
     Gtk::TreeModel::Path path;
 
@@ -173,7 +173,7 @@ void MultiView::icon_button_release_event(GdkEventButton* event) {
   }
 }
 
-void MultiView::tree_button_release_event(GdkEventButton* event) {
+auto MultiView::tree_button_release_event(GdkEventButton* event) -> void {
   if (GDK_BUTTON_RELEASE == event->type && 3 == event->button) {
     Glib::RefPtr<Gtk::TreeView::Selection> selection = _tree_view->get_selection();
 
@@ -185,10 +185,10 @@ void MultiView::tree_button_release_event(GdkEventButton* event) {
   }
 }
 
-void MultiView::on_selection_changed(const std::vector<bec::NodeId>& sel) {
+auto MultiView::on_selection_changed(const std::vector<bec::NodeId>& sel) -> void {
 }
 
-void MultiView::icon_selection_changed() {
+auto MultiView::icon_selection_changed() -> void {
   const std::vector<Gtk::TreeModel::Path> paths = _icon_view->get_selected_items();
   std::vector<bec::NodeId> nodes;
 
@@ -200,7 +200,7 @@ void MultiView::icon_selection_changed() {
   _selection_changed.emit(nodes);
 }
 
-void MultiView::tree_selection_changed() {
+auto MultiView::tree_selection_changed() -> void {
   const std::vector<Gtk::TreeModel::Path> paths = _tree_view->get_selection()->get_selected_rows();
   std::vector<bec::NodeId> nodes;
 
@@ -212,7 +212,7 @@ void MultiView::tree_selection_changed() {
   _selection_changed.emit(nodes);
 }
 
-Gtk::TreeModel::Path MultiView::get_selected() {
+auto MultiView::get_selected() -> Gtk::TreeModel::Path {
   if (_icon_view && _icon_view->is_visible()) {
     std::vector<Gtk::TreeModel::Path> selected_items = _icon_view->get_selected_items();
     if (selected_items.size() > 0)

@@ -39,59 +39,59 @@ namespace mforms {
       {
       }
 
-      static bool create_tool_bar(ToolBar *item, ToolBarType type) {
+      static auto create_tool_bar(ToolBar *item, ToolBarType type) -> bool {
         return true;
       }
 
-      static void insert_item(ToolBar *toolbar, int index, ToolBarItem *item) {
+      static auto insert_item(ToolBar *toolbar, int index, ToolBarItem *item) -> void {
       }
 
-      static void remove_item(ToolBar *toolbar, ToolBarItem *item) {
+      static auto remove_item(ToolBar *toolbar, ToolBarItem *item) -> void {
       }
 
-      static bool create_tool_item(ToolBarItem *item, ToolBarItemType type) {
+      static auto create_tool_item(ToolBarItem *item, ToolBarItemType type) -> bool {
         return true;
       }
 
-      static void set_item_icon(ToolBarItem *item, const std::string &) {
+      static auto set_item_icon(ToolBarItem *item, const std::string &) -> void {
       }
 
-      static void set_item_alt_icon(ToolBarItem *item, const std::string &) {
+      static auto set_item_alt_icon(ToolBarItem *item, const std::string &) -> void {
       }
 
-      static void set_item_text(ToolBarItem *item, const std::string &) {
+      static auto set_item_text(ToolBarItem *item, const std::string &) -> void {
       }
 
-      static std::string get_item_text(ToolBarItem *item) {
+      static auto get_item_text(ToolBarItem *item) -> std::string {
         return "";
       }
 
-      static void set_item_enabled(ToolBarItem *item, bool) {
+      static auto set_item_enabled(ToolBarItem *item, bool) -> void {
       }
 
-      static bool get_item_enabled(ToolBarItem *item) {
+      static auto get_item_enabled(ToolBarItem *item) -> bool {
         return true;
       }
 
-      static void set_item_checked(ToolBarItem *item, bool) {
+      static auto set_item_checked(ToolBarItem *item, bool) -> void {
       }
 
-      static bool get_item_checked(ToolBarItem *item) {
+      static auto get_item_checked(ToolBarItem *item) -> bool {
         return true;
       }
 
-      static void set_item_tooltip(ToolBarItem *item, const std::string &) {
+      static auto set_item_tooltip(ToolBarItem *item, const std::string &) -> void {
       }
 
-      static void set_selector_items(ToolBarItem *item, const std::vector<std::string> &values) {
+      static auto set_selector_items(ToolBarItem *item, const std::vector<std::string> &values) -> void {
       }
 
-      static void setItemName(ToolBarItem *item, const std::string &) {
+      static auto setItemName(ToolBarItem *item, const std::string &) -> void {
 
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_tool_bar_impl.create_tool_bar = &ToolBarWrapper::create_tool_bar;

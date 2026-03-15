@@ -30,7 +30,7 @@
 #include "grts/structs.db.mysql.h"
 #include "db_mysql_params.h"
 
-static std::string get_type_str_for_grant(const db_DatabaseObjectRef &obj) {
+static auto get_type_str_for_grant(const db_DatabaseObjectRef &obj) -> std::string {
   if (db_TableRef::can_wrap(obj))
     return "TABLE";
 
@@ -43,7 +43,7 @@ static std::string get_type_str_for_grant(const db_DatabaseObjectRef &obj) {
   return "";
 }
 
-static std::string quote_user(const std::string &user) {
+static auto quote_user(const std::string &user) -> std::string {
   std::string::size_type p;
   if ((p = user.find('@')) != std::string::npos) {
     if (user[p + 1] == '\'')
@@ -54,9 +54,9 @@ static std::string quote_user(const std::string &user) {
     return "'" + user + "'";
 }
 
-inline void MYSQLMODULEDBMYSQL_PUBLIC_FUNC gen_grant_sql(const db_CatalogRef &catalog, const db_UserRef &user,
+inline auto gen_grant_sql(const db_CatalogRef &catalog, const db_UserRef &user,
                                                          db_RoleRef &role, std::list<std::string> &out,
-                                                         bool ommit_schema_name = false) {
+                                                         bool ommit_schema_name = false) -> void MYSQLMODULEDBMYSQL_PUBLIC_FUNC {
   db_RoleRef parentRole = role->parentRole();
   if (parentRole.is_valid())
     gen_grant_sql(catalog, user, parentRole, out);
@@ -109,15 +109,15 @@ inline void MYSQLMODULEDBMYSQL_PUBLIC_FUNC gen_grant_sql(const db_CatalogRef &ca
   }
 }
 
-inline void MYSQLMODULEDBMYSQL_PUBLIC_FUNC gen_grant_sql(const db_CatalogRef &catalog, const db_UserRef &user,
-                                                         std::list<std::string> &out, bool ommit_schema_name = false) {
+inline auto gen_grant_sql(const db_CatalogRef &catalog, const db_UserRef &user,
+                                                         std::list<std::string> &out, bool ommit_schema_name = false) -> void MYSQLMODULEDBMYSQL_PUBLIC_FUNC {
   for (size_t i = 0, count = user->roles().count(); i < count; ++i) {
     db_RoleRef role = user->roles().get(i);
     gen_grant_sql(catalog, user, role, out, ommit_schema_name);
   }
 }
 
-inline void MYSQLMODULEDBMYSQL_PUBLIC_FUNC gen_grant_sql(const db_CatalogRef &catalog, std::list<std::string> &out) {
+inline auto gen_grant_sql(const db_CatalogRef &catalog, std::list<std::string> &out) -> void MYSQLMODULEDBMYSQL_PUBLIC_FUNC {
   for (size_t i = 0, count = catalog->users().count(); i < count; ++i) {
     db_UserRef user = catalog->users().get(i);
     gen_grant_sql(catalog, user, out);

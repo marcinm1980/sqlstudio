@@ -38,7 +38,7 @@ PROCESS_MEMORY_COUNTERS_EX pmc;
 
 //--------------------------------------------------------------------------------------------------
 
-void MemUsage::StartCounting() {
+auto MemUsage::StartCounting() -> void {
   memset(&memInfo, 0, sizeof memInfo);
   memset(&pmc, 0, sizeof pmc);
   memInfo.dwLength = sizeof MEMORYSTATUSEX;
@@ -48,7 +48,7 @@ void MemUsage::StartCounting() {
 
 //--------------------------------------------------------------------------------------------------
 
-void MemUsage::PrintUsage() {
+auto MemUsage::PrintUsage() -> void {
   logDebug("=========================== Memory usage before tests ===========================\n");
   DWORDLONG totalPhysMem = memInfo.ullTotalPhys;
   logDebug("Total Physical Memory(RAM): %s Bytes, %s MB\n", std::to_string(totalPhysMem).c_str(),

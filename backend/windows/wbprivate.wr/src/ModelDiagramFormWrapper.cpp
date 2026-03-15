@@ -57,7 +57,7 @@ ModelDiagramFormWrapper::~ModelDiagramFormWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-ModelDiagramForm *ModelDiagramFormWrapper::get_unmanaged_object() {
+auto ModelDiagramFormWrapper::get_unmanaged_object() -> ModelDiagramForm * {
   return (ModelDiagramForm *)inner;
 }
 
@@ -150,7 +150,7 @@ void ModelDiagramFormWrapper::OnKeyUp(KeyEventArgs ^ e, Keys keystate) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ ModelDiagramFormWrapper::get_tool_cursor() {
+auto ModelDiagramFormWrapper::get_tool_cursor() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_cursor());
 }
 
@@ -190,21 +190,21 @@ bool ModelDiagramFormWrapper::perform_drop(int x, int y, String ^ type, String ^
 
 //--------------------------------------------------------------------------------------------------
 
-void ModelDiagramFormWrapper::set_closed(bool flag) {
+auto ModelDiagramFormWrapper::set_closed(bool flag) -> void {
   if (get_unmanaged_object())
     get_unmanaged_object()->set_closed(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ModelDiagramFormWrapper::close() {
+auto ModelDiagramFormWrapper::close() -> void {
   if (get_unmanaged_object())
     get_unmanaged_object()->close();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ModelDiagramFormWrapper::is_closed() {
+auto ModelDiagramFormWrapper::is_closed() -> bool {
   if (get_unmanaged_object())
     return get_unmanaged_object()->is_closed();
   return false;
@@ -220,20 +220,20 @@ void ModelDiagramFormWrapper::setup_mini_view(BaseWindowsCanvasView ^ view) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ModelDiagramFormWrapper::update_mini_view_size(int w, int h) {
+auto ModelDiagramFormWrapper::update_mini_view_size(int w, int h) -> void {
   if (get_unmanaged_object() != NULL)
     get_unmanaged_object()->update_mini_view_size(w, h);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ModelDiagramFormWrapper::update_options_toolbar() {
+auto ModelDiagramFormWrapper::update_options_toolbar() -> void {
   get_unmanaged_object()->update_options_toolbar();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-double ModelDiagramFormWrapper::get_zoom() {
+auto ModelDiagramFormWrapper::get_zoom() -> double {
   if (get_unmanaged_object() != NULL)
     return get_unmanaged_object()->get_zoom();
 
@@ -242,20 +242,20 @@ double ModelDiagramFormWrapper::get_zoom() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ModelDiagramFormWrapper::set_zoom(double zoom) {
+auto ModelDiagramFormWrapper::set_zoom(double zoom) -> void {
   if (get_unmanaged_object() != NULL)
     get_unmanaged_object()->set_zoom(zoom);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ ModelDiagramFormWrapper::get_title() {
+auto ModelDiagramFormWrapper::get_title() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_title());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-ToolStrip ^ ModelDiagramFormWrapper::get_tools_toolbar() {
+auto ModelDiagramFormWrapper::get_tools_toolbar() -> ToolStrip ^ {
   mforms::ToolBar *toolbar = get_unmanaged_object()->get_tools_toolbar();
   if (toolbar == NULL)
     return nullptr;
@@ -265,7 +265,7 @@ ToolStrip ^ ModelDiagramFormWrapper::get_tools_toolbar() {
 
 //--------------------------------------------------------------------------------------------------
 
-ToolStrip ^ ModelDiagramFormWrapper::get_options_toolbar() {
+auto ModelDiagramFormWrapper::get_options_toolbar() -> ToolStrip ^ {
   mforms::ToolBar *toolbar = get_unmanaged_object()->get_options_toolbar();
   if (toolbar == NULL)
     return nullptr;
@@ -275,7 +275,7 @@ ToolStrip ^ ModelDiagramFormWrapper::get_options_toolbar() {
 
 //--------------------------------------------------------------------------------------------------
 
-TreeViewAdv ^ ModelDiagramFormWrapper::get_layer_tree() {
+auto ModelDiagramFormWrapper::get_layer_tree() -> TreeViewAdv ^ {
   mforms::TreeView *tree = get_unmanaged_object()->get_layer_tree();
 
   return dynamic_cast<TreeViewAdv ^>(ObjectMapper::GetManagedComponent(tree));
@@ -283,7 +283,7 @@ TreeViewAdv ^ ModelDiagramFormWrapper::get_layer_tree() {
 
 //--------------------------------------------------------------------------------------------------
 
-TreeViewAdv ^ ModelDiagramFormWrapper::get_catalog_tree() {
+auto ModelDiagramFormWrapper::get_catalog_tree() -> TreeViewAdv ^ {
   return dynamic_cast<TreeViewAdv ^>(ObjectMapper::GetManagedComponent(get_unmanaged_object()->get_catalog_tree()));
 }
 

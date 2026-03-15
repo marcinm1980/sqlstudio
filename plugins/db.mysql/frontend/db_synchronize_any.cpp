@@ -66,13 +66,13 @@ public:
     add_end(&_show_description_check, false, true);
   }
 
-  virtual void leave(bool advancing) {
+  virtual auto leave(bool advancing) -> void {
     if (advancing)
       bec::GRTManager::get()->set_app_option("db.mysql.synchronizeAny:show_sync_help_page",
                                              grt::IntegerRef(_show_description_check.get_active()));
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing)
       if (!bec::GRTManager::get()->get_app_option_int("db.mysql.synchronizeAny:show_sync_help_page", 1))
         _form->go_to_next();
@@ -94,11 +94,11 @@ public:
     set_title(_("Detected Changes to be Applied to Destination"));
   }
 
-  void set_generate_text_slot(const std::function<std::string()> &slot) {
+  auto set_generate_text_slot(const std::function<std::string()> &slot) -> void {
     _generate = slot;
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       std::string sql = _generate();
       _text.set_value(sql);
@@ -106,7 +106,7 @@ public:
     }
   }
 
-  virtual bool advance() {
+  virtual auto advance() -> bool {
     if (values().get_int("result") == DataSourceSelector::FileSource) {
       std::string path = values().get_string("result_path");
       if (!path.empty())
@@ -115,14 +115,14 @@ public:
     return true;
   }
 
-  virtual std::string next_button_caption() {
+  virtual auto next_button_caption() -> std::string {
     return execute_caption();
   }
 
-  virtual bool allow_cancel() {
+  virtual auto allow_cancel() -> bool {
     return false;
   }
-  virtual bool next_closes_wizard() {
+  virtual auto next_closes_wizard() -> bool {
     return values().get_int("result") != DataSourceSelector::ServerSource;
   }
 
@@ -158,7 +158,7 @@ public:
     set_status_text("");
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     _finished = false;
 
     if (advancing)
@@ -167,15 +167,15 @@ public:
     WizardProgressPage::enter(advancing);
   }
 
-  virtual bool allow_back() {
+  virtual auto allow_back() -> bool {
     return WizardProgressPage::allow_back() && !_finished;
   }
 
-  virtual bool allow_cancel() {
+  virtual auto allow_cancel() -> bool {
     return WizardProgressPage::allow_cancel() && !_finished;
   }
 
-  bool do_connect() {
+  auto do_connect() -> bool {
     execute_grt_task(
       [this]() {
         _dbplugin->db_conn()->test_connection();
@@ -185,39 +185,39 @@ public:
     return true;
   }
 
-  bool do_export() {
+  auto do_export() -> bool {
     _dbplugin->sql_script(values().get_string("script"));
     execute_grt_task(std::bind(&Db_plugin::apply_script_to_db, _dbplugin), false);
 
     return true;
   }
 
-  bool back_sync() {
+  auto back_sync() -> bool {
     execute_grt_task(std::bind(&AlterApplyProgressPage::back_sync_, this), false);
     return true;
   }
 
-  grt::IntegerRef back_sync_() {
+  auto back_sync_() -> grt::IntegerRef {
     _dbplugin->read_back_view_ddl();
     return grt::IntegerRef(0);
   }
 
-  bool perform_sync_model() {
+  auto perform_sync_model() -> bool {
     if (!_got_error_messages) {
       //      _dbplugin->save_sync_profile(_dbplugin->model_catalog());
     }
     return true;
   }
 
-  void export_finished(const grt::ValueRef &result) {
+  auto export_finished(const grt::ValueRef &result) -> void {
     _finished = true;
   }
 
-  virtual bool next_closes_wizard() {
+  virtual auto next_closes_wizard() -> bool {
     return true;
   }
 
-  void set_db_plugin(Db_plugin *pl) {
+  auto set_db_plugin(Db_plugin *pl) -> void {
     _dbplugin = pl;
   }
 };
@@ -306,7 +306,7 @@ public:
     _be.restore_overriden_names();
   }
 
-  std::string generate_alter() {
+  auto generate_alter() -> std::string {
     std::string report;
     try {
       //  TODO: Check if this is best place to set the options. For now it fixes a crash
@@ -318,7 +318,7 @@ public:
     return report;
   }
 
-  virtual WizardPage *get_next_page(WizardPage *current) {
+  virtual auto get_next_page(WizardPage *current) -> WizardPage * {
     std::string curid = current ? current->get_id() : "";
     std::string nextid;
 
@@ -397,7 +397,7 @@ protected:
   AlterApplyProgressPage *_apply_page;
   bool connect1_apply;
 
-  std::vector<std::string> load_schemata(Db_plugin *db) {
+  auto load_schemata(Db_plugin *db) -> std::vector<std::string> {
     std::vector<std::string> names;
     db->load_schemata(names);
     _be.set_db_options(db->load_db_options());
@@ -405,10 +405,10 @@ protected:
   }
 };
 
-WizardPlugin *createWbSynchronizeAnyWizard(grt::Module *module, db_CatalogRef catalog) {
+auto createWbSynchronizeAnyWizard(grt::Module *module, db_CatalogRef catalog) -> WizardPlugin * {
   return new WbSynchronizeAnyWizard(module);
 }
 
-void deleteWbSynchronizeAnyWizard(WizardPlugin *plugin) {
+auto deleteWbSynchronizeAnyWizard(WizardPlugin *plugin) -> void {
   delete plugin;
 }

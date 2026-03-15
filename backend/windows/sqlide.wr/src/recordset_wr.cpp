@@ -77,7 +77,7 @@ RecordsetWrapper::~RecordsetWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-void RecordsetWrapper::register_edit_actions() {
+auto RecordsetWrapper::register_edit_actions() -> void {
   mforms::ToolBarItem *item;
   item = _ref->get_toolbar()->find_item("record_del");
   if (item) {
@@ -138,7 +138,7 @@ bool RecordsetWrapper::delete_nodes(List<NodeIdWrapper ^> ^ nodes) {
 
 //--------------------------------------------------------------------------------------------------
 
-MySQL::Base::IRecordsetView ^ RecordsetWrapper::wrap_and_create_recordset_view(IntPtr rset) {
+auto RecordsetWrapper::wrap_and_create_recordset_view(IntPtr rset) -> MySQL::Base::IRecordsetView ^ {
   return create_recordset_for_wrapper(
     Ref2Ptr_<::Recordset, RecordsetWrapper>(*(std::shared_ptr<Recordset> *)rset.ToPointer()));
 }

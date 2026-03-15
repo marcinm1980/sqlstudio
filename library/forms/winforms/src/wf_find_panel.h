@@ -33,13 +33,13 @@ namespace MySQL {
     protected:
       FindPanelWrapper(mforms::FindPanel *backend);
 
-      static bool create(mforms::FindPanel *backend);
-      static size_t perform_action(mforms::FindPanel *backend, mforms::FindPanelAction action);
-      static void focus(mforms::FindPanel *backend);
-      static void enable_replace(mforms::FindPanel *backend, bool flag);
+      static auto create(mforms::FindPanel *backend) -> bool;
+      static auto perform_action(mforms::FindPanel *backend, mforms::FindPanelAction action) -> size_t;
+      static auto focus(mforms::FindPanel *backend) -> void;
+      static auto enable_replace(mforms::FindPanel *backend, bool flag) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

@@ -62,7 +62,7 @@ HyperTextWrapper::HyperTextWrapper(mforms::HyperText *backend) : ViewWrapper(bac
 
 //--------------------------------------------------------------------------------------------------
 
-bool HyperTextWrapper::create(mforms::HyperText *backend) {
+auto HyperTextWrapper::create(mforms::HyperText *backend) -> bool {
   HyperTextWrapper *wrapper = new HyperTextWrapper(backend);
 
   MformsHtmlPanel ^ panel = HyperTextWrapper::Create<MformsHtmlPanel>(backend, wrapper);
@@ -82,14 +82,14 @@ bool HyperTextWrapper::create(mforms::HyperText *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void HyperTextWrapper::set_markup_text(mforms::HyperText *backend, const std::string &text) {
+auto HyperTextWrapper::set_markup_text(mforms::HyperText *backend, const std::string &text) -> void {
   HtmlPanel ^ panel = HyperTextWrapper::GetManagedObject<HtmlPanel>(backend);
   panel->Text = CppStringToNative(text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void HyperTextWrapper::init() {
+auto HyperTextWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_hypertext_impl.create = &HyperTextWrapper::create;

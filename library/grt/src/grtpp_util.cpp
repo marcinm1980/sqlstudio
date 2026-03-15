@@ -49,7 +49,7 @@ using namespace grt;
 #include <uuid/uuid.h>
 #endif
 
-std::string grt::get_guid() {
+auto grt::get_guid() -> std::string {
 /* GUIDs must be no more than 50 chars */
 
 #if defined(_MSC_VER)
@@ -99,7 +99,7 @@ std::string grt::get_guid() {
 #endif
 }
 
-std::string grt::fmt_simple_type_spec(const SimpleTypeSpec &type) {
+auto grt::fmt_simple_type_spec(const SimpleTypeSpec &type) -> std::string {
   switch (type.type) {
     case IntegerType:
       return "ssize_t";
@@ -118,7 +118,7 @@ std::string grt::fmt_simple_type_spec(const SimpleTypeSpec &type) {
   }
 }
 
-std::string grt::fmt_type_spec(const TypeSpec &type) {
+auto grt::fmt_type_spec(const TypeSpec &type) -> std::string {
   switch (type.base.type) {
     case IntegerType:
       return "ssize_t";
@@ -155,7 +155,7 @@ std::string grt::fmt_type_spec(const TypeSpec &type) {
   }
 }
 
-std::string grt::fmt_arg_spec_list(const ArgSpecList &arglist) {
+auto grt::fmt_arg_spec_list(const ArgSpecList &arglist) -> std::string {
   std::string args;
 
   for (ArgSpecList::const_iterator arg = arglist.begin(); arg != arglist.end(); ++arg) {
@@ -184,7 +184,7 @@ std::string grt::fmt_arg_spec_list(const ArgSpecList &arglist) {
  *
  * @return A pointer to the value if it's found or NULL otherwise.
  *****************************************************************************/
-ValueRef grt::get_value_by_path(const ValueRef &root, const std::string &path) {
+auto grt::get_value_by_path(const ValueRef &root, const std::string &path) -> ValueRef {
   std::string prefix, suffix;
   ValueRef value = root;
   bool ok = true;
@@ -251,7 +251,7 @@ ValueRef grt::get_value_by_path(const ValueRef &root, const std::string &path) {
  * referenced object is not a dictionary or list.
  *
  *****************************************************************************/
-bool grt::set_value_by_path(const ValueRef &value, const std::string &path, const ValueRef &new_value) {
+auto grt::set_value_by_path(const ValueRef &value, const std::string &path, const ValueRef &new_value) -> bool {
   std::string front, last;
 
   if (path == "/")
@@ -296,15 +296,15 @@ bool grt::set_value_by_path(const ValueRef &value, const std::string &path, cons
   return false;
 }
 
-static ObjectRef find_child_object(const BaseListRef &list, const std::string &id, bool recursive,
-                                   std::set<internal::Value *> &visited);
-static ObjectRef find_child_object(const DictRef &dict, const std::string &id, bool recursive,
-                                   std::set<internal::Value *> &visited);
-static ObjectRef find_child_object(const ObjectRef &object, const std::string &id, bool recursive,
-                                   std::set<internal::Value *> &visited);
+static auto find_child_object(const BaseListRef &list, const std::string &id, bool recursive,
+                                   std::set<internal::Value *> &visited) -> ObjectRef;
+static auto find_child_object(const DictRef &dict, const std::string &id, bool recursive,
+                                   std::set<internal::Value *> &visited) -> ObjectRef;
+static auto find_child_object(const ObjectRef &object, const std::string &id, bool recursive,
+                                   std::set<internal::Value *> &visited) -> ObjectRef;
 
-static ObjectRef find_child_object(const BaseListRef &list, const std::string &id, bool recursive,
-                                   std::set<internal::Value *> &visited) {
+static auto find_child_object(const BaseListRef &list, const std::string &id, bool recursive,
+                                   std::set<internal::Value *> &visited) -> ObjectRef {
   if (!list.is_valid())
     throw std::invalid_argument("list is invalid");
 
@@ -334,8 +334,8 @@ static ObjectRef find_child_object(const BaseListRef &list, const std::string &i
   return found;
 }
 
-static ObjectRef find_child_object(const DictRef &dict, const std::string &id, bool recursive,
-                                   std::set<internal::Value *> &visited) {
+static auto find_child_object(const DictRef &dict, const std::string &id, bool recursive,
+                                   std::set<internal::Value *> &visited) -> ObjectRef {
   if (!dict.is_valid())
     throw std::invalid_argument("dict is invalid");
 
@@ -366,8 +366,8 @@ static ObjectRef find_child_object(const DictRef &dict, const std::string &id, b
   return found;
 }
 
-static ObjectRef find_child_object(const ObjectRef &object, const std::string &id, bool recursive,
-                                   std::set<internal::Value *> &visited) {
+static auto find_child_object(const ObjectRef &object, const std::string &id, bool recursive,
+                                   std::set<internal::Value *> &visited) -> ObjectRef {
   if (!object.is_valid())
     throw std::invalid_argument("object is invalid");
 
@@ -435,19 +435,19 @@ static ObjectRef find_child_object(const ObjectRef &object, const std::string &i
   return ObjectRef();
 }
 
-ObjectRef grt::find_child_object(const DictRef &dict, const std::string &id, bool recursive) {
+auto grt::find_child_object(const DictRef &dict, const std::string &id, bool recursive) -> ObjectRef {
   std::set<internal::Value *> visited;
 
   return ::find_child_object(dict, id, recursive, visited);
 }
 
-ObjectRef grt::find_child_object(const BaseListRef &list, const std::string &id, bool recursive) {
+auto grt::find_child_object(const BaseListRef &list, const std::string &id, bool recursive) -> ObjectRef {
   std::set<internal::Value *> visited;
 
   return ::find_child_object(list, id, recursive, visited);
 }
 
-ObjectRef grt::find_child_object(const ObjectRef &object, const std::string &id, bool recursive) {
+auto grt::find_child_object(const ObjectRef &object, const std::string &id, bool recursive) -> ObjectRef {
   std::set<internal::Value *> visited;
 
   return ::find_child_object(object, id, recursive, visited);
@@ -464,12 +464,12 @@ public:
   }
 };
 
-std::string grt::get_name_suggestion_for_list_object(const BaseListRef &baselist, const std::string &prefix,
-                                                     bool serial) {
+auto grt::get_name_suggestion_for_list_object(const BaseListRef &baselist, const std::string &prefix,
+                                                     bool serial) -> std::string {
   return get_name_suggestion(search_in_list_pred(ObjectListRef::cast_from(baselist)), prefix, serial);
 }
 
-void CopyContext::copy_list(BaseListRef &list, const BaseListRef &source, bool dontfollow) {
+auto CopyContext::copy_list(BaseListRef &list, const BaseListRef &source, bool dontfollow) -> void {
   for (size_t c = source.count(), i = 0; i < c; i++) {
     grt::ValueRef value(source.get(i));
 
@@ -500,7 +500,7 @@ void CopyContext::copy_list(BaseListRef &list, const BaseListRef &source, bool d
   }
 }
 
-void CopyContext::copy_dict(DictRef &dict, const DictRef &source, bool dontfollow) {
+auto CopyContext::copy_dict(DictRef &dict, const DictRef &source, bool dontfollow) -> void {
   for (DictRef::const_iterator iter = source.begin(); iter != source.end(); ++iter) {
     std::string key = iter->first;
     grt::ValueRef value = iter->second;
@@ -532,7 +532,7 @@ void CopyContext::copy_dict(DictRef &dict, const DictRef &source, bool dontfollo
   }
 }
 
-static void fixup_object_copied_references(ObjectRef copy, std::map<std::string, ValueRef> &object_copies) {
+static auto fixup_object_copied_references(ObjectRef copy, std::map<std::string, ValueRef> &object_copies) -> void {
   MetaClass *metac(copy.get_metaclass());
 
   do {
@@ -599,7 +599,7 @@ static void fixup_object_copied_references(ObjectRef copy, std::map<std::string,
   } while (metac != 0);
 }
 
-ObjectRef CopyContext::duplicate_object(ObjectRef object, std::set<std::string> skip_members, bool _dontfollow) {
+auto CopyContext::duplicate_object(ObjectRef object, std::set<std::string> skip_members, bool _dontfollow) -> ObjectRef {
   if (object.is_valid()) {
     MetaClass *metac(object.get_metaclass());
     ObjectRef copy = metac->allocate();
@@ -659,7 +659,7 @@ ObjectRef CopyContext::duplicate_object(ObjectRef object, std::set<std::string> 
   return ObjectRef();
 }
 
-void grt::update_ids(ObjectRef object, const std::set<std::string> &skip_members) {
+auto grt::update_ids(ObjectRef object, const std::set<std::string> &skip_members) -> void {
   if (!object.is_valid())
     return;
   MetaClass *metac(object.get_metaclass());
@@ -698,14 +698,14 @@ void grt::update_ids(ObjectRef object, const std::set<std::string> &skip_members
   object->__set_id(get_guid());
 }
 
-void grt::append_contents(BaseListRef target, BaseListRef source) {
+auto grt::append_contents(BaseListRef target, BaseListRef source) -> void {
   if (source.is_valid()) {
     for (size_t c = source.count(), i = 0; i < c; i++)
       target.ginsert(source[i]);
   }
 }
 
-void grt::replace_contents(BaseListRef target, BaseListRef source) {
+auto grt::replace_contents(BaseListRef target, BaseListRef source) -> void {
   for (size_t c = target.count(), i = 0; i < c; i++)
     target.remove(0);
 
@@ -713,7 +713,7 @@ void grt::replace_contents(BaseListRef target, BaseListRef source) {
     target.ginsert(source[i]);
 }
 
-void grt::merge_contents_by_name(ObjectListRef target, ObjectListRef source, bool replace_matching) {
+auto grt::merge_contents_by_name(ObjectListRef target, ObjectListRef source, bool replace_matching) -> void {
   std::map<std::string, int> known_names;
 
   for (size_t c = target.count(), i = 0; i < c; i++)
@@ -730,7 +730,7 @@ void grt::merge_contents_by_name(ObjectListRef target, ObjectListRef source, boo
   }
 }
 
-void grt::merge_contents_by_id(ObjectListRef target, ObjectListRef source, bool replace_matching) {
+auto grt::merge_contents_by_id(ObjectListRef target, ObjectListRef source, bool replace_matching) -> void {
   std::map<std::string, size_t> index_of_known_ids;
 
   for (size_t c = target.count(), i = 0; i < c; i++)
@@ -746,7 +746,7 @@ void grt::merge_contents_by_id(ObjectListRef target, ObjectListRef source, bool 
   }
 }
 
-void grt::merge_contents(DictRef target, DictRef source, bool overwrite) {
+auto grt::merge_contents(DictRef target, DictRef source, bool overwrite) -> void {
   DictRef::const_iterator iter;
   for (iter = source.begin(); iter != source.end(); ++iter) {
     std::string k = iter->first;
@@ -759,7 +759,7 @@ void grt::merge_contents(DictRef target, DictRef source, bool overwrite) {
   }
 }
 
-void grt::replace_contents(DictRef target, DictRef source) {
+auto grt::replace_contents(DictRef target, DictRef source) -> void {
   DictRef::const_iterator iter, current;
 
   iter = target.begin();
@@ -774,7 +774,7 @@ void grt::replace_contents(DictRef target, DictRef source) {
   }
 }
 
-void grt::merge_contents(ObjectRef target, ObjectRef source) {
+auto grt::merge_contents(ObjectRef target, ObjectRef source) -> void {
   MetaClass *metac = source->get_metaclass();
 
   do {
@@ -792,7 +792,7 @@ void grt::merge_contents(ObjectRef target, ObjectRef source) {
   } while (metac != 0);
 }
 
-std::string grt::join_string_list(const StringListRef &list, const std::string &separator) {
+auto grt::join_string_list(const StringListRef &list, const std::string &separator) -> std::string {
   std::string result;
   for (StringListRef::const_iterator i = list.begin(); i != list.end(); ++i) {
     if (i != list.begin())
@@ -802,7 +802,7 @@ std::string grt::join_string_list(const StringListRef &list, const std::string &
   return result;
 }
 
-ObjectRef CopyContext::copy(const ObjectRef &object, std::set<std::string> skip_members) {
+auto CopyContext::copy(const ObjectRef &object, std::set<std::string> skip_members) -> ObjectRef {
   ObjectRef copy = duplicate_object(object, skip_members, false);
   if (copy.is_valid())
     copies.push_back(copy);
@@ -810,7 +810,7 @@ ObjectRef CopyContext::copy(const ObjectRef &object, std::set<std::string> skip_
   return copy;
 }
 
-ObjectRef CopyContext::shallow_copy(const ObjectRef &object) {
+auto CopyContext::shallow_copy(const ObjectRef &object) -> ObjectRef {
   ObjectRef copy = duplicate_object(object, std::set<std::string>(), true);
   if (copy.is_valid())
     copies.push_back(copy);
@@ -818,21 +818,21 @@ ObjectRef CopyContext::shallow_copy(const ObjectRef &object) {
   return copy;
 }
 
-void CopyContext::update_references() {
+auto CopyContext::update_references() -> void {
   // go through everything that was copied, replacing copied object references
   // if needed
   for (std::list<ObjectRef>::iterator iter = copies.begin(); iter != copies.end(); ++iter)
     fixup_object_copied_references(*iter, object_copies);
 }
 
-ValueRef CopyContext::copy_for_object(ValueRef object) {
+auto CopyContext::copy_for_object(ValueRef object) -> ValueRef {
   ObjectRef obj(ObjectRef::cast_from(object));
   if (object_copies.find(obj.id()) != object_copies.end())
     return object_copies[obj.id()];
   return ValueRef();
 }
 
-static ValueRef copy_value(ValueRef value, bool deep, internal::Object *owner) {
+static auto copy_value(ValueRef value, bool deep, internal::Object *owner) -> ValueRef {
   switch (value.type()) {
     case AnyType:
       break;
@@ -883,11 +883,11 @@ static ValueRef copy_value(ValueRef value, bool deep, internal::Object *owner) {
   return ValueRef();
 }
 
-ValueRef grt::copy_value(ValueRef value, bool deep) {
+auto grt::copy_value(ValueRef value, bool deep) -> ValueRef {
   return ::copy_value(value, deep, 0);
 }
 
-bool grt::compare_list_contents(const ObjectListRef &l1, const ObjectListRef &l2) {
+auto grt::compare_list_contents(const ObjectListRef &l1, const ObjectListRef &l2) -> bool {
   bool l1_valid = l1.is_valid();
   bool l2_valid = l2.is_valid();
   if (!l1_valid || !l2_valid)
@@ -905,7 +905,7 @@ bool grt::compare_list_contents(const ObjectListRef &l1, const ObjectListRef &l2
   return true;
 }
 
-void grt::remove_list_items_matching(ObjectListRef list, const std::function<bool(grt::ObjectRef)> &matcher) {
+auto grt::remove_list_items_matching(ObjectListRef list, const std::function<bool(grt::ObjectRef)> &matcher) -> void {
   for (size_t i = list.count(); i >= 1; --i) {
     if (matcher(list[i - 1]))
       list.remove(i - 1);
@@ -914,7 +914,7 @@ void grt::remove_list_items_matching(ObjectListRef list, const std::function<boo
 
 // temporary code, should be replaced with dynamic loading once langauge support is pluginized
 
-bool grt::init_python_support(const std::string &module_path) {
+auto grt::init_python_support(const std::string &module_path) -> bool {
   PythonModuleLoader *loader = new PythonModuleLoader(module_path);
   if (!module_path.empty()) {
     loader->get_python_context()->add_module_path(module_path, true);
@@ -926,15 +926,15 @@ bool grt::init_python_support(const std::string &module_path) {
   return true;
 }
 
-void grt::add_python_module_dir(const std::string &python_module_path) {
+auto grt::add_python_module_dir(const std::string &python_module_path) -> void {
   PythonModuleLoader *loader = dynamic_cast<PythonModuleLoader *>(grt::GRT::get()->get_module_loader("python"));
   if (loader && !python_module_path.empty())
     loader->get_python_context()->add_module_path(python_module_path, true);
 }
 
-static void dump_value(const grt::ValueRef &value, int level, bool skip_spacing = false);
+static auto dump_value(const grt::ValueRef &value, int level, bool skip_spacing = false) -> void;
 
-static bool dump_member(grt::ObjectRef object, const grt::MetaClass::Member *member, int level) {
+static auto dump_member(grt::ObjectRef object, const grt::MetaClass::Member *member, int level) -> bool {
   if (!object.get_member(member->name).is_valid())
     printf("%*s%s = NULL", level, "  ", member->name.c_str());
   else if (member->type.base.type == grt::ObjectType && !member->owned_object)
@@ -948,7 +948,7 @@ static bool dump_member(grt::ObjectRef object, const grt::MetaClass::Member *mem
   return true;
 }
 
-static void dump_value(const grt::ValueRef &value, int level, bool skip_spacing) {
+static auto dump_value(const grt::ValueRef &value, int level, bool skip_spacing) -> void {
   int s = skip_spacing ? 0 : 1;
   switch (value.type()) {
     case grt::ListType: {
@@ -991,7 +991,7 @@ static void dump_value(const grt::ValueRef &value, int level, bool skip_spacing)
   }
 }
 
-void grt::dump_value(const grt::ValueRef &value) {
+auto grt::dump_value(const grt::ValueRef &value) -> void {
   ::dump_value(value, 0);
   printf("\n");
 }

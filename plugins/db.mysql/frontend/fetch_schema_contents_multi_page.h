@@ -36,12 +36,12 @@ public:
     set_status_text("");
   }
 
-  bool perform_fetch(bool source) {
+  auto perform_fetch(bool source) -> bool {
     execute_grt_task(std::bind(&FetchSchemaContentsSourceTargetProgressPage::do_fetch, this, source), false);
     return true;
   }
 
-  grt::ValueRef do_fetch(bool source) {
+  auto do_fetch(bool source) -> grt::ValueRef {
     grt::StringListRef selection(
       grt::StringListRef::cast_from(values().get(source ? "selectedOriginalSchemata" : "selectedSchemata")));
     std::vector<std::string> names;
@@ -63,7 +63,7 @@ public:
     return grt::ValueRef();
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       _finished = 0;
       clear_tasks();
@@ -85,7 +85,7 @@ public:
     WizardProgressPage::enter(advancing);
   }
 
-  virtual bool allow_next() {
+  virtual auto allow_next() -> bool {
     int count = 0;
     if (_source_page->get_left_source() == DataSourceSelector::ServerSource)
       count++;
@@ -94,7 +94,7 @@ public:
     return _finished == count;
   }
 
-  void set_db_plugin(Db_plugin *source_dbplugin, Db_plugin *target_dbplugin) {
+  auto set_db_plugin(Db_plugin *source_dbplugin, Db_plugin *target_dbplugin) -> void {
     _source_dbplugin = source_dbplugin;
     _target_dbplugin = target_dbplugin;
   }

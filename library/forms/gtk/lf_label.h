@@ -40,22 +40,22 @@ namespace mforms {
       Pango::FontDescription _font;
 
     protected:
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _label;
       }
 
       LabelImpl(::mforms::Label *self);
-      static bool create(::mforms::Label *self);
-      static void set_style(::mforms::Label *self, ::mforms::LabelStyle style);
-      static void set_text(::mforms::Label *self, const std::string &text);
-      static void set_color(::mforms::Label *self, const std::string &text);
-      static void set_wrap_text(::mforms::Label *self, bool flag);
-      static void set_text_align(::mforms::Label *self, ::mforms::Alignment align);
+      static auto create(::mforms::Label *self) -> bool;
+      static auto set_style(::mforms::Label *self, ::mforms::LabelStyle style) -> void;
+      static auto set_text(::mforms::Label *self, const std::string &text) -> void;
+      static auto set_color(::mforms::Label *self, const std::string &text) -> void;
+      static auto set_wrap_text(::mforms::Label *self, bool flag) -> void;
+      static auto set_text_align(::mforms::Label *self, ::mforms::Alignment align) -> void;
 
-      void realized();
+      auto realized() -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

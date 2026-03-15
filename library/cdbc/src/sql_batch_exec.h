@@ -43,7 +43,7 @@ namespace sql {
     long operator()(sql::Statement *stmt, std::list<std::string> &statements);
 
   private:
-    void exec_sql_script(sql::Statement *stmt, std::list<std::string> &statements, long &batch_exec_err_count);
+    auto exec_sql_script(sql::Statement *stmt, std::list<std::string> &statements, long &batch_exec_err_count) -> void;
 
   public:
     using Error_cb = std::function<int(long long, const std::string &, const std::string &)>;
@@ -54,13 +54,13 @@ namespace sql {
     Batch_exec_progress_cb _batch_exec_progress_cb;
     Batch_exec_stat_cb _batch_exec_stat_cb;
 
-    void error_cb(const Error_cb &cb) {
+    auto error_cb(const Error_cb &cb) -> void {
       _error_cb = cb;
     };
-    void batch_exec_progress_cb(const Batch_exec_progress_cb &cb) {
+    auto batch_exec_progress_cb(const Batch_exec_progress_cb &cb) -> void {
       _batch_exec_progress_cb = cb;
     };
-    void batch_exec_stat_cb(const Batch_exec_stat_cb &cb) {
+    auto batch_exec_stat_cb(const Batch_exec_stat_cb &cb) -> void {
       _batch_exec_stat_cb = cb;
     };
 
@@ -71,10 +71,10 @@ namespace sql {
     float _batch_exec_progress_inc;
 
   public:
-    void stop_on_error(bool value) {
+    auto stop_on_error(bool value) -> void {
       _stop_on_error = value;
     }
-    bool stop_on_error() {
+    auto stop_on_error() -> bool {
       return _stop_on_error;
     }
 
@@ -82,10 +82,10 @@ namespace sql {
     bool _stop_on_error;
 
   public:
-    void failback_statements(const std::list<std::string> &value) {
+    auto failback_statements(const std::list<std::string> &value) -> void {
       _failback_statements = value;
     }
-    const std::list<std::string> &failback_statements() const {
+    auto failback_statements() const -> const std::list<std::string> & {
       return _failback_statements;
     }
 
@@ -93,7 +93,7 @@ namespace sql {
     std::list<std::string> _failback_statements;
 
   public:
-    const std::list<std::string> &sql_log() const {
+    auto sql_log() const -> const std::list<std::string> & {
       return _sql_log;
     }
 

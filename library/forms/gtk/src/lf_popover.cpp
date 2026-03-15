@@ -57,7 +57,7 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  void PopoverNormal::showPopover(const int x, const int y, const StartPosition pos) {
+  auto PopoverNormal::showPopover(const int x, const int y, const StartPosition pos) -> void {
     switch (pos) {
       case mforms::StartLeft: // The popover is initially left to the ref point, having its arrow pointing to the right.
         _popover->set_position(Gtk::POS_LEFT);
@@ -97,7 +97,7 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  void PopoverNormal::close() {
+  auto PopoverNormal::close() -> void {
 #if GTK_VERSION_GT(3, 22)
     _popover->popdown();
 #else
@@ -107,19 +107,19 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  void PopoverNormal::setSize(const int w, const int h) {
+  auto PopoverNormal::setSize(const int w, const int h) -> void {
     _popover->set_size_request(w, h);
   }
 
   //------------------------------------------------------------------------------
 
-  void PopoverNormal::setContent(Gtk::Widget* w) {
+  auto PopoverNormal::setContent(Gtk::Widget* w) -> void {
     _popover->add(*w);
   }
 
   //------------------------------------------------------------------------------
 
-  void PopoverNormal::setName(const std::string& name) {
+  auto PopoverNormal::setName(const std::string& name) -> void {
     auto acc = _popover->get_accessible();
     if (acc)
       acc->set_name(name);
@@ -163,7 +163,7 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  void PopoverTooltip::showPopover(const int rx, const int ry, const StartPosition pos) {
+  auto PopoverTooltip::showPopover(const int rx, const int ry, const StartPosition pos) -> void {
     auto wnd = get_window();
     if (wnd) {
       int xx, yy;
@@ -197,7 +197,7 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  void PopoverTooltip::adjustPosition() {
+  auto PopoverTooltip::adjustPosition() -> void {
     int w = get_width();
     int h = get_height();
 
@@ -243,13 +243,13 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  void PopoverTooltip::close() {
+  auto PopoverTooltip::close() -> void {
     hide();
   }
 
   //------------------------------------------------------------------------------
 
-  void PopoverTooltip::setSize(const int w, const int h) {
+  auto PopoverTooltip::setSize(const int w, const int h) -> void {
     if (w > 1 && h > 1) {
       resize(w, h);
     }
@@ -257,13 +257,13 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  void PopoverTooltip::setContent(Gtk::Widget* w) {
+  auto PopoverTooltip::setContent(Gtk::Widget* w) -> void {
     _hbox->pack_start(*w, false, false, 0);
   }
 
   //------------------------------------------------------------------------------
 
-  void PopoverTooltip::setName(const std::string& name) {
+  auto PopoverTooltip::setName(const std::string& name) -> void {
     auto acc = get_accessible();
     if (acc)
       acc->set_name(name);
@@ -271,7 +271,7 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  bool PopoverTooltip::tooltipSignalEvent(GdkEvent* ev) {
+  auto PopoverTooltip::tooltipSignalEvent(GdkEvent* ev) -> bool {
     if (ev->type == GDK_LEAVE_NOTIFY)
       hide();
 
@@ -280,20 +280,20 @@ namespace mforms {
 
   //------------------------------------------------------------------------------
 
-  void PopoverTooltip::parentKeyRelease(GdkEventKey* ev) {
+  auto PopoverTooltip::parentKeyRelease(GdkEventKey* ev) -> void {
     hide();
   }
 }
 
 //------------------------------------------------------------------------------
 
-static void delete_PopoverWidget(void* o) {
+static auto delete_PopoverWidget(void* o) -> void {
   delete (mforms::PopoverWidget*)o;
 }
 
 //------------------------------------------------------------------------------
 
-static mforms::PopoverWidget* createPopover(mforms::PopoverStyle style, mforms::View *owner) {
+static auto createPopover(mforms::PopoverStyle style, mforms::View *owner) -> mforms::PopoverWidget* {
   switch (style) {
     case mforms::PopoverStyleNormal:
       return new mforms::PopoverNormal(owner);
@@ -306,7 +306,7 @@ static mforms::PopoverWidget* createPopover(mforms::PopoverStyle style, mforms::
 
 //------------------------------------------------------------------------------
 
-static bool create(mforms::Popover* self, mforms::View *owner, mforms::PopoverStyle style) {
+static auto create(mforms::Popover* self, mforms::View *owner, mforms::PopoverStyle style) -> bool {
   mforms::PopoverWidget* w = createPopover(style, owner);
   self->set_data(w, delete_PopoverWidget);
   return w;
@@ -314,7 +314,7 @@ static bool create(mforms::Popover* self, mforms::View *owner, mforms::PopoverSt
 
 //------------------------------------------------------------------------------
 
-static void set_content(mforms::Popover* self, mforms::View* content) {
+static auto set_content(mforms::Popover* self, mforms::View* content) -> void {
   mforms::PopoverWidget* w = self->get_data<mforms::PopoverWidget>();
   mforms::gtk::ViewImpl* view = content->get_data<mforms::gtk::ViewImpl>();
   w->setContent(view->get_outer());
@@ -322,28 +322,28 @@ static void set_content(mforms::Popover* self, mforms::View* content) {
 
 //------------------------------------------------------------------------------
 
-static void set_size(mforms::Popover* self, int w, int h) {
+static auto set_size(mforms::Popover* self, int w, int h) -> void {
   mforms::PopoverWidget* widget = self->get_data<mforms::PopoverWidget>();
   widget->setSize(w, h);
 }
 
 //------------------------------------------------------------------------------
 
-static void show(mforms::Popover* self, int x, int y, mforms::StartPosition pos) {
+static auto show(mforms::Popover* self, int x, int y, mforms::StartPosition pos) -> void {
   mforms::PopoverWidget* widget = self->get_data<mforms::PopoverWidget>();
   widget->showPopover(x, y, pos);
 }
 
 //------------------------------------------------------------------------------
 
-static void close(mforms::Popover* self) {
+static auto close(mforms::Popover* self) -> void {
   mforms::PopoverWidget* w = self->get_data<mforms::PopoverWidget>();
   w->close();
 }
 
 //------------------------------------------------------------------------------
 
-static void setName(mforms::Popover* self, const std::string& name) {
+static auto setName(mforms::Popover* self, const std::string& name) -> void {
   mforms::PopoverWidget* w = self->get_data<mforms::PopoverWidget>();
   if (w) {
     w->setName(name);
@@ -352,13 +352,13 @@ static void setName(mforms::Popover* self, const std::string& name) {
 
 //------------------------------------------------------------------------------
 
-static void show_and_track(mforms::Popover* self, mforms::View* owner, int x, int y, mforms::StartPosition pos) {
+static auto show_and_track(mforms::Popover* self, mforms::View* owner, int x, int y, mforms::StartPosition pos) -> void {
   show(self, x, y, pos);
 }
 
 namespace mforms {
   namespace gtk {
-    void Popover_init() {
+    auto Popover_init() -> void {
       ::mforms::ControlFactory* f = ::mforms::ControlFactory::get_instance();
 
       f->_popover_impl.create = create;

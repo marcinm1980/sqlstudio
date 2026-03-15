@@ -26,5 +26,5 @@
 #import <Cocoa/Cocoa.h>
 #include "mforms/menubar.h"
 
-void cf_swap_edit_menu();
-void cf_unswap_edit_menu();
+auto cf_swap_edit_menu() -> void;
+auto cf_unswap_edit_menu() -> void;

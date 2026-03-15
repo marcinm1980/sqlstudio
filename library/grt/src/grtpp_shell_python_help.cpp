@@ -137,7 +137,7 @@ static HelpTopic help_topics[] = {
   { NULL, NULL }
 };
 
-void grt_shell_show_python_help(const char *command) {
+auto grt_shell_show_python_help(const char *command) -> void {
   if (!command || !*command)
     grt::GRT::get()->send_output(
       "Help Topics" NL "-----------" NL "grt        General information about the MySqlStudio runtime" NL

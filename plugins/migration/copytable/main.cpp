@@ -54,7 +54,7 @@
 
 #include "SSHTunnelManager.h"
 
-void *get_mainwindow_impl() {
+auto get_mainwindow_impl() -> void * {
     return 0;
 }
 
@@ -65,12 +65,12 @@ public:
 
 DEFAULT_LOG_DOMAIN("copytable");
 
-static void count_rows(std::unique_ptr<CopyDataSource> &source,
+static auto count_rows(std::unique_ptr<CopyDataSource> &source,
                        const std::string &source_schema,
                        const std::string &source_table,
                        const std::vector<std::string> &pk_columns,
                        const CopySpec &spec,
-                       const std::vector<std::string> &last_pkeys) {
+                       const std::vector<std::string> &last_pkeys) -> void {
   unsigned long long total = source->count_rows(source_schema, source_table,
                                                 pk_columns, spec, last_pkeys);
 
@@ -81,7 +81,7 @@ static void count_rows(std::unique_ptr<CopyDataSource> &source,
 
 //-----------------------
 
-static bool set_log_level(const std::string &value) {
+static auto set_log_level(const std::string &value) -> bool {
   std::string level = base::tolower(value);
   bool ret = base::Logger::active_level(level);
   if (ret) // TODO: if the logger is set to error or warning the following log
@@ -92,8 +92,8 @@ static bool set_log_level(const std::string &value) {
   return ret;
 }
 
-static bool check_arg_with_value(char **argv, int &argi, const char *arg,
-                                 char *&value, bool arg_required) {
+static auto check_arg_with_value(char **argv, int &argi, const char *arg,
+                                 char *&value, bool arg_required) -> bool {
   char *a = argv[argi];
 
   if (strcmp(a, arg) == 0) {
@@ -117,10 +117,10 @@ static bool check_arg_with_value(char **argv, int &argi, const char *arg,
   return false;
 }
 
-static bool parse_mysql_connstring(const std::string &connstring,
+static auto parse_mysql_connstring(const std::string &connstring,
                                    std::string &user, std::string &password,
                                    std::string &host, int &port,
-                                   std::string &sock) {
+                                   std::string &sock) -> bool {
   // Format is user[:pass]@host:port or user[:pass]@::socket,
   // like what cmdline utilities use.
   std::string::size_type p = connstring.rfind('@');
@@ -150,7 +150,7 @@ static bool parse_mysql_connstring(const std::string &connstring,
   return true;
 }
 
-static void show_help() {
+static auto show_help() -> void {
   printf("copytable --*-source=<source db> --target=<target db> <options> "
          "<table spec> [<table spec> ...]\n");
   printf("--odbc-source=<odbc connstring>\n");
@@ -225,10 +225,10 @@ count_only = true and resume = false
 *
 <src_schema>\t<src_table>\t<tgt_schema>\t<tgt_table>\t<source_pk_columns>\t<target_pk_columns>\t<select_expression>
 */
-bool read_tasks_from_file(const std::string file_name, bool count_only,
+auto read_tasks_from_file(const std::string file_name, bool count_only,
                           TaskQueue &tasks,
                           std::set<std::string> &trigger_schemas, bool resume,
-                          long long int max_count) {
+                          long long int max_count) -> bool {
   std::ifstream ifs(file_name.data(), std::ifstream::in);
   unsigned int field_count = count_only && !resume ? 2 : 7;
   bool error = false;
@@ -275,9 +275,9 @@ bool read_tasks_from_file(const std::string file_name, bool count_only,
   return !error;
 }
 
-uint16_t createTunnel(ssh::SSHConnectionConfig &config,
+auto createTunnel(ssh::SSHConnectionConfig &config,
                       const ssh::SSHConnectionCredentials &credentials,
-                      ssh::SSHTunnelManager *manager) {
+                      ssh::SSHTunnelManager *manager) -> uint16_t {
   uint16_t tunnel_port = manager->lookupTunnel(config);
   if (tunnel_port > 0) {
     logInfo("Existing SSH tunnel found, connecting...\n");
@@ -353,7 +353,7 @@ uint16_t createTunnel(ssh::SSHConnectionConfig &config,
   return (uint16_t)std::get<1>(retVal);
 }
 
-int main(int argc, char **argv) {
+auto main(int argc, char **argv) -> int {
   std::string app_name = base::basename(argv[0]);
 
   TaskQueue tables;

@@ -43,7 +43,7 @@
 #include <string>
 
 namespace base {
-  std::string BASELIBRARY_PUBLIC_FUNC format_python_exception(std::string &summary);
+  auto format_python_exception(std::string &summary) -> std::string BASELIBRARY_PUBLIC_FUNC;
 };
 
 // Must be placed when Python code will be called
@@ -59,7 +59,7 @@ struct WillEnterPython {
       PyGILState_Release(state);
   }
 
-  void release() {
+  auto release() -> void {
     if (locked)
       PyGILState_Release(state);
     locked = false;

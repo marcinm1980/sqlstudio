@@ -43,18 +43,18 @@ namespace MySQL {
 
       public:
         UserEditorBE::UserEditorBE(MySQL::Grt::GrtValue ^ arglist);
-        ::bec::UserEditorBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> ::bec::UserEditorBE *;
         void set_name(String ^ name);
-        String ^ get_name();
+        auto get_name() -> String ^;
         void set_password(String ^ pass);
-        String ^ get_password();
+        auto get_password() -> String ^;
         void set_comment(String ^ comment);
-        String ^ get_comment();
-        RoleTreeBE ^ get_role_tree();
+        auto get_comment() -> String ^;
+        auto get_role_tree() -> RoleTreeBE ^;
         void add_role(String ^ pass);
         void remove_role(String ^ pass);
         ;
-        List<String ^> ^ get_roles();
+        auto get_roles() -> List<String ^> ^;
       };
 
     } // namespace Db

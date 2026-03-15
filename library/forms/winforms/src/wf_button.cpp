@@ -57,7 +57,7 @@ ButtonWrapper::ButtonWrapper(mforms::Button *backend) : ViewWrapper(backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-bool ButtonWrapper::create(mforms::Button *backend, mforms::ButtonType btype) {
+auto ButtonWrapper::create(mforms::Button *backend, mforms::ButtonType btype) -> bool {
   ButtonWrapper *wrapper = new ButtonWrapper(backend);
   MformsButton ^ button = ButtonWrapper::Create<MformsButton>(backend, wrapper);
   button->AutoSize = false;
@@ -96,7 +96,7 @@ bool ButtonWrapper::create(mforms::Button *backend, mforms::ButtonType btype) {
 
 //-------------------------------------------------------------------------------------------------
 
-int ButtonWrapper::set_text(const std::string &text) {
+auto ButtonWrapper::set_text(const std::string &text) -> int {
   Control ^ control = GetManagedObject<Control>();
   control->Text = CppStringToNativeRaw(text);
 
@@ -117,7 +117,7 @@ int ButtonWrapper::set_text(const std::string &text) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ButtonWrapper::set_text(mforms::Button *backend, const std::string &text) {
+auto ButtonWrapper::set_text(mforms::Button *backend, const std::string &text) -> void {
   // Note: DON'T try to replace underscores by ampersand to make the UI interpreting
   //       them as mnemonic chars (in conjunction with the following character).
   //       Underscores are VALID characters and here is the wrong place to handle this.
@@ -128,7 +128,7 @@ void ButtonWrapper::set_text(mforms::Button *backend, const std::string &text) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ButtonWrapper::set_icon(mforms::Button *backend, const std::string &icon) {
+auto ButtonWrapper::set_icon(mforms::Button *backend, const std::string &icon) -> void {
   Button ^ button = ButtonWrapper::GetManagedObject<Button>(backend);
   String ^ path = AppWrapper::get_image_path(CppStringToNativeRaw(icon));
 
@@ -152,14 +152,14 @@ void ButtonWrapper::set_icon(mforms::Button *backend, const std::string &icon) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ButtonWrapper::enable_internal_padding(mforms::Button *backend, bool flag) {
+auto ButtonWrapper::enable_internal_padding(mforms::Button *backend, bool flag) -> void {
   ButtonWrapper *wrapper = backend->get_data<ButtonWrapper>();
   wrapper->enable_internal_padding(flag);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void ButtonWrapper::enable_internal_padding(bool flag) {
+auto ButtonWrapper::enable_internal_padding(bool flag) -> void {
   // The internal padding feature is just some beautifying added to the button
   // which gives it a bit more room left and right of the text than what is the default
   // for it. It should actually be implemented via the View::set_padding function.
@@ -178,13 +178,13 @@ void ButtonWrapper::enable_internal_padding(bool flag) {
 
 //-------------------------------------------------------------------------------------------------
 
-bool ButtonWrapper::uses_internal_padding() {
+auto ButtonWrapper::uses_internal_padding() -> bool {
   return internal_padding;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void ButtonWrapper::init() {
+auto ButtonWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_button_impl.create = &ButtonWrapper::create;

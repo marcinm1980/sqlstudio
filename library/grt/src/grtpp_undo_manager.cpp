@@ -44,7 +44,7 @@ static bool debug_undo = false;
 
 /** For a list, try getting the object that owns it. Returns null if its not owned
  */
-static ObjectRef owner_of_list(const BaseListRef &list) {
+static auto owner_of_list(const BaseListRef &list) -> ObjectRef {
   internal::OwnedList *olist = dynamic_cast<internal::OwnedList *>(list.valueptr());
 
   if (olist)
@@ -55,7 +55,7 @@ static ObjectRef owner_of_list(const BaseListRef &list) {
 
 /** For a dict, try getting the object that owns it. Returns null if its not owned
  */
-static ObjectRef owner_of_dict(const DictRef &dict) {
+static auto owner_of_dict(const DictRef &dict) -> ObjectRef {
   internal::OwnedDict *odict = dynamic_cast<internal::OwnedDict *>(dict.valueptr());
 
   if (odict)
@@ -64,8 +64,8 @@ static ObjectRef owner_of_dict(const DictRef &dict) {
   return ObjectRef();
 }
 
-static bool find_member_for_list(const MetaClass::Member *member, const internal::Object *object,
-                                 const internal::List *list, std::string *ret_member_name) {
+static auto find_member_for_list(const MetaClass::Member *member, const internal::Object *object,
+                                 const internal::List *list, std::string *ret_member_name) -> bool {
   if (member->type.base.type == ListType &&
       object->get_metaclass()->get_member_value(object, member->name).valueptr() == list) {
     *ret_member_name = member->name;
@@ -76,7 +76,7 @@ static bool find_member_for_list(const MetaClass::Member *member, const internal
 
 /** Get the name of the object member the list belongs to
  */
-static std::string member_for_object_list(const ObjectRef &object, const BaseListRef &list) {
+static auto member_for_object_list(const ObjectRef &object, const BaseListRef &list) -> std::string {
   MetaClass *meta = object.get_metaclass();
   std::string name;
 
@@ -85,8 +85,8 @@ static std::string member_for_object_list(const ObjectRef &object, const BaseLis
   return name;
 }
 
-static bool find_member_for_dict(const MetaClass::Member *member, const ObjectRef &object, const DictRef &dict,
-                                 std::string *ret_member_name) {
+static auto find_member_for_dict(const MetaClass::Member *member, const ObjectRef &object, const DictRef &dict,
+                                 std::string *ret_member_name) -> bool {
   if (member->type.base.type == DictType &&
       object.get_metaclass()->get_member_value((internal::Object *)object.valueptr(), member->name) == dict) {
     *ret_member_name = member->name;
@@ -97,7 +97,7 @@ static bool find_member_for_dict(const MetaClass::Member *member, const ObjectRe
 
 /** Get the name of the object member the dict belongs to
  */
-static std::string member_for_object_dict(const ObjectRef &object, const DictRef &dict) {
+static auto member_for_object_dict(const ObjectRef &object, const DictRef &dict) -> std::string {
   MetaClass *meta = object.get_metaclass();
   std::string name;
 
@@ -108,13 +108,13 @@ static std::string member_for_object_dict(const ObjectRef &object, const DictRef
 
 //---------------------------------------------------------------------------------------------------
 
-void UndoAction::set_description(const std::string &description) {
+auto UndoAction::set_description(const std::string &description) -> void {
   _description = description;
 }
 
 //---------------------------------------------------------------------------------------------------
 
-void SimpleUndoAction::dump(std::ostream &out, int indent) const {
+auto SimpleUndoAction::dump(std::ostream &out, int indent) const -> void {
   out << strfmt("%*s custom_action ", indent, "") << ": " << _description << std::endl;
 }
 
@@ -131,7 +131,7 @@ UndoObjectChangeAction::UndoObjectChangeAction(const ObjectRef &object, const st
   : _object(object), _member(member), _value(value) {
 }
 
-void UndoObjectChangeAction::undo(UndoManager *owner) {
+auto UndoObjectChangeAction::undo(UndoManager *owner) -> void {
   // owner->add_undo(new UndoObjectChangeAction(_object, _member));
   // owner->set_action_description(description());
 
@@ -141,7 +141,7 @@ void UndoObjectChangeAction::undo(UndoManager *owner) {
   grt::GRT::get()->stop_tracking_changes();
 }
 
-void UndoObjectChangeAction::dump(std::ostream &out, int indent) const {
+auto UndoObjectChangeAction::dump(std::ostream &out, int indent) const -> void {
   std::string new_value;
 
   if (_object.get_metaclass()->get_member_info(_member)->type.base.type == ObjectType)
@@ -158,7 +158,7 @@ void UndoObjectChangeAction::dump(std::ostream &out, int indent) const {
 UndoListInsertAction::UndoListInsertAction(const BaseListRef &list, size_t index) : _list(list), _index(index) {
 }
 
-void UndoListInsertAction::undo(UndoManager *owner) {
+auto UndoListInsertAction::undo(UndoManager *owner) -> void {
   if (_index == BaseListRef::npos) {
     // Remove last entry in the list, if there is one.
     if (_list.count() > 0) {
@@ -179,7 +179,7 @@ void UndoListInsertAction::undo(UndoManager *owner) {
   }
 }
 
-void UndoListInsertAction::dump(std::ostream &out, int indent) const {
+auto UndoListInsertAction::dump(std::ostream &out, int indent) const -> void {
   ObjectRef owner = owner_of_list(_list);
 
   out << strfmt("%*s insert_list ", indent, "");
@@ -200,7 +200,7 @@ UndoListReorderAction::UndoListReorderAction(const BaseListRef &list, size_t oin
   : _list(list), _oindex(oindex), _nindex(nindex) {
 }
 
-void UndoListReorderAction::undo(UndoManager *owner) {
+auto UndoListReorderAction::undo(UndoManager *owner) -> void {
   /*
   owner->add_undo(new UndoListReorderAction(_list, _nindex, _oindex));
   owner->set_action_description(description());
@@ -212,7 +212,7 @@ void UndoListReorderAction::undo(UndoManager *owner) {
   grt::GRT::get()->stop_tracking_changes();
 }
 
-void UndoListReorderAction::dump(std::ostream &out, int indent) const {
+auto UndoListReorderAction::dump(std::ostream &out, int indent) const -> void {
   std::string change(strfmt("[%i]->[%i]", (int)(_oindex == BaseListRef::npos ? -1 : _oindex),
                             (int)(_nindex == BaseListRef::npos ? -1 : _nindex)));
   ObjectRef owner = owner_of_list(_list);
@@ -233,7 +233,7 @@ UndoListSetAction::UndoListSetAction(const BaseListRef &list, size_t index) : _l
   _value = list.get(index);
 }
 
-void UndoListSetAction::undo(UndoManager *owner) {
+auto UndoListSetAction::undo(UndoManager *owner) -> void {
   /*
   owner->add_undo(new UndoListSetAction(_list, _index));
   owner->set_action_description(description());
@@ -245,7 +245,7 @@ void UndoListSetAction::undo(UndoManager *owner) {
   grt::GRT::get()->stop_tracking_changes();
 }
 
-void UndoListSetAction::dump(std::ostream &out, int indent) const {
+auto UndoListSetAction::dump(std::ostream &out, int indent) const -> void {
   ObjectRef owner = owner_of_list(_list);
 
   out << strfmt("%*s set_list ", indent, "");
@@ -281,14 +281,14 @@ UndoListRemoveAction::UndoListRemoveAction(const BaseListRef &list, size_t index
   : _list(list), _value(list.get(index)), _index(index) {
 }
 
-void UndoListRemoveAction::undo(UndoManager *owner) {
+auto UndoListRemoveAction::undo(UndoManager *owner) -> void {
   grt::GRT::get()->start_tracking_changes();
   _list.ginsert(_value, _index);
   owner->set_action_description(description());
   grt::GRT::get()->stop_tracking_changes();
 }
 
-void UndoListRemoveAction::dump(std::ostream &out, int indent) const {
+auto UndoListRemoveAction::dump(std::ostream &out, int indent) const -> void {
   ObjectRef owner = owner_of_list(_list);
 
   out << strfmt("%*s remove_list ", indent, "");
@@ -313,7 +313,7 @@ UndoDictSetAction::UndoDictSetAction(const DictRef &dict, const std::string &key
     _had_value = false;
 }
 
-void UndoDictSetAction::undo(UndoManager *owner) {
+auto UndoDictSetAction::undo(UndoManager *owner) -> void {
   if (_had_value) {
     grt::GRT::get()->start_tracking_changes();
     _dict.set(_key, _value);
@@ -327,7 +327,7 @@ void UndoDictSetAction::undo(UndoManager *owner) {
   }
 }
 
-void UndoDictSetAction::dump(std::ostream &out, int indent) const {
+auto UndoDictSetAction::dump(std::ostream &out, int indent) const -> void {
   ObjectRef owner = owner_of_dict(_dict);
 
   out << strfmt("%*s set_dict ", indent, "");
@@ -351,7 +351,7 @@ UndoDictRemoveAction::UndoDictRemoveAction(const DictRef &dict, const std::strin
     _had_value = false;
 }
 
-void UndoDictRemoveAction::undo(UndoManager *owner) {
+auto UndoDictRemoveAction::undo(UndoManager *owner) -> void {
   if (_had_value) {
     grt::GRT::get()->start_tracking_changes();
     _dict.set(_key, _value);
@@ -364,7 +364,7 @@ void UndoDictRemoveAction::undo(UndoManager *owner) {
   }
 }
 
-void UndoDictRemoveAction::dump(std::ostream &out, int indent) const {
+auto UndoDictRemoveAction::dump(std::ostream &out, int indent) const -> void {
   ObjectRef owner = owner_of_dict(_dict);
 
   out << strfmt("%*s remove_dict ", indent, "");
@@ -389,7 +389,7 @@ UndoGroup::~UndoGroup() {
     delete *iter;
 }
 
-void UndoGroup::undo(UndoManager *owner) {
+auto UndoGroup::undo(UndoManager *owner) -> void {
   owner->begin_undo_group();
   for (std::list<UndoAction *>::reverse_iterator iter = _actions.rbegin(); iter != _actions.rend(); ++iter) {
     (*iter)->undo(owner);
@@ -399,7 +399,7 @@ void UndoGroup::undo(UndoManager *owner) {
   owner->set_action_description(UndoAction::description());
 }
 
-void UndoGroup::trim() {
+auto UndoGroup::trim() -> void {
   std::list<UndoAction *>::iterator next, iter;
   next = _actions.begin();
   // delete closed groups that are empty or have a single action
@@ -426,7 +426,7 @@ void UndoGroup::trim() {
   }
 }
 
-UndoGroup *UndoGroup::get_deepest_open_subgroup(UndoGroup **parent) {
+auto UndoGroup::get_deepest_open_subgroup(UndoGroup **parent) -> UndoGroup * {
   if (!_actions.empty()) {
     UndoGroup *group = dynamic_cast<UndoGroup *>(_actions.back());
     if (group && group->is_open()) {
@@ -438,7 +438,7 @@ UndoGroup *UndoGroup::get_deepest_open_subgroup(UndoGroup **parent) {
   return _is_open ? this : 0;
 }
 
-void UndoGroup::close() {
+auto UndoGroup::close() -> void {
   // close the topmost open undo group
   UndoGroup *group = get_deepest_open_subgroup();
   if (group)
@@ -447,7 +447,7 @@ void UndoGroup::close() {
     logWarning("trying to close already closed undo group\n");
 }
 
-void UndoGroup::add(UndoAction *op) {
+auto UndoGroup::add(UndoAction *op) -> void {
   // add the action to the topmost open undo group
   UndoGroup *subgroup = get_deepest_open_subgroup();
 
@@ -457,11 +457,11 @@ void UndoGroup::add(UndoAction *op) {
     throw std::logic_error("trying to add an action to a closed undo group");
 }
 
-bool UndoGroup::empty() const {
+auto UndoGroup::empty() const -> bool {
   return _actions.empty();
 }
 
-void UndoGroup::set_description(const std::string &description) {
+auto UndoGroup::set_description(const std::string &description) -> void {
   if (!_actions.empty() && _is_open) {
     UndoGroup *subgroup = dynamic_cast<UndoGroup *>(_actions.back());
     if (subgroup) {
@@ -478,7 +478,7 @@ void UndoGroup::set_description(const std::string &description) {
     UndoAction::set_description(description);
 }
 
-std::string UndoGroup::description() const {
+auto UndoGroup::description() const -> std::string {
   if (!_actions.empty() && _is_open) {
     UndoGroup *subgroup = dynamic_cast<UndoGroup *>(_actions.back());
     if (subgroup && subgroup->_is_open) {
@@ -488,7 +488,7 @@ std::string UndoGroup::description() const {
   return UndoAction::description();
 }
 
-void UndoGroup::dump(std::ostream &out, int indent) const {
+auto UndoGroup::dump(std::ostream &out, int indent) const -> void {
   out << strfmt("%*s group%s { ", indent, "", _is_open ? "(open)" : "") << std::endl;
   for (std::list<UndoAction *>::const_iterator iter = _actions.begin(); iter != _actions.end(); ++iter) {
     (*iter)->dump(out, indent + 2);
@@ -511,7 +511,7 @@ UndoManager::~UndoManager() {
   reset();
 }
 
-void UndoManager::enable_logging_to(std::ostream *stream) {
+auto UndoManager::enable_logging_to(std::ostream *stream) -> void {
   char buf[30];
   time_t t = time(NULL);
 
@@ -526,38 +526,38 @@ void UndoManager::enable_logging_to(std::ostream *stream) {
              << " *****" << std::endl;
 }
 
-void UndoManager::lock() const {
+auto UndoManager::lock() const -> void {
   _mutex.lock();
 }
 
-void UndoManager::unlock() const {
+auto UndoManager::unlock() const -> void {
   _mutex.unlock();
 }
 
-void UndoManager::disable() {
+auto UndoManager::disable() -> void {
   _blocks++;
 }
 
-void UndoManager::enable() {
+auto UndoManager::enable() -> void {
   if (_blocks == 0)
     return;
   _blocks--;
 }
 
-void UndoManager::set_undo_limit(size_t limit) {
+auto UndoManager::set_undo_limit(size_t limit) -> void {
   _undo_limit = limit;
 
   trim_undo_stack();
 }
 
-void UndoManager::trim_undo_stack() {
+auto UndoManager::trim_undo_stack() -> void {
   lock();
   if (_undo_limit > 0)
     _undo_stack.erase(_undo_stack.begin(), _undo_stack.begin() + std::max(0, (int)(_undo_stack.size() - _undo_limit)));
   unlock();
 }
 
-bool UndoManager::can_undo() const {
+auto UndoManager::can_undo() const -> bool {
   lock();
   bool empty = _undo_stack.empty();
   unlock();
@@ -565,7 +565,7 @@ bool UndoManager::can_undo() const {
   return !empty;
 }
 
-bool UndoManager::can_redo() const {
+auto UndoManager::can_redo() const -> bool {
   lock();
   bool empty = _redo_stack.empty();
   unlock();
@@ -573,7 +573,7 @@ bool UndoManager::can_redo() const {
   return !empty;
 }
 
-std::string UndoManager::undo_description() const {
+auto UndoManager::undo_description() const -> std::string {
   std::string d;
   lock();
   if (can_undo())
@@ -582,7 +582,7 @@ std::string UndoManager::undo_description() const {
   return d;
 }
 
-std::string UndoManager::redo_description() const {
+auto UndoManager::redo_description() const -> std::string {
   std::string d;
   lock();
   if (can_redo())
@@ -591,7 +591,7 @@ std::string UndoManager::redo_description() const {
   return d;
 }
 
-UndoAction *UndoManager::get_latest_closed_undo_action() const {
+auto UndoManager::get_latest_closed_undo_action() const -> UndoAction * {
   lock();
 
   std::deque<UndoAction *>::const_reverse_iterator action = _undo_stack.rbegin();
@@ -609,7 +609,7 @@ UndoAction *UndoManager::get_latest_closed_undo_action() const {
   return 0;
 }
 
-UndoAction *UndoManager::get_latest_undo_action() const {
+auto UndoManager::get_latest_undo_action() const -> UndoAction * {
   lock();
   if (_undo_stack.empty()) {
     unlock();
@@ -626,7 +626,7 @@ UndoAction *UndoManager::get_latest_undo_action() const {
   return action;
 }
 
-void UndoManager::reset() {
+auto UndoManager::reset() -> void {
   lock();
   for (std::deque<UndoAction *>::iterator iter = _undo_stack.begin(); iter != _undo_stack.end(); ++iter)
     delete *iter;
@@ -640,11 +640,11 @@ void UndoManager::reset() {
   _changed_signal();
 }
 
-bool UndoManager::empty() const {
+auto UndoManager::empty() const -> bool {
   return _undo_stack.empty() && _redo_stack.empty();
 }
 
-UndoGroup *UndoManager::begin_undo_group(UndoGroup *group) {
+auto UndoManager::begin_undo_group(UndoGroup *group) -> UndoGroup * {
   if (_blocks > 0) { // if blocked, delete the group given and return 0
     delete group;
     return 0;
@@ -669,7 +669,7 @@ UndoGroup *UndoManager::begin_undo_group(UndoGroup *group) {
  *
  * @return true if the undo group was closed and added to the undo stack
  */
-bool UndoManager::end_undo_group(const std::string &description, bool trim) {
+auto UndoManager::end_undo_group(const std::string &description, bool trim) -> bool {
   if (_blocks > 0)
     return false;
 
@@ -731,7 +731,7 @@ bool UndoManager::end_undo_group(const std::string &description, bool trim) {
   }
 }
 
-void UndoManager::cancel_undo_group() {
+auto UndoManager::cancel_undo_group() -> void {
   std::deque<UndoAction *> *stack;
   // undo the deepest open undo group
   if (_is_undoing)
@@ -774,7 +774,7 @@ void UndoManager::cancel_undo_group() {
   }
 }
 
-void UndoManager::set_action_description(const std::string &descr) {
+auto UndoManager::set_action_description(const std::string &descr) -> void {
   if (_blocks > 0)
     return; // added by tax (instructed by alfredo)
 
@@ -790,14 +790,14 @@ void UndoManager::set_action_description(const std::string &descr) {
   _changed_signal();
 }
 
-std::string UndoManager::get_action_description() const {
+auto UndoManager::get_action_description() const -> std::string {
   if (_is_undoing)
     return _redo_stack.back()->description();
   else
     return _undo_stack.back()->description();
 }
 
-std::string UndoManager::get_running_action_description() const {
+auto UndoManager::get_running_action_description() const -> std::string {
   if (_is_redoing)
     return _redo_stack.back()->description();
   else if (_is_undoing)
@@ -805,7 +805,7 @@ std::string UndoManager::get_running_action_description() const {
   return "";
 }
 
-void UndoManager::undo() {
+auto UndoManager::undo() -> void {
   if (_is_undoing)
     throw std::logic_error("unexpected nested undo"); // is this allowed??
 
@@ -834,7 +834,7 @@ void UndoManager::undo() {
     unlock();
 }
 
-void UndoManager::redo() {
+auto UndoManager::redo() -> void {
   if (_is_redoing)
     throw std::logic_error("unexpected nested redo"); // is this allowed??
 
@@ -859,7 +859,7 @@ void UndoManager::redo() {
     unlock();
 }
 
-void UndoManager::add_undo(UndoAction *cmd) {
+auto UndoManager::add_undo(UndoAction *cmd) -> void {
   if (_blocks > 0) {
     delete cmd;
     return;
@@ -907,16 +907,16 @@ void UndoManager::add_undo(UndoAction *cmd) {
     _changed_signal();
 }
 
-void UndoManager::add_simple_undo(const std::function<void()> &slot) {
+auto UndoManager::add_simple_undo(const std::function<void()> &slot) -> void {
   add_undo(new SimpleUndoAction(slot));
 }
 
-void UndoManager::dump_undo_stack() {
+auto UndoManager::dump_undo_stack() -> void {
   for (std::deque<UndoAction *>::iterator iter = _undo_stack.begin(); iter != _undo_stack.end(); ++iter)
     (*iter)->dump(std::cout);
 }
 
-void UndoManager::dump_redo_stack() {
+auto UndoManager::dump_redo_stack() -> void {
   for (std::deque<UndoAction *>::iterator iter = _redo_stack.begin(); iter != _redo_stack.end(); ++iter)
     (*iter)->dump(std::cout);
 }
@@ -974,7 +974,7 @@ AutoUndo::~AutoUndo() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void AutoUndo::set_description_for_last_action(const std::string &s) {
+auto AutoUndo::set_description_for_last_action(const std::string &s) -> void {
   if (_valid && group != nullptr) {
     UndoAction *action = grt::GRT::get()->get_undo_manager()->get_latest_undo_action();
 
@@ -984,7 +984,7 @@ void AutoUndo::set_description_for_last_action(const std::string &s) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void AutoUndo::cancel() {
+auto AutoUndo::cancel() -> void {
   if (_valid) {
     if (group != nullptr)
       grt::GRT::get()->cancel_undoable_action();
@@ -995,7 +995,7 @@ void AutoUndo::cancel() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void AutoUndo::end_or_cancel_if_empty(const std::string &descr) {
+auto AutoUndo::end_or_cancel_if_empty(const std::string &descr) -> void {
   if (_valid) {
     if (group == nullptr)
       return;
@@ -1009,7 +1009,7 @@ void AutoUndo::end_or_cancel_if_empty(const std::string &descr) {
     throw std::logic_error("Trying to end an already finished undo action");
 }
 
-void AutoUndo::end(const std::string &descr) {
+auto AutoUndo::end(const std::string &descr) -> void {
   if (_valid) {
     if (group != nullptr)
       grt::GRT::get()->end_undoable_action(descr);

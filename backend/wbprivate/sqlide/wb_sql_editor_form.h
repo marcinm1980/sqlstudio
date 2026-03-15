@@ -76,7 +76,7 @@ namespace wb {
 using Recordsets = std::vector<Recordset::Ref>;
 using RecordsetsRef = std::shared_ptr<Recordsets>;
 
-db_mgmt_ServerInstanceRef getServerInstance(const db_mgmt_ConnectionRef &connection);
+auto getServerInstance(const db_mgmt_ConnectionRef &connection) -> db_mgmt_ServerInstanceRef;
 
 class MYSQLWBBACKEND_PUBLIC_FUNC SqlEditorForm : public bec::UIForm,
                                                  grt::GRTObserver,
@@ -115,76 +115,76 @@ public:
 public:
   using Ref = std::shared_ptr<SqlEditorForm>;
   using Ptr = std::weak_ptr<SqlEditorForm>;
-  static SqlEditorForm::Ref create(wb::WBContextSQLIDE *wbsql, const db_mgmt_ConnectionRef &conn);
-  static void report_connection_failure(const std::string &error, const db_mgmt_ConnectionRef &target);
-  static void report_connection_failure(const grt::server_denied &info, const db_mgmt_ConnectionRef &target);
+  static auto create(wb::WBContextSQLIDE *wbsql, const db_mgmt_ConnectionRef &conn) -> SqlEditorForm::Ref;
+  static auto report_connection_failure(const std::string &error, const db_mgmt_ConnectionRef &target) -> void;
+  static auto report_connection_failure(const grt::server_denied &info, const db_mgmt_ConnectionRef &target) -> void;
 
-  void set_tab_dock(mforms::DockingPoint *dp);
+  auto set_tab_dock(mforms::DockingPoint *dp) -> void;
 
   /* Callback must be set by frontend to show a busy indicator on the tab with the given index. -1 means remove it from
    * all */
   std::function<void(int)> set_busy_tab;
 
-  parsers::SymbolTable *databaseSymbols() {
+  auto databaseSymbols() -> parsers::SymbolTable * {
     return &_databaseSymbols;
   }
 
 protected:
   SqlEditorForm(wb::WBContextSQLIDE *wbsql);
 
-  void update_menu_and_toolbar();
-  void update_toolbar_icons();
+  auto update_menu_and_toolbar() -> void;
+  auto update_toolbar_icons() -> void;
 
-  void save_workspace_order(const std::string &prefix);
-  std::string find_workspace_state(const std::string &workspace_name, std::unique_ptr<base::LockFile> &lock_file);
+  auto save_workspace_order(const std::string &prefix) -> void;
+  auto find_workspace_state(const std::string &workspace_name, std::unique_ptr<base::LockFile> &lock_file) -> std::string;
 
 public:
   virtual ~SqlEditorForm();
 
-  void cancel_connect();
-  virtual void close();
-  virtual bool is_main_form() {
+  auto cancel_connect() -> void;
+  virtual auto close() -> void;
+  virtual auto is_main_form() -> bool {
     return true;
   }
-  virtual std::string get_form_context_name() const;
+  virtual auto get_form_context_name() const -> std::string;
 
-  virtual mforms::MenuBar *get_menubar();
-  virtual mforms::ToolBar *get_toolbar();
-  std::string get_session_name();
+  virtual auto get_menubar() -> mforms::MenuBar *;
+  virtual auto get_toolbar() -> mforms::ToolBar *;
+  auto get_session_name() -> std::string;
 
-  void auto_save();
-  void save_workspace(const std::string &workspace_name, bool is_autosave);
-  bool load_workspace(const std::string &workspace_name);
+  auto auto_save() -> void;
+  auto save_workspace(const std::string &workspace_name, bool is_autosave) -> void;
+  auto load_workspace(const std::string &workspace_name) -> bool;
 
-  void restore_last_workspace();
+  auto restore_last_workspace() -> void;
 
 public:
-  wb::WBContextSQLIDE *wbsql() const {
+  auto wbsql() const -> wb::WBContextSQLIDE * {
     return _wbsql;
   }
 
-  db_query_EditorRef grtobj();
+  auto grtobj() -> db_query_EditorRef;
 
-  void validate_menubar();
+  auto validate_menubar() -> void;
 
-  void handle_tab_menu_action(const std::string &action, int tab_index);
-  void handle_history_action(const std::string &action, const std::string &sql);
+  auto handle_tab_menu_action(const std::string &action, int tab_index) -> void;
+  auto handle_history_action(const std::string &action, const std::string &sql) -> void;
 
 public:
   // do NOT use rdbms->version().. it's not specific for this connection
-  db_mgmt_RdbmsRef rdbms();
-  GrtVersionRef rdbms_version() const;
+  auto rdbms() -> db_mgmt_RdbmsRef;
+  auto rdbms_version() const -> GrtVersionRef;
 
-  std::string get_connection_info() const {
+  auto get_connection_info() const -> std::string {
     return _connectionInfo;
   }
 
 public:
-  SqlEditorPanel *active_sql_editor_panel();
+  auto active_sql_editor_panel() -> SqlEditorPanel *;
 
-  void sql_editor_reordered(SqlEditorPanel *editor, int new_index);
+  auto sql_editor_reordered(SqlEditorPanel *editor, int new_index) -> void;
 
-  bool is_closing() const {
+  auto is_closing() const -> bool {
     return _closing;
   }
 
@@ -194,198 +194,198 @@ private:
   std::shared_ptr<wb::SSHTunnel> _tunnel;
   db_mgmt_SSHConnectionRef _sshConnection;
 
-  void sql_editor_panel_switched();
-  void sql_editor_panel_closed(mforms::AppView *view);
+  auto sql_editor_panel_switched() -> void;
+  auto sql_editor_panel_closed(mforms::AppView *view) -> void;
 
-  void set_editor_tool_items_enbled(const std::string &name, bool flag);
-  void set_editor_tool_items_checked(const std::string &name, bool flag);
+  auto set_editor_tool_items_enbled(const std::string &name, bool flag) -> void;
+  auto set_editor_tool_items_checked(const std::string &name, bool flag) -> void;
 
 public:
-  void set_tool_item_checked(const std::string &name, bool flag);
+  auto set_tool_item_checked(const std::string &name, bool flag) -> void;
 
   boost::signals2::signal<void(MySQLEditor::Ref, bool)> sql_editor_list_changed;
 
-  SqlEditorPanel *run_sql_in_scratch_tab(const std::string &sql, bool reuse_if_possible, bool start_collapsed);
-  SqlEditorPanel *add_sql_editor(bool scratch = false,
-                                 bool start_collapsed = false); // returns index of the added sql_editor
-  void remove_sql_editor(SqlEditorPanel *panel);
-  SqlEditorPanel *sql_editor_panel(int index);
-  int sql_editor_count();
-  int sql_editor_panel_index(SqlEditorPanel *panel);
+  auto run_sql_in_scratch_tab(const std::string &sql, bool reuse_if_possible, bool start_collapsed) -> SqlEditorPanel *;
+  auto add_sql_editor(bool scratch = false,
+                                 bool start_collapsed = false) -> SqlEditorPanel *; // returns index of the added sql_editor
+  auto remove_sql_editor(SqlEditorPanel *panel) -> void;
+  auto sql_editor_panel(int index) -> SqlEditorPanel *;
+  auto sql_editor_count() -> int;
+  auto sql_editor_panel_index(SqlEditorPanel *panel) -> int;
 
-  virtual mforms::DragOperation drag_over(mforms::View *sender, base::Point p, mforms::DragOperation allowedOperations,
-                                          const std::vector<std::string> &formats);
-  virtual mforms::DragOperation files_dropped(mforms::View *sender, base::Point p,
+  virtual auto drag_over(mforms::View *sender, base::Point p, mforms::DragOperation allowedOperations,
+                                          const std::vector<std::string> &formats) -> mforms::DragOperation;
+  virtual auto files_dropped(mforms::View *sender, base::Point p,
                                               mforms::DragOperation allowedOperations,
-                                              const std::vector<std::string> &file_names);
+                                              const std::vector<std::string> &file_names) -> mforms::DragOperation;
 
 private:
-  int count_connection_editors(const std::string &conn_name);
+  auto count_connection_editors(const std::string &conn_name) -> int;
 
 protected:
-  std::string create_title();
-  void title_changed();
-  void check_server_problems();
+  auto create_title() -> std::string;
+  auto title_changed() -> void;
+  auto check_server_problems() -> void;
 
 public:
-  virtual std::string get_title() {
+  virtual auto get_title() -> std::string {
     return _title;
   }
-  void update_title();
+  auto update_title() -> void;
 
-  int getTunnelPort() const;
+  auto getTunnelPort() const -> int;
 
-  std::map<std::string, std::string> &connection_details() {
+  auto connection_details() -> std::map<std::string, std::string> & {
     return _connection_details;
   }
-  int server_version();
-  std::set<std::string> valid_charsets();
+  auto server_version() -> int;
+  auto valid_charsets() -> std::set<std::string>;
 
 private:
-  grt::StringRef do_connect(std::shared_ptr<wb::SSHTunnel> tunnel, sql::Authentication::Ref &auth,
-                            struct ConnectionErrorInfo *autherr_ptr);
-  std::string get_client_lib_version();
-  grt::StringRef do_disconnect();
+  auto do_connect(std::shared_ptr<wb::SSHTunnel> tunnel, sql::Authentication::Ref &auth,
+                            struct ConnectionErrorInfo *autherr_ptr) -> grt::StringRef;
+  auto get_client_lib_version() -> std::string;
+  auto do_disconnect() -> grt::StringRef;
 
-  void update_connected_state();
+  auto update_connected_state() -> void;
 
 public:
-  bool connect(std::shared_ptr<wb::SSHTunnel> tunnel);
-  bool connected() const;
-  bool connectionIsValid() const {
+  auto connect(std::shared_ptr<wb::SSHTunnel> tunnel) -> bool;
+  auto connected() const -> bool;
+  auto connectionIsValid() const -> bool {
     return _connection.is_valid();
   }
-  void checkIfOffline();
-  bool offline();
-  bool ping() const;
-  void finish_startup();
-  void cancel_query();
-  void reset();
-  void commit();
-  void rollback();
-  bool auto_commit();
-  void auto_commit(bool value);
-  void toggle_autocommit();
-  void toggle_collect_field_info();
-  bool collect_field_info() const;
-  void toggle_collect_ps_statement_events();
-  bool collect_ps_statement_events() const;
+  auto checkIfOffline() -> void;
+  auto offline() -> bool;
+  auto ping() const -> bool;
+  auto finish_startup() -> void;
+  auto cancel_query() -> void;
+  auto reset() -> void;
+  auto commit() -> void;
+  auto rollback() -> void;
+  auto auto_commit() -> bool;
+  auto auto_commit(bool value) -> void;
+  auto toggle_autocommit() -> void;
+  auto toggle_collect_field_info() -> void;
+  auto collect_field_info() const -> bool;
+  auto toggle_collect_ps_statement_events() -> void;
+  auto collect_ps_statement_events() const -> bool;
 
-  void set_connection(db_mgmt_ConnectionRef conn);
+  auto set_connection(db_mgmt_ConnectionRef conn) -> void;
 
-  void run_editor_contents(bool current_statement_only);
+  auto run_editor_contents(bool current_statement_only) -> void;
 
-  void limit_rows(const std::string &limit_text);
+  auto limit_rows(const std::string &limit_text) -> void;
 
-  std::string sql_mode() const {
+  auto sql_mode() const -> std::string {
     return _sql_mode;
   };
-  int lower_case_table_names() const {
+  auto lower_case_table_names() const -> int {
     return _lower_case_table_names;
   }
 
 private:
-  void do_commit();
+  auto do_commit() -> void;
 
 public:
-  db_mgmt_ConnectionRef connection_descriptor() const {
+  auto connection_descriptor() const -> db_mgmt_ConnectionRef {
     return _connection;
   }
 
-  db_mgmt_SSHConnectionRef getSSHConnection();
+  auto getSSHConnection() -> db_mgmt_SSHConnectionRef;
 
-  bool get_session_variable(sql::Connection *dbc_conn, const std::string &name, std::string &value);
-
-private:
-  void cache_sql_mode();
-  void update_sql_mode_for_editors();
-
-  void query_ps_statistics(std::int64_t conn_id, std::map<std::string, std::int64_t> &stats);
-
-  std::vector<SqlEditorForm::PSStage> query_ps_stages(std::int64_t stmt_event_id);
-  std::vector<SqlEditorForm::PSWait> query_ps_waits(std::int64_t stmt_event_id);
+  auto get_session_variable(sql::Connection *dbc_conn, const std::string &name, std::string &value) -> bool;
 
 private:
-  void create_connection(sql::Dbc_connection_handler::Ref &dbc_conn, db_mgmt_ConnectionRef db_mgmt_conn,
+  auto cache_sql_mode() -> void;
+  auto update_sql_mode_for_editors() -> void;
+
+  auto query_ps_statistics(std::int64_t conn_id, std::map<std::string, std::int64_t> &stats) -> void;
+
+  auto query_ps_stages(std::int64_t stmt_event_id) -> std::vector<SqlEditorForm::PSStage>;
+  auto query_ps_waits(std::int64_t stmt_event_id) -> std::vector<SqlEditorForm::PSWait>;
+
+private:
+  auto create_connection(sql::Dbc_connection_handler::Ref &dbc_conn, db_mgmt_ConnectionRef db_mgmt_conn,
                          std::shared_ptr<wb::SSHTunnel> tunnel, sql::Authentication::Ref auth, bool autocommit_mode,
-                         bool user_connection);
-  void init_connection(sql::Connection *dbc_conn_ref, const db_mgmt_ConnectionRef &connectionProperties,
-                       sql::Dbc_connection_handler::Ref &dbc_conn, bool user_connection);
-  void close_connection(sql::Dbc_connection_handler::Ref &dbc_conn);
-  base::RecMutexLock ensure_valid_dbc_connection(sql::Dbc_connection_handler::Ref &dbc_conn,
+                         bool user_connection) -> void;
+  auto init_connection(sql::Connection *dbc_conn_ref, const db_mgmt_ConnectionRef &connectionProperties,
+                       sql::Dbc_connection_handler::Ref &dbc_conn, bool user_connection) -> void;
+  auto close_connection(sql::Dbc_connection_handler::Ref &dbc_conn) -> void;
+  auto ensure_valid_dbc_connection(sql::Dbc_connection_handler::Ref &dbc_conn,
                                                  base::RecMutex &dbc_conn_mutex, bool throw_on_block = false,
-                                                 bool lockOnly = false);
-  base::RecMutexLock ensure_valid_usr_connection(bool throw_on_block = false, bool lockOnly = false);
-  base::RecMutexLock ensure_valid_aux_connection(bool throw_on_block = false, bool lockOnly = false);
+                                                 bool lockOnly = false) -> base::RecMutexLock;
+  auto ensure_valid_usr_connection(bool throw_on_block = false, bool lockOnly = false) -> base::RecMutexLock;
+  auto ensure_valid_aux_connection(bool throw_on_block = false, bool lockOnly = false) -> base::RecMutexLock;
 
   std::vector<std::pair<std::string, std::string>> runQueryForCache(const std::string &query);
 
 public:
-  base::RecMutexLock ensure_valid_aux_connection(sql::Dbc_connection_handler::Ref &conn, bool lockOnly = false);
-  parsers::MySQLParserContext::Ref work_parser_context() {
+  auto ensure_valid_aux_connection(sql::Dbc_connection_handler::Ref &conn, bool lockOnly = false) -> base::RecMutexLock;
+  auto work_parser_context() -> parsers::MySQLParserContext::Ref {
     return _work_parser_context;
   };
 
 private:
-  void send_message_keep_alive();
-  bool send_message_keep_alive_bool_wrapper() {
+  auto send_message_keep_alive() -> void;
+  auto send_message_keep_alive_bool_wrapper() -> bool {
     send_message_keep_alive();
     return false;
   } // need it for ThreadedTimer, which expects callbacks to return bool
-  void reset_keep_alive_thread();
+  auto reset_keep_alive_thread() -> void;
 
-  base::RecMutexLock getAuxConnection(sql::Dbc_connection_handler::Ref &conn, bool lockOnly = false);
-  base::RecMutexLock getUserConnection(sql::Dbc_connection_handler::Ref &conn, bool lockOnly = false);
+  auto getAuxConnection(sql::Dbc_connection_handler::Ref &conn, bool lockOnly = false) -> base::RecMutexLock;
+  auto getUserConnection(sql::Dbc_connection_handler::Ref &conn, bool lockOnly = false) -> base::RecMutexLock;
 
-  void onCacheAction(bool active);
+  auto onCacheAction(bool active) -> void;
 
 public:
-  ColumnWidthCache *column_width_cache() {
+  auto column_width_cache() -> ColumnWidthCache * {
     return _column_width_cache;
   }
 
-  bool exec_editor_sql(SqlEditorPanel *editor, bool sync, bool current_statement_only = false,
+  auto exec_editor_sql(SqlEditorPanel *editor, bool sync, bool current_statement_only = false,
                        bool wrap_with_non_std_delimiter = false, bool dont_add_limit_clause = false,
-                       SqlEditorResult *into_result = NULL);
-  void exec_sql_retaining_editor_contents(const std::string &sql_script, SqlEditorPanel *editor, bool sync,
-                                          bool dont_add_limit_clause = false);
+                       SqlEditorResult *into_result = NULL) -> bool;
+  auto exec_sql_retaining_editor_contents(const std::string &sql_script, SqlEditorPanel *editor, bool sync,
+                                          bool dont_add_limit_clause = false) -> void;
 
-  RecordsetsRef exec_sql_returning_results(const std::string &sql_script, bool dont_add_limit_clause);
+  auto exec_sql_returning_results(const std::string &sql_script, bool dont_add_limit_clause) -> RecordsetsRef;
 
-  void exec_management_sql(const std::string &sql, bool log);
-  db_query_ResultsetRef exec_management_query(const std::string &sql, bool log);
+  auto exec_management_sql(const std::string &sql, bool log) -> void;
+  auto exec_management_query(const std::string &sql, bool log) -> db_query_ResultsetRef;
 
-  void exec_main_sql(const std::string &sql, bool log);
-  db_query_ResultsetRef exec_main_query(const std::string &sql, bool log);
+  auto exec_main_sql(const std::string &sql, bool log) -> void;
+  auto exec_main_query(const std::string &sql, bool log) -> db_query_ResultsetRef;
 
-  void explain_current_statement();
-  bool is_running_query();
+  auto explain_current_statement() -> void;
+  auto is_running_query() -> bool;
 
-  sql::Authentication::Ref dbc_auth_data() {
+  auto dbc_auth_data() -> sql::Authentication::Ref {
     return _dbc_auth;
   }
 
 private:
   enum ExecFlags { NeedNonStdDelimiter = 1 << 1, DontAddLimitClause = 1 << 2, ShowWarnings = 1 << 3 };
-  void update_live_schema_tree(const std::string &sql);
+  auto update_live_schema_tree(const std::string &sql) -> void;
 
-  grt::StringRef do_exec_sql(Ptr self_ptr, std::shared_ptr<std::string> sql, SqlEditorPanel *editor, ExecFlags flags,
-                             RecordsetsRef result_list);
+  auto do_exec_sql(Ptr self_ptr, std::shared_ptr<std::string> sql, SqlEditorPanel *editor, ExecFlags flags,
+                             RecordsetsRef result_list) -> grt::StringRef;
 
-  void handle_command_side_effects(const std::string &sql);
+  auto handle_command_side_effects(const std::string &sql) -> void;
 
 public:
   GrtThreadedTask::Ref exec_sql_task;
 
   std::function<void()> post_query_slot; // called after a query is executed
 private:
-  int on_exec_sql_finished();
+  auto on_exec_sql_finished() -> int;
 
 public:
-  bool continue_on_error() {
+  auto continue_on_error() -> bool {
     return _continueOnError;
   }
-  void continue_on_error(bool val);
+  auto continue_on_error(bool val) -> void;
 
 private:
   using Error_cb =
@@ -397,82 +397,82 @@ public:
   Error_cb on_sql_script_run_error;
 
 private:
-  int sql_script_apply_error(long long, const std::string &, const std::string &, std::string &);
+  auto sql_script_apply_error(long long, const std::string &, const std::string &, std::string &) -> int;
   int sql_script_apply_progress(float);
   int sql_script_stats(long, long);
 
-  void abort_apply_object_alter_script();
+  auto abort_apply_object_alter_script() -> void;
 
 public:
-  void apply_object_alter_script(const std::string &alter_script, bec::DBObjectEditorBE *obj_editor, RowId log_id);
-  bool run_live_object_alteration_wizard(const std::string &alter_script, bec::DBObjectEditorBE *obj_editor,
-                                         RowId log_id, const std::string &log_context);
+  auto apply_object_alter_script(const std::string &alter_script, bec::DBObjectEditorBE *obj_editor, RowId log_id) -> void;
+  auto run_live_object_alteration_wizard(const std::string &alter_script, bec::DBObjectEditorBE *obj_editor,
+                                         RowId log_id, const std::string &log_context) -> bool;
 
 private:
-  void apply_changes_to_recordset(Recordset::Ptr rs_ptr);
-  bool run_data_changes_commit_wizard(Recordset::Ptr rs_ptr, bool skip_commit);
-  void apply_data_changes_commit(const std::string &sql_script_text, Recordset::Ptr rs_ptr, bool skip_commit);
-  void update_editor_title_schema(const std::string &schema);
+  auto apply_changes_to_recordset(Recordset::Ptr rs_ptr) -> void;
+  auto run_data_changes_commit_wizard(Recordset::Ptr rs_ptr, bool skip_commit) -> bool;
+  auto apply_data_changes_commit(const std::string &sql_script_text, Recordset::Ptr rs_ptr, bool skip_commit) -> void;
+  auto update_editor_title_schema(const std::string &schema) -> void;
 
 public:
-  bool can_close();
-  bool can_close_(bool interactive);
+  auto can_close() -> bool;
+  auto can_close_(bool interactive) -> bool;
 
-  void check_external_file_changes();
+  auto check_external_file_changes() -> void;
 
 public:
-  SqlEditorPanel *new_sql_script_file();
-  SqlEditorPanel *new_sql_scratch_area(bool start_collapsed = false);
-  void new_scratch_area() {
+  auto new_sql_script_file() -> SqlEditorPanel *;
+  auto new_sql_scratch_area(bool start_collapsed = false) -> SqlEditorPanel *;
+  auto new_scratch_area() -> void {
     new_sql_scratch_area(false);
   }
-  void open_file(const std::string &path, bool in_new_tab, bool askForFile = true);
+  auto open_file(const std::string &path, bool in_new_tab, bool askForFile = true) -> void;
   void open_file(const std::string &path = "") {
     open_file(path, true, !path.empty());
   }
 
 public:
-  void active_schema(const std::string &value);
-  std::string active_schema() const;
+  auto active_schema(const std::string &value) -> void;
+  auto active_schema() const -> std::string;
 
-  void schemaListRefreshed(std::vector<std::string> const &schemas);
+  auto schemaListRefreshed(std::vector<std::string> const &schemas) -> void;
 
-  void schema_meta_data_refreshed(const std::string &schema_name, base::StringListPtr tables, base::StringListPtr views,
-                                  base::StringListPtr procedures, base::StringListPtr functions);
+  auto schema_meta_data_refreshed(const std::string &schema_name, base::StringListPtr tables, base::StringListPtr views,
+                                  base::StringListPtr procedures, base::StringListPtr functions) -> void;
 
 private:
-  void cache_active_schema_name();
+  auto cache_active_schema_name() -> void;
 
 public:
-  void request_refresh_schema_tree();
+  auto request_refresh_schema_tree() -> void;
 
 public:
-  std::string fetch_data_from_stored_procedure(std::string proc_call, std::shared_ptr<sql::ResultSet> &rs);
+  auto fetch_data_from_stored_procedure(std::string proc_call, std::shared_ptr<sql::ResultSet> &rs) -> std::string;
 
-  DbSqlEditorLog::Ref log() {
+  auto log() -> DbSqlEditorLog::Ref {
     return _log;
   }
-  DbSqlEditorHistory::Ref history() {
+  auto history() -> DbSqlEditorHistory::Ref {
     return _history;
   }
-  std::string restore_sql_from_history(int entry_index, std::list<int> &detail_indexes);
-  int exec_sql_error_count() {
+  auto restore_sql_from_history(int entry_index, std::list<int> &detail_indexes) -> std::string;
+  auto exec_sql_error_count() -> int {
     return _exec_sql_error_count;
   }
 
-  std::shared_ptr<SqlEditorTreeController> get_live_tree() {
+  auto get_live_tree() -> std::shared_ptr<SqlEditorTreeController> {
     return _live_tree;
   }
-  void schema_tree_did_populate();
+  auto schema_tree_did_populate() -> void;
 
   std::function<void(const std::string &, bool)> output_text_slot;
 
 public:
   // Result should be RowId but that requires to change the task callback type (at least for 64bit builds).
-  int add_log_message(int msg_type, const std::string &msg, const std::string &context, const std::string &duration);
-  void set_log_message(RowId log_message_index, int msg_type, const std::string &msg, const std::string &context,
-                       const std::string &duration);
-  void refresh_log_messages(bool ignore_last_message_timestamp);
+  auto add_log_message(int msg_type, const std::string &msg, const std::string &context, const std::string &duration) -> int;
+  auto set_log_message(RowId log_message_index, int msg_type, const std::string &msg, const std::string &context,
+                       const std::string &duration) -> void;
+  auto refresh_log_messages(bool ignore_last_message_timestamp) -> void;
 
 protected:
   DbSqlEditorLog::Ref _log;
@@ -482,29 +482,29 @@ protected:
   std::string _title;
 
 private:
-  virtual void handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info);
-  virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
-  void setup_side_palette();
+  virtual auto handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info) -> void;
+  virtual auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
+  auto setup_side_palette() -> void;
 
-  void schema_row_selected();
-  void side_bar_filter_changed(const std::string &filter);
+  auto schema_row_selected() -> void;
+  auto side_bar_filter_changed(const std::string &filter) -> void;
 
-  void note_connection_open_outcome(int error);
+  auto note_connection_open_outcome(int error) -> void;
 
 public:
-  void inspect_object(const std::string &name, const std::string &object, const std::string &type);
+  auto inspect_object(const std::string &name, const std::string &object, const std::string &type) -> void;
 
-  void toolbar_command(const std::string &command);
+  auto toolbar_command(const std::string &command) -> void;
 
-  bool save_snippet();
+  auto save_snippet() -> bool;
 
-  void show_output_area();
+  auto show_output_area() -> void;
 
-  mforms::View *get_sidebar();
-  mforms::View *get_side_palette();
+  auto get_sidebar() -> mforms::View *;
+  auto get_side_palette() -> mforms::View *;
 
-  void set_autosave_disabled(const bool autosave_disabled);
-  bool get_autosave_disabled(void);
+  auto set_autosave_disabled(const bool autosave_disabled) -> void;
+  auto get_autosave_disabled(void) -> bool;
 
 private:
   wb::WBContextSQLIDE *_wbsql;
@@ -570,8 +570,8 @@ private:
   parsers::SymbolTable _staticServerSymbols; // Charsets, collations, engines.
   parsers::SymbolTable _databaseSymbols;     // All available db objects reachable via the current connection.
 
-  void activate_command(const std::string &command);
-  void readStaticServerSymbols();
+  auto activate_command(const std::string &command) -> void;
+  auto readStaticServerSymbols() -> void;
 
   // workaround for managed code windows
   struct PrivateMutex;

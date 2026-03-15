@@ -38,55 +38,55 @@ namespace bec {
   public:
     virtual ~DBObjectEditorBE();
 
-    virtual bool should_close_on_delete_of(const std::string &oid);
+    virtual auto should_close_on_delete_of(const std::string &oid) -> bool;
 
-    virtual db_DatabaseObjectRef get_dbobject() {
+    virtual auto get_dbobject() -> db_DatabaseObjectRef {
       return db_DatabaseObjectRef::cast_from(get_object());
     };
 
-    virtual std::string get_name();
-    virtual void set_name(const std::string &name);
+    virtual auto get_name() -> std::string;
+    virtual auto set_name(const std::string &name) -> void;
 
-    virtual std::string get_comment();
-    virtual void set_comment(const std::string &descr);
+    virtual auto get_comment() -> std::string;
+    virtual auto set_comment(const std::string &descr) -> void;
 
-    virtual std::string get_sql();
-    virtual void set_sql(const std::string &sql);
+    virtual auto get_sql() -> std::string;
+    virtual auto set_sql(const std::string &sql) -> void;
 
-    virtual bool is_sql_commented();
-    virtual void set_sql_commented(bool flag);
+    virtual auto is_sql_commented() -> bool;
+    virtual auto set_sql_commented(bool flag) -> void;
 
-    virtual bool has_editor();
-    virtual MySQLEditor::Ref get_sql_editor();
-    virtual void reset_editor_undo_stack();
+    virtual auto has_editor() -> bool;
+    virtual auto get_sql_editor() -> MySQLEditor::Ref;
+    virtual auto reset_editor_undo_stack() -> void;
 
-    db_SchemaRef get_schema();
-    virtual std::string get_schema_name();
+    auto get_schema() -> db_SchemaRef;
+    virtual auto get_schema_name() -> std::string;
 
-    db_CatalogRef get_catalog();
-    db_SchemaRef get_schema_with_name(const std::string &schema_name);
+    auto get_catalog() -> db_CatalogRef;
+    auto get_schema_with_name(const std::string &schema_name) -> db_SchemaRef;
 
-    virtual std::vector<std::string> get_all_table_names();
-    virtual std::vector<std::string> get_all_schema_names();
-    virtual std::vector<std::string> get_schema_table_names();
-    virtual std::vector<std::string> get_table_column_names(const std::string &table_name);
-    virtual std::vector<std::string> get_table_column_names(const db_TableRef &table);
+    virtual auto get_all_table_names() -> std::vector<std::string>;
+    virtual auto get_all_schema_names() -> std::vector<std::string>;
+    virtual auto get_schema_table_names() -> std::vector<std::string>;
+    virtual auto get_table_column_names(const std::string &table_name) -> std::vector<std::string>;
+    virtual auto get_table_column_names(const db_TableRef &table) -> std::vector<std::string>;
 
     // charsets and collations
-    virtual std::vector<std::string> get_charset_list();
-    virtual std::vector<std::string> get_charset_collation_list(const std::string &charset);
-    virtual std::vector<std::string> get_charset_collation_list();
-    bool parse_charset_collation(const std::string &str, std::string &charset, std::string &collation);
-    std::string format_charset_collation(const std::string &charset, const std::string &collation);
+    virtual auto get_charset_list() -> std::vector<std::string>;
+    virtual auto get_charset_collation_list(const std::string &charset) -> std::vector<std::string>;
+    virtual auto get_charset_collation_list() -> std::vector<std::string>;
+    auto parse_charset_collation(const std::string &str, std::string &charset, std::string &collation) -> bool;
+    auto format_charset_collation(const std::string &charset, const std::string &collation) -> std::string;
 
-    void update_change_date();
-    void send_refresh();
-    void set_sql_mode(const std::string &value);
+    auto update_change_date() -> void;
+    auto send_refresh() -> void;
+    auto set_sql_mode(const std::string &value) -> void;
 
-    virtual bool is_editing_live_object();
-    virtual void apply_changes_to_live_object();
-    virtual void refresh_live_object();
-    virtual bool can_close();
+    virtual auto is_editing_live_object() -> bool;
+    virtual auto apply_changes_to_live_object() -> void;
+    virtual auto refresh_live_object() -> void;
+    virtual auto can_close() -> bool;
 
     std::function<bool(DBObjectEditorBE *, bool)> on_apply_changes_to_live_object;
     std::function<void(DBObjectEditorBE *)> on_refresh_live_object;
@@ -106,12 +106,12 @@ namespace bec {
     db_CatalogRef _catalog;
 
     boost::signals2::scoped_connection _val_notify_conn;
-    void notify_from_validation(const grt::Validator::Tag &tag, const grt::ObjectRef &, const std::string &,
-                                const int level); // level is grt::MessageType
+    auto notify_from_validation(const grt::Validator::Tag &tag, const grt::ObjectRef &, const std::string &,
+                                const int level) -> void; // level is grt::MessageType
     // Real-time validation part
     grt::MessageType _last_validation_check_status;
     std::string _last_validation_message;
 
-    virtual void handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info);
+    virtual auto handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info) -> void;
   };
 };

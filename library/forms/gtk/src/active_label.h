@@ -44,27 +44,27 @@ public:
   ActiveLabel(const Glib::ustring& text, const sigc::slot<void>& close_callback);
   virtual ~ActiveLabel();
 
-  void set_text(const std::string& lbl);
-  std::string get_text() const {
+  auto set_text(const std::string& lbl) -> void;
+  auto get_text() const -> std::string {
     return _text_label.get_text();
   }
 
-  mforms::Menu* get_menu() {
+  auto get_menu() -> mforms::Menu* {
     return _menu;
   }
-  void set_menu(mforms::Menu* m, bool delete_when_done);
-  bool has_menu();
-  void start_busy();
-  void stop_busy();
+  auto set_menu(mforms::Menu* m, bool delete_when_done) -> void;
+  auto has_menu() -> bool;
+  auto start_busy() -> void;
+  auto stop_busy() -> void;
 
-  void call_close() {
+  auto call_close() -> void {
     _close_callback();
   }
 
 private:
   bool button_press_slot(GdkEventButton*);
   bool handle_event(GdkEventButton*);
-  void button_style_changed();
+  auto button_style_changed() -> void;
   const sigc::slot<void> _close_callback;
   Gtk::Button _btn_close;
   Gtk::Image _closeImage;

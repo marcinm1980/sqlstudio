@@ -127,7 +127,7 @@ ExecuteRoutineWizard::ExecuteRoutineWizard(db_mysql_RoutineRef routine, const st
 
 //--------------------------------------------------------------------------------------------------
 
-bool ExecuteRoutineWizard::needs_quoting(const std::string &type) {
+auto ExecuteRoutineWizard::needs_quoting(const std::string &type) -> bool {
   // Parse type to see if it needs quoting.
   grt::ListRef<db_SimpleDatatype> default_type_list;
   grt::ListRef<db_SimpleDatatype> type_list;
@@ -157,7 +157,7 @@ bool ExecuteRoutineWizard::needs_quoting(const std::string &type) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool is_quoted(const std::string &text) {
+auto is_quoted(const std::string &text) -> bool {
   std::string text_ = base::trim(text);
   if (text_.size() < 2)
     return false;
@@ -173,7 +173,7 @@ bool is_quoted(const std::string &text) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ExecuteRoutineWizard::run() {
+auto ExecuteRoutineWizard::run() -> std::string {
   // Generate sql for the caller, so it can be run in an editor.
   std::string result;
 

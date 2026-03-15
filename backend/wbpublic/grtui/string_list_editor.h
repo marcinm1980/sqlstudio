@@ -46,18 +46,18 @@ namespace grtui {
     mforms::Button _add_button;
     mforms::Button _del_button;
 
-    virtual void add();
-    virtual void del();
+    virtual auto add() -> void;
+    virtual auto del() -> void;
 
   public:
     StringListEditor(mforms::Form *owner = 0, const bool reorderable = false);
 
-    bool run();
+    auto run() -> bool;
 
-    void set_string_list(const std::vector<std::string> &strings);
-    void set_grt_string_list(const grt::StringListRef &strings);
+    auto set_string_list(const std::vector<std::string> &strings) -> void;
+    auto set_grt_string_list(const grt::StringListRef &strings) -> void;
 
-    std::vector<std::string> get_string_list();
-    grt::StringListRef get_grt_string_list();
+    auto get_string_list() -> std::vector<std::string>;
+    auto get_grt_string_list() -> grt::StringListRef;
   };
 };

@@ -46,15 +46,15 @@ using namespace base;
 
 DEFAULT_LOG_DOMAIN("DbConnectPanel");
 
-grt::StringRef DbDriverParam::get_control_name() const {
+auto DbDriverParam::get_control_name() const -> grt::StringRef {
   return grt::StringRef(_inner->name());
 }
 
-grt::StringRef DbDriverParam::get_accessibility_name() const {
+auto DbDriverParam::get_accessibility_name() const -> grt::StringRef {
   return grt::StringRef(_inner->accessibilityName());
 }
 
-DbDriverParam::ParamType DbDriverParam::decode_param_type(std::string type_name, std::string real_type) {
+auto DbDriverParam::decode_param_type(std::string type_name, std::string real_type) -> DbDriverParam::ParamType {
   ParamType result = ptUnknown;
 
   std::transform(type_name.begin(), type_name.end(), type_name.begin(), g_unichar_tolower);
@@ -108,7 +108,7 @@ DbDriverParam::DbDriverParam(const db_mgmt_DriverParameterRef &driver_param, con
   set_value(value);
 }
 
-ControlType DbDriverParam::get_control_type() const {
+auto DbDriverParam::get_control_type() const -> ControlType {
   switch (get_type()) {
     case DbDriverParam::ptBoolean:
     case DbDriverParam::ptTristate:
@@ -136,7 +136,7 @@ ControlType DbDriverParam::get_control_type() const {
   }
 }
 
-void DbDriverParam::set_value(const grt::ValueRef &value) {
+auto DbDriverParam::set_value(const grt::ValueRef &value) -> void {
   switch (_type) {
     case ptString:
     case ptPassword:
@@ -181,7 +181,7 @@ void DbDriverParam::set_value(const grt::ValueRef &value) {
   }
 }
 
-std::vector<std::pair<std::string, std::string> > DbDriverParam::get_enum_options() {
+auto DbDriverParam::get_enum_options() -> std::vector<std::pair<std::string, std::string> > {
   std::vector<std::pair<std::string, std::string> > options;
 
   if ((*_inner->lookupValueModule()).empty()) {
@@ -220,7 +220,7 @@ std::vector<std::pair<std::string, std::string> > DbDriverParam::get_enum_option
   return options;
 }
 
-grt::StringRef DbDriverParam::getValue() {
+auto DbDriverParam::getValue() -> grt::StringRef {
   grt::StringRef value = "";
   if (!(*_inner->lookupValueModule()).empty() && (*_inner->lookupValueModule()) == "Options") {
     grt::DictRef wb_options = grt::DictRef::cast_from(grt::GRT::get()->get("/wb/options/options"));
@@ -268,34 +268,34 @@ private:
   std::string _row_desc;
 
 public:
-  int seq_no() const {
+  auto seq_no() const -> int {
     return _seq_no;
   }
-  int offset() const {
+  auto offset() const -> int {
     return _offset;
   }
-  int max_height() const {
+  auto max_height() const -> int {
     return _max_height;
   }
-  bool empty() const {
+  auto empty() const -> bool {
     return _controls.empty();
   }
-  void insert(LayoutControl &control) {
+  auto insert(LayoutControl &control) -> void {
     _controls.push_back(control);
     _offset += control.bounds.width + _hmargin;
     _max_height = std::max(_max_height, control.bounds.height);
   }
-  void add_desc(const std::string &desc) {
+  auto add_desc(const std::string &desc) -> void {
     if (!desc.empty()) {
       if (!_row_desc.empty())
         _row_desc.append(" - ");
       _row_desc.append(desc);
     }
   }
-  LayoutControls *controls() {
+  auto controls() -> LayoutControls * {
     return &_controls;
   }
-  LayoutControl *control(int index) {
+  auto control(int index) -> LayoutControl * {
     LayoutControls::iterator i = _controls.begin();
     if (!_controls.empty())
       while (index--)
@@ -303,7 +303,7 @@ public:
           break;
     return (i == _controls.end() ? NULL : &(*i));
   }
-  LayoutControl desc_control() const {
+  auto desc_control() const -> LayoutControl {
     LayoutControl ctrl(_offset);
     ctrl.param_handle = _controls.begin()->param_handle;
     ctrl.type = ctDescriptionLabel;
@@ -312,7 +312,7 @@ public:
   }
 };
 
-bool DbDriverParams::parameter_not_valid(const db_mgmt_DriverRef &driver, const std::string &param) {
+auto DbDriverParams::parameter_not_valid(const db_mgmt_DriverRef &driver, const std::string &param) -> bool {
   const std::string &name = driver->name();
   if (name == "MysqlNativeSocket") {
     static const std::set<std::string> restricted_params = {
@@ -339,11 +339,11 @@ bool DbDriverParams::parameter_not_valid(const db_mgmt_DriverRef &driver, const 
 
 typedef std::list<LayoutRow> LayoutRows;
 
-void DbDriverParams::init(
+auto DbDriverParams::init(
   const db_mgmt_DriverRef &driver, const db_mgmt_ConnectionRef &stored_conn,
   const std::function<void(bool)> &suspend_layout, const std::function<void()> &begin_layout,
   const std::function<void(DbDriverParam *, ControlType, const ControlBounds &, const std::string &)> &create_control,
-  const std::function<void()> &end_layout, bool skip_schema, int first_row_label_width, int hmargin, int vmargin) {
+  const std::function<void()> &end_layout, bool skip_schema, int first_row_label_width, int hmargin, int vmargin) -> void {
   typedef std::vector<std::string>::iterator StringVectorIterator;
   if (begin_layout)
     begin_layout();
@@ -500,12 +500,12 @@ void DbDriverParams::init(
     end_layout();
 }
 
-void DbDriverParams::free_dyn_mem() {
+auto DbDriverParams::free_dyn_mem() -> void {
   for (Collection::const_iterator i = _collection.begin(); i != _collection.end(); ++i)
     delete *i;
 }
 
-grt::DictRef DbDriverParams::get_params() const {
+auto DbDriverParams::get_params() const -> grt::DictRef {
   if (_driver.is_valid()) {
     grt::DictRef params(true);
     for (Collection::const_iterator i = _collection.begin(); i != _collection.end(); ++i) {
@@ -542,14 +542,14 @@ grt::DictRef DbDriverParams::get_params() const {
   return grt::DictRef();
 }
 
-DbDriverParam *DbDriverParams::get(std::string control_name) {
+auto DbDriverParams::get(std::string control_name) -> DbDriverParam * {
   String_index::const_iterator i = _control_name_index.find(control_name);
   if (_control_name_index.end() != i)
     return i->second;
   return NULL;
 }
 
-std::string DbDriverParams::validate() const {
+auto DbDriverParams::validate() const -> std::string {
   std::string err_msg("");
   for (Collection::const_iterator i = _collection.begin(); i != _collection.end(); ++i) {
     DbDriverParam *param_handle = *i;
@@ -571,22 +571,22 @@ DbConnection::DbConnection(const db_mgmt_ManagementRef &mgmt, const db_mgmt_Driv
   : _mgmt(mgmt), _active_driver(driver), _skip_schema(skip_schema) {
 }
 
-void DbConnection::set_control_callbacks(
+auto DbConnection::set_control_callbacks(
   const std::function<void(bool)> &suspend_layout, const std::function<void()> &begin_layout,
   const std::function<void(DbDriverParam *, ControlType, const ControlBounds &, const std::string &)> &create_control,
-  const std::function<void()> &end_layout) {
+  const std::function<void()> &end_layout) -> void {
   _suspend_layout = suspend_layout;
   _begin_layout = begin_layout;
   _end_layout = end_layout;
   _create_control = create_control;
 }
 
-db_mgmt_ConnectionRef DbConnection::get_connection() {
+auto DbConnection::get_connection() -> db_mgmt_ConnectionRef {
   save_changes();
   return _connection;
 }
 
-void DbConnection::save_changes() {
+auto DbConnection::save_changes() -> void {
   if (_connection.is_valid()) {
     _connection->driver(_active_driver);
 
@@ -598,7 +598,7 @@ void DbConnection::save_changes() {
 DbConnection::~DbConnection() {
 }
 
-void DbConnection::set_connection_and_update(const db_mgmt_ConnectionRef &connection) {
+auto DbConnection::set_connection_and_update(const db_mgmt_ConnectionRef &connection) -> void {
   if (_connection != connection) {
     _connection = connection;
     _active_driver = connection->driver();
@@ -608,7 +608,7 @@ void DbConnection::set_connection_and_update(const db_mgmt_ConnectionRef &connec
   }
 }
 
-void DbConnection::set_connection_keeping_parameters(const db_mgmt_ConnectionRef &connection) {
+auto DbConnection::set_connection_keeping_parameters(const db_mgmt_ConnectionRef &connection) -> void {
   if (_connection != connection) {
     _connection = connection;
     _connection->driver(_active_driver);
@@ -618,12 +618,12 @@ void DbConnection::set_connection_keeping_parameters(const db_mgmt_ConnectionRef
   }
 }
 
-void DbConnection::update() {
+auto DbConnection::update() -> void {
   _db_driver_param_handles.init(_active_driver, _connection, _suspend_layout, _begin_layout, _create_control,
                                 _end_layout, _skip_schema);
 }
 
-void DbConnection::set_driver_and_update(db_mgmt_DriverRef driver) {
+auto DbConnection::set_driver_and_update(db_mgmt_DriverRef driver) -> void {
   _active_driver = driver;
   if (_connection.is_valid())
     _connection->driver(driver);
@@ -635,12 +635,12 @@ void DbConnection::set_driver_and_update(db_mgmt_DriverRef driver) {
     save_changes();
 }
 
-bool DbConnection::test_connection() {
+auto DbConnection::test_connection() -> bool {
   sql::ConnectionWrapper dbc_conn = get_dbc_connection();
   return (dbc_conn.get() != NULL);
 }
 
-void DbConnection::init_dbc_connection(sql::Connection *dbc_conn, const db_mgmt_ConnectionRef &connectionProperties) {
+auto DbConnection::init_dbc_connection(sql::Connection *dbc_conn, const db_mgmt_ConnectionRef &connectionProperties) -> void {
   // connection startup script
   {
     std::list<std::string> sql_script;
@@ -656,7 +656,7 @@ void DbConnection::init_dbc_connection(sql::Connection *dbc_conn, const db_mgmt_
   }
 }
 
-sql::ConnectionWrapper DbConnection::get_dbc_connection() {
+auto DbConnection::get_dbc_connection() -> sql::ConnectionWrapper {
   save_changes();
 
   sql::ConnectionWrapper dbc_conn = sql::DriverManager::getDriverManager()->getConnection(
@@ -666,6 +666,6 @@ sql::ConnectionWrapper DbConnection::get_dbc_connection() {
   return dbc_conn;
 }
 
-std::string DbConnection::validate_driver_params() const {
+auto DbConnection::validate_driver_params() const -> std::string {
   return _db_driver_param_handles.validate();
 }

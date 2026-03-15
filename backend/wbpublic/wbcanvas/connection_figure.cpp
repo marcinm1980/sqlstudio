@@ -39,14 +39,14 @@ ConnectionLineLayouter::ConnectionLineLayouter(mdc::Connector *sconn, mdc::Conne
   _type = NormalLine;
 }
 
-std::vector<mdc::ItemHandle *> ConnectionLineLayouter::create_handles(mdc::Line *line, mdc::InteractionLayer *ilayer) {
+auto ConnectionLineLayouter::create_handles(mdc::Line *line, mdc::InteractionLayer *ilayer) -> std::vector<mdc::ItemHandle *> {
   if (_type == ZLine)
     return mdc::LineLayouter::create_handles(line, ilayer);
 
   return super::create_handles(line, ilayer);
 }
 
-bool ConnectionLineLayouter::handle_dragged(mdc::Line *line, mdc::ItemHandle *handle, const Point &pos, bool dragging) {
+auto ConnectionLineLayouter::handle_dragged(mdc::Line *line, mdc::ItemHandle *handle, const Point &pos, bool dragging) -> bool {
   /*
   if (handle->get_tag() == 1)
   {
@@ -55,7 +55,7 @@ bool ConnectionLineLayouter::handle_dragged(mdc::Line *line, mdc::ItemHandle *ha
   return super::handle_dragged(line, handle, pos, dragging);
 }
 
-static void set_connector_side(mdc::BoxSideMagnet *magnet, mdc::Connector *conn, double angle) {
+static auto set_connector_side(mdc::BoxSideMagnet *magnet, mdc::Connector *conn, double angle) -> void {
   if (magnet == NULL)
     return;
 
@@ -69,7 +69,7 @@ static void set_connector_side(mdc::BoxSideMagnet *magnet, mdc::Connector *conn,
     magnet->set_connector_side(conn, mdc::BoxSideMagnet::Bottom);
 }
 
-bool ConnectionLineLayouter::update_start_point() {
+auto ConnectionLineLayouter::update_start_point() -> bool {
   mdc::CanvasItem *start_item = _linfo.start_connector()->get_connected_item();
 
   if (_type == ZLine) {
@@ -87,7 +87,7 @@ bool ConnectionLineLayouter::update_start_point() {
   return super::update_start_point();
 }
 
-bool ConnectionLineLayouter::update_end_point() {
+auto ConnectionLineLayouter::update_end_point() -> bool {
   mdc::CanvasItem *end_item = _linfo.end_connector()->get_connected_item();
 
   if (_type == ZLine) {
@@ -106,7 +106,7 @@ bool ConnectionLineLayouter::update_end_point() {
   return super::update_end_point();
 }
 
-std::vector<Point> ConnectionLineLayouter::get_points_for_subline(int subline) {
+auto ConnectionLineLayouter::get_points_for_subline(int subline) -> std::vector<Point> {
   if (_type == ZLine) {
     if (subline == _linfo.start_subline()) {
       std::vector<Point> points;
@@ -133,7 +133,7 @@ std::vector<Point> ConnectionLineLayouter::get_points_for_subline(int subline) {
   return super::get_points_for_subline(subline);
 }
 
-void ConnectionLineLayouter::set_type(ConnectionLineLayouter::Type type) {
+auto ConnectionLineLayouter::set_type(ConnectionLineLayouter::Type type) -> void {
   _type = type;
   update();
 }
@@ -161,19 +161,19 @@ Connection::Connection(mdc::Layer *layer, FigureEventHub *hub, model_Object *rep
   set_fill_color(base::Color::white());
 }
 
-void Connection::set_start_figure(mdc::CanvasItem *item) {
+auto Connection::set_start_figure(mdc::CanvasItem *item) -> void {
   _start_figure = item;
 
   update_layouter();
 }
 
-void Connection::set_end_figure(mdc::CanvasItem *item) {
+auto Connection::set_end_figure(mdc::CanvasItem *item) -> void {
   _end_figure = item;
 
   update_layouter();
 }
 
-void Connection::update_layouter() {
+auto Connection::update_layouter() -> void {
   if (_start_figure && _end_figure) {
     if (!get_layouter()) {
       mdc::Connector *sc, *ec;
@@ -206,30 +206,30 @@ void Connection::update_layouter() {
   }
 }
 
-void Connection::set_diamond_type(DiamondType type) {
+auto Connection::set_diamond_type(DiamondType type) -> void {
   _diamond = type;
   set_needs_render();
 }
 
-void Connection::set_splitted(bool flag) {
+auto Connection::set_splitted(bool flag) -> void {
   _split = flag;
   set_needs_render();
 }
 
-double Connection::get_segment_offset(int subline) {
+auto Connection::get_segment_offset(int subline) -> double {
   ConnectionLineLayouter *l = dynamic_cast<ConnectionLineLayouter *>(get_layouter());
   if (l)
     return l->get_segment_offset(subline);
   return 0.0;
 }
 
-void Connection::set_segment_offset(int subline, double offset) {
+auto Connection::set_segment_offset(int subline, double offset) -> void {
   ConnectionLineLayouter *l = dynamic_cast<ConnectionLineLayouter *>(get_layouter());
   if (l)
     l->set_segment_offset(subline, offset);
 }
 
-bool Connection::contains_point(const Point &point) const {
+auto Connection::contains_point(const Point &point) const -> bool {
   if (!super::contains_point(point))
     return false;
 
@@ -293,7 +293,7 @@ bool Connection::contains_point(const Point &point) const {
 
 //--------------------------------------------------------------------------------------------------
 
-void Connection::stroke_outline(mdc::CairoCtx *cr, float offset) const {
+auto Connection::stroke_outline(mdc::CairoCtx *cr, float offset) const -> void {
   if (!_split || _segments.size() < 2)
     mdc::Line::stroke_outline(cr, offset);
   else // Draw a split connection (only show start and end).
@@ -341,7 +341,7 @@ void Connection::stroke_outline(mdc::CairoCtx *cr, float offset) const {
 
 //--------------------------------------------------------------------------------------------------
 
-void Connection::stroke_outline_gl(float offset) const {
+auto Connection::stroke_outline_gl(float offset) const -> void {
 #ifndef __APPLE__
   if (!_split || _segments.size() < 2)
     mdc::Line::stroke_outline_gl(offset);
@@ -395,7 +395,7 @@ void Connection::stroke_outline_gl(float offset) const {
 
 //--------------------------------------------------------------------------------------------------
 
-Point Connection::get_middle_caption_pos(const Size &size, CaptionPos pos) {
+auto Connection::get_middle_caption_pos(const Size &size, CaptionPos pos) -> Point {
   if (_segments.size() >= 2) {
     Point midpoint;
     Point p1, p2;
@@ -491,7 +491,7 @@ Point Connection::get_middle_caption_pos(const Size &size, CaptionPos pos) {
   return get_position();
 }
 
-double Connection::get_middle_segment_angle() {
+auto Connection::get_middle_segment_angle() -> double {
   if (_segments.size() == 2)
     return mdc::angle_of_line(_segments.front().pos, _segments.back().pos);
   else if (_segments.size() > 2) {
@@ -510,7 +510,7 @@ double Connection::get_middle_segment_angle() {
   return 0.0;
 }
 
-Point Connection::get_start_caption_pos(const Size &size) {
+auto Connection::get_start_caption_pos(const Size &size) -> Point {
   Point p = _segments.front().pos;
   Point next_point = (++_segments.begin())->pos;
 
@@ -531,7 +531,7 @@ Point Connection::get_start_caption_pos(const Size &size) {
   return convert_point_to(p, 0);
 }
 
-Point Connection::get_end_caption_pos(const Size &size) {
+auto Connection::get_end_caption_pos(const Size &size) -> Point {
   Point p = _segments.back().pos;
   Point next_point = (++_segments.rbegin())->pos;
 
@@ -552,21 +552,21 @@ Point Connection::get_end_caption_pos(const Size &size) {
   return convert_point_to(p, 0);
 }
 
-void Connection::set_start_dashed(bool flag) {
+auto Connection::set_start_dashed(bool flag) -> void {
   _start_dashed = flag;
 }
 
-void Connection::set_end_dashed(bool flag) {
+auto Connection::set_end_dashed(bool flag) -> void {
   _end_dashed = flag;
 }
 
-void Connection::set_center_captions(bool flag) {
+auto Connection::set_center_captions(bool flag) -> void {
   _center_captions = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Connection::render(mdc::CairoCtx *cr) {
+auto Connection::render(mdc::CairoCtx *cr) -> void {
   if (_segments.empty())
     return;
 
@@ -668,7 +668,7 @@ void Connection::render(mdc::CairoCtx *cr) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Connection::render_gl(mdc::CairoCtx *cr) {
+auto Connection::render_gl(mdc::CairoCtx *cr) -> void {
 #ifndef __APPLE__
   if (_segments.empty())
     return;
@@ -765,7 +765,7 @@ void Connection::render_gl(mdc::CairoCtx *cr) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool Connection::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button, mdc::EventState state) {
+auto Connection::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button, mdc::EventState state) -> bool {
   if (!_hub->figure_click(_represented_object, target, point, button, state))
     return super::on_click(target, point, button, state);
   return false;
@@ -773,8 +773,8 @@ bool Connection::on_click(mdc::CanvasItem *target, const Point &point, mdc::Mous
 
 //--------------------------------------------------------------------------------------------------
 
-bool Connection::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                                 mdc::EventState state) {
+auto Connection::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool {
   if (!_hub->figure_double_click(_represented_object, target, point, button, state))
     return super::on_double_click(target, point, button, state);
   return false;
@@ -782,33 +782,33 @@ bool Connection::on_double_click(mdc::CanvasItem *target, const Point &point, md
 
 //--------------------------------------------------------------------------------------------------
 
-bool Connection::on_enter(mdc::CanvasItem *target, const Point &point) {
+auto Connection::on_enter(mdc::CanvasItem *target, const Point &point) -> bool {
   if (!_hub->figure_enter(_represented_object, target, point))
     return super::on_enter(target, point);
   return false;
 }
 
-bool Connection::on_leave(mdc::CanvasItem *target, const Point &point) {
+auto Connection::on_leave(mdc::CanvasItem *target, const Point &point) -> bool {
   if (!_hub->figure_leave(_represented_object, target, point))
     return super::on_leave(target, point);
   return false;
 }
 
-bool Connection::on_button_press(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                                 mdc::EventState state) {
+auto Connection::on_button_press(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool {
   if (!_hub->figure_button_press(_represented_object, target, point, button, state))
     return super::on_button_press(target, point, button, state);
   return false;
 }
 
-bool Connection::on_button_release(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                                   mdc::EventState state) {
+auto Connection::on_button_release(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                                   mdc::EventState state) -> bool {
   if (!_hub->figure_button_release(_represented_object, target, point, button, state))
     return super::on_button_release(target, point, button, state);
   return false;
 }
 
-void Connection::mark_crossings(mdc::Line *line) {
+auto Connection::mark_crossings(mdc::Line *line) -> void {
   ConnectionLineLayouter *cLineLayouter = dynamic_cast<ConnectionLineLayouter *>(_layouter);
   if (cLineLayouter != NULL && cLineLayouter->get_type() == ConnectionLineLayouter::ZLine)
     return;

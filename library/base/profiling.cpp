@@ -31,12 +31,12 @@
 DEFAULT_LOG_DOMAIN("Profiling")
 
 namespace base {
-  TimeAccumulator create_global_ta() {
+  auto create_global_ta() -> TimeAccumulator {
     TimeAccumulator _ta;
     return _ta;
   }
 
-  StopWatch create_global_sw() {
+  auto create_global_sw() -> StopWatch {
     StopWatch _sw;
     return _sw;
   }
@@ -45,7 +45,7 @@ namespace base {
   StopWatch GlobalSW::_sw = create_global_sw();
 
   //----------------- Time Check --------------------------------------------------------
-  std::string StopWatch::format_time(clock_t time) {
+  auto StopWatch::format_time(clock_t time) -> std::string {
     float s = ((float)time) / ((float)CLOCKS_PER_SEC);
     int m = (int)(s / 60);
     s -= (m * 60);
@@ -55,7 +55,7 @@ namespace base {
     return base::strfmt("%02d:%02d:%02.3f", h, m, s);
   }
 
-  void StopWatch::start(const std::string& message) {
+  auto StopWatch::start(const std::string& message) -> void {
     _initialized = true;
     _start = clock();
 
@@ -64,7 +64,7 @@ namespace base {
     logDebug("---> %s - [STARTED] %s\n", format_time(0).data(), message.data());
   }
   //-------------------------------------------------------------------------------------
-  void StopWatch::lap(const std::string& message) {
+  auto StopWatch::lap(const std::string& message) -> void {
     if (_initialized) {
       _end = clock();
 
@@ -76,7 +76,7 @@ namespace base {
     }
   }
 
-  void StopWatch::stop(const std::string& message) {
+  auto StopWatch::stop(const std::string& message) -> void {
     if (_initialized) {
       _end = clock();
 
@@ -87,17 +87,17 @@ namespace base {
   }
 
   //----------------- Time Profiler -----------------------------------------------------
-  void TimeAccumulator::add(const std::string& id) {
+  auto TimeAccumulator::add(const std::string& id) -> void {
     _accumulators[id] = 0;
     _starts[id] = 0;
   }
   //-------------------------------------------------------------------------------------
-  void TimeAccumulator::on(const std::string& id) {
+  auto TimeAccumulator::on(const std::string& id) -> void {
     clock_t current = clock();
     _starts[id] = current;
   }
   //-------------------------------------------------------------------------------------
-  void TimeAccumulator::off(const std::string& id) {
+  auto TimeAccumulator::off(const std::string& id) -> void {
     clock_t current = clock();
 
     double diff = current - _starts[id];
@@ -106,7 +106,7 @@ namespace base {
     _accumulators[id] = acc;
   }
   //-------------------------------------------------------------------------------------
-  void TimeAccumulator::dump(const std::string& message) {
+  auto TimeAccumulator::dump(const std::string& message) -> void {
     std::map<std::string, double>::const_iterator index, end = _accumulators.end();
 
     logDebug("Dumping data for : %s\n", message.data());
@@ -116,7 +116,7 @@ namespace base {
     }
   }
   //-------------------------------------------------------------------------------------
-  void TimeAccumulator::clear() {
+  auto TimeAccumulator::clear() -> void {
     _accumulators.clear();
     _starts.clear();
   }

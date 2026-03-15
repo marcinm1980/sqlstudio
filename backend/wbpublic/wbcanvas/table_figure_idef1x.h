@@ -37,11 +37,11 @@ namespace wbfig {
       _bottom_empty = false;
     }
 
-    virtual void draw_contents(mdc::CairoCtx *cr);
+    virtual auto draw_contents(mdc::CairoCtx *cr) -> void;
 
-    virtual base::Size calc_min_size();
-    void set_top_empty(bool flag);
-    void set_bottom_empty(bool flag);
+    virtual auto calc_min_size() -> base::Size;
+    auto set_top_empty(bool flag) -> void;
+    auto set_bottom_empty(bool flag) -> void;
 
   protected:
     bool _top_empty;
@@ -52,37 +52,37 @@ namespace wbfig {
   public:
     Idef1xTable(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self);
 
-    virtual void set_color(const base::Color &color);
-    virtual void set_dependant(bool flag);
+    virtual auto set_color(const base::Color &color) -> void;
+    virtual auto set_dependant(bool flag) -> void;
 
-    virtual ItemList::iterator begin_columns_sync();
+    virtual auto begin_columns_sync() -> ItemList::iterator;
 
-    virtual ItemList::iterator sync_next_column(ItemList::iterator iter, const std::string &id, ColumnFlags flags,
-                                                const std::string &text);
+    virtual auto sync_next_column(ItemList::iterator iter, const std::string &id, ColumnFlags flags,
+                                                const std::string &text) -> ItemList::iterator;
 
-    virtual void end_columns_sync(ItemList::iterator iter);
+    virtual auto end_columns_sync(ItemList::iterator iter) -> void;
 
-    virtual ItemList::iterator begin_indexes_sync() {
+    virtual auto begin_indexes_sync() -> ItemList::iterator {
       return ItemList::iterator();
     }
-    virtual ItemList::iterator sync_next_index(ItemList::iterator iter, const std::string &id,
-                                               const std::string &text) {
+    virtual auto sync_next_index(ItemList::iterator iter, const std::string &id,
+                                               const std::string &text) -> ItemList::iterator {
       return ItemList::iterator();
     }
-    virtual void end_indexes_sync(ItemList::iterator iter) {
+    virtual auto end_indexes_sync(ItemList::iterator iter) -> void {
     }
 
-    virtual ItemList::iterator begin_triggers_sync() {
+    virtual auto begin_triggers_sync() -> ItemList::iterator {
       return ItemList::iterator();
     }
-    virtual ItemList::iterator sync_next_trigger(ItemList::iterator iter, const std::string &id,
-                                                 const std::string &text) {
+    virtual auto sync_next_trigger(ItemList::iterator iter, const std::string &id,
+                                                 const std::string &text) -> ItemList::iterator {
       return ItemList::iterator();
     }
-    virtual void end_triggers_sync(ItemList::iterator iter) {
+    virtual auto end_triggers_sync(ItemList::iterator iter) -> void {
     }
 
-    virtual ItemList *get_columns() {
+    virtual auto get_columns() -> ItemList * {
       return &_columns;
     }
 
@@ -93,7 +93,7 @@ namespace wbfig {
 
     ItemList _columns;
 
-    virtual void end_sync(mdc::Box &box, ItemList &list, ItemList::iterator iter);
+    virtual auto end_sync(mdc::Box &box, ItemList &list, ItemList::iterator iter) -> void;
   };
 };
 

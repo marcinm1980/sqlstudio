@@ -42,7 +42,7 @@ InterfacedObserver::InterfacedObserver(IMySqlStudioObserver ^ native_observer) {
 
 //--------------------------------------------------------------------------------------------------
 
-void InterfacedObserver::handle_notification(const std::string &name, void *sender, NotificationInfo &info) {
+auto InterfacedObserver::handle_notification(const std::string &name, void *sender, NotificationInfo &info) -> void {
   _managed_observer->HandleNotification(CppStringToNativeRaw(name), IntPtr(sender), CppStringMapToDictionary(info));
 }
 

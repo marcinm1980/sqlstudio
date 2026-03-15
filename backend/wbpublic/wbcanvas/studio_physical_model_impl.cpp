@@ -47,8 +47,8 @@ studio_physical_Model::ImplData::ImplData(studio_physical_Model *self) : super(s
   grt::GRTNotificationCenter::get()->add_grt_observer(this, "GRNPreferencesDidClose");
 }
 
-void studio_physical_Model::ImplData::handle_grt_notification(const std::string &name, grt::ObjectRef sender,
-                                                                 grt::DictRef info) {
+auto studio_physical_Model::ImplData::handle_grt_notification(const std::string &name, grt::ObjectRef sender,
+                                                                 grt::DictRef info) -> void {
   //  if (name == "GRNPreferencesDidClose" && info.get_int("saved") == 1)
   {
     //    run_later(std::bind(&studio_physical_Model::ImplData::reset_figures, this));
@@ -60,7 +60,7 @@ studio_physical_Model::ImplData::~ImplData() {
   grt::GRTNotificationCenter::get()->remove_grt_observer(this);
 }
 
-void studio_physical_Model::ImplData::member_changed_comm(const std::string &name, const grt::ValueRef &ovalue) {
+auto studio_physical_Model::ImplData::member_changed_comm(const std::string &name, const grt::ValueRef &ovalue) -> void {
   PhysicalRelationshipNotation rnot;
   PhysicalFigureNotation fnot;
   if (name == "connectionNotation") {
@@ -108,7 +108,7 @@ void studio_physical_Model::ImplData::member_changed_comm(const std::string &nam
   }
 }
 
-mdc::LineEndType studio_physical_Model::ImplData::get_line_end_type(bool mand, bool many, bool start) {
+auto studio_physical_Model::ImplData::get_line_end_type(bool mand, bool many, bool start) -> mdc::LineEndType {
   switch (_relationship_notation) {
     case PRIdef1xNotation:
       if (start)
@@ -140,7 +140,7 @@ mdc::LineEndType studio_physical_Model::ImplData::get_line_end_type(bool mand, b
   return mdc::NormalEnd;
 }
 
-std::string studio_physical_Model::ImplData::get_line_end_caption(bool mand, bool many, bool start) {
+auto studio_physical_Model::ImplData::get_line_end_caption(bool mand, bool many, bool start) -> std::string {
   switch (_relationship_notation) {
     case PRIdef1xNotation:
       if (start) {
@@ -200,8 +200,8 @@ std::string studio_physical_Model::ImplData::get_line_end_caption(bool mand, boo
   return "";
 }
 
-void studio_physical_Model::ImplData::update_relationship_figure(model_Connection::ImplData *cfig, bool imandatory,
-                                                                    bool imany, bool fmandatory, bool fmany) {
+auto studio_physical_Model::ImplData::update_relationship_figure(model_Connection::ImplData *cfig, bool imandatory,
+                                                                    bool imany, bool fmandatory, bool fmany) -> void {
   wbfig::Connection *conn = dynamic_cast<wbfig::Connection *>(cfig->get_canvas_item());
   if (conn) {
     conn->set_end_type(get_line_end_type(imandatory, imany, true), get_line_end_type(fmandatory, fmany, false));
@@ -229,9 +229,9 @@ void studio_physical_Model::ImplData::update_relationship_figure(model_Connectio
   }
 }
 
-wbfig::Table *studio_physical_Model::ImplData::create_table_figure(mdc::Layer *layer,
+auto studio_physical_Model::ImplData::create_table_figure(mdc::Layer *layer,
                                                                       const model_DiagramRef &diagram,
-                                                                      const model_ObjectRef &forTable) {
+                                                                      const model_ObjectRef &forTable) -> wbfig::Table * {
   switch (_figure_notation) {
     case PFMySqlStudioNotation:
       return new wbfig::WBTable(layer, diagram->get_data(), forTable);
@@ -267,8 +267,8 @@ wbfig::Table *studio_physical_Model::ImplData::create_table_figure(mdc::Layer *l
   }
 }
 
-void studio_physical_Model::ImplData::tag_list_changed(grt::internal::OwnedList *list, bool added,
-                                                          const grt::ValueRef &value, const meta_TagRef &tag) {
+auto studio_physical_Model::ImplData::tag_list_changed(grt::internal::OwnedList *list, bool added,
+                                                          const grt::ValueRef &value, const meta_TagRef &tag) -> void {
   if (list == tag->objects().valueptr()) {
     meta_TaggedObjectRef to(meta_TaggedObjectRef::cast_from(value));
     if (added) {
@@ -299,8 +299,8 @@ void studio_physical_Model::ImplData::tag_list_changed(grt::internal::OwnedList 
   }
 }
 
-void studio_physical_Model::ImplData::list_changed(grt::internal::OwnedList *list, bool added,
-                                                      const grt::ValueRef &value) {
+auto studio_physical_Model::ImplData::list_changed(grt::internal::OwnedList *list, bool added,
+                                                      const grt::ValueRef &value) -> void {
   if (list == self()->_tags.valueptr()) {
     if (added) {
       meta_TagRef tag(meta_TagRef::cast_from(value));
@@ -319,8 +319,8 @@ void studio_physical_Model::ImplData::list_changed(grt::internal::OwnedList *lis
   }
 }
 
-void studio_physical_Model::ImplData::dict_changed(grt::internal::OwnedDict *dict, bool added,
-                                                      const std::string &key) {
+auto studio_physical_Model::ImplData::dict_changed(grt::internal::OwnedDict *dict, bool added,
+                                                      const std::string &key) -> void {
   if (g_str_has_prefix(key.c_str(), "studio.physical.TableFigure:") ||
       g_str_has_prefix(key.c_str(), "studio.physical.ViewFigure:") ||
       g_str_has_prefix(key.c_str(), "studio.physical.RoutineGroupFigure:")) {
@@ -328,7 +328,7 @@ void studio_physical_Model::ImplData::dict_changed(grt::internal::OwnedDict *dic
   }
 }
 
-std::list<meta_TagRef> studio_physical_Model::ImplData::get_tags_for_dbobject(const db_DatabaseObjectRef &dbobject) {
+auto studio_physical_Model::ImplData::get_tags_for_dbobject(const db_DatabaseObjectRef &dbobject) -> std::list<meta_TagRef> {
   std::list<meta_TagRef> list;
 
   for (grt::ListRef<meta_Tag>::const_iterator end = self()->tags().end(), tag = self()->tags().begin(); tag != end;

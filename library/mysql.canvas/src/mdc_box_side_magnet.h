@@ -40,17 +40,17 @@ namespace mdc {
     BoxSideMagnet(CanvasItem *owner);
     virtual ~BoxSideMagnet(){};
 
-    void set_compare_slot(const std::function<bool(Connector *, Connector *, Side)> &compare);
+    auto set_compare_slot(const std::function<bool(Connector *, Connector *, Side)> &compare) -> void;
 
     virtual auto constrain_angle(double angle) const -> double;
 
     virtual auto get_position_for_connector(Connector *conn, const base::Point &srcpos) const -> base::Point;
 
-    void set_connector_side(Connector *conn, Side side);
+    auto set_connector_side(Connector *conn, Side side) -> void;
 
-    virtual void remove_connector(mdc::Connector *conn);
+    virtual auto remove_connector(mdc::Connector *conn) -> void;
 
-    void reorder_connector_closer_to(Connector *conn, const base::Point &pos);
+    auto reorder_connector_closer_to(Connector *conn, const base::Point &pos) -> void;
 
   protected:
     friend struct CompareConnectors;
@@ -80,9 +80,9 @@ namespace mdc {
     auto get_connector_side(Connector *conn) const -> Side;
     auto connector_position(Side side, Connector *conn, double length) const -> double;
 
-    void notify_connectors(Side side);
+    auto notify_connectors(Side side) -> void;
 
-    void reorder_connectors();
+    auto reorder_connectors() -> void;
   };
 
 } // end of mdc namespace

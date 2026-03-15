@@ -44,34 +44,34 @@ class MYSQLWBBACKEND_PUBLIC_FUNC DbSqlEditorSnippets : public bec::ListModel {
 public:
   enum Column { Description, Script };
 
-  static void setup(wb::WBContextSQLIDE *sqlide, const std::string &path);
-  static DbSqlEditorSnippets *get_instance();
+  static auto setup(wb::WBContextSQLIDE *sqlide, const std::string &path) -> void;
+  static auto get_instance() -> DbSqlEditorSnippets *;
 
-  void load();
-  void save();
-  void load_from_db(SqlEditorForm *editor = 0);
+  auto load() -> void;
+  auto save() -> void;
+  auto load_from_db(SqlEditorForm *editor = 0) -> void;
 
-  bool shared_snippets_usable();
+  auto shared_snippets_usable() -> bool;
 
-  std::vector<std::string> get_category_list();
-  void select_category(const std::string &category);
-  std::string selected_category();
+  auto get_category_list() -> std::vector<std::string>;
+  auto select_category(const std::string &category) -> void;
+  auto selected_category() -> std::string;
 
-  virtual size_t count();
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, std::string &value);
-  virtual bool set_field(const bec::NodeId &node, ColumnId column, const std::string &value);
-  virtual void refresh() {
+  virtual auto count() -> size_t;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+  virtual auto set_field(const bec::NodeId &node, ColumnId column, const std::string &value) -> bool;
+  virtual auto refresh() -> void {
   }
 
   // virtual bool activate_node(const bec::NodeId &node);
 
-  bool activate_toolbar_item(const bec::NodeId &selected, const std::string &name);
+  auto activate_toolbar_item(const bec::NodeId &selected, const std::string &name) -> bool;
 
   //  virtual bec::MenuItemList get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes);
   //  virtual bool activate_popup_item_for_nodes(const std::string &name, const std::vector<bec::NodeId> &nodes);
 
-  virtual bool can_delete_node(const bec::NodeId &node);
-  virtual bool delete_node(const bec::NodeId &node);
+  virtual auto can_delete_node(const bec::NodeId &node) -> bool;
+  virtual auto delete_node(const bec::NodeId &node) -> bool;
 
 protected:
   DbSqlEditorSnippets(wb::WBContextSQLIDE *sqlide, const std::string &path);
@@ -89,14 +89,14 @@ protected:
 
   std::deque<Snippet> _entries;
 
-  void toolbar_item_activated(const std::string &name);
-  void copy_original_file(const std::string &name, bool overwrite);
+  auto toolbar_item_activated(const std::string &name) -> void;
+  auto copy_original_file(const std::string &name, bool overwrite) -> void;
 
-  int add_db_snippet(const std::string &name, const std::string &code);
-  void delete_db_snippet(int snippet_id);
+  auto add_db_snippet(const std::string &name, const std::string &code) -> int;
+  auto delete_db_snippet(int snippet_id) -> void;
 
 public:
-  void add_snippet(const std::string &name, const std::string &code, bool edit);
+  auto add_snippet(const std::string &name, const std::string &code, bool edit) -> void;
 };
 
 #endif /* _DB_SQL_EDITOR_SNIPPETSBE_H_ */

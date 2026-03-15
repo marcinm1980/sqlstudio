@@ -37,8 +37,8 @@ namespace {
   using namespace base;
   using namespace wb;
 
-  static bool match_member(const grt::MetaClass::Member *member, const grt::ObjectRef &copy,
-                           const grt::ObjectRef &source) {
+  static auto match_member(const grt::MetaClass::Member *member, const grt::ObjectRef &copy,
+                           const grt::ObjectRef &source) -> bool {
     if (!grt::is_simple_type(member->type.base.type))
       return true;
 
@@ -55,13 +55,13 @@ namespace {
     return true;
   }
 
-  static void ensure_simple_contents_match(const grt::ObjectRef &copy, const grt::ObjectRef &source) {
+  static auto ensure_simple_contents_match(const grt::ObjectRef &copy, const grt::ObjectRef &source) -> void {
     grt::MetaClass *mc = copy.get_metaclass();
 
     mc->foreach_member(std::bind(&match_member, std::placeholders::_1, copy, source));
   }
 
-  static void ensure_list_contents_copy(const grt::BaseListRef &copy, const grt::BaseListRef &source) {
+  static auto ensure_list_contents_copy(const grt::BaseListRef &copy, const grt::BaseListRef &source) -> void {
     EXPECT_TRUE(copy.valueptr() != source.valueptr());
 
     EXPECT_EQ(copy.count(), source.count());

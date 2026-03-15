@@ -118,10 +118,10 @@ namespace mdc {
       : family(afamily), slant(aslant), weight(aweight), size(asize) {
     }
 
-    void toggle_bold(bool flag) {
+    auto toggle_bold(bool flag) -> void {
       weight = flag ? WBold : WNormal;
     }
-    void toggle_italic(bool flag) {
+    auto toggle_italic(bool flag) -> void {
       slant = flag ? SItalic : SNormal;
     }
 
@@ -187,7 +187,7 @@ namespace mdc {
   class MYSQLCANVAS_PUBLIC_FUNC ImageSurface : public Surface {
   public:
     ImageSurface(double width, double height, cairo_format_t format);
-    void save_to_png(const std::string &destination) const;
+    auto save_to_png(const std::string &destination) const -> void;
   };
 
 #ifdef _MSC_VER
@@ -214,159 +214,159 @@ namespace mdc {
     CairoCtx(const Surface &surf);
     ~CairoCtx();
 
-    void check_state() const;
+    auto check_state() const -> void;
 
-    void update_cairo_backend(cairo_surface_t *surface);
+    auto update_cairo_backend(cairo_surface_t *surface) -> void;
     inline auto get_cr() -> cairo_t * {
       return cr;
     }
 
-    inline void save() const {
+    inline auto save() const -> void {
       cairo_save(cr);
       check_state();
     }
-    inline void restore() const {
+    inline auto restore() const -> void {
       cairo_restore(cr);
       check_state();
     }
-    inline void show_page() {
+    inline auto show_page() -> void {
       cairo_show_page(cr);
     }
 
-    inline void translate(const base::Point &p) {
+    inline auto translate(const base::Point &p) -> void {
       cairo_translate(cr, p.x, p.y);
     }
-    inline void translate(double x, double y) {
+    inline auto translate(double x, double y) -> void {
       cairo_translate(cr, x, y);
     }
-    inline void scale(const base::Point &p) {
+    inline auto scale(const base::Point &p) -> void {
       cairo_scale(cr, p.x, p.y);
     }
-    inline void scale(double x, double y) {
+    inline auto scale(double x, double y) -> void {
       cairo_scale(cr, x, y);
     }
-    inline void rotate(double rad) {
+    inline auto rotate(double rad) -> void {
       cairo_rotate(cr, rad);
     }
 
-    inline void set_line_width(double width) {
+    inline auto set_line_width(double width) -> void {
       cairo_set_line_width(cr, width);
     }
-    inline void set_line_cap(cairo_line_cap_t t) {
+    inline auto set_line_cap(cairo_line_cap_t t) -> void {
       cairo_set_line_cap(cr, t);
     }
-    inline void set_line_join(cairo_line_join_t t) {
+    inline auto set_line_join(cairo_line_join_t t) -> void {
       cairo_set_line_join(cr, t);
     }
-    inline void set_miter_limit(double l) {
+    inline auto set_miter_limit(double l) -> void {
       cairo_set_miter_limit(cr, l);
     }
 
-    inline void user_to_device(double *x, double *y) {
+    inline auto user_to_device(double *x, double *y) -> void {
       cairo_user_to_device(cr, x, y);
     };
-    inline void device_to_user(double *x, double *y) {
+    inline auto device_to_user(double *x, double *y) -> void {
       cairo_device_to_user(cr, x, y);
     };
-    inline void set_dash(double dashes[], int ndashes, double offset) {
+    inline auto set_dash(double dashes[], int ndashes, double offset) -> void {
       cairo_set_dash(cr, dashes, ndashes, offset);
     }
     inline void set_operator(cairo_operator_t oper) {
       cairo_set_operator(cr, oper);
     }
 
-    inline void set_color(const base::Color &color) const {
+    inline auto set_color(const base::Color &color) const -> void {
       if (color.alpha == 1.0)
         cairo_set_source_rgb(cr, color.red, color.green, color.blue);
       else
         cairo_set_source_rgba(cr, color.red, color.green, color.blue, color.alpha);
     }
 
-    inline void set_color(const base::Color &color, double alpha) const {
+    inline auto set_color(const base::Color &color, double alpha) const -> void {
       cairo_set_source_rgba(cr, color.red, color.green, color.blue, alpha);
     }
 
-    void set_font(const FontSpec &font) const;
-    void get_text_extents(const FontSpec &font, const std::string &text, cairo_text_extents_t &extents);
-    void get_text_extents(const FontSpec &font, const char *text, cairo_text_extents_t &extents);
+    auto set_font(const FontSpec &font) const -> void;
+    auto get_text_extents(const FontSpec &font, const std::string &text, cairo_text_extents_t &extents) -> void;
+    auto get_text_extents(const FontSpec &font, const char *text, cairo_text_extents_t &extents) -> void;
     auto get_font_extents(const FontSpec &font, cairo_font_extents_t &extents) -> bool;
 
-    inline void set_source_surface(cairo_surface_t *srf, double x, double y) {
+    inline auto set_source_surface(cairo_surface_t *srf, double x, double y) -> void {
       cairo_set_source_surface(cr, srf, x, y);
     }
 
-    inline void set_mask(cairo_pattern_t *pat) {
+    inline auto set_mask(cairo_pattern_t *pat) -> void {
       cairo_mask(cr, pat);
     }
 
-    inline void set_mask_surface(cairo_surface_t *surf, double x, double y) {
+    inline auto set_mask_surface(cairo_surface_t *surf, double x, double y) -> void {
       cairo_mask_surface(cr, surf, x, y);
     }
 
-    inline void set_pattern(cairo_pattern_t *pat) {
+    inline auto set_pattern(cairo_pattern_t *pat) -> void {
       cairo_set_source(cr, pat);
     }
 
-    inline void paint() {
+    inline auto paint() -> void {
       cairo_paint(cr);
     }
-    inline void paint_with_alpha(double a) {
+    inline auto paint_with_alpha(double a) -> void {
       cairo_paint_with_alpha(cr, a);
     }
 
-    inline void clip() {
+    inline auto clip() -> void {
       cairo_clip(cr);
     }
 
-    inline void stroke() {
+    inline auto stroke() -> void {
       cairo_stroke(cr);
     }
-    inline void fill() {
+    inline auto fill() -> void {
       cairo_fill(cr);
     }
-    inline void stroke_preserve() {
+    inline auto stroke_preserve() -> void {
       cairo_stroke_preserve(cr);
     }
-    inline void fill_preserve() {
+    inline auto fill_preserve() -> void {
       cairo_fill_preserve(cr);
     }
 
-    inline void move_to(const base::Point &pt) {
+    inline auto move_to(const base::Point &pt) -> void {
       cairo_move_to(cr, pt.x, pt.y);
     }
-    inline void move_to(double x, double y) {
+    inline auto move_to(double x, double y) -> void {
       cairo_move_to(cr, x, y);
     }
-    inline void rel_move_to(double x, double y) {
+    inline auto rel_move_to(double x, double y) -> void {
       cairo_rel_move_to(cr, x, y);
     }
 
-    inline void line_to(const base::Point &pt) {
+    inline auto line_to(const base::Point &pt) -> void {
       cairo_line_to(cr, pt.x, pt.y);
     }
-    inline void line_to(double x, double y) {
+    inline auto line_to(double x, double y) -> void {
       cairo_line_to(cr, x, y);
     }
 
-    inline void arc(double cx, double cy, double r, double start, double end) {
+    inline auto arc(double cx, double cy, double r, double start, double end) -> void {
       cairo_arc(cr, cx, cy, r, start, end);
     }
 
-    inline void show_text(const std::string &text) {
+    inline auto show_text(const std::string &text) -> void {
       cairo_show_text(cr, text.c_str());
     }
 
-    inline void new_path() {
+    inline auto new_path() -> void {
       cairo_new_path(cr);
     }
-    inline void close_path() {
+    inline auto close_path() -> void {
       cairo_close_path(cr);
     }
 
-    inline void rectangle(const base::Rect &rect) {
+    inline auto rectangle(const base::Rect &rect) -> void {
       cairo_rectangle(cr, rect.left(), rect.top(), rect.width(), rect.height());
     }
-    inline void rectangle(double x, double y, double w, double h) {
+    inline auto rectangle(double x, double y, double w, double h) -> void {
       cairo_rectangle(cr, x, y, w, h);
     }
   };

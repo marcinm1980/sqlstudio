@@ -47,24 +47,24 @@ namespace mforms {
       sigc::connection _idleClose;
 
       bool handle_draw_event(const ::Cairo::RefPtr< ::Cairo::Context> &context);
-      bool mouse_cross_event(GdkEventCrossing *event);
-      bool mouse_button_event(GdkEventButton *event);
-      bool mouse_move_event(GdkEventMotion *event);
-      bool key_press_event(GdkEventKey *event);
+      auto mouse_cross_event(GdkEventCrossing *event) -> bool;
+      auto mouse_button_event(GdkEventButton *event) -> bool;
+      auto mouse_move_event(GdkEventMotion *event) -> bool;
+      auto key_press_event(GdkEventKey *event) -> bool;
       void set_size(int, int);
 
-      static bool create(::mforms::Popup *self, mforms::PopupStyle style);
-      static void destroy(::mforms::Popup *self);
-      static void set_needs_repaint(::mforms::Popup *self);
-      static void set_size(::mforms::Popup *, int, int);
-      static int show(::mforms::Popup *, int, int);
-      static base::Rect get_content_rect(::mforms::Popup *);
-      static void set_modal_result(Popup *, int result);
+      static auto create(::mforms::Popup *self, mforms::PopupStyle style) -> bool;
+      static auto destroy(::mforms::Popup *self) -> void;
+      static auto set_needs_repaint(::mforms::Popup *self) -> void;
+      static auto set_size(::mforms::Popup *, int, int) -> void;
+      static auto show(::mforms::Popup *, int, int) -> int;
+      static auto get_content_rect(::mforms::Popup *) -> base::Rect;
+      static auto set_modal_result(Popup *, int result) -> void;
 
     public:
       PopupImpl(::mforms::Popup *self, mforms::PopupStyle style);
       ~PopupImpl();
-      static void init();
+      static auto init() -> void;
     }; // end of PopupImpl
 
   } // end of namespace gtk

@@ -26,10 +26,10 @@
 #include "base_bridge.h"
 #include "grt/grt_manager.h"
 
-bool BridgeBase::is_main_thread() {
+auto BridgeBase::is_main_thread() -> bool {
   return bec::GRTManager::get()->in_main_thread();
 }
 
-void BridgeBase::run_later(const std::function<void()> &slot) {
+auto BridgeBase::run_later(const std::function<void()> &slot) -> void {
   bec::GRTManager::get()->run_once_when_idle(this, slot);
 }

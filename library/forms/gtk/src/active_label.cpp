@@ -73,7 +73,7 @@ ActiveLabel::~ActiveLabel() {
 }
 
 //--------------------------------------------------------------------------------
-bool ActiveLabel::handle_event(GdkEventButton* e) {
+auto ActiveLabel::handle_event(GdkEventButton* e) -> bool {
   switch (e->type) {
     case GDK_BUTTON_RELEASE: {
       if (e->button == 1 || e->button == 2) // left or middle mouse button
@@ -87,28 +87,28 @@ bool ActiveLabel::handle_event(GdkEventButton* e) {
   return false;
 }
 //--------------------------------------------------------------------------------
-void ActiveLabel::button_style_changed() {
+auto ActiveLabel::button_style_changed() -> void {
   int w, h;
   if (Gtk::IconSize::lookup(Gtk::ICON_SIZE_MENU, w, h, _btn_close.get_settings()))
     _btn_close.set_size_request(w - 2, h - 2);
 }
 //--------------------------------------------------------------------------------
-void ActiveLabel::set_menu(mforms::Menu* m, bool delete_when_done) {
+auto ActiveLabel::set_menu(mforms::Menu* m, bool delete_when_done) -> void {
   this->_menu = m;
   _delete_menu = delete_when_done;
 }
 
-bool ActiveLabel::has_menu() {
+auto ActiveLabel::has_menu() -> bool {
   return this->_menu != NULL;
 }
 
 //--------------------------------------------------------------------------------
-void ActiveLabel::set_text(const std::string& lbl) {
+auto ActiveLabel::set_text(const std::string& lbl) -> void {
   _text_label.set_text(lbl);
 }
 
 //--------------------------------------------------------------------------------
-bool ActiveLabel::button_press_slot(GdkEventButton* evb) {
+auto ActiveLabel::button_press_slot(GdkEventButton* evb) -> bool {
   if (evb->button == 3 && _menu && !_menu->empty())
     _menu->popup_at(0, evb->x, evb->y);
   else if (evb->button == 2 && _close_callback) // middle button
@@ -117,7 +117,7 @@ bool ActiveLabel::button_press_slot(GdkEventButton* evb) {
 }
 
 //--------------------------------------------------------------------------------
-void ActiveLabel::start_busy() {
+auto ActiveLabel::start_busy() -> void {
   _btn_close.hide();
 
   _spinner.show();
@@ -125,7 +125,7 @@ void ActiveLabel::start_busy() {
 }
 
 //--------------------------------------------------------------------------------
-void ActiveLabel::stop_busy() {
+auto ActiveLabel::stop_busy() -> void {
   _spinner.stop();
   _spinner.hide();
 

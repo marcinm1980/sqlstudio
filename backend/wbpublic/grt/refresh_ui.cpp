@@ -29,26 +29,26 @@ using namespace bec;
 
 //--------------------------------------------------------------------------------------------------
 
-void RefreshUI::set_refresh_ui_slot(const RefreshSlot &slot) {
+auto RefreshUI::set_refresh_ui_slot(const RefreshSlot &slot) -> void {
   _refresh_ui = slot;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::RefreshUI::set_partial_refresh_ui_slot(const PartialRefreshSlot &slot) {
+auto bec::RefreshUI::set_partial_refresh_ui_slot(const PartialRefreshSlot &slot) -> void {
   _partial_refresh_ui = slot;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::RefreshUI::do_partial_ui_refresh(const int what) {
+auto bec::RefreshUI::do_partial_ui_refresh(const int what) -> void {
   if (!_partial_refresh_blocked && _partial_refresh_ui)
     _partial_refresh_ui(what);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::RefreshUI::do_ui_refresh() {
+auto bec::RefreshUI::do_ui_refresh() -> void {
   if (_refresh_ui)
     _refresh_ui();
 }

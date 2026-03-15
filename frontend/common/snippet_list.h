@@ -64,15 +64,15 @@ protected:
   std::function<void(int x, int y)> _defaultSnippetActionCb;
 
 protected:
-  int find_selected_index();
+  auto find_selected_index() -> int;
 
-  void set_selected(Snippet* snippet);
-  Snippet* snippet_from_point(double x, double y);
+  auto set_selected(Snippet* snippet) -> void;
+  auto snippet_from_point(double x, double y) -> Snippet*;
 
   virtual void repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) override;
-  void layout();
+  auto layout() -> void;
   virtual base::Size getLayoutSize(base::Size proposedSize) override;
-  Snippet* selected();
+  auto selected() -> Snippet*;
   virtual bool mouse_leave() override;
   virtual bool mouse_move(mforms::MouseButton button, int x, int y) override;
   virtual bool mouse_down(mforms::MouseButton button, int x, int y) override;
@@ -83,20 +83,20 @@ public:
   BaseSnippetList(const std::string& icon_name, bec::ListModel* model);
   ~BaseSnippetList();
 
-  void setDefaultSnippetAction(const std::function<void(int x, int y)> &cb) {
+  auto setDefaultSnippetAction(const std::function<void(int x, int y)> &cb) -> void {
     _defaultSnippetActionCb = cb;
   }
   boost::signals2::signal<void()>* signal_selection_changed() {
     return &_selection_changed_signal;
   }
 
-  void clear();
-  void refresh_snippets();
-  int selected_index();
+  auto clear() -> void;
+  auto refresh_snippets() -> void;
+  auto selected_index() -> int;
 
-  void set_snippet_info(Snippet* snippet, const std::string& title, const std::string& subtitle);
-  void get_snippet_info(Snippet* snippet, std::string& title, std::string& subtitle);
-  base::Rect snippet_bounds(Snippet* snippet);
+  auto set_snippet_info(Snippet* snippet, const std::string& title, const std::string& subtitle) -> void;
+  auto get_snippet_info(Snippet* snippet, std::string& title, std::string& subtitle) -> void;
+  auto snippet_bounds(Snippet* snippet) -> base::Rect;
 
   // ------ Accesibility Methods -----
   virtual void set_name(const std::string &name) override {

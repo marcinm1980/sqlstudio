@@ -37,13 +37,13 @@ ImageCanvasView::~ImageCanvasView() {
     cairo_surface_destroy(_buffer);
 }
 
-void ImageCanvasView::begin_repaint(int x, int y, int w, int h) {
+auto ImageCanvasView::begin_repaint(int x, int y, int w, int h) -> void {
 }
 
-void ImageCanvasView::end_repaint() {
+auto ImageCanvasView::end_repaint() -> void {
 }
 
-void ImageCanvasView::update_view_size(int width, int height) {
+auto ImageCanvasView::update_view_size(int width, int height) -> void {
   if (_buffer && _view_width == width && _view_height == height)
     return;
 
@@ -62,7 +62,7 @@ void ImageCanvasView::update_view_size(int width, int height) {
   _viewport_changed_signal();
 }
 
-void ImageCanvasView::save_to(const std::string &path) {
+auto ImageCanvasView::save_to(const std::string &path) -> void {
   // clear in white
   memset(cairo_image_surface_get_data(_buffer), 0xff, cairo_image_surface_get_stride(_buffer) * _view_height);
 
@@ -71,7 +71,7 @@ void ImageCanvasView::save_to(const std::string &path) {
   cairo_surface_write_to_png(_buffer, path.c_str());
 }
 
-const unsigned char *ImageCanvasView::get_image_data(size_t &size) {
+auto ImageCanvasView::get_image_data(size_t &size) -> const unsigned char * {
   repaint();
 
   size = cairo_image_surface_get_stride(_buffer) * _view_height;

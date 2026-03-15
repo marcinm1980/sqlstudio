@@ -37,7 +37,7 @@ using namespace grt;
 class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_normalizer : protected Mysql_sql_parser_base, public Sql_normalizer {
 public:
   typedef std::shared_ptr<Mysql_sql_normalizer> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_sql_normalizer());
   }
   virtual ~Mysql_sql_normalizer() {
@@ -47,28 +47,28 @@ protected:
   Mysql_sql_normalizer();
 
 public:
-  std::string normalize(const std::string &sql, const std::string &schema_name);
+  auto normalize(const std::string &sql, const std::string &schema_name) -> std::string;
 
 protected:
   // higher level
-  int process_sql_statement(const SqlAstNode *tree);
-  Parse_result process_create_statement(const SqlAstNode *tree);
+  auto process_sql_statement(const SqlAstNode *tree) -> int;
+  auto process_create_statement(const SqlAstNode *tree) -> Parse_result;
 
   // parse tree core
-  Parse_result process_create_schema_statement(const SqlAstNode *tree);
-  Parse_result process_create_table_statement(const SqlAstNode *tree);
-  Parse_result process_create_index_statement(const SqlAstNode *tree);
-  Parse_result process_create_view_statement(const SqlAstNode *tree);
-  Parse_result process_create_trigger_statement(const SqlAstNode *tree);
-  Parse_result process_create_routine_statement(const SqlAstNode *tree);
-  Parse_result process_create_server_link_statement(const SqlAstNode *tree);
-  Parse_result process_create_tablespace_statement(const SqlAstNode *tree);
-  Parse_result process_create_logfile_group_statement(const SqlAstNode *tree);
-  Parse_result process_insert_statement(const SqlAstNode *tree);
+  auto process_create_schema_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_table_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_index_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_view_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_trigger_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_routine_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_server_link_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_tablespace_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_logfile_group_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_insert_statement(const SqlAstNode *tree) -> Parse_result;
 
   // parse tree helpers
-  void qualify_obj_ident(const SqlAstNode *sp_name);
-  void append_stmt_to_script(const std::string &stmt);
+  auto qualify_obj_ident(const SqlAstNode *sp_name) -> void;
+  auto append_stmt_to_script(const std::string &stmt) -> void;
 
   // context
   std::string _schema_name;

@@ -36,7 +36,7 @@ class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_statement_decomposer : protected My
                                                                     public Sql_statement_decomposer {
 public:
   typedef std::shared_ptr<Mysql_sql_statement_decomposer> Ref;
-  static Ref create(grt::DictRef db_opts = grt::DictRef()) {
+  static auto create(grt::DictRef db_opts = grt::DictRef()) -> Ref {
     Ref decomposer(new Mysql_sql_statement_decomposer);
     decomposer->set_options(db_opts);
     return decomposer;
@@ -46,29 +46,29 @@ public:
 
 protected:
   Mysql_sql_statement_decomposer();
-  void set_options(const grt::DictRef &opts);
-  int decompose_query(const std::string &sql, SelectStatement::Ref select_statement);
-  int decompose_view(const std::string &ddl, SelectStatement::Ref select_statement);
-  int decompose_view(db_ViewRef view, SelectStatement::Ref select_statement);
+  auto set_options(const grt::DictRef &opts) -> void;
+  auto decompose_query(const std::string &sql, SelectStatement::Ref select_statement) -> int;
+  auto decompose_view(const std::string &ddl, SelectStatement::Ref select_statement) -> int;
+  auto decompose_view(db_ViewRef view, SelectStatement::Ref select_statement) -> int;
 
 protected:
   typedef boost::function<Parse_result(const SqlAstNode *)> ProcessSqlStatement;
-  int process_sql_statement(const std::string &sql, SelectStatement::Ref select_statement,
-                            ProcessSqlStatement do_process_sql_statement_cb);
-  int process_sql_statement(const std::string &sql, SelectStatement::Ref select_statement,
-                            Mysql_sql_parser_fe &sql_parser_fe);
-  int do_process_sql_statement(const SqlAstNode *tree);
+  auto process_sql_statement(const std::string &sql, SelectStatement::Ref select_statement,
+                            ProcessSqlStatement do_process_sql_statement_cb) -> int;
+  auto process_sql_statement(const std::string &sql, SelectStatement::Ref select_statement,
+                            Mysql_sql_parser_fe &sql_parser_fe) -> int;
+  auto do_process_sql_statement(const SqlAstNode *tree) -> int;
   ProcessSqlStatement _do_process_sql_statement;
 
 protected:
-  Parse_result decompose_query(const SqlAstNode *select_init);
-  Parse_result do_decompose_query(const SqlAstNode *tree);
+  auto decompose_query(const SqlAstNode *select_init) -> Parse_result;
+  auto do_decompose_query(const SqlAstNode *tree) -> Parse_result;
   SelectStatement::Ref _select_statement;
 
 protected:
-  Parse_result do_decompose_view(const SqlAstNode *tree);
-  void expand_wildcards(SelectStatement::Ref select_statement, db_SchemaRef &db_schema,
-                        grt::ListRef<db_Schema> &db_schemata);
+  auto do_decompose_view(const SqlAstNode *tree) -> Parse_result;
+  auto expand_wildcards(SelectStatement::Ref select_statement, db_SchemaRef &db_schema,
+                        grt::ListRef<db_Schema> &db_schemata) -> void;
   std::list<std::string> _view_columns_names;
 
 protected:

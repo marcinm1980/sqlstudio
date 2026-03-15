@@ -61,10 +61,9 @@ namespace MySQL {
 
         TableColumnsListWrapper(bec::TableColumnsListBE *inn);
 
-        List<String ^> ^
-          get_datatype_names() { return CppStringListToNative(get_unmanaged_object()->get_datatype_names()); }
+        auto get_datatype_names() -> List<String ^> ^ { return CppStringListToNative(get_unmanaged_object()->get_datatype_names()); }
 
-          inline bec::TableColumnsListBE *get_unmanaged_object() {
+          inline auto get_unmanaged_object() -> bec::TableColumnsListBE * {
           return static_cast<bec::TableColumnsListBE *>(inner);
         }
 
@@ -85,14 +84,14 @@ namespace MySQL {
 
         IndexColumnsListWrapper(bec::IndexColumnsListBE *inn);
 
-        inline bec::IndexColumnsListBE *get_unmanaged_object() {
+        inline auto get_unmanaged_object() -> bec::IndexColumnsListBE * {
           return static_cast<bec::IndexColumnsListBE *>(inner);
         }
 
         void set_column_enabled(NodeIdWrapper ^ node, bool flag);
         bool get_column_enabled(NodeIdWrapper ^ node);
 
-        int get_max_order_index();
+        auto get_max_order_index() -> int;
       };
 
     public
@@ -108,11 +107,11 @@ namespace MySQL {
 
         IndexListWrapper(bec::IndexListBE *inn);
 
-        inline bec::IndexListBE *get_unmanaged_object() {
+        inline auto get_unmanaged_object() -> bec::IndexListBE * {
           return static_cast<bec::IndexListBE *>(inner);
         }
 
-        IndexColumnsListWrapper ^ get_columns();
+        auto get_columns() -> IndexColumnsListWrapper ^;
 
         // db_Index get_selected_index();
         void select_index(NodeIdWrapper ^ node);
@@ -134,7 +133,7 @@ namespace MySQL {
 
         FKConstraintColumnsListWrapper(bec::FKConstraintColumnsListBE *inn);
 
-        inline bec::FKConstraintColumnsListBE *get_unmanaged_object() {
+        inline auto get_unmanaged_object() -> bec::FKConstraintColumnsListBE * {
           return static_cast<bec::FKConstraintColumnsListBE *>(inner);
         }
 
@@ -161,13 +160,13 @@ namespace MySQL {
 
         FKConstraintListWrapper(bec::FKConstraintListBE *inn);
 
-        inline bec::FKConstraintListBE *get_unmanaged_object() {
+        inline auto get_unmanaged_object() -> bec::FKConstraintListBE * {
           return static_cast<bec::FKConstraintListBE *>(inner);
         }
 
         void select_fk(NodeIdWrapper ^ node);
 
-        FKConstraintColumnsListWrapper ^ get_columns();
+        auto get_columns() -> FKConstraintColumnsListWrapper ^;
       };
 
     public
@@ -184,15 +183,15 @@ namespace MySQL {
           RefreshColumnCollation = bec::TableEditorBE::RefreshColumnCollation,
         };
 
-        bec::TableEditorBE *get_unmanaged_object() {
+        auto get_unmanaged_object() -> bec::TableEditorBE * {
           return static_cast<bec::TableEditorBE *>(inner);
         }
 
-        IndexListWrapper ^ get_indexes();
+        auto get_indexes() -> IndexListWrapper ^;
 
-        FKConstraintListWrapper ^ get_fks();
+        auto get_fks() -> FKConstraintListWrapper ^;
 
-        Control ^ get_inserts_panel();
+        auto get_inserts_panel() -> Control ^;
 
         // table options
         //...
@@ -218,7 +217,7 @@ namespace MySQL {
 
         NodeIdWrapper ^ add_index_with_columns(List<NodeIdWrapper ^> ^ columns);
 
-        List<String ^> ^ get_index_types();
+        auto get_index_types() -> List<String ^> ^;
       };
 
     } // namespace Db

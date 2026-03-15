@@ -75,7 +75,7 @@ public:
 
   virtual ~parser_ContextReference();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "parser.ContextReference";
   }
 
@@ -86,18 +86,18 @@ public:
    * \par In Python:
    *    value = obj.valid
    */
-  grt::IntegerRef valid() const;
+  auto valid() const -> grt::IntegerRef;
 
 
 private: // The next attribute is read-only.
 public:
 
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -105,12 +105,12 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new parser_ContextReference());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -136,7 +136,7 @@ public:
       _release_data(_data);
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "mforms.ObjectReference";
   }
 
@@ -147,7 +147,7 @@ public:
    * \par In Python:
    *    value = obj.type
    */
-  grt::StringRef type() const { return _type; }
+  auto type() const -> grt::StringRef { return _type; }
 
   /**
    * Setter for attribute type
@@ -156,7 +156,7 @@ public:
    * \par In Python:
    *   obj.type = value
    */
-  virtual void type(const grt::StringRef &value) {
+  virtual auto type(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_type);
     _type = value;
     member_changed("type", ovalue, value);
@@ -169,7 +169,7 @@ public:
    * \par In Python:
    *    value = obj.valid
    */
-  grt::IntegerRef valid() const;
+  auto valid() const -> grt::IntegerRef;
 
 
 private: // The next attribute is read-only.
@@ -180,11 +180,11 @@ public:
    * \param other 
    * \return 
    */
-  virtual grt::IntegerRef isEqualTo(const mforms_ObjectReferenceRef &other);
+  virtual auto isEqualTo(const mforms_ObjectReferenceRef &other) -> grt::IntegerRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data, void (*release)(ImplData*)) {
+  auto set_data(ImplData *data, void (*release)(ImplData*)) -> void {
     if (_data == data) return;
     if (_data && _release_data) _release_data(_data);
     _data= data;
@@ -198,14 +198,14 @@ private: // Wrapper methods for use by the grt.
   ImplData *_data;
   void (*_release_data)(ImplData *);
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new mforms_ObjectReference());
   }
 
   static grt::ValueRef call_isEqualTo(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<mforms_ObjectReference*>(self)->isEqualTo(mforms_ObjectReferenceRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -236,7 +236,7 @@ public:
       _release_data(_data);
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "grt.PyObject";
   }
 
@@ -245,11 +245,11 @@ public:
    * \param other 
    * \return 
    */
-  virtual grt::IntegerRef isEqualTo(const grt_PyObjectRef &other);
+  virtual auto isEqualTo(const grt_PyObjectRef &other) -> grt::IntegerRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data, void (*release)(ImplData*)) {
+  auto set_data(ImplData *data, void (*release)(ImplData*)) -> void {
     if (_data == data) return;
     if (_data && _release_data) _release_data(_data);
     _data= data;
@@ -262,14 +262,14 @@ private: // Wrapper methods for use by the grt.
   ImplData *_data;
   void (*_release_data)(ImplData *);
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new grt_PyObject());
   }
 
   static grt::ValueRef call_isEqualTo(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<grt_PyObject*>(self)->isEqualTo(grt_PyObjectRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -280,7 +280,7 @@ public:
 
 
 
-inline void register_structs_wrapper_xml() {
+inline auto register_structs_wrapper_xml() -> void {
   grt::internal::ClassRegistry::register_class<parser_ContextReference>();
   grt::internal::ClassRegistry::register_class<mforms_ObjectReference>();
   grt::internal::ClassRegistry::register_class<grt_PyObject>();

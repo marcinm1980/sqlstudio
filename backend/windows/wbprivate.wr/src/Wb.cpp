@@ -125,19 +125,19 @@ bool WbOptions::parse_args(array<String ^> ^ args, String ^ app_path) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WbOptions::OpenAtStartup::get() {
+auto WbOptions::OpenAtStartup::get() -> String ^ {
   return CppStringToNative(inner->open_at_startup);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WbOptions::OpenAtStartupType::get() {
+auto WbOptions::OpenAtStartupType::get() -> String ^ {
   return CppStringToNative(inner->open_at_startup_type);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbOptions::analyzeCommandLineArguments() {
+auto WbOptions::analyzeCommandLineArguments() -> void {
   inner->analyzeCommandLineArguments();
 }
 
@@ -168,7 +168,7 @@ bool WbContext::init(WbFrontendCallbacks ^ callbacks, WbOptions ^ options,
 
 //--------------------------------------------------------------------------------------------------
 
-GrtManager ^ WbContext::get_grt_manager() {
+auto WbContext::get_grt_manager() -> GrtManager ^ {
   if (manager == nullptr)
     manager = gcnew GrtManager();
 
@@ -196,7 +196,7 @@ void WbContext::activate_command(String ^ name) {
 
 //--------------------------------------------------------------------------------------------------
 
-Overview ^ WbContext::get_physical_overview() {
+auto WbContext::get_physical_overview() -> Overview ^ {
   if (physical_overview == nullptr)
     physical_overview = gcnew Overview(WBContextUI::get()->get_physical_overview());
   return physical_overview;
@@ -204,7 +204,7 @@ Overview ^ WbContext::get_physical_overview() {
 
 //--------------------------------------------------------------------------------------------------
 
-TreeViewAdv ^ WbContext::get_history_tree() {
+auto WbContext::get_history_tree() -> TreeViewAdv ^ {
   // Note: this and the other get_* function below leak memory (the created trees).
   //       This will be solved once the entire sidebars are managed by the backend.
   return dynamic_cast<TreeViewAdv ^>(
@@ -213,7 +213,7 @@ TreeViewAdv ^ WbContext::get_history_tree() {
 
 //--------------------------------------------------------------------------------------------------
 
-TreeViewAdv ^ WbContext::get_usertypes_tree() {
+auto WbContext::get_usertypes_tree() -> TreeViewAdv ^ {
   return dynamic_cast<TreeViewAdv ^>(
     ObjectMapper::GetManagedComponent(WBContextUI::get()->get_wb()->get_model_context()->create_user_type_list()));
 }
@@ -308,13 +308,13 @@ void WbContext::set_active_form_from_appview(MySQL::Forms::AppViewDockContent ^ 
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WbContext::get_active_context() {
+auto WbContext::get_active_context() -> String ^ {
   return CppStringToNative(WBContextUI::get()->get_active_context());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbContext::close_gui_plugin(IntPtr handle) {
+auto WbContext::close_gui_plugin(IntPtr handle) -> void {
   WBContextUI::get()->get_wb()->close_gui_plugin((NativeHandle)handle.ToPointer());
 }
 
@@ -417,7 +417,7 @@ void WbContext::set_create_main_form_view(MySQL::MySqlStudio::WbFrontendCallback
 
 //--------------------------------------------------------------------------------------------------
 
-void WbContext::create_main_form_view_wrapper(const std::string &view_name, std::shared_ptr<bec::UIForm> form_be) {
+auto WbContext::create_main_form_view_wrapper(const std::string &view_name, std::shared_ptr<bec::UIForm> form_be) -> void {
   String ^ name = CppStringToNativeRaw(view_name);
   Logger::LogDebug("WBContext managed", 1, String::Format("Creating UI wrapper {0}\n", name));
 
@@ -497,7 +497,7 @@ ToolStrip ^ WbContext::toolbar_for_form(MySQL::Base::UIForm ^ form) {
 
 //--------------------------------------------------------------------------------------------------
 
-Control ^ WbContext::shared_secondary_sidebar() {
+auto WbContext::shared_secondary_sidebar() -> Control ^ {
   mforms::View *sidebar = WBContextUI::get()->get_wb()->get_model_context()->shared_secondary_sidebar();
   if (sidebar == NULL)
     return nullptr;
@@ -549,13 +549,13 @@ String ^ WbContext::get_search_string(MySQL::Base::UIForm ^ form) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WbContext::get_title() {
+auto WbContext::get_title() -> String ^ {
   return CppStringToNative(WBContextUI::get()->get_title());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool WbContext::has_unsaved_changes() {
+auto WbContext::has_unsaved_changes() -> bool {
   return WBContextUI::get()->get_wb()->has_unsaved_changes();
 }
 
@@ -567,13 +567,13 @@ void WbContext::open_document(String ^ file) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool WbContext::save_changes() {
+auto WbContext::save_changes() -> bool {
   return WBContextUI::get()->get_wb()->save_changes();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbContext::flush_idle_tasks(bool force) {
+auto WbContext::flush_idle_tasks(bool force) -> void {
   try {
     WBContextUI::get()->get_wb()->flush_idle_tasks(force);
   } catch (std::exception *ex) {
@@ -588,13 +588,13 @@ void WbContext::flush_idle_tasks(bool force) {
 
 //--------------------------------------------------------------------------------------------------
 
-double WbContext::delay_for_next_timer() {
+auto WbContext::delay_for_next_timer() -> double {
   return bec::GRTManager::get()->delay_for_next_timeout();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbContext::flush_timers() {
+auto WbContext::flush_timers() -> void {
   return bec::GRTManager::get()->flush_timers();
 }
 

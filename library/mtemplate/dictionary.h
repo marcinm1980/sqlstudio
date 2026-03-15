@@ -54,7 +54,7 @@ namespace mtemplate {
 
     typedef std::map<base::utf8string, section_dictionary_storage> section_storage;
 
-    virtual DictionaryInterface *getParent() = 0;
+    virtual auto getParent() -> DictionaryInterface * = 0;
 
     friend NodeSection;
     friend Template;
@@ -63,25 +63,25 @@ namespace mtemplate {
     virtual ~DictionaryInterface() {
     }
 
-    virtual void setValue(const base::utf8string &key, const base::utf8string &value) = 0;
-    virtual base::utf8string getValue(const base::utf8string &key) = 0;
+    virtual auto setValue(const base::utf8string &key, const base::utf8string &value) -> void = 0;
+    virtual auto getValue(const base::utf8string &key) -> base::utf8string = 0;
 
-    void setIntValue(const base::utf8string &key, long value);
-    void setValueAndShowSection(const base::utf8string &key, const base::utf8string &value,
-                                const base::utf8string &section);
-    void setFormatedValue(const base::utf8string &key, const char *format, ...); // G_GNUC_PRINTF(2, 3);
+    auto setIntValue(const base::utf8string &key, long value) -> void;
+    auto setValueAndShowSection(const base::utf8string &key, const base::utf8string &value,
+                                const base::utf8string &section) -> void;
+    auto setFormatedValue(const base::utf8string &key, const char *format, ...) -> void; // G_GNUC_PRINTF(2, 3);
 
-    virtual DictionaryInterface *addSectionDictionary(const base::utf8string &name) = 0;
-    virtual section_dictionary_storage &getSectionDictionaries(const base::utf8string &sections) = 0;
+    virtual auto addSectionDictionary(const base::utf8string &name) -> DictionaryInterface * = 0;
+    virtual auto getSectionDictionaries(const base::utf8string &sections) -> section_dictionary_storage & = 0;
 
-    void setIsLast(bool value) {
+    auto setIsLast(bool value) -> void {
       _is_last = value;
     }
-    bool isLast() {
+    auto isLast() -> bool {
       return _is_last;
     }
 
-    virtual void dump(int indent = 0) = 0;
+    virtual auto dump(int indent = 0) -> void = 0;
   };
 
   class MTEMPLATELIBRARY_PUBLIC_FUNC Dictionary : public DictionaryInterface {
@@ -92,7 +92,7 @@ namespace mtemplate {
     section_storage _section_dictionaries;
     section_dictionary_storage _no_section;
 
-    DictionaryInterface *getParent() {
+    auto getParent() -> DictionaryInterface * {
       return _parent;
     }
 
@@ -104,16 +104,16 @@ namespace mtemplate {
     }
 
     //  DictionaryInterface
-    virtual void setValue(const base::utf8string &key, const base::utf8string &value);
-    virtual base::utf8string getValue(const base::utf8string &key);
+    virtual auto setValue(const base::utf8string &key, const base::utf8string &value) -> void;
+    virtual auto getValue(const base::utf8string &key) -> base::utf8string;
 
-    virtual DictionaryInterface *addSectionDictionary(const base::utf8string &name);
-    virtual section_dictionary_storage &getSectionDictionaries(const base::utf8string &section);
+    virtual auto addSectionDictionary(const base::utf8string &name) -> DictionaryInterface *;
+    virtual auto getSectionDictionaries(const base::utf8string &section) -> section_dictionary_storage &;
 
-    virtual void dump(int indent = 0);
+    virtual auto dump(int indent = 0) -> void;
   };
 
-  MTEMPLATELIBRARY_PUBLIC_FUNC Dictionary *CreateMainDictionary();
-  MTEMPLATELIBRARY_PUBLIC_FUNC void SetGlobalValue(const base::utf8string &key, const base::utf8string &value);
+  auto CreateMainDictionary() -> MTEMPLATELIBRARY_PUBLIC_FUNC Dictionary *;
+  auto SetGlobalValue(const base::utf8string &key, const base::utf8string &value) -> MTEMPLATELIBRARY_PUBLIC_FUNC void;
 
 } //  namespace mtemplate

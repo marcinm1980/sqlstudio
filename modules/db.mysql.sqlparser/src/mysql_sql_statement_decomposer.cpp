@@ -43,7 +43,7 @@ Mysql_sql_statement_decomposer::Null_state_keeper::~Null_state_keeper() {
 }
 #define NULL_STATE_KEEPER Null_state_keeper _nsk(this);
 
-void Mysql_sql_statement_decomposer::set_options(const grt::DictRef &opts) {
+auto Mysql_sql_statement_decomposer::set_options(const grt::DictRef &opts) -> void {
   if (opts.is_valid())
     Sql_parser_base::case_sensitive_identifiers(opts.get_int("case_sensitive_identifiers", grt::IntegerRef(1)) != 0);
 }
@@ -52,22 +52,22 @@ Mysql_sql_statement_decomposer::Mysql_sql_statement_decomposer() {
   NULL_STATE_KEEPER
 }
 
-int Mysql_sql_statement_decomposer::decompose_query(const std::string &sql, SelectStatement::Ref select_statement) {
+auto Mysql_sql_statement_decomposer::decompose_query(const std::string &sql, SelectStatement::Ref select_statement) -> int {
   NULL_STATE_KEEPER
   int err_count = process_sql_statement(sql, select_statement,
                                         boost::bind(&Mysql_sql_statement_decomposer::do_decompose_query, this, _1));
   return (err_count ? 0 : 1);
 }
 
-int Mysql_sql_statement_decomposer::decompose_view(const std::string &sql, SelectStatement::Ref select_statement) {
+auto Mysql_sql_statement_decomposer::decompose_view(const std::string &sql, SelectStatement::Ref select_statement) -> int {
   NULL_STATE_KEEPER
   int err_count = process_sql_statement(sql, select_statement,
                                         boost::bind(&Mysql_sql_statement_decomposer::do_decompose_view, this, _1));
   return (err_count ? 0 : 1);
 }
 
-int Mysql_sql_statement_decomposer::process_sql_statement(const std::string &sql, SelectStatement::Ref select_statement,
-                                                          ProcessSqlStatement do_process_sql_statement_cb) {
+auto Mysql_sql_statement_decomposer::process_sql_statement(const std::string &sql, SelectStatement::Ref select_statement,
+                                                          ProcessSqlStatement do_process_sql_statement_cb) -> int {
   _messages_enabled = false;
   _do_process_sql_statement = do_process_sql_statement_cb;
   _process_sql_statement = boost::bind(&Mysql_sql_statement_decomposer::do_process_sql_statement, this, _1);
@@ -78,8 +78,8 @@ int Mysql_sql_statement_decomposer::process_sql_statement(const std::string &sql
   return process_sql_statement(sql, select_statement, sql_parser_fe);
 }
 
-int Mysql_sql_statement_decomposer::process_sql_statement(const std::string &sql, SelectStatement::Ref select_statement,
-                                                          Mysql_sql_parser_fe &sql_parser_fe) {
+auto Mysql_sql_statement_decomposer::process_sql_statement(const std::string &sql, SelectStatement::Ref select_statement,
+                                                          Mysql_sql_parser_fe &sql_parser_fe) -> int {
   _select_statement = select_statement;
 
   // set delimiter for sql script if needed
@@ -103,7 +103,7 @@ int Mysql_sql_statement_decomposer::process_sql_statement(const std::string &sql
   return res;
 }
 
-int Mysql_sql_statement_decomposer::do_process_sql_statement(const SqlAstNode *tree) {
+auto Mysql_sql_statement_decomposer::do_process_sql_statement(const SqlAstNode *tree) -> int {
   if (!tree) {
     report_sql_error(_err_tok_lineno, true, _err_tok_line_pos, _err_tok_len, _err_msg, 2);
     return 1;
@@ -126,7 +126,7 @@ int Mysql_sql_statement_decomposer::do_process_sql_statement(const SqlAstNode *t
     return 1;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_statement_decomposer::decompose_query(const SqlAstNode *select_init) {
+auto Mysql_sql_statement_decomposer::decompose_query(const SqlAstNode *select_init) -> Mysql_sql_parser_base::Parse_result {
   const SqlAstNode *select_part2 = select_init->subitem(sql::_select_init2, sql::_select_part2);
 
   // Views now have a separate path for their select part.
@@ -147,7 +147,7 @@ Mysql_sql_parser_base::Parse_result Mysql_sql_statement_decomposer::decompose_qu
                  sql::_select_into, sql::_select_from, sql::_join_table_list, sql::_derived_table_list)) {
       // collect table_factor nodes
       struct Helper {
-        static void process(const SqlAstNode *table_ref, std::list<const SqlAstNode *> &table_factor_list) {
+        static auto process(const SqlAstNode *table_ref, std::list<const SqlAstNode *> &table_factor_list) -> void {
           if (const SqlAstNode *join_table = table_ref->subitem(sql::_join_table))
             table_ref = join_table;
 
@@ -313,7 +313,7 @@ Mysql_sql_parser_base::Parse_result Mysql_sql_statement_decomposer::decompose_qu
   return pr_processed;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_statement_decomposer::do_decompose_query(const SqlAstNode *tree) {
+auto Mysql_sql_statement_decomposer::do_decompose_query(const SqlAstNode *tree) -> Mysql_sql_parser_base::Parse_result {
   const SqlAstNode *select_init = tree->subitem(sql::_select, sql::_select_init);
 
   if (!select_init)
@@ -322,7 +322,7 @@ Mysql_sql_parser_base::Parse_result Mysql_sql_statement_decomposer::do_decompose
   return decompose_query(select_init);
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_statement_decomposer::do_decompose_view(const SqlAstNode *tree) {
+auto Mysql_sql_statement_decomposer::do_decompose_view(const SqlAstNode *tree) -> Mysql_sql_parser_base::Parse_result {
   const SqlAstNode *view_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -355,7 +355,7 @@ Mysql_sql_parser_base::Parse_result Mysql_sql_statement_decomposer::do_decompose
   return res;
 }
 
-int Mysql_sql_statement_decomposer::decompose_view(db_ViewRef view, SelectStatement::Ref select_statement) {
+auto Mysql_sql_statement_decomposer::decompose_view(db_ViewRef view, SelectStatement::Ref select_statement) -> int {
   db_SchemaRef schema = db_SchemaRef::cast_from(view->owner());
   grt::ListRef<db_Schema> schemata = db_CatalogRef::cast_from(schema->owner())->schemata();
 
@@ -378,8 +378,8 @@ int Mysql_sql_statement_decomposer::decompose_view(db_ViewRef view, SelectStatem
   return res;
 }
 
-void Mysql_sql_statement_decomposer::expand_wildcards(SelectStatement::Ref select_statement, db_SchemaRef &db_schema,
-                                                      grt::ListRef<db_Schema> &db_schemata) {
+auto Mysql_sql_statement_decomposer::expand_wildcards(SelectStatement::Ref select_statement, db_SchemaRef &db_schema,
+                                                      grt::ListRef<db_Schema> &db_schemata) -> void {
   std::list<SelectItems::iterator> wildcard_fields;
   for (SelectItems::iterator i = select_statement->select_items.begin(), i_end = select_statement->select_items.end();
        i != i_end; ++i)

@@ -47,7 +47,7 @@ OrthogonalLineLayouter::~OrthogonalLineLayouter() {
   delete _linfo.end_connector();
 }
 
-std::vector<Point> OrthogonalLineLayouter::get_points() {
+auto OrthogonalLineLayouter::get_points() -> std::vector<Point> {
   std::vector<Point> p;
 
   for (int c = _linfo.count_sublines(), i = 0; i < c; i++) {
@@ -59,19 +59,19 @@ std::vector<Point> OrthogonalLineLayouter::get_points() {
   return p;
 }
 
-Point OrthogonalLineLayouter::get_start_point() {
+auto OrthogonalLineLayouter::get_start_point() -> Point {
   return _linfo.subline_start_point(_linfo.start_subline());
 }
 
-Point OrthogonalLineLayouter::get_end_point() {
+auto OrthogonalLineLayouter::get_end_point() -> Point {
   return _linfo.subline_end_point(_linfo.end_subline());
 }
 
-void OrthogonalLineLayouter::set_segment_offset(int subline, double offset) {
+auto OrthogonalLineLayouter::set_segment_offset(int subline, double offset) -> void {
   _linfo.set_subline_offset(subline, offset);
 }
 
-double OrthogonalLineLayouter::angle_of_intersection_with_rect(const Rect &rect, const Point &p) {
+auto OrthogonalLineLayouter::angle_of_intersection_with_rect(const Rect &rect, const Point &p) -> double {
   double langle = angle_of_line(rect.center(), p);
   double tl_angle = angle_of_line(rect.center(), rect.top_left());
   double bl_angle = angle_of_line(rect.center(), rect.bottom_left());
@@ -88,7 +88,7 @@ double OrthogonalLineLayouter::angle_of_intersection_with_rect(const Rect &rect,
     return 90;
 }
 
-bool OrthogonalLineLayouter::update_start_point() {
+auto OrthogonalLineLayouter::update_start_point() -> bool {
   Point p(_linfo.start_connector()->get_position());
   mdc::CanvasItem *item = _linfo.start_connector()->get_connected_item();
   mdc::Magnet *magnet = _linfo.start_connector()->get_connected_magnet();
@@ -126,7 +126,7 @@ bool OrthogonalLineLayouter::update_start_point() {
   return false;
 }
 
-bool OrthogonalLineLayouter::update_end_point() {
+auto OrthogonalLineLayouter::update_end_point() -> bool {
   Point p(_linfo.end_connector()->get_position());
   mdc::CanvasItem *item = _linfo.end_connector()->get_connected_item();
   mdc::Magnet *magnet = _linfo.end_connector()->get_connected_magnet();
@@ -163,7 +163,7 @@ bool OrthogonalLineLayouter::update_end_point() {
   return false;
 }
 
-void OrthogonalLineLayouter::update() {
+auto OrthogonalLineLayouter::update() -> void {
   _change_pending = true;
   connector_changed(_linfo.start_connector());
 
@@ -171,7 +171,7 @@ void OrthogonalLineLayouter::update() {
     _changed();
 }
 
-void OrthogonalLineLayouter::connector_changed(Connector *conn) {
+auto OrthogonalLineLayouter::connector_changed(Connector *conn) -> void {
   bool changed = false;
 
   if (_updating)
@@ -233,7 +233,7 @@ void OrthogonalLineLayouter::connector_changed(Connector *conn) {
 *  @return vector with 3 or 4 points
 *********************************************************************************
 */
-std::vector<Point> OrthogonalLineLayouter::get_points_for_subline(int subline) {
+auto OrthogonalLineLayouter::get_points_for_subline(int subline) -> std::vector<Point> {
   std::vector<Point> points;
   Point start(_linfo.subline_start_point(subline));
   Point end(_linfo.subline_end_point(subline));
@@ -320,7 +320,7 @@ std::vector<Point> OrthogonalLineLayouter::get_points_for_subline(int subline) {
   return points;
 }
 
-std::vector<ItemHandle *> OrthogonalLineLayouter::create_handles(Line *line, InteractionLayer *ilayer) {
+auto OrthogonalLineLayouter::create_handles(Line *line, InteractionLayer *ilayer) -> std::vector<ItemHandle *> {
   std::vector<ItemHandle *> handles = super::create_handles(line, ilayer);
 
   for (int c = _linfo.count_sublines(), i = 0; i < c; i++) {
@@ -339,7 +339,7 @@ std::vector<ItemHandle *> OrthogonalLineLayouter::create_handles(Line *line, Int
   return handles;
 }
 
-void OrthogonalLineLayouter::update_handles(Line *line, std::vector<ItemHandle *> &handles) {
+auto OrthogonalLineLayouter::update_handles(Line *line, std::vector<ItemHandle *> &handles) -> void {
   super::update_handles(line, handles);
 
   for (std::vector<ItemHandle *>::iterator iter = handles.begin(); iter != handles.end(); ++iter) {
@@ -359,7 +359,7 @@ void OrthogonalLineLayouter::update_handles(Line *line, std::vector<ItemHandle *
   }
 }
 
-bool OrthogonalLineLayouter::handle_dragged(Line *line, ItemHandle *handle, const Point &pos, bool dragging) {
+auto OrthogonalLineLayouter::handle_dragged(Line *line, ItemHandle *handle, const Point &pos, bool dragging) -> bool {
   if (handle->get_tag() >= 100 && handle->get_tag() < 100 + _linfo.count_sublines()) {
     LineSegmentHandle *hdl = dynamic_cast<LineSegmentHandle *>(handle);
     if (hdl) {

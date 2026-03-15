@@ -44,13 +44,13 @@ namespace dataTypes {
 
   enum ConnectionType { ConnectionClassic, ConnectionNode };
 
-  rapidjson::Value toJson(const ConnectionType &type);
-  void fromJson(const rapidjson::Value &value, ConnectionType &type);
+  auto toJson(const ConnectionType &type) -> rapidjson::Value;
+  auto fromJson(const rapidjson::Value &value, ConnectionType &type) -> void;
 
   enum EditorLanguage { EditorSql, EditorJavaScript, EditorPython };
 
-  rapidjson::Value toJson(const EditorLanguage &lang);
-  void fromJson(const rapidjson::Value &value, EditorLanguage &lang);
+  auto toJson(const EditorLanguage &lang) -> rapidjson::Value;
+  auto fromJson(const rapidjson::Value &value, EditorLanguage &lang) -> void;
 
   struct BASELIBRARY_PUBLIC_FUNC AppOptions {
     std::string basedir;
@@ -155,7 +155,7 @@ namespace dataTypes {
   public:
     ArgumentParser(const std::string &line) : ptr(line.data()) {};
 
-    std::string getArgName() {
+    auto getArgName() -> std::string {
       if (std::strncmp(ptr, "--", sizeof("--") - 1) != 0) {
         // This means it's not an argument name
         return std::string();
@@ -171,7 +171,7 @@ namespace dataTypes {
       }
       return argName;
     }
-    std::string getArgValue() {
+    auto getArgValue() -> std::string {
       std::string retVal;
       do {
         if (*ptr == '\0')
@@ -191,15 +191,15 @@ namespace dataTypes {
   public:
     using entryList = std::map<std::string, OptionEntry>;
     OptionsList() {};
-    void addEntry(const OptionEntry &entry) {
+    auto addEntry(const OptionEntry &entry) -> void {
       _list.insert({ entry.longName, entry });
     }
 
-    entryList *getEntries() {
+    auto getEntries() -> entryList * {
       return &_list;
     }
 
-    OptionEntry *getEntry(const std::string name) {
+    auto getEntry(const std::string name) -> OptionEntry * {
       auto it = _list.find(name);
       if (it != _list.end())
         return &it->second;
@@ -207,7 +207,7 @@ namespace dataTypes {
     }
     std::vector<std::string> pathArgs;
 
-    bool parse(const std::vector<std::string> &args, int &retVal) {
+    auto parse(const std::vector<std::string> &args, int &retVal) -> bool {
       for (auto it = args.begin(); it != args.end(); it++) {
         ArgumentParser a(*it);
 
@@ -252,7 +252,7 @@ namespace dataTypes {
       return true;
     }
 
-    std::string getHelp(const std::string &binaryName) {
+    auto getHelp(const std::string &binaryName) -> std::string {
       std::stringstream ss;
       ss << binaryName;
       ss << " [<options>] [<name of a model file or sql script>]";
@@ -284,7 +284,7 @@ namespace dataTypes {
 
   protected:
     entryList _list;
-    bool setArgumentValue(OptionEntry &entry, const std::string &val, int *retval) {
+    auto setArgumentValue(OptionEntry &entry, const std::string &val, int *retval) -> bool {
       switch (entry.value.type) {
         case OptionArgumentNumeric:
           entry.value.numericValue = atoi((val).c_str());
@@ -318,14 +318,14 @@ namespace dataTypes {
     BaseConnection(const rapidjson::Value &value);
     virtual ~BaseConnection() {};
 
-    bool isValid() const {
+    auto isValid() const -> bool {
       return (!hostName.empty() && !userName.empty());
     }
 
-    std::string uri(bool withPassword = false) const;
-    std::string hostIdentifier() const;
+    auto uri(bool withPassword = false) const -> std::string;
+    auto hostIdentifier() const -> std::string;
 
-    virtual rapidjson::Value toJson() const;
+    virtual auto toJson() const -> rapidjson::Value;
     virtual void fromJson(const rapidjson::Value &value, const std::string &cName = "");
   };
 
@@ -339,7 +339,7 @@ namespace dataTypes {
     }
     SSHConnection(const rapidjson::Value &value);
     virtual ~SSHConnection() {};
-    virtual rapidjson::Value toJson() const;
+    virtual auto toJson() const -> rapidjson::Value;
     virtual void fromJson(const rapidjson::Value &value, const std::string &cName = "");
   };
 
@@ -356,7 +356,7 @@ namespace dataTypes {
     NodeConnection();
     NodeConnection(const rapidjson::Value &value);
     virtual ~NodeConnection();
-    virtual rapidjson::Value toJson() const;
+    virtual auto toJson() const -> rapidjson::Value;
     virtual void fromJson(const rapidjson::Value &value, const std::string &cName = "");
   };
 
@@ -368,14 +368,14 @@ namespace dataTypes {
     bool placeholder;
     std::string name;
     NodeConnection connection;
-    bool isValid() const {
+    auto isValid() const -> bool {
       return !name.empty() && connection.isValid();
     };
     XProject() : placeholder(false) {};
     XProject(const rapidjson::Value &value);
     virtual ~XProject() {};
-    rapidjson::Value toJson() const;
-    void fromJson(const rapidjson::Value &value);
+    auto toJson() const -> rapidjson::Value;
+    auto fromJson(const rapidjson::Value &value) -> void;
   };
 
   class BASELIBRARY_PUBLIC_FUNC ProjectHolder {
@@ -391,8 +391,8 @@ namespace dataTypes {
     ProjectHolder() : isGroup(false), isRoot(false) {};
     ProjectHolder(const rapidjson::Value &value);
     virtual ~ProjectHolder() {};
-    rapidjson::Value toJson() const;
-    void fromJson(const rapidjson::Value &value);
+    auto toJson() const -> rapidjson::Value;
+    auto fromJson(const rapidjson::Value &value) -> void;
   };
 
 } /* namespace dataTypes */

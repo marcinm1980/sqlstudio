@@ -31,28 +31,28 @@
 
 DEFAULT_LOG_DOMAIN("SSHCommon")
 
-static int MutexInit(void **priv) {
+static auto MutexInit(void **priv) -> int {
   *priv = new std::mutex();
   return 0;
 }
 
-static int MutexDestroy(void **lock) {
+static auto MutexDestroy(void **lock) -> int {
   delete static_cast<std::mutex *>(*lock);
   *lock = nullptr;
   return 0;
 }
 
-static int MutexLock(void **lock) {
+static auto MutexLock(void **lock) -> int {
   static_cast<std::mutex *>(*lock)->lock();
   return 0;
 }
 
-static int MutexUnlock(void **lock) {
+static auto MutexUnlock(void **lock) -> int {
   static_cast<std::mutex *>(*lock)->unlock();
   return 0;
 }
 
-static unsigned long getThreadId(void) {
+static auto getThreadId(void) -> unsigned long {
   std::hash<std::thread::id> hasher;
   return hasher(std::this_thread::get_id());
 }
@@ -64,7 +64,7 @@ struct ssh_threads_callbacks_struct * ssh_threads_get_std_threads(void) {
   return &stdThreads;
 }
 
-void sshLogCallback(int priority, const char *function, const char *buffer, void *userdata) {
+auto sshLogCallback(int priority, const char *function, const char *buffer, void *userdata) -> void {
   switch (priority) {
     case SSH_LOG_TRACE:
       logDebug3("libssh: %s %s\n", function, buffer);
@@ -83,11 +83,11 @@ void sshLogCallback(int priority, const char *function, const char *buffer, void
 }
 
 namespace ssh {
-  std::string getError() {
+  auto getError() -> std::string {
     return std::string(strerror(errno));
   }
 
-  std::string getSftpErrorDescription(int rc) {
+  auto getSftpErrorDescription(int rc) -> std::string {
     switch (rc)
     {
       case SSH_FX_EOF:
@@ -123,7 +123,7 @@ namespace ssh {
     }
   }
 
-  void setSocketNonBlocking(int sock) {
+  auto setSocketNonBlocking(int sock) -> void {
 #ifdef _MSC_VER
     u_long mode = 1;
     int result = ioctlsocket(sock, FIONBIO, &mode);
@@ -139,7 +139,7 @@ namespace ssh {
 #endif
   }
 
-  static void setupLibSSH() {
+  static auto setupLibSSH() -> void {
     ssh_threads_set_callbacks(ssh_threads_get_std_threads());
     std::string logLevel = base::Logger::active_level();
     if (logLevel == "none")
@@ -157,7 +157,7 @@ namespace ssh {
     ssh_init();
   }
 
-  void initLibSSH() {
+  auto initLibSSH() -> void {
     std::call_once(sshInitOnce, []{setupLibSSH();});
   }
 
@@ -168,7 +168,7 @@ namespace ssh {
 
   }
 
-  void SSHConnectionConfig::dumpConfig() const {
+  auto SSHConnectionConfig::dumpConfig() const -> void {
     logDebug2("SSH Connection config info:\n");
     logDebug2("SSH bufferSize: %lu\n", bufferSize);
     logDebug2("SSH connectTimeout: %lu\n", connectTimeout);
@@ -196,7 +196,7 @@ namespace ssh {
     return !(tun1 == tun2);
   }
 
-  void SSHThread::_run() {
+  auto SSHThread::_run() -> void {
     _initializationSem.post();
     _finished = false;
     run();
@@ -215,17 +215,17 @@ namespace ssh {
     }
   }
 
-  void SSHThread::stop() {
+  auto SSHThread::stop() -> void {
     _stop = true;
     if (_thread.joinable())
       _thread.join();
   }
 
-  bool SSHThread::isRunning() {
+  auto SSHThread::isRunning() -> bool {
     return !_finished;
   }
 
-  void SSHThread::start() {
+  auto SSHThread::start() -> void {
     if (_finished) {
       _stop = false;
       _thread = std::thread(&SSHThread::_run, this);
@@ -233,7 +233,7 @@ namespace ssh {
     }
   }
 
-  void SSHThread::join() {
+  auto SSHThread::join() -> void {
     _thread.join();
   }
 } /* namespace ssh */

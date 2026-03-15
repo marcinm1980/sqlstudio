@@ -35,14 +35,14 @@ Symbol::Symbol(std::string const &aName) : name(aName){};
 
 Symbol::~Symbol() {};
 
-void Symbol::clear() {
+auto Symbol::clear() -> void {
 }
 
-void Symbol::setParent(Symbol *parent) {
+auto Symbol::setParent(Symbol *parent) -> void {
   this->parent = parent;
 }
 
-Symbol *Symbol::getRoot() const {
+auto Symbol::getRoot() const -> Symbol * {
   Symbol *run = parent;
   while (run != nullptr) {
     if (run->parent == nullptr || dynamic_cast<SymbolTable *>(run->parent) != nullptr)
@@ -52,7 +52,7 @@ Symbol *Symbol::getRoot() const {
   return run;
 }
 
-std::vector<Symbol const *> Symbol::getSymbolPath() const {
+auto Symbol::getSymbolPath() const -> std::vector<Symbol const *> {
   std::vector<Symbol const *> result;
   const Symbol *run = this;
   while (run != nullptr) {
@@ -64,7 +64,7 @@ std::vector<Symbol const *> Symbol::getSymbolPath() const {
   return result;
 }
 
-std::string Symbol::qualifiedName(std::string const &separator, bool full) const {
+auto Symbol::qualifiedName(std::string const &separator, bool full) const -> std::string {
   std::string result = name;
   Symbol *run = parent;
   while (run != nullptr) {
@@ -86,16 +86,16 @@ TypedSymbol::TypedSymbol(std::string const &name, Type const *aType) : Symbol(na
 ScopedSymbol::ScopedSymbol(std::string const &name) : Symbol(name) {
 };
 
-void ScopedSymbol::clear() {
+auto ScopedSymbol::clear() -> void {
   children.clear();
 }
 
-void ScopedSymbol::addAndManageSymbol(Symbol *symbol) {
+auto ScopedSymbol::addAndManageSymbol(Symbol *symbol) -> void {
   children.emplace_back(symbol);
   symbol->setParent(this);
 }
 
-Symbol *ScopedSymbol::resolve(std::string const &name, bool localOnly) {
+auto ScopedSymbol::resolve(std::string const &name, bool localOnly) -> Symbol * {
   for (auto &child : children) {
     if (child->name == name)
       return child.get();
@@ -111,7 +111,7 @@ Symbol *ScopedSymbol::resolve(std::string const &name, bool localOnly) {
   return nullptr;
 }
 
-std::vector<TypedSymbol *> ScopedSymbol::getTypedSymbols(bool localOnly) const {
+auto ScopedSymbol::getTypedSymbols(bool localOnly) const -> std::vector<TypedSymbol *> {
   std::vector<TypedSymbol *> result = getSymbolsOfType<TypedSymbol>();
 
   if (!localOnly) {
@@ -125,7 +125,7 @@ std::vector<TypedSymbol *> ScopedSymbol::getTypedSymbols(bool localOnly) const {
   return result;
 }
 
-std::vector<std::string> ScopedSymbol::getTypedSymbolNames(bool localOnly) const {
+auto ScopedSymbol::getTypedSymbolNames(bool localOnly) const -> std::vector<std::string> {
   std::vector<std::string> result;
 
   for (auto &child : children) {
@@ -145,7 +145,7 @@ std::vector<std::string> ScopedSymbol::getTypedSymbolNames(bool localOnly) const
   return result;
 }
 
-std::vector<Type *> ScopedSymbol::getTypes(bool localOnly) const {
+auto ScopedSymbol::getTypes(bool localOnly) const -> std::vector<Type *> {
   std::vector<Type *> result = getSymbolsOfType<Type>();
 
   if (!localOnly) {
@@ -159,11 +159,11 @@ std::vector<Type *> ScopedSymbol::getTypes(bool localOnly) const {
   return result;
 }
 
-std::vector<ScopedSymbol *> ScopedSymbol::getDirectScopes() const {
+auto ScopedSymbol::getDirectScopes() const -> std::vector<ScopedSymbol *> {
   return getSymbolsOfType<ScopedSymbol>();
 }
 
-std::vector<Symbol *> ScopedSymbol::getAllSymbols() const {
+auto ScopedSymbol::getAllSymbols() const -> std::vector<Symbol *> {
   std::vector<Symbol *> result;
 
   for (auto &child : children) {
@@ -179,7 +179,7 @@ std::vector<Symbol *> ScopedSymbol::getAllSymbols() const {
   return result;
 }
 
-std::set<std::string> ScopedSymbol::getAllSymbolNames() const {
+auto ScopedSymbol::getAllSymbolNames() const -> std::set<std::string> {
   std::set<std::string> result;
 
   for (auto &child : children) {
@@ -208,11 +208,11 @@ RoutineSymbol::RoutineSymbol(std::string const &name, Type const *aReturnType)
   : ScopedSymbol(name), returnType(aReturnType) {
 };
 
-std::vector<VariableSymbol *> RoutineSymbol::getVariables(bool localOnly) const {
+auto RoutineSymbol::getVariables(bool localOnly) const -> std::vector<VariableSymbol *> {
   return getSymbolsOfType<VariableSymbol>();
 }
 
-std::vector<ParameterSymbol *> RoutineSymbol::getParameters(bool localOnly) const {
+auto RoutineSymbol::getParameters(bool localOnly) const -> std::vector<ParameterSymbol *> {
   return getSymbolsOfType<ParameterSymbol>();
 }
 
@@ -248,11 +248,11 @@ ClassSymbol::ClassSymbol(std::string const &name, ClassSymbol *aSuperClass)
   : ScopedSymbol(name), Type(name), superClasses({aSuperClass}) {
 }
 
-std::vector<MethodSymbol *> ClassSymbol::getMethods(bool includeInherited) const {
+auto ClassSymbol::getMethods(bool includeInherited) const -> std::vector<MethodSymbol *> {
   return getSymbolsOfType<MethodSymbol>();
 }
 
-std::vector<FieldSymbol *> ClassSymbol::getFields(bool includeInherited) const {
+auto ClassSymbol::getFields(bool includeInherited) const -> std::vector<FieldSymbol *> {
   return getSymbolsOfType<FieldSymbol>();
 }
 
@@ -288,26 +288,26 @@ SymbolTable::~SymbolTable() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SymbolTable::lock() {
+auto SymbolTable::lock() -> void {
   _d->mutex.lock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SymbolTable::unlock() {
+auto SymbolTable::unlock() -> void {
   _d->mutex.unlock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SymbolTable::addDependencies(std::vector<SymbolTable *> const &newDependencies) {
+auto SymbolTable::addDependencies(std::vector<SymbolTable *> const &newDependencies) -> void {
   // No duplicate check takes place.
   _dependencies.insert(_dependencies.end(), newDependencies.begin(), newDependencies.end());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Symbol *SymbolTable::resolve(std::string const &name, bool localOnly) {
+auto SymbolTable::resolve(std::string const &name, bool localOnly) -> Symbol * {
   lock();
   Symbol *result = ScopedSymbol::resolve(name, localOnly);
 

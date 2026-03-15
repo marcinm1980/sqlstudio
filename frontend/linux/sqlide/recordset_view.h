@@ -36,18 +36,18 @@
 
 class RecordsetView : public Gtk::ScrolledWindow {
 public:
-  static RecordsetView *create(Recordset::Ref model);
+  static auto create(Recordset::Ref model) -> RecordsetView *;
   ~RecordsetView();
 
 protected:
   RecordsetView(Recordset::Ref model);
 
 private:
-  virtual void init();
+  virtual auto init() -> void;
 
 public:
-  void model(Recordset::Ref value);
-  Recordset::Ref model() {
+  auto model(Recordset::Ref value) -> void;
+  auto model() -> Recordset::Ref {
     return _model;
   }
 
@@ -62,38 +62,38 @@ protected:
   boost::signals2::connection _refresh_ui_stat_sig;
 
 public:
-  GridView *grid_view() {
+  auto grid_view() -> GridView * {
     return _grid;
   }
 
-  virtual void refresh();
-  virtual void reset();
+  virtual auto refresh() -> void;
+  virtual auto reset() -> void;
 
-  bool has_changes();
-  void copy(const std::vector<int> &rows);
+  auto has_changes() -> bool;
+  auto copy(const std::vector<int> &rows) -> void;
 
 protected:
-  virtual bool on_event(GdkEvent *event);
+  virtual auto on_event(GdkEvent *event) -> bool;
 
-  void selected_record_changed();
+  auto selected_record_changed() -> void;
 
-  void on_commit_btn_clicked();
-  void on_rollback_btn_clicked();
+  auto on_commit_btn_clicked() -> void;
+  auto on_rollback_btn_clicked() -> void;
 
-  void on_goto_first_row_btn_clicked();
-  void on_goto_last_row_btn_clicked();
-  void on_record_prev();
-  void on_record_next();
-  void on_record_edit();
-  void on_record_add();
-  void on_record_del();
-  void on_record_sort_asc();
-  void on_record_sort_desc();
-  void on_toggle_vertical_sizing();
+  auto on_goto_first_row_btn_clicked() -> void;
+  auto on_goto_last_row_btn_clicked() -> void;
+  auto on_record_prev() -> void;
+  auto on_record_next() -> void;
+  auto on_record_edit() -> void;
+  auto on_record_add() -> void;
+  auto on_record_del() -> void;
+  auto on_record_sort_asc() -> void;
+  auto on_record_sort_desc() -> void;
+  auto on_toggle_vertical_sizing() -> void;
 
   void set_fixed_row_height(int);
 
-  bool activate_toolbar_item(const std::string &action);
+  auto activate_toolbar_item(const std::string &action) -> bool;
 };
 
 #endif // __RECORDSET_VIEW_H__

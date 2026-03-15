@@ -36,19 +36,19 @@ namespace mforms {
       CodeEditorWrapper(::mforms::CodeEditor* self) : ViewWrapper(self) {
       }
 
-      static bool create(CodeEditor* self, bool showInfo) {
+      static auto create(CodeEditor* self, bool showInfo) -> bool {
         return true;
       }
 
-      static sptr_t send_editor(CodeEditor* self, unsigned int message, uptr_t wParam, sptr_t lParam) {
+      static auto send_editor(CodeEditor* self, unsigned int message, uptr_t wParam, sptr_t lParam) -> sptr_t {
         return 0;
       }
 
-      static void set_status_text(CodeEditor* self, const std::string& text) {
+      static auto set_status_text(CodeEditor* self, const std::string& text) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory* f = ::mforms::ControlFactory::get_instance();
 
         f->_code_editor_impl.create = &CodeEditorWrapper::create;

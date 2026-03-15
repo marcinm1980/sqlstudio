@@ -44,23 +44,23 @@ namespace ssh {
   class WBSSHLIBRARY_PUBLIC_FUNC SSHTunnelManager : public SSHThread {
   public:
     SSHTunnelManager();
-    std::tuple<SSHReturnType, base::any> createTunnel(std::shared_ptr<SSHSession> &session);
-    int lookupTunnel(const SSHConnectionConfig &config);
+    auto createTunnel(std::shared_ptr<SSHSession> &session) -> std::tuple<SSHReturnType, base::any>;
+    auto lookupTunnel(const SSHConnectionConfig &config) -> int;
     virtual ~SSHTunnelManager();
-    void pokeWakeupSocket();
-    void setStop() {
+    auto pokeWakeupSocket() -> void;
+    auto setStop() -> void {
       _stop = true;
     }
 
-    void disconnect(const SSHConnectionConfig &config);
+    auto disconnect(const SSHConnectionConfig &config) -> void;
 
   protected:
     mutable base::RecMutex _socketMutex;
-    base::RecMutexLock lockSocketList();
+    auto lockSocketList() -> base::RecMutexLock;
     virtual void run() override;
-    sockInfo createSocket();
-    void localSocketHandler();
-    std::vector<pollfd> getSocketList();
+    auto createSocket() -> sockInfo;
+    auto localSocketHandler() -> void;
+    auto getSocketList() -> std::vector<pollfd>;
 
     uint16_t _wakeupSocketPort;
     int _wakeupSocket;

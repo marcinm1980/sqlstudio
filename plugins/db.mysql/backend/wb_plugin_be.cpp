@@ -26,7 +26,7 @@
 #include "wb_plugin_be.h"
 //--------------------------------------------------------------------------------------------------
 
-void Wb_plugin::exec_task(bool sync) {
+auto Wb_plugin::exec_task(bool sync) -> void {
   set_task_proc();
 
   bec::GRTTask::Ref task =
@@ -44,7 +44,7 @@ void Wb_plugin::exec_task(bool sync) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Wb_plugin::process_task_msg(const grt::Message &msg) {
+auto Wb_plugin::process_task_msg(const grt::Message &msg) -> void {
   switch (msg.type) {
     case grt::WarningMsg:
     case grt::ErrorMsg:
@@ -63,14 +63,14 @@ void Wb_plugin::process_task_msg(const grt::Message &msg) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Wb_plugin::process_task_fail(const std::exception &error) {
+auto Wb_plugin::process_task_fail(const std::exception &error) -> void {
   if (_task_fail_cb)
     _task_fail_cb(error.what());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Wb_plugin::process_task_finish(grt::ValueRef res) {
+auto Wb_plugin::process_task_finish(grt::ValueRef res) -> void {
   grt::GRT::get()->send_info(grt::StringRef::cast_from(res));
   bec::GRTManager::get()->perform_idle_tasks();
   if (_task_fail_cb)
@@ -87,26 +87,26 @@ T2 get_option(const grt::DictRef &options, const std::string &name) {
   return value;
 }
 
-int Wb_plugin::get_int_option(const std::string &name) {
+auto Wb_plugin::get_int_option(const std::string &name) -> int {
   return get_option<grt::IntegerRef, int>(_options, name);
 }
 
-double Wb_plugin::get_double_option(const std::string &name) {
+auto Wb_plugin::get_double_option(const std::string &name) -> double {
   return get_option<grt::DoubleRef, double>(_options, name);
 }
 
-std::string Wb_plugin::get_string_option(const std::string &name) {
+auto Wb_plugin::get_string_option(const std::string &name) -> std::string {
   return get_option<grt::StringRef, std::string>(_options, name);
 }
 
-void Wb_plugin::set_option(const std::string &name, int val) {
+auto Wb_plugin::set_option(const std::string &name, int val) -> void {
   _options.set(name, grt::IntegerRef(val));
 }
 
-void Wb_plugin::set_option(const std::string &name, const double &val) {
+auto Wb_plugin::set_option(const std::string &name, const double &val) -> void {
   _options.set(name, grt::DoubleRef(val));
 }
 
-void Wb_plugin::set_option(const std::string &name, const std::string &val) {
+auto Wb_plugin::set_option(const std::string &name, const std::string &val) -> void {
   _options.set(name, grt::StringRef(val));
 }

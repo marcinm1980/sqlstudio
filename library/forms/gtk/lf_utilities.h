@@ -37,48 +37,48 @@ namespace mforms {
   namespace gtk {
 
     class UtilitiesImpl {
-      static int show_message(const std::string &title, const std::string &text, const std::string &ok,
-                              const std::string &cancel, const std::string &other);
-      static int show_error(const std::string &title, const std::string &text, const std::string &ok,
-                            const std::string &cancel, const std::string &other);
-      static int show_warning(const std::string &title, const std::string &text, const std::string &ok,
-                              const std::string &cancel, const std::string &other);
+      static auto show_message(const std::string &title, const std::string &text, const std::string &ok,
+                              const std::string &cancel, const std::string &other) -> int;
+      static auto show_error(const std::string &title, const std::string &text, const std::string &ok,
+                            const std::string &cancel, const std::string &other) -> int;
+      static auto show_warning(const std::string &title, const std::string &text, const std::string &ok,
+                              const std::string &cancel, const std::string &other) -> int;
       static int show_message_with_checkbox(
         const std::string &title, const std::string &text, const std::string &ok, const std::string &cancel,
         const std::string &other,
         const std::string &checkbox_text, // empty text = default "Don't show this message again" text
         bool &remember_checked);
 
-      static void show_wait_message(const std::string &title, const std::string &text);
-      static bool hide_wait_message();
-      static bool run_cancelable_wait_message(const std::string &title, const std::string &text,
+      static auto show_wait_message(const std::string &title, const std::string &text) -> void;
+      static auto hide_wait_message() -> bool;
+      static auto run_cancelable_wait_message(const std::string &title, const std::string &text,
                                               const std::function<void()> &start_task,
-                                              const std::function<bool()> &cancel_task);
-      static void stop_cancelable_wait_message();
+                                              const std::function<bool()> &cancel_task) -> bool;
+      static auto stop_cancelable_wait_message() -> void;
 
-      static void set_clipboard_text(const std::string &text);
-      static std::string get_clipboard_text();
-      static void open_url(const std::string &url);
-      static std::string get_special_folder(mforms::FolderType type);
-      static TimeoutHandle add_timeout(float interval, const std::function<bool()> &slot);
-      static void cancel_timeout(TimeoutHandle h);
+      static auto set_clipboard_text(const std::string &text) -> void;
+      static auto get_clipboard_text() -> std::string;
+      static auto open_url(const std::string &url) -> void;
+      static auto get_special_folder(mforms::FolderType type) -> std::string;
+      static auto add_timeout(float interval, const std::function<bool()> &slot) -> TimeoutHandle;
+      static auto cancel_timeout(TimeoutHandle h) -> void;
 
-      static void store_password(const std::string &service, const std::string &account, const std::string &password);
-      static bool find_password(const std::string &service, const std::string &account, std::string &password);
-      static void forget_password(const std::string &service, const std::string &account);
+      static auto store_password(const std::string &service, const std::string &account, const std::string &password) -> void;
+      static auto find_password(const std::string &service, const std::string &account, std::string &password) -> bool;
+      static auto forget_password(const std::string &service, const std::string &account) -> void;
 
-      static bool move_to_trash(const std::string &path);
-      static void reveal_file(const std::string &path);
+      static auto move_to_trash(const std::string &path) -> bool;
+      static auto reveal_file(const std::string &path) -> void;
 
-      static void set_thread_name(const std::string &name);
-      static void beep();
+      static auto set_thread_name(const std::string &name) -> void;
+      static auto beep() -> void;
 
-      static double get_text_width(const std::string &text, const std::string &font_desc);
+      static auto get_text_width(const std::string &text, const std::string &font_desc) -> double;
 
     public:
-      static void init();
+      static auto init() -> void;
 
-      static Glib::RefPtr<Gdk::Pixbuf> get_cached_icon(const std::string &icon);
+      static auto get_cached_icon(const std::string &icon) -> Glib::RefPtr<Gdk::Pixbuf>;
     };
 
     class MainThreadRequestQueue {
@@ -94,12 +94,12 @@ namespace mforms {
       Glib::Mutex _mutex;
       std::list<std::shared_ptr<Request> > _queue;
 
-      void from_main_thread();
+      auto from_main_thread() -> void;
 
     public:
       MainThreadRequestQueue();
-      static MainThreadRequestQueue *get();
-      static void *perform(const std::function<void *()> &slot, bool wait);
+      static auto get() -> MainThreadRequestQueue *;
+      static auto perform(const std::function<void *()> &slot, bool wait) -> void *;
     };
   };
 };

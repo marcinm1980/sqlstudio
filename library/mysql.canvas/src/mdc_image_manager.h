@@ -47,7 +47,7 @@ namespace mdc {
 
     auto get_image_nocache(const std::string &name) -> cairo_surface_t *;
 
-    void add_search_path(const std::string &directory);
+    auto add_search_path(const std::string &directory) -> void;
   };
 
 } // end of mdc namespace

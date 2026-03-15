@@ -45,7 +45,7 @@ MySQLRoutineEditorBE::MySQLRoutineEditorBE(const db_mysql_RoutineRef& routine) :
 /**
  * Loads the current routine sql text into the editor control and marks that as not dirty.
  */
-void MySQLRoutineEditorBE::load_routine_sql() {
+auto MySQLRoutineEditorBE::load_routine_sql() -> void {
   mforms::CodeEditor* editor = get_sql_editor()->get_editor_control();
   std::string sql = get_sql();
   editor->set_text_keeping_state(sql.c_str());
@@ -53,7 +53,7 @@ void MySQLRoutineEditorBE::load_routine_sql() {
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRoutineEditorBE::commit_changes() {
+auto MySQLRoutineEditorBE::commit_changes() -> void {
   mforms::CodeEditor* editor = get_sql_editor()->get_editor_control();
   if (editor->is_dirty()) {
     const std::string sql = editor->get_text(false);
@@ -73,7 +73,7 @@ void MySQLRoutineEditorBE::commit_changes() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLRoutineEditorBE::can_close() {
+auto MySQLRoutineEditorBE::can_close() -> bool {
   commit_changes();
   return RoutineEditorBE::can_close();
 }

@@ -107,9 +107,9 @@ static const char *test_function_1_output[] = {
 static int test_function_1_output_index;
 static bool test_function_1_success_flag;
 
-int test_function_1_cb(void* user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
+auto test_function_1_cb(void* user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
     int stmt_begin_lineno, int stmt_begin_line_pos, int stmt_end_lineno, int stmt_end_line_pos,
-    int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) {
+    int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) -> int {
   test_function_1_success_flag &= (strcmp(sql, test_function_1_output[test_function_1_output_index++]) == 0);
   return 0;
 }
@@ -118,26 +118,26 @@ int test_function_1_cb(void* user_data, const MyxStatementParser *splitter, cons
 
 static int test_function_2_counter;
 
-int test_function_2_cb(void* user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
+auto test_function_2_cb(void* user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
     int stmt_begin_lineno, int stmt_begin_line_pos, int stmt_end_lineno, int stmt_end_line_pos,
-    int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) {
+    int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) -> int {
   test_function_2_counter++;
   return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int test_function_30_cb(void* user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
+auto test_function_30_cb(void* user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
   int stmt_begin_lineno, int stmt_begin_line_pos, int stmt_end_lineno, int stmt_end_line_pos,
-  int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) {
+  int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) -> int {
   return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int test_function_5_cb(void* user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
+auto test_function_5_cb(void* user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
   int stmt_begin_lineno, int stmt_begin_line_pos, int stmt_end_lineno, int stmt_end_line_pos,
-  int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) {
+  int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) -> int {
   int *count = (int*)user_data;
   *count += 1;
   return 0;
@@ -154,7 +154,7 @@ private:
   GRTManagerTest &operator=(GRTManagerTest &) = delete;
 
 public:
-  static std::shared_ptr<GRTManagerTest> get() {
+  static auto get() -> std::shared_ptr<GRTManagerTest> {
     static std::shared_ptr<GRTManagerTest> instance(new GRTManagerTest());
     return instance;
   }

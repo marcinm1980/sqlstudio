@@ -56,38 +56,38 @@ protected:
 
   ImplData(model_Figure *owner);
 
-  virtual void update_options(const std::string &key);
+  virtual auto update_options(const std::string &key) -> void;
 
-  void finish_realize();
+  auto finish_realize() -> void;
 
-  void member_changed(const std::string &member, const grt::ValueRef &ovalue);
+  auto member_changed(const std::string &member, const grt::ValueRef &ovalue) -> void;
 
-  void figure_resized(const base::Rect &rect);
-  void figure_bounds_changed(const base::Rect &rect);
+  auto figure_resized(const base::Rect &rect) -> void;
+  auto figure_bounds_changed(const base::Rect &rect) -> void;
 
-  virtual bool is_realizable();
+  virtual auto is_realizable() -> bool;
 
-  void relayout_badges();
-
-public:
-  mdc::CanvasView *get_canvas_view() const;
-  bool is_canvas_view_valid();
-
-  void set_layer(const model_LayerRef &layer);
-
-  void add_badge(BadgeFigure *badge);
-  void remove_badge(BadgeFigure *badge);
-  BadgeFigure *get_badge_with_id(const std::string &badge_id);
+  auto relayout_badges() -> void;
 
 public:
-  virtual void render_mini(mdc::CairoCtx *cr);
-  virtual void unrealize();
+  auto get_canvas_view() const -> mdc::CanvasView *;
+  auto is_canvas_view_valid() -> bool;
 
-  virtual void highlight(const base::Color *color = 0);
-  virtual void unhighlight();
+  auto set_layer(const model_LayerRef &layer) -> void;
+
+  auto add_badge(BadgeFigure *badge) -> void;
+  auto remove_badge(BadgeFigure *badge) -> void;
+  auto get_badge_with_id(const std::string &badge_id) -> BadgeFigure *;
+
+public:
+  virtual auto render_mini(mdc::CairoCtx *cr) -> void;
+  virtual auto unrealize() -> void;
+
+  virtual auto highlight(const base::Color *color = 0) -> void;
+  virtual auto unhighlight() -> void;
 
 private:
-  model_Figure *self() const {
+  auto self() const -> model_Figure * {
     return (model_Figure *)_self;
   }
 };

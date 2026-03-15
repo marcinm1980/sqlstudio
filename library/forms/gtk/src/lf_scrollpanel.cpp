@@ -53,11 +53,11 @@ mforms::gtk::ScrollPanelImpl::~ScrollPanelImpl() {
     delete _swin;
 }
 
-bool mforms::gtk::ScrollPanelImpl::create(::mforms::ScrollPanel *self, mforms::ScrollPanelFlags flags) {
+auto mforms::gtk::ScrollPanelImpl::create(::mforms::ScrollPanel *self, mforms::ScrollPanelFlags flags) -> bool {
   return new mforms::gtk::ScrollPanelImpl(self, flags) != 0;
 }
 
-void mforms::gtk::ScrollPanelImpl::add(::mforms::ScrollPanel *self, ::mforms::View *child) {
+auto mforms::gtk::ScrollPanelImpl::add(::mforms::ScrollPanel *self, ::mforms::View *child) -> void {
   mforms::gtk::ScrollPanelImpl *panel = self->get_data<mforms::gtk::ScrollPanelImpl>();
 
   if (panel)
@@ -74,13 +74,13 @@ void mforms::gtk::ScrollPanelImpl::add(::mforms::ScrollPanel *self, ::mforms::Vi
 
 }
 
-void mforms::gtk::ScrollPanelImpl::remove(::mforms::ScrollPanel *self) {
+auto mforms::gtk::ScrollPanelImpl::remove(::mforms::ScrollPanel *self) -> void {
   mforms::gtk::ScrollPanelImpl *panel = self->get_data<mforms::gtk::ScrollPanelImpl>();
   if (panel)
     panel->_swin->remove();
 }
 
-void mforms::gtk::ScrollPanelImpl::set_visible_scrollers(::mforms::ScrollPanel *self, bool vertical, bool horizontal) {
+auto mforms::gtk::ScrollPanelImpl::set_visible_scrollers(::mforms::ScrollPanel *self, bool vertical, bool horizontal) -> void {
   mforms::gtk::ScrollPanelImpl *panel = self->get_data<mforms::gtk::ScrollPanelImpl>();
   panel->_vertical = vertical;
   panel->_horizontal = horizontal;
@@ -106,7 +106,7 @@ void mforms::gtk::ScrollPanelImpl::set_visible_scrollers(::mforms::ScrollPanel *
   panel->_swin->set_policy(hPolicy, vPolicy);
 }
 
-void mforms::gtk::ScrollPanelImpl::set_autohide_scrollers(::mforms::ScrollPanel *self, bool flag) {
+auto mforms::gtk::ScrollPanelImpl::set_autohide_scrollers(::mforms::ScrollPanel *self, bool flag) -> void {
   ScrollPanelImpl *panel = self->get_data<mforms::gtk::ScrollPanelImpl>();
 
   panel->_autohide = flag;
@@ -115,7 +115,7 @@ void mforms::gtk::ScrollPanelImpl::set_autohide_scrollers(::mforms::ScrollPanel 
     panel->_autohide ? Gtk::POLICY_AUTOMATIC : (panel->_vertical ? Gtk::POLICY_ALWAYS : Gtk::POLICY_NEVER));
 }
 
-void mforms::gtk::ScrollPanelImpl::scroll_to_view(mforms::ScrollPanel *self, mforms::View *child) {
+auto mforms::gtk::ScrollPanelImpl::scroll_to_view(mforms::ScrollPanel *self, mforms::View *child) -> void {
   mforms::gtk::ScrollPanelImpl *panel = self->get_data<mforms::gtk::ScrollPanelImpl>();
   if (!panel)
     throw std::logic_error("self->get_data returned 0. Check mforms::gtk::ScrollPanelImpl::scroll_to_view.");
@@ -132,13 +132,13 @@ void mforms::gtk::ScrollPanelImpl::scroll_to_view(mforms::ScrollPanel *self, mfo
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ScrollPanelImpl::set_padding_impl(int left, int top, int right, int bottom) {
+auto mforms::gtk::ScrollPanelImpl::set_padding_impl(int left, int top, int right, int bottom) -> void {
   _swin->set_border_width(left);
 }
 
 //------------------------------------------------------------------------------
 
-void mforms::gtk::ScrollPanelImpl::disableAutomaticScrollToChildren() {
+auto mforms::gtk::ScrollPanelImpl::disableAutomaticScrollToChildren() -> void {
   _noAutoScroll = true;
 
   auto dummyAdjV = Gtk::Adjustment::create(0,  0,  0);
@@ -148,7 +148,7 @@ void mforms::gtk::ScrollPanelImpl::disableAutomaticScrollToChildren() {
 }
 
 //------------------------------------------------------------------------------
-base::Rect mforms::gtk::ScrollPanelImpl::get_content_rect(mforms::ScrollPanel *self) {
+auto mforms::gtk::ScrollPanelImpl::get_content_rect(mforms::ScrollPanel *self) -> base::Rect {
   mforms::gtk::ScrollPanelImpl *panel = self->get_data<mforms::gtk::ScrollPanelImpl>();
 
   base::Rect rect;
@@ -164,13 +164,13 @@ base::Rect mforms::gtk::ScrollPanelImpl::get_content_rect(mforms::ScrollPanel *s
   return rect;
 }
 
-void mforms::gtk::ScrollPanelImpl::scroll_to(mforms::ScrollPanel *self, int x, int y) {
+auto mforms::gtk::ScrollPanelImpl::scroll_to(mforms::ScrollPanel *self, int x, int y) -> void {
   mforms::gtk::ScrollPanelImpl *panel = self->get_data<mforms::gtk::ScrollPanelImpl>();
   panel->_swin->get_vadjustment()->set_value(y);
   panel->_swin->get_hadjustment()->set_value(x);
 }
 
-void mforms::gtk::ScrollPanelImpl::init() {
+auto mforms::gtk::ScrollPanelImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_spanel_impl.create = &mforms::gtk::ScrollPanelImpl::create;

@@ -31,7 +31,7 @@
 
 #define MODULE_VERSION "1.0.0"
 
-static grt::ListRef<app_Plugin> get_mysql_plugins_info();
+static auto get_mysql_plugins_info() -> grt::ListRef<app_Plugin>;
 
 class MySQLDbModuleImpl : public grt::ModuleImplBase, public PluginInterfaceImpl {
 public:
@@ -47,9 +47,9 @@ public:
                      DECLARE_MODULE_FUNCTION(MySQLDbModuleImpl::runDbExportWizard),
                      DECLARE_MODULE_FUNCTION(MySQLDbModuleImpl::runDiffAlterWizard), NULL);
 
-  int runExportCREATEScriptWizard(db_CatalogRef catalog) {
-    extern grtui::WizardPlugin *createExportCREATEScriptWizard(grt::Module * module, db_CatalogRef catalog);
-    extern void deleteExportCREATEScriptWizard(grtui::WizardPlugin * plugin);
+  auto runExportCREATEScriptWizard(db_CatalogRef catalog) -> int {
+    extern auto createExportCREATEScriptWizard(grt::Module * module, db_CatalogRef catalog) -> grtui::WizardPlugin *;
+    extern auto deleteExportCREATEScriptWizard(grtui::WizardPlugin * plugin) -> void;
 
     grtui::WizardPlugin *wizard = createExportCREATEScriptWizard(this, catalog);
     int rc = wizard->run_wizard();
@@ -58,9 +58,9 @@ public:
     return rc;
   }
 
-  int runImportScriptWizard(db_CatalogRef catalog) {
-    extern grtui::WizardPlugin *createImportScriptWizard(grt::Module * module, db_CatalogRef catalog);
-    extern void deleteImportScriptWizard(grtui::WizardPlugin * plugin);
+  auto runImportScriptWizard(db_CatalogRef catalog) -> int {
+    extern auto createImportScriptWizard(grt::Module * module, db_CatalogRef catalog) -> grtui::WizardPlugin *;
+    extern auto deleteImportScriptWizard(grtui::WizardPlugin * plugin) -> void;
 
     grtui::WizardPlugin *wizard = createImportScriptWizard(this, catalog);
     int rc = wizard->run_wizard();
@@ -69,9 +69,9 @@ public:
     return rc;
   }
 
-  int runDbSynchronizeWizard(db_CatalogRef catalog) {
-    extern grtui::WizardPlugin *createDbSynchronizeWizard(grt::Module * module, db_CatalogRef catalog);
-    extern void deleteDbSynchronizeWizard(grtui::WizardPlugin * plugin);
+  auto runDbSynchronizeWizard(db_CatalogRef catalog) -> int {
+    extern auto createDbSynchronizeWizard(grt::Module * module, db_CatalogRef catalog) -> grtui::WizardPlugin *;
+    extern auto deleteDbSynchronizeWizard(grtui::WizardPlugin * plugin) -> void;
     grtui::WizardPlugin *wizard = createDbSynchronizeWizard(this, catalog);
     int rc = wizard->run_wizard();
     deleteDbSynchronizeWizard(wizard);
@@ -79,9 +79,9 @@ public:
     return rc;
   }
 
-  int runDbImportWizard(db_CatalogRef catalog) {
-    extern grtui::WizardPlugin *createDbImportWizard(grt::Module * module, db_CatalogRef catalog);
-    extern void deleteDbImportWizard(grtui::WizardPlugin * plugin);
+  auto runDbImportWizard(db_CatalogRef catalog) -> int {
+    extern auto createDbImportWizard(grt::Module * module, db_CatalogRef catalog) -> grtui::WizardPlugin *;
+    extern auto deleteDbImportWizard(grtui::WizardPlugin * plugin) -> void;
 
     grtui::WizardPlugin *wizard = createDbImportWizard(this, catalog);
     int rc = wizard->run_wizard();
@@ -90,9 +90,9 @@ public:
     return rc;
   }
 
-  int runDiffAlterWizard(db_CatalogRef catalog) {
-    extern grtui::WizardPlugin *createWbSynchronizeAnyWizard(grt::Module * module, db_CatalogRef catalog);
-    extern void deleteWbSynchronizeAnyWizard(grtui::WizardPlugin * plugin);
+  auto runDiffAlterWizard(db_CatalogRef catalog) -> int {
+    extern auto createWbSynchronizeAnyWizard(grt::Module * module, db_CatalogRef catalog) -> grtui::WizardPlugin *;
+    extern auto deleteWbSynchronizeAnyWizard(grtui::WizardPlugin * plugin) -> void;
 
     grtui::WizardPlugin *wizard = createWbSynchronizeAnyWizard(this, catalog);
     int rc = wizard->run_wizard();
@@ -101,9 +101,9 @@ public:
     return rc;
   }
 
-  int runDbExportWizard(db_CatalogRef catalog) {
-    extern grtui::WizardPlugin *createDbExportWizard(grt::Module * module, db_CatalogRef catalog);
-    extern void deleteDbExportWizard(grtui::WizardPlugin * plugin);
+  auto runDbExportWizard(db_CatalogRef catalog) -> int {
+    extern auto createDbExportWizard(grt::Module * module, db_CatalogRef catalog) -> grtui::WizardPlugin *;
+    extern auto deleteDbExportWizard(grtui::WizardPlugin * plugin) -> void;
 
     grtui::WizardPlugin *wizard = createDbExportWizard(this, catalog);
     int rc = wizard->run_wizard();
@@ -117,7 +117,7 @@ public:
   }
 };
 
-static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
+static auto get_mysql_plugins_info() -> grt::ListRef<app_Plugin> {
   grt::ListRef<app_Plugin> plugins(true);
   app_PluginRef diff_sql_generator(grt::Initialized);
 

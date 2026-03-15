@@ -33,8 +33,7 @@ namespace mysql_parser
 
 #ifdef BAD_STRING_COMPILER
 
-char *strmake(char *dst,const char *src,uint length)
-{
+auto strmake(char *dst,const char *src,uint length) -> char * {
   reg1 char *res;
 
   if ((res=memccpy(dst,src,0,length)))
@@ -46,8 +45,7 @@ char *strmake(char *dst,const char *src,uint length)
 #define strmake strmake_overlapp	/* Use orginal for overlapping str */
 #endif
 
-char *strmake(register char *dst, register const char *src, uint length)
-{
+auto strmake(register char *dst, register const char *src, uint length) -> char * {
   while (length--)
     if (! (*dst++ = *src++))
       return dst-1;

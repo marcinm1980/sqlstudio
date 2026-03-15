@@ -95,7 +95,7 @@ class mdc::FontManager {
   std::map<std::string, std::list<ScaledFont> > _cache;
   CairoCtx *_cairo;
 
-  cairo_scaled_font_t *lookup(const FontSpec &spec) {
+  auto lookup(const FontSpec &spec) -> cairo_scaled_font_t * {
     if (_cache.find(spec.family) != _cache.end()) {
       std::list<ScaledFont> &flist(_cache[spec.family]);
 
@@ -107,7 +107,7 @@ class mdc::FontManager {
     return 0;
   }
 
-  cairo_scaled_font_t *create(const FontSpec &spec) {
+  auto create(const FontSpec &spec) -> cairo_scaled_font_t * {
     cairo_font_face_t *face;
     cairo_scaled_font_t *sfont;
     cairo_matrix_t matrix;
@@ -175,7 +175,7 @@ public:
   FontManager(CairoCtx *cr) : _cairo(cr) {
   }
 
-  cairo_scaled_font_t *get_font(const FontSpec &spec) {
+  auto get_font(const FontSpec &spec) -> cairo_scaled_font_t * {
     cairo_scaled_font_t *font;
 
     font = lookup(spec);
@@ -207,7 +207,7 @@ ImageSurface::ImageSurface(double width, double height, cairo_format_t format) {
   surface = cairo_image_surface_create(format, (int)width, (int)height);
 }
 
-void ImageSurface::save_to_png(const std::string &destination) const {
+auto ImageSurface::save_to_png(const std::string &destination) const -> void {
   cairo_status_t status = cairo_surface_write_to_png(surface, destination.c_str());
   if (status != CAIRO_STATUS_SUCCESS)
     throw canvas_error("cairo error: " + std::string(cairo_status_to_string(status)));
@@ -285,7 +285,7 @@ CairoCtx::~CairoCtx() {
 /**
  * Recreates the internal cairo context based on the (new) surface given.
  */
-void CairoCtx::update_cairo_backend(cairo_surface_t *surface) {
+auto CairoCtx::update_cairo_backend(cairo_surface_t *surface) -> void {
   cairo_status_t st;
 
   if (cr != NULL && _free_cr)
@@ -303,25 +303,25 @@ void CairoCtx::update_cairo_backend(cairo_surface_t *surface) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CairoCtx::check_state() const {
+auto CairoCtx::check_state() const -> void {
   cairo_status_t status = cairo_status(cr);
   if (status != CAIRO_STATUS_SUCCESS)
     throw canvas_error("cairo error: " + std::string(cairo_status_to_string(cairo_status(cr))));
 }
 
-void CairoCtx::set_font(const FontSpec &font) const {
+auto CairoCtx::set_font(const FontSpec &font) const -> void {
   cairo_set_scaled_font(cr, fm->get_font(font));
 }
 
-void CairoCtx::get_text_extents(const FontSpec &font, const std::string &text, cairo_text_extents_t &extents) {
+auto CairoCtx::get_text_extents(const FontSpec &font, const std::string &text, cairo_text_extents_t &extents) -> void {
   cairo_scaled_font_text_extents(fm->get_font(font), text.c_str(), &extents);
 }
 
-void CairoCtx::get_text_extents(const FontSpec &font, const char *text, cairo_text_extents_t &extents) {
+auto CairoCtx::get_text_extents(const FontSpec &font, const char *text, cairo_text_extents_t &extents) -> void {
   cairo_scaled_font_text_extents(fm->get_font(font), text, &extents);
 }
 
-bool CairoCtx::get_font_extents(const FontSpec &font, cairo_font_extents_t &extents) {
+auto CairoCtx::get_font_extents(const FontSpec &font, cairo_font_extents_t &extents) -> bool {
   cairo_scaled_font_t *fontp = fm->get_font(font);
   if (fontp) {
     cairo_scaled_font_extents(fontp, &extents);
@@ -330,7 +330,7 @@ bool CairoCtx::get_font_extents(const FontSpec &font, cairo_font_extents_t &exte
   return false;
 }
 
-Timestamp mdc::get_time() {
+auto mdc::get_time() -> Timestamp {
 #ifdef _MSC_VER
   unsigned __int64 t = 0;
 
@@ -349,7 +349,7 @@ Timestamp mdc::get_time() {
 //-----------------
 // mdc::write_to_surface
 //-----------------
-cairo_status_t mdc::write_to_surface(void *closure, const unsigned char *data, unsigned int length) {
+auto mdc::write_to_surface(void *closure, const unsigned char *data, unsigned int length) -> cairo_status_t {
   FILE *file = static_cast<FILE *>(closure);
   size_t res = fwrite(data, sizeof(data[0]), length, file);
   cairo_status_t ret = (res == length) ? CAIRO_STATUS_SUCCESS : CAIRO_STATUS_WRITE_ERROR;

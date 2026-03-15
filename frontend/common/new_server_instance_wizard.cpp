@@ -61,7 +61,7 @@ NewServerInstancePage::NewServerInstancePage(WizardForm *form, const std::string
 
 //--------------------------------------------------------------------------------------------------
 
-NewServerInstanceWizard *NewServerInstancePage::wizard() {
+auto NewServerInstancePage::wizard() -> NewServerInstanceWizard * {
   return dynamic_cast<NewServerInstanceWizard *>(_form);
 }
 
@@ -120,7 +120,7 @@ TestDatabaseSettingsPage::TestDatabaseSettingsPage(WizardForm *host)
 
 //--------------------------------------------------------------------------------------------------
 
-bool TestDatabaseSettingsPage::open_connection() {
+auto TestDatabaseSettingsPage::open_connection() -> bool {
   try {
     db_mgmt_ConnectionRef conn(db_mgmt_ConnectionRef::cast_from(values().get("connection")));
     add_log_text(strfmt("Connecting to MySQL server %s...", conn->name().c_str()));
@@ -137,7 +137,7 @@ bool TestDatabaseSettingsPage::open_connection() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TestDatabaseSettingsPage::tasks_finished(bool success) {
+auto TestDatabaseSettingsPage::tasks_finished(bool success) -> void {
   if (!success)
     set_status_text(
       strfmt("Could not connect to MySQL server:\n  %s\nYou may continue if the server is simply not running.",
@@ -147,7 +147,7 @@ void TestDatabaseSettingsPage::tasks_finished(bool success) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TestDatabaseSettingsPage::get_server_version() {
+auto TestDatabaseSettingsPage::get_server_version() -> bool {
   sql::Statement *pstmt = _dbc_conn->createStatement();
   sql::ResultSet *res = pstmt->executeQuery("SELECT VERSION() as VERSION");
   std::string version;
@@ -189,7 +189,7 @@ bool TestDatabaseSettingsPage::get_server_version() {
  * This functions attempts to find a clue on which OS this server is running by examining
  * on which is was built. There's usually a good correlation, even though it may not be very precise.
  */
-bool TestDatabaseSettingsPage::get_server_platform() {
+auto TestDatabaseSettingsPage::get_server_platform() -> bool {
   sql::Statement *pstmt = _dbc_conn->createStatement();
   sql::ResultSet *res = pstmt->executeQuery("SHOW VARIABLES LIKE 'version_compile_%'");
   std::string name, value;
@@ -236,7 +236,7 @@ bool TestDatabaseSettingsPage::get_server_platform() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TestDatabaseSettingsPage::enter(bool advancing) {
+auto TestDatabaseSettingsPage::enter(bool advancing) -> void {
   if (advancing) {
     values().remove("server_version");
     values().remove("detected_os_type");
@@ -246,7 +246,7 @@ void TestDatabaseSettingsPage::enter(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-NewServerInstanceWizard *TestDatabaseSettingsPage::wizard() {
+auto TestDatabaseSettingsPage::wizard() -> NewServerInstanceWizard * {
   return dynamic_cast<NewServerInstanceWizard *>(_form);
 }
 
@@ -325,7 +325,7 @@ HostAndRemoteTypePage::HostAndRemoteTypePage(WizardForm *host)
 
 //--------------------------------------------------------------------------------------------------
 
-void HostAndRemoteTypePage::enter(bool advancing) {
+auto HostAndRemoteTypePage::enter(bool advancing) -> void {
   if (!advancing)
     return;
 
@@ -413,7 +413,7 @@ void HostAndRemoteTypePage::enter(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-void HostAndRemoteTypePage::refresh_profile_list() {
+auto HostAndRemoteTypePage::refresh_profile_list() -> void {
   wizard()->clear_problem();
 
   std::string system = _os_selector.get_string_value();
@@ -429,7 +429,7 @@ void HostAndRemoteTypePage::refresh_profile_list() {
 
 //--------------------------------------------------------------------------------------------------
 
-void HostAndRemoteTypePage::toggle_remote_admin() {
+auto HostAndRemoteTypePage::toggle_remote_admin() -> void {
   wizard()->clear_problem();
 
   std::string detected_os_type = values().get_string("detected_os_type");
@@ -473,7 +473,7 @@ void HostAndRemoteTypePage::toggle_remote_admin() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool HostAndRemoteTypePage::advance() {
+auto HostAndRemoteTypePage::advance() -> bool {
   std::string system = _os_selector.get_string_value();
   values().gset("os", system);
 
@@ -515,7 +515,7 @@ bool HostAndRemoteTypePage::advance() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool HostAndRemoteTypePage::skip_page() {
+auto HostAndRemoteTypePage::skip_page() -> bool {
 // Skip this page if this is a local Windows installation.
 #ifdef _MSC_VER
   if (wizard()->is_local()) {
@@ -597,7 +597,7 @@ SSHConfigurationPage::SSHConfigurationPage(WizardForm *host)
 
 //--------------------------------------------------------------------------------------------------
 
-void SSHConfigurationPage::use_ssh_key_changed() {
+auto SSHConfigurationPage::use_ssh_key_changed() -> void {
   bool value = _use_ssh_key.get_active();
   _ssh_path_label.set_enabled(value);
   _ssh_key_path.set_enabled(value);
@@ -606,7 +606,7 @@ void SSHConfigurationPage::use_ssh_key_changed() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SSHConfigurationPage::enter(bool advancing) {
+auto SSHConfigurationPage::enter(bool advancing) -> void {
   if (advancing) {
     _host_name.set_value(values().get_string("host_name"));
 
@@ -630,7 +630,7 @@ void SSHConfigurationPage::enter(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool SSHConfigurationPage::advance() {
+auto SSHConfigurationPage::advance() -> bool {
   db_mgmt_ServerInstanceRef instance(wizard()->assemble_server_instance());
 
   // Check if we have valid SSH credentials.
@@ -652,7 +652,7 @@ bool SSHConfigurationPage::advance() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SSHConfigurationPage::leave(bool advancing) {
+auto SSHConfigurationPage::leave(bool advancing) -> void {
   if (advancing) {
     values().gset("host_name", _host_name.get_string_value());
     values().gset("ssh_port", _port.get_string_value());
@@ -666,7 +666,7 @@ void SSHConfigurationPage::leave(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool SSHConfigurationPage::skip_page() {
+auto SSHConfigurationPage::skip_page() -> bool {
   return values().get_int("remoteAdmin", 0) != 1;
 }
 
@@ -731,7 +731,7 @@ WindowsManagementPage::WindowsManagementPage(WizardForm *host, wb::WBContext *co
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsManagementPage::refresh_config_path() {
+auto WindowsManagementPage::refresh_config_path() -> void {
   if (_service_selector.get_selected_index() >= 0 && _service_selector.get_selected_index() < (int)_config_paths.size())
     _config_path.set_value(_config_paths[_service_selector.get_selected_index()]);
   else
@@ -740,7 +740,7 @@ void WindowsManagementPage::refresh_config_path() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsManagementPage::leave(bool advancing) {
+auto WindowsManagementPage::leave(bool advancing) -> void {
   // If we're going back, reset the progress label. We can't set it right before
   // performing the slow operation, because it blocks the UI.
   if (!advancing) {
@@ -750,7 +750,7 @@ void WindowsManagementPage::leave(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsManagementPage::enter(bool advancing) {
+auto WindowsManagementPage::enter(bool advancing) -> void {
   if (advancing) {
     wizard()->clear_problem();
     _config_paths.clear();
@@ -888,7 +888,7 @@ void WindowsManagementPage::enter(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool WindowsManagementPage::advance() {
+auto WindowsManagementPage::advance() -> bool {
   if (_service_names.size() == 0 || _service_selector.get_selected_index() < 0)
     return false;
 
@@ -901,7 +901,7 @@ bool WindowsManagementPage::advance() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool WindowsManagementPage::skip_page() {
+auto WindowsManagementPage::skip_page() -> bool {
   // Provide native Windows (WMI) management for local and remote Windows boxes.
   // Remote Windows boxes which are managed via SSH use the SSH config page instead, though.
 
@@ -946,7 +946,7 @@ TestHostMachineSettingsPage::TestHostMachineSettingsPage(WizardForm *host)
 
 //--------------------------------------------------------------------------------------------------
 
-void TestHostMachineSettingsPage::enter(bool advance) {
+auto TestHostMachineSettingsPage::enter(bool advance) -> void {
   reset_tasks();
 
   db_mgmt_ServerInstanceRef instance(wizard()->assemble_server_instance());
@@ -958,7 +958,7 @@ void TestHostMachineSettingsPage::enter(bool advance) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TestHostMachineSettingsPage::connect_to_host() {
+auto TestHostMachineSettingsPage::connect_to_host() -> bool {
   // This will require the ssh or SSH key password, so it needs to be called from main thread.
   wizard()->test_setting_grt("connect_to_host");
 
@@ -967,7 +967,7 @@ bool TestHostMachineSettingsPage::connect_to_host() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TestHostMachineSettingsPage::find_config_file() {
+auto TestHostMachineSettingsPage::find_config_file() -> bool {
   // Native remote Windows management uses a direct URI for the files.
   bool use_local = wizard()->is_local() || values().get_int("windowsAdmin", 0) == 1;
   execute_grt_task(std::bind(&NewServerInstanceWizard::test_setting_grt, wizard(),
@@ -978,7 +978,7 @@ bool TestHostMachineSettingsPage::find_config_file() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TestHostMachineSettingsPage::find_error_files() {
+auto TestHostMachineSettingsPage::find_error_files() -> bool {
   bool use_local = wizard()->is_local() || values().get_int("windowsAdmin", 0) == 1;
   execute_grt_task(std::bind(&NewServerInstanceWizard::test_setting_grt, wizard(),
                              use_local ? "find_error_files/local" : "find_error_files"),
@@ -988,7 +988,7 @@ bool TestHostMachineSettingsPage::find_error_files() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TestHostMachineSettingsPage::check_admin_commands() {
+auto TestHostMachineSettingsPage::check_admin_commands() -> bool {
   execute_grt_task(std::bind(&NewServerInstanceWizard::test_setting_grt, wizard(),
                              wizard()->is_local() ? "check_admin_commands/local" : "check_admin_commands"),
                    false);
@@ -997,19 +997,19 @@ bool TestHostMachineSettingsPage::check_admin_commands() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TestHostMachineSettingsPage::skip_page() {
+auto TestHostMachineSettingsPage::skip_page() -> bool {
   return !(wizard()->is_admin_enabled());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TestHostMachineSettingsPage::tasks_finished(bool success) {
+auto TestHostMachineSettingsPage::tasks_finished(bool success) -> void {
   values().gset("host_tests_succeeded", success);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TestHostMachineSettingsPage::leave(bool advancing) {
+auto TestHostMachineSettingsPage::leave(bool advancing) -> void {
   if (advancing) {
     bool require_review = false;
     if (values().get_int("host_tests_succeeded") == 1) {
@@ -1028,7 +1028,7 @@ void TestHostMachineSettingsPage::leave(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-NewServerInstanceWizard *TestHostMachineSettingsPage::wizard() {
+auto TestHostMachineSettingsPage::wizard() -> NewServerInstanceWizard * {
   return dynamic_cast<NewServerInstanceWizard *>(_form);
 }
 
@@ -1057,14 +1057,14 @@ ReviewPage::ReviewPage(WizardForm *host) : NewServerInstancePage(host, "review")
 
 //--------------------------------------------------------------------------------------------------
 
-void ReviewPage::customize_changed() {
+auto ReviewPage::customize_changed() -> void {
   values().gset("customize", _customize_check.get_active());
   wizard()->update_buttons();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ReviewPage::enter(bool advancing) {
+auto ReviewPage::enter(bool advancing) -> void {
   if (advancing) {
     std::string summary;
 
@@ -1123,19 +1123,19 @@ void ReviewPage::enter(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ReviewPage::skip_page() {
+auto ReviewPage::skip_page() -> bool {
   return values().get_int("review_required", 0) == 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ReviewPage::next_closes_wizard() {
+auto ReviewPage::next_closes_wizard() -> bool {
   return !_customize_check.get_active();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ReviewPage::leave(bool advancing) {
+auto ReviewPage::leave(bool advancing) -> void {
   if (advancing && !_customize_check.get_active())
     wizard()->create_instance();
 }
@@ -1202,13 +1202,13 @@ PathsPage::PathsPage(WizardForm *host, wb::WBContext *context) : NewServerInstan
 
 //--------------------------------------------------------------------------------------------------
 
-bool PathsPage::skip_page() {
+auto PathsPage::skip_page() -> bool {
   return !(wizard()->is_admin_enabled()) || !values().get_int("customize");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PathsPage::enter(bool advancing) {
+auto PathsPage::enter(bool advancing) -> void {
   _test_config_path_description.set_color(base::Color::getSystemColor(base::TextColor).to_html());
   _test_config_path_description.set_text(_("Click to test if your path is correct."));
   _test_section_description.set_color(base::Color::getSystemColor(base::TextColor).to_html());
@@ -1230,7 +1230,7 @@ void PathsPage::enter(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool PathsPage::advance() {
+auto PathsPage::advance() -> bool {
   std::string version = base::trim(_version.get_string_value());
   int a, b, c;
   if (version.empty() || sscanf(version.c_str(), "%i.%i.%i", &a, &b, &c) < 2 || a < 4) {
@@ -1260,7 +1260,7 @@ bool PathsPage::advance() {
 /**
  * Triggers the remote file open dialog.
  */
-void PathsPage::browse_remote_config_file() {
+auto PathsPage::browse_remote_config_file() -> void {
   db_mgmt_ServerInstanceRef instance(wizard()->assemble_server_instance());
 
   grt::BaseListRef args(true);
@@ -1279,7 +1279,7 @@ void PathsPage::browse_remote_config_file() {
 
 //--------------------------------------------------------------------------------------------------
 
-void PathsPage::test_path() {
+auto PathsPage::test_path() -> void {
   std::string detail;
 
   values().gset("ini_path", _config_path.get_string_value());
@@ -1303,7 +1303,7 @@ void PathsPage::test_path() {
 
 //--------------------------------------------------------------------------------------------------
 
-void PathsPage::test_section() {
+auto PathsPage::test_section() -> void {
   std::string detail;
 
   values().gset("ini_path", _config_path.get_string_value());
@@ -1368,13 +1368,13 @@ CommandsPage::CommandsPage(WizardForm *host) : NewServerInstancePage(host, "comm
 
 //--------------------------------------------------------------------------------------------------
 
-bool CommandsPage::skip_page() {
+auto CommandsPage::skip_page() -> bool {
   return !(wizard()->is_admin_enabled()) || !values().get_int("customize");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void CommandsPage::enter(bool advancing) {
+auto CommandsPage::enter(bool advancing) -> void {
   if (advancing) {
     // Prefill values from defaults.
     _start_command.set_value(wizard()->get_server_info("sys.mysqld.start"));
@@ -1385,7 +1385,7 @@ void CommandsPage::enter(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool CommandsPage::advance() {
+auto CommandsPage::advance() -> bool {
   values().gset("command_start", base::trim(_start_command.get_string_value()));
   values().gset("command_stop", base::trim(_stop_command.get_string_value()));
   values().gset("use_sudo", _use_sudo.get_active());
@@ -1395,7 +1395,7 @@ bool CommandsPage::advance() {
 
 //--------------------------------------------------------------------------------------------------
 
-void CommandsPage::leave(bool advancing) {
+auto CommandsPage::leave(bool advancing) -> void {
   if (advancing)
     wizard()->create_instance();
 }
@@ -1476,7 +1476,7 @@ NewServerInstanceWizard::~NewServerInstanceWizard() {
 /**
  * Creates a server instance object from the current values.
  */
-db_mgmt_ServerInstanceRef NewServerInstanceWizard::assemble_server_instance() {
+auto NewServerInstanceWizard::assemble_server_instance() -> db_mgmt_ServerInstanceRef {
   db_mgmt_ConnectionRef conn(db_mgmt_ConnectionRef::cast_from(values().get("connection")));
 
   _instance->owner(_context->get_root()->rdbmsMgmt());
@@ -1548,7 +1548,7 @@ db_mgmt_ServerInstanceRef NewServerInstanceWizard::assemble_server_instance() {
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef NewServerInstanceWizard::test_setting_grt(const std::string &name) {
+auto NewServerInstanceWizard::test_setting_grt(const std::string &name) -> grt::ValueRef {
   std::string detail;
   if (!test_setting(name, detail))
     throw std::runtime_error(detail);
@@ -1557,7 +1557,7 @@ grt::ValueRef NewServerInstanceWizard::test_setting_grt(const std::string &name)
 
 //--------------------------------------------------------------------------------------------------
 
-bool NewServerInstanceWizard::test_setting(const std::string &name, std::string &detail) {
+auto NewServerInstanceWizard::test_setting(const std::string &name, std::string &detail) -> bool {
   grt::Module *module = grt::GRT::get()->get_module("WbAdmin");
   if (module) {
     grt::BaseListRef args(true);
@@ -1596,7 +1596,7 @@ bool NewServerInstanceWizard::test_setting(const std::string &name, std::string 
 /**
  * Loads all default values for a given instance.
  */
-void NewServerInstanceWizard::load_defaults() {
+auto NewServerInstanceWizard::load_defaults() -> void {
   std::string template_file = values().get_string("template_path");
   if (!template_file.empty()) {
     grt::DictRef dict;
@@ -1617,7 +1617,7 @@ void NewServerInstanceWizard::load_defaults() {
  * Returns the current value for the server info at the specified key. Might be the default
  * value or one set by assemble_server_instance().
  */
-std::string NewServerInstanceWizard::get_server_info(const std::string &key) {
+auto NewServerInstanceWizard::get_server_info(const std::string &key) -> std::string {
   grt::ValueRef value = _instance->serverInfo().get(key);
 
   if (!value.is_valid())
@@ -1629,7 +1629,7 @@ std::string NewServerInstanceWizard::get_server_info(const std::string &key) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool NewServerInstanceWizard::is_admin_enabled() {
+auto NewServerInstanceWizard::is_admin_enabled() -> bool {
   return (values().get_int("remoteAdmin", 0) == 1) || (values().get_int("windowsAdmin", 0) == 1) || is_local();
 }
 
@@ -1638,7 +1638,7 @@ bool NewServerInstanceWizard::is_admin_enabled() {
 /**
  * Returns true if the currently selected host is the local machine.
  */
-bool NewServerInstanceWizard::is_local() {
+auto NewServerInstanceWizard::is_local() -> bool {
   std::string driver = _connection->driver().is_valid() ? _connection->driver()->name() : "";
   if (driver != "MysqlNativeSSH") {
     std::string hostname = _connection->parameterValues().get_string("hostName");
@@ -1650,7 +1650,7 @@ bool NewServerInstanceWizard::is_local() {
 
 //--------------------------------------------------------------------------------------------------
 
-void NewServerInstanceWizard::create_instance() {
+auto NewServerInstanceWizard::create_instance() -> void {
   db_mgmt_ManagementRef rdbms(_context->get_root()->rdbmsMgmt());
   grt::ListRef<db_mgmt_ServerInstance> instances = rdbms->storedInstances();
 

@@ -62,22 +62,22 @@ class MYSQL_SQL_PARSER_PUBLIC_FUNC MyxStatementParser
 #pragma warning(pop)
 #endif
 
-  int fill_buffer(std::istream& is);
-  int buffer_eof(std::istream& is);
+  auto fill_buffer(std::istream& is) -> int;
+  auto buffer_eof(std::istream& is) -> int;
 
-  int get_next_char(std::istream& is, int *len, int count_lines= 1);
-  int peek_next_char(std::istream& is, int *len);
-  void add_char_to_buffer(std::string& buffer, int c, int len) const;
+  auto get_next_char(std::istream& is, int *len, int count_lines= 1) -> int;
+  auto peek_next_char(std::istream& is, int *len) -> int;
+  auto add_char_to_buffer(std::string& buffer, int c, int len) const -> void;
 
 public:
   MyxStatementParser(CHARSET_INFO *charset);
   virtual ~MyxStatementParser();
 
-  void process(std::istream& is, process_sql_statement_callback, void *arg, int mode);
-  const std::string & delimiter() const { return delim; }
-  int statement_boffset() const { return _stmt_boffset; }
-  int statement_first_line_first_symbol_pos() const { return _stmt_first_line_first_symbol_pos; }
-  int total_line_count() const { return _total_lc; }
+  auto process(std::istream& is, process_sql_statement_callback, void *arg, int mode) -> void;
+  auto delimiter() const -> const std::string & { return delim; }
+  auto statement_boffset() const -> int { return _stmt_boffset; }
+  auto statement_first_line_first_symbol_pos() const -> int { return _stmt_first_line_first_symbol_pos; }
+  auto total_line_count() const -> int { return _total_lc; }
 };
 
 } // namespace mysql_parser

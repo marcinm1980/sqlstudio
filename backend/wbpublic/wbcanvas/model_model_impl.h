@@ -37,12 +37,12 @@
 class WBPUBLICBACKEND_PUBLIC_FUNC ModelBridgeDelegate {
 public:
   virtual ~ModelBridgeDelegate() {};
-  virtual mdc::CanvasView *create_diagram(const model_DiagramRef &mview) = 0;
-  virtual void free_canvas_view(mdc::CanvasView *view) = 0;
+  virtual auto create_diagram(const model_DiagramRef &mview) -> mdc::CanvasView * = 0;
+  virtual auto free_canvas_view(mdc::CanvasView *view) -> void = 0;
 
-  virtual cairo_surface_t *fetch_image(const std::string &file) = 0;
-  virtual std::string attach_image(const std::string &name) = 0;
-  virtual void release_image(const std::string &name) = 0;
+  virtual auto fetch_image(const std::string &file) -> cairo_surface_t * = 0;
+  virtual auto attach_image(const std::string &name) -> std::string = 0;
+  virtual auto release_image(const std::string &name) -> void = 0;
 };
 
 class WBPUBLICBACKEND_PUBLIC_FUNC model_Model::ImplData : public BridgeBase {
@@ -56,15 +56,15 @@ protected:
   bool _reset_pending;
   bool _options_signal_installed;
 
-  void member_changed(const std::string &name);
+  auto member_changed(const std::string &name) -> void;
 
-  grt::DictRef get_app_options_dict();
+  auto get_app_options_dict() -> grt::DictRef;
 
-  void option_changed(grt::internal::OwnedDict *dict, bool added, const std::string &option);
+  auto option_changed(grt::internal::OwnedDict *dict, bool added, const std::string &option) -> void;
 
-  void list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value);
+  auto list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) -> void;
 
-  virtual GrtObject *get_object() {
+  virtual auto get_object() -> GrtObject * {
     return _owner;
   }
 
@@ -72,32 +72,32 @@ public:
   ImplData(model_Model *owner);
 
   //  void add_diagram(const model_DiagramRef &view);
-  void remove_diagram(const model_DiagramRef &view);
+  auto remove_diagram(const model_DiagramRef &view) -> void;
 
-  virtual bool realize();
-  virtual void unrealize();
+  virtual auto realize() -> bool;
+  virtual auto unrealize() -> void;
 
-  void reset_connections();
-  void reset_figures();
-  void reset_layers();
+  auto reset_connections() -> void;
+  auto reset_figures() -> void;
+  auto reset_layers() -> void;
 
-  std::string common_color_for_db_object(const grt::ObjectRef &object, const std::string &member);
+  auto common_color_for_db_object(const grt::ObjectRef &object, const std::string &member) -> std::string;
 
-  void update_object_color_in_all_diagrams(const std::string &color, const std::string &object_member,
-                                           const std::string &object_id);
+  auto update_object_color_in_all_diagrams(const std::string &color, const std::string &object_member,
+                                           const std::string &object_id) -> void;
 
 public:
-  void set_delegate(ModelBridgeDelegate *delegate) {
+  auto set_delegate(ModelBridgeDelegate *delegate) -> void {
     _delegate = delegate;
   }
-  ModelBridgeDelegate *get_delegate() {
+  auto get_delegate() -> ModelBridgeDelegate * {
     return _delegate;
   }
 
-  app_PageSettingsRef get_page_settings();
+  auto get_page_settings() -> app_PageSettingsRef;
 
-  std::string get_string_option(const std::string &name, const std::string &defvalue);
-  int get_int_option(const std::string &name, int defvalue);
+  auto get_string_option(const std::string &name, const std::string &defvalue) -> std::string;
+  auto get_int_option(const std::string &name, int defvalue) -> int;
 
   boost::signals2::signal<void(std::string)> *signal_options_changed() {
     return &_options_changed_signal;

@@ -126,7 +126,7 @@ namespace grt {
     //  std::reverse(res.begin(), res.end());
   }
 
-  bool diffPred(const std::shared_ptr<ListItemChange> &a, const std::shared_ptr<ListItemChange> &b) {
+  auto diffPred(const std::shared_ptr<ListItemChange> &a, const std::shared_ptr<ListItemChange> &b) -> bool {
     if (a->get_change_type() == grt::ListItemRemoved)
       if (b->get_change_type() == grt::ListItemRemoved)
         return a->get_index() > b->get_index(); // removals should be processed right to left to keep still existing
@@ -139,7 +139,7 @@ namespace grt {
       return a->get_index() < b->get_index();
   }
 
-  std::shared_ptr<MultiChange> GrtListDiff::diff(const BaseListRef &source, const BaseListRef &target, const Omf *omf) {
+  auto GrtListDiff::diff(const BaseListRef &source, const BaseListRef &target, const Omf *omf) -> std::shared_ptr<MultiChange> {
     typedef std::vector<size_t> TIndexContainer;
     default_omf def_omf;
     std::vector<std::shared_ptr<ListItemChange> > changes;
@@ -232,8 +232,8 @@ namespace grt {
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  std::shared_ptr<ListItemModifiedChange> create_item_modified_change(const ValueRef &source, const ValueRef &target,
-                                                                      const Omf *omf, const size_t index) {
+  auto create_item_modified_change(const ValueRef &source, const ValueRef &target,
+                                                                      const Omf *omf, const size_t index) -> std::shared_ptr<ListItemModifiedChange> {
     std::shared_ptr<DiffChange> subchange = GrtDiff(omf).diff(source, target, omf);
     if (!subchange)
       return std::shared_ptr<ListItemModifiedChange>();

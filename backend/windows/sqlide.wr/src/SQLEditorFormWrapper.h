@@ -59,27 +59,26 @@ namespace MySQL {
 
         MySQL::Grt::ActionList ^ action_list;
 
-        GrtManager ^ grt_manager() { return gcnew GrtManager(); }
+        auto grt_manager() -> GrtManager ^ { return gcnew GrtManager(); }
 
-          void new_sql_script_file() {
+          auto new_sql_script_file() -> void {
           (*_ref)->new_sql_script_file();
         }
 
         void sql_editor_reorder(MySQL::Forms::AppViewDockContent ^ page, Int32 to) {
           (*_ref)->sql_editor_reordered(dynamic_cast<SqlEditorPanel *>(page->GetBackend()), to);
         }
-        String ^
-          sql_editor_path(Int32 index) {
+        auto sql_editor_path(Int32 index) -> String ^ {
             if ((*_ref)->sql_editor_panel(index))
               return CppStringToNative((*_ref)->sql_editor_panel(index)->filename());
             else
               return "";
           }
 
-          Int32 exec_sql_error_count() {
+          auto exec_sql_error_count() -> Int32 {
           return (*_ref)->exec_sql_error_count();
         };
-        void show_output_area();
+        auto show_output_area() -> void;
 
         void handle_tab_menu_action(String ^ action, int tab) {
           (*_ref)->handle_tab_menu_action(NativeToCppString(action), tab);
@@ -90,23 +89,23 @@ namespace MySQL {
         }
 
         // History and log.
-        VarGridModelWrapper ^ log() { return _log; } System::Windows::Forms::ContextMenuStrip ^ get_log_context_menu();
-        DbSqlEditorHistoryWrapper ^ history() { return _history; } String ^
+        auto log() -> VarGridModelWrapper ^ { return _log; } System::Windows::Forms::ContextMenuStrip ^ get_log_context_menu();
+        auto history() -> DbSqlEditorHistoryWrapper ^ { return _history; } String ^
           restore_sql_from_history(Int32 entry_index, List<Int32> ^ detail_indexes);
         void set_log_selection(List<Int32> ^ selection);
 
-        bool can_close() {
+        auto can_close() -> bool {
           return (*_ref)->can_close();
         }
 
         // Native UI control factory methods.
-        System::Windows::Forms::Control ^ get_sidebar_control();
-        System::Windows::Forms::Control ^ get_palette_control();
+        auto get_sidebar_control() -> System::Windows::Forms::Control ^;
+        auto get_palette_control() -> System::Windows::Forms::Control ^;
 
         void set_tool_item_checked(String ^ name, bool value);
         void set_docking_delegate(MySQL::Forms::ManagedDockDelegate ^ theDelegate);
 
-        void view_switched();
+        auto view_switched() -> void;
 
       public:
         typedef MySQL::Grt::DelegateSlot2<void, void, std::string, String ^, bool, bool> Output_text_ui_cb;

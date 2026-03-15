@@ -52,8 +52,8 @@ DbMySQLDiffReporting::DbMySQLDiffReporting() {
 DbMySQLDiffReporting::~DbMySQLDiffReporting() {
 }
 
-std::string DbMySQLDiffReporting::generate_report(const db_mysql_CatalogRef& left_cat,
-                                                  const db_mysql_CatalogRef& right_cat) {
+auto DbMySQLDiffReporting::generate_report(const db_mysql_CatalogRef& left_cat,
+                                                  const db_mysql_CatalogRef& right_cat) -> std::string {
   std::string err;
   db_mysql_CatalogRef left_cat_copy, right_cat_copy;
 

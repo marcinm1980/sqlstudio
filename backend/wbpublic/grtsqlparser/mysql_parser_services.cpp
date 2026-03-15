@@ -32,7 +32,7 @@ using namespace parsers;
 
 //------------------ MySQLParserServices -----------------------------------------------------------
 
-MySQLParserServices::Ref MySQLParserServices::get() {
+auto MySQLParserServices::get() -> MySQLParserServices::Ref {
   MySQLParserServices::Ref module =
     dynamic_cast<MySQLParserServices::Ref>(grt::GRT::get()->get_module("MySQLParserServices"));
   if (module == nullptr)
@@ -46,8 +46,8 @@ MySQLParserServices::Ref MySQLParserServices::get() {
  *	Compares the given typename with what is in the type list, including the synonyms and returns
  *	the type whose name or synonym matches.
  */
-db_SimpleDatatypeRef MySQLParserServices::findDataType(SimpleDatatypeListRef types, GrtVersionRef targetVersion,
-                                                       const std::string &name) {
+auto MySQLParserServices::findDataType(SimpleDatatypeListRef types, GrtVersionRef targetVersion,
+                                                       const std::string &name) -> db_SimpleDatatypeRef {
   for (auto type : types) {
     bool typeFound = base::same_string(type->name(), name, false);
     if (!typeFound) {

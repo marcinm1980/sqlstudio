@@ -30,9 +30,9 @@
 #include "sqlide/recordset_be.h"
 #include <cppconn/resultset.h>
 
-db_query_ResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC grtwrap_recordset(GrtObjectRef owner, Recordset::Ref rset);
-db_query_ResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC grtwrap_recordset(GrtObjectRef owner,
-                                                                    std::shared_ptr<sql::ResultSet> result);
+auto grtwrap_recordset(GrtObjectRef owner, Recordset::Ref rset) -> db_query_ResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC;
+auto grtwrap_recordset(GrtObjectRef owner,
+                                                                    std::shared_ptr<sql::ResultSet> result) -> db_query_ResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC;
 
 class WBPUBLICBACKEND_PUBLIC_FUNC db_query_Resultset::ImplData {
 protected:
@@ -45,26 +45,26 @@ public:
 
   virtual ~ImplData();
 
-  virtual void refresh() = 0;
-  virtual grt::StringRef sql() const = 0;
-  virtual grt::IntegerRef currentRow() const = 0;
-  virtual grt::IntegerRef rowCount() const = 0;
-  virtual grt::DoubleRef floatFieldValue(ssize_t column) = 0;
-  virtual grt::DoubleRef floatFieldValueByName(const std::string &column) = 0;
-  virtual grt::IntegerRef goToFirstRow() = 0;
-  virtual grt::IntegerRef goToLastRow() = 0;
-  virtual grt::IntegerRef goToRow(ssize_t row) = 0;
-  virtual grt::IntegerRef intFieldValue(ssize_t column) = 0;
-  virtual grt::IntegerRef intFieldValueByName(const std::string &column) = 0;
-  virtual grt::IntegerRef nextRow() = 0;
-  virtual grt::IntegerRef previousRow() = 0;
-  virtual grt::IntegerRef saveFieldValueToFile(ssize_t column, const std::string &file) = 0;
-  virtual grt::StringRef stringFieldValue(ssize_t column) = 0;
-  virtual grt::StringRef stringFieldValueByName(const std::string &column) = 0;
-  virtual grt::StringRef geoStringFieldValue(ssize_t column) = 0;
-  virtual grt::StringRef geoStringFieldValueByName(const std::string &column) = 0;
-  virtual grt::StringRef geoJsonFieldValue(ssize_t column) = 0;
-  virtual grt::StringRef geoJsonFieldValueByName(const std::string &column) = 0;
+  virtual auto refresh() -> void = 0;
+  virtual auto sql() const -> grt::StringRef = 0;
+  virtual auto currentRow() const -> grt::IntegerRef = 0;
+  virtual auto rowCount() const -> grt::IntegerRef = 0;
+  virtual auto floatFieldValue(ssize_t column) -> grt::DoubleRef = 0;
+  virtual auto floatFieldValueByName(const std::string &column) -> grt::DoubleRef = 0;
+  virtual auto goToFirstRow() -> grt::IntegerRef = 0;
+  virtual auto goToLastRow() -> grt::IntegerRef = 0;
+  virtual auto goToRow(ssize_t row) -> grt::IntegerRef = 0;
+  virtual auto intFieldValue(ssize_t column) -> grt::IntegerRef = 0;
+  virtual auto intFieldValueByName(const std::string &column) -> grt::IntegerRef = 0;
+  virtual auto nextRow() -> grt::IntegerRef = 0;
+  virtual auto previousRow() -> grt::IntegerRef = 0;
+  virtual auto saveFieldValueToFile(ssize_t column, const std::string &file) -> grt::IntegerRef = 0;
+  virtual auto stringFieldValue(ssize_t column) -> grt::StringRef = 0;
+  virtual auto stringFieldValueByName(const std::string &column) -> grt::StringRef = 0;
+  virtual auto geoStringFieldValue(ssize_t column) -> grt::StringRef = 0;
+  virtual auto geoStringFieldValueByName(const std::string &column) -> grt::StringRef = 0;
+  virtual auto geoJsonFieldValue(ssize_t column) -> grt::StringRef = 0;
+  virtual auto geoJsonFieldValueByName(const std::string &column) -> grt::StringRef = 0;
 };
 
 class WBPUBLICBACKEND_PUBLIC_FUNC WBRecordsetResultset : public db_query_Resultset::ImplData {
@@ -73,26 +73,26 @@ public:
   std::shared_ptr<Recordset> recordset;
 
   WBRecordsetResultset(db_query_ResultsetRef aself, std::shared_ptr<Recordset> rset);
-  virtual grt::StringRef sql() const;
-  virtual grt::IntegerRef currentRow() const;
-  virtual grt::IntegerRef rowCount() const;
-  virtual grt::DoubleRef floatFieldValue(ssize_t column);
-  virtual grt::DoubleRef floatFieldValueByName(const std::string &column);
-  virtual grt::IntegerRef goToFirstRow();
-  virtual grt::IntegerRef goToLastRow();
-  virtual grt::IntegerRef goToRow(ssize_t row);
-  virtual grt::IntegerRef intFieldValue(ssize_t column);
-  virtual grt::IntegerRef intFieldValueByName(const std::string &column);
-  virtual grt::IntegerRef nextRow();
-  virtual grt::IntegerRef previousRow();
+  virtual auto sql() const -> grt::StringRef;
+  virtual auto currentRow() const -> grt::IntegerRef;
+  virtual auto rowCount() const -> grt::IntegerRef;
+  virtual auto floatFieldValue(ssize_t column) -> grt::DoubleRef;
+  virtual auto floatFieldValueByName(const std::string &column) -> grt::DoubleRef;
+  virtual auto goToFirstRow() -> grt::IntegerRef;
+  virtual auto goToLastRow() -> grt::IntegerRef;
+  virtual auto goToRow(ssize_t row) -> grt::IntegerRef;
+  virtual auto intFieldValue(ssize_t column) -> grt::IntegerRef;
+  virtual auto intFieldValueByName(const std::string &column) -> grt::IntegerRef;
+  virtual auto nextRow() -> grt::IntegerRef;
+  virtual auto previousRow() -> grt::IntegerRef;
 
-  virtual void refresh();
-  virtual grt::StringRef stringFieldValue(ssize_t column);
-  virtual grt::StringRef stringFieldValueByName(const std::string &column);
-  virtual grt::StringRef geoStringFieldValue(ssize_t column);
-  virtual grt::StringRef geoStringFieldValueByName(const std::string &column);
-  virtual grt::StringRef geoJsonFieldValue(ssize_t column);
-  virtual grt::StringRef geoJsonFieldValueByName(const std::string &column);
-  virtual grt::IntegerRef saveFieldValueToFile(ssize_t column, const std::string &file);
+  virtual auto refresh() -> void;
+  virtual auto stringFieldValue(ssize_t column) -> grt::StringRef;
+  virtual auto stringFieldValueByName(const std::string &column) -> grt::StringRef;
+  virtual auto geoStringFieldValue(ssize_t column) -> grt::StringRef;
+  virtual auto geoStringFieldValueByName(const std::string &column) -> grt::StringRef;
+  virtual auto geoJsonFieldValue(ssize_t column) -> grt::StringRef;
+  virtual auto geoJsonFieldValueByName(const std::string &column) -> grt::StringRef;
+  virtual auto saveFieldValueToFile(ssize_t column, const std::string &file) -> grt::IntegerRef;
 };
 #endif

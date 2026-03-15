@@ -76,7 +76,7 @@ public:
       _paramType("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.migration.MigrationParameter";
   }
 
@@ -87,7 +87,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -96,7 +96,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -109,7 +109,7 @@ public:
    * \par In Python:
    *    value = obj.defaultValue
    */
-  grt::StringRef defaultValue() const { return _defaultValue; }
+  auto defaultValue() const -> grt::StringRef { return _defaultValue; }
 
   /**
    * Setter for attribute defaultValue
@@ -118,7 +118,7 @@ public:
    * \par In Python:
    *   obj.defaultValue = value
    */
-  virtual void defaultValue(const grt::StringRef &value) {
+  virtual auto defaultValue(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultValue);
     _defaultValue = value;
     member_changed("defaultValue", ovalue, value);
@@ -131,7 +131,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -140,7 +140,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -153,7 +153,7 @@ public:
    * \par In Python:
    *    value = obj.paramType
    */
-  grt::StringRef paramType() const { return _paramType; }
+  auto paramType() const -> grt::StringRef { return _paramType; }
 
   /**
    * Setter for attribute paramType
@@ -162,7 +162,7 @@ public:
    * \par In Python:
    *   obj.paramType = value
    */
-  virtual void paramType(const grt::StringRef &value) {
+  virtual auto paramType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_paramType);
     _paramType = value;
     member_changed("paramType", ovalue, value);
@@ -176,12 +176,12 @@ protected:
   grt::StringRef _paramType;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_migration_MigrationParameter());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -230,7 +230,7 @@ public:
       _targetDatatypeName("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.migration.DatatypeMapping";
   }
 
@@ -241,7 +241,7 @@ public:
    * \par In Python:
    *    value = obj.isUnsigned
    */
-  grt::IntegerRef isUnsigned() const { return _isUnsigned; }
+  auto isUnsigned() const -> grt::IntegerRef { return _isUnsigned; }
 
   /**
    * Setter for attribute isUnsigned
@@ -250,7 +250,7 @@ public:
    * \par In Python:
    *   obj.isUnsigned = value
    */
-  virtual void isUnsigned(const grt::IntegerRef &value) {
+  virtual auto isUnsigned(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isUnsigned);
     _isUnsigned = value;
     member_changed("isUnsigned", ovalue, value);
@@ -263,7 +263,7 @@ public:
    * \par In Python:
    *    value = obj.length
    */
-  grt::IntegerRef length() const { return _length; }
+  auto length() const -> grt::IntegerRef { return _length; }
 
   /**
    * Setter for attribute length
@@ -272,7 +272,7 @@ public:
    * \par In Python:
    *   obj.length = value
    */
-  virtual void length(const grt::IntegerRef &value) {
+  virtual auto length(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_length);
     _length = value;
     member_changed("length", ovalue, value);
@@ -285,7 +285,7 @@ public:
    * \par In Python:
    *    value = obj.lengthConditionFrom
    */
-  grt::IntegerRef lengthConditionFrom() const { return _lengthConditionFrom; }
+  auto lengthConditionFrom() const -> grt::IntegerRef { return _lengthConditionFrom; }
 
   /**
    * Setter for attribute lengthConditionFrom
@@ -294,7 +294,7 @@ public:
    * \par In Python:
    *   obj.lengthConditionFrom = value
    */
-  virtual void lengthConditionFrom(const grt::IntegerRef &value) {
+  virtual auto lengthConditionFrom(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_lengthConditionFrom);
     _lengthConditionFrom = value;
     member_changed("lengthConditionFrom", ovalue, value);
@@ -307,7 +307,7 @@ public:
    * \par In Python:
    *    value = obj.lengthConditionTo
    */
-  grt::IntegerRef lengthConditionTo() const { return _lengthConditionTo; }
+  auto lengthConditionTo() const -> grt::IntegerRef { return _lengthConditionTo; }
 
   /**
    * Setter for attribute lengthConditionTo
@@ -316,7 +316,7 @@ public:
    * \par In Python:
    *   obj.lengthConditionTo = value
    */
-  virtual void lengthConditionTo(const grt::IntegerRef &value) {
+  virtual auto lengthConditionTo(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_lengthConditionTo);
     _lengthConditionTo = value;
     member_changed("lengthConditionTo", ovalue, value);
@@ -329,7 +329,7 @@ public:
    * \par In Python:
    *    value = obj.precision
    */
-  grt::IntegerRef precision() const { return _precision; }
+  auto precision() const -> grt::IntegerRef { return _precision; }
 
   /**
    * Setter for attribute precision
@@ -338,7 +338,7 @@ public:
    * \par In Python:
    *   obj.precision = value
    */
-  virtual void precision(const grt::IntegerRef &value) {
+  virtual auto precision(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_precision);
     _precision = value;
     member_changed("precision", ovalue, value);
@@ -351,7 +351,7 @@ public:
    * \par In Python:
    *    value = obj.precisionConditionFrom
    */
-  grt::IntegerRef precisionConditionFrom() const { return _precisionConditionFrom; }
+  auto precisionConditionFrom() const -> grt::IntegerRef { return _precisionConditionFrom; }
 
   /**
    * Setter for attribute precisionConditionFrom
@@ -360,7 +360,7 @@ public:
    * \par In Python:
    *   obj.precisionConditionFrom = value
    */
-  virtual void precisionConditionFrom(const grt::IntegerRef &value) {
+  virtual auto precisionConditionFrom(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_precisionConditionFrom);
     _precisionConditionFrom = value;
     member_changed("precisionConditionFrom", ovalue, value);
@@ -373,7 +373,7 @@ public:
    * \par In Python:
    *    value = obj.precisionConditionTo
    */
-  grt::IntegerRef precisionConditionTo() const { return _precisionConditionTo; }
+  auto precisionConditionTo() const -> grt::IntegerRef { return _precisionConditionTo; }
 
   /**
    * Setter for attribute precisionConditionTo
@@ -382,7 +382,7 @@ public:
    * \par In Python:
    *   obj.precisionConditionTo = value
    */
-  virtual void precisionConditionTo(const grt::IntegerRef &value) {
+  virtual auto precisionConditionTo(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_precisionConditionTo);
     _precisionConditionTo = value;
     member_changed("precisionConditionTo", ovalue, value);
@@ -395,7 +395,7 @@ public:
    * \par In Python:
    *    value = obj.scale
    */
-  grt::IntegerRef scale() const { return _scale; }
+  auto scale() const -> grt::IntegerRef { return _scale; }
 
   /**
    * Setter for attribute scale
@@ -404,7 +404,7 @@ public:
    * \par In Python:
    *   obj.scale = value
    */
-  virtual void scale(const grt::IntegerRef &value) {
+  virtual auto scale(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_scale);
     _scale = value;
     member_changed("scale", ovalue, value);
@@ -417,7 +417,7 @@ public:
    * \par In Python:
    *    value = obj.scaleConditionFrom
    */
-  grt::IntegerRef scaleConditionFrom() const { return _scaleConditionFrom; }
+  auto scaleConditionFrom() const -> grt::IntegerRef { return _scaleConditionFrom; }
 
   /**
    * Setter for attribute scaleConditionFrom
@@ -426,7 +426,7 @@ public:
    * \par In Python:
    *   obj.scaleConditionFrom = value
    */
-  virtual void scaleConditionFrom(const grt::IntegerRef &value) {
+  virtual auto scaleConditionFrom(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_scaleConditionFrom);
     _scaleConditionFrom = value;
     member_changed("scaleConditionFrom", ovalue, value);
@@ -439,7 +439,7 @@ public:
    * \par In Python:
    *    value = obj.scaleConditionTo
    */
-  grt::IntegerRef scaleConditionTo() const { return _scaleConditionTo; }
+  auto scaleConditionTo() const -> grt::IntegerRef { return _scaleConditionTo; }
 
   /**
    * Setter for attribute scaleConditionTo
@@ -448,7 +448,7 @@ public:
    * \par In Python:
    *   obj.scaleConditionTo = value
    */
-  virtual void scaleConditionTo(const grt::IntegerRef &value) {
+  virtual auto scaleConditionTo(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_scaleConditionTo);
     _scaleConditionTo = value;
     member_changed("scaleConditionTo", ovalue, value);
@@ -461,7 +461,7 @@ public:
    * \par In Python:
    *    value = obj.sourceDatatypeName
    */
-  grt::StringRef sourceDatatypeName() const { return _sourceDatatypeName; }
+  auto sourceDatatypeName() const -> grt::StringRef { return _sourceDatatypeName; }
 
   /**
    * Setter for attribute sourceDatatypeName
@@ -470,7 +470,7 @@ public:
    * \par In Python:
    *   obj.sourceDatatypeName = value
    */
-  virtual void sourceDatatypeName(const grt::StringRef &value) {
+  virtual auto sourceDatatypeName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_sourceDatatypeName);
     _sourceDatatypeName = value;
     member_changed("sourceDatatypeName", ovalue, value);
@@ -483,7 +483,7 @@ public:
    * \par In Python:
    *    value = obj.targetDatatypeName
    */
-  grt::StringRef targetDatatypeName() const { return _targetDatatypeName; }
+  auto targetDatatypeName() const -> grt::StringRef { return _targetDatatypeName; }
 
   /**
    * Setter for attribute targetDatatypeName
@@ -492,7 +492,7 @@ public:
    * \par In Python:
    *   obj.targetDatatypeName = value
    */
-  virtual void targetDatatypeName(const grt::StringRef &value) {
+  virtual auto targetDatatypeName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_targetDatatypeName);
     _targetDatatypeName = value;
     member_changed("targetDatatypeName", ovalue, value);
@@ -514,12 +514,12 @@ protected:
   grt::StringRef _targetDatatypeName;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_migration_DatatypeMapping());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -599,7 +599,7 @@ public:
       _options(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.migration.DBPreferences";
   }
 
@@ -610,11 +610,11 @@ public:
    * \par In Python:
    *    value = obj.characterSetMapping
    */
-  grt::DictRef characterSetMapping() const { return _characterSetMapping; }
+  auto characterSetMapping() const -> grt::DictRef { return _characterSetMapping; }
 
 
 private: // The next attribute is read-only.
-  virtual void characterSetMapping(const grt::DictRef &value) {
+  virtual auto characterSetMapping(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_characterSetMapping);
     _characterSetMapping = value;
     member_changed("characterSetMapping", ovalue, value);
@@ -629,11 +629,11 @@ public:
    * \par In Python:
    *    value = obj.datatypeMapping
    */
-  grt::ListRef<db_migration_DatatypeMapping> datatypeMapping() const { return _datatypeMapping; }
+  auto datatypeMapping() const -> grt::ListRef<db_migration_DatatypeMapping> { return _datatypeMapping; }
 
 
 private: // The next attribute is read-only.
-  virtual void datatypeMapping(const grt::ListRef<db_migration_DatatypeMapping> &value) {
+  virtual auto datatypeMapping(const grt::ListRef<db_migration_DatatypeMapping> &value) -> void {
     grt::ValueRef ovalue(_datatypeMapping);
 
     _datatypeMapping = value;
@@ -648,11 +648,11 @@ public:
    * \par In Python:
    *    value = obj.defaultValueMapping
    */
-  grt::DictRef defaultValueMapping() const { return _defaultValueMapping; }
+  auto defaultValueMapping() const -> grt::DictRef { return _defaultValueMapping; }
 
 
 private: // The next attribute is read-only.
-  virtual void defaultValueMapping(const grt::DictRef &value) {
+  virtual auto defaultValueMapping(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_defaultValueMapping);
     _defaultValueMapping = value;
     member_changed("defaultValueMapping", ovalue, value);
@@ -666,11 +666,11 @@ public:
    * \par In Python:
    *    value = obj.options
    */
-  grt::DictRef options() const { return _options; }
+  auto options() const -> grt::DictRef { return _options; }
 
 
 private: // The next attribute is read-only.
-  virtual void options(const grt::DictRef &value) {
+  virtual auto options(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_options);
     _options = value;
     member_changed("options", ovalue, value);
@@ -684,7 +684,7 @@ public:
    * \par In Python:
    *    value = obj.sourceRdbms
    */
-  db_mgmt_RdbmsRef sourceRdbms() const { return _sourceRdbms; }
+  auto sourceRdbms() const -> db_mgmt_RdbmsRef { return _sourceRdbms; }
 
   /**
    * Setter for attribute sourceRdbms
@@ -693,7 +693,7 @@ public:
    * \par In Python:
    *   obj.sourceRdbms = value
    */
-  virtual void sourceRdbms(const db_mgmt_RdbmsRef &value) {
+  virtual auto sourceRdbms(const db_mgmt_RdbmsRef &value) -> void {
     grt::ValueRef ovalue(_sourceRdbms);
     _sourceRdbms = value;
     member_changed("sourceRdbms", ovalue, value);
@@ -708,12 +708,12 @@ protected:
   db_mgmt_RdbmsRef _sourceRdbms;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_migration_DBPreferences());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -773,7 +773,7 @@ public:
 
   virtual ~db_migration_Migration();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.migration.Migration";
   }
 
@@ -784,11 +784,11 @@ public:
    * \par In Python:
    *    value = obj.applicationData
    */
-  grt::DictRef applicationData() const { return _applicationData; }
+  auto applicationData() const -> grt::DictRef { return _applicationData; }
 
 
 private: // The next attribute is read-only.
-  virtual void applicationData(const grt::DictRef &value) {
+  virtual auto applicationData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_applicationData);
     _applicationData = value;
     member_changed("applicationData", ovalue, value);
@@ -803,11 +803,11 @@ public:
    * \par In Python:
    *    value = obj.creationLog
    */
-  grt::ListRef<GrtLogObject> creationLog() const { return _creationLog; }
+  auto creationLog() const -> grt::ListRef<GrtLogObject> { return _creationLog; }
 
 
 private: // The next attribute is read-only.
-  virtual void creationLog(const grt::ListRef<GrtLogObject> &value) {
+  virtual auto creationLog(const grt::ListRef<GrtLogObject> &value) -> void {
     grt::ValueRef ovalue(_creationLog);
 
     _creationLog = value;
@@ -822,11 +822,11 @@ public:
    * \par In Python:
    *    value = obj.dataBulkTransferParams
    */
-  grt::DictRef dataBulkTransferParams() const { return _dataBulkTransferParams; }
+  auto dataBulkTransferParams() const -> grt::DictRef { return _dataBulkTransferParams; }
 
 
 private: // The next attribute is read-only.
-  virtual void dataBulkTransferParams(const grt::DictRef &value) {
+  virtual auto dataBulkTransferParams(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_dataBulkTransferParams);
     _dataBulkTransferParams = value;
     member_changed("dataBulkTransferParams", ovalue, value);
@@ -841,11 +841,11 @@ public:
    * \par In Python:
    *    value = obj.dataTransferLog
    */
-  grt::ListRef<GrtLogObject> dataTransferLog() const { return _dataTransferLog; }
+  auto dataTransferLog() const -> grt::ListRef<GrtLogObject> { return _dataTransferLog; }
 
 
 private: // The next attribute is read-only.
-  virtual void dataTransferLog(const grt::ListRef<GrtLogObject> &value) {
+  virtual auto dataTransferLog(const grt::ListRef<GrtLogObject> &value) -> void {
     grt::ValueRef ovalue(_dataTransferLog);
 
     _dataTransferLog = value;
@@ -860,11 +860,11 @@ public:
    * \par In Python:
    *    value = obj.defaultColumnValueMappings
    */
-  grt::DictRef defaultColumnValueMappings() const { return _defaultColumnValueMappings; }
+  auto defaultColumnValueMappings() const -> grt::DictRef { return _defaultColumnValueMappings; }
 
 
 private: // The next attribute is read-only.
-  virtual void defaultColumnValueMappings(const grt::DictRef &value) {
+  virtual auto defaultColumnValueMappings(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_defaultColumnValueMappings);
     _defaultColumnValueMappings = value;
     member_changed("defaultColumnValueMappings", ovalue, value);
@@ -879,11 +879,11 @@ public:
    * \par In Python:
    *    value = obj.genericDatatypeMappings
    */
-  grt::ListRef<db_migration_DatatypeMapping> genericDatatypeMappings() const { return _genericDatatypeMappings; }
+  auto genericDatatypeMappings() const -> grt::ListRef<db_migration_DatatypeMapping> { return _genericDatatypeMappings; }
 
 
 private: // The next attribute is read-only.
-  virtual void genericDatatypeMappings(const grt::ListRef<db_migration_DatatypeMapping> &value) {
+  virtual auto genericDatatypeMappings(const grt::ListRef<db_migration_DatatypeMapping> &value) -> void {
     grt::ValueRef ovalue(_genericDatatypeMappings);
 
     _genericDatatypeMappings = value;
@@ -898,11 +898,11 @@ public:
    * \par In Python:
    *    value = obj.ignoreList
    */
-  grt::StringListRef ignoreList() const { return _ignoreList; }
+  auto ignoreList() const -> grt::StringListRef { return _ignoreList; }
 
 
 private: // The next attribute is read-only.
-  virtual void ignoreList(const grt::StringListRef &value) {
+  virtual auto ignoreList(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_ignoreList);
     _ignoreList = value;
     member_changed("ignoreList", ovalue, value);
@@ -917,11 +917,11 @@ public:
    * \par In Python:
    *    value = obj.migrationLog
    */
-  grt::ListRef<GrtLogObject> migrationLog() const { return _migrationLog; }
+  auto migrationLog() const -> grt::ListRef<GrtLogObject> { return _migrationLog; }
 
 
 private: // The next attribute is read-only.
-  virtual void migrationLog(const grt::ListRef<GrtLogObject> &value) {
+  virtual auto migrationLog(const grt::ListRef<GrtLogObject> &value) -> void {
     grt::ValueRef ovalue(_migrationLog);
 
     _migrationLog = value;
@@ -936,11 +936,11 @@ public:
    * \par In Python:
    *    value = obj.objectCreationParams
    */
-  grt::DictRef objectCreationParams() const { return _objectCreationParams; }
+  auto objectCreationParams() const -> grt::DictRef { return _objectCreationParams; }
 
 
 private: // The next attribute is read-only.
-  virtual void objectCreationParams(const grt::DictRef &value) {
+  virtual auto objectCreationParams(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_objectCreationParams);
     _objectCreationParams = value;
     member_changed("objectCreationParams", ovalue, value);
@@ -954,11 +954,11 @@ public:
    * \par In Python:
    *    value = obj.objectMigrationParams
    */
-  grt::DictRef objectMigrationParams() const { return _objectMigrationParams; }
+  auto objectMigrationParams() const -> grt::DictRef { return _objectMigrationParams; }
 
 
 private: // The next attribute is read-only.
-  virtual void objectMigrationParams(const grt::DictRef &value) {
+  virtual auto objectMigrationParams(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_objectMigrationParams);
     _objectMigrationParams = value;
     member_changed("objectMigrationParams", ovalue, value);
@@ -972,11 +972,11 @@ public:
    * \par In Python:
    *    value = obj.selectedSchemataNames
    */
-  grt::StringListRef selectedSchemataNames() const { return _selectedSchemataNames; }
+  auto selectedSchemataNames() const -> grt::StringListRef { return _selectedSchemataNames; }
 
 
 private: // The next attribute is read-only.
-  virtual void selectedSchemataNames(const grt::StringListRef &value) {
+  virtual auto selectedSchemataNames(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_selectedSchemataNames);
     _selectedSchemataNames = value;
     member_changed("selectedSchemataNames", ovalue, value);
@@ -991,7 +991,7 @@ public:
    * \par In Python:
    *    value = obj.sourceCatalog
    */
-  db_CatalogRef sourceCatalog() const { return _sourceCatalog; }
+  auto sourceCatalog() const -> db_CatalogRef { return _sourceCatalog; }
 
   /**
    * Setter for attribute sourceCatalog
@@ -1000,7 +1000,7 @@ public:
    * \par In Python:
    *   obj.sourceCatalog = value
    */
-  virtual void sourceCatalog(const db_CatalogRef &value) {
+  virtual auto sourceCatalog(const db_CatalogRef &value) -> void {
     grt::ValueRef ovalue(_sourceCatalog);
 
     _sourceCatalog = value;
@@ -1015,7 +1015,7 @@ public:
    * \par In Python:
    *    value = obj.sourceConnection
    */
-  db_mgmt_ConnectionRef sourceConnection() const { return _sourceConnection; }
+  auto sourceConnection() const -> db_mgmt_ConnectionRef { return _sourceConnection; }
 
   /**
    * Setter for attribute sourceConnection
@@ -1024,7 +1024,7 @@ public:
    * \par In Python:
    *   obj.sourceConnection = value
    */
-  virtual void sourceConnection(const db_mgmt_ConnectionRef &value) {
+  virtual auto sourceConnection(const db_mgmt_ConnectionRef &value) -> void {
     grt::ValueRef ovalue(_sourceConnection);
 
     _sourceConnection = value;
@@ -1039,7 +1039,7 @@ public:
    * \par In Python:
    *    value = obj.sourceDBVersion
    */
-  GrtVersionRef sourceDBVersion() const { return _sourceDBVersion; }
+  auto sourceDBVersion() const -> GrtVersionRef { return _sourceDBVersion; }
 
   /**
    * Setter for attribute sourceDBVersion
@@ -1048,7 +1048,7 @@ public:
    * \par In Python:
    *   obj.sourceDBVersion = value
    */
-  virtual void sourceDBVersion(const GrtVersionRef &value) {
+  virtual auto sourceDBVersion(const GrtVersionRef &value) -> void {
     grt::ValueRef ovalue(_sourceDBVersion);
 
     _sourceDBVersion = value;
@@ -1063,11 +1063,11 @@ public:
    * \par In Python:
    *    value = obj.sourceObjects
    */
-  grt::ListRef<GrtObject> sourceObjects() const { return _sourceObjects; }
+  auto sourceObjects() const -> grt::ListRef<GrtObject> { return _sourceObjects; }
 
 
 private: // The next attribute is read-only.
-  virtual void sourceObjects(const grt::ListRef<GrtObject> &value) {
+  virtual auto sourceObjects(const grt::ListRef<GrtObject> &value) -> void {
     grt::ValueRef ovalue(_sourceObjects);
 
     _sourceObjects = value;
@@ -1082,11 +1082,11 @@ public:
    * \par In Python:
    *    value = obj.sourceSchemataNames
    */
-  grt::StringListRef sourceSchemataNames() const { return _sourceSchemataNames; }
+  auto sourceSchemataNames() const -> grt::StringListRef { return _sourceSchemataNames; }
 
 
 private: // The next attribute is read-only.
-  virtual void sourceSchemataNames(const grt::StringListRef &value) {
+  virtual auto sourceSchemataNames(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_sourceSchemataNames);
     _sourceSchemataNames = value;
     member_changed("sourceSchemataNames", ovalue, value);
@@ -1101,7 +1101,7 @@ public:
    * \par In Python:
    *    value = obj.targetCatalog
    */
-  db_CatalogRef targetCatalog() const { return _targetCatalog; }
+  auto targetCatalog() const -> db_CatalogRef { return _targetCatalog; }
 
   /**
    * Setter for attribute targetCatalog
@@ -1110,7 +1110,7 @@ public:
    * \par In Python:
    *   obj.targetCatalog = value
    */
-  virtual void targetCatalog(const db_CatalogRef &value) {
+  virtual auto targetCatalog(const db_CatalogRef &value) -> void {
     grt::ValueRef ovalue(_targetCatalog);
 
     _targetCatalog = value;
@@ -1125,7 +1125,7 @@ public:
    * \par In Python:
    *    value = obj.targetConnection
    */
-  db_mgmt_ConnectionRef targetConnection() const { return _targetConnection; }
+  auto targetConnection() const -> db_mgmt_ConnectionRef { return _targetConnection; }
 
   /**
    * Setter for attribute targetConnection
@@ -1134,7 +1134,7 @@ public:
    * \par In Python:
    *   obj.targetConnection = value
    */
-  virtual void targetConnection(const db_mgmt_ConnectionRef &value) {
+  virtual auto targetConnection(const db_mgmt_ConnectionRef &value) -> void {
     grt::ValueRef ovalue(_targetConnection);
 
     _targetConnection = value;
@@ -1149,7 +1149,7 @@ public:
    * \par In Python:
    *    value = obj.targetDBVersion
    */
-  GrtVersionRef targetDBVersion() const { return _targetDBVersion; }
+  auto targetDBVersion() const -> GrtVersionRef { return _targetDBVersion; }
 
   /**
    * Setter for attribute targetDBVersion
@@ -1158,7 +1158,7 @@ public:
    * \par In Python:
    *   obj.targetDBVersion = value
    */
-  virtual void targetDBVersion(const GrtVersionRef &value) {
+  virtual auto targetDBVersion(const GrtVersionRef &value) -> void {
     grt::ValueRef ovalue(_targetDBVersion);
 
     _targetDBVersion = value;
@@ -1173,7 +1173,7 @@ public:
    * \par In Python:
    *    value = obj.targetVersion
    */
-  GrtVersionRef targetVersion() const { return _targetVersion; }
+  auto targetVersion() const -> GrtVersionRef { return _targetVersion; }
 
   /**
    * Setter for attribute targetVersion
@@ -1182,7 +1182,7 @@ public:
    * \par In Python:
    *   obj.targetVersion = value
    */
-  virtual void targetVersion(const GrtVersionRef &value) {
+  virtual auto targetVersion(const GrtVersionRef &value) -> void {
     grt::ValueRef ovalue(_targetVersion);
 
     _targetVersion = value;
@@ -1197,32 +1197,32 @@ public:
    * \param message 
    * \return 
    */
-  virtual GrtLogObjectRef addMigrationLogEntry(ssize_t type, const GrtObjectRef &sourceObject, const GrtObjectRef &targetObject, const std::string &message);
+  virtual auto addMigrationLogEntry(ssize_t type, const GrtObjectRef &sourceObject, const GrtObjectRef &targetObject, const std::string &message) -> GrtLogObjectRef;
   /**
    * Method. 
    * \param sourceObject 
    * \param targetObject 
    * \return 
    */
-  virtual GrtLogObjectRef findMigrationLogEntry(const GrtObjectRef &sourceObject, const GrtObjectRef &targetObject);
+  virtual auto findMigrationLogEntry(const GrtObjectRef &sourceObject, const GrtObjectRef &targetObject) -> GrtLogObjectRef;
   /**
    * Method. 
    * \param sourceObject 
    * \return 
    */
-  virtual GrtObjectRef lookupMigratedObject(const GrtObjectRef &sourceObject);
+  virtual auto lookupMigratedObject(const GrtObjectRef &sourceObject) -> GrtObjectRef;
   /**
    * Method. 
    * \param targetObject 
    * \return 
    */
-  virtual GrtObjectRef lookupSourceObject(const GrtObjectRef &targetObject);
+  virtual auto lookupSourceObject(const GrtObjectRef &targetObject) -> GrtObjectRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -1250,7 +1250,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_migration_Migration());
   }
 
@@ -1263,7 +1263,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_lookupSourceObject(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<db_migration_Migration*>(self)->lookupSourceObject(GrtObjectRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1377,7 +1377,7 @@ public:
 
 
 
-inline void register_structs_db_migration_xml() {
+inline auto register_structs_db_migration_xml() -> void {
   grt::internal::ClassRegistry::register_class<db_migration_MigrationParameter>();
   grt::internal::ClassRegistry::register_class<db_migration_DatatypeMapping>();
   grt::internal::ClassRegistry::register_class<db_migration_DBPreferences>();

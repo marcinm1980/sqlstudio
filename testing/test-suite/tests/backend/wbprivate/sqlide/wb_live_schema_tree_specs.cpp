@@ -179,7 +179,7 @@ namespace wb {
     virtual ~LiveTreeTestDelegate() {
     }
 
-    void expect_fetch_schema_contents_call() {
+    auto expect_fetch_schema_contents_call() -> void {
       _mock_schema_list = base::StringListPtr(new std::list<std::string>());
       _mock_table_list = base::StringListPtr(new std::list<std::string>());
       _mock_view_list = base::StringListPtr(new std::list<std::string>());
@@ -192,7 +192,7 @@ namespace wb {
       _expect_fetch_schema_contents_call = true;
     }
 
-    virtual std::vector<std::string> fetch_schema_list() {
+    virtual auto fetch_schema_list() -> std::vector<std::string> {
       EXPECT_TRUE(_expect_fetch_schema_list_call) << _check_id + " : Unexpected call to fetch_schema_list";
       _expect_fetch_schema_list_call = false;
 
@@ -201,8 +201,8 @@ namespace wb {
       return slist;
     }
 
-    virtual bool fetch_data_for_filter(const std::string& _schema_pattern, const std::string& _object_pattern,
-                                       const LiveSchemaTree::NewSchemaContentArrivedSlot& arrived_slot) {
+    virtual auto fetch_data_for_filter(const std::string& _schema_pattern, const std::string& _object_pattern,
+                                       const LiveSchemaTree::NewSchemaContentArrivedSlot& arrived_slot) -> bool {
       EXPECT_TRUE(_expect_fetch_data_for_filter) << _check_id + " : Unexpected call to fetch_data_for_filter";
       _expect_fetch_data_for_filter = false;
 
@@ -214,8 +214,8 @@ namespace wb {
       return true;
     }
 
-    virtual bool fetch_schema_contents(const std::string& schema_name,
-                                       const LiveSchemaTree::NewSchemaContentArrivedSlot& arrived_slot) {
+    virtual auto fetch_schema_contents(const std::string& schema_name,
+                                       const LiveSchemaTree::NewSchemaContentArrivedSlot& arrived_slot) -> bool {
       EXPECT_TRUE(_expect_fetch_schema_contents_call) << _check_id + " : Unexpected call to fetch_schema_contents";
       _expect_fetch_schema_contents_call = false;
 
@@ -229,9 +229,9 @@ namespace wb {
       return true;
     }
 
-    virtual bool fetch_object_details(const std::string& schema_name, const std::string& obj_name,
+    virtual auto fetch_object_details(const std::string& schema_name, const std::string& obj_name,
                                       LiveSchemaTree::ObjectType obj_type, short flags,
-                                      const LiveSchemaTree::NodeChildrenUpdaterSlot& updater_slot) {
+                                      const LiveSchemaTree::NodeChildrenUpdaterSlot& updater_slot) -> bool {
       mforms::TreeNodeRef parent;
       LiveSchemaTree::ViewData* pviewdata;
 
@@ -335,21 +335,21 @@ namespace wb {
       return true;
     }
 
-    virtual bool fetch_routine_details(const std::string& schema_name, const std::string& obj_name,
-                                       LiveSchemaTree::ObjectType obj_type) {
+    virtual auto fetch_routine_details(const std::string& schema_name, const std::string& obj_name,
+                                       LiveSchemaTree::ObjectType obj_type) -> bool {
       return true;
     }
 
-    virtual void tree_refresh() {
+    virtual auto tree_refresh() -> void {
       EXPECT_TRUE(_expect_tree_refresh) << _check_id + " : Unexpected call to tree_refresh.";
       _expect_tree_refresh = false;
     }
 
-    virtual bool sidebar_action(const std::string& action) {
+    virtual auto sidebar_action(const std::string& action) -> bool {
       return true;
     }
 
-    void check_expected_changes(const std::string& change, const std::vector<LiveSchemaTree::ChangeRecord>& changes) {
+    auto check_expected_changes(const std::string& change, const std::vector<LiveSchemaTree::ChangeRecord>& changes) -> void {
       EXPECT_EQ(changes.size(), _mock_expected_changes.size())
         << _check_id + " : Unexpected number of objects " + change;
 
@@ -367,8 +367,8 @@ namespace wb {
       _mock_expected_changes.clear();
     }
 
-    virtual void tree_activate_objects(const std::string& action,
-                                       const std::vector<LiveSchemaTree::ChangeRecord>& changes) {
+    virtual auto tree_activate_objects(const std::string& action,
+                                       const std::vector<LiveSchemaTree::ChangeRecord>& changes) -> void {
       EXPECT_TRUE(_expect_tree_activate_objects) << _check_id + " : Unexpected call to tree_activate_objects.";
       EXPECT_EQ(action, _mock_expected_action)
         << _check_id + " : Unexpected action received on tree_activate_objects.";
@@ -377,14 +377,14 @@ namespace wb {
       check_expected_changes("activated", changes);
     }
 
-    virtual void tree_alter_objects(const std::vector<LiveSchemaTree::ChangeRecord>& changes) {
+    virtual auto tree_alter_objects(const std::vector<LiveSchemaTree::ChangeRecord>& changes) -> void {
       EXPECT_TRUE(_expect_tree_alter_objects) << _check_id + " : Unexpected call to tree_alter_objects.";
       _expect_tree_alter_objects = false;
       check_expected_changes("altered", changes);
     }
 
-    virtual void tree_create_object(LiveSchemaTree::ObjectType type, const std::string& schema_name,
-                                    const std::string& object_name) {
+    virtual auto tree_create_object(LiveSchemaTree::ObjectType type, const std::string& schema_name,
+                                    const std::string& object_name) -> void {
       EXPECT_TRUE(_expect_tree_create_object) << _check_id + " : Unexpected call to tree_create_object.";
       EXPECT_EQ(schema_name, _mock_expected_changes[0].schema) << _check_id + " : Unexpected schema name.";
       EXPECT_EQ(type, _mock_expected_changes[0].type) << _check_id + " : Unexpected object type.";
@@ -395,13 +395,13 @@ namespace wb {
       _expect_tree_create_object = false;
     }
 
-    virtual void tree_drop_objects(const std::vector<LiveSchemaTree::ChangeRecord>& changes) {
+    virtual auto tree_drop_objects(const std::vector<LiveSchemaTree::ChangeRecord>& changes) -> void {
       EXPECT_TRUE(_expect_tree_drop_objects) << _check_id + " : Unexpected call to tree_drop_objects.";
       _expect_tree_drop_objects = false;
       check_expected_changes("dropped", changes);
     }
 
-    void check_and_reset(const std::string& check_id) {
+    auto check_and_reset(const std::string& check_id) -> void {
       EXPECT_TRUE(_expect_fetch_schema_list_call) << check_id + " : Missed call to fetch_schema_list";
       EXPECT_TRUE(_expect_fetch_schema_contents_call) << check_id + " : Missed call to fetch_schema_contents";
       EXPECT_TRUE(_expect_fetch_object_details_call) << check_id + " : Missed call to fetch_object_details";
@@ -434,16 +434,16 @@ namespace wb {
   GPatternSpec* objectPattern = nullptr;
 
   class DummyLST : public LiveSchemaTree::LSTData {
-    virtual LiveSchemaTree::ObjectType get_type() {
+    virtual auto get_type() -> LiveSchemaTree::ObjectType {
       return LiveSchemaTree::Any;
     }
 
-    virtual std::string get_object_name() {
+    virtual auto get_object_name() -> std::string {
       return "DummyLST";
     }
   };
 
-  void fillBasicSchema(const std::string& check_id) {
+  auto fillBasicSchema(const std::string& check_id) -> void {
     // Fills the tree using the real structure..
     base::StringListPtr schemas(new std::list<std::string>());
     mforms::TreeNodeRef node;
@@ -505,7 +505,7 @@ namespace wb {
     delegate->check_and_reset(check_id);
   }
 
-  void fillSchemaObjectLists() {
+  auto fillSchemaObjectLists() -> void {
     delegate->_mock_view_list->clear();
     delegate->_mock_view_list->push_back("first_view");
     delegate->_mock_view_list->push_back("second_view");
@@ -529,7 +529,7 @@ namespace wb {
     delegate->_mock_function_list->push_back("dummy");
   }
 
-  void fillComplexSchema(const std::string& check_id) {
+  auto fillComplexSchema(const std::string& check_id) -> void {
     // Fills the tree using the real structure.
     base::StringListPtr schemas(new std::list<std::string>());
     mforms::TreeNodeRef node;
@@ -637,7 +637,7 @@ namespace wb {
     }
   }
 
-  void checkGetSchemaNameRecursive(LiveSchemaTree* lst, mforms::TreeNodeRef root) {
+  auto checkGetSchemaNameRecursive(LiveSchemaTree* lst, mforms::TreeNodeRef root) -> void {
     EXPECT_EQ(lst->get_schema_name(root), "schema1");
 
     for (int index = 0; index < root->count(); index++) {
@@ -645,7 +645,7 @@ namespace wb {
     }
   }
 
-  void checkNodePathsRecursive(LiveSchemaTree* lst, mforms::TreeNodeRef root) {
+  auto checkNodePathsRecursive(LiveSchemaTree* lst, mforms::TreeNodeRef root) -> void {
     std::vector<std::string> path = lst->get_node_path(root);
     mforms::TreeNodeRef other_node = lst->get_node_from_path(path);
 
@@ -656,7 +656,7 @@ namespace wb {
     }
   }
 
-  void setNodes(LiveSchemaTree* lst, std::list<mforms::TreeNodeRef>& nodes, int flags) {
+  auto setNodes(LiveSchemaTree* lst, std::list<mforms::TreeNodeRef>& nodes, int flags) -> void {
     mforms::TreeNodeRef schema_node = lst->get_node_for_object("schema1", LiveSchemaTree::Schema, "");
     mforms::TreeNodeRef object_node;
     if (SCHEMA & flags)
@@ -712,7 +712,7 @@ namespace wb {
       nodes.push_back(schema_node->get_child(LiveSchemaTree::FUNCTIONS_NODE_INDEX)->get_child(0));
   }
 
-  bool ensureItemExists(const bec::MenuItemList& items, const std::string& item_caption) {
+  auto ensureItemExists(const bec::MenuItemList& items, const std::string& item_caption) -> bool {
     bool found = false;
 
     for (size_t index = 0; !found && index < items.size(); index++) {
@@ -722,8 +722,8 @@ namespace wb {
     return found;
   }
 
-  bool ensureSubItemExists(const std::string& item_caption, const bec::MenuItemList& items,
-                           const std::string& subitem_caption) {
+  auto ensureSubItemExists(const std::string& item_caption, const bec::MenuItemList& items,
+                           const std::string& subitem_caption) -> bool {
     bool found = false;
 
     for (size_t index = 0; !found && index < items.size(); index++) {
@@ -734,8 +734,8 @@ namespace wb {
     return found;
   }
 
-  void ensureMenuItemsExist(const std::string check, const bec::MenuItemList& items, int main_items, int sub_items,
-                            const std::string& single, const std::string& multi) {
+  auto ensureMenuItemsExist(const std::string check, const bec::MenuItemList& items, int main_items, int sub_items,
+                            const std::string& single, const std::string& multi) -> void {
     std::string custom_caption = single;
 
     if (SET_DEF_SCH & main_items) {
@@ -854,7 +854,7 @@ namespace wb {
     }
   }
 
-  void setChangeRecords(std::vector<LiveSchemaTree::ChangeRecord>& change_records, int flags) {
+  auto setChangeRecords(std::vector<LiveSchemaTree::ChangeRecord>& change_records, int flags) -> void {
     if (SCHEMA & flags) {
       LiveSchemaTree::ChangeRecord change = { LiveSchemaTree::Schema, "", "schema1", "" };
       change_records.push_back(change);
@@ -877,7 +877,7 @@ namespace wb {
     }
   }
 
-  void setPatterns(const std::string& filter) {
+  auto setPatterns(const std::string& filter) -> void {
     std::vector<std::string> filters = base::split(filter, ".", 2);
 
     if (schemaPattern) {
@@ -896,9 +896,9 @@ namespace wb {
       objectPattern = g_pattern_spec_new(base::toupper(filters[1]).c_str());
   }
 
-  void verifyFilterResult(const std::string& check, mforms::TreeNodeRef root, const std::vector<std::string>& schemas,
+  auto verifyFilterResult(const std::string& check, mforms::TreeNodeRef root, const std::vector<std::string>& schemas,
                           const std::vector<std::string>& tables, const std::vector<std::string>& views,
-                          const std::vector<std::string>& procedures, const std::vector<std::string>& functions) {
+                          const std::vector<std::string>& procedures, const std::vector<std::string>& functions) -> void {
     mforms::TreeNodeRef schema_node_f;
     mforms::TreeNodeRef object_node_f;
 
@@ -957,7 +957,7 @@ class Live_Schema_TreeTest : public ::testing::Test {
 protected:
   static std::unique_ptr<TestData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data->delegate.reset(new TestData::LiveTreeTestDelegate());
     data->delegateFiltered.reset(new TestData::LiveTreeTestDelegate());
 
@@ -985,7 +985,7 @@ protected:
     data->delegateFiltered->ptree = &data->treeTestHelperFiltered;
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     if (data->schemaPattern != nullptr) {
       g_pattern_spec_free(data->schemaPattern);
     }

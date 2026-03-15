@@ -33,19 +33,19 @@ namespace mtemplate {
   //-----------------------------------------------------------------------------------
   //  DictionaryInterface stuff
   //-----------------------------------------------------------------------------------
-  void DictionaryInterface::setIntValue(const base::utf8string &key, long int value) {
+  auto DictionaryInterface::setIntValue(const base::utf8string &key, long int value) -> void {
     setValue(key, base::strfmt("%ld", value));
   }
 
-  void DictionaryInterface::setValueAndShowSection(const base::utf8string &key, const base::utf8string &value,
-                                                   const base::utf8string &section) {
+  auto DictionaryInterface::setValueAndShowSection(const base::utf8string &key, const base::utf8string &value,
+                                                   const base::utf8string &section) -> void {
     if (value.size() == 0)
       return;
     DictionaryInterface *dict = addSectionDictionary(section);
     dict->setValue(key, value);
   }
 
-  void DictionaryInterface::setFormatedValue(const base::utf8string &key, const char *format, ...) {
+  auto DictionaryInterface::setFormatedValue(const base::utf8string &key, const char *format, ...) -> void {
     va_list args;
     va_start(args, format);
     base::utf8string result = base::strfmt(format, args);
@@ -62,7 +62,7 @@ namespace mtemplate {
     dictionary_storage _dictionary;
     section_dictionary_storage _no_section;
 
-    DictionaryInterface *getParent() {
+    auto getParent() -> DictionaryInterface * {
       return nullptr;
     }
 
@@ -73,21 +73,21 @@ namespace mtemplate {
     }
 
     //  DictionaryInterface
-    virtual void setValue(const base::utf8string &key, const base::utf8string &value) {
+    virtual auto setValue(const base::utf8string &key, const base::utf8string &value) -> void {
       _dictionary[key] = value;
     }
-    virtual base::utf8string getValue(const base::utf8string &key) {
+    virtual auto getValue(const base::utf8string &key) -> base::utf8string {
       return _dictionary.find(key) == _dictionary.end() ? "" : _dictionary[key];
     }
 
-    virtual DictionaryInterface *addSectionDictionary(const base::utf8string &name) {
+    virtual auto addSectionDictionary(const base::utf8string &name) -> DictionaryInterface * {
       return NULL;
     }
-    virtual section_dictionary_storage &getSectionDictionaries(const base::utf8string &sections) {
+    virtual auto getSectionDictionaries(const base::utf8string &sections) -> section_dictionary_storage & {
       return _no_section;
     }
 
-    virtual void dump(int indent) {
+    virtual auto dump(int indent) -> void {
       base::utf8string indent_str(indent * 2, ' ');
       base::utf8string indent_plus_str((indent + 1) * 2, ' ');
 
@@ -103,11 +103,11 @@ namespace mtemplate {
   //-----------------------------------------------------------------------------------
   //  Dictionary stuff
   //-----------------------------------------------------------------------------------
-  void Dictionary::setValue(const base::utf8string &key, const base::utf8string &value) {
+  auto Dictionary::setValue(const base::utf8string &key, const base::utf8string &value) -> void {
     _dictionary[key] = value;
   }
 
-  base::utf8string Dictionary::getValue(const base::utf8string &key) {
+  auto Dictionary::getValue(const base::utf8string &key) -> base::utf8string {
     if (_dictionary.find(key) != _dictionary.end())
       return _dictionary[key];
 
@@ -117,7 +117,7 @@ namespace mtemplate {
     return GlobalDictionary.getValue(key);
   }
 
-  DictionaryInterface *Dictionary::addSectionDictionary(const base::utf8string &name) {
+  auto Dictionary::addSectionDictionary(const base::utf8string &name) -> DictionaryInterface * {
     base::utf8string newName = _name + name + base::utf8string("/");
     DictionaryInterface *_sectionDict = new Dictionary(newName, this);
 
@@ -129,13 +129,13 @@ namespace mtemplate {
     return _sectionDict;
   }
 
-  Dictionary::section_dictionary_storage &Dictionary::getSectionDictionaries(const base::utf8string &section) {
+  auto Dictionary::getSectionDictionaries(const base::utf8string &section) -> Dictionary::section_dictionary_storage & {
     if (_section_dictionaries.find(section) == _section_dictionaries.end())
       return _no_section;
     return _section_dictionaries[section];
   }
 
-  void Dictionary::dump(int indent) {
+  auto Dictionary::dump(int indent) -> void {
     base::utf8string indent_str(indent * 2, ' ');
     base::utf8string indent_plus_str((indent + 1) * 2, ' ');
 
@@ -160,11 +160,11 @@ namespace mtemplate {
   //-----------------------------------------------------------------------------------
   //  General stuff
   //-----------------------------------------------------------------------------------
-  Dictionary *CreateMainDictionary() {
+  auto CreateMainDictionary() -> Dictionary * {
     return new Dictionary("/", NULL);
   }
 
-  void SetGlobalValue(const base::utf8string &key, const base::utf8string &value) {
+  auto SetGlobalValue(const base::utf8string &key, const base::utf8string &value) -> void {
     GlobalDictionary.setValue(key, value);
   }
 

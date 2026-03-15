@@ -279,7 +279,7 @@ bool Color::operator!=(const Color &other) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string Color::to_html() const {
+auto Color::to_html() const -> std::string {
   if (is_valid())
     return strfmt("#%02X%02X%02X", static_cast<uint8_t>(red * 255), static_cast<uint8_t>(green * 255),
                   static_cast<uint8_t>(blue * 255));
@@ -288,7 +288,7 @@ std::string Color::to_html() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-long Color::toRGB() const {
+auto Color::toRGB() const -> long {
   if (!is_valid())
     return 0;
   return ((long)(red * 255.0) << 16) + ((long)(green * 255.0) << 8) + (long)(blue * 255.0);
@@ -296,7 +296,7 @@ long Color::toRGB() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-long Color::toBGR() const {
+auto Color::toBGR() const -> long {
   if (!is_valid())
     return 0;
   return ((long)(blue * 255.0) << 16) + ((long)(green * 255.0) << 8) + (long)(red * 255.0);
@@ -304,13 +304,13 @@ long Color::toBGR() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool Color::is_valid() const {
+auto Color::is_valid() const -> bool {
   return !(red < 0 || green < 0 || blue < 0 || alpha < 0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Color Color::invert() const {
+auto Color::invert() const -> Color {
   if (is_valid())
     return { 1 - red, 1 - green, 1 - blue, alpha };
 
@@ -319,7 +319,7 @@ Color Color::invert() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-double Color::brightness() const {
+auto Color::brightness() const -> double {
   if (is_valid())
     return 0.2126 * red + 0.7152 * green + 0.0722 * blue; // ITU BT.709
 
@@ -328,7 +328,7 @@ double Color::brightness() const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Color Color::brighten(float fraction) const {
+auto Color::brighten(float fraction) const -> Color {
   if (is_valid()) {
     double newRed = red + red * fraction;
     if (newRed > 1.0)
@@ -352,7 +352,7 @@ Color Color::brighten(float fraction) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Color Color::darken(float fraction) const {
+auto Color::darken(float fraction) const -> Color {
   if (is_valid()) {
     double newRed = red - red * fraction;
     if (newRed > 1.0)
@@ -380,7 +380,7 @@ Color Color::darken(float fraction) const {
 /**
  * Parse an HTML color definition into a Color structure.
  */
-Color Color::parse(const std::string &color) {
+auto Color::parse(const std::string &color) -> Color {
   if (!color.empty()) {
     if (color[0] == '#') {
       int r, g, b;
@@ -464,7 +464,7 @@ static std::pair<std::string, std::string> custom_colors[] = {
 /**
  * Returns one of the predefined application colors.
  */
-std::string Color::getApplicationColorAsString(ApplicationColor color, bool foreground) {
+auto Color::getApplicationColorAsString(ApplicationColor color, bool foreground) -> std::string {
   static const std::pair<std::string, std::string> app_colors_win7[] = {
     // Background, foreground.
     std::make_pair("#b2bed1", "#000000"), // AppColorMainTab
@@ -549,13 +549,13 @@ std::string Color::getApplicationColorAsString(ApplicationColor color, bool fore
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Color Color::getApplicationColor(ApplicationColor color, bool foreground) {
+auto Color::getApplicationColor(ApplicationColor color, bool foreground) -> Color {
   return Color::parse(getApplicationColorAsString(color, foreground));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Color::set_active_scheme(ColorScheme scheme) {
+auto Color::set_active_scheme(ColorScheme scheme) -> void {
   base::MutexLock lock(*color_mutex);
 
   active_scheme = scheme;
@@ -576,7 +576,7 @@ void Color::set_active_scheme(ColorScheme scheme) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::ColorScheme base::Color::get_active_scheme() {
+auto base::Color::get_active_scheme() -> base::ColorScheme {
   base::MutexLock lock(*color_mutex);
 
   return active_scheme;
@@ -584,13 +584,13 @@ base::ColorScheme base::Color::get_active_scheme() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool Color::is_high_contrast_scheme() {
+auto Color::is_high_contrast_scheme() -> bool {
   return high_contrast_active;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Color::load_custom_colors(const std::map<std::string, std::string> &colors) {
+auto Color::load_custom_colors(const std::map<std::string, std::string> &colors) -> void {
   static const std::map<std::string, int> app_color_map = {
     { "main-tab", AppColorMainTab },
     { "main", AppColorMainBackground },
@@ -629,7 +629,7 @@ void Color::load_custom_colors(const std::map<std::string, std::string> &colors)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Color::save_custom_colors(std::map<std::string, std::string> &colors) {
+auto Color::save_custom_colors(std::map<std::string, std::string> &colors) -> void {
   static const std::map<std::string, int> app_color_map = {
     { "main-tab", AppColorMainTab },
     { "main", AppColorMainBackground },

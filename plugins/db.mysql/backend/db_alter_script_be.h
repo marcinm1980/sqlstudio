@@ -47,16 +47,16 @@ class DbMySQLDiffAlter : public SynchronizeDifferencesPageBEInterface {
   grt::DictRef _db_options;
 
 public:
-  void set_db_options(grt::DictRef db_options) {
+  auto set_db_options(grt::DictRef db_options) -> void {
     _db_options = db_options;
   };
-  grt::DictRef get_db_options() const {
+  auto get_db_options() const -> grt::DictRef {
     return _db_options.is_valid() ? _db_options : grt::DictRef();
   };
-  virtual db_mysql_CatalogRef get_model_catalog() {
+  virtual auto get_model_catalog() -> db_mysql_CatalogRef {
     return db_mysql_CatalogRef::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0/catalog"));
   }
-  virtual void get_compared_catalogs(db_CatalogRef &left, db_CatalogRef &right) {
+  virtual auto get_compared_catalogs(db_CatalogRef &left, db_CatalogRef &right) -> void {
     left = _left_catalog;
     right = _right_catalog;
   }
@@ -64,15 +64,15 @@ public:
   DbMySQLDiffAlter();
   virtual ~DbMySQLDiffAlter();
 
-  std::string generate_alter();
+  auto generate_alter() -> std::string;
 
-  virtual std::shared_ptr<DiffTreeBE> init_diff_tree(const std::vector<std::string> &schemata,
+  virtual auto init_diff_tree(const std::vector<std::string> &schemata,
                                                      const grt::ValueRef &ext_cat, const grt::ValueRef &cat2,
-                                                     grt::StringListRef SchemaSkipList, grt::DictRef options);
+                                                     grt::StringListRef SchemaSkipList, grt::DictRef options) -> std::shared_ptr<DiffTreeBE>;
 
-  virtual std::string get_col_name(const size_t col_id);
+  virtual auto get_col_name(const size_t col_id) -> std::string;
 
-  virtual std::string get_sql_for_object(GrtNamedObjectRef obj) {
+  virtual auto get_sql_for_object(GrtNamedObjectRef obj) -> std::string {
     std::string result;
     for (size_t i = 0; i < _alter_list.count(); ++i)
       if (_alter_object_list.get(i) == obj) {
@@ -81,5 +81,5 @@ public:
     return result;
   }
 
-  void restore_overriden_names();
+  auto restore_overriden_names() -> void;
 };

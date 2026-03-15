@@ -144,24 +144,24 @@ namespace grt {
   MYSQLGRT_PUBLIC auto find_child_object(const ObjectRef &object, const std::string &id, bool recursive = true)
     -> ObjectRef;
 
-  MYSQLGRT_PUBLIC void update_ids(ObjectRef object,
-                                  const std::set<std::string> &skip_members = std::set<std::string>());
+  MYSQLGRT_PUBLIC auto update_ids(ObjectRef object,
+                                  const std::set<std::string> &skip_members = std::set<std::string>()) -> void;
   // the following merge functions are not recursive
-  MYSQLGRT_PUBLIC void append_contents(BaseListRef target, BaseListRef source);
-  MYSQLGRT_PUBLIC void replace_contents(BaseListRef target, BaseListRef source);
-  MYSQLGRT_PUBLIC void merge_contents_by_name(ObjectListRef target, ObjectListRef source, bool replace_matching);
-  MYSQLGRT_PUBLIC void merge_contents_by_id(ObjectListRef target, ObjectListRef source, bool replace_matching);
+  MYSQLGRT_PUBLIC auto append_contents(BaseListRef target, BaseListRef source) -> void;
+  MYSQLGRT_PUBLIC auto replace_contents(BaseListRef target, BaseListRef source) -> void;
+  MYSQLGRT_PUBLIC auto merge_contents_by_name(ObjectListRef target, ObjectListRef source, bool replace_matching) -> void;
+  MYSQLGRT_PUBLIC auto merge_contents_by_id(ObjectListRef target, ObjectListRef source, bool replace_matching) -> void;
 
-  MYSQLGRT_PUBLIC void replace_contents(DictRef target, DictRef source);
-  MYSQLGRT_PUBLIC void merge_contents(DictRef target, DictRef source, bool overwrite);
-  MYSQLGRT_PUBLIC void merge_contents(ObjectRef target, ObjectRef source);
+  MYSQLGRT_PUBLIC auto replace_contents(DictRef target, DictRef source) -> void;
+  MYSQLGRT_PUBLIC auto merge_contents(DictRef target, DictRef source, bool overwrite) -> void;
+  MYSQLGRT_PUBLIC auto merge_contents(ObjectRef target, ObjectRef source) -> void;
 
   MYSQLGRT_PUBLIC auto compare_list_contents(const ObjectListRef &list1, const ObjectListRef &list2) -> bool;
 
   MYSQLGRT_PUBLIC auto join_string_list(const StringListRef &list, const std::string &separator) -> std::string;
 
-  MYSQLGRT_PUBLIC void remove_list_items_matching(ObjectListRef list,
-                                                  const std::function<bool(grt::ObjectRef)> &matcher);
+  MYSQLGRT_PUBLIC auto remove_list_items_matching(ObjectListRef list,
+                                                  const std::function<bool(grt::ObjectRef)> &matcher) -> void;
 
   // XXX don't use this for objects, use CopyContext::copy() instead
   MYSQLGRT_PUBLIC auto copy_value(ValueRef value, bool deep) -> ValueRef;
@@ -175,17 +175,17 @@ namespace grt {
 
     auto copy(const ObjectRef &object, std::set<std::string> skip_members = std::set<std::string>()) -> ObjectRef;
     auto shallow_copy(const ObjectRef &object) -> ObjectRef;
-    void finish() {
+    auto finish() -> void {
       update_references();
     }
-    void update_references();
+    auto update_references() -> void;
 
     auto copy_for_object(ValueRef object) -> ValueRef;
 
   private:
     auto duplicate_object(ObjectRef object, std::set<std::string> skip_members, bool dontfollow) -> ObjectRef;
-    void copy_list(BaseListRef &list, const BaseListRef &source, bool dontfollow);
-    void copy_dict(DictRef &dict, const DictRef &source, bool dontfollow);
+    auto copy_list(BaseListRef &list, const BaseListRef &source, bool dontfollow) -> void;
+    auto copy_dict(DictRef &dict, const DictRef &source, bool dontfollow) -> void;
   };
 
   template <typename OType>
@@ -212,11 +212,11 @@ namespace grt {
     return copy;
   }
 
-  MYSQLGRT_PUBLIC void dump_value(const grt::ValueRef &value);
+  MYSQLGRT_PUBLIC auto dump_value(const grt::ValueRef &value) -> void;
 
   // temporary code
   MYSQLGRT_PUBLIC auto init_python_support(const std::string &python_module_path) -> bool;
-  MYSQLGRT_PUBLIC void add_python_module_dir(const std::string &python_module_path);
+  MYSQLGRT_PUBLIC auto add_python_module_dir(const std::string &python_module_path) -> void;
 
   // diffing
 

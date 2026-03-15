@@ -52,18 +52,18 @@ namespace MySQL {
       NodeIdWrapper(String ^ str);
       ~NodeIdWrapper();
 
-      bec::NodeId *get_unmanaged_object();
+      auto get_unmanaged_object() -> bec::NodeId *;
       bool operator==(NodeIdWrapper ^ node);
       bool equals(NodeIdWrapper ^ node);
       int operator[](int i);
-      int get_by_index(int i);
-      int depth();
-      int end();
-      bool previous();
-      bool next();
-      NodeIdWrapper ^ append(int i);
-      bool is_valid();
-      String ^ toString();
+      auto get_by_index(int i) -> int;
+      auto depth() -> int;
+      auto end() -> int;
+      auto previous() -> bool;
+      auto next() -> bool;
+      auto append(int i) -> NodeIdWrapper ^;
+      auto is_valid() -> bool;
+      auto toString() -> String ^;
     };
 
     //----------------------------------------------------------------------------------------------
@@ -71,10 +71,9 @@ namespace MySQL {
     /**
      * Helper methods.
      */
-    inline NodeIdWrapper ^ nativeToManaged(const bec::NodeId &input) { return gcnew NodeIdWrapper(&input); }
+    inline auto nativeToManaged(const bec::NodeId &input) -> NodeIdWrapper ^ { return gcnew NodeIdWrapper(&input); }
 
-      inline List<NodeIdWrapper ^> ^
-      nativeToManaged(const std::vector<bec::NodeId> &input) {
+      inline auto nativeToManaged(const std::vector<bec::NodeId> &input) -> List<NodeIdWrapper ^> ^ {
         typedef const std::vector<bec::NodeId> SourceContainerType;
         typedef List<NodeIdWrapper ^> TargetContainerType;
 
@@ -106,18 +105,18 @@ namespace MySQL {
       ListModelWrapper(::bec::ListModel *inn);
       ~ListModelWrapper();
 
-      bool is_valid();
+      auto is_valid() -> bool;
       bool equals(ListModelWrapper ^ other);
-      virtual int count();
-      virtual NodeIdWrapper ^ get_node(int index);
+      virtual auto count() -> int;
+      virtual auto get_node(int index) -> NodeIdWrapper ^;
       virtual bool get_field(NodeIdWrapper ^ node, int column, [Out] String ^ % value);
       virtual bool get_field(NodeIdWrapper ^ node, int column, [Out] int % value);
       virtual bool get_field(NodeIdWrapper ^ node, int column, [Out] double % value);
       virtual String ^ get_field_description(NodeIdWrapper ^ node, int column);
       virtual IconId get_field_icon(NodeIdWrapper ^ node, int column, IconSize size);
       virtual GrtValue ^ get_grt_value(NodeIdWrapper ^ node, int column);
-      virtual void refresh();
-      virtual void reset();
+      virtual auto refresh() -> void;
+      virtual auto reset() -> void;
       virtual GrtValueType ^ get_field_type(NodeIdWrapper ^ node, int column);
       virtual bool set_field(NodeIdWrapper ^ node, int column, String ^ value);
       virtual bool set_field(NodeIdWrapper ^ node, int column, double value);
@@ -146,8 +145,8 @@ namespace MySQL {
     public:
       TreeModelWrapper(bec::TreeModel *inn);
 
-      bec::TreeModel *get_unmanaged_object();
-      virtual NodeIdWrapper ^ get_root();
+      auto get_unmanaged_object() -> bec::TreeModel *;
+      virtual auto get_root() -> NodeIdWrapper ^;
       virtual int get_node_depth(NodeIdWrapper ^ node);
       virtual NodeIdWrapper ^ get_parent(NodeIdWrapper ^ node);
       virtual int count_children(NodeIdWrapper ^ parent);
@@ -175,16 +174,16 @@ namespace MySQL {
 
       GridModelWrapper(bec::GridModel *inn);
 
-      bec::GridModel *get_unmanaged_object();
-      virtual int get_column_count();
-      virtual String ^ get_column_caption(int column);
-      virtual ColumnType get_column_type(int column);
-      virtual bool is_readonly();
-      virtual String ^ readonly_reason();
+      auto get_unmanaged_object() -> bec::GridModel *;
+      virtual auto get_column_count() -> int;
+      virtual auto get_column_caption(int column) -> String ^;
+      virtual auto get_column_type(int column) -> ColumnType;
+      virtual auto is_readonly() -> bool;
+      virtual auto readonly_reason() -> String ^;
       virtual bool is_field_null(NodeIdWrapper ^ node, int column);
       virtual bool set_field_null(NodeIdWrapper ^ node, int column);
       virtual bool get_field_repr(NodeIdWrapper ^ node, int column, [Out] String ^ % value);
-      virtual void set_edited_field(int row_index, int col_index);
+      virtual auto set_edited_field(int row_index, int col_index) -> void;
       virtual void sort_columns([Out] List<int> ^ % indexes, [Out] List<int> ^ % orders);
     };
 

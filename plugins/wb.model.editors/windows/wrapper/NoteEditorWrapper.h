@@ -42,11 +42,11 @@ namespace MySQL {
       NoteEditorWrapper(MySQL::Grt::GrtValue ^ arglist);
       ~NoteEditorWrapper();
 
-      NoteEditorBE *get_unmanaged_object();
+      auto get_unmanaged_object() -> NoteEditorBE *;
       void set_text(String ^ text);
-      String ^ get_text();
+      auto get_text() -> String ^;
       void set_name(String ^ name);
-      String ^ get_name();
+      auto get_name() -> String ^;
     };
 
   } // namespace Grt

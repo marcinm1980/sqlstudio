@@ -43,7 +43,7 @@
 using base::strfmt;
 
 class OverviewDivision : public Gtk::Box {
-  bool header_button_release(GdkEventButton *e) {
+  auto header_button_release(GdkEventButton *e) -> bool {
     if (!e || e->button == 1) {
       if (_arrow->property_arrow_type() == Gtk::ARROW_DOWN)
         toggle(false);
@@ -53,7 +53,7 @@ class OverviewDivision : public Gtk::Box {
     return false;
   }
 
-  void view_mode_changed(Gtk::ToggleButton *btn, wb::OverviewBE::OverviewDisplayMode mode) {
+  auto view_mode_changed(Gtk::ToggleButton *btn, wb::OverviewBE::OverviewDisplayMode mode) -> void {
     if (_view_mode_changing)
       return;
     _view_mode_changing = true;
@@ -71,8 +71,8 @@ class OverviewDivision : public Gtk::Box {
     _view_mode_change.emit(mode);
   }
 
-  Gtk::Button *add_mode_switch_button(Gtk::Box *view_mode_box, const std::string &filename,
-                                      wb::OverviewBE::OverviewDisplayMode mode) {
+  auto add_mode_switch_button(Gtk::Box *view_mode_box, const std::string &filename,
+                                      wb::OverviewBE::OverviewDisplayMode mode) -> Gtk::Button * {
     // Create button
     Gtk::ToggleButton *btn = Gtk::manage(new Gtk::ToggleButton());
     btn->set_relief(Gtk::RELIEF_NONE);
@@ -95,8 +95,8 @@ class OverviewDivision : public Gtk::Box {
     return btn;
   }
 
-  Gtk::Button *add_action_button(Gtk::Box *view_mode_box, const std::string &filename, const std::string &tooltip,
-                                 const sigc::slot<void> &callback) {
+  auto add_action_button(Gtk::Box *view_mode_box, const std::string &filename, const std::string &tooltip,
+                                 const sigc::slot<void> &callback) -> Gtk::Button * {
     // Create button
     Gtk::Button *btn = Gtk::manage(new Gtk::Button());
     btn->set_relief(Gtk::RELIEF_NONE);
@@ -120,7 +120,7 @@ class OverviewDivision : public Gtk::Box {
     return btn;
   }
 
-  void create_header(const std::string &text, Gtk::EventBox **ebox_dptr, Gtk::Box **hbox_dptr) {
+  auto create_header(const std::string &text, Gtk::EventBox **ebox_dptr, Gtk::Box **hbox_dptr) -> void {
     // Let us get events from the header's widgets by creating EventBox
     Gtk::EventBox *ebox = *ebox_dptr = Gtk::manage(new Gtk::EventBox());
     ebox->set_name("Overview Header");
@@ -153,7 +153,7 @@ class OverviewDivision : public Gtk::Box {
   bool _view_mode_changing;
 
 public:
-  sigc::signal<void, wb::OverviewBE::OverviewDisplayMode> signal_view_mode_change() {
+  auto signal_view_mode_change() -> sigc::signal<void, wb::OverviewBE::OverviewDisplayMode> {
     return _view_mode_change;
   }
 
@@ -209,7 +209,7 @@ public:
     //      btn->set_tooltip_text(_("Delete selected item"));
   }
 
-  void set_display_mode(wb::OverviewBE::OverviewDisplayMode mode) {
+  auto set_display_mode(wb::OverviewBE::OverviewDisplayMode mode) -> void {
     _display_mode = mode;
 
     if (_switch_buttons.empty()) {
@@ -231,20 +231,20 @@ public:
     }
   }
 
-  wb::OverviewBE::OverviewDisplayMode get_display_mode() {
+  auto get_display_mode() -> wb::OverviewBE::OverviewDisplayMode {
     return _display_mode;
   }
 
-  void add_clicked() {
+  auto add_clicked() -> void {
     _overview->request_add_object(_node);
   }
 
-  void delete_clicked() {
+  auto delete_clicked() -> void {
     if (_overview->count_children(_node) > 0)
       _overview->request_delete_object(_overview->get_focused_child(_node));
   }
 
-  void toggle(bool flag) {
+  auto toggle(bool flag) -> void {
     std::vector<Gtk::Widget *> children(get_children());
     std::vector<Gtk::Widget *>::iterator iter = children.begin();
 
@@ -277,47 +277,47 @@ protected:
 
   std::string _drag_tmp_file;
 
-  void activate_item(const Gtk::TreeModel::Path &path);
+  auto activate_item(const Gtk::TreeModel::Path &path) -> void;
   // on_selection_changed is called from MultiView before MultiView::signal_selection_changed is emitted
-  virtual void on_selection_changed(const std::vector<bec::NodeId> &sel);
+  virtual auto on_selection_changed(const std::vector<bec::NodeId> &sel) -> void;
 
-  bec::NodeId get_selected_node();
+  auto get_selected_node() -> bec::NodeId;
 
-  void drag_begin(const Glib::RefPtr<Gdk::DragContext> &context);
-  void drag_data_get(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::SelectionData &data, guint, guint time);
-  void drag_data_delete(const Glib::RefPtr<Gdk::DragContext> &context);
-  bool drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time);
-  bool drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time, Gtk::Widget *target);
-  void drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, const Gtk::SelectionData &data,
-                          guint info, guint time);
-  bool row_draggable(const Gtk::TreeModel::Path &path);
+  auto drag_begin(const Glib::RefPtr<Gdk::DragContext> &context) -> void;
+  auto drag_data_get(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::SelectionData &data, guint, guint time) -> void;
+  auto drag_data_delete(const Glib::RefPtr<Gdk::DragContext> &context) -> void;
+  auto drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time) -> bool;
+  auto drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time, Gtk::Widget *target) -> bool;
+  auto drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, const Gtk::SelectionData &data,
+                          guint info, guint time) -> void;
+  auto row_draggable(const Gtk::TreeModel::Path &path) -> bool;
 
 public:
   enum DragDropType { DragOnly, DropOnly, DragAndDrop };
 
   OverviewItemContainer(wb::OverviewBE *overview, const bec::NodeId &node, bool items_as_tree, bool items_as_icons);
   virtual ~OverviewItemContainer();
-  void enable_drag_drop(const std::vector<Gtk::TargetEntry> *entries = 0,
-                        Gdk::DragAction src_actions = Gdk::ACTION_MOVE, DragDropType type = DragAndDrop);
-  void enable_drag_drop_type(const std::string &drag_type);
-  void refresh_info(const bec::NodeId &node);
+  auto enable_drag_drop(const std::vector<Gtk::TargetEntry> *entries = 0,
+                        Gdk::DragAction src_actions = Gdk::ACTION_MOVE, DragDropType type = DragAndDrop) -> void;
+  auto enable_drag_drop_type(const std::string &drag_type) -> void;
+  auto refresh_info(const bec::NodeId &node) -> void;
 
-  const bec::NodeId &get_base_node() {
+  auto get_base_node() -> const bec::NodeId & {
     return _node;
   }
 
-  void update_base_node(const bec::NodeId &node) {
+  auto update_base_node(const bec::NodeId &node) -> void {
     _node = node;
 
     get_tree_model()->update_root_node(_node);
     get_icon_model()->update_root_node(_node);
   }
 
-  void set_display_mode(wb::OverviewBE::OverviewDisplayMode mode);
+  auto set_display_mode(wb::OverviewBE::OverviewDisplayMode mode) -> void;
 };
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::activate_item(const Gtk::TreeModel::Path &path) {
+auto OverviewItemContainer::activate_item(const Gtk::TreeModel::Path &path) -> void {
   bec::NodeId node(_node);
 
   std::for_each(path.begin(), path.end(), sigc::mem_fun(node, &bec::NodeId::append));
@@ -326,7 +326,7 @@ void OverviewItemContainer::activate_item(const Gtk::TreeModel::Path &path) {
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::on_selection_changed(const std::vector<bec::NodeId> &sel) {
+auto OverviewItemContainer::on_selection_changed(const std::vector<bec::NodeId> &sel) -> void {
   _overview->begin_selection_marking();
   ssize_t node_type;
 
@@ -340,7 +340,7 @@ void OverviewItemContainer::on_selection_changed(const std::vector<bec::NodeId> 
 }
 
 //------------------------------------------------------------------------------
-bec::NodeId OverviewItemContainer::get_selected_node() {
+auto OverviewItemContainer::get_selected_node() -> bec::NodeId {
   Gtk::TreeModel::Path path(get_selected());
   bec::NodeId node(_node);
 
@@ -351,7 +351,7 @@ bec::NodeId OverviewItemContainer::get_selected_node() {
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::drag_begin(const Glib::RefPtr<Gdk::DragContext> &context) {
+auto OverviewItemContainer::drag_begin(const Glib::RefPtr<Gdk::DragContext> &context) -> void {
   //  bec::NodeId node(get_selected_node());
   //
   //  if (!node.is_valid())
@@ -361,8 +361,8 @@ void OverviewItemContainer::drag_begin(const Glib::RefPtr<Gdk::DragContext> &con
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::drag_data_get(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::SelectionData &data,
-                                          guint, guint time) {
+auto OverviewItemContainer::drag_data_get(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::SelectionData &data,
+                                          guint, guint time) -> void {
   bec::NodeId node(get_selected_node());
   if (node.is_valid()) {
     // const char *bytes= 0;
@@ -407,13 +407,13 @@ void OverviewItemContainer::drag_data_get(const Glib::RefPtr<Gdk::DragContext> &
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::drag_data_delete(const Glib::RefPtr<Gdk::DragContext> &context) {
+auto OverviewItemContainer::drag_data_delete(const Glib::RefPtr<Gdk::DragContext> &context) -> void {
   if (!_drag_tmp_file.empty())
     ::g_remove(_drag_tmp_file.c_str());
 }
 
 //------------------------------------------------------------------------------
-bool OverviewItemContainer::drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time) {
+auto OverviewItemContainer::drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time) -> bool {
   std::vector<std::string> targets(context->list_targets());
   std::vector<std::string>::iterator iter;
 
@@ -429,8 +429,8 @@ bool OverviewItemContainer::drag_drop(const Glib::RefPtr<Gdk::DragContext> &cont
 }
 
 //------------------------------------------------------------------------------
-bool OverviewItemContainer::drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time,
-                                        Gtk::Widget *target) {
+auto OverviewItemContainer::drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time,
+                                        Gtk::Widget *target) -> bool {
   std::vector<std::string> targets(context->list_targets());
 
   if (!target->drag_dest_find_target(context).empty()) {
@@ -445,8 +445,8 @@ bool OverviewItemContainer::drag_motion(const Glib::RefPtr<Gdk::DragContext> &co
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                                               const Gtk::SelectionData &data, guint info, guint time) {
+auto OverviewItemContainer::drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                                               const Gtk::SelectionData &data, guint info, guint time) -> void {
   if (data.targets_include_uri() || data.get_data_type() == "text/uri-list") {
     std::vector<Glib::ustring> uri(data.get_uris());
 
@@ -461,7 +461,7 @@ void OverviewItemContainer::drag_data_received(const Glib::RefPtr<Gdk::DragConte
 }
 
 //------------------------------------------------------------------------------
-bool OverviewItemContainer::row_draggable(const Gtk::TreeModel::Path &path) {
+auto OverviewItemContainer::row_draggable(const Gtk::TreeModel::Path &path) -> bool {
   bec::NodeId node(_node);
 
   if (!path.empty())
@@ -510,7 +510,7 @@ OverviewItemContainer::~OverviewItemContainer() {
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::enable_drag_drop_type(const std::string &drag_type) {
+auto OverviewItemContainer::enable_drag_drop_type(const std::string &drag_type) -> void {
   std::vector<Gtk::TargetEntry> targets;
   if (drag_type == "file") {
     enable_drag_drop();
@@ -521,8 +521,8 @@ void OverviewItemContainer::enable_drag_drop_type(const std::string &drag_type) 
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::enable_drag_drop(const std::vector<Gtk::TargetEntry> *entries, Gdk::DragAction src_actions,
-                                             DragDropType type) {
+auto OverviewItemContainer::enable_drag_drop(const std::vector<Gtk::TargetEntry> *entries, Gdk::DragAction src_actions,
+                                             DragDropType type) -> void {
   std::vector<Gtk::TargetEntry> targets;
 
   if (entries)
@@ -574,7 +574,7 @@ void OverviewItemContainer::enable_drag_drop(const std::vector<Gtk::TargetEntry>
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::refresh_info(const bec::NodeId &node) {
+auto OverviewItemContainer::refresh_info(const bec::NodeId &node) -> void {
   Gtk::TreePath path(node.back());
   Gtk::TreeIter iter(get_icon_model()->get_iter(path));
 
@@ -588,7 +588,7 @@ void OverviewItemContainer::refresh_info(const bec::NodeId &node) {
 }
 
 //------------------------------------------------------------------------------
-void OverviewItemContainer::set_display_mode(wb::OverviewBE::OverviewDisplayMode mode) {
+auto OverviewItemContainer::set_display_mode(wb::OverviewBE::OverviewDisplayMode mode) -> void {
   switch (mode) {
     case wb::OverviewBE::MNone:
       break;
@@ -637,7 +637,7 @@ public:
     }
   }
 
-  void update_label() {
+  auto update_label() -> void {
     std::string label;
     _overview->get_field(_node, wb::OverviewBE::Label, label);
 
@@ -645,7 +645,7 @@ public:
       strfmt("<b>%s</b> <small>(%zi items)</small>", label.c_str(), _overview->count_children(_node) - 1));
   }
 
-  virtual void refresh() {
+  virtual auto refresh() -> void {
     OverviewItemContainer::refresh();
     update_label();
   }
@@ -657,7 +657,7 @@ class OverviewGroup : public Gtk::Box {
   std::string _uid;
   Gtk::Label *_label;
 
-  void invalidate_children(Gtk::Widget &widget) {
+  auto invalidate_children(Gtk::Widget &widget) -> void {
     OverviewItemContainer *items = dynamic_cast<OverviewItemContainer *>(&widget);
     if (items) {
       items->get_tree_model()->invalidate();
@@ -665,7 +665,7 @@ class OverviewGroup : public Gtk::Box {
     }
   }
 
-  void update_base_node_children(Gtk::Widget &widget, const bec::NodeId &node) {
+  auto update_base_node_children(Gtk::Widget &widget, const bec::NodeId &node) -> void {
     OverviewItemContainer *items = dynamic_cast<OverviewItemContainer *>(&widget);
     if (items) {
       bec::NodeId new_node(node);
@@ -689,16 +689,16 @@ public:
     invalidate();
   }
 
-  void invalidate() {
+  auto invalidate() -> void {
     foreach (sigc::mem_fun(this, &OverviewGroup::invalidate_children))
       ;
   }
 
-  std::string get_unique_id() {
+  auto get_unique_id() -> std::string {
     return _uid;
   }
 
-  void update_base_node(const bec::NodeId &node) {
+  auto update_base_node(const bec::NodeId &node) -> void {
     if (_node.back() != node.back()) {
       foreach (sigc::bind(sigc::mem_fun(this, &OverviewGroup::update_base_node_children), node))
         ;
@@ -706,11 +706,11 @@ public:
     }
   }
 
-  bec::NodeId get_base_node() {
+  auto get_base_node() -> bec::NodeId {
     return _node;
   }
 
-  void update_label() {
+  auto update_label() -> void {
     std::string text, descr;
 
     _overview->get_field(_node, wb::OverviewBE::Label, text);
@@ -728,25 +728,25 @@ class OverviewGroupContainer : public Gtk::Notebook {
   int _current_page_index;
 
 public:
-  bec::NodeId node() {
+  auto node() -> bec::NodeId {
     return _node;
   }
-  int current_page_index() {
+  auto current_page_index() -> int {
     return _current_page_index;
   }
 
 private:
-  void page_switched(Gtk::Widget *page, guint num) {
+  auto page_switched(Gtk::Widget *page, guint num) -> void {
     if ((size_t)num < _overview->count_children(_node))
       _overview->focus_node(_overview->get_child(_node, num));
     _current_page_index = num;
   }
 
-  void activate_context_menu(const std::string &item, const std::vector<bec::NodeId> &nodes) {
+  auto activate_context_menu(const std::string &item, const std::vector<bec::NodeId> &nodes) -> void {
     _overview->activate_popup_item_for_nodes(item, nodes);
   }
 
-  void on_tab_button_press(GdkEventButton *ev, OverviewGroup *group) {
+  auto on_tab_button_press(GdkEventButton *ev, OverviewGroup *group) -> void {
     if (ev->button == 3) {
       std::vector<bec::NodeId> nodes;
       nodes.push_back(group->get_base_node());
@@ -762,7 +762,7 @@ private:
     }
   }
 
-  Gtk::EventBox *create_group_heading(const bec::NodeId &node, Gtk::Label **tab_label) {
+  auto create_group_heading(const bec::NodeId &node, Gtk::Label **tab_label) -> Gtk::EventBox * {
     Gtk::EventBox *tab_box = Gtk::manage(new Gtk::EventBox());
     Gtk::Box *tab = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 4));
     std::string icon_path;
@@ -792,7 +792,7 @@ private:
   }
 
 protected:
-  virtual void on_size_allocate(Gdk::Rectangle &rect) {
+  virtual auto on_size_allocate(Gdk::Rectangle &rect) -> void {
     bool was_focus_node_enabled = _is_focus_node_enabled;
     _is_focus_node_enabled = false;
     Notebook::on_size_allocate(rect);
@@ -809,10 +809,10 @@ public:
     signal_switch_page().connect(sigc::mem_fun(this, &OverviewGroupContainer::page_switched));
   }
 
-  void enable_set_focus_node(bool value) {
+  auto enable_set_focus_node(bool value) -> void {
     _is_focus_node_enabled = value;
   }
-  bool enable_set_focus_node() {
+  auto enable_set_focus_node() -> bool {
     return _is_focus_node_enabled;
   }
 
@@ -841,7 +841,7 @@ public:
     return page;
   }
 
-  void refresh_info(const bec::NodeId &node) {
+  auto refresh_info(const bec::NodeId &node) -> void {
     if (get_n_pages() > (ssize_t)node.back())
       ((OverviewGroup *)get_nth_page(node.back()))->update_label();
   }
@@ -869,7 +869,7 @@ OverviewPanel::OverviewPanel(wb::OverviewBE *overview)
 
 //----------------------------------------------------------------------------------------------------
 
-static void delete_container_contents(Gtk::Container *container) {
+static auto delete_container_contents(Gtk::Container *container) -> void {
   std::vector<Gtk::Widget *> children = container->get_children();
   for (std::vector<Gtk::Widget *>::const_iterator i = children.begin(); i != children.end(); ++i) {
     container->remove(**i);
@@ -877,7 +877,7 @@ static void delete_container_contents(Gtk::Container *container) {
   }
 }
 
-void OverviewPanel::reset() {
+auto OverviewPanel::reset() -> void {
   _freeze = true;
 
   _group_containers_by_id.clear();
@@ -894,12 +894,12 @@ void OverviewPanel::reset() {
 }
 
 //----------------------------------------------------------------------------------------------------
-void OverviewPanel::update_for_resize() {
+auto OverviewPanel::update_for_resize() -> void {
   // XXX gtk bug with icon reflow, this should be optimized to only refresh all icon views
   rebuild_all();
 }
 
-void OverviewPanel::rebuild_all() {
+auto OverviewPanel::rebuild_all() -> void {
   if (_rebuilding)
     return;
 
@@ -945,7 +945,7 @@ void OverviewPanel::rebuild_all() {
   _rebuilding = false;
 }
 
-void OverviewPanel::item_list_selection_changed(const std::vector<bec::NodeId> &nodes, MultiView *mview) {
+auto OverviewPanel::item_list_selection_changed(const std::vector<bec::NodeId> &nodes, MultiView *mview) -> void {
   if (nodes.empty())
     return;
   for (std::map<std::string, OverviewItemContainer *>::iterator iter = _item_containers_by_id.begin();
@@ -958,7 +958,7 @@ void OverviewPanel::item_list_selection_changed(const std::vector<bec::NodeId> &
 //------------------------------------------------------------------------------
 // Build division e.g. EER Diagrams, Physical Schemata,
 // Schema Privileges in the model overview. @pnode points to a subtree
-void OverviewPanel::build_division(Gtk::Box *container, const bec::NodeId &pnode) {
+auto OverviewPanel::build_division(Gtk::Box *container, const bec::NodeId &pnode) -> void {
   // Fetch division name, wb::OverviewBE::Label is a enum defined in
   // backend/studio/wb_overview.h so it is passed as a column index
   // to wb::OverviewBE (_overview) method get_field
@@ -1050,8 +1050,8 @@ void OverviewPanel::build_division(Gtk::Box *container, const bec::NodeId &pnode
 }
 
 //------------------------------------------------------------------------------
-void OverviewPanel::build_group(OverviewDivision *division, OverviewGroupContainer *group_container,
-                                const bec::NodeId &pnode, int position) {
+auto OverviewPanel::build_group(OverviewDivision *division, OverviewGroupContainer *group_container,
+                                const bec::NodeId &pnode, int position) -> void {
   Gtk::Box *page = group_container->add_group(pnode, position);
 
   page->set_spacing(8);
@@ -1059,7 +1059,7 @@ void OverviewPanel::build_group(OverviewDivision *division, OverviewGroupContain
   build_group_contents(division, page, pnode);
 }
 
-void OverviewPanel::build_group_contents(OverviewDivision *division, Gtk::Box *page, const bec::NodeId &pnode) {
+auto OverviewPanel::build_group_contents(OverviewDivision *division, Gtk::Box *page, const bec::NodeId &pnode) -> void {
   ssize_t type;
   _overview_be->get_field(pnode, wb::OverviewBE::ChildNodeType, type);
   if (type != wb::OverviewBE::OSection)
@@ -1088,7 +1088,7 @@ void OverviewPanel::build_group_contents(OverviewDivision *division, Gtk::Box *p
   }
 }
 
-void OverviewPanel::pre_refresh_groups() {
+auto OverviewPanel::pre_refresh_groups() -> void {
   for (int i = _groups->get_n_pages() - 1; i >= 0; --i) {
     OverviewGroup *group = (OverviewGroup *)_groups->get_nth_page(i);
     bool was_focus_node_enabled = _groups->enable_set_focus_node();
@@ -1100,7 +1100,7 @@ void OverviewPanel::pre_refresh_groups() {
   }
 }
 
-void OverviewPanel::refresh_active_group_node_children() {
+auto OverviewPanel::refresh_active_group_node_children() -> void {
   bec::NodeId group_node_id = _groups->node();
   ssize_t current_page_index = _groups->current_page_index();
   if (-1 == current_page_index || _groups->get_n_pages() < (ssize_t)_overview_be->count_children(group_node_id)) {
@@ -1137,7 +1137,7 @@ void OverviewPanel::refresh_active_group_node_children() {
   }
 }
 
-void OverviewPanel::update_group_note(OverviewGroupContainer *group_container, const bec::NodeId &node) {
+auto OverviewPanel::update_group_note(OverviewGroupContainer *group_container, const bec::NodeId &node) -> void {
   OverviewDivision *division = dynamic_cast<OverviewDivision *>(group_container->get_parent());
 
   for (int i = group_container->get_n_pages() - 1; i >= 0; --i) {
@@ -1216,7 +1216,7 @@ void OverviewPanel::update_group_note(OverviewGroupContainer *group_container, c
 }
 
 //------------------------------------------------------------------------------
-void OverviewPanel::select_default_group_page() {
+auto OverviewPanel::select_default_group_page() -> void {
   if (!_groups)
     return;
 
@@ -1229,7 +1229,7 @@ void OverviewPanel::select_default_group_page() {
 }
 
 //------------------------------------------------------------------------------
-void OverviewPanel::refresh_children(const bec::NodeId &node) {
+auto OverviewPanel::refresh_children(const bec::NodeId &node) -> void {
   ssize_t type;
 
   if (!node.is_valid()) {
@@ -1265,7 +1265,7 @@ void OverviewPanel::refresh_children(const bec::NodeId &node) {
 }
 
 //------------------------------------------------------------------------------
-void OverviewPanel::refresh_node(const bec::NodeId &node) {
+auto OverviewPanel::refresh_node(const bec::NodeId &node) -> void {
   if (_freeze)
     return;
 
@@ -1292,7 +1292,7 @@ void OverviewPanel::refresh_node(const bec::NodeId &node) {
 }
 
 //------------------------------------------------------------------------------
-void OverviewPanel::select_node(const bec::NodeId &node) {
+auto OverviewPanel::select_node(const bec::NodeId &node) -> void {
   if (_freeze)
     return;
 
@@ -1311,7 +1311,7 @@ void OverviewPanel::select_node(const bec::NodeId &node) {
 }
 
 //------------------------------------------------------------------------------
-void OverviewPanel::item_popup_menu(const Gtk::TreeModel::Path &path, guint32 time, OverviewItemContainer *sender) {
+auto OverviewPanel::item_popup_menu(const Gtk::TreeModel::Path &path, guint32 time, OverviewItemContainer *sender) -> void {
   bec::NodeId node(sender->get_base_node());
 
   std::for_each(path.begin(), path.end(), sigc::mem_fun(node, &bec::NodeId::append));

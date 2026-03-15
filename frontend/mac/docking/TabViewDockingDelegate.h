@@ -36,22 +36,22 @@ class TabViewDockingPointDelegate : public mforms::DockingPointDelegate {
 public:
   TabViewDockingPointDelegate(NSTabView *tabView, const std::string &type);
 
-  virtual std::string get_type() {
+  virtual auto get_type() -> std::string {
     return _type;
   }
 
-  mforms::AppView *appview_for_view(NSView *view);
+  auto appview_for_view(NSView *view) -> mforms::AppView *;
 
-  bool close_all();
+  auto close_all() -> bool;
 
-  virtual void set_name(const std::string &name);
-  virtual void dock_view(mforms::AppView *view, const std::string &arg1, int arg2);
-  virtual bool select_view(mforms::AppView *view);
-  virtual void undock_view(mforms::AppView *view);
-  virtual void set_view_title(mforms::AppView *view, const std::string &title);
-  virtual std::pair<int, int> get_size();
+  virtual auto set_name(const std::string &name) -> void;
+  virtual auto dock_view(mforms::AppView *view, const std::string &arg1, int arg2) -> void;
+  virtual auto select_view(mforms::AppView *view) -> bool;
+  virtual auto undock_view(mforms::AppView *view) -> void;
+  virtual auto set_view_title(mforms::AppView *view, const std::string &title) -> void;
+  virtual auto get_size() -> std::pair<int, int>;
 
-  virtual mforms::AppView *selected_view();
-  virtual int view_count();
-  virtual mforms::AppView *view_at_index(int index);
+  virtual auto selected_view() -> mforms::AppView *;
+  virtual auto view_count() -> int;
+  virtual auto view_at_index(int index) -> mforms::AppView *;
 };

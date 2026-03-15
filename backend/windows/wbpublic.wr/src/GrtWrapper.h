@@ -90,11 +90,11 @@ namespace MySQL {
         return this;
       }
 
-      const grt::ValueRef &get_unmanaged_object() {
+      auto get_unmanaged_object() -> const grt::ValueRef & {
         return *inner;
       }
 
-      GrtValueType get_type() {
+      auto get_type() -> GrtValueType {
         return (GrtValueType)inner->type();
       }
       bool is_object_instance_of(System::String ^ struct_name) {
@@ -103,7 +103,7 @@ namespace MySQL {
         return false;
       }
 
-      System::String ^ object_id() {
+      auto object_id() -> System::String ^ {
         if (get_type() != GrtValueType::ObjectValue || !inner || ::grt::ObjectRef::cast_from(*inner).id().empty())
           return gcnew System::String("");
 
@@ -127,7 +127,7 @@ namespace MySQL {
       GrtModule() : inner(0) {
       }
 
-      grt::Module *get_unmanaged_object() {
+      auto get_unmanaged_object() -> grt::Module * {
         return inner;
       }
     };
@@ -138,11 +138,11 @@ namespace MySQL {
       GRT() {
       }
 
-      ::grt::GRT *get_unmanaged_object() {
+      auto get_unmanaged_object() -> ::grt::GRT * {
         return grt::GRT::get().get();
       }
 
-      static System::String ^ version() { return CppStringToNative(GRT_VERSION); }
+      static auto version() -> System::String ^ { return CppStringToNative(GRT_VERSION); }
 
     };
 
@@ -173,24 +173,24 @@ namespace MySQL {
         delete inner;
       }
 
-      inline ::grt::ValueRef *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::grt::ValueRef * {
         return inner;
       }
 
-      inline void release() {
+      inline auto release() -> void {
         inner->release();
       }
 
-      inline GenericValue % retain() {
+      inline auto retain() -> GenericValue % {
         inner->retain();
         return *this;
       }
 
-      inline void reset() {
+      inline auto reset() -> void {
         inner->reset();
       }
 
-      inline bool is_valid() {
+      inline auto is_valid() -> bool {
         return inner->is_valid();
       }
 
@@ -201,7 +201,7 @@ namespace MySQL {
 
         /*inline _clr_MYX_GRT_VALUE_TYPE type()
           { return static_cast<_clr_MYX_GRT_VALUE_TYPE>(inner->type()); }*/
-        inline GrtValueType type() {
+        inline auto type() -> GrtValueType {
         return static_cast<GrtValueType>(inner->type());
       }
 
@@ -229,7 +229,7 @@ namespace MySQL {
       explicit IntValue(int value) : GenericValue(new ::grt::IntValue(value)) {
       }
 
-      inline ::grt::IntValue *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::grt::IntValue * {
         return static_cast<::grt::IntValue *>(inner);
       }
 
@@ -263,7 +263,7 @@ namespace MySQL {
       /*explicit*/ DoubleValue(double value) : GenericValue(new ::grt::DoubleValue(value)) {
       }
 
-      inline ::grt::DoubleValue *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::grt::DoubleValue * {
         return static_cast<::grt::DoubleValue *>(inner);
       }
 
@@ -303,7 +303,7 @@ namespace MySQL {
       //  : GenericValue(::new ::grt::StringValue(svalue))
       //  {}
 
-      inline ::grt::StringValue *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::grt::StringValue * {
         return static_cast<::grt::StringValue *>(inner);
       }
 
@@ -333,7 +333,7 @@ namespace MySQL {
       BaseListValue(::grt::BaseListValue *value) : GenericValue(value) {
       }
 
-      inline ::grt::BaseListValue *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::grt::BaseListValue * {
         return static_cast<::grt::BaseListValue *>(inner);
       }
 
@@ -347,7 +347,7 @@ namespace MySQL {
       // static MYX_GRT_VALUE_TYPE class_type()
       //  { return inner->class_type(); }
 
-      inline GrtValueType content_type() {
+      inline auto content_type() -> GrtValueType {
         return static_cast<GrtValueType>(get_unmanaged_object()->content_type());
       }
 
@@ -363,7 +363,7 @@ namespace MySQL {
       // inline void remove(unsigned int index)
       //  { return inner->remove(index); }
 
-      inline unsigned int count() {
+      inline auto count() -> unsigned int {
         return (unsigned int)get_unmanaged_object()->count();
       }
 
@@ -405,7 +405,7 @@ namespace MySQL {
         Reference(Reference % other) : inner(new ::grt::IntListValue::Reference(*other.get_unmanaged_object())) {
         }
 
-        ::grt::IntListValue::Reference *get_unmanaged_object() {
+        auto get_unmanaged_object() -> ::grt::IntListValue::Reference * {
           return inner;
         }
 
@@ -425,7 +425,7 @@ namespace MySQL {
       explicit IntListValue(MYX_GRT_VALUE *lvalue) : BaseListValue(new ::grt::IntListValue(lvalue)) {
       }
 
-      inline ::grt::IntListValue *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::grt::IntListValue * {
         return static_cast<::grt::IntListValue *>(inner);
       }
 
@@ -443,11 +443,11 @@ namespace MySQL {
       // inline void insert(IntValue% value)
       //  { inner->insert(*(value.get_unmanaged_object()), -1); }
 
-      inline void insert(int value, int index) {
+      inline auto insert(int value, int index) -> void {
         get_unmanaged_object()->insert(value, index);
       }
 
-      inline void insert(int value) {
+      inline auto insert(int value) -> void {
         get_unmanaged_object()->insert(value, -1);
       }
 
@@ -484,7 +484,7 @@ namespace MySQL {
         Reference(Reference % other) : inner(new ::grt::StringListValue::Reference(*other.get_unmanaged_object())) {
         }
 
-        inline ::grt::StringListValue::Reference *get_unmanaged_object() {
+        inline auto get_unmanaged_object() -> ::grt::StringListValue::Reference * {
           return inner;
         }
 
@@ -500,7 +500,7 @@ namespace MySQL {
       explicit StringListValue(MYX_GRT_VALUE *lvalue) : BaseListValue(new ::grt::StringListValue(lvalue)) {
       }
 
-      ::grt::StringListValue *get_unmanaged_object() {
+      auto get_unmanaged_object() -> ::grt::StringListValue * {
         return static_cast<::grt::StringListValue *>(inner);
       }
 
@@ -527,8 +527,7 @@ namespace MySQL {
       // inline StringValue operator[](unsigned int index) const
       //  {}
 
-      inline StringValue ^
-        get(unsigned int index) { return gcnew StringValue(get_unmanaged_object()->get(index).grt_value()); }
+      inline auto get(unsigned int index) -> StringValue ^ { return gcnew StringValue(get_unmanaged_object()->get(index).grt_value()); }
 
         inline void set(unsigned int index, StringValue ^ value) {
         get_unmanaged_object()->set(index, *value->get_unmanaged_object());
@@ -552,7 +551,7 @@ namespace MySQL {
         Reference(const ::grt::DictValue::Reference &inn) : inner(new ::grt::DictValue::Reference(inn)) {
         }
 
-        ::grt::DictValue::Reference *get_unmanaged_object() {
+        auto get_unmanaged_object() -> ::grt::DictValue::Reference * {
           return inner;
         }
 
@@ -569,7 +568,7 @@ namespace MySQL {
       explicit DictValue(MYX_GRT_VALUE *dvalue) : GenericValue(new ::grt::DictValue(dvalue)) {
       }
 
-      inline ::grt::DictValue *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::grt::DictValue * {
         return static_cast<::grt::DictValue *>(inner);
       }
 
@@ -593,7 +592,7 @@ namespace MySQL {
         return get_unmanaged_object()->content_type();
       }
 
-      inline std::string content_struct_name() {
+      inline auto content_struct_name() -> std::string {
         return get_unmanaged_object()->content_struct_name();
       }
 
@@ -603,7 +602,7 @@ namespace MySQL {
       // inline bool can_contain(GenericValue% value)
       //  { return get_unmanaged_object()->can_contain(*value.get_unmanaged_object()); }
 
-      inline bool has_key(const std::string &k) {
+      inline auto has_key(const std::string &k) -> bool {
         return get_unmanaged_object()->has_key(k);
       }
 
@@ -614,11 +613,11 @@ namespace MySQL {
         return Reference(get_unmanaged_object()->operator[](k));
       }
 
-      void remove(const std::string &k) {
+      auto remove(const std::string &k) -> void {
         get_unmanaged_object()->remove(k);
       }
 
-      GenericValue get(const std::string &k) {
+      auto get(const std::string &k) -> GenericValue {
         return GenericValue(&get_unmanaged_object()->get(k));
       }
 
@@ -626,7 +625,7 @@ namespace MySQL {
         return get_unmanaged_object()->set(NativeToCppString(k), *value->get_unmanaged_object());
       }
 
-      inline unsigned int count() {
+      inline auto count() -> unsigned int {
         return (unsigned int)get_unmanaged_object()->count();
       }
 

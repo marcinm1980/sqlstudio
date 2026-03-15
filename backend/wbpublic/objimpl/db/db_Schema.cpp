@@ -38,13 +38,13 @@ using namespace base;
 //================================================================================
 // db_Schema
 
-void db_Schema::init() {
+auto db_Schema::init() -> void {
 }
 
 db_Schema::~db_Schema() {
 }
 
-db_RoutineRef db_Schema::addNewRoutine(const std::string &dbpackage) {
+auto db_Schema::addNewRoutine(const std::string &dbpackage) -> db_RoutineRef {
   grt::UndoManager *um = 0;
   db_RoutineRef routine;
   std::string class_name;
@@ -71,7 +71,7 @@ db_RoutineRef db_Schema::addNewRoutine(const std::string &dbpackage) {
   return routine;
 }
 
-db_RoutineGroupRef db_Schema::addNewRoutineGroup(const std::string &dbpackage) {
+auto db_Schema::addNewRoutineGroup(const std::string &dbpackage) -> db_RoutineGroupRef {
   grt::UndoManager *um = 0;
   db_RoutineGroupRef rgroup;
   std::string class_name;
@@ -98,7 +98,7 @@ db_RoutineGroupRef db_Schema::addNewRoutineGroup(const std::string &dbpackage) {
   return rgroup;
 }
 
-db_TableRef db_Schema::addNewTable(const std::string &dbpackage) {
+auto db_Schema::addNewTable(const std::string &dbpackage) -> db_TableRef {
   grt::UndoManager *um = 0;
   db_TableRef table;
   std::string class_name;
@@ -123,7 +123,7 @@ db_TableRef db_Schema::addNewTable(const std::string &dbpackage) {
   return table;
 }
 
-db_ViewRef db_Schema::addNewView(const std::string &dbpackage) {
+auto db_Schema::addNewView(const std::string &dbpackage) -> db_ViewRef {
   grt::UndoManager *um = 0;
   db_ViewRef view;
   std::string class_name;
@@ -149,14 +149,14 @@ db_ViewRef db_Schema::addNewView(const std::string &dbpackage) {
   return view;
 }
 
-grt::ListRef<db_ForeignKey> db_Schema::getForeignKeysReferencingTable(const db_TableRef &table) {
+auto db_Schema::getForeignKeysReferencingTable(const db_TableRef &table) -> grt::ListRef<db_ForeignKey> {
   // from db_ForeignKey.cpp
-  extern grt::ListRef<db_ForeignKey> get_foreign_keys_referencing_table(const db_TableRef &value);
+  extern auto get_foreign_keys_referencing_table(const db_TableRef &value) -> grt::ListRef<db_ForeignKey>;
 
   return get_foreign_keys_referencing_table(table);
 }
 
-void db_Schema::removeTable(const db_TableRef &table) {
+auto db_Schema::removeTable(const db_TableRef &table) -> void {
   grt::AutoUndo undo(!is_global());
 
   // check foreign keys that refer to this table and reset them

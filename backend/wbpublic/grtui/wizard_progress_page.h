@@ -42,11 +42,11 @@ namespace grtui {
     WizardProgressPage(WizardForm *form, const std::string &id, bool has_progressbar);
     virtual ~WizardProgressPage();
 
-    virtual ::mforms::View *get_advanced_panel() {
+    virtual auto get_advanced_panel() -> ::mforms::View * {
       return &_log_panel;
     }
 
-    void set_heading(const std::string &text);
+    auto set_heading(const std::string &text) -> void;
 
   protected:
     enum TaskState { StateNormal, StateBusy, StateDone, StateWarning, StateError, StateDisabled };
@@ -67,8 +67,8 @@ namespace grtui {
       TaskRow() : enabled(true), async(false), async_running(false), async_failed(false), async_errors(0) {
       }
 
-      void set_state(TaskState state);
-      void set_enabled(bool flag);
+      auto set_state(TaskState state) -> void;
+      auto set_enabled(bool flag) -> void;
     };
 
     mforms::Label _heading;
@@ -95,53 +95,53 @@ namespace grtui {
     bool _got_warning_messages;
     bool _got_error_messages;
 
-    TaskRow *add_async_task(const std::string &caption, const std::function<bool()> &execute,
-                            const std::string &status_text);
+    auto add_async_task(const std::string &caption, const std::function<bool()> &execute,
+                            const std::string &status_text) -> TaskRow *;
 
-    TaskRow *add_task(const std::string &caption, const std::function<bool()> &execute, const std::string &status_text);
+    auto add_task(const std::string &caption, const std::function<bool()> &execute, const std::string &status_text) -> TaskRow *;
 
-    TaskRow *add_disabled_task(const std::string &caption);
+    auto add_disabled_task(const std::string &caption) -> TaskRow *;
 
-    TaskRow *current_task();
+    auto current_task() -> TaskRow *;
 
-    void end_adding_tasks(const std::string &finish_message);
+    auto end_adding_tasks(const std::string &finish_message) -> void;
 
-    void clear_tasks();
-    void reset_tasks();
+    auto clear_tasks() -> void;
+    auto reset_tasks() -> void;
 
-    void start_tasks();
+    auto start_tasks() -> void;
 
-    void set_status_text(const std::string &text, bool is_error = false);
+    auto set_status_text(const std::string &text, bool is_error = false) -> void;
 
-    void update_progress(float pct, const std::string &caption);
+    auto update_progress(float pct, const std::string &caption) -> void;
 
-    void add_log_text(const std::string &text);
+    auto add_log_text(const std::string &text) -> void;
 
-    virtual void extra_clicked();
+    virtual auto extra_clicked() -> void;
 
   private:
-    TaskRow *add_task(bool async, const std::string &caption, const std::function<bool()> &execute,
-                      const std::string &status_text);
+    auto add_task(bool async, const std::string &caption, const std::function<bool()> &execute,
+                      const std::string &status_text) -> TaskRow *;
 
   public:
-    void execute_grt_task(const std::function<grt::ValueRef()> &slot, bool sync);
+    auto execute_grt_task(const std::function<grt::ValueRef()> &slot, bool sync) -> void;
 
-    void process_grt_task_message(const grt::Message &msg);
-    void process_grt_task_fail(const std::exception &error, bec::GRTTask *task);
-    void process_grt_task_finish(const grt::ValueRef &result, bec::GRTTask *task);
+    auto process_grt_task_message(const grt::Message &msg) -> void;
+    auto process_grt_task_fail(const std::exception &error, bec::GRTTask *task) -> void;
+    auto process_grt_task_finish(const grt::ValueRef &result, bec::GRTTask *task) -> void;
 
   protected:
-    void perform_tasks();
+    auto perform_tasks() -> void;
 
-    virtual bool allow_cancel();
-    virtual bool allow_next();
-    virtual bool allow_back();
+    virtual auto allow_cancel() -> bool;
+    virtual auto allow_next() -> bool;
+    virtual auto allow_back() -> bool;
 
-    virtual void tasks_finished(bool success) {
+    virtual auto tasks_finished(bool success) -> void {
     }
 
-    virtual std::string extra_button_caption();
+    virtual auto extra_button_caption() -> std::string;
 
-    virtual void enter(bool advancing);
+    virtual auto enter(bool advancing) -> void;
   };
 };

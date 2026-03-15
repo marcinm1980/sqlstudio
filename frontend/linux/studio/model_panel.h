@@ -49,7 +49,7 @@ namespace mforms {
 
 class ModelPanel : public Gtk::Box, public FormViewBase {
 public:
-  static ModelPanel *create(wb::OverviewBE *overview);
+  static auto create(wb::OverviewBE *overview) -> ModelPanel *;
   ~ModelPanel();
 
   virtual bool on_close() override;
@@ -63,15 +63,15 @@ public:
   virtual void reset_layout() override {
     _editor_paned->set_position(_editor_paned->get_height() - 300);
   }
-  OverviewPanel *get_overview() {
+  auto get_overview() -> OverviewPanel * {
     return _overview;
   }
 
-  void selection_changed();
+  auto selection_changed() -> void;
 
   virtual void find_text(const std::string &text) override;
   using FormViewBase::restore_sidebar_layout;
-  virtual void restore_sidebar_layout();
+  virtual auto restore_sidebar_layout() -> void;
 
 private:
   OverviewPanel *_overview;
@@ -88,10 +88,10 @@ private:
 
   friend class Gtk::Builder;
   ModelPanel(GtkBox *cobject, const Glib::RefPtr<Gtk::Builder> &xml);
-  void post_construct(wb::OverviewBE *overview);
+  auto post_construct(wb::OverviewBE *overview) -> void;
 
-  void resize_overview();
-  bool do_resize_overview();
+  auto resize_overview() -> void;
+  auto do_resize_overview() -> bool;
 
   sigc::connection _sig_restore_layout;
   sigc::connection _sig_resize_overview;

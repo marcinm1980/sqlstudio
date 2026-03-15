@@ -40,7 +40,7 @@ ViewEditorBE::ViewEditorBE(const db_ViewRef &view) : DBObjectEditorBE(view) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ViewEditorBE::get_sql() {
+auto ViewEditorBE::get_sql() -> std::string {
   std::string sql = DBObjectEditorBE::get_sql();
   if (sql.empty())
     sql = "CREATE VIEW `" + get_name() + "` AS\n";
@@ -50,7 +50,7 @@ std::string ViewEditorBE::get_sql() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ViewEditorBE::get_title() {
+auto ViewEditorBE::get_title() -> std::string {
   return get_name() + " - View";
 }
 

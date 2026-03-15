@@ -38,19 +38,19 @@ public:
   GeomDrawBox() : _geom(NULL), _srid(0) {
   }
 
-  void draw_ring(cairo_t *cr, OGRRawPoint *points, int num_points, double scale, double x, double y, double height);
+  auto draw_ring(cairo_t *cr, OGRRawPoint *points, int num_points, double scale, double x, double y, double height) -> void;
 
-  void draw_ring_vertices(cairo_t *cr, OGRRawPoint *points, int num_points, double scale, double x, double y,
-                          double height);
+  auto draw_ring_vertices(cairo_t *cr, OGRRawPoint *points, int num_points, double scale, double x, double y,
+                          double height) -> void;
 
-  void draw_geometry(cairo_t *cr, OGRGeometry *geom, double scale, double x, double y, double height);
+  auto draw_geometry(cairo_t *cr, OGRGeometry *geom, double scale, double x, double y, double height) -> void;
 
-  void draw_polygon(cairo_t *cr, OGRPolygon *poly, double scale, double x, double y, double height);
-  void set_data(const std::string &text);
+  auto draw_polygon(cairo_t *cr, OGRPolygon *poly, double scale, double x, double y, double height) -> void;
+  auto set_data(const std::string &text) -> void;
 
-  virtual void repaint(cairo_t *cr, int x, int y, int w, int h);
+  virtual auto repaint(cairo_t *cr, int x, int y, int w, int h) -> void;
 
-  int getSrid() const;
+  auto getSrid() const -> int;
 };
 
 #endif

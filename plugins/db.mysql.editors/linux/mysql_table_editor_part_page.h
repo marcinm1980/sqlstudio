@@ -42,25 +42,25 @@ class DbMySQLTableEditorPartPage {
 public:
   DbMySQLTableEditorPartPage(DbMySQLTableEditor *owner, MySQLTableEditorBE *be, Glib::RefPtr<Gtk::Builder> xml);
 
-  void refresh();
+  auto refresh() -> void;
 
-  void switch_be(MySQLTableEditorBE *be);
+  auto switch_be(MySQLTableEditorBE *be) -> void;
 
 private:
-  void init_widgets();
-  void enabled_checkbutton_toggled();
+  auto init_widgets() -> void;
+  auto enabled_checkbutton_toggled() -> void;
 
-  void part_function_changed();
-  void subpart_function_changed();
+  auto part_function_changed() -> void;
+  auto subpart_function_changed() -> void;
 
-  void part_count_changed();
-  void subpart_count_changed();
+  auto part_count_changed() -> void;
+  auto subpart_count_changed() -> void;
 
-  void part_manual_toggled();
-  void subpart_manual_toggled();
+  auto part_manual_toggled() -> void;
+  auto subpart_manual_toggled() -> void;
 
-  void set_part_params_to_be(const std::string &value);
-  void set_subpart_params_to_be(const std::string &value);
+  auto set_part_params_to_be(const std::string &value) -> void;
+  auto set_subpart_params_to_be(const std::string &value) -> void;
 
   DbMySQLTableEditor *_owner;
   MySQLTableEditorBE *_be;

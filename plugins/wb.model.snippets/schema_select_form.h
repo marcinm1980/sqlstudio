@@ -66,13 +66,13 @@ public:
     set_content(&_box);
   };
 
-  db_SchemaRef get_selection() {
+  auto get_selection() -> db_SchemaRef {
     if (_schema_list.get_selected_index() == (int)_schemas.count())
       return db_SchemaRef();
     return _schemas[_schema_list.get_selected_index()];
   };
 
-  bool run() {
+  auto run() -> bool {
     center();
     int x;
     x = run_modal(&_ok_button, &_cancel_button);

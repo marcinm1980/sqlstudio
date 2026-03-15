@@ -28,11 +28,11 @@
 
 #include "grt/editor_base.h"
 
-void ui_ObjectEditor::ImplData::notify_will_open() {
+auto ui_ObjectEditor::ImplData::notify_will_open() -> void {
   grt::GRTNotificationCenter::get()->send_grt(GRNObjectEditorWillOpen, self(), grt::DictRef());
 }
 
-bool ui_ObjectEditor::ImplData::notify_will_close() {
+auto ui_ObjectEditor::ImplData::notify_will_close() -> bool {
   grt::DictRef info(true);
   info.gset("cancel", 0);
   grt::GRTNotificationCenter::get()->send_grt(GRNObjectEditorWillClose, self(), info);
@@ -41,25 +41,25 @@ bool ui_ObjectEditor::ImplData::notify_will_close() {
   return true;
 }
 
-void ui_ObjectEditor::ImplData::notify_did_close() {
+auto ui_ObjectEditor::ImplData::notify_did_close() -> void {
   grt::GRTNotificationCenter::get()->send_grt(GRNObjectEditorDidClose, self(), grt::DictRef());
 }
 
-void ui_ObjectEditor::ImplData::notify_did_switch_object(bec::BaseEditor *editor) {
+auto ui_ObjectEditor::ImplData::notify_did_switch_object(bec::BaseEditor *editor) -> void {
   _editor = editor;
   self()->object(editor->get_object());
   grt::GRTNotificationCenter::get()->send_grt(GRNEditorFormDidSwitchObject, self(), grt::DictRef());
 }
 
-void ui_ObjectEditor::ImplData::notify_will_save() {
+auto ui_ObjectEditor::ImplData::notify_will_save() -> void {
   grt::GRTNotificationCenter::get()->send_grt(GRNEditorFormWillSave, self(), grt::DictRef());
 }
 
-void ui_ObjectEditor::ImplData::notify_did_revert() {
+auto ui_ObjectEditor::ImplData::notify_did_revert() -> void {
   grt::GRTNotificationCenter::get()->send_grt(GRNEditorFormDidRevert, self(), grt::DictRef());
 }
 
-GrtObjectRef ui_ObjectEditor::ImplData::edited_object() {
+auto ui_ObjectEditor::ImplData::edited_object() -> GrtObjectRef {
   return _editor ? _editor->get_object() : GrtObjectRef();
 }
 

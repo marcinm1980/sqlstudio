@@ -45,11 +45,11 @@ class MYSQLWBBACKEND_PUBLIC_FUNC QuerySidePalette : public mforms::TabView, base
 public:
   QuerySidePalette(const SqlEditorForm::Ref &owner);
   ~QuerySidePalette();
-  void cancel_timer();
-  void close_popover();
+  auto cancel_timer() -> void;
+  auto close_popover() -> void;
 
-  void refresh_snippets();
-  void edit_last_snippet();
+  auto refresh_snippets() -> void;
+  auto edit_last_snippet() -> void;
 
 private:
   SqlEditorForm::Ptr _owner;
@@ -79,22 +79,22 @@ private:
   std::map<std::string, std::pair<std::string, std::string> >
     _topic_cache; // Plain text and html text under a specific topic.
 
-  void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
-  void updateColors();
+  auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
+  auto updateColors() -> void;
 
-  void show_help_text_for_topic(const std::string &topic);
-  void show_help_hint_or_update();
+  auto show_help_text_for_topic(const std::string &topic) -> void;
+  auto show_help_hint_or_update() -> void;
 
-  bool find_context_help(MySQLEditor *editor);
-  grt::StringRef get_help_topic_threaded(const std::string &query, std::pair<ssize_t, ssize_t> caret);
-  void update_help_history(const std::string &topic);
+  auto find_context_help(MySQLEditor *editor) -> bool;
+  auto get_help_topic_threaded(const std::string &query, std::pair<ssize_t, ssize_t> caret) -> grt::StringRef;
+  auto update_help_history(const std::string &topic) -> void;
 
-  void click_link(const std::string &link);
-  mforms::ToolBar *prepare_snippet_toolbar();
-  mforms::ToolBar *prepare_help_toolbar();
-  void snippet_toolbar_item_activated(mforms::ToolBarItem *item);
-  void help_toolbar_item_activated(mforms::ToolBarItem *item);
+  auto click_link(const std::string &link) -> void;
+  auto prepare_snippet_toolbar() -> mforms::ToolBar *;
+  auto prepare_help_toolbar() -> mforms::ToolBar *;
+  auto snippet_toolbar_item_activated(mforms::ToolBarItem *item) -> void;
+  auto help_toolbar_item_activated(mforms::ToolBarItem *item) -> void;
 
-  void snippet_selection_changed();
+  auto snippet_selection_changed() -> void;
 };
 

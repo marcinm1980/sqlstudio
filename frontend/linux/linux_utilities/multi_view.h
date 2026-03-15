@@ -50,50 +50,50 @@ class MultiView : public Gtk::Grid {
   sigc::signal<void, Gtk::TreeModel::Path, guint32> _popup_menu;
   sigc::signal<void, Gtk::TreeModel::Path> _activate_item;
 
-  void tree_row_activated(const Gtk::TreeModel::Path &path, const Gtk::TreeViewColumn *column);
-  void icon_activated(const Gtk::TreeModel::Path &path);
-  void icon_button_release_event(GdkEventButton *event);
-  void tree_button_release_event(GdkEventButton *event);
-  void icon_selection_changed();
-  void tree_selection_changed();
+  auto tree_row_activated(const Gtk::TreeModel::Path &path, const Gtk::TreeViewColumn *column) -> void;
+  auto icon_activated(const Gtk::TreeModel::Path &path) -> void;
+  auto icon_button_release_event(GdkEventButton *event) -> void;
+  auto tree_button_release_event(GdkEventButton *event) -> void;
+  auto icon_selection_changed() -> void;
+  auto tree_selection_changed() -> void;
 
 protected:
-  virtual void on_selection_changed(const std::vector<bec::NodeId> &sel);
+  virtual auto on_selection_changed(const std::vector<bec::NodeId> &sel) -> void;
 
 public:
   MultiView(bool tree_view, bool icon_view);
   virtual ~MultiView();
 
-  Gtk::TreeView *get_tree_view() const {
+  auto get_tree_view() const -> Gtk::TreeView * {
     return _tree_view;
   }
-  Gtk::IconView *get_icon_view() const {
+  auto get_icon_view() const -> Gtk::IconView * {
     return _icon_view;
   }
 
-  virtual void refresh();
-  void set_tree_model(const Glib::RefPtr<TreeModelWrapper> &model);
-  void set_icon_model(const Glib::RefPtr<TreeModelWrapper> &model);
-  void unset_models();
-  Glib::RefPtr<TreeModelWrapper> get_tree_model() {
+  virtual auto refresh() -> void;
+  auto set_tree_model(const Glib::RefPtr<TreeModelWrapper> &model) -> void;
+  auto set_icon_model(const Glib::RefPtr<TreeModelWrapper> &model) -> void;
+  auto unset_models() -> void;
+  auto get_tree_model() -> Glib::RefPtr<TreeModelWrapper> {
     return _tv_model;
   }
-  Glib::RefPtr<TreeModelWrapper> get_icon_model() {
+  auto get_icon_model() -> Glib::RefPtr<TreeModelWrapper> {
     return _iv_model;
   }
 
-  void set_icon_mode(bool flag, bool horizontal_icons = false);
+  auto set_icon_mode(bool flag, bool horizontal_icons = false) -> void;
 
-  Gtk::TreeModel::Path get_selected();
-  void select_node(const bec::NodeId &node);
+  auto get_selected() -> Gtk::TreeModel::Path;
+  auto select_node(const bec::NodeId &node) -> void;
 
-  sigc::signal<void, const std::vector<bec::NodeId> &> signal_selection_changed() {
+  auto signal_selection_changed() -> sigc::signal<void, const std::vector<bec::NodeId> &> {
     return _selection_changed;
   }
-  sigc::signal<void, Gtk::TreeModel::Path, guint32> signal_popup_menu() {
+  auto signal_popup_menu() -> sigc::signal<void, Gtk::TreeModel::Path, guint32> {
     return _popup_menu;
   }
-  sigc::signal<void, Gtk::TreeModel::Path> signal_activate_item() {
+  auto signal_activate_item() -> sigc::signal<void, Gtk::TreeModel::Path> {
     return _activate_item;
   }
 };

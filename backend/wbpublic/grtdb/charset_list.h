@@ -36,10 +36,10 @@ namespace bec {
 
     enum CharsetListColumns { Name };
 
-    virtual size_t count_children(const NodeId &parent);
-    virtual bool get_field(const NodeId &node, ColumnId column, std::string &value);
-    virtual std::string get_field_description(const NodeId &node, ColumnId column);
-    void picked_charset(const NodeId &node);
+    virtual auto count_children(const NodeId &parent) -> size_t;
+    virtual auto get_field(const NodeId &node, ColumnId column, std::string &value) -> bool;
+    virtual auto get_field_description(const NodeId &node, ColumnId column) -> std::string;
+    auto picked_charset(const NodeId &node) -> void;
 
   protected:
     std::list<size_t> _recently_used;

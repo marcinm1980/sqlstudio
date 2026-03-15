@@ -33,14 +33,14 @@ DEFAULT_LOG_DOMAIN(DOMAIN_GRT)
 
 using namespace grt;
 
-inline std::string get_prop(xmlNodePtr node, const char *name) {
+inline auto get_prop(xmlNodePtr node, const char *name) -> std::string {
   xmlChar *prop = xmlGetProp(node, (xmlChar *)name);
   std::string tmp = prop ? (char *)prop : "";
   xmlFree(prop);
   return tmp;
 }
 
-inline bool get_type_spec(xmlNodePtr node, TypeSpec &type, bool allow_void = false) {
+inline auto get_type_spec(xmlNodePtr node, TypeSpec &type, bool allow_void = false) -> bool {
   std::string s = get_prop(node, "type");
 
   if (allow_void && s == "void") {
@@ -94,7 +94,7 @@ inline bool get_type_spec(xmlNodePtr node, TypeSpec &type, bool allow_void = fal
  *
  * @return 32bit CRC of the class.
  */
-static unsigned int make_checksum(MetaClass *metaclass) {
+static auto make_checksum(MetaClass *metaclass) -> unsigned int {
   static unsigned int crc32bits[] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3, 0x0edb8832,
     0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2,
@@ -179,7 +179,7 @@ static unsigned int make_checksum(MetaClass *metaclass) {
   return (crc ^ ~0U);
 }
 
-bool MetaClass::foreach_validator(const ObjectRef &obj, const Validator::Tag &tag) {
+auto MetaClass::foreach_validator(const ObjectRef &obj, const Validator::Tag &tag) -> bool {
   bool ret = true;
   const ValidatorList::size_type size = _validators.size();
   for (ValidatorList::size_type i = 0; i < size; ++i) {
@@ -189,7 +189,7 @@ bool MetaClass::foreach_validator(const ObjectRef &obj, const Validator::Tag &ta
   return ret;
 }
 
-bool MetaClass::has_member(const std::string &member) const {
+auto MetaClass::has_member(const std::string &member) const -> bool {
   if (_members.find(member) == _members.end()) {
     if (_parent)
       return _parent->has_member(member);
@@ -198,7 +198,7 @@ bool MetaClass::has_member(const std::string &member) const {
   return true;
 }
 
-bool MetaClass::has_method(const std::string &method) const {
+auto MetaClass::has_method(const std::string &method) const -> bool {
   if (_methods.find(method) == _methods.end()) {
     if (_parent)
       return _parent->has_method(method);
@@ -207,7 +207,7 @@ bool MetaClass::has_method(const std::string &method) const {
   return true;
 }
 
-bool MetaClass::is_a(const std::string &name) const {
+auto MetaClass::is_a(const std::string &name) const -> bool {
   MetaClass *mc = grt::GRT::get()->get_metaclass(name);
   if (!mc)
     return false;
@@ -215,7 +215,7 @@ bool MetaClass::is_a(const std::string &name) const {
   return is_a(mc);
 }
 
-bool MetaClass::is_a(MetaClass *struc) const {
+auto MetaClass::is_a(MetaClass *struc) const -> bool {
   const MetaClass *par = this;
 
   while (par && par != struc)
@@ -242,7 +242,7 @@ MetaClass::~MetaClass() {
     delete iter->second.property;
 }
 
-MetaClass *MetaClass::create_base_class() {
+auto MetaClass::create_base_class() -> MetaClass * {
   MetaClass *mc = new MetaClass;
   mc->_name = internal::Object::static_class_name();
   mc->_placeholder = false;
@@ -250,7 +250,7 @@ MetaClass *MetaClass::create_base_class() {
   return mc;
 }
 
-MetaClass *MetaClass::from_xml(const std::string &source, xmlNodePtr node) {
+auto MetaClass::from_xml(const std::string &source, xmlNodePtr node) -> MetaClass * {
   std::string name = get_prop(node, "name");
   MetaClass *stru;
 
@@ -274,7 +274,7 @@ MetaClass *MetaClass::from_xml(const std::string &source, xmlNodePtr node) {
   return stru;
 }
 
-void MetaClass::load_attribute_list(xmlNodePtr node, const std::string &member) {
+auto MetaClass::load_attribute_list(xmlNodePtr node, const std::string &member) -> void {
   if (node->properties) {
     xmlAttr *attr = node->properties;
     std::string prefix;
@@ -294,7 +294,7 @@ void MetaClass::load_attribute_list(xmlNodePtr node, const std::string &member) 
   }
 }
 
-void MetaClass::load_xml(xmlNodePtr node) {
+auto MetaClass::load_xml(xmlNodePtr node) -> void {
   std::string node_property = get_prop(node, "name");
   xmlNodePtr child_node;
 
@@ -529,11 +529,11 @@ void MetaClass::load_xml(xmlNodePtr node) {
   _crc32 = make_checksum(this);
 }
 
-bool MetaClass::is_bound() const {
+auto MetaClass::is_bound() const -> bool {
   return _bound;
 }
 
-bool MetaClass::validate() {
+auto MetaClass::validate() -> bool {
   std::map<std::string, std::string> seen;
   bool ok = true;
 
@@ -603,7 +603,7 @@ bool MetaClass::validate() {
   return ok;
 }
 
-std::string MetaClass::get_attribute(const std::string &attr, bool search_parents) {
+auto MetaClass::get_attribute(const std::string &attr, bool search_parents) -> std::string {
   MetaClass *root = this;
 
   std::unordered_map<std::string, std::string>::const_iterator iter;
@@ -620,7 +620,7 @@ std::string MetaClass::get_attribute(const std::string &attr, bool search_parent
   return "";
 }
 
-std::string MetaClass::get_member_attribute(const std::string &member, const std::string &attr, bool search_parents) {
+auto MetaClass::get_member_attribute(const std::string &member, const std::string &attr, bool search_parents) -> std::string {
   MetaClass *root = this;
   const std::string search_string = member + ":" + attr;
 
@@ -638,7 +638,7 @@ std::string MetaClass::get_member_attribute(const std::string &member, const std
   return "";
 }
 
-bool MetaClass::is_abstract() const {
+auto MetaClass::is_abstract() const -> bool {
   if (_bound && !_alloc)
     return true;
 
@@ -650,7 +650,7 @@ bool MetaClass::is_abstract() const {
   return false;
 }
 
-ObjectRef MetaClass::allocate() {
+auto MetaClass::allocate() -> ObjectRef {
   if (is_abstract())
     throw std::runtime_error("cannot allocate an abstract class");
 
@@ -663,12 +663,12 @@ ObjectRef MetaClass::allocate() {
   return object;
 }
 
-void MetaClass::bind_allocator(Allocator alloc) {
+auto MetaClass::bind_allocator(Allocator alloc) -> void {
   _alloc = alloc;
   _bound = true;
 }
 
-void MetaClass::bind_member(const std::string &name, PropertyBase *prop) {
+auto MetaClass::bind_member(const std::string &name, PropertyBase *prop) -> void {
   std::map<std::string, Member>::iterator iter = _members.find(name);
   if (iter == _members.end())
     throw std::runtime_error("Attempt to bind invalid member " + name);
@@ -676,7 +676,7 @@ void MetaClass::bind_member(const std::string &name, PropertyBase *prop) {
   iter->second.property = prop;
 }
 
-void MetaClass::bind_method(const std::string &name, Method::Function method) {
+auto MetaClass::bind_method(const std::string &name, Method::Function method) -> void {
   std::map<std::string, Method>::iterator iter = _methods.find(name);
   if (iter == _methods.end())
     throw std::runtime_error("Attempt to bind invalid method " + name);
@@ -684,21 +684,21 @@ void MetaClass::bind_method(const std::string &name, Method::Function method) {
   iter->second.function = method;
 }
 
-void MetaClass::add_validator(Validator *v) {
+auto MetaClass::add_validator(Validator *v) -> void {
   if (v && _validators.end() == std::find(_validators.begin(), _validators.end(), v))
     _validators.push_back(v);
 }
 
-void MetaClass::remove_validator(Validator *v) {
+auto MetaClass::remove_validator(Validator *v) -> void {
   throw std::logic_error("void MetaClass::del_validator(Validator* v) not implemented!");
 }
 
-void MetaClass::set_member_value(internal::Object *object, const std::string &name, const ValueRef &value) {
+auto MetaClass::set_member_value(internal::Object *object, const std::string &name, const ValueRef &value) -> void {
   set_member_internal(object, name, value, false);
 }
 
-void MetaClass::set_member_internal(internal::Object *object, const std::string &name, const ValueRef &value,
-                                    bool force) {
+auto MetaClass::set_member_internal(internal::Object *object, const std::string &name, const ValueRef &value,
+                                    bool force) -> void {
   MetaClass *mc = this;
   MemberList::const_iterator mem, end;
   bool found = false;
@@ -727,7 +727,7 @@ void MetaClass::set_member_internal(internal::Object *object, const std::string 
   mem->second.property->set(object, value);
 }
 
-ValueRef MetaClass::get_member_value(const internal::Object *object, const std::string &name) {
+auto MetaClass::get_member_value(const internal::Object *object, const std::string &name) -> ValueRef {
   MetaClass *mc = this;
   MemberList::const_iterator mem, end;
   do {
@@ -743,11 +743,11 @@ ValueRef MetaClass::get_member_value(const internal::Object *object, const std::
   return mem->second.property->get(object);
 }
 
-ValueRef MetaClass::get_member_value(const internal::Object *object, const MetaClass::Member *member) {
+auto MetaClass::get_member_value(const internal::Object *object, const MetaClass::Member *member) -> ValueRef {
   return member->property->get(object);
 }
 
-ValueRef MetaClass::call_method(internal::Object *object, const std::string &name, const BaseListRef &args) {
+auto MetaClass::call_method(internal::Object *object, const std::string &name, const BaseListRef &args) -> ValueRef {
   MetaClass *mc = this;
   MethodList::const_iterator mem, end;
   do {
@@ -763,11 +763,11 @@ ValueRef MetaClass::call_method(internal::Object *object, const std::string &nam
   return (*mem->second.function)(object, args);
 }
 
-ValueRef MetaClass::call_method(internal::Object *object, const Method *method, const BaseListRef &args) {
+auto MetaClass::call_method(internal::Object *object, const Method *method, const BaseListRef &args) -> ValueRef {
   return (*method->function)(object, args);
 }
 
-const MetaClass::Member *MetaClass::get_member_info(const std::string &member) const {
+auto MetaClass::get_member_info(const std::string &member) const -> const MetaClass::Member * {
   const MetaClass *mc = this;
   MemberList::const_iterator mem, end;
   do {
@@ -782,7 +782,7 @@ const MetaClass::Member *MetaClass::get_member_info(const std::string &member) c
   return &mem->second;
 }
 
-const MetaClass::Method *MetaClass::get_method_info(const std::string &method) const {
+auto MetaClass::get_method_info(const std::string &method) const -> const MetaClass::Method * {
   const MetaClass *mc = this;
   MethodList::const_iterator mem, end;
   do {
@@ -797,7 +797,7 @@ const MetaClass::Method *MetaClass::get_method_info(const std::string &method) c
   return &mem->second;
 }
 
-TypeSpec MetaClass::get_member_type(const std::string &member) const {
+auto MetaClass::get_member_type(const std::string &member) const -> TypeSpec {
   const Member *mem = get_member_info(member);
   if (!mem)
     throw bad_item(member);

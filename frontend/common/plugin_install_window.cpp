@@ -47,7 +47,7 @@ class AddOnDownloadWindow::DownloadItem : public mforms::Box {
 public:
   DownloadItem(AddOnDownloadWindow *owner, const std::string &url);
 
-  void start();
+  auto start() -> void;
 
 private:
   AddOnDownloadWindow *_owner;
@@ -62,10 +62,10 @@ private:
   std::string _url;
   std::string _dest_path;
 
-  void download_finished(grt::ValueRef ret);
-  void download_failed(const std::exception &exc);
-  grt::ValueRef perform_download();
-  void handle_output(const grt::Message &message);
+  auto download_finished(grt::ValueRef ret) -> void;
+  auto download_failed(const std::exception &exc) -> void;
+  auto perform_download() -> grt::ValueRef;
+  auto handle_output(const grt::Message &message) -> void;
 };
 
 AddOnDownloadWindow::DownloadItem::DownloadItem(AddOnDownloadWindow *owner, const std::string &url)
@@ -95,12 +95,12 @@ AddOnDownloadWindow::DownloadItem::DownloadItem(AddOnDownloadWindow *owner, cons
   _progress.set_value(0.0);
 }
 
-void AddOnDownloadWindow::DownloadItem::download_failed(const std::exception &exc) {
+auto AddOnDownloadWindow::DownloadItem::download_failed(const std::exception &exc) -> void {
   _info.set_text(base::strfmt("Failed: %s", exc.what()));
   _owner->download_failed(this);
 }
 
-void AddOnDownloadWindow::DownloadItem::download_finished(grt::ValueRef ret) {
+auto AddOnDownloadWindow::DownloadItem::download_finished(grt::ValueRef ret) -> void {
   std::string fn;
   if (ret.is_valid() && grt::StringRef::can_wrap(ret))
     fn = *grt::StringRef::cast_from(ret);
@@ -113,7 +113,7 @@ void AddOnDownloadWindow::DownloadItem::download_finished(grt::ValueRef ret) {
   }
 }
 
-grt::ValueRef AddOnDownloadWindow::DownloadItem::perform_download() {
+auto AddOnDownloadWindow::DownloadItem::perform_download() -> grt::ValueRef {
   grt::Module *module = grt::GRT::get()->get_module("WbUpdater");
   if (!module)
     throw std::runtime_error("Can't locate module WbUpdater");
@@ -127,7 +127,7 @@ grt::ValueRef AddOnDownloadWindow::DownloadItem::perform_download() {
 
 //--------------------------------------------------------------------------------------------------
 
-void AddOnDownloadWindow::DownloadItem::start() {
+auto AddOnDownloadWindow::DownloadItem::start() -> void {
   bec::GRTTask::Ref task =
     bec::GRTTask::create_task("downloading plugin", bec::GRTManager::get()->get_dispatcher(),
                               std::bind(&AddOnDownloadWindow::DownloadItem::perform_download, this));
@@ -144,7 +144,7 @@ void AddOnDownloadWindow::DownloadItem::start() {
 
 //--------------------------------------------------------------------------------------------------
 
-void AddOnDownloadWindow::DownloadItem::handle_output(const grt::Message &message) {
+auto AddOnDownloadWindow::DownloadItem::handle_output(const grt::Message &message) -> void {
   if (message.type == grt::InfoMsg) {
     std::vector<std::string> s = base::split(message.text, ":");
     if (s.size() == 3) {
@@ -171,7 +171,7 @@ AddOnDownloadWindow::AddOnDownloadWindow(wb::WBContextUI *wbui)
   _box.add_end(&_bbox, false, false);
 }
 
-void AddOnDownloadWindow::install_addon_from_url(const std::string &url) {
+auto AddOnDownloadWindow::install_addon_from_url(const std::string &url) -> void {
   DownloadItem *item = mforms::manage(new DownloadItem(this, url));
   _items.push_back(item);
   _box.add(item, false, true);
@@ -187,11 +187,11 @@ void AddOnDownloadWindow::install_addon_from_url(const std::string &url) {
     _wbui->get_wb()->open_file_by_extension(_final_path, true);
 }
 
-void AddOnDownloadWindow::download_failed(DownloadItem *item) {
+auto AddOnDownloadWindow::download_failed(DownloadItem *item) -> void {
   // dont auto-close, let user click Cancel after reading error
 }
 
-void AddOnDownloadWindow::download_finished(const std::string &path, DownloadItem *item) {
+auto AddOnDownloadWindow::download_finished(const std::string &path, DownloadItem *item) -> void {
   end_modal(true);
   show(false);
   _final_path = path;
@@ -213,7 +213,7 @@ class PluginInstallWindow::InstallItem : public mforms::Box {
 public:
   InstallItem(PluginInstallWindow *owner, const std::string &path);
 
-  bool start();
+  auto start() -> bool;
 };
 
 PluginInstallWindow::InstallItem::InstallItem(PluginInstallWindow *owner, const std::string &path)
@@ -237,7 +237,7 @@ PluginInstallWindow::InstallItem::InstallItem(PluginInstallWindow *owner, const 
   _rbox.add(&_info_caption, false, true);
 }
 
-static std::string full_file_path(const std::list<std::string> &paths, const std::string &file) {
+static auto full_file_path(const std::list<std::string> &paths, const std::string &file) -> std::string {
   for (std::list<std::string>::const_iterator i = paths.begin(); i != paths.end(); ++i) {
     if (g_str_has_suffix(i->c_str(), file.c_str()))
       return *i;
@@ -245,7 +245,7 @@ static std::string full_file_path(const std::list<std::string> &paths, const std
   return "";
 }
 
-bool PluginInstallWindow::InstallItem::start() {
+auto PluginInstallWindow::InstallItem::start() -> bool {
   grt::DictRef manifest;
   std::string unpacked_path;
 
@@ -325,7 +325,7 @@ PluginInstallWindow::PluginInstallWindow(wb::WBContextUI *wbui)
   set_size(400, -1);
 }
 
-bool PluginInstallWindow::install_plugin(const std::string &path) {
+auto PluginInstallWindow::install_plugin(const std::string &path) -> bool {
   InstallItem item(this, path);
   _box.add(&item, false, true);
   try {

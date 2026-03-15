@@ -36,16 +36,16 @@ namespace mforms {
       HyperTextWrapper(::mforms::HyperText *self) : ViewWrapper(self) {
       }
 
-      static bool create(::mforms::HyperText *self) {
+      static auto create(::mforms::HyperText *self) -> bool {
         return true;
       }
 
-      static void setMarkupText(HyperText *ht, const std::string &text) {
+      static auto setMarkupText(HyperText *ht, const std::string &text) -> void {
       }
 
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_hypertext_impl.create = &HyperTextWrapper::create;

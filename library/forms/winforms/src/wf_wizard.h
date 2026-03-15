@@ -35,22 +35,22 @@ namespace MySQL {
     protected:
       WizardWrapper(mforms::Wizard *backend, mforms::Form *owner);
 
-      static bool create(mforms::Wizard *backend, mforms::Form *parent);
-      static void set_title(mforms::Wizard *backend, const std::string &title);
-      static void run_modal(mforms::Wizard *backend);
-      static void close(mforms::Wizard *backend);
-      static void set_content(mforms::Wizard *backend, mforms::View *view);
-      static void set_heading(mforms::Wizard *backend, const std::string &heading);
-      static void set_step_list(mforms::Wizard *backend, const std::vector<std::string> &steps);
-      static void set_allow_cancel(mforms::Wizard *backend, bool flag);
-      static void set_allow_back(mforms::Wizard *backend, bool flag);
-      static void set_allow_next(mforms::Wizard *backend, bool flag);
-      static void set_show_extra(mforms::Wizard *backend, bool flag);
-      static void set_extra_caption(mforms::Wizard *backend, const std::string &caption);
-      static void set_next_caption(mforms::Wizard *backend, const std::string &caption);
+      static auto create(mforms::Wizard *backend, mforms::Form *parent) -> bool;
+      static auto set_title(mforms::Wizard *backend, const std::string &title) -> void;
+      static auto run_modal(mforms::Wizard *backend) -> void;
+      static auto close(mforms::Wizard *backend) -> void;
+      static auto set_content(mforms::Wizard *backend, mforms::View *view) -> void;
+      static auto set_heading(mforms::Wizard *backend, const std::string &heading) -> void;
+      static auto set_step_list(mforms::Wizard *backend, const std::vector<std::string> &steps) -> void;
+      static auto set_allow_cancel(mforms::Wizard *backend, bool flag) -> void;
+      static auto set_allow_back(mforms::Wizard *backend, bool flag) -> void;
+      static auto set_allow_next(mforms::Wizard *backend, bool flag) -> void;
+      static auto set_show_extra(mforms::Wizard *backend, bool flag) -> void;
+      static auto set_extra_caption(mforms::Wizard *backend, const std::string &caption) -> void;
+      static auto set_next_caption(mforms::Wizard *backend, const std::string &caption) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   }
 }

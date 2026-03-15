@@ -36,15 +36,15 @@ namespace wb {
     RelationshipFloater(ModelDiagramForm *view);
     virtual ~RelationshipFloater();
 
-    void add_column(const std::string &name);
+    auto add_column(const std::string &name) -> void;
 
     boost::signals2::signal<void()> *signal_done_clicked() {
       return _button.signal_activate();
     }
 
-    void setup_pick_target();
+    auto setup_pick_target() -> void;
 
-    void pick_next_target();
+    auto pick_next_target() -> void;
 
   private:
     mdc::Box _columns_box;
@@ -53,7 +53,7 @@ namespace wb {
     std::vector<mdc::TextFigure *> _columns;
     unsigned int _current_column;
 
-    void setup_pick_source();
+    auto setup_pick_source() -> void;
   };
 };
 

@@ -59,8 +59,8 @@ private:
   bool _statement_valid;
 
 public:
-  bool get_limit_clause_params(const std::string &sql, int *row_count, int *row_row_offset, bool *contains_limit_clause,
-                               size_t *limit_ins_pos) {
+  auto get_limit_clause_params(const std::string &sql, int *row_count, int *row_row_offset, bool *contains_limit_clause,
+                               size_t *limit_ins_pos) -> bool {
     NULL_STATE_KEEPER
 
     _row_count = row_count;
@@ -79,7 +79,7 @@ public:
   }
 
 protected:
-  int process_sql_statement(const SqlAstNode *tree) {
+  auto process_sql_statement(const SqlAstNode *tree) -> int {
     if (tree) {
       _statement_valid = true;
 
@@ -90,7 +90,7 @@ protected:
     return 0; // error count
   }
 
-  Parse_result process_select_statement(const SqlAstNode *tree) {
+  auto process_select_statement(const SqlAstNode *tree) -> Parse_result {
     // Look for an existing limit clause in a normal SELECT.
     {
       static sql::symbol path1[] = {sql::_select_init, sql::_select_init2,     sql::_select_part2, sql::_select_into,
@@ -193,7 +193,7 @@ protected:
 Mysql_sql_specifics::Mysql_sql_specifics() {
 }
 
-std::string Mysql_sql_specifics::limit_select_query(const std::string &sql, int *row_count, int *row_row_offset) {
+auto Mysql_sql_specifics::limit_select_query(const std::string &sql, int *row_count, int *row_row_offset) -> std::string {
   Mysql_sql_statement_info statement_info;
   bool contains_limit_clause = false;
   size_t limit_ins_pos = sql.length();
@@ -211,16 +211,16 @@ std::string Mysql_sql_specifics::limit_select_query(const std::string &sql, int 
   return sql;
 }
 
-void Mysql_sql_specifics::get_connection_startup_script(std::list<std::string> &sql_script) {
+auto Mysql_sql_specifics::get_connection_startup_script(std::list<std::string> &sql_script) -> void {
   sql_script.push_back("SET CHARACTER SET utf8");
   sql_script.push_back("SET NAMES utf8");
 }
 
-std::string Mysql_sql_specifics::query_connection_id() {
+auto Mysql_sql_specifics::query_connection_id() -> std::string {
   return "SELECT CONNECTION_ID()";
 }
 
-std::string Mysql_sql_specifics::query_kill_connection(std::int64_t connection_id) {
+auto Mysql_sql_specifics::query_kill_connection(std::int64_t connection_id) -> std::string {
 #ifdef __GNUC__
   return strfmt("KILL CONNECTION %lli", (long long int)connection_id);
 #else
@@ -228,7 +228,7 @@ std::string Mysql_sql_specifics::query_kill_connection(std::int64_t connection_i
 #endif
 }
 
-std::string Mysql_sql_specifics::query_kill_query(std::int64_t connection_id) {
+auto Mysql_sql_specifics::query_kill_query(std::int64_t connection_id) -> std::string {
 #ifdef __GNUC__
   return strfmt("KILL QUERY %lli", (long long int)connection_id);
 #else
@@ -236,17 +236,17 @@ std::string Mysql_sql_specifics::query_kill_query(std::int64_t connection_id) {
 #endif
 }
 
-std::string Mysql_sql_specifics::query_variable(const std::string &name) {
+auto Mysql_sql_specifics::query_variable(const std::string &name) -> std::string {
   return strfmt("SHOW SESSION VARIABLES LIKE '%s'", name.c_str());
 }
 
-std::string escape_c_string_(const std::string &text) {
+auto escape_c_string_(const std::string &text) -> std::string {
   std::string res;
   Mysql_sql_parser_fe::escape_string(text, res);
   return res;
 }
 
-sqlide::QuoteVar::Escape_sql_string Mysql_sql_specifics::escape_sql_string() {
+auto Mysql_sql_specifics::escape_sql_string() -> sqlide::QuoteVar::Escape_sql_string {
   bool ansi_sql_strings = false;
 
   grt::ValueRef sql_mode_value = bec::GRTManager::get()->get_app_option("SqlMode");
@@ -265,24 +265,24 @@ sqlide::QuoteVar::Escape_sql_string Mysql_sql_specifics::escape_sql_string() {
   return (ansi_sql_strings) ? &sqlide::QuoteVar::escape_ansi_sql_string : &escape_c_string_;
 }
 
-std::string blob_to_string_(const unsigned char *data, size_t size) {
+auto blob_to_string_(const unsigned char *data, size_t size) -> std::string {
   boost::scoped_array<char> out(new char[size * 2 + 1]);
   Mysql_sql_parser_fe::escape_string(out.get(), 0, (const char *)data, (unsigned long)size);
   return std::string(out.get());
 }
 
-sqlide::QuoteVar::Blob_to_string Mysql_sql_specifics::blob_to_string() {
+auto Mysql_sql_specifics::blob_to_string() -> sqlide::QuoteVar::Blob_to_string {
   return blob_to_string_;
 }
 
-std::string Mysql_sql_specifics::setting_non_std_sql_delimiter() {
+auto Mysql_sql_specifics::setting_non_std_sql_delimiter() -> std::string {
   return "DELIMITER " + non_std_sql_delimiter() + EolHelpers::eol();
 }
 
-std::string Mysql_sql_specifics::non_std_sql_delimiter() {
+auto Mysql_sql_specifics::non_std_sql_delimiter() -> std::string {
   return bec::GRTManager::get()->get_app_option_string("SqlDelimiter", "$$");
 }
 
-std::string Mysql_sql_specifics::setting_ansi_quotes() {
+auto Mysql_sql_specifics::setting_ansi_quotes() -> std::string {
   return "SET @@sql_mode=concat(@@sql_mode, ',ANSI_QUOTES')";
 }

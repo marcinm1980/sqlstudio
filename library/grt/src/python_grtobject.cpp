@@ -35,7 +35,7 @@
 using namespace grt;
 using namespace base;
 
-static PyObject *call_object_method(const grt::ObjectRef &object, const grt::ClassMethod *method, PyObject *args) {
+static auto call_object_method(const grt::ObjectRef &object, const grt::ClassMethod *method, PyObject *args) -> PyObject * {
   PythonContext *ctx = PythonContext::get_and_check();
   if (!ctx)
     return NULL;
@@ -88,13 +88,13 @@ static PyObject *call_object_method(const grt::ObjectRef &object, const grt::Cla
   return NULL;
 }
 
-static void method_dealloc(PyGRTMethodObject *self) {
+static auto method_dealloc(PyGRTMethodObject *self) -> void {
   delete self->object;
 
   Py_TYPE(self)->tp_free(self);
 }
 
-static PyObject *method_call(PyGRTMethodObject *self, PyObject *args, PyObject *kw) {
+static auto method_call(PyGRTMethodObject *self, PyObject *args, PyObject *kw) -> PyObject * {
   return call_object_method(*self->object, self->method, args);
 }
 
@@ -192,7 +192,7 @@ static PyTypeObject PyGRTMethodObjectType = {
 
 //----------------------------------------------------------------------------------------------
 
-static int object_init(PyGRTObjectObject *self, PyObject *args, PyObject *kwds) {
+static auto object_init(PyGRTObjectObject *self, PyObject *args, PyObject *kwds) -> int {
   PythonContext *ctx = PythonContext::get_and_check();
   if (ctx) {
     const char *class_name = NULL;
@@ -231,17 +231,17 @@ static int object_init(PyGRTObjectObject *self, PyObject *args, PyObject *kwds) 
   return -1;
 }
 
-static void object_dealloc(PyGRTObjectObject *self) {
+static auto object_dealloc(PyGRTObjectObject *self) -> void {
   delete self->object;
 
   Py_TYPE(self)->tp_free(self);
 }
 
-static PyObject *object_printable(PyGRTObjectObject *self) {
+static auto object_printable(PyGRTObjectObject *self) -> PyObject * {
   return PyUnicode_FromString(self->object->toString().c_str());
 }
 
-static PyObject *object_rich_compare(PyGRTObjectObject *self, PyGRTObjectObject *other, int op) {
+static auto object_rich_compare(PyGRTObjectObject *self, PyGRTObjectObject *other, int op) -> PyObject * {
   if(&other->ob_base == Py_None) {
     Py_RETURN_FALSE;
   }
@@ -257,7 +257,7 @@ static PyObject *object_rich_compare(PyGRTObjectObject *self, PyGRTObjectObject 
   Py_RETURN_FALSE;
 }
 
-static long object_hash(PyGRTObjectObject *self) {
+static auto object_hash(PyGRTObjectObject *self) -> long {
   if (self->hash != -1)
     return self->hash;
   // hash the identifier of the object using the same algorithm as the built-in one for strings
@@ -277,7 +277,7 @@ static long object_hash(PyGRTObjectObject *self) {
   return hash;
 }
 
-static PyObject *object_getattro(PyGRTObjectObject *self, PyObject *attr_name) {
+static auto object_getattro(PyGRTObjectObject *self, PyObject *attr_name) -> PyObject * {
   if (PyUnicode_Check(attr_name)) {
     const char *attrname = PyUnicode_AsUTF8(attr_name);
 
@@ -314,7 +314,7 @@ static PyObject *object_getattro(PyGRTObjectObject *self, PyObject *attr_name) {
   return NULL;
 }
 
-static int object_setattro(PyGRTObjectObject *self, PyObject *attr_name, PyObject *attr_value) {
+static auto object_setattro(PyGRTObjectObject *self, PyObject *attr_name, PyObject *attr_value) -> int {
   if (PyUnicode_Check(attr_name)) {
     const char *attrname = PyUnicode_AsUTF8(attr_name);
 
@@ -353,7 +353,7 @@ static int object_setattro(PyGRTObjectObject *self, PyObject *attr_name, PyObjec
   return -1;
 }
 
-static PyObject *object_callmethod(PyGRTObjectObject *self, PyObject *args) {
+static auto object_callmethod(PyGRTObjectObject *self, PyObject *args) -> PyObject * {
   PyObject *method_name;
 
   if (PyTuple_Size(args) < 1 || !(method_name = PyTuple_GetItem(args, 0)) || !PyUnicode_Check(method_name)) {
@@ -370,13 +370,13 @@ static PyObject *object_callmethod(PyGRTObjectObject *self, PyObject *args) {
   return call_object_method(*self->object, method, PyTuple_GetSlice(args, 1, PyTuple_Size(args)));
 }
 
-static PyObject *object_reset_references(PyGRTObjectObject *self, void *nothing) {
+static auto object_reset_references(PyGRTObjectObject *self, void *nothing) -> PyObject * {
   (*self->object)->reset_references();
 
   Py_RETURN_NONE;
 }
 
-static PyObject *object_shallow_copy(PyGRTObjectObject *self, void *nothing) {
+static auto object_shallow_copy(PyGRTObjectObject *self, void *nothing) -> PyObject * {
   PythonContext *ctx;
   if (!(ctx = PythonContext::get_and_check()))
     return NULL;
@@ -384,7 +384,7 @@ static PyObject *object_shallow_copy(PyGRTObjectObject *self, void *nothing) {
   return ctx->from_grt(grt::shallow_copy_object(*self->object));
 }
 
-static PyObject *object_deep_copy(PyGRTObjectObject *self, void *nothing) {
+static auto object_deep_copy(PyGRTObjectObject *self, void *nothing) -> PyObject * {
   PythonContext *ctx;
   if (!(ctx = PythonContext::get_and_check()))
     return NULL;
@@ -392,11 +392,11 @@ static PyObject *object_deep_copy(PyGRTObjectObject *self, void *nothing) {
   return ctx->from_grt(grt::copy_object(*self->object));
 }
 
-static PyObject *object_get_doc(PyGRTObjectObject *self, void *closure) {
+static auto object_get_doc(PyGRTObjectObject *self, void *closure) -> PyObject * {
   return Py_BuildValue("s", self->object->get_metaclass()->get_attribute("description").c_str());
 }
 
-static bool add_member_to_list(const grt::MetaClass::Member *member, PyObject *list) {
+static auto add_member_to_list(const grt::MetaClass::Member *member, PyObject *list) -> bool {
   PyObject *tmp = PyUnicode_FromString(member->name.c_str());
   PyList_Append(list, tmp);
   Py_DECREF(tmp);
@@ -404,7 +404,7 @@ static bool add_member_to_list(const grt::MetaClass::Member *member, PyObject *l
   return true;
 }
 
-static bool add_method_to_list(const grt::MetaClass::Method *method, PyObject *list) {
+static auto add_method_to_list(const grt::MetaClass::Method *method, PyObject *list) -> bool {
   PyObject *tmp = PyUnicode_FromString(method->name.c_str());
   PyList_Append(list, tmp);
   Py_DECREF(tmp);
@@ -412,13 +412,13 @@ static bool add_method_to_list(const grt::MetaClass::Method *method, PyObject *l
   return true;
 }
 
-static PyObject *object_get_members(PyGRTObjectObject *self, void *closure) {
+static auto object_get_members(PyGRTObjectObject *self, void *closure) -> PyObject * {
   PyObject *members = PyList_New(0);
   self->object->get_metaclass()->foreach_member(std::bind(&add_member_to_list, std::placeholders::_1, members));
   return members;
 }
 
-static PyObject *object_get_methods(PyGRTObjectObject *self, void *closure) {
+static auto object_get_methods(PyGRTObjectObject *self, void *closure) -> PyObject * {
   PyObject *methods = PyList_New(0);
   self->object->get_metaclass()->foreach_method(std::bind(&add_method_to_list, std::placeholders::_1, methods));
   return methods;
@@ -538,7 +538,7 @@ static PyTypeObject PyGRTObjectObjectType = {
 #endif
 };
 
-void grt::PythonContext::init_grt_object_type() {
+auto grt::PythonContext::init_grt_object_type() -> void {
   {
     PyGRTObjectObjectType.tp_new = PyType_GenericNew;
     if (PyType_Ready(&PyGRTObjectObjectType) < 0) {

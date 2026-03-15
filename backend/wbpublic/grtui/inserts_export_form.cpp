@@ -58,7 +58,7 @@ InsertsExportForm::InsertsExportForm(mforms::Form *owner, Recordset::Ref rset, c
   set_title(_("Export Inserts Data to File"));
 }
 
-std::string InsertsExportForm::run() {
+auto InsertsExportForm::run() -> std::string {
   if (run_modal()) {
     std::string path = get_path();
     std::string ext = base::extension(path);

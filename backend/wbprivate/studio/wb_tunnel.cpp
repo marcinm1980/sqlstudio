@@ -56,7 +56,7 @@ TunnelManager::TunnelManager()
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TunnelManager::start() {
+auto TunnelManager::start() -> void {
   if (_manager == nullptr)
     _manager = new ssh::SSHTunnelManager();
 
@@ -68,7 +68,7 @@ void TunnelManager::start() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TunnelManager::shutdown() {
+auto TunnelManager::shutdown() -> void {
   if (_manager != nullptr) {
     _manager->setStop();
     _manager->pokeWakeupSocket();
@@ -77,7 +77,7 @@ void TunnelManager::shutdown() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TunnelManager::portUsageIncrement(const ssh::SSHConnectionConfig &config) {
+auto TunnelManager::portUsageIncrement(const ssh::SSHConnectionConfig &config) -> void {
   logDebug2("Increment port usage count: %d\n", config.localport);
   base::MutexLock lock(_usageMapMtx);
   auto it = _portUsage.find(config.localport);
@@ -90,7 +90,7 @@ void TunnelManager::portUsageIncrement(const ssh::SSHConnectionConfig &config) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TunnelManager::portUsageDecrement(const ssh::SSHConnectionConfig &config) {
+auto TunnelManager::portUsageDecrement(const ssh::SSHConnectionConfig &config) -> void {
   logDebug2("Decrement port usage count: %d\n", config.localport);
   base::MutexLock lock(_usageMapMtx);
   auto it = _portUsage.find(config.localport);
@@ -105,7 +105,7 @@ void TunnelManager::portUsageDecrement(const ssh::SSHConnectionConfig &config) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::shared_ptr<SSHTunnel> TunnelManager::createTunnel(db_mgmt_ConnectionRef connectionProperties) {
+auto TunnelManager::createTunnel(db_mgmt_ConnectionRef connectionProperties) -> std::shared_ptr<SSHTunnel> {
   grt::DictRef parameter_values = connectionProperties->parameterValues();
 
   if (connectionProperties->driver()->name() == "MysqlNativeSSH") {

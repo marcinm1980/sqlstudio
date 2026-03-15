@@ -44,13 +44,13 @@ namespace {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static mforms::DialogResult message_ok_callback() {
+static auto message_ok_callback() -> mforms::DialogResult {
   return mforms::ResultOk;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static mforms::DialogResult message_cancel_callback() {
+static auto message_cancel_callback() -> mforms::DialogResult {
   return mforms::ResultCancel;
 }
 
@@ -70,7 +70,7 @@ struct TestData {
 
   #include "wb_undo_helpers.h"
 
-  void placeFigureWithTool(const std::string &tool, double x = 10, double y = 10) {
+  auto placeFigureWithTool(const std::string &tool, double x = 10, double y = 10) -> void {
     diagramForm->set_tool(tool);
     diagramForm->handle_mouse_button(mdc::ButtonLeft, true, static_cast<int>(x), static_cast<int>(y),
                                     (mdc::EventState)0);

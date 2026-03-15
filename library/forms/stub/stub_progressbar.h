@@ -36,21 +36,21 @@ namespace mforms {
       ProgressBarWrapper(::mforms::ProgressBar *self) : ViewWrapper(self) {
       }
 
-      static bool create(::mforms::ProgressBar *self) {
+      static auto create(::mforms::ProgressBar *self) -> bool {
         return true;
       }
 
-      static void set_value(::mforms::ProgressBar *self, float pct) {
+      static auto set_value(::mforms::ProgressBar *self, float pct) -> void {
       }
 
-      static void set_started(::mforms::ProgressBar *self, bool flag) {
+      static auto set_started(::mforms::ProgressBar *self, bool flag) -> void {
       }
 
-      static void set_indeterminate(::mforms::ProgressBar *self, bool flag) {
+      static auto set_indeterminate(::mforms::ProgressBar *self, bool flag) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_progressbar_impl.create = &ProgressBarWrapper::create;

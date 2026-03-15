@@ -46,22 +46,22 @@ class PythonCopyDataSource : public CopyDataSource {
 
   bool initialized;
 
-  void _init();
-  bool pystring_to_string(PyObject *strobject, std::string &ret_string, bool convert);
+  auto _init() -> void;
+  auto pystring_to_string(PyObject *strobject, std::string &ret_string, bool convert) -> bool;
 
 public:
   PythonCopyDataSource(const std::string &connstring, const std::string &password);
   virtual ~PythonCopyDataSource();
 
 public:
-  virtual size_t count_rows(const std::string &schema, const std::string &table,
+  virtual auto count_rows(const std::string &schema, const std::string &table,
                             const std::vector<std::string> &pk_columns, const CopySpec &spec,
-                            const std::vector<std::string> &last_pkeys);
-  virtual std::shared_ptr<std::vector<ColumnInfo> > begin_select_table(
+                            const std::vector<std::string> &last_pkeys) -> size_t;
+  virtual auto begin_select_table(
     const std::string &schema, const std::string &table, const std::vector<std::string> &pk_columns,
-    const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys);
-  virtual void end_select_table();
-  virtual bool fetch_row(RowBuffer &rowbuffer);
+    const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) -> std::shared_ptr<std::vector<ColumnInfo> >;
+  virtual auto end_select_table() -> void;
+  virtual auto fetch_row(RowBuffer &rowbuffer) -> bool;
 };
 
 #endif

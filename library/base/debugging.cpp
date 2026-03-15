@@ -52,7 +52,7 @@ DataBreakpoint::~DataBreakpoint() {
  * @param bits Number of bits to set with value.
  * @value The new value to set.
  */
-void DataBreakpoint::SetBits(REGISTER_TYPE& target, REGISTER_TYPE offset, REGISTER_TYPE bits, REGISTER_TYPE value) {
+auto DataBreakpoint::SetBits(REGISTER_TYPE& target, REGISTER_TYPE offset, REGISTER_TYPE bits, REGISTER_TYPE value) -> void {
   REGISTER_TYPE mask = (1 << bits) - 1;
   target = (target & ~(mask << offset)) | (value << offset);
 }
@@ -66,7 +66,7 @@ void DataBreakpoint::SetBits(REGISTER_TYPE& target, REGISTER_TYPE offset, REGIST
  * @size The size of the memory block address points to. Can be 1, 2 or 4 bytes.
  * @when Determines when to trigger the break point (write or read/write).
  */
-void DataBreakpoint::Set(void* address, int size, Condition when) {
+auto DataBreakpoint::Set(void* address, int size, Condition when) -> void {
   if (_register_index != -1)
     throw std::runtime_error("Watch point already set. Use clear() before setting a new one.");
 
@@ -130,7 +130,7 @@ void DataBreakpoint::Set(void* address, int size, Condition when) {
 /**
  * Removes a currently set watch point if one is set.
  */
-void DataBreakpoint::Clear() {
+auto DataBreakpoint::Clear() -> void {
   if (_register_index != -1) {
     CONTEXT context;
     HANDLE currentThread = GetCurrentThread();

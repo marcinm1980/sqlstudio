@@ -37,7 +37,7 @@ OpenGLCanvasView::OpenGLCanvasView(int width, int height) : CanvasView(width, he
 OpenGLCanvasView::~OpenGLCanvasView() {
 }
 
-void OpenGLCanvasView::check_error() {
+auto OpenGLCanvasView::check_error() -> void {
   GLenum err = glGetError();
   if (err != GL_NO_ERROR) {
     const char *msg = "unknown error";
@@ -73,7 +73,7 @@ void OpenGLCanvasView::check_error() {
   }
 }
 
-bool OpenGLCanvasView::initialize() {
+auto OpenGLCanvasView::initialize() -> bool {
   if (!CanvasView::initialize())
     return false;
 
@@ -111,14 +111,14 @@ bool OpenGLCanvasView::initialize() {
   return true;
 }
 
-void OpenGLCanvasView::begin_repaint(int, int, int, int) {
+auto OpenGLCanvasView::begin_repaint(int, int, int, int) -> void {
   make_current();
 
   // Start clean.
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void OpenGLCanvasView::end_repaint() {
+auto OpenGLCanvasView::end_repaint() -> void {
   swap_buffers();
   check_error();
   remove_current();

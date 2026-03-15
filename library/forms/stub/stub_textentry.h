@@ -33,24 +33,24 @@ namespace mforms {
 
     class TextEntryWrapper : public ViewWrapper {
       TextEntryWrapper(::mforms::TextEntry *self, TextEntryType type);
-      static bool create(::mforms::TextEntry *self, TextEntryType type);
-      static void set_text(::mforms::TextEntry *self, const std::string &text);
-      static void set_max_length(::mforms::TextEntry *self, int len);
-      static std::string get_text(::mforms::TextEntry *self);
-      static void set_read_only(::mforms::TextEntry *self, bool flag);
-      static void set_placeholder_text(TextEntry *self, const std::string &text);
-      static void set_placeholder_color(TextEntry *self, const std::string &color);
-      static void set_bordered(TextEntry *self, bool flag);
-      static void cut(TextEntry *self);
-      static void copy(TextEntry *self);
-      static void paste(TextEntry *self);
-      static void select(TextEntry *self, const base::Range &range);
-      static base::Range getSelection(TextEntry *self);
+      static auto create(::mforms::TextEntry *self, TextEntryType type) -> bool;
+      static auto set_text(::mforms::TextEntry *self, const std::string &text) -> void;
+      static auto set_max_length(::mforms::TextEntry *self, int len) -> void;
+      static auto get_text(::mforms::TextEntry *self) -> std::string;
+      static auto set_read_only(::mforms::TextEntry *self, bool flag) -> void;
+      static auto set_placeholder_text(TextEntry *self, const std::string &text) -> void;
+      static auto set_placeholder_color(TextEntry *self, const std::string &color) -> void;
+      static auto set_bordered(TextEntry *self, bool flag) -> void;
+      static auto cut(TextEntry *self) -> void;
+      static auto copy(TextEntry *self) -> void;
+      static auto paste(TextEntry *self) -> void;
+      static auto select(TextEntry *self, const base::Range &range) -> void;
+      static auto getSelection(TextEntry *self) -> base::Range;
 
-      void activated(mforms::TextEntry *self);
+      auto activated(mforms::TextEntry *self) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

@@ -41,26 +41,26 @@ class WBEDITOR_BACKEND_PUBLIC_FUNC StoredNoteEditorBE : public bec::BaseEditor {
 public:
   StoredNoteEditorBE(const GrtStoredNoteRef &note);
 
-  bool is_script();
+  auto is_script() -> bool;
 
-  virtual MySQLEditor::Ref get_sql_editor();
+  virtual auto get_sql_editor() -> MySQLEditor::Ref;
 
-  void set_name(const std::string &name);
-  std::string get_name();
+  auto set_name(const std::string &name) -> void;
+  auto get_name() -> std::string;
 
-  virtual std::string get_title();
+  virtual auto get_title() -> std::string;
 
-  void load_text();
-  virtual void commit_changes();
-  virtual bool has_editor() {
+  auto load_text() -> void;
+  virtual auto commit_changes() -> void;
+  virtual auto has_editor() -> bool {
     return true;
   }
 
 protected:
   MySQLEditor::Ref _sql_editor;
 
-  void set_text(grt::StringRef ext);
-  grt::StringRef get_text(bool &isutf8);
+  auto set_text(grt::StringRef ext) -> void;
+  auto get_text(bool &isutf8) -> grt::StringRef;
 
-  void changed_selector(mforms::ToolBarItem *item);
+  auto changed_selector(mforms::ToolBarItem *item) -> void;
 };

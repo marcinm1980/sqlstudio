@@ -32,7 +32,7 @@
 
 using namespace mforms;
 
-int main(int argc, char **argv) {
+auto main(int argc, char **argv) -> int {
   Gtk::Main main(argc, argv);
 
   ::mforms::gtk::init();

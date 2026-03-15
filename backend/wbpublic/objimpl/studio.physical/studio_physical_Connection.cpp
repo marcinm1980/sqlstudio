@@ -32,13 +32,13 @@
 //================================================================================
 // studio_physical_Connection
 
-void studio_physical_Connection::init() {
+auto studio_physical_Connection::init() -> void {
   if (!_data)
     _data = new studio_physical_Connection::ImplData(this);
   model_Connection::set_data(_data);
 }
 
-void studio_physical_Connection::set_data(ImplData *data) {
+auto studio_physical_Connection::set_data(ImplData *data) -> void {
   throw std::logic_error("unexpected");
 }
 
@@ -46,7 +46,7 @@ studio_physical_Connection::~studio_physical_Connection() {
   delete _data;
 }
 
-void studio_physical_Connection::foreignKey(const db_ForeignKeyRef &value) {
+auto studio_physical_Connection::foreignKey(const db_ForeignKeyRef &value) -> void {
   if (_foreignKey == value)
     return;
   if (_foreignKey.is_valid() && value.is_valid())

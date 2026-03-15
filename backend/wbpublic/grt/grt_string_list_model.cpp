@@ -33,14 +33,14 @@ GrtStringListModel::GrtStringListModel()
   : _items_val_masks(NULL), _icon_id(0), _active_items_count(0), _invalidated(false) {
 }
 
-void GrtStringListModel::reset() {
+auto GrtStringListModel::reset() -> void {
   _items.clear();
   _visible_items.clear();
   invalidate();
   refresh();
 }
 
-void GrtStringListModel::reset(const std::list<std::string> &items) {
+auto GrtStringListModel::reset(const std::list<std::string> &items) -> void {
   _items.resize(items.size());
   std::list<std::string>::const_iterator i = items.begin();
   for (size_t n = 0, count = items.size(); n < count; ++n, ++i)
@@ -51,50 +51,50 @@ void GrtStringListModel::reset(const std::list<std::string> &items) {
   refresh();
 }
 
-void GrtStringListModel::invalidate() {
+auto GrtStringListModel::invalidate() -> void {
   _active_items_count = 0;
   _invalidated = true;
 }
 
-void GrtStringListModel::items_val_mask(const std::string items_val_mask) {
+auto GrtStringListModel::items_val_mask(const std::string items_val_mask) -> void {
   if (_items_val_mask != items_val_mask) {
     _items_val_mask = items_val_mask;
     invalidate();
   }
 }
 
-const std::string &GrtStringListModel::items_val_mask() const {
+auto GrtStringListModel::items_val_mask() const -> const std::string & {
   return _items_val_mask;
 }
 
-GrtStringListModel *GrtStringListModel::items_val_masks() const {
+auto GrtStringListModel::items_val_masks() const -> GrtStringListModel * {
   return _items_val_masks;
 }
 
-void GrtStringListModel::items_val_masks(GrtStringListModel *items_val_masks) {
+auto GrtStringListModel::items_val_masks(GrtStringListModel *items_val_masks) -> void {
   if (_items_val_masks != items_val_masks) {
     _items_val_masks = items_val_masks;
     invalidate();
   }
 }
 
-size_t GrtStringListModel::count() {
+auto GrtStringListModel::count() -> size_t {
   return _visible_items.size();
 }
 
-size_t GrtStringListModel::active_items_count() const {
+auto GrtStringListModel::active_items_count() const -> size_t {
   return _active_items_count;
 }
 
-size_t GrtStringListModel::total_items_count() const {
+auto GrtStringListModel::total_items_count() const -> size_t {
   return _items.size();
 }
 
-size_t GrtStringListModel::get_item_id(size_t item_index) {
+auto GrtStringListModel::get_item_id(size_t item_index) -> size_t {
   return _items[_visible_items[item_index]].iid;
 }
 
-bool GrtStringListModel::get_field(const NodeId &node, ColumnId column, std::string &value) {
+auto GrtStringListModel::get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
   switch ((Columns)column) {
     case Name:
       value = _items[_visible_items[node[0]]].val;
@@ -103,35 +103,35 @@ bool GrtStringListModel::get_field(const NodeId &node, ColumnId column, std::str
   return false;
 }
 
-void GrtStringListModel::icon_id(IconId icon_id) {
+auto GrtStringListModel::icon_id(IconId icon_id) -> void {
   _icon_id = icon_id;
 }
 
-IconId GrtStringListModel::get_field_icon(const NodeId &node, ColumnId column, IconSize size) {
+auto GrtStringListModel::get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId {
   return _icon_id;
 }
 
-void GrtStringListModel::add_item(const grt::StringRef &item, size_t id) {
+auto GrtStringListModel::add_item(const grt::StringRef &item, size_t id) -> void {
   _items.push_back(Item_handler(*item, id));
   std::nth_element(_items.begin(), _items.end() - 1, _items.end());
   invalidate(); // consequent call of refresh() is expected to process _visible_mask & update _visible_items
   // it's not called at once because of optimization for batch insert/move operations
 }
 
-void GrtStringListModel::remove_item(size_t index) {
+auto GrtStringListModel::remove_item(size_t index) -> void {
   std::vector<size_t>::iterator i = _visible_items.begin() + (size_t)index;
   _items.erase(_items.begin() + *i);
   _visible_items.erase(i);
   invalidate(); // consequent call of refresh() is expected to process _visible_mask & update _visible_items
 }
 
-void GrtStringListModel::remove_items(std::vector<size_t> &item_indexes) {
+auto GrtStringListModel::remove_items(std::vector<size_t> &item_indexes) -> void {
   std::sort(item_indexes.begin(), item_indexes.end());
   for (std::vector<size_t>::reverse_iterator i = item_indexes.rbegin(); i != item_indexes.rend(); ++i)
     remove_item(*i);
 }
 
-void GrtStringListModel::copy_items_to_val_masks_list(std::vector<size_t> &item_indexes) {
+auto GrtStringListModel::copy_items_to_val_masks_list(std::vector<size_t> &item_indexes) -> void {
   if (!_items_val_masks)
     return;
 
@@ -142,7 +142,7 @@ void GrtStringListModel::copy_items_to_val_masks_list(std::vector<size_t> &item_
   }
 }
 
-std::vector<std::string> GrtStringListModel::items() const {
+auto GrtStringListModel::items() const -> std::vector<std::string> {
   // init visibility map
   std::vector<bool> items;
   items.reserve(_items.size());
@@ -165,7 +165,7 @@ std::vector<std::string> GrtStringListModel::items() const {
   return res;
 }
 
-GrtStringListModel::Items_ids GrtStringListModel::items_ids() const {
+auto GrtStringListModel::items_ids() const -> GrtStringListModel::Items_ids {
   // init visibility map
   std::vector<bool> items;
   items.reserve(_items.size());
@@ -188,7 +188,7 @@ GrtStringListModel::Items_ids GrtStringListModel::items_ids() const {
   return res;
 }
 
-void GrtStringListModel::refresh() {
+auto GrtStringListModel::refresh() -> void {
   if (!_invalidated)
     return;
 
@@ -235,8 +235,8 @@ void GrtStringListModel::refresh() {
   _invalidated = false;
 }
 
-void GrtStringListModel::process_mask(const std::string &mask, std::vector<bool> &items,
-                                      bool match_means_visible) const {
+auto GrtStringListModel::process_mask(const std::string &mask, std::vector<bool> &items,
+                                      bool match_means_visible) const -> void {
   //! static const char *ANY_SYM= "(?:\\pL(?:" UNICODE_CHAR_PCRE ")?)";
   //! static const char *ANY_SEQ= "(?:\\pL(?:" UNICODE_CHAR_PCRE ")*)";
   static const char *ANY_SYM = ".?";
@@ -284,7 +284,7 @@ void GrtStringListModel::process_mask(const std::string &mask, std::vector<bool>
   }
 }
 
-std::string GrtStringListModel::terminate_wildcard_symbols(const std::string &str) {
+auto GrtStringListModel::terminate_wildcard_symbols(const std::string &str) -> std::string {
   std::string res;
   for (std::string::const_iterator i = str.begin(); i != str.end(); ++i) {
     if ('\\' == *i)

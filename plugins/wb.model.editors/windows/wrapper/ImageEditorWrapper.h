@@ -42,16 +42,16 @@ namespace MySQL {
       ImageEditorWrapper::ImageEditorWrapper(MySQL::Grt::GrtValue ^ arglist);
       ~ImageEditorWrapper();
 
-      ImageEditorBE *get_unmanaged_object();
+      auto get_unmanaged_object() -> ImageEditorBE *;
       void set_filename(String ^ text);
-      String ^ get_filename();
-      String ^ get_attached_image_path();
+      auto get_filename() -> String ^;
+      auto get_attached_image_path() -> String ^;
       void get_size([Out] int % w, [Out] int % h);
-      void set_size(int w, int h);
-      void set_width(int w);
-      void set_height(int h);
-      bool get_keep_aspect_ratio();
-      void set_keep_aspect_ratio(bool flag);
+      auto set_size(int w, int h) -> void;
+      auto set_width(int w) -> void;
+      auto set_height(int h) -> void;
+      auto get_keep_aspect_ratio() -> bool;
+      auto set_keep_aspect_ratio(bool flag) -> void;
     };
 
   } // namespace Grt

@@ -33,7 +33,7 @@
 
 #ifdef DEBUG_DIFF
 
-static std::string rep(const grt::ValueRef &value) {
+static auto rep(const grt::ValueRef &value) -> std::string {
   switch (value.type()) {
     case grt::ObjectType:
       return grt::ObjectRef::cast_from(value)->get_string_member("name");
@@ -45,31 +45,31 @@ static std::string rep(const grt::ValueRef &value) {
 
 namespace grt {
 
-  bool is_any(ValueRef &s);
+  auto is_any(ValueRef &s) -> bool;
 
-  std::shared_ptr<DiffChange> ChangeFactory::create_value_added_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_value_added_change(std::shared_ptr<DiffChange> parent,
                                                                        const ValueRef &source, const ValueRef &target,
-                                                                       bool dupvalue) {
+                                                                       bool dupvalue) -> std::shared_ptr<DiffChange> {
 #ifdef DEBUG_DIFF
     logInfo("value_added (%s)\n", rep(target).c_str());
 #endif
     return std::shared_ptr<DiffChange>(new ValueAddedChange(ValueAdded, target, dupvalue));
   }
 
-  std::shared_ptr<DiffChange> ChangeFactory::create_value_removed_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_value_removed_change(std::shared_ptr<DiffChange> parent,
                                                                          const ValueRef &source,
-                                                                         const ValueRef &target) {
+                                                                         const ValueRef &target) -> std::shared_ptr<DiffChange> {
 #ifdef DEBUG_DIFF
     logInfo("value_remove (%s)\n", rep(target).c_str());
 #endif
     return std::shared_ptr<DiffChange>(new ValueRemovedChange);
   }
 
-  std::shared_ptr<DiffChange> ChangeFactory::create_object_attr_modified_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_object_attr_modified_change(std::shared_ptr<DiffChange> parent,
                                                                                 const ObjectRef &source,
                                                                                 const ObjectRef &target,
                                                                                 const std::string &attr,
-                                                                                std::shared_ptr<DiffChange> change) {
+                                                                                std::shared_ptr<DiffChange> change) -> std::shared_ptr<DiffChange> {
     if (change) {
 #ifdef DEBUG_DIFF
       logInfo("attr_change %s\n", attr.c_str());
@@ -83,10 +83,10 @@ namespace grt {
     return std::shared_ptr<DiffChange>();
   }
 
-  std::shared_ptr<MultiChange> ChangeFactory::create_object_modified_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_object_modified_change(std::shared_ptr<DiffChange> parent,
                                                                             const ObjectRef &source,
                                                                             const ObjectRef &target,
-                                                                            ChangeSet &changes) {
+                                                                            ChangeSet &changes) -> std::shared_ptr<MultiChange> {
     if (!changes.empty()) {
 #ifdef DEBUG_DIFF
       logInfo("object_modified (%s)\n", rep(target).c_str());
@@ -101,9 +101,9 @@ namespace grt {
     return T::cast_from(source) == T::cast_from(target);
   }
 
-  std::shared_ptr<DiffChange> ChangeFactory::create_simple_value_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_simple_value_change(std::shared_ptr<DiffChange> parent,
                                                                         const ValueRef &source,
-                                                                        const ValueRef &target) {
+                                                                        const ValueRef &target) -> std::shared_ptr<DiffChange> {
     grt::Type t = UnknownType;
     if (source.is_valid())
       t = source.type();
@@ -142,36 +142,36 @@ namespace grt {
     return std::shared_ptr<DiffChange>(new SimpleValueChange(source, target));
   }
 
-  std::shared_ptr<MultiChange> ChangeFactory::create_dict_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_dict_change(std::shared_ptr<DiffChange> parent,
                                                                  const DictRef &source, const DictRef &target,
-                                                                 ChangeSet &changes) {
+                                                                 ChangeSet &changes) -> std::shared_ptr<MultiChange> {
     if (changes.empty())
       return std::shared_ptr<MultiChange>();
 
     return std::shared_ptr<MultiChange>(new MultiChange(DictModified, changes));
   }
 
-  std::shared_ptr<DiffChange> ChangeFactory::create_dict_item_added_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_dict_item_added_change(std::shared_ptr<DiffChange> parent,
                                                                            const DictRef &source, const DictRef &target,
                                                                            const std::string &key, ValueRef v,
-                                                                           bool dupvalue) {
+                                                                           bool dupvalue) -> std::shared_ptr<DiffChange> {
     return std::shared_ptr<DiffChange>(new DictItemAddedChange(key, v, dupvalue));
   }
 
-  std::shared_ptr<DiffChange> ChangeFactory::create_dict_item_modified_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_dict_item_modified_change(std::shared_ptr<DiffChange> parent,
                                                                               const DictRef &source,
                                                                               const DictRef &target,
                                                                               const std::string &key,
-                                                                              std::shared_ptr<DiffChange> change) {
+                                                                              std::shared_ptr<DiffChange> change) -> std::shared_ptr<DiffChange> {
     if (change)
       return std::shared_ptr<DiffChange>(new DictItemModifiedChange(key, change));
     return std::shared_ptr<DiffChange>();
   }
 
-  std::shared_ptr<DiffChange> ChangeFactory::create_dict_item_removed_change(std::shared_ptr<DiffChange> parent,
+  auto ChangeFactory::create_dict_item_removed_change(std::shared_ptr<DiffChange> parent,
                                                                              const DictRef &source,
                                                                              const DictRef &target,
-                                                                             const std::string &key) {
+                                                                             const std::string &key) -> std::shared_ptr<DiffChange> {
     return std::shared_ptr<DiffChange>(new DictItemRemovedChange(key));
   }
 }

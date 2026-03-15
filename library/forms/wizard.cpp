@@ -44,19 +44,19 @@ Wizard::~Wizard() {
     _content->release();
 }
 
-void Wizard::set_title(const std::string &title) {
+auto Wizard::set_title(const std::string &title) -> void {
   _wizard_impl->set_title(this, title);
 }
 
-void Wizard::run() {
+auto Wizard::run() -> void {
   _wizard_impl->run_modal(this);
 }
 
-void Wizard::close() {
+auto Wizard::close() -> void {
   _wizard_impl->close(this);
 }
 
-void Wizard::set_content(View *view) {
+auto Wizard::set_content(View *view) -> void {
   if (_content != view) {
     if (_content)
       _content->release();
@@ -66,38 +66,38 @@ void Wizard::set_content(View *view) {
   }
 }
 
-void Wizard::set_heading(const std::string &text) {
+auto Wizard::set_heading(const std::string &text) -> void {
   _wizard_impl->set_heading(this, text);
 }
 
-void Wizard::set_step_list(const std::vector<std::string> &steps) {
+auto Wizard::set_step_list(const std::vector<std::string> &steps) -> void {
   _wizard_impl->set_step_list(this, steps);
 }
 
-void Wizard::set_allow_cancel(bool flag) {
+auto Wizard::set_allow_cancel(bool flag) -> void {
   _wizard_impl->set_allow_cancel(this, flag);
 }
 
-void Wizard::set_allow_back(bool flag) {
+auto Wizard::set_allow_back(bool flag) -> void {
   _wizard_impl->set_allow_back(this, flag);
 }
 
-void Wizard::set_allow_next(bool flag) {
+auto Wizard::set_allow_next(bool flag) -> void {
   _wizard_impl->set_allow_next(this, flag);
 }
 
-void Wizard::set_show_extra(bool flag) {
+auto Wizard::set_show_extra(bool flag) -> void {
   _wizard_impl->set_show_extra(this, flag);
 }
 
-void Wizard::set_extra_caption(const std::string &caption) {
+auto Wizard::set_extra_caption(const std::string &caption) -> void {
   _wizard_impl->set_extra_caption(this, caption);
 }
 
-void Wizard::set_next_caption(const std::string &caption) {
+auto Wizard::set_next_caption(const std::string &caption) -> void {
   _wizard_impl->set_next_caption(this, caption);
 }
 
-void Wizard::set_cancel_handler(const std::function<bool()> &slot) {
+auto Wizard::set_cancel_handler(const std::function<bool()> &slot) -> void {
   _cancel_slot = slot;
 }

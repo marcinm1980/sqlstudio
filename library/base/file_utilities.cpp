@@ -44,7 +44,7 @@
 
 namespace base {
 
-  std::string format_file_error(const std::string &text, int err) {
+  auto format_file_error(const std::string &text, int err) -> std::string {
 #ifdef _MSC_VER
     return strfmt("%s: error code %i", text.c_str(), err);
 #else
@@ -56,7 +56,7 @@ namespace base {
     : std::runtime_error(format_file_error(text, err)), sys_error_code(err) {
   }
 
-  error_code file_error::code() {
+  auto file_error::code() -> error_code {
 #ifdef _MSC_VER
     switch (sys_error_code) {
       case 0:
@@ -89,7 +89,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::list<std::string> scan_for_files_matching(const std::string &pattern, bool recursive) {
+  auto scan_for_files_matching(const std::string &pattern, bool recursive) -> std::list<std::string> {
     std::list<std::string> matches;
 
     std::string path = dirname(pattern);
@@ -169,7 +169,7 @@ namespace base {
     DeleteFileW(string_to_wstring(path).c_str());
   }
 
-  LockFile::LockStatus LockFile::check(const std::string &path) {
+  auto LockFile::check(const std::string &path) -> LockFile::LockStatus {
     // Can we open the file in exclusive mode?
     std::wstring wpath = string_to_wstring(path);
     HANDLE h = CreateFile(wpath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
@@ -256,7 +256,7 @@ namespace base {
     unlink(path.c_str());
   }
 
-  LockFile::LockStatus LockFile::check(const std::string &path) {
+  auto LockFile::check(const std::string &path) -> LockFile::LockStatus {
     int fd = open(path.c_str(), O_RDONLY);
     if (fd < 0)
       return NotLocked;
@@ -281,7 +281,7 @@ namespace base {
   }
 #endif
 
-  bool create_directory(const std::string &path, int mode, bool with_parents) {
+  auto create_directory(const std::string &path, int mode, bool with_parents) -> bool {
 #ifdef _MSC_VER
     SetLastError(0);
     if (!CreateDirectoryW(path_from_utf8(path).c_str(), NULL)) {
@@ -331,7 +331,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  bool copyDirectoryRecursive(const std::string &src, const std::string &dst, bool includeFiles) {
+  auto copyDirectoryRecursive(const std::string &src, const std::string &dst, bool includeFiles) -> bool {
     GError *error = NULL;
     GDir *srcDir, *dstDir;
     const char *dirEntry;
@@ -377,7 +377,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::wifstream openTextInputStream(const std::string &fileName) {
+  auto openTextInputStream(const std::string &fileName) -> std::wifstream {
     std::wifstream result;
 
 #ifdef _MSC_VER
@@ -391,7 +391,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::wofstream openTextOutputStream(const std::string &fileName) {
+  auto openTextOutputStream(const std::string &fileName) -> std::wofstream {
     std::wofstream result;
 
 #ifdef _MSC_VER
@@ -405,7 +405,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::ifstream openBinaryInputStream(const std::string &fileName) {
+  auto openBinaryInputStream(const std::string &fileName) -> std::ifstream {
     std::ifstream result;
 
 #ifdef _MSC_VER
@@ -419,7 +419,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::ofstream openBinaryOutputStream(const std::string &fileName) {
+  auto openBinaryOutputStream(const std::string &fileName) -> std::ofstream {
     std::ofstream result;
 
 #ifdef _MSC_VER
@@ -433,7 +433,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  bool copyFile(const std::string &source, const std::string &target) {
+  auto copyFile(const std::string &source, const std::string &target) -> bool {
     std::ifstream src = openBinaryInputStream(source);
     if (src.bad())
       return false;
@@ -447,7 +447,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void rename(const std::string &from, const std::string &to) {
+  auto rename(const std::string &from, const std::string &to) -> void {
 #ifdef _MSC_VER
     if (!MoveFile(path_from_utf8(from).c_str(), path_from_utf8(to).c_str()))
       throw file_error(strfmt("Could not rename file %s to %s", from.c_str(), to.c_str()), GetLastError());
@@ -459,7 +459,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  bool remove_recursive(const std::string &path) {
+  auto remove_recursive(const std::string &path) -> bool {
     GError *error = NULL;
     GDir *dir;
     const char *dir_entry;
@@ -492,7 +492,7 @@ namespace base {
    * Deletes file or folder.
    * Returns false if the object doesn't exist and throws an exception on error.
    */
-  bool remove(const std::string &path) {
+  auto remove(const std::string &path) -> bool {
 #ifdef _MSC_VER
     if (is_directory(path)) {
       if (!RemoveDirectoryW(path_from_utf8(path).c_str())) {
@@ -523,7 +523,7 @@ namespace base {
    * Tries to delete a file or folder.
    * No exception is thrown if that fails. Returns true on success, otherwise false.
    */
-  bool tryRemove(const std::string &path) {
+  auto tryRemove(const std::string &path) -> bool {
 #ifdef _MSC_VER
     if (is_directory(path))
       return RemoveDirectory(path_from_utf8(path).c_str()) == TRUE;
@@ -536,7 +536,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  bool file_exists(const std::string &path) {
+  auto file_exists(const std::string &path) -> bool {
     char *f = g_filename_from_utf8(path.c_str(), -1, NULL, NULL, NULL);
     if (g_file_test(f, G_FILE_TEST_EXISTS)) {
       g_free(f);
@@ -548,7 +548,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  bool is_directory(const std::string &path) {
+  auto is_directory(const std::string &path) -> bool {
     char *f = g_filename_from_utf8(path.c_str(), -1, NULL, NULL, NULL);
     if (g_file_test(f, G_FILE_TEST_IS_DIR)) {
       g_free(f);
@@ -560,7 +560,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string extension(const std::string &path) {
+  auto extension(const std::string &path) -> std::string {
     std::string::size_type p = path.rfind('.');
     if (p != std::string::npos) {
       std::string ext(path.substr(p));
@@ -573,7 +573,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string appendExtensionIfNeeded(const std::string &path, const std::string &ext) {
+  auto appendExtensionIfNeeded(const std::string &path, const std::string &ext) -> std::string {
     if (!base::hasSuffix(path, ext))
       return path + ext;
     return path;
@@ -581,21 +581,21 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string dirname(const std::string &path) {
+  auto dirname(const std::string &path) -> std::string {
     char *dn = g_path_get_dirname(path.c_str());
     std::string tmp(dn);
     g_free(dn);
     return tmp;
   }
 
-  std::string basename(const std::string &path) {
+  auto basename(const std::string &path) -> std::string {
     char *dn = g_path_get_basename(path.c_str());
     std::string tmp(dn);
     g_free(dn);
     return tmp;
   }
 
-  std::string strip_extension(const std::string &path) {
+  auto strip_extension(const std::string &path) -> std::string {
     std::string ext;
     if (!(ext = extension(path)).empty()) {
       return path.substr(0, path.size() - ext.size());
@@ -622,16 +622,16 @@ namespace base {
     return *this;
   }
 
-  std::string FileHandle::getPath() const {
+  auto FileHandle::getPath() const -> std::string {
     return _path;
   }
 
-  void FileHandle::swap(FileHandle &fh) {
+  auto FileHandle::swap(FileHandle &fh) -> void {
     std::swap(_file, fh._file);
     _path = std::move(fh._path);
   }
 
-  void FileHandle::dispose() {
+  auto FileHandle::dispose() -> void {
     if (_file) {
       ::fclose(_file);
       _file = NULL;
@@ -642,7 +642,7 @@ namespace base {
   /**
    * Returns the last modification time of the given file.
    */
-  bool file_mtime(const std::string &path, time_t &mtime) {
+  auto file_mtime(const std::string &path, time_t &mtime) -> bool {
 #ifdef _MSC_VER
     struct _stat stbuf;
 #else
@@ -660,7 +660,7 @@ namespace base {
     return false;
   }
 
-  std::string makePath(const std::string &prefix, const std::string &file) {
+  auto makePath(const std::string &prefix, const std::string &file) -> std::string {
     if (prefix.empty())
       return file;
 
@@ -669,7 +669,7 @@ namespace base {
     return prefix + G_DIR_SEPARATOR + file;
   }
 
-  std::string joinPath(const char *prefix, ...) {
+  auto joinPath(const char *prefix, ...) -> std::string {
     std::string path = prefix;
 #ifdef _MSC_VER
     char wrong_path_separator = '\\';
@@ -703,7 +703,7 @@ namespace base {
    * Paths can contain both forward and backward slash separators. The result only uses backslashes.
    * Folder names are compared case insensitively on Windows, otherwise case matters.
    */
-  std::string relativePath(const std::string &basePath, const std::string &pathToMakeRelative) {
+  auto relativePath(const std::string &basePath, const std::string &pathToMakeRelative) -> std::string {
     std::vector<std::string> basePathList = split_by_set(basePath, "/\\");
     std::vector<std::string> otherPathList = split_by_set(pathToMakeRelative, "/\\");
 
@@ -741,7 +741,7 @@ namespace base {
   /**
    * Returns temporary file with the given prefix.
    */
-  FileHandle makeTmpFile(const std::string &prefix) {
+  auto makeTmpFile(const std::string &prefix) -> FileHandle {
     std::string tmp(prefix);
 #if _MSC_VER
     wchar_t tempPathBuffer[MAX_PATH] = { 0 };
@@ -768,19 +768,19 @@ namespace base {
   }
 
 
-  std::string pathlistAppend(const std::string &l, const std::string &s) {
+  auto pathlistAppend(const std::string &l, const std::string &s) -> std::string {
     if (l.empty())
       return s;
     return l + G_SEARCHPATH_SEPARATOR + s;
   }
 
-  std::string pathlistPrepend(const std::string &l, const std::string &s) {
+  auto pathlistPrepend(const std::string &l, const std::string &s) -> std::string {
     if (l.empty())
       return s;
     return s + G_SEARCHPATH_SEPARATOR + l;
   }
 
-  std::string cwd() {
+  auto cwd() -> std::string {
 #ifdef _MSC_VER
     wchar_t widePath[FILENAME_MAX + 1];
     ::_wgetcwd(widePath, FILENAME_MAX);

@@ -50,16 +50,16 @@ namespace wb {
     boost::signals2::scoped_connection _view_repaint_connection;
     boost::signals2::scoped_connection _view_viewport_change_connection;
 
-    void render_figure(mdc::CairoCtx *cr, const model_FigureRef &elem);
-    void render_layer(mdc::CairoCtx *cr, const model_LayerRef &layer);
-    void render_layer_figures(mdc::CairoCtx *cr, const model_LayerRef &layer);
-    virtual void draw_contents(mdc::CairoCtx *cr);
+    auto render_figure(mdc::CairoCtx *cr, const model_FigureRef &elem) -> void;
+    auto render_layer(mdc::CairoCtx *cr, const model_LayerRef &layer) -> void;
+    auto render_layer_figures(mdc::CairoCtx *cr, const model_LayerRef &layer) -> void;
+    virtual auto draw_contents(mdc::CairoCtx *cr) -> void;
 
-    void viewport_changed();
+    auto viewport_changed() -> void;
 
-    void viewport_dragged(const base::Rect &rect);
+    auto viewport_dragged(const base::Rect &rect) -> void;
 
-    base::Rect get_scaled_target_bounds(double &scale);
+    auto get_scaled_target_bounds(double &scale) -> base::Rect;
 
     bool view_button_cb(mdc::CanvasView *, mdc::MouseButton, bool, base::Point, mdc::EventState);
     bool view_motion_cb(mdc::CanvasView *, base::Point, mdc::EventState);
@@ -68,9 +68,9 @@ namespace wb {
     MiniView(mdc::Layer *output_layer);
     virtual ~MiniView();
 
-    void update_size();
-    void set_active_view(mdc::CanvasView *canvas_view, const model_DiagramRef &model_diagram);
-    void setBackgroundColor(base::Color const& color);
+    auto update_size() -> void;
+    auto set_active_view(mdc::CanvasView *canvas_view, const model_DiagramRef &model_diagram) -> void;
+    auto setBackgroundColor(base::Color const& color) -> void;
   };
 };
 

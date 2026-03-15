@@ -76,7 +76,7 @@ public:
 
   virtual ~studio_model_ImageFigure();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.model.ImageFigure";
   }
 
@@ -87,7 +87,7 @@ public:
    * \par In Python:
    *    value = obj.filename
    */
-  grt::StringRef filename() const { return _filename; }
+  auto filename() const -> grt::StringRef { return _filename; }
 
   /**
    * Setter for attribute filename
@@ -96,7 +96,7 @@ public:
    * \par In Python:
    *   obj.filename = value
    */
-  virtual void filename(const grt::StringRef &value) {
+  virtual auto filename(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_filename);
     _filename = value;
     member_changed("filename", ovalue, value);
@@ -109,7 +109,7 @@ public:
    * \par In Python:
    *    value = obj.keepAspectRatio
    */
-  grt::IntegerRef keepAspectRatio() const { return _keepAspectRatio; }
+  auto keepAspectRatio() const -> grt::IntegerRef { return _keepAspectRatio; }
 
   /**
    * Setter for attribute keepAspectRatio
@@ -118,20 +118,20 @@ public:
    * \par In Python:
    *   obj.keepAspectRatio = value
    */
-  virtual void keepAspectRatio(const grt::IntegerRef &value);
+  virtual auto keepAspectRatio(const grt::IntegerRef &value) -> void;
 
   /**
    * Method. 
    * \param name 
    * \return 
    */
-  virtual grt::StringRef setImageFile(const std::string &name);
+  virtual auto setImageFile(const std::string &name) -> grt::StringRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -141,14 +141,14 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_model_ImageFigure());
   }
 
   static grt::ValueRef call_setImageFile(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<studio_model_ImageFigure*>(self)->setImageFile(grt::StringRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -184,7 +184,7 @@ public:
 
   virtual ~studio_model_NoteFigure();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.model.NoteFigure";
   }
 
@@ -195,7 +195,7 @@ public:
    * \par In Python:
    *    value = obj.font
    */
-  grt::StringRef font() const { return _font; }
+  auto font() const -> grt::StringRef { return _font; }
 
   /**
    * Setter for attribute font
@@ -204,7 +204,7 @@ public:
    * \par In Python:
    *   obj.font = value
    */
-  virtual void font(const grt::StringRef &value);
+  virtual auto font(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute text
@@ -213,7 +213,7 @@ public:
    * \par In Python:
    *    value = obj.text
    */
-  grt::StringRef text() const { return _text; }
+  auto text() const -> grt::StringRef { return _text; }
 
   /**
    * Setter for attribute text
@@ -222,7 +222,7 @@ public:
    * \par In Python:
    *   obj.text = value
    */
-  virtual void text(const grt::StringRef &value);
+  virtual auto text(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute textColor
@@ -231,7 +231,7 @@ public:
    * \par In Python:
    *    value = obj.textColor
    */
-  grt::StringRef textColor() const { return _textColor; }
+  auto textColor() const -> grt::StringRef { return _textColor; }
 
   /**
    * Setter for attribute textColor
@@ -240,14 +240,14 @@ public:
    * \par In Python:
    *   obj.textColor = value
    */
-  virtual void textColor(const grt::StringRef &value);
+  virtual auto textColor(const grt::StringRef &value) -> void;
 
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -258,12 +258,12 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_model_NoteFigure());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -288,7 +288,7 @@ public:
 
 
 
-inline void register_structs_studio_model_xml() {
+inline auto register_structs_studio_model_xml() -> void {
   grt::internal::ClassRegistry::register_class<studio_model_ImageFigure>();
   grt::internal::ClassRegistry::register_class<studio_model_NoteFigure>();
 }

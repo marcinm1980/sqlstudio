@@ -36,13 +36,13 @@ class WBEDITOR_BACKEND_PUBLIC_FUNC LayerEditorBE : public bec::BaseEditor {
 public:
   LayerEditorBE(const studio_physical_LayerRef &layer);
 
-  virtual bool should_close_on_delete_of(const std::string &oid);
+  virtual auto should_close_on_delete_of(const std::string &oid) -> bool;
 
-  void set_color(const std::string &color);
-  std::string get_color();
+  auto set_color(const std::string &color) -> void;
+  auto get_color() -> std::string;
 
-  void set_name(const std::string &name);
-  std::string get_name();
+  auto set_name(const std::string &name) -> void;
+  auto get_name() -> std::string;
 
-  virtual std::string get_title();
+  virtual auto get_title() -> std::string;
 };

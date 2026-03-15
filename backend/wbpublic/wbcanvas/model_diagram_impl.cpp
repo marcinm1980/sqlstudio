@@ -50,7 +50,7 @@ public:
   RootAreaGroup(mdc::Layer *owner) : mdc::AreaGroup(owner) {
   }
 
-  virtual void repaint(const Rect &clipArea, bool direct) {
+  virtual auto repaint(const Rect &clipArea, bool direct) -> void {
     mdc::CairoCtx *cr = _layer->get_view()->cairoctx();
 
     std::list<mdc::AreaGroup *> layers;
@@ -113,11 +113,11 @@ model_Diagram::ImplData::~ImplData() {
   unrealize();
 }
 
-bool model_Diagram::ImplData::is_realizable() {
+auto model_Diagram::ImplData::is_realizable() -> bool {
   return true;
 }
 
-void model_Diagram::ImplData::set_page_counts(int x, int y) {
+auto model_Diagram::ImplData::set_page_counts(int x, int y) -> void {
   Size pageSize(get_size_for_page(_self->owner()->get_data()->get_page_settings()));
 
   _self->width(pageSize.width * x);
@@ -133,7 +133,7 @@ void model_Diagram::ImplData::set_page_counts(int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-mdc::CanvasView *model_Diagram::ImplData::get_canvas_view() {
+auto model_Diagram::ImplData::get_canvas_view() -> mdc::CanvasView * {
   // Create a canvas view if none exists yet.
   if (_canvas_view == NULL)
     realize();
@@ -142,7 +142,7 @@ mdc::CanvasView *model_Diagram::ImplData::get_canvas_view() {
 
 //--------------------------------------------------------------------------------------------------
 
-Size model_Diagram::ImplData::get_size_for_page(const app_PageSettingsRef &page) {
+auto model_Diagram::ImplData::get_size_for_page(const app_PageSettingsRef &page) -> Size {
   Size size;
 
   if (page.is_valid() && page->paperType().is_valid()) {
@@ -164,18 +164,18 @@ Size model_Diagram::ImplData::get_size_for_page(const app_PageSettingsRef &page)
   return size;
 }
 
-void model_Diagram::ImplData::block_updates(bool flag) {
+auto model_Diagram::ImplData::block_updates(bool flag) -> void {
 }
 
-void model_Diagram::ImplData::notify_object_realize(const model_ObjectRef &object) {
+auto model_Diagram::ImplData::notify_object_realize(const model_ObjectRef &object) -> void {
   _realize_object_signal(object);
 }
 
-void model_Diagram::ImplData::notify_object_will_unrealize(const model_ObjectRef &object) {
+auto model_Diagram::ImplData::notify_object_will_unrealize(const model_ObjectRef &object) -> void {
   _will_unrealize_object_signal(object);
 }
 
-void model_Diagram::ImplData::update_from_page_size() {
+auto model_Diagram::ImplData::update_from_page_size() -> void {
   if (_canvas_view) {
     Size pageSize(get_size_for_page(_self->owner()->get_data()->get_page_settings()));
     _canvas_view->set_page_size(pageSize);
@@ -191,7 +191,7 @@ void model_Diagram::ImplData::update_from_page_size() {
   }
 }
 
-void model_Diagram::ImplData::update_size() {
+auto model_Diagram::ImplData::update_size() -> void {
   if (_canvas_view) {
     Size pageSize(get_size_for_page(_self->owner()->get_data()->get_page_settings()));
 
@@ -223,7 +223,7 @@ void model_Diagram::ImplData::update_size() {
   }
 }
 
-void model_Diagram::ImplData::realize_selection() {
+auto model_Diagram::ImplData::realize_selection() -> void {
   // apply selection state that was previously saved
   begin_selection_update();
 
@@ -260,7 +260,7 @@ void model_Diagram::ImplData::realize_selection() {
     g_return_if_fail(_canvas_view->get_selection()->get_contents().size() == _self->_selection.count());
 }
 
-void model_Diagram::ImplData::update_options(const std::string &key) {
+auto model_Diagram::ImplData::update_options(const std::string &key) -> void {
   if (key == "studio.physical.Diagram:DrawLineCrossings" || key.empty()) {
     model_Model::ImplData *model = _self->owner()->get_data();
     if (_canvas_view)
@@ -268,7 +268,7 @@ void model_Diagram::ImplData::update_options(const std::string &key) {
   }
 }
 
-void model_Diagram::ImplData::realize_contents() {
+auto model_Diagram::ImplData::realize_contents() -> void {
   _self->_rootLayer->get_data()->realize();
 
   for (size_t c = _self->_layers.count(), i = 0; i < c; i++) {
@@ -282,7 +282,7 @@ void model_Diagram::ImplData::realize_contents() {
   }
 }
 
-bool model_Diagram::ImplData::realize() {
+auto model_Diagram::ImplData::realize() -> bool {
   if (!is_realizable())
     return false;
 
@@ -328,7 +328,7 @@ bool model_Diagram::ImplData::realize() {
   return true;
 }
 
-void model_Diagram::ImplData::unrealize() {
+auto model_Diagram::ImplData::unrealize() -> void {
   if (_selection_signal_conn.connected())
     _selection_signal_conn.disconnect();
 
@@ -353,7 +353,7 @@ void model_Diagram::ImplData::unrealize() {
   }
 }
 
-void model_Diagram::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) {
+auto model_Diagram::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void {
   if (name == "zoom") {
     if (*_self->_zoom <= 0.1)
       _self->_zoom = 0.1;
@@ -372,8 +372,8 @@ void model_Diagram::ImplData::member_changed(const std::string &name, const grt:
   }
 }
 
-void model_Diagram::ImplData::member_list_changed(grt::internal::OwnedList *alist, bool added,
-                                                  const grt::ValueRef &value) {
+auto model_Diagram::ImplData::member_list_changed(grt::internal::OwnedList *alist, bool added,
+                                                  const grt::ValueRef &value) -> void {
   grt::BaseListRef list(alist);
 
   if (list == self()->_figures) {
@@ -394,7 +394,7 @@ void model_Diagram::ImplData::member_list_changed(grt::internal::OwnedList *alis
   }
 }
 
-void model_Diagram::ImplData::add_figure(const model_FigureRef &figure) {
+auto model_Diagram::ImplData::add_figure(const model_FigureRef &figure) -> void {
   _self->_figures.insert(figure);
   if (figure->layer().is_valid())
     figure->layer()->figures().insert(figure);
@@ -402,22 +402,22 @@ void model_Diagram::ImplData::add_figure(const model_FigureRef &figure) {
     _self->rootLayer()->figures().insert(figure);
 }
 
-void model_Diagram::ImplData::add_connection(const model_ConnectionRef &conn) {
+auto model_Diagram::ImplData::add_connection(const model_ConnectionRef &conn) -> void {
   _self->_connections.insert(conn);
 }
 
-void model_Diagram::ImplData::remove_figure(const model_FigureRef &figure) {
+auto model_Diagram::ImplData::remove_figure(const model_FigureRef &figure) -> void {
   _self->_figures.remove_value(figure);
   if (figure->layer().is_valid()) {
     figure->layer()->figures().remove_value(figure);
   }
 }
 
-void model_Diagram::ImplData::remove_connection(const model_ConnectionRef &conn) {
+auto model_Diagram::ImplData::remove_connection(const model_ConnectionRef &conn) -> void {
   _self->_connections.remove_value(conn);
 }
 
-void model_Diagram::ImplData::delete_layer(const model_LayerRef &layer) {
+auto model_Diagram::ImplData::delete_layer(const model_LayerRef &layer) -> void {
   grt::AutoUndo undo(!self()->is_global());
 
   model_LayerRef root(self()->rootLayer());
@@ -436,7 +436,7 @@ void model_Diagram::ImplData::delete_layer(const model_LayerRef &layer) {
   undo.end(_("Delete Layer from View"));
 }
 
-void model_Diagram::ImplData::select_object(const model_ObjectRef &object) {
+auto model_Diagram::ImplData::select_object(const model_ObjectRef &object) -> void {
   if (_self->_selection.get_index(object) != grt::BaseListRef::npos)
     return;
 
@@ -476,7 +476,7 @@ void model_Diagram::ImplData::select_object(const model_ObjectRef &object) {
   end_selection_update();
 }
 
-void model_Diagram::ImplData::unselect_object(const model_ObjectRef &object) {
+auto model_Diagram::ImplData::unselect_object(const model_ObjectRef &object) -> void {
   if (object.is_instance<model_Figure>()) {
     model_Figure::ImplData *elem = dynamic_cast<model_Figure::ImplData *>(object->get_data());
 
@@ -513,7 +513,7 @@ void model_Diagram::ImplData::unselect_object(const model_ObjectRef &object) {
   end_selection_update();
 }
 
-void model_Diagram::ImplData::unselect_all() {
+auto model_Diagram::ImplData::unselect_all() -> void {
   begin_selection_update();
 
   _canvas_view->get_selection()->clear();
@@ -529,7 +529,7 @@ void model_Diagram::ImplData::unselect_all() {
 /**
  * Increases the selection lock count and returns true if the caller can continue.
  */
-bool model_Diagram::ImplData::begin_selection_update() {
+auto model_Diagram::ImplData::begin_selection_update() -> bool {
   return ++_updating_selection == 1;
 }
 
@@ -537,13 +537,13 @@ bool model_Diagram::ImplData::begin_selection_update() {
  * Removes one lock level from the selection lock and triggers the change event if
  * it reaches 0.
  */
-void model_Diagram::ImplData::end_selection_update() {
+auto model_Diagram::ImplData::end_selection_update() -> void {
   _updating_selection--;
   if (_updating_selection == 0)
     _selection_changed_signal(model_DiagramRef(_self));
 }
 
-void model_Diagram::ImplData::canvas_selection_changed(bool added, mdc::CanvasItem *item) {
+auto model_Diagram::ImplData::canvas_selection_changed(bool added, mdc::CanvasItem *item) -> void {
   if (begin_selection_update()) {
     if (added) {
       model_ObjectRef object;
@@ -584,8 +584,8 @@ void model_Diagram::ImplData::canvas_selection_changed(bool added, mdc::CanvasIt
   end_selection_update();
 }
 
-static mdc::CanvasItem *get_first_realized_layer_under(const grt::ListRef<model_Layer> &list,
-                                                       const model_LayerRef &layer) {
+static auto get_first_realized_layer_under(const grt::ListRef<model_Layer> &list,
+                                                       const model_LayerRef &layer) -> mdc::CanvasItem * {
   bool found = false;
   if (!layer.is_valid())
     found = true;
@@ -602,8 +602,8 @@ static mdc::CanvasItem *get_first_realized_layer_under(const grt::ListRef<model_
   return 0;
 }
 
-static mdc::CanvasItem *get_first_realized_connection_under(const grt::ListRef<model_Connection> &list,
-                                                            const model_ConnectionRef &connection) {
+static auto get_first_realized_connection_under(const grt::ListRef<model_Connection> &list,
+                                                            const model_ConnectionRef &connection) -> mdc::CanvasItem * {
   bool found = false;
   if (!connection.is_valid())
     found = true;
@@ -619,8 +619,8 @@ static mdc::CanvasItem *get_first_realized_connection_under(const grt::ListRef<m
   return 0;
 }
 
-static mdc::CanvasItem *get_first_realized_figure_under(const grt::ListRef<model_Figure> &list,
-                                                        const model_FigureRef &figure) {
+static auto get_first_realized_figure_under(const grt::ListRef<model_Figure> &list,
+                                                        const model_FigureRef &figure) -> mdc::CanvasItem * {
   bool found = false;
   if (!figure.is_valid())
     found = true;
@@ -636,7 +636,7 @@ static mdc::CanvasItem *get_first_realized_figure_under(const grt::ListRef<model
   return 0;
 }
 
-void model_Diagram::ImplData::stack_layer(const model_LayerRef &layer, mdc::CanvasItem *layer_item) {
+auto model_Diagram::ImplData::stack_layer(const model_LayerRef &layer, mdc::CanvasItem *layer_item) -> void {
   mdc::CanvasItem *item_under;
 
   item_under = get_first_realized_layer_under(_self->_layers, layer);
@@ -647,7 +647,7 @@ void model_Diagram::ImplData::stack_layer(const model_LayerRef &layer, mdc::Canv
     _canvas_view->get_current_layer()->get_root_area_group()->lower_item(layer_item);
 }
 
-void model_Diagram::ImplData::stack_connection(const model_ConnectionRef &conn, mdc::CanvasItem *connection_item) {
+auto model_Diagram::ImplData::stack_connection(const model_ConnectionRef &conn, mdc::CanvasItem *connection_item) -> void {
   mdc::CanvasItem *item_under;
 
   item_under = get_first_realized_connection_under(_self->_connections, conn);
@@ -660,7 +660,7 @@ void model_Diagram::ImplData::stack_connection(const model_ConnectionRef &conn, 
     _canvas_view->get_current_layer()->get_root_area_group()->lower_item(connection_item);
 }
 
-void model_Diagram::ImplData::stack_figure(const model_FigureRef &figure, mdc::CanvasItem *figure_item) {
+auto model_Diagram::ImplData::stack_figure(const model_FigureRef &figure, mdc::CanvasItem *figure_item) -> void {
   mdc::CanvasItem *item_under;
 
   item_under = get_first_realized_figure_under(figure->layer()->figures(), figure);
@@ -668,7 +668,7 @@ void model_Diagram::ImplData::stack_figure(const model_FigureRef &figure, mdc::C
   _canvas_view->get_current_layer()->get_root_area_group()->raise_item(figure_item, item_under);
 }
 
-model_LayerRef model_Diagram::ImplData::get_layer_under_figure(const model_FigureRef &figure) {
+auto model_Diagram::ImplData::get_layer_under_figure(const model_FigureRef &figure) -> model_LayerRef {
   Rect bounds;
 
   mdc::CanvasItem *item = figure->get_data()->get_canvas_item();
@@ -703,7 +703,7 @@ model_LayerRef model_Diagram::ImplData::get_layer_under_figure(const model_Figur
   return _self->rootLayer();
 }
 
-bool model_Diagram::ImplData::update_layer_of_figure(const model_FigureRef &figure) {
+auto model_Diagram::ImplData::update_layer_of_figure(const model_FigureRef &figure) -> bool {
   bool relocated = false;
   grt::AutoUndo undo;
 
@@ -750,8 +750,8 @@ bool model_Diagram::ImplData::update_layer_of_figure(const model_FigureRef &figu
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Diagram::ImplData::figure_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const Point &point,
-                                           mdc::MouseButton button, mdc::EventState state) {
+auto model_Diagram::ImplData::figure_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const Point &point,
+                                           mdc::MouseButton button, mdc::EventState state) -> bool {
   _item_click_signal(owner, target, point, button, state);
 
   return false;
@@ -759,8 +759,8 @@ bool model_Diagram::ImplData::figure_click(const model_ObjectRef &owner, mdc::Ca
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Diagram::ImplData::figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *target,
-                                                  const Point &point, mdc::MouseButton button, mdc::EventState state) {
+auto model_Diagram::ImplData::figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *target,
+                                                  const Point &point, mdc::MouseButton button, mdc::EventState state) -> bool {
   _item_double_click_signal(owner, target, point, button, state);
 
   return false;
@@ -768,34 +768,34 @@ bool model_Diagram::ImplData::figure_double_click(const model_ObjectRef &owner, 
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Diagram::ImplData::figure_button_press(const model_ObjectRef &owner, mdc::CanvasItem *target,
-                                                  const Point &point, mdc::MouseButton button, mdc::EventState state) {
+auto model_Diagram::ImplData::figure_button_press(const model_ObjectRef &owner, mdc::CanvasItem *target,
+                                                  const Point &point, mdc::MouseButton button, mdc::EventState state) -> bool {
   _item_mouse_button_signal(owner, target, true, point, button, state);
 
   return false;
 }
 
-bool model_Diagram::ImplData::figure_button_release(const model_ObjectRef &owner, mdc::CanvasItem *target,
+auto model_Diagram::ImplData::figure_button_release(const model_ObjectRef &owner, mdc::CanvasItem *target,
                                                     const Point &point, mdc::MouseButton button,
-                                                    mdc::EventState state) {
+                                                    mdc::EventState state) -> bool {
   _item_mouse_button_signal(owner, target, false, point, button, state);
 
   return false;
 }
 
-bool model_Diagram::ImplData::figure_enter(const model_ObjectRef &owner, mdc::CanvasItem *target, const Point &point) {
+auto model_Diagram::ImplData::figure_enter(const model_ObjectRef &owner, mdc::CanvasItem *target, const Point &point) -> bool {
   _item_crossed_signal(owner, target, true, point);
 
   return false;
 }
 
-bool model_Diagram::ImplData::figure_leave(const model_ObjectRef &owner, mdc::CanvasItem *target, const Point &point) {
+auto model_Diagram::ImplData::figure_leave(const model_ObjectRef &owner, mdc::CanvasItem *target, const Point &point) -> bool {
   _item_crossed_signal(owner, target, false, point);
 
   return false;
 }
 
-static void update_badge(const std::string &name, const ValueRef &ovalue, const meta_TagRef &tag, BadgeFigure *badge) {
+static auto update_badge(const std::string &name, const ValueRef &ovalue, const meta_TagRef &tag, BadgeFigure *badge) -> void {
   if (name == "label") {
     badge->set_text(tag->label());
   } else if (name == "color") {
@@ -803,7 +803,7 @@ static void update_badge(const std::string &name, const ValueRef &ovalue, const 
   }
 }
 
-void model_Diagram::ImplData::add_tag_badge_to_figure(const model_FigureRef &figure, const meta_TagRef &tag) {
+auto model_Diagram::ImplData::add_tag_badge_to_figure(const model_FigureRef &figure, const meta_TagRef &tag) -> void {
   BadgeFigure *badge = new BadgeFigure(get_canvas_view()->get_current_layer());
 
   badge->set_badge_id(tag->id());
@@ -820,7 +820,7 @@ void model_Diagram::ImplData::add_tag_badge_to_figure(const model_FigureRef &fig
   figure->get_data()->add_badge(badge);
 }
 
-void model_Diagram::ImplData::remove_tag_badge_from_figure(const model_FigureRef &figure, const meta_TagRef &tag) {
+auto model_Diagram::ImplData::remove_tag_badge_from_figure(const model_FigureRef &figure, const meta_TagRef &tag) -> void {
   BadgeFigure *badge = figure->get_data()->get_badge_with_id(tag->id());
 
   if (badge) {

@@ -34,7 +34,7 @@
 #include "base/python_utils.h"
 #include "base/string_utilities.h"
 
-std::string format_python_traceback(PyObject *tb) {
+auto format_python_traceback(PyObject *tb) -> std::string {
   PyTracebackObject *trace = (PyTracebackObject *)tb;
   std::string stack;
 
@@ -57,7 +57,7 @@ std::string format_python_traceback(PyObject *tb) {
   return stack;
 }
 
-std::string base::format_python_exception(std::string &summary) {
+auto base::format_python_exception(std::string &summary) -> std::string {
   std::string reason, stack;
   PyObject *exc, *val, *tb;
 

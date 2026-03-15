@@ -40,14 +40,14 @@ public:
                              DECLARE_INTERFACE_FUNCTION(WbModelReportingInterfaceImpl::getReportingTemplateInfo),
                              DECLARE_INTERFACE_FUNCTION(WbModelReportingInterfaceImpl::generateReport));
 
-  virtual ssize_t getAvailableReportingTemplates(grt::StringListRef templates) = 0;
+  virtual auto getAvailableReportingTemplates(grt::StringListRef templates) -> ssize_t = 0;
 
-  virtual std::string getTemplateDirFromName(const std::string& template_name) = 0;
+  virtual auto getTemplateDirFromName(const std::string& template_name) -> std::string = 0;
 
-  virtual grt::Ref<studio_model_reporting_TemplateInfo> getReportingTemplateInfo(
-    const std::string& template_name) = 0;
+  virtual auto getReportingTemplateInfo(
+    const std::string& template_name) -> grt::Ref<studio_model_reporting_TemplateInfo> = 0;
 
-  virtual ssize_t generateReport(grt::Ref<studio_physical_Model> model, const grt::DictRef& options) = 0;
+  virtual auto generateReport(grt::Ref<studio_physical_Model> model, const grt::DictRef& options) -> ssize_t = 0;
 };
 
 #endif /* _WB_MODEL_REPORTING_IF_H_ */

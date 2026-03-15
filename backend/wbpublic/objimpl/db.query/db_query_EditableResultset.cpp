@@ -33,8 +33,8 @@ public:
   }
 };
 
-db_query_EditableResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC grtwrap_editablerecordset(GrtObjectRef owner,
-                                                                                    Recordset::Ref rset) {
+auto grtwrap_editablerecordset(GrtObjectRef owner,
+                                                                                    Recordset::Ref rset) -> db_query_EditableResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC {
   db_query_EditableResultsetRef object(grt::Initialized);
 
   db_query_EditableResultset::ImplData *data = new db_query_EditableResultset::ImplData(object, rset);
@@ -46,7 +46,7 @@ db_query_EditableResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC grtwrap_editablerecord
   return object;
 }
 
-void db_query_EditableResultset::init() {
+auto db_query_EditableResultset::init() -> void {
 }
 
 db_query_EditableResultset::~db_query_EditableResultset() {
@@ -54,76 +54,76 @@ db_query_EditableResultset::~db_query_EditableResultset() {
   // delete _data;
 }
 
-void db_query_EditableResultset::set_data(ImplData *data) {
+auto db_query_EditableResultset::set_data(ImplData *data) -> void {
   _data = data;
   db_query_Resultset::set_data(data);
 }
 
-grt::IntegerRef db_query_EditableResultset::setFieldNull(ssize_t column) {
+auto db_query_EditableResultset::setFieldNull(ssize_t column) -> grt::IntegerRef {
   if (_data && column >= 0 && (size_t)column < _data->recordset->get_column_count() &&
       _data->recordset->set_field_null(bec::NodeId(_data->currentRow()), column))
     return grt::IntegerRef(1);
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::setFieldNullByName(const std::string &column) {
+auto db_query_EditableResultset::setFieldNullByName(const std::string &column) -> grt::IntegerRef {
   if (_data && _data->column_by_name.find(column) != _data->column_by_name.end() &&
       _data->recordset->set_field_null(bec::NodeId(_data->currentRow()), _data->column_by_name[column]))
     return grt::IntegerRef(1);
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::setFloatFieldValue(ssize_t column, double value) {
+auto db_query_EditableResultset::setFloatFieldValue(ssize_t column, double value) -> grt::IntegerRef {
   if (_data && column >= 0 && (size_t)column < _data->recordset->get_column_count() &&
       _data->recordset->set_field(bec::NodeId(_data->currentRow()), column, value))
     return grt::IntegerRef(1);
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::setFloatFieldValueByName(const std::string &column, double value) {
+auto db_query_EditableResultset::setFloatFieldValueByName(const std::string &column, double value) -> grt::IntegerRef {
   if (_data && _data->column_by_name.find(column) != _data->column_by_name.end() &&
       _data->recordset->set_field(bec::NodeId(_data->currentRow()), _data->column_by_name[column], value))
     return grt::IntegerRef(1);
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::setIntFieldValue(ssize_t column, ssize_t value) {
+auto db_query_EditableResultset::setIntFieldValue(ssize_t column, ssize_t value) -> grt::IntegerRef {
   if (_data && column >= 0 && (size_t)column < _data->recordset->get_column_count() &&
       _data->recordset->set_field(bec::NodeId(_data->currentRow()), column, value))
     return grt::IntegerRef(1);
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::setIntFieldValueByName(const std::string &column, ssize_t value) {
+auto db_query_EditableResultset::setIntFieldValueByName(const std::string &column, ssize_t value) -> grt::IntegerRef {
   if (_data && _data->column_by_name.find(column) != _data->column_by_name.end() &&
       _data->recordset->set_field(bec::NodeId(_data->currentRow()), _data->column_by_name[column], value))
     return grt::IntegerRef(1);
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::setStringFieldValue(ssize_t column, const std::string &value) {
+auto db_query_EditableResultset::setStringFieldValue(ssize_t column, const std::string &value) -> grt::IntegerRef {
   if (_data && column >= 0 && (size_t)column < _data->recordset->get_column_count() &&
       _data->recordset->set_field(bec::NodeId(_data->currentRow()), column, value))
     return grt::IntegerRef(1);
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::setStringFieldValueByName(const std::string &column,
-                                                                      const std::string &value) {
+auto db_query_EditableResultset::setStringFieldValueByName(const std::string &column,
+                                                                      const std::string &value) -> grt::IntegerRef {
   if (_data && _data->column_by_name.find(column) != _data->column_by_name.end() &&
       _data->recordset->set_field(bec::NodeId(_data->currentRow()), _data->column_by_name[column], value))
     return grt::IntegerRef(1);
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::applyChanges() {
+auto db_query_EditableResultset::applyChanges() -> grt::IntegerRef {
   if (_data)
     _data->recordset->apply_changes_();
 
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::revertChanges() {
+auto db_query_EditableResultset::revertChanges() -> grt::IntegerRef {
   if (_data) {
     _data->recordset->rollback();
 
@@ -133,7 +133,7 @@ grt::IntegerRef db_query_EditableResultset::revertChanges() {
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::addNewRow() {
+auto db_query_EditableResultset::addNewRow() -> grt::IntegerRef {
   if (_data) {
     _data->cursor = _data->recordset->count() - 1;
     if (_data->recordset->rows_changed)
@@ -143,11 +143,11 @@ grt::IntegerRef db_query_EditableResultset::addNewRow() {
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_EditableResultset::deleteRow(ssize_t row) {
+auto db_query_EditableResultset::deleteRow(ssize_t row) -> grt::IntegerRef {
   return grt::IntegerRef(_data ? _data->recordset->delete_node(row) : 0);
 }
 
-grt::IntegerRef db_query_EditableResultset::loadFieldValueFromFile(ssize_t column, const std::string &file) {
+auto db_query_EditableResultset::loadFieldValueFromFile(ssize_t column, const std::string &file) -> grt::IntegerRef {
   if (_data && column >= 0 && (size_t)column < _data->recordset->get_column_count()) {
     _data->recordset->load_from_file(bec::NodeId(_data->cursor), column, file);
     return grt::IntegerRef(1);

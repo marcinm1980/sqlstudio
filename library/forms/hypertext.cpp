@@ -37,19 +37,19 @@ HyperText::HyperText() {
 
 //--------------------------------------------------------------------------------------------------
 
-void HyperText::handle_url_click(const std::string &url) {
+auto HyperText::handle_url_click(const std::string &url) -> void {
   _url_click_signal(url);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void HyperText::set_markup_text(const std::string &text) {
+auto HyperText::set_markup_text(const std::string &text) -> void {
   _hypertext_impl->set_markup_text(this, text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void HyperText::set_padding(int left, int top, int right, int bottom) {
+auto HyperText::set_padding(int left, int top, int right, int bottom) -> void {
   set_layout_dirty(true);
   if (_view_impl->set_padding)
     (*_view_impl->set_padding)(this, left, top, right, bottom);

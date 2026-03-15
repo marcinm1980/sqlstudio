@@ -47,19 +47,19 @@ namespace DBImport {
   class ObjectSelectionPage : public WizardObjectFilterPage {
   public:
     ObjectSelectionPage(WbPluginDbImport *form);
-    void setup_filters();
+    auto setup_filters() -> void;
 
   protected:
-    virtual void enter(bool advancing) {
+    virtual auto enter(bool advancing) -> void {
       if (advancing)
         setup_filters();
 
       WizardObjectFilterPage::enter(advancing);
     }
 
-    virtual bool advance();
+    virtual auto advance() -> bool;
 
-    virtual std::string next_button_caption() {
+    virtual auto next_button_caption() -> std::string {
       return execute_caption();
     }
 
@@ -117,7 +117,7 @@ namespace DBImport {
   public:
     DBImportProgressPage(WbPluginDbImport *form);
 
-    virtual void enter(bool advancing) {
+    virtual auto enter(bool advancing) -> void {
       bool place = values().get_int("import.place_figures", 0) != 0;
 
       _place_task->set_enabled(place);
@@ -125,10 +125,10 @@ namespace DBImport {
       WizardProgressPage::enter(advancing);
     }
 
-    bool perform_import();
-    bool perform_place();
+    auto perform_import() -> bool;
+    auto perform_place() -> bool;
 
-    virtual bool allow_back() {
+    virtual auto allow_back() -> bool {
       return false;
     }
   };
@@ -138,9 +138,9 @@ namespace DBImport {
   class FinishPage : public WizardFinishedPage {
   public:
     FinishPage(WbPluginDbImport *form);
-    virtual void enter(bool advancing);
+    virtual auto enter(bool advancing) -> void;
 
-    virtual bool next_closes_wizard() {
+    virtual auto next_closes_wizard() -> bool {
       return true;
     }
 
@@ -154,7 +154,7 @@ namespace DBImport {
       }
     };
 
-    std::string create_summary(const grt::ListRef<GrtObject> &objects) {
+    auto create_summary(const grt::ListRef<GrtObject> &objects) -> std::string {
       std::map<std::string, Summary> schema_summary;
 
       std::string summary = _("Summary of Reverse Engineered Objects:\n\n");
@@ -214,7 +214,7 @@ namespace DBImport {
 
     Db_rev_eng _db_rev_eng;
 
-    std::vector<std::string> load_schemas() {
+    auto load_schemas() -> std::vector<std::string> {
       std::vector<std::string> schema_names;
 
       db_plugin()->load_schemata(schema_names);
@@ -224,10 +224,10 @@ namespace DBImport {
   public:
     WbPluginDbImport(grt::Module *module);
 
-    Db_plugin *db_plugin() {
+    auto db_plugin() -> Db_plugin * {
       return &_db_rev_eng;
     }
-    Sql_import *sql_import() {
+    auto sql_import() -> Sql_import * {
       return &_db_rev_eng;
     }
   };
@@ -286,7 +286,7 @@ namespace DBImport {
     _box.add(&_autoplace_check, false);
   }
 
-  void ObjectSelectionPage::setup_filters() {
+  auto ObjectSelectionPage::setup_filters() -> void {
     Db_plugin *plugin = ((WbPluginDbImport *)_form)->db_plugin();
     bool empty = true;
 
@@ -328,7 +328,7 @@ namespace DBImport {
     _empty_label.show(empty);
   }
 
-  bool ObjectSelectionPage::advance() {
+  auto ObjectSelectionPage::advance() -> bool {
     Db_plugin *plugin = ((WbPluginDbImport *)_form)->db_plugin();
       
 
@@ -388,12 +388,12 @@ namespace DBImport {
     end_adding_tasks(_("Operation Completed Successfully"));
   }
 
-  bool DBImportProgressPage::perform_import() {
+  auto DBImportProgressPage::perform_import() -> bool {
     execute_grt_task(((WbPluginDbImport *)_form)->sql_import()->get_task_slot(), false);
     return true;
   }
 
-  bool DBImportProgressPage::perform_place() {
+  auto DBImportProgressPage::perform_place() -> bool {
     execute_grt_task(((WbPluginDbImport *)_form)->sql_import()->get_autoplace_task_slot(), false);
 
     return true;
@@ -404,16 +404,16 @@ namespace DBImport {
     set_short_title(_("Results"));
   }
 
-  void FinishPage::enter(bool advancing) {
+  auto FinishPage::enter(bool advancing) -> void {
     if (advancing)
       set_summary(create_summary(((WbPluginDbImport *)_form)->sql_import()->get_created_objects()));
   }
 }; // namespace DBImport
 
-grtui::WizardPlugin *createDbImportWizard(grt::Module *module, db_CatalogRef catalog) {
+auto createDbImportWizard(grt::Module *module, db_CatalogRef catalog) -> grtui::WizardPlugin * {
   return new DBImport::WbPluginDbImport(module);
 }
 
-void deleteDbImportWizard(grtui::WizardPlugin *plugin) {
+auto deleteDbImportWizard(grtui::WizardPlugin *plugin) -> void {
   delete plugin;
 }

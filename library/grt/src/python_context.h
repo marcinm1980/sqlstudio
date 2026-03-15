@@ -101,7 +101,7 @@ namespace grt {
 
   protected:
     PythonContextHelper(const std::string &module_path);
-    void InitPython();
+    auto InitPython() -> void;
 
   public:
     virtual ~PythonContextHelper();
@@ -112,76 +112,76 @@ namespace grt {
     PythonContext(const std::string &module_path);
     virtual ~PythonContext();
 
-    static PythonContext *get();
-    static PythonContext *get_and_check();
+    static auto get() -> PythonContext *;
+    static auto get_and_check() -> PythonContext *;
 
-    static PyObject *internal_cobject_from_value(const ValueRef &value);
-    static ValueRef value_from_internal_cobject(PyObject *value);
+    static auto internal_cobject_from_value(const ValueRef &value) -> PyObject *;
+    static auto value_from_internal_cobject(PyObject *value) -> ValueRef;
 
-    static void set_wrap_pyobject_func(PyObject *(*func)(PyObject *, PyObject *));
-    static void set_unwrap_pyobject_func(PyObject *(*func)(PyObject *, PyObject *));
+    static auto set_wrap_pyobject_func(PyObject *(*func)(PyObject *, PyObject *)) -> void;
+    static auto set_unwrap_pyobject_func(PyObject *(*func)(PyObject *, PyObject *)) -> void;
 
-    void add_module_path(const std::string &path, bool prepend = false);
-    PyObject *import_module(const std::string &name);
+    auto add_module_path(const std::string &path, bool prepend = false) -> void;
+    auto import_module(const std::string &name) -> PyObject *;
 
-    PyObject *from_grt(const ValueRef &value);
-    grt::ValueRef from_pyobject(PyObject *object);
-    grt::ValueRef from_pyobject(PyObject *object, const grt::TypeSpec &expected_type);
-    bool pystring_to_string(PyObject *str, std::string &ret_string, bool convert = false);
+    auto from_grt(const ValueRef &value) -> PyObject *;
+    auto from_pyobject(PyObject *object) -> grt::ValueRef;
+    auto from_pyobject(PyObject *object, const grt::TypeSpec &expected_type) -> grt::ValueRef;
+    auto pystring_to_string(PyObject *str, std::string &ret_string, bool convert = false) -> bool;
 
-    int run_file(const std::string &file, bool interactive);
-    int run_buffer(const std::string &buffer, std::string *line_buffer = 0);
+    auto run_file(const std::string &file, bool interactive) -> int;
+    auto run_buffer(const std::string &buffer, std::string *line_buffer = 0) -> int;
 
-    int call_grt_function(const std::string &module, const std::string &function, const BaseListRef &args);
+    auto call_grt_function(const std::string &module, const std::string &function, const BaseListRef &args) -> int;
 
-    PyObject *eval_string(const std::string &expression);
+    auto eval_string(const std::string &expression) -> PyObject *;
 
-    PyObject *get_grt_module();
+    auto get_grt_module() -> PyObject *;
 
-    PyObject *get_global(const std::string &value);
-    bool set_global(const std::string &name, PyObject *value);
+    auto get_global(const std::string &value) -> PyObject *;
+    auto set_global(const std::string &name, PyObject *value) -> bool;
 
-    int refresh();
+    auto refresh() -> int;
 
-    bool set_cwd(const std::string &path);
-    std::string get_cwd() const {
+    auto set_cwd(const std::string &path) -> bool;
+    auto get_cwd() const -> std::string {
       return _cwd;
     }
 
     std::function<std::string()> stdin_readline_slot;
 
-    static void set_user_interrupted(const grt::user_cancelled &exc);
-    static void set_db_access_denied(const grt::db_access_denied &exc);
-    static void set_db_login_error(const grt::db_login_error &exc);
-    static void set_db_not_conected(const grt::db_not_connected &exc);
-    static void set_db_error(const grt::db_error &exc);
+    static auto set_user_interrupted(const grt::user_cancelled &exc) -> void;
+    static auto set_db_access_denied(const grt::db_access_denied &exc) -> void;
+    static auto set_db_login_error(const grt::db_login_error &exc) -> void;
+    static auto set_db_not_conected(const grt::db_not_connected &exc) -> void;
+    static auto set_db_error(const grt::db_error &exc) -> void;
     static void set_python_error(const grt::type_error &exc, const std::string &location = "");
     static void set_python_error(const grt::bad_item &exc, const std::string &location = "");
     static void set_python_error(const std::exception &exc, const std::string &location = "");
 
-    static void log_python_error(const char *message);
+    static auto log_python_error(const char *message) -> void;
 
-    PyObject *user_interrupted_error() {
+    auto user_interrupted_error() -> PyObject * {
       return _grt_user_interrupt_error;
     }
-    PyObject *db_access_denied_error() {
+    auto db_access_denied_error() -> PyObject * {
       return _grt_db_access_denied_error;
     }
-    PyObject *db_login_error() {
+    auto db_login_error() -> PyObject * {
       return _grt_db_login_error;
     }
-    PyObject *db_error() {
+    auto db_error() -> PyObject * {
       return _grt_db_error;
     }
-    PyObject *db_not_connected() {
+    auto db_not_connected() -> PyObject * {
       return _grt_db_not_connected;
     }
 
-    void set_grt_observer_callable(PyObject *obj);
-    void setEventlogCallback(PyObject *obj);
-    void printResult(std::map<std::string, std::string> &output);
+    auto set_grt_observer_callable(PyObject *obj) -> void;
+    auto setEventlogCallback(PyObject *obj) -> void;
+    auto printResult(std::map<std::string, std::string> &output) -> void;
 
-    static PyObject *grt_module_create();
+    static auto grt_module_create() -> PyObject *;
 //     static PyObject *grt_modules_module_create();
 
   protected:
@@ -211,21 +211,21 @@ namespace grt {
     std::map<std::string, AutoPyObject> _grt_class_wrappers;
 
   private:
-    ValueRef simple_type_from_pyobject(PyObject *object, const grt::SimpleTypeSpec &type);
+    auto simple_type_from_pyobject(PyObject *object, const grt::SimpleTypeSpec &type) -> ValueRef;
 
-    void register_grt_module(PyObject *module);
-    void register_grt_functions();
-    void redirect_python_output();
+    auto register_grt_module(PyObject *module) -> void;
+    auto register_grt_functions() -> void;
+    auto redirect_python_output() -> void;
 
-    void init_grt_module_type();
-    void init_grt_list_type();
-    void init_grt_dict_type();
-    void init_grt_object_type();
+    auto init_grt_module_type() -> void;
+    auto init_grt_list_type() -> void;
+    auto init_grt_dict_type() -> void;
+    auto init_grt_object_type() -> void;
 
-    void run_post_init_script();
+    auto run_post_init_script() -> void;
 
-    virtual void handle_grt_notification(const std::string &name, ObjectRef sender, DictRef info);
-    virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
+    virtual auto handle_grt_notification(const std::string &name, ObjectRef sender, DictRef info) -> void;
+    virtual auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
   };
 
   class python_error : public std::runtime_error {

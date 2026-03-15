@@ -39,18 +39,18 @@ class DbMySQLTableEditorOptPage {
 public:
   DbMySQLTableEditorOptPage(DbMySQLTableEditor* owner, MySQLTableEditorBE* be, Glib::RefPtr<Gtk::Builder> xml);
 
-  void refresh();
+  auto refresh() -> void;
 
-  void switch_be(MySQLTableEditorBE* be);
+  auto switch_be(MySQLTableEditorBE* be) -> void;
 
 private:
-  void set_table_option(const std::string& value, const char* option);
-  void set_toggled_table_option(const char* option);
+  auto set_table_option(const std::string& value, const char* option) -> void;
+  auto set_toggled_table_option(const char* option) -> void;
 
-  void set_pack_keys();
-  void set_row_format();
-  void set_key_block_size();
-  void set_merge_method();
+  auto set_pack_keys() -> void;
+  auto set_row_format() -> void;
+  auto set_key_block_size() -> void;
+  auto set_merge_method() -> void;
 
   DbMySQLTableEditor* _owner;
   MySQLTableEditorBE* _be;

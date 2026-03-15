@@ -91,27 +91,27 @@ namespace ssh {
     SSHSftp(std::shared_ptr<SSHSession> session, std::size_t maxFileSize);
     virtual ~SSHSftp();
 
-    sftp_file open(const std::string &path) const;
-    void mkdir(const std::string &dirname, unsigned int mode = S_IRWXU);
-    void rmdir(const std::string &dirname);
-    void unlink(const std::string &file);
-    SftpStatAttrib stat(const std::string &path);
-    void get(const std::string &src, const std::string &dest) const;
-    void setContent(const std::string &path, const std::string &data) const;
-    void put(const std::string &src, const std::string &dest) const;
-    std::string getContent(const std::string &src) const;
-    void setMaxFileLimit(std::size_t limit);
-    int cd(const std::string &dirname);
-    std::vector<SftpStatAttrib> ls(const std::string &dirname) const;
-    std::string pwd() const;
-    bool fileExists(const std::string &path) const;
+    auto open(const std::string &path) const -> sftp_file;
+    auto mkdir(const std::string &dirname, unsigned int mode = S_IRWXU) -> void;
+    auto rmdir(const std::string &dirname) -> void;
+    auto unlink(const std::string &file) -> void;
+    auto stat(const std::string &path) -> SftpStatAttrib;
+    auto get(const std::string &src, const std::string &dest) const -> void;
+    auto setContent(const std::string &path, const std::string &data) const -> void;
+    auto put(const std::string &src, const std::string &dest) const -> void;
+    auto getContent(const std::string &src) const -> std::string;
+    auto setMaxFileLimit(std::size_t limit) -> void;
+    auto cd(const std::string &dirname) -> int;
+    auto ls(const std::string &dirname) const -> std::vector<SftpStatAttrib>;
+    auto pwd() const -> std::string;
+    auto fileExists(const std::string &path) const -> bool;
 
   protected:
     SSHSftp(const SSHSftp& ses) = delete;
     SSHSftp(const SSHSftp&& ses) = delete;
     SSHSftp &operator =(SSHSftp&) = delete;
-    void throwOnError(int rc) const;
-    std::string createRemotePath(const std::string &path) const;
+    auto throwOnError(int rc) const -> void;
+    auto createRemotePath(const std::string &path) const -> std::string;
 
   };
 

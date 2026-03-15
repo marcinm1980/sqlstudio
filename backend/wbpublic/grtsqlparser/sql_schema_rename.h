@@ -43,10 +43,10 @@ protected:
   }
 
 public:
-  virtual int rename_schema_references(db_CatalogRef catalog, const std::string &old_schema_name,
-                                       const std::string &new_schema_name) = 0;
-  virtual int rename_schema_references(std::string &sql, const std::string &old_schema_name,
-                                       const std::string &new_schema_name) = 0;
+  virtual auto rename_schema_references(db_CatalogRef catalog, const std::string &old_schema_name,
+                                       const std::string &new_schema_name) -> int = 0;
+  virtual auto rename_schema_references(std::string &sql, const std::string &old_schema_name,
+                                       const std::string &new_schema_name) -> int = 0;
 };
 
 #endif // _SQL_SCHEMA_RENAME_H_

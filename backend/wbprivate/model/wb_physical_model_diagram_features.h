@@ -53,35 +53,35 @@ namespace wb {
 
     bool _highlight_all;
 
-    void on_figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *item, const base::Point &pos,
-                                mdc::MouseButton button, mdc::EventState state);
-    void on_figure_mouse_button(const model_ObjectRef &owner, mdc::CanvasItem *item, bool press, const base::Point &pos,
-                                mdc::MouseButton button, mdc::EventState state);
-    void on_figure_crossed(const model_ObjectRef &owner, mdc::CanvasItem *item, bool enter, const base::Point &pos);
+    auto on_figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *item, const base::Point &pos,
+                                mdc::MouseButton button, mdc::EventState state) -> void;
+    auto on_figure_mouse_button(const model_ObjectRef &owner, mdc::CanvasItem *item, bool press, const base::Point &pos,
+                                mdc::MouseButton button, mdc::EventState state) -> void;
+    auto on_figure_crossed(const model_ObjectRef &owner, mdc::CanvasItem *item, bool enter, const base::Point &pos) -> void;
 
-    void on_selection_changed();
+    auto on_selection_changed() -> void;
 
-    void on_figure_will_unrealize(const model_ObjectRef &object);
+    auto on_figure_will_unrealize(const model_ObjectRef &object) -> void;
 
-    void activate_item(const model_ObjectRef &owner, mdc::CanvasItem *item, mdc::EventState state);
+    auto activate_item(const model_ObjectRef &owner, mdc::CanvasItem *item, mdc::EventState state) -> void;
 
-    void highlight_connection(const studio_physical_ConnectionRef &conn, bool flag);
-    void highlight_table(const studio_physical_TableFigureRef &table, bool flag);
-    void highlight_table_index(const studio_physical_TableFigureRef &table, const db_IndexRef &index, bool entered);
+    auto highlight_connection(const studio_physical_ConnectionRef &conn, bool flag) -> void;
+    auto highlight_table(const studio_physical_TableFigureRef &table, bool flag) -> void;
+    auto highlight_table_index(const studio_physical_TableFigureRef &table, const db_IndexRef &index, bool entered) -> void;
 
-    void tooltip_setup(const model_ObjectRef &owner);
-    void tooltip_cancel();
-    void show_tooltip(const model_ObjectRef &owner, mdc::CanvasItem *item);
+    auto tooltip_setup(const model_ObjectRef &owner) -> void;
+    auto tooltip_cancel() -> void;
+    auto show_tooltip(const model_ObjectRef &owner, mdc::CanvasItem *item) -> void;
 
-    mdc::CanvasView *get_canvas_view();
-    bec::GRTManager::Timer *run_every(const std::function<bool()> &slot, double seconds);
-    void cancel_timer(bec::GRTManager::Timer *timer);
+    auto get_canvas_view() -> mdc::CanvasView *;
+    auto run_every(const std::function<bool()> &slot, double seconds) -> bec::GRTManager::Timer *;
+    auto cancel_timer(bec::GRTManager::Timer *timer) -> void;
 
   public:
     PhysicalModelDiagramFeatures(ModelDiagramForm *diagram);
     virtual ~PhysicalModelDiagramFeatures();
 
-    void highlight_all_connections(bool flag);
+    auto highlight_all_connections(bool flag) -> void;
 
     //    virtual bool key_pressed();
   };

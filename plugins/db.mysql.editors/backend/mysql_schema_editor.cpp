@@ -42,8 +42,8 @@ MySQLSchemaEditorBE::MySQLSchemaEditorBE(const db_mysql_SchemaRef &schema) : bec
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLSchemaEditorBE::refactor_catalog_upon_schema_rename(const std::string &old_name,
-                                                              const std::string &new_name) {
+auto MySQLSchemaEditorBE::refactor_catalog_upon_schema_rename(const std::string &old_name,
+                                                              const std::string &new_name) -> void {
   try {
     bec::AutoUndoEdit undo(this);
 
@@ -61,7 +61,7 @@ void MySQLSchemaEditorBE::refactor_catalog_upon_schema_rename(const std::string 
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLSchemaEditorBE::refactor_catalog() {
+auto MySQLSchemaEditorBE::refactor_catalog() -> void {
   try {
     bec::AutoUndoEdit undo(this);
     std::string from_name = get_schema()->customData().get_string("LastRefactoringTargetName", get_schema()->oldName());
@@ -90,7 +90,7 @@ void MySQLSchemaEditorBE::refactor_catalog() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLSchemaEditorBE::refactor_possible() {
+auto MySQLSchemaEditorBE::refactor_possible() -> bool {
   std::string from_name = get_schema()->customData().get_string("LastRefactoringTargetName", get_schema()->oldName());
   std::string to_name = get_schema()->name();
   if (from_name.empty())

@@ -49,12 +49,12 @@ public:
 private:
   virtual grt::ListRef<app_Plugin> getPluginInfo() override;
 
-  int printDiagramsToFile(grt::ListRef<model_Diagram> view, const std::string &path, const std::string &format,
-                          grt::DictRef options);
-  int printToPDFFile(model_DiagramRef view, const std::string &path);
-  int printToPSFile(model_DiagramRef view, const std::string &path);
+  auto printDiagramsToFile(grt::ListRef<model_Diagram> view, const std::string &path, const std::string &format,
+                          grt::DictRef options) -> int;
+  auto printToPDFFile(model_DiagramRef view, const std::string &path) -> int;
+  auto printToPSFile(model_DiagramRef view, const std::string &path) -> int;
 
-  int printToPrinter(model_DiagramRef view, const std::string &printer);
+  auto printToPrinter(model_DiagramRef view, const std::string &printer) -> int;
 };
 
 #endif

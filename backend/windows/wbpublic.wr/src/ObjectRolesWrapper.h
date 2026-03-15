@@ -43,10 +43,10 @@ namespace MySQL {
         ObjectRoleListWrapper(DBObjectEditorWrapper ^ editor);
         ~ObjectRoleListWrapper();
 
-        ::bec::ObjectRoleListBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> ::bec::ObjectRoleListBE *;
         void add_role_for_privileges(GrtValue ^ role);
         void remove_role_from_privileges(GrtValue ^ role);
-        ObjectPrivilegeListBE ^ get_privilege_list();
+        auto get_privilege_list() -> ObjectPrivilegeListBE ^;
         void set_selected(NodeIdWrapper ^ node);
       };
 
@@ -60,7 +60,7 @@ namespace MySQL {
 
       public:
         ObjectPrivilegeListBE(::bec::ObjectPrivilegeListBE *inn);
-        ::bec::ObjectPrivilegeListBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> ::bec::ObjectPrivilegeListBE *;
       };
 
     } // namespace Db

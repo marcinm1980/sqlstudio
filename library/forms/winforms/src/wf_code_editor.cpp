@@ -63,7 +63,7 @@ ScintillaControl::ScintillaControl() : Control() {
  *                 (considering the other platforms).
  *   The underlying scintilla window has a separate check for cross thread calls.
  */
-sptr_t ScintillaControl::direct_call(unsigned int message, uptr_t wParam, sptr_t lParam) {
+auto ScintillaControl::direct_call(unsigned int message, uptr_t wParam, sptr_t lParam) -> sptr_t {
   if (destroying || Disposing || IsDisposed)
     return -1;
 
@@ -84,44 +84,44 @@ sptr_t ScintillaControl::direct_call(unsigned int message, uptr_t wParam, sptr_t
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::SetBackend(mforms::CodeEditor *editor) {
+auto ScintillaControl::SetBackend(mforms::CodeEditor *editor) -> void {
   backend = editor;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::SetDropTarget(mforms::DropDelegate *target) {
+auto ScintillaControl::SetDropTarget(mforms::DropDelegate *target) -> void {
   file_drop_target = target;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ScintillaControl::CanUndo::get() {
+auto ScintillaControl::CanUndo::get() -> bool {
   return direct_call(SCI_CANUNDO, 0, 0) != 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ScintillaControl::CanRedo::get() {
+auto ScintillaControl::CanRedo::get() -> bool {
   return direct_call(SCI_CANREDO, 0, 0) != 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ScintillaControl::CanCopy::get() {
+auto ScintillaControl::CanCopy::get() -> bool {
   sptr_t length = direct_call(SCI_GETSELECTIONEND, 0, 0) - direct_call(SCI_GETSELECTIONSTART, 0, 0);
   return length > 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ScintillaControl::CanCut::get() {
+auto ScintillaControl::CanCut::get() -> bool {
   return CanCopy && CanDelete;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ScintillaControl::CanPaste::get() {
+auto ScintillaControl::CanPaste::get() -> bool {
   try {
     // Doesn't usually crash but if the clipboard chain is forcibly broken we might get this
     // error. No sense to show it to the user.
@@ -134,55 +134,55 @@ bool ScintillaControl::CanPaste::get() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ScintillaControl::CanDelete::get() {
+auto ScintillaControl::CanDelete::get() -> bool {
   return CanCopy && direct_call(SCI_GETREADONLY, 0, 0) == 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::Undo() {
+auto ScintillaControl::Undo() -> void {
   direct_call(SCI_UNDO, 0, 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::Redo() {
+auto ScintillaControl::Redo() -> void {
   direct_call(SCI_REDO, 0, 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::Copy() {
+auto ScintillaControl::Copy() -> void {
   direct_call(SCI_COPY, 0, 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::Cut() {
+auto ScintillaControl::Cut() -> void {
   direct_call(SCI_CUT, 0, 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::Paste() {
+auto ScintillaControl::Paste() -> void {
   direct_call(SCI_PASTE, 0, 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::Delete() {
+auto ScintillaControl::Delete() -> void {
   direct_call(SCI_REPLACESEL, 0, (sptr_t) "");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::SelectAll() {
+auto ScintillaControl::SelectAll() -> void {
   direct_call(SCI_SELECTALL, 0, 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::CreateParams ^ ScintillaControl::CreateParams::get() {
+auto ScintillaControl::CreateParams::get() -> System::Windows::Forms::CreateParams ^ {
   System::Windows::Forms::CreateParams ^ params = Control::CreateParams::get();
   params->ClassName = "Scintilla";
 
@@ -191,7 +191,7 @@ System::Windows::Forms::CreateParams ^ ScintillaControl::CreateParams::get() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::KeyCode ScintillaControl::GetKeyCode(int code) {
+auto ScintillaControl::GetKeyCode(int code) -> mforms::KeyCode {
   auto key = mforms::KeyUnkown;
   switch (code) {
     case Keys::Return:
@@ -211,7 +211,7 @@ mforms::KeyCode ScintillaControl::GetKeyCode(int code) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::ModifierKey ScintillaControl::GetModifiers(System::Windows::Forms::Keys keyData) {
+auto ScintillaControl::GetModifiers(System::Windows::Forms::Keys keyData) -> mforms::ModifierKey {
   return ViewWrapper::GetModifiers(keyData);
 }
 
@@ -300,7 +300,7 @@ void ScintillaControl::WndProc(System::Windows::Forms::Message % m) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ScintillaControl::ShowFindPanel(bool doReplace) {
+auto ScintillaControl::ShowFindPanel(bool doReplace) -> void {
   backend->show_find_panel(doReplace);
 }
 
@@ -329,7 +329,7 @@ CodeEditorWrapper::CodeEditorWrapper(mforms::CodeEditor *backend) : ViewWrapper(
 
 //--------------------------------------------------------------------------------------------------
 
-bool CodeEditorWrapper::create(mforms::CodeEditor *backend, bool showInfo) {
+auto CodeEditorWrapper::create(mforms::CodeEditor *backend, bool showInfo) -> bool {
   CodeEditorWrapper *wrapper = new CodeEditorWrapper(backend);
   ScintillaControl ^ editor = CodeEditorWrapper::Create<ScintillaControl>(backend, wrapper);
   editor->SetBackend(backend);
@@ -339,14 +339,14 @@ bool CodeEditorWrapper::create(mforms::CodeEditor *backend, bool showInfo) {
 
 //--------------------------------------------------------------------------------------------------
 
-sptr_t CodeEditorWrapper::send_editor(mforms::CodeEditor *backend, unsigned int message, uptr_t wParam, sptr_t lParam) {
+auto CodeEditorWrapper::send_editor(mforms::CodeEditor *backend, unsigned int message, uptr_t wParam, sptr_t lParam) -> sptr_t {
   ScintillaControl ^ editor = CodeEditorWrapper::GetManagedObject<ScintillaControl>(backend);
   return editor->direct_call(message, wParam, lParam);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void CodeEditorWrapper::show_find_panel(mforms::CodeEditor *backend, bool show) {
+auto CodeEditorWrapper::show_find_panel(mforms::CodeEditor *backend, bool show) -> void {
   mforms::FindPanel *find_panel = backend->get_find_panel();
   if (find_panel != NULL) {
     Control ^ find_control = FindPanelWrapper::GetControl(find_panel);
@@ -371,7 +371,7 @@ void CodeEditorWrapper::show_find_panel(mforms::CodeEditor *backend, bool show) 
 
 //--------------------------------------------------------------------------------------------------
 
-void CodeEditorWrapper::register_file_drop(mforms::DropDelegate *target) {
+auto CodeEditorWrapper::register_file_drop(mforms::DropDelegate *target) -> void {
   ScintillaControl ^ editor = CodeEditorWrapper::GetManagedObject<ScintillaControl>();
   editor->SetDropTarget(target);
   DragAcceptFiles((HWND)editor->Handle.ToPointer(), true);
@@ -379,7 +379,7 @@ void CodeEditorWrapper::register_file_drop(mforms::DropDelegate *target) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CodeEditorWrapper::init() {
+auto CodeEditorWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_code_editor_impl.create = &CodeEditorWrapper::create;

@@ -65,7 +65,7 @@ namespace MySQL {
         List = ::wb::OverviewBE::MList
       };
 
-      inline ::wb::OverviewBE *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> ::wb::OverviewBE * {
         return static_cast<::wb::OverviewBE *>(TreeModelWrapper::get_unmanaged_object());
       }
 
@@ -79,15 +79,14 @@ namespace MySQL {
         delete uiform;
       }
 
-      MySQL::Base::UIForm ^ get_uiform() { return uiform; }
+      auto get_uiform() -> MySQL::Base::UIForm ^ { return uiform; }
 
-        bool matches_handle(System::IntPtr handle) {
+        auto matches_handle(System::IntPtr handle) -> bool {
         return (dynamic_cast<bec::UIForm *>(get_unmanaged_object()) ==
                 reinterpret_cast<bec::UIForm *>(handle.ToPointer()));
       }
 
-      System::String ^
-        get_title() {
+      auto get_title() -> System::String ^ {
           std::string title = get_unmanaged_object()->get_title();
           if (title.empty())
             return nullptr;
@@ -126,11 +125,11 @@ namespace MySQL {
           return list;
         }
 
-        bool is_expansion_disabled() {
+        auto is_expansion_disabled() -> bool {
         return get_unmanaged_object()->is_expansion_disabled();
       }
 
-      int get_default_tab_page_index() {
+      auto get_default_tab_page_index() -> int {
         return get_unmanaged_object()->get_default_tab_page_index();
       }
 
@@ -138,11 +137,11 @@ namespace MySQL {
         get_unmanaged_object()->focus_node(*node->get_unmanaged_object());
       }
 
-      void begin_selection_marking() {
+      auto begin_selection_marking() -> void {
         get_unmanaged_object()->begin_selection_marking();
       }
 
-      void end_selection_marking() {
+      auto end_selection_marking() -> void {
         get_unmanaged_object()->end_selection_marking();
       }
 
@@ -158,7 +157,7 @@ namespace MySQL {
         return get_unmanaged_object()->request_delete_object(*node->get_unmanaged_object());
       }
 
-      bool request_delete_selection() {
+      auto request_delete_selection() -> bool {
         return get_unmanaged_object()->request_delete_selected() != 0;
       }
 
@@ -195,11 +194,11 @@ namespace MySQL {
           return nullptr;
         }
 
-        bool can_close() {
+        auto can_close() -> bool {
         return get_unmanaged_object()->can_close();
       }
 
-      void close() {
+      auto close() -> void {
         get_unmanaged_object()->close();
       }
 

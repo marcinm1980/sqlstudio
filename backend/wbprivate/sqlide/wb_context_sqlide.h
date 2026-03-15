@@ -55,49 +55,49 @@ namespace wb {
   public:
     WBContextSQLIDE();
     virtual ~WBContextSQLIDE();
-    void init();
-    void finalize();
+    auto init() -> void;
+    auto finalize() -> void;
 
-    static void detect_auto_save_files(const std::string &autosave_dir);
-    static std::map<std::string, std::string> auto_save_sessions();
+    static auto detect_auto_save_files(const std::string &autosave_dir) -> void;
+    static auto auto_save_sessions() -> std::map<std::string, std::string>;
 
-    std::shared_ptr<SqlEditorForm> create_connected_editor(const db_mgmt_ConnectionRef &conn);
+    auto create_connected_editor(const db_mgmt_ConnectionRef &conn) -> std::shared_ptr<SqlEditorForm>;
 
-    CommandUI *get_cmdui();
+    auto get_cmdui() -> CommandUI *;
 
-    SqlEditorForm *get_active_sql_editor();
+    auto get_active_sql_editor() -> SqlEditorForm *;
 
-    bool activate_live_object(GrtObjectRef object);
+    auto activate_live_object(GrtObjectRef object) -> bool;
 
-    void open_document(const std::string &path);
+    auto open_document(const std::string &path) -> void;
 
-    bool request_quit();
+    auto request_quit() -> bool;
 
-    void reconnect_editor(SqlEditorForm *editor);
+    auto reconnect_editor(SqlEditorForm *editor) -> void;
 
     void editor_will_close(SqlEditorForm *); // to be called by SqlEditorForm
 
   public:
-    void update_plugin_arguments_pool(bec::ArgumentPool &args);
+    auto update_plugin_arguments_pool(bec::ArgumentPool &args) -> void;
 
-    db_query_EditorRef get_grt_editor_object(SqlEditorForm *editor);
-    std::list<std::weak_ptr<SqlEditorForm> > *get_open_editors() {
+    auto get_grt_editor_object(SqlEditorForm *editor) -> db_query_EditorRef;
+    auto get_open_editors() -> std::list<std::weak_ptr<SqlEditorForm> > * {
       return &_open_editors;
     }
 
   private:
     void call_in_editor(void (SqlEditorForm::*method)());
-    void call_in_editor_str(void (SqlEditorForm::*method)(const std::string &arg), const std::string &arg);
-    void call_in_editor_str2(void (SqlEditorForm::*method)(const std::string &arg1, bool arg2, bool arg3),
-                             const std::string &arg1, bool arg2, bool arg3);
-    void call_in_editor_bool(void (SqlEditorForm::*method)(bool arg), bool arg);
+    auto call_in_editor_str(void (SqlEditorForm::*method)(const std::string &arg), const std::string &arg) -> void;
+    auto call_in_editor_str2(void (SqlEditorForm::*method)(const std::string &arg1, bool arg2, bool arg3),
+                             const std::string &arg1, bool arg2, bool arg3) -> void;
+    auto call_in_editor_bool(void (SqlEditorForm::*method)(bool arg), bool arg) -> void;
 
     void call_in_editor_panel(void (SqlEditorPanel::*method)());
 
-    bool auto_save_workspaces();
-    void option_changed(grt::internal::OwnedDict *dict, bool, const std::string &key);
+    auto auto_save_workspaces() -> bool;
+    auto option_changed(grt::internal::OwnedDict *dict, bool, const std::string &key) -> void;
 
-    virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
+    virtual auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
   };
 };
 

@@ -32,11 +32,11 @@ mforms::gtk::SplitterImpl::SplitterImpl(::mforms::Splitter *self, bool horiz) : 
   _paned->show();
 }
 
-bool mforms::gtk::SplitterImpl::create(::mforms::Splitter *self, bool horiz) {
+auto mforms::gtk::SplitterImpl::create(::mforms::Splitter *self, bool horiz) -> bool {
   return new SplitterImpl(self, horiz);
 }
 
-void mforms::gtk::SplitterImpl::add(Splitter *self, View *child, int minwidth, bool fixed) {
+auto mforms::gtk::SplitterImpl::add(Splitter *self, View *child, int minwidth, bool fixed) -> void {
   SplitterImpl *splitview = self->get_data<SplitterImpl>();
 
   if (!splitview->_paned->get_child1())
@@ -45,25 +45,25 @@ void mforms::gtk::SplitterImpl::add(Splitter *self, View *child, int minwidth, b
     splitview->_paned->pack2(*child->get_data<ViewImpl>()->get_outer(), !fixed, true);
 }
 
-void mforms::gtk::SplitterImpl::remove(Splitter *self, View *child) {
+auto mforms::gtk::SplitterImpl::remove(Splitter *self, View *child) -> void {
   SplitterImpl *splitview = self->get_data<SplitterImpl>();
 
   splitview->_paned->remove(*child->get_data<ViewImpl>()->get_outer());
 }
 
-void mforms::gtk::SplitterImpl::set_divider_position(Splitter *self, int pos) {
+auto mforms::gtk::SplitterImpl::set_divider_position(Splitter *self, int pos) -> void {
   SplitterImpl *splitview = self->get_data<SplitterImpl>();
 
   splitview->_paned->set_position(pos);
 }
 
-int mforms::gtk::SplitterImpl::get_divider_position(Splitter *self) {
+auto mforms::gtk::SplitterImpl::get_divider_position(Splitter *self) -> int {
   SplitterImpl *splitview = self->get_data<SplitterImpl>();
 
   return splitview->_paned->get_position();
 }
 
-void mforms::gtk::SplitterImpl::set_expanded(Splitter *self, bool first, bool expand) {
+auto mforms::gtk::SplitterImpl::set_expanded(Splitter *self, bool first, bool expand) -> void {
   SplitterImpl *sv = self->get_data<SplitterImpl>();
 
   if (sv && sv->_paned) {
@@ -77,7 +77,7 @@ void mforms::gtk::SplitterImpl::set_expanded(Splitter *self, bool first, bool ex
   }
 }
 
-void mforms::gtk::SplitterImpl::init() {
+auto mforms::gtk::SplitterImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_splitter_impl.create = &SplitterImpl::create;

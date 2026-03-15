@@ -35,7 +35,7 @@
 namespace test_suite {
   //-----------------------------------------------------------------------------------------------------
   // Read whole file as bytes (binary to avoid platform newline transforms).
-  static bool read_file_bytes(const std::filesystem::path &p, std::string &out) {
+  static auto read_file_bytes(const std::filesystem::path &p, std::string &out) -> bool {
     std::ifstream in(p, std::ios::binary);
     if (!in) {
       return false;
@@ -52,8 +52,8 @@ namespace test_suite {
   //-----------------------------------------------------------------------------------------------------
 
   // Normalize line endings to '\n'. Optionally trim trailing spaces per-line and ignore final newline.
-  static std::string normalize_text(std::string_view src, bool trim_trailing_space_per_line = false,
-                                    bool ignore_final_newline = true, bool strip_utf8_bom = true) {
+  static auto normalize_text(std::string_view src, bool trim_trailing_space_per_line = false,
+                                    bool ignore_final_newline = true, bool strip_utf8_bom = true) -> std::string {
     std::string dst;
     dst.reserve(src.size());
     size_t i = 0, n = src.size();
@@ -122,8 +122,8 @@ namespace test_suite {
   //-----------------------------------------------------------------------------------------------------
 
   // Returns true if contents are equal after normalization.
-  bool equal_text_files_ignoring_eol(const std::filesystem::path &a, const std::filesystem::path &b,
-                                     bool trim_trailing_space_per_line = false, bool ignore_final_newline = true) {
+  auto equal_text_files_ignoring_eol(const std::filesystem::path &a, const std::filesystem::path &b,
+                                     bool trim_trailing_space_per_line = false, bool ignore_final_newline = true) -> bool {
     std::string sa, sb;
     if (!read_file_bytes(a, sa) || !read_file_bytes(b, sb)) {
       return false; // could also throw if you prefer

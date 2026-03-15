@@ -186,16 +186,14 @@ static uchar NEAR sort_order_euc_kr[]=
 #define iseuc_kr(c)     ((0xa1<=(uchar)(c) && (uchar)(c)<=0xfe))
 
 
-static int ismbchar_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
-		    const char* p, const char *e)
-{
+static auto ismbchar_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
+		    const char* p, const char *e) -> int {
   return ((*(uchar*)(p)<0x80)? 0:\
           iseuc_kr(*(p)) && (e)-(p)>1 && iseuc_kr(*((p)+1))? 2:\
           0);
 }
 
-static int mbcharlen_euc_kr(CHARSET_INFO *cs __attribute__((unused)),uint c)
-{
+static auto mbcharlen_euc_kr(CHARSET_INFO *cs __attribute__((unused)),uint c) -> int {
   return (iseuc_kr(c) ? 2 : 1);
 }
 
@@ -4146,7 +4144,7 @@ static uint16 tab_ksc5601_uni1[]={
 0x5E0C,0x6199,0x6198,0x6231,0x665E,0x66E6,0x7199,0x71B9,
 0x71BA,0x72A7,0x79A7,0x7A00,0x7FB2,0x8A70};
 
-static int func_ksc5601_uni_onechar(int code){
+static auto func_ksc5601_uni_onechar(int code) -> int {
   if ((code>=0x8141)&&(code<=0xC8FE))
     return(tab_ksc5601_uni0[code-0x8141]);
   if ((code>=0xCAA1)&&(code<=0xFDFE))
@@ -8558,7 +8556,7 @@ static uint16 tab_uni_ksc560110[]={
      0,     0,     0,     0,     0,     0,     0,0xA1CB,
 0xA1CC,0xA1FE,0xA3FE,     0,0xA1CD,0xA3DC};
 
-static int func_uni_ksc5601_onechar(int code){
+static auto func_uni_ksc5601_onechar(int code) -> int {
   if ((code>=0x00A1)&&(code<=0x0167))
     return(tab_uni_ksc56010[code-0x00A1]);
   if ((code>=0x02C7)&&(code<=0x0451))
@@ -8585,10 +8583,8 @@ static int func_uni_ksc5601_onechar(int code){
 }
 
 
-static int
-my_wc_mb_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
-		 my_wc_t wc, uchar *s, uchar *e)
-{
+static auto my_wc_mb_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
+		 my_wc_t wc, uchar *s, uchar *e) -> int {
   int code;
   
   if (s >= e)
@@ -8612,10 +8608,8 @@ my_wc_mb_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
   return 2;
 }
 
-static int 
-my_mb_wc_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
-		 my_wc_t *pwc, const uchar *s, const uchar *e)
-{
+static auto my_mb_wc_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
+		 my_wc_t *pwc, const uchar *s, const uchar *e) -> int {
   
   int hi=s[0];
   
@@ -8641,11 +8635,9 @@ my_mb_wc_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
 /*
   Returns well formed length of a EUC-KR string.
 */
-static uint
-my_well_formed_len_euckr(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_well_formed_len_euckr(CHARSET_INFO *cs __attribute__((unused)),
                          const char *b, const char *e,
-                         uint pos, int *error)
-{
+                         uint pos, int *error) -> uint {
   const char *b0= b;
   const char *emb= e - 1; /* Last possible end of an MB character */
 

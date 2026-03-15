@@ -35,10 +35,10 @@ namespace mforms {
 //================================================================================
 // mforms_ViewReference
 
-GRT_STRUCTS_WRAPPER_PUBLIC mforms::Object *mforms_from_grt(mforms_ObjectReferenceRef object);
+auto mforms_from_grt(mforms_ObjectReferenceRef object) -> GRT_STRUCTS_WRAPPER_PUBLIC mforms::Object *;
 
-GRT_STRUCTS_WRAPPER_PUBLIC mforms_ObjectReferenceRef mforms_to_grt(mforms::Object *object,
-                                                                   const std::string &mforms_type_name);
+auto mforms_to_grt(mforms::Object *object,
+                                                                   const std::string &mforms_type_name) -> GRT_STRUCTS_WRAPPER_PUBLIC mforms_ObjectReferenceRef;
 
-GRT_STRUCTS_WRAPPER_PUBLIC mforms_ObjectReferenceRef mforms_to_grt(mforms::ContextMenu *menu);
-GRT_STRUCTS_WRAPPER_PUBLIC mforms_ObjectReferenceRef mforms_to_grt(mforms::DockingPoint *dpoint);
+auto mforms_to_grt(mforms::ContextMenu *menu) -> GRT_STRUCTS_WRAPPER_PUBLIC mforms_ObjectReferenceRef;
+auto mforms_to_grt(mforms::DockingPoint *dpoint) -> GRT_STRUCTS_WRAPPER_PUBLIC mforms_ObjectReferenceRef;

@@ -665,7 +665,7 @@ LayoutBox::LayoutBox() {
 
 //--------------------------------------------------------------------------------------------------
 
-System::Drawing::Size LayoutBox::GetPreferredSize(System::Drawing::Size proposedSize) {
+auto LayoutBox::GetPreferredSize(System::Drawing::Size proposedSize) -> System::Drawing::Size {
   return layoutEngine->GetPreferredSize(this, proposedSize);
 }
 
@@ -685,7 +685,7 @@ BoxWrapper::BoxWrapper(mforms::Box *box) : ViewWrapper(box) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool BoxWrapper::create(mforms::Box *backend, bool horizontal) {
+auto BoxWrapper::create(mforms::Box *backend, bool horizontal) -> bool {
   BoxWrapper *wrapper = new BoxWrapper(backend);
   LayoutBox ^ box = Create<LayoutBox>(backend, wrapper);
   box->Horizontal = horizontal;
@@ -695,7 +695,7 @@ bool BoxWrapper::create(mforms::Box *backend, bool horizontal) {
 
 //-------------------------------------------------------------------------------------------------
 
-void BoxWrapper::add(mforms::Box *backend, mforms::View *child, bool expand, bool fill) {
+auto BoxWrapper::add(mforms::Box *backend, mforms::View *child, bool expand, bool fill) -> void {
   Control ^ control = BoxWrapper::GetControl(child);
   if (backend->is_horizontal())
     control->Dock = DockStyle::Left;
@@ -709,7 +709,7 @@ void BoxWrapper::add(mforms::Box *backend, mforms::View *child, bool expand, boo
 
 //-------------------------------------------------------------------------------------------------
 
-void BoxWrapper::add_end(mforms::Box *backend, mforms::View *child, bool expand, bool fill) {
+auto BoxWrapper::add_end(mforms::Box *backend, mforms::View *child, bool expand, bool fill) -> void {
   Control ^ control = BoxWrapper::GetControl(child);
   if (backend->is_horizontal())
     control->Dock = DockStyle::Right;
@@ -723,7 +723,7 @@ void BoxWrapper::add_end(mforms::Box *backend, mforms::View *child, bool expand,
 
 //-------------------------------------------------------------------------------------------------
 
-void BoxWrapper::remove(mforms::Box *backend, mforms::View *child) {
+auto BoxWrapper::remove(mforms::Box *backend, mforms::View *child) -> void {
   LayoutBox ^ box = BoxWrapper::GetManagedObject<LayoutBox>(backend);
   box->Remove(BoxWrapper::GetControl(child));
   backend->set_layout_dirty(true);
@@ -731,7 +731,7 @@ void BoxWrapper::remove(mforms::Box *backend, mforms::View *child) {
 
 //-------------------------------------------------------------------------------------------------
 
-void BoxWrapper::set_spacing(mforms::Box *backend, int space) {
+auto BoxWrapper::set_spacing(mforms::Box *backend, int space) -> void {
   LayoutBox ^ box = BoxWrapper::GetManagedObject<LayoutBox>(backend);
   box->Spacing = space;
   backend->set_layout_dirty(true);
@@ -739,7 +739,7 @@ void BoxWrapper::set_spacing(mforms::Box *backend, int space) {
 
 //-------------------------------------------------------------------------------------------------
 
-void BoxWrapper::set_homogeneous(mforms::Box *backend, bool value) {
+auto BoxWrapper::set_homogeneous(mforms::Box *backend, bool value) -> void {
   LayoutBox ^ box = BoxWrapper::GetManagedObject<LayoutBox>(backend);
   box->Homogeneous = value;
   backend->set_layout_dirty(true);
@@ -747,7 +747,7 @@ void BoxWrapper::set_homogeneous(mforms::Box *backend, bool value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BoxWrapper::init() {
+auto BoxWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_box_impl.create = &BoxWrapper::create;

@@ -39,20 +39,20 @@ namespace mdc {
     Connector(CanvasItem *owner);
     virtual ~Connector();
 
-    void set_update_handler(const std::function<void(Connector *)> &update_handler);
+    auto set_update_handler(const std::function<void(Connector *)> &update_handler) -> void;
 
     virtual auto try_connect(Magnet *magnet) -> bool;
     virtual auto try_disconnect() -> bool;
 
-    virtual void connect(Magnet *magnet);
-    virtual void disconnect();
+    virtual auto connect(Magnet *magnet) -> void;
+    virtual auto disconnect() -> void;
 
-    void set_draggable(bool flag);
+    auto set_draggable(bool flag) -> void;
     auto is_draggable() -> bool {
       return _draggable;
     }
 
-    void set_tag(int tag) {
+    auto set_tag(int tag) -> void {
       _tag = tag;
     }
     auto get_tag() -> int {
@@ -71,7 +71,7 @@ namespace mdc {
     auto get_position() -> base::Point;
 
     // callback for Magnet
-    virtual void magnet_moved(Magnet *magnet);
+    virtual auto magnet_moved(Magnet *magnet) -> void;
 
   protected:
     CanvasItem *_owner;

@@ -56,7 +56,7 @@ DEFAULT_LOG_DOMAIN(DOMAIN_MFORMS_WRAPPER)
 /**
  * Converts Windows specific mouse button identifiers mforms identifiers.
  */
-static mforms::MouseButton convert_mouse_button(MouseButtons button) {
+static auto convert_mouse_button(MouseButtons button) -> mforms::MouseButton {
   switch (button) {
     case MouseButtons::Left:
       return mforms::MouseButtonLeft;
@@ -90,7 +90,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void SetDropTarget(mforms::DropDelegate *theTarget) {
+  auto SetDropTarget(mforms::DropDelegate *theTarget) -> void {
     target = theTarget;
   }
 
@@ -112,7 +112,7 @@ public:
    * Converts drag event key states flags to mforms constants.
    * This is not the same as converting KeyData (like in wf_textbox.cpp).
    */
-  mforms::ModifierKey GetModifiers(int keyState) {
+  auto GetModifiers(int keyState) -> mforms::ModifierKey {
     mforms::ModifierKey modifiers = mforms::ModifierNoModifier;
     if ((keyState & 8) == 8)
       modifiers = modifiers | mforms::ModifierControl;
@@ -226,7 +226,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  mforms::KeyCode GetKeys(System::Windows::Forms::Keys arg) {
+  auto GetKeys(System::Windows::Forms::Keys arg) -> mforms::KeyCode {
     mforms::KeyCode code = mforms::KeyUnkown;
     switch (arg) {
     case Keys::Home:
@@ -457,7 +457,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void Relayout() {
+  auto Relayout() -> void {
     // Not really an event handler but a target for a threaded invocation.
     control->PerformLayout(control, "Bounds");
   }
@@ -476,7 +476,7 @@ ViewWrapper::ViewWrapper(mforms::View *view) : ObjectWrapper(view) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ViewWrapper::destroy(mforms::View *backend) {
+auto ViewWrapper::destroy(mforms::View *backend) -> void {
   // Not needed anymore.
 }
 
@@ -629,7 +629,7 @@ void ViewWrapper::set_layout_dirty(Control ^ control, bool value) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::show(mforms::View *backend, bool show) {
+auto ViewWrapper::show(mforms::View *backend, bool show) -> void {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   Control ^ control = wrapper->GetControl();
 
@@ -657,49 +657,49 @@ void ViewWrapper::show(mforms::View *backend, bool show) {
 
 //-------------------------------------------------------------------------------------------------
 
-int ViewWrapper::get_width(const mforms::View *backend) {
+auto ViewWrapper::get_width(const mforms::View *backend) -> int {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->Width;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-int ViewWrapper::get_height(const mforms::View *backend) {
+auto ViewWrapper::get_height(const mforms::View *backend) -> int {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->Height;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-int ViewWrapper::get_preferred_width(mforms::View *backend) {
+auto ViewWrapper::get_preferred_width(mforms::View *backend) -> int {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->PreferredSize.Width;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-int ViewWrapper::get_preferred_height(mforms::View *backend) {
+auto ViewWrapper::get_preferred_height(mforms::View *backend) -> int {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->PreferredSize.Height;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-int ViewWrapper::get_x(const mforms::View *backend) {
+auto ViewWrapper::get_x(const mforms::View *backend) -> int {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->Location.X;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-int ViewWrapper::get_y(const mforms::View *backend) {
+auto ViewWrapper::get_y(const mforms::View *backend) -> int {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->Location.Y;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_size(mforms::View *backend, int w, int h) {
+auto ViewWrapper::set_size(mforms::View *backend, int w, int h) -> void {
   Control ^ control = GetManagedObject<Control>(backend);
   Size newSize = control->Size;
   Size newMinSize = control->MinimumSize;
@@ -720,7 +720,7 @@ void ViewWrapper::set_size(mforms::View *backend, int w, int h) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_min_size(mforms::View *backend, int w, int h) {
+auto ViewWrapper::set_min_size(mforms::View *backend, int w, int h) -> void {
   Control ^ control = GetManagedObject<Control>(backend);
   Size newMinSize = control->MinimumSize;
   if (w >= 0)
@@ -733,14 +733,14 @@ void ViewWrapper::set_min_size(mforms::View *backend, int w, int h) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_padding(mforms::View *backend, int left, int top, int right, int bottom) {
+auto ViewWrapper::set_padding(mforms::View *backend, int left, int top, int right, int bottom) -> void {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   wrapper->set_padding(left, top, right, bottom);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_position(mforms::View *backend, int x, int y) {
+auto ViewWrapper::set_position(mforms::View *backend, int x, int y) -> void {
   Control ^ control = GetManagedObject<Control>(backend);
   control->Location = Point(x, y);
   if (backend->get_parent() != NULL)
@@ -749,7 +749,7 @@ void ViewWrapper::set_position(mforms::View *backend, int x, int y) {
 
 //-------------------------------------------------------------------------------------------------
 
-std::pair<int, int> ViewWrapper::client_to_screen(mforms::View *backend, int x, int y) {
+auto ViewWrapper::client_to_screen(mforms::View *backend, int x, int y) -> std::pair<int, int> {
   Control ^ control = GetManagedObject<Control>(backend);
   System::Drawing::Point location = System::Drawing::Point(x, y);
   location = control->PointToScreen(location);
@@ -758,7 +758,7 @@ std::pair<int, int> ViewWrapper::client_to_screen(mforms::View *backend, int x, 
 
 //-------------------------------------------------------------------------------------------------
 
-std::pair<int, int> ViewWrapper::screen_to_client(mforms::View *backend, int x, int y) {
+auto ViewWrapper::screen_to_client(mforms::View *backend, int x, int y) -> std::pair<int, int> {
   Control ^ control = GetManagedObject<Control>(backend);
   System::Drawing::Point location = System::Drawing::Point(x, y);
   location = control->PointToClient(location);
@@ -767,7 +767,7 @@ std::pair<int, int> ViewWrapper::screen_to_client(mforms::View *backend, int x, 
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::relayout(mforms::View *backend) {
+auto ViewWrapper::relayout(mforms::View *backend) -> void {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   Control ^ control = wrapper->GetControl();
   if (control->InvokeRequired)
@@ -778,27 +778,27 @@ void ViewWrapper::relayout(mforms::View *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_enabled(mforms::View *backend, bool flag) {
+auto ViewWrapper::set_enabled(mforms::View *backend, bool flag) -> void {
   Control ^ control = GetManagedObject<Control>(backend);
   control->Enabled = flag;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool ViewWrapper::is_enabled(mforms::View *backend) {
+auto ViewWrapper::is_enabled(mforms::View *backend) -> bool {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->Enabled;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-mforms::View *ViewWrapper::find_subview(mforms::View *backend, std::string &name) {
+auto ViewWrapper::find_subview(mforms::View *backend, std::string &name) -> mforms::View * {
   return NULL;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_name(mforms::View *backend, const std::string &text) {
+auto ViewWrapper::set_name(mforms::View *backend, const std::string &text) -> void {
   Control ^ control = GetManagedObject<Control>(backend);
   control->Name = CppStringToNative(text);
   control->AccessibleName = control->Name;
@@ -806,14 +806,14 @@ void ViewWrapper::set_name(mforms::View *backend, const std::string &text) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_needs_repaint(mforms::View *backend) {
+auto ViewWrapper::set_needs_repaint(mforms::View *backend) -> void {
   Control ^ control = GetManagedObject<Control>(backend);
   control->Invalidate();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::suspend_layout(mforms::View *backend, bool flag) {
+auto ViewWrapper::suspend_layout(mforms::View *backend, bool flag) -> void {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   wrapper->layoutSuspended = flag;
 
@@ -829,14 +829,14 @@ void ViewWrapper::suspend_layout(mforms::View *backend, bool flag) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_front_color(mforms::View *backend, const std::string &color) {
+auto ViewWrapper::set_front_color(mforms::View *backend, const std::string &color) -> void {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   wrapper->set_front_color(CppStringToNativeRaw(color));
 }
 
 //-------------------------------------------------------------------------------------------------
 
-std::string ViewWrapper::get_front_color(mforms::View *backend) {
+auto ViewWrapper::get_front_color(mforms::View *backend) -> std::string {
   Control ^ control = GetManagedObject<Control>(backend);
   Color ^ color = control->ForeColor;
   if (color == nullptr)
@@ -846,7 +846,7 @@ std::string ViewWrapper::get_front_color(mforms::View *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_back_color(mforms::View *backend, const std::string &color) {
+auto ViewWrapper::set_back_color(mforms::View *backend, const std::string &color) -> void {
   FlatTabControl ^ tabcontrol = GetManagedObject<FlatTabControl>(backend);
   if (tabcontrol != nullptr) {
     if (color.empty())
@@ -872,7 +872,7 @@ void ViewWrapper::set_back_color(mforms::View *backend, const std::string &color
 
 //-------------------------------------------------------------------------------------------------
 
-std::string ViewWrapper::get_back_color(mforms::View *backend) {
+auto ViewWrapper::get_back_color(mforms::View *backend) -> std::string {
   Control ^ control = GetManagedObject<Control>(backend);
   Color ^ color = control->BackColor;
   if (color == nullptr)
@@ -882,7 +882,7 @@ std::string ViewWrapper::get_back_color(mforms::View *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_back_image(mforms::View *backend, const std::string &path, mforms::Alignment align) {
+auto ViewWrapper::set_back_image(mforms::View *backend, const std::string &path, mforms::Alignment align) -> void {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   String ^ native_path = AppWrapper::get_image_path(CppStringToNative(path));
   if (File::Exists(native_path)) {
@@ -893,7 +893,7 @@ void ViewWrapper::set_back_image(mforms::View *backend, const std::string &path,
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::focus(mforms::View *backend) {
+auto ViewWrapper::focus(mforms::View *backend) -> void {
   Control ^ control = GetManagedObject<Control>(backend);
   System::Windows::Forms::Form ^ form = control->FindForm();
   if (form != nullptr)
@@ -904,14 +904,14 @@ void ViewWrapper::focus(mforms::View *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-bool ViewWrapper::has_focus(mforms::View *backend) {
+auto ViewWrapper::has_focus(mforms::View *backend) -> bool {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->Focused;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_tooltip(mforms::View *backend, const std::string &text) {
+auto ViewWrapper::set_tooltip(mforms::View *backend, const std::string &text) -> void {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   Control ^ control = wrapper->GetControl();
   if (static_cast<ToolTip ^>(wrapper->tooltip) == nullptr) {
@@ -926,7 +926,7 @@ void ViewWrapper::set_tooltip(mforms::View *backend, const std::string &text) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_font(const std::string &fontDescription) {
+auto ViewWrapper::set_font(const std::string &fontDescription) -> void {
   Control ^ control = GetManagedObject<Control>();
 
   std::string font;
@@ -952,21 +952,21 @@ void ViewWrapper::set_font(const std::string &fontDescription) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_font(mforms::View *backend, const std::string &text) {
+auto ViewWrapper::set_font(mforms::View *backend, const std::string &text) -> void {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   wrapper->set_font(text);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool ViewWrapper::is_shown(mforms::View *backend) {
+auto ViewWrapper::is_shown(mforms::View *backend) -> bool {
   Control ^ control = GetManagedObject<Control>(backend);
   return control->Visible;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool ViewWrapper::is_fully_visible(mforms::View *backend) {
+auto ViewWrapper::is_fully_visible(mforms::View *backend) -> bool {
   Control ^ control = GetManagedObject<Control>(backend);
   while (control->Visible) {
     if (control->Parent == nullptr)
@@ -979,8 +979,8 @@ bool ViewWrapper::is_fully_visible(mforms::View *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::register_drop_formats(mforms::View *backend, mforms::DropDelegate *target,
-                                        const std::vector<std::string> &formats) {
+auto ViewWrapper::register_drop_formats(mforms::View *backend, mforms::DropDelegate *target,
+                                        const std::vector<std::string> &formats) -> void {
   Control ^ control = GetManagedObject<Control>(backend);
   control->AllowDrop =
     !formats.empty(); // On Windows we don't need to preregister formats like we do on the other platforms.
@@ -1002,8 +1002,8 @@ void ViewWrapper::register_drop_formats(mforms::View *backend, mforms::DropDeleg
 
 //-------------------------------------------------------------------------------------------------
 
-mforms::DragOperation ViewWrapper::drag_text(mforms::View *backend, mforms::DragDetails details,
-                                             const std::string &text) {
+auto ViewWrapper::drag_text(mforms::View *backend, mforms::DragDetails details,
+                                             const std::string &text) -> mforms::DragOperation {
   Control ^ control = GetManagedObject<Control>(backend);
   System::Windows::Forms::DataObject ^ dataObject =
     gcnew System::Windows::Forms::DataObject(gcnew MySQL::Utilities::DataObject());
@@ -1032,8 +1032,8 @@ mforms::DragOperation ViewWrapper::drag_text(mforms::View *backend, mforms::Drag
 
 //-------------------------------------------------------------------------------------------------
 
-mforms::DragOperation ViewWrapper::drag_data(mforms::View *backend, mforms::DragDetails details, void *data,
-                                             const std::string &format) {
+auto ViewWrapper::drag_data(mforms::View *backend, mforms::DragDetails details, void *data,
+                                             const std::string &format) -> mforms::DragOperation {
   Control ^ control = GetManagedObject<Control>(backend);
   DataWrapper ^ wrapper = gcnew DataWrapper(data);
   System::Windows::Forms::DataObject ^ dataObject =
@@ -1064,7 +1064,7 @@ mforms::DragOperation ViewWrapper::drag_data(mforms::View *backend, mforms::Drag
 
 //-------------------------------------------------------------------------------------------------
 
-mforms::DropPosition ViewWrapper::get_drop_position(mforms::View *backend) {
+auto ViewWrapper::get_drop_position(mforms::View *backend) -> mforms::DropPosition {
   ViewWrapper *wrapper = backend->get_data<ViewWrapper>();
   return wrapper->get_drop_position();
 }
@@ -1201,7 +1201,7 @@ bool ViewWrapper::can_layout(Control ^ control, String ^ reason) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::flush_events(mforms::View *) {
+auto ViewWrapper::flush_events(mforms::View *) -> void {
   Application::DoEvents();
 }
 
@@ -1252,13 +1252,13 @@ void ViewWrapper::DrawBackground(PaintEventArgs ^ args) {
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_resize_mode(AutoResizeMode mode) {
+auto ViewWrapper::set_resize_mode(AutoResizeMode mode) -> void {
   _resize_mode = mode;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void ViewWrapper::Initialize() {
+auto ViewWrapper::Initialize() -> void {
   Control ^ control = GetControl();
 
   // Can be null, e.g. for non-control objects like dialogs.
@@ -1307,14 +1307,14 @@ void ViewWrapper::set_front_color(String ^ color) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ViewWrapper::set_padding(int left, int top, int right, int bottom) {
+auto ViewWrapper::set_padding(int left, int top, int right, int bottom) -> void {
   Control ^ control = GetManagedObject<Control>();
   control->Padding = System::Windows::Forms::Padding(left, top, right, bottom);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::ModifierKey ViewWrapper::GetModifiers(Keys keyData) {
+auto ViewWrapper::GetModifiers(Keys keyData) -> mforms::ModifierKey {
   mforms::ModifierKey modifiers = mforms::ModifierNoModifier;
   if ((keyData & Keys::Control) == Keys::Control)
     modifiers = modifiers | mforms::ModifierControl;
@@ -1331,7 +1331,7 @@ mforms::ModifierKey ViewWrapper::GetModifiers(Keys keyData) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ViewWrapper::init() {
+auto ViewWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_view_impl.destroy = &destroy;

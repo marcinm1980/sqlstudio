@@ -52,29 +52,29 @@ class OverviewPanel : public Gtk::ScrolledWindow {
 public:
   OverviewPanel(wb::OverviewBE *overview);
 
-  void reset();
-  void rebuild_all();
-  void update_for_resize();
+  auto reset() -> void;
+  auto rebuild_all() -> void;
+  auto update_for_resize() -> void;
 
-  void select_node(const bec::NodeId &node);
-  void refresh_node(const bec::NodeId &node);
-  void refresh_children(const bec::NodeId &node);
+  auto select_node(const bec::NodeId &node) -> void;
+  auto refresh_node(const bec::NodeId &node) -> void;
+  auto refresh_children(const bec::NodeId &node) -> void;
 
-  wb::OverviewBE *get_be() {
+  auto get_be() -> wb::OverviewBE * {
     return _overview_be;
   }
 
-  void item_popup_menu(const Gtk::TreeModel::Path &path, guint32 time, OverviewItemContainer *sender);
+  auto item_popup_menu(const Gtk::TreeModel::Path &path, guint32 time, OverviewItemContainer *sender) -> void;
 
-  virtual bool on_close() {
+  virtual auto on_close() -> bool {
     if (!_overview_be->can_close())
       return false;
     _overview_be->close();
     return false;
   }
 
-  void select_default_group_page();
-  void refresh_active_group_node_children();
+  auto select_default_group_page() -> void;
+  auto refresh_active_group_node_children() -> void;
 
 private:
   Gtk::Box *_container;
@@ -89,16 +89,16 @@ private:
   bool _freeze;
   bool _rebuilding;
 
-  void pre_refresh_groups();
+  auto pre_refresh_groups() -> void;
 
-  void update_group_note(OverviewGroupContainer *group_container, const bec::NodeId &node);
+  auto update_group_note(OverviewGroupContainer *group_container, const bec::NodeId &node) -> void;
 
-  void build_division(Gtk::Box *container, const bec::NodeId &node);
+  auto build_division(Gtk::Box *container, const bec::NodeId &node) -> void;
   void build_group(OverviewDivision *division, OverviewGroupContainer *group_container, const bec::NodeId &node,
                    int position = -1);
-  void build_group_contents(OverviewDivision *division, Gtk::Box *page, const bec::NodeId &node);
+  auto build_group_contents(OverviewDivision *division, Gtk::Box *page, const bec::NodeId &node) -> void;
 
-  void item_list_selection_changed(const std::vector<bec::NodeId> &nodes, MultiView *mview);
+  auto item_list_selection_changed(const std::vector<bec::NodeId> &nodes, MultiView *mview) -> void;
 };
 
 #endif /* _OVERVIEW_PANEL_H_ */

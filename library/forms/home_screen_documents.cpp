@@ -40,37 +40,37 @@ bool DocumentEntry::operator<(const DocumentEntry &other) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentEntry::setTitle(const std::string &t) {
+auto DocumentEntry::setTitle(const std::string &t) -> void {
   title = t;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string DocumentEntry::getAccessibilityDescription() {
+auto DocumentEntry::getAccessibilityDescription() -> std::string {
   return title;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Accessible::Role DocumentEntry::getAccessibilityRole() {
+auto DocumentEntry::getAccessibilityRole() -> base::Accessible::Role {
   return Accessible::ListItem;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Rect DocumentEntry::getAccessibilityBounds() {
+auto DocumentEntry::getAccessibilityBounds() -> base::Rect {
   return bounds;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string DocumentEntry::getAccessibilityDefaultAction() {
+auto DocumentEntry::getAccessibilityDefaultAction() -> std::string {
   return "Open Model";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentEntry::accessibilityDoDefaultAction() {
+auto DocumentEntry::accessibilityDoDefaultAction() -> void {
   if (default_handler)
     default_handler((int)bounds.center().x, (int)bounds.center().y);
 }
@@ -111,7 +111,7 @@ DocumentsSection::~DocumentsSection() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::size_t DocumentsSection::entry_from_point(int x, int y) {
+auto DocumentsSection::entry_from_point(int x, int y) -> std::size_t {
   int width = get_width();
   if (x < DOCUMENTS_LEFT_PADDING || x > (width - DOCUMENTS_RIGHT_PADDING) || y < DOCUMENTS_TOP_PADDING)
     return -1; // Outside the entries area.
@@ -149,7 +149,7 @@ std::size_t DocumentsSection::entry_from_point(int x, int y) {
  * Draws and icon followed by the given text. The given position is that of the upper left corner
  * of the image.
  */
-void DocumentsSection::draw_icon_with_text(cairo_t *cr, int x, int y, cairo_surface_t *icon, const std::string &text) {
+auto DocumentsSection::draw_icon_with_text(cairo_t *cr, int x, int y, cairo_surface_t *icon, const std::string &text) -> void {
   base::Size imageSize;
   if (icon != nullptr) {
     imageSize = mforms::Utilities::getImageSize(icon);
@@ -169,7 +169,7 @@ void DocumentsSection::draw_icon_with_text(cairo_t *cr, int x, int y, cairo_surf
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::draw_entry(cairo_t *cr, const DocumentEntry &entry, bool hot) {
+auto DocumentsSection::draw_entry(cairo_t *cr, const DocumentEntry &entry, bool hot) -> void {
   const int icon_top = 26;
   const int detail_spacing = 15;
   mforms::Utilities::paint_icon(cr, _model_icon, entry.bounds.left(), entry.bounds.top() + icon_top);
@@ -210,7 +210,7 @@ void DocumentsSection::draw_entry(cairo_t *cr, const DocumentEntry &entry, bool 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::update_filtered_documents() {
+auto DocumentsSection::update_filtered_documents() -> void {
   _filtered_documents.clear();
   _filtered_documents.reserve(_documents.size());
   switch (_display_mode) {
@@ -238,7 +238,7 @@ void DocumentsSection::update_filtered_documents() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::draw_selection_message(cairo_t *cr) {
+auto DocumentsSection::draw_selection_message(cairo_t *cr) -> void {
   // Attach the message to the current active entry as this is what is used when
   // a connection is opened.
   ssize_t column = _active_entry % _entries_per_row;
@@ -314,7 +314,7 @@ void DocumentsSection::draw_selection_message(cairo_t *cr) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::layout(cairo_t *cr) {
+auto DocumentsSection::layout(cairo_t *cr) -> void {
   if (is_layout_dirty()) {
     set_layout_dirty(false);
 
@@ -392,26 +392,26 @@ void DocumentsSection::layout(cairo_t *cr) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-const char* DocumentsSection::getTitle() {
+auto DocumentsSection::getTitle() -> const char* {
   return "Documents Section";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::cancelOperation() {
+auto DocumentsSection::cancelOperation() -> void {
   _pending_script = "";
   hide_connection_select_message();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::setFocus() {
+auto DocumentsSection::setFocus() -> void {
   // pass
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool DocumentsSection::canHandle(HomeScreenMenuType type) {
+auto DocumentsSection::canHandle(HomeScreenMenuType type) -> bool {
   switch (type) {
     case HomeMenuDocumentModelAction:
     case HomeMenuDocumentModel:
@@ -426,7 +426,7 @@ bool DocumentsSection::canHandle(HomeScreenMenuType type) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::setContextMenu(mforms::Menu *menu, HomeScreenMenuType type) {
+auto DocumentsSection::setContextMenu(mforms::Menu *menu, HomeScreenMenuType type) -> void {
   if (canHandle(type) && type == HomeMenuDocumentModel) {
     if (_model_context_menu != NULL)
       _model_context_menu->release();
@@ -440,7 +440,7 @@ void DocumentsSection::setContextMenu(mforms::Menu *menu, HomeScreenMenuType typ
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::setContextMenuAction(mforms::Menu *menu, HomeScreenMenuType type) {
+auto DocumentsSection::setContextMenuAction(mforms::Menu *menu, HomeScreenMenuType type) -> void {
   if (canHandle(type) && type == HomeMenuDocumentModelAction) {
     if (_model_action_menu != NULL)
       _model_action_menu->release();
@@ -454,7 +454,7 @@ void DocumentsSection::setContextMenuAction(mforms::Menu *menu, HomeScreenMenuTy
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::updateColors() {
+auto DocumentsSection::updateColors() -> void {
   if (_owner->isDarkModeActive()) {
     _textColor = base::Color::parse("#F4F4F4");
   } else {
@@ -464,7 +464,7 @@ void DocumentsSection::updateColors() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::updateIcons() {
+auto DocumentsSection::updateIcons() -> void {
   deleteIcons();
 
   if (_owner->isDarkModeActive()) {
@@ -494,7 +494,7 @@ void DocumentsSection::updateIcons() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) {
+auto DocumentsSection::repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) -> void {
   int width = get_width();
   int height = get_height();
 
@@ -562,8 +562,8 @@ void DocumentsSection::repaint(cairo_t *cr, int areax, int areay, int areaw, int
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::add_document(const std::string &path, const time_t &time, const std::string schemas,
-                                    long file_size) {
+auto DocumentsSection::add_document(const std::string &path, const time_t &time, const std::string schemas,
+                                    long file_size) -> void {
   DocumentEntry entry;
   entry.path = path;
   entry.timestamp = time;
@@ -606,20 +606,20 @@ void DocumentsSection::add_document(const std::string &path, const time_t &time,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::clear_documents() {
+auto DocumentsSection::clear_documents() -> void {
   _documents.clear();
   set_layout_dirty(true);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool DocumentsSection::mouse_double_click(mforms::MouseButton button, int x, int y) {
+auto DocumentsSection::mouse_double_click(mforms::MouseButton button, int x, int y) -> bool {
   return this->mouse_click(button, x, y);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool DocumentsSection::mouse_click(mforms::MouseButton button, int x, int y) {
+auto DocumentsSection::mouse_click(mforms::MouseButton button, int x, int y) -> bool {
   switch (button) {
     case mforms::MouseButtonLeft: {
       if (_show_selection_message && _close_button_rect.contains(x, y)) {
@@ -723,7 +723,7 @@ bool DocumentsSection::mouse_click(mforms::MouseButton button, int x, int y) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool DocumentsSection::mouse_leave() {
+auto DocumentsSection::mouse_leave() -> bool {
   if (_hot_heading != Nothing || _hot_entry > -1) {
     _hot_heading = Nothing;
     _hot_entry = -1;
@@ -735,7 +735,7 @@ bool DocumentsSection::mouse_leave() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool DocumentsSection::mouse_move(mforms::MouseButton button, int x, int y) {
+auto DocumentsSection::mouse_move(mforms::MouseButton button, int x, int y) -> bool {
   bool result = false;
   ssize_t entry = entry_from_point(x, y);
   if (entry != _hot_entry) {
@@ -769,7 +769,7 @@ bool DocumentsSection::mouse_move(mforms::MouseButton button, int x, int y) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::handle_command(const std::string &command) {
+auto DocumentsSection::handle_command(const std::string &command) -> void {
   if (_active_entry > -1)
     _owner->handleContextMenu(_filtered_documents[_active_entry].path, command);
   else
@@ -780,21 +780,21 @@ void DocumentsSection::handle_command(const std::string &command) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::show_connection_select_message() {
+auto DocumentsSection::show_connection_select_message() -> void {
   _show_selection_message = true;
   set_needs_repaint();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::hide_connection_select_message() {
+auto DocumentsSection::hide_connection_select_message() -> void {
   _show_selection_message = false;
   set_needs_repaint();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t DocumentsSection::getAccessibilityChildCount() {
+auto DocumentsSection::getAccessibilityChildCount() -> size_t {
   // Initial value due to the add/open/create EER Model icons
   int ret_val = 3;
   ret_val += (int)_filtered_documents.size();
@@ -804,7 +804,7 @@ size_t DocumentsSection::getAccessibilityChildCount() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Accessible* DocumentsSection::getAccessibilityChild(size_t index) {
+auto DocumentsSection::getAccessibilityChild(size_t index) -> base::Accessible* {
   base::Accessible* accessible = nullptr;
   switch (index) {
     case 0:
@@ -829,13 +829,13 @@ base::Accessible* DocumentsSection::getAccessibilityChild(size_t index) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Accessible::Role DocumentsSection::getAccessibilityRole() {
+auto DocumentsSection::getAccessibilityRole() -> base::Accessible::Role {
   return Accessible::List;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Accessible* DocumentsSection::accessibilityHitTest(ssize_t x, ssize_t y) {
+auto DocumentsSection::accessibilityHitTest(ssize_t x, ssize_t y) -> base::Accessible* {
   base::Accessible* accessible = nullptr;
 
   if (_add_button.bounds.contains(static_cast<double>(x), static_cast<double>(y)))
@@ -856,14 +856,14 @@ base::Accessible* DocumentsSection::accessibilityHitTest(ssize_t x, ssize_t y) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool DocumentsSection::accessibleHandler(int x, int y) {
+auto DocumentsSection::accessibleHandler(int x, int y) -> bool {
   mouse_move(MouseButtonLeft, x, y);
   return mouse_click(MouseButtonLeft, x, y);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DocumentsSection::deleteIcons() {
+auto DocumentsSection::deleteIcons() -> void {
   deleteSurface(_plus_icon);
   deleteSurface(_model_icon);
   deleteSurface(_sql_icon);

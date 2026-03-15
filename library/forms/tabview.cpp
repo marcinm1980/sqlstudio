@@ -45,26 +45,26 @@ TabView::~TabView() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::set_active_tab(int index) {
+auto TabView::set_active_tab(int index) -> void {
   _tabview_impl->set_active_tab(this, index);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TabView::get_active_tab() {
+auto TabView::get_active_tab() -> int {
   return _tabview_impl->get_active_tab(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TabView::add_page(View *page, const std::string &caption, bool hasCloseButton) {
+auto TabView::add_page(View *page, const std::string &caption, bool hasCloseButton) -> int {
   cache_view(page);
   return _tabview_impl->add_page(this, page, caption, hasCloseButton);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::remove_page(View *page) {
+auto TabView::remove_page(View *page) -> void {
   page->retain();
   int i = get_page_index(page);
   _tabview_impl->remove_page(this, page);
@@ -75,7 +75,7 @@ void TabView::remove_page(View *page) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::reordered(View *view, int index) {
+auto TabView::reordered(View *view, int index) -> void {
   int old_index = get_subview_index(view);
   reorder_cache(view, index);
   _signal_tab_reordered(view, old_index, index);
@@ -83,37 +83,37 @@ void TabView::reordered(View *view, int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::pin_changed(int tab, bool pinned) {
+auto TabView::pin_changed(int tab, bool pinned) -> void {
   _signal_tab_pin_changed(tab, pinned);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TabView::page_count() {
+auto TabView::page_count() -> int {
   return get_subview_count();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TabView::get_page_index(View *page) {
+auto TabView::get_page_index(View *page) -> int {
   return get_subview_index(page);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-View *TabView::get_page(int index) {
+auto TabView::get_page(int index) -> View * {
   return get_subview_at_index(index);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::set_tab_title(int page, const std::string &caption) {
+auto TabView::set_tab_title(int page, const std::string &caption) -> void {
   _tabview_impl->set_tab_title(this, page, caption);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TabView::can_close_tab(int index) {
+auto TabView::can_close_tab(int index) -> bool {
   if (!_signal_tab_closing.empty())
     return *_signal_tab_closing(index);
   return true;
@@ -121,7 +121,7 @@ bool TabView::can_close_tab(int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::set_aux_view(View *view) {
+auto TabView::set_aux_view(View *view) -> void {
   if (_aux_view)
     _aux_view->release();
   _aux_view = view;
@@ -132,24 +132,24 @@ void TabView::set_aux_view(View *view) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::set_allows_reordering(bool flag) {
+auto TabView::set_allows_reordering(bool flag) -> void {
   _tabview_impl->set_allows_reordering(this, flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::set_tab_menu(ContextMenu *menu) {
+auto TabView::set_tab_menu(ContextMenu *menu) -> void {
   _tab_menu = menu;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabView::set_menu_tab(int tab) {
+auto TabView::set_menu_tab(int tab) -> void {
   _menu_tab = tab;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TabView::get_menu_tab() {
+auto TabView::get_menu_tab() -> int {
   return _menu_tab;
 }

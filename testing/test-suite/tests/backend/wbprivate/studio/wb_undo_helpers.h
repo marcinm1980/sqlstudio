@@ -27,14 +27,14 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void resetUndoAccounting() {
+auto resetUndoAccounting() -> void {
   lastUndoStackSize = um->get_undo_stack().size();
   lastRedoStackSize = um->get_redo_stack().size();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void checkOnlyOneUndoAdded() {
+auto checkOnlyOneUndoAdded() -> void {
   ++lastUndoStackSize;
   EXPECT_EQ(um->get_undo_stack().size(), lastUndoStackSize) << "Added 1 undo action";
 
@@ -44,7 +44,7 @@ void checkOnlyOneUndoAdded() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void checkUndo() {
+auto checkUndo() -> void {
   EXPECT_EQ(um->get_undo_stack().size(), lastUndoStackSize) << "Undo stack size";
   EXPECT_EQ(um->get_redo_stack().size(), lastRedoStackSize) << "Redo stack size";
 
@@ -63,7 +63,7 @@ void checkUndo() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void checkRedo() {
+auto checkRedo() -> void {
   // make sure that the undo/redo stack has the expected size
   EXPECT_EQ(um->get_undo_stack().size(), lastUndoStackSize) << "Undo stack size";
   EXPECT_EQ(um->get_redo_stack().size(), lastRedoStackSize) << "Redo stack size";

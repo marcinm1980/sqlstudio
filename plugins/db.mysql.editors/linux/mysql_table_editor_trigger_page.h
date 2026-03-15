@@ -41,9 +41,9 @@ public:
   DbMySQLTableEditorTriggerPage(DbMySQLTableEditor* owner, MySQLTableEditorBE* be, Glib::RefPtr<Gtk::Builder> xml);
   ~DbMySQLTableEditorTriggerPage();
 
-  void refresh();
+  auto refresh() -> void;
 
-  void switch_be(MySQLTableEditorBE* be);
+  auto switch_be(MySQLTableEditorBE* be) -> void;
 
 private:
   MySQLTableEditorBE* _be;

@@ -40,14 +40,14 @@ public:
   ImplData() : _panel(0) {
   }
 
-  void init(const db_mgmt_ManagementRef &mgmt) {
+  auto init(const db_mgmt_ManagementRef &mgmt) -> void {
     if (!_panel) {
       _panel = new grtui::DbConnectPanel();
       _panel->init(mgmt);
     }
   }
 
-  void init(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &rdbms_list) {
+  auto init(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &rdbms_list) -> void {
     if (!_panel) {
       _panel =
         new grtui::DbConnectPanel(grtui::DbConnectPanelShowConnectionCombo | grtui::DbConnectPanelShowRDBMSCombo);
@@ -55,7 +55,7 @@ public:
     }
   }
 
-  grtui::DbConnectPanel *panel() {
+  auto panel() -> grtui::DbConnectPanel * {
     return _panel;
   }
 
@@ -64,7 +64,7 @@ public:
   }
 };
 
-void ui_db_ConnectPanel::init() {
+auto ui_db_ConnectPanel::init() -> void {
   _data = new ImplData();
 }
 
@@ -72,20 +72,20 @@ ui_db_ConnectPanel::~ui_db_ConnectPanel() {
   delete _data;
 }
 
-void ui_db_ConnectPanel::set_data(ImplData *data) {
+auto ui_db_ConnectPanel::set_data(ImplData *data) -> void {
   throw std::logic_error("wrong call to set_data()");
 }
 
-void ui_db_ConnectPanel::initialize(const grt::Ref<db_mgmt_Management> &mgmt) {
+auto ui_db_ConnectPanel::initialize(const grt::Ref<db_mgmt_Management> &mgmt) -> void {
   _data->init(mgmt);
 }
 
-void ui_db_ConnectPanel::initializeWithRDBMSSelector(const grt::Ref<db_mgmt_Management> &mgmt,
-                                                     const grt::ListRef<db_mgmt_Rdbms> &rdbms_list) {
+auto ui_db_ConnectPanel::initializeWithRDBMSSelector(const grt::Ref<db_mgmt_Management> &mgmt,
+                                                     const grt::ListRef<db_mgmt_Rdbms> &rdbms_list) -> void {
   _data->init(mgmt, rdbms_list);
 }
 
-grt::Ref<db_mgmt_Connection> ui_db_ConnectPanel::connection() const {
+auto ui_db_ConnectPanel::connection() const -> grt::Ref<db_mgmt_Connection> {
   if (_data && _data->panel()) {
     _data->panel()->get_be()->save_changes();
     return _data->panel()->get_connection();
@@ -93,19 +93,19 @@ grt::Ref<db_mgmt_Connection> ui_db_ConnectPanel::connection() const {
   return db_mgmt_ConnectionRef();
 }
 
-void ui_db_ConnectPanel::connection(const grt::Ref<db_mgmt_Connection> &value) {
+auto ui_db_ConnectPanel::connection(const grt::Ref<db_mgmt_Connection> &value) -> void {
   if (_data && _data->panel())
     _data->panel()->set_connection(value);
   throw std::logic_error("Cannot set connection value to non-initialized ui.db.ConnectionPanel instance");
 }
 
-grt::Ref<mforms_ObjectReference> ui_db_ConnectPanel::view() const {
+auto ui_db_ConnectPanel::view() const -> grt::Ref<mforms_ObjectReference> {
   if (_data && _data->panel())
     return mforms_to_grt(_data->panel(), "Box");
   return grt::Ref<mforms_ObjectReference>();
 }
 
-void ui_db_ConnectPanel::saveConnectionAs(const std::string &name) {
+auto ui_db_ConnectPanel::saveConnectionAs(const std::string &name) -> void {
   if (_data && _data->panel())
     _data->panel()->save_connection_as(name);
 }

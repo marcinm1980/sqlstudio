@@ -65,36 +65,36 @@ private:
 
   std::map<std::string, boost::signals2::connection> _tag_connections;
 
-  void tag_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value, const meta_TagRef &tag);
-  void list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value);
-  void dict_changed(grt::internal::OwnedDict *dict, bool added, const std::string &key);
+  auto tag_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value, const meta_TagRef &tag) -> void;
+  auto list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) -> void;
+  auto dict_changed(grt::internal::OwnedDict *dict, bool added, const std::string &key) -> void;
 
   // Observer
-  virtual void handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info);
+  virtual auto handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info) -> void;
 
 public:
   ImplData(studio_physical_Model *self);
   virtual ~ImplData();
 
-  void update_relationship_figure(model_Connection::ImplData *cfig, bool imandatory, bool imany, bool fmandatory,
-                                  bool fmany);
+  auto update_relationship_figure(model_Connection::ImplData *cfig, bool imandatory, bool imany, bool fmandatory,
+                                  bool fmany) -> void;
 
-  void member_changed_comm(const std::string &name, const grt::ValueRef &value);
-  mdc::LineEndType get_line_end_type(bool mand, bool many, bool start);
-  std::string get_line_end_caption(bool mand, bool many, bool start);
-  wbfig::Table *create_table_figure(mdc::Layer *layer, const model_DiagramRef &diagram, const model_ObjectRef &table);
+  auto member_changed_comm(const std::string &name, const grt::ValueRef &value) -> void;
+  auto get_line_end_type(bool mand, bool many, bool start) -> mdc::LineEndType;
+  auto get_line_end_caption(bool mand, bool many, bool start) -> std::string;
+  auto create_table_figure(mdc::Layer *layer, const model_DiagramRef &diagram, const model_ObjectRef &table) -> wbfig::Table *;
 
-  PhysicalRelationshipNotation get_relationship_notation() const {
+  auto get_relationship_notation() const -> PhysicalRelationshipNotation {
     return _relationship_notation;
   }
-  PhysicalFigureNotation get_figure_notation() const {
+  auto get_figure_notation() const -> PhysicalFigureNotation {
     return _figure_notation;
   }
 
-  std::list<meta_TagRef> get_tags_for_dbobject(const db_DatabaseObjectRef &dbobject);
+  auto get_tags_for_dbobject(const db_DatabaseObjectRef &dbobject) -> std::list<meta_TagRef>;
 
 private:
-  studio_physical_Model *self() const {
+  auto self() const -> studio_physical_Model * {
     return (studio_physical_Model *)_owner;
   }
 };

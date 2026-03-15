@@ -36,11 +36,11 @@ namespace wb {
     TunnelManager();
     ~TunnelManager();
 
-    void start();
-    void shutdown();
-    void portUsageIncrement(const ssh::SSHConnectionConfig &config);
-    void portUsageDecrement(const ssh::SSHConnectionConfig &config);
-    std::shared_ptr<SSHTunnel> createTunnel(db_mgmt_ConnectionRef connectionProperties);
+    auto start() -> void;
+    auto shutdown() -> void;
+    auto portUsageIncrement(const ssh::SSHConnectionConfig &config) -> void;
+    auto portUsageDecrement(const ssh::SSHConnectionConfig &config) -> void;
+    auto createTunnel(db_mgmt_ConnectionRef connectionProperties) -> std::shared_ptr<SSHTunnel>;
 
   private:
     ssh::SSHTunnelManager *_manager;
@@ -63,16 +63,16 @@ namespace wb {
       disconnect();
     }
 
-    void connect(db_mgmt_ConnectionRef connectionProperties) {
+    auto connect(db_mgmt_ConnectionRef connectionProperties) -> void {
       if (_config.localport == 0)
         throw std::runtime_error("Could not connect SSH tunnel");
     }
 
-    void disconnect() {
+    auto disconnect() -> void {
       _tm->portUsageDecrement(_config);
     }
 
-    const ssh::SSHConnectionConfig getConfig() const { return _config; }
+    auto getConfig() const -> const ssh::SSHConnectionConfig { return _config; }
   };
 
 };

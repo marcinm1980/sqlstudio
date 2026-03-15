@@ -33,23 +33,23 @@ Table::Table() {
   _table_impl->create(this);
 }
 
-void Table::set_row_count(int c) {
+auto Table::set_row_count(int c) -> void {
   _table_impl->set_row_count(this, c);
 }
 
-void Table::set_column_count(int c) {
+auto Table::set_column_count(int c) -> void {
   _table_impl->set_column_count(this, c);
 }
 
-void Table::set_row_spacing(int c) {
+auto Table::set_row_spacing(int c) -> void {
   _table_impl->set_row_spacing(this, c);
 }
 
-void Table::set_column_spacing(int c) {
+auto Table::set_column_spacing(int c) -> void {
   _table_impl->set_column_spacing(this, c);
 }
 
-void Table::add(View *subview, int row_left, int row_right, int col_top, int col_bottom, int flags) {
+auto Table::add(View *subview, int row_left, int row_right, int col_top, int col_bottom, int flags) -> void {
   if (row_left > row_right)
     throw std::invalid_argument("table cell left must be <= right");
   if (col_top > col_bottom)
@@ -60,7 +60,7 @@ void Table::add(View *subview, int row_left, int row_right, int col_top, int col
   subview->show();
 }
 
-void Table::remove(View *sv) {
+auto Table::remove(View *sv) -> void {
   _table_impl->remove(this, sv);
   View::remove_from_cache(sv);
 #ifdef _MSC_VER // XXX this shouldn't be needed here, the plat specific code is supposed to do this
@@ -68,6 +68,6 @@ void Table::remove(View *sv) {
 #endif
 }
 
-void Table::set_homogeneous(bool value) {
+auto Table::set_homogeneous(bool value) -> void {
   _table_impl->set_homogeneous(this, value);
 }

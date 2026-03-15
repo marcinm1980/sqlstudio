@@ -36,18 +36,18 @@ namespace MySQL {
     protected:
       TabViewWrapper(mforms::TabView *backend, mforms::TabViewType type);
 
-      static bool create(mforms::TabView *backend, mforms::TabViewType type);
-      static void set_active_tab(mforms::TabView *backend, int index);
-      static int get_active_tab(mforms::TabView *backend);
-      static int add_page(mforms::TabView *backend, mforms::View *page, const std::string &caption,
-                          bool hasCloseButton);
-      static void remove_page(mforms::TabView *backend, mforms::View *page);
-      static void set_tab_title(mforms::TabView *backend, int tab, const std::string &caption);
-      static void set_aux_view(mforms::TabView *backend, mforms::View *aux);
-      static void set_allows_reordering(mforms::TabView *backend, bool flag);
+      static auto create(mforms::TabView *backend, mforms::TabViewType type) -> bool;
+      static auto set_active_tab(mforms::TabView *backend, int index) -> void;
+      static auto get_active_tab(mforms::TabView *backend) -> int;
+      static auto add_page(mforms::TabView *backend, mforms::View *page, const std::string &caption,
+                          bool hasCloseButton) -> int;
+      static auto remove_page(mforms::TabView *backend, mforms::View *page) -> void;
+      static auto set_tab_title(mforms::TabView *backend, int tab, const std::string &caption) -> void;
+      static auto set_aux_view(mforms::TabView *backend, mforms::View *aux) -> void;
+      static auto set_allows_reordering(mforms::TabView *backend, bool flag) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

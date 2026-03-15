@@ -37,7 +37,7 @@ namespace mforms {
 
   // Use this variation to get a base::any. Use type cast directly only if you know the key exists in the map and
   // the item (base::any) does not contain a nullptr value
-  base::any getAnyMapValue(const anyMap& map, const std::string& key, base::any defaultValue = base::any());
+  auto getAnyMapValue(const anyMap& map, const std::string& key, base::any defaultValue = base::any()) -> base::any;
 
   // Use this variation to cast a base::any safely without throwing and exception
   template <typename T>
@@ -160,38 +160,38 @@ namespace mforms {
     virtual ~HomeScreenSection() {
     }
 
-    std::string getIcon() {
+    auto getIcon() -> std::string {
       return _iconName;
     }
 
-    virtual mforms::View* getContainer() {
+    virtual auto getContainer() -> mforms::View* {
       return this;
     }
 
-    virtual View* get_parent() const {
+    virtual auto get_parent() const -> View* {
       return _parent;
     }
 
-    virtual const char* getTitle() = 0;
-    virtual void cancelOperation() = 0;
-    virtual void setFocus() = 0;
-    virtual bool canHandle(HomeScreenMenuType type) = 0;
-    virtual void setContextMenu(mforms::Menu* menu, HomeScreenMenuType type) = 0;
-    virtual void setContextMenuAction(mforms::Menu* menu, HomeScreenMenuType type) = 0;
+    virtual auto getTitle() -> const char* = 0;
+    virtual auto cancelOperation() -> void = 0;
+    virtual auto setFocus() -> void = 0;
+    virtual auto canHandle(HomeScreenMenuType type) -> bool = 0;
+    virtual auto setContextMenu(mforms::Menu* menu, HomeScreenMenuType type) -> void = 0;
+    virtual auto setContextMenuAction(mforms::Menu* menu, HomeScreenMenuType type) -> void = 0;
 
-    virtual void updateColors() = 0;
-    virtual void updateIcons() = 0;
+    virtual auto updateColors() -> void = 0;
+    virtual auto updateIcons() -> void = 0;
 
     std::function<void()> callback;
   };
 
   // The following helpers are just temporary. They will be replaced by a cairo context class.
-  inline void deleteSurface(cairo_surface_t* surface) {
+  inline auto deleteSurface(cairo_surface_t* surface) -> void {
     if (surface != nullptr)
       cairo_surface_destroy(surface);
   }
-  int imageWidth(cairo_surface_t* image);
-  int imageHeight(cairo_surface_t* image);
-  void textWithDecoration(cairo_t* cr, double x, double y, const char* text, bool hot, double width);
+  auto imageWidth(cairo_surface_t* image) -> int;
+  auto imageHeight(cairo_surface_t* image) -> int;
+  auto textWithDecoration(cairo_t* cr, double x, double y, const char* text, bool hot, double width) -> void;
 
 } // namespace mforms

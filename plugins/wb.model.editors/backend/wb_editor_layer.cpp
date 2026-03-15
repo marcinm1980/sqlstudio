@@ -29,14 +29,14 @@
 LayerEditorBE::LayerEditorBE(const studio_physical_LayerRef &layer) : BaseEditor(layer), _layer(layer) {
 }
 
-bool LayerEditorBE::should_close_on_delete_of(const std::string &oid) {
+auto LayerEditorBE::should_close_on_delete_of(const std::string &oid) -> bool {
   if (_layer.id() == oid || _layer->owner().id() == oid)
     return true;
 
   return false;
 }
 
-void LayerEditorBE::set_color(const std::string &color) {
+auto LayerEditorBE::set_color(const std::string &color) -> void {
   if (_layer->color() != color) {
     bec::AutoUndoEdit undo(this, _layer, "color");
     _layer->color(color);
@@ -44,11 +44,11 @@ void LayerEditorBE::set_color(const std::string &color) {
   }
 }
 
-std::string LayerEditorBE::get_color() {
+auto LayerEditorBE::get_color() -> std::string {
   return _layer->color();
 }
 
-void LayerEditorBE::set_name(const std::string &name) {
+auto LayerEditorBE::set_name(const std::string &name) -> void {
   if (_layer->name() != name) {
     bec::AutoUndoEdit undo(this, _layer, "name");
     _layer->name(name);
@@ -56,10 +56,10 @@ void LayerEditorBE::set_name(const std::string &name) {
   }
 }
 
-std::string LayerEditorBE::get_name() {
+auto LayerEditorBE::get_name() -> std::string {
   return _layer->name();
 }
 
-std::string LayerEditorBE::get_title() {
+auto LayerEditorBE::get_title() -> std::string {
   return base::strfmt("%s - Layer", get_name().c_str());
 }

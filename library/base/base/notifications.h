@@ -38,7 +38,7 @@ namespace base {
 
   class BASELIBRARY_PUBLIC_FUNC Observer {
   public:
-    virtual void handle_notification(const std::string &name, void *sender, NotificationInfo &info) = 0;
+    virtual auto handle_notification(const std::string &name, void *sender, NotificationInfo &info) -> void = 0;
     virtual ~Observer();
   };
 
@@ -64,30 +64,30 @@ namespace base {
     std::map<std::string, NotificationHelp> _notification_help;
 
   protected:
-    static void set_instance(NotificationCenter *center);
+    static auto set_instance(NotificationCenter *center) -> void;
 
   public:
-    static NotificationCenter *get();
+    static auto get() -> NotificationCenter *;
     virtual ~NotificationCenter();
 
     void register_notification(const std::string &name, const std::string &context, const std::string &general_info,
                                const std::string &sender_info, // type - description
                                const std::string &info_info);  // fields - description
-    const std::map<std::string, NotificationHelp> &get_registered_notifications() {
+    auto get_registered_notifications() -> const std::map<std::string, NotificationHelp> & {
       return _notification_help;
     }
-    NotificationHelp get_registered_notification(const std::string &name) {
+    auto get_registered_notification(const std::string &name) -> NotificationHelp {
       return _notification_help[name];
     }
 
     void add_observer(Observer *observer, const std::string &name = "");
     bool remove_observer(Observer *observer, const std::string &name = "");
-    bool is_registered(Observer *observer);
+    auto is_registered(Observer *observer) -> bool;
 
     // notification names MUST start with GN (global notification) for easy grepping
 
     // must be called from main thread only
-    void send(const std::string &name, void *sender, NotificationInfo &info);
-    void send(const std::string &name, void *sender);
+    auto send(const std::string &name, void *sender, NotificationInfo &info) -> void;
+    auto send(const std::string &name, void *sender) -> void;
   };
 }; // namespace base

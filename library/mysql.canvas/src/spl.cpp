@@ -110,14 +110,14 @@ public:
     add_column("email varchar(80)", column_icon);
   }
 
-  void toggle_expander() {
+  auto toggle_expander() -> void {
     if (title_expander.get_active())
       column_box.set_visible(true);
     else
       column_box.set_visible(false);
   }
 
-  void add_column(const std::string &text, cairo_surface_t *icon) {
+  auto add_column(const std::string &text, cairo_surface_t *icon) -> void {
     mdc::IconTextFigure *tf;
 
     tf = new mdc::IconTextFigure(_layer);
@@ -132,7 +132,7 @@ public:
 
 #include "wbcanvas/table_figure.h"
 
-int main(int argc, char **argv) {
+auto main(int argc, char **argv) -> int {
   Gtk::Main main(argc, argv);
   Gtk::Window window(Gtk::WINDOW_TOPLEVEL);
   Gtk::Notebook note;

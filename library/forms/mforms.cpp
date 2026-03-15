@@ -34,7 +34,7 @@ DEFAULT_LOG_DOMAIN(DOMAIN_MFORMS_BE);
 extern GThread *_mforms_main_thread;
 
 // The first time this method is called must be from the main thread, during startup.
-ControlFactory *ControlFactory::get_instance() {
+auto ControlFactory::get_instance() -> ControlFactory * {
   static ControlFactory *instance = NULL;
 
   if (!instance) {
@@ -98,7 +98,7 @@ ControlFactory::ControlFactory() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ControlFactory::check_impl() {
+auto ControlFactory::check_impl() -> void {
 #if defined(_DEBUG) || defined(ENABLE_DEBUG)
   CHECKPTRS(_view_impl);
   CHECKPTRS(_form_impl);

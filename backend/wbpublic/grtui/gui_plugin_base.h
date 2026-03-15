@@ -40,7 +40,7 @@ public:
 
   virtual ~GUIPluginBase();
 
-  grt::Module *module() const {
+  auto module() const -> grt::Module * {
     return _module;
   }
 };

@@ -32,24 +32,24 @@
 //================================================================================
 // studio_model_ImageFigure
 
-void studio_model_ImageFigure::init() {
+auto studio_model_ImageFigure::init() -> void {
   if (!_data)
     _data = new studio_model_ImageFigure::ImplData(this);
   model_Figure::set_data(_data);
 }
 
-void studio_model_ImageFigure::set_data(ImplData *data) {
+auto studio_model_ImageFigure::set_data(ImplData *data) -> void {
 }
 
 studio_model_ImageFigure::~studio_model_ImageFigure() {
   delete _data;
 }
 
-grt::StringRef studio_model_ImageFigure::setImageFile(const std::string &name) {
+auto studio_model_ImageFigure::setImageFile(const std::string &name) -> grt::StringRef {
   return get_data()->set_filename(name);
 }
 
-void studio_model_ImageFigure::keepAspectRatio(const grt::IntegerRef &value) {
+auto studio_model_ImageFigure::keepAspectRatio(const grt::IntegerRef &value) -> void {
   grt::ValueRef ovalue(_keepAspectRatio);
   get_data()->set_keep_aspect_ratio(value != 0);
   member_changed("keepAspectRatio", ovalue, value);

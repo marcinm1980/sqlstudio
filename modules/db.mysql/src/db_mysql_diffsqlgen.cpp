@@ -40,7 +40,7 @@
 #include "module_db_mysql.h"
 #include "module_db_mysql_shared_code.h"
 
-void DiffSQLGeneratorBE::generate_set_partitioning(db_mysql_TableRef table, const grt::DiffChange *table_diffchange) {
+auto DiffSQLGeneratorBE::generate_set_partitioning(db_mysql_TableRef table, const grt::DiffChange *table_diffchange) -> void {
   bool part_type_set = false, part_expr_set = false, subpart_type_set = false, subpart_expr_set = false,
        part_count_set = false, part_defs_set = false;
   std::string part_type, part_expr, subpart_type, subpart_expr;
@@ -129,7 +129,7 @@ void DiffSQLGeneratorBE::generate_set_partitioning(db_mysql_TableRef table, cons
                                               part_defs);
 }
 
-void DiffSQLGeneratorBE::generate_create_partitioning(db_mysql_TableRef table) {
+auto DiffSQLGeneratorBE::generate_create_partitioning(db_mysql_TableRef table) -> void {
   callback->alter_table_generate_partitioning(
     table, std::string(table->partitionType().is_valid() ? table->partitionType().c_str() : ""),
     std::string(table->partitionExpression().is_valid() ? table->partitionExpression().c_str() : ""),
@@ -139,7 +139,7 @@ void DiffSQLGeneratorBE::generate_create_partitioning(db_mysql_TableRef table) {
     table->partitionDefinitions());
 }
 
-void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_TableRef table) {
+auto DiffSQLGeneratorBE::generate_create_stmt(db_mysql_TableRef table) -> void {
   if (table->isStub())
     return;
 
@@ -300,7 +300,7 @@ void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_TableRef table) {
   }
 }
 
-void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_ViewRef view) {
+auto DiffSQLGeneratorBE::generate_create_stmt(db_mysql_ViewRef view) -> void {
   std::string view_name_for_filter(get_old_object_name_for_key(view, _case_sensitive));
   if (_use_filtered_lists)
     if (_filtered_views.find(view_name_for_filter) == _filtered_views.end())
@@ -309,7 +309,7 @@ void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_ViewRef view) {
   callback->create_view(view);
 }
 
-void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_RoutineRef routine, bool for_alter) {
+auto DiffSQLGeneratorBE::generate_create_stmt(db_mysql_RoutineRef routine, bool for_alter) -> void {
   std::string routine_name_for_filter(get_old_object_name_for_key(routine, _case_sensitive));
   if (_use_filtered_lists)
     if (_filtered_routines.find(routine_name_for_filter) == _filtered_routines.end())
@@ -318,7 +318,7 @@ void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_RoutineRef routine, bool 
   callback->create_routine(routine, for_alter);
 }
 
-void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_TriggerRef trigger, bool for_alter) {
+auto DiffSQLGeneratorBE::generate_create_stmt(db_mysql_TriggerRef trigger, bool for_alter) -> void {
   std::string trigger_name_for_filter(get_old_object_name_for_key(trigger, _case_sensitive));
 
   if (_use_filtered_lists)
@@ -328,7 +328,7 @@ void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_TriggerRef trigger, bool 
   callback->create_trigger(trigger, for_alter);
 }
 
-void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_SchemaRef schema) {
+auto DiffSQLGeneratorBE::generate_create_stmt(db_mysql_SchemaRef schema) -> void {
   std::string schema_name_for_filter(get_old_object_name_for_key(schema, _case_sensitive));
 
   if (_use_filtered_lists)
@@ -356,7 +356,7 @@ void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_SchemaRef schema) {
   }
 }
 
-void DiffSQLGeneratorBE::generate_create_stmt(db_UserRef user) {
+auto DiffSQLGeneratorBE::generate_create_stmt(db_UserRef user) -> void {
   std::string user_name_for_filter(get_old_object_name_for_key(user, _case_sensitive));
 
   if (_use_filtered_lists)
@@ -366,7 +366,7 @@ void DiffSQLGeneratorBE::generate_create_stmt(db_UserRef user) {
   callback->create_user(user);
 }
 
-void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_CatalogRef catalog) {
+auto DiffSQLGeneratorBE::generate_create_stmt(db_mysql_CatalogRef catalog) -> void {
   grt::ListRef<db_mysql_Schema> schemata = catalog->schemata();
   for (size_t count = schemata.count(), i = 0; i < count; i++) {
     db_mysql_SchemaRef schema = schemata.get(i);
@@ -379,7 +379,7 @@ void DiffSQLGeneratorBE::generate_create_stmt(db_mysql_CatalogRef catalog) {
   }
 }
 
-void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_TableRef table) {
+auto DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_TableRef table) -> void {
   if (table->isStub())
     return;
 
@@ -394,7 +394,7 @@ void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_TableRef table) {
   }
 }
 
-void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_TriggerRef trigger, bool for_alter) {
+auto DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_TriggerRef trigger, bool for_alter) -> void {
   std::string trigger_name_for_filter(get_old_object_name_for_key(trigger, _case_sensitive));
   if (_use_filtered_lists)
     if (_filtered_triggers.find(trigger_name_for_filter) == _filtered_triggers.end())
@@ -403,7 +403,7 @@ void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_TriggerRef trigger, bool fo
   callback->drop_trigger(trigger, for_alter);
 }
 
-void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_ViewRef view) {
+auto DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_ViewRef view) -> void {
   std::string view_name_for_filter(get_old_object_name_for_key(view, _case_sensitive));
   if (_use_filtered_lists)
     if (_filtered_views.find(view_name_for_filter) == _filtered_views.end())
@@ -412,7 +412,7 @@ void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_ViewRef view) {
   callback->drop_view(view);
 }
 
-void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_RoutineRef routine, bool for_alter) {
+auto DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_RoutineRef routine, bool for_alter) -> void {
   std::string routine_name_for_filter(get_old_object_name_for_key(routine, _case_sensitive));
   if (_use_filtered_lists)
     if (_filtered_routines.find(routine_name_for_filter) == _filtered_routines.end())
@@ -421,11 +421,11 @@ void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_RoutineRef routine, bool fo
   callback->drop_routine(routine, for_alter);
 }
 
-void DiffSQLGeneratorBE::generate_drop_stmt(db_UserRef user) {
+auto DiffSQLGeneratorBE::generate_drop_stmt(db_UserRef user) -> void {
   callback->drop_user(user);
 }
 
-void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_SchemaRef schema) {
+auto DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_SchemaRef schema) -> void {
   callback->drop_schema(schema);
   callback->disable_list_insert(true);
   grt::ListRef<db_mysql_Table> tables = schema->tables();
@@ -448,7 +448,7 @@ void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_SchemaRef schema) {
   callback->disable_list_insert(false);
 }
 
-void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_CatalogRef catalog) {
+auto DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_CatalogRef catalog) -> void {
   grt::ListRef<db_mysql_Schema> schemata = catalog->schemata();
   for (size_t count = schemata.count(), i = 0; i < count; i++) {
     db_mysql_SchemaRef schema = schemata.get(i);
@@ -461,7 +461,7 @@ void DiffSQLGeneratorBE::generate_drop_stmt(db_mysql_CatalogRef catalog) {
   }
 }
 
-void DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_Column> columns, const grt::MultiChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_Column> columns, const grt::MultiChange *diffchange) -> void {
   const grt::ChangeSet *columns_cs = diffchange->subchanges();
 
   if (columns.count() == 0)
@@ -551,7 +551,7 @@ void DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_Column> columns, c
   callback->alter_table_columns_end(table);
 }
 
-void DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_Index> indices, const grt::MultiChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_Index> indices, const grt::MultiChange *diffchange) -> void {
   const grt::ChangeSet *indices_cs = diffchange->subchanges();
 
   for (grt::ChangeSet::const_iterator e = indices_cs->end(), it = indices_cs->begin(); it != e; it++) {
@@ -594,8 +594,8 @@ void DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_Index> indices, co
   }
 }
 
-void DiffSQLGeneratorBE::generate_alter_drop(grt::ListRef<db_mysql_ForeignKey> fks,
-                                             const grt::MultiChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_alter_drop(grt::ListRef<db_mysql_ForeignKey> fks,
+                                             const grt::MultiChange *diffchange) -> void {
   /*
     You cannot add a foreign key and drop a foreign key in separate
     clauses of a single ALTER TABLE  statement. You must use separate
@@ -645,7 +645,7 @@ void DiffSQLGeneratorBE::generate_alter_drop(grt::ListRef<db_mysql_ForeignKey> f
   }
 }
 
-void DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_ForeignKey> fks, const grt::MultiChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_ForeignKey> fks, const grt::MultiChange *diffchange) -> void {
   /*
     You cannot add a foreign key and drop a foreign key in separate
     clauses of a single ALTER TABLE  statement. You must use separate
@@ -730,7 +730,7 @@ void DiffSQLGeneratorBE::generate_alter(grt::ListRef<db_mysql_ForeignKey> fks, c
   }
 }
 
-void DiffSQLGeneratorBE::generate_alter_stmt_drops(db_mysql_TableRef table, const grt::DiffChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_alter_stmt_drops(db_mysql_TableRef table, const grt::DiffChange *diffchange) -> void {
   if (table->isStub())
     return;
 
@@ -764,8 +764,8 @@ void DiffSQLGeneratorBE::generate_alter_stmt_drops(db_mysql_TableRef table, cons
     callback->alter_table_props_end(table);
 }
 
-void DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_TableRef table, const grt::DiffChange *diffchange,
-                                             AlterTableFlags alter_table_flags) {
+auto DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_TableRef table, const grt::DiffChange *diffchange,
+                                             AlterTableFlags alter_table_flags) -> void {
   if (table->isStub())
     return;
 
@@ -1085,8 +1085,8 @@ void DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_TableRef table, const grt:
   callback->alter_table_props_end(table);
 }
 
-void DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_ViewRef old_view, db_mysql_ViewRef new_view,
-                                             const grt::DiffChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_ViewRef old_view, db_mysql_ViewRef new_view,
+                                             const grt::DiffChange *diffchange) -> void {
   std::string view_name_for_filter(get_old_object_name_for_key(new_view, _case_sensitive));
   if (_use_filtered_lists)
     if (_filtered_views.find(view_name_for_filter) == _filtered_views.end())
@@ -1100,8 +1100,8 @@ void DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_ViewRef old_view, db_mysql
     generate_drop_stmt(old_view);
 }
 
-void DiffSQLGeneratorBE::generate_routine_alter_stmt(db_mysql_RoutineRef old_routine, db_mysql_RoutineRef new_routine,
-                                                     const grt::DiffChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_routine_alter_stmt(db_mysql_RoutineRef old_routine, db_mysql_RoutineRef new_routine,
+                                                     const grt::DiffChange *diffchange) -> void {
   std::string routine_name_for_filter(get_old_object_name_for_key(new_routine, _case_sensitive));
   if (_use_filtered_lists)
     if (_filtered_routines.find(routine_name_for_filter) == _filtered_routines.end())
@@ -1116,7 +1116,7 @@ void DiffSQLGeneratorBE::generate_routine_alter_stmt(db_mysql_RoutineRef old_rou
   }
 }
 
-void DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_SchemaRef schema, const grt::DiffChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_SchemaRef schema, const grt::DiffChange *diffchange) -> void {
   bool process_alter_schema = true;
   std::string schema_name_for_filter(get_old_object_name_for_key(schema, _case_sensitive));
 
@@ -1315,7 +1315,7 @@ void DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_SchemaRef schema, const gr
   }
 }
 
-void DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_CatalogRef catalog, const grt::DiffChange *diffchange) {
+auto DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_CatalogRef catalog, const grt::DiffChange *diffchange) -> void {
   // process changes in schemata
   for (grt::ChangeSet::const_iterator e = diffchange->subchanges()->end(), it = diffchange->subchanges()->begin();
        it != e; it++) {
@@ -1364,7 +1364,7 @@ void DiffSQLGeneratorBE::generate_alter_stmt(db_mysql_CatalogRef catalog, const 
   }
 }
 
-static void fill_set_from_list(grt::StringListRef string_list, std::set<std::string> &string_set) {
+static auto fill_set_from_list(grt::StringListRef string_list, std::set<std::string> &string_set) -> void {
   for (size_t count = string_list.count(), i = 0; i < count; i++)
     string_set.insert(std::string(string_list.get(i).c_str()));
 }
@@ -1400,15 +1400,15 @@ DiffSQLGeneratorBE::DiffSQLGeneratorBE(grt::DictRef options, grt::DictRef dbtrai
   fill_set_from_list(grt::StringListRef::cast_from(options.get("TriggerFilterList", empty_list)), _filtered_triggers);
 }
 
-void DiffSQLGeneratorBE::process_diff_change(grt::ValueRef org_object, grt::DiffChange *diff, grt::DictRef map) {
+auto DiffSQLGeneratorBE::process_diff_change(grt::ValueRef org_object, grt::DiffChange *diff, grt::DictRef map) -> void {
   this->target_list = grt::StringListRef();
   this->target_map = map;
 
   do_process_diff_change(org_object, diff);
 }
 
-void DiffSQLGeneratorBE::process_diff_change(grt::ValueRef org_object, grt::DiffChange *diff, grt::StringListRef list,
-                                             grt::ListRef<GrtNamedObject> objlist) {
+auto DiffSQLGeneratorBE::process_diff_change(grt::ValueRef org_object, grt::DiffChange *diff, grt::StringListRef list,
+                                             grt::ListRef<GrtNamedObject> objlist) -> void {
   this->target_map = grt::DictRef();
   this->target_list = list;
   this->target_object_list = objlist;
@@ -1416,7 +1416,7 @@ void DiffSQLGeneratorBE::process_diff_change(grt::ValueRef org_object, grt::Diff
   do_process_diff_change(org_object, diff);
 }
 
-void DiffSQLGeneratorBE::do_process_diff_change(grt::ValueRef org_object, grt::DiffChange *diff) {
+auto DiffSQLGeneratorBE::do_process_diff_change(grt::ValueRef org_object, grt::DiffChange *diff) -> void {
   switch (diff->get_change_type()) {
     // case SimpleValue:
     case grt::ValueAdded:

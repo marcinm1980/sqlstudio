@@ -52,14 +52,14 @@ using namespace base;
 
 //--------------------------------------------------------------------------------------------------
 
-std::shared_ptr<GRT> GRT::get() {
+auto GRT::get() -> std::shared_ptr<GRT> {
   static std::shared_ptr<GRT> instance(new GRT);
   return instance;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string grt::type_to_str(Type type) {
+auto grt::type_to_str(Type type) -> std::string {
   switch (type) {
     case UnknownType:
       return "";
@@ -80,7 +80,7 @@ std::string grt::type_to_str(Type type) {
 }
 
 //--------------------------------------------------------------------------------------------------
-std::map<std::string, base::any> grt::convert(const grt::DictRef dict) {
+auto grt::convert(const grt::DictRef dict) -> std::map<std::string, base::any> {
   std::map<std::string, base::any> result;
   for (auto it = dict.begin(); it != dict.end(); ++it) {
     auto val = dict.get(it->first);
@@ -122,7 +122,7 @@ std::map<std::string, base::any> grt::convert(const grt::DictRef dict) {
 
 //--------------------------------------------------------------------------------------------------
 
-Type grt::str_to_type(const std::string &type) {
+auto grt::str_to_type(const std::string &type) -> Type {
   char ini = type[0];
   if (ini == 'i' && type == "int")
     return IntegerType;
@@ -139,7 +139,7 @@ Type grt::str_to_type(const std::string &type) {
   return UnknownType;
 }
 
-std::string Message::format(bool withtype) const {
+auto Message::format(bool withtype) const -> std::string {
   std::string text;
 
   if (withtype) {
@@ -212,14 +212,14 @@ db_error::db_error(const sql::SQLException &exc) : std::runtime_error(exc.what()
 
 //----------------- Value ----------------------------------------------------------------------------------------------
 
-internal::Value *internal::Value::retain() {
+auto internal::Value::retain() -> internal::Value * {
   g_atomic_int_inc(&_refcount);
   return this;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void internal::Value::release() {
+auto internal::Value::release() -> void {
 #ifdef WB_DEBUG
   if (_refcount == 0)
     logWarning("GRT: releasing invalid object\n");
@@ -230,13 +230,13 @@ void internal::Value::release() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::refcount_t internal::Value::refcount() const {
+auto internal::Value::refcount() const -> base::refcount_t {
   return g_atomic_int_get(&_refcount);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-StringRef StringRef::format(const char *format, ...) {
+auto StringRef::format(const char *format, ...) -> StringRef {
   va_list args;
   char *tmp;
   StringRef ret;
@@ -319,11 +319,11 @@ GRT::~GRT() {
   _loaders.erase(iter, _loaders.end());
 }
 
-void GRT::push_undo_manager(UndoManager *um) {
+auto GRT::push_undo_manager(UndoManager *um) -> void {
   _undo_managers.push_back(um);
 }
 
-UndoManager *GRT::pop_undo_manager() {
+auto GRT::pop_undo_manager() -> UndoManager * {
   if (_undo_managers.empty())
     return 0;
   UndoManager *tmp = _undo_managers.back();
@@ -331,28 +331,28 @@ UndoManager *GRT::pop_undo_manager() {
   return tmp;
 }
 
-UndoManager *GRT::get_undo_manager() const {
+auto GRT::get_undo_manager() const -> UndoManager * {
   return _undo_managers.empty() ? _default_undo_manager : _undo_managers.back();
 }
 
-void GRT::start_tracking_changes() {
+auto GRT::start_tracking_changes() -> void {
   _tracking_changes++;
 }
 
-void GRT::stop_tracking_changes() {
+auto GRT::stop_tracking_changes() -> void {
   _tracking_changes--;
 }
 
-void GRT::set_verbose(bool flag) {
+auto GRT::set_verbose(bool flag) -> void {
   _verbose = flag;
 }
 
-UndoGroup *GRT::begin_undoable_action(UndoGroup *group) {
+auto GRT::begin_undoable_action(UndoGroup *group) -> UndoGroup * {
   start_tracking_changes();
   return get_undo_manager()->begin_undo_group(group);
 }
 
-void GRT::end_undoable_action(const std::string &group_description) {
+auto GRT::end_undoable_action(const std::string &group_description) -> void {
   if (!get_undo_manager()->end_undo_group(group_description, true)) {
     if (getenv("DEBUG_UNDO"))
       logWarning("'%s' was empty\n", group_description.c_str());
@@ -360,24 +360,24 @@ void GRT::end_undoable_action(const std::string &group_description) {
   stop_tracking_changes();
 }
 
-void GRT::cancel_undoable_action() {
+auto GRT::cancel_undoable_action() -> void {
   get_undo_manager()->cancel_undo_group();
   stop_tracking_changes();
 }
 
-void GRT::lock() const {
+auto GRT::lock() const -> void {
 }
 
-void GRT::unlock() const {
+auto GRT::unlock() const -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool GRT::metaclassesNeedRegister() {
+auto GRT::metaclassesNeedRegister() -> bool {
   return !internal::ClassRegistry::get_instance()->isEmpty();
 }
 
-void GRT::load_metaclasses(const std::string &file, std::list<std::string> *requiresList) {
+auto GRT::load_metaclasses(const std::string &file, std::list<std::string> *requiresList) -> void {
   xmlNodePtr root;
   xmlDocPtr doc;
 
@@ -418,7 +418,7 @@ void GRT::load_metaclasses(const std::string &file, std::list<std::string> *requ
 
 //--------------------------------------------------------------------------------------------------
 
-void GRT::reinitialiseForTests() {
+auto GRT::reinitialiseForTests() -> void {
   delete _shell;
   _shell = nullptr;
   delete _default_undo_manager;
@@ -484,7 +484,7 @@ void GRT::reinitialiseForTests() {
 
 //--------------------------------------------------------------------------------------------------
 
-int GRT::scan_metaclasses_in(const std::string &directory, std::multimap<std::string, std::string> *requiresMap) {
+auto GRT::scan_metaclasses_in(const std::string &directory, std::multimap<std::string, std::string> *requiresMap) -> int {
   GDir *dir;
   const char *entry;
   size_t old_count = _metaclasses.size();
@@ -519,8 +519,8 @@ int GRT::scan_metaclasses_in(const std::string &directory, std::multimap<std::st
   return (int)(_metaclasses.size() - old_count);
 }
 
-static void dfs_visit(MetaClass *u, const std::multimap<MetaClass *, MetaClass *> &adjacents,
-                      std::set<MetaClass *> &visited, std::list<MetaClass *> &sorted) {
+static auto dfs_visit(MetaClass *u, const std::multimap<MetaClass *, MetaClass *> &adjacents,
+                      std::set<MetaClass *> &visited, std::list<MetaClass *> &sorted) -> void {
   visited.insert(u);
 
   std::multimap<MetaClass *, MetaClass *>::const_iterator iter = adjacents.find(u);
@@ -536,7 +536,7 @@ static void dfs_visit(MetaClass *u, const std::multimap<MetaClass *, MetaClass *
   sorted.push_front(u);
 }
 
-static std::list<MetaClass *> sort_metaclasses(const std::list<MetaClass *> &list) {
+static auto sort_metaclasses(const std::list<MetaClass *> &list) -> std::list<MetaClass *> {
   std::list<MetaClass *> sorted;
   std::set<MetaClass *> visited;
   std::multimap<MetaClass *, MetaClass *> adjacents;
@@ -554,7 +554,7 @@ static std::list<MetaClass *> sort_metaclasses(const std::list<MetaClass *> &lis
   return sorted;
 }
 
-void GRT::end_loading_metaclasses(bool check_class_binding) {
+auto GRT::end_loading_metaclasses(bool check_class_binding) -> void {
   bool undefined = false;
   bool validate_error = false;
 
@@ -590,7 +590,7 @@ void GRT::end_loading_metaclasses(bool check_class_binding) {
   _metaclasses_list = sort_metaclasses(_metaclasses_list);
 }
 
-MetaClass *GRT::get_metaclass(const std::string &name) const {
+auto GRT::get_metaclass(const std::string &name) const -> MetaClass * {
   std::map<std::string, MetaClass *>::const_iterator iter;
 
   if ((iter = _metaclasses.find(name)) == _metaclasses.end())
@@ -598,13 +598,13 @@ MetaClass *GRT::get_metaclass(const std::string &name) const {
   return iter->second;
 }
 
-void GRT::add_metaclass(MetaClass *stru) {
+auto GRT::add_metaclass(MetaClass *stru) -> void {
   _metaclasses[stru->name()] = stru;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRT::set_root(const ValueRef &root) {
+auto GRT::set_root(const ValueRef &root) -> void {
   AutoLock lock;
   _root = root;
   // only nodes starting from /wb/doc (ie, in a model) should be marked global for undo tracking
@@ -612,20 +612,20 @@ void GRT::set_root(const ValueRef &root) {
   //    _root.mark_global();
 }
 
-ValueRef GRT::get(const std::string &path) const {
+auto GRT::get(const std::string &path) const -> ValueRef {
   AutoLock lock;
 
   return get_value_by_path(_root, path);
 }
 
-void GRT::set(const std::string &path, const ValueRef &value) {
+auto GRT::set(const std::string &path, const ValueRef &value) -> void {
   AutoLock lock;
 
   if (!set_value_by_path(_root, path, value))
     throw grt::bad_item("Invalid path " + path);
 }
 
-ObjectRef GRT::find_object_by_id(const std::string &id, const std::string &subpath) {
+auto GRT::find_object_by_id(const std::string &id, const std::string &subpath) -> ObjectRef {
   /*
   std::map<std::string,internal::Object*>::const_iterator iter= _objects.find(id);
   if (iter == _objects.end())
@@ -663,18 +663,18 @@ ObjectRef GRT::find_object_by_id(const std::string &id, const std::string &subpa
 
 //--------------------------------------------------------------------------------------------------
 
-void GRT::serialize(const ValueRef &value, const std::string &path, const std::string &doctype,
-                    const std::string &version, bool list_objects_as_links) {
+auto GRT::serialize(const ValueRef &value, const std::string &path, const std::string &doctype,
+                    const std::string &version, bool list_objects_as_links) -> void {
   internal::Serializer ser;
 
   ser.save_to_xml(value, path, doctype, version, list_objects_as_links);
 }
 
-std::shared_ptr<grt::internal::Unserializer> GRT::get_unserializer() {
+auto GRT::get_unserializer() -> std::shared_ptr<grt::internal::Unserializer> {
   return std::shared_ptr<grt::internal::Unserializer>(new internal::Unserializer(_check_serialized_crc));
 };
 
-ValueRef GRT::unserialize(const std::string &path, std::shared_ptr<grt::internal::Unserializer> unserializer) {
+auto GRT::unserialize(const std::string &path, std::shared_ptr<grt::internal::Unserializer> unserializer) -> ValueRef {
   if (!unserializer)
     unserializer = std::shared_ptr<grt::internal::Unserializer>(new internal::Unserializer(_check_serialized_crc));
 
@@ -689,7 +689,7 @@ ValueRef GRT::unserialize(const std::string &path, std::shared_ptr<grt::internal
   }
 }
 
-ValueRef GRT::unserialize(const std::string &path, std::string &doctype_ret, std::string &version_ret) {
+auto GRT::unserialize(const std::string &path, std::string &doctype_ret, std::string &version_ret) -> ValueRef {
   internal::Unserializer unser(_check_serialized_crc);
 
   if (!g_file_test(path.c_str(), G_FILE_TEST_EXISTS))
@@ -701,15 +701,15 @@ ValueRef GRT::unserialize(const std::string &path, std::string &doctype_ret, std
   }
 }
 
-xmlDocPtr GRT::load_xml(const std::string &path) {
+auto GRT::load_xml(const std::string &path) -> xmlDocPtr {
   return base::xml::loadXMLDoc(path);
 }
 
-void GRT::get_xml_metainfo(xmlDocPtr doc, std::string &doctype_ret, std::string &version_ret) {
+auto GRT::get_xml_metainfo(xmlDocPtr doc, std::string &doctype_ret, std::string &version_ret) -> void {
   base::xml::getXMLDocMetainfo(doc, doctype_ret, version_ret);
 }
 
-ValueRef GRT::unserialize_xml(xmlDocPtr doc, const std::string &source_path) {
+auto GRT::unserialize_xml(xmlDocPtr doc, const std::string &source_path) -> ValueRef {
   internal::Unserializer unser(_check_serialized_crc);
 
   try {
@@ -719,24 +719,24 @@ ValueRef GRT::unserialize_xml(xmlDocPtr doc, const std::string &source_path) {
   }
 }
 
-std::string GRT::serialize_xml_data(const ValueRef &value, const std::string &doctype, const std::string &version,
-                                    bool list_objects_as_links) {
+auto GRT::serialize_xml_data(const ValueRef &value, const std::string &doctype, const std::string &version,
+                                    bool list_objects_as_links) -> std::string {
   return internal::Serializer().serialize_to_xmldata(value, doctype, version, list_objects_as_links);
 }
 
-ValueRef GRT::unserialize_xml_data(const std::string &data) {
+auto GRT::unserialize_xml_data(const std::string &data) -> ValueRef {
   return internal::Unserializer(_check_serialized_crc).unserialize_xmldata(data.data(), data.size());
 }
 
 //--------------------------------------------------------------------------------
 
-void GRT::add_module_loader(ModuleLoader *loader) {
+auto GRT::add_module_loader(ModuleLoader *loader) -> void {
   _loaders.push_back(loader);
 
   loader->refresh();
 }
 
-bool GRT::load_module(const std::string &path, const std::string &basePath, bool refresh) {
+auto GRT::load_module(const std::string &path, const std::string &basePath, bool refresh) -> bool {
   std::string shortendPath = base::relativePath(basePath, path);
   if (shortendPath != path)
     shortendPath = "<base dir>/" + shortendPath;
@@ -765,7 +765,7 @@ bool GRT::load_module(const std::string &path, const std::string &basePath, bool
   return false;
 }
 
-ModuleLoader *GRT::get_module_loader(const std::string &name) {
+auto GRT::get_module_loader(const std::string &name) -> ModuleLoader * {
   for (std::list<ModuleLoader *>::const_iterator iter = _loaders.begin(); iter != _loaders.end(); ++iter) {
     if ((*iter)->get_loader_name() == name)
       return *iter;
@@ -773,7 +773,7 @@ ModuleLoader *GRT::get_module_loader(const std::string &name) {
   return 0;
 }
 
-ModuleLoader *GRT::get_module_loader_for_file(const std::string &path) {
+auto GRT::get_module_loader_for_file(const std::string &path) -> ModuleLoader * {
   for (std::list<ModuleLoader *>::const_iterator iter = _loaders.begin(); iter != _loaders.end(); ++iter) {
     if ((*iter)->check_file_extension(path))
       return *iter;
@@ -781,8 +781,8 @@ ModuleLoader *GRT::get_module_loader_for_file(const std::string &path) {
   return 0;
 }
 
-int GRT::scan_modules_in(const std::string &path, const std::string &basePath, const std::list<std::string> &exts,
-                         bool reload) {
+auto GRT::scan_modules_in(const std::string &path, const std::string &basePath, const std::list<std::string> &exts,
+                         bool reload) -> int {
   GDir *dir;
   const char *entry;
   int count = 0;
@@ -854,15 +854,15 @@ int GRT::scan_modules_in(const std::string &path, const std::string &basePath, c
   return count;
 }
 
-static bool compare_modules(Module *a, Module *b) {
+static auto compare_modules(Module *a, Module *b) -> bool {
   return g_ascii_strcasecmp(a->name().c_str(), b->name().c_str()) < 0;
 }
 
-void GRT::end_loading_modules() {
+auto GRT::end_loading_modules() -> void {
   std::sort(_modules.begin(), _modules.end(), compare_modules);
 }
 
-Module *GRT::get_module(const std::string &name) {
+auto GRT::get_module(const std::string &name) -> Module * {
   for (std::vector<Module *>::iterator iter = _modules.begin(); iter != _modules.end(); ++iter) {
     if ((*iter)->name() == name)
       return *iter;
@@ -870,15 +870,15 @@ Module *GRT::get_module(const std::string &name) {
   return 0;
 }
 
-grt::ValueRef GRT::call_module_function(const std::string &module, const std::string &function,
-                                        const grt::BaseListRef &args) {
+auto GRT::call_module_function(const std::string &module, const std::string &function,
+                                        const grt::BaseListRef &args) -> grt::ValueRef {
   Module *m = get_module(module);
   if (!m)
     throw grt::module_error("Module " + module + " not found");
   return m->call_function(function, args);
 }
 
-std::vector<Module *> GRT::find_modules_matching(const std::string &interface_name, const std::string &name_pattern) {
+auto GRT::find_modules_matching(const std::string &interface_name, const std::string &name_pattern) -> std::vector<Module *> {
   std::vector<Module *> result;
 
   for (std::vector<Module *>::const_iterator module = _modules.begin(); module != _modules.end(); ++module) {
@@ -899,13 +899,13 @@ std::vector<Module *> GRT::find_modules_matching(const std::string &interface_na
   return result;
 }
 
-void GRT::refresh_loaders() {
+auto GRT::refresh_loaders() -> void {
   for (std::list<ModuleLoader *>::iterator iter = _loaders.begin(); iter != _loaders.end(); ++iter) {
     (*iter)->refresh();
   }
 }
 
-void GRT::register_new_module(Module *module) {
+auto GRT::register_new_module(Module *module) -> void {
   module->validate();
 
   if (get_module(module->name()))
@@ -917,7 +917,7 @@ void GRT::register_new_module(Module *module) {
     refresh_loaders();
 }
 
-void GRT::unregister_module(Module *module) {
+auto GRT::unregister_module(Module *module) -> void {
   std::vector<Module *>::iterator iter = std::find(_modules.begin(), _modules.end(), module);
   if (iter != _modules.end())
     _modules.erase(iter);
@@ -928,7 +928,7 @@ void GRT::unregister_module(Module *module) {
   // delete module;
 }
 
-void GRT::refresh_module(Module *module) {
+auto GRT::refresh_module(Module *module) -> void {
   bool found = false;
 
   module->validate();
@@ -946,14 +946,14 @@ void GRT::refresh_module(Module *module) {
     register_new_module(module);
 }
 
-void GRT::register_new_interface(Interface *iface) {
+auto GRT::register_new_interface(Interface *iface) -> void {
   if (get_interface(iface->name()))
     throw std::logic_error("Duplicate interface " + iface->name());
 
   _interfaces[iface->name()] = iface;
 }
 
-const Interface *GRT::get_interface(const std::string &name) {
+auto GRT::get_interface(const std::string &name) -> const Interface * {
   std::map<std::string, Interface *>::const_iterator iter;
   if ((iter = _interfaces.find(name)) == _interfaces.end())
     return 0;
@@ -962,14 +962,14 @@ const Interface *GRT::get_interface(const std::string &name) {
 
 //--------------------------------------------------------------------------------
 
-void GRT::set_context_data(const std::string &key, void *value, void (*free_value)(void *)) {
+auto GRT::set_context_data(const std::string &key, void *value, void (*free_value)(void *)) -> void {
   unset_context_data(key);
 
   _context_data[key].first = value;
   _context_data[key].second = free_value;
 }
 
-void GRT::unset_context_data(const std::string &key) {
+auto GRT::unset_context_data(const std::string &key) -> void {
   if (_context_data.find(key) != _context_data.end()) {
     if (_context_data[key].second)
       (*_context_data[key].second)(_context_data[key].first);
@@ -977,13 +977,13 @@ void GRT::unset_context_data(const std::string &key) {
   }
 }
 
-void *GRT::get_context_data(const std::string &key) {
+auto GRT::get_context_data(const std::string &key) -> void * {
   return _context_data[key].first;
 }
 
 //--------------------------------------------------------------------------------
 
-bool GRT::init_shell(const std::string &shell_type) {
+auto GRT::init_shell(const std::string &shell_type) -> bool {
   if (shell_type == LanguagePython)
     _shell = new PythonShell;
   else
@@ -994,25 +994,25 @@ bool GRT::init_shell(const std::string &shell_type) {
   return true;
 }
 
-std::string GRT::shell_type() {
+auto GRT::shell_type() -> std::string {
   if (dynamic_cast<PythonShell *>(_shell))
     return LanguagePython;
 
   return "";
 }
 
-Shell *GRT::get_shell() {
+auto GRT::get_shell() -> Shell * {
   return _shell;
 }
 
 //--------------------------------------------------------------------------------
 
-void GRT::pushMessageHandler(SlotHolder *slot) {
+auto GRT::pushMessageHandler(SlotHolder *slot) -> void {
   base::RecMutexLock lock(_message_mutex);
   _messageSlotStack.push_back(slot);
 }
 
-void GRT::popMessageHandler() {
+auto GRT::popMessageHandler() -> void {
   base::RecMutexLock lock(_message_mutex);
   if (_messageSlotStack.empty()) {
     logError("popMessageHandler() called on empty handler stack");
@@ -1022,7 +1022,7 @@ void GRT::popMessageHandler() {
   }
 }
 
-void GRT::removeMessageHandler(SlotHolder *slot) {
+auto GRT::removeMessageHandler(SlotHolder *slot) -> void {
   base::RecMutexLock lock(_message_mutex);
   auto iter = std::find(_messageSlotStack.begin(), _messageSlotStack.end(), slot);
   if (iter != _messageSlotStack.end()) {
@@ -1031,7 +1031,7 @@ void GRT::removeMessageHandler(SlotHolder *slot) {
   }
 }
 
-bool GRT::handle_message(const Message &msg, void *sender) {
+auto GRT::handle_message(const Message &msg, void *sender) -> bool {
   // Don't log any message if there's no message slot is occupied. It just means
   // we don't want anything logged.
   if (!_messageSlotStack.empty()) {
@@ -1054,22 +1054,22 @@ bool GRT::handle_message(const Message &msg, void *sender) {
   return false;
 }
 
-void GRT::push_status_query_handler(const StatusQuerySlot &slot) {
+auto GRT::push_status_query_handler(const StatusQuerySlot &slot) -> void {
   _status_query_slot_stack.push_back(slot);
 }
 
-void GRT::pop_status_query_handler() {
+auto GRT::pop_status_query_handler() -> void {
   _status_query_slot_stack.pop_back();
 }
 
-bool GRT::query_status() {
+auto GRT::query_status() -> bool {
   if (_status_query_slot_stack.empty())
     return false;
   return _status_query_slot_stack.back()();
 }
 
 // XXX: these handlers should go and be replaced by pure log_* calls.
-void GRT::send_error(const std::string &message, const std::string &details, void *sender) {
+auto GRT::send_error(const std::string &message, const std::string &details, void *sender) -> void {
   base::RecMutexLock lock(_message_mutex);
   Message msg;
   msg.type = ErrorMsg;
@@ -1082,7 +1082,7 @@ void GRT::send_error(const std::string &message, const std::string &details, voi
   logError("%s\t%s\n", message.c_str(), details.c_str());
 }
 
-void GRT::send_warning(const std::string &message, const std::string &details, void *sender) {
+auto GRT::send_warning(const std::string &message, const std::string &details, void *sender) -> void {
   base::RecMutexLock lock(_message_mutex);
   Message msg;
   msg.type = WarningMsg;
@@ -1095,7 +1095,7 @@ void GRT::send_warning(const std::string &message, const std::string &details, v
   logWarning("%s\t%s\n", message.c_str(), details.c_str());
 }
 
-void GRT::send_info(const std::string &message, const std::string &details, void *sender) {
+auto GRT::send_info(const std::string &message, const std::string &details, void *sender) -> void {
   base::RecMutexLock lock(_message_mutex);
   Message msg;
   msg.type = InfoMsg;
@@ -1108,7 +1108,7 @@ void GRT::send_info(const std::string &message, const std::string &details, void
   logInfo("%s\t%s\n", message.c_str(), details.c_str());
 }
 
-void GRT::reset_progress_steps() {
+auto GRT::reset_progress_steps() -> void {
   _progress_step_stack.clear();
 }
 
@@ -1124,15 +1124,15 @@ void GRT::reset_progress_steps() {
  begin - from 0.0 to 1.0, initial value of the progress for the sub-task
  end - from 0.0 to 1.0, the final value of the progress for the sub-task once its completed
  */
-void GRT::begin_progress_step(float from, float to) {
+auto GRT::begin_progress_step(float from, float to) -> void {
   _progress_step_stack.push_back(std::make_pair(from, to));
 }
 
-void GRT::end_progress_step() {
+auto GRT::end_progress_step() -> void {
   _progress_step_stack.pop_back();
 }
 
-void GRT::send_progress(float percentage, const std::string &message, const std::string &details, void *sender) {
+auto GRT::send_progress(float percentage, const std::string &message, const std::string &details, void *sender) -> void {
   base::RecMutexLock lock(_message_mutex);
   Message msg;
   msg.type = ProgressMsg;
@@ -1155,7 +1155,7 @@ void GRT::send_progress(float percentage, const std::string &message, const std:
   //    log_debug3("%s\t%s", message.c_str(), details.c_str());
 }
 
-void GRT::send_verbose(const std::string &message, void *sender) {
+auto GRT::send_verbose(const std::string &message, void *sender) -> void {
   base::RecMutexLock lock(_message_mutex);
   Message msg;
   msg.type = VerboseMsg;
@@ -1168,7 +1168,7 @@ void GRT::send_verbose(const std::string &message, void *sender) {
   logDebug2("%s", message.c_str());
 }
 
-void GRT::send_output(const std::string &message, void *sender) {
+auto GRT::send_output(const std::string &message, void *sender) -> void {
   base::RecMutexLock lock(_message_mutex);
   Message msg;
   msg.type = OutputMsg;

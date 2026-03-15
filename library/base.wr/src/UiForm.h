@@ -54,18 +54,18 @@ namespace MySQL {
     public:
       MenuItem(const bec::MenuItem &item);
 
-      System::String ^ get_caption();
-      System::String ^ get_shortcut();
-      System::String ^ getInternalName();
-      MenuItemType get_type();
+      auto get_caption() -> System::String ^;
+      auto get_shortcut() -> System::String ^;
+      auto getInternalName() -> System::String ^;
+      auto get_type() -> MenuItemType;
 
-      bool get_checked();
-      void set_checked(bool value);
+      auto get_checked() -> bool;
+      auto set_checked(bool value) -> void;
 
-      bool get_enabled();
-      void set_enabled(bool value);
+      auto get_enabled() -> bool;
+      auto set_enabled(bool value) -> void;
 
-      System::Collections::Generic::List<MenuItem ^> ^ get_subitems();
+      auto get_subitems() -> System::Collections::Generic::List<MenuItem ^> ^;
     };
 
   public
@@ -106,34 +106,31 @@ namespace MySQL {
           checked(item.checked) {
       }
 
-      int get_icon() {
+      auto get_icon() -> int {
         return icon;
       }
 
-      int get_alt_icon() {
+      auto get_alt_icon() -> int {
         return alt_icon;
       }
 
-      System::String ^ getInternalName() { return internalName; }
+      auto getInternalName() -> System::String ^ { return internalName; }
 
-        System::String
-        ^ get_caption() { return caption; }
+        auto get_caption() -> System::String ^ { return caption; }
 
-        System::String
-        ^ get_command() { return command; }
+        auto get_command() -> System::String ^ { return command; }
 
-        System::String
-        ^ get_tooltip() { return tooltip; }
+        auto get_tooltip() -> System::String ^ { return tooltip; }
 
-        ToolbarItemType get_type() {
+        auto get_type() -> ToolbarItemType {
         return type;
       }
 
-      bool get_checked() {
+      auto get_checked() -> bool {
         return checked;
       }
 
-      bool get_enabled() {
+      auto get_enabled() -> bool {
         return enabled;
       }
     };
@@ -147,19 +144,19 @@ namespace MySQL {
       UIForm(bec::UIForm *inn);
       UIForm();
 
-      System::IntPtr GetFixedId();
-      void ReleaseHandle();
+      auto GetFixedId() -> System::IntPtr;
+      auto ReleaseHandle() -> void;
 
     public:
       virtual ~UIForm();
 
-      void init(bec::UIForm *inn);
-      bec::UIForm *get_unmanaged_object();
-      static UIForm ^ GetFromFixedId(System::IntPtr ip);
-      bool can_close();
-      void close();
-      System::String ^ get_title();
-      System::String ^ form_id();
+      auto init(bec::UIForm *inn) -> void;
+      auto get_unmanaged_object() -> bec::UIForm *;
+      static auto GetFromFixedId(System::IntPtr ip) -> UIForm ^;
+      auto can_close() -> bool;
+      auto close() -> void;
+      auto get_title() -> System::String ^;
+      auto form_id() -> System::String ^;
     };
   }
 }

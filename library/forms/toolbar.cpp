@@ -41,49 +41,49 @@ ToolBar::~ToolBar() {
   _items.clear();
 }
 
-ToolBarItem *ToolBar::find_item(const std::string &name) {
+auto ToolBar::find_item(const std::string &name) -> ToolBarItem * {
   for (std::vector<ToolBarItem *>::iterator iter = _items.begin(); iter != _items.end(); ++iter)
     if ((*iter)->getInternalName() == name)
       return *iter;
   return 0;
 }
 
-void ToolBar::validate() {
+auto ToolBar::validate() -> void {
   for (std::vector<ToolBarItem *>::iterator iter = _items.begin(); iter != _items.end(); ++iter)
     (*iter)->validate();
 }
 
-void ToolBar::set_item_enabled(const std::string &name, bool flag) {
+auto ToolBar::set_item_enabled(const std::string &name, bool flag) -> void {
   ToolBarItem *item = find_item(name);
   if (item)
     item->set_enabled(flag);
 }
 
-void ToolBar::set_item_checked(const std::string &name, bool flag) {
+auto ToolBar::set_item_checked(const std::string &name, bool flag) -> void {
   ToolBarItem *item = find_item(name);
   if (item)
     item->set_checked(flag);
 }
 
-bool ToolBar::get_item_checked(const std::string &name) {
+auto ToolBar::get_item_checked(const std::string &name) -> bool {
   ToolBarItem *item = find_item(name);
   if (item)
     return item->get_checked();
   return false;
 }
 
-void ToolBar::add_item(ToolBarItem *item) {
+auto ToolBar::add_item(ToolBarItem *item) -> void {
   insert_item(-1, item);
 }
 
-ToolBarItem *ToolBar::add_separator_item(const std::string &name) {
+auto ToolBar::add_separator_item(const std::string &name) -> ToolBarItem * {
   ToolBarItem *item = mforms::manage(new ToolBarItem(SeparatorItem));
   item->set_name(name);
   add_item(item);
   return item;
 }
 
-void ToolBar::insert_item(int index, ToolBarItem *item) {
+auto ToolBar::insert_item(int index, ToolBarItem *item) -> void {
   assert(item->is_managed());
 
   if (index < 0 || index > (int)_items.size())
@@ -98,7 +98,7 @@ void ToolBar::insert_item(int index, ToolBarItem *item) {
   _items.push_back(item);
 }
 
-void ToolBar::remove_all() {
+auto ToolBar::remove_all() -> void {
   for (std::vector<ToolBarItem *>::iterator iter = _items.begin(); iter != _items.end(); ++iter) {
     _impl->remove_item(this, *iter);
     (*iter)->release();
@@ -106,7 +106,7 @@ void ToolBar::remove_all() {
   _items.clear();
 }
 
-void ToolBar::remove_item(ToolBarItem *item) {
+auto ToolBar::remove_item(ToolBarItem *item) -> void {
   std::vector<ToolBarItem *>::iterator iter = std::find(_items.begin(), _items.end(), item);
   if (iter != _items.end()) {
     _impl->remove_item(this, *iter);
@@ -120,60 +120,60 @@ ToolBarItem::ToolBarItem(ToolBarItemType type) : _type(type), _updating(false) {
   _impl->create_tool_item(this, type);
 }
 
-void ToolBarItem::set_text(const std::string &text) {
+auto ToolBarItem::set_text(const std::string &text) -> void {
   _updating = true;
   _impl->set_item_text(this, text);
   _updating = false;
 }
 
-std::string ToolBarItem::get_text() {
+auto ToolBarItem::get_text() -> std::string {
   return _impl->get_item_text(this);
 }
 
-void ToolBarItem::set_tooltip(const std::string &text) {
+auto ToolBarItem::set_tooltip(const std::string &text) -> void {
   _impl->set_item_tooltip(this, text);
 }
 
-void ToolBarItem::set_icon(const std::string &path) {
+auto ToolBarItem::set_icon(const std::string &path) -> void {
   _icon = path;
   _impl->set_item_icon(this, path);
 }
 
-void ToolBarItem::set_alt_icon(const std::string &path) {
+auto ToolBarItem::set_alt_icon(const std::string &path) -> void {
   _alt_icon = path;
   _impl->set_item_alt_icon(this, path);
 }
 
-void ToolBarItem::set_enabled(bool flag) {
+auto ToolBarItem::set_enabled(bool flag) -> void {
   _impl->set_item_enabled(this, flag);
 }
 
-bool ToolBarItem::get_enabled() {
+auto ToolBarItem::get_enabled() -> bool {
   return _impl->get_item_enabled(this);
 }
 
-void ToolBarItem::set_checked(bool flag) {
+auto ToolBarItem::set_checked(bool flag) -> void {
   _updating = true;
   _impl->set_item_checked(this, flag);
   _updating = false;
 }
 
-bool ToolBarItem::get_checked() {
+auto ToolBarItem::get_checked() -> bool {
   return _impl->get_item_checked(this);
 }
 
-void ToolBarItem::set_name(const std::string &name) {
+auto ToolBarItem::set_name(const std::string &name) -> void {
   if (_impl->set_item_name)
     _impl->set_item_name(this, name);
 }
 
-void ToolBarItem::set_selector_items(const std::vector<std::string> &values) {
+auto ToolBarItem::set_selector_items(const std::vector<std::string> &values) -> void {
   _updating = true;
   _impl->set_selector_items(this, values);
   _updating = false;
 }
 
-void ToolBarItem::callback() {
+auto ToolBarItem::callback() -> void {
   try {
     if (!_updating)
       _clicked_signal(this);
@@ -183,28 +183,28 @@ void ToolBarItem::callback() {
   }
 }
 
-void ToolBarItem::validate() {
+auto ToolBarItem::validate() -> void {
   if (_validate)
     set_enabled(_validate());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarItem::search(const std::string &text) {
+auto ToolBarItem::search(const std::string &text) -> void {
   if (_search)
     _search(text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarItem::set_validator(const std::function<bool()> &slot) {
+auto ToolBarItem::set_validator(const std::function<bool()> &slot) -> void {
   _validate = slot;
   validate();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ToolBarItem::set_search_handler(const std::function<void(const std::string &)> &slot) {
+auto ToolBarItem::set_search_handler(const std::function<void(const std::string &)> &slot) -> void {
   _search = slot;
 }
 

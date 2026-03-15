@@ -30,13 +30,13 @@
 //================================================================================
 // db_Index
 
-void db_Index::init() {
+auto db_Index::init() -> void {
 }
 
 db_Index::~db_Index() {
 }
 
-void db_Index::name(const grt::StringRef &value) {
+auto db_Index::name(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_name);
 
   if (_owner.is_valid() && _name != value)

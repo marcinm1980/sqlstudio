@@ -100,11 +100,11 @@ mforms::gtk::PanelImpl::~PanelImpl() {
     delete (_evbox);
 }
 
-bool mforms::gtk::PanelImpl::create(::mforms::Panel *self, ::mforms::PanelType type) {
+auto mforms::gtk::PanelImpl::create(::mforms::Panel *self, ::mforms::PanelType type) -> bool {
   return new PanelImpl(self, type);
 }
 
-void mforms::gtk::PanelImpl::set_title(::mforms::Panel *self, const std::string &title) {
+auto mforms::gtk::PanelImpl::set_title(::mforms::Panel *self, const std::string &title) -> void {
   PanelImpl *panel = self->get_data<PanelImpl>();
 
   if (panel->_title_check)
@@ -113,14 +113,14 @@ void mforms::gtk::PanelImpl::set_title(::mforms::Panel *self, const std::string 
     panel->_frame->set_label(title);
 }
 
-void mforms::gtk::PanelImpl::set_active(::mforms::Panel *self, bool flag) {
+auto mforms::gtk::PanelImpl::set_active(::mforms::Panel *self, bool flag) -> void {
   PanelImpl *panel = self->get_data<PanelImpl>();
 
   if (panel->_title_check)
     panel->_title_check->set_active(flag);
 }
 
-bool mforms::gtk::PanelImpl::get_active(::mforms::Panel *self) {
+auto mforms::gtk::PanelImpl::get_active(::mforms::Panel *self) -> bool {
   PanelImpl *panel = self->get_data<PanelImpl>();
 
   if (panel->_title_check)
@@ -128,14 +128,14 @@ bool mforms::gtk::PanelImpl::get_active(::mforms::Panel *self) {
   return false;
 }
 
-void mforms::gtk::PanelImpl::set_back_color(::mforms::Panel *self, const std::string &color) {
+auto mforms::gtk::PanelImpl::set_back_color(::mforms::Panel *self, const std::string &color) -> void {
   PanelImpl *panel = self->get_data<PanelImpl>();
 
   if (panel->_evbox)
     panel->_evbox->override_background_color(color_to_rgba(Gdk::Color(color)), Gtk::STATE_FLAG_NORMAL);
 }
 
-void mforms::gtk::PanelImpl::add(::mforms::Panel *self, ::mforms::View *child) {
+auto mforms::gtk::PanelImpl::add(::mforms::Panel *self, ::mforms::View *child) -> void {
   PanelImpl *panel = self->get_data<PanelImpl>();
 
   Gtk::Widget *outer_child = child->get_data<ViewImpl>()->get_outer();
@@ -147,7 +147,7 @@ void mforms::gtk::PanelImpl::add(::mforms::Panel *self, ::mforms::View *child) {
   child->show();
 }
 
-void mforms::gtk::PanelImpl::remove(::mforms::Panel *self, ::mforms::View *child) {
+auto mforms::gtk::PanelImpl::remove(::mforms::Panel *self, ::mforms::View *child) -> void {
   PanelImpl *panel = self->get_data<PanelImpl>();
 
   if (panel->_evbox)
@@ -156,14 +156,14 @@ void mforms::gtk::PanelImpl::remove(::mforms::Panel *self, ::mforms::View *child
     panel->_frame->remove();
 }
 
-void mforms::gtk::PanelImpl::set_padding_impl(int left, int top, int right, int bottom) {
+auto mforms::gtk::PanelImpl::set_padding_impl(int left, int top, int right, int bottom) -> void {
   if (_evbox)
     _evbox->set_border_width(left);
   else if (_frame)
     _frame->set_border_width(left);
 }
 
-void mforms::gtk::PanelImpl::init() {
+auto mforms::gtk::PanelImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_panel_impl.create = &PanelImpl::create;
@@ -178,7 +178,7 @@ void mforms::gtk::PanelImpl::init() {
 }
 
 // called by radiobutton to add itself to a radio group
-void mforms::gtk::PanelImpl::add_to_radio_group(Gtk::RadioButton *radio) {
+auto mforms::gtk::PanelImpl::add_to_radio_group(Gtk::RadioButton *radio) -> void {
   if (!_radio_group_set) {
     _radio_group_set = true;
     _radio_group = radio->get_group();

@@ -28,46 +28,46 @@
 Sql_specifics::Sql_specifics() {
 }
 
-std::string Sql_specifics::limit_select_query(const std::string &sql, int *row_count, int *offset) {
+auto Sql_specifics::limit_select_query(const std::string &sql, int *row_count, int *offset) -> std::string {
   // since there is no standart syntax do-nothing by default
   return sql;
 }
 
-void Sql_specifics::get_connection_startup_script(std::list<std::string> &sql_script) {
+auto Sql_specifics::get_connection_startup_script(std::list<std::string> &sql_script) -> void {
 }
 
-std::string Sql_specifics::query_connection_id() {
+auto Sql_specifics::query_connection_id() -> std::string {
   return "";
 }
 
-std::string Sql_specifics::query_kill_connection(std::int64_t connection_id) {
+auto Sql_specifics::query_kill_connection(std::int64_t connection_id) -> std::string {
   return "";
 }
 
-std::string Sql_specifics::query_kill_query(std::int64_t connection_id) {
+auto Sql_specifics::query_kill_query(std::int64_t connection_id) -> std::string {
   return "";
 }
 
-std::string Sql_specifics::query_variable(const std::string &name) {
+auto Sql_specifics::query_variable(const std::string &name) -> std::string {
   return "";
 }
 
-sqlide::QuoteVar::Escape_sql_string Sql_specifics::escape_sql_string() {
+auto Sql_specifics::escape_sql_string() -> sqlide::QuoteVar::Escape_sql_string {
   return &sqlide::QuoteVar::escape_ansi_sql_string;
 }
 
-sqlide::QuoteVar::Blob_to_string Sql_specifics::blob_to_string() {
+auto Sql_specifics::blob_to_string() -> sqlide::QuoteVar::Blob_to_string {
   return sqlide::QuoteVar::Blob_to_string();
 }
 
-std::string Sql_specifics::setting_non_std_sql_delimiter() {
+auto Sql_specifics::setting_non_std_sql_delimiter() -> std::string {
   return "";
 }
 
-std::string Sql_specifics::non_std_sql_delimiter() {
+auto Sql_specifics::non_std_sql_delimiter() -> std::string {
   return ";";
 }
 
-std::string Sql_specifics::setting_ansi_quotes() {
+auto Sql_specifics::setting_ansi_quotes() -> std::string {
   return "";
 }

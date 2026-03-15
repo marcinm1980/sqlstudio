@@ -134,8 +134,8 @@ protected:
    * Draws the icon followed by the given text. The given position is that of the upper left corner
    * of the image.
    */
-  void draw_icon_with_text(cairo_t *cr, double x, double y, cairo_surface_t *icon, const std::string &text,
-                           double alpha) {
+  auto draw_icon_with_text(cairo_t *cr, double x, double y, cairo_surface_t *icon, const std::string &text,
+                           double alpha) -> void {
     if (icon) {
       mforms::Utilities::paint_icon(cr, icon, x, y);
       x += imageWidth(icon) + 3;
@@ -170,31 +170,31 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual bool is_movable() const {
+  virtual auto is_movable() const -> bool {
     return true;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual base::Color getTitleColor() const {
+  virtual auto getTitleColor() const -> base::Color {
     return owner->_titleColor;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual base::Color getBackgroundColor(bool hot) const {
+  virtual auto getBackgroundColor(bool hot) const -> base::Color {
     return hot ? owner->_backgroundColorHot : owner->_backgroundColor;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual cairo_surface_t *get_background_icon() const {
+  virtual auto get_background_icon() const -> cairo_surface_t * {
     return owner->_sakila_icon;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void draw_tile_background(cairo_t *cr, bool hot, double alpha, bool for_dragging) const {
+  auto draw_tile_background(cairo_t *cr, bool hot, double alpha, bool for_dragging) const -> void {
     base::Color backColor = getBackgroundColor(hot);
 
     base::Rect bounds = this->bounds;
@@ -232,7 +232,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual void draw_tile(cairo_t *cr, bool hot, double alpha, bool for_dragging) {
+  virtual auto draw_tile(cairo_t *cr, bool hot, double alpha, bool for_dragging) -> void {
     base::Color titleColor = getTitleColor();
     base::Rect bounds = this->bounds;
     if (for_dragging)
@@ -284,7 +284,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual void draw_tile_text(cairo_t *cr, double x, double y, double alpha) {
+  virtual auto draw_tile_text(cairo_t *cr, double x, double y, double alpha) -> void {
     if (compute_strings) {
       double available_width = bounds.width() - 24 - imageWidth(owner->_network_icon);
       description = mforms::Utilities::shorten_string(cr, description, available_width);
@@ -305,19 +305,19 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual void activate() {
+  virtual auto activate() -> void {
     owner->_owner->trigger_callback(HomeScreenAction::ActionOpenConnectionFromList, connectionId);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual mforms::Menu *context_menu() const {
+  virtual auto context_menu() const -> mforms::Menu * {
     return owner->_connection_context_menu;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual void menu_open(ItemPosition pos) const {
+  virtual auto menu_open(ItemPosition pos) const -> void {
     mforms::Menu *menu = context_menu();
 
     menu->set_item_enabled(menu->get_item_index("edit_connection"), true);
@@ -561,31 +561,31 @@ ConnectionsWelcomeScreen::~ConnectionsWelcomeScreen() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Size ConnectionsWelcomeScreen::getLayoutSize(base::Size proposedSize) {
+auto ConnectionsWelcomeScreen::getLayoutSize(base::Size proposedSize) -> base::Size {
   return base::Size(proposedSize.width, _totalHeight); // Height doesn't change. Constant content.
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Accessible::Role ConnectionsWelcomeScreen::getAccessibilityRole() {
+auto ConnectionsWelcomeScreen::getAccessibilityRole() -> Accessible::Role {
   return base::Accessible::Pane;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string ConnectionsWelcomeScreen::getAccessibilityTitle() {
+auto ConnectionsWelcomeScreen::getAccessibilityTitle() -> std::string {
   return _heading;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string ConnectionsWelcomeScreen::getAccessibilityDescription() {
+auto ConnectionsWelcomeScreen::getAccessibilityDescription() -> std::string {
   return "Home Screen Welcome Page";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string ConnectionsWelcomeScreen::getAccessibilityValue() {
+auto ConnectionsWelcomeScreen::getAccessibilityValue() -> std::string {
   std::string result;
   for (auto &line : _content)
     result += line + "\n";
@@ -594,13 +594,13 @@ std::string ConnectionsWelcomeScreen::getAccessibilityValue() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t ConnectionsWelcomeScreen::getAccessibilityChildCount() {
+auto ConnectionsWelcomeScreen::getAccessibilityChildCount() -> size_t {
   return 4;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Accessible* ConnectionsWelcomeScreen::getAccessibilityChild(size_t index) {
+auto ConnectionsWelcomeScreen::getAccessibilityChild(size_t index) -> Accessible* {
   switch (index) {
     case 1:
       return &_browseDocButton;
@@ -615,13 +615,13 @@ Accessible* ConnectionsWelcomeScreen::getAccessibilityChild(size_t index) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Rect ConnectionsWelcomeScreen::getAccessibilityBounds() {
+auto ConnectionsWelcomeScreen::getAccessibilityBounds() -> base::Rect {
   return base::Rect(0, 100, 500, 700);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Accessible* ConnectionsWelcomeScreen::accessibilityHitTest(ssize_t x, ssize_t y) {
+auto ConnectionsWelcomeScreen::accessibilityHitTest(ssize_t x, ssize_t y) -> Accessible* {
   if (_browseDocButton.bounds.contains(static_cast<double>(x), static_cast<double>(y))) {
     return &_browseDocButton;
   }
@@ -643,7 +643,7 @@ Accessible* ConnectionsWelcomeScreen::accessibilityHitTest(ssize_t x, ssize_t y)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ConnectionsWelcomeScreen::repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) {
+auto ConnectionsWelcomeScreen::repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) -> void {
   Size size = Utilities::getImageSize(_closeIcon);
   _closeHomeScreenButton.bounds = base::Rect(get_width() - size.width - 8, 8, size.width, size.height);
 
@@ -700,7 +700,7 @@ void ConnectionsWelcomeScreen::repaint(cairo_t *cr, int areax, int areay, int ar
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ConnectionsWelcomeScreen::updateColors() {
+auto ConnectionsWelcomeScreen::updateColors() -> void {
   if (_owner->isDarkModeActive()) {
     _textColor = base::Color::parse("#F4F4F4");
   } else {
@@ -710,7 +710,7 @@ void ConnectionsWelcomeScreen::updateColors() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ConnectionsWelcomeScreen::updateIcons() {
+auto ConnectionsWelcomeScreen::updateIcons() -> void {
   cairo_surface_destroy(_closeIcon);
   if (_owner->isDarkModeActive())
     _closeIcon = Utilities::load_icon("home_screen_close_dark.png", true);
@@ -720,7 +720,7 @@ void ConnectionsWelcomeScreen::updateIcons() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ConnectionsWelcomeScreen::mouse_click(mforms::MouseButton button, int x, int y) {
+auto ConnectionsWelcomeScreen::mouse_click(mforms::MouseButton button, int x, int y) -> bool {
   if (button == MouseButtonLeft) {
     HomeAccessibleButton * button = dynamic_cast<HomeAccessibleButton *>(accessibilityHitTest(x, y));
     if (button != nullptr) {
@@ -829,7 +829,7 @@ ConnectionsSection::~ConnectionsSection() {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::updateColors() {
+auto ConnectionsSection::updateColors() -> void {
   if (_owner->isDarkModeActive()) {
     _titleColor = base::Color::parse("#F4F4F4");
     _folderTitleColor = base::Color::parse("#F0F0F0");
@@ -862,7 +862,7 @@ void ConnectionsSection::updateColors() {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::updateIcons() {
+auto ConnectionsSection::updateIcons() -> void {
   if (_owner->isDarkModeActive()) {
     deleteSurface(_sakila_icon);
     _sakila_icon = mforms::Utilities::load_icon("wb_tile_sakila_dark.png");
@@ -907,13 +907,13 @@ void ConnectionsSection::updateIcons() {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::focus_search_box() {
+auto ConnectionsSection::focus_search_box() -> void {
   _search_text.focus();
 }
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::showWelcomeHeading(bool state) {
+auto ConnectionsSection::showWelcomeHeading(bool state) -> void {
   _showWelcomeHeading = state;
   if (_welcomeScreen != nullptr)
     _welcomeScreen->show(state);
@@ -923,7 +923,7 @@ void ConnectionsSection::showWelcomeHeading(bool state) {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::on_search_text_changed() {
+auto ConnectionsSection::on_search_text_changed() -> void {
   std::string filter = _search_text.get_string_value();
   _filtered_connections.clear();
 
@@ -948,7 +948,7 @@ void ConnectionsSection::on_search_text_changed() {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::on_search_text_action(mforms::TextEntryAction action) {
+auto ConnectionsSection::on_search_text_action(mforms::TextEntryAction action) -> void {
   if (action == mforms::EntryEscape) {
     _search_text.set_value("");
     on_search_text_changed();
@@ -1002,7 +1002,7 @@ void ConnectionsSection::on_search_text_action(mforms::TextEntryAction action) {
  * This will not work in section separated folders, but it doesn't matter
  * atm because this is only used for drag/drop
  */
-ssize_t ConnectionsSection::calculate_index_from_point(int x, int y) {
+auto ConnectionsSection::calculate_index_from_point(int x, int y) -> ssize_t {
   int width = get_width();
   if (x < CONNECTIONS_LEFT_PADDING || x > (width - CONNECTIONS_RIGHT_PADDING) || y < CONNECTIONS_TOP_PADDING)
     return -1; // Outside the tiles area.
@@ -1033,7 +1033,7 @@ ssize_t ConnectionsSection::calculate_index_from_point(int x, int y) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::shared_ptr<ConnectionEntry> ConnectionsSection::entry_from_point(int x, int y) const {
+auto ConnectionsSection::entry_from_point(int x, int y) const -> std::shared_ptr<ConnectionEntry> {
   std::shared_ptr<ConnectionEntry> entry;
 
   ConnectionVector connections(displayed_connections());
@@ -1049,7 +1049,7 @@ std::shared_ptr<ConnectionEntry> ConnectionsSection::entry_from_point(int x, int
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::shared_ptr<ConnectionEntry> ConnectionsSection::entry_from_index(ssize_t index) const {
+auto ConnectionsSection::entry_from_index(ssize_t index) const -> std::shared_ptr<ConnectionEntry> {
   ssize_t count = displayed_connections().size();
   if (index < count) {
     return displayed_connections()[index];
@@ -1059,7 +1059,7 @@ std::shared_ptr<ConnectionEntry> ConnectionsSection::entry_from_index(ssize_t in
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Rect ConnectionsSection::bounds_for_entry(size_t index, size_t width) {
+auto ConnectionsSection::bounds_for_entry(size_t index, size_t width) -> base::Rect {
   base::Rect result(CONNECTIONS_LEFT_PADDING, CONNECTIONS_TOP_PADDING, CONNECTIONS_TILE_WIDTH, CONNECTIONS_TILE_HEIGHT);
   size_t tiles_per_row = (width - CONNECTIONS_LEFT_PADDING - CONNECTIONS_RIGHT_PADDING) /
                          (CONNECTIONS_TILE_WIDTH + CONNECTIONS_SPACING);
@@ -1082,7 +1082,7 @@ base::Rect ConnectionsSection::bounds_for_entry(size_t index, size_t width) {
  * describes a folder or back tile.
  * Properly takes into account if we are in a folder or not and if we have filtered entries currently.
  */
-std::string ConnectionsSection::connectionIdFromIndex(ssize_t index) {
+auto ConnectionsSection::connectionIdFromIndex(ssize_t index) -> std::string {
   if (index < 0 || (_active_folder && index == 0))
     return "";
 
@@ -1091,7 +1091,7 @@ std::string ConnectionsSection::connectionIdFromIndex(ssize_t index) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) {
+auto ConnectionsSection::repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) -> void {
   if (is_layout_dirty()) {
     getContainer()->get_parent()->relayout();
     set_layout_dirty(false);
@@ -1238,7 +1238,7 @@ void ConnectionsSection::repaint(cairo_t *cr, int areax, int areay, int areaw, i
 
 //----------------------------------------------------------------------------------------------------------------------
 
-base::Size ConnectionsSection::getLayoutSize(base::Size proposedSize) {
+auto ConnectionsSection::getLayoutSize(base::Size proposedSize) -> base::Size {
   ConnectionVector const& connections(displayed_connections());
 
   size_t height;
@@ -1254,25 +1254,25 @@ base::Size ConnectionsSection::getLayoutSize(base::Size proposedSize) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-const char* ConnectionsSection::getTitle() {
+auto ConnectionsSection::getTitle() -> const char* {
   return "Connections Section";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::cancelOperation() {
+auto ConnectionsSection::cancelOperation() -> void {
   // noop
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::setFocus() {
+auto ConnectionsSection::setFocus() -> void {
   _search_text.focus();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::canHandle(HomeScreenMenuType type) {
+auto ConnectionsSection::canHandle(HomeScreenMenuType type) -> bool {
   switch (type) {
     case HomeMenuConnection:
     case HomeMenuConnectionGroup:
@@ -1286,7 +1286,7 @@ bool ConnectionsSection::canHandle(HomeScreenMenuType type) {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::setContextMenu(mforms::Menu *menu, HomeScreenMenuType type) {
+auto ConnectionsSection::setContextMenu(mforms::Menu *menu, HomeScreenMenuType type) -> void {
   if (canHandle(type)) {
     switch (type) {
       case HomeMenuConnectionGroup:
@@ -1327,15 +1327,15 @@ void ConnectionsSection::setContextMenu(mforms::Menu *menu, HomeScreenMenuType t
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::setContextMenuAction(mforms::Menu *menu, HomeScreenMenuType type) {
+auto ConnectionsSection::setContextMenuAction(mforms::Menu *menu, HomeScreenMenuType type) -> void {
   // pass
 }
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::addConnection(const std::string &connectionId, const std::string &title,
+auto ConnectionsSection::addConnection(const std::string &connectionId, const std::string &title,
                                        const std::string &description, const std::string &user,
-                                       const std::string &schema) {
+                                       const std::string &schema) -> void {
   std::shared_ptr<ConnectionEntry> entry;
 
   entry = std::shared_ptr<ConnectionEntry>(new ConnectionEntry(this));
@@ -1393,7 +1393,7 @@ void ConnectionsSection::addConnection(const std::string &connectionId, const st
   set_layout_dirty(true);
 }
 
-void ConnectionsSection::updateFocusableAreas() {
+auto ConnectionsSection::updateFocusableAreas() -> void {
   clearFocusableAreas();
   if (!_filtered_connections.empty()) {
     for (const auto &it: _filtered_connections) {
@@ -1429,13 +1429,13 @@ void ConnectionsSection::updateFocusableAreas() {
 
 //------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::setFocusOnEntry(ConnectionEntry const* entry) {
+auto ConnectionsSection::setFocusOnEntry(ConnectionEntry const* entry) -> bool {
   return setFocusOnArea(entry->bounds.center());
 }
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::clear_connections(bool clear_state) {
+auto ConnectionsSection::clear_connections(bool clear_state) -> void {
   if (clear_state) {
     _filtered = false;
     _filtered_connections.clear();
@@ -1455,7 +1455,7 @@ void ConnectionsSection::clear_connections(bool clear_state) {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::change_to_folder(std::shared_ptr<FolderEntry> folder) {
+auto ConnectionsSection::change_to_folder(std::shared_ptr<FolderEntry> folder) -> void {
   if (_active_folder && !folder) {
     // Returning to root list.
     _active_folder.reset();
@@ -1475,7 +1475,7 @@ void ConnectionsSection::change_to_folder(std::shared_ptr<FolderEntry> folder) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::mouse_down(mforms::MouseButton button, int x, int y) {
+auto ConnectionsSection::mouse_down(mforms::MouseButton button, int x, int y) -> bool {
   mforms::DrawBox::mouse_down(button, x, y);
   if (button == mforms::MouseButtonLeft && _hot_entry)
     _mouse_down_position = base::Rect(x - 4, y - 4, 8, 8); // Center a 8x8 pixels rect around the mouse position.
@@ -1485,20 +1485,20 @@ bool ConnectionsSection::mouse_down(mforms::MouseButton button, int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::mouse_up(mforms::MouseButton button, int x, int y) {
+auto ConnectionsSection::mouse_up(mforms::MouseButton button, int x, int y) -> bool {
   _mouse_down_position = base::Rect();
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::mouse_double_click(mforms::MouseButton button, int x, int y) {
+auto ConnectionsSection::mouse_double_click(mforms::MouseButton button, int x, int y) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::mouse_click(mforms::MouseButton button, int x, int y) {
+auto ConnectionsSection::mouse_click(mforms::MouseButton button, int x, int y) -> bool {
   // everything below this relies on _hot_entry, which will become out of sync
   // if the user pops up the context menu and then clicks (or right clicks) in some
   // other tile... so we must first update _hot_entry before doing any actions
@@ -1555,7 +1555,7 @@ bool ConnectionsSection::mouse_click(mforms::MouseButton button, int x, int y) {
 
 //------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::mouse_leave() {
+auto ConnectionsSection::mouse_leave() -> bool {
   if (_hot_entry) {
     _hot_entry.reset();
     set_needs_repaint();
@@ -1565,7 +1565,7 @@ bool ConnectionsSection::mouse_leave() {
 
 //------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::mouse_move(mforms::MouseButton button, int x, int y) {
+auto ConnectionsSection::mouse_move(mforms::MouseButton button, int x, int y) -> bool {
 
   std::shared_ptr<ConnectionEntry> entry = entry_from_point(x, y);
 
@@ -1597,7 +1597,7 @@ bool ConnectionsSection::mouse_move(mforms::MouseButton button, int x, int y) {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::handle_command(const std::string &command) {
+auto ConnectionsSection::handle_command(const std::string &command) -> void {
   std::string item;
   if (_entry_for_menu) {
     if (_active_folder) {
@@ -1621,7 +1621,7 @@ void ConnectionsSection::handle_command(const std::string &command) {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::handle_folder_command(const std::string &command) {
+auto ConnectionsSection::handle_folder_command(const std::string &command) -> void {
   {
     // We have to pass on a valid connection (for the group name).
     // All child items have the same group name (except the dummy entry for the back tile).
@@ -1638,7 +1638,7 @@ void ConnectionsSection::handle_folder_command(const std::string &command) {
 
 //------------------------------------------------------------------------------------------------
 
-void ConnectionsSection::menu_open() {
+auto ConnectionsSection::menu_open() -> void {
   if (_entry_for_menu) {
     ConnectionVector const& items(displayed_connections());
 
@@ -1655,13 +1655,13 @@ void ConnectionsSection::menu_open() {
 
 //------------------------------------------------------------------------------------------------
 
-std::string ConnectionsSection::getAccessibilityTitle() {
+auto ConnectionsSection::getAccessibilityTitle() -> std::string {
   return "Home Screen Connections List";
 }
 
 //------------------------------------------------------------------------------------------------
 
-size_t ConnectionsSection::getAccessibilityChildCount() {
+auto ConnectionsSection::getAccessibilityChildCount() -> size_t {
   size_t ret_val = 2; // 2 for create + manage icons.
 
   if (_filtered)
@@ -1676,7 +1676,7 @@ size_t ConnectionsSection::getAccessibilityChildCount() {
 
 //------------------------------------------------------------------------------------------------
 
-base::Accessible* ConnectionsSection::getAccessibilityChild(size_t index) {
+auto ConnectionsSection::getAccessibilityChild(size_t index) -> base::Accessible* {
   base::Accessible* accessible = nullptr;
 
   switch (index) {
@@ -1709,13 +1709,13 @@ base::Accessible* ConnectionsSection::getAccessibilityChild(size_t index) {
 
 //------------------------------------------------------------------------------------------------
 
-base::Accessible::Role ConnectionsSection::getAccessibilityRole() {
+auto ConnectionsSection::getAccessibilityRole() -> base::Accessible::Role {
   return Accessible::List;
 }
 
 //------------------------------------------------------------------------------------------------
 
-base::Accessible* ConnectionsSection::accessibilityHitTest(ssize_t x, ssize_t y) {
+auto ConnectionsSection::accessibilityHitTest(ssize_t x, ssize_t y) -> base::Accessible* {
   base::Accessible* accessible = nullptr;
 
   if (_add_button.bounds.contains(static_cast<double>(x), static_cast<double>(y)))
@@ -1734,7 +1734,7 @@ base::Accessible* ConnectionsSection::accessibilityHitTest(ssize_t x, ssize_t y)
 
 //------------------------------------------------------------------------------------------------
 
-bool ConnectionsSection::do_tile_drag(ssize_t index, int x, int y) {
+auto ConnectionsSection::do_tile_drag(ssize_t index, int x, int y) -> bool {
   _hot_entry.reset();
   set_needs_repaint();
 
@@ -1776,9 +1776,9 @@ bool ConnectionsSection::do_tile_drag(ssize_t index, int x, int y) {
 //------------------------------------------------------------------------------------------------
 
 // Drop delegate implementation.
-mforms::DragOperation ConnectionsSection::drag_over(View *sender, base::Point p,
+auto ConnectionsSection::drag_over(View *sender, base::Point p,
                                                     mforms::DragOperation allowedOperations,
-                                                    const std::vector<std::string> &formats) {
+                                                    const std::vector<std::string> &formats) -> mforms::DragOperation {
   if (allowedOperations == mforms::DragOperationNone)
     return allowedOperations;
 
@@ -1901,9 +1901,9 @@ mforms::DragOperation ConnectionsSection::drag_over(View *sender, base::Point p,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::DragOperation ConnectionsSection::files_dropped(View *sender, base::Point p,
+auto ConnectionsSection::files_dropped(View *sender, base::Point p,
                                                         mforms::DragOperation allowedOperations,
-                                                        const std::vector<std::string> &file_names) {
+                                                        const std::vector<std::string> &file_names) -> mforms::DragOperation {
   std::shared_ptr<ConnectionEntry> entry = entry_from_point(static_cast<int>(p.x), static_cast<int>(p.y));
   if (!entry)
     return mforms::DragOperationNone;
@@ -1929,9 +1929,9 @@ mforms::DragOperation ConnectionsSection::files_dropped(View *sender, base::Poin
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::DragOperation ConnectionsSection::data_dropped(mforms::View *sender, base::Point p,
+auto ConnectionsSection::data_dropped(mforms::View *sender, base::Point p,
                                                        mforms::DragOperation allowedOperations, void *data,
-                                                       const std::string &format) {
+                                                       const std::string &format) -> mforms::DragOperation {
   if (format == mforms::HomeScreenSettings::TILE_DRAG_FORMAT && _drop_index > -1) {
     mforms::DragOperation result = mforms::DragOperationNone;
 
@@ -1993,7 +1993,7 @@ mforms::DragOperation ConnectionsSection::data_dropped(mforms::View *sender, bas
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::View *ConnectionsSection::getContainer() {
+auto ConnectionsSection::getContainer() -> mforms::View * {
   if (_container == nullptr) {
     _container = mforms::manage(new mforms::Box(false));
     _container->set_name("Home Screen Content Host");
@@ -2011,13 +2011,13 @@ mforms::View *ConnectionsSection::getContainer() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::View *ConnectionsSection::get_parent() const {
+auto ConnectionsSection::get_parent() const -> mforms::View * {
   return _container->get_parent();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-ConnectionsSection::ConnectionVector const& ConnectionsSection::displayed_connections() const {
+auto ConnectionsSection::displayed_connections() const -> ConnectionsSection::ConnectionVector const& {
   if (_filtered)
     return _filtered_connections;
   else if (_active_folder)

@@ -40,16 +40,16 @@ namespace wbfig {
   class FigureEventHub {
   public:
     virtual ~FigureEventHub() {};
-    virtual bool figure_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
-                              mdc::MouseButton button, mdc::EventState state) = 0;
-    virtual bool figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
-                                     mdc::MouseButton button, mdc::EventState state) = 0;
-    virtual bool figure_button_press(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
-                                     mdc::MouseButton button, mdc::EventState state) = 0;
-    virtual bool figure_button_release(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
-                                       mdc::MouseButton button, mdc::EventState state) = 0;
-    virtual bool figure_enter(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point) = 0;
-    virtual bool figure_leave(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point) = 0;
+    virtual auto figure_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
+                              mdc::MouseButton button, mdc::EventState state) -> bool = 0;
+    virtual auto figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
+                                     mdc::MouseButton button, mdc::EventState state) -> bool = 0;
+    virtual auto figure_button_press(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
+                                     mdc::MouseButton button, mdc::EventState state) -> bool = 0;
+    virtual auto figure_button_release(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
+                                       mdc::MouseButton button, mdc::EventState state) -> bool = 0;
+    virtual auto figure_enter(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point) -> bool = 0;
+    virtual auto figure_leave(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point) -> bool = 0;
   };
 
   class BaseFigure;
@@ -61,28 +61,28 @@ namespace wbfig {
     Titlebar(mdc::Layer *layer, FigureEventHub *hub, BaseFigure *owner, bool expander);
     virtual ~Titlebar();
 
-    void set_icon(cairo_surface_t *icon);
-    void set_title(const std::string &text);
+    auto set_icon(cairo_surface_t *icon) -> void;
+    auto set_title(const std::string &text) -> void;
 
-    inline const std::string &get_title() const {
+    inline auto get_title() const -> const std::string & {
       return _icon_text.get_text();
     }
 
-    void set_color(const base::Color &color);
-    void set_text_color(const base::Color &color);
-    void set_font(const mdc::FontSpec &font);
-    const mdc::FontSpec &get_font() {
+    auto set_color(const base::Color &color) -> void;
+    auto set_text_color(const base::Color &color) -> void;
+    auto set_font(const mdc::FontSpec &font) -> void;
+    auto get_font() -> const mdc::FontSpec & {
       return _icon_text.get_font();
     }
-    void set_rounded(mdc::CornerMask corners);
-    void set_border_color(const base::Color &color);
+    auto set_rounded(mdc::CornerMask corners) -> void;
+    auto set_border_color(const base::Color &color) -> void;
 
-    void set_expanded(bool flag);
-    bool get_expanded();
+    auto set_expanded(bool flag) -> void;
+    auto get_expanded() -> bool;
 
-    virtual void set_auto_sizing(bool flag);
+    virtual auto set_auto_sizing(bool flag) -> void;
 
-    void auto_size() {
+    auto auto_size() -> void {
       _icon_text.auto_size();
     }
 
@@ -103,20 +103,20 @@ namespace wbfig {
 
     boost::signals2::signal<void(bool)> _signal_expand_toggle;
 
-    void expand_toggled();
+    auto expand_toggled() -> void;
 
-    virtual void render(mdc::CairoCtx *cr);
+    virtual auto render(mdc::CairoCtx *cr) -> void;
 
-    virtual bool on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                          mdc::EventState state);
-    virtual bool on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                   mdc::EventState state);
-    virtual bool on_enter(mdc::CanvasItem *target, const base::Point &point);
-    virtual bool on_leave(mdc::CanvasItem *target, const base::Point &point);
+    virtual auto on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                          mdc::EventState state) -> bool;
+    virtual auto on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                   mdc::EventState state) -> bool;
+    virtual auto on_enter(mdc::CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_leave(mdc::CanvasItem *target, const base::Point &point) -> bool;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC CaptionFigure : public mdc::TextFigure {
@@ -125,16 +125,16 @@ namespace wbfig {
     FigureEventHub *_hub;
     model_Object *_owner_object;
 
-    virtual bool on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                          mdc::EventState state);
-    virtual bool on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                   mdc::EventState state);
-    virtual bool on_enter(mdc::CanvasItem *target, const base::Point &point);
-    virtual bool on_leave(mdc::CanvasItem *target, const base::Point &point);
+    virtual auto on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                          mdc::EventState state) -> bool;
+    virtual auto on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                   mdc::EventState state) -> bool;
+    virtual auto on_enter(mdc::CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_leave(mdc::CanvasItem *target, const base::Point &point) -> bool;
 
   public:
     CaptionFigure(mdc::Layer *layer, FigureEventHub *hub, model_Object *owner);
@@ -149,34 +149,34 @@ namespace wbfig {
     std::string _object_id;
     bool _dirty;
 
-    virtual bool on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                          mdc::EventState state);
-    virtual bool on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                   mdc::EventState state);
-    virtual bool on_enter(mdc::CanvasItem *target, const base::Point &point);
-    virtual bool on_leave(mdc::CanvasItem *target, const base::Point &point);
+    virtual auto on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                          mdc::EventState state) -> bool;
+    virtual auto on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                   mdc::EventState state) -> bool;
+    virtual auto on_enter(mdc::CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_leave(mdc::CanvasItem *target, const base::Point &point) -> bool;
 
-    virtual void draw_state(mdc::CairoCtx *cr);
-    virtual base::Point get_intersection_with_line_to(const base::Point &p);
-    virtual base::Rect get_root_bounds() const;
+    virtual auto draw_state(mdc::CairoCtx *cr) -> void;
+    virtual auto get_intersection_with_line_to(const base::Point &p) -> base::Point;
+    virtual auto get_root_bounds() const -> base::Rect;
 
   public:
     FigureItem(mdc::Layer *layer, FigureEventHub *hub, BaseFigure *owner);
 
-    std::string get_id() {
+    auto get_id() -> std::string {
       return _object_id;
     }
-    void set_id(const std::string &id) {
+    auto set_id(const std::string &id) -> void {
       _object_id = id;
     }
-    void set_dirty(bool flag = true) {
+    auto set_dirty(bool flag = true) -> void {
       _dirty = flag;
     }
-    bool get_dirty() {
+    auto get_dirty() -> bool {
       return _dirty;
     }
   };
@@ -188,17 +188,17 @@ namespace wbfig {
     using ItemList = std::list<FigureItem *>;
 
     // default implementation just sets background color
-    virtual void unset_color();
-    virtual void set_color(const base::Color &color);
+    virtual auto unset_color() -> void;
+    virtual auto set_color(const base::Color &color) -> void;
 
-    virtual void set_title_font(const mdc::FontSpec &font) {
+    virtual auto set_title_font(const mdc::FontSpec &font) -> void {
     }
-    virtual void set_content_font(const mdc::FontSpec &font);
+    virtual auto set_content_font(const mdc::FontSpec &font) -> void;
 
-    virtual void highlight(const base::Color *color = 0);
-    virtual void unhighlight();
+    virtual auto highlight(const base::Color *color = 0) -> void;
+    virtual auto unhighlight() -> void;
 
-    virtual void set_allow_manual_resizing(bool flag);
+    virtual auto set_allow_manual_resizing(bool flag) -> void;
 
     boost::signals2::signal<void(base::Rect)> *signal_interactive_resize() {
       return &_signal_interactive_resize;
@@ -208,15 +208,15 @@ namespace wbfig {
       return &_signal_item_added;
     }
 
-    virtual void toggle(bool flag) {
+    virtual auto toggle(bool flag) -> void {
     }
-    virtual void set_state_drawing(bool flag);
+    virtual auto set_state_drawing(bool flag) -> void;
 
-    model_ObjectRef represented_object() {
+    auto represented_object() -> model_ObjectRef {
       return model_ObjectRef(_represented_object);
     }
 
-    bool in_user_resize() const {
+    auto in_user_resize() const -> bool {
       return _resizing;
     }
 
@@ -234,32 +234,32 @@ namespace wbfig {
     bool _manual_resizing;
     bool _resizing;
 
-    void invalidate_min_sizes();
-    static void invalidate_min_sizes(mdc::CanvasItem *item);
+    auto invalidate_min_sizes() -> void;
+    static auto invalidate_min_sizes(mdc::CanvasItem *item) -> void;
 
     using CreateItemSlot = std::function<FigureItem *(mdc::Layer *, FigureEventHub *)>;
     using UpdateItemSlot = std::function<void(FigureItem *)>;
 
-    virtual ItemList::iterator begin_sync(mdc::Box &box, ItemList &list);
-    virtual ItemList::iterator sync_next(mdc::Box &box, ItemList &list, ItemList::iterator iter, const std::string &id,
+    virtual auto begin_sync(mdc::Box &box, ItemList &list) -> ItemList::iterator;
+    virtual auto sync_next(mdc::Box &box, ItemList &list, ItemList::iterator iter, const std::string &id,
                                          cairo_surface_t *icon, const std::string &text,
                                          const CreateItemSlot &create_item = CreateItemSlot(),
-                                         const UpdateItemSlot &update_item = UpdateItemSlot());
+                                         const UpdateItemSlot &update_item = UpdateItemSlot()) -> ItemList::iterator;
 
-    virtual void end_sync(mdc::Box &box, ItemList &list, ItemList::iterator iter);
+    virtual auto end_sync(mdc::Box &box, ItemList &list, ItemList::iterator iter) -> void;
 
-    virtual bool on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                          mdc::EventState state);
-    virtual bool on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                   mdc::EventState state);
-    virtual bool on_enter(mdc::CanvasItem *target, const base::Point &point);
-    virtual bool on_leave(mdc::CanvasItem *target, const base::Point &point);
+    virtual auto on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                          mdc::EventState state) -> bool;
+    virtual auto on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                   mdc::EventState state) -> bool;
+    virtual auto on_enter(mdc::CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_leave(mdc::CanvasItem *target, const base::Point &point) -> bool;
 
-    virtual bool on_drag_handle(mdc::ItemHandle *handle, const base::Point &pos, bool dragging);
+    virtual auto on_drag_handle(mdc::ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC ShrinkableBox : public mdc::Box {
@@ -270,16 +270,16 @@ namespace wbfig {
     float _visible_part_size;
     bool _manual_resizing;
 
-    virtual void render(mdc::CairoCtx *cr);
-    virtual void resize_to(const base::Size &size);
+    virtual auto render(mdc::CairoCtx *cr) -> void;
+    virtual auto resize_to(const base::Size &size) -> void;
 
   public:
     ShrinkableBox(mdc::Layer *layer, mdc::Box::Orientation orientation);
-    virtual base::Size calc_min_size();
+    virtual auto calc_min_size() -> base::Size;
 
-    void set_item_count_limit(int limit);
+    auto set_item_count_limit(int limit) -> void;
 
-    void set_allow_manual_resizing(bool flag);
+    auto set_allow_manual_resizing(bool flag) -> void;
   };
 }; // namespace wbfig
 

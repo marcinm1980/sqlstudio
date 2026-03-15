@@ -59,8 +59,8 @@ namespace wmi {
     WmiMonitor(IWbemServices* services, const std::string& parameter);
     ~WmiMonitor();
 
-    std::string readValue();
-    inline WmiServices* owner() {
+    auto readValue() -> std::string;
+    inline auto owner() -> WmiServices* {
       return _owner;
     }
   };
@@ -73,19 +73,19 @@ namespace wmi {
     CComPtr<IWbemServices> _services;
 
   protected:
-    static void allocate_locator();
-    static void deallocate_locator();
+    static auto allocate_locator() -> void;
+    static auto deallocate_locator() -> void;
 
   public:
     WmiServices(const std::string& server, const std::string& user, const std::string& password);
     ~WmiServices();
 
-    grt::DictListRef query(const std::string& query);
-    std::string serviceControl(const std::string& service, const std::string& action);
-    std::string systemStat(const std::string& what);
+    auto query(const std::string& query) -> grt::DictListRef;
+    auto serviceControl(const std::string& service, const std::string& action) -> std::string;
+    auto systemStat(const std::string& what) -> std::string;
 
-    WmiMonitor* startMonitoring(const std::string& parameter);
-    void stopMonitoring(WmiMonitor* monitor);
+    auto startMonitoring(const std::string& parameter) -> WmiMonitor*;
+    auto stopMonitoring(WmiMonitor* monitor) -> void;
   };
 }
 

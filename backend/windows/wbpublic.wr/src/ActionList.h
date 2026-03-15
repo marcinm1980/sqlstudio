@@ -35,7 +35,7 @@ namespace MySQL {
     ref class ActionList {
     public:
       ActionList(::ActionList *inner);
-      void reset();
+      auto reset() -> void;
 
     private:
       ~ActionList();

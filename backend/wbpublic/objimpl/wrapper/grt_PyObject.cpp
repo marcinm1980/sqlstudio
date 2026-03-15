@@ -33,23 +33,23 @@
 //================================================================================
 // grt_PyObject
 
-grt::IntegerRef grt_PyObject::isEqualTo(const grt::Ref<grt_PyObject> &other) {
+auto grt_PyObject::isEqualTo(const grt::Ref<grt_PyObject> &other) -> grt::IntegerRef {
   if (other.is_valid())
     return grt::IntegerRef(0);
   return grt::IntegerRef(0);
 }
 
-grt::AutoPyObject pyobject_from_grt(grt_PyObjectRef object) {
+auto pyobject_from_grt(grt_PyObjectRef object) -> grt::AutoPyObject {
   if (!object.is_valid())
     return 0;
   return *object->get_data();
 }
 
-static void release_object(grt::AutoPyObject *object) {
+static auto release_object(grt::AutoPyObject *object) -> void {
   delete object;
 }
 
-grt_PyObjectRef pyobject_to_grt(grt::AutoPyObject object) {
+auto pyobject_to_grt(grt::AutoPyObject object) -> grt_PyObjectRef {
   if (object) {
     grt_PyObjectRef ref(grt::Initialized);
     ref->set_data(new grt::AutoPyObject(object), release_object);
@@ -58,11 +58,11 @@ grt_PyObjectRef pyobject_to_grt(grt::AutoPyObject object) {
   return grt_PyObjectRef(grt::Initialized);
 }
 
-grt_PyObjectRef pyobject_to_grt(PyObject *object) {
+auto pyobject_to_grt(PyObject *object) -> grt_PyObjectRef {
   return pyobject_to_grt(grt::AutoPyObject(object));
 }
 
-static PyObject *wrap_pyobject(PyObject *self, PyObject *args) {
+static auto wrap_pyobject(PyObject *self, PyObject *args) -> PyObject * {
   grt::PythonContext *ctx;
   std::string text;
 
@@ -76,7 +76,7 @@ static PyObject *wrap_pyobject(PyObject *self, PyObject *args) {
   return ctx->from_grt(pyobject_to_grt(o));
 }
 
-static PyObject *unwrap_pyobject(PyObject *self, PyObject *args) {
+static auto unwrap_pyobject(PyObject *self, PyObject *args) -> PyObject * {
   grt::PythonContext *ctx;
   std::string text;
 
@@ -106,7 +106,7 @@ static PyObject *unwrap_pyobject(PyObject *self, PyObject *args) {
     Py_RETURN_NONE;
 }
 
-void pyobject_initialize() {
+auto pyobject_initialize() -> void {
   grt::PythonContext::set_wrap_pyobject_func(wrap_pyobject);
   grt::PythonContext::set_unwrap_pyobject_func(unwrap_pyobject);
 }

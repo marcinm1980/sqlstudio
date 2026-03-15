@@ -100,11 +100,11 @@ const char* LiveSchemaTree::_schema_tokens[16] = {
 
 LiveSchemaTree::LSTData::LSTData() : details(""){};
 
-void LiveSchemaTree::LSTData::copy(LSTData* other) {
+auto LiveSchemaTree::LSTData::copy(LSTData* other) -> void {
   this->details = other->details;
 }
 
-std::string LiveSchemaTree::LSTData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::LSTData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val("");
 
   if (full) {
@@ -118,7 +118,7 @@ std::string LiveSchemaTree::LSTData::get_details(bool full, const mforms::TreeNo
   return ret_val;
 }
 
-void LiveSchemaTree::ColumnData::copy(LSTData* other) {
+auto LiveSchemaTree::ColumnData::copy(LSTData* other) -> void {
   LSTData::copy(other);
 
   ColumnData* pother = dynamic_cast<ColumnData*>(other);
@@ -135,7 +135,7 @@ void LiveSchemaTree::ColumnData::copy(LSTData* other) {
   }
 }
 
-std::string LiveSchemaTree::ColumnData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::ColumnData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val("");
 
   if (details.empty()) {
@@ -170,7 +170,7 @@ std::string LiveSchemaTree::ColumnData::get_details(bool full, const mforms::Tre
   return ret_val;
 }
 
-void LiveSchemaTree::FKData::copy(LSTData* other) {
+auto LiveSchemaTree::FKData::copy(LSTData* other) -> void {
   LSTData::copy(other);
 
   FKData* pother = dynamic_cast<FKData*>(other);
@@ -184,7 +184,7 @@ void LiveSchemaTree::FKData::copy(LSTData* other) {
   }
 }
 
-std::string LiveSchemaTree::FKData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::FKData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val("");
 
   if (details.empty()) {
@@ -207,7 +207,7 @@ std::string LiveSchemaTree::FKData::get_details(bool full, const mforms::TreeNod
   return ret_val;
 }
 
-void LiveSchemaTree::IndexData::copy(LSTData* other) {
+auto LiveSchemaTree::IndexData::copy(LSTData* other) -> void {
   LSTData::copy(other);
 
   IndexData* pother = dynamic_cast<IndexData*>(other);
@@ -220,7 +220,7 @@ void LiveSchemaTree::IndexData::copy(LSTData* other) {
   }
 }
 
-std::string LiveSchemaTree::IndexData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::IndexData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val("");
 
   if (details.empty()) {
@@ -246,7 +246,7 @@ std::string LiveSchemaTree::IndexData::get_details(bool full, const mforms::Tree
   return ret_val;
 }
 
-void LiveSchemaTree::TriggerData::copy(LSTData* other) {
+auto LiveSchemaTree::TriggerData::copy(LSTData* other) -> void {
   LSTData::copy(other);
 
   TriggerData* pother = dynamic_cast<TriggerData*>(other);
@@ -257,7 +257,7 @@ void LiveSchemaTree::TriggerData::copy(LSTData* other) {
   }
 }
 
-std::string LiveSchemaTree::TriggerData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::TriggerData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val("");
 
   if (details.empty()) {
@@ -277,7 +277,7 @@ std::string LiveSchemaTree::TriggerData::get_details(bool full, const mforms::Tr
   return ret_val;
 }
 
-void LiveSchemaTree::ObjectData::copy(LSTData* other) {
+auto LiveSchemaTree::ObjectData::copy(LSTData* other) -> void {
   LSTData::copy(other);
 
   ObjectData* pother = dynamic_cast<ObjectData*>(other);
@@ -288,7 +288,7 @@ void LiveSchemaTree::ObjectData::copy(LSTData* other) {
   }
 }
 
-void LiveSchemaTree::ViewData::copy(LSTData* other) {
+auto LiveSchemaTree::ViewData::copy(LSTData* other) -> void {
   ObjectData::copy(other);
 
   ViewData* pother = dynamic_cast<ViewData*>(other);
@@ -300,7 +300,7 @@ void LiveSchemaTree::ViewData::copy(LSTData* other) {
   }
 }
 
-std::string LiveSchemaTree::ViewData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::ViewData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val;
 
   if (full)
@@ -332,7 +332,7 @@ std::string LiveSchemaTree::ViewData::get_details(bool full, const mforms::TreeN
   return ret_val;
 }
 
-std::string LiveSchemaTree::TableData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::TableData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val = ViewData::get_details(full, node);
 
   if (_loaded_mask & FK_DATA) {
@@ -352,7 +352,7 @@ std::string LiveSchemaTree::TableData::get_details(bool full, const mforms::Tree
   return ret_val;
 }
 
-void LiveSchemaTree::SchemaData::copy(LSTData* other) {
+auto LiveSchemaTree::SchemaData::copy(LSTData* other) -> void {
   LSTData::copy(other);
 
   SchemaData* pother = dynamic_cast<SchemaData*>(other);
@@ -365,20 +365,20 @@ void LiveSchemaTree::SchemaData::copy(LSTData* other) {
 
 //--------------------------------------------------------------------------------------------------
 
-short LiveSchemaTree::ViewData::get_loaded_mask() {
+auto LiveSchemaTree::ViewData::get_loaded_mask() -> short {
   return _loaded_mask;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void LiveSchemaTree::ViewData::set_unloaded_data(short mask) {
+auto LiveSchemaTree::ViewData::set_unloaded_data(short mask) -> void {
   // Gets the data that is loaded and needs to be marked as unloaded
   short filter = _loaded_mask & mask;
 
   _loaded_mask -= filter;
 }
 
-void LiveSchemaTree::ViewData::set_loaded_data(short mask) {
+auto LiveSchemaTree::ViewData::set_loaded_data(short mask) -> void {
   // Gets the data that is being marked as loaded and was loading
   short filter = mask & _loading_mask;
   _loading_mask -= filter;
@@ -387,19 +387,19 @@ void LiveSchemaTree::ViewData::set_loaded_data(short mask) {
   _loaded_mask |= mask;
 }
 
-short LiveSchemaTree::ViewData::get_loading_mask() {
+auto LiveSchemaTree::ViewData::get_loading_mask() -> short {
   return _loading_mask;
 }
 
-void LiveSchemaTree::ViewData::set_loading_mask(short mask) {
+auto LiveSchemaTree::ViewData::set_loading_mask(short mask) -> void {
   _loading_mask = mask;
 }
 
-bool LiveSchemaTree::ViewData::is_data_loaded(short mask) {
+auto LiveSchemaTree::ViewData::is_data_loaded(short mask) -> bool {
   return (_loaded_mask & mask) == mask;
 }
 
-bool LiveSchemaTree::ViewData::is_update_complete() {
+auto LiveSchemaTree::ViewData::is_update_complete() -> bool {
   bool ret_val = false;
 
   if (_reload_mask) {
@@ -414,14 +414,14 @@ bool LiveSchemaTree::ViewData::is_update_complete() {
   return ret_val;
 }
 
-std::string LiveSchemaTree::ProcedureData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::ProcedureData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val = ObjectData::get_details(true, node);
   ret_val += ObjectData::get_details(false, node);
 
   return ret_val;
 }
 
-std::string LiveSchemaTree::FunctionData::get_details(bool full, const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::FunctionData::get_details(bool full, const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val = ObjectData::get_details(true, node);
   ret_val += ObjectData::get_details(false, node);
 
@@ -511,15 +511,15 @@ LiveSchemaTree::~LiveSchemaTree() {
   clean_filter();
 }
 
-void LiveSchemaTree::set_fetch_delegate(std::shared_ptr<FetchDelegate> delegate) {
+auto LiveSchemaTree::set_fetch_delegate(std::shared_ptr<FetchDelegate> delegate) -> void {
   _fetch_delegate = delegate;
 }
 
-void LiveSchemaTree::set_delegate(std::shared_ptr<Delegate> delegate) {
+auto LiveSchemaTree::set_delegate(std::shared_ptr<Delegate> delegate) -> void {
   _delegate = delegate;
 }
 
-unsigned char LiveSchemaTree::internalize_token(const std::string& token) {
+auto LiveSchemaTree::internalize_token(const std::string& token) -> unsigned char {
   unsigned char found_index = 0;
   for (unsigned char index = 1; !found_index && (index < (sizeof(_schema_tokens) / sizeof(char*))); index++) {
     if (token == _schema_tokens[index])
@@ -529,20 +529,20 @@ unsigned char LiveSchemaTree::internalize_token(const std::string& token) {
   return found_index;
 }
 
-std::string LiveSchemaTree::externalize_token(unsigned char c) {
+auto LiveSchemaTree::externalize_token(unsigned char c) -> std::string {
   return (c > 0 && c < (sizeof(_schema_tokens) / sizeof(char*))) ? _schema_tokens[c] : "";
 }
 
-void LiveSchemaTree::set_case_sensitive_identifiers(bool flag) {
+auto LiveSchemaTree::set_case_sensitive_identifiers(bool flag) -> void {
   _case_sensitive_identifiers = flag;
 }
 
-bool LiveSchemaTree::identifiers_equal(const std::string& a, const std::string& b) {
+auto LiveSchemaTree::identifiers_equal(const std::string& a, const std::string& b) -> bool {
   return base::string_compare(a, b, _case_sensitive_identifiers) == 0;
 }
 
-void LiveSchemaTree::setup_node(mforms::TreeNodeRef node, ObjectType type, mforms::TreeNodeData* pdata,
-                                bool ignore_null_data) {
+auto LiveSchemaTree::setup_node(mforms::TreeNodeRef node, ObjectType type, mforms::TreeNodeData* pdata,
+                                bool ignore_null_data) -> void {
   switch (type) {
     case Schema:
       node->set_data(pdata ? pdata : new SchemaData());
@@ -582,7 +582,7 @@ void LiveSchemaTree::setup_node(mforms::TreeNodeRef node, ObjectType type, mform
   }
 }
 
-void LiveSchemaTree::fill_node_icons() {
+auto LiveSchemaTree::fill_node_icons() -> void {
   _icon_paths[Schema] = get_node_icon_path(Schema);
   _icon_paths[TableCollection] = get_node_icon_path(TableCollection);
   _icon_paths[ViewCollection] = get_node_icon_path(ViewCollection);
@@ -603,12 +603,12 @@ void LiveSchemaTree::fill_node_icons() {
   _icon_paths[Trigger] = get_node_icon_path(Trigger);
 }
 
-std::string LiveSchemaTree::get_node_icon_path(ObjectType type) {
+auto LiveSchemaTree::get_node_icon_path(ObjectType type) -> std::string {
   bec::IconId icon = get_node_icon(type);
   return bec::IconManager::get_instance()->get_icon_file(icon);
 }
 
-bec::IconId LiveSchemaTree::get_node_icon(ObjectType type) {
+auto LiveSchemaTree::get_node_icon(ObjectType type) -> bec::IconId {
   bec::IconId icon;
 
   switch (type) {
@@ -675,7 +675,7 @@ bec::IconId LiveSchemaTree::get_node_icon(ObjectType type) {
   return icon;
 }
 
-void LiveSchemaTree::update_node_icon(mforms::TreeNodeRef node) {
+auto LiveSchemaTree::update_node_icon(mforms::TreeNodeRef node) -> void {
   bec::IconId icon = 0;
 
   LSTData* pnode_data = dynamic_cast<LSTData*>(node->get_data());
@@ -728,8 +728,8 @@ void LiveSchemaTree::update_node_icon(mforms::TreeNodeRef node) {
  *   type: the type of children that will be affected (some nodes may have children of different types)
  *   to_remove: a vector containing the nodes to be removed from the parent node
  */
-void LiveSchemaTree::update_change_data(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
-                                        std::vector<mforms::TreeNodeRef>& to_remove) {
+auto LiveSchemaTree::update_change_data(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
+                                        std::vector<mforms::TreeNodeRef>& to_remove) -> void {
   mforms::TreeNodeRef node;
 
   int total_nodes = parent->count();
@@ -774,8 +774,8 @@ void LiveSchemaTree::update_change_data(mforms::TreeNodeRef parent, base::String
  *
  * NOTE : That children may change, so if the original list is needed, the caller needs to have a copy
  */
-bool LiveSchemaTree::update_node_children(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
-                                          bool sorted, bool just_append) {
+auto LiveSchemaTree::update_node_children(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
+                                          bool sorted, bool just_append) -> bool {
   bool ret_val = false;
 
   if (_base) {
@@ -894,7 +894,7 @@ bool LiveSchemaTree::update_node_children(mforms::TreeNodeRef parent, base::Stri
   return ret_val;
 }
 
-std::string LiveSchemaTree::get_field_description(const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::get_field_description(const mforms::TreeNodeRef& node) -> std::string {
   std::string text;
   mforms::TreeNodeRef temp_node = node;
 
@@ -925,7 +925,7 @@ std::string LiveSchemaTree::get_field_description(const mforms::TreeNodeRef& nod
   return text;
 }
 
-void LiveSchemaTree::set_notify_on_reload(const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::set_notify_on_reload(const mforms::TreeNodeRef& node) -> void {
   mforms::TreeNodeRef temp_node = node;
 
   LSTData* pdata = NULL;
@@ -939,7 +939,7 @@ void LiveSchemaTree::set_notify_on_reload(const mforms::TreeNodeRef& node) {
   }
 }
 
-void LiveSchemaTree::notify_on_reload(const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::notify_on_reload(const mforms::TreeNodeRef& node) -> void {
   mforms::TreeNodeRef temp_node = node;
 
   LSTData* pdata = NULL;
@@ -953,7 +953,7 @@ void LiveSchemaTree::notify_on_reload(const mforms::TreeNodeRef& node) {
   }
 }
 
-void LiveSchemaTree::set_active_schema(const std::string& schema) {
+auto LiveSchemaTree::set_active_schema(const std::string& schema) -> void {
   mforms::TreeNodeTextAttributes attrs;
 
   if (_model_view) {
@@ -982,8 +982,8 @@ void LiveSchemaTree::set_active_schema(const std::string& schema) {
     _base->set_active_schema(schema);
 }
 
-void LiveSchemaTree::update_live_object_state(ObjectType type, const std::string& schema_name,
-                                              const std::string& old_obj_name, const std::string& new_obj_name) {
+auto LiveSchemaTree::update_live_object_state(ObjectType type, const std::string& schema_name,
+                                              const std::string& old_obj_name, const std::string& new_obj_name) -> void {
   if (_model_view) {
     mforms::TreeNodeRef schema_node;
     bool created = old_obj_name.empty() && !new_obj_name.empty();
@@ -1070,9 +1070,9 @@ void LiveSchemaTree::update_live_object_state(ObjectType type, const std::string
   }
 }
 
-void LiveSchemaTree::schema_contents_arrived(const std::string& schema_name, base::StringListPtr tables,
+auto LiveSchemaTree::schema_contents_arrived(const std::string& schema_name, base::StringListPtr tables,
                                              base::StringListPtr views, base::StringListPtr procedures,
-                                             base::StringListPtr functions, bool just_append) {
+                                             base::StringListPtr functions, bool just_append) -> void {
   if (_base) {
     _base->schema_contents_arrived(schema_name, tables, views, procedures, functions, just_append);
     filter_data();
@@ -1142,8 +1142,8 @@ void LiveSchemaTree::schema_contents_arrived(const std::string& schema_name, bas
   }
 }
 
-void LiveSchemaTree::load_table_details(ObjectType object_type, const std::string schema_name,
-                                        const std::string object_name, int fetch_mask) {
+auto LiveSchemaTree::load_table_details(ObjectType object_type, const std::string schema_name,
+                                        const std::string object_name, int fetch_mask) -> void {
   if (_model_view) {
     mforms::TreeNodeRef node;
 
@@ -1159,7 +1159,7 @@ void LiveSchemaTree::load_table_details(ObjectType object_type, const std::strin
   }
 }
 
-void LiveSchemaTree::load_table_details(mforms::TreeNodeRef& node, int fetch_mask) {
+auto LiveSchemaTree::load_table_details(mforms::TreeNodeRef& node, int fetch_mask) -> void {
   ViewData* pdata = dynamic_cast<ViewData*>(node->get_data());
 
   if (pdata) {
@@ -1180,8 +1180,8 @@ void LiveSchemaTree::load_table_details(mforms::TreeNodeRef& node, int fetch_mas
   }
 }
 
-void LiveSchemaTree::fetch_table_details(ObjectType object_type, const std::string schema_name,
-                                         const std::string object_name, int fetch_mask) {
+auto LiveSchemaTree::fetch_table_details(ObjectType object_type, const std::string schema_name,
+                                         const std::string object_name, int fetch_mask) -> void {
   std::shared_ptr<FetchDelegate> delegate = _fetch_delegate.lock();
 
   if (delegate) {
@@ -1192,9 +1192,7 @@ void LiveSchemaTree::fetch_table_details(ObjectType object_type, const std::stri
   }
 }
 
-void LiveSchemaTree::load_routine_details(mforms::TreeNodeRef& node)
-
-{
+auto LiveSchemaTree::load_routine_details(mforms::TreeNodeRef& node) -> void {
   ObjectData* pdata = dynamic_cast<ObjectData*>(node->get_data());
 
   if (pdata && !pdata->fetched && !pdata->fetching) {
@@ -1209,7 +1207,7 @@ void LiveSchemaTree::load_routine_details(mforms::TreeNodeRef& node)
   }
 }
 
-void LiveSchemaTree::load_data_for_filter(const std::string& schema_filter, const std::string& object_filter) {
+auto LiveSchemaTree::load_data_for_filter(const std::string& schema_filter, const std::string& object_filter) -> void {
   if (std::shared_ptr<FetchDelegate> delegate = _fetch_delegate.lock()) {
     std::string remote_schema_filter = get_filter_wildcard(schema_filter, RemoteLike);
     std::string remote_object_filter = get_filter_wildcard(object_filter, RemoteLike);
@@ -1220,7 +1218,7 @@ void LiveSchemaTree::load_data_for_filter(const std::string& schema_filter, cons
   }
 }
 
-void LiveSchemaTree::load_schema_content(mforms::TreeNodeRef& schema_node) {
+auto LiveSchemaTree::load_schema_content(mforms::TreeNodeRef& schema_node) -> void {
   SchemaData* data = dynamic_cast<SchemaData*>(schema_node->get_data());
 
   if (!data->fetched && !data->fetching) {
@@ -1251,8 +1249,8 @@ void LiveSchemaTree::load_schema_content(mforms::TreeNodeRef& schema_node) {
   }
 }
 
-mforms::TreeNodeRef LiveSchemaTree::get_node_for_object(const std::string& schema_name, ObjectType type,
-                                                        const std::string& name) {
+auto LiveSchemaTree::get_node_for_object(const std::string& schema_name, ObjectType type,
+                                                        const std::string& name) -> mforms::TreeNodeRef {
   mforms::TreeNodeRef object_node = mforms::TreeNodeRef();
 
   if (_model_view) {
@@ -1285,8 +1283,8 @@ mforms::TreeNodeRef LiveSchemaTree::get_node_for_object(const std::string& schem
   return object_node;
 }
 
-mforms::TreeNodeRef LiveSchemaTree::create_node_for_object(const std::string& schema_name, ObjectType type,
-                                                           const std::string& name) {
+auto LiveSchemaTree::create_node_for_object(const std::string& schema_name, ObjectType type,
+                                                           const std::string& name) -> mforms::TreeNodeRef {
   bool created_schema = false;
   mforms::TreeNodeRef object_node = mforms::TreeNodeRef();
   mforms::TreeNodeRef parent_node = mforms::TreeNodeRef();
@@ -1326,7 +1324,7 @@ mforms::TreeNodeRef LiveSchemaTree::create_node_for_object(const std::string& sc
   return object_node;
 }
 
-grt::BaseListRef LiveSchemaTree::get_selected_objects() {
+auto LiveSchemaTree::get_selected_objects() -> grt::BaseListRef {
   grt::ListRef<db_query_LiveDBObject> selection(true);
 
   if (_model_view) {
@@ -1486,7 +1484,7 @@ grt::BaseListRef LiveSchemaTree::get_selected_objects() {
   return selection;
 }
 
-bec::MenuItemList LiveSchemaTree::get_popup_items_for_nodes(const std::list<mforms::TreeNodeRef>& nodes) {
+auto LiveSchemaTree::get_popup_items_for_nodes(const std::list<mforms::TreeNodeRef>& nodes) -> bec::MenuItemList {
   bec::MenuItemList items;
 
   {
@@ -1566,8 +1564,8 @@ bec::MenuItemList LiveSchemaTree::get_popup_items_for_nodes(const std::list<mfor
   return items;
 }
 
-bool LiveSchemaTree::activate_popup_item_for_nodes(const std::string& name,
-                                                   const std::list<mforms::TreeNodeRef>& unsorted_nodes) {
+auto LiveSchemaTree::activate_popup_item_for_nodes(const std::string& name,
+                                                   const std::list<mforms::TreeNodeRef>& unsorted_nodes) -> bool {
   std::vector<ChangeRecord> changes;
 
   mforms::TreeNodeRef pnode;
@@ -1662,17 +1660,17 @@ bool LiveSchemaTree::activate_popup_item_for_nodes(const std::string& name,
   return false;
 }
 
-bool LiveSchemaTree::is_schema_contents_enabled() const {
+auto LiveSchemaTree::is_schema_contents_enabled() const -> bool {
   return _is_schema_contents_enabled;
 }
 
-void LiveSchemaTree::is_schema_contents_enabled(bool value) {
+auto LiveSchemaTree::is_schema_contents_enabled(bool value) -> void {
   _is_schema_contents_enabled = value;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void LiveSchemaTree::set_no_connection() {
+auto LiveSchemaTree::set_no_connection() -> void {
   _model_view->clear();
   mforms::TreeNodeRef node = _model_view->add_node();
   node->set_string(0, "Not connected");
@@ -1680,13 +1678,13 @@ void LiveSchemaTree::set_no_connection() {
 
 //--------------------------------------------------------------------------------------------------
 
-void LiveSchemaTree::set_enabled(bool enabled) {
+auto LiveSchemaTree::set_enabled(bool enabled) -> void {
   _model_view->set_enabled(enabled);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string LiveSchemaTree::get_filter_wildcard(const std::string& filter, FilterType type) {
+auto LiveSchemaTree::get_filter_wildcard(const std::string& filter, FilterType type) -> std::string {
   std::string wildcard = filter;
   if (filter.length() == 0)
     wildcard = "*";
@@ -1714,7 +1712,7 @@ std::string LiveSchemaTree::get_filter_wildcard(const std::string& filter, Filte
 }
 
 //--------------------------------------------------------------------------------------------------
-void LiveSchemaTree::filter_data() {
+auto LiveSchemaTree::filter_data() -> void {
   _enabled_events = false;
 
   // Removes all the objects on the target tree
@@ -1736,7 +1734,7 @@ void LiveSchemaTree::filter_data() {
 *  filter_children_collection: will trigger a children copy for the collection nodes of the given source
 *                              right now the pattern is only used for nodes on schema collections
 */
-void LiveSchemaTree::filter_children_collection(mforms::TreeNodeRef& source, mforms::TreeNodeRef& target) {
+auto LiveSchemaTree::filter_children_collection(mforms::TreeNodeRef& source, mforms::TreeNodeRef& target) -> void {
   LSTData* pdata = dynamic_cast<LSTData*>(source->get_data());
 
   if (pdata) {
@@ -1793,8 +1791,8 @@ void LiveSchemaTree::filter_children_collection(mforms::TreeNodeRef& source, mfo
 *  filter_children: will create duplicate objects in target for the children in source matching the given pattern
 *                   if no pattern is specified, all the children will be cuplicated
 */
-bool LiveSchemaTree::filter_children(ObjectType type, mforms::TreeNodeRef& source, mforms::TreeNodeRef& target,
-                                     GPatternSpec* pattern) {
+auto LiveSchemaTree::filter_children(ObjectType type, mforms::TreeNodeRef& source, mforms::TreeNodeRef& target,
+                                     GPatternSpec* pattern) -> bool {
   // Validation to occur only on schema child objects if a pattern is set
   bool validate = is_object_type(DatabaseObject, type) && pattern;
 
@@ -1841,7 +1839,7 @@ bool LiveSchemaTree::filter_children(ObjectType type, mforms::TreeNodeRef& sourc
 
 //--------------------------------------------------------------------------------------------------
 
-void LiveSchemaTree::clean_filter() {
+auto LiveSchemaTree::clean_filter() -> void {
   if (_filter.length() > 0) {
     _filter_type = Any;
     _filter = "";
@@ -1856,7 +1854,7 @@ void LiveSchemaTree::clean_filter() {
   }
 }
 
-void LiveSchemaTree::set_filter(std::string filter) {
+auto LiveSchemaTree::set_filter(std::string filter) -> void {
   // Cleans the previous filter if any...
   clean_filter();
 
@@ -1876,7 +1874,7 @@ void LiveSchemaTree::set_filter(std::string filter) {
   }
 }
 
-void LiveSchemaTree::set_model_view(mforms::TreeView* target) {
+auto LiveSchemaTree::set_model_view(mforms::TreeView* target) -> void {
   _model_view = target;
 
   if (_model_view) {
@@ -1902,8 +1900,8 @@ void LiveSchemaTree::set_model_view(mforms::TreeView* target) {
  *                        - If not found, the position where it should be located if it is going to be added
  * Return Value : if found, the child node
  */
-mforms::TreeNodeRef LiveSchemaTree::binary_search_node(const mforms::TreeNodeRef& parent, int min, int max,
-                                                       const std::string& name, ObjectType type, int& position) {
+auto LiveSchemaTree::binary_search_node(const mforms::TreeNodeRef& parent, int min, int max,
+                                                       const std::string& name, ObjectType type, int& position) -> mforms::TreeNodeRef {
   if (max < min)
     return mforms::TreeNodeRef();
   else {
@@ -1929,8 +1927,8 @@ mforms::TreeNodeRef LiveSchemaTree::binary_search_node(const mforms::TreeNodeRef
  *               tables, views and routines which are sorted. Sequential search is there for
  *               the non sorted nodes.
  */
-mforms::TreeNodeRef LiveSchemaTree::get_child_node(const mforms::TreeNodeRef& parent, const std::string& name,
-                                                   ObjectType type, bool binary_search) {
+auto LiveSchemaTree::get_child_node(const mforms::TreeNodeRef& parent, const std::string& name,
+                                                   ObjectType type, bool binary_search) -> mforms::TreeNodeRef {
   int last_position = 0;
   bool found = false;
   mforms::TreeNodeRef child;
@@ -1969,8 +1967,8 @@ mforms::TreeNodeRef LiveSchemaTree::get_child_node(const mforms::TreeNodeRef& pa
  *                - If not found, the position where the node should be (i.e. to add it there)
  * Return value : boolean value indicating whether the node was found or not
  */
-bool LiveSchemaTree::find_child_position(const mforms::TreeNodeRef& parent, const std::string& name, ObjectType type,
-                                         int& position) {
+auto LiveSchemaTree::find_child_position(const mforms::TreeNodeRef& parent, const std::string& name, ObjectType type,
+                                         int& position) -> bool {
   mforms::TreeNodeRef child;
 
   position = 0;
@@ -1984,7 +1982,7 @@ bool LiveSchemaTree::find_child_position(const mforms::TreeNodeRef& parent, cons
   return child ? true : false;
 }
 
-void LiveSchemaTree::update_schemata(base::StringListPtr schema_list) {
+auto LiveSchemaTree::update_schemata(base::StringListPtr schema_list) -> void {
   mforms::TreeNodeRef schema_node;
 
   if (_model_view) {
@@ -2019,7 +2017,7 @@ void LiveSchemaTree::update_schemata(base::StringListPtr schema_list) {
   }
 }
 
-void LiveSchemaTree::expand_toggled(mforms::TreeNodeRef node, bool value) {
+auto LiveSchemaTree::expand_toggled(mforms::TreeNodeRef node, bool value) -> void {
   if (_enabled_events) {
     LSTData* node_data = dynamic_cast<LSTData*>(node->get_data());
 
@@ -2070,7 +2068,7 @@ void LiveSchemaTree::expand_toggled(mforms::TreeNodeRef node, bool value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void LiveSchemaTree::node_activated(mforms::TreeNodeRef node, int column) {
+auto LiveSchemaTree::node_activated(mforms::TreeNodeRef node, int column) -> void {
   LSTData* node_data = dynamic_cast<LSTData*>(node->get_data());
 
   if (node_data) {
@@ -2170,7 +2168,7 @@ void LiveSchemaTree::node_activated(mforms::TreeNodeRef node, int column) {
 /**
  * Finds the parent schema for a specific node in the tree.
  */
-std::string LiveSchemaTree::get_schema_name(const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::get_schema_name(const mforms::TreeNodeRef& node) -> std::string {
   std::string ret_val;
   mforms::TreeNodeRef temp_node = node;
   mforms::TreeNodeRef parent = temp_node->get_parent();
@@ -2192,7 +2190,7 @@ std::string LiveSchemaTree::get_schema_name(const mforms::TreeNodeRef& node) {
 /*
 * get_node_path: Gets the name path to a node from root
 */
-std::vector<std::string> LiveSchemaTree::get_node_path(const mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::get_node_path(const mforms::TreeNodeRef& node) -> std::vector<std::string> {
   std::vector<std::string> path;
 
   mforms::TreeNodeRef temp_node = node;
@@ -2220,7 +2218,7 @@ std::vector<std::string> LiveSchemaTree::get_node_path(const mforms::TreeNodeRef
 *       for a procedure or for a function, on this case a sequential search will be done so
 *       procedures will be searched first all the time
 */
-mforms::TreeNodeRef LiveSchemaTree::get_node_from_path(std::vector<std::string> path) {
+auto LiveSchemaTree::get_node_from_path(std::vector<std::string> path) -> mforms::TreeNodeRef {
   mforms::TreeNodeRef temp_node = _model_view->root_node();
   std::size_t index = 0;
   bool error = false;
@@ -2246,7 +2244,7 @@ mforms::TreeNodeRef LiveSchemaTree::get_node_from_path(std::vector<std::string> 
 /*
 * is_object_type: Validates that the type of a given object is in a specific group
 */
-bool LiveSchemaTree::is_object_type(ObjectTypeValidation validation, ObjectType type) {
+auto LiveSchemaTree::is_object_type(ObjectTypeValidation validation, ObjectType type) -> bool {
   switch (validation) {
     case DatabaseObject:
       return (type == Schema || type == Table || type == View || type == Procedure || type == Function);
@@ -2268,7 +2266,7 @@ bool LiveSchemaTree::is_object_type(ObjectTypeValidation validation, ObjectType 
   return false;
 }
 
-mforms::TreeNodeRef LiveSchemaTree::insert_node(mforms::TreeNodeRef parent, const std::string& name, ObjectType type) {
+auto LiveSchemaTree::insert_node(mforms::TreeNodeRef parent, const std::string& name, ObjectType type) -> mforms::TreeNodeRef {
   mforms::TreeNodeRef node;
 
   int target_position = 0;
@@ -2286,7 +2284,7 @@ mforms::TreeNodeRef LiveSchemaTree::insert_node(mforms::TreeNodeRef parent, cons
   return node;
 }
 
-void LiveSchemaTree::reload_object_data(mforms::TreeNodeRef& node) {
+auto LiveSchemaTree::reload_object_data(mforms::TreeNodeRef& node) -> void {
   ViewData* pdata = dynamic_cast<ViewData*>(node->get_data());
   if (pdata) {
     short loaded_mask = pdata->get_loaded_mask();
@@ -2344,7 +2342,7 @@ void LiveSchemaTree::reload_object_data(mforms::TreeNodeRef& node) {
 
 //--------------------------------------------------------------------------------------------------
 
-void LiveSchemaTree::discard_object_data(mforms::TreeNodeRef& node, int data_mask) {
+auto LiveSchemaTree::discard_object_data(mforms::TreeNodeRef& node, int data_mask) -> void {
   mforms::TreeNodeRef parent_node;
 
   if (data_mask & COLUMN_DATA) {
@@ -2375,7 +2373,7 @@ void LiveSchemaTree::discard_object_data(mforms::TreeNodeRef& node, int data_mas
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> LiveSchemaTree::overlay_icons_for_tree_node(mforms::TreeNodeRef node) {
+auto LiveSchemaTree::overlay_icons_for_tree_node(mforms::TreeNodeRef node) -> std::vector<std::string> {
   LSTData* data = dynamic_cast<LSTData*>(node->get_data());
 
   std::vector<std::string> icons;

@@ -28,15 +28,15 @@
 
 using namespace mforms;
 
-void TabViewDockingPoint::set_name(const std::string &name) {
+auto TabViewDockingPoint::set_name(const std::string &name) -> void {
   _tabview->set_name(name);
 }
 
-void TabViewDockingPoint::dock_view(mforms::AppView *view, const std::string &arg1, int arg2) {
+auto TabViewDockingPoint::dock_view(mforms::AppView *view, const std::string &arg1, int arg2) -> void {
   _tabview->add_page(view, view->get_title());
 }
 
-bool TabViewDockingPoint::select_view(mforms::AppView *view) {
+auto TabViewDockingPoint::select_view(mforms::AppView *view) -> bool {
   int i;
   if ((i = _tabview->get_page_index(view)) < 0)
     return false;
@@ -44,32 +44,32 @@ bool TabViewDockingPoint::select_view(mforms::AppView *view) {
   return true;
 }
 
-mforms::AppView *TabViewDockingPoint::selected_view() {
+auto TabViewDockingPoint::selected_view() -> mforms::AppView * {
   int i = _tabview->get_active_tab();
   if (i >= 0)
     return dynamic_cast<mforms::AppView *>(_tabview->get_page(i));
   return NULL;
 }
 
-void TabViewDockingPoint::undock_view(mforms::AppView *view) {
+auto TabViewDockingPoint::undock_view(mforms::AppView *view) -> void {
   _tabview->remove_page(view);
 }
 
-void TabViewDockingPoint::set_view_title(mforms::AppView *view, const std::string &title) {
+auto TabViewDockingPoint::set_view_title(mforms::AppView *view, const std::string &title) -> void {
   int i;
   if ((i = _tabview->get_page_index(view)) < 0)
     return;
   _tabview->set_tab_title(i, title);
 }
 
-std::pair<int, int> TabViewDockingPoint::get_size() {
+auto TabViewDockingPoint::get_size() -> std::pair<int, int> {
   return std::make_pair(_tabview->get_width(), _tabview->get_height());
 }
 
-int TabViewDockingPoint::view_count() {
+auto TabViewDockingPoint::view_count() -> int {
   return _tabview->page_count();
 }
 
-AppView *TabViewDockingPoint::view_at_index(int index) {
+auto TabViewDockingPoint::view_at_index(int index) -> AppView * {
   return dynamic_cast<AppView *>(_tabview->get_page(index));
 }

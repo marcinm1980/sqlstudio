@@ -28,59 +28,59 @@
 namespace mforms {
   namespace stub {
 
-    bool TextEntryWrapper::create(::mforms::TextEntry *self, TextEntryType type) {
+    auto TextEntryWrapper::create(::mforms::TextEntry *self, TextEntryType type) -> bool {
       return true;
     }
 
-    void TextEntryWrapper::set_text(::mforms::TextEntry *self, const std::string &text) {
+    auto TextEntryWrapper::set_text(::mforms::TextEntry *self, const std::string &text) -> void {
     }
 
-    void TextEntryWrapper::set_max_length(::mforms::TextEntry *self, int len) {
+    auto TextEntryWrapper::set_max_length(::mforms::TextEntry *self, int len) -> void {
     }
 
-    std::string TextEntryWrapper::get_text(::mforms::TextEntry *self) {
+    auto TextEntryWrapper::get_text(::mforms::TextEntry *self) -> std::string {
       return "";
     }
 
-    void TextEntryWrapper::set_read_only(::mforms::TextEntry *self, bool flag) {
+    auto TextEntryWrapper::set_read_only(::mforms::TextEntry *self, bool flag) -> void {
     }
 
-    void TextEntryWrapper::set_placeholder_text(TextEntry *self, const std::string &text) {
-    }
-
-    //--------------------------------------------------------------------------------------------------
-
-    void TextEntryWrapper::set_placeholder_color(TextEntry *self, const std::string &color) {
+    auto TextEntryWrapper::set_placeholder_text(TextEntry *self, const std::string &text) -> void {
     }
 
     //--------------------------------------------------------------------------------------------------
 
-    void TextEntryWrapper::set_bordered(TextEntry *self, bool flag) {
+    auto TextEntryWrapper::set_placeholder_color(TextEntry *self, const std::string &color) -> void {
     }
 
     //--------------------------------------------------------------------------------------------------
 
-    void TextEntryWrapper::cut(TextEntry *self) {
+    auto TextEntryWrapper::set_bordered(TextEntry *self, bool flag) -> void {
     }
 
     //--------------------------------------------------------------------------------------------------
 
-    void TextEntryWrapper::copy(TextEntry *self) {
+    auto TextEntryWrapper::cut(TextEntry *self) -> void {
     }
 
     //--------------------------------------------------------------------------------------------------
 
-    void TextEntryWrapper::paste(TextEntry *self) {
+    auto TextEntryWrapper::copy(TextEntry *self) -> void {
     }
 
     //--------------------------------------------------------------------------------------------------
 
-    void TextEntryWrapper::select(TextEntry *self, const base::Range &range) {
+    auto TextEntryWrapper::paste(TextEntry *self) -> void {
     }
 
     //--------------------------------------------------------------------------------------------------
 
-    base::Range TextEntryWrapper::getSelection(TextEntry *self) {
+    auto TextEntryWrapper::select(TextEntry *self, const base::Range &range) -> void {
+    }
+
+    //--------------------------------------------------------------------------------------------------
+
+    auto TextEntryWrapper::getSelection(TextEntry *self) -> base::Range {
       return base::Range();
     }
 
@@ -89,10 +89,10 @@ namespace mforms {
     TextEntryWrapper::TextEntryWrapper(::mforms::TextEntry *self, TextEntryType type) : ViewWrapper(self) {
     }
 
-    void TextEntryWrapper::activated(mforms::TextEntry *self) {
+    auto TextEntryWrapper::activated(mforms::TextEntry *self) -> void {
     }
 
-    void TextEntryWrapper::init() {
+    auto TextEntryWrapper::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_textentry_impl.create = &TextEntryWrapper::create;

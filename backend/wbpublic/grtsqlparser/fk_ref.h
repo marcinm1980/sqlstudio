@@ -55,24 +55,24 @@ public:
   inline operator db_ForeignKeyRef &() {
     return _fk;
   }
-  inline db_TableRef owner_table() {
+  inline auto owner_table() -> db_TableRef {
     return db_TableRef::cast_from(_fk->owner());
   }
 
-  inline std::string &ref_schema_name() {
+  inline auto ref_schema_name() -> std::string & {
     return _ref_schema_name;
   }
-  inline std::string &ref_table_name() {
+  inline auto ref_table_name() -> std::string & {
     return _ref_table_name;
   }
-  inline String_collection &ref_column_names() {
+  inline auto ref_column_names() -> String_collection & {
     return _ref_columns_names;
   }
 
-  inline void ref_schema_name(const std::string &schema_name) {
+  inline auto ref_schema_name(const std::string &schema_name) -> void {
     _ref_schema_name = schema_name;
   }
-  inline void ref_table_name(const std::string &table_name) {
+  inline auto ref_table_name(const std::string &table_name) -> void {
     _ref_table_name = table_name;
   }
 };

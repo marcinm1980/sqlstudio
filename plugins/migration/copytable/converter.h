@@ -33,13 +33,13 @@
 #endif
 
 class BaseConverter {
-  static void init_mysql_time(MYSQL_TIME* target);
+  static auto init_mysql_time(MYSQL_TIME* target) -> void;
 
 public:
-  static void convert_date(DATE_STRUCT* source, MYSQL_TIME* target);
-  static void convert_date(const char* source, MYSQL_TIME* target);
-  static void convert_time(const char* source, MYSQL_TIME* target);
-  static void convert_timestamp(const char* source, MYSQL_TIME* target);
-  static void convert_timestamp(TIMESTAMP_STRUCT* source, MYSQL_TIME* target);
-  static void convert_date_time(const char* source, MYSQL_TIME* target, int type);
+  static auto convert_date(DATE_STRUCT* source, MYSQL_TIME* target) -> void;
+  static auto convert_date(const char* source, MYSQL_TIME* target) -> void;
+  static auto convert_time(const char* source, MYSQL_TIME* target) -> void;
+  static auto convert_timestamp(const char* source, MYSQL_TIME* target) -> void;
+  static auto convert_timestamp(TIMESTAMP_STRUCT* source, MYSQL_TIME* target) -> void;
+  static auto convert_date_time(const char* source, MYSQL_TIME* target, int type) -> void;
 };

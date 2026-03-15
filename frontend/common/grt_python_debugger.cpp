@@ -48,7 +48,7 @@ using namespace mforms;
 #define BP_ACTION_STEP_OUT 4
 #define BP_ACTION_PAUSE 5
 
-static PyObject *ui_print(PyObject *unused, PyObject *args) {
+static auto ui_print(PyObject *unused, PyObject *args) -> PyObject * {
   PyObject *self;
   char *s = nullptr;
 
@@ -67,7 +67,7 @@ static PyObject *ui_print(PyObject *unused, PyObject *args) {
   return Py_None;
 }
 
-static PyObject *ui_clear_breakpoints(PyObject *unused, PyObject *args) {
+static auto ui_clear_breakpoints(PyObject *unused, PyObject *args) -> PyObject * {
   PyObject *self;
 
   if (!PyArg_ParseTuple(args, "O:ui_clear_breakpoints", &self))
@@ -83,7 +83,7 @@ static PyObject *ui_clear_breakpoints(PyObject *unused, PyObject *args) {
   return Py_None;
 }
 
-static PyObject *ui_add_breakpoint(PyObject *unused, PyObject *args) {
+static auto ui_add_breakpoint(PyObject *unused, PyObject *args) -> PyObject * {
   PyObject *self;
   const char *file = "";
   int active;
@@ -103,7 +103,7 @@ static PyObject *ui_add_breakpoint(PyObject *unused, PyObject *args) {
   return Py_None;
 }
 
-static PyObject *ui_program_stopped(PyObject *unused, PyObject *args) {
+static auto ui_program_stopped(PyObject *unused, PyObject *args) -> PyObject * {
   PyObject *self;
   const char *file = "";
   int line = 0;
@@ -121,7 +121,7 @@ static PyObject *ui_program_stopped(PyObject *unused, PyObject *args) {
   return Py_BuildValue("s", next_command);
 }
 
-static PyObject *ui_clear_stack(PyObject *unused, PyObject *args) {
+static auto ui_clear_stack(PyObject *unused, PyObject *args) -> PyObject * {
   PyObject *self;
 
   if (!PyArg_ParseTuple(args, "O:ui_clear_stack", &self))
@@ -137,7 +137,7 @@ static PyObject *ui_clear_stack(PyObject *unused, PyObject *args) {
   return Py_None;
 }
 
-static PyObject *ui_add_stack(PyObject *unused, PyObject *args) {
+static auto ui_add_stack(PyObject *unused, PyObject *args) -> PyObject * {
   PyObject *self;
   const char *file = "";
   const char *location = "";
@@ -156,7 +156,7 @@ static PyObject *ui_add_stack(PyObject *unused, PyObject *args) {
   return Py_None;
 }
 
-static PyObject *ui_clear_variables(PyObject *unused, PyObject *args) {
+static auto ui_clear_variables(PyObject *unused, PyObject *args) -> PyObject * {
   PyObject *self;
 
   if (!PyArg_ParseTuple(args, "O:ui_clear_variables", &self))
@@ -172,7 +172,7 @@ static PyObject *ui_clear_variables(PyObject *unused, PyObject *args) {
   return Py_None;
 }
 
-static PyObject *ui_add_variable(PyObject *unused, PyObject *args) {
+static auto ui_add_variable(PyObject *unused, PyObject *args) -> PyObject * {
   PyObject *self;
   const char *variable = "";
   const char *value = "";
@@ -192,7 +192,7 @@ static PyObject *ui_add_variable(PyObject *unused, PyObject *args) {
 
 static int pdb_desc = 0;
 
-static void init_pdb_python() {
+static auto init_pdb_python() -> void {
   static PyObject *module = nullptr;
 
   if(module)
@@ -237,13 +237,13 @@ static void init_pdb_python() {
   
 }
 
-PyObject *PythonDebugger::as_cobject() {
+auto PythonDebugger::as_cobject() -> PyObject * {
   PyObject* ret = PyCapsule_New(this, "PythonDebugger", nullptr);
   PyCapsule_SetContext(ret, &pdb_desc);
   return ret;
 }
 
-PythonDebugger *PythonDebugger::from_cobject(PyObject *cobj) {
+auto PythonDebugger::from_cobject(PyObject *cobj) -> PythonDebugger * {
   if (!PyCapsule_CheckExact(cobj))
     return nullptr;
 
@@ -288,7 +288,7 @@ PythonDebugger::PythonDebugger(GRTShellWindow *shell, mforms::TabView *tabview)
   _program_stopped = false;
 }
 
-void PythonDebugger::init_pdb() {
+auto PythonDebugger::init_pdb() -> void {
   WillEnterPython lock;
 
   init_pdb_python();
@@ -319,7 +319,7 @@ void PythonDebugger::init_pdb() {
   pyc->set_global(_pdb_varname, _pdb);
 }
 
-void PythonDebugger::editor_added(GRTCodeEditor *editor) {
+auto PythonDebugger::editor_added(GRTCodeEditor *editor) -> void {
   scoped_connect(editor->get_editor()->signal_gutter_clicked(),
                  std::bind(&PythonDebugger::line_gutter_clicked, this, std::placeholders::_1, std::placeholders::_2,
                            std::placeholders::_3, editor));
@@ -328,12 +328,12 @@ void PythonDebugger::editor_added(GRTCodeEditor *editor) {
     std::bind(&PythonDebugger::editor_text_changed, this, std::placeholders::_1, std::placeholders::_2, editor));
 }
 
-void PythonDebugger::editor_closed(GRTCodeEditor *editor) {
+auto PythonDebugger::editor_closed(GRTCodeEditor *editor) -> void {
   if (editor == _stack_position_editor)
     _stack_position_editor = 0;
 }
 
-bool PythonDebugger::ensure_code_saved() {
+auto PythonDebugger::ensure_code_saved() -> bool {
   GRTCodeEditor *editor = _shell->get_active_editor();
 
   if (editor->is_dirty()) {
@@ -347,7 +347,7 @@ bool PythonDebugger::ensure_code_saved() {
   return true;
 }
 
-void PythonDebugger::line_gutter_clicked(int margin, int line, mforms::ModifierKey mods, GRTCodeEditor *editor) {
+auto PythonDebugger::line_gutter_clicked(int margin, int line, mforms::ModifierKey mods, GRTCodeEditor *editor) -> void {
   if (margin == 1 || margin == 0) // click line numbers or on the markers
   {
     WillEnterPython lock;
@@ -359,7 +359,7 @@ void PythonDebugger::line_gutter_clicked(int margin, int line, mforms::ModifierK
   }
 }
 
-void PythonDebugger::editor_text_changed(int line, int linesAdded, GRTCodeEditor *editor) {
+auto PythonDebugger::editor_text_changed(int line, int linesAdded, GRTCodeEditor *editor) -> void {
   if (linesAdded != 0) {
     WillEnterPython lock;
 
@@ -375,7 +375,7 @@ void PythonDebugger::editor_text_changed(int line, int linesAdded, GRTCodeEditor
   }
 }
 
-void PythonDebugger::edit_breakpoint(mforms::TreeNodeRef node, int column, std::string value) {
+auto PythonDebugger::edit_breakpoint(mforms::TreeNodeRef node, int column, std::string value) -> void {
   int row = _breakpoint_list->row_for_node(node);
   if (column == 2 && row >= 0) // edit bp condition
   {
@@ -396,13 +396,13 @@ void PythonDebugger::edit_breakpoint(mforms::TreeNodeRef node, int column, std::
   }
 }
 
-void PythonDebugger::refresh_file(const std::string &file) {
+auto PythonDebugger::refresh_file(const std::string &file) -> void {
   WillEnterPython lock;
   grt::AutoPyObject r(PyObject_CallMethod(_pdb, "wdb_reload_module_for_file", "(s)", file.c_str()),
                       false);
 }
 
-void PythonDebugger::run(GRTCodeEditor *editor, bool stepping) {
+auto PythonDebugger::run(GRTCodeEditor *editor, bool stepping) -> void {
   if (editor->is_dirty() && !ensure_code_saved())
     return;
 
@@ -434,40 +434,40 @@ void PythonDebugger::run(GRTCodeEditor *editor, bool stepping) {
   debug_print("Execution finished\n");
 }
 
-void PythonDebugger::step_into() {
+auto PythonDebugger::step_into() -> void {
   mforms::App::get()->exit_event_loop(BP_ACTION_STEP_INTO);
 }
 
-void PythonDebugger::step() {
+auto PythonDebugger::step() -> void {
   mforms::App::get()->exit_event_loop(BP_ACTION_STEP);
 }
 
-void PythonDebugger::continue_() {
+auto PythonDebugger::continue_() -> void {
   mforms::App::get()->exit_event_loop(BP_ACTION_CONTINUE);
 }
 
-void PythonDebugger::stop() {
+auto PythonDebugger::stop() -> void {
   mforms::App::get()->exit_event_loop(BP_ACTION_STOP);
 }
 
-void PythonDebugger::pause() {
+auto PythonDebugger::pause() -> void {
   _pause_clicked = true;
   mforms::App::get()->exit_event_loop(BP_ACTION_PAUSE);
 }
 
-void PythonDebugger::step_out() {
+auto PythonDebugger::step_out() -> void {
   mforms::App::get()->exit_event_loop(BP_ACTION_STEP_OUT);
 }
 
-void PythonDebugger::debug_print(const std::string &s) {
+auto PythonDebugger::debug_print(const std::string &s) -> void {
   _shell->add_output(s);
 }
 
-void PythonDebugger::ui_clear_breakpoints() {
+auto PythonDebugger::ui_clear_breakpoints() -> void {
   _breakpoint_list->clear();
 }
 
-void PythonDebugger::ui_add_breakpoint(const char *file, int line, const char *condition) {
+auto PythonDebugger::ui_add_breakpoint(const char *file, int line, const char *condition) -> void {
   if (!file)
     file = "";
 
@@ -481,7 +481,7 @@ void PythonDebugger::ui_add_breakpoint(const char *file, int line, const char *c
   node->set_string(2, condition);
 }
 
-const char *PythonDebugger::ui_program_stopped(const char *file, int line, int reason) {
+auto PythonDebugger::ui_program_stopped(const char *file, int line, int reason) -> const char * {
   GRTCodeEditor *editor = 0;
   mforms::CodeEditor *code_editor = nullptr;
   bool continue_possible = true;
@@ -639,17 +639,17 @@ const char *PythonDebugger::ui_program_stopped(const char *file, int line, int r
   return command;
 }
 
-bool PythonDebugger::heartbeat_timeout() {
+auto PythonDebugger::heartbeat_timeout() -> bool {
   _heartbeat_timeout_timer = 0;
   mforms::App::get()->exit_event_loop(BP_ACTION_CONTINUE);
   return false;
 }
 
-void PythonDebugger::ui_clear_stack() {
+auto PythonDebugger::ui_clear_stack() -> void {
   _stack_list->clear();
 }
 
-void PythonDebugger::ui_add_stack(const char *location, const char *file, int line) {
+auto PythonDebugger::ui_add_stack(const char *location, const char *file, int line) -> void {
   if (!file)
     file = "";
 
@@ -660,17 +660,17 @@ void PythonDebugger::ui_add_stack(const char *location, const char *file, int li
   node->set_string(2, base::strfmt("%s:%i", base::basename(file).c_str(), line));
 }
 
-void PythonDebugger::ui_clear_variables() {
+auto PythonDebugger::ui_clear_variables() -> void {
   _variable_list->clear();
 }
 
-void PythonDebugger::ui_add_variable(const char *varname, const char *value) {
+auto PythonDebugger::ui_add_variable(const char *varname, const char *value) -> void {
   mforms::TreeNodeRef node = _variable_list->add_node();
   node->set_string(0, varname);
   node->set_string(1, value);
 }
 
-void PythonDebugger::stack_selected() {
+auto PythonDebugger::stack_selected() -> void {
   mforms::TreeNodeRef node(_stack_list->get_selected_node());
   int show_frame = 0;
 
@@ -707,7 +707,7 @@ void PythonDebugger::stack_selected() {
   }
 }
 
-bool PythonDebugger::toggle_breakpoint(const char *file, int line) {
+auto PythonDebugger::toggle_breakpoint(const char *file, int line) -> bool {
   WillEnterPython lock;
 
   grt::AutoPyObject r(PyObject_CallMethod(_pdb, "wdb_toggle_breakpoint", "(si)", file, line), false);

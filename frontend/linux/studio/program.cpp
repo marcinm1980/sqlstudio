@@ -61,7 +61,7 @@ using base::strfmt;
 
 Program* Program::_instance = 0;
 
-static void flush_main_thread() {
+static auto flush_main_thread() -> void {
   while (Gtk::Main::events_pending()) {
     if (Gtk::Main::iteration(false)) {
       // return value of true means quit() was called
@@ -76,7 +76,7 @@ DEFAULT_LOG_DOMAIN("Program")
 //------------------------------------------------------------------------------
 Program::Program() : _main_form(nullptr), _wbcallbacks(new wb::WBFrontendCallbacks()) {};
 
-void Program::init(wb::WBOptions& wboptions) {
+auto Program::init(wb::WBOptions& wboptions) -> void {
   _instance = this;
 // Setup backend stuff
 //  _wb_context_ui = new wb::WBContextUI(wboptions.verbose);
@@ -191,12 +191,12 @@ Program::~Program() {
   delete _wbcallbacks;
 }
 
-void Program::finalize_initialization(wb::WBOptions* options) {
+auto Program::finalize_initialization(wb::WBOptions* options) -> void {
   _main_form->show();
   wb::WBContextUI::get()->init_finish(options);
 }
 
-bool Program::idle_stuff() {
+auto Program::idle_stuff() -> bool {
   // if there are tasks to be executed, schedule it to be done when idle so that the timer
   // doesn't get blocked during its execution
   _idleConnections.push_back(Glib::signal_idle().connect(sigc::bind(
@@ -204,7 +204,7 @@ bool Program::idle_stuff() {
   return true;
 }
 
-void Program::shutdown() {
+auto Program::shutdown() -> void {
   if (_instance == nullptr) // there was no initialization
     return;
 
@@ -244,8 +244,8 @@ struct GtkAutoLock {
 };
 #pragma GCC diagnostic pop
 
-int Program::confirm_action_becb(const std::string& title, const std::string& msg, const std::string& default_btn,
-                                 const std::string& alt_btn, const std::string& other_btn) {
+auto Program::confirm_action_becb(const std::string& title, const std::string& msg, const std::string& default_btn,
+                                 const std::string& alt_btn, const std::string& other_btn) -> int {
   GtkAutoLock lock;
 
   Gtk::MessageDialog dlg(strfmt("<b>%s</b>\n%s", title.c_str(), msg.c_str()), true, Gtk::MESSAGE_QUESTION,
@@ -280,8 +280,8 @@ int Program::confirm_action_becb(const std::string& title, const std::string& ms
 }
 
 //------------------------------------------------------------------------------
-std::string Program::show_file_dialog_becb(const std::string& type, const std::string& title,
-                                           const std::string& extensions) {
+auto Program::show_file_dialog_becb(const std::string& type, const std::string& title,
+                                           const std::string& extensions) -> std::string {
   Gtk::FileChooserDialog dlg(title, (type == "open" ? Gtk::FILE_CHOOSER_ACTION_OPEN : Gtk::FILE_CHOOSER_ACTION_SAVE));
 
   dlg.set_transient_for(*(_main_form->get_mainwindow()));
@@ -367,12 +367,12 @@ std::string Program::show_file_dialog_becb(const std::string& type, const std::s
 }
 
 //------------------------------------------------------------------------------
-Gtk::Window* Program::get_mainwindow() const {
+auto Program::get_mainwindow() const -> Gtk::Window* {
   return _main_form->get_mainwindow();
 }
 
 // get_mainwindow is declared in gtk_helpers.h
 //------------------------------------------------------------------------------
-void* get_mainwindow_impl() {
+auto get_mainwindow_impl() -> void* {
   return Program::get_instance()->get_mainwindow();
 }

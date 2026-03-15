@@ -67,9 +67,9 @@ namespace parsers {
     Symbol(std::string const &aName = "");
     virtual ~Symbol();
 
-    virtual void clear();
-    void setParent(Symbol *parent);
-    Symbol *getRoot() const; // Get the outermost entity (below the symbol table) that holds us.
+    virtual auto clear() -> void;
+    auto setParent(Symbol *parent) -> void;
+    auto getRoot() const -> Symbol *; // Get the outermost entity (below the symbol table) that holds us.
 
     // Returns the the next enclosing parent of the given type.
     template <typename T>
@@ -85,7 +85,7 @@ namespace parsers {
     }
 
     // The list of symbols from this one up to root.
-    std::vector<Symbol const *> getSymbolPath() const;
+    auto getSymbolPath() const -> std::vector<Symbol const *>;
 
     // Create a qualified identifier from this symbol and its parent.
     // If `full` is true then all parents are traversed, instead only the direct one.
@@ -108,7 +108,7 @@ namespace parsers {
   public:
     virtual void clear() override;
 
-    void addAndManageSymbol(Symbol *symbol); // Takes over ownership.
+    auto addAndManageSymbol(Symbol *symbol) -> void; // Takes over ownership.
 
     template <typename T>
     std::vector<T *> getSymbolsOfType() const {
@@ -123,24 +123,24 @@ namespace parsers {
     }
 
     // Retrieval functions for this scope or any of the parent scopes (conditionally).
-    virtual Symbol *resolve(std::string const &name, bool localOnly = false);
+    virtual auto resolve(std::string const &name, bool localOnly = false) -> Symbol *;
 
     // Returns all accessible symbols that have a type assigned.
-    std::vector<TypedSymbol *> getTypedSymbols(bool localOnly = true) const;
+    auto getTypedSymbols(bool localOnly = true) const -> std::vector<TypedSymbol *>;
 
     // The names of all accessible symbols with a type.
-    std::vector<std::string> getTypedSymbolNames(bool localOnly = true) const;
+    auto getTypedSymbolNames(bool localOnly = true) const -> std::vector<std::string>;
 
-    std::vector<Type *> getTypes(bool localOnly = true) const; // The types accessible in this scope.
+    auto getTypes(bool localOnly = true) const -> std::vector<Type *>; // The types accessible in this scope.
 
     // Returns all direct child symbols with a scope (e.g. classes in a module).
-    std::vector<ScopedSymbol *> getDirectScopes() const;
+    auto getDirectScopes() const -> std::vector<ScopedSymbol *>;
 
     // Returns symbols from this and all nested scopes in the order they were defined.
-    std::vector<Symbol *> getAllSymbols() const;
+    auto getAllSymbols() const -> std::vector<Symbol *>;
 
     // Like getAllSymbols but only the names (sorted alpabetically).
-    std::set<std::string> getAllSymbolNames() const;
+    auto getAllSymbolNames() const -> std::set<std::string>;
 
   protected:
     ScopedSymbol(const ScopedSymbol&) = delete;
@@ -165,8 +165,8 @@ namespace parsers {
 
     RoutineSymbol(std::string const &name, Type const *aReturnType);
 
-    std::vector<VariableSymbol *> getVariables(bool localOnly = true) const;
-    std::vector<ParameterSymbol *> getParameters(bool localOnly = true) const;
+    auto getVariables(bool localOnly = true) const -> std::vector<VariableSymbol *>;
+    auto getParameters(bool localOnly = true) const -> std::vector<ParameterSymbol *>;
   };
 
   // A routine which belongs to a class or other outer container structure.
@@ -231,8 +231,8 @@ namespace parsers {
 
     ClassSymbol(std::string const &name, ClassSymbol *aSuperClass);
 
-    std::vector<MethodSymbol *> getMethods(bool includeInherited = false) const; // Returns a list of all methods.
-    std::vector<FieldSymbol *> getFields(bool includeInherited = false) const;   // Returns all fields.
+    auto getMethods(bool includeInherited = false) const -> std::vector<MethodSymbol *>; // Returns a list of all methods.
+    auto getFields(bool includeInherited = false) const -> std::vector<FieldSymbol *>;   // Returns all fields.
   };
 
   class PARSERS_PUBLIC_TYPE ArrayType : public Type {
@@ -372,10 +372,10 @@ namespace parsers {
     virtual ~SymbolTable();
 
     // Lock/unlock can be used recursively, but must be balanced of course.
-    void lock();
-    void unlock();
+    auto lock() -> void;
+    auto unlock() -> void;
 
-    void addDependencies(std::vector<SymbolTable *> const &newDependencies);
+    auto addDependencies(std::vector<SymbolTable *> const &newDependencies) -> void;
 
     // The returned symbol instance is managed by this table.
     template <typename T, typename... Args>

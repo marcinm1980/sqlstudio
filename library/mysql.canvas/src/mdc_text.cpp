@@ -69,25 +69,25 @@ TextFigure::~TextFigure() {
 /**
  * Sets a flag that indicates whether the background must be filled or not.
  */
-void TextFigure::set_fill_background(bool flag) {
+auto TextFigure::set_fill_background(bool flag) -> void {
   _fill_background = flag;
 }
 
 /**
  * Sets a flag that indicates whether the a white outline should be drawn around the text.
  */
-void TextFigure::set_draw_outline(bool flag) {
+auto TextFigure::set_draw_outline(bool flag) -> void {
   _draw_outline = flag;
 }
 
-void TextFigure::set_allow_wrapping(bool flag) {
+auto TextFigure::set_allow_wrapping(bool flag) -> void {
   _allow_wrapping = flag;
 }
 
 /**
  * Resets the shorted text member.
  */
-void TextFigure::reset_shrinked_text() {
+auto TextFigure::reset_shrinked_text() -> void {
   _shrinked_text.clear();
   base::Size size = get_size();
   if (_text_layout && !_auto_sizing && (_allow_wrapping || _allow_shrinking)) {
@@ -109,8 +109,8 @@ void TextFigure::reset_shrinked_text() {
  *
  * @return A value describing the computed text width.
  */
-static double get_text_width(CairoCtx *cr, const FontSpec &font, gchar *ptr, int offset,
-                             cairo_text_extents_t &extents) {
+static auto get_text_width(CairoCtx *cr, const FontSpec &font, gchar *ptr, int offset,
+                             cairo_text_extents_t &extents) -> double {
   gchar save = ptr[offset];
   ptr[offset] = 0;
 
@@ -120,8 +120,8 @@ static double get_text_width(CairoCtx *cr, const FontSpec &font, gchar *ptr, int
   return extents.x_advance;
 }
 
-static std::string fit_text_to_width(CairoCtx *cr, const FontSpec &font, const std::string &text, double width,
-                                     cairo_text_extents_t &extents) {
+static auto fit_text_to_width(CairoCtx *cr, const FontSpec &font, const std::string &text, double width,
+                                     cairo_text_extents_t &extents) -> std::string {
   gchar *ptr, *p, *prev;
   // calculate length in characters of string and also a mapping from character -> offset
   prev = p = ptr = g_strdup(text.c_str());
@@ -142,8 +142,8 @@ static std::string fit_text_to_width(CairoCtx *cr, const FontSpec &font, const s
   return text;
 }
 
-static base::Range fit_text_to_width_word_wrap(CairoCtx *cr, const FontSpec &font, const std::string &text,
-                                               double width, cairo_text_extents_t &extents) {
+static auto fit_text_to_width_word_wrap(CairoCtx *cr, const FontSpec &font, const std::string &text,
+                                               double width, cairo_text_extents_t &extents) -> base::Range {
   gchar *ptr, *p, *prev, *pp, *start;
   // calculate length in characters of string and also a mapping from character -> offset
   prev = pp = p = ptr = g_strdup(text.c_str());
@@ -179,7 +179,7 @@ static base::Range fit_text_to_width_word_wrap(CairoCtx *cr, const FontSpec &fon
   return base::Range(0, text.length());
 }
 
-void TextFigure::draw_contents(CairoCtx *cr, const Rect &bounds) {
+auto TextFigure::draw_contents(CairoCtx *cr, const Rect &bounds) -> void {
   if (_fill_background) {
     cr->set_color(_fill_color);
     cr->rectangle(bounds);
@@ -278,11 +278,11 @@ void TextFigure::draw_contents(CairoCtx *cr, const Rect &bounds) {
   }
 }
 
-void TextFigure::draw_contents(CairoCtx *cr) {
+auto TextFigure::draw_contents(CairoCtx *cr) -> void {
   draw_contents(cr, get_bounds());
 }
 
-void TextFigure::set_multi_line(bool flag) {
+auto TextFigure::set_multi_line(bool flag) -> void {
   if (flag != _multi_line) {
     _multi_line = flag;
 
@@ -300,13 +300,13 @@ void TextFigure::set_multi_line(bool flag) {
   }
 }
 
-void TextFigure::set_allow_shrinking(bool flag) {
+auto TextFigure::set_allow_shrinking(bool flag) -> void {
   _allow_shrinking = flag;
   _shrinked_text = "";
   reset_shrinked_text();
 }
 
-void TextFigure::set_font(const FontSpec &font) {
+auto TextFigure::set_font(const FontSpec &font) -> void {
   if (_font != font) {
     _font = font;
 
@@ -321,14 +321,14 @@ void TextFigure::set_font(const FontSpec &font) {
   }
 }
 
-void TextFigure::set_text_alignment(TextAlignment align) {
+auto TextFigure::set_text_alignment(TextAlignment align) -> void {
   if (_align != align) {
     _align = align;
     set_needs_render();
   }
 }
 
-void TextFigure::set_text(const std::string &text) {
+auto TextFigure::set_text(const std::string &text) -> void {
   if (_text != text) {
     _text = text;
     _shrinked_text = "";
@@ -341,7 +341,7 @@ void TextFigure::set_text(const std::string &text) {
   }
 }
 
-void TextFigure::auto_size() {
+auto TextFigure::auto_size() -> void {
   Size size;
 
   size = get_text_size();
@@ -352,7 +352,7 @@ void TextFigure::auto_size() {
   resize_to(size);
 }
 
-Size TextFigure::get_text_size() {
+auto TextFigure::get_text_size() -> Size {
   if (_text_layout) {
     _text_layout->relayout(get_layer()->get_view()->cairoctx());
     return _text_layout->get_size();
@@ -368,7 +368,7 @@ Size TextFigure::get_text_size() {
   return size;
 }
 
-Size TextFigure::calc_min_size() {
+auto TextFigure::calc_min_size() -> Size {
   Size size = get_text_size();
 
   if (_allow_shrinking && !_auto_sizing)
@@ -382,7 +382,7 @@ Size TextFigure::calc_min_size() {
 
 //------------------------------------------------------------------------------------------------
 
-void TextLayout::break_paragraphs() {
+auto TextLayout::break_paragraphs() -> void {
   size_t start;
   const char *str = _text.c_str();
   const char *ptr;
@@ -415,7 +415,7 @@ void TextLayout::break_paragraphs() {
   }
 }
 
-void TextLayout::relayout(CairoCtx *cr) {
+auto TextLayout::relayout(CairoCtx *cr) -> void {
   if (_needs_relayout) {
     _needs_relayout = false;
 
@@ -426,7 +426,7 @@ void TextLayout::relayout(CairoCtx *cr) {
   }
 }
 
-void TextLayout::layout_paragraph(CairoCtx *cr, Paragraph &para) {
+auto TextLayout::layout_paragraph(CairoCtx *cr, Paragraph &para) -> void {
   cairo_text_extents_t ext;
 
   cr->get_text_extents(_font, std::string(_text.c_str() + para.text_offset, para.text_length), ext);
@@ -479,7 +479,7 @@ TextLayout::TextLayout() {
 TextLayout::~TextLayout() {
 }
 
-void TextLayout::set_text(const std::string &text) {
+auto TextLayout::set_text(const std::string &text) -> void {
   _text = text;
 
   break_paragraphs();
@@ -487,18 +487,18 @@ void TextLayout::set_text(const std::string &text) {
   _needs_relayout = true;
 }
 
-void TextLayout::set_font(const FontSpec &font) {
+auto TextLayout::set_font(const FontSpec &font) -> void {
   _font = font;
 
   _needs_relayout = true;
 }
 
-void TextLayout::set_size(const base::Size &s) {
+auto TextLayout::set_size(const base::Size &s) -> void {
   _fixed_size = s;
   _needs_relayout = true;
 }
 
-Size TextLayout::get_size() {
+auto TextLayout::get_size() -> Size {
   Size size = _fixed_size;
   double w = 0, h = 0;
   double line_spacing = floor(_font.size / 4) + 1;
@@ -520,7 +520,7 @@ Size TextLayout::get_size() {
   return size;
 }
 
-void TextLayout::render(CairoCtx *cr, const Point &pos, const Size &size, TextAlignment align) {
+auto TextLayout::render(CairoCtx *cr, const Point &pos, const Size &size, TextAlignment align) -> void {
   double x = pos.x;
   double y = pos.y;
   double line_spacing = floor(_font.size / 4) + 1;

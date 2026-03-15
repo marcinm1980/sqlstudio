@@ -38,20 +38,20 @@ namespace mforms {
     RecordGridView(std::shared_ptr<Recordset> rset);
     virtual ~RecordGridView();
 
-    virtual int get_column_count();
-    virtual int get_column_width(int column);
-    virtual void set_column_width(int column, int width);
-    virtual void set_column_header_indicator(int column, ColumnHeaderIndicator order);
+    virtual auto get_column_count() -> int;
+    virtual auto get_column_width(int column) -> int;
+    virtual auto set_column_width(int column, int width) -> void;
+    virtual auto set_column_header_indicator(int column, ColumnHeaderIndicator order) -> void;
 
-    virtual bool current_cell(size_t &row, int &column);
-    virtual void set_current_cell(size_t row, int column);
+    virtual auto current_cell(size_t &row, int &column) -> bool;
+    virtual auto set_current_cell(size_t row, int column) -> void;
 
-    virtual void set_font(const std::string &font);
-    virtual void set_header_menu(ContextMenu *menu);
+    virtual auto set_font(const std::string &font) -> void;
+    virtual auto set_header_menu(ContextMenu *menu) -> void;
 
-    virtual void update_columns();
+    virtual auto update_columns() -> void;
 
-    MResultsetViewer *control() {
+    auto control() -> MResultsetViewer * {
       return viewer;
     }
   };

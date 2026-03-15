@@ -28,8 +28,8 @@
 using namespace mdc;
 using namespace base;
 
-bool mdc::intersect_hv_lines(const Point &s1, const Point &e1, const Point &s2, const Point &e2,
-                             Point &intersection_ret) {
+auto mdc::intersect_hv_lines(const Point &s1, const Point &e1, const Point &s2, const Point &e2,
+                             Point &intersection_ret) -> bool {
   if (e1.y == s1.y) {
     if (e2.y == s2.y)
       return false; // parallel lines
@@ -53,7 +53,7 @@ bool mdc::intersect_hv_lines(const Point &s1, const Point &e1, const Point &s2, 
   return true;
 }
 
-bool mdc::intersect_lines(const Point &s1, const Point &e1, const Point &s2, const Point &e2, Point &intersection_ret) {
+auto mdc::intersect_lines(const Point &s1, const Point &e1, const Point &s2, const Point &e2, Point &intersection_ret) -> bool {
   double a1, b1;
   double a2, b2;
 
@@ -83,8 +83,8 @@ bool mdc::intersect_lines(const Point &s1, const Point &e1, const Point &s2, con
   }
 }
 
-bool mdc::intersect_rect_to_line(const Rect &rect, const Point &s, const Point &e, Point &intersection1_ret,
-                                 Point &intersection2_ret) { // XXX optimize this
+auto mdc::intersect_rect_to_line(const Rect &rect, const Point &s, const Point &e, Point &intersection1_ret,
+                                 Point &intersection2_ret) -> bool { // XXX optimize this
   std::vector<Point> intersections;
   Point p;
 
@@ -109,7 +109,7 @@ bool mdc::intersect_rect_to_line(const Rect &rect, const Point &s, const Point &
   return false;
 }
 
-double mdc::point_line_distance(const Point &p1, const Point &p2, const Point &p) {
+auto mdc::point_line_distance(const Point &p1, const Point &p2, const Point &p) -> double {
   double line_size_sqr;
   double u;
   Point inters;

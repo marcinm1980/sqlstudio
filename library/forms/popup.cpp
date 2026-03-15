@@ -43,25 +43,25 @@ Popup::~Popup() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Popup::set_needs_repaint() {
+auto Popup::set_needs_repaint() -> void {
   _popup_impl->set_needs_repaint(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Popup::set_size(int width, int height) {
+auto Popup::set_size(int width, int height) -> void {
   _popup_impl->set_size(this, width, height);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int Popup::show(int spot_x, int spot_y) {
+auto Popup::show(int spot_x, int spot_y) -> int {
   return _popup_impl->show(this, spot_x, spot_y);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-base::Rect Popup::get_content_rect() {
+auto Popup::get_content_rect() -> base::Rect {
   return _popup_impl->get_content_rect(this);
 }
 
@@ -73,13 +73,13 @@ base::Rect Popup::get_content_rect() {
  * necessary to set it from outside to finish the modal mode. The result set here is returned by
  * the show() call and only has an effect while the popup is shown.
  */
-void Popup::set_modal_result(int result) {
+auto Popup::set_modal_result(int result) -> void {
   _popup_impl->set_modal_result(this, result);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void mforms::Popup::closed() {
+auto mforms::Popup::closed() -> void {
   _on_close();
 }
 

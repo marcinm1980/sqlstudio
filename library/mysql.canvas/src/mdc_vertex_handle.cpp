@@ -35,7 +35,7 @@ VertexHandle::VertexHandle(InteractionLayer *ilayer, CanvasItem *item, const Poi
 VertexHandle::~VertexHandle() {
 }
 
-void VertexHandle::repaint(CairoCtx *cr) {
+auto VertexHandle::repaint(CairoCtx *cr) -> void {
   Rect r = get_bounds();
 
   cr->set_color(Color(1, 1, 1, 0.8));
@@ -58,7 +58,7 @@ void VertexHandle::repaint(CairoCtx *cr) {
   cr->stroke();
 }
 
-Rect VertexHandle::get_bounds() const {
+auto VertexHandle::get_bounds() const -> Rect {
   Rect r;
   r.pos.x = _pos.x - 4.5;
   r.pos.y = _pos.y - 4.5;

@@ -35,21 +35,21 @@ Reporter::Reporter() : _error_count(0), _warning_count(0), _tracking(false) {
   flush();
 };
 
-bool Reporter::is_tracking() const {
+auto Reporter::is_tracking() const -> bool {
   return _tracking;
 }
 
-void Reporter::start_tracking() const {
+auto Reporter::start_tracking() const -> void {
   _tracking = true;
 }
 
-void Reporter::flush() const {
+auto Reporter::flush() const -> void {
   _warning_count = 0;
   _error_count = 0;
   _tracking = false;
 }
 
-void Reporter::report_warning(const char *format, ...) const {
+auto Reporter::report_warning(const char *format, ...) const -> void {
   _warning_count++;
 
   va_list args;
@@ -66,7 +66,7 @@ void Reporter::report_warning(const char *format, ...) const {
     grt::GRT::get()->send_warning(format);
 }
 
-void Reporter::report_error(const char *format, ...) const {
+auto Reporter::report_error(const char *format, ...) const -> void {
   _error_count++;
 
   va_list args;
@@ -84,7 +84,7 @@ void Reporter::report_error(const char *format, ...) const {
   }
 }
 
-void Reporter::report_info(const char *format, ...) const {
+auto Reporter::report_info(const char *format, ...) const -> void {
   va_list args;
   char *tmp;
 
@@ -100,7 +100,7 @@ void Reporter::report_info(const char *format, ...) const {
   }
 }
 
-void Reporter::report_heading(const char* format, ...) const {
+auto Reporter::report_heading(const char* format, ...) const -> void {
   va_list args;
   char *tmp;
 
@@ -120,7 +120,7 @@ void Reporter::report_heading(const char* format, ...) const {
   }
 }
 
-void Reporter::report_summary(const char *operation_name) const {
+auto Reporter::report_summary(const char *operation_name) const -> void {
   if (error_count() && warning_count())
     report_info("Operation '%s' finished with %d errors and %d warnings", operation_name, error_count(),
                 warning_count());
@@ -133,11 +133,11 @@ void Reporter::report_summary(const char *operation_name) const {
   flush();
 }
 
-int Reporter::error_count() const {
+auto Reporter::error_count() const -> int {
   return _error_count;
 }
 
-int Reporter::warning_count() const {
+auto Reporter::warning_count() const -> int {
   return _warning_count;
 }
 

@@ -32,7 +32,7 @@ using namespace bec;
 DBObjectFilterBE::DBObjectFilterBE() : _filter_model(NULL) {
 }
 
-void DBObjectFilterBE::set_object_type_name(const std::string &type_name) {
+auto DBObjectFilterBE::set_object_type_name(const std::string &type_name) -> void {
   _grt_type_name = type_name;
 
   if (type_name.empty()) {
@@ -59,11 +59,11 @@ void DBObjectFilterBE::set_object_type_name(const std::string &type_name) {
     _stored_filter_sets = grt::DictRef(true);
 }
 
-const std::string &DBObjectFilterBE::get_full_type_name() const {
+auto DBObjectFilterBE::get_full_type_name() const -> const std::string & {
   return _full_type_name;
 }
 
-bec::IconId DBObjectFilterBE::icon_id(bec::IconSize icon_size) {
+auto DBObjectFilterBE::icon_id(bec::IconSize icon_size) -> bec::IconId {
   if (!_grt_type_name.empty()) {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(_grt_type_name);
     if (!meta)
@@ -73,7 +73,7 @@ bec::IconId DBObjectFilterBE::icon_id(bec::IconSize icon_size) {
   return 0;
 }
 
-void DBObjectFilterBE::add_stored_filter_set(const std::string &name) {
+auto DBObjectFilterBE::add_stored_filter_set(const std::string &name) -> void {
   if (!_filter_model)
     return;
 
@@ -87,7 +87,7 @@ void DBObjectFilterBE::add_stored_filter_set(const std::string &name) {
   grt::GRT::get()->serialize(_stored_filter_sets, _stored_filter_sets_filepath);
 }
 
-void DBObjectFilterBE::remove_stored_filter_set(int index) {
+auto DBObjectFilterBE::remove_stored_filter_set(int index) -> void {
   if (index < 0 || index >= (int)_stored_filter_sets.count())
     return;
 
@@ -102,7 +102,7 @@ void DBObjectFilterBE::remove_stored_filter_set(int index) {
   grt::GRT::get()->serialize(_stored_filter_sets, _stored_filter_sets_filepath);
 }
 
-void DBObjectFilterBE::load_stored_filter_set(int index) {
+auto DBObjectFilterBE::load_stored_filter_set(int index) -> void {
   if (!_filter_model)
     return;
 
@@ -123,7 +123,7 @@ void DBObjectFilterBE::load_stored_filter_set(int index) {
   }
 }
 
-int DBObjectFilterBE::stored_filter_set_index(const std::string &name) {
+auto DBObjectFilterBE::stored_filter_set_index(const std::string &name) -> int {
   if (!_filter_model)
     return -1;
 
@@ -138,7 +138,7 @@ int DBObjectFilterBE::stored_filter_set_index(const std::string &name) {
   return (int)_stored_filter_sets.count();
 }
 
-void DBObjectFilterBE::load_stored_filter_set_list(std::list<std::string> &names) {
+auto DBObjectFilterBE::load_stored_filter_set_list(std::list<std::string> &names) -> void {
   grt::StringListRef masks;
 
   for (grt::DictRef::const_iterator item = _stored_filter_sets.begin(); item != _stored_filter_sets.end(); ++item) {

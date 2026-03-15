@@ -42,8 +42,7 @@ namespace mysql_parser
   
 */
 
-static char *mstr(char *str,const char *src,uint l1,uint l2)
-{
+static auto mstr(char *str,const char *src,uint l1,uint l2) -> char * {
   l1= l1<l2 ? l1 : l2;
   memcpy(str,src,l1);
   str[l1]='\0';
@@ -146,8 +145,7 @@ typedef struct my_cs_file_info
 
 
 
-static int fill_uchar(uchar *a,uint size,const char *str, uint len)
-{
+static auto fill_uchar(uchar *a,uint size,const char *str, uint len) -> int {
   uint i= 0;
   const char *s, *b, *e=str+len;
   
@@ -163,8 +161,7 @@ static int fill_uchar(uchar *a,uint size,const char *str, uint len)
   return 0;
 }
 
-static int fill_uint16(uint16 *a,uint size,const char *str, uint len)
-{
+static auto fill_uint16(uint16 *a,uint size,const char *str, uint len) -> int {
   uint i= 0;
   
   const char *s, *b, *e=str+len;
@@ -181,8 +178,7 @@ static int fill_uint16(uint16 *a,uint size,const char *str, uint len)
 }
 
 
-static int cs_enter(MY_XML_PARSER *st,const char *attr, uint len)
-{
+static auto cs_enter(MY_XML_PARSER *st,const char *attr, uint len) -> int {
   struct my_cs_file_info *i= (struct my_cs_file_info *)st->user_data;
   struct my_cs_file_section_st *s= cs_file_sec(attr,len);
   
@@ -196,8 +192,7 @@ static int cs_enter(MY_XML_PARSER *st,const char *attr, uint len)
 }
 
 
-static int cs_leave(MY_XML_PARSER *st,const char *attr, uint len)
-{
+static auto cs_leave(MY_XML_PARSER *st,const char *attr, uint len) -> int {
   struct my_cs_file_info *i= (struct my_cs_file_info *)st->user_data;
   struct my_cs_file_section_st *s= cs_file_sec(attr,len);
   int    state= s ? s->state : 0;
@@ -214,8 +209,7 @@ static int cs_leave(MY_XML_PARSER *st,const char *attr, uint len)
 }
 
 
-static int cs_value(MY_XML_PARSER *st,const char *attr, uint len)
-{
+static auto cs_value(MY_XML_PARSER *st,const char *attr, uint len) -> int {
   struct my_cs_file_info *i= (struct my_cs_file_info *)st->user_data;
   struct my_cs_file_section_st *s;
   int    state= (int)((s=cs_file_sec(st->attr, (int) strlen(st->attr))) ? s->state : 0);
@@ -292,9 +286,8 @@ static int cs_value(MY_XML_PARSER *st,const char *attr, uint len)
 }
 
 
-my_bool my_parse_charset_xml(const char *buf, uint len, 
-				    int (*add_collation)(CHARSET_INFO *cs))
-{
+auto my_parse_charset_xml(const char *buf, uint len, 
+				    int (*add_collation)(CHARSET_INFO *cs)) -> my_bool {
   MY_XML_PARSER p;
   struct my_cs_file_info i;
   my_bool rc;

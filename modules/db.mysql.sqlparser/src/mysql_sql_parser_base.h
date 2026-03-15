@@ -49,38 +49,38 @@ using namespace mysql_parser;
  */
 class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_parser_base : virtual public Sql_parser_base {
 private:
-  static int process_sql_statement(void *sql_parser_ptr, const MyxStatementParser *splitter, const char *sql_statement,
+  static auto process_sql_statement(void *sql_parser_ptr, const MyxStatementParser *splitter, const char *sql_statement,
                                    const SqlAstNode *tree, int stmt_begin_lineno, int stmt_begin_line_pos,
                                    int stmt_end_lineno, int stmt_end_line_pos, int err_tok_lineno, int err_tok_line_pos,
-                                   int err_tok_len, const std::string &err_msg);
-  friend int process_sql_statement(void *, const MyxStatementParser *, const char *, const SqlAstNode *, int,
-                                   const std::string &);
+                                   int err_tok_len, const std::string &err_msg) -> int;
+  friend auto process_sql_statement(void *, const MyxStatementParser *, const char *, const SqlAstNode *, int,
+                                   const std::string &) -> int;
 
 protected:
   Mysql_sql_parser_base();
   virtual ~Mysql_sql_parser_base() {
   }
 
-  virtual void sql_mode(const std::string &value);
+  virtual auto sql_mode(const std::string &value) -> void;
 
   // prepare/clear routines
-  void set_options(const grt::DictRef &options);
+  auto set_options(const grt::DictRef &options) -> void;
 
   // parse tree helpers
-  void process_obj_full_name_item(const SqlAstNode *item, std::string &schema_name, std::string &obj_name);
+  auto process_obj_full_name_item(const SqlAstNode *item, std::string &schema_name, std::string &obj_name) -> void;
 
   // error reporting
-  void report_semantic_error(const SqlAstNode *item, const std::string &err_msg, int entry_type);
+  auto report_semantic_error(const SqlAstNode *item, const std::string &err_msg, int entry_type) -> void;
 
   // misc
-  virtual int total_line_count();
+  virtual auto total_line_count() -> int;
 
   // aux types
   typedef boost::function<int(const SqlAstNode *)> Process_sql_statement;
 
   // basic functionality
-  int parse_sql_script(Mysql_sql_parser_fe &sql_parser_fe, const char *sql);
-  int parse_sql_script_file(Mysql_sql_parser_fe &sql_parser_fe, const std::string &filename);
+  auto parse_sql_script(Mysql_sql_parser_fe &sql_parser_fe, const char *sql) -> int;
+  auto parse_sql_script_file(Mysql_sql_parser_fe &sql_parser_fe, const std::string &filename) -> int;
 
   // data members
   std::string _non_std_sql_delimiter;
@@ -99,7 +99,7 @@ protected:
   bool _override_sql_mode;
   std::string _sql_mode;
 
-  bool on_stop(Mysql_sql_parser_fe *sql_parser_fe);
+  auto on_stop(Mysql_sql_parser_fe *sql_parser_fe) -> bool;
 
   class Null_state_keeper : public Sql_parser_base::Null_state_keeper {
   public:

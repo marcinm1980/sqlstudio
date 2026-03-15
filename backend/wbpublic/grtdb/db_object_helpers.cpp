@@ -76,7 +76,7 @@ db_mgmt_RdbmsRef get_rdbms_for_db_object(const ::grt::ValueRef &object) {
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef bec::getModelOption(studio_physical_ModelRef model, const std::string &key, bool forceModel) {
+auto bec::getModelOption(studio_physical_ModelRef model, const std::string &key, bool forceModel) -> grt::ValueRef {
   if (!model.is_valid()) {
     if (forceModel)
       return grt::ValueRef();
@@ -108,7 +108,7 @@ grt::ValueRef bec::getModelOption(studio_physical_ModelRef model, const std::str
 
 //--------------------------------------------------------------------------------------------------
 
-bool CatalogHelper::is_type_valid_for_version(const db_SimpleDatatypeRef &type, const GrtVersionRef &target_version) {
+auto CatalogHelper::is_type_valid_for_version(const db_SimpleDatatypeRef &type, const GrtVersionRef &target_version) -> bool {
   std::string validity = type->validity();
   GrtVersionRef valid_version;
   if (!validity.empty()) {
@@ -147,11 +147,11 @@ bool CatalogHelper::is_type_valid_for_version(const db_SimpleDatatypeRef &type, 
   return true;
 }
 
-std::string CatalogHelper::dbobject_to_dragdata(const db_DatabaseObjectRef &object) {
+auto CatalogHelper::dbobject_to_dragdata(const db_DatabaseObjectRef &object) -> std::string {
   return object.class_name() + ":" + object.id();
 }
 
-db_DatabaseObjectRef CatalogHelper::dragdata_to_dbobject(const db_CatalogRef &catalog, const std::string &data) {
+auto CatalogHelper::dragdata_to_dbobject(const db_CatalogRef &catalog, const std::string &data) -> db_DatabaseObjectRef {
   if (data.find(':') != std::string::npos) {
     std::string oid = data.substr(data.find(':') + 1);
 
@@ -160,7 +160,7 @@ db_DatabaseObjectRef CatalogHelper::dragdata_to_dbobject(const db_CatalogRef &ca
   return db_DatabaseObjectRef();
 }
 
-std::string CatalogHelper::dbobject_list_to_dragdata(const std::list<db_DatabaseObjectRef> &objects) {
+auto CatalogHelper::dbobject_list_to_dragdata(const std::list<db_DatabaseObjectRef> &objects) -> std::string {
   std::string ret;
   for (std::list<db_DatabaseObjectRef>::const_iterator iter = objects.begin(); iter != objects.end(); ++iter) {
     if (!ret.empty())
@@ -170,8 +170,8 @@ std::string CatalogHelper::dbobject_list_to_dragdata(const std::list<db_Database
   return ret;
 }
 
-std::list<db_DatabaseObjectRef> CatalogHelper::dragdata_to_dbobject_list(const db_CatalogRef &catalog,
-                                                                         const std::string &data) {
+auto CatalogHelper::dragdata_to_dbobject_list(const db_CatalogRef &catalog,
+                                                                         const std::string &data) -> std::list<db_DatabaseObjectRef> {
   std::list<db_DatabaseObjectRef> dbobjects;
   std::vector<std::string> items = base::split(data, "\n");
   for (std::vector<std::string>::const_iterator item = items.begin(); item != items.end(); ++item) {
@@ -184,7 +184,7 @@ std::list<db_DatabaseObjectRef> CatalogHelper::dragdata_to_dbobject_list(const d
 }
 
 //------------------------------------------------------------------------------------
-std::set<std::string> SchemaHelper::get_foreign_key_names(const db_SchemaRef &schema) {
+auto SchemaHelper::get_foreign_key_names(const db_SchemaRef &schema) -> std::set<std::string> {
   std::set<std::string> used_names;
 
   GRTLIST_FOREACH(db_Table, schema->tables(), table) {
@@ -196,8 +196,8 @@ std::set<std::string> SchemaHelper::get_foreign_key_names(const db_SchemaRef &sc
   return used_names;
 }
 
-std::string SchemaHelper::get_unique_foreign_key_name(std::set<std::string> &used_names, const std::string &prefix_,
-                                                      int maxlength) {
+auto SchemaHelper::get_unique_foreign_key_name(std::set<std::string> &used_names, const std::string &prefix_,
+                                                      int maxlength) -> std::string {
   std::string prefix;
   std::string the_name = prefix_;
   int index = 0;
@@ -222,8 +222,8 @@ std::string SchemaHelper::get_unique_foreign_key_name(std::set<std::string> &use
   return the_name;
 }
 
-std::string SchemaHelper::get_unique_foreign_key_name(const db_SchemaRef &schema, const std::string &prefix_,
-                                                      int maxlength) {
+auto SchemaHelper::get_unique_foreign_key_name(const db_SchemaRef &schema, const std::string &prefix_,
+                                                      int maxlength) -> std::string {
   std::set<std::string> used_names;
   std::string prefix;
   std::string the_name = prefix_;
@@ -260,10 +260,10 @@ std::string SchemaHelper::get_unique_foreign_key_name(const db_SchemaRef &schema
 
 //------------------------------------------------------------------------------------
 
-db_TableRef TableHelper::create_associative_table(const db_SchemaRef &schema, const db_TableRef &table1,
+auto TableHelper::create_associative_table(const db_SchemaRef &schema, const db_TableRef &table1,
                                                   const db_TableRef &table2, bool mandatory1, bool mandatory2,
                                                   const db_mgmt_RdbmsRef &rdbms, const grt::DictRef &global_options,
-                                                  const grt::DictRef &options) {
+                                                  const grt::DictRef &options) -> db_TableRef {
   db_TableRef atable;
   std::string name;
 
@@ -312,19 +312,19 @@ db_TableRef TableHelper::create_associative_table(const db_SchemaRef &schema, co
 //  return base::replaceVariable(fmt, "%table%", table->name().c_str());
 //}
 
-static std::string format_ident_with_stable_dtable(const std::string &fmt, const db_TableRef &stable,
-                                                   const db_TableRef &dtable) {
+static auto format_ident_with_stable_dtable(const std::string &fmt, const db_TableRef &stable,
+                                                   const db_TableRef &dtable) -> std::string {
   return base::replaceVariable(base::replaceVariable(fmt, "%stable%", stable->name().c_str()), "%dtable%",
                                dtable->name().c_str());
 }
 
-static std::string format_ident_with_column(const std::string &fmt, const db_ColumnRef &column) {
+static auto format_ident_with_column(const std::string &fmt, const db_ColumnRef &column) -> std::string {
   return base::replaceVariable(
     base::replaceVariable(fmt, "%table%", db_TableRef::cast_from(column->owner())->name().c_str()), "%column%",
     column->name().c_str());
 }
 
-db_IndexRef TableHelper::create_index_for_fk(const db_ForeignKeyRef &fk, const size_t max_len) {
+auto TableHelper::create_index_for_fk(const db_ForeignKeyRef &fk, const size_t max_len) -> db_IndexRef {
   std::string index_name(fk->name().c_str());
   if (index_name.length() > (max_len - 5))
     index_name.resize(max_len - 5);
@@ -358,7 +358,7 @@ db_IndexRef TableHelper::create_index_for_fk(const db_ForeignKeyRef &fk, const s
   return index;
 }
 
-void TableHelper::reorder_foreign_key_for_index(const db_ForeignKeyRef &fk, const db_IndexRef &index) {
+auto TableHelper::reorder_foreign_key_for_index(const db_ForeignKeyRef &fk, const db_IndexRef &index) -> void {
   // make the order of the columns in the FK match that of the index
   size_t column_count = fk->columns().count();
 
@@ -393,8 +393,8 @@ void TableHelper::reorder_foreign_key_for_index(const db_ForeignKeyRef &fk, cons
   }
 }
 
-db_IndexRef TableHelper::find_index_usable_by_fk(const db_ForeignKeyRef &fk, const db_IndexRef &other_than,
-                                                 bool allow_any_order) {
+auto TableHelper::find_index_usable_by_fk(const db_ForeignKeyRef &fk, const db_IndexRef &other_than,
+                                                 bool allow_any_order) -> db_IndexRef {
   size_t column_count = fk->columns().count();
   db_TableRef table(db_TableRef::cast_from(fk->owner()));
 
@@ -460,7 +460,7 @@ db_IndexRef TableHelper::find_index_usable_by_fk(const db_ForeignKeyRef &fk, con
   return db_IndexRef();
 }
 
-void TableHelper::update_foreign_keys_from_column_notnull(const db_TableRef &table, const db_ColumnRef &column) {
+auto TableHelper::update_foreign_keys_from_column_notnull(const db_TableRef &table, const db_ColumnRef &column) -> void {
   AutoUndo undo;
 
   // go through all foreign keys and update the ones that have this column
@@ -493,11 +493,11 @@ void TableHelper::update_foreign_keys_from_column_notnull(const db_TableRef &tab
   undo.end("Update FK Mandatory Flag");
 }
 
-std::string TableHelper::generate_foreign_key_name() {
+auto TableHelper::generate_foreign_key_name() -> std::string {
   return std::string("fk_") + grt::get_guid();
 }
 
-db_ForeignKeyRef TableHelper::create_empty_foreign_key(const db_TableRef &table, const std::string &name) {
+auto TableHelper::create_empty_foreign_key(const db_TableRef &table, const std::string &name) -> db_ForeignKeyRef {
   db_ForeignKeyRef fk;
 
   // create a new FK
@@ -521,7 +521,7 @@ db_ForeignKeyRef TableHelper::create_empty_foreign_key(const db_TableRef &table,
   return fk;
 }
 
-void TableHelper::update_foreign_key_index(const db_ForeignKeyRef &fk) {
+auto TableHelper::update_foreign_key_index(const db_ForeignKeyRef &fk) -> void {
   //! todo: add undo group
 
   db_TableRef table(fk->owner());
@@ -570,7 +570,7 @@ void TableHelper::update_foreign_key_index(const db_ForeignKeyRef &fk) {
     create_index_for_fk_if_needed(fk);
 }
 
-bool TableHelper::create_index_for_fk_if_needed(db_ForeignKeyRef fk) {
+auto TableHelper::create_index_for_fk_if_needed(db_ForeignKeyRef fk) -> bool {
   db_IndexRef index = find_index_usable_by_fk(fk, db_IndexRef(), true);
   if (index.is_valid())
     reorder_foreign_key_for_index(fk, index);
@@ -583,7 +583,7 @@ bool TableHelper::create_index_for_fk_if_needed(db_ForeignKeyRef fk) {
   return false;
 }
 
-bool TableHelper::create_missing_indexes_for_foreign_keys(const db_TableRef &table) {
+auto TableHelper::create_missing_indexes_for_foreign_keys(const db_TableRef &table) -> bool {
   bool created = false;
   GRTLIST_FOREACH(db_ForeignKey, table->foreignKeys(), fk) {
     // check if an index already exists for the FK columns and if not, create one
@@ -614,11 +614,11 @@ bool TableHelper::create_missing_indexes_for_foreign_keys(const db_TableRef &tab
  * @return the created foreign key
  ****************************************************************************
  */
-db_ForeignKeyRef TableHelper::create_foreign_key_to_table(const db_TableRef &table, const db_TableRef &ref_table,
+auto TableHelper::create_foreign_key_to_table(const db_TableRef &table, const db_TableRef &ref_table,
                                                           bool mandatory, bool ref_mandatory, bool many,
                                                           bool identifying, const db_mgmt_RdbmsRef &rdbms,
                                                           const grt::DictRef &global_options,
-                                                          const grt::DictRef &options) {
+                                                          const grt::DictRef &options) -> db_ForeignKeyRef {
   db_ForeignKeyRef new_fk;
   db_IndexRef pk = ref_table->primaryKey();
   std::string name_format;
@@ -719,10 +719,10 @@ db_ForeignKeyRef TableHelper::create_foreign_key_to_table(const db_TableRef &tab
   return new_fk;
 }
 
-db_ForeignKeyRef TableHelper::create_foreign_key_to_table(
+auto TableHelper::create_foreign_key_to_table(
   const db_TableRef &table, const std::vector<db_ColumnRef> &columns, const db_TableRef &ref_table,
   const std::vector<db_ColumnRef> &refcolumns, bool mandatory, bool many, const db_mgmt_RdbmsRef &rdbms,
-  const grt::DictRef &global_options, const grt::DictRef &options) {
+  const grt::DictRef &global_options, const grt::DictRef &options) -> db_ForeignKeyRef {
   db_ForeignKeyRef new_fk;
   std::string name_format;
   std::string scolumn_name;
@@ -797,7 +797,7 @@ db_ForeignKeyRef TableHelper::create_foreign_key_to_table(
   return new_fk;
 }
 
-bool TableHelper::rename_foreign_key(const db_TableRef &table, db_ForeignKeyRef &fk, const std::string &new_name) {
+auto TableHelper::rename_foreign_key(const db_TableRef &table, db_ForeignKeyRef &fk, const std::string &new_name) -> bool {
   std::string old_name;
 
   // check if the name is already taken
@@ -820,7 +820,7 @@ bool TableHelper::rename_foreign_key(const db_TableRef &table, db_ForeignKeyRef 
   return true;
 }
 
-bool TableHelper::is_identifying_foreign_key(const db_TableRef &table, const db_ForeignKeyRef &fk) {
+auto TableHelper::is_identifying_foreign_key(const db_TableRef &table, const db_ForeignKeyRef &fk) -> bool {
   // check if the fk is part of the PK
   if (table->primaryKey().is_valid()) {
     for (size_t c = fk->columns().count(), i = 0; i < c; i++) {
@@ -832,7 +832,7 @@ bool TableHelper::is_identifying_foreign_key(const db_TableRef &table, const db_
   return false;
 }
 
-db_mysql_StorageEngineRef TableHelper::get_engine_by_name(const std::string &name) {
+auto TableHelper::get_engine_by_name(const std::string &name) -> db_mysql_StorageEngineRef {
   grt::ListRef<db_mysql_StorageEngine> engines;
   Module *module = grt::GRT::get()->get_module("DbMySQL");
 
@@ -856,8 +856,8 @@ db_mysql_StorageEngineRef TableHelper::get_engine_by_name(const std::string &nam
  * maximum count, whichever comes first. If no line break was found and the string is shorter
  * than the maximum length the result points to the terminating 0.
  */
-static void split_comment(const std::string &comment, size_t db_comment_len, std::string *comment_ret,
-                          std::string *leftover_ret) {
+static auto split_comment(const std::string &comment, size_t db_comment_len, std::string *comment_ret,
+                          std::string *leftover_ret) -> void {
   size_t res;
   // XXX: check for Unicode line breaks! especially asian languages may not use the ANSI new line.
   const gchar *pointer_to_linebreak = NULL;
@@ -896,7 +896,7 @@ static void split_comment(const std::string &comment, size_t db_comment_len, std
   }
 }
 
-std::string TableHelper::get_sync_comment(const std::string &comment, const size_t max_len) {
+auto TableHelper::get_sync_comment(const std::string &comment, const size_t max_len) -> std::string {
   std::string ret;
   if (comment.size() > max_len)
     split_comment(comment, max_len, &ret, NULL);
@@ -905,7 +905,7 @@ std::string TableHelper::get_sync_comment(const std::string &comment, const size
   return ret;
 };
 
-std::string TableHelper::normalize_table_name_list(const std::string &schema, const std::string &table_name_list) {
+auto TableHelper::normalize_table_name_list(const std::string &schema, const std::string &table_name_list) -> std::string {
   std::vector<std::string> names = base::split(table_name_list, ",");
 
   for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
@@ -922,7 +922,7 @@ std::string TableHelper::normalize_table_name_list(const std::string &schema, co
   return base::join(names, ",");
 }
 
-void ColumnHelper::copy_column(const db_ColumnRef &from, db_ColumnRef &to) {
+auto ColumnHelper::copy_column(const db_ColumnRef &from, db_ColumnRef &to) -> void {
   to->userType(from->userType());
   to->precision(from->precision());
   to->scale(from->scale());
@@ -938,7 +938,7 @@ void ColumnHelper::copy_column(const db_ColumnRef &from, db_ColumnRef &to) {
   to->datatypeExplicitParams(from->datatypeExplicitParams());
 }
 
-ColumnTypeCompareResult ColumnHelper::compare_column_types(const db_ColumnRef &from, const db_ColumnRef &to) {
+auto ColumnHelper::compare_column_types(const db_ColumnRef &from, const db_ColumnRef &to) -> ColumnTypeCompareResult {
   // not to be used for foreign key column matching as the rules are different and DB dependant
   std::string sfrom = from->formattedType();
   std::string sto = to->formattedType();
@@ -964,7 +964,7 @@ ColumnTypeCompareResult ColumnHelper::compare_column_types(const db_ColumnRef &f
   return COLUMNS_TYPES_EQUAL;
 }
 
-void ColumnHelper::set_default_value(db_ColumnRef column, const std::string &value) {
+auto ColumnHelper::set_default_value(db_ColumnRef column, const std::string &value) -> void {
   column->defaultValueIsNull(base::same_string(value, "NULL", false) ? 1 : 0);
   column->defaultValue(value.c_str());
 
@@ -977,7 +977,7 @@ void ColumnHelper::set_default_value(db_ColumnRef column, const std::string &val
 
 //------------------------------------------------------------------------------------
 
-void CatalogHelper::apply_defaults(db_mysql_ColumnRef column) {
+auto CatalogHelper::apply_defaults(db_mysql_ColumnRef column) -> void {
   // for numeric types only
   static std::map<std::string, int> def_precision_map;
   if (def_precision_map.empty()) {
@@ -1039,7 +1039,7 @@ void CatalogHelper::apply_defaults(db_mysql_ColumnRef column) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CatalogHelper::apply_defaults(db_mysql_CatalogRef cat, std::string default_engine) {
+auto CatalogHelper::apply_defaults(db_mysql_CatalogRef cat, std::string default_engine) -> void {
   cat->defaultCharacterSetName("utf8");
   cat->defaultCollationName("utf8_general_ci");
 
@@ -1087,8 +1087,7 @@ void CatalogHelper::apply_defaults(db_mysql_CatalogRef cat, std::string default_
 
 //--------------------------------------------------------------------------------------------------
 
-std::string bec::get_default_collation_for_charset(const db_SchemaRef &schema, const std::string &character_set)
-{
+auto bec::get_default_collation_for_charset(const db_SchemaRef &schema, const std::string &character_set) -> std::string {
   if (schema->owner().is_valid())
   {
     db_CatalogRef catalog(db_CatalogRef::cast_from(schema->owner()));
@@ -1102,7 +1101,7 @@ std::string bec::get_default_collation_for_charset(const db_SchemaRef &schema, c
   return "";
 }
 
-std::string bec::get_default_collation_for_charset(const db_TableRef &table, const std::string &character_set) {
+auto bec::get_default_collation_for_charset(const db_TableRef &table, const std::string &character_set) -> std::string {
   if (table->owner().is_valid())
     return bec::get_default_collation_for_charset(db_SchemaRef::cast_from(table->owner()), character_set);
   else
@@ -1110,7 +1109,7 @@ std::string bec::get_default_collation_for_charset(const db_TableRef &table, con
   return "";
 }
 
-std::string bec::TableHelper::generate_comment_text(const std::string &comment_text, size_t comment_lenght) {
+auto bec::TableHelper::generate_comment_text(const std::string &comment_text, size_t comment_lenght) -> std::string {
   if (comment_text.size() > comment_lenght) {
     std::string comment, leftover;
 

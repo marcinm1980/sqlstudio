@@ -37,6 +37,6 @@ Canvas::Canvas() {
   _canvas_impl->create(this);
 }
 
-mdc::CanvasView *Canvas::canvas() {
+auto Canvas::canvas() -> mdc::CanvasView * {
   return _canvas_impl->canvas(this);
 }

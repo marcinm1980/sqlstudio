@@ -140,7 +140,7 @@ FillGroupBox::FillGroupBox() {
 
 //--------------------------------------------------------------------------------------------------
 
-System::Drawing::Size FillGroupBox::GetPreferredSize(System::Drawing::Size proposedSize) {
+auto FillGroupBox::GetPreferredSize(System::Drawing::Size proposedSize) -> System::Drawing::Size {
   return layoutEngine->GetPreferredSize(this, proposedSize);
 }
 
@@ -160,7 +160,7 @@ FillPanel::FillPanel() {
 
 //--------------------------------------------------------------------------------------------------
 
-System::Drawing::Size FillPanel::GetPreferredSize(System::Drawing::Size proposedSize) {
+auto FillPanel::GetPreferredSize(System::Drawing::Size proposedSize) -> System::Drawing::Size {
   return layoutEngine->GetPreferredSize(this, proposedSize);
 }
 
@@ -180,7 +180,7 @@ HeaderFillPanel::HeaderFillPanel() {
 
 //--------------------------------------------------------------------------------------------------
 
-System::Drawing::Size HeaderFillPanel::GetPreferredSize(System::Drawing::Size proposedSize) {
+auto HeaderFillPanel::GetPreferredSize(System::Drawing::Size proposedSize) -> System::Drawing::Size {
   return layoutEngine->GetPreferredSize(this, proposedSize);
 }
 
@@ -191,7 +191,7 @@ PanelWrapper::PanelWrapper(mforms::View *backend) : ViewWrapper(backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool PanelWrapper::create(mforms::Panel *backend, mforms::PanelType panelType) {
+auto PanelWrapper::create(mforms::Panel *backend, mforms::PanelType panelType) -> bool {
   PanelWrapper *wrapper = new PanelWrapper(backend);
   wrapper->type = panelType;
 
@@ -249,7 +249,7 @@ bool PanelWrapper::create(mforms::Panel *backend, mforms::PanelType panelType) {
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::set_title(mforms::Panel *backend, const std::string &title) {
+auto PanelWrapper::set_title(mforms::Panel *backend, const std::string &title) -> void {
   PanelWrapper *wrapper = backend->get_data<PanelWrapper>();
   wrapper->set_title(title);
   backend->set_layout_dirty(true);
@@ -257,14 +257,14 @@ void PanelWrapper::set_title(mforms::Panel *backend, const std::string &title) {
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::set_back_color(mforms::Panel *backend, const std::string &color) {
+auto PanelWrapper::set_back_color(mforms::Panel *backend, const std::string &color) -> void {
   PanelWrapper *wrapper = backend->get_data<PanelWrapper>();
   wrapper->set_back_color(color);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::add(mforms::Panel *backend, mforms::View *view) {
+auto PanelWrapper::add(mforms::Panel *backend, mforms::View *view) -> void {
   PanelWrapper *wrapper = backend->get_data<PanelWrapper>();
   wrapper->add(view);
   backend->set_layout_dirty(true);
@@ -272,21 +272,21 @@ void PanelWrapper::add(mforms::Panel *backend, mforms::View *view) {
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::set_active(mforms::Panel *backend, bool value) {
+auto PanelWrapper::set_active(mforms::Panel *backend, bool value) -> void {
   PanelWrapper *wrapper = backend->get_data<PanelWrapper>();
   wrapper->set_active(value);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool PanelWrapper::get_active(mforms::Panel *backend) {
+auto PanelWrapper::get_active(mforms::Panel *backend) -> bool {
   PanelWrapper *wrapper = backend->get_data<PanelWrapper>();
   return wrapper->get_active();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::remove(mforms::Panel *backend, mforms::View *view) {
+auto PanelWrapper::remove(mforms::Panel *backend, mforms::View *view) -> void {
   PanelWrapper *wrapper = backend->get_data<PanelWrapper>();
   wrapper->remove(view);
   backend->set_layout_dirty(true);
@@ -294,7 +294,7 @@ void PanelWrapper::remove(mforms::Panel *backend, mforms::View *view) {
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::set_title(const std::string &title) {
+auto PanelWrapper::set_title(const std::string &title) -> void {
   Control ^ control = GetControl();
   control->Text = CppStringToNative(title);
   control->Refresh();
@@ -302,7 +302,7 @@ void PanelWrapper::set_title(const std::string &title) {
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::set_back_color(const std::string &color) {
+auto PanelWrapper::set_back_color(const std::string &color) -> void {
   switch (type) {
     case mforms::TitledBoxPanel:
     case mforms::BorderedPanel:
@@ -316,27 +316,27 @@ void PanelWrapper::set_back_color(const std::string &color) {
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::add(mforms::View *view) {
+auto PanelWrapper::add(mforms::View *view) -> void {
   child = view;
   GetControl()->Controls->Add(PanelWrapper::GetControl(view));
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::set_active(bool value) {
+auto PanelWrapper::set_active(bool value) -> void {
   // TODO: implement as soon as the checkbox is available
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool PanelWrapper::get_active() {
+auto PanelWrapper::get_active() -> bool {
   // TODO: implement as soon as the checkbox is available
   return false;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::remove(mforms::View *view) {
+auto PanelWrapper::remove(mforms::View *view) -> void {
   if (child == view)
     child = NULL;
   GetControl()->Controls->Remove(PanelWrapper::GetControl(view));
@@ -344,13 +344,13 @@ void PanelWrapper::remove(mforms::View *view) {
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::remove() {
+auto PanelWrapper::remove() -> void {
   GetControl()->Controls->Clear();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void PanelWrapper::init() {
+auto PanelWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_panel_impl.create = &PanelWrapper::create;

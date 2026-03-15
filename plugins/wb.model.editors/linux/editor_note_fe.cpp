@@ -36,11 +36,11 @@ class NoteEditor : public PluginEditorBase {
   NoteEditorBE _be;
   Glib::RefPtr<Gtk::Builder> _xml;
 
-  virtual bec::BaseEditor *get_be() {
+  virtual auto get_be() -> bec::BaseEditor * {
     return &_be;
   }
 
-  void set_name(const std::string &name) {
+  auto set_name(const std::string &name) -> void {
     _be.set_name(name);
     _signal_title_changed.emit(_be.get_title());
   }
@@ -77,7 +77,7 @@ public:
     refresh_form_data();
   }
 
-  virtual void do_refresh_form_data() {
+  virtual auto do_refresh_form_data() -> void {
     Gtk::Entry *entry;
     _xml->get_widget("name_entry", entry);
 
@@ -91,7 +91,7 @@ public:
 };
 
 extern "C" {
-GUIPluginBase *createNoteEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createNoteEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new NoteEditor(m, args));
 }
 };

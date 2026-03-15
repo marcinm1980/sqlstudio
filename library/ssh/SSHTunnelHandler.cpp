@@ -56,25 +56,25 @@ namespace ssh {
 
   }
 
-  int SSHTunnelHandler::getLocalSocket() const {
+  auto SSHTunnelHandler::getLocalSocket() const -> int {
     return _localSocket;
   }
 
-  int SSHTunnelHandler::getLocalPort() const {
+  auto SSHTunnelHandler::getLocalPort() const -> int {
     return _localPort;
   }
 
-  SSHConnectionConfig SSHTunnelHandler::getConfig() const {
+  auto SSHTunnelHandler::getConfig() const -> SSHConnectionConfig {
     return _session->getConfig();
   }
 
-  void SSHTunnelHandler::run() {
+  auto SSHTunnelHandler::run() -> void {
     handleConnection();
   }
 
   // This is noop function so ssh_even_dopoll will exit once client socket will have new data
 
-    static int onSocketEvent(socket_t fd, int revents, void *userdata) {
+    static auto onSocketEvent(socket_t fd, int revents, void *userdata) -> int {
       //the return should be:
       //  0 success
       // -1 the internal ssh_poll_handle was removed/freed and should be removed from the context
@@ -82,7 +82,7 @@ namespace ssh {
       return 0;
     }
 
-  void SSHTunnelHandler::handleConnection() {
+  auto SSHTunnelHandler::handleConnection() -> void {
     logDebug3("Start tunnel handler thread.\n");
     int rc = 0;
 
@@ -148,7 +148,7 @@ namespace ssh {
     logDebug3("Tunnel handler thread stopped.\n");
   }
 
-  void SSHTunnelHandler::handleNewConnection(int incomingSocket) {
+  auto SSHTunnelHandler::handleNewConnection(int incomingSocket) -> void {
     logDebug3("About to handle new connection.\n");
     struct sockaddr_in client;
     socklen_t addrlen = sizeof(client);
@@ -167,7 +167,7 @@ namespace ssh {
     logDebug3("Accepted new connection.\n");
   }
 
-  void SSHTunnelHandler::transferDataFromClient(int sock, ssh::Channel *chan) {
+  auto SSHTunnelHandler::transferDataFromClient(int sock, ssh::Channel *chan) -> void {
     ssize_t readlen = 0;
     std::vector<char> buff(_session->getConfig().bufferSize, '\0');
 
@@ -186,7 +186,7 @@ namespace ssh {
     }
   }
 
-  void SSHTunnelHandler::transferDataToClient(int sock, ssh::Channel *chan) {
+  auto SSHTunnelHandler::transferDataToClient(int sock, ssh::Channel *chan) -> void {
     ssize_t readlen = 0;
     std::vector<char> buff(_session->getConfig().bufferSize, '\0');
     do {
@@ -214,7 +214,7 @@ namespace ssh {
     } while (!_stop && true);
   }
 
-  std::unique_ptr<ssh::Channel> SSHTunnelHandler::openTunnel() {
+  auto SSHTunnelHandler::openTunnel() -> std::unique_ptr<ssh::Channel> {
     std::unique_ptr<ssh::Channel> channel(new ssh::Channel(*(_session->getSession())));
     ssh_channel_set_blocking(channel->getCChannel(), false);
 
@@ -241,7 +241,7 @@ namespace ssh {
     return channel;
   }
 
-  void SSHTunnelHandler::prepareTunnel(int clientSocket) {
+  auto SSHTunnelHandler::prepareTunnel(int clientSocket) -> void {
     std::unique_ptr<ssh::Channel> channel;
     try {
       channel = openTunnel();

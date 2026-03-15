@@ -43,16 +43,16 @@ namespace wb {
     UserDatatypeList(WBContext *wb);
     virtual ~UserDatatypeList();
 
-    void set_catalog(const db_CatalogRef &catalog);
+    auto set_catalog(const db_CatalogRef &catalog) -> void;
 
-    void refresh();
+    auto refresh() -> void;
 
   protected:
     mforms::ContextMenu *_menu;
     db_CatalogRef _catalog;
     WBContext *_wb;
 
-    void handle_menu_action(const std::string &action);
+    auto handle_menu_action(const std::string &action) -> void;
   };
 };
 

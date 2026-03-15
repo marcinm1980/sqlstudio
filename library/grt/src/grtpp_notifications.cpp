@@ -29,7 +29,7 @@ using namespace grt;
 
 //----------------- GRTObserver ----------------------------------------------------------------------------------------
 
-void GRTObserver::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto GRTObserver::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   // Map standard center notifications to GRT notifications.
   grt::DictRef grtInfo(grt::Initialized);
   for (auto &entry : info)
@@ -39,19 +39,19 @@ void GRTObserver::handle_notification(const std::string &name, void *sender, bas
 
 //----------------- GRTNotificationCenter ------------------------------------------------------------------------------
 
-void GRTNotificationCenter::setup() {
+auto GRTNotificationCenter::setup() -> void {
   base::NotificationCenter::set_instance(new GRTNotificationCenter());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-GRTNotificationCenter *GRTNotificationCenter::get() {
+auto GRTNotificationCenter::get() -> GRTNotificationCenter * {
   return dynamic_cast<GRTNotificationCenter *>(base::NotificationCenter::get());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void GRTNotificationCenter::add_grt_observer(GRTObserver *observer, const std::string &name, ObjectRef object) {
+auto GRTNotificationCenter::add_grt_observer(GRTObserver *observer, const std::string &name, ObjectRef object) -> void {
   GRTObserverEntry entry;
   entry.observer = observer;
   entry.observed_notification = name;
@@ -61,7 +61,7 @@ void GRTNotificationCenter::add_grt_observer(GRTObserver *observer, const std::s
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool GRTNotificationCenter::remove_grt_observer(GRTObserver *observer, const std::string &name, ObjectRef object) {
+auto GRTNotificationCenter::remove_grt_observer(GRTObserver *observer, const std::string &name, ObjectRef object) -> bool {
   bool foundInherited = NotificationCenter::remove_observer(observer);
 
   auto iter = std::remove_if(_grt_observers.begin(), _grt_observers.end(), [&](auto &value) {
@@ -78,7 +78,7 @@ bool GRTNotificationCenter::remove_grt_observer(GRTObserver *observer, const std
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void GRTNotificationCenter::send_grt(const std::string &name, ObjectRef sender, DictRef info) {
+auto GRTNotificationCenter::send_grt(const std::string &name, ObjectRef sender, DictRef info) -> void {
   if (name.substr(0, 3) != "GRN")
     throw std::invalid_argument("Attempt to send GRT notification with a name that doesn't start with GRN");
 

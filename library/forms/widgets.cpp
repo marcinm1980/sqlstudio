@@ -76,7 +76,7 @@ static vector<BaseWidget*> animated_widgets;
 /**
  * Animation timer callback. Triggers all registered step() methods.
  */
-static bool on_timer(int task_id) {
+static auto on_timer(int task_id) -> bool {
   base::MutexLock lock(animation_timer_mutex);
 
   for (vector<BaseWidget*>::const_iterator iterator = animated_widgets.begin(); iterator != animated_widgets.end();
@@ -92,7 +92,7 @@ static bool on_timer(int task_id) {
  * Starts the animation timer if not yet done and increases the ref count for it, so it does not
  * get freed before the last consumer is gone.
  */
-static void start_animation_timer_for(BaseWidget* widget) {
+static auto start_animation_timer_for(BaseWidget* widget) -> void {
   base::MutexLock lock(animation_timer_mutex);
 
   animated_widgets.push_back(widget);
@@ -106,7 +106,7 @@ static void start_animation_timer_for(BaseWidget* widget) {
 /**
  * Decreases the animation timer ref count and frees the timer if no consumer is left.
  */
-static void stop_animation_timer_for(BaseWidget* widget) {
+static auto stop_animation_timer_for(BaseWidget* widget) -> void {
   base::MutexLock lock(animation_timer_mutex);
 
   for (vector<BaseWidget*>::iterator iterator = animated_widgets.begin(); iterator != animated_widgets.end();
@@ -151,19 +151,19 @@ BaseWidget::~BaseWidget() {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::lock() {
+auto BaseWidget::lock() -> void {
   _lock.lock();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::unlock() {
+auto BaseWidget::unlock() -> void {
   _lock.unlock();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::destroy_background() {
+auto BaseWidget::destroy_background() -> void {
   if (_background != NULL) {
     cairo_surface_destroy(_background);
     _background = NULL;
@@ -183,7 +183,7 @@ void BaseWidget::destroy_background() {
 /**
  * Normalizes the input value to the range [0..1] depending on the set input value range.
  */
-double BaseWidget::normalize(double input) {
+auto BaseWidget::normalize(double input) -> double {
   if (_upper_limit - _lower_limit == 0)
     return 0;
 
@@ -201,7 +201,7 @@ double BaseWidget::normalize(double input) {
  *
  * @result True if the ranges were updated, otherwise false.
  */
-bool BaseWidget::compute_scale(double min, double max) {
+auto BaseWidget::compute_scale(double min, double max) -> bool {
   double new_upper = _upper_limit;
   double new_lower = _lower_limit;
 
@@ -233,7 +233,7 @@ bool BaseWidget::compute_scale(double min, double max) {
  * Updates the value range depending on the auto scale mode and what is the
  * currently largest value in the widget.
  */
-void BaseWidget::auto_scale(double value) {
+auto BaseWidget::auto_scale(double value) -> void {
   if (_auto_scale) {
     double min, max;
     get_minmax_values(&min, &max);
@@ -249,14 +249,14 @@ void BaseWidget::auto_scale(double value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::get_minmax_values(double* min, double* max) {
+auto BaseWidget::get_minmax_values(double* min, double* max) -> void {
   *min = 0;
   *max = 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::set_right_align(bool flag) {
+auto BaseWidget::set_right_align(bool flag) -> void {
   lock();
   if (_right_align != flag) {
     _right_align = flag;
@@ -268,7 +268,7 @@ void BaseWidget::set_right_align(bool flag) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::enable_auto_scale(bool enable) {
+auto BaseWidget::enable_auto_scale(bool enable) -> void {
   lock();
   _auto_scale = enable; // Change will be visible when next value comes in.
   unlock();
@@ -283,7 +283,7 @@ void BaseWidget::enable_auto_scale(bool enable) {
  * @param low The lower bound of the input value range. Can be less than zero. Must be less than the high bound.
  * @param high The upper bound of the input value range. Can be less than zero. Must be more than the lower bound.
  */
-void BaseWidget::set_value_range(double low, double high) {
+auto BaseWidget::set_value_range(double low, double high) -> void {
   if (low <= high && (low != _lower_limit || high != _upper_limit)) {
     // Precompute transformation factors for recomputing existing values.
     // To compute the original value we have:
@@ -305,7 +305,7 @@ void BaseWidget::set_value_range(double low, double high) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::set_thresholds(ThresholdList lower_thresholds, ThresholdList upper_thresholds) {
+auto BaseWidget::set_thresholds(ThresholdList lower_thresholds, ThresholdList upper_thresholds) -> void {
   // Changes in thresholds are visible on next auto scale and repaint.
   _lower_thresholds = lower_thresholds;
   _upper_thresholds = upper_thresholds;
@@ -314,13 +314,13 @@ void BaseWidget::set_thresholds(ThresholdList lower_thresholds, ThresholdList up
 
 //--------------------------------------------------------------------------------------------------
 
-double BaseWidget::get_upper_range() const {
+auto BaseWidget::get_upper_range() const -> double {
   return _upper_limit;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::set_description(const std::string& description) {
+auto BaseWidget::set_description(const std::string& description) -> void {
   if (_description != description) {
     _description = description;
     create_context_for_layout();
@@ -332,7 +332,7 @@ void BaseWidget::set_description(const std::string& description) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) {
+auto BaseWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) -> void {
   if (is_layout_dirty() || _last_height != get_height() || _last_width != get_width())
     layout(cr);
 
@@ -363,7 +363,7 @@ void BaseWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah
 /**
  * Returns the computed size for this widget (min size).
  */
-base::Size BaseWidget::getLayoutSize(base::Size proposedSize) {
+auto BaseWidget::getLayoutSize(base::Size proposedSize) -> base::Size {
   if (is_layout_dirty()) {
     create_context_for_layout();
     layout(_layout_context);
@@ -379,7 +379,7 @@ base::Size BaseWidget::getLayoutSize(base::Size proposedSize) {
  *
  * @result Returns true if size did change, otherwise false.
  */
-bool BaseWidget::layout(cairo_t* cr) {
+auto BaseWidget::layout(cairo_t* cr) -> bool {
   lock();
 
   set_layout_dirty(false);
@@ -418,7 +418,7 @@ bool BaseWidget::layout(cairo_t* cr) {
 /**
  * Creates a cairo context on a small image surface, to be used for layouting.
  */
-void BaseWidget::create_context_for_layout() {
+auto BaseWidget::create_context_for_layout() -> void {
   if (_layout_surface == NULL)
     _layout_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, get_width(), get_height());
   if (_layout_context == NULL)
@@ -427,7 +427,7 @@ void BaseWidget::create_context_for_layout() {
 
 //----------------- WidgetSeparator ----------------------------------------------------------------
 
-void WidgetSeparator::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) {
+auto WidgetSeparator::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) -> void {
   //  cairo_set_source_rgb(cr, BK_RED, BK_GREEN, BK_BLUE); // Same as the widget box.
   //  cairo_rectangle(cr, 0, 0, get_width(), get_height());
   //  cairo_fill(cr);
@@ -467,7 +467,7 @@ HeartbeatWidget::~HeartbeatWidget() {
 /**
  * Sets the heartbeat value at the current pivot position. The value must be in the range of 0..1.
  */
-void HeartbeatWidget::set_value(double value) {
+auto HeartbeatWidget::set_value(double value) -> void {
   value = normalize(value);
 
   lock();
@@ -484,7 +484,7 @@ void HeartbeatWidget::set_value(double value) {
  * Computes the values for the next paint operation and triggers invalidation so that
  * the widget is redrawn.
  */
-void HeartbeatWidget::step() {
+auto HeartbeatWidget::step() -> void {
   lock();
 
   // Decrease luminance each point by one step to simulate a fade-out.
@@ -526,7 +526,7 @@ void HeartbeatWidget::step() {
  * Creates the static background (including the dotted graph lines) if not yet done or if the
  * size of the control changed.
  */
-void HeartbeatWidget::prepare_background() {
+auto HeartbeatWidget::prepare_background() -> void {
   if (_background == NULL || cairo_image_surface_get_width(_background) != _diagram_area.width() ||
       cairo_image_surface_get_height(_background) != _diagram_area.height()) {
     destroy_background();
@@ -576,7 +576,7 @@ void HeartbeatWidget::prepare_background() {
  * Called when the user changed the value range. Transform existing values into that new range.
  * The given parameters are precomputed values that allow to do a simple transformation.
  */
-void HeartbeatWidget::range_updated(double scale, double offset) {
+auto HeartbeatWidget::range_updated(double scale, double offset) -> void {
   lock();
   for (int i = 0; i < HEARTBEAT_DATA_SIZE; i++)
     _deflection[i] = _deflection[i] * scale + offset;
@@ -586,7 +586,7 @@ void HeartbeatWidget::range_updated(double scale, double offset) {
 
 //--------------------------------------------------------------------------------------------------
 
-void HeartbeatWidget::get_minmax_values(double* min, double* max) {
+auto HeartbeatWidget::get_minmax_values(double* min, double* max) -> void {
   *min = 0;
   *max = 0;
 
@@ -603,7 +603,7 @@ void HeartbeatWidget::get_minmax_values(double* min, double* max) {
 
 //--------------------------------------------------------------------------------------------------
 
-void HeartbeatWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) {
+auto HeartbeatWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) -> void {
   BaseWidget::repaint(cr, areax, areay, areaw, areah);
 
   Rect bounds = _diagram_area;
@@ -659,7 +659,7 @@ ServerStatusWidget::~ServerStatusWidget() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ServerStatusWidget::set_server_status(int status) {
+auto ServerStatusWidget::set_server_status(int status) -> void {
   // Sanity check.
   if (status < -1 || status > 2)
     status = -1;
@@ -677,7 +677,7 @@ void ServerStatusWidget::set_server_status(int status) {
 
 #define LINE_SPACING 4 // Extra spacing between lines.
 
-void ServerStatusWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) {
+auto ServerStatusWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) -> void {
   BaseWidget::repaint(cr, areax, areay, areaw, areah);
 
   lock();
@@ -717,7 +717,7 @@ void ServerStatusWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, i
 /**
  * This function computes the overall layout of the widget and sets its size.
  */
-bool ServerStatusWidget::layout(cairo_t* cr) {
+auto ServerStatusWidget::layout(cairo_t* cr) -> bool {
   _layout_width = 0;
   _layout_height = 0;
   BaseWidget::layout(cr);
@@ -779,7 +779,7 @@ BarGraphWidget::~BarGraphWidget() {
 
 //--------------------------------------------------------------------------------------------------
 
-void BarGraphWidget::prepare_background() {
+auto BarGraphWidget::prepare_background() -> void {
   Rect bounds = _diagram_area;
 
   if (_background == NULL || cairo_image_surface_get_height(_background) != bounds.height()) {
@@ -827,7 +827,7 @@ void BarGraphWidget::prepare_background() {
 
 //--------------------------------------------------------------------------------------------------
 
-void BarGraphWidget::destroy_background() {
+auto BarGraphWidget::destroy_background() -> void {
   BaseWidget::destroy_background();
 
   if (_value_gradient != NULL)
@@ -844,7 +844,7 @@ void BarGraphWidget::destroy_background() {
  * Called when the user changed the value range. Transform existing values into that new range.
  * The given parameters are precomputed values that allow do a simple transformation.
  */
-void BarGraphWidget::range_updated(double scale, double offset) {
+auto BarGraphWidget::range_updated(double scale, double offset) -> void {
   lock();
   _value = _value * scale + offset;
   unlock();
@@ -852,7 +852,7 @@ void BarGraphWidget::range_updated(double scale, double offset) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BarGraphWidget::get_minmax_values(double* min, double* max) {
+auto BarGraphWidget::get_minmax_values(double* min, double* max) -> void {
   lock();
   *min = _value;
   *max = _value;
@@ -865,7 +865,7 @@ void BarGraphWidget::get_minmax_values(double* min, double* max) {
  * Creates the gradient for the value display, which depends on both, the control's dimension
  * as well as the actual value.
  */
-void BarGraphWidget::create_value_gradient() {
+auto BarGraphWidget::create_value_gradient() -> void {
   // The value gradient is always fully shown (i.e. over the full range), regardless of the value.
   // Though the value changes, so we have to create the gradient exactly for each value to make it work as we want.
   if (_value_gradient != NULL)
@@ -882,7 +882,7 @@ void BarGraphWidget::create_value_gradient() {
 
 //--------------------------------------------------------------------------------------------------
 
-void BarGraphWidget::set_value(double value) {
+auto BarGraphWidget::set_value(double value) -> void {
   value = normalize(value);
   if (_value != value) {
     _value = value;
@@ -893,7 +893,7 @@ void BarGraphWidget::set_value(double value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BarGraphWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) {
+auto BarGraphWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) -> void {
   BaseWidget::repaint(cr, areax, areay, areaw, areah);
 
   // Fill body with thick lines in either dark gray or a blue gradient depending on the current bar value.
@@ -949,7 +949,7 @@ LineDiagramWidget::~LineDiagramWidget() {
 
 //--------------------------------------------------------------------------------------------------
 
-void LineDiagramWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) {
+auto LineDiagramWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) -> void {
   BaseWidget::repaint(cr, areax, areay, areaw, areah);
 
   Rect bounds = _diagram_area;
@@ -1025,7 +1025,7 @@ void LineDiagramWidget::repaint(cairo_t* cr, int areax, int areay, int areaw, in
 
 //--------------------------------------------------------------------------------------------------
 
-void LineDiagramWidget::set_value(double value) {
+auto LineDiagramWidget::set_value(double value) -> void {
   auto_scale(value);
 
   value = normalize(value);
@@ -1045,7 +1045,7 @@ void LineDiagramWidget::set_value(double value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void LineDiagramWidget::prepare_background() {
+auto LineDiagramWidget::prepare_background() -> void {
   Rect bounds = _diagram_area;
 
   if (_background == NULL || cairo_image_surface_get_height(_background) != bounds.height() ||
@@ -1099,7 +1099,7 @@ void LineDiagramWidget::prepare_background() {
 
 //--------------------------------------------------------------------------------------------------
 
-void LineDiagramWidget::destroy_background() {
+auto LineDiagramWidget::destroy_background() -> void {
   BaseWidget::destroy_background();
 
   if (_value_gradient != NULL)
@@ -1116,7 +1116,7 @@ void LineDiagramWidget::destroy_background() {
  * Called when the user changed the value range. Transform existing values into that new range.
  * The given parameters are precomputed values that allow to do a simple transformation.
  */
-void LineDiagramWidget::range_updated(double scale, double offset) {
+auto LineDiagramWidget::range_updated(double scale, double offset) -> void {
   lock();
   for (int i = 0; i < LINE_SERIES_DATA_SIZE; i++)
     _deflection[i] = _deflection[i] * scale + offset;
@@ -1129,7 +1129,7 @@ void LineDiagramWidget::range_updated(double scale, double offset) {
 /**
  * Returns the largest and smallest value in the current time range.
  */
-void LineDiagramWidget::get_minmax_values(double* min, double* max) {
+auto LineDiagramWidget::get_minmax_values(double* min, double* max) -> void {
   *min = 0;
   *max = 0;
 
@@ -1155,7 +1155,7 @@ void LineDiagramWidget::get_minmax_values(double* min, double* max) {
 
 #define DATA_TIMEOUT 15 // 15 seconds after which the diagram will go to sleep if no data comes in.
 
-void LineDiagramWidget::step() {
+auto LineDiagramWidget::step() -> void {
   double timestamp = g_timer_elapsed(_clock, NULL);
 
   bool needs_repaint = false;
@@ -1195,7 +1195,7 @@ void LineDiagramWidget::step() {
 
 #define WARNING_TEXT "No Data"
 
-void LineDiagramWidget::show_feedback(cairo_t* cr, const Rect& bounds) {
+auto LineDiagramWidget::show_feedback(cairo_t* cr, const Rect& bounds) -> void {
   if (_sleep_mode != Awake) {
     cairo_select_font_face(cr, WIDGET_SMALL_FONT, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(cr, WIDGET_WARNING_FONT_SIZE);
@@ -1225,7 +1225,7 @@ void LineDiagramWidget::show_feedback(cairo_t* cr, const Rect& bounds) {
  * Triggered when, after some timeout, no new data arrives.
  * Note: lock has been acquired on call already.
  */
-void LineDiagramWidget::begin_sleeping(double timestamp) {
+auto LineDiagramWidget::begin_sleeping(double timestamp) -> void {
   _sleep_mode = GoSleeping;
   _sleep_start = timestamp;
 }
@@ -1236,7 +1236,7 @@ void LineDiagramWidget::begin_sleeping(double timestamp) {
  * Triggered when, after we slept, new data arrives.
  * Note: lock has been acquired on call already.
  */
-void LineDiagramWidget::end_sleeping(double timestamp) {
+auto LineDiagramWidget::end_sleeping(double timestamp) -> void {
   _sleep_mode = Awaking;
   _sleep_start = timestamp;
 }
@@ -1247,7 +1247,7 @@ void LineDiagramWidget::end_sleeping(double timestamp) {
  * Used to compute the next feedback step, if there is any feedback.
  * Returns true if the widget must be repainted.
  */
-bool LineDiagramWidget::feedback_step() {
+auto LineDiagramWidget::feedback_step() -> bool {
   bool result = false;
   if (_sleep_mode != Awake) {
     // Determine if we have to go sleeping or awake.

@@ -55,17 +55,17 @@ public:
       mforms::Utilities::cancel_timeout(_timer);
   }
 
-  void set_progress(const std::string &doing_what, float pct) {
+  auto set_progress(const std::string &doing_what, float pct) -> void {
     _label.set_text(doing_what);
     _progress.set_value(pct);
   }
 
-  void start(std::function<bool(std::string &, float &)> progress_fetcher, float interval) {
+  auto start(std::function<bool(std::string &, float &)> progress_fetcher, float interval) -> void {
     _progress_fetcher = progress_fetcher;
     _timer = mforms::Utilities::add_timeout(interval, std::bind(&ProgressPanel::update, this));
   }
 
-  void stop() {
+  auto stop() -> void {
     mforms::Utilities::cancel_timeout(_timer);
     _timer = 0;
   }
@@ -77,7 +77,7 @@ private:
   mforms::ProgressBar _progress;
   std::function<bool(std::string &, float &)> _progress_fetcher;
 
-  bool update() {
+  auto update() -> bool {
     std::string what;
     float pct;
     if (_progress_fetcher(what, pct)) {
@@ -89,7 +89,7 @@ private:
   }
 };
 
-void *SpatialDrawBox::do_render_layers(void *data) {
+auto SpatialDrawBox::do_render_layers(void *data) -> void * {
   SpatialDrawBox *self = (SpatialDrawBox *)data;
   {
     base::MutexLock lock(self->_thread_mutex);
@@ -103,7 +103,7 @@ void *SpatialDrawBox::do_render_layers(void *data) {
   return NULL;
 }
 
-void SpatialDrawBox::render_in_thread(bool reproject) { 
+auto SpatialDrawBox::render_in_thread(bool reproject) -> void { 
   if (_renderThread != nullptr) {
     logDebug3("Render thread didn't finish yet, waiting.\n");
     g_thread_join(_renderThread);
@@ -124,7 +124,7 @@ void SpatialDrawBox::render_in_thread(bool reproject) {
   }
 }
 
-void *SpatialDrawBox::render_done() {
+auto SpatialDrawBox::render_done() -> void * {
   _progress->stop();
 
   _rendering = false;
@@ -138,7 +138,7 @@ void *SpatialDrawBox::render_done() {
   return NULL;
 }
 
-void SpatialDrawBox::render(bool reproject) {
+auto SpatialDrawBox::render(bool reproject) -> void {
   int width = get_width();
   int height = get_height();
 
@@ -230,7 +230,7 @@ void SpatialDrawBox::render(bool reproject) {
     _needs_reprojection = false;
 }
 
-bool SpatialDrawBox::get_progress(std::string &action, float &pct) {
+auto SpatialDrawBox::get_progress(std::string &action, float &pct) -> bool {
   bool changed = false;
   _progress_mutex.lock();
   float current_progress = (float)_current_layer_index / _layers.size();
@@ -288,7 +288,7 @@ SpatialDrawBox::~SpatialDrawBox() {
   _ctx_cache = NULL;
 }
 
-void SpatialDrawBox::set_projection(spatial::ProjectionType proj) {
+auto SpatialDrawBox::set_projection(spatial::ProjectionType proj) -> void {
   if (_spatial_reprojector)
     _spatial_reprojector->change_projection(NULL, spatial::Projection::get_instance().get_projection(proj));
 
@@ -296,7 +296,7 @@ void SpatialDrawBox::set_projection(spatial::ProjectionType proj) {
   invalidate(true);
 }
 
-void SpatialDrawBox::zoom_out() {
+auto SpatialDrawBox::zoom_out() -> void {
   _zoom_level -= 0.2f;
   if (_zoom_level < 1.0)
     _zoom_level = 1.0;
@@ -315,12 +315,12 @@ void SpatialDrawBox::zoom_out() {
   invalidate(reproject);
 }
 
-void SpatialDrawBox::zoom_in() {
+auto SpatialDrawBox::zoom_in() -> void {
   _zoom_level += 0.2f;
   invalidate();
 }
 
-void SpatialDrawBox::auto_zoom(spatial::LayerId layer_id) {
+auto SpatialDrawBox::auto_zoom(spatial::LayerId layer_id) -> void {
   if (_layers.empty())
     return;
 
@@ -367,12 +367,12 @@ void SpatialDrawBox::auto_zoom(spatial::LayerId layer_id) {
   _displaying_restricted = true;
 }
 
-void SpatialDrawBox::center_on(double lat, double lon) {
+auto SpatialDrawBox::center_on(double lat, double lon) -> void {
   // XXX
   invalidate();
 }
 
-void SpatialDrawBox::reset_view() {
+auto SpatialDrawBox::reset_view() -> void {
   clear_pins();
 
   _min_lat = -179;
@@ -391,7 +391,7 @@ void SpatialDrawBox::reset_view() {
   _displaying_restricted = false;
 }
 
-void SpatialDrawBox::select_area(bool flag) {
+auto SpatialDrawBox::select_area(bool flag) -> void {
   if (flag)
     mforms::App::get()->set_status_text("Click and drag to select an area to display.");
   else
@@ -399,7 +399,7 @@ void SpatialDrawBox::select_area(bool flag) {
   _select_pending = flag;
 }
 
-void SpatialDrawBox::clear() {
+auto SpatialDrawBox::clear() -> void {
   delete _background_layer;
   _background_layer = NULL;
 
@@ -417,23 +417,23 @@ void SpatialDrawBox::clear() {
   }
 }
 
-void SpatialDrawBox::set_background(spatial::Layer *layer) {
+auto SpatialDrawBox::set_background(spatial::Layer *layer) -> void {
   if (_background_layer)
     delete _background_layer;
   _background_layer = layer;
 }
 
-void SpatialDrawBox::set_context_menu(mforms::ContextMenu *menu) {
+auto SpatialDrawBox::set_context_menu(mforms::ContextMenu *menu) -> void {
   _menu = menu;
 }
 
-void SpatialDrawBox::add_layer(spatial::Layer *layer) {
+auto SpatialDrawBox::add_layer(spatial::Layer *layer) -> void {
   base::MutexLock lock(_layer_mutex);
   layer->set_fill_polygons(get_option("SqlEditor::FillUpPolygons", 1) >= 1);
   _layers.push_back(layer);
 }
 
-void SpatialDrawBox::remove_layer(spatial::Layer *layer) {
+auto SpatialDrawBox::remove_layer(spatial::Layer *layer) -> void {
   base::MutexLock lock(_layer_mutex);
   layer->interrupt();
   std::deque<spatial::Layer *>::iterator l = std::find(_layers.begin(), _layers.end(), layer);
@@ -441,7 +441,7 @@ void SpatialDrawBox::remove_layer(spatial::Layer *layer) {
     _layers.erase(l);
 }
 
-void SpatialDrawBox::change_layer_order(const std::vector<spatial::LayerId> &order) {
+auto SpatialDrawBox::change_layer_order(const std::vector<spatial::LayerId> &order) -> void {
   base::MutexLock lock(_layer_mutex);
   std::map<spatial::LayerId, spatial::Layer *> layers;
   for (std::deque<spatial::Layer *>::iterator it = _layers.begin(); it != _layers.end(); ++it)
@@ -456,7 +456,7 @@ void SpatialDrawBox::change_layer_order(const std::vector<spatial::LayerId> &ord
   }
 }
 
-spatial::Layer *SpatialDrawBox::get_layer(spatial::LayerId layer_id) {
+auto SpatialDrawBox::get_layer(spatial::LayerId layer_id) -> spatial::Layer * {
   base::MutexLock lock(_layer_mutex);
   for (std::deque<spatial::Layer *>::iterator it = _layers.begin(); it != _layers.end(); ++it) {
     if ((*it)->layer_id() == layer_id) {
@@ -468,7 +468,7 @@ spatial::Layer *SpatialDrawBox::get_layer(spatial::LayerId layer_id) {
   return NULL;
 }
 
-void SpatialDrawBox::show_layer(spatial::LayerId layer_id, bool flag) {
+auto SpatialDrawBox::show_layer(spatial::LayerId layer_id, bool flag) -> void {
   if (layer_id == 1 && _background_layer) {
     _background_layer->set_show(flag);
     invalidate(true);
@@ -483,20 +483,20 @@ void SpatialDrawBox::show_layer(spatial::LayerId layer_id, bool flag) {
   }
 }
 
-void SpatialDrawBox::activate() {
+auto SpatialDrawBox::activate() -> void {
   if (!_ready) {
     _ready = true;
     invalidate(true);
   }
 }
 
-void SpatialDrawBox::invalidate(bool reproject) {
+auto SpatialDrawBox::invalidate(bool reproject) -> void {
   if (_ready)
     render_in_thread(reproject);
   set_needs_repaint(); // repaint the grid
 }
 
-bool SpatialDrawBox::mouse_double_click(mforms::MouseButton button, int x, int y) {
+auto SpatialDrawBox::mouse_double_click(mforms::MouseButton button, int x, int y) -> bool {
   int dx, dy;
   dx = this->get_width() / 2;
   dy = this->get_height() / 2;
@@ -508,7 +508,7 @@ bool SpatialDrawBox::mouse_double_click(mforms::MouseButton button, int x, int y
   return false;
 }
 
-bool SpatialDrawBox::mouse_down(mforms::MouseButton button, int x, int y) {
+auto SpatialDrawBox::mouse_down(mforms::MouseButton button, int x, int y) -> bool {
   if (button == mforms::MouseButtonLeft) {
     _initial_offset_x = _offset_x;
     _initial_offset_y = _offset_y;
@@ -533,7 +533,7 @@ bool SpatialDrawBox::mouse_down(mforms::MouseButton button, int x, int y) {
   return true;
 }
 
-bool SpatialDrawBox::mouse_up(mforms::MouseButton button, int x, int y) {
+auto SpatialDrawBox::mouse_up(mforms::MouseButton button, int x, int y) -> bool {
   if (button == mforms::MouseButtonLeft && _dragging) {
     if (_drag_x == x && _drag_y == y) {
       // handle feature click
@@ -556,7 +556,7 @@ bool SpatialDrawBox::mouse_up(mforms::MouseButton button, int x, int y) {
   return true;
 }
 
-bool SpatialDrawBox::mouse_move(mforms::MouseButton button, int x, int y) {
+auto SpatialDrawBox::mouse_move(mforms::MouseButton button, int x, int y) -> bool {
   if (_dragging) {
     _offset_x = (int)(_initial_offset_x + (x - _drag_x) / _zoom_level);
     _offset_y = (int)(_initial_offset_y + (y - _drag_y) / _zoom_level);
@@ -572,7 +572,7 @@ bool SpatialDrawBox::mouse_move(mforms::MouseButton button, int x, int y) {
   return true;
 }
 
-int SpatialDrawBox::clicked_row_id() {
+auto SpatialDrawBox::clicked_row_id() -> int {
   int row_id = -1;
 
   base::Point p(_right_clicked_point.x - _offset_x, _right_clicked_point.y - _offset_y);
@@ -589,7 +589,7 @@ int SpatialDrawBox::clicked_row_id() {
   return row_id;
 }
 
-void SpatialDrawBox::restrict_displayed_area(int x1, int y1, int x2, int y2, bool no_invalidate) {
+auto SpatialDrawBox::restrict_displayed_area(int x1, int y1, int x2, int y2, bool no_invalidate) -> void {
   double lat1, lat2;
   double lon1, lon2;
 
@@ -626,7 +626,7 @@ void SpatialDrawBox::restrict_displayed_area(int x1, int y1, int x2, int y2, boo
   }
 }
 
-void SpatialDrawBox::repaint(cairo_t *crt, int x, int y, int w, int h) {
+auto SpatialDrawBox::repaint(cairo_t *crt, int x, int y, int w, int h) -> void {
   std::shared_ptr<mdc::Surface> cache(_cache);
   mdc::CairoCtx cr(crt);
   if (cache) {
@@ -681,7 +681,7 @@ void SpatialDrawBox::repaint(cairo_t *crt, int x, int y, int w, int h) {
   }
 }
 
-bool SpatialDrawBox::screen_to_world(const int &x, const int &y, double &lat, double &lon) {
+auto SpatialDrawBox::screen_to_world(const int &x, const int &y, double &lat, double &lon) -> bool {
   if (_spatial_reprojector) {
     //     TODO check if x, y are inside the world image
     //    if (x >= _offset_x && y >= _offset_y) <- this is not working when we do rectangular zoom
@@ -692,7 +692,7 @@ bool SpatialDrawBox::screen_to_world(const int &x, const int &y, double &lat, do
   return false;
 }
 
-void SpatialDrawBox::world_to_screen(const double &lat, const double &lon, int &x, int &y) {
+auto SpatialDrawBox::world_to_screen(const double &lat, const double &lon, int &x, int &y) -> void {
   if (_spatial_reprojector) {
     _spatial_reprojector->from_latlon(lat, lon, x, y);
 
@@ -703,31 +703,31 @@ void SpatialDrawBox::world_to_screen(const double &lat, const double &lon, int &
   }
 }
 
-void SpatialDrawBox::save_to_png(const std::string &destination) {
+auto SpatialDrawBox::save_to_png(const std::string &destination) -> void {
   std::shared_ptr<mdc::ImageSurface> surface(new mdc::ImageSurface(get_width(), get_height(), CAIRO_FORMAT_ARGB32));
   mdc::CairoCtx ctx(*surface);
   this->repaint(ctx.get_cr(), 0, 0, get_width(), get_height());
   surface->save_to_png(destination);
 }
 
-void SpatialDrawBox::clear_pins() {
+auto SpatialDrawBox::clear_pins() -> void {
   _pins.clear();
   set_needs_repaint();
 }
 
-base::Point SpatialDrawBox::unapply_cairo_transformation(const base::Point &p) const {
+auto SpatialDrawBox::unapply_cairo_transformation(const base::Point &p) const -> base::Point {
   double xx = p.x, yy = p.y;
   _ctx_cache->user_to_device(&xx, &yy);
   return base::Point(xx, yy);
 }
 
-base::Point SpatialDrawBox::apply_cairo_transformation(const base::Point &p) const {
+auto SpatialDrawBox::apply_cairo_transformation(const base::Point &p) const -> base::Point {
   double xx = p.x, yy = p.y;
   _ctx_cache->device_to_user(&xx, &yy);
   return base::Point(xx, yy);
 }
 
-void SpatialDrawBox::place_pin(cairo_surface_t *pin, const base::Point &p) {
+auto SpatialDrawBox::place_pin(cairo_surface_t *pin, const base::Point &p) -> void {
   double lat, lon;
   screen_to_world((int)p.x, (int)p.y, lat, lon);
   _pins.push_back(Pin(lat, lon, pin));

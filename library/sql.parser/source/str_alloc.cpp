@@ -20,16 +20,14 @@
 namespace mysql_parser
 {
 
-static void *my_str_malloc_default(size_t size)
-{
+static auto my_str_malloc_default(size_t size) -> void * {
   void *ret= malloc(size);
   if (!ret)
     exit(1);
   return ret;
 }
 
-static void my_str_free_default(void *ptr)
-{
+static auto my_str_free_default(void *ptr) -> void {
   free(ptr);
 }
 

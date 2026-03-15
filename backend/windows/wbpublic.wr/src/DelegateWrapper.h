@@ -35,38 +35,37 @@ using namespace System::Collections::Generic;
 namespace MySQL {
   namespace Grt {
 
-    inline int nativeToManaged(int input) {
+    inline auto nativeToManaged(int input) -> int {
       return input;
     }
 
-    inline long long nativeToManaged(long long input) {
+    inline auto nativeToManaged(long long input) -> long long {
       return input;
     }
 
-    inline float nativeToManaged(float input) {
+    inline auto nativeToManaged(float input) -> float {
       return input;
     }
 
-    inline bool nativeToManaged(bool input) {
+    inline auto nativeToManaged(bool input) -> bool {
       return input;
     }
 
-    inline String ^ nativeToManaged(const char *input) { return CppStringToNative(input); }
+    inline auto nativeToManaged(const char *input) -> String ^ { return CppStringToNative(input); }
 
-      inline String
-      ^ nativeToManaged(const std::string &input) { return CppStringToNative(input); }
+      inline auto nativeToManaged(const std::string &input) -> String ^ { return CppStringToNative(input); }
 
-      inline long nativeToManaged(Recordset::Ref input) {
+      inline auto nativeToManaged(Recordset::Ref input) -> long {
       return (long)input->key();
     }
 
-    inline List<int> ^ nativeToManaged(const std::vector<int> &input) { return CppVectorToNativeList<int, int>(input); }
+    inline auto nativeToManaged(const std::vector<int> &input) -> List<int> ^ { return CppVectorToNativeList<int, int>(input); }
 
-      inline int managedToNative(int input) {
+      inline auto managedToNative(int input) -> int {
       return input;
     }
 
-    inline bool managedToNative(bool input) {
+    inline auto managedToNative(bool input) -> bool {
       return input;
     }
 
@@ -99,7 +98,7 @@ namespace MySQL {
     public:
       RunWrappedDelegate0(MD ^ md) : managed_delegate(md) {
       }
-      void native_callback() {
+      auto native_callback() -> void {
         managed_delegate();
       }
 
@@ -128,7 +127,7 @@ namespace MySQL {
     public:
       RunWrappedDelegate1(MD ^ md) : managed_delegate(md) {
       }
-      void native_callback(const A1N &a1) {
+      auto native_callback(const A1N &a1) -> void {
         managed_delegate(nativeToManaged(a1));
       }
 
@@ -157,7 +156,7 @@ namespace MySQL {
     public:
       RunWrappedDelegate2(MD ^ md) : managed_delegate(md) {
       }
-      void native_callback(const A1N &a1, const A2N &a2) {
+      auto native_callback(const A1N &a1, const A2N &a2) -> void {
         managed_delegate(nativeToManaged(a1), nativeToManaged(a2));
       }
 
@@ -187,7 +186,7 @@ namespace MySQL {
     public:
       RunWrappedDelegate3(MD ^ md) : managed_delegate(md) {
       }
-      void native_callback(const A1N &a1, const A2N &a2, const A3N &a3) {
+      auto native_callback(const A1N &a1, const A2N &a2, const A3N &a3) -> void {
         managed_delegate(nativeToManaged(a1), nativeToManaged(a2), nativeToManaged(a3));
       }
 
@@ -218,7 +217,7 @@ namespace MySQL {
     public:
       RunWrappedDelegate4(MD ^ md) : managed_delegate(md) {
       }
-      void native_callback(const A1N &a1, const A2N &a2, const A3N &a3, const A4N &a4) {
+      auto native_callback(const A1N &a1, const A2N &a2, const A3N &a3, const A4N &a4) -> void {
         managed_delegate(nativeToManaged(a1), nativeToManaged(a2), nativeToManaged(a3), nativeToManaged(a4));
       }
 
@@ -235,7 +234,7 @@ namespace MySQL {
       DelegateSlotWrapper_(MD ^ md) : managed_delegate(md), native_slot(NULL) {
         run_wrapped_delegate = gcnew DR(md);
       }
-      NS *get_slot() {
+      auto get_slot() -> NS * {
         if (native_slot)
           return native_slot;
         if (nullptr == wrapped_delegate)
@@ -245,7 +244,7 @@ namespace MySQL {
         native_slot = new NS(cb);
         return native_slot;
       }
-      void destroy_slot() {
+      auto destroy_slot() -> void {
         if (!native_slot)
           return;
         delete native_slot;
@@ -269,8 +268,8 @@ namespace MySQL {
     template <typename RN, typename RM>
     public ref class DelegateSlot0 {
     public:
-      delegate RM ManagedDelegate();
-      delegate RN WrapperDelegate();
+      auto ManagedDelegate() -> delegate RM;
+      auto WrapperDelegate() -> delegate RN;
       typedef RN (*NativeCBType)();
       typedef boost::function<RN()> NativeSlot;
       typedef RunWrappedDelegate0<RN, RM, ManagedDelegate> RunWrappedDelegate;
@@ -297,7 +296,7 @@ namespace MySQL {
       !DelegateSlot0() {
         reset();
       }
-      void reset() {
+      auto reset() -> void {
         delegate_slot_wrapper->destroy_slot();
       }
     };
@@ -309,7 +308,7 @@ namespace MySQL {
     public ref class DelegateSlot1 {
     public:
       delegate RM ManagedDelegate(A1M);
-      delegate RN WrapperDelegate(const A1N &);
+      auto WrapperDelegate(const A1N &) -> delegate RN;
       typedef boost::function<RN(const A1N &)> NativeSlot;
       typedef RN (*NativeCBType)(const A1N &);
       typedef RunWrappedDelegate1<RN, RM, A1N, A1M, ManagedDelegate> RunWrappedDelegate;
@@ -322,7 +321,7 @@ namespace MySQL {
     public:
       DelegateSlot1(ManagedDelegate ^ deleg) : delegate_slot_wrapper(gcnew DelegateSlotWrapper(deleg)) {
       }
-      const NativeSlot &get_slot() {
+      auto get_slot() -> const NativeSlot & {
         return *delegate_slot_wrapper->get_slot();
       }
       bool wraps_delegate(ManagedDelegate ^ deleg) {
@@ -336,7 +335,7 @@ namespace MySQL {
       !DelegateSlot1() {
         reset();
       }
-      void reset() {
+      auto reset() -> void {
         delegate_slot_wrapper->destroy_slot();
       }
     };
@@ -348,7 +347,7 @@ namespace MySQL {
     public ref class DelegateSlot2 {
     public:
       delegate RM ManagedDelegate(A1M, A2M);
-      delegate RN WrapperDelegate(const A1N &, const A2N &);
+      auto WrapperDelegate(const A1N &, const A2N &) -> delegate RN;
       typedef RN (*NativeCBType)(const A1N &, const A2N &);
       typedef boost::function<RN(const A1N &, const A2N &)> NativeSlot;
       typedef RunWrappedDelegate2<RN, RM, A1N, A1M, A2N, A2M, ManagedDelegate> RunWrappedDelegate;
@@ -361,7 +360,7 @@ namespace MySQL {
     public:
       DelegateSlot2(ManagedDelegate ^ deleg) : delegate_slot_wrapper(gcnew DelegateSlotWrapper(deleg)) {
       }
-      const NativeSlot &get_slot() {
+      auto get_slot() -> const NativeSlot & {
         return *delegate_slot_wrapper->get_slot();
       }
       bool wraps_delegate(ManagedDelegate ^ deleg) {
@@ -375,7 +374,7 @@ namespace MySQL {
       !DelegateSlot2() {
         reset();
       }
-      void reset() {
+      auto reset() -> void {
         delegate_slot_wrapper->destroy_slot();
       }
     };
@@ -388,7 +387,7 @@ namespace MySQL {
     public ref class DelegateSlot3 {
     public:
       delegate RM ManagedDelegate(A1M, A2M, A3M);
-      delegate RN WrapperDelegate(const A1N &, const A2N &, const A3N &);
+      auto WrapperDelegate(const A1N &, const A2N &, const A3N &) -> delegate RN;
       typedef RN (*NativeCBType)(const A1N &, const A2N &, const A3N &);
       typedef boost::function<RN(const A1N &, const A2N &, const A3N &)> NativeSlot;
       typedef RunWrappedDelegate3<RN, RM, A1N, A1M, A2N, A2M, A3N, A3M, ManagedDelegate> RunWrappedDelegate;
@@ -401,7 +400,7 @@ namespace MySQL {
     public:
       DelegateSlot3(ManagedDelegate ^ deleg) : delegate_slot_wrapper(gcnew DelegateSlotWrapper(deleg)) {
       }
-      const NativeSlot &get_slot() {
+      auto get_slot() -> const NativeSlot & {
         return *delegate_slot_wrapper->get_slot();
       }
       bool wraps_delegate(ManagedDelegate ^ deleg) {
@@ -415,7 +414,7 @@ namespace MySQL {
       !DelegateSlot3() {
         reset();
       }
-      void reset() {
+      auto reset() -> void {
         delegate_slot_wrapper->destroy_slot();
       }
     };
@@ -428,7 +427,7 @@ namespace MySQL {
     public ref class DelegateSlot4 {
     public:
       delegate RM ManagedDelegate(A1M, A2M, A3M, A4M);
-      delegate RN WrapperDelegate(const A1N &, const A2N &, const A3N &, const A4N &);
+      auto WrapperDelegate(const A1N &, const A2N &, const A3N &, const A4N &) -> delegate RN;
       typedef RN (*NativeCBType)(const A1N &, const A2N &, const A3N &, const A4N &);
       typedef boost::function<RN(const A1N &, const A2N &, const A3N &, const A4N &)> NativeSlot;
       typedef RunWrappedDelegate4<RN, RM, A1N, A1M, A2N, A2M, A3N, A3M, A4N, A4M, ManagedDelegate> RunWrappedDelegate;
@@ -441,7 +440,7 @@ namespace MySQL {
     public:
       DelegateSlot4(ManagedDelegate ^ deleg) : delegate_slot_wrapper(gcnew DelegateSlotWrapper(deleg)) {
       }
-      const NativeSlot &get_slot() {
+      auto get_slot() -> const NativeSlot & {
         return *delegate_slot_wrapper->get_slot();
       }
       bool wraps_delegate(ManagedDelegate ^ deleg) {
@@ -455,7 +454,7 @@ namespace MySQL {
       !DelegateSlot4() {
         reset();
       }
-      void reset() {
+      auto reset() -> void {
         delegate_slot_wrapper->destroy_slot();
       }
     };

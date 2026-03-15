@@ -34,11 +34,11 @@ namespace grt {
     public:
       Unserializer(bool check_crc);
 
-      ValueRef load_from_xml(const std::string &path, std::string *doctype = 0, std::string *docversion = 0);
+      auto load_from_xml(const std::string &path, std::string *doctype = 0, std::string *docversion = 0) -> ValueRef;
 
       ValueRef unserialize_xmldoc(xmlDocPtr doc, const std::string &source_path = "");
 
-      ValueRef unserialize_xmldata(const char *data, size_t size);
+      auto unserialize_xmldata(const char *data, size_t size) -> ValueRef;
 
     protected:
       std::string _source_name;
@@ -46,14 +46,14 @@ namespace grt {
       std::set<std::string> _invalid_cache;
       bool _check_serialized_crc;
 
-      ValueRef unserialize_from_xml(xmlNodePtr node);
-      ValueRef traverse_xml_recreating_tree(xmlNodePtr node);
-      void traverse_xml_creating_objects(xmlNodePtr node);
+      auto unserialize_from_xml(xmlNodePtr node) -> ValueRef;
+      auto traverse_xml_recreating_tree(xmlNodePtr node) -> ValueRef;
+      auto traverse_xml_creating_objects(xmlNodePtr node) -> void;
 
-      ObjectRef unserialize_object_step1(xmlNodePtr node);
-      ObjectRef unserialize_object_step2(xmlNodePtr node);
-      void unserialize_object_contents(const ObjectRef &object, xmlNodePtr node);
-      ValueRef find_cached(const std::string &id);
+      auto unserialize_object_step1(xmlNodePtr node) -> ObjectRef;
+      auto unserialize_object_step2(xmlNodePtr node) -> ObjectRef;
+      auto unserialize_object_contents(const ObjectRef &object, xmlNodePtr node) -> void;
+      auto find_cached(const std::string &id) -> ValueRef;
     };
   };
 };

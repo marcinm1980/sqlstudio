@@ -41,7 +41,7 @@ DbMySQLSync::DbMySQLSync() : Db_plugin(), DbMySQLValidationPage() {
   _catalog = db_mysql_CatalogRef::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0/catalog"));
 }
 
-void DbMySQLSync::set_option(const std::string& name, const std::string& value) {
+auto DbMySQLSync::set_option(const std::string& name, const std::string& value) -> void {
   if (name.compare("InputFileName") == 0)
     _input_filename = value;
   else if (name.compare("OutputFileName") == 0)
@@ -50,7 +50,7 @@ void DbMySQLSync::set_option(const std::string& name, const std::string& value) 
     _script_to_apply = value;
 }
 
-void DbMySQLSync::start_apply_script_to_db() {
+auto DbMySQLSync::start_apply_script_to_db() -> void {
   sql_script(_script_to_apply);
   Db_plugin::exec_task();
 }

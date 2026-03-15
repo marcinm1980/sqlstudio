@@ -27,7 +27,7 @@
 
 namespace grt {
 
-  ChangeType DiffChange::get_change_type() const {
+  auto DiffChange::get_change_type() const -> ChangeType {
     return type;
   }
 

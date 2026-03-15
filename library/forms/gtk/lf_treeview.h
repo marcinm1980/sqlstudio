@@ -71,9 +71,9 @@ namespace mforms {
     public:
       CustomTreeStore(const Gtk::TreeModelColumnRecord &columns);
 
-      static Glib::RefPtr<CustomTreeStore> create(const Gtk::TreeModelColumnRecord &columns);
+      static auto create(const Gtk::TreeModelColumnRecord &columns) -> Glib::RefPtr<CustomTreeStore>;
 
-      void copy_iter(Gtk::TreeModel::iterator &from, Gtk::TreeModel::iterator &to);
+      auto copy_iter(Gtk::TreeModel::iterator &from, Gtk::TreeModel::iterator &to) -> void;
     };
 
     class TreeViewImpl; // rename
@@ -83,93 +83,93 @@ namespace mforms {
       TreeViewImpl *_treeview;
       int _refcount;
 
-      inline TreeNodeRef ref_from_iter(const Gtk::TreeIter &iter) const;
-      inline TreeNodeRef ref_from_path(const Gtk::TreePath &path) const;
+      inline auto ref_from_iter(const Gtk::TreeIter &iter) const -> TreeNodeRef;
+      inline auto ref_from_path(const Gtk::TreePath &path) const -> TreeNodeRef;
 
-      virtual bool is_root() const;
+      virtual auto is_root() const -> bool;
 
-      virtual bool is_valid() const;
+      virtual auto is_valid() const -> bool;
 
-      virtual bool equals(const TreeNode &other);
+      virtual auto equals(const TreeNode &other) -> bool;
 
-      virtual int level() const;
+      virtual auto level() const -> int;
 
     public:
       RootTreeNodeImpl(TreeViewImpl *tree);
 
-      virtual void invalidate();
+      virtual auto invalidate() -> void;
 
-      virtual void release();
+      virtual auto release() -> void;
 
-      virtual void retain();
+      virtual auto retain() -> void;
 
-      virtual int count() const;
+      virtual auto count() const -> int;
 
-      virtual bool can_expand();
+      virtual auto can_expand() -> bool;
 
-      virtual Gtk::TreeIter create_child(int index);
+      virtual auto create_child(int index) -> Gtk::TreeIter;
 
-      virtual Gtk::TreeIter create_child(int index, Gtk::TreeIter *other_parent);
+      virtual auto create_child(int index, Gtk::TreeIter *other_parent) -> Gtk::TreeIter;
 
-      virtual TreeNodeRef insert_child(int index);
+      virtual auto insert_child(int index) -> TreeNodeRef;
 
       virtual std::vector<mforms::TreeNodeRef> add_node_collection(const TreeNodeCollectionSkeleton &nodes,
                                                                    int position = -1);
 
-      virtual void add_children_from_skeletons(const std::vector<Gtk::TreeIter> &parents,
-                                               const std::vector<TreeNodeSkeleton> &children);
+      virtual auto add_children_from_skeletons(const std::vector<Gtk::TreeIter> &parents,
+                                               const std::vector<TreeNodeSkeleton> &children) -> void;
 
-      virtual void remove_from_parent();
+      virtual auto remove_from_parent() -> void;
 
-      virtual TreeNodeRef get_child(int index) const;
+      virtual auto get_child(int index) const -> TreeNodeRef;
 
-      virtual TreeNodeRef get_parent() const;
+      virtual auto get_parent() const -> TreeNodeRef;
 
-      virtual void expand();
+      virtual auto expand() -> void;
 
-      virtual void collapse();
+      virtual auto collapse() -> void;
 
-      virtual bool is_expanded();
+      virtual auto is_expanded() -> bool;
 
-      virtual void set_attributes(int column, const mforms::TreeNodeTextAttributes &attrs);
+      virtual auto set_attributes(int column, const mforms::TreeNodeTextAttributes &attrs) -> void;
 
-      virtual void set_icon_path(int column, const std::string &icon);
+      virtual auto set_icon_path(int column, const std::string &icon) -> void;
 
-      virtual void set_string(int column, const std::string &value);
+      virtual auto set_string(int column, const std::string &value) -> void;
 
-      virtual void set_int(int column, int value);
+      virtual auto set_int(int column, int value) -> void;
 
-      virtual void set_long(int column, std::int64_t value);
+      virtual auto set_long(int column, std::int64_t value) -> void;
 
-      virtual void set_bool(int column, bool value);
+      virtual auto set_bool(int column, bool value) -> void;
 
-      virtual void set_float(int column, double value);
+      virtual auto set_float(int column, double value) -> void;
 
-      virtual std::string get_string(int column) const;
+      virtual auto get_string(int column) const -> std::string;
 
-      virtual int get_int(int column) const;
+      virtual auto get_int(int column) const -> int;
 
-      virtual std::int64_t get_long(int column) const;
+      virtual auto get_long(int column) const -> std::int64_t;
 
-      virtual bool get_bool(int column) const;
+      virtual auto get_bool(int column) const -> bool;
 
-      virtual double get_float(int column) const;
+      virtual auto get_float(int column) const -> double;
 
-      virtual void set_tag(const std::string &tag);
+      virtual auto set_tag(const std::string &tag) -> void;
 
-      virtual std::string get_tag() const;
+      virtual auto get_tag() const -> std::string;
 
-      virtual void set_data(TreeNodeData *data);
+      virtual auto set_data(TreeNodeData *data) -> void;
 
-      virtual TreeNodeData *get_data() const;
+      virtual auto get_data() const -> TreeNodeData *;
 
-      virtual TreeNodeRef previous_sibling() const;
+      virtual auto previous_sibling() const -> TreeNodeRef;
 
-      virtual TreeNodeRef next_sibling() const;
+      virtual auto next_sibling() const -> TreeNodeRef;
 
-      virtual int get_child_index(TreeNodeRef child) const;
+      virtual auto get_child_index(TreeNodeRef child) const -> int;
 
-      virtual void move_node(TreeNodeRef node, bool before);
+      virtual auto move_node(TreeNodeRef node, bool before) -> void;
     };
 
     class TreeNodeImpl : public RootTreeNodeImpl {
@@ -178,87 +178,87 @@ namespace mforms {
       Gtk::TreeRowReference _rowref;
 
     public:
-      inline Glib::RefPtr<Gtk::TreeStore> model();
-      inline Gtk::TreeIter iter();
+      inline auto model() -> Glib::RefPtr<Gtk::TreeStore>;
+      inline auto iter() -> Gtk::TreeIter;
 
-      inline Gtk::TreeIter iter() const;
+      inline auto iter() const -> Gtk::TreeIter;
 
-      inline Gtk::TreePath path();
+      inline auto path() -> Gtk::TreePath;
 
-      virtual bool is_root() const;
+      virtual auto is_root() const -> bool;
 
-      virtual Gtk::TreeIter duplicate_node(TreeNodeRef oldnode);
+      virtual auto duplicate_node(TreeNodeRef oldnode) -> Gtk::TreeIter;
 
     public:
       TreeNodeImpl(TreeViewImpl *tree, Glib::RefPtr<Gtk::TreeStore> model, const Gtk::TreePath &path);
 
       TreeNodeImpl(TreeViewImpl *tree, const Gtk::TreeRowReference &ref);
 
-      virtual bool equals(const TreeNode &other);
+      virtual auto equals(const TreeNode &other) -> bool;
 
-      virtual bool is_valid() const;
+      virtual auto is_valid() const -> bool;
 
-      virtual void invalidate();
+      virtual auto invalidate() -> void;
 
-      virtual int count() const;
+      virtual auto count() const -> int;
 
-      virtual Gtk::TreeIter create_child(int index);
+      virtual auto create_child(int index) -> Gtk::TreeIter;
 
-      virtual void remove_from_parent();
+      virtual auto remove_from_parent() -> void;
 
-      virtual TreeNodeRef get_child(int index) const;
+      virtual auto get_child(int index) const -> TreeNodeRef;
 
-      virtual TreeNodeRef get_parent() const;
+      virtual auto get_parent() const -> TreeNodeRef;
 
-      virtual void expand();
+      virtual auto expand() -> void;
 
-      virtual bool can_expand();
+      virtual auto can_expand() -> bool;
 
-      virtual void collapse();
+      virtual auto collapse() -> void;
 
-      virtual bool is_expanded();
+      virtual auto is_expanded() -> bool;
 
-      virtual void set_attributes(int column, const TreeNodeTextAttributes &attrs);
+      virtual auto set_attributes(int column, const TreeNodeTextAttributes &attrs) -> void;
 
-      virtual void set_icon_path(int column, const std::string &icon);
+      virtual auto set_icon_path(int column, const std::string &icon) -> void;
 
-      virtual void set_string(int column, const std::string &value);
+      virtual auto set_string(int column, const std::string &value) -> void;
 
-      virtual void set_int(int column, int value);
+      virtual auto set_int(int column, int value) -> void;
 
-      virtual void set_long(int column, std::int64_t value);
+      virtual auto set_long(int column, std::int64_t value) -> void;
 
-      virtual void set_bool(int column, bool value);
+      virtual auto set_bool(int column, bool value) -> void;
 
-      virtual void set_float(int column, double value);
+      virtual auto set_float(int column, double value) -> void;
 
-      virtual std::string get_string(int column) const;
+      virtual auto get_string(int column) const -> std::string;
 
-      virtual int get_int(int column) const;
+      virtual auto get_int(int column) const -> int;
 
-      virtual std::int64_t get_long(int column) const;
+      virtual auto get_long(int column) const -> std::int64_t;
 
-      virtual bool get_bool(int column) const;
+      virtual auto get_bool(int column) const -> bool;
 
-      virtual double get_float(int column) const;
+      virtual auto get_float(int column) const -> double;
 
-      virtual void set_tag(const std::string &tag);
+      virtual auto set_tag(const std::string &tag) -> void;
 
-      virtual std::string get_tag() const;
+      virtual auto get_tag() const -> std::string;
 
-      virtual void set_data(TreeNodeData *data);
+      virtual auto set_data(TreeNodeData *data) -> void;
 
-      virtual TreeNodeData *get_data() const;
+      virtual auto get_data() const -> TreeNodeData *;
 
-      virtual int level() const;
+      virtual auto level() const -> int;
 
-      virtual TreeNodeRef next_sibling() const;
+      virtual auto next_sibling() const -> TreeNodeRef;
 
-      virtual TreeNodeRef previous_sibling() const;
+      virtual auto previous_sibling() const -> TreeNodeRef;
 
-      virtual int get_child_index(TreeNodeRef child) const;
+      virtual auto get_child_index(TreeNodeRef child) const -> int;
 
-      virtual void move_node(TreeNodeRef node, bool before);
+      virtual auto move_node(TreeNodeRef node, bool before) -> void;
     };
 
     class TreeViewImpl : public ViewImpl // rename
@@ -276,8 +276,8 @@ namespace mforms {
           return col;
         }
 
-        void on_cell_editing_started(Gtk::CellEditable *e, const Glib::ustring &path);
-        bool on_focus_out(GdkEventFocus *event, Gtk::Entry *e);
+        auto on_cell_editing_started(Gtk::CellEditable *e, const Glib::ustring &path) -> void;
+        auto on_focus_out(GdkEventFocus *event, Gtk::Entry *e) -> bool;
 
       public:
         std::vector<Gtk::TreeModelColumnBase *> columns;
@@ -294,23 +294,23 @@ namespace mforms {
         }
 
         virtual ~ColumnRecord();
-        void add_tag_column();
-        void add_data_column();
-        Gtk::TreeModelColumn<std::string> &tag_column();
-        Gtk::TreeModelColumn<TreeNodeDataRef> &data_column();
-        int add_string(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr, bool with_icon,
-                       bool align_right = false);
-        int add_integer(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr);
-        int add_long_integer(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr);
-        int add_float(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr);
-        int add_check(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr);
-        int add_tri_check(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr);
+        auto add_tag_column() -> void;
+        auto add_data_column() -> void;
+        auto tag_column() -> Gtk::TreeModelColumn<std::string> &;
+        auto data_column() -> Gtk::TreeModelColumn<TreeNodeDataRef> &;
+        auto add_string(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr, bool with_icon,
+                       bool align_right = false) -> int;
+        auto add_integer(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr) -> int;
+        auto add_long_integer(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr) -> int;
+        auto add_float(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr) -> int;
+        auto add_check(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr) -> int;
+        auto add_tri_check(Gtk::TreeView *tree, const std::string &title, bool editable, bool attr) -> int;
         template <typename T>
         std::pair<Gtk::TreeViewColumn *, int> create_column(Gtk::TreeView *tree, const std::string &title,
                                                             bool editable, bool attr, bool with_icon,
                                                             bool align_right = false);
-        void format_tri_check(Gtk::CellRenderer *cell, const Gtk::TreeIter &iter,
-                              const Gtk::TreeModelColumn<int> &column);
+        auto format_tri_check(Gtk::CellRenderer *cell, const Gtk::TreeIter &iter,
+                              const Gtk::TreeModelColumn<int> &column) -> void;
       };
 
       bool _is_drag_source;
@@ -344,98 +344,98 @@ namespace mforms {
 
       mforms::TreeNodeRef _root_node;
 
-      mforms::TreeNodeRef find_node_at_row(const Gtk::TreeModel::Children &trow, int &c, int row);
+      auto find_node_at_row(const Gtk::TreeModel::Children &trow, int &c, int row) -> mforms::TreeNodeRef;
 
-      Gtk::TreeView *tree_view() {
+      auto tree_view() -> Gtk::TreeView * {
         return &_tree;
       }
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return &(const_cast<Gtk::ScrolledWindow &>(_swin));
       }
-      virtual Gtk::Widget *get_inner() const {
+      virtual auto get_inner() const -> Gtk::Widget * {
         return &(const_cast<Gtk::TreeView &>(_tree));
       }
 
       TreeViewImpl(TreeView *self, mforms::TreeOptions opts);
       ~TreeViewImpl();
-      void string_edited(const Glib::ustring &path, const Glib::ustring &new_text, int column);
-      void toggle_edited(const Glib::ustring &path, int column);
-      void on_activated(const Gtk::TreeModel::Path &, Gtk::TreeViewColumn *);
-      void on_will_expand(const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &path);
-      void on_collapsed(const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &path);
-      void on_realize();
-      bool on_header_button_event(GdkEventButton *ev, int);
-      bool on_key_release(GdkEventKey *ev);
-      bool on_button_event(GdkEventButton *ev);
-      bool on_button_release(GdkEventButton *ev);
-      bool on_motion_notify(GdkEventMotion *ev);
+      auto string_edited(const Glib::ustring &path, const Glib::ustring &new_text, int column) -> void;
+      auto toggle_edited(const Glib::ustring &path, int column) -> void;
+      auto on_activated(const Gtk::TreeModel::Path &, Gtk::TreeViewColumn *) -> void;
+      auto on_will_expand(const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &path) -> void;
+      auto on_collapsed(const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &path) -> void;
+      auto on_realize() -> void;
+      auto on_header_button_event(GdkEventButton *ev, int) -> bool;
+      auto on_key_release(GdkEventKey *ev) -> bool;
+      auto on_button_event(GdkEventButton *ev) -> bool;
+      auto on_button_release(GdkEventButton *ev) -> bool;
+      auto on_motion_notify(GdkEventMotion *ev) -> bool;
       bool on_draw_event(const ::Cairo::RefPtr< ::Cairo::Context> &context);
-      bool on_enter_notify(GdkEventCrossing *ev);
-      bool on_leave_notify(GdkEventCrossing *ev);
+      auto on_enter_notify(GdkEventCrossing *ev) -> bool;
+      auto on_leave_notify(GdkEventCrossing *ev) -> bool;
 
-      void slot_drag_end(const Glib::RefPtr<Gdk::DragContext> &context);
-      bool slot_drag_failed(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::DragResult result);
+      auto slot_drag_end(const Glib::RefPtr<Gdk::DragContext> &context) -> void;
+      auto slot_drag_failed(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::DragResult result) -> bool;
 
-      void set_allow_sorting(bool flag);
+      auto set_allow_sorting(bool flag) -> void;
 
-      int add_column(TreeColumnType type, const std::string &name, int initial_width, bool editable, bool attributed);
-      void end_columns();
-      static bool create(TreeView *self, mforms::TreeOptions opt);
-      static int add_column(TreeView *self, TreeColumnType type, const std::string &name, int width, bool editable,
-                            bool attr);
-      static void end_columns(TreeView *self);
-      static void clear(TreeView *self);
-      static TreeNodeRef root_node(TreeView *self);
-      static TreeNodeRef get_selected_node(TreeView *self);
-      static std::list<TreeNodeRef> get_selection(TreeView *self);
-      static void set_selected(TreeView *self, TreeNodeRef node, bool flag);
-      static void scrollToNode(TreeView *self, TreeNodeRef node);
-      static TreeSelectionMode get_selection_mode(TreeView *self);
-      static void set_selection_mode(TreeView *self, TreeSelectionMode mode);
-      static void clear_selection(TreeView *self);
+      auto add_column(TreeColumnType type, const std::string &name, int initial_width, bool editable, bool attributed) -> int;
+      auto end_columns() -> void;
+      static auto create(TreeView *self, mforms::TreeOptions opt) -> bool;
+      static auto add_column(TreeView *self, TreeColumnType type, const std::string &name, int width, bool editable,
+                            bool attr) -> int;
+      static auto end_columns(TreeView *self) -> void;
+      static auto clear(TreeView *self) -> void;
+      static auto root_node(TreeView *self) -> TreeNodeRef;
+      static auto get_selected_node(TreeView *self) -> TreeNodeRef;
+      static auto get_selection(TreeView *self) -> std::list<TreeNodeRef>;
+      static auto set_selected(TreeView *self, TreeNodeRef node, bool flag) -> void;
+      static auto scrollToNode(TreeView *self, TreeNodeRef node) -> void;
+      static auto get_selection_mode(TreeView *self) -> TreeSelectionMode;
+      static auto set_selection_mode(TreeView *self, TreeSelectionMode mode) -> void;
+      static auto clear_selection(TreeView *self) -> void;
 
-      static int row_for_node(TreeView *self, TreeNodeRef node);
-      static TreeNodeRef node_at_row(TreeView *self, int row);
-      static TreeNodeRef node_with_tag(TreeView *self, const std::string &tag);
+      static auto row_for_node(TreeView *self, TreeNodeRef node) -> int;
+      static auto node_at_row(TreeView *self, int row) -> TreeNodeRef;
+      static auto node_with_tag(TreeView *self, const std::string &tag) -> TreeNodeRef;
 
-      static void set_row_height(TreeView *self, int height);
+      static auto set_row_height(TreeView *self, int height) -> void;
 
-      static void set_allow_sorting(TreeView *self, bool flag);
-      static void freeze_refresh(TreeView *self, bool flag);
-      static void set_column_visible(TreeView *self, int column, bool flag);
-      static bool get_column_visible(TreeView *self, int column);
-      static void set_column_title(TreeView *self, int column, const std::string &title);
+      static auto set_allow_sorting(TreeView *self, bool flag) -> void;
+      static auto freeze_refresh(TreeView *self, bool flag) -> void;
+      static auto set_column_visible(TreeView *self, int column, bool flag) -> void;
+      static auto get_column_visible(TreeView *self, int column) -> bool;
+      static auto set_column_title(TreeView *self, int column, const std::string &title) -> void;
 
-      static void set_column_width(TreeView *self, int column, int width);
-      static int get_column_width(TreeView *self, int column);
-      static TreeNodeRef node_at_position(TreeView *self, base::Point position);
+      static auto set_column_width(TreeView *self, int column, int width) -> void;
+      static auto get_column_width(TreeView *self, int column) -> int;
+      static auto node_at_position(TreeView *self, base::Point position) -> TreeNodeRef;
 
-      Gtk::TreeModel::iterator to_list_iter(const Gtk::TreeModel::iterator &it);
-      Gtk::TreeModel::Path to_list_path(const Gtk::TreeModel::Path &path);
-      Gtk::TreeModel::iterator to_sort_iter(const Gtk::TreeModel::iterator &it);
-      Gtk::TreeModel::Path to_sort_path(const Gtk::TreeModel::Path &path);
+      auto to_list_iter(const Gtk::TreeModel::iterator &it) -> Gtk::TreeModel::iterator;
+      auto to_list_path(const Gtk::TreeModel::Path &path) -> Gtk::TreeModel::Path;
+      auto to_sort_iter(const Gtk::TreeModel::iterator &it) -> Gtk::TreeModel::iterator;
+      auto to_sort_path(const Gtk::TreeModel::Path &path) -> Gtk::TreeModel::Path;
 
       void header_clicked(Gtk::TreeModelColumnBase *, Gtk::TreeViewColumn *);
 
-      virtual void set_back_color(const std::string &color);
+      virtual auto set_back_color(const std::string &color) -> void;
 
     protected:
-      mforms::DropPosition get_drop_position();
+      auto get_drop_position() -> mforms::DropPosition;
 
     public:
-      static void init();
+      static auto init() -> void;
 
-      int index_for_column_attr(int i) {
+      auto index_for_column_attr(int i) -> int {
         return _columns.column_attr_index[i];
       }
-      int index_for_column(int i) {
+      auto index_for_column(int i) -> int {
         return _columns.column_value_index[i];
       }
-      Glib::RefPtr<Gtk::TreeStore> tree_store() {
+      auto tree_store() -> Glib::RefPtr<Gtk::TreeStore> {
         return _tree_store;
       }
 
-      TreeView *get_owner();
+      auto get_owner() -> TreeView *;
     };
   }
 }

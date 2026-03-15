@@ -57,10 +57,10 @@ namespace bec {
 
     auto create_list(const std::string &filter_to_source = "") -> MessageListBE *;
 
-    void clear_all();
+    auto clear_all() -> void;
 
-    void handle_message(const grt::Message &msg);
-    void set_output_handler(const std::function<void(std::string)> &handler);
+    auto handle_message(const grt::Message &msg) -> void;
+    auto set_output_handler(const std::function<void(std::string)> &handler) -> void;
 
   private:
     friend class MessageListBE;
@@ -73,8 +73,8 @@ namespace bec {
     IconId _warning_icon;
     IconId _info_icon;
 
-    void validation_notify(const grt::Validator::Tag &tag, const grt::ObjectRef &o, const std::string &msg,
-                           const int level);
+    auto validation_notify(const grt::Validator::Tag &tag, const grt::ObjectRef &o, const std::string &msg,
+                           const int level) -> void;
   };
 
   //! Backend for message's tab in Output window. To clear run popup and feed
@@ -83,10 +83,10 @@ namespace bec {
   public:
     enum Column { Time, Message, Detail };
 
-    void clear();
+    auto clear() -> void;
     virtual auto count_children(const NodeId &parent) -> size_t;
     virtual auto get_field(const NodeId &node, ColumnId column, std::string &value) -> bool;
-    virtual void refresh() {
+    virtual auto refresh() -> void {
     }
     virtual auto get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId;
     virtual auto get_message_type(const NodeId &node) -> grt::MessageType;
@@ -94,10 +94,10 @@ namespace bec {
     virtual auto get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList;
     virtual auto activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool;
 
-    void add_source(const std::string &source);
-    void remove_source(const std::string &source);
+    auto add_source(const std::string &source) -> void;
+    auto remove_source(const std::string &source) -> void;
 
-    void add_message(MessageListStorage::MessageEntryRef message);
+    auto add_message(MessageListStorage::MessageEntryRef message) -> void;
 
     auto signal_show() -> boost::signals2::signal<void()> * {
       return &_list_show;

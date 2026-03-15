@@ -51,8 +51,8 @@
 
 namespace spatial {
 
-  std::string WBPUBLICBACKEND_PUBLIC_FUNC stringFromErrorCode(const OGRErr &val);
-  std::string WBPUBLICBACKEND_PUBLIC_FUNC fetchAuthorityCode(const std::string &wkt);
+  auto stringFromErrorCode(const OGRErr &val) -> std::string WBPUBLICBACKEND_PUBLIC_FUNC;
+  auto fetchAuthorityCode(const std::string &wkt) -> std::string WBPUBLICBACKEND_PUBLIC_FUNC;
 
   struct WBPUBLICBACKEND_PUBLIC_FUNC ProjectionView {
     int width;
@@ -74,8 +74,8 @@ namespace spatial {
     base::Point bottom_right;
     friend bool operator==(const Envelope &env1, const Envelope &env2);
     friend bool operator!=(const Envelope &env1, const Envelope &env2);
-    bool is_init();
-    bool within(const base::Point &p) const;
+    auto is_init() -> bool;
+    auto within(const base::Point &p) const -> bool;
   };
 
   bool operator==(const ProjectionView &v1, const ProjectionView &v2);
@@ -97,24 +97,24 @@ namespace spatial {
     ShapeGeometryCollection
   };
 
-  std::string shape_description(ShapeType shp);
-  ShapeType ogrTypeToWb(const OGRwkbGeometryType type);
+  auto shape_description(ShapeType shp) -> std::string;
+  auto ogrTypeToWb(const OGRwkbGeometryType type) -> ShapeType;
 
   enum AxisType { AxisLat = 1, AxisLon = 2 };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC ShapeContainer {
   protected:
-    double distance_linearring(const base::Point &p) const;
-    double distance_line(const std::vector<base::Point> &point_list, const base::Point &p) const;
-    double distance_polygon(const base::Point &p) const;
-    double distance_point(const base::Point &p) const;
+    auto distance_linearring(const base::Point &p) const -> double;
+    auto distance_line(const std::vector<base::Point> &point_list, const base::Point &p) const -> double;
+    auto distance_polygon(const base::Point &p) const -> double;
+    auto distance_point(const base::Point &p) const -> double;
 
   public:
     ShapeContainer();
     ShapeType type;
     std::vector<base::Point> points;
     Envelope bounding_box;
-    double distance(const base::Point &p) const;
+    auto distance(const base::Point &p) const -> double;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC Projection {
@@ -126,8 +126,8 @@ namespace spatial {
     OGRSpatialReference _bonne_srs;
 
   public:
-    static Projection &get_instance();
-    bool check_libproj_availability();
+    static auto get_instance() -> Projection &;
+    auto check_libproj_availability() -> bool;
     OGRSpatialReference *get_projection(ProjectionType);
 
   private:
@@ -139,27 +139,27 @@ namespace spatial {
   class WBPUBLICBACKEND_PUBLIC_FUNC Importer {
     OGRGeometry *_geometry;
     bool _interrupt;
-    void extract_points(OGRGeometry *shape, std::deque<ShapeContainer> &shapes_container);
+    auto extract_points(OGRGeometry *shape, std::deque<ShapeContainer> &shapes_container) -> void;
     int _srid;
 
   public:
     Importer();
     ~Importer();
-    int import_from_mysql(const std::string &data);
-    int import_from_wkt(std::string data);
-    void get_points(std::deque<ShapeContainer> &shapes_container);
-    void get_envelope(Envelope &env);
-    void interrupt();
-    std::string getName() const;
-    ShapeType getType() const;
+    auto import_from_mysql(const std::string &data) -> int;
+    auto import_from_wkt(std::string data) -> int;
+    auto get_points(std::deque<ShapeContainer> &shapes_container) -> void;
+    auto get_envelope(Envelope &env) -> void;
+    auto interrupt() -> void;
+    auto getName() const -> std::string;
+    auto getType() const -> ShapeType;
 
-    int getSrid() const;
-    std::string as_wkt();
-    std::string as_kml();
-    std::string as_json();
-    std::string as_gml();
+    auto getSrid() const -> int;
+    auto as_wkt() -> std::string;
+    auto as_kml() -> std::string;
+    auto as_json() -> std::string;
+    auto as_gml() -> std::string;
 
-    OGRGeometry *steal_data();
+    auto steal_data() -> OGRGeometry *;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC Converter {
@@ -176,21 +176,21 @@ namespace spatial {
   public:
     Converter(ProjectionView view, OGRSpatialReference *src_srs, OGRSpatialReference *dst_srs);
     ~Converter();
-    void change_projection(OGRSpatialReference *src_srs = NULL, OGRSpatialReference *dst_srs = NULL);
-    void change_projection(ProjectionView view, OGRSpatialReference *src_srs = NULL,
-                           OGRSpatialReference *dst_srs = NULL);
-    void from_projected(double lat, double lon, int &x, int &y);
-    void to_projected(int x, int y, double &lat, double &lon);
+    auto change_projection(OGRSpatialReference *src_srs = NULL, OGRSpatialReference *dst_srs = NULL) -> void;
+    auto change_projection(ProjectionView view, OGRSpatialReference *src_srs = NULL,
+                           OGRSpatialReference *dst_srs = NULL) -> void;
+    auto from_projected(double lat, double lon, int &x, int &y) -> void;
+    auto to_projected(int x, int y, double &lat, double &lon) -> void;
 
-    bool to_latlon(int x, int y, double &lat, double &lon);
-    bool from_latlon(double lat, double lon, int &x, int &y);
+    auto to_latlon(int x, int y, double &lat, double &lon) -> bool;
+    auto from_latlon(double lat, double lon, int &x, int &y) -> bool;
 
-    bool from_latlon_to_proj(double &lat, double &lon);
-    bool from_proj_to_latlon(double &lat, double &lon);
-    static std::string dec_to_dms(double angle, AxisType axis, int precision);
-    void transform_points(std::deque<ShapeContainer> &shapes_container);
-    void transform_envelope(spatial::Envelope &env);
-    void interrupt();
+    auto from_latlon_to_proj(double &lat, double &lon) -> bool;
+    auto from_proj_to_latlon(double &lat, double &lon) -> bool;
+    static auto dec_to_dms(double angle, AxisType axis, int precision) -> std::string;
+    auto transform_points(std::deque<ShapeContainer> &shapes_container) -> void;
+    auto transform_envelope(spatial::Envelope &env) -> void;
+    auto interrupt() -> void;
   };
 
   class Layer;
@@ -206,20 +206,20 @@ namespace spatial {
     Feature(Layer *layer, int row_id, const std::string &data, bool wkt);
     ~Feature();
 
-    void interrupt();
-    void get_envelope(spatial::Envelope &env, const bool &screen_coords = false);
-    void render(spatial::Converter *converter);
-    void repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area,
-                 base::Color fill_color = base::Color::invalid());
+    auto interrupt() -> void;
+    auto get_envelope(spatial::Envelope &env, const bool &screen_coords = false) -> void;
+    auto render(spatial::Converter *converter) -> void;
+    auto repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area,
+                 base::Color fill_color = base::Color::invalid()) -> void;
 
-    int row_id() const {
+    auto row_id() const -> int {
       return _row_id;
     }
-    double distance(const base::Point &p, const double &allowed_distance = 4.0);
+    auto distance(const base::Point &p, const double &allowed_distance = 4.0) -> double;
   };
 
   using LayerId = int;
-  WBPUBLICBACKEND_PUBLIC_FUNC LayerId new_layer_id();
+  WBPUBLICBACKEND_PUBLIC_FUNC auto new_layer_id() -> LayerId;
 
   class WBPUBLICBACKEND_PUBLIC_FUNC Layer {
     friend class Feature;
@@ -239,35 +239,35 @@ namespace spatial {
     Layer(LayerId layer_id, base::Color color);
     virtual ~Layer();
 
-    virtual void load_data() {
+    virtual auto load_data() -> void {
     }
 
-    void interrupt();
+    auto interrupt() -> void;
 
-    bool hidden();
-    LayerId layer_id();
+    auto hidden() -> bool;
+    auto layer_id() -> LayerId;
 
-    void set_show(bool flag);
+    auto set_show(bool flag) -> void;
 
-    size_t size() {
+    auto size() -> size_t {
       return _features.size();
     }
 
-    base::Color color() {
+    auto color() -> base::Color {
       return _color;
     }
-    bool fill() {
+    auto fill() -> bool {
       return _fill_polygons;
     }
 
-    void add_feature(int row_id, const std::string &geom_data, bool wkt);
-    virtual void render(spatial::Converter *converter);
-    spatial::Feature *feature_closest(const base::Point &p, const double &allowed_distance = 4.0);
-    void set_fill_polygons(bool fill);
-    bool get_fill_polygons();
-    virtual void repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area);
-    float query_render_progress();
-    spatial::Envelope get_envelope();
+    auto add_feature(int row_id, const std::string &geom_data, bool wkt) -> void;
+    virtual auto render(spatial::Converter *converter) -> void;
+    auto feature_closest(const base::Point &p, const double &allowed_distance = 4.0) -> spatial::Feature *;
+    auto set_fill_polygons(bool fill) -> void;
+    auto get_fill_polygons() -> bool;
+    virtual auto repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area) -> void;
+    auto query_render_progress() -> float;
+    auto get_envelope() -> spatial::Envelope;
   };
 }; // namespace spatial
 #endif /* SPATIAL_HANDLER_H_ */

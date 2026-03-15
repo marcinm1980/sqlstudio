@@ -47,22 +47,22 @@ namespace sqlide {
   };
   static const IsVarTypeEqTo is_var_type_eq_to;
 
-  bool is_var_null(const sqlite::variant_t &value) {
+  auto is_var_null(const sqlite::variant_t &value) -> bool {
     static const sqlite::variant_t null_value = sqlite::null_t();
     return boost::apply_visitor(is_var_type_eq_to, value, null_value);
   }
 
-  bool is_var_unknown(const sqlite::variant_t &value) {
+  auto is_var_unknown(const sqlite::variant_t &value) -> bool {
     static const sqlite::variant_t unknown_value = sqlite::unknown_t();
     return boost::apply_visitor(is_var_type_eq_to, value, unknown_value);
   }
 
-  bool is_var_blob(const sqlite::variant_t &value) {
+  auto is_var_blob(const sqlite::variant_t &value) -> bool {
     static const sqlite::variant_t blob_value = sqlite::blob_ref_t();
     return boost::apply_visitor(is_var_type_eq_to, value, blob_value);
   }
 
-  void optimize_sqlite_connection_for_speed(sqlite::connection *conn) {
+  auto optimize_sqlite_connection_for_speed(sqlite::connection *conn) -> void {
     //! sqlite::execute(*conn, "pragma locking_mode = exclusive", true);
     sqlite::execute(*conn, "pragma fsync = 0", true);
     sqlite::execute(*conn, "pragma synchronous = off", true);
@@ -91,12 +91,12 @@ namespace sqlide {
     sqlite::execute(*_conn, action, true);
   }
 
-  void Sqlite_transaction_guarder::commit() {
+  auto Sqlite_transaction_guarder::commit() -> void {
     sqlite::execute(*_conn, "commit", true);
     _in_trans = false;
   }
 
-  void Sqlite_transaction_guarder::commit_and_start_new_transaction() {
+  auto Sqlite_transaction_guarder::commit_and_start_new_transaction() -> void {
     commit();
     sqlite::execute(*_conn, "begin", true);
     _in_trans = true;
@@ -104,7 +104,7 @@ namespace sqlide {
 
 } // namespace sqlide
 
-std::tm local_timestamp() {
+auto local_timestamp() -> std::tm {
   std::time_t ltime;
   time(&ltime);
   std::tm t;
@@ -116,13 +116,13 @@ std::tm local_timestamp() {
   return t;
 }
 
-std::string format_time(const std::tm &t, const char *format) {
+auto format_time(const std::tm &t, const char *format) -> std::string {
   const size_t BUFFER_SIZE = 256;
   char buf[BUFFER_SIZE];
   strftime(buf, BUFFER_SIZE, format, &t);
   return std::string(buf);
 }
 
-std::string current_time(const char *format) {
+auto current_time(const char *format) -> std::string {
   return format_time(local_timestamp(), format);
 }

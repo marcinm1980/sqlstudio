@@ -37,23 +37,23 @@ namespace mdc {
     AreaGroup(Layer *layer);
     virtual ~AreaGroup();
 
-    virtual void set_selected(bool flag);
+    virtual auto set_selected(bool flag) -> void;
 
-    virtual void move_item(CanvasItem *item, const base::Point &pos);
+    virtual auto move_item(CanvasItem *item, const base::Point &pos) -> void;
 
     virtual auto can_render_gl() -> bool {
       return true;
     }
 
-    virtual void repaint(const base::Rect &clipArea, bool direct);
+    virtual auto repaint(const base::Rect &clipArea, bool direct) -> void;
 
-    void repaint_contents(const base::Rect &localClipArea, bool direct);
+    auto repaint_contents(const base::Rect &localClipArea, bool direct) -> void;
 
   protected:
     bool _dragged;
     bool _drag_selects_contents;
 
-    virtual void update_bounds();
+    virtual auto update_bounds() -> void;
     auto constrain_rect_to_bounds(const base::Rect &rect) -> base::Rect;
 
     virtual auto on_click(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;

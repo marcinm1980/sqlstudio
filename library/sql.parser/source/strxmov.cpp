@@ -37,8 +37,7 @@
 namespace mysql_parser
 {
 
-char *strxmov(char *dst,const char *src, ...)
-{
+auto strxmov(char *dst,const char *src, ...) -> char * {
   va_list pvar;
 
   va_start(pvar,src);

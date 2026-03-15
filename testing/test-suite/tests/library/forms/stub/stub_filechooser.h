@@ -36,7 +36,7 @@ namespace mforms {
   namespace stub {
 
     class FileChooserWrapper : public ViewWrapper {
-      static std::vector<std::string> split_string(const std::string &s, const std::string &sep) {
+      static auto split_string(const std::string &s, const std::string &sep) -> std::vector<std::string> {
         std::vector<std::string> parts;
         std::string ss = s;
 
@@ -57,42 +57,42 @@ namespace mforms {
         return parts;
       }
 
-      static bool create(FileChooser *self, mforms::Form *owner, FileChooserType type, bool show_hidden) {
+      static auto create(FileChooser *self, mforms::Form *owner, FileChooserType type, bool show_hidden) -> bool {
         return true;
       }
 
-      static void set_title(::mforms::FileChooser *self, const std::string &title) {
+      static auto set_title(::mforms::FileChooser *self, const std::string &title) -> void {
       }
 
-      static bool show_modal(::mforms::FileChooser *self) {
+      static auto show_modal(::mforms::FileChooser *self) -> bool {
         return true;
       }
 
-      static void set_directory(FileChooser *self, const std::string &path) {
+      static auto set_directory(FileChooser *self, const std::string &path) -> void {
       }
 
-      static std::string get_directory(FileChooser *self) {
+      static auto get_directory(FileChooser *self) -> std::string {
         return "";
       }
 
-      static std::string get_path(FileChooser *self) {
+      static auto get_path(FileChooser *self) -> std::string {
         return "";
       }
 
-      static void set_extensions(FileChooser *self, const std::string &extensions, const std::string &default_extension,
-                                 bool allow_all_file_types = true) {
+      static auto set_extensions(FileChooser *self, const std::string &extensions, const std::string &default_extension,
+                                 bool allow_all_file_types = true) -> void {
       }
 
-      static void setPath(FileChooser *self, const std::string &path) {
-
-      }
-
-      static void addSelectorOption(FileChooser *self, const std::string &name, const std::string &label,
-                                  const std::vector<std::pair<std::string, std::string> > &options) {
+      static auto setPath(FileChooser *self, const std::string &path) -> void {
 
       }
 
-      static std::string getSelectorOptionValue(FileChooser *self, const std::string &name) {
+      static auto addSelectorOption(FileChooser *self, const std::string &name, const std::string &label,
+                                  const std::vector<std::pair<std::string, std::string> > &options) -> void {
+
+      }
+
+      static auto getSelectorOptionValue(FileChooser *self, const std::string &name) -> std::string {
         return "";
       }
 
@@ -103,7 +103,7 @@ namespace mforms {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_filechooser_impl.create = &FileChooserWrapper::create;

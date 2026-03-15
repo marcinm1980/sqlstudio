@@ -42,19 +42,19 @@ MySQLViewEditorWrapper::~MySQLViewEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-MySQLViewEditorBE *MySQLViewEditorWrapper::get_unmanaged_object() {
+auto MySQLViewEditorWrapper::get_unmanaged_object() -> MySQLViewEditorBE * {
   return static_cast<::MySQLViewEditorBE *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLViewEditorWrapper::load_view_sql() {
+auto MySQLViewEditorWrapper::load_view_sql() -> void {
   get_unmanaged_object()->load_view_sql();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLViewEditorWrapper::commit_changes() {
+auto MySQLViewEditorWrapper::commit_changes() -> void {
   get_unmanaged_object()->commit_changes();
 }
 

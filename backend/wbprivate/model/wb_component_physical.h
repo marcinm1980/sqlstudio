@@ -73,61 +73,61 @@ namespace wb {
     WBComponentPhysical(WBContext *wb);
     virtual ~WBComponentPhysical();
 
-    static std::string name() {
+    static auto name() -> std::string {
       return "physical";
     }
-    virtual std::string get_name() {
+    virtual auto get_name() -> std::string {
       return WBComponentPhysical::name();
     }
-    virtual std::string get_diagram_class_name() {
+    virtual auto get_diagram_class_name() -> std::string {
       return studio_physical_Diagram::static_class_name();
     }
 
     // Model
-    db_SchemaRef add_new_db_schema(const studio_physical_ModelRef &model);
-    void delete_db_schema(const db_SchemaRef &schema);
+    auto add_new_db_schema(const studio_physical_ModelRef &model) -> db_SchemaRef;
+    auto delete_db_schema(const db_SchemaRef &schema) -> void;
 
     db_DatabaseObjectRef add_new_db_table(const db_SchemaRef &schema, const std::string &template_name = "");
-    db_DatabaseObjectRef add_new_db_view(const db_SchemaRef &schema);
-    db_DatabaseObjectRef add_new_db_routine(const db_SchemaRef &schema);
-    db_DatabaseObjectRef add_new_db_routine_group(const db_SchemaRef &schema);
+    auto add_new_db_view(const db_SchemaRef &schema) -> db_DatabaseObjectRef;
+    auto add_new_db_routine(const db_SchemaRef &schema) -> db_DatabaseObjectRef;
+    auto add_new_db_routine_group(const db_SchemaRef &schema) -> db_DatabaseObjectRef;
 
     db_ScriptRef add_new_stored_script(const studio_physical_ModelRef &model, const std::string &path = "");
     GrtStoredNoteRef add_new_stored_note(const studio_physical_ModelRef &model, const std::string &path = "");
 
-    std::list<model_FigureRef> interactive_place_db_objects(ModelDiagramForm *vform, int x, int y,
-                                                            const std::list<db_DatabaseObjectRef> &objects);
-    std::list<model_FigureRef> interactive_place_db_objects(ModelDiagramForm *vform, int x, int y,
+    auto interactive_place_db_objects(ModelDiagramForm *vform, int x, int y,
+                                                            const std::list<db_DatabaseObjectRef> &objects) -> std::list<model_FigureRef>;
+    auto interactive_place_db_objects(ModelDiagramForm *vform, int x, int y,
                                                             const std::list<db_DatabaseObjectRef> &objects,
-                                                            grt::CopyContext &copy_context);
+                                                            grt::CopyContext &copy_context) -> std::list<model_FigureRef>;
 
-    model_FigureRef place_db_object(ModelDiagramForm *view, const base::Point &pos, const db_DatabaseObjectRef &object,
-                                    bool select_figure = true);
-    void place_new_db_object(ModelDiagramForm *view, const base::Point &pos, ObjectType type);
+    auto place_db_object(ModelDiagramForm *view, const base::Point &pos, const db_DatabaseObjectRef &object,
+                                    bool select_figure = true) -> model_FigureRef;
+    auto place_new_db_object(ModelDiagramForm *view, const base::Point &pos, ObjectType type) -> void;
 
-    db_DatabaseObjectRef clone_db_object_to_schema(const db_SchemaRef &schema, const db_DatabaseObjectRef &object,
-                                                   grt::CopyContext &copy_context);
+    auto clone_db_object_to_schema(const db_SchemaRef &schema, const db_DatabaseObjectRef &object,
+                                                   grt::CopyContext &copy_context) -> db_DatabaseObjectRef;
 
-    virtual void block_model_notifications();
-    virtual void unblock_model_notifications();
+    virtual auto block_model_notifications() -> void;
+    virtual auto unblock_model_notifications() -> void;
 
-    virtual void delete_db_object(const db_DatabaseObjectRef &object);
+    virtual auto delete_db_object(const db_DatabaseObjectRef &object) -> void;
 
-    void setup_physical_model(studio_DocumentRef &doc, const std::string &rdbms_name,
-                              const std::string &rdbms_version);
+    auto setup_physical_model(studio_DocumentRef &doc, const std::string &rdbms_name,
+                              const std::string &rdbms_version) -> void;
 
-    bool has_figure_for_object_in_active_view(const GrtObjectRef &object, ModelDiagramForm *vform = 0);
+    auto has_figure_for_object_in_active_view(const GrtObjectRef &object, ModelDiagramForm *vform = 0) -> bool;
 
-    void privilege_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                                const db_CatalogRef &catalog);
-    void remove_user(const db_UserRef &user);
-    void remove_role(const db_RoleRef &role);
+    auto privilege_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                                const db_CatalogRef &catalog) -> void;
+    auto remove_user(const db_UserRef &user) -> void;
+    auto remove_role(const db_RoleRef &role) -> void;
 
-    db_UserRef add_new_user(const studio_physical_ModelRef &model);
-    db_RoleRef add_new_role(const studio_physical_ModelRef &model);
+    auto add_new_user(const studio_physical_ModelRef &model) -> db_UserRef;
+    auto add_new_role(const studio_physical_ModelRef &model) -> db_RoleRef;
 
-    void remove_references_to_object(const db_DatabaseObjectRef &object);
-    virtual void close_document();
+    auto remove_references_to_object(const db_DatabaseObjectRef &object) -> void;
+    virtual auto close_document() -> void;
 
   protected:
     enum RelationshipToolState { RIdle, RPickingStart, RPickingEnd, RFinished, RCancelled };
@@ -148,90 +148,90 @@ namespace wb {
       studio_physical_TableFigureRef itable;
       studio_physical_TableFigureRef ftable;
 
-      bool pick_table(const studio_physical_TableFigureRef &table);
-      bool pick_reftable(const studio_physical_TableFigureRef &table);
+      auto pick_table(const studio_physical_TableFigureRef &table) -> bool;
+      auto pick_reftable(const studio_physical_TableFigureRef &table) -> bool;
 
-      bool pick_column(const studio_physical_TableFigureRef &table, const db_ColumnRef &column);
-      bool pick_refcolumn(const studio_physical_TableFigureRef &table, const db_ColumnRef &column);
-      bool done_picking_columns() {
+      auto pick_column(const studio_physical_TableFigureRef &table, const db_ColumnRef &column) -> bool;
+      auto pick_refcolumn(const studio_physical_TableFigureRef &table, const db_ColumnRef &column) -> bool;
+      auto done_picking_columns() -> bool {
         return (!columns.empty() && columns.size() == refcolumns.size());
       }
 
-      bool finish_for_tables();
-      bool finish_for_columns();
-      bool finish();
+      auto finish_for_tables() -> bool;
+      auto finish_for_columns() -> bool;
+      auto finish() -> bool;
 
-      bool add_column(const db_ColumnRef &column);
-      bool add_refcolumn(const db_ColumnRef &column);
+      auto add_column(const db_ColumnRef &column) -> bool;
+      auto add_refcolumn(const db_ColumnRef &column) -> bool;
 
-      void on_figure_crossed(const model_ObjectRef &owner, mdc::CanvasItem *item, bool enter, const base::Point &pos);
-      void enter_table(const studio_physical_TableFigureRef &table);
-      void leave_table(const studio_physical_TableFigureRef &table);
+      auto on_figure_crossed(const model_ObjectRef &owner, mdc::CanvasItem *item, bool enter, const base::Point &pos) -> void;
+      auto enter_table(const studio_physical_TableFigureRef &table) -> void;
+      auto leave_table(const studio_physical_TableFigureRef &table) -> void;
 
-      void source_picking_done();
+      auto source_picking_done() -> void;
 
     public:
       RelationshipToolContext(WBComponentPhysical *owner, ModelDiagramForm *form, RelationshipType type);
 
-      void cancel();
+      auto cancel() -> void;
 
-      bool button_press(ModelDiagramForm *view, const base::Point &pos);
+      auto button_press(ModelDiagramForm *view, const base::Point &pos) -> bool;
     };
 
-    virtual void load_app_options(bool update);
+    virtual auto load_app_options(bool update) -> void;
 
-    virtual void setup_context_grt(WBOptions *options);
+    virtual auto setup_context_grt(WBOptions *options) -> void;
 
-    void init_catalog_grt(const db_mgmt_RdbmsRef &rdbms, const std::string &db_versionRef,
-                          studio_physical_ModelRef &model);
+    auto init_catalog_grt(const db_mgmt_RdbmsRef &rdbms, const std::string &db_versionRef,
+                          studio_physical_ModelRef &model) -> void;
 
-    grt::ListRef<db_UserDatatype> create_builtin_user_datatypes(const db_CatalogRef &catalog,
-                                                                const db_mgmt_RdbmsRef &rdbms);
+    auto create_builtin_user_datatypes(const db_CatalogRef &catalog,
+                                                                const db_mgmt_RdbmsRef &rdbms) -> grt::ListRef<db_UserDatatype>;
 
-    virtual void setup_canvas_tool(ModelDiagramForm *view, const std::string &tool);
+    virtual auto setup_canvas_tool(ModelDiagramForm *view, const std::string &tool) -> void;
 
-    virtual app_ToolbarRef get_tools_toolbar();
-    virtual app_ToolbarRef get_tool_options(const std::string &tool);
-    virtual grt::ListRef<app_ShortcutItem> get_shortcut_items();
+    virtual auto get_tools_toolbar() -> app_ToolbarRef;
+    virtual auto get_tool_options(const std::string &tool) -> app_ToolbarRef;
+    virtual auto get_shortcut_items() -> grt::ListRef<app_ShortcutItem>;
 
-    virtual void reset_document();
-    virtual void document_loaded();
-    void add_schema_listeners(const db_SchemaRef &schema);
-    void add_schema_object_listeners(const grt::ObjectRef &object);
+    virtual auto reset_document() -> void;
+    virtual auto document_loaded() -> void;
+    auto add_schema_listeners(const db_SchemaRef &schema) -> void;
+    auto add_schema_object_listeners(const grt::ObjectRef &object) -> void;
 
-    virtual bool delete_model_object(const model_ObjectRef &object, bool figure_only);
+    virtual auto delete_model_object(const model_ObjectRef &object, bool figure_only) -> bool;
 
-    virtual bool handles_figure(const model_ObjectRef &figure);
-    virtual bool can_paste_object(const grt::ObjectRef &object);
-    virtual model_ObjectRef paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
-                                         grt::CopyContext &copy_context);
-    virtual void copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context);
+    virtual auto handles_figure(const model_ObjectRef &figure) -> bool;
+    virtual auto can_paste_object(const grt::ObjectRef &object) -> bool;
+    virtual auto paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
+                                         grt::CopyContext &copy_context) -> model_ObjectRef;
+    virtual auto copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context) -> void;
 
-    virtual void activate_canvas_object(const model_ObjectRef &figure, bool newwindow);
+    virtual auto activate_canvas_object(const model_ObjectRef &figure, bool newwindow) -> void;
 
-    virtual std::string get_object_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item);
+    virtual auto get_object_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item) -> std::string;
 
     // Toolbar Handling
-    virtual std::vector<std::string> get_command_dropdown_items(const std::string &option);
+    virtual auto get_command_dropdown_items(const std::string &option) -> std::vector<std::string>;
 
     // drag&drop
-    virtual bool accepts_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
-                              const std::list<GrtObjectRef> &objects);
-    virtual bool perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
-                              const std::list<GrtObjectRef> &objects);
-    virtual bool perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type, const std::string &data);
+    virtual auto accepts_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
+                              const std::list<GrtObjectRef> &objects) -> bool;
+    virtual auto perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
+                              const std::list<GrtObjectRef> &objects) -> bool;
+    virtual auto perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type, const std::string &data) -> bool;
 
   public:
-    virtual GrtObjectRef get_object_for_figure(const model_ObjectRef &object);
+    virtual auto get_object_for_figure(const model_ObjectRef &object) -> GrtObjectRef;
 
   private:
-    grt::DictRef delete_db_schema(const db_SchemaRef &schema, bool check_empty);
+    auto delete_db_schema(const db_SchemaRef &schema, bool check_empty) -> grt::DictRef;
 
-    RelationshipToolContext *start_relationship(ModelDiagramForm *view, const base::Point &pos, RelationshipType type);
-    void cancel_relationship(ModelDiagramForm *view, RelationshipToolContext *rctx);
+    auto start_relationship(ModelDiagramForm *view, const base::Point &pos, RelationshipType type) -> RelationshipToolContext *;
+    auto cancel_relationship(ModelDiagramForm *view, RelationshipToolContext *rctx) -> void;
 
-    bool create_nm_relationship(ModelDiagramForm *view, studio_physical_TableFigureRef table1,
-                                studio_physical_TableFigureRef table2, bool imandatory, bool fmandatory);
+    auto create_nm_relationship(ModelDiagramForm *view, studio_physical_TableFigureRef table1,
+                                studio_physical_TableFigureRef table2, bool imandatory, bool fmandatory) -> bool;
 
   private:
     std::map<std::string, app_ToolbarRef> _toolbars;
@@ -249,28 +249,28 @@ namespace wb {
     boost::signals2::connection _model_list_listener;
     boost::signals2::connection _catalog_object_list_listener;
 
-    void refresh_ui_for_object(const GrtObjectRef &object);
+    auto refresh_ui_for_object(const GrtObjectRef &object) -> void;
 
-    bool update_table_fk_connection(const db_TableRef &table, const db_ForeignKeyRef &fk, bool added);
+    auto update_table_fk_connection(const db_TableRef &table, const db_ForeignKeyRef &fk, bool added) -> bool;
 
     // Listeners
-    void model_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value);
+    auto model_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) -> void;
 
-    void view_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                                  const model_DiagramRef &view);
+    auto view_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                                  const model_DiagramRef &view) -> void;
 
-    void catalog_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                                     const db_CatalogRef &catalog);
-    void schema_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                                    const db_SchemaRef &schema);
+    auto catalog_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                                     const db_CatalogRef &catalog) -> void;
+    auto schema_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                                    const db_SchemaRef &schema) -> void;
 
-    void foreign_key_changed(const db_ForeignKeyRef &fk);
+    auto foreign_key_changed(const db_ForeignKeyRef &fk) -> void;
 
-    void schema_content_object_changed(const db_DatabaseObjectRef &object);
+    auto schema_content_object_changed(const db_DatabaseObjectRef &object) -> void;
 
-    void schema_member_changed(const std::string &name, const grt::ValueRef &ovalue, const db_SchemaRef &schema);
+    auto schema_member_changed(const std::string &name, const grt::ValueRef &ovalue, const db_SchemaRef &schema) -> void;
 
-    bool handle_button_event(ModelDiagramForm *, mdc::MouseButton, bool, base::Point, mdc::EventState, void *data);
+    auto handle_button_event(ModelDiagramForm *, mdc::MouseButton, bool, base::Point, mdc::EventState, void *data) -> bool;
   };
 };
 

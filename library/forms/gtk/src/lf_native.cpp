@@ -31,7 +31,7 @@ NativeContainerImpl::NativeContainerImpl(::mforms::NativeContainer *self, Gtk::W
   _widget->show();
 }
 
-mforms::NativeContainer *mforms::native_from_widget(Gtk::Widget *w) {
+auto mforms::native_from_widget(Gtk::Widget *w) -> mforms::NativeContainer * {
   mforms::NativeContainer *native = new mforms::NativeContainer();
   new NativeContainerImpl(native, w);
   return native;

@@ -59,7 +59,7 @@ namespace mforms {
 
     bool operator<(const DocumentEntry &other) const;
 
-    void setTitle(const std::string &t);
+    auto setTitle(const std::string &t) -> void;
 
     //------ Accessibility Methods -----
     virtual std::string getAccessibilityDescription() override;
@@ -119,8 +119,8 @@ namespace mforms {
     base::Rect _mixed_heading_rect;
     std::string _pending_script;
 
-    bool accessibleHandler(int x, int y);
-    void deleteIcons();
+    auto accessibleHandler(int x, int y) -> bool;
+    auto deleteIcons() -> void;
 
   public:
     const int DOCUMENTS_LEFT_PADDING = 40;
@@ -142,18 +142,18 @@ namespace mforms {
     DocumentsSection(HomeScreen *owner);
     virtual ~DocumentsSection();
 
-    std::size_t entry_from_point(int x, int y);
+    auto entry_from_point(int x, int y) -> std::size_t;
 
     /**
      * Draws and icon followed by the given text. The given position is that of the upper left corner
      * of the image.
      */
-    void draw_icon_with_text(cairo_t *cr, int x, int y, cairo_surface_t *icon, const std::string &text);
+    auto draw_icon_with_text(cairo_t *cr, int x, int y, cairo_surface_t *icon, const std::string &text) -> void;
 
-    void draw_entry(cairo_t *cr, const DocumentEntry &entry, bool hot);
-    void update_filtered_documents();
-    void draw_selection_message(cairo_t *cr);
-    void layout(cairo_t *cr);
+    auto draw_entry(cairo_t *cr, const DocumentEntry &entry, bool hot) -> void;
+    auto update_filtered_documents() -> void;
+    auto draw_selection_message(cairo_t *cr) -> void;
+    auto layout(cairo_t *cr) -> void;
     virtual const char *getTitle() override;
     virtual void cancelOperation() override;
     virtual void setFocus() override;
@@ -165,17 +165,17 @@ namespace mforms {
     virtual void updateIcons() override;
 
     virtual void repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) override;
-    void add_document(const std::string &path, const time_t &time, const std::string schemas, long file_size);
-    void clear_documents();
+    auto add_document(const std::string &path, const time_t &time, const std::string schemas, long file_size) -> void;
+    auto clear_documents() -> void;
 
     virtual bool mouse_double_click(mforms::MouseButton button, int x, int y) override;
     virtual bool mouse_click(mforms::MouseButton button, int x, int y) override;
     virtual bool mouse_leave() override;
     virtual bool mouse_move(mforms::MouseButton button, int x, int y) override;
 
-    void handle_command(const std::string &command);
-    void show_connection_select_message();
-    void hide_connection_select_message();
+    auto handle_command(const std::string &command) -> void;
+    auto show_connection_select_message() -> void;
+    auto hide_connection_select_message() -> void;
 
     virtual size_t getAccessibilityChildCount() override;
     virtual Accessible *getAccessibilityChild(size_t index) override;

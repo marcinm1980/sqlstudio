@@ -151,24 +151,24 @@ namespace MySQL {
     protected:
       PanelWrapper(mforms::View *backend);
 
-      static bool create(mforms::Panel *backend, mforms::PanelType panelType);
-      static void set_title(mforms::Panel *backend, const std::string &title);
-      static void set_back_color(mforms::Panel *backend, const std::string &color);
-      static void add(mforms::Panel *backend, mforms::View *view);
-      static void set_active(mforms::Panel *backend, bool value);
-      static bool get_active(mforms::Panel *backend);
-      static void remove(mforms::Panel *backend, mforms::View *view);
+      static auto create(mforms::Panel *backend, mforms::PanelType panelType) -> bool;
+      static auto set_title(mforms::Panel *backend, const std::string &title) -> void;
+      static auto set_back_color(mforms::Panel *backend, const std::string &color) -> void;
+      static auto add(mforms::Panel *backend, mforms::View *view) -> void;
+      static auto set_active(mforms::Panel *backend, bool value) -> void;
+      static auto get_active(mforms::Panel *backend) -> bool;
+      static auto remove(mforms::Panel *backend, mforms::View *view) -> void;
 
     public:
-      virtual void set_title(const std::string &title);
-      virtual void set_back_color(const std::string &color);
-      virtual void add(mforms::View *view);
-      virtual void set_active(bool value);
-      virtual bool get_active();
-      virtual void remove(mforms::View *view);
-      virtual void remove();
+      virtual auto set_title(const std::string &title) -> void;
+      virtual auto set_back_color(const std::string &color) -> void;
+      virtual auto add(mforms::View *view) -> void;
+      virtual auto set_active(bool value) -> void;
+      virtual auto get_active() -> bool;
+      virtual auto remove(mforms::View *view) -> void;
+      virtual auto remove() -> void;
 
-      static void init();
+      static auto init() -> void;
     };
   };
 };

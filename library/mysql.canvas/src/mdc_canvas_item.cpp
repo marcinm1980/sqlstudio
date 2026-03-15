@@ -119,13 +119,13 @@ CanvasItem::~CanvasItem() {
     glDeleteTextures(1, &_content_texture);
 }
 
-mdc::CanvasItem *CanvasItem::find_item_with_tag(const std::string &tag) {
+auto CanvasItem::find_item_with_tag(const std::string &tag) -> mdc::CanvasItem * {
   if (tag == _tag)
     return this;
   return 0;
 }
 
-void CanvasItem::set_bounds(const Rect &rect) {
+auto CanvasItem::set_bounds(const Rect &rect) -> void {
   Rect obounds = get_bounds();
 
   if (obounds != rect) {
@@ -138,7 +138,7 @@ void CanvasItem::set_bounds(const Rect &rect) {
   }
 }
 
-void CanvasItem::set_position(const Point &pos) {
+auto CanvasItem::set_position(const Point &pos) -> void {
   if (_pos != pos) {
     Rect obounds = get_bounds();
 
@@ -150,7 +150,7 @@ void CanvasItem::set_position(const Point &pos) {
   }
 }
 
-void CanvasItem::set_size(const Size &size) {
+auto CanvasItem::set_size(const Size &size) -> void {
   if (_size != size) {
     Rect obounds = get_bounds();
 
@@ -162,11 +162,11 @@ void CanvasItem::set_size(const Size &size) {
   }
 }
 
-Rect CanvasItem::get_root_bounds() const {
+auto CanvasItem::get_root_bounds() const -> Rect {
   return Rect(get_root_position(), get_size());
 }
 
-Rect CanvasItem::get_padded_root_bounds() const {
+auto CanvasItem::get_padded_root_bounds() const -> Rect {
   Rect bounds(get_root_bounds());
 
   bounds.pos.x -= LEFT_OUTER_PAD;
@@ -177,32 +177,32 @@ Rect CanvasItem::get_padded_root_bounds() const {
   return bounds;
 }
 
-Rect CanvasItem::get_bounds() const {
+auto CanvasItem::get_bounds() const -> Rect {
   return Rect(get_position(), get_size());
 }
 
-Point CanvasItem::get_root_position() const {
+auto CanvasItem::get_root_position() const -> Point {
   return convert_point_to(Point(0, 0), 0);
 }
 
-bool CanvasItem::intersects(const Rect &bounds) const {
+auto CanvasItem::intersects(const Rect &bounds) const -> bool {
   return bounds_intersect(bounds, get_bounds());
 }
 
-bool CanvasItem::contains_point(const Point &point) const {
+auto CanvasItem::contains_point(const Point &point) const -> bool {
   return bounds_contain_point(get_bounds(), point.x, point.y);
 }
 
-void CanvasItem::set_fixed_min_size(const Size &size) {
+auto CanvasItem::set_fixed_min_size(const Size &size) -> void {
   _min_size_invalid = true;
   _fixed_min_size = size;
 }
 
-Size CanvasItem::calc_min_size() {
+auto CanvasItem::calc_min_size() -> Size {
   return Size(_xpadding * 2, _ypadding * 2);
 }
 
-Size CanvasItem::get_min_size() {
+auto CanvasItem::get_min_size() -> Size {
   if (_min_size_invalid) {
     Size size = Size(-1, -1); //_fixed_size;
     Size msize;
@@ -231,21 +231,21 @@ Size CanvasItem::get_min_size() {
   return _min_size;
 }
 
-void CanvasItem::set_padding(double xpad, double ypad) {
+auto CanvasItem::set_padding(double xpad, double ypad) -> void {
   _xpadding = xpad;
   _ypadding = ypad;
 
   set_needs_relayout();
 }
 
-void CanvasItem::resize_to(const Size &size) {
+auto CanvasItem::resize_to(const Size &size) -> void {
   if (_size != size) {
     set_size(size);
     set_needs_render();
   }
 }
 
-void CanvasItem::move_to(const Point &pos) {
+auto CanvasItem::move_to(const Point &pos) -> void {
   set_position(pos);
 
   if (is_toplevel())
@@ -255,7 +255,7 @@ void CanvasItem::move_to(const Point &pos) {
   //  _layer->set_needs_repaint();
 }
 
-void CanvasItem::set_fixed_size(const Size &size) {
+auto CanvasItem::set_fixed_size(const Size &size) -> void {
   Rect obounds(get_bounds());
 
   _min_size_invalid = true;
@@ -265,19 +265,19 @@ void CanvasItem::set_fixed_size(const Size &size) {
   set_needs_relayout();
 }
 
-void CanvasItem::parent_bounds_changed(const Rect &obounds, CanvasItem *item) {
+auto CanvasItem::parent_bounds_changed(const Rect &obounds, CanvasItem *item) -> void {
   _parent_bounds_changed_signal(item, obounds);
 
   update_handles();
 }
 
-void CanvasItem::grand_parent_bounds_changed(CanvasItem *item, const Rect &obounds) {
+auto CanvasItem::grand_parent_bounds_changed(CanvasItem *item, const Rect &obounds) -> void {
   _parent_bounds_changed_signal(item, obounds);
 
   update_handles();
 }
 
-void CanvasItem::set_parent(CanvasItem *parent) {
+auto CanvasItem::set_parent(CanvasItem *parent) -> void {
   if (parent != 0 && _parent != 0 && parent != _parent)
     throw std::logic_error("setting parent to already parented item");
 
@@ -294,40 +294,40 @@ void CanvasItem::set_parent(CanvasItem *parent) {
   }
 }
 
-void CanvasItem::remove_from_parent() {
+auto CanvasItem::remove_from_parent() -> void {
   if (_parent)
     dynamic_cast<Layouter *>(_parent)->remove(this);
 }
 
-CanvasView *CanvasItem::get_view() const {
+auto CanvasItem::get_view() const -> CanvasView * {
   if (_layer)
     return _layer->get_view();
   return 0;
 }
 
-void CanvasItem::set_accepts_focus(bool flag) {
+auto CanvasItem::set_accepts_focus(bool flag) -> void {
   _accepts_focus = flag;
 }
 
-void CanvasItem::set_accepts_selection(bool flag) {
+auto CanvasItem::set_accepts_selection(bool flag) -> void {
   _accepts_selection = flag;
 }
 
-void CanvasItem::set_draws_hover(bool flag) {
+auto CanvasItem::set_draws_hover(bool flag) -> void {
   if (_draws_hover != flag) {
     _draws_hover = flag;
     set_needs_render();
   }
 }
 
-void CanvasItem::set_highlighted(bool flag) {
+auto CanvasItem::set_highlighted(bool flag) -> void {
   if (_highlighted != flag) {
     _highlighted = flag;
     set_needs_render();
   }
 }
 
-void CanvasItem::set_highlight_color(const Color *color) {
+auto CanvasItem::set_highlight_color(const Color *color) -> void {
   if (_highlight_color)
     delete _highlight_color;
 
@@ -340,7 +340,7 @@ void CanvasItem::set_highlight_color(const Color *color) {
     set_needs_render();
 }
 
-void CanvasItem::set_selected(bool flag) {
+auto CanvasItem::set_selected(bool flag) -> void {
   if (_selected != flag) {
     _selected = flag;
     if (!_selected)
@@ -350,7 +350,7 @@ void CanvasItem::set_selected(bool flag) {
   }
 }
 
-void CanvasItem::set_focused(bool flag) {
+auto CanvasItem::set_focused(bool flag) -> void {
   if (_focused != flag) {
     _focused = flag;
     set_needs_render();
@@ -359,16 +359,16 @@ void CanvasItem::set_focused(bool flag) {
   }
 }
 
-void CanvasItem::set_allowed_resizing(bool horizontal, bool vertical) {
+auto CanvasItem::set_allowed_resizing(bool horizontal, bool vertical) -> void {
   _hresizeable = horizontal;
   _vresizeable = vertical;
 }
 
-void CanvasItem::set_draggable(bool flag) {
+auto CanvasItem::set_draggable(bool flag) -> void {
   _draggable = flag;
 }
 
-void CanvasItem::set_auto_sizing(bool flag) {
+auto CanvasItem::set_auto_sizing(bool flag) -> void {
   _auto_sizing = flag;
   _min_size_invalid = true;
   set_needs_relayout();
@@ -376,11 +376,11 @@ void CanvasItem::set_auto_sizing(bool flag) {
 
 //------------------------------------------------------------------------------
 
-void CanvasItem::set_cache_toplevel_contents(bool flag) {
+auto CanvasItem::set_cache_toplevel_contents(bool flag) -> void {
   _cache_toplevel_content = flag;
 }
 
-void CanvasItem::invalidate_cache() {
+auto CanvasItem::invalidate_cache() -> void {
   if (_content_cache) {
     _layer->get_view()->bookkeep_cache_mem(-cairo_image_surface_get_stride(_content_cache) *
                                            cairo_image_surface_get_height(_content_cache));
@@ -390,21 +390,21 @@ void CanvasItem::invalidate_cache() {
   set_needs_render();
 }
 
-void CanvasItem::set_has_shadow(bool flag) {
+auto CanvasItem::set_has_shadow(bool flag) -> void {
   if (_has_shadow != flag) {
     _has_shadow = flag;
     set_needs_render();
   }
 }
 
-void CanvasItem::set_visible(bool flag) {
+auto CanvasItem::set_visible(bool flag) -> void {
   if (_visible != flag) {
     _visible = flag;
     set_needs_relayout();
   }
 }
 
-bool CanvasItem::get_parents_visible() const {
+auto CanvasItem::get_parents_visible() const -> bool {
   CanvasItem *item = get_parent();
 
   while (item && !item->is_toplevel()) {
@@ -415,7 +415,7 @@ bool CanvasItem::get_parents_visible() const {
   return true;
 }
 
-void CanvasItem::set_needs_repaint() {
+auto CanvasItem::set_needs_repaint() -> void {
   Rect bounds(get_root_bounds());
 
   bounds.pos.x -= LEFT_OUTER_PAD;
@@ -436,7 +436,7 @@ void CanvasItem::set_needs_repaint() {
   _layer->queue_repaint(_old_bounds);
 }
 
-void CanvasItem::set_needs_render() {
+auto CanvasItem::set_needs_render() -> void {
   /*
   if (!_needs_render)
   {
@@ -458,7 +458,7 @@ void CanvasItem::set_needs_render() {
   }
 }
 
-void CanvasItem::set_needs_relayout() {
+auto CanvasItem::set_needs_relayout() -> void {
   _min_size_invalid = 1;
   // propagate the relayout request up until the last parent, which will
   // be a toplevel item. the toplevel will in its turn, add itself to the layers
@@ -473,7 +473,7 @@ void CanvasItem::set_needs_relayout() {
   set_needs_render();
 }
 
-void CanvasItem::auto_size() {
+auto CanvasItem::auto_size() -> void {
   Size size = _fixed_size;
   Size minsize = get_min_size();
 
@@ -488,7 +488,7 @@ void CanvasItem::auto_size() {
   resize_to(size);
 }
 
-void CanvasItem::relayout() {
+auto CanvasItem::relayout() -> void {
   // called by layer only
   if (_auto_sizing)
     auto_size();
@@ -504,13 +504,13 @@ void CanvasItem::relayout() {
   }
 }
 
-bool CanvasItem::is_toplevel() const {
+auto CanvasItem::is_toplevel() const -> bool {
   if (dynamic_cast<Group *>(_parent))
     return true;
   return false;
 }
 
-CanvasItem *CanvasItem::get_toplevel() const {
+auto CanvasItem::get_toplevel() const -> CanvasItem * {
   if (_parent) {
     if (is_toplevel())
       return (CanvasItem *)this;
@@ -519,7 +519,7 @@ CanvasItem *CanvasItem::get_toplevel() const {
   return 0;
 }
 
-CanvasItem::State CanvasItem::get_state() {
+auto CanvasItem::get_state() -> CanvasItem::State {
   if (_disabled)
     return Disabled;
   else if (_hovering && _draws_hover)
@@ -531,13 +531,13 @@ CanvasItem::State CanvasItem::get_state() {
   return Normal;
 }
 
-void CanvasItem::set_state_drawing(bool flag) {
+auto CanvasItem::set_state_drawing(bool flag) -> void {
   _disable_state_drawing = !flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void CanvasItem::draw_state(CairoCtx *cr) {
+auto CanvasItem::draw_state(CairoCtx *cr) -> void {
   if (!get_view()->is_printout() && !_disable_state_drawing) {
     switch (get_state()) {
       case Disabled:
@@ -563,7 +563,7 @@ void CanvasItem::draw_state(CairoCtx *cr) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CanvasItem::draw_state_gl() {
+auto CanvasItem::draw_state_gl() -> void {
   if (!get_view()->is_printout() && !_disable_state_drawing) {
     switch (get_state()) {
       case Disabled:
@@ -589,7 +589,7 @@ void CanvasItem::draw_state_gl() {
 
 //--------------------------------------------------------------------------------------------------
 
-void CanvasItem::draw_outline_ring(CairoCtx *cr, const Color &color) {
+auto CanvasItem::draw_outline_ring(CairoCtx *cr, const Color &color) -> void {
   cr->save();
 
   cr->set_color(color, color.alpha);
@@ -607,7 +607,7 @@ void CanvasItem::draw_outline_ring(CairoCtx *cr, const Color &color) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CanvasItem::draw_outline_ring_gl(const Color &color) {
+auto CanvasItem::draw_outline_ring_gl(const Color &color) -> void {
 #ifndef __APPLE__
   gl_setcolor(color);
   glLineWidth(2);
@@ -623,13 +623,13 @@ void CanvasItem::draw_outline_ring_gl(const Color &color) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CanvasItem::render(CairoCtx *cr) {
+auto CanvasItem::render(CairoCtx *cr) -> void {
 }
 
-void CanvasItem::render_gl(CairoCtx *cr) {
+auto CanvasItem::render_gl(CairoCtx *cr) -> void {
 }
 
-void CanvasItem::render_to_surface(cairo_surface_t *surf, bool use_padding) {
+auto CanvasItem::render_to_surface(cairo_surface_t *surf, bool use_padding) -> void {
   CairoCtx cr(surf);
 
   cr.scale(_layer->get_view()->get_zoom(), _layer->get_view()->get_zoom());
@@ -641,7 +641,7 @@ void CanvasItem::render_to_surface(cairo_surface_t *surf, bool use_padding) {
   render(&cr);
 }
 
-void CanvasItem::repaint_gl(const Rect &clipArea) {
+auto CanvasItem::repaint_gl(const Rect &clipArea) -> void {
 #ifndef __APPLE__
   CairoCtx *ccr = _layer->get_view()->cairoctx();
 
@@ -751,7 +751,7 @@ void CanvasItem::repaint_gl(const Rect &clipArea) {
 #endif
 }
 
-void CanvasItem::repaint(const Rect &clipArea, bool direct) {
+auto CanvasItem::repaint(const Rect &clipArea, bool direct) -> void {
   // Don't render OpenGL commands if "direct" is true, which means we are rendering to off-screen bitmap
   // (for printing, png/pdf export or similar).
   if (_layer->get_view()->has_gl() && !direct)
@@ -764,7 +764,7 @@ void CanvasItem::repaint(const Rect &clipArea, bool direct) {
   }
 }
 
-void CanvasItem::repaint_direct() {
+auto CanvasItem::repaint_direct() -> void {
   CairoCtx *ccr = _layer->get_view()->cairoctx();
 
   ccr->save();
@@ -783,7 +783,7 @@ void CanvasItem::repaint_direct() {
  * @param size The base size to use to compute the right texture size (must be a power of 2). Can be 0 in which
  *             case the item's entire size is used.
  */
-Size CanvasItem::get_texture_size(Size size) {
+auto CanvasItem::get_texture_size(Size size) -> Size {
   if (size.width == 0 || size.height == 0) {
     size = get_size();
 
@@ -802,7 +802,7 @@ Size CanvasItem::get_texture_size(Size size) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CanvasItem::regenerate_cache(Size size) {
+auto CanvasItem::regenerate_cache(Size size) -> void {
   if (!_content_cache || ((int)size.width != cairo_image_surface_get_width(_content_cache) ||
                           (int)size.height != cairo_image_surface_get_height(_content_cache))) {
     if (_content_cache) {
@@ -830,7 +830,7 @@ void CanvasItem::regenerate_cache(Size size) {
   _needs_render = false;
 }
 
-void CanvasItem::repaint_cached() {
+auto CanvasItem::repaint_cached() -> void {
   // during zooming, the cache must be rendered with scaling enabled,
   // but the blitting of the rendered image must be done with no zooming
 
@@ -859,7 +859,7 @@ void CanvasItem::repaint_cached() {
   }
 }
 
-CanvasItem *CanvasItem::get_common_ancestor(CanvasItem *item) const {
+auto CanvasItem::get_common_ancestor(CanvasItem *item) const -> CanvasItem * {
   const CanvasItem *my_ancestor, *other_ancestor;
 
   for (my_ancestor = this; my_ancestor != NULL; my_ancestor = my_ancestor->get_parent()) {
@@ -871,7 +871,7 @@ CanvasItem *CanvasItem::get_common_ancestor(CanvasItem *item) const {
   return 0;
 }
 
-Point CanvasItem::convert_point_from(const Point &pt, CanvasItem *item) const {
+auto CanvasItem::convert_point_from(const Point &pt, CanvasItem *item) const -> Point {
   CanvasItem *ancestor = 0;
   const CanvasItem *it;
   Point point = pt;
@@ -891,7 +891,7 @@ Point CanvasItem::convert_point_from(const Point &pt, CanvasItem *item) const {
   return point;
 }
 
-Point CanvasItem::convert_point_to(const Point &pt, CanvasItem *item) const {
+auto CanvasItem::convert_point_to(const Point &pt, CanvasItem *item) const -> Point {
   CanvasItem *ancestor = item ? get_common_ancestor(item) : 0;
   const CanvasItem *it;
   Point point = pt;
@@ -908,7 +908,7 @@ Point CanvasItem::convert_point_to(const Point &pt, CanvasItem *item) const {
   return point;
 }
 
-Point CanvasItem::get_intersection_with_line_to(const Point &p) {
+auto CanvasItem::get_intersection_with_line_to(const Point &p) -> Point {
   Rect bounds(get_root_bounds());
   Point p1;
   Point p2;
@@ -923,14 +923,14 @@ Point CanvasItem::get_intersection_with_line_to(const Point &p) {
 
 //--------------------------------------------------------------------------------
 
-void CanvasItem::destroy_handles() {
+auto CanvasItem::destroy_handles() -> void {
   for (std::vector<ItemHandle *>::iterator i = _handles.begin(); i != _handles.end(); ++i) {
     delete *i;
   }
   _handles.clear();
 }
 
-void CanvasItem::create_handles(InteractionLayer *ilayer) {
+auto CanvasItem::create_handles(InteractionLayer *ilayer) -> void {
   ItemHandle *hdl;
   struct {
     int tag;
@@ -950,7 +950,7 @@ void CanvasItem::create_handles(InteractionLayer *ilayer) {
   }
 }
 
-void CanvasItem::update_handles() {
+auto CanvasItem::update_handles() -> void {
   if (!_handles.empty()) {
     Size size = get_size();
     struct {
@@ -966,15 +966,15 @@ void CanvasItem::update_handles() {
   }
 }
 
-void CanvasItem::magnetize_bounds() {
+auto CanvasItem::magnetize_bounds() -> void {
   add_magnet(new BoundsMagnet(this));
 }
 
-void CanvasItem::add_magnet(Magnet *magnet) {
+auto CanvasItem::add_magnet(Magnet *magnet) -> void {
   _magnets.push_back(magnet);
 }
 
-BoundsMagnet *CanvasItem::get_bounds_magnet() {
+auto CanvasItem::get_bounds_magnet() -> BoundsMagnet * {
   for (std::vector<Magnet *>::const_iterator iter = _magnets.begin(); iter != _magnets.end(); ++iter) {
     if (dynamic_cast<BoundsMagnet *>(*iter))
       return dynamic_cast<BoundsMagnet *>(*iter);
@@ -982,7 +982,7 @@ BoundsMagnet *CanvasItem::get_bounds_magnet() {
   return 0;
 }
 
-mdc::Magnet *CanvasItem::get_closest_magnet(const Point &point) {
+auto CanvasItem::get_closest_magnet(const Point &point) -> mdc::Magnet * {
   Point lpos = convert_point_from(point, 0);
   double d, bestd = MAGNET_STICK_DISTANCE;
   Magnet *best = 0;
@@ -1005,13 +1005,13 @@ mdc::Magnet *CanvasItem::get_closest_magnet(const Point &point) {
   return best;
 }
 
-void CanvasItem::set_drag_handle_constrainer(const std::function<void(ItemHandle *, Size &)> &slot) {
+auto CanvasItem::set_drag_handle_constrainer(const std::function<void(ItemHandle *, Size &)> &slot) -> void {
   _drag_handle_constrainer = slot;
 }
 
 //------------------------------------------------------------------------------
 
-bool CanvasItem::on_drag_handle(ItemHandle *handle, const Point &pos, bool dragging) {
+auto CanvasItem::on_drag_handle(ItemHandle *handle, const Point &pos, bool dragging) -> bool {
   Rect oframe = get_root_bounds();
   Point npos = get_position();
   Size nsize = get_size();
@@ -1092,7 +1092,7 @@ bool CanvasItem::on_drag_handle(ItemHandle *handle, const Point &pos, bool dragg
 
 //--------------------------------------------------------------------------------------------------
 
-bool CanvasItem::on_click(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto CanvasItem::on_click(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   if (button == ButtonLeft && !_dragged) {
     CanvasView *view = get_layer()->get_view();
 
@@ -1134,13 +1134,13 @@ bool CanvasItem::on_click(CanvasItem *target, const Point &point, MouseButton bu
 
 //--------------------------------------------------------------------------------------------------
 
-bool CanvasItem::on_double_click(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto CanvasItem::on_double_click(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool CanvasItem::on_button_press(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto CanvasItem::on_button_press(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   _button_press_pos = point;
 
   // if we're a toplevel, prepare for dragging
@@ -1179,7 +1179,7 @@ bool CanvasItem::on_button_press(CanvasItem *target, const Point &point, MouseBu
   return false;
 }
 
-bool CanvasItem::on_button_release(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto CanvasItem::on_button_release(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   if (button == ButtonLeft) {
     if (is_toplevel()) // && target->_draggable)
     {
@@ -1196,7 +1196,7 @@ bool CanvasItem::on_button_release(CanvasItem *target, const Point &point, Mouse
   return false;
 }
 
-bool CanvasItem::on_drag(CanvasItem *target, const Point &point, EventState state) {
+auto CanvasItem::on_drag(CanvasItem *target, const Point &point, EventState state) -> bool {
   _dragged = 1;
 
   if (is_toplevel() && (state & SLeftButtonMask)) {
@@ -1223,7 +1223,7 @@ bool CanvasItem::on_drag(CanvasItem *target, const Point &point, EventState stat
   return false;
 }
 
-bool CanvasItem::on_enter(CanvasItem *target, const Point &point) {
+auto CanvasItem::on_enter(CanvasItem *target, const Point &point) -> bool {
   // on_enter and on_leave return true (block propagation)
   // by default, unlike other events.
   // the parent items will receive their own crossing events
@@ -1235,7 +1235,7 @@ bool CanvasItem::on_enter(CanvasItem *target, const Point &point) {
   return true;
 }
 
-bool CanvasItem::on_leave(CanvasItem *target, const Point &point) {
+auto CanvasItem::on_leave(CanvasItem *target, const Point &point) -> bool {
   // on_enter and on_leave return true (block propagation)
   // by default, unlike other events.
   if (_hovering) {

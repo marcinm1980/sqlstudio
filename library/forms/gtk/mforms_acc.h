@@ -55,49 +55,49 @@ namespace mforms {
     public:
       class AtkActionIface {
       public:
-        static void init(::AtkActionIface *iface);
+        static auto init(::AtkActionIface *iface) -> void;
 
       private:
         AtkActionIface() {};
 
-        static gboolean doAction(AtkAction *action, gint i);
-        static gint getNActions(AtkAction *action);
-        static const gchar* getName(AtkAction *action, gint i);
+        static auto doAction(AtkAction *action, gint i) -> gboolean;
+        static auto getNActions(AtkAction *action) -> gint;
+        static auto getName(AtkAction *action, gint i) -> const gchar*;
       };
 
       class AtkComponentIface {
       public:
-        static void init(::AtkComponentIface *iface);
+        static auto init(::AtkComponentIface *iface) -> void;
 
       private:
         AtkComponentIface() {};
 
-        static void getPosition(AtkComponent *component, gint *x, gint *y, AtkCoordType coord_type);
-        static void getSize(AtkComponent *component, gint *width, gint *height);
-        static void getExtents(AtkComponent *component, gint *x, gint *y, gint *width, gint *height, AtkCoordType coord_type);
-        static gboolean grabFocus(AtkComponent *component);
+        static auto getPosition(AtkComponent *component, gint *x, gint *y, AtkCoordType coord_type) -> void;
+        static auto getSize(AtkComponent *component, gint *width, gint *height) -> void;
+        static auto getExtents(AtkComponent *component, gint *x, gint *y, gint *width, gint *height, AtkCoordType coord_type) -> void;
+        static auto grabFocus(AtkComponent *component) -> gboolean;
       };
 
       class AtkTextIface {
        public:
-        static void init(::AtkTextIface *iface);
+        static auto init(::AtkTextIface *iface) -> void;
        private:
         AtkTextIface() {};
-        static gchar* getText(AtkText* text, gint start, gint end);
-        static gint getCharacterCount(AtkText* text);
+        static auto getText(AtkText* text, gint start, gint end) -> gchar*;
+        static auto getCharacterCount(AtkText* text) -> gint;
       };
 
       mformsGTKAccessible(GtkAccessible *accessible, base::Accessible *acc);
       virtual ~mformsGTKAccessible();
-      static AtkObject *WidgetGetAccessibleImpl(GtkWidget *widget, AtkObject **cache, gpointer widget_parent_class);
-      static base::Accessible* getmformsAccessible(AtkObject *accessible);
-      static const gchar* getName(AtkObject *accessible);
-      static const gchar* getDescription(AtkObject *accessible);
-      static AtkRole getRole(AtkObject *accessible);
-      static gint getNChildren(AtkObject *accessible);
-      static AtkObject* refChild(AtkObject *accessible, gint i);
-      static mformsGTKAccessible *FromAccessible(GtkAccessible *accessible);
-      static mformsGTKAccessible *FromAccessible(AtkObject *accessible);
+      static auto WidgetGetAccessibleImpl(GtkWidget *widget, AtkObject **cache, gpointer widget_parent_class) -> AtkObject *;
+      static auto getmformsAccessible(AtkObject *accessible) -> base::Accessible*;
+      static auto getName(AtkObject *accessible) -> const gchar*;
+      static auto getDescription(AtkObject *accessible) -> const gchar*;
+      static auto getRole(AtkObject *accessible) -> AtkRole;
+      static auto getNChildren(AtkObject *accessible) -> gint;
+      static auto refChild(AtkObject *accessible, gint i) -> AtkObject*;
+      static auto FromAccessible(GtkAccessible *accessible) -> mformsGTKAccessible *;
+      static auto FromAccessible(AtkObject *accessible) -> mformsGTKAccessible *;
 
     protected:
       GtkAccessible *_accessible;
@@ -118,20 +118,20 @@ namespace mforms {
       mformsGTK(_MFormsObject *mfo);
       virtual ~mformsGTK();
 
-      static AtkObject* GetAccessible(GtkWidget *widget);
-      static void ClassInit(GObjectClass* object_class, GtkWidgetClass *widget_class,
-                            GtkEventBoxClass *container_class);
-      static void Destroy(GObject *object);
-      static mformsGTK* FromWidget(GtkWidget *widget);
-      AtkObject* GetAccessibleThis(GtkWidget *widget);
-      void SetMFormsOwner(mforms::View *view);
-      base::Accessible* getmformsAcc();
+      static auto GetAccessible(GtkWidget *widget) -> AtkObject*;
+      static auto ClassInit(GObjectClass* object_class, GtkWidgetClass *widget_class,
+                            GtkEventBoxClass *container_class) -> void;
+      static auto Destroy(GObject *object) -> void;
+      static auto FromWidget(GtkWidget *widget) -> mformsGTK*;
+      auto GetAccessibleThis(GtkWidget *widget) -> AtkObject*;
+      auto SetMFormsOwner(mforms::View *view) -> void;
+      auto getmformsAcc() -> base::Accessible*;
     protected:
       _MFormsObject *_mfo;
       GtkWidget* _windowMain;
       AtkObject *_accessible;
       mforms::View *_owner;
-      virtual void Finalise();
+      virtual auto Finalise() -> void;
     };
 
     struct _MFormsObject {
@@ -147,16 +147,16 @@ namespace mforms {
       void (*set_backend)(MFormsObject *mfo, mforms::View *view);
     };
 
-    void mforms_class_init(MFormsClass *klass);
-    void mforms_init(MFormsObject *mf);
+    auto mforms_class_init(MFormsClass *klass) -> void;
+    auto mforms_init(MFormsObject *mf) -> void;
 
-    GType mforms_get_type();
-    GType mforms_object_accessible_get_type(GType parent_type G_GNUC_UNUSED);
+    auto mforms_get_type() -> GType;
+    auto mforms_object_accessible_get_type(GType parent_type G_GNUC_UNUSED) -> GType;
     static gint mformsObject_private_offset = 0;
-    static inline mformsObjectAccessiblePrivate* mforms_get_instance_private(mformsObjectAccessible *self) {
+    static inline auto mforms_get_instance_private(mformsObjectAccessible *self) -> mformsObjectAccessiblePrivate* {
       return reinterpret_cast<mformsObjectAccessiblePrivate*>(G_STRUCT_MEMBER_P(self, mformsObject_private_offset));
     }
 
-    GtkWidget* mforms_new();
+    auto mforms_new() -> GtkWidget*;
   }
 }

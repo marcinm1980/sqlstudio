@@ -19,9 +19,8 @@
 namespace mysql_parser
 {
 
-int my_message_no_curses(uint error __attribute__((unused)),
-			 const char *str, myf MyFlags)
-{
+auto my_message_no_curses(uint error __attribute__((unused)),
+			 const char *str, myf MyFlags) -> int {
   DBUG_ENTER("my_message_no_curses");
   DBUG_PRINT("enter",("message: %s",str));
   (void) fflush(stdout);

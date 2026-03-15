@@ -40,7 +40,7 @@ mforms::TaskSidebar::TaskSidebar() : Box(false) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-TaskSidebar* TaskSidebar::create(const std::string& type) {
+auto TaskSidebar::create(const std::string& type) -> TaskSidebar* {
   if (!sidebar_factory || sidebar_factory->find(type) == sidebar_factory->end())
     throw std::invalid_argument("Invalid sidebar type " + type);
 
@@ -49,7 +49,7 @@ TaskSidebar* TaskSidebar::create(const std::string& type) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TaskSidebar::register_factory(const std::string& type, TaskSidebar* (*create)()) {
+auto TaskSidebar::register_factory(const std::string& type, TaskSidebar* (*create)()) -> void {
   if (!sidebar_factory)
     sidebar_factory = new std::map<std::string, TaskSidebar* (*)()>();
 

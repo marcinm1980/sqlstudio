@@ -63,23 +63,23 @@ namespace wb {
     boost::signals2::signal<void()> _closed;
 
   protected:
-    void revert_clicked();
-    void edit_clicked();
-    void close_clicked();
-    void text_changed(int start_line, int lines_changed);
+    auto revert_clicked() -> void;
+    auto edit_clicked() -> void;
+    auto close_clicked() -> void;
+    auto text_changed(int start_line, int lines_changed) -> void;
 
     virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) override;
   public:
     SnippetPopover(mforms::View *owner);
     ~SnippetPopover();
 
-    void set_heading(const std::string& text);
-    void set_text(const std::string& text);
-    void set_read_only(bool flag);
+    auto set_heading(const std::string& text) -> void;
+    auto set_text(const std::string& text) -> void;
+    auto set_read_only(bool flag) -> void;
 
-    bool has_changed();
-    std::string get_text();
-    std::string get_heading();
+    auto has_changed() -> bool;
+    auto get_text() -> std::string;
+    auto get_heading() -> std::string;
 
     boost::signals2::signal<void()>* signal_closed() {
       return &_closed;

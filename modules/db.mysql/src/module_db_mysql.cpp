@@ -59,7 +59,7 @@
 using namespace grt;
 using namespace base;
 
-static std::string get_table_old_name(db_mysql_TableRef table) {
+static auto get_table_old_name(db_mysql_TableRef table) -> std::string {
   return std::string("`")
     .append(table->owner()->name().c_str())
     .append("`.`")
@@ -67,7 +67,7 @@ static std::string get_table_old_name(db_mysql_TableRef table) {
     .append("` ");
 }
 
-inline std::string get_name(const GrtNamedObjectRef object, const bool use_short_names) {
+inline auto get_name(const GrtNamedObjectRef object, const bool use_short_names) -> std::string {
   return use_short_names ? std::string("`").append(object->name().c_str()).append("`")
                          : get_qualified_schema_object_name(object);
 };
@@ -82,7 +82,7 @@ namespace {
 
     std::string padding_text;
 
-    void rebuild_padding_text() {
+    auto rebuild_padding_text() -> void {
       padding_text = std::string(padding, ' ');
     }
 
@@ -102,15 +102,15 @@ namespace {
       return *this;
     }
 
-    std::string& pad(std::string& text) {
+    auto pad(std::string& text) -> std::string& {
       return text.append(padding_text);
     }
   };
 
-  static std::string generate_single_partition(db_mysql_PartitionDefinitionRef part, bool is_range) {
+  static auto generate_single_partition(db_mysql_PartitionDefinitionRef part, bool is_range) -> std::string {
     class Partition_options {
     public:
-      static void generate(db_mysql_PartitionDefinitionRef part, std::string& sql) {
+      static auto generate(db_mysql_PartitionDefinitionRef part, std::string& sql) -> void {
         if (strlen(part->comment().c_str()))
           sql.append(" COMMENT = '").append(base::escape_sql_string(part->comment().c_str())).append("'");
 
@@ -162,7 +162,7 @@ namespace {
     return sql;
   }
 
-  static std::string generate_drop_partitions(const std::list<std::string>& part_names) {
+  static auto generate_drop_partitions(const std::list<std::string>& part_names) -> std::string {
     std::string sql(" DROP PARTITION ");
     bool first = true;
 
@@ -178,7 +178,7 @@ namespace {
     return sql;
   }
 
-  static std::string global_generate_create(db_mysql_ForeignKeyRef fk, TextPadding& padding, bool use_short_names) {
+  static auto global_generate_create(db_mysql_ForeignKeyRef fk, TextPadding& padding, bool use_short_names) -> std::string {
     std::string sql;
 
     sql.append("CONSTRAINT `").append(fk->name().c_str()).append("`\n");
@@ -238,7 +238,7 @@ namespace {
     return sql;
   }
 
-  static std::string generate_drop_index(db_mysql_IndexRef index) {
+  static auto generate_drop_index(db_mysql_IndexRef index) -> std::string {
     /*
      | DROP {INDEX|KEY} index_name
      */
@@ -286,10 +286,10 @@ namespace {
     grt::ListRef<GrtNamedObject> target_object_list;
     bool disable_object_list;
 
-    void remember_alter(const GrtNamedObjectRef& obj, const std::string& sql);
-    void remember(const GrtNamedObjectRef& obj, const std::string& sql, const bool front = false);
+    auto remember_alter(const GrtNamedObjectRef& obj, const std::string& sql) -> void;
+    auto remember(const GrtNamedObjectRef& obj, const std::string& sql, const bool front = false) -> void;
 
-    void alter_table_property(std::string& to, const std::string& name, const std::string& value);
+    auto alter_table_property(std::string& to, const std::string& name, const std::string& value) -> void;
 
   public:
     ActionGenerateSQL(grt::ValueRef target, grt::ListRef<GrtNamedObject> obj_list, const grt::DictRef options,
@@ -303,12 +303,12 @@ namespace {
     void create_table_columns_begin(db_mysql_TableRef);
     void create_table_column(db_mysql_ColumnRef);
     void create_table_columns_end(db_mysql_TableRef);
-    std::string generate_create(db_mysql_ColumnRef column);
+    auto generate_create(db_mysql_ColumnRef column) -> std::string;
 
     void create_table_indexes_begin(db_mysql_TableRef);
-    void create_table_index(db_mysql_IndexRef, bool gen_create_index);
+    auto create_table_index(db_mysql_IndexRef, bool gen_create_index) -> void;
     void create_table_indexes_end(db_mysql_TableRef);
-    std::string generate_create(db_mysql_IndexRef index, std::string table_q_name, bool separate_index);
+    auto generate_create(db_mysql_IndexRef index, std::string table_q_name, bool separate_index) -> std::string;
 
     void create_table_fks_begin(db_mysql_TableRef);
     void create_table_fk(db_mysql_ForeignKeyRef);
@@ -342,9 +342,9 @@ namespace {
 
     // alter schema
     void alter_schema_props_begin(db_mysql_SchemaRef);
-    void alter_schema_default_charset(db_mysql_SchemaRef, grt::StringRef value);
-    void alter_schema_default_collate(db_mysql_SchemaRef, grt::StringRef value);
-    void alter_schema_name(db_mysql_SchemaRef, grt::StringRef value);
+    auto alter_schema_default_charset(db_mysql_SchemaRef, grt::StringRef value) -> void;
+    auto alter_schema_default_collate(db_mysql_SchemaRef, grt::StringRef value) -> void;
+    auto alter_schema_name(db_mysql_SchemaRef, grt::StringRef value) -> void;
     void alter_schema_props_end(db_mysql_SchemaRef);
 
     void alter_table_props_begin(db_mysql_TableRef);
@@ -366,33 +366,33 @@ namespace {
     void alter_table_min_rows(db_mysql_TableRef, grt::StringRef);
     void alter_table_max_rows(db_mysql_TableRef, grt::StringRef);
     void alter_table_connection_string(db_mysql_TableRef, grt::StringRef);
-    void alter_table_generate_partitioning(db_mysql_TableRef table, const std::string& part_type,
+    auto alter_table_generate_partitioning(db_mysql_TableRef table, const std::string& part_type,
                                            const std::string& part_expr, int part_count,
                                            const std::string& subpart_type, const std::string& subpart_expr,
-                                           grt::ListRef<db_mysql_PartitionDefinition> part_defs);
-    void alter_table_drop_partitioning(db_mysql_TableRef table);
-    void alter_table_add_partition(db_mysql_PartitionDefinitionRef part, bool is_range);
-    void alter_table_reorganize_partition(db_mysql_PartitionDefinitionRef old_part,
-                                          db_mysql_PartitionDefinitionRef new_part, bool is_range);
-    void alter_table_drop_partition(const std::string& part_name);
+                                           grt::ListRef<db_mysql_PartitionDefinition> part_defs) -> void;
+    auto alter_table_drop_partitioning(db_mysql_TableRef table) -> void;
+    auto alter_table_add_partition(db_mysql_PartitionDefinitionRef part, bool is_range) -> void;
+    auto alter_table_reorganize_partition(db_mysql_PartitionDefinitionRef old_part,
+                                          db_mysql_PartitionDefinitionRef new_part, bool is_range) -> void;
+    auto alter_table_drop_partition(const std::string& part_name) -> void;
     void alter_table_partition_count(db_mysql_TableRef, grt::IntegerRef);
     void alter_table_partition_definitions(db_mysql_TableRef, grt::StringRef);
     void alter_table_props_end(db_mysql_TableRef);
 
     void alter_table_columns_begin(db_mysql_TableRef);
-    void alter_table_add_column(db_mysql_TableRef, std::map<std::string, std::string>, db_mysql_ColumnRef,
-                                db_mysql_ColumnRef after);
+    auto alter_table_add_column(db_mysql_TableRef, std::map<std::string, std::string>, db_mysql_ColumnRef,
+                                db_mysql_ColumnRef after) -> void;
     void alter_table_drop_column(db_mysql_TableRef, db_mysql_ColumnRef);
-    void alter_table_change_column(db_mysql_TableRef table, db_mysql_ColumnRef org_col, db_mysql_ColumnRef mod_col,
+    auto alter_table_change_column(db_mysql_TableRef table, db_mysql_ColumnRef org_col, db_mysql_ColumnRef mod_col,
                                    db_mysql_ColumnRef after, bool modified,
-                                   std::map<std::string, std::string> column_rename_map);
+                                   std::map<std::string, std::string> column_rename_map) -> void;
     void alter_table_columns_end(db_mysql_TableRef);
 
     void alter_table_indexes_begin(db_mysql_TableRef);
     void alter_table_add_index(db_mysql_IndexRef);
     void alter_table_drop_index(db_mysql_IndexRef);
     void alter_table_indexes_end(db_mysql_TableRef);
-    void alter_table_change_index(db_mysql_IndexRef orgIndex, db_mysql_IndexRef newIndex);
+    auto alter_table_change_index(db_mysql_IndexRef orgIndex, db_mysql_IndexRef newIndex) -> void;
 
     void alter_table_fks_begin(db_mysql_TableRef);
     void alter_table_add_fk(db_mysql_ForeignKeyRef);
@@ -400,27 +400,27 @@ namespace {
     void alter_table_fks_end(db_mysql_TableRef);
 
     // triggers
-    void create_trigger(db_mysql_TriggerRef, bool for_alter);
-    void drop_trigger(db_mysql_TriggerRef, bool for_alter);
+    auto create_trigger(db_mysql_TriggerRef, bool for_alter) -> void;
+    auto drop_trigger(db_mysql_TriggerRef, bool for_alter) -> void;
 
     // views
     void create_view(db_mysql_ViewRef);
     void drop_view(db_mysql_ViewRef);
 
     // routines
-    void create_routine(db_mysql_RoutineRef, bool for_alter);
-    void drop_routine(db_mysql_RoutineRef, bool for_alter);
+    auto create_routine(db_mysql_RoutineRef, bool for_alter) -> void;
+    auto drop_routine(db_mysql_RoutineRef, bool for_alter) -> void;
 
     // users
     void create_user(db_UserRef);
     void drop_user(db_UserRef);
 
-    std::string get_name(GrtNamedObjectRef object) const {
+    auto get_name(GrtNamedObjectRef object) const -> std::string {
       return ::get_name(object, _omitSchemas);
     };
-    std::string generate_add_index(db_mysql_IndexRef index);
+    auto generate_add_index(db_mysql_IndexRef index) -> std::string;
 
-    virtual void disable_list_insert(const bool flag) {
+    virtual auto disable_list_insert(const bool flag) -> void {
       disable_object_list = flag;
     };
   };
@@ -461,7 +461,7 @@ namespace {
 
   // create table methods
 
-  void ActionGenerateSQL::create_table_props_begin(db_mysql_TableRef table) {
+  auto ActionGenerateSQL::create_table_props_begin(db_mysql_TableRef table) -> void {
     sql.assign("CREATE");
 
     table_q_name = get_name(table);
@@ -476,15 +476,15 @@ namespace {
     ++padding;
   }
 
-  void ActionGenerateSQL::create_table_props_end(db_mysql_TableRef table) {
+  auto ActionGenerateSQL::create_table_props_end(db_mysql_TableRef table) -> void {
     remember(table, sql);
   }
 
-  void ActionGenerateSQL::create_table_columns_begin(db_mysql_TableRef) {
+  auto ActionGenerateSQL::create_table_columns_begin(db_mysql_TableRef) -> void {
     first_column = true;
   }
 
-  void ActionGenerateSQL::create_table_column(db_mysql_ColumnRef column) {
+  auto ActionGenerateSQL::create_table_column(db_mysql_ColumnRef column) -> void {
     if (first_column)
       first_column = false;
     else
@@ -493,10 +493,10 @@ namespace {
     padding.pad(sql).append(generate_create(column));
   }
 
-  void ActionGenerateSQL::create_table_columns_end(db_mysql_TableRef) {
+  auto ActionGenerateSQL::create_table_columns_end(db_mysql_TableRef) -> void {
   }
 
-  std::string ActionGenerateSQL::generate_create(db_mysql_ColumnRef column) {
+  auto ActionGenerateSQL::generate_create(db_mysql_ColumnRef column) -> std::string {
     std::string sql;
 
     sql.append("`").append(column->name().c_str()).append("` ");
@@ -570,10 +570,10 @@ namespace {
     return base::trim_right(sql);
   }
 
-  void ActionGenerateSQL::create_table_indexes_begin(db_mysql_TableRef) {
+  auto ActionGenerateSQL::create_table_indexes_begin(db_mysql_TableRef) -> void {
   }
 
-  void ActionGenerateSQL::create_table_index(db_mysql_IndexRef index, bool gen_create_index) {
+  auto ActionGenerateSQL::create_table_index(db_mysql_IndexRef index, bool gen_create_index) -> void {
     std::string index_sql(generate_create(index, table_q_name, gen_create_index));
 
     if (gen_create_index) {
@@ -585,13 +585,13 @@ namespace {
     }
   }
 
-  void ActionGenerateSQL::create_table_indexes_end(db_mysql_TableRef) {
+  auto ActionGenerateSQL::create_table_indexes_end(db_mysql_TableRef) -> void {
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::string ActionGenerateSQL::generate_create(db_mysql_IndexRef index, std::string table_q_name,
-                                                 bool separate_index) {
+  auto ActionGenerateSQL::generate_create(db_mysql_IndexRef index, std::string table_q_name,
+                                                 bool separate_index) -> std::string {
     std::stringstream result;
     bool pk = (index->isPrimary() != 0);
 
@@ -681,12 +681,12 @@ namespace {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void ActionGenerateSQL::create_table_fks_begin(db_mysql_TableRef) {
+  auto ActionGenerateSQL::create_table_fks_begin(db_mysql_TableRef) -> void {
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void ActionGenerateSQL::create_table_fk(db_mysql_ForeignKeyRef fk) {
+  auto ActionGenerateSQL::create_table_fk(db_mysql_ForeignKeyRef fk) -> void {
     grt::StringRef ename = db_mysql_TableRef::cast_from(fk->owner())->tableEngine();
     db_mysql_StorageEngineRef engine = bec::TableHelper::get_engine_by_name(ename);
     if (engine.is_valid() && !engine->supportsForeignKeys())
@@ -696,36 +696,36 @@ namespace {
     padding.pad(sql).append(global_generate_create(fk, padding, _omitSchemas));
   }
 
-  void ActionGenerateSQL::create_table_fks_end(db_mysql_TableRef) {
+  auto ActionGenerateSQL::create_table_fks_end(db_mysql_TableRef) -> void {
     sql.append(")");
     --padding;
   }
 
-  void ActionGenerateSQL::create_table_engine(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_engine(grt::StringRef value) -> void {
     sql.append("\nENGINE = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_next_auto_inc(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_next_auto_inc(grt::StringRef value) -> void {
     sql.append("\nAUTO_INCREMENT = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_password(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_password(grt::StringRef value) -> void {
     sql.append("\nPASSWORD = '").append(value.c_str()).append("'");
   }
 
-  void ActionGenerateSQL::create_table_delay_key_write(grt::IntegerRef value) {
+  auto ActionGenerateSQL::create_table_delay_key_write(grt::IntegerRef value) -> void {
     sql.append("\nDELAY_KEY_WRITE = ").append(value.toString());
   }
 
-  void ActionGenerateSQL::create_table_charset(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_charset(grt::StringRef value) -> void {
     sql.append("\nDEFAULT CHARACTER SET = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_collate(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_collate(grt::StringRef value) -> void {
     sql.append("\nCOLLATE = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_merge_union(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_merge_union(grt::StringRef value) -> void {
     std::string s = *value;
     if (!s.empty() && s[0] == '(')
       sql.append("\nUNION = ").append(value.c_str());
@@ -733,52 +733,52 @@ namespace {
       sql.append("\nUNION = (").append(s).append(")");
   }
 
-  void ActionGenerateSQL::create_table_merge_insert(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_merge_insert(grt::StringRef value) -> void {
     sql.append("\nINSERT_METHOD = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_pack_keys(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_pack_keys(grt::StringRef value) -> void {
     sql.append("\nPACK_KEYS = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_checksum(grt::IntegerRef value) {
+  auto ActionGenerateSQL::create_table_checksum(grt::IntegerRef value) -> void {
     sql.append("\nCHECKSUM = ").append(value.toString());
   }
 
-  void ActionGenerateSQL::create_table_row_format(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_row_format(grt::StringRef value) -> void {
     sql.append("\nROW_FORMAT = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_key_block_size(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_key_block_size(grt::StringRef value) -> void {
     sql.append("\nKEY_BLOCK_SIZE = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_avg_row_length(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_avg_row_length(grt::StringRef value) -> void {
     sql.append("\nAVG_ROW_LENGTH = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_min_rows(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_min_rows(grt::StringRef value) -> void {
     sql.append("\nMIN_ROWS = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_max_rows(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_max_rows(grt::StringRef value) -> void {
     sql.append("\nMAX_ROWS = ").append(value.c_str());
   }
 
-  void ActionGenerateSQL::create_table_comment(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_comment(grt::StringRef value) -> void {
     sql.append("\nCOMMENT = ").append(bec::TableHelper::generate_comment_text(value, _maxTableCommentLength));
   }
 
-  void ActionGenerateSQL::create_table_data_dir(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_data_dir(grt::StringRef value) -> void {
     sql.append("\nDATA DIRECTORY = '").append(value.c_str()).append("'");
   }
 
-  void ActionGenerateSQL::create_table_index_dir(grt::StringRef value) {
+  auto ActionGenerateSQL::create_table_index_dir(grt::StringRef value) -> void {
     sql.append("\nINDEX DIRECTORY = '").append(value.c_str()).append("'");
   }
 
   // drop table
-  void ActionGenerateSQL::drop_table(db_mysql_TableRef table) {
+  auto ActionGenerateSQL::drop_table(db_mysql_TableRef table) -> void {
     sql.clear();
     sql.append("DROP TABLE IF EXISTS ").append(get_name(table)).append(" ");
     remember(table, sql);
@@ -786,7 +786,7 @@ namespace {
 
   // schema
 
-  void ActionGenerateSQL::create_schema(db_mysql_SchemaRef schema) {
+  auto ActionGenerateSQL::create_schema(db_mysql_SchemaRef schema) -> void {
     std::string schema_sql;
     schema_sql.append("CREATE SCHEMA ");
     if (_put_if_exists)
@@ -809,7 +809,7 @@ namespace {
     remember(schema, schema_sql);
   }
 
-  void ActionGenerateSQL::drop_schema(db_mysql_SchemaRef schema) {
+  auto ActionGenerateSQL::drop_schema(db_mysql_SchemaRef schema) -> void {
     std::string schema_sql;
     schema_sql.append("DROP SCHEMA IF EXISTS `").append(schema->name().c_str()).append("` ");
     remember(schema, schema_sql, true);
@@ -817,11 +817,11 @@ namespace {
 
   // alter schema methods
 
-  void ActionGenerateSQL::alter_schema_props_begin(db_mysql_SchemaRef schema) {
+  auto ActionGenerateSQL::alter_schema_props_begin(db_mysql_SchemaRef schema) -> void {
     sql.clear();
   }
 
-  void ActionGenerateSQL::alter_schema_name(db_mysql_SchemaRef schema, grt::StringRef value) {
+  auto ActionGenerateSQL::alter_schema_name(db_mysql_SchemaRef schema, grt::StringRef value) -> void {
     std::string rename_sql("RENAME SCHEMA `");
     rename_sql += schema->name().c_str();
     rename_sql += "` TO `";
@@ -830,11 +830,11 @@ namespace {
     remember_alter(schema, rename_sql);
   }
 
-  void ActionGenerateSQL::alter_schema_default_charset(db_mysql_SchemaRef schema, grt::StringRef value) {
+  auto ActionGenerateSQL::alter_schema_default_charset(db_mysql_SchemaRef schema, grt::StringRef value) -> void {
     sql.append(" DEFAULT CHARACTER SET ").append(value).append(" ");
   }
 
-  void ActionGenerateSQL::alter_schema_default_collate(db_mysql_SchemaRef schema, grt::StringRef value) {
+  auto ActionGenerateSQL::alter_schema_default_collate(db_mysql_SchemaRef schema, grt::StringRef value) -> void {
     if (value.empty())
       sql.append(" DEFAULT COLLATE ")
         .append(bec::get_default_collation_for_charset(db_SchemaRef::cast_from(schema),
@@ -844,7 +844,7 @@ namespace {
       sql.append(" DEFAULT COLLATE ").append(value).append(" ");
   }
 
-  void ActionGenerateSQL::alter_schema_props_end(db_mysql_SchemaRef schema) {
+  auto ActionGenerateSQL::alter_schema_props_end(db_mysql_SchemaRef schema) -> void {
     if (!sql.empty()) {
       sql = std::string("ALTER SCHEMA `").append(schema->name().c_str()).append("` ").append(sql);
       remember_alter(schema, sql);
@@ -853,7 +853,7 @@ namespace {
 
   // alter table
 
-  void ActionGenerateSQL::alter_table_props_begin(db_mysql_TableRef table) {
+  auto ActionGenerateSQL::alter_table_props_begin(db_mysql_TableRef table) -> void {
     comma.clear();
     sql.assign("ALTER TABLE ");
     sql += get_table_old_name(table) + "\n";
@@ -865,7 +865,7 @@ namespace {
     first_change = true;
   }
 
-  void ActionGenerateSQL::alter_table_property(std::string& to, const std::string& name, const std::string& value) {
+  auto ActionGenerateSQL::alter_table_property(std::string& to, const std::string& name, const std::string& value) -> void {
     if (first_change)
       first_change = false;
     else
@@ -874,7 +874,7 @@ namespace {
     to.append(name).append(value).append(" ");
   }
 
-  void ActionGenerateSQL::alter_table_name(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_name(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(
       sql, "RENAME TO ",
       _omitSchemas
@@ -882,31 +882,31 @@ namespace {
         : std::string(" `").append(table->owner()->name().c_str()).append("`.`").append(str.c_str()).append("`"));
   }
 
-  void ActionGenerateSQL::alter_table_engine(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_engine(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "ENGINE = ", str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_next_auto_inc(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_next_auto_inc(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "AUTO_INCREMENT = ", str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_password(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_password(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "PASSWORD  = '", std::string(str.c_str()).append("' "));
   }
 
-  void ActionGenerateSQL::alter_table_delay_key_write(db_mysql_TableRef table, grt::IntegerRef n) {
+  auto ActionGenerateSQL::alter_table_delay_key_write(db_mysql_TableRef table, grt::IntegerRef n) -> void {
     alter_table_property(sql, "DELAY_KEY_WRITE  = ", n.toString());
   }
 
-  void ActionGenerateSQL::alter_table_charset(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_charset(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "CHARACTER SET = ", str.empty() ? "DEFAULT" : str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_collate(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_collate(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "COLLATE = ", str.empty() ? "DEFAULT" : str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_comment(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_comment(db_mysql_TableRef table, grt::StringRef str) -> void {
     std::string comment = bec::TableHelper::generate_comment_text(str, _maxTableCommentLength);
     if (comment.empty())
       alter_table_property(sql, "COMMENT = ", "''");
@@ -914,7 +914,7 @@ namespace {
       alter_table_property(sql, "COMMENT = ", comment);
   }
 
-  void ActionGenerateSQL::alter_table_merge_union(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_merge_union(db_mysql_TableRef table, grt::StringRef str) -> void {
     std::string s = *str;
     if (!s.empty() && s[0] == '(')
       s = s.substr(1, s.size() - 2);
@@ -925,49 +925,49 @@ namespace {
     alter_table_property(sql, "UNION = (", std::string(s).append(") "));
   }
 
-  void ActionGenerateSQL::alter_table_merge_insert(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_merge_insert(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "INSERT_METHOD = ", str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_pack_keys(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_pack_keys(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "PACK_KEYS = ", str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_checksum(db_mysql_TableRef table, grt::IntegerRef n) {
+  auto ActionGenerateSQL::alter_table_checksum(db_mysql_TableRef table, grt::IntegerRef n) -> void {
     alter_table_property(sql, "CHECKSUM = ", n.toString());
   }
 
-  void ActionGenerateSQL::alter_table_row_format(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_row_format(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "ROW_FORMAT = ", str.empty() ? "DEFAULT" : str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_key_block_size(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_key_block_size(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "KEY_BLOCK_SIZE = ", str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_avg_row_length(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_avg_row_length(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "AVG_ROW_LENGTH = ", str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_min_rows(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_min_rows(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "MIN_ROWS = ", str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_max_rows(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_max_rows(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "MAX_ROWS = ", str.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_connection_string(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_connection_string(db_mysql_TableRef table, grt::StringRef str) -> void {
     alter_table_property(sql, "CONNECTION = ", str.c_str());
   }
 
   // used by generate_create_partitioning and generate_add_partitioning
   // generates full PARTITION BY clause
-  void ActionGenerateSQL::alter_table_generate_partitioning(db_mysql_TableRef table, const std::string& part_type,
+  auto ActionGenerateSQL::alter_table_generate_partitioning(db_mysql_TableRef table, const std::string& part_type,
                                                             const std::string& part_expr, int part_count,
                                                             const std::string& subpart_type,
                                                             const std::string& subpart_expr,
-                                                            grt::ListRef<db_mysql_PartitionDefinition> part_defs) {
+                                                            grt::ListRef<db_mysql_PartitionDefinition> part_defs) -> void {
     if (!part_count) {
       alter_table_drop_partitioning(table);
       return;
@@ -1005,12 +1005,12 @@ namespace {
     sql.append(" ");
   }
 
-  void ActionGenerateSQL::alter_table_drop_partitioning(db_mysql_TableRef table) {
+  auto ActionGenerateSQL::alter_table_drop_partitioning(db_mysql_TableRef table) -> void {
     sql.append(" REMOVE PARTITIONING ");
   }
 
-  void ActionGenerateSQL::alter_table_reorganize_partition(db_mysql_PartitionDefinitionRef old_part,
-                                                           db_mysql_PartitionDefinitionRef new_part, bool is_range) {
+  auto ActionGenerateSQL::alter_table_reorganize_partition(db_mysql_PartitionDefinitionRef old_part,
+                                                           db_mysql_PartitionDefinitionRef new_part, bool is_range) -> void {
     std::string part_sql(" REORGANIZE PARTITION ");
 
     part_sql.append(old_part->name().c_str())
@@ -1021,16 +1021,16 @@ namespace {
     partitions_to_change.push_back(part_sql);
   }
 
-  void ActionGenerateSQL::alter_table_drop_partition(const std::string& part_name) {
+  auto ActionGenerateSQL::alter_table_drop_partition(const std::string& part_name) -> void {
     partitions_to_drop.push_back(part_name.c_str());
   }
 
-  void ActionGenerateSQL::alter_table_add_partition(db_mysql_PartitionDefinitionRef part, bool is_range) {
+  auto ActionGenerateSQL::alter_table_add_partition(db_mysql_PartitionDefinitionRef part, bool is_range) -> void {
     partitions_to_add.push_back(
       std::string(" ADD PARTITION (").append(generate_single_partition(part, is_range)).append(") "));
   }
 
-  void ActionGenerateSQL::alter_table_partition_count(db_mysql_TableRef table, grt::IntegerRef oldcount) {
+  auto ActionGenerateSQL::alter_table_partition_count(db_mysql_TableRef table, grt::IntegerRef oldcount) -> void {
     // we get here only if partitionType was not changed, so we can rely on old type setting
 
     ssize_t newcount = table->partitionCount();
@@ -1058,10 +1058,10 @@ namespace {
     }
   }
 
-  void ActionGenerateSQL::alter_table_partition_definitions(db_mysql_TableRef table, grt::StringRef str) {
+  auto ActionGenerateSQL::alter_table_partition_definitions(db_mysql_TableRef table, grt::StringRef str) -> void {
   }
 
-  void ActionGenerateSQL::alter_table_props_end(db_mysql_TableRef table) {
+  auto ActionGenerateSQL::alter_table_props_end(db_mysql_TableRef table) -> void {
     if (sql.length() > empty_length) {
       if (!_algorithm_type.empty())
         sql.append(", ALGORITHM = ").append(_algorithm_type);
@@ -1102,12 +1102,12 @@ namespace {
       remember_alter(table, sql);
   }
 
-  void ActionGenerateSQL::alter_table_columns_begin(db_mysql_TableRef) {
+  auto ActionGenerateSQL::alter_table_columns_begin(db_mysql_TableRef) -> void {
     // first_column= true;
   }
 
-  void ActionGenerateSQL::alter_table_add_column(db_mysql_TableRef table, std::map<std::string, std::string> rename_map,
-                                                 db_mysql_ColumnRef column, db_mysql_ColumnRef after) {
+  auto ActionGenerateSQL::alter_table_add_column(db_mysql_TableRef table, std::map<std::string, std::string> rename_map,
+                                                 db_mysql_ColumnRef column, db_mysql_ColumnRef after) -> void {
     if (first_change)
       first_change = false;
     else
@@ -1136,7 +1136,7 @@ namespace {
     // return sql;
   }
 
-  void ActionGenerateSQL::alter_table_drop_column(db_mysql_TableRef, db_mysql_ColumnRef column) {
+  auto ActionGenerateSQL::alter_table_drop_column(db_mysql_TableRef, db_mysql_ColumnRef column) -> void {
     if (first_change)
       first_change = false;
     else
@@ -1147,9 +1147,9 @@ namespace {
     sql += "`";
   }
 
-  void ActionGenerateSQL::alter_table_change_column(db_mysql_TableRef table, db_mysql_ColumnRef org_col,
+  auto ActionGenerateSQL::alter_table_change_column(db_mysql_TableRef table, db_mysql_ColumnRef org_col,
                                                     db_mysql_ColumnRef mod_col, db_mysql_ColumnRef after, bool modified,
-                                                    std::map<std::string, std::string> column_rename_map) {
+                                                    std::map<std::string, std::string> column_rename_map) -> void {
     if (first_change)
       first_change = false;
     else
@@ -1186,13 +1186,13 @@ namespace {
     }
   }
 
-  void ActionGenerateSQL::alter_table_columns_end(db_mysql_TableRef) {
+  auto ActionGenerateSQL::alter_table_columns_end(db_mysql_TableRef) -> void {
   }
 
-  void ActionGenerateSQL::alter_table_indexes_begin(db_mysql_TableRef) {
+  auto ActionGenerateSQL::alter_table_indexes_begin(db_mysql_TableRef) -> void {
   }
 
-  void ActionGenerateSQL::alter_table_add_index(db_mysql_IndexRef index) {
+  auto ActionGenerateSQL::alter_table_add_index(db_mysql_IndexRef index) -> void {
     //  sql.append("\n");
     padding.pad(sql);
 
@@ -1204,14 +1204,14 @@ namespace {
     sql.append(generate_add_index(index));
   }
 
-  std::string ActionGenerateSQL::generate_add_index(db_mysql_IndexRef index) {
+  auto ActionGenerateSQL::generate_add_index(db_mysql_IndexRef index) -> std::string {
     /*
      | ADD {INDEX|KEY} [index_name] [index_type] (index_col_name,...)
      */
     return std::string("ADD ").append(generate_create(index, "", false));
   }
 
-  void ActionGenerateSQL::alter_table_drop_index(db_mysql_IndexRef index) {
+  auto ActionGenerateSQL::alter_table_drop_index(db_mysql_IndexRef index) -> void {
     //  sql.append("\n");
     padding.pad(sql);
 
@@ -1223,7 +1223,7 @@ namespace {
     sql.append(generate_drop_index(index));
   }
 
-  void ActionGenerateSQL::alter_table_change_index(db_mysql_IndexRef orgIndex, db_mysql_IndexRef newIndex) {
+  auto ActionGenerateSQL::alter_table_change_index(db_mysql_IndexRef orgIndex, db_mysql_IndexRef newIndex) -> void {
     auto catalog = db_CatalogRef::cast_from(orgIndex->owner()->owner()->owner());
 
     GrtVersionRef version;
@@ -1292,7 +1292,7 @@ namespace {
                              newIndex->visible() == 1 ? "VISIBLE" : "INVISIBLE"));
   }
 
-  void ActionGenerateSQL::alter_table_indexes_end(db_mysql_TableRef) {
+  auto ActionGenerateSQL::alter_table_indexes_end(db_mysql_TableRef) -> void {
     if (first_change) {
       first_change = false;
     }
@@ -1301,14 +1301,14 @@ namespace {
     sql.append(indexAlter);
   }
 
-  void ActionGenerateSQL::alter_table_fks_begin(db_mysql_TableRef) {
+  auto ActionGenerateSQL::alter_table_fks_begin(db_mysql_TableRef) -> void {
     first_fk_create = true;
     first_fk_drop = true;
     fk_add_sql.clear();
     fk_drop_sql.clear();
   }
 
-  void ActionGenerateSQL::alter_table_add_fk(db_mysql_ForeignKeyRef fk) {
+  auto ActionGenerateSQL::alter_table_add_fk(db_mysql_ForeignKeyRef fk) -> void {
     grt::StringRef ename = db_mysql_TableRef::cast_from(fk->owner())->tableEngine();
     db_mysql_StorageEngineRef engine = bec::TableHelper::get_engine_by_name(ename);
     if (engine.is_valid() && !engine->supportsForeignKeys())
@@ -1327,7 +1327,7 @@ namespace {
     fk_add_sql += global_generate_create(fk, padding, _omitSchemas);
   }
 
-  void ActionGenerateSQL::alter_table_drop_fk(db_mysql_ForeignKeyRef fk) {
+  auto ActionGenerateSQL::alter_table_drop_fk(db_mysql_ForeignKeyRef fk) -> void {
     grt::StringRef ename = db_mysql_TableRef::cast_from(fk->owner())->tableEngine();
     db_mysql_StorageEngineRef engine = bec::TableHelper::get_engine_by_name(ename);
     if (engine.is_valid() && !engine->supportsForeignKeys())
@@ -1346,7 +1346,7 @@ namespace {
     fk_drop_sql += "`";
   }
 
-  void ActionGenerateSQL::alter_table_fks_end(db_mysql_TableRef table) {
+  auto ActionGenerateSQL::alter_table_fks_end(db_mysql_TableRef table) -> void {
     if (!fk_add_sql.empty() && !fk_drop_sql.empty()) {
       if (!first_change)
         sql.append(",\n");
@@ -1374,7 +1374,7 @@ namespace {
 
   // triggers
 
-  static db_mysql_TriggerRef find_ordering_for_trigger(db_mysql_TriggerRef trigger, std::string& position) {
+  static auto find_ordering_for_trigger(db_mysql_TriggerRef trigger, std::string& position) -> db_mysql_TriggerRef {
     db_mysql_TriggerRef prec;
 
     // the trigger FOLLOWS the last one before it
@@ -1401,7 +1401,7 @@ namespace {
     return prec;
   }
 
-  void ActionGenerateSQL::create_trigger(db_mysql_TriggerRef trigger, bool for_alter) {
+  auto ActionGenerateSQL::create_trigger(db_mysql_TriggerRef trigger, bool for_alter) -> void {
     std::string trigger_sql;
     std::string schema_name = trigger->owner()->owner()->name().c_str();
     if (!_omitSchemas || _gen_use)
@@ -1465,7 +1465,7 @@ namespace {
     remember(trigger, trigger_sql);
   }
 
-  void ActionGenerateSQL::drop_trigger(db_mysql_TriggerRef trigger, bool for_alter) {
+  auto ActionGenerateSQL::drop_trigger(db_mysql_TriggerRef trigger, bool for_alter) -> void {
     std::string trigger_sql;
     if (!_omitSchemas || _gen_use)
       trigger_sql.append("USE `")
@@ -1482,7 +1482,7 @@ namespace {
 
   // views
 
-  void ActionGenerateSQL::create_view(db_mysql_ViewRef view) {
+  auto ActionGenerateSQL::create_view(db_mysql_ViewRef view) -> void {
     bool or_replace_present = false;
 
     std::string view_def;
@@ -1521,14 +1521,14 @@ namespace {
     remember(view, view_def);
   }
 
-  void ActionGenerateSQL::drop_view(db_mysql_ViewRef view) {
+  auto ActionGenerateSQL::drop_view(db_mysql_ViewRef view) -> void {
     std::string view_sql;
     view_sql.append("DROP VIEW IF EXISTS ").append(get_name(view)).append(" ");
     remember(view, view_sql);
   }
 
   // routines
-  void ActionGenerateSQL::create_routine(db_mysql_RoutineRef routine, bool for_alter) {
+  auto ActionGenerateSQL::create_routine(db_mysql_RoutineRef routine, bool for_alter) -> void {
     std::string routine_sql;
     routine_sql = "\nDELIMITER ";
     routine_sql.append(_non_std_sql_delimiter).append("\n");
@@ -1554,7 +1554,7 @@ namespace {
       remember(routine, routine_sql);
   }
 
-  void ActionGenerateSQL::drop_routine(db_mysql_RoutineRef routine, bool for_alter) {
+  auto ActionGenerateSQL::drop_routine(db_mysql_RoutineRef routine, bool for_alter) -> void {
     std::string routine_sql;
 
     if (!_omitSchemas || _gen_use) {
@@ -1575,7 +1575,7 @@ namespace {
   }
 
   // users
-  void ActionGenerateSQL::create_user(db_UserRef user) {
+  auto ActionGenerateSQL::create_user(db_UserRef user) -> void {
     std::string sql;
 
     sql.append("CREATE USER ").append(quote_user(user->name()));
@@ -1594,7 +1594,7 @@ namespace {
     remember(user, sql);
   }
 
-  void ActionGenerateSQL::drop_user(db_UserRef user) {
+  auto ActionGenerateSQL::drop_user(db_UserRef user) -> void {
     auto catalog = db_CatalogRef::cast_from(user->owner());
 
     GrtVersionRef version;
@@ -1613,7 +1613,7 @@ namespace {
     remember(user, sql);
   }
 
-  void ActionGenerateSQL::remember(const GrtNamedObjectRef& obj, const std::string& sql, const bool front) {
+  auto ActionGenerateSQL::remember(const GrtNamedObjectRef& obj, const std::string& sql, const bool front) -> void {
     if (target_list.is_valid()) {
       if (disable_object_list)
         return;
@@ -1628,7 +1628,7 @@ namespace {
 
   // in case of ALTERs there could be > 1 statement to remember
   // so we use grt::StringListRefs as needed
-  void ActionGenerateSQL::remember_alter(const GrtNamedObjectRef& obj, const std::string& sql) {
+  auto ActionGenerateSQL::remember_alter(const GrtNamedObjectRef& obj, const std::string& sql) -> void {
     if (target_list.is_valid()) {
       if (disable_object_list)
         return;
@@ -1667,8 +1667,8 @@ DbMySQLImpl::DbMySQLImpl(grt::CPPModuleLoader* ldr) : grt::ModuleImplBase(ldr), 
   _default_traits.set("maxColumnCommentLength", grt::IntegerRef(1024));
 }
 
-ssize_t DbMySQLImpl::generateSQL(GrtNamedObjectRef org_object, const grt::DictRef& options,
-                                 std::shared_ptr<DiffChange> changes) {
+auto DbMySQLImpl::generateSQL(GrtNamedObjectRef org_object, const grt::DictRef& options,
+                                 std::shared_ptr<DiffChange> changes) -> ssize_t {
   grt::ValueRef result = options.get("OutputContainer");
   grt::ListRef<GrtNamedObject> obj_list;
   grt::DictRef dbsettings = grt::DictRef::cast_from(options.get("DBSettings", getDefaultTraits()));
@@ -1690,8 +1690,8 @@ ssize_t DbMySQLImpl::generateSQL(GrtNamedObjectRef org_object, const grt::DictRe
   return 0;
 }
 
-grt::StringRef DbMySQLImpl::generateReport(GrtNamedObjectRef org_object, const grt::DictRef& options,
-                                           std::shared_ptr<DiffChange> changes) {
+auto DbMySQLImpl::generateReport(GrtNamedObjectRef org_object, const grt::DictRef& options,
+                                           std::shared_ptr<DiffChange> changes) -> grt::StringRef {
   grt::StringRef tpl_file = grt::StringRef::cast_from(options.get("TemplateFile"));
 
   {
@@ -1706,8 +1706,8 @@ grt::StringRef DbMySQLImpl::generateReport(GrtNamedObjectRef org_object, const g
   }
 }
 
-grt::StringRef DbMySQLImpl::generateReportForDifferences(GrtNamedObjectRef org_object, GrtNamedObjectRef oth_object,
-                                                         const grt::DictRef& options) {
+auto DbMySQLImpl::generateReportForDifferences(GrtNamedObjectRef org_object, GrtNamedObjectRef oth_object,
+                                                         const grt::DictRef& options) -> grt::StringRef {
   grt::DbObjectMatchAlterOmf omf;
   omf.dontdiff_mask = (unsigned int)options.get_int("OMFDontDiffMask", omf.dontdiff_mask);
   grt::NormalizedComparer normalizer;
@@ -1731,8 +1731,8 @@ grt::StringRef DbMySQLImpl::generateReportForDifferences(GrtNamedObjectRef org_o
   }
 }
 
-grt::DictRef DbMySQLImpl::generateSQLForDifferences(GrtNamedObjectRef srcobj, GrtNamedObjectRef dstobj,
-                                                    grt::DictRef options) {
+auto DbMySQLImpl::generateSQLForDifferences(GrtNamedObjectRef srcobj, GrtNamedObjectRef dstobj,
+                                                    grt::DictRef options) -> grt::DictRef {
   grt::DictRef sql_map(true);
 
   default_omf omf;
@@ -1755,12 +1755,12 @@ grt::DictRef DbMySQLImpl::generateSQLForDifferences(GrtNamedObjectRef srcobj, Gr
   return sql_map;
 }
 
-static bool exists_in_map(const GrtNamedObjectRef& object, const DictRef& dict, const bool case_sensitive) {
+static auto exists_in_map(const GrtNamedObjectRef& object, const DictRef& dict, const bool case_sensitive) -> bool {
   std::string qname(get_full_object_name_for_key(object, case_sensitive));
   return dict.has_key(qname);
 }
 
-static std::string string_from_map(const GrtNamedObjectRef& object, const DictRef& dict, const bool case_sensitive) {
+static auto string_from_map(const GrtNamedObjectRef& object, const DictRef& dict, const bool case_sensitive) -> std::string {
   std::string qname(get_full_object_name_for_key(object, case_sensitive));
   StringRef res = dict.get_string(qname);
 
@@ -1769,7 +1769,7 @@ static std::string string_from_map(const GrtNamedObjectRef& object, const DictRe
   return *res;
 }
 
-static std::string reformat_text_for_comment(const std::string& text) {
+static auto reformat_text_for_comment(const std::string& text) -> std::string {
   if (text.empty())
     return "";
   std::string comment = text;
@@ -1781,7 +1781,7 @@ class TableSorterByFK {
   std::set<db_mysql_TableRef> generated_tables;
 
 public:
-  void perform(db_mysql_TableRef table, std::vector<db_mysql_TableRef>& result) {
+  auto perform(db_mysql_TableRef table, std::vector<db_mysql_TableRef>& result) -> void {
     if (table->modelOnly() || table->isStub() || (generated_tables.find(table) != generated_tables.end()))
       return;
     generated_tables.insert(table);
@@ -1840,15 +1840,15 @@ protected:
     include_scripts = options.get_int("GenerateAttachedScripts") != 0;
   };
 
-  void send_output(const std::string& msg) const {
+  auto send_output(const std::string& msg) const -> void {
     grt::GRT::get()->send_output(msg);
   };
 
-  std::string show_warnings_sql() const {
+  auto show_warnings_sql() const -> std::string {
     return show_warnings ? "SHOW WARNINGS;\n" : "";
   }
 
-  std::string set_server_vars() const {
+  auto set_server_vars() const -> std::string {
     std::string result;
     result.append("SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;\n");
     result.append("SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;\n");
@@ -1856,7 +1856,7 @@ protected:
     return result;
   }
 
-  std::string restore_server_vars() const {
+  auto restore_server_vars() const -> std::string {
     std::string result;
 
     result.append("\n");
@@ -1866,7 +1866,7 @@ protected:
     return result;
   }
 
-  std::string generate_view_placeholder(const db_mysql_ViewRef view) {
+  auto generate_view_placeholder(const db_mysql_ViewRef view) -> std::string {
     std::string sql;
     std::string view_q_name(get_name(view, _omitSchemas));
 
@@ -1966,7 +1966,7 @@ protected:
     return sql;
   }
 
-  std::string user_script(const db_ScriptRef& script) const {
+  auto user_script(const db_ScriptRef& script) const -> std::string {
     std::string out_sql;
     out_sql.append("-- begin attached script '").append(script->name()).append("'\n");
     out_sql.append(script->getText()).append("\n");
@@ -1977,7 +1977,7 @@ protected:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::string generateDocumentProperties(const db_CatalogRef cat) {
+static auto generateDocumentProperties(const db_CatalogRef cat) -> std::string {
   std::string output;
   if (cat->owner().is_valid() && cat->owner()->owner().is_valid()) {
     output.append("-- Generated: ").append(fmttime(0, DATETIME_FMT)).append("\n");
@@ -2035,7 +2035,7 @@ public:
   }
 
 protected:
-  std::string schemata_sql(const grt::ListRef<db_mysql_Schema>& schemata) const {
+  auto schemata_sql(const grt::ListRef<db_mysql_Schema>& schemata) const -> std::string {
     std::string result;
     for (size_t c1 = schemata.count(), i = 0; i < c1; i++) {
       db_mysql_SchemaRef schema = schemata.get(i);
@@ -2069,7 +2069,7 @@ protected:
     return result;
   };
 
-  std::string table_sql(const db_mysql_TableRef table) const {
+  auto table_sql(const db_mysql_TableRef table) const -> std::string {
     std::string result;
     std::string create_table_sql = string_from_map(table, create_map, caseSensitive);
 
@@ -2098,7 +2098,7 @@ protected:
     return result;
   }
 
-  std::string table_inserts_sql(const db_mysql_TableRef table) const {
+  auto table_inserts_sql(const db_mysql_TableRef table) const -> std::string {
     std::string result;
     std::string use_code;
     if (!_omitSchemas || gen_use)
@@ -2134,7 +2134,7 @@ protected:
     return result;
   }
 
-  std::string view_placeholder(const db_mysql_ViewRef view) {
+  auto view_placeholder(const db_mysql_ViewRef view) -> std::string {
     if (view->modelOnly())
       return "";
     if (exists_in_map(view, create_map, caseSensitive))
@@ -2142,7 +2142,7 @@ protected:
     return "";
   }
 
-  std::string routine_sql(const db_mysql_RoutineRef routine) const {
+  auto routine_sql(const db_mysql_RoutineRef routine) const -> std::string {
     std::string result;
     send_output(std::string("Processing Routine ")
                   .append(routine->owner()->name())
@@ -2176,7 +2176,7 @@ protected:
     return result;
   }
 
-  std::string view_sql(const db_mysql_ViewRef view) {
+  auto view_sql(const db_mysql_ViewRef view) -> std::string {
     send_output(
       std::string("Processing View ").append(view->owner()->name()).append(".").append(view->name()).append("\n"));
 
@@ -2187,7 +2187,7 @@ protected:
                              string_from_map(view, drop_map, caseSensitive));
   }
 
-  std::string trigger_sql(const db_mysql_TriggerRef trigger) const {
+  auto trigger_sql(const db_mysql_TriggerRef trigger) const -> std::string {
     std::string result;
 
     send_output(std::string("Processing Trigger ")
@@ -2216,7 +2216,7 @@ protected:
     return result;
   }
 
-  std::string user_sql(const db_UserRef user) const {
+  auto user_sql(const db_UserRef user) const -> std::string {
     std::string result;
     if (user->modelOnly() || !exists_in_map(user, create_map, caseSensitive))
       return "";
@@ -2237,7 +2237,7 @@ protected:
   }
 
 public:
-  std::string get_export_sql(const db_mysql_CatalogRef cat) {
+  auto get_export_sql(const db_mysql_CatalogRef cat) -> std::string {
     std::string out_sql;
     std::string inserts_sql;  // separate from main sql script & append to it as a last step,
                               // to separate creation of structures from data loading.
@@ -2418,8 +2418,8 @@ public:
   }
 };
 
-ssize_t DbMySQLImpl::makeSQLExportScript(GrtNamedObjectRef dbobject, grt::DictRef options,
-                                         const grt::DictRef& createSQL, const grt::DictRef& dropSQL) {
+auto DbMySQLImpl::makeSQLExportScript(GrtNamedObjectRef dbobject, grt::DictRef options,
+                                         const grt::DictRef& createSQL, const grt::DictRef& dropSQL) -> ssize_t {
   // now only catalog supported
   if (!db_mysql_CatalogRef::can_wrap(dbobject))
     return 1;
@@ -2435,8 +2435,8 @@ public:
   SQLSyncComposer(const grt::DictRef options) : SQLComposer(options) {
   }
 
-  std::string get_sync_sql(const db_CatalogRef& cat, const grt::StringListRef& sql_list,
-                           const grt::ListRef<GrtNamedObject>& obj_list) {
+  auto get_sync_sql(const db_CatalogRef& cat, const grt::StringListRef& sql_list,
+                           const grt::ListRef<GrtNamedObject>& obj_list) -> std::string {
     std::string out_sql;
     std::list<int> views_indices;
     std::string view_placeholders;
@@ -2521,15 +2521,15 @@ public:
   };
 };
 
-ssize_t DbMySQLImpl::makeSQLSyncScript(db_CatalogRef cat, grt::DictRef options, const grt::StringListRef& sql_list,
-                                       const grt::ListRef<GrtNamedObject>& obj_list) {
+auto DbMySQLImpl::makeSQLSyncScript(db_CatalogRef cat, grt::DictRef options, const grt::StringListRef& sql_list,
+                                       const grt::ListRef<GrtNamedObject>& obj_list) -> ssize_t {
   SQLSyncComposer composer(options);
   options.set("OutputScript", grt::StringRef(composer.get_sync_sql(cat, sql_list, obj_list)));
   return 0;
 }
 
-std::string DbMySQLImpl::makeAlterScript(GrtNamedObjectRef source, GrtNamedObjectRef target,
-                                         const grt::DictRef& diff_options) {
+auto DbMySQLImpl::makeAlterScript(GrtNamedObjectRef source, GrtNamedObjectRef target,
+                                         const grt::DictRef& diff_options) -> std::string {
   grt::DbObjectMatchAlterOmf omf;
   omf.dontdiff_mask = 3;
   grt::NormalizedComparer normalizer(grt::DictRef::cast_from(diff_options.get("DBSettings")));
@@ -2573,8 +2573,8 @@ std::string DbMySQLImpl::makeAlterScript(GrtNamedObjectRef source, GrtNamedObjec
   return script;
 }
 
-std::string DbMySQLImpl::makeAlterScriptForObject(GrtNamedObjectRef source, GrtNamedObjectRef target,
-                                                  GrtNamedObjectRef obj, const grt::DictRef& diff_options) {
+auto DbMySQLImpl::makeAlterScriptForObject(GrtNamedObjectRef source, GrtNamedObjectRef target,
+                                                  GrtNamedObjectRef obj, const grt::DictRef& diff_options) -> std::string {
   grt::DbObjectMatchAlterOmf omf;
   omf.dontdiff_mask = 5;
 
@@ -2694,7 +2694,7 @@ std::string DbMySQLImpl::makeAlterScriptForObject(GrtNamedObjectRef source, GrtN
 }
 
 // This function is used from scripts and HTML report generator.
-std::string DbMySQLImpl::makeCreateScriptForObject(GrtNamedObjectRef object) {
+auto DbMySQLImpl::makeCreateScriptForObject(GrtNamedObjectRef object) -> std::string {
   DictRef options(true);
   DictRef result(true);
 
@@ -2742,7 +2742,7 @@ std::string DbMySQLImpl::makeCreateScriptForObject(GrtNamedObjectRef object) {
   return sql;
 }
 
-db_mgmt_RdbmsRef DbMySQLImpl::initializeDBMSInfo() {
+auto DbMySQLImpl::initializeDBMSInfo() -> db_mgmt_RdbmsRef {
   db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->unserialize(
     base::makePath(bec::GRTManager::get()->get_basedir(), "modules/data/mysql_rdbms_info.xml")));
 
@@ -2750,11 +2750,11 @@ db_mgmt_RdbmsRef DbMySQLImpl::initializeDBMSInfo() {
   return rdbms;
 }
 
-grt::StringRef DbMySQLImpl::quoteIdentifier(grt::StringRef ident) {
+auto DbMySQLImpl::quoteIdentifier(grt::StringRef ident) -> grt::StringRef {
   return grt::StringRef(base::sqlstring("!", 0) << *ident);
 }
 
-grt::StringRef DbMySQLImpl::fullyQualifiedObjectName(GrtNamedObjectRef object) {
+auto DbMySQLImpl::fullyQualifiedObjectName(GrtNamedObjectRef object) -> grt::StringRef {
   GrtNamedObjectRef owner = GrtNamedObjectRef::cast_from(object->owner());
   if (owner.is_valid()) {
     if (db_SchemaRef::can_wrap(owner))
@@ -2763,14 +2763,14 @@ grt::StringRef DbMySQLImpl::fullyQualifiedObjectName(GrtNamedObjectRef object) {
   return grt::StringRef(base::sqlstring("!", 0) << *object->name());
 }
 
-grt::ListRef<db_mysql_StorageEngine> DbMySQLImpl::getKnownEngines() {
+auto DbMySQLImpl::getKnownEngines() -> grt::ListRef<db_mysql_StorageEngine> {
   if (!_known_engines.is_valid())
     _known_engines = dbmysql::get_known_engines();
   return _known_engines;
 }
 
 // checks whether the 2nd version number is the same or newer than the 1st one
-inline bool match_version(int ref_major, int ref_minor, int ref_revision, int major, int minor, int revision) {
+inline auto match_version(int ref_major, int ref_minor, int ref_revision, int major, int minor, int revision) -> bool {
   if (major > ref_major)
     return true;
   if (minor < ref_minor)
@@ -2782,7 +2782,7 @@ inline bool match_version(int ref_major, int ref_minor, int ref_revision, int ma
   return false;
 }
 
-grt::DictRef DbMySQLImpl::getTraitsForServerVersion(const int major, const int minor, const int revision) {
+auto DbMySQLImpl::getTraitsForServerVersion(const int major, const int minor, const int revision) -> grt::DictRef {
   grt::DictRef traits(true);
 
   traits.set("version", grt::StringRef(base::strfmt("%i.%i.%i", major, minor, revision < 0 ? 0 : revision)));
@@ -2800,7 +2800,7 @@ grt::DictRef DbMySQLImpl::getTraitsForServerVersion(const int major, const int m
   return traits;
 }
 
-grt::ListRef<db_UserDatatype> DbMySQLImpl::getDefaultUserDatatypes(db_mgmt_RdbmsRef rdbms) {
+auto DbMySQLImpl::getDefaultUserDatatypes(db_mgmt_RdbmsRef rdbms) -> grt::ListRef<db_UserDatatype> {
   static struct {
     const char* oid;
     const char* name;

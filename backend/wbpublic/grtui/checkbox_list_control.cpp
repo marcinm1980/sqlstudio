@@ -31,7 +31,7 @@ StringCheckBoxList::StringCheckBoxList() : mforms::ScrollPanel(), _box(false) {
   add(&_box);
 }
 
-void StringCheckBoxList::set_strings(const std::vector<std::string> &strings) {
+auto StringCheckBoxList::set_strings(const std::vector<std::string> &strings) -> void {
   for (std::vector<mforms::CheckBox *>::const_iterator iter = _items.begin(); iter != _items.end(); ++iter)
     _box.remove(*iter);
   _items.clear();
@@ -48,7 +48,7 @@ void StringCheckBoxList::set_strings(const std::vector<std::string> &strings) {
   }
 }
 
-void StringCheckBoxList::set_strings(const grt::StringListRef &strings) {
+auto StringCheckBoxList::set_strings(const grt::StringListRef &strings) -> void {
   for (std::vector<mforms::CheckBox *>::const_iterator iter = _items.begin(); iter != _items.end(); ++iter) {
     _box.remove(*iter);
   }
@@ -67,7 +67,7 @@ void StringCheckBoxList::set_strings(const grt::StringListRef &strings) {
   }
 }
 
-bool StringCheckBoxList::has_selection() {
+auto StringCheckBoxList::has_selection() -> bool {
   for (std::vector<mforms::CheckBox *>::const_iterator iter = _items.begin(); iter != _items.end(); ++iter) {
     if ((*iter)->get_active())
       return true;
@@ -75,7 +75,7 @@ bool StringCheckBoxList::has_selection() {
   return false;
 }
 
-void StringCheckBoxList::set_selected(const std::string &name, bool flag) {
+auto StringCheckBoxList::set_selected(const std::string &name, bool flag) -> void {
   for (std::vector<mforms::CheckBox *>::const_iterator iter = _items.begin(); iter != _items.end(); ++iter) {
     if ((*iter)->getInternalName() == name) {
       (*iter)->set_active(flag);
@@ -83,7 +83,7 @@ void StringCheckBoxList::set_selected(const std::string &name, bool flag) {
   }
 }
 
-std::vector<std::string> StringCheckBoxList::get_selection() {
+auto StringCheckBoxList::get_selection() -> std::vector<std::string> {
   std::vector<std::string> list;
 
   for (std::vector<mforms::CheckBox *>::const_iterator iter = _items.begin(); iter != _items.end(); ++iter) {
@@ -93,6 +93,6 @@ std::vector<std::string> StringCheckBoxList::get_selection() {
   return list;
 }
 
-void StringCheckBoxList::toggled() {
+auto StringCheckBoxList::toggled() -> void {
   _signal_changed();
 }

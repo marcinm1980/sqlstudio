@@ -449,11 +449,10 @@ static struct wordvalue doubles[] = {
 
 #define IS_END(p, src, len)	(((char *)p - (char *)src) >= (len))
 
-static int my_strnncoll_win1250ch(CHARSET_INFO *cs __attribute__((unused)), 
+static auto my_strnncoll_win1250ch(CHARSET_INFO *cs __attribute__((unused)), 
 				  const uchar * s1, uint len1,
                                   const uchar * s2, uint len2,
-                                  my_bool s2_is_prefix)
-{
+                                  my_bool s2_is_prefix) -> int {
   int v1, v2;
   const uchar * p1, * p2;
   int pass1 = 0, pass2 = 0;
@@ -480,22 +479,20 @@ static int my_strnncoll_win1250ch(CHARSET_INFO *cs __attribute__((unused)),
 */
 
 static
-int my_strnncollsp_win1250ch(CHARSET_INFO * cs, 
+auto my_strnncollsp_win1250ch(CHARSET_INFO * cs, 
 			     const uchar *s, uint slen, 
 			     const uchar *t, uint tlen,
                              my_bool diff_if_only_endspace_difference
-                             __attribute__((unused)))
-{
+                             __attribute__((unused))) -> int {
   for ( ; slen && s[slen-1] == ' ' ; slen--);
   for ( ; tlen && t[tlen-1] == ' ' ; tlen--);
   return my_strnncoll_win1250ch(cs,s,slen,t,tlen,0);
 }
 
 
-static int my_strnxfrm_win1250ch(CHARSET_INFO * cs  __attribute__((unused)),
+static auto my_strnxfrm_win1250ch(CHARSET_INFO * cs  __attribute__((unused)),
 				 uchar * dest, uint len, 
-				 const uchar * src, uint srclen)
-{
+				 const uchar * src, uint srclen) -> int {
   int value;
   const uchar * p;
   int pass = 0;
@@ -617,14 +614,12 @@ static uchar NEAR like_range_prefix_max_win1250ch[]=
 ** optimized !
 */
 
-static my_bool
-my_like_range_win1250ch(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_like_range_win1250ch(CHARSET_INFO *cs __attribute__((unused)),
 			const char *ptr, uint ptr_length,
 			pbool escape, pbool w_one, pbool w_many,
 			uint res_length,
 			char *min_str, char *max_str,
-			uint *min_length, uint *max_length)
-{
+			uint *min_length, uint *max_length) -> my_bool {
 
   int only_min_found= 1;
   const char *end = ptr + ptr_length;

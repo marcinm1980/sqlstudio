@@ -55,12 +55,12 @@ WizardSchemaFilterPage::WizardSchemaFilterPage(WizardForm *form, const char *nam
   scoped_connect(_check_list.signal_changed(), std::bind(&WizardSchemaFilterPage::validate, this));
 }
 
-void WizardSchemaFilterPage::enter(bool advancing) {
+auto WizardSchemaFilterPage::enter(bool advancing) -> void {
   if (advancing)
     _check_list.set_strings(grt::StringListRef::cast_from(values().get("schemata")));
 }
 
-void WizardSchemaFilterPage::leave(bool advancing) {
+auto WizardSchemaFilterPage::leave(bool advancing) -> void {
   if (advancing) {
     grt::StringListRef list(grt::Initialized);
     std::vector<std::string> selection = _check_list.get_selection();
@@ -72,6 +72,6 @@ void WizardSchemaFilterPage::leave(bool advancing) {
   }
 }
 
-bool WizardSchemaFilterPage::allow_next() {
+auto WizardSchemaFilterPage::allow_next() -> bool {
   return _check_list.has_selection();
 }

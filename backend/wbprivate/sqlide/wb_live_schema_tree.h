@@ -136,14 +136,14 @@ namespace wb {
     public:
       std::string details;
       LSTData();
-      virtual ObjectType get_type() = 0;
-      virtual void copy(LSTData* other);
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
-      virtual std::string get_object_name() = 0;
+      virtual auto get_type() -> ObjectType = 0;
+      virtual auto copy(LSTData* other) -> void;
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
+      virtual auto get_object_name() -> std::string = 0;
 
       // Nodes requiring to enable this functionality should overwrite
       // and return true once their specific criteria is met
-      virtual bool is_update_complete() {
+      virtual auto is_update_complete() -> bool {
         return false;
       }
     };
@@ -168,12 +168,12 @@ namespace wb {
       bool is_id;
       bool is_idx;
 
-      virtual void copy(LSTData* other);
-      virtual ObjectType get_type() {
+      virtual auto copy(LSTData* other) -> void;
+      virtual auto get_type() -> ObjectType {
         return _type;
       }
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
-      virtual std::string get_object_name() {
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
+      virtual auto get_object_name() -> std::string {
         return _("Column");
       }
     };
@@ -188,12 +188,12 @@ namespace wb {
       std::string from_cols;
       std::string to_cols;
 
-      virtual void copy(LSTData* other);
-      virtual ObjectType get_type() {
+      virtual auto copy(LSTData* other) -> void;
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::ForeignKey;
       }
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
-      virtual std::string get_object_name() {
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
+      virtual auto get_object_name() -> std::string {
         return _("Foreign Key");
       }
     };
@@ -207,12 +207,12 @@ namespace wb {
       unsigned char type;
       std::vector<std::string> columns;
 
-      virtual void copy(LSTData* other);
-      virtual ObjectType get_type() {
+      virtual auto copy(LSTData* other) -> void;
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::Index;
       }
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
-      virtual std::string get_object_name() {
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
+      virtual auto get_object_name() -> std::string {
         return _("Index");
       }
     };
@@ -224,12 +224,12 @@ namespace wb {
       unsigned char event_manipulation;
       unsigned char timing;
 
-      virtual void copy(LSTData* other);
-      virtual ObjectType get_type() {
+      virtual auto copy(LSTData* other) -> void;
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::Trigger;
       }
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
-      virtual std::string get_object_name() {
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
+      virtual auto get_object_name() -> std::string {
         return _("Trigger");
       }
     };
@@ -241,11 +241,11 @@ namespace wb {
       bool fetched;
       bool fetching;
 
-      virtual void copy(LSTData* other);
-      virtual ObjectType get_type() {
+      virtual auto copy(LSTData* other) -> void;
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::Any;
       }
-      virtual std::string get_object_name() {
+      virtual auto get_object_name() -> std::string {
         return _("Object");
       }
     };
@@ -254,26 +254,26 @@ namespace wb {
     public:
       ProcedureData() : ObjectData() {
       }
-      virtual ObjectType get_type() {
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::Procedure;
       }
-      virtual std::string get_object_name() {
+      virtual auto get_object_name() -> std::string {
         return _("Procedure");
       }
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
     };
 
     class MYSQLWBBACKEND_PUBLIC_FUNC FunctionData : public ObjectData {
     public:
       FunctionData() : ObjectData() {
       }
-      virtual ObjectType get_type() {
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::Function;
       }
-      virtual std::string get_object_name() {
+      virtual auto get_object_name() -> std::string {
         return _("Function");
       }
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
     };
 
     class MYSQLWBBACKEND_PUBLIC_FUNC ViewData : public ObjectData {
@@ -285,27 +285,27 @@ namespace wb {
       short _loading_mask;
       short _reload_mask;
 
-      virtual void copy(LSTData* other);
-      virtual ObjectType get_type() {
+      virtual auto copy(LSTData* other) -> void;
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::View;
       }
-      void set_reload_mask(short mask) {
+      auto set_reload_mask(short mask) -> void {
         _reload_mask = mask;
       }
-      short get_reload_mask() {
+      auto get_reload_mask() -> short {
         return _reload_mask;
       }
-      virtual short get_loaded_mask();
-      virtual void set_loaded_data(short mask);
-      virtual void set_unloaded_data(short mask);
-      bool is_data_loaded(short mask);
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
-      virtual std::string get_object_name() {
+      virtual auto get_loaded_mask() -> short;
+      virtual auto set_loaded_data(short mask) -> void;
+      virtual auto set_unloaded_data(short mask) -> void;
+      auto is_data_loaded(short mask) -> bool;
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
+      virtual auto get_object_name() -> std::string {
         return _("View");
       }
-      short get_loading_mask();
-      void set_loading_mask(short mask);
-      virtual bool is_update_complete();
+      auto get_loading_mask() -> short;
+      auto set_loading_mask(short mask) -> void;
+      virtual auto is_update_complete() -> bool;
     };
 
     class MYSQLWBBACKEND_PUBLIC_FUNC TableData : public ViewData {
@@ -313,12 +313,12 @@ namespace wb {
       TableData() : ViewData() {
       }
 
-      virtual ObjectType get_type() {
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::Table;
       }
 
-      virtual std::string get_details(bool full, const mforms::TreeNodeRef& node);
-      virtual std::string get_object_name() {
+      virtual auto get_details(bool full, const mforms::TreeNodeRef& node) -> std::string;
+      virtual auto get_object_name() -> std::string {
         return _("Table");
       }
     };
@@ -329,11 +329,11 @@ namespace wb {
       bool fetched;
       bool fetching;
 
-      virtual void copy(LSTData* other);
-      virtual ObjectType get_type() {
+      virtual auto copy(LSTData* other) -> void;
+      virtual auto get_type() -> ObjectType {
         return LiveSchemaTree::Schema;
       }
-      virtual std::string get_object_name() {
+      virtual auto get_object_name() -> std::string {
         return _("Schema");
       }
     };
@@ -346,20 +346,20 @@ namespace wb {
       std::function<bool(mforms::TreeNodeRef, base::StringListPtr, ObjectType, bool, bool)>;
 
     struct FetchDelegate {
-      virtual std::vector<std::string> fetch_schema_list() = 0;
-      virtual bool fetch_data_for_filter(const std::string&, const std::string&,
-                                         const NewSchemaContentArrivedSlot&) = 0;
-      virtual bool fetch_schema_contents(const std::string&, const NewSchemaContentArrivedSlot&) = 0;
-      virtual bool fetch_object_details(const std::string& schema_name, const std::string& object_name,
-                                        wb::LiveSchemaTree::ObjectType type, short, const NodeChildrenUpdaterSlot&) = 0;
-      virtual bool fetch_routine_details(const std::string& schema_name, const std::string& object_name,
-                                         wb::LiveSchemaTree::ObjectType type) = 0;
+      virtual auto fetch_schema_list() -> std::vector<std::string> = 0;
+      virtual auto fetch_data_for_filter(const std::string&, const std::string&,
+                                         const NewSchemaContentArrivedSlot&) -> bool = 0;
+      virtual auto fetch_schema_contents(const std::string&, const NewSchemaContentArrivedSlot&) -> bool = 0;
+      virtual auto fetch_object_details(const std::string& schema_name, const std::string& object_name,
+                                        wb::LiveSchemaTree::ObjectType type, short, const NodeChildrenUpdaterSlot&) -> bool = 0;
+      virtual auto fetch_routine_details(const std::string& schema_name, const std::string& object_name,
+                                         wb::LiveSchemaTree::ObjectType type) -> bool = 0;
     };
 
     struct Delegate {
-      virtual void tree_refresh() = 0;
-      virtual bool sidebar_action(const std::string&) = 0;
-      virtual void tree_activate_objects(const std::string&, const std::vector<ChangeRecord>&) = 0;
+      virtual auto tree_refresh() -> void = 0;
+      virtual auto sidebar_action(const std::string&) -> bool = 0;
+      virtual auto tree_activate_objects(const std::string&, const std::vector<ChangeRecord>&) -> void = 0;
     };
 
     using SqlEditorTextInsertSignal = boost::signals2::signal<int(const std::string&)>;
@@ -377,113 +377,113 @@ namespace wb {
 
     bool _case_sensitive_identifiers;
 
-    void schema_contents_arrived(const std::string& schema_name, base::StringListPtr tables, base::StringListPtr views,
-                                 base::StringListPtr procedures, base::StringListPtr functions, bool just_append);
-    void load_table_details(mforms::TreeNodeRef& node, int fetch_mask);
-    void fetch_table_details(ObjectType object_type, const std::string schema_name, const std::string object_name,
-                             int fetch_mask);
-    void load_routine_details(mforms::TreeNodeRef& node);
-    void load_schema_content(mforms::TreeNodeRef& schema_node);
-    void reload_object_data(mforms::TreeNodeRef& node);
-    void discard_object_data(mforms::TreeNodeRef& node, int data_mask);
+    auto schema_contents_arrived(const std::string& schema_name, base::StringListPtr tables, base::StringListPtr views,
+                                 base::StringListPtr procedures, base::StringListPtr functions, bool just_append) -> void;
+    auto load_table_details(mforms::TreeNodeRef& node, int fetch_mask) -> void;
+    auto fetch_table_details(ObjectType object_type, const std::string schema_name, const std::string object_name,
+                             int fetch_mask) -> void;
+    auto load_routine_details(mforms::TreeNodeRef& node) -> void;
+    auto load_schema_content(mforms::TreeNodeRef& schema_node) -> void;
+    auto reload_object_data(mforms::TreeNodeRef& node) -> void;
+    auto discard_object_data(mforms::TreeNodeRef& node, int data_mask) -> void;
 
-    bool identifiers_equal(const std::string& a, const std::string& b);
+    auto identifiers_equal(const std::string& a, const std::string& b) -> bool;
 
-    std::vector<std::string> overlay_icons_for_tree_node(mforms::TreeNodeRef node);
+    auto overlay_icons_for_tree_node(mforms::TreeNodeRef node) -> std::vector<std::string>;
 
     // Filtering functions
-    std::string get_filter_wildcard(const std::string& filter, FilterType type = LocalLike);
-    void clean_filter();
-    void filter_children_collection(mforms::TreeNodeRef& source, mforms::TreeNodeRef& target);
-    bool filter_children(ObjectType type, mforms::TreeNodeRef& source, mforms::TreeNodeRef& target,
-                         GPatternSpec* pattern = NULL);
-    bool is_object_type(ObjectTypeValidation validation, ObjectType type);
+    auto get_filter_wildcard(const std::string& filter, FilterType type = LocalLike) -> std::string;
+    auto clean_filter() -> void;
+    auto filter_children_collection(mforms::TreeNodeRef& source, mforms::TreeNodeRef& target) -> void;
+    auto filter_children(ObjectType type, mforms::TreeNodeRef& source, mforms::TreeNodeRef& target,
+                         GPatternSpec* pattern = NULL) -> bool;
+    auto is_object_type(ObjectTypeValidation validation, ObjectType type) -> bool;
 
   public:
     LiveSchemaTree(base::MySQLVersion version);
     virtual ~LiveSchemaTree();
 
-    void set_model_view(mforms::TreeView* target);
-    void set_delegate(std::shared_ptr<Delegate> delegate);
-    void set_fetch_delegate(std::shared_ptr<FetchDelegate> delegate);
+    auto set_model_view(mforms::TreeView* target) -> void;
+    auto set_delegate(std::shared_ptr<Delegate> delegate) -> void;
+    auto set_fetch_delegate(std::shared_ptr<FetchDelegate> delegate) -> void;
 
-    void load_table_details(ObjectType object_type, const std::string schema_name, const std::string object_name,
-                            int fetch_mask);
+    auto load_table_details(ObjectType object_type, const std::string schema_name, const std::string object_name,
+                            int fetch_mask) -> void;
 
-    void set_filter(std::string filter);
-    std::string getFilter() const {
+    auto set_filter(std::string filter) -> void;
+    auto getFilter() const -> std::string {
       return _filter;
     }
 
-    void filter_data();
-    void load_data_for_filter(const std::string& schema_filter, const std::string& object_filter);
+    auto filter_data() -> void;
+    auto load_data_for_filter(const std::string& schema_filter, const std::string& object_filter) -> void;
 
-    static unsigned char internalize_token(const std::string& token);
-    static std::string externalize_token(unsigned char c);
+    static auto internalize_token(const std::string& token) -> unsigned char;
+    static auto externalize_token(unsigned char c) -> std::string;
 
-    void set_active_schema(const std::string& schema);
+    auto set_active_schema(const std::string& schema) -> void;
 
-    void set_no_connection();
+    auto set_no_connection() -> void;
 
-    void set_enabled(bool enabled);
+    auto set_enabled(bool enabled) -> void;
 
-    void update_live_object_state(ObjectType type, const std::string& schema_name, const std::string& old_obj_name,
-                                  const std::string& new_obj_name);
+    auto update_live_object_state(ObjectType type, const std::string& schema_name, const std::string& old_obj_name,
+                                  const std::string& new_obj_name) -> void;
 
-    virtual std::string get_field_description(const mforms::TreeNodeRef& node);
-    void set_notify_on_reload(const mforms::TreeNodeRef& node);
-    void notify_on_reload(const mforms::TreeNodeRef& node);
+    virtual auto get_field_description(const mforms::TreeNodeRef& node) -> std::string;
+    auto set_notify_on_reload(const mforms::TreeNodeRef& node) -> void;
+    auto notify_on_reload(const mforms::TreeNodeRef& node) -> void;
 
-    mforms::TreeNodeRef get_node_for_object(const std::string& schema_name, ObjectType type, const std::string& name);
-    mforms::TreeNodeRef create_node_for_object(const std::string& schema_name, ObjectType type,
-                                               const std::string& name);
+    auto get_node_for_object(const std::string& schema_name, ObjectType type, const std::string& name) -> mforms::TreeNodeRef;
+    auto create_node_for_object(const std::string& schema_name, ObjectType type,
+                                               const std::string& name) -> mforms::TreeNodeRef;
 
     // Returns a list of db_query_LiveDBObjectRef.
-    grt::BaseListRef get_selected_objects();
+    auto get_selected_objects() -> grt::BaseListRef;
 
-    virtual bool activate_popup_item_for_nodes(const std::string& name,
-                                               const std::list<mforms::TreeNodeRef>& orig_nodes);
-    virtual bec::MenuItemList get_popup_items_for_nodes(const std::list<mforms::TreeNodeRef>& nodes);
+    virtual auto activate_popup_item_for_nodes(const std::string& name,
+                                               const std::list<mforms::TreeNodeRef>& orig_nodes) -> bool;
+    virtual auto get_popup_items_for_nodes(const std::list<mforms::TreeNodeRef>& nodes) -> bec::MenuItemList;
 
-    bool is_schema_contents_enabled() const;
-    void is_schema_contents_enabled(bool value);
+    auto is_schema_contents_enabled() const -> bool;
+    auto is_schema_contents_enabled(bool value) -> void;
 
-    void set_base(LiveSchemaTree* base) {
+    auto set_base(LiveSchemaTree* base) -> void {
       _base = base;
     }
 
-    LiveSchemaTree* getBase() {
+    auto getBase() -> LiveSchemaTree* {
       return _base;
     }
 
-    bool update_node_children(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
-                              bool sorted = false, bool just_append = false);
-    void update_change_data(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
-                            std::vector<mforms::TreeNodeRef>& to_remove);
-    mforms::TreeNodeRef insert_node(mforms::TreeNodeRef parent, const std::string& name, ObjectType type);
-    void setup_node(mforms::TreeNodeRef node, ObjectType type, mforms::TreeNodeData* data = NULL,
-                    bool ignore_null_data = false);
-    void update_node_icon(mforms::TreeNodeRef node);
+    auto update_node_children(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
+                              bool sorted = false, bool just_append = false) -> bool;
+    auto update_change_data(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
+                            std::vector<mforms::TreeNodeRef>& to_remove) -> void;
+    auto insert_node(mforms::TreeNodeRef parent, const std::string& name, ObjectType type) -> mforms::TreeNodeRef;
+    auto setup_node(mforms::TreeNodeRef node, ObjectType type, mforms::TreeNodeData* data = NULL,
+                    bool ignore_null_data = false) -> void;
+    auto update_node_icon(mforms::TreeNodeRef node) -> void;
 
-    void update_schemata(base::StringListPtr schema_list);
-    mforms::TreeNodeRef binary_search_node(const mforms::TreeNodeRef& parent, int first, int last,
-                                           const std::string& name, ObjectType type, int& position);
-    mforms::TreeNodeRef get_child_node(const mforms::TreeNodeRef& parent, const std::string& name,
-                                       ObjectType type = Any, bool binary_search = true);
-    bool find_child_position(const mforms::TreeNodeRef& parent, const std::string& name, ObjectType type,
-                             int& position);
-    void expand_toggled(mforms::TreeNodeRef node, bool value);
-    void node_activated(mforms::TreeNodeRef node, int column);
-    void set_case_sensitive_identifiers(bool flag);
-    std::string get_schema_name(const mforms::TreeNodeRef& node);
-    std::vector<std::string> get_node_path(const mforms::TreeNodeRef& node);
-    mforms::TreeNodeRef get_node_from_path(std::vector<std::string> path);
+    auto update_schemata(base::StringListPtr schema_list) -> void;
+    auto binary_search_node(const mforms::TreeNodeRef& parent, int first, int last,
+                                           const std::string& name, ObjectType type, int& position) -> mforms::TreeNodeRef;
+    auto get_child_node(const mforms::TreeNodeRef& parent, const std::string& name,
+                                       ObjectType type = Any, bool binary_search = true) -> mforms::TreeNodeRef;
+    auto find_child_position(const mforms::TreeNodeRef& parent, const std::string& name, ObjectType type,
+                             int& position) -> bool;
+    auto expand_toggled(mforms::TreeNodeRef node, bool value) -> void;
+    auto node_activated(mforms::TreeNodeRef node, int column) -> void;
+    auto set_case_sensitive_identifiers(bool flag) -> void;
+    auto get_schema_name(const mforms::TreeNodeRef& node) -> std::string;
+    auto get_node_path(const mforms::TreeNodeRef& node) -> std::vector<std::string>;
+    auto get_node_from_path(std::vector<std::string> path) -> mforms::TreeNodeRef;
 
-    void enable_events(bool enable) {
+    auto enable_events(bool enable) -> void {
       _enabled_events = enable;
     }
 
-    bool getEnabledEvents() {
+    auto getEnabledEvents() -> bool {
       return _enabled_events;
     }
 
@@ -503,8 +503,8 @@ namespace wb {
 
     std::map<ObjectType, mforms::TreeNodeCollectionSkeleton> _node_collections;
 
-    void fill_node_icons();
-    std::string get_node_icon_path(ObjectType type);
-    bec::IconId get_node_icon(ObjectType type);
+    auto fill_node_icons() -> void;
+    auto get_node_icon_path(ObjectType type) -> std::string;
+    auto get_node_icon(ObjectType type) -> bec::IconId;
   };
 }; // namespace wb

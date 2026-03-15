@@ -48,37 +48,37 @@ public:
   DbMySQLTableEditorColumnPage(DbMySQLTableEditor* owner, MySQLTableEditorBE* be, Glib::RefPtr<Gtk::Builder> xml);
   ~DbMySQLTableEditorColumnPage();
 
-  void refresh();
-  void partial_refresh(const int what);
+  auto refresh() -> void;
+  auto partial_refresh(const int what) -> void;
 
-  void switch_be(MySQLTableEditorBE* be);
+  auto switch_be(MySQLTableEditorBE* be) -> void;
 
 private:
-  grt::StringListRef get_types_for_table(const db_TableRef table); //!< T
+  auto get_types_for_table(const db_TableRef table) -> grt::StringListRef; //!< T
 
-  bool process_event(GdkEvent* event);
-  void type_column_event(GdkEvent* e);
-  void cursor_changed();
+  auto process_event(GdkEvent* event) -> bool;
+  auto type_column_event(GdkEvent* e) -> void;
+  auto cursor_changed() -> void;
 
   void update_column_details(const ::bec::NodeId& node);
 
-  void set_comment(const std::string& comment);
-  void set_charset();
-  void set_collation();
-  void update_collation();
-  void update_gc_storage_type();
-  void set_gc_storage_type();
+  auto set_comment(const std::string& comment) -> void;
+  auto set_charset() -> void;
+  auto set_collation() -> void;
+  auto update_collation() -> void;
+  auto update_gc_storage_type() -> void;
+  auto set_gc_storage_type() -> void;
 
-  void check_resize(Gtk::Allocation& r);
+  auto check_resize(Gtk::Allocation& r) -> void;
   bool do_on_visible(GdkEventVisibility*);
 
-  bec::NodeId get_selected();
+  auto get_selected() -> bec::NodeId;
 
-  void start_auto_edit();
+  auto start_auto_edit() -> void;
 
 private:
-  void refill_completions();
-  void refill_columns_tv();
+  auto refill_completions() -> void;
+  auto refill_columns_tv() -> void;
   sigc::connection sigQueryTooltip;
 
   DbMySQLTableEditor* _owner;
@@ -103,10 +103,10 @@ private:
   // Auto completion of types and related functions
   static std::shared_ptr<AutoCompletable> _types_completion;
   static std::shared_ptr<AutoCompletable> _names_completion;
-  static std::shared_ptr<AutoCompletable> types_completion();
-  static std::shared_ptr<AutoCompletable> names_completion();
-  static void type_cell_editing_started(GtkCellRenderer* cr, GtkCellEditable* ce, gchar* path, gpointer udata);
-  static void cell_editing_done(GtkCellEditable* ce, gpointer udata);
+  static auto types_completion() -> std::shared_ptr<AutoCompletable>;
+  static auto names_completion() -> std::shared_ptr<AutoCompletable>;
+  static auto type_cell_editing_started(GtkCellRenderer* cr, GtkCellEditable* ce, gchar* path, gpointer udata) -> void;
+  static auto cell_editing_done(GtkCellEditable* ce, gpointer udata) -> void;
   bool _editing;
 };
 

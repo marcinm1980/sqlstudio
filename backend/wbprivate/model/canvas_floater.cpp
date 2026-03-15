@@ -37,7 +37,7 @@ Button::Button(mdc::Layer *layer) : mdc::Button(layer, mdc::ActionButton) {
   set_text_alignment(mdc::AlignCenter);
 }
 
-void Button::draw_contents(mdc::CairoCtx *cr) {
+auto Button::draw_contents(mdc::CairoCtx *cr) -> void {
   cairo_pattern_t *pat;
 
   pat = cairo_pattern_create_linear(0.0, get_position().y, 0.0, get_position().y + 20.0);
@@ -89,16 +89,16 @@ Floater::~Floater() {
   delete _title;
 }
 
-void Floater::set_title(const std::string &title) {
+auto Floater::set_title(const std::string &title) -> void {
   if (_title)
     _title->set_title(title);
 }
 
-void Floater::update_position() {
+auto Floater::update_position() -> void {
 }
 
-bool Floater::on_button_press(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                              mdc::EventState state) {
+auto Floater::on_button_press(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                              mdc::EventState state) -> bool {
   if (button == mdc::ButtonLeft) {
     _dragging = true;
     _drag_offset = convert_point_to(point, 0) - get_root_position();
@@ -108,8 +108,8 @@ bool Floater::on_button_press(mdc::CanvasItem *target, const Point &point, mdc::
   return super::on_button_press(target, point, button, state);
 }
 
-bool Floater::on_button_release(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                                mdc::EventState state) {
+auto Floater::on_button_release(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                                mdc::EventState state) -> bool {
   if (button == mdc::ButtonLeft) {
     _dragging = false;
     return true;
@@ -117,7 +117,7 @@ bool Floater::on_button_release(mdc::CanvasItem *target, const Point &point, mdc
   return super::on_button_release(target, point, button, state);
 }
 
-bool Floater::on_drag(mdc::CanvasItem *target, const Point &point, mdc::EventState state) {
+auto Floater::on_drag(mdc::CanvasItem *target, const Point &point, mdc::EventState state) -> bool {
   if (_dragging) {
     mdc::Group *group = dynamic_cast<mdc::Group *>(get_parent());
 

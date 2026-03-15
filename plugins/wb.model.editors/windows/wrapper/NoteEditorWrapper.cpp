@@ -47,7 +47,7 @@ NoteEditorWrapper::~NoteEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-NoteEditorBE *NoteEditorWrapper::get_unmanaged_object() {
+auto NoteEditorWrapper::get_unmanaged_object() -> NoteEditorBE * {
   return static_cast<::NoteEditorBE *>(inner);
 }
 
@@ -59,7 +59,7 @@ void NoteEditorWrapper::set_text(String ^ text) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ NoteEditorWrapper::get_text() {
+auto NoteEditorWrapper::get_text() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_text());
 }
 
@@ -71,7 +71,7 @@ void NoteEditorWrapper::set_name(String ^ name) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ NoteEditorWrapper::get_name() {
+auto NoteEditorWrapper::get_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_name());
 }
 

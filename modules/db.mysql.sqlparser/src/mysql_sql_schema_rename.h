@@ -35,7 +35,7 @@
 class Mysql_sql_schema_rename : protected Mysql_sql_parser_base, virtual public Sql_schema_rename {
 public:
   typedef std::shared_ptr<Mysql_sql_schema_rename> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_sql_schema_rename());
   }
   virtual ~Mysql_sql_schema_rename() {
@@ -45,10 +45,10 @@ protected:
   Mysql_sql_schema_rename();
 
 public:
-  int rename_schema_references(db_CatalogRef catalog, const std::string &old_schema_name,
-                               const std::string &new_schema_name);
-  int rename_schema_references(std::string &sql, const std::string &old_schema_name,
-                               const std::string &new_schema_name);
+  auto rename_schema_references(db_CatalogRef catalog, const std::string &old_schema_name,
+                               const std::string &new_schema_name) -> int;
+  auto rename_schema_references(std::string &sql, const std::string &old_schema_name,
+                               const std::string &new_schema_name) -> int;
 
 protected:
   template <typename T>
@@ -56,11 +56,11 @@ protected:
                                 void (T::*sql_text_prop_w)(const grt::StringRef &), int delim_wrapping,
                                 Mysql_sql_parser_fe &parser_fe);
 
-  int process_sql_statement(const SqlAstNode *tree);
-  void process_sql_statement_item(const SqlAstNode *item);
-  void process_schema_reference_candidate(const SqlAstNode *item, int dot_count);
-  bool rename_schema_references(std::string &sql_text, Mysql_sql_parser_fe &sql_parser_fe, int delim_wrapping);
-  bool rename_schema_references(std::string &sql_text);
+  auto process_sql_statement(const SqlAstNode *tree) -> int;
+  auto process_sql_statement_item(const SqlAstNode *item) -> void;
+  auto process_schema_reference_candidate(const SqlAstNode *item, int dot_count) -> void;
+  auto rename_schema_references(std::string &sql_text, Mysql_sql_parser_fe &sql_parser_fe, int delim_wrapping) -> bool;
+  auto rename_schema_references(std::string &sql_text) -> bool;
 
   std::string _old_schema_name;
   std::string _new_schema_name;

@@ -30,12 +30,12 @@
 //================================================================================
 // db_RoutineGroup
 
-static void routine_group_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                                       db_RoutineGroup *group) {
+static auto routine_group_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                                       db_RoutineGroup *group) -> void {
   (*group->signal_contentChanged())();
 }
 
-void db_RoutineGroup::init() {
+auto db_RoutineGroup::init() -> void {
   // No need in disconnet management since signal it part of object
   _list_changed_signal.connect(
     std::bind(&routine_group_list_changed, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, this));

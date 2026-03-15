@@ -56,7 +56,7 @@ WBComponentBasic::WBComponentBasic(WBContext *wb) : WBComponent(wb) {
 WBComponentBasic::~WBComponentBasic() {
 }
 
-void WBComponentBasic::load_app_options(bool update) {
+auto WBComponentBasic::load_app_options(bool update) -> void {
   if (!update) {
     app_ToolbarRef options_toolbar;
 
@@ -73,18 +73,18 @@ void WBComponentBasic::load_app_options(bool update) {
   }
 }
 
-app_ToolbarRef WBComponentBasic::get_tools_toolbar() {
+auto WBComponentBasic::get_tools_toolbar() -> app_ToolbarRef {
   return app_ToolbarRef::cast_from(
     grt::GRT::get()->unserialize(base::makePath(_wb->get_datadir(), "data/tools_toolbar_basic.xml")));
 }
 
-app_ToolbarRef WBComponentBasic::get_tool_options(const std::string &tool) {
+auto WBComponentBasic::get_tool_options(const std::string &tool) -> app_ToolbarRef {
   if (_toolbars.find("options/" + tool) != _toolbars.end())
     return _toolbars["options/" + tool];
   return app_ToolbarRef();
 }
 
-void WBComponentBasic::setup_canvas_tool(ModelDiagramForm *view, const std::string &tool) {
+auto WBComponentBasic::setup_canvas_tool(ModelDiagramForm *view, const std::string &tool) -> void {
   void *data = 0;
 
   if (tool == WB_TOOL_SELECT) {
@@ -157,7 +157,7 @@ void WBComponentBasic::setup_canvas_tool(ModelDiagramForm *view, const std::stri
   view->set_reset_tool_callback(std::bind(&WBComponentBasic::reset_tool, this, std::placeholders::_1, data));
 }
 
-std::vector<std::string> WBComponentBasic::get_command_dropdown_items(const std::string &option) {
+auto WBComponentBasic::get_command_dropdown_items(const std::string &option) -> std::vector<std::string> {
   std::vector<std::string> items;
   if (base::hasSuffix(option, ":Color")) {
     std::string colors = _wb->get_wb_options().get_string("studio.model.Figure:ColorList");
@@ -191,14 +191,14 @@ std::vector<std::string> WBComponentBasic::get_command_dropdown_items(const std:
   return items;
 }
 
-grt::ListRef<app_ShortcutItem> WBComponentBasic::get_shortcut_items() {
+auto WBComponentBasic::get_shortcut_items() -> grt::ListRef<app_ShortcutItem> {
   return _shortcuts;
 }
 
 //--------------------------------------------------------------------------------
 // Object Placement
 
-bool WBComponentBasic::handles_figure(const model_ObjectRef &object) {
+auto WBComponentBasic::handles_figure(const model_ObjectRef &object) -> bool {
   if (object.is_instance(model_Layer::static_class_name()) ||
       object.is_instance(studio_model_NoteFigure::static_class_name()) ||
       object.is_instance(studio_model_ImageFigure::static_class_name()))
@@ -206,7 +206,7 @@ bool WBComponentBasic::handles_figure(const model_ObjectRef &object) {
   return false;
 }
 
-grt::ValueRef WBComponentBasic::place_layer(ModelDiagramForm *form, const Rect &rect) {
+auto WBComponentBasic::place_layer(ModelDiagramForm *form, const Rect &rect) -> grt::ValueRef {
   try {
     model_DiagramRef view(form->get_model_diagram());
 
@@ -261,7 +261,7 @@ void WBComponentBasic::delete_selection()
   }
 }*/
 
-bool WBComponentBasic::delete_model_object(const model_ObjectRef &object, bool figure_only) {
+auto WBComponentBasic::delete_model_object(const model_ObjectRef &object, bool figure_only) -> bool {
   grt::AutoUndo undo;
 
   if (object.is_instance(model_Figure::static_class_name())) {
@@ -284,7 +284,7 @@ bool WBComponentBasic::delete_model_object(const model_ObjectRef &object, bool f
   return true;
 }
 
-void WBComponentBasic::delete_object(ModelDiagramForm *view, const Point &pos) {
+auto WBComponentBasic::delete_object(ModelDiagramForm *view, const Point &pos) -> void {
   model_ObjectRef object(view->get_object_at(pos));
 
   if (object.is_valid()) {
@@ -294,7 +294,7 @@ void WBComponentBasic::delete_object(ModelDiagramForm *view, const Point &pos) {
   }
 }
 
-void WBComponentBasic::copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context) {
+auto WBComponentBasic::copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context) -> void {
   std::set<std::string> skip;
   skip.insert("oldName");
   //  skip.insert("filename");
@@ -306,7 +306,7 @@ void WBComponentBasic::copy_object_to_clipboard(const grt::ObjectRef &object, gr
   clip->append_data(copy);
 }
 
-bool WBComponentBasic::can_paste_object(const grt::ObjectRef &object) {
+auto WBComponentBasic::can_paste_object(const grt::ObjectRef &object) -> bool {
   if (object.is_instance(studio_model_NoteFigure::static_class_name()) ||
       object.is_instance(studio_model_ImageFigure::static_class_name()) ||
       object.is_instance(model_Layer::static_class_name()))
@@ -314,13 +314,13 @@ bool WBComponentBasic::can_paste_object(const grt::ObjectRef &object) {
   return false;
 }
 
-static void get_component_that_can_paste(WBComponent *compo, const grt::ObjectRef &object, WBComponent **result) {
+static auto get_component_that_can_paste(WBComponent *compo, const grt::ObjectRef &object, WBComponent **result) -> void {
   if (compo->can_paste_object(object))
     *result = compo;
 }
 
-model_ObjectRef WBComponentBasic::paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
-                                               grt::CopyContext &copy_context) {
+auto WBComponentBasic::paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
+                                               grt::CopyContext &copy_context) -> model_ObjectRef {
   model_ObjectRef copy;
   model_LayerRef destlayer(view->get_model_diagram()->rootLayer());
   grt::AutoUndo undo;
@@ -398,7 +398,7 @@ model_ObjectRef WBComponentBasic::paste_object(ModelDiagramForm *view, const grt
   return copy;
 }
 
-void WBComponentBasic::activate_canvas_object(const model_ObjectRef &figure, bool newwindow) {
+auto WBComponentBasic::activate_canvas_object(const model_ObjectRef &figure, bool newwindow) -> void {
   if (figure.is_instance(studio_model_NoteFigure::static_class_name()))
     bec::GRTManager::get()->open_object_editor(figure, newwindow ? bec::ForceNewWindowFlag : bec::NoFlags);
   else if (figure.is_instance(studio_model_ImageFigure::static_class_name()))
@@ -410,8 +410,8 @@ void WBComponentBasic::activate_canvas_object(const model_ObjectRef &figure, boo
 //-------------------------------------------------------------------------------------
 // Handlers
 
-bool WBComponentBasic::handle_button_event(ModelDiagramForm *view, mdc::MouseButton button, bool press, Point pos,
-                                           mdc::EventState state, void *data) {
+auto WBComponentBasic::handle_button_event(ModelDiagramForm *view, mdc::MouseButton button, bool press, Point pos,
+                                           mdc::EventState state, void *data) -> bool {
   std::string tool = view->get_tool();
 
   if (tool == WB_TOOL_HAND && (button == mdc::ButtonLeft || button == mdc::ButtonMiddle)) {
@@ -519,7 +519,7 @@ bool WBComponentBasic::handle_button_event(ModelDiagramForm *view, mdc::MouseBut
   return false;
 }
 
-bool WBComponentBasic::handle_motion_event(ModelDiagramForm *view, Point pos, mdc::EventState state, void *data) {
+auto WBComponentBasic::handle_motion_event(ModelDiagramForm *view, Point pos, mdc::EventState state, void *data) -> bool {
   std::string tool = view->get_tool();
 
   if (tool == WB_TOOL_HAND) {
@@ -557,7 +557,7 @@ bool WBComponentBasic::handle_motion_event(ModelDiagramForm *view, Point pos, md
   return false;
 }
 
-void WBComponentBasic::reset_tool(ModelDiagramForm *view, void *data) {
+auto WBComponentBasic::reset_tool(ModelDiagramForm *view, void *data) -> void {
   if (view->get_tool() == WB_TOOL_HAND) {
     HandToolContext *hcontext = reinterpret_cast<HandToolContext *>(data);
 

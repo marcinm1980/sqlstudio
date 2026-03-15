@@ -40,20 +40,20 @@ public:
     set_status_text("");
   }
 
-  void set_load_schemata_slot(DbConnection *sdbc, const std::function<std::vector<std::string>()> &sslot,
-                              DbConnection *tdbc, const std::function<std::vector<std::string>()> &tslot) {
+  auto set_load_schemata_slot(DbConnection *sdbc, const std::function<std::vector<std::string>()> &sslot,
+                              DbConnection *tdbc, const std::function<std::vector<std::string>()> &tslot) -> void {
     _source_dbconn = sdbc;
     _target_dbconn = tdbc;
     _load_source_schemata = sslot;
     _load_target_schemata = tslot;
   }
 
-  void set_model_catalog(db_CatalogRef catalog) {
+  auto set_model_catalog(db_CatalogRef catalog) -> void {
     _model_catalog = catalog;
   }
 
 protected:
-  bool perform_connect(bool source) {
+  auto perform_connect(bool source) -> bool {
     DbConnection *dbc = source ? _source_dbconn : _target_dbconn;
     db_mgmt_ConnectionRef conn = dbc->get_connection();
 
@@ -62,7 +62,7 @@ protected:
     return true;
   }
 
-  grt::ValueRef do_connect(DbConnection *dbc) {
+  auto do_connect(DbConnection *dbc) -> grt::ValueRef {
     if (!dbc)
       throw std::logic_error("must call set_db_connection() 1st");
     dbc->test_connection();
@@ -70,16 +70,16 @@ protected:
     return grt::ValueRef();
   }
 
-  bool perform_fetch(bool source) {
+  auto perform_fetch(bool source) -> bool {
     execute_grt_task(std::bind(&FetchSchemaNamesSourceTargetProgressPage::do_fetch, this, source), false);
     return true;
   }
 
-  static bool collate(const std::string &a, const std::string &b) {
+  static auto collate(const std::string &a, const std::string &b) -> bool {
     return g_utf8_collate(a.c_str(), b.c_str()) < 0;
   }
 
-  grt::ValueRef do_fetch(bool source) {
+  auto do_fetch(bool source) -> grt::ValueRef {
     std::vector<std::string> schema_names = source ? _load_source_schemata() : _load_target_schemata();
 
     // order the schema names alphabetically
@@ -100,7 +100,7 @@ protected:
     return grt::ValueRef();
   }
 
-  bool perform_script_fetch(bool source) {
+  auto perform_script_fetch(bool source) -> bool {
     std::string path = values().get_string(source ? "left_source_file" : "right_source_file");
     db_CatalogRef catalog = parse_catalog_from_file(path);
 
@@ -121,7 +121,7 @@ protected:
     return true;
   }
 
-  db_CatalogRef parse_catalog_from_file(const std::string &filename) {
+  auto parse_catalog_from_file(const std::string &filename) -> db_CatalogRef {
     studio_physical_ModelRef pm = studio_physical_ModelRef::cast_from(_model_catalog->owner());
 
     db_mysql_CatalogRef cat(grt::Initialized);
@@ -148,7 +148,7 @@ protected:
     return cat;
   }
 
-  bool perform_model_fetch(bool source) {
+  auto perform_model_fetch(bool source) -> bool {
     {
       db_CatalogRef catalog(_model_catalog);
       grt::StringListRef names(grt::Initialized);
@@ -160,7 +160,7 @@ protected:
     return true;
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       clear_tasks();
       switch (_source_page->get_left_source()) {
@@ -214,7 +214,7 @@ protected:
     WizardProgressPage::enter(advancing);
   }
 
-  virtual bool allow_next() {
+  virtual auto allow_next() -> bool {
     return _finished == 2;
   }
 

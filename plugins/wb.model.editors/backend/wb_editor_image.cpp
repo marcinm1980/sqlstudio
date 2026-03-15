@@ -31,14 +31,14 @@ using namespace bec;
 ImageEditorBE::ImageEditorBE(const studio_model_ImageFigureRef &image) : bec::BaseEditor(image), _image(image) {
 }
 
-bool ImageEditorBE::should_close_on_delete_of(const std::string &oid) {
+auto ImageEditorBE::should_close_on_delete_of(const std::string &oid) -> bool {
   if (_image.id() == oid || _image->owner().id() == oid)
     return true;
 
   return false;
 }
 
-void ImageEditorBE::set_filename(const std::string &text) {
+auto ImageEditorBE::set_filename(const std::string &text) -> void {
   if (text != *_image->filename()) {
     AutoUndoEdit undo(this);
     _image->setImageFile(text);
@@ -46,12 +46,12 @@ void ImageEditorBE::set_filename(const std::string &text) {
   }
 }
 
-void ImageEditorBE::get_size(int &w, int &h) {
+auto ImageEditorBE::get_size(int &w, int &h) -> void {
   w = (int)_image->width();
   h = (int)_image->height();
 }
 
-void ImageEditorBE::set_size(int w, int h) {
+auto ImageEditorBE::set_size(int w, int h) -> void {
   if (w > 0 && h > 0 && (w != *_image->width() || h != *_image->height())) {
     AutoUndoEdit undo(this);
     _image->width(w);
@@ -60,7 +60,7 @@ void ImageEditorBE::set_size(int w, int h) {
   }
 }
 
-void ImageEditorBE::set_width(int w) {
+auto ImageEditorBE::set_width(int w) -> void {
   AutoUndoEdit undo(this);
 
   if (*_image->keepAspectRatio() && _image->width() > 0) {
@@ -75,7 +75,7 @@ void ImageEditorBE::set_width(int w) {
   undo.end(_("Set Image Size"));
 }
 
-void ImageEditorBE::set_height(int h) {
+auto ImageEditorBE::set_height(int h) -> void {
   AutoUndoEdit undo(this);
 
   if (*_image->keepAspectRatio() && _image->height() > 0) {
@@ -90,11 +90,11 @@ void ImageEditorBE::set_height(int h) {
   undo.end(_("Set Image Size"));
 }
 
-bool ImageEditorBE::get_keep_aspect_ratio() {
+auto ImageEditorBE::get_keep_aspect_ratio() -> bool {
   return _image->keepAspectRatio() == 1;
 }
 
-void ImageEditorBE::set_keep_aspect_ratio(bool flag) {
+auto ImageEditorBE::set_keep_aspect_ratio(bool flag) -> void {
   AutoUndoEdit undo(this);
 
   _image->keepAspectRatio(flag);
@@ -102,11 +102,11 @@ void ImageEditorBE::set_keep_aspect_ratio(bool flag) {
   undo.end(_("Toggle Image Aspect Ratio"));
 }
 
-std::string ImageEditorBE::get_filename() const {
+auto ImageEditorBE::get_filename() const -> std::string {
   return _image->filename();
 }
 
-std::string ImageEditorBE::get_attached_image_path() {
+auto ImageEditorBE::get_attached_image_path() -> std::string {
   grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
 
   if (!module)
@@ -121,6 +121,6 @@ std::string ImageEditorBE::get_attached_image_path() {
   return value;
 }
 
-std::string ImageEditorBE::get_title() {
+auto ImageEditorBE::get_title() -> std::string {
   return base::strfmt("Image");
 }

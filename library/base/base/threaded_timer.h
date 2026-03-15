@@ -65,11 +65,11 @@ enum TimerUnit { TimerFrequency, TimerTimeSpan };
  */
 class BASELIBRARY_PUBLIC_FUNC ThreadedTimer {
 public:
-  static ThreadedTimer* get();
-  static void stop();
+  static auto get() -> ThreadedTimer*;
+  static auto stop() -> void;
 
-  static int add_task(TimerUnit unit, double value, bool single_shot, TimerFunction callback);
-  static bool remove_task(int task_id);
+  static auto add_task(TimerUnit unit, double value, bool single_shot, TimerFunction callback) -> int;
+  static auto remove_task(int task_id) -> bool;
 
 private:
   base::Mutex _timer_lock; // Synchronize access to the timer class.
@@ -84,8 +84,8 @@ private:
   ThreadedTimer(int base_frequency);
   ~ThreadedTimer();
 
-  static gpointer start(gpointer data);
-  static void pool_function(gpointer data, gpointer user_data);
-  void main_loop();
-  bool remove(int task_id);
+  static auto start(gpointer data) -> gpointer;
+  static auto pool_function(gpointer data, gpointer user_data) -> void;
+  auto main_loop() -> void;
+  auto remove(int task_id) -> bool;
 };

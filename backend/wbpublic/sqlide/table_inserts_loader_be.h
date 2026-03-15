@@ -37,7 +37,7 @@ public:
   virtual ~TableInsertsLoader() {
   }
 
-  void process_table(db_TableRef table, const std::string &inserts_script);
+  auto process_table(db_TableRef table, const std::string &inserts_script) -> void;
 };
 
 #endif /* _TABLE_INSERTS_LOADER_BE_H_ */

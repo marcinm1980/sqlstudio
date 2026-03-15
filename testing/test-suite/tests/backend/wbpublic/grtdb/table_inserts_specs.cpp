@@ -51,7 +51,7 @@ public:
   TestTableColumnsListBE(TableEditorBE *ed) : TableColumnsListBE(ed) {
   }
 
-  virtual std::vector<std::string> get_datatype_names() {
+  virtual auto get_datatype_names() -> std::vector<std::string> {
     return std::vector<std::string>();
   }
 };
@@ -74,22 +74,22 @@ public:
 #pragma warning(pop)
 #endif
 
-  db_TableRef get_table() {
+  auto get_table() -> db_TableRef {
     return _table;
   }
 
-  virtual TableColumnsListBE *get_columns() {
+  virtual auto get_columns() -> TableColumnsListBE * {
     return &_columns;
   }
 
-  virtual IndexListBE *get_indexes() {
+  virtual auto get_indexes() -> IndexListBE * {
     return &_indexes;
   }
 
-  virtual void edit_object(const ObjectRef &v) {
+  virtual auto edit_object(const ObjectRef &v) -> void {
   }
 
-  virtual std::vector<std::string> get_index_types() {
+  virtual auto get_index_types() -> std::vector<std::string> {
     std::vector<std::string> index_types;
     index_types.push_back("type1");
     index_types.push_back("type2");
@@ -98,25 +98,25 @@ public:
     return index_types;
   }
 
-  void set_table_option_by_name(const std::string &name, const std::string &value) {
+  auto set_table_option_by_name(const std::string &name, const std::string &value) -> void {
     // TODO: implement
   }
 
-  std::string get_table_option_by_name(const std::string &name) {
+  auto get_table_option_by_name(const std::string &name) -> std::string {
     // TODO: implement
     return std::string();
   }
 
-  std::vector<std::string> get_charsets_list() {
+  auto get_charsets_list() -> std::vector<std::string> {
     return std::vector<std::string>();
   }
 
-  virtual bool check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) {
+  virtual auto check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) -> bool {
     // TODO: implement
     return false;
   }
 
-  virtual db_TableRef create_stub_table(const std::string &schema, const std::string &table) {
+  virtual auto create_stub_table(const std::string &schema, const std::string &table) -> db_TableRef {
     return db_TableRef(); // TODO: implement and add tests.
   }
 };
@@ -126,7 +126,7 @@ struct TestData {
   db_TableRef table;
   //TestTableEditor *editor;
 
-  db_TableRef makeInsertsTestTable(const db_mgmt_RdbmsRef &rdbms, const db_CatalogRef &catalog) {
+  auto makeInsertsTestTable(const db_mgmt_RdbmsRef &rdbms, const db_CatalogRef &catalog) -> db_TableRef {
     grt::ListRef<db_UserDatatype> usertypes;
 
     db_SchemaRef schema(grt::Initialized);
@@ -171,7 +171,7 @@ struct TestData {
     return table;
   }
 
-  std::string generateSqlLikeForwardEng(db_TableRef table) {
+  auto generateSqlLikeForwardEng(db_TableRef table) -> std::string {
     // this code copied verbatim from module_db_mysql.cpp
     Recordset_table_inserts_storage::Ref input_storage = Recordset_table_inserts_storage::create();
     input_storage->table(table);
@@ -191,8 +191,8 @@ struct TestData {
     return output_storage->sql_script();
   }
 
-  void testRsStorage(RecordsetRef rs, int row, int column, const std::string &value,
-                     const std::string &other_value) {
+  auto testRsStorage(RecordsetRef rs, int row, int column, const std::string &value,
+                     const std::string &other_value) -> void {
     EXPECT_EQ(1U, rs->count()) /* "rows before" */;
 
     rs->set_field(row, column, value);

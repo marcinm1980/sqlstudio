@@ -36,7 +36,7 @@ UndoObjectChangeGroup::UndoObjectChangeGroup(const std::string &object_id, const
 
 //--------------------------------------------------------------------------------------------------
 
-bool UndoObjectChangeGroup::matches_group(UndoGroup *group) const {
+auto UndoObjectChangeGroup::matches_group(UndoGroup *group) const -> bool {
   UndoObjectChangeGroup *other = dynamic_cast<UndoObjectChangeGroup *>(group);
   if (!other)
     return false;
@@ -62,13 +62,13 @@ BaseEditor::~BaseEditor() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string BaseEditor::get_form_context_name() const {
+auto BaseEditor::get_form_context_name() const -> std::string {
   return "editor"; // WB_CONTEXT_EDITOR;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditor::add_listeners(const grt::Ref<GrtObject> &object) {
+auto BaseEditor::add_listeners(const grt::Ref<GrtObject> &object) -> void {
   scoped_connect(object->signal_changed(),
                  std::bind(&BaseEditor::object_member_changed, this, std::placeholders::_1, std::placeholders::_2));
   scoped_connect(object->signal_list_changed(), std::bind(&BaseEditor::on_object_changed, this));
@@ -76,26 +76,26 @@ void BaseEditor::add_listeners(const grt::Ref<GrtObject> &object) {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditor::object_member_changed(const std::string &member, const grt::ValueRef &ovalue) {
+auto BaseEditor::object_member_changed(const std::string &member, const grt::ValueRef &ovalue) -> void {
   if (_ignored_object_fields_for_ui_refresh.find(member) == _ignored_object_fields_for_ui_refresh.end())
     on_object_changed();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditor::freeze_refresh_on_object_change() {
+auto BaseEditor::freeze_refresh_on_object_change() -> void {
   _ignore_object_changes_for_ui_refresh++;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool BaseEditor::is_refresh_frozen() {
+auto BaseEditor::is_refresh_frozen() -> bool {
   return _ignore_object_changes_for_ui_refresh > 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditor::thaw_refresh_on_object_change(bool discard_pending) {
+auto BaseEditor::thaw_refresh_on_object_change(bool discard_pending) -> void {
   if (_ignore_object_changes_for_ui_refresh > 0)
     _ignore_object_changes_for_ui_refresh--;
   if (_ignore_object_changes_for_ui_refresh == 0) {
@@ -110,21 +110,21 @@ void BaseEditor::thaw_refresh_on_object_change(bool discard_pending) {
 /**
  * Replaces the current object (e.g. on re-parse/reset).
  */
-void BaseEditor::set_object(GrtObjectRef value) {
+auto BaseEditor::set_object(GrtObjectRef value) -> void {
   _object = value;
   on_object_changed();
 };
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditor::apply_changes_to_live_object() {
+auto BaseEditor::apply_changes_to_live_object() -> void {
   commit_changes();
   reset_editor_undo_stack();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::BaseEditor::revert_changes_to_live_object() {
+auto bec::BaseEditor::revert_changes_to_live_object() -> void {
   refresh_live_object();
   reset_editor_undo_stack();
 }
@@ -135,7 +135,7 @@ void bec::BaseEditor::revert_changes_to_live_object() {
  * Checks if the editor can be closed and returns true if so.
  * Must be called in the context of the main thread.
  */
-bool BaseEditor::can_close() {
+auto BaseEditor::can_close() -> bool {
   if (!UIForm::can_close())
     return false;
 
@@ -146,7 +146,7 @@ bool BaseEditor::can_close() {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditor::on_object_changed() {
+auto BaseEditor::on_object_changed() -> void {
   if (_ignore_object_changes_for_ui_refresh == 0) {
     // calling ui_refresh from here will cause refresh to be called from the GRT thread
     // which must not happen. delaying it to be executing when idle will make it
@@ -161,20 +161,20 @@ void BaseEditor::on_object_changed() {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditor::undo_applied() {
+auto BaseEditor::undo_applied() -> void {
   _ui_refresh_conn = bec::GRTManager::get()->run_once_when_idle(std::bind(&RefreshUI::do_ui_refresh, this));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditor::run_from_grt(const std::function<void()> &slot) {
+auto BaseEditor::run_from_grt(const std::function<void()> &slot) -> void {
   bec::GRTManager::get()->get_dispatcher()->execute_sync_function(
     "editor action", std::bind(std::bind(&base::run_and_return_value<grt::ValueRef>, slot)));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool BaseEditor::is_editor_dirty() {
+auto BaseEditor::is_editor_dirty() -> bool {
   if (!has_editor())
     return false;
 

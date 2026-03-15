@@ -49,7 +49,7 @@ namespace mdc {
     virtual auto get_start_point() -> base::Point;
     virtual auto get_end_point() -> base::Point;
 
-    virtual void update();
+    virtual auto update() -> void;
 
   protected:
     Connector *_start_conn;
@@ -58,7 +58,7 @@ namespace mdc {
     base::Point _start;
     base::Point _end;
 
-    virtual void connector_changed(Connector *conn);
+    virtual auto connector_changed(Connector *conn) -> void;
   };
 
 #if 0

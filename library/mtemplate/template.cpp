@@ -41,7 +41,7 @@ namespace mtemplate {
   Template::~Template() {
   }
 
-  void Template::dump(int indent) {
+  auto Template::dump(int indent) -> void {
     base::utf8string indent_str(indent * 2, ' ');
     base::utf8string indent_plus_str((indent + 1) * 2, ' ');
 
@@ -53,7 +53,7 @@ namespace mtemplate {
     std::cout << indent_str << "}" << std::endl;
   }
 
-  void Template::expand(DictionaryInterface *dict, TemplateOutput *output) {
+  auto Template::expand(DictionaryInterface *dict, TemplateOutput *output) -> void {
     for (NodeStorageType node : _document) {
       if (node->type() == TemplateObject_Section) {
         DictionaryInterface::section_dictionary_storage &section_dicts = dict->getSectionDictionaries(node->_text);
@@ -66,7 +66,7 @@ namespace mtemplate {
     }
   }
 
-  Template *GetTemplate(const base::utf8string &path, PARSE_TYPE type) {
+  auto GetTemplate(const base::utf8string &path, PARSE_TYPE type) -> Template * {
     if (type == STRIP_WHITESPACE)
       throw std::invalid_argument("STRIP_WHITESPACE");
 

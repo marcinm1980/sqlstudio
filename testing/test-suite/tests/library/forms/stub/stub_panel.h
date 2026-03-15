@@ -36,31 +36,31 @@ namespace mforms {
       PanelWrapper(::mforms::Panel *self, ::mforms::PanelType type) : ContainerWrapper(self) {
       }
 
-      static bool create(::mforms::Panel *self, ::mforms::PanelType type) {
+      static auto create(::mforms::Panel *self, ::mforms::PanelType type) -> bool {
         return true;
       }
 
-      static void set_title(::mforms::Panel *self, const std::string &title) {
+      static auto set_title(::mforms::Panel *self, const std::string &title) -> void {
       }
 
-      static void set_active(::mforms::Panel *self, bool flag) {
+      static auto set_active(::mforms::Panel *self, bool flag) -> void {
       }
 
-      static bool get_active(::mforms::Panel *self) {
+      static auto get_active(::mforms::Panel *self) -> bool {
         return false;
       }
 
-      static void set_back_color(::mforms::Panel *self, const std::string &color) {
+      static auto set_back_color(::mforms::Panel *self, const std::string &color) -> void {
       }
 
-      static void add(::mforms::Panel *self, ::mforms::View *child) {
+      static auto add(::mforms::Panel *self, ::mforms::View *child) -> void {
       }
 
-      static void remove(::mforms::Panel *self, ::mforms::View *child) {
+      static auto remove(::mforms::Panel *self, ::mforms::View *child) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_panel_impl.create = &PanelWrapper::create;

@@ -39,7 +39,7 @@ namespace mforms {
 
     static std::string icon_path;
 
-    static void setup_padded_button(Gtk::Button *button, Gtk::Label *label, Gtk::Image *image) {
+    static auto setup_padded_button(Gtk::Button *button, Gtk::Label *label, Gtk::Image *image) -> void {
       if (image) {
         Gtk::Box *hbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 4));
         button->add(*hbox);
@@ -138,7 +138,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::cancel(::mforms::Wizard *wiz) {
+    auto WizardImpl::cancel(::mforms::Wizard *wiz) -> void {
       WizardImpl *wiz_impl = wiz->get_data<WizardImpl>();
 
       if (wiz->_cancel_slot()) {
@@ -148,7 +148,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool WizardImpl::delete_event(GdkEventAny *ev, ::mforms::Wizard *wiz) {
+    auto WizardImpl::delete_event(GdkEventAny *ev, ::mforms::Wizard *wiz) -> bool {
       WizardImpl *wiz_impl = wiz->get_data<WizardImpl>();
 
       wiz->_cancel_slot();
@@ -158,19 +158,19 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool WizardImpl::create(::mforms::Wizard *self, ::mforms::Form *owner) {
+    auto WizardImpl::create(::mforms::Wizard *self, ::mforms::Form *owner) -> bool {
       return new WizardImpl(self, owner);
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_title(::mforms::Wizard *self, const std::string &title) {
+    auto WizardImpl::set_title(::mforms::Wizard *self, const std::string &title) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
       if (wiz) {
         wiz->FormImpl::set_title(title);
       }
     }
     //------------------------------------------------------------------------------
-    void WizardImpl::run_modal(::mforms::Wizard *self) {
+    auto WizardImpl::run_modal(::mforms::Wizard *self) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
       if (wiz) {
         Gtk::Window *_wnd = wiz->get_window();
@@ -187,7 +187,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::close(::mforms::Wizard *self) {
+    auto WizardImpl::close(::mforms::Wizard *self) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
       if (wiz) {
         Gtk::Window *_wnd = wiz->get_window();
@@ -198,13 +198,13 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::flush_events(::mforms::Wizard *self) {
+    auto WizardImpl::flush_events(::mforms::Wizard *self) -> void {
       while (Gtk::Main::events_pending())
         Gtk::Main::iteration();
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_content(::mforms::Wizard *self, View *view) {
+    auto WizardImpl::set_content(::mforms::Wizard *self, View *view) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
 
       wiz->_content.remove();
@@ -215,21 +215,21 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_heading(::mforms::Wizard *self, const std::string &heading) {
+    auto WizardImpl::set_heading(::mforms::Wizard *self, const std::string &heading) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
 
       wiz->_heading.set_markup("<b>" + heading + "</b>");
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_step_list(::mforms::Wizard *self, const std::vector<std::string> &steps) {
+    auto WizardImpl::set_step_list(::mforms::Wizard *self, const std::vector<std::string> &steps) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
 
       wiz->refresh_step_list(steps);
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::refresh_step_list(const std::vector<std::string> &steps) {
+    auto WizardImpl::refresh_step_list(const std::vector<std::string> &steps) -> void {
       int row = 0;
 
       for (std::vector<std::string>::const_iterator iter = steps.begin(); iter != steps.end(); ++iter) {
@@ -264,30 +264,30 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_icon_path(const std::string &path) {
+    auto WizardImpl::set_icon_path(const std::string &path) -> void {
       icon_path = path;
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_allow_cancel(::mforms::Wizard *self, bool flag) {
+    auto WizardImpl::set_allow_cancel(::mforms::Wizard *self, bool flag) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
       wiz->_cancel_btn.set_sensitive(flag);
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_allow_back(::mforms::Wizard *self, bool flag) {
+    auto WizardImpl::set_allow_back(::mforms::Wizard *self, bool flag) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
       wiz->_back_btn.set_sensitive(flag);
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_allow_next(::mforms::Wizard *self, bool flag) {
+    auto WizardImpl::set_allow_next(::mforms::Wizard *self, bool flag) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
       wiz->_fwd_btn.set_sensitive(flag);
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_show_extra(::mforms::Wizard *self, bool flag) {
+    auto WizardImpl::set_show_extra(::mforms::Wizard *self, bool flag) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
 
       if (flag)
@@ -298,7 +298,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_extra_caption(::mforms::Wizard *self, const std::string &caption) {
+    auto WizardImpl::set_extra_caption(::mforms::Wizard *self, const std::string &caption) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
 
       wiz->_extra_label.set_text(caption);
@@ -306,7 +306,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::set_next_caption(::mforms::Wizard *self, const std::string &caption) {
+    auto WizardImpl::set_next_caption(::mforms::Wizard *self, const std::string &caption) -> void {
       WizardImpl *wiz = self->get_data<WizardImpl>();
 
       if (caption.empty())
@@ -316,7 +316,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void WizardImpl::init() {
+    auto WizardImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_wizard_impl.create = &WizardImpl::create;

@@ -36,33 +36,33 @@ namespace wb {
 
     class PhysicalSchemaNode : public OverviewBE::ContainerNode {
     public:
-      virtual void init();
+      virtual auto init() -> void;
 
     protected:
       bool _is_routine_group_enabled;
 
     public:
       PhysicalSchemaNode(db_SchemaRef schema);
-      virtual bool is_pasteable(bec::Clipboard *clip);
-      virtual void paste_object(WBContext *wb, bec::Clipboard *clip);
-      virtual bool is_deletable();
-      virtual void delete_object(WBContext *wb);
-      virtual bool is_renameable();
-      virtual bool rename(WBContext *wb, const std::string &name);
-      virtual bool activate(WBContext *wb);
-      virtual void focus(OverviewBE *sender);
-      virtual void refresh();
+      virtual auto is_pasteable(bec::Clipboard *clip) -> bool;
+      virtual auto paste_object(WBContext *wb, bec::Clipboard *clip) -> void;
+      virtual auto is_deletable() -> bool;
+      virtual auto delete_object(WBContext *wb) -> void;
+      virtual auto is_renameable() -> bool;
+      virtual auto rename(WBContext *wb, const std::string &name) -> bool;
+      virtual auto activate(WBContext *wb) -> bool;
+      virtual auto focus(OverviewBE *sender) -> void;
+      virtual auto refresh() -> void;
 
     public:
-      virtual bool add_new_db_table(WBContext *wb);
-      virtual bool add_new_db_view(WBContext *wb);
-      virtual bool add_new_db_routine_group(WBContext *wb);
-      virtual bool add_new_db_routine(WBContext *wb);
+      virtual auto add_new_db_table(WBContext *wb) -> bool;
+      virtual auto add_new_db_view(WBContext *wb) -> bool;
+      virtual auto add_new_db_routine_group(WBContext *wb) -> bool;
+      virtual auto add_new_db_routine(WBContext *wb) -> bool;
 
-      virtual SchemaObjectNode *create_table_node(const db_DatabaseObjectRef &dbobject);
-      virtual SchemaObjectNode *create_view_node(const db_DatabaseObjectRef &dbobject);
-      virtual SchemaObjectNode *create_routine_node(const db_DatabaseObjectRef &dbobject);
-      virtual SchemaObjectNode *create_routine_group_node(const db_DatabaseObjectRef &dbobject);
+      virtual auto create_table_node(const db_DatabaseObjectRef &dbobject) -> SchemaObjectNode *;
+      virtual auto create_view_node(const db_DatabaseObjectRef &dbobject) -> SchemaObjectNode *;
+      virtual auto create_routine_node(const db_DatabaseObjectRef &dbobject) -> SchemaObjectNode *;
+      virtual auto create_routine_group_node(const db_DatabaseObjectRef &dbobject) -> SchemaObjectNode *;
     };
 
     class SchemaObjectNode : public OverviewBE::ObjectNode {
@@ -71,41 +71,41 @@ namespace wb {
 
     public:
       SchemaObjectNode(const db_DatabaseObjectRef &dbobject);
-      virtual void delete_object(WBContext *wb);
-      virtual bool is_deletable();
-      virtual bool is_renameable();
-      virtual void copy_object(WBContext *wb, bec::Clipboard *clip);
-      virtual bool is_copyable();
+      virtual auto delete_object(WBContext *wb) -> void;
+      virtual auto is_deletable() -> bool;
+      virtual auto is_renameable() -> bool;
+      virtual auto copy_object(WBContext *wb, bec::Clipboard *clip) -> void;
+      virtual auto is_copyable() -> bool;
     };
 
     class SchemaTableNode : public SchemaObjectNode {
     public:
       SchemaTableNode(const db_DatabaseObjectRef &dbobject) : SchemaObjectNode(dbobject) {
       }
-      virtual std::string get_detail(int field);
+      virtual auto get_detail(int field) -> std::string;
     };
 
     class SchemaViewNode : public SchemaObjectNode {
     public:
       SchemaViewNode(const db_DatabaseObjectRef &dbobject) : SchemaObjectNode(dbobject) {
       }
-      virtual bool is_renameable();
-      virtual std::string get_detail(int field);
+      virtual auto is_renameable() -> bool;
+      virtual auto get_detail(int field) -> std::string;
     };
 
     class SchemaRoutineGroupNode : public SchemaObjectNode {
     public:
       SchemaRoutineGroupNode(const db_DatabaseObjectRef &dbobject) : SchemaObjectNode(dbobject) {
       }
-      virtual std::string get_detail(int field);
+      virtual auto get_detail(int field) -> std::string;
     };
 
     class SchemaRoutineNode : public SchemaObjectNode {
     public:
       SchemaRoutineNode(const db_DatabaseObjectRef &dbobject) : SchemaObjectNode(dbobject) {
       }
-      virtual std::string get_detail(int field);
-      virtual bool is_renameable();
+      virtual auto get_detail(int field) -> std::string;
+      virtual auto is_renameable() -> bool;
     };
   };
 };

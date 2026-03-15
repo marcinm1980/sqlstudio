@@ -39,14 +39,14 @@ EventLogReader::EventLogReader(const std::string &query,
 /**
  * @brief Set last view position.
  */
-void EventLogReader::SetPosition(long position) {
+auto EventLogReader::SetPosition(long position) -> void {
   _position = position;
 }
 
 /**
  * @brief Get the list of events.
  */
-void EventLogReader::ReadEvents() {
+auto EventLogReader::ReadEvents() -> void {
   DWORD status = ERROR_SUCCESS;
   std::wstring buf = base::string_to_wstring(_query);
   EVT_HANDLE results = EvtQuery(nullptr, nullptr, buf.c_str(), EvtQueryChannelPath | EvtQueryTolerateQueryErrors);
@@ -319,7 +319,7 @@ DWORD EventLogReader::PrintEvent(EVT_HANDLE eventHandle) {
  *
  * @return returns message string from the event.
  */
-std::string EventLogReader::GetMessageString(EVT_HANDLE metadata, EVT_HANDLE eventHandle) {
+auto EventLogReader::GetMessageString(EVT_HANDLE metadata, EVT_HANDLE eventHandle) -> std::string {
   DWORD bufferSize = 0;
   DWORD bufferUsed = 0;
   DWORD status = 0;

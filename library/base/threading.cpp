@@ -48,19 +48,19 @@ Mutex::~Mutex() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Mutex::lock() {
+auto Mutex::lock() -> void {
   _d->mutex.lock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Mutex::unlock() {
+auto Mutex::unlock() -> void {
   _d->mutex.unlock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool Mutex::tryLock() {
+auto Mutex::tryLock() -> bool {
   return _d->mutex.try_lock();
 }
 
@@ -111,19 +111,19 @@ RecMutex::~RecMutex() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RecMutex::lock() {
+auto RecMutex::lock() -> void {
   _d->mutex.lock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RecMutex::unlock() {
+auto RecMutex::unlock() -> void {
   _d->mutex.unlock();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool RecMutex::tryLock() {
+auto RecMutex::tryLock() -> bool {
   return _d->mutex.try_lock();
 }
 
@@ -190,7 +190,7 @@ Semaphore::~Semaphore() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Semaphore::post() {
+auto Semaphore::post() -> void {
   std::unique_lock<std::mutex> lock(_d->mutex);
   _d->count++;
   _d->condition.notify_one();
@@ -198,7 +198,7 @@ void Semaphore::post() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Semaphore::wait() {
+auto Semaphore::wait() -> void {
   std::unique_lock<std::mutex> lock(_d->mutex);
 
   _d->condition.wait(lock, [this]() { return _d->count > 0; });

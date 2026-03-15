@@ -36,7 +36,7 @@ public:
     signal_button_press_event().connect(sigc::mem_fun(this, &MyActiveLabel::button_press_slot));
   }
 
-  bool button_press_slot(GdkEventButton *evb) {
+  auto button_press_slot(GdkEventButton *evb) -> bool {
     if (evb->button == 3) {
       _owner->set_menu_tab(_owner->get_page_index(_page));
       if (_owner->get_tab_menu()) {
@@ -76,13 +76,13 @@ mforms::gtk::TabViewImpl::~TabViewImpl() {
   delete _nb;
 }
 
-void mforms::gtk::TabViewImpl::tab_changed(Gtk::Widget *, guint) {
+auto mforms::gtk::TabViewImpl::tab_changed(Gtk::Widget *, guint) -> void {
   TabView *tv = dynamic_cast<TabView *>(owner);
   if (tv && !tv->is_destroying())
     (*tv->signal_tab_changed())();
 }
 
-void mforms::gtk::TabViewImpl::tab_reordered(Gtk::Widget *page, guint to) {
+auto mforms::gtk::TabViewImpl::tab_reordered(Gtk::Widget *page, guint to) -> void {
   TabView *tv = dynamic_cast<TabView *>(owner);
   mforms::View *view = view_for_widget(page);
   if (!view)
@@ -92,7 +92,7 @@ void mforms::gtk::TabViewImpl::tab_reordered(Gtk::Widget *page, guint to) {
     tv->reordered(view, to);
 }
 
-void mforms::gtk::TabViewImpl::close_tab_clicked(mforms::View *page) {
+auto mforms::gtk::TabViewImpl::close_tab_clicked(mforms::View *page) -> void {
   TabView *tv = dynamic_cast<TabView *>(owner);
   int i = tv->get_page_index(page);
   page->retain();
@@ -103,11 +103,11 @@ void mforms::gtk::TabViewImpl::close_tab_clicked(mforms::View *page) {
   page->release();
 }
 
-bool mforms::gtk::TabViewImpl::create(::mforms::TabView *self, mforms::TabViewType tabtype) {
+auto mforms::gtk::TabViewImpl::create(::mforms::TabView *self, mforms::TabViewType tabtype) -> bool {
   return new TabViewImpl(self, tabtype) != 0;
 }
 
-void mforms::gtk::TabViewImpl::set_active_tab(::mforms::TabView *self, int index) {
+auto mforms::gtk::TabViewImpl::set_active_tab(::mforms::TabView *self, int index) -> void {
   TabViewImpl *cb = self->get_data<TabViewImpl>();
 
   if (cb) {
@@ -115,14 +115,14 @@ void mforms::gtk::TabViewImpl::set_active_tab(::mforms::TabView *self, int index
   }
 }
 
-int mforms::gtk::TabViewImpl::get_active_tab(::mforms::TabView *self) {
+auto mforms::gtk::TabViewImpl::get_active_tab(::mforms::TabView *self) -> int {
   TabViewImpl *cb = self->get_data<TabViewImpl>();
 
   return cb ? cb->_nb->get_current_page() : -1;
 }
 
-int mforms::gtk::TabViewImpl::add_page(::mforms::TabView *self, ::mforms::View *page, const std::string &caption,
-                                       bool hasCloseButton) {
+auto mforms::gtk::TabViewImpl::add_page(::mforms::TabView *self, ::mforms::View *page, const std::string &caption,
+                                       bool hasCloseButton) -> int {
   int page_index_after_insert = -1;
   TabViewImpl *cb = self->get_data<TabViewImpl>();
 
@@ -162,7 +162,7 @@ int mforms::gtk::TabViewImpl::add_page(::mforms::TabView *self, ::mforms::View *
   return page_index_after_insert;
 }
 
-void mforms::gtk::TabViewImpl::remove_page(::mforms::TabView *self, ::mforms::View *page) {
+auto mforms::gtk::TabViewImpl::remove_page(::mforms::TabView *self, ::mforms::View *page) -> void {
   TabViewImpl *cb = self->get_data<TabViewImpl>();
 
   if (cb) {
@@ -173,7 +173,7 @@ void mforms::gtk::TabViewImpl::remove_page(::mforms::TabView *self, ::mforms::Vi
   }
 }
 
-void mforms::gtk::TabViewImpl::set_tab_title(::mforms::TabView *self, int tab, const std::string &title) {
+auto mforms::gtk::TabViewImpl::set_tab_title(::mforms::TabView *self, int tab, const std::string &title) -> void {
   TabViewImpl *cb = self->get_data<TabViewImpl>();
 
   if (cb) {
@@ -188,7 +188,7 @@ void mforms::gtk::TabViewImpl::set_tab_title(::mforms::TabView *self, int tab, c
   }
 }
 
-void mforms::gtk::TabViewImpl::set_aux_view(mforms::TabView *self, mforms::View *view) {
+auto mforms::gtk::TabViewImpl::set_aux_view(mforms::TabView *self, mforms::View *view) -> void {
   TabViewImpl *cb = self->get_data<TabViewImpl>();
 
   if (cb) {
@@ -203,7 +203,7 @@ void mforms::gtk::TabViewImpl::set_aux_view(mforms::TabView *self, mforms::View 
   }
 }
 
-void mforms::gtk::TabViewImpl::set_allows_reordering(mforms::TabView *self, bool flag) {
+auto mforms::gtk::TabViewImpl::set_allows_reordering(mforms::TabView *self, bool flag) -> void {
   TabViewImpl *cb = self->get_data<TabViewImpl>();
 
   if (cb) {
@@ -213,7 +213,7 @@ void mforms::gtk::TabViewImpl::set_allows_reordering(mforms::TabView *self, bool
     }
   }
 }
-void mforms::gtk::TabViewImpl::init() {
+auto mforms::gtk::TabViewImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_tabview_impl.create = &TabViewImpl::create;

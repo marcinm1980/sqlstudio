@@ -796,8 +796,7 @@ case YY_STATE_EOF(INITIAL):
  *	EOB_ACT_END_OF_FILE - end of file
  */
 
-static int yy_get_next_buffer()
-	{
+static auto yy_get_next_buffer() -> int {
 	register char *dest = yy_current_buffer->yy_ch_buf;
 	register char *source = yytext_ptr;
 	register int number_to_move, i;
@@ -928,8 +927,7 @@ static int yy_get_next_buffer()
 
 /* yy_get_previous_state - get the state just before the EOB char was reached */
 
-static yy_state_type yy_get_previous_state()
-	{
+static auto yy_get_previous_state() -> yy_state_type {
 	register yy_state_type yy_current_state;
 	register char *yy_cp;
 
@@ -1410,8 +1408,7 @@ int new_state;
 
 
 #ifndef YY_NO_POP_STATE
-static void yy_pop_state()
-	{
+static auto yy_pop_state() -> void {
 	if ( --yy_start_stack_ptr < 0 )
 		YY_FATAL_ERROR( "start-condition stack underflow" );
 
@@ -1421,8 +1418,7 @@ static void yy_pop_state()
 
 
 #ifndef YY_NO_TOP_STATE
-static int yy_top_state()
-	{
+static auto yy_top_state() -> int {
 	return yy_start_stack[yy_start_stack_ptr - 1];
 	}
 #endif
@@ -1534,8 +1530,7 @@ void *ptr;
 	}
 
 #if YY_MAIN
-int main()
-	{
+auto main() -> int {
 	yylex();
 	return 0;
 	}
@@ -1543,7 +1538,6 @@ int main()
 #line 28 "parser.lex"
 
 
-int yywrap ()
-{
+auto yywrap () -> int {
   return 1;
 }

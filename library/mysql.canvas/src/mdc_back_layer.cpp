@@ -48,7 +48,7 @@ BackLayer::BackLayer(CanvasView *view) : Layer(view) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void BackLayer::set_color(const Color &color) {
+auto BackLayer::set_color(const Color &color) -> void {
   // Setting something else but a white background color produces problems with other elements, for instance connections.
   // Would have to draw them piecewise in different colors, depending on whether a part is over the background or a
   // layer (particularly important for dark backgrounds).
@@ -75,7 +75,7 @@ BackLayer::~BackLayer() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void BackLayer::render_grid(const Rect &bounds) {
+auto BackLayer::render_grid(const Rect &bounds) -> void {
   bool use_gl = _owner->has_gl();
 
   double gsize = _owner->_grid_size;
@@ -200,7 +200,7 @@ void BackLayer::render_grid(const Rect &bounds) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void BackLayer::render_page_borders(const Rect &bounds) {
+auto BackLayer::render_page_borders(const Rect &bounds) -> void {
   CairoCtx *cr = _owner->cairoctx();
   bool use_gl = _owner->has_gl();
 
@@ -248,7 +248,7 @@ void BackLayer::render_page_borders(const Rect &bounds) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void BackLayer::repaint(const Rect &aBounds) {
+auto BackLayer::repaint(const Rect &aBounds) -> void {
   Rect vrect = _owner->get_viewport();
   CairoCtx *cr = _owner->cairoctx();
   Size total_size = _owner->get_total_view_size();
@@ -359,14 +359,14 @@ void BackLayer::repaint(const Rect &aBounds) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void BackLayer::set_grid_visible(bool flag) {
+auto BackLayer::set_grid_visible(bool flag) -> void {
   _grid_visible = flag;
   queue_repaint();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void BackLayer::set_paper_visible(bool flag) {
+auto BackLayer::set_paper_visible(bool flag) -> void {
   _paper_visible = flag;
   queue_repaint();
 }

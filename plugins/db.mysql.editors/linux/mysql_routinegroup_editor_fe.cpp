@@ -42,18 +42,18 @@ class DbMySQLRoutineGroupEditor : public PluginEditorBase {
   TextListColumnsModel *_routines_columns;
   Gtk::Menu _context_menu;
 
-  virtual bec::BaseEditor *get_be();
+  virtual auto get_be() -> bec::BaseEditor *;
 
-  void activate_row(const Gtk::TreePath &path, Gtk::TreeViewColumn *column);
-  bool process_event(GdkEvent *event);
-  void menu_action_on_node(const std::string &item_name, const Gtk::TreePath path);
+  auto activate_row(const Gtk::TreePath &path, Gtk::TreeViewColumn *column) -> void;
+  auto process_event(GdkEvent *event) -> bool;
+  auto menu_action_on_node(const std::string &item_name, const Gtk::TreePath path) -> void;
 
-  void set_group_name(const std::string &);
+  auto set_group_name(const std::string &) -> void;
 
-  void set_comment(const std::string &comm) {
+  auto set_comment(const std::string &comm) -> void {
     _be->set_comment(comm);
   }
-  virtual bool can_close() {
+  virtual auto can_close() -> bool {
     return _be->can_close();
   }
 
@@ -61,12 +61,12 @@ public:
   DbMySQLRoutineGroupEditor(grt::Module *m, const grt::BaseListRef &args);
 
   virtual ~DbMySQLRoutineGroupEditor();
-  virtual void do_refresh_form_data();
+  virtual auto do_refresh_form_data() -> void;
 
-  void on_routine_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                       const Gtk::SelectionData &selection_data, guint info, guint time);
+  auto on_routine_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                       const Gtk::SelectionData &selection_data, guint info, guint time) -> void;
 
-  bool switch_edited_object(const grt::BaseListRef &args);
+  auto switch_edited_object(const grt::BaseListRef &args) -> bool;
 };
 
 //------------------------------------------------------------------------------
@@ -122,12 +122,12 @@ DbMySQLRoutineGroupEditor::~DbMySQLRoutineGroupEditor() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoutineGroupEditor::activate_row(const Gtk::TreePath &path, Gtk::TreeViewColumn *column) {
+auto DbMySQLRoutineGroupEditor::activate_row(const Gtk::TreePath &path, Gtk::TreeViewColumn *column) -> void {
   _be->open_editor_for_routine_at_index(path.front());
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLRoutineGroupEditor::switch_edited_object(const grt::BaseListRef &args) {
+auto DbMySQLRoutineGroupEditor::switch_edited_object(const grt::BaseListRef &args) -> bool {
   Gtk::Box *code_win;
   xml()->get_widget("rg_code_holder", code_win);
   delete _be;
@@ -144,18 +144,18 @@ bool DbMySQLRoutineGroupEditor::switch_edited_object(const grt::BaseListRef &arg
 
 //------------------------------------------------------------------------------
 
-void DbMySQLRoutineGroupEditor::set_group_name(const std::string &name) {
+auto DbMySQLRoutineGroupEditor::set_group_name(const std::string &name) -> void {
   _be->set_name(name);
   _signal_title_changed.emit(_be->get_title());
 }
 
 //------------------------------------------------------------------------------
-bec::BaseEditor *DbMySQLRoutineGroupEditor::get_be() {
+auto DbMySQLRoutineGroupEditor::get_be() -> bec::BaseEditor * {
   return _be;
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoutineGroupEditor::do_refresh_form_data() {
+auto DbMySQLRoutineGroupEditor::do_refresh_form_data() -> void {
   Gtk::Entry *entry(0);
   xml()->get_widget("rg_name", entry);
   if (entry->get_text() != _be->get_name()) {
@@ -172,7 +172,7 @@ void DbMySQLRoutineGroupEditor::do_refresh_form_data() {
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLRoutineGroupEditor::process_event(GdkEvent *event) {
+auto DbMySQLRoutineGroupEditor::process_event(GdkEvent *event) -> bool {
   if (event->type == GDK_BUTTON_PRESS && event->button.button == 3) {
     Gtk::TreeModel::Path path;
     Gtk::TreeView::Column *column(0);
@@ -196,7 +196,7 @@ bool DbMySQLRoutineGroupEditor::process_event(GdkEvent *event) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoutineGroupEditor::menu_action_on_node(const std::string &item_name, const Gtk::TreePath path) {
+auto DbMySQLRoutineGroupEditor::menu_action_on_node(const std::string &item_name, const Gtk::TreePath path) -> void {
   if (item_name == "remove_routine_from_the_group") {
     const std::string name = (*(_routines_model->get_iter(path)))[_routines_columns->item];
     _be->delete_routine_with_name(name);
@@ -205,8 +205,8 @@ void DbMySQLRoutineGroupEditor::menu_action_on_node(const std::string &item_name
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoutineGroupEditor::on_routine_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                                                const Gtk::SelectionData &selection_data, guint info, guint time) {
+auto DbMySQLRoutineGroupEditor::on_routine_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                                                const Gtk::SelectionData &selection_data, guint info, guint time) -> void {
   bool dnd_status = false;
 
   if (selection_data.get_target() == WB_DBOBJECT_DRAG_TYPE) {
@@ -233,7 +233,7 @@ void DbMySQLRoutineGroupEditor::on_routine_drop(const Glib::RefPtr<Gdk::DragCont
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createDbMysqlRoutineGroupEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createDbMysqlRoutineGroupEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new DbMySQLRoutineGroupEditor(m, args));
 }
 };

@@ -43,7 +43,7 @@ using namespace mysql_parser;
 class Mysql_sql_script_splitter {
 public:
   typedef std::shared_ptr<Mysql_sql_script_splitter> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_sql_script_splitter());
   }
   virtual ~Mysql_sql_script_splitter();
@@ -52,12 +52,12 @@ protected:
   Mysql_sql_script_splitter();
 
 public:
-  int process(const std::string &sql, std::list<std::string> &statements);
-  int process(const char *sql, std::list<std::pair<size_t, size_t> > &ranges);
+  auto process(const std::string &sql, std::list<std::string> &statements) -> int;
+  auto process(const char *sql, std::list<std::pair<size_t, size_t> > &ranges) -> int;
 
 private:
-  static int process_statement(const MyxStatementParser *splitter, const char *sql, void *userdata);
-  static int process_statement_ranges(const MyxStatementParser *splitter, const char *sql, void *userdata);
+  static auto process_statement(const MyxStatementParser *splitter, const char *sql, void *userdata) -> int;
+  static auto process_statement_ranges(const MyxStatementParser *splitter, const char *sql, void *userdata) -> int;
   CHARSET_INFO *_cs;
 };
 

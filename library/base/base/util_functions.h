@@ -69,15 +69,15 @@ BASELIBRARY_PUBLIC_FUNC auto str_toupper(char *str) -> char *;
 BASELIBRARY_PUBLIC_FUNC auto str_is_numeric(const char *str) -> int;
 
 #if defined(_MSC_VER)
-BASELIBRARY_PUBLIC_FUNC int get_value_from_registry(HKEY root_key, const char *sub_key, const char *key,
-                                                    const char *def, char *value, int target_size);
-BASELIBRARY_PUBLIC_FUNC int set_value_to_registry(HKEY root_key, const char *sub_key, const char *key,
-                                                  const char *value);
+BASELIBRARY_PUBLIC_FUNC auto get_value_from_registry(HKEY root_key, const char *sub_key, const char *key,
+                                                    const char *def, char *value, int target_size) -> int;
+BASELIBRARY_PUBLIC_FUNC auto set_value_to_registry(HKEY root_key, const char *sub_key, const char *key,
+                                                  const char *value) -> int;
 #endif
 
-BASELIBRARY_PUBLIC_FUNC void set_os_specific_password_functions(
+BASELIBRARY_PUBLIC_FUNC auto set_os_specific_password_functions(
   char *(*store_func)(const char *host, const char *username, const char *password),
-  char *(*retrieve_func)(const char *host, const char *username, const char *password_data));
+  char *(*retrieve_func)(const char *host, const char *username, const char *password_data)) -> void;
 
 BASELIBRARY_PUBLIC_FUNC auto get_local_os_name(void) -> std::string;
 BASELIBRARY_PUBLIC_FUNC auto get_local_hardware_info(void) -> std::string;

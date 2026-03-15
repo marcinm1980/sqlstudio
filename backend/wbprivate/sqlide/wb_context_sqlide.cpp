@@ -79,7 +79,7 @@ static std::map<std::string, std::string> auto_save_sessions;
 
 class MYSQLWBBACKEND_PUBLIC_FUNC db_query_EditorConcreteImplData : public db_query_Editor::ImplData,
                                                                    public base::trackable {
-  void sql_editor_list_changed(MySQLEditor::Ref editor, bool added) {
+  auto sql_editor_list_changed(MySQLEditor::Ref editor, bool added) -> void {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       if (added) {
@@ -108,32 +108,32 @@ public:
                                                       std::placeholders::_1, std::placeholders::_2));
   }
 
-  std::shared_ptr<SqlEditorForm> editor_object() const {
+  auto editor_object() const -> std::shared_ptr<SqlEditorForm> {
     return _editor;
   }
 
-  virtual db_mgmt_ConnectionRef connection() const {
+  virtual auto connection() const -> db_mgmt_ConnectionRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       return _editor->connection_descriptor();
     return db_mgmt_ConnectionRef();
   }
 
-  virtual db_mgmt_SSHConnectionRef sshConnection() const {
+  virtual auto sshConnection() const -> db_mgmt_SSHConnectionRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       return _editor->getSSHConnection();
     return db_mgmt_SSHConnectionRef();
   }
 
-  virtual grt::IntegerRef getSSHTunnelPort() const {
+  virtual auto getSSHTunnelPort() const -> grt::IntegerRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       return _editor->getTunnelPort();
     return -1;
   }
 
-  virtual grt::IntegerRef isConnected() const {
+  virtual auto isConnected() const -> grt::IntegerRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       if (_editor->offline())
@@ -148,7 +148,7 @@ public:
     return grt::IntegerRef(0);
   }
 
-  virtual db_query_QueryEditorRef addQueryEditor() {
+  virtual auto addQueryEditor() -> db_query_QueryEditorRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       _editor->new_sql_script_file();
@@ -158,7 +158,7 @@ public:
     return db_query_QueryEditorRef();
   }
 
-  virtual grt::IntegerRef addToOutput(const std::string &text, long bringToFront) {
+  virtual auto addToOutput(const std::string &text, long bringToFront) -> grt::IntegerRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       ref->output_text_slot(text, bringToFront != 0);
@@ -166,7 +166,7 @@ public:
     return grt::IntegerRef(0);
   }
 
-  virtual grt::ListRef<db_query_Resultset> executeScript(const std::string &sql) {
+  virtual auto executeScript(const std::string &sql) -> grt::ListRef<db_query_Resultset> {
     grt::ListRef<db_query_Resultset> result(true);
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
@@ -186,7 +186,7 @@ public:
     return result;
   }
 
-  virtual grt::IntegerRef executeScriptAndOutputToGrid(const std::string &sql) {
+  virtual auto executeScriptAndOutputToGrid(const std::string &sql) -> grt::IntegerRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       ref->exec_sql_retaining_editor_contents(sql, NULL, true);
@@ -194,7 +194,7 @@ public:
     return grt::IntegerRef(0);
   }
 
-  virtual db_query_ResultsetRef executeManagementQuery(const std::string &sql, bool log) {
+  virtual auto executeManagementQuery(const std::string &sql, bool log) -> db_query_ResultsetRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       return ref->exec_management_query(sql, log);
@@ -202,13 +202,13 @@ public:
     return db_query_ResultsetRef();
   }
 
-  virtual void executeManagementCommand(const std::string &sql, bool log) {
+  virtual auto executeManagementCommand(const std::string &sql, bool log) -> void {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       ref->exec_management_sql(sql, log);
   }
 
-  virtual db_query_ResultsetRef executeQuery(const std::string &sql, bool log) {
+  virtual auto executeQuery(const std::string &sql, bool log) -> db_query_ResultsetRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       return ref->exec_main_query(sql, log);
@@ -216,7 +216,7 @@ public:
     return db_query_ResultsetRef();
   }
 
-  virtual void executeCommand(const std::string &sql, bool log, bool background) {
+  virtual auto executeCommand(const std::string &sql, bool log, bool background) -> void {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       if (background)
@@ -226,8 +226,8 @@ public:
     }
   }
 
-  virtual db_query_EditableResultsetRef createTableEditResultset(const std::string &schema, const std::string &table,
-                                                                 const std::string &where, bool showGrid) {
+  virtual auto createTableEditResultset(const std::string &schema, const std::string &table,
+                                                                 const std::string &where, bool showGrid) -> db_query_EditableResultsetRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       std::string query;
@@ -248,20 +248,20 @@ public:
     return db_query_EditableResultsetRef();
   }
 
-  virtual void activeSchema(const std::string &schema) {
+  virtual auto activeSchema(const std::string &schema) -> void {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       ref->active_schema(schema);
   }
 
-  virtual std::string activeSchema() {
+  virtual auto activeSchema() -> std::string {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       return ref->active_schema();
     return "";
   }
 
-  virtual db_query_QueryEditorRef activeQueryEditor() {
+  virtual auto activeQueryEditor() -> db_query_QueryEditorRef {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       SqlEditorPanel *panel = ref->active_sql_editor_panel();
@@ -271,14 +271,14 @@ public:
     return db_query_QueryEditorRef();
   }
 
-  virtual void editLiveObject(const db_DatabaseObjectRef &object, const db_CatalogRef &catalog) {
+  virtual auto editLiveObject(const db_DatabaseObjectRef &object, const db_CatalogRef &catalog) -> void {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       ref->get_live_tree()->open_alter_object_editor(object, catalog);
     }
   }
 
-  virtual void alterLiveObject(const std::string &type, const std::string &schemaName, const std::string &objectName) {
+  virtual auto alterLiveObject(const std::string &type, const std::string &schemaName, const std::string &objectName) -> void {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref) {
       wb::LiveSchemaTree::ObjectType otype;
@@ -298,7 +298,7 @@ public:
     }
   }
 
-  virtual grt::ListRef<db_query_LiveDBObject> schemaTreeSelection() const {
+  virtual auto schemaTreeSelection() const -> grt::ListRef<db_query_LiveDBObject> {
     std::shared_ptr<SqlEditorForm> ref(_editor);
     if (ref)
       return grt::ListRef<db_query_LiveDBObject>::cast_from(
@@ -306,7 +306,7 @@ public:
     return grt::ListRef<db_query_LiveDBObject>();
   }
 
-  void detach() {
+  auto detach() -> void {
     _editor.reset();
   }
 
@@ -317,13 +317,13 @@ protected:
 
 //------------------------------------------------------------------------------------------------
 
-void WBContextSQLIDE::call_in_editor(void (SqlEditorForm::*method)()) {
+auto WBContextSQLIDE::call_in_editor(void (SqlEditorForm::*method)()) -> void {
   SqlEditorForm *form = get_active_sql_editor();
   if (form)
     (form->*method)();
 }
 
-void WBContextSQLIDE::call_in_editor_panel(void (SqlEditorPanel::*method)()) {
+auto WBContextSQLIDE::call_in_editor_panel(void (SqlEditorPanel::*method)()) -> void {
   SqlEditorForm *form = get_active_sql_editor();
   if (form) {
     SqlEditorPanel *panel = form->active_sql_editor_panel();
@@ -332,27 +332,27 @@ void WBContextSQLIDE::call_in_editor_panel(void (SqlEditorPanel::*method)()) {
   }
 }
 
-void WBContextSQLIDE::call_in_editor_str(void (SqlEditorForm::*method)(const std::string &arg),
-                                         const std::string &arg) {
+auto WBContextSQLIDE::call_in_editor_str(void (SqlEditorForm::*method)(const std::string &arg),
+                                         const std::string &arg) -> void {
   SqlEditorForm *form = get_active_sql_editor();
   if (form)
     (form->*method)(arg);
 }
 
-void WBContextSQLIDE::call_in_editor_str2(void (SqlEditorForm::*method)(const std::string &arg1, bool arg2, bool arg3),
-                                          const std::string &arg1, bool arg2, bool arg3) {
+auto WBContextSQLIDE::call_in_editor_str2(void (SqlEditorForm::*method)(const std::string &arg1, bool arg2, bool arg3),
+                                          const std::string &arg1, bool arg2, bool arg3) -> void {
   SqlEditorForm *form = get_active_sql_editor();
   if (form)
     (form->*method)(arg1, arg2, arg3);
 }
 
-void WBContextSQLIDE::call_in_editor_bool(void (SqlEditorForm::*method)(bool arg), bool arg) {
+auto WBContextSQLIDE::call_in_editor_bool(void (SqlEditorForm::*method)(bool arg), bool arg) -> void {
   SqlEditorForm *form = get_active_sql_editor();
   if (form)
     (form->*method)(arg);
 }
 
-static void call_export(wb::WBContextSQLIDE *sqlide) {
+static auto call_export(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     SqlEditorPanel *panel = form->active_sql_editor_panel();
@@ -361,7 +361,7 @@ static void call_export(wb::WBContextSQLIDE *sqlide) {
   }
 }
 
-inline bool has_active_resultset(wb::WBContextSQLIDE *sqlide) {
+inline auto has_active_resultset(wb::WBContextSQLIDE *sqlide) -> bool {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     SqlEditorPanel *panel = form->active_sql_editor_panel();
@@ -371,11 +371,11 @@ inline bool has_active_resultset(wb::WBContextSQLIDE *sqlide) {
   return false;
 }
 
-static bool validate_export(wb::WBContextSQLIDE *sqlide) {
+static auto validate_export(wb::WBContextSQLIDE *sqlide) -> bool {
   return has_active_resultset(sqlide);
 }
 
-static void call_save_file(wb::WBContextSQLIDE *sqlide) {
+static auto call_save_file(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *editor = sqlide->get_active_sql_editor();
   if (editor) {
     SqlEditorPanel *panel = editor->active_sql_editor_panel();
@@ -385,7 +385,7 @@ static void call_save_file(wb::WBContextSQLIDE *sqlide) {
   }
 }
 
-static void call_save_file_as(wb::WBContextSQLIDE *sqlide) {
+static auto call_save_file_as(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *editor = sqlide->get_active_sql_editor();
   if (editor) {
     SqlEditorPanel *panel = editor->active_sql_editor_panel();
@@ -395,7 +395,7 @@ static void call_save_file_as(wb::WBContextSQLIDE *sqlide) {
   }
 }
 
-static void call_revert(wb::WBContextSQLIDE *sqlide) {
+static auto call_revert(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *editor = sqlide->get_active_sql_editor();
   if (editor) {
     SqlEditorPanel *panel = editor->active_sql_editor_panel();
@@ -415,7 +415,7 @@ static void call_revert(wb::WBContextSQLIDE *sqlide) {
   }
 }
 
-static bool validate_revert(wb::WBContextSQLIDE *sqlide) {
+static auto validate_revert(wb::WBContextSQLIDE *sqlide) -> bool {
   SqlEditorForm *editor = sqlide->get_active_sql_editor();
   if (editor) {
     SqlEditorPanel *panel = editor->active_sql_editor_panel();
@@ -425,19 +425,19 @@ static bool validate_revert(wb::WBContextSQLIDE *sqlide) {
   return false;
 }
 
-static void call_continue_on_error(wb::WBContextSQLIDE *sqlide) {
+static auto call_continue_on_error(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form)
     form->continue_on_error(!form->continue_on_error());
 }
 
-static void call_reconnect(wb::WBContextSQLIDE *sqlide) {
+static auto call_reconnect(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
 
   sqlide->reconnect_editor(form);
 }
 
-static void call_new_connection(wb::WBContextSQLIDE *sqlide) {
+static auto call_new_connection(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     db_mgmt_ConnectionRef conn(form->connection_descriptor());
@@ -445,12 +445,12 @@ static void call_new_connection(wb::WBContextSQLIDE *sqlide) {
   }
 }
 
-static bool validate_has_connection(wb::WBContextSQLIDE *sqlide) {
+static auto validate_has_connection(wb::WBContextSQLIDE *sqlide) -> bool {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   return form && form->connection_descriptor().is_valid();
 }
 
-static void call_open_script(wb::WBContextSQLIDE *sqlide) {
+static auto call_open_script(wb::WBContextSQLIDE *sqlide) -> void {
   mforms::FileChooser chooser(mforms::OpenFile);
   chooser.set_title("Open SQL Script");
   chooser.set_extensions("SQL Files (*.sql)|*.sql|Query Browser Files (*.qbquery)|*.qbquery", "sql");
@@ -462,24 +462,24 @@ static void call_open_script(wb::WBContextSQLIDE *sqlide) {
   }
 }
 
-static void call_no_connection_empty_tab(wb::WBContextSQLIDE *sqlide) {
+static auto call_no_connection_empty_tab(wb::WBContextSQLIDE *sqlide) -> void {
   std::shared_ptr<SqlEditorForm> form = wb::WBContextUI::get()->get_wb()->add_new_query_window();
   if (form)
     form->open_file();
 }
 
-static void call_exec_sql(wb::WBContextSQLIDE *sqlide, bool current_statement_only) {
+static auto call_exec_sql(wb::WBContextSQLIDE *sqlide, bool current_statement_only) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form)
     form->run_editor_contents(current_statement_only);
 }
 
-static bool validate_exec_sql(wb::WBContextSQLIDE *sqlide) {
+static auto validate_exec_sql(wb::WBContextSQLIDE *sqlide) -> bool {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   return (form && !form->is_running_query() && form->connected());
 }
 
-static void call_save_edits(wb::WBContextSQLIDE *sqlide) {
+static auto call_save_edits(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     SqlEditorPanel *panel = form->active_sql_editor_panel();
@@ -491,7 +491,7 @@ static void call_save_edits(wb::WBContextSQLIDE *sqlide) {
   }
 }
 
-static void call_discard_edits(wb::WBContextSQLIDE *sqlide) {
+static auto call_discard_edits(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     SqlEditorPanel *panel = form->active_sql_editor_panel();
@@ -505,7 +505,7 @@ static void call_discard_edits(wb::WBContextSQLIDE *sqlide) {
 
 //--------------------------------------------------------------------------------------------------
 
-static bool validate_save_edits(wb::WBContextSQLIDE *sqlide) {
+static auto validate_save_edits(wb::WBContextSQLIDE *sqlide) -> bool {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     SqlEditorPanel *panel = form->active_sql_editor_panel();
@@ -520,13 +520,13 @@ static bool validate_save_edits(wb::WBContextSQLIDE *sqlide) {
 
 //--------------------------------------------------------------------------------------------------
 
-static bool validate_list_members(wb::WBContextSQLIDE *sqlide) {
+static auto validate_list_members(wb::WBContextSQLIDE *sqlide) -> bool {
   return bec::GRTManager::get()->get_app_option_int("DbSqlEditor:CodeCompletionEnabled") != 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-static void new_script_tab(wb::WBContextSQLIDE *sqlide) {
+static auto new_script_tab(wb::WBContextSQLIDE *sqlide) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     if (bec::GRTManager::get()->get_app_option_int("DbSqlEditor:DiscardUnsavedQueryTabs", 0))
@@ -538,9 +538,9 @@ static void new_script_tab(wb::WBContextSQLIDE *sqlide) {
 
 //--------------------------------------------------------------------------------------------------
 
-static bool validate_toolbar_alias_toggle(wb::WBContextSQLIDE *sqlide, const std::string &item_name);
+static auto validate_toolbar_alias_toggle(wb::WBContextSQLIDE *sqlide, const std::string &item_name) -> bool;
 
-static void call_toolbar_alias_toggle(wb::WBContextSQLIDE *sqlide, const std::string &item_name) {
+static auto call_toolbar_alias_toggle(wb::WBContextSQLIDE *sqlide, const std::string &item_name) -> void {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     mforms::ToolBarItem *item = form->get_toolbar()->find_item(item_name);
@@ -552,7 +552,7 @@ static void call_toolbar_alias_toggle(wb::WBContextSQLIDE *sqlide, const std::st
   }
 }
 
-static bool validate_toolbar_alias_toggle(wb::WBContextSQLIDE *sqlide, const std::string &item_name) {
+static auto validate_toolbar_alias_toggle(wb::WBContextSQLIDE *sqlide, const std::string &item_name) -> bool {
   SqlEditorForm *form = sqlide->get_active_sql_editor();
   if (form) {
     mforms::ToolBarItem *item = form->get_toolbar()->find_item(item_name);
@@ -591,7 +591,7 @@ WBContextSQLIDE::~WBContextSQLIDE() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextSQLIDE::option_changed(grt::internal::OwnedDict *dict, bool, const std::string &key) {
+auto WBContextSQLIDE::option_changed(grt::internal::OwnedDict *dict, bool, const std::string &key) -> void {
   if (key == "studio:AutoSaveSQLEditorInterval" &&
       dict == WBContextUI::get()->get_wb()->get_wb_options().valueptr()) {
     auto_save_workspaces();
@@ -600,7 +600,7 @@ void WBContextSQLIDE::option_changed(grt::internal::OwnedDict *dict, bool, const
 
 //--------------------------------------------------------------------------------------------------
 
-bool WBContextSQLIDE::auto_save_workspaces() {
+auto WBContextSQLIDE::auto_save_workspaces() -> bool {
   WBContext *wb = WBContextUI::get()->get_wb();
   ssize_t interval = wb->get_root()->options()->options().get_int("studio:AutoSaveSQLEditorInterval", 60);
   if (interval <= 0 || !_auto_save_active) {
@@ -636,7 +636,7 @@ bool WBContextSQLIDE::auto_save_workspaces() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextSQLIDE::detect_auto_save_files(const std::string &autosave_dir) {
+auto WBContextSQLIDE::detect_auto_save_files(const std::string &autosave_dir) -> void {
   // look for SQLEditor autosave workspace folders
   std::list<std::string> autosaves;
   try {
@@ -657,26 +657,26 @@ void WBContextSQLIDE::detect_auto_save_files(const std::string &autosave_dir) {
   }
 }
 
-std::map<std::string, std::string> WBContextSQLIDE::auto_save_sessions() {
+auto WBContextSQLIDE::auto_save_sessions() -> std::map<std::string, std::string> {
   return ::auto_save_sessions;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CommandUI *WBContextSQLIDE::get_cmdui() {
+auto WBContextSQLIDE::get_cmdui() -> CommandUI * {
   return wb::WBContextUI::get()->get_command_ui();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WBContextSQLIDE::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto WBContextSQLIDE::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   if (name == "GNAppClosing")
     finalize();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WBContextSQLIDE::init() {
+auto WBContextSQLIDE::init() -> void {
 
   // Access the context help once to start its initial loading.
   help::DbSqlEditorContextHelp::get();
@@ -769,7 +769,7 @@ void WBContextSQLIDE::init() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WBContextSQLIDE::finalize() {
+auto WBContextSQLIDE::finalize() -> void {
   if (_auto_save_handle) {
     mforms::Utilities::cancel_timeout(_auto_save_handle);
     _auto_save_handle = static_cast<mforms::TimeoutHandle>(NULL);
@@ -787,7 +787,7 @@ void WBContextSQLIDE::finalize() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void WBContextSQLIDE::reconnect_editor(SqlEditorForm *editor) {
+auto WBContextSQLIDE::reconnect_editor(SqlEditorForm *editor) -> void {
   std::shared_ptr<wb::SSHTunnel> tunnel;
 
   if (!editor->connection_descriptor().is_valid()) {
@@ -822,7 +822,7 @@ void WBContextSQLIDE::reconnect_editor(SqlEditorForm *editor) {
   }
 }
 
-static void *connect_editor(SqlEditorForm::Ref editor, std::shared_ptr<wb::SSHTunnel> tunnel) {
+static auto connect_editor(SqlEditorForm::Ref editor, std::shared_ptr<wb::SSHTunnel> tunnel) -> void * {
   try {
     logDebug3("Connecting SQL editor...\n");
     editor->connect(tunnel);
@@ -847,13 +847,13 @@ static void *connect_editor(SqlEditorForm::Ref editor, std::shared_ptr<wb::SSHTu
   return new std::string();
 }
 
-static bool cancel_connect_editor(SqlEditorForm::Ref editor) {
+static auto cancel_connect_editor(SqlEditorForm::Ref editor) -> bool {
   logDebug3("Cancelling connection...\n");
   editor->cancel_connect();
   return true;
 }
 
-SqlEditorForm::Ref WBContextSQLIDE::create_connected_editor(const db_mgmt_ConnectionRef &conn) {
+auto WBContextSQLIDE::create_connected_editor(const db_mgmt_ConnectionRef &conn) -> SqlEditorForm::Ref {
   // start by opening the tunnel, if needed
   std::shared_ptr<wb::SSHTunnel> tunnel;
 
@@ -953,14 +953,14 @@ SqlEditorForm::Ref WBContextSQLIDE::create_connected_editor(const db_mgmt_Connec
   return editor;
 }
 
-SqlEditorForm *WBContextSQLIDE::get_active_sql_editor() {
+auto WBContextSQLIDE::get_active_sql_editor() -> SqlEditorForm * {
   bec::UIForm *form = wb::WBContextUI::get()->get_active_main_form();
   if (form)
     return dynamic_cast<SqlEditorForm *>(form);
   return 0;
 }
 
-bool WBContextSQLIDE::activate_live_object(GrtObjectRef object) {
+auto WBContextSQLIDE::activate_live_object(GrtObjectRef object) -> bool {
   SqlEditorForm *editor = get_active_sql_editor();
   if (!editor)
     return false;
@@ -969,7 +969,7 @@ bool WBContextSQLIDE::activate_live_object(GrtObjectRef object) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextSQLIDE::open_document(const std::string &path) {
+auto WBContextSQLIDE::open_document(const std::string &path) -> void {
   SqlEditorForm *editor = get_active_sql_editor();
   if (editor) {
     editor->open_file(path);
@@ -979,11 +979,11 @@ void WBContextSQLIDE::open_document(const std::string &path) {
   }
 }
 
-static bool compare(SqlEditorForm::Ptr ptr, SqlEditorForm *editor) {
+static auto compare(SqlEditorForm::Ptr ptr, SqlEditorForm *editor) -> bool {
   return ptr.lock().get() == editor;
 }
 
-void WBContextSQLIDE::editor_will_close(SqlEditorForm *editor) {
+auto WBContextSQLIDE::editor_will_close(SqlEditorForm *editor) -> void {
   std::list<SqlEditorForm::Ptr>::iterator iter =
     std::find_if(_open_editors.begin(), _open_editors.end(), std::bind(compare, std::placeholders::_1, editor));
   if (iter != _open_editors.end()) {
@@ -1009,7 +1009,7 @@ void WBContextSQLIDE::editor_will_close(SqlEditorForm *editor) {
   }
 }
 
-bool WBContextSQLIDE::request_quit() {
+auto WBContextSQLIDE::request_quit() -> bool {
   for (std::list<SqlEditorForm::Ptr>::iterator ed = _open_editors.begin(); ed != _open_editors.end(); ++ed) {
     if (!ed->expired() && !ed->lock()->can_close())
       return false;
@@ -1017,7 +1017,7 @@ bool WBContextSQLIDE::request_quit() {
   return true;
 }
 
-void WBContextSQLIDE::update_plugin_arguments_pool(bec::ArgumentPool &args) {
+auto WBContextSQLIDE::update_plugin_arguments_pool(bec::ArgumentPool &args) -> void {
   SqlEditorForm *editor_ptr = get_active_sql_editor();
   if (editor_ptr) {
     db_query_EditorRef editor(get_grt_editor_object(editor_ptr));
@@ -1038,7 +1038,7 @@ void WBContextSQLIDE::update_plugin_arguments_pool(bec::ArgumentPool &args) {
   }
 }
 
-db_query_EditorRef WBContextSQLIDE::get_grt_editor_object(SqlEditorForm *editor) {
+auto WBContextSQLIDE::get_grt_editor_object(SqlEditorForm *editor) -> db_query_EditorRef {
   if (editor) {
     grt::ListRef<db_query_Editor> list(wb::WBContextUI::get()->get_wb()->get_root()->sqlEditors());
     for (grt::ListRef<db_query_Editor>::const_iterator ed = list.begin(); ed != list.end(); ++ed) {

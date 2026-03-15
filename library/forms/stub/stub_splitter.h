@@ -36,33 +36,33 @@ namespace mforms {
       }
 
 #ifdef __APPLE__
-      static bool create(::mforms::Splitter *self, bool horiz, bool thin) {
+      static auto create(::mforms::Splitter *self, bool horiz, bool thin) -> bool {
         return true;
       }
 #else
-      static bool create(::mforms::Splitter *self, bool horiz) {
+      static auto create(::mforms::Splitter *self, bool horiz) -> bool {
         return true;
       }
 #endif
 
-      static void add(Splitter *self, View *child, int minwidth, bool fixed) {
+      static auto add(Splitter *self, View *child, int minwidth, bool fixed) -> void {
       }
 
-      static void remove(Splitter *self, View *child) {
+      static auto remove(Splitter *self, View *child) -> void {
       }
 
-      static void set_divider_position(Splitter *self, int pos) {
+      static auto set_divider_position(Splitter *self, int pos) -> void {
       }
 
-      static int get_divider_position(Splitter *self) {
+      static auto get_divider_position(Splitter *self) -> int {
         return 0;
       }
 
-      static void set_expanded(Splitter *self, bool first, bool expand) {
+      static auto set_expanded(Splitter *self, bool first, bool expand) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_splitter_impl.create = &SplitterWrapper::create;

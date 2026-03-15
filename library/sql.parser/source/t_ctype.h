@@ -253,7 +253,7 @@ enum level_symbols {
 #define isdiacrt(c)		( _is(c) & _diacrt) 
 
 /* Function prototype called by sql/field.cc */
-void ThNormalize(uchar* ptr, uint field_length, const uchar* from, uint length);
+auto ThNormalize(uchar* ptr, uint field_length, const uchar* from, uint length) -> void;
 
 } // namespace mysql_parser
 

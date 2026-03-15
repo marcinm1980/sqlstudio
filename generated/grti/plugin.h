@@ -36,11 +36,11 @@ protected:
   }
 
 public:
-  static const char *static_get_name() {
+  static auto static_get_name() -> const char * {
     return "PluginInterface";
   }
 
-  grt::ListRef<app_Plugin> getPluginInfo() {
+  auto getPluginInfo() -> grt::ListRef<app_Plugin> {
     grt::BaseListRef args(grt::AnyType);
 
     grt::ValueRef ret = _module->call_function("getPluginInfo", args);

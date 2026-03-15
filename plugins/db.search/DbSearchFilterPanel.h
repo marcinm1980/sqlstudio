@@ -46,45 +46,45 @@ private:
 
 public:
   DBSearchFilterPanel();
-  void cell_edited(mforms::TreeNodeRef node, int column, const std::string &value);
+  auto cell_edited(mforms::TreeNodeRef node, int column, const std::string &value) -> void;
 
-  int get_limit_table() {
+  auto get_limit_table() -> int {
     return atoi(_limit_table.get_string_value().c_str());
   }
 
-  void set_limit_table(const std::string &i) {
+  auto set_limit_table(const std::string &i) -> void {
     _limit_table.set_value(i);
   }
 
-  int get_limit_total() {
+  auto get_limit_total() -> int {
     return atoi(_limit_total.get_string_value().c_str());
   }
 
-  void set_limit_total(const std::string &i) {
+  auto set_limit_total(const std::string &i) -> void {
     _limit_total.set_value(i);
   }
 
-  bool search_all_types() {
+  auto search_all_types() -> bool {
     return _search_all_type_check.get_active();
   }
 
-  int get_search_type() {
+  auto get_search_type() -> int {
     return _filter_selector.get_selected_index();
   }
 
-  void set_search_type(int i) {
+  auto set_search_type(int i) -> void {
     _filter_selector.set_selected(i);
   }
 
-  bool exclude() {
+  auto exclude() -> bool {
     return _exclude_check.get_active();
   }
 
-  void set_exclude(bool flag) {
+  auto set_exclude(bool flag) -> void {
     _exclude_check.set_active(flag);
   }
 
-  std::string get_search_text() {
+  auto get_search_text() -> std::string {
     return _search_text.get_string_value();
   }
 
@@ -94,12 +94,12 @@ public:
       result.insert(_filter_tree.node_at_row(i)->get_string(0));
   }
 
-  void set_searching(bool flag);
+  auto set_searching(bool flag) -> void;
 
-  mforms::Button *search_button() {
+  auto search_button() -> mforms::Button * {
     return &_search_button;
   }
-  mforms::TextEntry *search_field() {
+  auto search_field() -> mforms::TextEntry * {
     return &_search_text;
   }
 };

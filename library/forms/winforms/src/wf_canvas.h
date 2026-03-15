@@ -29,7 +29,7 @@ namespace MySQL {
   namespace Forms {
   public
     interface class ICanvasViewer {
-      System::Windows::Forms::Control ^ control();
+      auto control() -> System::Windows::Forms::Control ^;
     };
 
   public
@@ -37,11 +37,11 @@ namespace MySQL {
     protected:
       CanvasWrapper(mforms::Canvas *backend);
 
-      static bool create(mforms::Canvas *backend);
-      static mdc::CanvasView *canvas(mforms::Canvas *backend);
+      static auto create(mforms::Canvas *backend) -> bool;
+      static auto canvas(mforms::Canvas *backend) -> mdc::CanvasView *;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

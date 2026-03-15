@@ -51,26 +51,26 @@ namespace MySQL {
         RefreshTextChanged = bec::BaseEditor::RefreshTextChanged,
       };
 
-      void disable_auto_refresh();
-      void enable_auto_refresh();
+      auto disable_auto_refresh() -> void;
+      auto enable_auto_refresh() -> void;
 
-      bec::BaseEditor *get_unmanaged_object();
-      GrtValue ^ get_object();
-      String ^ get_title();
-      bool is_editing_live_object();
-      void apply_changes_to_live_object();
-      void revert_changes_to_live_object();
+      auto get_unmanaged_object() -> bec::BaseEditor *;
+      auto get_object() -> GrtValue ^;
+      auto get_title() -> String ^;
+      auto is_editing_live_object() -> bool;
+      auto apply_changes_to_live_object() -> void;
+      auto revert_changes_to_live_object() -> void;
       void set_refresh_ui_handler(DelegateSlot0<void, void>::ManagedDelegate ^ slot);
       void set_refresh_partial_ui_handler(DelegateSlot1<void, void, int, int>::ManagedDelegate ^ slot);
 
-      GRT ^ get_grt();
+      auto get_grt() -> GRT ^;
 
       void show_exception(String ^ title, String ^ detail);
       void show_validation_error(String ^ title, String ^ reason);
       bool should_close_on_delete_of(String ^ oid);
 
-      bool is_editor_dirty();
-      void reset_editor_undo_stack();
+      auto is_editor_dirty() -> bool;
+      auto reset_editor_undo_stack() -> void;
     };
 
   } // namespace Grt

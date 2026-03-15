@@ -35,8 +35,7 @@ MyxStatementParser::~MyxStatementParser()
   delete[] char_buffer;
 }
 
-static bool is_empty_statement(const std::string& str)
-{
+static auto is_empty_statement(const std::string& str) -> bool {
   int i= 0;
   while(str[i] != 0)
     if(str[i++] > ' ')
@@ -45,8 +44,7 @@ static bool is_empty_statement(const std::string& str)
   return true;
 }
 
-int MyxStatementParser::fill_buffer(std::istream& is)
-{
+auto MyxStatementParser::fill_buffer(std::istream& is) -> int {
   char *input_start= std::copy(char_buffer_b, char_buffer_e, char_buffer);
   int len= (int)(input_start - char_buffer);
   is.read(input_start, CHAR_BUFFER_SIZE - len);
@@ -56,13 +54,11 @@ int MyxStatementParser::fill_buffer(std::istream& is)
   return gc;
 }
 
-int MyxStatementParser::buffer_eof(std::istream& is)
-{
+auto MyxStatementParser::buffer_eof(std::istream& is) -> int {
   return eof_hit;
 }
 
-int MyxStatementParser::get_next_char(std::istream& is, int *len, int count_lines)
-{
+auto MyxStatementParser::get_next_char(std::istream& is, int *len, int count_lines) -> int {
   if(char_buffer_e - char_buffer_b < 4)
     fill_buffer(is);
 
@@ -113,15 +109,13 @@ int MyxStatementParser::get_next_char(std::istream& is, int *len, int count_line
   return c;
 }
 
-int MyxStatementParser::peek_next_char(std::istream& is, int *len)
-{
+auto MyxStatementParser::peek_next_char(std::istream& is, int *len) -> int {
   int c= get_next_char(is, len, 0);
   char_buffer_b -= *len;
   return c;
 }
 
-void MyxStatementParser::add_char_to_buffer(std::string& buffer, int c, int len) const
-{
+auto MyxStatementParser::add_char_to_buffer(std::string& buffer, int c, int len) const -> void {
   unsigned uc= (unsigned)c;
 
   switch(len) // all cases fall through
@@ -137,8 +131,7 @@ void MyxStatementParser::add_char_to_buffer(std::string& buffer, int c, int len)
   }
 }
 
-void MyxStatementParser::process(std::istream& is, process_sql_statement_callback cb, void *arg, int mode)
-{
+auto MyxStatementParser::process(std::istream& is, process_sql_statement_callback cb, void *arg, int mode) -> void {
   static const char *kwd= "DELIMITER";
   
   int c;
@@ -450,18 +443,14 @@ stmtlabel:
   }
 }
 
-MYX_PUBLIC_FUNC 
-int myx_process_sql_statements(const char *sql, CHARSET_INFO *cs, process_sql_statement_callback cb, void *user_data, int mode)
-{
+auto myx_process_sql_statements(const char *sql, CHARSET_INFO *cs, process_sql_statement_callback cb, void *user_data, int mode) -> MYX_PUBLIC_FUNC int {
   MyxStatementParser p(cs);
   std::istringstream tmp(sql, std::ios::in | std::ios::binary);
   p.process(tmp, cb, user_data, mode);
   return 0;
 }
 
-MYX_PUBLIC_FUNC 
-int myx_process_sql_statements_from_file(const char *filename, CHARSET_INFO *cs, process_sql_statement_callback cb, void *user_data, int mode)
-{
+auto myx_process_sql_statements_from_file(const char *filename, CHARSET_INFO *cs, process_sql_statement_callback cb, void *user_data, int mode) -> MYX_PUBLIC_FUNC int {
   std::ifstream is;
 
 #if defined(_MSC_VER)

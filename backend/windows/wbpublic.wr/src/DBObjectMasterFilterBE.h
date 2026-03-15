@@ -50,15 +50,15 @@ namespace MySQL {
           delete inner;
         }
 
-        ::bec::DBObjectMasterFilterBE *get_unmanaged_object() {
+        auto get_unmanaged_object() -> ::bec::DBObjectMasterFilterBE * {
           return static_cast<::bec::DBObjectMasterFilterBE *>(inner);
         }
 
         void add_filter(DBObjectFilterBE ^ filter);
-        void remove_all_filters();
+        auto remove_all_filters() -> void;
 
         void add_stored_filter_set(String ^ name, List<String ^> ^ stored_filter_set_names);
-        void remove_stored_filter_set(int index);
+        auto remove_stored_filter_set(int index) -> void;
         void load_stored_filter_set(int index, List<int> ^ % indexes);
         void load_stored_filter_set_list(List<String ^> ^ % names);
       };

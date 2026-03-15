@@ -32,13 +32,13 @@
 #include "wbpublic_public_interface.h"
 
 namespace bec {
-  WBPUBLICBACKEND_PUBLIC_FUNC db_mgmt_SyncProfileRef create_sync_profile(studio_physical_ModelRef model,
+  WBPUBLICBACKEND_PUBLIC_FUNC auto create_sync_profile(studio_physical_ModelRef model,
                                                                          const std::string &profile_name,
-                                                                         const std::string &target_schema);
-  WBPUBLICBACKEND_PUBLIC_FUNC db_mgmt_SyncProfileRef get_sync_profile(studio_physical_ModelRef model,
+                                                                         const std::string &target_schema) -> db_mgmt_SyncProfileRef;
+  WBPUBLICBACKEND_PUBLIC_FUNC auto get_sync_profile(studio_physical_ModelRef model,
                                                                       const std::string &profile_name,
-                                                                      const std::string &target_schema);
-  WBPUBLICBACKEND_PUBLIC_FUNC void update_schema_from_sync_profile(db_SchemaRef schema, db_mgmt_SyncProfileRef profile);
-  WBPUBLICBACKEND_PUBLIC_FUNC void update_sync_profile_from_schema(db_mgmt_SyncProfileRef profile, db_SchemaRef schema,
-                                                                   bool view_code_only = false);
+                                                                      const std::string &target_schema) -> db_mgmt_SyncProfileRef;
+  WBPUBLICBACKEND_PUBLIC_FUNC auto update_schema_from_sync_profile(db_SchemaRef schema, db_mgmt_SyncProfileRef profile) -> void;
+  WBPUBLICBACKEND_PUBLIC_FUNC auto update_sync_profile_from_schema(db_mgmt_SyncProfileRef profile, db_SchemaRef schema,
+                                                                   bool view_code_only = false) -> void;
 };

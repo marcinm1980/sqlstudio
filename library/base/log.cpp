@@ -154,21 +154,21 @@ Logger::Logger(const std::string& dir, const bool stderr_log, const std::string&
 
 //--------------------------------------------------------------------------------------------------
 
-void Logger::enable_level(const LogLevel level) {
+auto Logger::enable_level(const LogLevel level) -> void {
   if (enumIndex(level) < logLevelCount)
     _impl->_levels[enumIndex(level)] = true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Logger::disable_level(const LogLevel level) {
+auto Logger::disable_level(const LogLevel level) -> void {
   if (enumIndex(level) < logLevelCount)
     _impl->_levels[enumIndex(level)] = false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void local_free(char* d) {
+auto local_free(char* d) -> void {
   g_free(d);
 }
 
@@ -179,7 +179,7 @@ void local_free(char* d) {
  * Note: it should be pretty safe to use utf-8 encoded text too here, though avoid log messages
  * which are several thousands of chars long.
  */
-void Logger::logv(LogLevel level, const char* const domain, const char* format, va_list args) {
+auto Logger::logv(LogLevel level, const char* const domain, const char* format, va_list args) -> void {
   scope_ptr<char, local_free> buffer(g_strdup_vprintf(format, args));
 
   // Print to stderr if no logger is created (yet).
@@ -266,7 +266,7 @@ void Logger::logv(LogLevel level, const char* const domain, const char* format, 
 
 //--------------------------------------------------------------------------------------------------
 
-void Logger::log(const Logger::LogLevel level, const char* const domain, const char* format, ...) {
+auto Logger::log(const Logger::LogLevel level, const char* const domain, const char* format, ...) -> void {
   if (_impl->level_is_enabled(level)) {
     va_list args;
     va_start(args, format);
@@ -277,13 +277,13 @@ void Logger::log(const Logger::LogLevel level, const char* const domain, const c
 
 //--------------------------------------------------------------------------------------------------
 
-void Logger::log_exc(const LogLevel level, const char* const domain, const char* msg, const std::exception& exc) {
+auto Logger::log_exc(const LogLevel level, const char* const domain, const char* msg, const std::exception& exc) -> void {
   log(level, domain, "%s: Exception: %s\n", msg, exc.what());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Logger::log_throw(const LogLevel level, const char* const domain, const char* format, ...) {
+auto Logger::log_throw(const LogLevel level, const char* const domain, const char* format, ...) -> void {
   if (_impl->level_is_enabled(level)) {
     va_list args;
     va_start(args, format);
@@ -308,7 +308,7 @@ auto Logger::get_state() -> std::string {
 
 //--------------------------------------------------------------------------------------------------
 
-void Logger::set_state(const std::string& state) {
+auto Logger::set_state(const std::string& state) -> void {
   if (_impl && state.length() >= logLevelCount) {
     for (std::size_t i = 0; i < logLevelCount; ++i) {
       const char level = state[i];
@@ -383,6 +383,6 @@ auto Logger::active_level(const std::string& value) -> bool {
 }
 
 //--------------------------------------------------------------------------------------------------
-void Logger::log_to_stderr(bool value) {
+auto Logger::log_to_stderr(bool value) -> void {
   _impl->_std_err_log = value;
 }

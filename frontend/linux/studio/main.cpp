@@ -63,23 +63,23 @@ using base::strfmt;
 static base::RecMutex custom_gdk_rec_mutex;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-static void custom_gdk_threads_enter() {
+static auto custom_gdk_threads_enter() -> void {
   custom_gdk_rec_mutex.lock();
 }
 
-static void custom_gdk_threads_leave() {
+static auto custom_gdk_threads_leave() -> void {
   custom_gdk_rec_mutex.unlock();
 }
 
-inline void init_gdk_thread_callbacks() {
+inline auto init_gdk_thread_callbacks() -> void {
   gdk_threads_set_lock_functions(G_CALLBACK(&custom_gdk_threads_enter), G_CALLBACK(&custom_gdk_threads_leave));
 }
 #pragma GCC diagnostic pop
 //==============================================================================
 
-extern void lf_record_grid_init();
+extern auto lf_record_grid_init() -> void;
 
-int main(int argc, char **argv) {
+auto main(int argc, char **argv) -> int {
   if (!getenv("MWB_DATA_DIR")) {
     std::string script_name = argv[0];
     std::string termination = "-bin";
@@ -252,7 +252,7 @@ void __cyg_profile_func_enter(void *func_address, void *call_site) __attribute__
 void __cyg_profile_func_exit(void *func_address, void *call_site) __attribute__((no_instrument_function));
 static char *resolve_function(void *addr) __attribute__((no_instrument_function));
 
-static char *resolve_function(void *addr) {
+static auto resolve_function(void *addr) -> char * {
   Dl_info info;
   int s;
 
@@ -261,7 +261,7 @@ static char *resolve_function(void *addr) {
   return __cxxabiv1::__cxa_demangle(info.dli_sname, NULL, NULL, &s);
 }
 
-void __cyg_profile_func_enter(void *func_address, void *call_site) {
+auto __cyg_profile_func_enter(void *func_address, void *call_site) -> void {
   if (!trace_file) {
     gettimeofday(&start_time, NULL);
     trace_file = fopen("trace.txt", "w+");
@@ -281,7 +281,7 @@ void __cyg_profile_func_enter(void *func_address, void *call_site) {
   }
 }
 
-void __cyg_profile_func_exit(void *func_address, void *call_site) {
+auto __cyg_profile_func_exit(void *func_address, void *call_site) -> void {
   if (trace_on) {
     char *s = resolve_function(func_address);
     struct timeval t;

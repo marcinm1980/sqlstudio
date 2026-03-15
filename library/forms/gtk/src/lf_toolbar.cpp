@@ -47,7 +47,7 @@ public:
 static ColorComboColumns *color_combo_columns = 0;
 
 //------------------------------------------------------------------------------
-static void process_ctrl_action(Gtk::Widget *w, mforms::ToolBarItem *item) {
+static auto process_ctrl_action(Gtk::Widget *w, mforms::ToolBarItem *item) -> void {
   const int ignore_signal = (long)w->get_data("ignore_signal");
   if (!ignore_signal && item)
     item->callback();
@@ -61,7 +61,7 @@ namespace {
   }
 }
 
-static Gtk::Orientation toolbar_orientation_from_type(const mforms::ToolBarType type) {
+static auto toolbar_orientation_from_type(const mforms::ToolBarType type) -> Gtk::Orientation {
   Gtk::Orientation dir = Gtk::ORIENTATION_HORIZONTAL;
 
   if (type == mforms::ToolPickerToolBar)
@@ -79,7 +79,7 @@ public:
   mutable Gtk::Box _toolbar;
   const mforms::ToolBarType _toolbar_type;
 
-  virtual Gtk::Widget *get_outer() const {
+  virtual auto get_outer() const -> Gtk::Widget * {
     return &_toolbar;
   }
 
@@ -92,16 +92,16 @@ public:
   }
 
 protected:
-  virtual void set_padding_impl(int left, int top, int right, int bottom);
+  virtual auto set_padding_impl(int left, int top, int right, int bottom) -> void;
 };
 
 //------------------------------------------------------------------------------
-Gtk::Widget *mforms::widget_for_toolbar(mforms::ToolBar *toolbar) {
+auto mforms::widget_for_toolbar(mforms::ToolBar *toolbar) -> Gtk::Widget * {
   return toolbar->get_data< ::ToolBarImpl>()->get_outer();
 }
 
 //------------------------------------------------------------------------------
-Gtk::Widget *mforms::widget_for_toolbar_item_named(mforms::ToolBar *toolbar, const std::string &name) {
+auto mforms::widget_for_toolbar_item_named(mforms::ToolBar *toolbar, const std::string &name) -> Gtk::Widget * {
   mforms::ToolBarItem *item = toolbar->find_item(name);
   if (item) {
     Gtk::Widget *w = cast<Gtk::Widget *>(item->get_data_ptr());
@@ -115,12 +115,12 @@ Gtk::Widget *mforms::widget_for_toolbar_item_named(mforms::ToolBar *toolbar, con
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::ToolBarImpl::create_tool_bar(mforms::ToolBar *item, mforms::ToolBarType type) {
+auto mforms::gtk::ToolBarImpl::create_tool_bar(mforms::ToolBar *item, mforms::ToolBarType type) -> bool {
   return (new ::ToolBarImpl(item, type)) != 0;
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::insert_item(mforms::ToolBar *toolbar, int index, mforms::ToolBarItem *item) {
+auto mforms::gtk::ToolBarImpl::insert_item(mforms::ToolBar *toolbar, int index, mforms::ToolBarItem *item) -> void {
   ::ToolBarImpl *impl = toolbar->get_data< ::ToolBarImpl>();
   Gtk::Widget *w = cast<Gtk::Widget *>(item->get_data_ptr());
   if (!w)
@@ -151,7 +151,7 @@ void mforms::gtk::ToolBarImpl::insert_item(mforms::ToolBar *toolbar, int index, 
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::remove_item(mforms::ToolBar *toolbar, mforms::ToolBarItem *item) {
+auto mforms::gtk::ToolBarImpl::remove_item(mforms::ToolBar *toolbar, mforms::ToolBarItem *item) -> void {
   ::ToolBarImpl *impl = toolbar->get_data< ::ToolBarImpl>();
   Gtk::Widget *w = item ? cast<Gtk::Widget *>(item->get_data_ptr()) : 0;
 
@@ -168,7 +168,7 @@ void mforms::gtk::ToolBarImpl::remove_item(mforms::ToolBar *toolbar, mforms::Too
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::ToolBarImpl::create_tool_item(mforms::ToolBarItem *item, ToolBarItemType type) {
+auto mforms::gtk::ToolBarImpl::create_tool_item(mforms::ToolBarItem *item, ToolBarItemType type) -> bool {
   Gtk::Widget *w = 0;
   switch (type) {
     case mforms::TextActionItem:
@@ -279,7 +279,7 @@ bool mforms::gtk::ToolBarImpl::create_tool_item(mforms::ToolBarItem *item, ToolB
 }
 
 //------------------------------------------------------------------------------
-static void free_icon(gpointer icon_ptr) {
+static auto free_icon(gpointer icon_ptr) -> void {
   Gtk::Image *img = reinterpret_cast<Gtk::Image *>(icon_ptr);
   if (img) {
     delete img;
@@ -287,7 +287,7 @@ static void free_icon(gpointer icon_ptr) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::set_item_icon(mforms::ToolBarItem *item, const std::string &image_path) {
+auto mforms::gtk::ToolBarImpl::set_item_icon(mforms::ToolBarItem *item, const std::string &image_path) -> void {
   Gtk::Button *btn = cast<Gtk::Button *>(item->get_data_ptr());
   if (btn) {
     static ImageCache *images = ImageCache::get_instance();
@@ -301,7 +301,7 @@ void mforms::gtk::ToolBarImpl::set_item_icon(mforms::ToolBarItem *item, const st
 }
 
 //------------------------------------------------------------------------------
-static void swap_icons(Gtk::ToggleButton *btn) {
+static auto swap_icons(Gtk::ToggleButton *btn) -> void {
   Gtk::Image *img = 0;
 
   if (btn->get_active())
@@ -314,7 +314,7 @@ static void swap_icons(Gtk::ToggleButton *btn) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::set_item_alt_icon(mforms::ToolBarItem *item, const std::string &image_path) {
+auto mforms::gtk::ToolBarImpl::set_item_alt_icon(mforms::ToolBarItem *item, const std::string &image_path) -> void {
   Gtk::ToggleButton *btn = cast<Gtk::ToggleButton *>(item->get_data_ptr());
   if (btn) {
     static ImageCache *images = ImageCache::get_instance();
@@ -327,7 +327,7 @@ void mforms::gtk::ToolBarImpl::set_item_alt_icon(mforms::ToolBarItem *item, cons
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::set_item_text(mforms::ToolBarItem *item, const std::string &label) {
+auto mforms::gtk::ToolBarImpl::set_item_text(mforms::ToolBarItem *item, const std::string &label) -> void {
   const mforms::ToolBarItemType type = item->get_type();
 
   switch (type) {
@@ -391,7 +391,7 @@ void mforms::gtk::ToolBarImpl::set_item_text(mforms::ToolBarItem *item, const st
 }
 
 //------------------------------------------------------------------------------
-std::string mforms::gtk::ToolBarImpl::get_item_text(mforms::ToolBarItem *item) {
+auto mforms::gtk::ToolBarImpl::get_item_text(mforms::ToolBarItem *item) -> std::string {
   std::string text;
 
   switch (item->get_type()) {
@@ -429,7 +429,7 @@ std::string mforms::gtk::ToolBarImpl::get_item_text(mforms::ToolBarItem *item) {
 
 //------------------------------------------------------------------------------
 
-void mforms::gtk::ToolBarImpl::set_item_name(mforms::ToolBarItem *item, const std::string &name) {
+auto mforms::gtk::ToolBarImpl::set_item_name(mforms::ToolBarItem *item, const std::string &name) -> void {
   Gtk::Widget *w = cast<Gtk::Widget *>(item->get_data_ptr());
   if (w) {
     w->set_name(name);
@@ -442,7 +442,7 @@ void mforms::gtk::ToolBarImpl::set_item_name(mforms::ToolBarItem *item, const st
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::set_item_enabled(mforms::ToolBarItem *item, bool is_on) {
+auto mforms::gtk::ToolBarImpl::set_item_enabled(mforms::ToolBarItem *item, bool is_on) -> void {
   Gtk::Widget *w = cast<Gtk::Widget *>(item->get_data_ptr());
   if (w) {
     w->set_sensitive(is_on);
@@ -452,7 +452,7 @@ void mforms::gtk::ToolBarImpl::set_item_enabled(mforms::ToolBarItem *item, bool 
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::ToolBarImpl::get_item_enabled(mforms::ToolBarItem *item) {
+auto mforms::gtk::ToolBarImpl::get_item_enabled(mforms::ToolBarItem *item) -> bool {
   bool ret = false;
   Gtk::Widget *w = cast<Gtk::Widget *>(item->get_data_ptr());
   if (w)
@@ -462,7 +462,7 @@ bool mforms::gtk::ToolBarImpl::get_item_enabled(mforms::ToolBarItem *item) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::set_item_checked(mforms::ToolBarItem *item, bool toggled) {
+auto mforms::gtk::ToolBarImpl::set_item_checked(mforms::ToolBarItem *item, bool toggled) -> void {
   Gtk::ToggleButton *btn = cast<Gtk::ToggleButton *>(item->get_data_ptr());
   if (btn) {
     btn->set_data("ignore_signal", (void *)1);
@@ -472,7 +472,7 @@ void mforms::gtk::ToolBarImpl::set_item_checked(mforms::ToolBarItem *item, bool 
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::ToolBarImpl::get_item_checked(mforms::ToolBarItem *item) {
+auto mforms::gtk::ToolBarImpl::get_item_checked(mforms::ToolBarItem *item) -> bool {
   bool ret = false;
 
   Gtk::ToggleButton *btn = cast<Gtk::ToggleButton *>(item->get_data_ptr());
@@ -483,7 +483,7 @@ bool mforms::gtk::ToolBarImpl::get_item_checked(mforms::ToolBarItem *item) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::set_item_tooltip(mforms::ToolBarItem *item, const std::string &text) {
+auto mforms::gtk::ToolBarImpl::set_item_tooltip(mforms::ToolBarItem *item, const std::string &text) -> void {
   Gtk::Widget *w = cast<Gtk::Widget *>(item->get_data_ptr());
   if (w) {
 #if GTK_VERSION_GT(2, 10)
@@ -493,7 +493,7 @@ void mforms::gtk::ToolBarImpl::set_item_tooltip(mforms::ToolBarItem *item, const
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::ToolBarImpl::set_selector_items(ToolBarItem *item, const std::vector<std::string> &values) {
+auto mforms::gtk::ToolBarImpl::set_selector_items(ToolBarItem *item, const std::vector<std::string> &values) -> void {
   if (item->get_type() == mforms::SelectorItem || item->get_type() == mforms::FlatSelectorItem) {
     Gtk::ComboBoxText *w = cast<Gtk::ComboBoxText *>(item->get_data_ptr());
     if (w) {
@@ -541,7 +541,7 @@ void ::ToolBarImpl::set_padding_impl(int left, int top, int right, int bottom) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::lf_toolbar_init() {
+auto mforms::gtk::lf_toolbar_init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_tool_bar_impl.create_tool_bar = mforms::gtk::ToolBarImpl::create_tool_bar;

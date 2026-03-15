@@ -42,7 +42,7 @@ namespace {
 
     //--------------------------------------------------------------------------------------------------------------------
 
-    db_SchemaRef add_schema(const std::string &name) {
+    auto add_schema(const std::string &name) -> db_SchemaRef {
       db_SchemaRef schema(grt::Initialized);
       schema->owner(catalog);
       schema->name(name);
@@ -52,7 +52,7 @@ namespace {
 
     //--------------------------------------------------------------------------------------------------------------------
 
-    db_TableRef add_table(db_SchemaRef schema, const std::string &name) {
+    auto add_table(db_SchemaRef schema, const std::string &name) -> db_TableRef {
       db_TableRef table(grt::Initialized);
       table->owner(schema);
       table->name(name);
@@ -62,7 +62,7 @@ namespace {
 
     //--------------------------------------------------------------------------------------------------------------------
 
-    db_ColumnRef add_table_column(db_TableRef table, const std::string &name) {
+    auto add_table_column(db_TableRef table, const std::string &name) -> db_ColumnRef {
       db_ColumnRef col(grt::Initialized);
       col->owner(table);
       col->name(name);
@@ -72,7 +72,7 @@ namespace {
 
     //--------------------------------------------------------------------------------------------------------------------
 
-    db_ViewRef add_view(db_SchemaRef schema, const std::string &name) {
+    auto add_view(db_SchemaRef schema, const std::string &name) -> db_ViewRef {
       db_ViewRef view(grt::Initialized);
       view->owner(schema);
       view->name(name);
@@ -82,14 +82,14 @@ namespace {
 
     //--------------------------------------------------------------------------------------------------------------------
 
-    grt::StringRef add_view_column(db_ViewRef view, const std::string &name) {
+    auto add_view_column(db_ViewRef view, const std::string &name) -> grt::StringRef {
       view->columns().insert(name);
       return name;
     }
 
     //--------------------------------------------------------------------------------------------------------------------
 
-    void test_sql(const std::string &sql, const std::string &master_result) {
+    auto test_sql(const std::string &sql, const std::string &master_result) -> void {
       SelectStatement::Ref select_statement(new SelectStatement());
       int res = sqlStatementDecomposer->decompose_query(sql, select_statement);
       EXPECT_EQ(1, res) << "Failed to parse statement: " + sql;
@@ -101,14 +101,14 @@ namespace {
 
     //--------------------------------------------------------------------------------------------------------------------
 
-    void test_view2(const std::string &sql, const std::string &master_result) {
+    auto test_view2(const std::string &sql, const std::string &master_result) -> void {
       std::string view_sql_def = base::strfmt("create view v1 as %s", sql.c_str());
       test_view(view_sql_def, master_result);
     }
 
     //--------------------------------------------------------------------------------------------------------------------
 
-    void test_view(const std::string &sql, const std::string &master_result) {
+    auto test_view(const std::string &sql, const std::string &master_result) -> void {
       view->sqlDefinition(sql);
 
       SelectStatement::Ref select_statement(new SelectStatement());

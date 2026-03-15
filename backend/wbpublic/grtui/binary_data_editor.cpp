@@ -60,11 +60,11 @@ public:
     _scroll.add(&_image);
   }
 
-  virtual void data_changed() {
+  virtual auto data_changed() -> void {
     _image.set_image_data(_owner->data(), _owner->length());
   }
 
-  static bool can_display(const char *data, size_t length) {
+  static auto can_display(const char *data, size_t length) -> bool {
     if (length > 4) {
       if (data[0] == (char)0x89 && strncmp(data + 1, "PNG", 3) == 0)
         return true;
@@ -126,14 +126,14 @@ public:
                                           std::placeholders::_2, std::placeholders::_3));
   }
 
-  virtual void data_changed() {
+  virtual auto data_changed() -> void {
     if (_offset >= _owner->length())
       _offset = (_owner->length() / _block_size) * _block_size;
 
     refresh();
   }
 
-  void go(int step) {
+  auto go(int step) -> void {
     switch (step) {
       case -2:
         _offset = 0;
@@ -156,7 +156,7 @@ public:
     refresh();
   }
 
-  void refresh() {
+  auto refresh() -> void {
     suspend_layout();
 
     unsigned char *ptr = (unsigned char *)_owner->data() + _offset;
@@ -202,7 +202,7 @@ private:
   size_t _offset;
   size_t _block_size;
 
-  void set_cell_value(mforms::TreeNodeRef node, int column, const std::string &value) {
+  auto set_cell_value(mforms::TreeNodeRef node, int column, const std::string &value) -> void {
     size_t offset = _offset + _tree.row_for_node(node) * 16 + (column - 1);
 
     if (offset < _owner->length()) {
@@ -240,7 +240,7 @@ public:
     _text.set_show_find_panel_callback(std::bind(&TextDataViewer::embed_find_panel, this, std::placeholders::_2));
   }
 
-  virtual void data_changed() {
+  virtual auto data_changed() -> void {
     GError *error = 0;
     gchar *converted = NULL;
     gsize bread, bwritten;
@@ -278,7 +278,7 @@ private:
   mforms::Label _message;
   std::string _encoding;
 
-  void edited() {
+  auto edited() -> void {
     std::string data = _text.get_string_value();
     gchar *converted;
     gsize bread, bwritten;
@@ -307,7 +307,7 @@ private:
     }
   }
 
-  void embed_find_panel(bool show) {
+  auto embed_find_panel(bool show) -> void {
     mforms::View *panel = _text.get_find_panel();
     if (show) {
       if (!panel->get_parent())
@@ -341,7 +341,7 @@ public:
     });
   }
 
-  virtual void data_changed() {
+  virtual auto data_changed() -> void {
     if (!_owner->data()) {
       _jsonView.clear();
       return;
@@ -380,7 +380,7 @@ public:
   }
 
 private:
-  void edited(const std::string &text) {
+  auto edited(const std::string &text) -> void {
     _owner->assign_data(text.data(), text.length());
   }
 
@@ -398,7 +398,7 @@ public:
     add(&_drawbox, true, true);
   }
 
-  virtual void data_changed() {
+  virtual auto data_changed() -> void {
     _drawbox.set_data(std::string(_owner->data(), _owner->length()));
   }
 
@@ -427,7 +427,7 @@ public:
     _selector.signal_changed()->connect(std::bind(&GeomTextDataViewer::data_changed, this));
   }
 
-  virtual void data_changed() {
+  virtual auto data_changed() -> void {
     std::string text;
     spatial::Importer importer;
     importer.import_from_mysql(std::string(_owner->data(), _owner->length()));
@@ -531,7 +531,7 @@ BinaryDataEditor::~BinaryDataEditor() {
   g_free(_data);
 }
 
-void BinaryDataEditor::setup() {
+auto BinaryDataEditor::setup() -> void {
   set_title("Edit Data");
   set_content(&_box);
   _box.set_padding(12);
@@ -566,11 +566,11 @@ void BinaryDataEditor::setup() {
   center();
 }
 
-void BinaryDataEditor::notify_edit() {
+auto BinaryDataEditor::notify_edit() -> void {
   _length_text.set_text(base::strfmt("Data Length: %i bytes", (int)_length));
 }
 
-void BinaryDataEditor::assign_data(const char *data, size_t length, bool steal_pointer) {
+auto BinaryDataEditor::assign_data(const char *data, size_t length, bool steal_pointer) -> void {
   if (_updating)
     return;
 
@@ -589,7 +589,7 @@ void BinaryDataEditor::assign_data(const char *data, size_t length, bool steal_p
   _length_text.set_text(base::strfmt("Data Length: %i bytes", (int)_length));
 }
 
-void BinaryDataEditor::tab_changed() {
+auto BinaryDataEditor::tab_changed() -> void {
   int i = _tab_view.get_active_tab();
   if (i < 0)
     i = 0;
@@ -614,14 +614,14 @@ void BinaryDataEditor::tab_changed() {
   }
 }
 
-void BinaryDataEditor::add_viewer(BinaryDataViewer *viewer, const std::string &title) {
+auto BinaryDataEditor::add_viewer(BinaryDataViewer *viewer, const std::string &title) -> void {
   _viewers.push_back(viewer);
   _pendingUpdates.insert(viewer);
 
   _tab_view.add_page(mforms::manage(viewer), title);
 }
 
-void BinaryDataEditor::add_json_viewer(bool read_only, const std::string &text_encoding, const std::string &title) {
+auto BinaryDataEditor::add_json_viewer(bool read_only, const std::string &text_encoding, const std::string &title) -> void {
   if (!data())
     return;
   GError *error = NULL;
@@ -647,12 +647,12 @@ void BinaryDataEditor::add_json_viewer(bool read_only, const std::string &text_e
   }
 }
 
-void BinaryDataEditor::save() {
+auto BinaryDataEditor::save() -> void {
   signal_saved();
   close();
 }
 
-void BinaryDataEditor::import_value() {
+auto BinaryDataEditor::import_value() -> void {
   mforms::FileChooser chooser(mforms::OpenFile);
 
   chooser.set_title("Import Field Data");
@@ -672,7 +672,7 @@ void BinaryDataEditor::import_value() {
   }
 }
 
-void BinaryDataEditor::export_value() {
+auto BinaryDataEditor::export_value() -> void {
   mforms::FileChooser chooser(mforms::SaveFile);
   chooser.set_title("Export Field Data");
   chooser.set_extensions("Text files (*.txt)|*.txt|All Files (*.*)|*.*", "txt");

@@ -87,7 +87,7 @@ struct signal_connection_wrapper {
     return *this;
   }
 #endif
-  void disconnect() {
+  auto disconnect() -> void {
     connection.disconnect();
   }
 };

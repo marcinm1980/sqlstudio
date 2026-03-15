@@ -72,7 +72,7 @@ static std::string copyright =
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string cppize_class_name(std::string name) {
+static auto cppize_class_name(std::string name) -> std::string {
   std::string::size_type p;
   while ((p = name.find('.')) != std::string::npos)
     name[p] = '_';
@@ -81,7 +81,7 @@ static std::string cppize_class_name(std::string name) {
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string format_type_cpp(const TypeSpec &type, bool unknown_as_void = false) {
+static auto format_type_cpp(const TypeSpec &type, bool unknown_as_void = false) -> std::string {
   std::string s;
 
   switch (type.base.type) {
@@ -124,7 +124,7 @@ static std::string format_type_cpp(const TypeSpec &type, bool unknown_as_void = 
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string format_arg_list(const std::vector<ArgSpec> &args) {
+static auto format_arg_list(const std::vector<ArgSpec> &args) -> std::string {
   std::string s;
 
   for (std::vector<ArgSpec>::const_iterator iter = args.begin(); iter != args.end(); ++iter) {
@@ -154,7 +154,7 @@ static std::string format_arg_list(const std::vector<ArgSpec> &args) {
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string format_signal_args(const std::vector<MetaClass::SignalArg> &args) {
+static auto format_signal_args(const std::vector<MetaClass::SignalArg> &args) -> std::string {
   std::string s;
 
   for (std::vector<MetaClass::SignalArg>::const_iterator iter = args.begin(); iter != args.end(); ++iter) {
@@ -184,7 +184,7 @@ static std::string format_signal_args(const std::vector<MetaClass::SignalArg> &a
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string format_signal_names(const std::vector<MetaClass::SignalArg> &args) {
+static auto format_signal_names(const std::vector<MetaClass::SignalArg> &args) -> std::string {
   std::string s;
 
   for (std::vector<MetaClass::SignalArg>::const_iterator iter = args.begin(); iter != args.end(); ++iter) {
@@ -196,7 +196,7 @@ static std::string format_signal_names(const std::vector<MetaClass::SignalArg> &
   return s;
 }
 
-static std::string format_wraparg_list(const std::vector<ArgSpec> &args) {
+static auto format_wraparg_list(const std::vector<ArgSpec> &args) -> std::string {
   std::string s;
   int i = 0;
   for (std::vector<ArgSpec>::const_iterator iter = args.begin(); iter != args.end(); ++iter) {
@@ -232,7 +232,7 @@ struct ClassImplGenerator {
     needs_body = false;
   }
 
-  void output_overriden_list_reset_code(FILE *f) {
+  auto output_overriden_list_reset_code(FILE *f) -> void {
     for (std::map<std::string, MetaClass::Member>::const_iterator mem = members.begin(); mem != members.end(); ++mem) {
       if ((mem->second.type.base.type == ListType || mem->second.type.base.type == DictType) &&
           !mem->second.calculated && mem->second.overrides) {
@@ -245,7 +245,7 @@ struct ClassImplGenerator {
     }
   }
 
-  void output_constructor_init_list(FILE *f) {
+  auto output_constructor_init_list(FILE *f) -> void {
     fprintf(f, "    : %s(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name()))", pname.c_str());
     for (std::map<std::string, MetaClass::Member>::const_iterator mem = members.begin(); mem != members.end(); ++mem) {
       if (mem->second.calculated || mem->second.overrides)
@@ -278,13 +278,13 @@ struct ClassImplGenerator {
       fprintf(f, ",\n      _data(nullptr)");
   }
 
-  void generate_class_doc(FILE *f) {
+  auto generate_class_doc(FILE *f) -> void {
     std::string doc = gstruct->get_attribute("desc", false);
     if (!doc.empty())
       fprintf(f, "/** %s */\n", doc.c_str());
   }
 
-  void generate_getter_doc(FILE *f, const MetaClass::Member &member) {
+  auto generate_getter_doc(FILE *f, const MetaClass::Member &member) -> void {
     std::string doc = gstruct->get_member_attribute(member.name, "desc", false);
 
     fprintf(f, "  /**\n");
@@ -295,7 +295,7 @@ struct ClassImplGenerator {
     fprintf(f, "   */\n");
   }
 
-  void generate_setter_doc(FILE *f, const MetaClass::Member &member) {
+  auto generate_setter_doc(FILE *f, const MetaClass::Member &member) -> void {
     std::string doc = gstruct->get_member_attribute(member.name, "desc", false);
 
     fprintf(f, "  /**\n");
@@ -306,7 +306,7 @@ struct ClassImplGenerator {
     fprintf(f, "   */\n");
   }
 
-  void generate_method_doc(FILE *f, const MetaClass::Method &method) {
+  auto generate_method_doc(FILE *f, const MetaClass::Method &method) -> void {
     std::string doc = gstruct->get_member_attribute(method.name, "desc", false);
 
     fprintf(f, "  /**\n");
@@ -320,7 +320,7 @@ struct ClassImplGenerator {
     fprintf(f, "   */\n");
   }
 
-  void generate_class_header(const std::string &dll_export) {
+  auto generate_class_header(const std::string &dll_export) -> void {
     FILE *f = header_file;
 
     // check if we will need a implementation file (.cpp)
@@ -662,7 +662,7 @@ struct ClassImplGenerator {
 
   //------------------------------------------------------------------------------------------------
 
-  void generate_class_body(FILE *f) {
+  auto generate_class_body(FILE *f) -> void {
     const char *separator =
       "//------------------------------------------------------------------------------------------------\n\n";
     fprintf(f, "%s", separator);
@@ -765,7 +765,7 @@ struct ClassImplGenerator {
 //--------------------------------------------------------------------------------------------------
 
 // XXX: use base::basename instead.
-static std::string basename(std::string s) {
+static auto basename(std::string s) -> std::string {
   if (s.find('/') != std::string::npos)
     s = s.substr(s.rfind('/') + 1);
 
@@ -777,7 +777,7 @@ static std::string basename(std::string s) {
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string pkgname(std::string s) {
+static auto pkgname(std::string s) -> std::string {
   std::string source(basename(s));
 
   if (source.find('.') != std::string::npos)
@@ -787,7 +787,7 @@ static std::string pkgname(std::string s) {
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string generate_dll_export_name(const std::string &fname) {
+static auto generate_dll_export_name(const std::string &fname) -> std::string {
   std::string name = basename(fname);
 
   name = cppize_class_name(name.substr(0, name.rfind('.')));
@@ -800,7 +800,7 @@ static std::string generate_dll_export_name(const std::string &fname) {
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string used_class_name(const TypeSpec &type) {
+static auto used_class_name(const TypeSpec &type) -> std::string {
   if (type.base.type == ObjectType)
     return type.base.object_class;
   else if (type.content.type == ObjectType)
@@ -810,8 +810,8 @@ static std::string used_class_name(const TypeSpec &type) {
 
 //--------------------------------------------------------------------------------------------------
 
-static bool is_header_included_somehow(const std::string &xml_for_header, const std::string &in_xml_for_header,
-                                       const std::multimap<std::string, std::string> &requiresMap) {
+static auto is_header_included_somehow(const std::string &xml_for_header, const std::string &in_xml_for_header,
+                                       const std::multimap<std::string, std::string> &requiresMap) -> bool {
   if (xml_for_header == in_xml_for_header)
     return true;
 
@@ -826,9 +826,9 @@ static bool is_header_included_somehow(const std::string &xml_for_header, const 
 
 //--------------------------------------------------------------------------------------------------
 
-void grt::helper::generate_struct_code(const std::string &target_file, const std::string &outpath,
+auto grt::helper::generate_struct_code(const std::string &target_file, const std::string &outpath,
                                        const std::string &imploutpath,
-                                       const std::multimap<std::string, std::string> &requires_orig) {
+                                       const std::multimap<std::string, std::string> &requires_orig) -> void {
   std::map<std::string, FILE *> files;
   std::map<std::string, std::set<std::string>> foreign_classes; // packagename -> class list
   std::multimap<std::string, std::string> requiresMap;
@@ -1110,7 +1110,7 @@ static const char *module_function_template =
 
 //--------------------------------------------------------------------------------------------------
 
-static void export_module_function(FILE *f, const Module::Function &function) {
+static auto export_module_function(FILE *f, const Module::Function &function) -> void {
   unsigned int i;
   std::string func_template = module_function_template;
   std::string return_type;
@@ -1199,7 +1199,7 @@ static void export_module_function(FILE *f, const Module::Function &function) {
 
 //--------------------------------------------------------------------------------------------------
 
-void grt::helper::generate_module_wrappers(const std::string &outpath, const std::vector<Module *> &modules) {
+auto grt::helper::generate_module_wrappers(const std::string &outpath, const std::vector<Module *> &modules) -> void {
   FILE *f = base_fopen(outpath.c_str(), "w+");
   if (!f)
     throw grt::os_error(errno);

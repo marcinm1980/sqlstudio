@@ -41,22 +41,22 @@ class DbMySQLTableEditorFKPage {
 public:
   DbMySQLTableEditorFKPage(DbMySQLTableEditor *owner, MySQLTableEditorBE *be, Glib::RefPtr<Gtk::Builder> xml);
 
-  void refresh();
+  auto refresh() -> void;
 
-  void switch_be(MySQLTableEditorBE *be);
+  auto switch_be(MySQLTableEditorBE *be) -> void;
 
 private:
-  static void cell_editing_started(GtkCellRenderer *cr, GtkCellEditable *ce, gchar *path, gpointer udata);
-  void fkcol_cell_editing_started(Gtk::CellEditable *cell, const Glib::ustring &path);
-  static void cell_editing_done(GtkCellEditable *ce, gpointer udata);
-  void fk_cursor_changed();
-  void model_only_toggled();
+  static auto cell_editing_started(GtkCellRenderer *cr, GtkCellEditable *ce, gchar *path, gpointer udata) -> void;
+  auto fkcol_cell_editing_started(Gtk::CellEditable *cell, const Glib::ustring &path) -> void;
+  static auto cell_editing_done(GtkCellEditable *ce, gpointer udata) -> void;
+  auto fk_cursor_changed() -> void;
+  auto model_only_toggled() -> void;
 
-  void update_fk_details();
+  auto update_fk_details() -> void;
 
-  void combo_box_changed(
-    const int model_column); // column is either FKConstraintListBE::OnUpdate or FKConstraintListBE::OnDelete
-  void set_comment(const std::string &comment);
+  auto combo_box_changed(
+    const int model_column) -> void; // column is either FKConstraintListBE::OnUpdate or FKConstraintListBE::OnDelete
+  auto set_comment(const std::string &comment) -> void;
 
   DbMySQLTableEditor *_owner;
   MySQLTableEditorBE *_be;
@@ -80,7 +80,7 @@ private:
 
   Gtk::Widget *_fk_page_content;
   Gtk::Label *_fk_page_not_supported_label;
-  void check_fk_support();
+  auto check_fk_support() -> void;
 };
 
 #endif

@@ -49,7 +49,7 @@ GrtThreadedTask::~GrtThreadedTask() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::disconnect_callbacks() {
+auto GrtThreadedTask::disconnect_callbacks() -> void {
   _proc_cb = Proc_cb();
   _msg_cb = Msg_cb();
   _progress_cb = Progress_cb();
@@ -61,7 +61,7 @@ void GrtThreadedTask::disconnect_callbacks() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::parent_task(const GrtThreadedTask::Ref val) {
+auto GrtThreadedTask::parent_task(const GrtThreadedTask::Ref val) -> void {
   if (_dispatcher) {
     if (!_parent_task || (_parent_task->dispatcher() != _dispatcher))
       _dispatcher->shutdown();
@@ -83,7 +83,7 @@ void GrtThreadedTask::parent_task(const GrtThreadedTask::Ref val) {
 
 //--------------------------------------------------------------------------------------------------
 
-const bec::GRTDispatcher::Ref &GrtThreadedTask::dispatcher() {
+auto GrtThreadedTask::dispatcher() -> const bec::GRTDispatcher::Ref & {
   if (!_dispatcher) {
     _dispatcher = bec::GRTDispatcher::create_dispatcher(bec::GRTManager::get()->is_threaded(), false);
     _dispatcher->set_main_thread_flush_and_wait(
@@ -95,13 +95,13 @@ const bec::GRTDispatcher::Ref &GrtThreadedTask::dispatcher() {
 
 //--------------------------------------------------------------------------------------------------
 
-const bec::GRTTask::Ref GrtThreadedTask::task() {
+auto GrtThreadedTask::task() -> const bec::GRTTask::Ref {
   return (_task) ? _task : ((_parent_task) ? _parent_task->task() : bec::GRTTask::Ref());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::exec(bool sync, Proc_cb proc_cb) {
+auto GrtThreadedTask::exec(bool sync, Proc_cb proc_cb) -> void {
   logDebug3("Sending task \"%s\" to dispatcher (%s)...\n", _desc.c_str(), sync ? "wait" : "don't wait");
 
   if (!proc_cb)
@@ -124,7 +124,7 @@ void GrtThreadedTask::exec(bool sync, Proc_cb proc_cb) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::process_msg(const grt::Message &msg) {
+auto GrtThreadedTask::process_msg(const grt::Message &msg) -> void {
   switch (msg.type) {
     case grt::WarningMsg:
     case grt::ErrorMsg:
@@ -143,7 +143,7 @@ void GrtThreadedTask::process_msg(const grt::Message &msg) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::process_fail(const std::exception &error) {
+auto GrtThreadedTask::process_fail(const std::exception &error) -> void {
   if (_fail_cb) {
     _fail_cb(error.what());
     if (_onetime_fail_cb)
@@ -155,7 +155,7 @@ void GrtThreadedTask::process_fail(const std::exception &error) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::process_finish(grt::ValueRef res) {
+auto GrtThreadedTask::process_finish(grt::ValueRef res) -> void {
   if (_send_task_res_msg) {
     grt::StringRef res_str = grt::StringRef::cast_from(res);
     if (!res_str.empty())
@@ -173,7 +173,7 @@ void GrtThreadedTask::process_finish(grt::ValueRef res) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::send_msg(int msg_type, const std::string &msg, const std::string &detail) {
+auto GrtThreadedTask::send_msg(int msg_type, const std::string &msg, const std::string &detail) -> void {
   if (bec::GRTManager::get()->in_main_thread()) {
     if (_msg_cb)
       _msg_cb(msg_type, msg, detail);
@@ -196,7 +196,7 @@ void GrtThreadedTask::send_msg(int msg_type, const std::string &msg, const std::
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::send_progress(float percentage, const std::string &msg, const std::string &detail) {
+auto GrtThreadedTask::send_progress(float percentage, const std::string &msg, const std::string &detail) -> void {
   if (bec::GRTManager::get()->terminated())
     return;
 
@@ -212,7 +212,7 @@ void GrtThreadedTask::send_progress(float percentage, const std::string &msg, co
 
 //--------------------------------------------------------------------------------------------------
 
-void GrtThreadedTask::execute_in_main_thread(const std::function<void()> &function, bool wait, bool force_queue) {
+auto GrtThreadedTask::execute_in_main_thread(const std::function<void()> &function, bool wait, bool force_queue) -> void {
   dispatcher()->call_from_main_thread<void>(function, wait, force_queue);
 }
 

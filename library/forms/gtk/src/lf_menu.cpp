@@ -47,7 +47,7 @@ mforms::gtk::MenuImpl::MenuImpl(mforms::Menu *self) : mforms::gtk::ObjectImpl(se
 }
 
 //------------------------------------------------------------------------------
-Gtk::MenuItem *mforms::gtk::MenuImpl::item_at(const int i) {
+auto mforms::gtk::MenuImpl::item_at(const int i) -> Gtk::MenuItem * {
   Gtk::MenuItem *item = 0;
   std::vector<Gtk::Widget *> items = _menu.get_children();
   if ((int)items.size() > i)
@@ -57,12 +57,12 @@ Gtk::MenuItem *mforms::gtk::MenuImpl::item_at(const int i) {
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::MenuImpl::create(Menu *self) {
+auto mforms::gtk::MenuImpl::create(Menu *self) -> bool {
   return new mforms::gtk::MenuImpl(self);
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuImpl::remove_item(Menu *self, int i) {
+auto mforms::gtk::MenuImpl::remove_item(Menu *self, int i) -> void {
   MenuImpl *menu = self->get_data<MenuImpl>();
   if (menu) {
     menu->_menu.remove(*menu->_menu.get_children()[i]);
@@ -70,7 +70,7 @@ void mforms::gtk::MenuImpl::remove_item(Menu *self, int i) {
 }
 
 //------------------------------------------------------------------------------
-int mforms::gtk::MenuImpl::add_item(Menu *self, const std::string &caption, const std::string &action) {
+auto mforms::gtk::MenuImpl::add_item(Menu *self, const std::string &caption, const std::string &action) -> int {
   int index = -1;
   MenuImpl *menu = self->get_data<MenuImpl>();
   if (menu) {
@@ -84,7 +84,7 @@ int mforms::gtk::MenuImpl::add_item(Menu *self, const std::string &caption, cons
 }
 
 //------------------------------------------------------------------------------
-int mforms::gtk::MenuImpl::add_separator(Menu *self) {
+auto mforms::gtk::MenuImpl::add_separator(Menu *self) -> int {
   int index = -1;
   MenuImpl *menu = self->get_data<MenuImpl>();
   if (menu) {
@@ -97,7 +97,7 @@ int mforms::gtk::MenuImpl::add_separator(Menu *self) {
 }
 
 //------------------------------------------------------------------------------
-int mforms::gtk::MenuImpl::add_submenu(Menu *self, const std::string &caption, Menu *submenu) {
+auto mforms::gtk::MenuImpl::add_submenu(Menu *self, const std::string &caption, Menu *submenu) -> int {
   int index = -1;
   MenuImpl *menu = self->get_data<MenuImpl>();
   MenuImpl *sub_menu = submenu->get_data<MenuImpl>();
@@ -112,7 +112,7 @@ int mforms::gtk::MenuImpl::add_submenu(Menu *self, const std::string &caption, M
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuImpl::set_item_enabled(Menu *self, int i, bool flag) {
+auto mforms::gtk::MenuImpl::set_item_enabled(Menu *self, int i, bool flag) -> void {
   MenuImpl *menu = self->get_data<MenuImpl>();
   if (menu) {
     Gtk::MenuItem *item = menu->item_at(i);
@@ -122,7 +122,7 @@ void mforms::gtk::MenuImpl::set_item_enabled(Menu *self, int i, bool flag) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuImpl::popup_at(Menu *self, Object *control, int x, int y) {
+auto mforms::gtk::MenuImpl::popup_at(Menu *self, Object *control, int x, int y) -> void {
   MenuImpl *menu = self->get_data<MenuImpl>();
 
   if (menu)
@@ -130,7 +130,7 @@ void mforms::gtk::MenuImpl::popup_at(Menu *self, Object *control, int x, int y) 
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuImpl::clear(Menu *self) {
+auto mforms::gtk::MenuImpl::clear(Menu *self) -> void {
   MenuImpl *menu = self->get_data<MenuImpl>();
 
   if (menu) {
@@ -147,7 +147,7 @@ void mforms::gtk::MenuImpl::clear(Menu *self) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuImpl::init() {
+auto mforms::gtk::MenuImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_menu_impl.create = &mforms::gtk::MenuImpl::create;

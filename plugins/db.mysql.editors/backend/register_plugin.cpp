@@ -38,7 +38,7 @@
 #define FRONTEND_LIBNAME(obj, windows_dll, linux_so, osx_dylib) obj->moduleName(linux_so)
 #endif
 
-static grt::ListRef<app_Plugin> get_mysql_plugins_info();
+static auto get_mysql_plugins_info() -> grt::ListRef<app_Plugin>;
 
 class MySQLEditorsModuleImpl : public grt::ModuleImplBase, public PluginInterfaceImpl {
 public:
@@ -53,7 +53,7 @@ public:
   }
 };
 
-static void set_object_argument(app_PluginRef &plugin, const std::string &struct_name) {
+static auto set_object_argument(app_PluginRef &plugin, const std::string &struct_name) -> void {
   app_PluginObjectInputRef pdef(grt::Initialized);
 
   pdef->objectStructName(struct_name);
@@ -62,7 +62,7 @@ static void set_object_argument(app_PluginRef &plugin, const std::string &struct
   plugin->inputValues().insert(pdef);
 }
 
-static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
+static auto get_mysql_plugins_info() -> grt::ListRef<app_Plugin> {
   grt::ListRef<app_Plugin> editors(grt::Initialized);
 
   app_PluginRef schema_editor(grt::Initialized);

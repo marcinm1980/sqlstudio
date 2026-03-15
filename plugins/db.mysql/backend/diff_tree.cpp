@@ -44,7 +44,7 @@ DEFAULT_LOG_DOMAIN("difftree");
 // using namespace wb;
 using namespace bec;
 
-std::string utf_to_upper(const char *str) {
+auto utf_to_upper(const char *str) -> std::string {
   char *n = g_utf8_strup(str, g_utf8_strlen(str, -1));
   std::string retval(n);
   g_free(n);
@@ -107,7 +107,7 @@ namespace {
   };
 }
 
-void DiffNode::dump(int depth) {
+auto DiffNode::dump(int depth) -> void {
   const char *dir = NULL;
   switch (applyDirection) {
     case ApplyToModel:
@@ -131,7 +131,7 @@ void DiffNode::dump(int depth) {
     (*It)->dump(depth + 1);
 }
 
-DiffNode *DiffNode::find_child_by_db_part_name(const std::string &name) {
+auto DiffNode::find_child_by_db_part_name(const std::string &name) -> DiffNode * {
   DiffNodeVector::const_iterator b = children.begin();
   DiffNodeVector::const_iterator e = children.end();
   DiffNodeVector::const_iterator it = std::find_if(b, e, CompareName(name, true));
@@ -143,7 +143,7 @@ DiffNode *DiffNode::find_child_by_db_part_name(const std::string &name) {
   return *it;
 }
 
-DiffNode *DiffNode::find_node_for_object(const grt::ObjectRef obj) {
+auto DiffNode::find_node_for_object(const grt::ObjectRef obj) -> DiffNode * {
   if (get_db_part().is_valid_object()) {
     if (get_db_part().get_object()->id() == obj->id())
       return this;
@@ -171,13 +171,13 @@ DiffNodeController::DiffNodeController(
 
     };
 
-void DiffNodeController::set_next_apply_direction(DiffNode *node) const {
+auto DiffNodeController::set_next_apply_direction(DiffNode *node) const -> void {
   std::map<DiffNode::ApplicationDirection, DiffNode::ApplicationDirection>::const_iterator newdir =
     _directions_map.find(node->apply_direction());
   node->apply_direction(newdir == _directions_map.end() ? DiffNode::DontApply : newdir->second);
 };
 
-void DiffNodeController::set_apply_direction(DiffNode *node, DiffNode::ApplicationDirection dir, bool recursive) const {
+auto DiffNodeController::set_apply_direction(DiffNode *node, DiffNode::ApplicationDirection dir, bool recursive) const -> void {
   node->apply_direction(dir);
 
   if (recursive)
@@ -203,7 +203,7 @@ namespace {
   };
 }
 
-void DiffNode::get_object_list_for_script(std::vector<grt::ValueRef> &vec) const {
+auto DiffNode::get_object_list_for_script(std::vector<grt::ValueRef> &vec) const -> void {
   bool im_already_there = false;
 
   if (applyDirection == ApplyToDb) {
@@ -241,8 +241,8 @@ namespace {
   };
 }
 
-void DiffNode::get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec,
-                                                 std::vector<grt::ValueRef> &removal_vec) const {
+auto DiffNode::get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec,
+                                                 std::vector<grt::ValueRef> &removal_vec) const -> void {
   if (applyDirection == ApplyToModel) {
     grt::ValueRef val = this->get_db_part().get_object();
     if (val.is_valid())
@@ -256,13 +256,13 @@ void DiffNode::get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec
   std::for_each(b, e, GetObjectListToApplyToModel(vec, removal_vec));
 }
 
-void DiffNode::set_modified_and_update_dir(bool m, std::shared_ptr<grt::DiffChange> c) {
+auto DiffNode::set_modified_and_update_dir(bool m, std::shared_ptr<grt::DiffChange> c) -> void {
   change = c;
   modified = m;
   applyDirection = m ? ApplyToDb : CantApply;
 }
 
-std::string get_old_name_or_name(GrtNamedObjectRef obj) {
+auto get_old_name_or_name(GrtNamedObjectRef obj) -> std::string {
   if (!obj.is_valid())
     return "";
 
@@ -334,8 +334,7 @@ namespace {
   };
 }
 
-WBPLUGINDBMYSQLBE_PUBLIC_FUNC
-void build_catalog_map(db_mysql_CatalogRef catalog, CatalogMap &map) {
+auto build_catalog_map(db_mysql_CatalogRef catalog, CatalogMap &map) -> WBPLUGINDBMYSQLBE_PUBLIC_FUNC void {
   SchemaAction sa(map);
   ct::for_each<ct::Schemata>(catalog, sa);
 }
@@ -350,7 +349,7 @@ T DiffTreeBE::find_object_in_catalog_map(T t, const CatalogMap &map) {
   return T();
 }
 
-void DiffTreeBE::fill_tree(DiffNode *table_node, db_mysql_TableRef table, const CatalogMap &map, bool inverse) {
+auto DiffTreeBE::fill_tree(DiffNode *table_node, db_mysql_TableRef table, const CatalogMap &map, bool inverse) -> void {
   // triggers
   for (size_t k = 0, triggers_count = table->triggers().count(); k < triggers_count; k++) {
     db_mysql_TriggerRef trigger = table->triggers().get(k);
@@ -360,7 +359,7 @@ void DiffTreeBE::fill_tree(DiffNode *table_node, db_mysql_TableRef table, const 
   }
 }
 
-void DiffTreeBE::fill_tree(DiffNode *schema_node, db_mysql_SchemaRef schema, const CatalogMap &map, bool inverse) {
+auto DiffTreeBE::fill_tree(DiffNode *schema_node, db_mysql_SchemaRef schema, const CatalogMap &map, bool inverse) -> void {
   // tables
   for (size_t j = 0, tables_count = schema->tables().count(); j < tables_count; j++) {
     db_mysql_TableRef table = schema->tables().get(j);
@@ -387,7 +386,7 @@ void DiffTreeBE::fill_tree(DiffNode *schema_node, db_mysql_SchemaRef schema, con
   }
 }
 
-void DiffTreeBE::fill_tree(DiffNode *root, db_mysql_CatalogRef model_catalog, const CatalogMap &map, bool inverse) {
+auto DiffTreeBE::fill_tree(DiffNode *root, db_mysql_CatalogRef model_catalog, const CatalogMap &map, bool inverse) -> void {
   for (size_t i = 0, schemata_count = model_catalog->schemata().count(); i < schemata_count; i++) {
     db_mysql_SchemaRef schema = model_catalog->schemata().get(i);
     db_mysql_SchemaRef external_schema = find_object_in_catalog_map(schema, map);
@@ -402,12 +401,12 @@ void DiffTreeBE::fill_tree(DiffNode *root, db_mysql_CatalogRef model_catalog, co
   }
 }
 
-bool is_node_object(const grt::ValueRef v) {
+auto is_node_object(const grt::ValueRef v) -> bool {
   return (db_SchemaRef::can_wrap(v) || db_TableRef::can_wrap(v) || db_ViewRef::can_wrap(v) ||
           db_RoutineRef::can_wrap(v) || db_TriggerRef::can_wrap(v));
 }
 
-bool DiffTreeBE::update_tree_with_changes(const std::shared_ptr<grt::DiffChange> diffchange) {
+auto DiffTreeBE::update_tree_with_changes(const std::shared_ptr<grt::DiffChange> diffchange) -> bool {
   if (!diffchange)
     return false;
 
@@ -479,7 +478,7 @@ bool DiffTreeBE::update_tree_with_changes(const std::shared_ptr<grt::DiffChange>
 }
 
 // TODO check how new DiffNode being deleted
-void DiffTreeBE::apply_change(GrtObjectRef obj, std::shared_ptr<grt::DiffChange> change) {
+auto DiffTreeBE::apply_change(GrtObjectRef obj, std::shared_ptr<grt::DiffChange> change) -> void {
   DiffNode *obj_node = _root->find_node_for_object(obj);
 
 #if 0
@@ -522,7 +521,7 @@ DiffTreeBE::DiffTreeBE(const std::vector<std::string> &schemata, db_mysql_Catalo
   drop_alert_icon = bec::IconManager::get_instance()->get_icon_id("change_alert_drop.png");
 }
 
-DiffNode *DiffTreeBE::get_node_with_id(const NodeId &nodeid) {
+auto DiffTreeBE::get_node_with_id(const NodeId &nodeid) -> DiffNode * {
   DiffNode *n = _root;
 
   if (!n)
@@ -540,14 +539,14 @@ DiffNode *DiffTreeBE::get_node_with_id(const NodeId &nodeid) {
   return n;
 }
 
-size_t DiffTreeBE::count_children(const bec::NodeId &nodeid) {
+auto DiffTreeBE::count_children(const bec::NodeId &nodeid) -> size_t {
   DiffNode *node = get_node_with_id(nodeid);
   if (node)
     return (int)node->get_children_size();
   return 0;
 }
 
-bec::NodeId DiffTreeBE::get_child(const bec::NodeId &parentid, size_t child_idx) {
+auto DiffTreeBE::get_child(const bec::NodeId &parentid, size_t child_idx) -> bec::NodeId {
   DiffNode *node = get_node_with_id(parentid);
 
   if (node && child_idx < node->get_children_size())
@@ -559,7 +558,7 @@ bec::NodeId DiffTreeBE::get_child(const bec::NodeId &parentid, size_t child_idx)
   return NodeId();
 }
 
-bool DiffTreeBE::get_field(const bec::NodeId &node_id, ColumnId column, std::string &value) {
+auto DiffTreeBE::get_field(const bec::NodeId &node_id, ColumnId column, std::string &value) -> bool {
   if ((column != ModelObjectName) && (column != DbObjectName)) {
     return false;
   }
@@ -597,7 +596,7 @@ bool DiffTreeBE::get_field(const bec::NodeId &node_id, ColumnId column, std::str
   return true;
 }
 
-bec::IconId DiffTreeBE::get_field_icon(const bec::NodeId &node_id, ColumnId column, IconSize size) {
+auto DiffTreeBE::get_field_icon(const bec::NodeId &node_id, ColumnId column, IconSize size) -> bec::IconId {
   if ((column != ModelObjectName) && (column != ModelChanged) && (column != ApplyDirection) && (column != DbChanged) &&
       (column != DbObjectName)) {
     return -1;
@@ -684,31 +683,31 @@ bec::IconId DiffTreeBE::get_field_icon(const bec::NodeId &node_id, ColumnId colu
   }
 }
 
-void DiffTreeBE::set_next_apply_direction(const bec::NodeId &node_id) {
+auto DiffTreeBE::set_next_apply_direction(const bec::NodeId &node_id) -> void {
   DiffNode *node = dynamic_cast<DiffNode *>(get_node_with_id(node_id));
   if (node)
     _node_controller.set_next_apply_direction(node);
 }
 
-void DiffTreeBE::set_apply_direction(const bec::NodeId &node_id, DiffNode::ApplicationDirection dir, bool recursive) {
+auto DiffTreeBE::set_apply_direction(const bec::NodeId &node_id, DiffNode::ApplicationDirection dir, bool recursive) -> void {
   DiffNode *node = dynamic_cast<DiffNode *>(get_node_with_id(node_id));
   if (node)
     _node_controller.set_apply_direction(node, dir, recursive);
 }
 
-DiffNode::ApplicationDirection DiffTreeBE::get_apply_direction(const bec::NodeId &node_id) {
+auto DiffTreeBE::get_apply_direction(const bec::NodeId &node_id) -> DiffNode::ApplicationDirection {
   DiffNode *node = dynamic_cast<DiffNode *>(get_node_with_id(node_id));
   if (node)
     return node->get_application_direction();
   return DiffNode::CantApply;
 }
 
-void DiffTreeBE::get_object_list_for_script(std::vector<grt::ValueRef> &vec) const {
+auto DiffTreeBE::get_object_list_for_script(std::vector<grt::ValueRef> &vec) const -> void {
   _root->get_object_list_for_script(vec);
 }
 
-void DiffTreeBE::get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec,
-                                                   std::vector<grt::ValueRef> &removal_vec) const {
+auto DiffTreeBE::get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec,
+                                                   std::vector<grt::ValueRef> &removal_vec) const -> void {
   _root->get_object_list_to_apply_to_model(vec, removal_vec);
 }
 

@@ -33,14 +33,14 @@ class MYSQLWBMYSQLSUPPORTBACKEND_PUBLIC_FUNC MySQLRoutineGroupEditorBE : public 
 public:
   MySQLRoutineGroupEditorBE(const db_mysql_RoutineGroupRef &group);
 
-  virtual db_RoutineGroupRef get_routine_group() {
+  virtual auto get_routine_group() -> db_RoutineGroupRef {
     return _routine_group;
   }
 
-  virtual void load_routines_sql();
-  virtual void commit_changes();
+  virtual auto load_routines_sql() -> void;
+  virtual auto commit_changes() -> void;
 
-  void use_sql(const std::string &sql);
+  auto use_sql(const std::string &sql) -> void;
 
 private:
   db_mysql_RoutineGroupRef _routine_group;

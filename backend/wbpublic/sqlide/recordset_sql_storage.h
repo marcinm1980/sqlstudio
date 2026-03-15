@@ -39,7 +39,7 @@ public:
   using Statements_bindings = std::list<Statement_bindings>;
   Statements statements;
   Statements_bindings statements_bindings;
-  void reset() {
+  auto reset() -> void {
     statements.clear();
     statements_bindings.clear();
   }
@@ -48,7 +48,7 @@ public:
 class WBPUBLICBACKEND_PUBLIC_FUNC Recordset_sql_storage : public Recordset_data_storage {
 public:
   using Ref = std::shared_ptr<Recordset_sql_storage>;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Recordset_sql_storage());
   }
   virtual ~Recordset_sql_storage();
@@ -57,73 +57,73 @@ protected:
   Recordset_sql_storage();
 
 protected:
-  virtual void fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
-                                sqlite::variant_t &blob_value);
+  virtual auto fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
+                                sqlite::variant_t &blob_value) -> void;
 
 protected:
-  virtual void do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db, bool skip_commit);
-  virtual void do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db);
-  virtual void do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db);
-  virtual void do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
-                                   sqlite::variant_t &blob_value);
+  virtual auto do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db, bool skip_commit) -> void;
+  virtual auto do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  virtual auto do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  virtual auto do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
+                                   sqlite::variant_t &blob_value) -> void;
 
 public:
-  static std::string statements_as_sql_script(const Sql_script::Statements &sql_statements);
+  static auto statements_as_sql_script(const Sql_script::Statements &sql_statements) -> std::string;
 
 protected:
-  virtual void generate_sql_script(const Recordset *recordset, sqlite::connection *data_swap_db, Sql_script &sql_script,
-                                   bool is_update_script, bool binaryAsString = false);
-  virtual void generate_inserts(const Recordset *recordset, sqlite::connection *data_swap_db, Sql_script &sql_script);
-  virtual void run_sql_script(const Sql_script &sql_script, bool skip_commit) {
+  virtual auto generate_sql_script(const Recordset *recordset, sqlite::connection *data_swap_db, Sql_script &sql_script,
+                                   bool is_update_script, bool binaryAsString = false) -> void;
+  virtual auto generate_inserts(const Recordset *recordset, sqlite::connection *data_swap_db, Sql_script &sql_script) -> void;
+  virtual auto run_sql_script(const Sql_script &sql_script, bool skip_commit) -> void {
   }
-  virtual void init_variant_quoter(sqlide::QuoteVar &qv) const;
+  virtual auto init_variant_quoter(sqlide::QuoteVar &qv) const -> void;
 
 public:
-  void schema_name(const std::string &schema_name) {
+  auto schema_name(const std::string &schema_name) -> void {
     _schema_name = schema_name;
   }
-  std::string schema_name() const {
+  auto schema_name() const -> std::string {
     return _schema_name;
   }
 
-  void table_name(const std::string &table_name) {
+  auto table_name(const std::string &table_name) -> void {
     _table_name = table_name;
   }
-  std::string table_name() const {
+  auto table_name() const -> std::string {
     return _table_name;
   }
 
-  std::string full_table_name() const;
+  auto full_table_name() const -> std::string;
 
-  void additional_clauses(const std::string &value) {
+  auto additional_clauses(const std::string &value) -> void {
     _additional_clauses = value;
   }
-  std::string additional_clauses() const {
+  auto additional_clauses() const -> std::string {
     return _additional_clauses;
   }
 
-  void sql_query(const std::string &sql_query) {
+  auto sql_query(const std::string &sql_query) -> void {
     _sql_query = sql_query;
   }
-  std::string sql_query() const {
+  auto sql_query() const -> std::string {
     return _sql_query;
   }
 
-  void sql_script(const std::string &val) {
+  auto sql_script(const std::string &val) -> void {
     _sql_script = val;
   }
-  const std::string &sql_script() const {
+  auto sql_script() const -> const std::string & {
     return _sql_script;
   }
 
-  void affective_columns(const Sql_inserts_loader::Strings &val) {
+  auto affective_columns(const Sql_inserts_loader::Strings &val) -> void {
     _affective_columns = val;
   }
-  const Sql_inserts_loader::Strings &affective_columns() const {
+  auto affective_columns() const -> const Sql_inserts_loader::Strings & {
     return _affective_columns;
   }
 
-  virtual ColumnId aux_column_count() {
+  virtual auto aux_column_count() -> ColumnId {
     return _pkey_columns.size();
   }
 
@@ -139,26 +139,26 @@ protected:
                                                   // validated) sql script, also affects column order
 
 public:
-  void sql_script_substitute(const Sql_script &val) {
+  auto sql_script_substitute(const Sql_script &val) -> void {
     _sql_script_substitute = val;
   }
-  const Sql_script &sql_script_substitute() const {
+  auto sql_script_substitute() const -> const Sql_script & {
     return _sql_script_substitute;
   }
-  void is_sql_script_substitute_enabled(bool val) {
+  auto is_sql_script_substitute_enabled(bool val) -> void {
     _is_sql_script_substitute_enabled = val;
   }
-  bool is_sql_script_substitute_enabled() const {
+  auto is_sql_script_substitute_enabled() const -> bool {
     return _is_sql_script_substitute_enabled;
   }
 
 public:
-  void init_sql_script_substitute(const Recordset::Ptr &recordset, bool is_update_script);
-  void omit_schema_qualifier(bool flag);
+  auto init_sql_script_substitute(const Recordset::Ptr &recordset, bool is_update_script) -> void;
+  auto omit_schema_qualifier(bool flag) -> void;
 
 private:
-  void do_init_sql_script_substitute(const Recordset *recordset, sqlite::connection *data_swap_db,
-                                     bool is_update_script);
+  auto do_init_sql_script_substitute(const Recordset *recordset, sqlite::connection *data_swap_db,
+                                     bool is_update_script) -> void;
 
 private:
   Sql_script _sql_script_substitute; // if (_is_sql_script_substitute_enabled) use this value instead of generating sql
@@ -170,16 +170,16 @@ private:
   using Fields_order = std::map<std::string, int>;
   Fields_order _fields_order;
 
-  void load_insert_statement(const std::string &sql, const std::pair<std::string, std::string> &schema_table,
+  auto load_insert_statement(const std::string &sql, const std::pair<std::string, std::string> &schema_table,
                              const Sql_inserts_loader::Strings &fields_names,
                              const Sql_inserts_loader::Strings &fields_values, const std::vector<bool> &null_fields,
-                             Recordset::Column_names *column_names, Var_list *var_list);
+                             Recordset::Column_names *column_names, Var_list *var_list) -> void;
 
 public:
-  db_mgmt_RdbmsRef rdbms() {
+  auto rdbms() -> db_mgmt_RdbmsRef {
     return _rdbms;
   }
-  void rdbms(db_mgmt_RdbmsRef rdbms) {
+  auto rdbms(db_mgmt_RdbmsRef rdbms) -> void {
     _rdbms = rdbms;
   }
 
@@ -195,14 +195,14 @@ public:
   Batch_exec_stat_cb on_sql_script_run_statistics;
 
 protected:
-  void get_pkey_predicate_for_data_cache_rowid(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
-                                               std::string &pkey_predicate);
+  auto get_pkey_predicate_for_data_cache_rowid(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
+                                               std::string &pkey_predicate) -> void;
 
 public:
-  bool binding_blobs() const {
+  auto binding_blobs() const -> bool {
     return _binding_blobs;
   }
-  void binding_blobs(bool val) {
+  auto binding_blobs(bool val) -> void {
     _binding_blobs = val;
   }
 

@@ -33,25 +33,25 @@ namespace MySQL {
     protected:
       TextEntryWrapper(mforms::TextEntry *text);
 
-      static bool create(mforms::TextEntry *backend, mforms::TextEntryType type);
-      static void set_text(mforms::TextEntry *backend, const std::string &text);
-      static void set_placeholder_text(mforms::TextEntry *backend, const std::string &text);
-      static void set_placeholder_color(mforms::TextEntry *backend, const std::string &color);
-      static std::string get_text(mforms::TextEntry *backend);
-      static void set_max_length(mforms::TextEntry *backend, int length);
-      static void set_read_only(mforms::TextEntry *backend, bool flag);
-      static void set_bordered(mforms::TextEntry *backend, bool flag);
+      static auto create(mforms::TextEntry *backend, mforms::TextEntryType type) -> bool;
+      static auto set_text(mforms::TextEntry *backend, const std::string &text) -> void;
+      static auto set_placeholder_text(mforms::TextEntry *backend, const std::string &text) -> void;
+      static auto set_placeholder_color(mforms::TextEntry *backend, const std::string &color) -> void;
+      static auto get_text(mforms::TextEntry *backend) -> std::string;
+      static auto set_max_length(mforms::TextEntry *backend, int length) -> void;
+      static auto set_read_only(mforms::TextEntry *backend, bool flag) -> void;
+      static auto set_bordered(mforms::TextEntry *backend, bool flag) -> void;
 
-      static void cut(mforms::TextEntry *self);
-      static void copy(mforms::TextEntry *self);
-      static void paste(mforms::TextEntry *self);
-      static void select(mforms::TextEntry *self, const base::Range &range);
-      static base::Range get_selection(mforms::TextEntry *self);
+      static auto cut(mforms::TextEntry *self) -> void;
+      static auto copy(mforms::TextEntry *self) -> void;
+      static auto paste(mforms::TextEntry *self) -> void;
+      static auto select(mforms::TextEntry *self, const base::Range &range) -> void;
+      static auto get_selection(mforms::TextEntry *self) -> base::Range;
 
       virtual void set_front_color(String ^ color);
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

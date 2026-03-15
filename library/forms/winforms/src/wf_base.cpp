@@ -34,7 +34,7 @@ using namespace System::Windows::Forms;
 using namespace MySQL;
 using namespace MySQL::Forms;
 
-void free_wrapper(void *payload) {
+auto free_wrapper(void *payload) -> void {
   ObjectWrapper *wrapper = reinterpret_cast<ObjectWrapper *>(payload);
   delete wrapper;
 }
@@ -69,7 +69,7 @@ ObjectWrapper::~ObjectWrapper() {
 /**
  * Internal helper for getting the tag of the native platform control.
  */
-IntPtr ^ ObjectWrapper::GetBackendReference() {
+auto ObjectWrapper::GetBackendReference() -> IntPtr ^ {
   Object ^ tag = nullptr;
   System::Object ^ object = component;
   if (is<Control>(object))
@@ -84,7 +84,7 @@ IntPtr ^ ObjectWrapper::GetBackendReference() {
 
 //----------------- ObjectMapper -------------------------------------------------------------------
 
-Component ^ ObjectMapper::GetManagedComponent(mforms::Object *backend) {
+auto ObjectMapper::GetManagedComponent(mforms::Object *backend) -> Component ^ {
   return ObjectWrapper::GetManagedObject<Component>(backend);
 }
 

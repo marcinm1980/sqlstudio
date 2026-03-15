@@ -45,13 +45,11 @@ Grammar_tree_item::~Grammar_tree_item(void)
 {
 }
 
-std::string Grammar_tree_item::text() const
-{
+auto Grammar_tree_item::text() const -> std::string {
   return _text;
 }
 
-std::string Grammar_tree_item::text_unquoted() const
-{
+auto Grammar_tree_item::text_unquoted() const -> std::string {
   if (!_text.empty() && _text[0] == '\'')
   {
     std::stringstream oss;
@@ -62,18 +60,15 @@ std::string Grammar_tree_item::text_unquoted() const
     return _text;
 }
 
-void Grammar_tree_item::text(const std::string &text)
-{
+auto Grammar_tree_item::text(const std::string &text) -> void {
   _text= text;
 }
 
-bool Grammar_tree_item::empty() const
-{
+auto Grammar_tree_item::empty() const -> bool {
   return _text.empty();
 }
 
-bool Grammar_tree_item::non_prec_child_exists() const
-{
+auto Grammar_tree_item::non_prec_child_exists() const -> bool {
   bool result= false;
   
   bool prev_item_was_prec_directive= false;
@@ -93,8 +88,7 @@ bool Grammar_tree_item::non_prec_child_exists() const
   return result;
 }
 
-bool Grammar_tree_item::has_more_then_one_meaningful_child() const
-{
+auto Grammar_tree_item::has_more_then_one_meaningful_child() const -> bool {
   bool result= false;
   
   bool prev_item_was_prec_directive= false;
@@ -117,8 +111,7 @@ bool Grammar_tree_item::has_more_then_one_meaningful_child() const
   return result;
 }
 
-bool Grammar_tree_item::is_terminal() const
-{
+auto Grammar_tree_item::is_terminal() const -> bool {
   bool result= true;
 
   for (std::string::const_iterator i= _text.begin(); i != _text.end(); ++i)
@@ -134,8 +127,7 @@ bool Grammar_tree_item::is_terminal() const
   return result;
 }
 
-bool Grammar_tree_item::is_last_non_prec_child(const Grammar_tree_item *item) const
-{
+auto Grammar_tree_item::is_last_non_prec_child(const Grammar_tree_item *item) const -> bool {
   char neq_count= 0;
 
   if (_items.back() != item)
@@ -159,8 +151,7 @@ bool Grammar_tree_item::is_last_non_prec_child(const Grammar_tree_item *item) co
   return (0 == neq_count);
 }
 
-bool Grammar_tree_item::is_prec_directive() const
-{
+auto Grammar_tree_item::is_prec_directive() const -> bool {
   if (_text.empty() || ('%' != _text[0]))
     return false;
   return (0 == _stricmp("%prec", _text.c_str()));
@@ -172,23 +163,19 @@ Item_kind Grammar_tree_item::item_kind() const
   return _item_kind;
 }
 */
-const Grammar_tree_item::Item_list * Grammar_tree_item::items() const
-{
+auto Grammar_tree_item::items() const -> const Grammar_tree_item::Item_list * {
   return &_items;
 }
 
-void Grammar_tree_item::add_item_as_last(const Grammar_tree_item *item)
-{
+auto Grammar_tree_item::add_item_as_last(const Grammar_tree_item *item) -> void {
   _items.push_back(item);
 }
 
-void Grammar_tree_item::add_item_as_first(const Grammar_tree_item *item)
-{
+auto Grammar_tree_item::add_item_as_first(const Grammar_tree_item *item) -> void {
   _items.push_front(item);
 }
 
-void Grammar_tree_item::flush(std::ostream& os) const
-{
+auto Grammar_tree_item::flush(std::ostream& os) const -> void {
   os << "<elem name= '" << _text << "'>";
   for (Item_list::const_iterator i= _items.begin(); i != _items.end(); ++i)
     (*i)->flush(os);

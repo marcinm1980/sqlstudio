@@ -360,11 +360,10 @@ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
 };
 
 static
-int my_mb_wc_latin1(CHARSET_INFO *cs  __attribute__((unused)),
+auto my_mb_wc_latin1(CHARSET_INFO *cs  __attribute__((unused)),
 		    my_wc_t *wc,
 		    const unsigned char *str,
-		    const unsigned char *end __attribute__((unused)))
-{
+		    const unsigned char *end __attribute__((unused))) -> int {
   if (str >= end)
     return MY_CS_TOOSMALL;
   
@@ -373,11 +372,10 @@ int my_mb_wc_latin1(CHARSET_INFO *cs  __attribute__((unused)),
 }
 
 static
-int my_wc_mb_latin1(CHARSET_INFO *cs  __attribute__((unused)),
+auto my_wc_mb_latin1(CHARSET_INFO *cs  __attribute__((unused)),
 		    my_wc_t wc,
 		    unsigned char *str,
-		    unsigned char *end __attribute__((unused)))
-{
+		    unsigned char *end __attribute__((unused))) -> int {
   unsigned char *pl;
   
   if (str >= end)
@@ -459,19 +457,19 @@ CHARSET_INFO my_charset_latin1=
  *
  * The modern sort order is used, where:
  *
- * 'ä'  ->  "ae"
- * 'ö'  ->  "oe"
- * 'ü'  ->  "ue"
- * 'ß'  ->  "ss"
+ * 'ï¿½'  ->  "ae"
+ * 'ï¿½'  ->  "oe"
+ * 'ï¿½'  ->  "ue"
+ * 'ï¿½'  ->  "ss"
  */
 
 
 /*
  * This is a simple latin1 mapping table, which maps all accented
  * characters to their non-accented equivalents.  Note: in this
- * table, 'ä' is mapped to 'A', 'ÿ' is mapped to 'Y', etc. - all
+ * table, 'ï¿½' is mapped to 'A', 'ï¿½' is mapped to 'Y', etc. - all
  * accented characters except the following are treated the same way.
- * Ü, ü, Ö, ö, Ä, ä
+ * ï¿½, ï¿½, ï¿½, ï¿½, ï¿½, ï¿½
  */
 
 static uchar sort_order_latin1_de[] = {
@@ -537,7 +535,7 @@ uchar combo2map[]={
   my_strnxfrm_latin_de() on both strings and compared the result strings.
 
   This means that:
-  Ä must also matches ÁE and Aè, because my_strxn_frm_latin_de() will convert
+  ï¿½ must also matches ï¿½E and Aï¿½, because my_strxn_frm_latin_de() will convert
   both to AE.
 
   The other option would be to not do any accent removal in
@@ -545,11 +543,10 @@ uchar combo2map[]={
 */
 
 
-static int my_strnncoll_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnncoll_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
 				  const uchar *a, uint a_length,
 				  const uchar *b, uint b_length,
-                                  my_bool b_is_prefix)
-{
+                                  my_bool b_is_prefix) -> int {
   const uchar *a_end= a + a_length;
   const uchar *b_end= b + b_length;
   uchar a_char, a_extend= 0, b_char, b_extend= 0;
@@ -586,11 +583,10 @@ static int my_strnncoll_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-static int my_strnncollsp_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnncollsp_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
 				    const uchar *a, uint a_length,
 				    const uchar *b, uint b_length,
-                                    my_bool diff_if_only_endspace_difference)
-{
+                                    my_bool diff_if_only_endspace_difference) -> int {
   const uchar *a_end= a + a_length, *b_end= b + b_length;
   uchar a_char, a_extend= 0, b_char, b_extend= 0;
   int res;
@@ -658,10 +654,9 @@ static int my_strnncollsp_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-static int my_strnxfrm_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnxfrm_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
 				 uchar * dest, uint len,
-				 const uchar * src, uint srclen)
-{
+				 const uchar * src, uint srclen) -> int {
   const uchar *de = dest + len;
   const uchar *se = src + srclen;
   for ( ; src < se && dest < de ; src++)
@@ -677,14 +672,13 @@ static int my_strnxfrm_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-void my_hash_sort_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
+auto my_hash_sort_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
 			    const uchar *key, uint len,
-			    ulong *nr1, ulong *nr2)
-{
+			    ulong *nr1, ulong *nr2) -> void {
   const uchar *end= key+len;
   /*
     Remove end space. We have to do this to be able to compare
-    'AE' and 'Ä' as identical
+    'AE' and 'ï¿½' as identical
   */
   while (end > key && end[-1] == ' ')
     end--;

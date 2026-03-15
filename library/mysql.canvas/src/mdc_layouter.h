@@ -40,23 +40,23 @@ namespace mdc {
     virtual ~Layouter();
 
     virtual auto get_item_at(const base::Point &pos) -> CanvasItem * = 0;
-    virtual void remove(CanvasItem *item) = 0;
-    virtual void remove_all();
+    virtual auto remove(CanvasItem *item) -> void = 0;
+    virtual auto remove_all() -> void;
 
-    virtual void foreach (const std::function<void(CanvasItem *)> &slot) = 0;
+    virtual auto foreach (const std::function<void(CanvasItem *)> &slot) -> void = 0;
 
-    virtual void render(CairoCtx *cr);
-    virtual void render_gl(mdc::CairoCtx *cr);
+    virtual auto render(CairoCtx *cr) -> void;
+    virtual auto render_gl(mdc::CairoCtx *cr) -> void;
 
     virtual auto find_item_with_tag(const std::string &tag) -> CanvasItem *;
 
-    void set_draw_background(bool flag);
-    void set_background_corners(mdc::CornerMask mask, float radius);
-    void set_background_color(const base::Color &color);
-    void set_border_color(const base::Color &color);
+    auto set_draw_background(bool flag) -> void;
+    auto set_background_corners(mdc::CornerMask mask, float radius) -> void;
+    auto set_background_color(const base::Color &color) -> void;
+    auto set_border_color(const base::Color &color) -> void;
 
-    virtual void stroke_outline(CairoCtx *cr, float offset = 0) const;
-    virtual void stroke_outline_gl(float offset = 0) const;
+    virtual auto stroke_outline(CairoCtx *cr, float offset = 0) const -> void;
+    virtual auto stroke_outline_gl(float offset = 0) const -> void;
 
   protected:
     base::Color _border_color;

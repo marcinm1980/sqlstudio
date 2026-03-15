@@ -53,7 +53,7 @@ class Undo_Tests_for_EditorsTest : public ::testing::Test {
 protected:
   static std::unique_ptr<WbUndoEditorsData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<WbUndoEditorsData>();
     data->tester.reset(new MySqlStudioTester());
     data->um = grt::GRT::get()->get_undo_manager();
@@ -77,7 +77,7 @@ protected:
     EXPECT_EQ(data->um->get_undo_stack().size(), 0U) << "undo stack is empty";
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

@@ -38,13 +38,13 @@
 
 #define _(s) s
 
-bool ModelPanel::on_close() {
+auto ModelPanel::on_close() -> bool {
   bool has_changes = wb::WBContextUI::get()->get_wb()->has_unsaved_changes();
   _overview->on_close();
   return !has_changes;
 }
 
-void ModelPanel::on_activate() {
+auto ModelPanel::on_activate() -> void {
   mforms::View *sidebar = wb::WBContextUI::get()->get_wb()->get_model_context()->shared_secondary_sidebar();
   Gtk::Widget *w = mforms::widget_for_view(sidebar);
   if (w->get_parent())
@@ -54,7 +54,7 @@ void ModelPanel::on_activate() {
   w->show();
 }
 
-ModelPanel *ModelPanel::create(wb::OverviewBE *overview) {
+auto ModelPanel::create(wb::OverviewBE *overview) -> ModelPanel * {
   Glib::RefPtr<Gtk::Builder> xml =
     Gtk::Builder::create_from_file(bec::GRTManager::get()->get_data_file_path("model_view.glade"));
 
@@ -79,7 +79,7 @@ ModelPanel::ModelPanel(GtkBox *cobject, const Glib::RefPtr<Gtk::Builder> &xml)
   _pending_rebuild_overview = false;
 }
 
-void ModelPanel::post_construct(wb::OverviewBE *overview) {
+auto ModelPanel::post_construct(wb::OverviewBE *overview) -> void {
   _toolbar = overview->get_toolbar();
   {
     mforms::MenuBar *menubar = overview->get_menubar();
@@ -138,7 +138,7 @@ void ModelPanel::post_construct(wb::OverviewBE *overview) {
     Glib::signal_idle().connect(sigc::bind_return(sigc::mem_fun<void, ModelPanel, ModelPanel>(this, &ModelPanel::restore_sidebar_layout), false));
 }
 
-void ModelPanel::restore_sidebar_layout() {
+auto ModelPanel::restore_sidebar_layout() -> void {
   FormViewBase::restore_sidebar_layout(275);
   do_resize_overview();
 }
@@ -150,13 +150,13 @@ ModelPanel::~ModelPanel() {
   delete _usertypes_box;
 }
 
-bool ModelPanel::do_resize_overview() {
+auto ModelPanel::do_resize_overview() -> bool {
   _overview->update_for_resize();
   _pending_rebuild_overview = false;
   return false;
 }
 
-void ModelPanel::resize_overview() {
+auto ModelPanel::resize_overview() -> void {
   if (!_pending_rebuild_overview) {
     // this hack is needed to force the iconview to properly resize to accomodate its new
     // container size
@@ -166,15 +166,15 @@ void ModelPanel::resize_overview() {
   }
 }
 
-void ModelPanel::selection_changed() {
+auto ModelPanel::selection_changed() -> void {
   _documentation_box->update_for_form(_overview->get_be());
 }
 
-bec::UIForm *ModelPanel::get_form() const {
+auto ModelPanel::get_form() const -> bec::UIForm * {
   return (bec::UIForm *)_overview->get_be();
 }
 
-void ModelPanel::find_text(const std::string &text) {
+auto ModelPanel::find_text(const std::string &text) -> void {
   _last_found_node = _overview->get_be()->search_child_item_node_matching(bec::NodeId(), _last_found_node, text);
 
   if (_last_found_node.is_valid()) {

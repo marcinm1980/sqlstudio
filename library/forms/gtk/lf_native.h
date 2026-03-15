@@ -37,7 +37,7 @@ namespace mforms {
       Gtk::Widget *_widget;
 
     public:
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _widget;
       }
 
@@ -45,7 +45,7 @@ namespace mforms {
     };
   };
 
-  mforms::NativeContainer *native_from_widget(Gtk::Widget *w);
+  auto native_from_widget(Gtk::Widget *w) -> mforms::NativeContainer *;
 };
 
 #endif

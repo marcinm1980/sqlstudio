@@ -72,7 +72,7 @@ studio_physical_Connection::ImplData::ImplData(studio_physical_Connection *owner
 studio_physical_Connection::ImplData::~ImplData() {
 }
 
-void studio_physical_Connection::ImplData::set_in_view(bool flag) {
+auto studio_physical_Connection::ImplData::set_in_view(bool flag) -> void {
   model_DiagramRef diagram(self()->owner());
 
   if (flag) {
@@ -93,7 +93,7 @@ void studio_physical_Connection::ImplData::set_in_view(bool flag) {
   }
 }
 
-void studio_physical_Connection::ImplData::set_foreign_key(const db_ForeignKeyRef &fk) {
+auto studio_physical_Connection::ImplData::set_foreign_key(const db_ForeignKeyRef &fk) -> void {
   bool owner_valid = self()->owner().is_valid();
 
   // remove mapping of the old FK
@@ -130,7 +130,7 @@ void studio_physical_Connection::ImplData::set_foreign_key(const db_ForeignKeyRe
 
 /** Sets startFigure and endFigure according to the tables in the foreignKey
  */
-void studio_physical_Connection::ImplData::update_connected_tables() {
+auto studio_physical_Connection::ImplData::update_connected_tables() -> void {
   db_TableRef table;
   db_TableRef reftable;
 
@@ -167,7 +167,7 @@ void studio_physical_Connection::ImplData::update_connected_tables() {
   }
 }
 
-void studio_physical_Connection::ImplData::object_realized(const model_ObjectRef &object) {
+auto studio_physical_Connection::ImplData::object_realized(const model_ObjectRef &object) -> void {
   if (object.is_instance(studio_physical_TableFigure::static_class_name())) {
     studio_physical_TableFigureRef figure(studio_physical_TableFigureRef::cast_from(object));
     db_TableRef table(figure->table());
@@ -178,7 +178,7 @@ void studio_physical_Connection::ImplData::object_realized(const model_ObjectRef
   }
 }
 
-void studio_physical_Connection::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) {
+auto studio_physical_Connection::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void {
   if (_line && name == "caption") {
     set_above_caption(self()->_caption);
   } else if (_line && name == "extraCaption") {
@@ -223,12 +223,12 @@ void studio_physical_Connection::ImplData::member_changed(const std::string &nam
   }
 }
 
-void studio_physical_Connection::ImplData::fk_changed(const db_ForeignKeyRef &fk) {
+auto studio_physical_Connection::ImplData::fk_changed(const db_ForeignKeyRef &fk) -> void {
   if (self()->foreignKey() == fk && _line)
     update_connected_tables();
 }
 
-void studio_physical_Connection::ImplData::fk_member_changed(const std::string &name, const grt::ValueRef &ovalue) {
+auto studio_physical_Connection::ImplData::fk_member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void {
   update_line_ends();
 
   if (name == "owner") {
@@ -239,7 +239,7 @@ void studio_physical_Connection::ImplData::fk_member_changed(const std::string &
   }
 }
 
-void studio_physical_Connection::ImplData::caption_bounds_changed(const Rect &obounds, mdc::TextFigure *figure) {
+auto studio_physical_Connection::ImplData::caption_bounds_changed(const Rect &obounds, mdc::TextFigure *figure) -> void {
   if (!figure->is_dragging())
     return;
 
@@ -260,7 +260,7 @@ void studio_physical_Connection::ImplData::caption_bounds_changed(const Rect &ob
   }
 }
 
-void studio_physical_Connection::ImplData::update_line_ends() {
+auto studio_physical_Connection::ImplData::update_line_ends() -> void {
   studio_physical_Model::ImplData *model =
     dynamic_cast<studio_physical_Model::ImplData *>(self()->owner()->owner()->get_data());
   if (model && _line) {
@@ -269,14 +269,14 @@ void studio_physical_Connection::ImplData::update_line_ends() {
   }
 }
 
-void studio_physical_Connection::ImplData::layout_changed() {
+auto studio_physical_Connection::ImplData::layout_changed() -> void {
   double offset = _line->get_segment_offset(0);
 
   if (offset != *self()->_middleSegmentOffset)
     self()->_middleSegmentOffset = offset;
 }
 
-void studio_physical_Connection::ImplData::highlight(const base::Color *color) {
+auto studio_physical_Connection::ImplData::highlight(const base::Color *color) -> void {
   model_Connection::ImplData::highlight(color);
 
   if (_above_caption) {
@@ -301,7 +301,7 @@ void studio_physical_Connection::ImplData::highlight(const base::Color *color) {
   }
 }
 
-void studio_physical_Connection::ImplData::unhighlight() {
+auto studio_physical_Connection::ImplData::unhighlight() -> void {
   if (_above_caption)
     _above_caption->set_highlighted(false);
   if (_below_caption)
@@ -313,7 +313,7 @@ void studio_physical_Connection::ImplData::unhighlight() {
   model_Connection::ImplData::unhighlight();
 }
 
-static wbfig::FigureItem *get_table_column_with_id(wbfig::Table *table, const std::string &id) {
+static auto get_table_column_with_id(wbfig::Table *table, const std::string &id) -> wbfig::FigureItem * {
   wbfig::BaseFigure::ItemList *items = table->get_columns();
   for (wbfig::BaseFigure::ItemList::iterator iter = items->begin(); iter != items->end(); ++iter) {
     if ((*iter)->get_id() == id)
@@ -322,7 +322,7 @@ static wbfig::FigureItem *get_table_column_with_id(wbfig::Table *table, const st
   return 0;
 }
 
-mdc::CanvasItem *studio_physical_Connection::ImplData::get_start_canvas_item() {
+auto studio_physical_Connection::ImplData::get_start_canvas_item() -> mdc::CanvasItem * {
   if (self()->_foreignKey.is_valid()) {
     // get the item corresponding to the FK column
     wbfig::Table *table = dynamic_cast<wbfig::Table *>(super::get_start_canvas_item());
@@ -340,7 +340,7 @@ mdc::CanvasItem *studio_physical_Connection::ImplData::get_start_canvas_item() {
   return 0;
 }
 
-mdc::CanvasItem *studio_physical_Connection::ImplData::get_end_canvas_item() {
+auto studio_physical_Connection::ImplData::get_end_canvas_item() -> mdc::CanvasItem * {
   if (self()->_foreignKey.is_valid()) {
     // get the item corresponding to the FK referenced column
     wbfig::Table *table = dynamic_cast<wbfig::Table *>(super::get_end_canvas_item());
@@ -358,7 +358,7 @@ mdc::CanvasItem *studio_physical_Connection::ImplData::get_end_canvas_item() {
   return 0;
 }
 
-void studio_physical_Connection::ImplData::table_changed(const std::string &detail) {
+auto studio_physical_Connection::ImplData::table_changed(const std::string &detail) -> void {
   if (!bec::TableHelper::is_identifying_foreign_key(db_TableRef::cast_from(self()->_foreignKey->owner()),
                                                     self()->_foreignKey))
     _line->set_line_pattern(mdc::Dashed2Pattern);
@@ -367,7 +367,7 @@ void studio_physical_Connection::ImplData::table_changed(const std::string &deta
   _line->set_needs_render();
 }
 
-bool studio_physical_Connection::ImplData::realize() {
+auto studio_physical_Connection::ImplData::realize() -> bool {
   if (_line)
     return true;
 
@@ -437,7 +437,7 @@ bool studio_physical_Connection::ImplData::realize() {
   return true;
 }
 
-void studio_physical_Connection::ImplData::unrealize() {
+auto studio_physical_Connection::ImplData::unrealize() -> void {
   if (_line) {
     notify_will_unrealize();
 

@@ -48,7 +48,7 @@ namespace MySQL {
     private:
       gcroot<IMySqlStudioObserver ^> _managed_observer;
 
-      virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
+      virtual auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
 
     public:
       InterfacedObserver(IMySqlStudioObserver ^ native_observer);

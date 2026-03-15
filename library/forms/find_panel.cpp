@@ -34,14 +34,14 @@ FindPanel::FindPanel(CodeEditor *editor) {
   set_name("Find and Replace");
 }
 
-size_t FindPanel::perform_action(FindPanelAction action) {
+auto FindPanel::perform_action(FindPanelAction action) -> size_t {
   return _find_impl->perform_action(this, action);
 }
 
-void FindPanel::focus() {
+auto FindPanel::focus() -> void {
   _find_impl->focus(this);
 }
 
-void FindPanel::enable_replace(bool flag) {
+auto FindPanel::enable_replace(bool flag) -> void {
   _find_impl->enable_replace(this, flag);
 }

@@ -36,7 +36,7 @@ using namespace grt;
 using namespace grt::internal;
 using namespace base;
 
-static void register_base_class() {
+static auto register_base_class() -> void {
   MetaClass* mc = grt::GRT::get()->get_metaclass(Object::static_class_name());
 
   mc->bind_allocator(0);
@@ -49,7 +49,7 @@ ClassRegistry::ClassRegistry() {
   classes[Object::static_class_name()] = &register_base_class;
 }
 
-void ClassRegistry::register_all() {
+auto ClassRegistry::register_all() -> void {
   for (std::map<std::string, ClassRegistrationFunction>::const_iterator iter = classes.begin(); iter != classes.end();
        ++iter) {
     // Register classes only for loaded meta classes.
@@ -62,38 +62,38 @@ void ClassRegistry::register_all() {
   }
 }
 
-void ClassRegistry::cleanUp() {
+auto ClassRegistry::cleanUp() -> void {
   classes.clear();
   // register the root class
   classes[Object::static_class_name()] = &register_base_class;
 }
 
-ClassRegistry* ClassRegistry::get_instance() {
+auto ClassRegistry::get_instance() -> ClassRegistry* {
   static ClassRegistry* instance = new ClassRegistry();
   return instance;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ClassRegistry::isEmpty() {
+auto ClassRegistry::isEmpty() -> bool {
   return classes.empty();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string Integer::debugDescription(const std::string& indentation) const {
+auto Integer::debugDescription(const std::string& indentation) const -> std::string {
   // Simple values don't use indentation as they are always on a RHS.
   return toString();
 }
 
-std::string Integer::toString() const {
+auto Integer::toString() const -> std::string {
   return std::to_string(_value);
 }
 
 Integer::Integer(storage_type value) : _value(value) {
 }
 
-Integer* Integer::get(storage_type value) {
+auto Integer::get(storage_type value) -> Integer* {
   static Integer* one = (Integer*)((new Integer(1))->retain());
   static Integer* zero = (Integer*)((new Integer(0))->retain());
 
@@ -105,28 +105,28 @@ Integer* Integer::get(storage_type value) {
   return new Integer(value);
 }
 
-bool Integer::equals(const Value* o) const {
+auto Integer::equals(const Value* o) const -> bool {
   return _value == dynamic_cast<const Integer*>(o)->_value;
 }
 
-bool Integer::less_than(const Value* o) const {
+auto Integer::less_than(const Value* o) const -> bool {
   return _value < dynamic_cast<const Integer*>(o)->_value;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string Double::debugDescription(const std::string& indentation) const {
+auto Double::debugDescription(const std::string& indentation) const -> std::string {
   return toString();
 }
 
-std::string Double::toString() const {
+auto Double::toString() const -> std::string {
   return std::to_string(_value);
 }
 
 Double::Double(storage_type value) : _value(value) {
 }
 
-Double* Double::get(storage_type value) {
+auto Double::get(storage_type value) -> Double* {
   static Double* one = (Double*)((new Double(1.0))->retain());
   static Double* zero = (Double*)((new Double(0.0))->retain());
 
@@ -138,28 +138,28 @@ Double* Double::get(storage_type value) {
   return new Double(value);
 }
 
-bool Double::equals(const Value* o) const {
+auto Double::equals(const Value* o) const -> bool {
   return _value == dynamic_cast<const Double*>(o)->_value;
 }
 
-bool Double::less_than(const Value* o) const {
+auto Double::less_than(const Value* o) const -> bool {
   return _value < dynamic_cast<const Double*>(o)->_value;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string String::debugDescription(const std::string& indentation) const {
+auto String::debugDescription(const std::string& indentation) const -> std::string {
   return "'" + _value + "'";
 }
 
-std::string String::toString() const {
+auto String::toString() const -> std::string {
   return _value;
 }
 
 String::String(const storage_type& value) : _value(value) {
 }
 
-String* String::get(const storage_type& value) {
+auto String::get(const storage_type& value) -> String* {
   static String* empty = (String*)((new String(""))->retain());
 
   if (value.empty())
@@ -168,17 +168,17 @@ String* String::get(const storage_type& value) {
   return new String(value);
 }
 
-bool String::equals(const Value* o) const {
+auto String::equals(const Value* o) const -> bool {
   return _value == dynamic_cast<const String*>(o)->_value;
 }
 
-bool String::less_than(const Value* o) const {
+auto String::less_than(const Value* o) const -> bool {
   return _value < dynamic_cast<const String*>(o)->_value;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string List::debugDescription(const std::string& indentation) const {
+auto List::debugDescription(const std::string& indentation) const -> std::string {
   std::string s;
 
   s.append("[\n"); // Not indented (RHS value).
@@ -189,7 +189,7 @@ std::string List::debugDescription(const std::string& indentation) const {
   return s;
 }
 
-std::string List::toString() const {
+auto List::toString() const -> std::string {
   std::string s;
   bool first = true;
 
@@ -219,7 +219,7 @@ List::List(Type content_type, const std::string& content_class, bool allow_null)
 List::~List() {
 }
 
-void List::set_unchecked(size_t index, const ValueRef& value) {
+auto List::set_unchecked(size_t index, const ValueRef& value) -> void {
   if (index >= count())
     throw bad_item(index, count());
 
@@ -245,7 +245,7 @@ void List::set_unchecked(size_t index, const ValueRef& value) {
   }
 }
 
-void List::insert_unchecked(const ValueRef& value, size_t index) {
+auto List::insert_unchecked(const ValueRef& value, size_t index) -> void {
   if (_is_global > 0 && value.is_valid())
     value.mark_global();
 
@@ -264,7 +264,7 @@ void List::insert_unchecked(const ValueRef& value, size_t index) {
   }
 }
 
-void List::remove(const ValueRef& value) {
+auto List::remove(const ValueRef& value) -> void {
   size_t i = _content.size();
   while (i-- > 0) {
     if (_content[i] == value) {
@@ -279,7 +279,7 @@ void List::remove(const ValueRef& value) {
   }
 }
 
-void List::remove(size_t index) {
+auto List::remove(size_t index) -> void {
   if (index >= count())
     throw grt::bad_item(index, count());
 
@@ -292,7 +292,7 @@ void List::remove(size_t index) {
   _content.erase(_content.begin() + index);
 }
 
-void List::reorder(size_t oi, size_t ni) {
+auto List::reorder(size_t oi, size_t ni) -> void {
   if (oi == ni)
     return;
 
@@ -307,7 +307,7 @@ void List::reorder(size_t oi, size_t ni) {
     _content.insert(_content.begin() + ni, tmp);
 }
 
-size_t List::get_index(const ValueRef& value) {
+auto List::get_index(const ValueRef& value) -> size_t {
   size_t i = 0;
   for (std::vector<ValueRef>::const_iterator iter = _content.begin(); iter != _content.end(); ++iter, ++i) {
     if (*iter == value)
@@ -316,7 +316,7 @@ size_t List::get_index(const ValueRef& value) {
   return npos;
 }
 
-bool List::check_assignable(const ValueRef& value) const {
+auto List::check_assignable(const ValueRef& value) const -> bool {
   if (value.is_valid()) {
     Type vtype = value.type();
 
@@ -338,7 +338,7 @@ bool List::check_assignable(const ValueRef& value) const {
   return _allow_null;
 }
 
-void List::set_checked(size_t index, const ValueRef& value) {
+auto List::set_checked(size_t index, const ValueRef& value) -> void {
   if (check_assignable(value))
     set_unchecked(index, value);
   else {
@@ -349,7 +349,7 @@ void List::set_checked(size_t index, const ValueRef& value) {
   }
 }
 
-void List::insert_checked(const ValueRef& value, size_t index) {
+auto List::insert_checked(const ValueRef& value, size_t index) -> void {
   if (check_assignable(value))
     insert_unchecked(value, index);
   else {
@@ -365,7 +365,7 @@ void List::insert_checked(const ValueRef& value, size_t index) {
   }
 }
 
-void List::mark_global() const {
+auto List::mark_global() const -> void {
   if (_is_global == 0) {
     if (_content_type.type == AnyType || is_container_type(_content_type.type)) {
       for (storage_type::const_iterator iter = _content.begin(); iter != _content.end(); ++iter) {
@@ -377,7 +377,7 @@ void List::mark_global() const {
   _is_global++;
 }
 
-void List::unmark_global() const {
+auto List::unmark_global() const -> void {
   _is_global--;
   if (_is_global == 0) {
     if (_content_type.type == AnyType || is_container_type(_content_type.type)) {
@@ -389,7 +389,7 @@ void List::unmark_global() const {
   }
 }
 
-void List::reset_references() {
+auto List::reset_references() -> void {
   const int max_index = (int)count();
   grt::ValueRef value;
   for (int i = 0; i < max_index; ++i) {
@@ -401,15 +401,15 @@ void List::reset_references() {
   }
 }
 
-bool List::equals(const Value* o) const {
+auto List::equals(const Value* o) const -> bool {
   return this == o;
 }
 
-bool List::less_than(const Value* o) const {
+auto List::less_than(const Value* o) const -> bool {
   return this < o;
 }
 
-void List::__retype(Type type, const std::string& content_class) {
+auto List::__retype(Type type, const std::string& content_class) -> void {
   _content_type.type = type;
   _content_type.object_class = content_class;
 }
@@ -422,7 +422,7 @@ OwnedList::OwnedList(Type type, const std::string& content_class, Object* owner,
     throw std::invalid_argument("owner cannot be NULL");
 }
 
-void OwnedList::set_unchecked(size_t index, const ValueRef& value) {
+auto OwnedList::set_unchecked(size_t index, const ValueRef& value) -> void {
   ValueRef item;
 
   if (index < _content.size())
@@ -438,19 +438,19 @@ void OwnedList::set_unchecked(size_t index, const ValueRef& value) {
     _owner->owned_list_item_added(this, value);
 }
 
-void OwnedList::insert_unchecked(const ValueRef& value, size_t index) {
+auto OwnedList::insert_unchecked(const ValueRef& value, size_t index) -> void {
   List::insert_unchecked(value, index);
 
   _owner->owned_list_item_added(this, value);
 }
 
-void OwnedList::remove(const ValueRef& value) {
+auto OwnedList::remove(const ValueRef& value) -> void {
   List::remove(value);
 
   _owner->owned_list_item_removed(this, value);
 }
 
-void OwnedList::remove(size_t index) {
+auto OwnedList::remove(size_t index) -> void {
   ValueRef item(_content[index]);
 
   List::remove(index);
@@ -460,7 +460,7 @@ void OwnedList::remove(size_t index) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string Dict::debugDescription(const std::string& indentation) const {
+auto Dict::debugDescription(const std::string& indentation) const -> std::string {
   std::string s;
 
   s.append("{\n");
@@ -473,7 +473,7 @@ std::string Dict::debugDescription(const std::string& indentation) const {
   return s;
 }
 
-std::string Dict::toString() const {
+auto Dict::toString() const -> std::string {
   std::string s;
   bool first = true;
 
@@ -501,7 +501,7 @@ Dict::Dict(Type content_type, const std::string& content_class, bool allow_null)
   _is_global = 0;
 }
 
-bool Dict::has_key(const std::string& key) const {
+auto Dict::has_key(const std::string& key) const -> bool {
   return _content.find(key) != _content.end();
 }
 
@@ -512,29 +512,29 @@ ValueRef Dict::operator[](const std::string& key) const {
   return iter->second;
 }
 
-Dict::const_iterator Dict::begin() const {
+auto Dict::begin() const -> Dict::const_iterator {
   return _content.begin();
 }
 
-Dict::const_iterator Dict::end() const {
+auto Dict::end() const -> Dict::const_iterator {
   return _content.end();
 }
 
-std::vector<std::string> Dict::keys() const {
+auto Dict::keys() const -> std::vector<std::string> {
   std::vector<std::string> r;
   for (storage_type::const_iterator i = _content.begin(); i != _content.end(); ++i)
     r.push_back(i->first);
   return r;
 }
 
-ValueRef Dict::get(const std::string& key) const {
+auto Dict::get(const std::string& key) const -> ValueRef {
   const_iterator iter;
   if ((iter = _content.find(key)) == _content.end())
     return ValueRef();
   return iter->second;
 }
 
-void Dict::set(const std::string& key, const ValueRef& value) {
+auto Dict::set(const std::string& key, const ValueRef& value) -> void {
   if (!value.is_valid() && !_allow_null)
     throw std::invalid_argument("inserting null value to not null dict");
 
@@ -554,7 +554,7 @@ void Dict::set(const std::string& key, const ValueRef& value) {
   _content[key] = value;
 }
 
-void Dict::remove(const std::string& key) {
+auto Dict::remove(const std::string& key) -> void {
   storage_type::iterator iter = _content.find(key);
   if (iter != _content.end()) {
     if (_is_global > 0) {
@@ -576,7 +576,7 @@ void Dict::remove(const std::string& key) {
  * no undo record is created (in fact, what has a high level feature like undo/redo to do
  * in such a low level storage container?).
  */
-void Dict::reset_entries() {
+auto Dict::reset_entries() -> void {
   if (_is_global > 0) {
     if (_content_type.type == AnyType || is_container_type(_content_type.type)) {
       for (storage_type::const_iterator iter = _content.begin(); iter != _content.end(); ++iter) {
@@ -590,7 +590,7 @@ void Dict::reset_entries() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Dict::mark_global() const {
+auto Dict::mark_global() const -> void {
   if (_is_global == 0) {
     if (_content_type.type == AnyType || is_container_type(_content_type.type)) {
       for (storage_type::const_iterator iter = _content.begin(); iter != _content.end(); ++iter) {
@@ -602,7 +602,7 @@ void Dict::mark_global() const {
   _is_global++;
 }
 
-void Dict::unmark_global() const {
+auto Dict::unmark_global() const -> void {
   _is_global--;
 
   if (_is_global == 0) {
@@ -615,7 +615,7 @@ void Dict::unmark_global() const {
   }
 }
 
-void Dict::reset_references() {
+auto Dict::reset_references() -> void {
   storage_type::iterator it = _content.begin();
   const storage_type::const_iterator last = _content.end();
 
@@ -626,11 +626,11 @@ void Dict::reset_references() {
   }
 }
 
-bool Dict::equals(const Value* o) const {
+auto Dict::equals(const Value* o) const -> bool {
   return this == o;
 }
 
-bool Dict::less_than(const Value* o) const {
+auto Dict::less_than(const Value* o) const -> bool {
   return this < o;
 }
 
@@ -640,13 +640,13 @@ OwnedDict::OwnedDict(Type type, const std::string& content_class, Object* owner,
   : Dict(type, content_class, allow_null), _owner(owner) {
 }
 
-void OwnedDict::set(const std::string& key, const ValueRef& value) {
+auto OwnedDict::set(const std::string& key, const ValueRef& value) -> void {
   Dict::set(key, value);
 
   _owner->owned_dict_item_set(this, key);
 }
 
-void OwnedDict::remove(const std::string& key) {
+auto OwnedDict::remove(const std::string& key) -> void {
   Dict::remove(key);
 
   _owner->owned_dict_item_removed(this, key);
@@ -657,7 +657,7 @@ void OwnedDict::remove(const std::string& key) {
 /**
  * Removes all entries from this dict and sends a notification for each removal.
  */
-void OwnedDict::reset_entries() {
+auto OwnedDict::reset_entries() -> void {
   for (storage_type::const_iterator iter = _content.begin(); iter != _content.end(); ++iter) {
     _owner->owned_dict_item_removed(this, iter->first);
   }
@@ -677,19 +677,19 @@ Object::Object(MetaClass* metaclass) : _metaclass(metaclass) {
 Object::~Object() {
 }
 
-const std::string& Object::id() const {
+auto Object::id() const -> const std::string& {
   return _id;
 }
 
-MetaClass* Object::get_metaclass() const {
+auto Object::get_metaclass() const -> MetaClass* {
   return _metaclass;
 }
 
-const std::string& Object::class_name() const {
+auto Object::class_name() const -> const std::string& {
   return _metaclass->name();
 }
 
-std::string Object::debugDescription(const std::string& indentation) const {
+auto Object::debugDescription(const std::string& indentation) const -> std::string {
   std::string s;
   bool first = true;
 
@@ -732,7 +732,7 @@ std::string Object::debugDescription(const std::string& indentation) const {
   return s;
 }
 
-std::string Object::toString() const {
+auto Object::toString() const -> std::string {
   std::string s;
   bool first = true;
 
@@ -775,53 +775,53 @@ std::string Object::toString() const {
   return s;
 }
 
-bool Object::is_instance(MetaClass* metaclass) const {
+auto Object::is_instance(MetaClass* metaclass) const -> bool {
   return _metaclass->is_a(metaclass);
 }
 
-bool Object::is_instance(const std::string& name) const {
+auto Object::is_instance(const std::string& name) const -> bool {
   return _metaclass->is_a(grt::GRT::get()->get_metaclass(name));
 }
 
-void Object::set_member(const std::string& member, const ValueRef& value) {
+auto Object::set_member(const std::string& member, const ValueRef& value) -> void {
   _metaclass->set_member_value(this, member, value);
 }
 
-ValueRef Object::get_member(const std::string& member) const {
+auto Object::get_member(const std::string& member) const -> ValueRef {
   return _metaclass->get_member_value(this, member);
 }
 
-bool Object::has_member(const std::string& member) const {
+auto Object::has_member(const std::string& member) const -> bool {
   return _metaclass->has_member(member);
 }
 
-bool Object::has_method(const std::string& method) const {
+auto Object::has_method(const std::string& method) const -> bool {
   return _metaclass->has_method(method);
 }
 
-std::string Object::get_string_member(const std::string& member) const {
+auto Object::get_string_member(const std::string& member) const -> std::string {
   return StringRef::extract_from(_metaclass->get_member_value(this, member));
 }
 
-Double::storage_type Object::get_double_member(const std::string& member) const {
+auto Object::get_double_member(const std::string& member) const -> Double::storage_type {
   return DoubleRef::extract_from(_metaclass->get_member_value(this, member));
 }
 
-Integer::storage_type Object::get_integer_member(const std::string& member) const {
+auto Object::get_integer_member(const std::string& member) const -> Integer::storage_type {
   return IntegerRef::extract_from(_metaclass->get_member_value(this, member));
 }
 
-ValueRef Object::call(const std::string& method, const BaseListRef& args) {
+auto Object::call(const std::string& method, const BaseListRef& args) -> ValueRef {
   return _metaclass->call_method(this, method, args);
 }
 
 /** Evil function to set ID of an object, use only if you know what you're doing.
  */
-void Object::__set_id(const std::string& id) {
+auto Object::__set_id(const std::string& id) -> void {
   _id = id;
 }
 
-bool process_reset_references_for_member(const MetaClass::Member* m, Object* obj) {
+auto process_reset_references_for_member(const MetaClass::Member* m, Object* obj) -> bool {
   if (m && !m->calculated && !grt::is_simple_type(m->type.base.type)) {
     // g_log("grt", G_LOG_LEVEL_DEBUG, "\tprocess_reset_references_for_member'%s':'%s':'%s'", obj->class_name().c_str(),
     // obj->id().c_str(), m->name.c_str());
@@ -839,15 +839,15 @@ bool process_reset_references_for_member(const MetaClass::Member* m, Object* obj
   return true;
 }
 
-void Object::reset_references() {
+auto Object::reset_references() -> void {
   // g_log("grt", G_LOG_LEVEL_DEBUG, "Object::reset_references for '%s':'%s'", class_name().c_str(), id().c_str());
   _metaclass->foreach_member(std::bind(&process_reset_references_for_member, std::placeholders::_1, this));
 }
 
-void Object::init() {
+auto Object::init() -> void {
 }
 
-static bool mark_global_(const MetaClass::Member* member, const Object* obj) {
+static auto mark_global_(const MetaClass::Member* member, const Object* obj) -> bool {
   if (is_container_type(member->type.base.type)) {
     ValueRef value(obj->get_member(member->name));
     if (value.is_valid())
@@ -856,13 +856,13 @@ static bool mark_global_(const MetaClass::Member* member, const Object* obj) {
   return true;
 }
 
-void Object::mark_global() const {
+auto Object::mark_global() const -> void {
   _is_global++;
   if (_is_global == 1)
     _metaclass->foreach_member(std::bind(&mark_global_, std::placeholders::_1, this));
 }
 
-static bool unmark_global_(const MetaClass::Member* member, const Object* obj) {
+static auto unmark_global_(const MetaClass::Member* member, const Object* obj) -> bool {
   if (is_container_type(member->type.base.type)) {
     ValueRef value(obj->get_member(member->name));
     if (value.is_valid())
@@ -871,21 +871,21 @@ static bool unmark_global_(const MetaClass::Member* member, const Object* obj) {
   return true;
 }
 
-void Object::unmark_global() const {
+auto Object::unmark_global() const -> void {
   _is_global--;
   if (_is_global == 0)
     _metaclass->foreach_member(std::bind(&unmark_global_, std::placeholders::_1, this));
 }
 
-bool Object::equals(const Value* o) const {
+auto Object::equals(const Value* o) const -> bool {
   return this == o;
 }
 
-bool Object::less_than(const Value* o) const {
+auto Object::less_than(const Value* o) const -> bool {
   return this < o;
 }
 
-void Object::owned_member_changed(const std::string& name, const grt::ValueRef& ovalue, const grt::ValueRef& nvalue) {
+auto Object::owned_member_changed(const std::string& name, const grt::ValueRef& ovalue, const grt::ValueRef& nvalue) -> void {
   if (_is_global) {
     if (ovalue != nvalue) {
       if (ovalue.is_valid())
@@ -899,25 +899,25 @@ void Object::owned_member_changed(const std::string& name, const grt::ValueRef& 
   _changed_signal(name, ovalue);
 }
 
-void Object::member_changed(const std::string& name, const grt::ValueRef& ovalue, const grt::ValueRef& nvalue) {
+auto Object::member_changed(const std::string& name, const grt::ValueRef& ovalue, const grt::ValueRef& nvalue) -> void {
   if (_is_global && grt::GRT::get()->tracking_changes())
     grt::GRT::get()->get_undo_manager()->add_undo(new UndoObjectChangeAction(this, name, ovalue));
   _changed_signal(name, ovalue);
 }
 
-void Object::owned_list_item_added(OwnedList* list, const grt::ValueRef& value) {
+auto Object::owned_list_item_added(OwnedList* list, const grt::ValueRef& value) -> void {
   _list_changed_signal(list, true, value);
 }
 
-void Object::owned_list_item_removed(OwnedList* list, const grt::ValueRef& value) {
+auto Object::owned_list_item_removed(OwnedList* list, const grt::ValueRef& value) -> void {
   _list_changed_signal(list, false, value);
 }
 
-void Object::owned_dict_item_set(OwnedDict* dict, const std::string& key) {
+auto Object::owned_dict_item_set(OwnedDict* dict, const std::string& key) -> void {
   _dict_changed_signal(dict, true, key);
 }
 
-void Object::owned_dict_item_removed(OwnedDict* dict, const std::string& key) {
+auto Object::owned_dict_item_removed(OwnedDict* dict, const std::string& key) -> void {
   _dict_changed_signal(dict, false, key);
 }
 
@@ -933,55 +933,55 @@ namespace {
 };
 
 class CountedTypeHandler : public TypeHandler {
-  static internal::Value* get_ptr(const TypeHandle& handle) {
+  static auto get_ptr(const TypeHandle& handle) -> internal::Value* {
     return static_cast<internal::Value*>(handle.refcounted_value.ptr_value);
   };
-  virtual void release(TypeHandle& handle) const {
+  virtual auto release(TypeHandle& handle) const -> void {
     get_ptr(handle)->release();
   };
 
-  virtual void retain(TypeHandle& handle) const {
+  virtual auto retain(TypeHandle& handle) const -> void {
     get_ptr(handle)->retain();
   };
-  virtual bool equals(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto equals(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return false;
     return get_ptr(handle)->equals(get_ptr(other.get_data()));
   };
 
-  virtual bool less_than(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto less_than(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (get_ptr(handle)->get_type() != other.type())
       return get_ptr(handle)->get_type() < other.type();
     return get_ptr(handle)->less_than(get_ptr(other.get_data()));
   };
-  virtual void reset_references(TypeHandle& handle) const {
+  virtual auto reset_references(TypeHandle& handle) const -> void {
     get_ptr(handle)->reset_references();
   };
-  virtual void clear(TypeHandle& handle) const {
+  virtual auto clear(TypeHandle& handle) const -> void {
     release(handle);
   };
-  virtual inline bool is_same(const TypeHandle& handle, const ValueRef& value) const {
+  virtual inline auto is_same(const TypeHandle& handle, const ValueRef& value) const -> bool {
     return get_ptr(handle) == value.valueptr();
   }
-  virtual inline Type type(const TypeHandle& handle) const {
+  virtual inline auto type(const TypeHandle& handle) const -> Type {
     return get_ptr(handle) ? get_ptr(handle)->get_type() : UnknownType;
   }
-  std::string debugDescription(const TypeHandle& handle) const {
+  auto debugDescription(const TypeHandle& handle) const -> std::string {
     return get_ptr(handle)->debugDescription();
   };
-  std::string toString(const TypeHandle& handle) const {
+  auto toString(const TypeHandle& handle) const -> std::string {
     return get_ptr(handle)->toString();
   };
-  virtual void mark_global(const TypeHandle& handle) const {
+  virtual auto mark_global(const TypeHandle& handle) const -> void {
     get_ptr(handle)->mark_global();
   };
-  virtual void unmark_global(const TypeHandle& handle) const {
+  virtual auto unmark_global(const TypeHandle& handle) const -> void {
     get_ptr(handle)->unmark_global();
   };
-  virtual internal::Value* valueptr(const TypeHandle& handle) const {
+  virtual auto valueptr(const TypeHandle& handle) const -> internal::Value* {
     return get_ptr(handle);
   };
-  virtual int refcount(const TypeHandle& handle) const {
+  virtual auto refcount(const TypeHandle& handle) const -> int {
     return get_ptr(handle)->refcount();
   };
 };
@@ -990,45 +990,45 @@ static CountedTypeHandler counted_handler;
 
 class NonCountedTypeHandler : public TypeHandler {
 public:
-  virtual void release(TypeHandle& handle) const {};
-  virtual void retain(TypeHandle& handle) const {};
-  virtual void reset_references(TypeHandle& handle) const {};
-  virtual void clear(TypeHandle& handle) const {};
-  virtual void mark_global(const TypeHandle& handle) const {};
-  virtual void unmark_global(const TypeHandle& handle) const {};
+  virtual auto release(TypeHandle& handle) const -> void {};
+  virtual auto retain(TypeHandle& handle) const -> void {};
+  virtual auto reset_references(TypeHandle& handle) const -> void {};
+  virtual auto clear(TypeHandle& handle) const -> void {};
+  virtual auto mark_global(const TypeHandle& handle) const -> void {};
+  virtual auto unmark_global(const TypeHandle& handle) const -> void {};
   // Type isn't counted thus there is no refcount
-  virtual int refcount(const TypeHandle& handle) const {
+  virtual auto refcount(const TypeHandle& handle) const -> int {
     return 1;
   };
-  virtual internal::Value* valueptr(const TypeHandle& handle) const { // kinda hack shouldn't exist at all
+  virtual auto valueptr(const TypeHandle& handle) const -> internal::Value* { // kinda hack shouldn't exist at all
     return static_cast<internal::Value*>(handle.refcounted_value.ptr_value);
   };
 };
 
 class DefaultTypeHandler : public NonCountedTypeHandler {
 public:
-  virtual Type type(const TypeHandle& handle) const {
+  virtual auto type(const TypeHandle& handle) const -> Type {
     return UnknownType;
   }
 
   // all empty valuerefs are equal so compare only type
-  virtual bool equals(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto equals(const TypeHandle& handle, const ValueRef& other) const -> bool {
     return other.type() == UnknownType;
   };
 
-  virtual bool less_than(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto less_than(const TypeHandle& handle, const ValueRef& other) const -> bool {
     return other.type() != UnknownType;
   };
 
-  virtual inline bool is_same(const TypeHandle& handle, const ValueRef& value) const {
+  virtual inline auto is_same(const TypeHandle& handle, const ValueRef& value) const -> bool {
     return value.type() == UnknownType;
   }
 
-  std::string debugDescription(const TypeHandle& handle) const {
+  auto debugDescription(const TypeHandle& handle) const -> std::string {
     return "NULL";
   };
 
-  std::string toString(const TypeHandle& handle) const {
+  auto toString(const TypeHandle& handle) const -> std::string {
     return "NULL";
   };
 };
@@ -1038,32 +1038,32 @@ TypeHandler* ValueRef::_defalut_handler = &default_handler;
 
 class DoubleTypeHandler : public NonCountedTypeHandler {
 public:
-  virtual Type type(const TypeHandle& handle) const {
+  virtual auto type(const TypeHandle& handle) const -> Type {
     return DoubleType;
   }
 
-  virtual bool equals(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto equals(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return false;
     return handle.double_value == other.get_data().double_value;
   };
 
-  virtual bool less_than(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto less_than(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return type(handle) < other.type();
 
     return handle.double_value < other.get_data().double_value;
   };
 
-  virtual inline bool is_same(const TypeHandle& handle, const ValueRef& value) const {
+  virtual inline auto is_same(const TypeHandle& handle, const ValueRef& value) const -> bool {
     return handle.double_value == value.get_data().double_value;
   }
 
-  std::string debugDescription(const TypeHandle& handle) const {
+  auto debugDescription(const TypeHandle& handle) const -> std::string {
     return toString(handle);
   };
 
-  std::string toString(const TypeHandle& handle) const {
+  auto toString(const TypeHandle& handle) const -> std::string {
     return std::to_string(handle.double_value);
   };
 };
@@ -1072,32 +1072,32 @@ static DoubleTypeHandler double_handler;
 
 class IntegerTypeHandler : public NonCountedTypeHandler {
 public:
-  virtual Type type(const TypeHandle& handle) const {
+  virtual auto type(const TypeHandle& handle) const -> Type {
     return IntegerType;
   }
 
-  virtual bool equals(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto equals(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return false;
     return handle.int_value == other.get_data().int_value;
   };
 
-  virtual bool less_than(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto less_than(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return type(handle) < other.type();
 
     return handle.int_value < other.get_data().int_value;
   };
 
-  virtual inline bool is_same(const TypeHandle& handle, const ValueRef& value) const {
+  virtual inline auto is_same(const TypeHandle& handle, const ValueRef& value) const -> bool {
     return handle.int_value == value.get_data().int_value;
   }
 
-  std::string debugDescription(const TypeHandle& handle) const {
+  auto debugDescription(const TypeHandle& handle) const -> std::string {
     return toString(handle);
   };
 
-  std::string toString(const TypeHandle& handle) const {
+  auto toString(const TypeHandle& handle) const -> std::string {
     return std::to_string(handle.int_value);
   };
 };
@@ -1107,45 +1107,45 @@ static IntegerTypeHandler int_handler;
 class StringTypeHandler : public TypeHandler {
 public:
   static const int small_string_size = 36;
-  static StringRef::storage_type get_ptr(const TypeHandle& handle) {
+  static auto get_ptr(const TypeHandle& handle) -> StringRef::storage_type {
     return handle.string_ptr;
   };
-  virtual bool equals(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto equals(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return false;
     return !strcmp(get_ptr(handle), get_ptr(other.get_data())); // get_ptr(handle)->equals(get_ptr(other.get_data()));
   };
 
-  virtual bool less_than(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto less_than(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return type(handle) < other.type();
     return strcmp(get_ptr(handle), get_ptr(other.get_data())) < 0;
   };
 
-  virtual void reset_references(TypeHandle& handle) const {};
+  virtual auto reset_references(TypeHandle& handle) const -> void {};
 
-  virtual void clear(TypeHandle& handle) const {
+  virtual auto clear(TypeHandle& handle) const -> void {
     release(handle);
   };
 
-  virtual inline bool is_same(const TypeHandle& handle, const ValueRef& value) const {
+  virtual inline auto is_same(const TypeHandle& handle, const ValueRef& value) const -> bool {
     return get_ptr(handle) == value.get_data().string_ptr;
   }
-  virtual inline Type type(const TypeHandle& handle) const {
+  virtual inline auto type(const TypeHandle& handle) const -> Type {
     return StringType;
   }
-  std::string debugDescription(const TypeHandle& handle) const {
+  auto debugDescription(const TypeHandle& handle) const -> std::string {
     return get_ptr(handle);
   };
-  std::string toString(const TypeHandle& handle) const {
+  auto toString(const TypeHandle& handle) const -> std::string {
     return get_ptr(handle);
   };
-  virtual void mark_global(const TypeHandle& handle) const {};
-  virtual void unmark_global(const TypeHandle& handle) const {};
-  virtual internal::Value* valueptr(const TypeHandle& handle) const {
+  virtual auto mark_global(const TypeHandle& handle) const -> void {};
+  virtual auto unmark_global(const TypeHandle& handle) const -> void {};
+  virtual auto valueptr(const TypeHandle& handle) const -> internal::Value* {
     return NULL;
   };
-  virtual int refcount(const TypeHandle& handle) const {
+  virtual auto refcount(const TypeHandle& handle) const -> int {
     return 1;
   };
 };
@@ -1170,19 +1170,19 @@ struct stringlogger {
     int release_count;
   };
   std::map<std::string, string_log_data> log;
-  void log_string_alloc(const char* str) {
+  auto log_string_alloc(const char* str) -> void {
     log[str].alloc_count++;
   };
 
-  void log_string_dealloc(const char* str) {
+  auto log_string_dealloc(const char* str) -> void {
     log[str].dealloc_count++;
   };
 
-  void log_string_retain(const char* str) {
+  auto log_string_retain(const char* str) -> void {
     log[str].retain_count++;
   };
 
-  void log_string_release(const char* str) {
+  auto log_string_release(const char* str) -> void {
     log[str].release_count++;
   };
 
@@ -1202,18 +1202,18 @@ stringlogger logger;
 static char empty_string = 0;
 class EmptyStringTypeHandler : public StringTypeHandler {
 public:
-  StringRef::storage_type allocate(const char* srcstring, const size_t len) const {
+  auto allocate(const char* srcstring, const size_t len) const -> StringRef::storage_type {
     return len ? NULL : &empty_string;
   };
 
-  virtual bool equals(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto equals(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return false;
     return get_ptr(other.get_data())[0] == 0;
   };
 
-  virtual void release(TypeHandle& handle) const {};
-  virtual void retain(TypeHandle& handle) const {};
+  virtual auto release(TypeHandle& handle) const -> void {};
+  virtual auto retain(TypeHandle& handle) const -> void {};
 };
 
 EmptyStringTypeHandler empty_string_handler;
@@ -1352,7 +1352,7 @@ public:
     std::sort(fixed_strins, fixed_strins + sizeof(fixed_strins) / sizeof(fixed_strins[0]), str_less_pred);
   }
 
-  StringRef::storage_type allocate(const char* srcstring, const size_t len) const {
+  auto allocate(const char* srcstring, const size_t len) const -> StringRef::storage_type {
     if (len >= small_string_size)
       return NULL;
     const char** found = std::lower_bound(fixed_strins, fixed_strins + sizeof(fixed_strins) / sizeof(fixed_strins[0]),
@@ -1362,14 +1362,14 @@ public:
     return NULL;
   };
 
-  virtual bool equals(const TypeHandle& handle, const ValueRef& other) const {
+  virtual auto equals(const TypeHandle& handle, const ValueRef& other) const -> bool {
     if (type(handle) != other.type())
       return false;
     return get_ptr(handle) == get_ptr(other.get_data());
   };
 
-  virtual void release(TypeHandle& handle) const {};
-  virtual void retain(TypeHandle& handle) const {};
+  virtual auto release(TypeHandle& handle) const -> void {};
+  virtual auto retain(TypeHandle& handle) const -> void {};
 };
 
 FixedStringTypeHandler fixed_string_handler;
@@ -1398,7 +1398,7 @@ public:
     g_static_mutex_free(&_allocation_mutex);
   }
 
-  StringRef::storage_type allocate(const char* srcstring, const size_t len) {
+  auto allocate(const char* srcstring, const size_t len) -> StringRef::storage_type {
     base::GStaticMutexLock lock(_allocation_mutex);
 
     if ((len >= small_string_size) || small_strings_stack.empty())
@@ -1411,7 +1411,7 @@ public:
     return block_ptr->buffer;
   };
 
-  virtual void release(TypeHandle& handle) const {
+  virtual auto release(TypeHandle& handle) const -> void {
 #ifdef STRING_ALLOCATION_LOGGER_ENABLED
     logger.log_string_release(get_ptr(handle));
 #endif
@@ -1423,7 +1423,7 @@ public:
     }
   };
 
-  virtual void retain(TypeHandle& handle) const {
+  virtual auto retain(TypeHandle& handle) const -> void {
 #ifdef STRING_ALLOCATION_LOGGER_ENABLED
     logger.log_string_retain(get_ptr(handle));
 #endif
@@ -1439,7 +1439,7 @@ ShortStringTypeHandler short_string_handler;
 
 class LongStringTypeHandler : public StringTypeHandler {
 public:
-  StringRef::storage_type allocate(const char* srcstring, const size_t len) const {
+  auto allocate(const char* srcstring, const size_t len) const -> StringRef::storage_type {
     size_t size = len + 1 + sizeof(CountedStringDataStruct);
     void* buffer = new char[size];
     memset(buffer, 0, sizeof(CountedStringDataStruct));
@@ -1448,7 +1448,7 @@ public:
     return string_buffer;
   };
 
-  virtual void release(TypeHandle& handle) const {
+  virtual auto release(TypeHandle& handle) const -> void {
 #ifdef STRING_ALLOCATION_LOGGER_ENABLED
     logger.log_string_release(get_ptr(handle));
 #endif
@@ -1459,7 +1459,7 @@ public:
       delete[](ptr);
   };
 
-  virtual void retain(TypeHandle& handle) const {
+  virtual auto retain(TypeHandle& handle) const -> void {
 #ifdef STRING_ALLOCATION_LOGGER_ENABLED
     logger.log_string_retain(get_ptr(handle));
 #endif
@@ -1470,7 +1470,7 @@ public:
 
 static LongStringTypeHandler long_string_handler;
 
-TypeHandler* grt::get_string_type_handler(TypeHandler::TypeHandle& handle, const char* srcstring, const size_t len) {
+auto grt::get_string_type_handler(TypeHandler::TypeHandle& handle, const char* srcstring, const size_t len) -> TypeHandler* {
 #ifdef STRING_ALLOCATION_LOGGER_ENABLED
   logger.log_string_alloc(srcstring);
 #endif
@@ -1487,15 +1487,15 @@ TypeHandler* grt::get_string_type_handler(TypeHandler::TypeHandle& handle, const
     throw std::runtime_error("String Allocation Failed");
 }
 
-TypeHandler* grt::get_int_type_handler() {
+auto grt::get_int_type_handler() -> TypeHandler* {
   return &int_handler;
 }
 
-TypeHandler* grt::get_double_type_handler() {
+auto grt::get_double_type_handler() -> TypeHandler* {
   return &double_handler;
 }
 
-TypeHandler* grt::get_object_type_handler() {
+auto grt::get_object_type_handler() -> TypeHandler* {
   return &counted_handler;
 };
 #endif

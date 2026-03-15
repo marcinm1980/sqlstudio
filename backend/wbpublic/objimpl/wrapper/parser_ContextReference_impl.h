@@ -26,5 +26,5 @@
 #include "grts/structs.wrapper.h"
 #include "grtsqlparser/mysql_parser_services.h"
 
-GRT_STRUCTS_WRAPPER_PUBLIC parsers::MySQLParserContext::Ref parser_context_from_grt(parser_ContextReferenceRef object);
-GRT_STRUCTS_WRAPPER_PUBLIC parser_ContextReferenceRef parser_context_to_grt(const parsers::MySQLParserContext::Ref &context);
+auto parser_context_from_grt(parser_ContextReferenceRef object) -> GRT_STRUCTS_WRAPPER_PUBLIC parsers::MySQLParserContext::Ref;
+auto parser_context_to_grt(const parsers::MySQLParserContext::Ref &context) -> GRT_STRUCTS_WRAPPER_PUBLIC parser_ContextReferenceRef;

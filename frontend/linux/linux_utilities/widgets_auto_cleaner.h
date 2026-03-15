@@ -40,10 +40,10 @@ public:
     add(w);
     return w;
   }
-  void delete_widgets();
+  auto delete_widgets() -> void;
 
 private:
-  void add(Gtk::Widget* w);
+  auto add(Gtk::Widget* w) -> void;
   std::vector<Gtk::Widget*> _widgets;
 };
 

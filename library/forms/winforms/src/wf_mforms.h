@@ -43,9 +43,9 @@ namespace MySQL {
     public:
       ~Manager();
 
-      static Manager ^ get_instance();
-      void instance_created();
-      void instance_destroyed();
+      static auto get_instance() -> Manager ^;
+      auto instance_created() -> void;
+      auto instance_destroyed() -> void;
     };
   }
 };

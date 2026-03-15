@@ -32,20 +32,20 @@
 //================================================================================
 // studio_physical_ViewFigure
 
-void studio_physical_ViewFigure::init() {
+auto studio_physical_ViewFigure::init() -> void {
   if (!_data)
     _data = new studio_physical_ViewFigure::ImplData(this);
   model_Figure::set_data(_data);
 }
 
-void studio_physical_ViewFigure::set_data(ImplData *data) {
+auto studio_physical_ViewFigure::set_data(ImplData *data) -> void {
 }
 
 studio_physical_ViewFigure::~studio_physical_ViewFigure() {
   delete _data;
 }
 
-void studio_physical_ViewFigure::view(const db_ViewRef &value) {
+auto studio_physical_ViewFigure::view(const db_ViewRef &value) -> void {
   if (_view == value)
     return;
   if (_view.is_valid() && value.is_valid())

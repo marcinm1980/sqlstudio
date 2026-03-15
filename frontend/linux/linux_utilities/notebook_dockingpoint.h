@@ -36,27 +36,27 @@ class NotebookDockingPoint : public mforms::DockingPointDelegate {
 public:
   NotebookDockingPoint(Gtk::Notebook *note, const std::string &type);
 
-  void set_notebook(Gtk::Notebook *note);
+  auto set_notebook(Gtk::Notebook *note) -> void;
 
   sigc::signal<void, bool> notebook_changed_signal;
 
-  void close_appview_page(mforms::AppView *page);
+  auto close_appview_page(mforms::AppView *page) -> void;
 
-  virtual std::string get_type() {
+  virtual auto get_type() -> std::string {
     return _type;
   }
 
-  virtual void set_name(const std::string &name);
-  virtual void dock_view(mforms::AppView *view, const std::string &arg1, int arg2);
-  virtual bool select_view(mforms::AppView *view);
-  virtual void undock_view(mforms::AppView *view);
-  virtual void set_view_title(mforms::AppView *view, const std::string &title);
-  virtual std::pair<int, int> get_size();
-  virtual mforms::AppView *selected_view();
-  virtual int view_count();
-  virtual mforms::AppView *view_at_index(int index);
+  virtual auto set_name(const std::string &name) -> void;
+  virtual auto dock_view(mforms::AppView *view, const std::string &arg1, int arg2) -> void;
+  virtual auto select_view(mforms::AppView *view) -> bool;
+  virtual auto undock_view(mforms::AppView *view) -> void;
+  virtual auto set_view_title(mforms::AppView *view, const std::string &title) -> void;
+  virtual auto get_size() -> std::pair<int, int>;
+  virtual auto selected_view() -> mforms::AppView *;
+  virtual auto view_count() -> int;
+  virtual auto view_at_index(int index) -> mforms::AppView *;
 
-  bool close_page(Gtk::Widget *w);
+  auto close_page(Gtk::Widget *w) -> bool;
 };
 
 #endif

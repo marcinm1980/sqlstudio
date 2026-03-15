@@ -42,10 +42,10 @@ model_Figure::ImplData::ImplData(model_Figure *owner) : model_Object::ImplData(o
                                                     std::placeholders::_1, std::placeholders::_2));
 }
 
-void model_Figure::ImplData::update_options(const std::string &key) {
+auto model_Figure::ImplData::update_options(const std::string &key) -> void {
 }
 
-void model_Figure::ImplData::set_layer(const model_LayerRef &nlayer) {
+auto model_Figure::ImplData::set_layer(const model_LayerRef &nlayer) -> void {
   model_LayerRef oldLayer(self()->_layer);
 
   if (is_canvas_view_valid())
@@ -83,7 +83,7 @@ void model_Figure::ImplData::set_layer(const model_LayerRef &nlayer) {
   try_realize();
 }
 
-void model_Figure::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) {
+auto model_Figure::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void {
   if (name == "name") {
     if (_in_view) {
       (*self()->owner()->signal_refreshDisplay())(self());
@@ -189,7 +189,7 @@ void model_Figure::ImplData::member_changed(const std::string &name, const grt::
   }
 }
 
-bool model_Figure::ImplData::is_realizable() {
+auto model_Figure::ImplData::is_realizable() -> bool {
   if (_in_view && *self()->_visible && self()->layer().is_valid()) {
     model_Layer::ImplData *layer = self()->_layer->get_data();
     model_Diagram::ImplData *view = self()->owner()->get_data();
@@ -200,7 +200,7 @@ bool model_Figure::ImplData::is_realizable() {
   return false;
 }
 
-void model_Figure::ImplData::figure_bounds_changed(const Rect &rect) {
+auto model_Figure::ImplData::figure_bounds_changed(const Rect &rect) -> void {
   Rect bounds(get_canvas_item()->get_bounds());
 
   self()->_left = grt::DoubleRef(bounds.left());
@@ -218,7 +218,7 @@ void model_Figure::ImplData::figure_bounds_changed(const Rect &rect) {
  * The figure already has its final bounds at this point. We mostly create proper undo
  * records here.
  */
-void model_Figure::ImplData::figure_resized(const Rect &rect) {
+auto model_Figure::ImplData::figure_resized(const Rect &rect) -> void {
   Rect bounds = get_canvas_item()->get_bounds();
 
   model_Model::ImplData *model = self()->owner()->owner()->get_data();
@@ -241,7 +241,7 @@ void model_Figure::ImplData::figure_resized(const Rect &rect) {
 
 //--------------------------------------------------------------------------------------------------
 
-void model_Figure::ImplData::finish_realize() {
+auto model_Figure::ImplData::finish_realize() -> void {
   Size size;
   Point pos;
   wbfig::BaseFigure *figure = ((wbfig::BaseFigure *)get_canvas_item());
@@ -312,17 +312,17 @@ void model_Figure::ImplData::finish_realize() {
   _realizing = false;
 }
 
-void model_Figure::ImplData::highlight(const Color *color) {
+auto model_Figure::ImplData::highlight(const Color *color) -> void {
   if (get_canvas_item())
     dynamic_cast<wbfig::BaseFigure *>(get_canvas_item())->highlight(color);
 }
 
-void model_Figure::ImplData::unhighlight() {
+auto model_Figure::ImplData::unhighlight() -> void {
   if (get_canvas_item())
     dynamic_cast<wbfig::BaseFigure *>(get_canvas_item())->unhighlight();
 }
 
-void model_Figure::ImplData::render_mini(mdc::CairoCtx *cr) {
+auto model_Figure::ImplData::render_mini(mdc::CairoCtx *cr) -> void {
   Rect rect = get_canvas_item()->get_bounds();
 
   cr->set_color(Color::parse(*self()->_color));
@@ -330,7 +330,7 @@ void model_Figure::ImplData::render_mini(mdc::CairoCtx *cr) {
   cr->fill();
 }
 
-void model_Figure::ImplData::unrealize() {
+auto model_Figure::ImplData::unrealize() -> void {
   if (get_canvas_item()) {
     get_canvas_item()->get_view()->remove_item(get_canvas_item());
   }
@@ -338,7 +338,7 @@ void model_Figure::ImplData::unrealize() {
 
 //--------------------------------------------------------------------------------------------------
 
-mdc::CanvasView *model_Figure::ImplData::get_canvas_view() const {
+auto model_Figure::ImplData::get_canvas_view() const -> mdc::CanvasView * {
   if (self()->owner().is_valid()) {
     model_Diagram::ImplData *view = self()->owner()->get_data();
     if (view)
@@ -349,7 +349,7 @@ mdc::CanvasView *model_Figure::ImplData::get_canvas_view() const {
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Figure::ImplData::is_canvas_view_valid() {
+auto model_Figure::ImplData::is_canvas_view_valid() -> bool {
   if (self()->owner().is_valid()) {
     model_Diagram::ImplData *view = self()->owner()->get_data();
     if (view)
@@ -360,7 +360,7 @@ bool model_Figure::ImplData::is_canvas_view_valid() {
 
 //--------------------------------------------------------------------------------------------------
 
-void model_Figure::ImplData::relayout_badges() {
+auto model_Figure::ImplData::relayout_badges() -> void {
   if (!_badges.empty() && get_canvas_item()) {
     Rect bounds(get_canvas_item()->get_root_bounds());
     Point pos;
@@ -379,14 +379,14 @@ void model_Figure::ImplData::relayout_badges() {
   }
 }
 
-void model_Figure::ImplData::add_badge(BadgeFigure *badge) {
+auto model_Figure::ImplData::add_badge(BadgeFigure *badge) -> void {
   badge->set_visible(false);
   _badges.push_back(badge);
 
   relayout_badges();
 }
 
-void model_Figure::ImplData::remove_badge(BadgeFigure *badge) {
+auto model_Figure::ImplData::remove_badge(BadgeFigure *badge) -> void {
   std::list<BadgeFigure *>::iterator iter = std::find(_badges.begin(), _badges.end(), badge);
 
   if (iter != _badges.end())
@@ -395,7 +395,7 @@ void model_Figure::ImplData::remove_badge(BadgeFigure *badge) {
   relayout_badges();
 }
 
-BadgeFigure *model_Figure::ImplData::get_badge_with_id(const std::string &badge_id) {
+auto model_Figure::ImplData::get_badge_with_id(const std::string &badge_id) -> BadgeFigure * {
   for (std::list<BadgeFigure *>::const_iterator iter = _badges.begin(); iter != _badges.end(); ++iter) {
     if ((*iter)->badge_id() == badge_id)
       return *iter;

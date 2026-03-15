@@ -35,12 +35,12 @@
 using namespace mforms;
 
 #if GTK_VERSION_GT(2, 16)
-static void clear_text_clicked(Gtk::EntryIconPosition pos, const GdkEventButton *, Gtk::Entry *entry) {
+static auto clear_text_clicked(Gtk::EntryIconPosition pos, const GdkEventButton *, Gtk::Entry *entry) -> void {
   if (pos == Gtk::ENTRY_ICON_SECONDARY)
     entry->set_text("");
 }
 
-static void text_changed(Gtk::Entry *entry) {
+static auto text_changed(Gtk::Entry *entry) -> void {
   if (!entry->get_text().empty())
     entry->set_icon_from_stock(Gtk::Stock::CLEAR, Gtk::ENTRY_ICON_SECONDARY);
   else
@@ -48,7 +48,7 @@ static void text_changed(Gtk::Entry *entry) {
 }
 #endif
 
-static void toggle_bool(bool &b, Gtk::CheckMenuItem *item) {
+static auto toggle_bool(bool &b, Gtk::CheckMenuItem *item) -> void {
   b = item->get_active();
 }
 
@@ -154,7 +154,7 @@ public:
     
   }
 
-  void find_clicked() {
+  auto find_clicked() -> void {
     if (_find_radio_button->get_active()) {
         _replace_entry->hide();
         _replace_box->hide();
@@ -162,12 +162,12 @@ public:
     }
   }
 
-  void replace_clicked() {
+  auto replace_clicked() -> void {
     if (_replace_radio_button->get_active())
       _container->show_all();
   }
 
-  bool on_find_key_press(GdkEventKey *key) {
+  auto on_find_key_press(GdkEventKey *key) -> bool {
     if (key->keyval == GDK_KEY_Escape) {
       dynamic_cast<mforms::FindPanel *>(owner)->get_editor()->hide_find_panel();
       return true;
@@ -175,7 +175,7 @@ public:
     return false;
   }
 
-  void find_icon_press(Gtk::EntryIconPosition pos, const GdkEventButton *ev) {
+  auto find_icon_press(Gtk::EntryIconPosition pos, const GdkEventButton *ev) -> void {
     if (ev->button == 1 && pos == Gtk::ENTRY_ICON_PRIMARY) {
       // update the menu
       {
@@ -194,12 +194,12 @@ public:
     }
   }
 
-  void find_text_changed() {
+  auto find_text_changed() -> void {
     if (_find_status)
       _find_status->set_text("");
   }
 
-  void clear_search_history() {
+  auto clear_search_history() -> void {
     if (_search_menu) {
       std::vector<Gtk::Widget *> children = _search_menu->get_children();
       while (children.size() > 8) {
@@ -213,11 +213,11 @@ public:
     }
   }
 
-  virtual Gtk::Widget *get_outer() const {
+  virtual auto get_outer() const -> Gtk::Widget * {
     return _container;
   }
 
-  size_t perform_action(FindPanelAction action) {
+  auto perform_action(FindPanelAction action) -> size_t {
     std::string find_text = _find_entry->get_text();
     std::string repl_text = _replace_entry->get_text();
     CodeEditor *editor = dynamic_cast<FindPanel *>(owner)->get_editor();
@@ -278,21 +278,21 @@ public:
   }
 
 public:
-  static bool create(FindPanel *fp) {
+  static auto create(FindPanel *fp) -> bool {
     return new FindPanelImpl(fp) != 0;
   }
 
-  static size_t perform_action(FindPanel *fp, FindPanelAction action) {
+  static auto perform_action(FindPanel *fp, FindPanelAction action) -> size_t {
     FindPanelImpl *self = fp->get_data<FindPanelImpl>();
     return self->perform_action(action);
   }
 
-  static void focus(FindPanel *fp) {
+  static auto focus(FindPanel *fp) -> void {
     FindPanelImpl *self = fp->get_data<FindPanelImpl>();
     self->_find_entry->grab_focus();
   }
 
-  static void enable_replace(FindPanel *fp, bool flag) {
+  static auto enable_replace(FindPanel *fp, bool flag) -> void {
     FindPanelImpl *self = fp->get_data<FindPanelImpl>();
     flag ? self->_replace_radio_button->set_active(true) : self->_find_radio_button->set_active(true);
     // all find only widgets are marked No Show All, so we can use hide/show-all to hide the replace part
@@ -305,7 +305,7 @@ public:
   }
 };
 
-void lf_findpanel_init() {
+auto lf_findpanel_init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_findpanel_impl.create = &FindPanelImpl::create;

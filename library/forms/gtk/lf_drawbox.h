@@ -49,7 +49,7 @@ namespace mforms {
         int _bottom;
       };
 
-      void *on_repaint();
+      auto on_repaint() -> void *;
 
     protected:
       Gtk::EventBox* _darea;
@@ -67,7 +67,7 @@ namespace mforms {
 
       std::map<Gtk::Widget *, AlignControl> _alignments;
 
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _darea;
       }
 
@@ -75,26 +75,26 @@ namespace mforms {
       virtual ~DrawBoxImpl();
       bool repaint(const ::Cairo::RefPtr< ::Cairo::Context> &context, ::mforms::DrawBox *self);
       bool relayout(::mforms::DrawBox *self);
-      void on_size_allocate(Gtk::Allocation &alloc, ::mforms::DrawBox *self);
-      bool mouse_button_event(GdkEventButton *event, ::mforms::DrawBox *self);
-      bool mouse_move_event(GdkEventMotion *event, ::mforms::DrawBox *self);
+      auto on_size_allocate(Gtk::Allocation &alloc, ::mforms::DrawBox *self) -> void;
+      auto mouse_button_event(GdkEventButton *event, ::mforms::DrawBox *self) -> bool;
+      auto mouse_move_event(GdkEventMotion *event, ::mforms::DrawBox *self) -> bool;
 
-      static bool create(::mforms::DrawBox *self);
-      static void set_needs_repaint(::mforms::DrawBox *self);
-      static void add(::mforms::DrawBox *self, ::mforms::View *view, mforms::Alignment alignment);
-      static void remove(::mforms::DrawBox *self, ::mforms::View *view);
-      static void move(::mforms::DrawBox *self, ::mforms::View *view, int x, int y);
-      virtual void set_padding_impl(int left, int top, int right, int bottom);
-      static void drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base::Rect r);
+      static auto create(::mforms::DrawBox *self) -> bool;
+      static auto set_needs_repaint(::mforms::DrawBox *self) -> void;
+      static auto add(::mforms::DrawBox *self, ::mforms::View *view, mforms::Alignment alignment) -> void;
+      static auto remove(::mforms::DrawBox *self, ::mforms::View *view) -> void;
+      static auto move(::mforms::DrawBox *self, ::mforms::View *view, int x, int y) -> void;
+      virtual auto set_padding_impl(int left, int top, int right, int bottom) -> void;
+      static auto drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base::Rect r) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
 
-      virtual void set_size(int width, int height);
+      virtual auto set_size(int width, int height) -> void;
 
-      void add(::mforms::View *view, mforms::Alignment alignment);
+      auto add(::mforms::View *view, mforms::Alignment alignment) -> void;
       void remove(::mforms::View *view);
-      void move(::mforms::View *view, int x, int y);
+      auto move(::mforms::View *view, int x, int y) -> void;
     };
   };
 };

@@ -37,12 +37,12 @@ Box::Box(Layer *layer, Orientation orient, bool homogeneous) : Layouter(layer) {
 Box::~Box() {
 }
 
-void Box::set_spacing(float sp) {
+auto Box::set_spacing(float sp) -> void {
   _spacing = sp;
   set_needs_relayout();
 }
 
-void Box::foreach (const std::function<void(CanvasItem *)> &slot) {
+auto Box::foreach (const std::function<void(CanvasItem *)> &slot) -> void {
   for (ItemList::const_iterator iter = _children.begin(); iter != _children.end();) {
     ItemList::const_iterator next = iter;
     ++next;
@@ -51,7 +51,7 @@ void Box::foreach (const std::function<void(CanvasItem *)> &slot) {
   }
 }
 
-void Box::render(CairoCtx *cr) {
+auto Box::render(CairoCtx *cr) -> void {
   Layouter::render(cr);
 
   cr->translate(get_position());
@@ -66,7 +66,7 @@ void Box::render(CairoCtx *cr) {
   }
 }
 
-CanvasItem *Box::get_item_at(const Point &pos) {
+auto Box::get_item_at(const Point &pos) -> CanvasItem * {
   Point npos = pos - get_position();
 
   for (ItemList::reverse_iterator iter = _children.rbegin(); iter != _children.rend(); ++iter) {
@@ -83,7 +83,7 @@ CanvasItem *Box::get_item_at(const Point &pos) {
   return 0;
 }
 
-void Box::add(CanvasItem *item, bool expand, bool fill, bool hiddenspace) {
+auto Box::add(CanvasItem *item, bool expand, bool fill, bool hiddenspace) -> void {
   BoxItem bitem;
 
   bitem.item = item;
@@ -97,7 +97,7 @@ void Box::add(CanvasItem *item, bool expand, bool fill, bool hiddenspace) {
   set_needs_relayout();
 }
 
-void Box::insert_after(CanvasItem *after, CanvasItem *item, bool expand, bool fill, bool hiddenspace) {
+auto Box::insert_after(CanvasItem *after, CanvasItem *item, bool expand, bool fill, bool hiddenspace) -> void {
   BoxItem bitem;
 
   bitem.item = item;
@@ -122,7 +122,7 @@ void Box::insert_after(CanvasItem *after, CanvasItem *item, bool expand, bool fi
   set_needs_relayout();
 }
 
-void Box::insert_before(CanvasItem *before, CanvasItem *item, bool expand, bool fill, bool hiddenspace) {
+auto Box::insert_before(CanvasItem *before, CanvasItem *item, bool expand, bool fill, bool hiddenspace) -> void {
   BoxItem bitem;
 
   bitem.item = item;
@@ -151,7 +151,7 @@ void Box::insert_before(CanvasItem *before, CanvasItem *item, bool expand, bool 
   set_needs_relayout();
 }
 
-void Box::remove(CanvasItem *item) {
+auto Box::remove(CanvasItem *item) -> void {
   for (ItemList::iterator iter = _children.begin(); iter != _children.end(); ++iter) {
     if (iter->item == item) {
       item->set_parent(0);
@@ -163,7 +163,7 @@ void Box::remove(CanvasItem *item) {
   set_needs_relayout();
 }
 
-Size Box::calc_min_size() {
+auto Box::calc_min_size() -> Size {
   Size size;
   int count = 0;
 
@@ -233,7 +233,7 @@ Size Box::calc_min_size() {
   return size;
 }
 
-void Box::resize_to(const Size &size) {
+auto Box::resize_to(const Size &size) -> void {
   double x, y;
   double width, height;
   int num_visible = 0;

@@ -29,7 +29,7 @@
 #include <string.h>
 
 //------------------------------------------------------------------------------
-void TreeModelWrapper::update_root_node(const bec::NodeId& root_node) {
+auto TreeModelWrapper::update_root_node(const bec::NodeId& root_node) -> void {
   _root_node_path = root_node.toString();
   _root_node_path_dot = root_node.toString() + ".";
 
@@ -66,14 +66,14 @@ void TreeModelWrapper::update_root_node(const bec::NodeId& root_node) {
 //}
 
 //------------------------------------------------------------------------------
-bec::NodeId TreeModelWrapper::get_node_for_path(const Gtk::TreeModel::Path& path) const {
+auto TreeModelWrapper::get_node_for_path(const Gtk::TreeModel::Path& path) const -> bec::NodeId {
   if (path.empty())
     return _root_node_path_dot;
   return bec::NodeId(_root_node_path_dot + path.to_string());
 }
 
 //------------------------------------------------------------------------------
-bool TreeModelWrapper::get_iter_vfunc(const Path& path, iterator& iter) const {
+auto TreeModelWrapper::get_iter_vfunc(const Path& path, iterator& iter) const -> bool {
   if (!tm() || _invalid)
     return false;
 
@@ -93,7 +93,7 @@ bool TreeModelWrapper::get_iter_vfunc(const Path& path, iterator& iter) const {
   return ret;
 }
 
-Gtk::TreeModel::Path TreeModelWrapper::get_path_vfunc(const iterator& iter) const {
+auto TreeModelWrapper::get_path_vfunc(const iterator& iter) const -> Gtk::TreeModel::Path {
   bec::NodeId node = node_for_iter(iter);
   Gtk::TreeModel::Path path;
 
@@ -110,7 +110,7 @@ Gtk::TreeModel::Path TreeModelWrapper::get_path_vfunc(const iterator& iter) cons
 
 //------------------------------------------------------------------------------
 
-void TreeModelWrapper::tree_row_collapsed(const iterator& iter, const Path& path) {
+auto TreeModelWrapper::tree_row_collapsed(const iterator& iter, const Path& path) -> void {
   if (tm()) {
     if (_expanded_rows)
       _expanded_rows->erase(path.to_string());
@@ -121,7 +121,7 @@ void TreeModelWrapper::tree_row_collapsed(const iterator& iter, const Path& path
 
 //------------------------------------------------------------------------------
 
-void TreeModelWrapper::tree_row_expanded(const iterator& iter, const Path& path) {
+auto TreeModelWrapper::tree_row_expanded(const iterator& iter, const Path& path) -> void {
   if (tm()) {
     if (_expanded_rows)
       _expanded_rows->insert(path.to_string());
@@ -131,8 +131,8 @@ void TreeModelWrapper::tree_row_expanded(const iterator& iter, const Path& path)
 }
 
 //------------------------------------------------------------------------------
-void TreeModelWrapper::get_icon_value(const iterator& iter, int column, const bec::NodeId& node,
-                                      Glib::ValueBase& value) const {
+auto TreeModelWrapper::get_icon_value(const iterator& iter, int column, const bec::NodeId& node,
+                                      Glib::ValueBase& value) const -> void {
   if (!tm())
     return;
 
@@ -168,7 +168,7 @@ void TreeModelWrapper::get_icon_value(const iterator& iter, int column, const be
 
 //------------------------------------------------------------------------------
 
-Gtk::TreeModelFlags TreeModelWrapper::get_flags_vfunc() const {
+auto TreeModelWrapper::get_flags_vfunc() const -> Gtk::TreeModelFlags {
   if (_show_as_list)
     return Gtk::TREE_MODEL_ITERS_PERSIST | Gtk::TREE_MODEL_LIST_ONLY;
   else
@@ -176,13 +176,13 @@ Gtk::TreeModelFlags TreeModelWrapper::get_flags_vfunc() const {
 }
 
 //------------------------------------------------------------------------------
-bool TreeModelWrapper::iter_children_vfunc(const iterator& parent, iterator& iter) const {
+auto TreeModelWrapper::iter_children_vfunc(const iterator& parent, iterator& iter) const -> bool {
   // dprint("%s\n", __FUNCTION__);
   return _show_as_list ? false : iter_nth_child_vfunc(parent, 0, iter);
 }
 
 //------------------------------------------------------------------------------
-bool TreeModelWrapper::iter_parent_vfunc(const iterator& child, iterator& iter) const {
+auto TreeModelWrapper::iter_parent_vfunc(const iterator& child, iterator& iter) const -> bool {
   // dprint("%s\n", __FUNCTION__);
   bool ret = false;
   if (tm()) {
@@ -206,7 +206,7 @@ bool TreeModelWrapper::iter_parent_vfunc(const iterator& child, iterator& iter) 
 }
 
 //------------------------------------------------------------------------------
-bool TreeModelWrapper::iter_nth_child_vfunc(const iterator& parent, int n, iterator& iter) const {
+auto TreeModelWrapper::iter_nth_child_vfunc(const iterator& parent, int n, iterator& iter) const -> bool {
   // dprint("%s\n", __FUNCTION__);
   // Sets @a iter to be the child of @a parent using the given index.  The first
   // index is 0.  If @a n is too big, or @a parent has no children, @a iter is set
@@ -236,7 +236,7 @@ bool TreeModelWrapper::iter_nth_child_vfunc(const iterator& parent, int n, itera
 }
 
 //------------------------------------------------------------------------------
-bool TreeModelWrapper::iter_nth_root_child_vfunc(int n, iterator& iter) const {
+auto TreeModelWrapper::iter_nth_root_child_vfunc(int n, iterator& iter) const -> bool {
   // dprint("%s(n = %i), _tm->count() = %i   (as list=%i)\n", __FUNCTION__, n, _tm->count(), _show_as_list);
   bool ret = false;
   bec::NodeId root_node(_root_node_path);
@@ -255,7 +255,7 @@ bool TreeModelWrapper::iter_nth_root_child_vfunc(int n, iterator& iter) const {
 }
 
 //------------------------------------------------------------------------------
-bool TreeModelWrapper::iter_has_child_vfunc(const iterator& iter) const {
+auto TreeModelWrapper::iter_has_child_vfunc(const iterator& iter) const -> bool {
   if (_invalid)
     return false;
 
@@ -265,7 +265,7 @@ bool TreeModelWrapper::iter_has_child_vfunc(const iterator& iter) const {
 }
 
 //------------------------------------------------------------------------------
-int TreeModelWrapper::iter_n_children_vfunc(const iterator& iter) const {
+auto TreeModelWrapper::iter_n_children_vfunc(const iterator& iter) const -> int {
   if (!_children_count_enabled)
     return 1;
 
@@ -286,7 +286,7 @@ int TreeModelWrapper::iter_n_children_vfunc(const iterator& iter) const {
 }
 
 //------------------------------------------------------------------------------
-int TreeModelWrapper::iter_n_root_children_vfunc() const {
+auto TreeModelWrapper::iter_n_root_children_vfunc() const -> int {
   const bec::NodeId parent(_root_node_path);
   const int ret = tm() ? tm()->count_children(parent) : 0;
 
@@ -296,13 +296,13 @@ int TreeModelWrapper::iter_n_root_children_vfunc() const {
 }
 
 //------------------------------------------------------------------------------
-void TreeModelWrapper::block_expand_collapse_signals() {
+auto TreeModelWrapper::block_expand_collapse_signals() -> void {
   _expand_signal.block();
   _collapse_signal.block();
 }
 
 //------------------------------------------------------------------------------
-void TreeModelWrapper::unblock_expand_collapse_signals() {
+auto TreeModelWrapper::unblock_expand_collapse_signals() -> void {
   _expand_signal.unblock();
   _collapse_signal.unblock();
 }

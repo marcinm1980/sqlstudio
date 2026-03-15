@@ -36,20 +36,20 @@ class WBEDITOR_BACKEND_PUBLIC_FUNC ImageEditorBE : public bec::BaseEditor {
 public:
   ImageEditorBE(const studio_model_ImageFigureRef &image);
 
-  virtual bool should_close_on_delete_of(const std::string &oid);
+  virtual auto should_close_on_delete_of(const std::string &oid) -> bool;
 
-  void get_size(int &w, int &h);
-  void set_size(int w, int h);
-  void set_width(int w);
-  void set_height(int h);
+  auto get_size(int &w, int &h) -> void;
+  auto set_size(int w, int h) -> void;
+  auto set_width(int w) -> void;
+  auto set_height(int h) -> void;
 
-  bool get_keep_aspect_ratio();
-  void set_keep_aspect_ratio(bool flag);
+  auto get_keep_aspect_ratio() -> bool;
+  auto set_keep_aspect_ratio(bool flag) -> void;
 
-  void set_filename(const std::string &text);
-  std::string get_filename() const;
+  auto set_filename(const std::string &text) -> void;
+  auto get_filename() const -> std::string;
 
-  std::string get_attached_image_path();
+  auto get_attached_image_path() -> std::string;
 
-  virtual std::string get_title();
+  virtual auto get_title() -> std::string;
 };

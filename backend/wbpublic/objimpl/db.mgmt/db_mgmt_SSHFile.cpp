@@ -35,7 +35,7 @@ db_mgmt_SSHFile::ImplData::~ImplData() {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHFile::init() {
+auto db_mgmt_SSHFile::init() -> void {
 //  if (!_data)
 //    _data = new db_mgmt_SSHFile::ImplData();
 }
@@ -48,13 +48,13 @@ db_mgmt_SSHFile::~db_mgmt_SSHFile() {
 
 //------------------------------------------------------------------------------------------------
 
-void db_mgmt_SSHFile::set_data(ImplData *data) {
+auto db_mgmt_SSHFile::set_data(ImplData *data) -> void {
   _data = data;
 }
 
 //------------------------------------------------------------------------------------------------
 
-grt::StringRef db_mgmt_SSHFile::getPath() {
+auto db_mgmt_SSHFile::getPath() -> grt::StringRef {
   if (_data)
     return _data->getPath();
   return "";
@@ -62,7 +62,7 @@ grt::StringRef db_mgmt_SSHFile::getPath() {
 
 //------------------------------------------------------------------------------------------------
 
-grt::StringRef db_mgmt_SSHFile::read(ssize_t length) {
+auto db_mgmt_SSHFile::read(ssize_t length) -> grt::StringRef {
   if (_data)
     return _data->read(length);
   return "";
@@ -70,7 +70,7 @@ grt::StringRef db_mgmt_SSHFile::read(ssize_t length) {
 
 //------------------------------------------------------------------------------------------------
 
-grt::StringRef db_mgmt_SSHFile::readline() {
+auto db_mgmt_SSHFile::readline() -> grt::StringRef {
   if (_data)
     return _data->readline();
   return "";
@@ -78,7 +78,7 @@ grt::StringRef db_mgmt_SSHFile::readline() {
 
 //------------------------------------------------------------------------------------------------
 
-grt::IntegerRef db_mgmt_SSHFile::seek(ssize_t offset) {
+auto db_mgmt_SSHFile::seek(ssize_t offset) -> grt::IntegerRef {
   if (_data)
     return _data->seek(offset);
   return -1;
@@ -86,7 +86,7 @@ grt::IntegerRef db_mgmt_SSHFile::seek(ssize_t offset) {
 
 //------------------------------------------------------------------------------------------------
 
-grt::IntegerRef db_mgmt_SSHFile::tell() {
+auto db_mgmt_SSHFile::tell() -> grt::IntegerRef {
   if (_data)
     return _data->tell();
   return -1;

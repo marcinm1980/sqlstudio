@@ -34,21 +34,21 @@ namespace mforms {
     class ListBoxWrapper : public ViewWrapper {
     protected:
       ListBoxWrapper(mforms::ListBox *self, bool multi_select);
-      static bool create(mforms::ListBox *self, bool multi_select);
-      static void clear(mforms::ListBox *self);
-      static void set_heading(ListBox *self, const std::string &text);
-      static void add_items(mforms::ListBox *self, const std::list<std::string> &items);
-      static size_t add_item(mforms::ListBox *self, const std::string &item);
-      static void remove_indexes(mforms::ListBox *self, const std::vector<size_t> &items);
-      static void remove_index(mforms::ListBox *self, size_t index);
-      static std::string get_text(mforms::ListBox *self);
-      static void set_index(mforms::ListBox *self, ssize_t index);
-      static ssize_t get_index(mforms::ListBox *self);
-      static std::vector<size_t> get_selected_indices(ListBox *self);
-      static size_t getCount(ListBox *self);
-      static std::string getStringValueFromIndex(ListBox *self, size_t index);
+      static auto create(mforms::ListBox *self, bool multi_select) -> bool;
+      static auto clear(mforms::ListBox *self) -> void;
+      static auto set_heading(ListBox *self, const std::string &text) -> void;
+      static auto add_items(mforms::ListBox *self, const std::list<std::string> &items) -> void;
+      static auto add_item(mforms::ListBox *self, const std::string &item) -> size_t;
+      static auto remove_indexes(mforms::ListBox *self, const std::vector<size_t> &items) -> void;
+      static auto remove_index(mforms::ListBox *self, size_t index) -> void;
+      static auto get_text(mforms::ListBox *self) -> std::string;
+      static auto set_index(mforms::ListBox *self, ssize_t index) -> void;
+      static auto get_index(mforms::ListBox *self) -> ssize_t;
+      static auto get_selected_indices(ListBox *self) -> std::vector<size_t>;
+      static auto getCount(ListBox *self) -> size_t;
+      static auto getStringValueFromIndex(ListBox *self, size_t index) -> std::string;
     public:
-      static void init();
+      static auto init() -> void;
     };
   }
 }

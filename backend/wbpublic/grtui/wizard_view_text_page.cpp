@@ -64,7 +64,7 @@ ViewTextPage::ViewTextPage(WizardForm *form, const char *name, Buttons buttons, 
   add_end(&_text, true, true);
 }
 
-void ViewTextPage::set_text(const std::string &text) {
+auto ViewTextPage::set_text(const std::string &text) -> void {
   bool editable = _editable;
   if (!editable)
     set_editable(true);
@@ -73,16 +73,16 @@ void ViewTextPage::set_text(const std::string &text) {
     set_editable(false);
 }
 
-std::string ViewTextPage::get_text() {
+auto ViewTextPage::get_text() -> std::string {
   return _text.get_string_value();
 }
 
-void ViewTextPage::set_editable(bool flag) {
+auto ViewTextPage::set_editable(bool flag) -> void {
   _editable = flag;
   _text.set_features(mforms::FeatureReadOnly, !flag);
 }
 
-void ViewTextPage::save_clicked() {
+auto ViewTextPage::save_clicked() -> void {
   mforms::FileChooser fsel(mforms::SaveFile);
 
   fsel.set_extensions(_filetype, _filetype);
@@ -99,11 +99,11 @@ void ViewTextPage::save_clicked() {
   }
 }
 
-void ViewTextPage::copy_clicked() {
+auto ViewTextPage::copy_clicked() -> void {
   mforms::Utilities::set_clipboard_text(_text.get_string_value());
 }
 
-void ViewTextPage::save_text_to(const std::string &path) {
+auto ViewTextPage::save_text_to(const std::string &path) -> void {
   char *filename = g_filename_from_utf8(path.c_str(), -1, NULL, NULL, NULL);
   std::string text = get_text();
   GError *error = NULL;

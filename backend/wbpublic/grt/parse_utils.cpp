@@ -27,7 +27,7 @@
 
 namespace bec {
 
-  bool tokenize_string_list(const std::string &str, int quote_char, bool quoted_only, std::list<std::string> &tokens) {
+  auto tokenize_string_list(const std::string &str, int quote_char, bool quoted_only, std::list<std::string> &tokens) -> bool {
     const char *str_start = str.c_str();
     const char *word_start = str_start;
     const char *p;

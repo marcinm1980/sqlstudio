@@ -47,24 +47,24 @@ namespace mdc {
     Selection(CanvasView *view);
     ~Selection();
 
-    void set(CanvasItem *item);
-    void add(CanvasItem *item);
-    void remove(CanvasItem *item);
-    void toggle(CanvasItem *item);
+    auto set(CanvasItem *item) -> void;
+    auto add(CanvasItem *item) -> void;
+    auto remove(CanvasItem *item) -> void;
+    auto toggle(CanvasItem *item) -> void;
 
-    void add(const std::list<CanvasItem *> &items);
-    void toggle(const std::list<CanvasItem *> &items);
+    auto add(const std::list<CanvasItem *> &items) -> void;
+    auto toggle(const std::list<CanvasItem *> &items) -> void;
 
-    void remove_items_outside(const base::Rect &rect);
+    auto remove_items_outside(const base::Rect &rect) -> void;
 
-    void clear(bool keep_move_info = false);
+    auto clear(bool keep_move_info = false) -> void;
 
-    void begin_multi_selection();
-    void end_multi_selection();
+    auto begin_multi_selection() -> void;
+    auto end_multi_selection() -> void;
 
-    void begin_moving(const base::Point &mouse_pos);
-    void update_move(const base::Point &mouse_pos);
-    void end_moving();
+    auto begin_moving(const base::Point &mouse_pos) -> void;
+    auto update_move(const base::Point &mouse_pos) -> void;
+    auto end_moving() -> void;
     auto is_moving() -> bool;
 
     auto get_contents() -> ContentType {
@@ -119,8 +119,8 @@ namespace mdc {
     base::RecMutex _mutex;
     CanvasView *_view;
 
-    void lock();
-    void unlock();
+    auto lock() -> void;
+    auto unlock() -> void;
 
     // void render_drag_images(CairoCtx *cr);
 

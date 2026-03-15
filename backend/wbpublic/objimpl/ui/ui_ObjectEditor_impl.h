@@ -44,24 +44,24 @@ public:
   ImplData(ui_ObjectEditor *self) : _self(self) {
   }
 
-  void notify_will_open();
-  bool notify_will_close();
-  void notify_did_close();
+  auto notify_will_open() -> void;
+  auto notify_will_close() -> bool;
+  auto notify_did_close() -> void;
 
-  void notify_did_switch_object(bec::BaseEditor *editor);
+  auto notify_did_switch_object(bec::BaseEditor *editor) -> void;
 
   // live editors only
-  void notify_will_save();
-  void notify_did_revert();
+  auto notify_will_save() -> void;
+  auto notify_did_revert() -> void;
 
-  GrtObjectRef edited_object();
-  bool editing_live_object();
+  auto edited_object() -> GrtObjectRef;
+  auto editing_live_object() -> bool;
 
 private:
   ui_ObjectEditor *_self;
   bec::BaseEditor *_editor;
 
-  ui_ObjectEditorRef self() {
+  auto self() -> ui_ObjectEditorRef {
     return ui_ObjectEditorRef(_self);
   }
 };

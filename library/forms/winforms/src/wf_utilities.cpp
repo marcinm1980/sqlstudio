@@ -130,10 +130,10 @@ CustomMessageBox::CustomMessageBox() {
 #define TD_SHIELD_SUCCESS_ICON MAKEINTRESOURCE(-8)
 #define TD_SHIELD_GRAY_ICON MAKEINTRESOURCE(-9)
 
-mforms::DialogResult CustomMessageBox::ShowInternal(const std::string &title, const std::string &text, PCWSTR mainIcon,
+auto CustomMessageBox::ShowInternal(const std::string &title, const std::string &text, PCWSTR mainIcon,
                                                     const std::string &buttonOK, const std::string &buttonCancel,
                                                     const std::string &buttonOther, const std::string &checkbox,
-                                                    bool &checked) {
+                                                    bool &checked) -> mforms::DialogResult {
   logDebug("Creating and showing custom message box\n");
 
   TASKDIALOGCONFIG config = {0};
@@ -247,7 +247,7 @@ void AdjustButton(System::Windows::Forms::Button ^ button) {
  * As the name already says this function computes the layout of the message box depending on the
  * content (image size, button text etc.).
  */
-void CustomMessageBox::ComputeLayout() {
+auto CustomMessageBox::ComputeLayout() -> void {
   logDebug2("Layouting custom message box\n");
 
   SuspendLayout();
@@ -405,10 +405,10 @@ void CustomMessageBox::ButtonClick(Object ^ sender, EventArgs ^ arguments) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::DialogResult CustomMessageBox::Show(const std::string &title, const std::string &text, PCWSTR mainIcon,
+auto CustomMessageBox::Show(const std::string &title, const std::string &text, PCWSTR mainIcon,
                                             const std::string &buttonOK, const std::string &buttonCancel,
                                             const std::string &buttonOther, const std::string &checkbox,
-                                            bool &checked) {
+                                            bool &checked) -> mforms::DialogResult {
   logDebug("About to show a custom message box\n");
 
   mforms::Utilities::enter_modal_loop();
@@ -476,7 +476,7 @@ System::Windows::Forms::DialogResult CustomMessageBox::Show(MessageType type, St
 
 delegate InvokationResult ^ RunSlotDelegate(SlotWrapper ^ wrapper);
 
-void *DispatchControl::RunOnMainThread(const std::function<void *()> &slot, bool wait) {
+auto DispatchControl::RunOnMainThread(const std::function<void *()> &slot, bool wait) -> void * {
   logDebug("Running slot on main thread (%swaiting for it)\n", wait ? "" : "not ");
 
   if (InvokeRequired) {
@@ -517,14 +517,14 @@ UtilitiesWrapper::UtilitiesWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::beep() {
+auto UtilitiesWrapper::beep() -> void {
   SystemSounds::Beep->Play();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int UtilitiesWrapper::show_message(const std::string &title, const std::string &text, const std::string &ok,
-                                   const std::string &cancel, const std::string &other) {
+auto UtilitiesWrapper::show_message(const std::string &title, const std::string &text, const std::string &ok,
+                                   const std::string &cancel, const std::string &other) -> int {
   logDebug("Showing a message to the user\n");
 
   hide_wait_message();
@@ -535,8 +535,8 @@ int UtilitiesWrapper::show_message(const std::string &title, const std::string &
 
 //--------------------------------------------------------------------------------------------------
 
-int UtilitiesWrapper::show_error(const std::string &title, const std::string &text, const std::string &ok,
-                                 const std::string &cancel, const std::string &other) {
+auto UtilitiesWrapper::show_error(const std::string &title, const std::string &text, const std::string &ok,
+                                 const std::string &cancel, const std::string &other) -> int {
   logDebug("Showing an error to the user\n");
 
   hide_wait_message();
@@ -547,8 +547,8 @@ int UtilitiesWrapper::show_error(const std::string &title, const std::string &te
 
 //--------------------------------------------------------------------------------------------------
 
-int UtilitiesWrapper::show_warning(const std::string &title, const std::string &text, const std::string &ok,
-                                   const std::string &cancel, const std::string &other) {
+auto UtilitiesWrapper::show_warning(const std::string &title, const std::string &text, const std::string &ok,
+                                   const std::string &cancel, const std::string &other) -> int {
   logDebug("Showing a warning to the user\n");
 
   hide_wait_message();
@@ -559,10 +559,10 @@ int UtilitiesWrapper::show_warning(const std::string &title, const std::string &
 
 //--------------------------------------------------------------------------------------------------
 
-int UtilitiesWrapper::show_message_with_checkbox(const std::string &title, const std::string &text,
+auto UtilitiesWrapper::show_message_with_checkbox(const std::string &title, const std::string &text,
                                                  const std::string &ok, const std::string &cancel,
                                                  const std::string &other, const std::string &checkbox_text,
-                                                 bool &isChecked) {
+                                                 bool &isChecked) -> int {
   logDebug("Showing a message with checkbox to the user\n");
 
   hide_wait_message();
@@ -576,7 +576,7 @@ int UtilitiesWrapper::show_message_with_checkbox(const std::string &title, const
 /**
  * Shows the warning heads-up-display with the given title and text.
  */
-void UtilitiesWrapper::show_wait_message(const std::string &title, const std::string &text) {
+auto UtilitiesWrapper::show_wait_message(const std::string &title, const std::string &text) -> void {
   logDebug("Showing wait message\n");
 
   HUDForm::Show(CppStringToNative(title), CppStringToNative(text), true);
@@ -587,7 +587,7 @@ void UtilitiesWrapper::show_wait_message(const std::string &title, const std::st
 /**
  * Hides a previously shown wait message.
  */
-bool UtilitiesWrapper::hide_wait_message() {
+auto UtilitiesWrapper::hide_wait_message() -> bool {
   logDebug("Hiding the wait message\n");
 
   bool result = HUDForm::IsVisible;
@@ -612,12 +612,12 @@ public:
     : task_slot(start), cancel_slot(cancel) {
   }
 
-  void call_start() {
+  auto call_start() -> void {
     if (*task_slot)
       (*task_slot)();
   }
 
-  bool call_cancel() {
+  auto call_cancel() -> bool {
     if (*cancel_slot)
       return (*cancel_slot)();
     return true;
@@ -626,9 +626,9 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 
-bool UtilitiesWrapper::run_cancelable_wait_message(const std::string &title, const std::string &text,
+auto UtilitiesWrapper::run_cancelable_wait_message(const std::string &title, const std::string &text,
                                                    const std::function<void()> &signal_ready,
-                                                   const std::function<bool()> &cancel_slot) {
+                                                   const std::function<bool()> &cancel_slot) -> bool {
   logDebug("Running a cancelable wait message\n");
 
   CallSlotDelegate ^ caller = gcnew CallSlotDelegate(&signal_ready, &cancel_slot);
@@ -652,7 +652,7 @@ bool UtilitiesWrapper::run_cancelable_wait_message(const std::string &title, con
  * Signals the operation being described in a previous run_cancelable_wait_message() call has
  * finished and the message panel should be taken down.
  */
-void UtilitiesWrapper::stop_cancelable_wait_message() {
+auto UtilitiesWrapper::stop_cancelable_wait_message() -> void {
   logDebug("Explicit cancelation of the wait message\n");
 
   HUDForm::Finish();
@@ -665,7 +665,7 @@ void UtilitiesWrapper::stop_cancelable_wait_message() {
  *
  * @param content The text to be placed on the clipboard. It is assume its encoding is UTF-8.
  */
-void UtilitiesWrapper::set_clipboard_text(const std::string &content) {
+auto UtilitiesWrapper::set_clipboard_text(const std::string &content) -> void {
   logDebug("Setting clipboard text\n");
 
   if (!content.empty()) {
@@ -708,7 +708,7 @@ void UtilitiesWrapper::set_clipboard_text(const std::string &content) {
  * @result If there is text on the clipboard (ANSI or Unicode) it is returned as UTF-8 string.
  * @note The returned text gets all CRLF Windows line breaks converted to pure LF.
  */
-std::string UtilitiesWrapper::get_clipboard_text() {
+auto UtilitiesWrapper::get_clipboard_text() -> std::string {
   logDebug("Reading clipboard text\n");
 
   String ^ unicode = (String ^)Clipboard::GetData(DataFormats::UnicodeText);
@@ -723,7 +723,7 @@ std::string UtilitiesWrapper::get_clipboard_text() {
 /**
  * Returns platform specific user folders, e.g. for the desktop, the user's documents etc.
  */
-std::string UtilitiesWrapper::get_special_folder(mforms::FolderType type) {
+auto UtilitiesWrapper::get_special_folder(mforms::FolderType type) -> std::string {
   logDebug("Get special folder\n");
 
   Environment::SpecialFolder special_folder;
@@ -769,7 +769,7 @@ std::string UtilitiesWrapper::get_special_folder(mforms::FolderType type) {
 
 //--------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::open_url(const std::string &url) {
+auto UtilitiesWrapper::open_url(const std::string &url) -> void {
   try {
     logDebug("Opening the URL: %s\n", url.c_str());
 
@@ -785,7 +785,7 @@ void UtilitiesWrapper::open_url(const std::string &url) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool UtilitiesWrapper::move_to_trash(const std::string &file_name) {
+auto UtilitiesWrapper::move_to_trash(const std::string &file_name) -> bool {
   logDebug("Moving file to trash: %s\n", file_name.c_str());
 
   SHFILEOPSTRUCT shf = {0};
@@ -802,7 +802,7 @@ bool UtilitiesWrapper::move_to_trash(const std::string &file_name) {
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQL::Forms::UtilitiesWrapper::reveal_file(const std::string &path) {
+auto MySQL::Forms::UtilitiesWrapper::reveal_file(const std::string &path) -> void {
   std::wstring native_path = base::string_to_wstring(path);
   PIDLIST_ABSOLUTE pidl = ILCreateFromPath(native_path.c_str());
   if (pidl != NULL) {
@@ -826,7 +826,7 @@ typedef std::map<std::string, std::string>::iterator PasswordIterator;
 /**
  * Loads encrypted passwords from disk. These are typically held only for a short moment.
  */
-void UtilitiesWrapper::load_passwords() {
+auto UtilitiesWrapper::load_passwords() -> void {
   logDebug("Loading password cache\n");
 
   // Load password cache from disk. Don't throw an error if the cache file doesn't exist yet, though.
@@ -893,7 +893,7 @@ void UtilitiesWrapper::load_passwords() {
  * Saves the password cache to disk (if store is true) and clears it so passwords aren't kept in
  * memory any longer than necessary.
  */
-void UtilitiesWrapper::unload_passwords(bool store) {
+auto UtilitiesWrapper::unload_passwords(bool store) -> void {
   logDebug("Unloading password cache\n");
 
   // Store all passwords in a string for encryption.
@@ -942,8 +942,8 @@ void UtilitiesWrapper::unload_passwords(bool store) {
  * and user name. The file is encrypted by the system for safety and can only be decrypted by the
  * same user who encrypted it.
  */
-void UtilitiesWrapper::store_password(const std::string &service, const std::string &account,
-                                      const std::string &password) {
+auto UtilitiesWrapper::store_password(const std::string &service, const std::string &account,
+                                      const std::string &password) -> void {
   base::MutexLock lock(password_mutex);
   load_passwords();
 
@@ -958,7 +958,7 @@ void UtilitiesWrapper::store_password(const std::string &service, const std::str
 /**
  * Return the plain text password for the given service and account.
  */
-bool UtilitiesWrapper::find_password(const std::string &service, const std::string &account, std::string &password) {
+auto UtilitiesWrapper::find_password(const std::string &service, const std::string &account, std::string &password) -> bool {
   logDebug("Looking up password for service: %s, account: %s\n", service.c_str(), account.c_str());
 
   base::MutexLock lock(password_mutex);
@@ -980,7 +980,7 @@ bool UtilitiesWrapper::find_password(const std::string &service, const std::stri
 /**
  * Remove the password for the given service and account if there is one.
  */
-void UtilitiesWrapper::forget_password(const std::string &service, const std::string &account) {
+auto UtilitiesWrapper::forget_password(const std::string &service, const std::string &account) -> void {
   base::MutexLock lock(password_mutex);
 
   load_passwords();
@@ -995,7 +995,7 @@ void UtilitiesWrapper::forget_password(const std::string &service, const std::st
 
 //--------------------------------------------------------------------------------------------------
 
-void *UtilitiesWrapper::perform_from_main_thread(const std::function<void *()> &slot, bool wait) {
+auto UtilitiesWrapper::perform_from_main_thread(const std::function<void *()> &slot, bool wait) -> void * {
   return dispatcher->RunOnMainThread(slot, wait);
 }
 
@@ -1011,7 +1011,7 @@ typedef struct tagTHREADNAME_INFO {
 } THREADNAME_INFO;
 #pragma pack(pop)
 
-void SetThreadName(DWORD dwThreadID, const char *threadName) {
+auto SetThreadName(DWORD dwThreadID, const char *threadName) -> void {
   THREADNAME_INFO info;
   info.dwType = 0x1000;
   info.szName = threadName;
@@ -1025,7 +1025,7 @@ void SetThreadName(DWORD dwThreadID, const char *threadName) {
   }
 }
 
-void UtilitiesWrapper::set_thread_name(const std::string &name) {
+auto UtilitiesWrapper::set_thread_name(const std::string &name) -> void {
 #ifdef _DEBUG
   SetThreadName(-1, name.c_str());
 #endif
@@ -1036,7 +1036,7 @@ void UtilitiesWrapper::set_thread_name(const std::string &name) {
 gcroot<Font ^> UtilitiesWrapper::last_font;
 static std::string last_font_description;
 
-double UtilitiesWrapper::get_text_width(const std::string &text, const std::string &font) {
+auto UtilitiesWrapper::get_text_width(const std::string &text, const std::string &font) -> double {
   // We cache the last font we have used for the text width as it this computation is likely to be
   // done multiple times for the same font.
   if (last_font_description != font) {
@@ -1066,7 +1066,7 @@ double UtilitiesWrapper::get_text_width(const std::string &text, const std::stri
 /**
  * Returns the main form of the application.
  */
-System::Windows::Forms::Form ^ UtilitiesWrapper::get_mainform() {
+auto UtilitiesWrapper::get_mainform() -> System::Windows::Forms::Form ^ {
   logDebug2("Returning main form\n");
 
   return Application::OpenForms["MainForm"];
@@ -1107,7 +1107,7 @@ public:
     delete _slot;
   }
 
-  static void cancel(mforms::TimeoutHandle handle) {
+  static auto cancel(mforms::TimeoutHandle handle) -> void {
     base::RecMutexLock lock(timeout_mutex);
     if (timeout_handles->ContainsKey(handle)) {
       auto timerHandle = timeout_handles[handle];
@@ -1116,7 +1116,7 @@ public:
     }
   }
 
-  mforms::TimeoutHandle handle() {
+  auto handle() -> mforms::TimeoutHandle {
     return _handle;
   }
 
@@ -1151,7 +1151,7 @@ private:
 
 //-------------------------------------------------------------------------------------------------
 
-mforms::TimeoutHandle UtilitiesWrapper::add_timeout(float interval, const std::function<bool()> &slot) {
+auto UtilitiesWrapper::add_timeout(float interval, const std::function<bool()> &slot) -> mforms::TimeoutHandle {
   logDebug("Adding new timeout\n");
 
   TimerHandler ^ handler = gcnew TimerHandler(interval, slot);
@@ -1160,7 +1160,7 @@ mforms::TimeoutHandle UtilitiesWrapper::add_timeout(float interval, const std::f
 
 //-------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::cancel_timeout(mforms::TimeoutHandle h) {
+auto UtilitiesWrapper::cancel_timeout(mforms::TimeoutHandle h) -> void {
   TimerHandler::cancel(h);
 }
 
@@ -1168,7 +1168,7 @@ void UtilitiesWrapper::cancel_timeout(mforms::TimeoutHandle h) {
 
 gcroot<DispatchControl ^> UtilitiesWrapper::dispatcher;
 
-void UtilitiesWrapper::init() {
+auto UtilitiesWrapper::init() -> void {
   dispatcher = gcnew DispatchControl();
   dispatcher->Handle; // create window handle
 

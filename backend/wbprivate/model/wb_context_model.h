@@ -66,123 +66,123 @@ namespace wb {
     WBContextModel();
     virtual ~WBContextModel();
 
-    static void detect_auto_save_files(const std::string &autosave_dir);
-    static std::map<std::string, std::string> auto_save_files();
-    bool auto_save_document();
+    static auto detect_auto_save_files(const std::string &autosave_dir) -> void;
+    static auto auto_save_files() -> std::map<std::string, std::string>;
+    auto auto_save_document() -> bool;
 
-    mforms::View *shared_secondary_sidebar();
+    auto shared_secondary_sidebar() -> mforms::View *;
 
   public:
-    PhysicalOverviewBE *get_overview() {
+    auto get_overview() -> PhysicalOverviewBE * {
       return _overview;
     }
 
-    mforms::TreeView *create_user_type_list();
-    void show_user_type_editor(studio_physical_ModelRef model);
+    auto create_user_type_list() -> mforms::TreeView *;
+    auto show_user_type_editor(studio_physical_ModelRef model) -> void;
 
-    GrtVersionRef get_target_version();
+    auto get_target_version() -> GrtVersionRef;
 
-    mforms::TreeView *create_history_tree();
+    auto create_history_tree() -> mforms::TreeView *;
 
-    model_DiagramRef get_active_model_diagram(bool main_form);
-    model_ModelRef get_active_model(bool main_form);
+    auto get_active_model_diagram(bool main_form) -> model_DiagramRef;
+    auto get_active_model(bool main_form) -> model_ModelRef;
 
     // return the named toolbar
-    void model_created(ModelFile *file, studio_DocumentRef doc);
-    void model_loaded(ModelFile *file, studio_DocumentRef doc);
-    void model_closed();
+    auto model_created(ModelFile *file, studio_DocumentRef doc) -> void;
+    auto model_loaded(ModelFile *file, studio_DocumentRef doc) -> void;
+    auto model_closed() -> void;
 
-    void register_diagram_form(ModelDiagramForm *view);
+    auto register_diagram_form(ModelDiagramForm *view) -> void;
 
-    ModelDiagramForm *get_diagram_form_for_diagram_id(const std::string &id) {
+    auto get_diagram_form_for_diagram_id(const std::string &id) -> ModelDiagramForm * {
       return _model_forms.find(id) == _model_forms.end() ? 0 : _model_forms[id];
     }
-    ModelDiagramForm *get_diagram_form(mdc::CanvasView *view);
+    auto get_diagram_form(mdc::CanvasView *view) -> ModelDiagramForm *;
 
-    void notify_diagram_created(ModelDiagramForm *view);
-    void notify_diagram_destroyed(ModelDiagramForm *view);
+    auto notify_diagram_created(ModelDiagramForm *view) -> void;
+    auto notify_diagram_destroyed(ModelDiagramForm *view) -> void;
 
-    void realize();
-    void unrealize();
+    auto realize() -> void;
+    auto unrealize() -> void;
 
-    void activate_canvas_object(const model_ObjectRef &object, ssize_t flags);
+    auto activate_canvas_object(const model_ObjectRef &object, ssize_t flags) -> void;
 
-    void update_page_settings();
+    auto update_page_settings() -> void;
 
-    void export_png(const std::string &path);
-    void export_pdf(const std::string &path);
-    void export_ps(const std::string &path);
-    void export_svg(const std::string &path);
-    void exportPng(const model_DiagramRef &diagram, const std::string &path);
+    auto export_png(const std::string &path) -> void;
+    auto export_pdf(const std::string &path) -> void;
+    auto export_ps(const std::string &path) -> void;
+    auto export_svg(const std::string &path) -> void;
+    auto exportPng(const model_DiagramRef &diagram, const std::string &path) -> void;
 
     // Diagrams
-    model_DiagramRef get_view_with_id(const std::string &id);
+    auto get_view_with_id(const std::string &id) -> model_DiagramRef;
 
-    void add_new_diagram(const model_ModelRef &model);
+    auto add_new_diagram(const model_ModelRef &model) -> void;
 
-    void switch_diagram(const model_DiagramRef &view);
+    auto switch_diagram(const model_DiagramRef &view) -> void;
 
-    bool delete_diagram(const model_DiagramRef &view);
-    bool delete_object(model_ObjectRef object);
-    bool remove_figure(model_ObjectRef object);
+    auto delete_diagram(const model_DiagramRef &view) -> bool;
+    auto delete_object(model_ObjectRef object) -> bool;
+    auto remove_figure(model_ObjectRef object) -> bool;
 
-    GrtObjectRef duplicate_object(const db_DatabaseObjectRef &object, grt::CopyContext &copy_context);
+    auto duplicate_object(const db_DatabaseObjectRef &object, grt::CopyContext &copy_context) -> GrtObjectRef;
     void notify_catalog_tree_view(const CatalogNodeNotificationType &notify_type, grt::ValueRef value,
                                   const std::string &diagram_id = "");
-    void refill_catalog_tree();
+    auto refill_catalog_tree() -> void;
 
   public:
-    void update_plugin_arguments_pool(bec::ArgumentPool &args);
+    auto update_plugin_arguments_pool(bec::ArgumentPool &args) -> void;
 
-    int get_object_list_popup_items(bec::UIForm *form, const std::vector<bec::NodeId> &nodes,
+    auto get_object_list_popup_items(bec::UIForm *form, const std::vector<bec::NodeId> &nodes,
                                     const grt::ListRef<GrtObject> &objects, const std::string &label,
-                                    const std::list<std::string> &groups, bec::MenuItemList &items);
+                                    const std::list<std::string> &groups, bec::MenuItemList &items) -> int;
 
-    void begin_plugin_exec();
-    void end_plugin_exec();
+    auto begin_plugin_exec() -> void;
+    auto end_plugin_exec() -> void;
 
   public:
     boost::signals2::signal<void()> _udt_list_changed;
 
   private:
     // delegate functions from ModelBridgeDelegate
-    virtual cairo_surface_t *fetch_image(const std::string &file);
-    virtual std::string attach_image(const std::string &file);
-    virtual void release_image(const std::string &name);
+    virtual auto fetch_image(const std::string &file) -> cairo_surface_t *;
+    virtual auto attach_image(const std::string &file) -> std::string;
+    virtual auto release_image(const std::string &name) -> void;
 
-    virtual mdc::CanvasView *create_diagram(const model_DiagramRef &view);
-    virtual void free_canvas_view(mdc::CanvasView *view);
+    virtual auto create_diagram(const model_DiagramRef &view) -> mdc::CanvasView *;
+    virtual auto free_canvas_view(mdc::CanvasView *view) -> void;
 
-    mdc::CanvasView *create_diagram_main(const model_DiagramRef &mview);
+    auto create_diagram_main(const model_DiagramRef &mview) -> mdc::CanvasView *;
 
-    void update_current_diagram(bec::UIForm *form);
+    auto update_current_diagram(bec::UIForm *form) -> void;
 
-    void diagram_object_changed(const std::string &member, const grt::ValueRef &ovalue, ModelDiagramForm *view);
-    void diagram_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                                     ModelDiagramForm *vform);
-    void option_changed(grt::internal::OwnedDict *, bool, const std::string &);
+    auto diagram_object_changed(const std::string &member, const grt::ValueRef &ovalue, ModelDiagramForm *view) -> void;
+    auto diagram_object_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                                     ModelDiagramForm *vform) -> void;
+    auto option_changed(grt::internal::OwnedDict *, bool, const std::string &) -> void;
 
-    bool has_selected_model();
-    bool has_selected_schema();
-    bool has_selected_figures();
-    void add_model_schema();
-    void add_model_table();
-    void add_model_view();
-    void add_model_rgroup();
-    void add_model_diagram();
-    void remove_figure();
+    auto has_selected_model() -> bool;
+    auto has_selected_schema() -> bool;
+    auto has_selected_figures() -> bool;
+    auto add_model_schema() -> void;
+    auto add_model_table() -> void;
+    auto add_model_view() -> void;
+    auto add_model_rgroup() -> void;
+    auto add_model_diagram() -> void;
+    auto remove_figure() -> void;
 
-    void page_settings_changed(const std::string &field, const grt::ValueRef &value);
+    auto page_settings_changed(const std::string &field, const grt::ValueRef &value) -> void;
 
-    int add_object_plugins_to_popup_menu(const grt::ListRef<GrtObject> &objects, const std::list<std::string> &groups,
-                                         bec::MenuItemList &items);
+    auto add_object_plugins_to_popup_menu(const grt::ListRef<GrtObject> &objects, const std::list<std::string> &groups,
+                                         bec::MenuItemList &items) -> int;
 
-    void history_changed();
-    void selection_changed();
+    auto history_changed() -> void;
+    auto selection_changed() -> void;
 
-    virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
+    virtual auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
 
-    void setup_secondary_sidebar();
+    auto setup_secondary_sidebar() -> void;
 
   private:
     PhysicalOverviewBE *_overview;

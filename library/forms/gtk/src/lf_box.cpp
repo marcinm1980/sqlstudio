@@ -36,47 +36,47 @@ mforms::gtk::BoxImpl::BoxImpl(::mforms::Box *self, bool horiz) : ViewImpl(self) 
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::BoxImpl::create(::mforms::Box *self, bool horiz) {
+auto mforms::gtk::BoxImpl::create(::mforms::Box *self, bool horiz) -> bool {
   return new BoxImpl(self, horiz);
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::BoxImpl::add(Box *self, View *child, bool expand, bool fill) {
+auto mforms::gtk::BoxImpl::add(Box *self, View *child, bool expand, bool fill) -> void {
   BoxImpl *box = self->get_data<BoxImpl>();
 
   box->_innerBox->pack_start(*child->get_data<ViewImpl>()->get_outer(), expand, fill);
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::BoxImpl::add_end(Box *self, View *child, bool expand, bool fill) {
+auto mforms::gtk::BoxImpl::add_end(Box *self, View *child, bool expand, bool fill) -> void {
   BoxImpl *box = self->get_data<BoxImpl>();
 
   box->_innerBox->pack_end(*child->get_data<ViewImpl>()->get_outer(), expand, fill);
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::BoxImpl::remove(Box *self, View *child) {
+auto mforms::gtk::BoxImpl::remove(Box *self, View *child) -> void {
   BoxImpl *box = self->get_data<BoxImpl>();
 
   box->_innerBox->remove(*child->get_data<ViewImpl>()->get_outer());
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::BoxImpl::set_homogeneous(Box *self, bool flag) {
+auto mforms::gtk::BoxImpl::set_homogeneous(Box *self, bool flag) -> void {
   BoxImpl *box = self->get_data<BoxImpl>();
 
   box->_innerBox->set_homogeneous(flag);
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::BoxImpl::set_spacing(Box *self, int spc) {
+auto mforms::gtk::BoxImpl::set_spacing(Box *self, int spc) -> void {
   BoxImpl *box = self->get_data<BoxImpl>();
 
   box->_innerBox->set_spacing(spc);
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::BoxImpl::set_padding_impl(int left, int top, int right, int bottom) {
+auto mforms::gtk::BoxImpl::set_padding_impl(int left, int top, int right, int bottom) -> void {
   _innerBox->set_margin_bottom(bottom);
   _innerBox->set_margin_top(top);
   _innerBox->set_margin_left(left);
@@ -85,7 +85,7 @@ void mforms::gtk::BoxImpl::set_padding_impl(int left, int top, int right, int bo
 
 //------------------------------------------------------------------------------
 
-void mforms::gtk::BoxImpl::set_size(int width, int height) {
+auto mforms::gtk::BoxImpl::set_size(int width, int height) -> void {
   get_outer()->set_size_request(width, height);
   get_inner()->set_size_request(width, height);
 }
@@ -95,7 +95,7 @@ mforms::gtk::BoxImpl::~BoxImpl() {
   delete _innerBox;
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::BoxImpl::init() {
+auto mforms::gtk::BoxImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_box_impl.create = &BoxImpl::create;

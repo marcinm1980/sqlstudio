@@ -35,16 +35,16 @@ Figure::Figure(Layer *layer)
   : CanvasItem(layer), _pen_color(Color::black()), _fill_color(Color::white()), _line_width(1.0) {
 }
 
-void Figure::render(CairoCtx *cr) {
+auto Figure::render(CairoCtx *cr) -> void {
   draw_state(cr);
   draw_contents(cr);
 }
 
-void Figure::draw_contents_gl() {
+auto Figure::draw_contents_gl() -> void {
   throw std::logic_error("draw_contents_gl() not implemented for this figure");
 }
 
-void Figure::render_gl(mdc::CairoCtx *cr) {
+auto Figure::render_gl(mdc::CairoCtx *cr) -> void {
   draw_state_gl();
   draw_contents_gl();
 }
@@ -55,7 +55,7 @@ void Figure::render_gl(mdc::CairoCtx *cr) {
  * Draws a hollow rectangle given by the bounds of this figure and a certain offset.
  * This version uses Cairo to draw it.
  */
-void Figure::stroke_outline(CairoCtx *cr, float offset) const {
+auto Figure::stroke_outline(CairoCtx *cr, float offset) const -> void {
   Rect bounds = get_bounds();
 
   cr->rectangle(bounds.left() - offset, bounds.top() - offset, bounds.width() + offset * 2,
@@ -68,7 +68,7 @@ void Figure::stroke_outline(CairoCtx *cr, float offset) const {
  * Draws a hollow rectangle given by the bounds of this figure and a certain offset.
  * This version uses OpenGL to draw it.
  */
-void Figure::stroke_outline_gl(float offset) const {
+auto Figure::stroke_outline_gl(float offset) const -> void {
   Rect bounds = get_bounds();
 
   gl_rectangle(bounds.left() - offset, bounds.top() - offset, bounds.width() + 2 * offset, bounds.height() + 2 * offset,
@@ -77,7 +77,7 @@ void Figure::stroke_outline_gl(float offset) const {
 
 //--------------------------------------------------------------------------------------------------
 
-Point Figure::get_intersection_with_line_to(const Point &p) {
+auto Figure::get_intersection_with_line_to(const Point &p) -> Point {
   // this will return the intersection point of the line from the
   // center of the object to the given point.
   Point center = get_root_position();
@@ -117,17 +117,17 @@ Point Figure::get_intersection_with_line_to(const Point &p) {
   return center;
 }
 
-void Figure::set_pen_color(const Color &color) {
+auto Figure::set_pen_color(const Color &color) -> void {
   _pen_color = color;
   set_needs_render();
 }
 
-void Figure::set_fill_color(const Color &color) {
+auto Figure::set_fill_color(const Color &color) -> void {
   _fill_color = color;
   set_needs_render();
 }
 
-void Figure::set_line_width(float width) {
+auto Figure::set_line_width(float width) -> void {
   _line_width = width;
   set_needs_render();
 }

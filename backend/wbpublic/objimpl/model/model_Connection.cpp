@@ -32,10 +32,10 @@
 //================================================================================
 // model_Connection
 
-void model_Connection::init() {
+auto model_Connection::init() -> void {
 }
 
-void model_Connection::set_data(ImplData *data) {
+auto model_Connection::set_data(ImplData *data) -> void {
   _data = data;
   model_Object::set_data(data);
 }

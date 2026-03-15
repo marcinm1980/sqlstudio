@@ -75,7 +75,7 @@ namespace parsers {
     // Returns UNDERSCORE_CHARSET if so, otherwise IDENTIFIER.
     auto checkCharset(const std::string &text) -> size_t;
 
-    void emitDot();
+    auto emitDot() -> void;
 
   private:
     std::list<std::unique_ptr<antlr4::Token>> _pendingTokens;

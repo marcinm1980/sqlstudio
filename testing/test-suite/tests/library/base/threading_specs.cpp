@@ -37,7 +37,7 @@ namespace {
 
 static base::refcount_t counter;
 
-gpointer thread_function1(gpointer data) {
+auto thread_function1(gpointer data) -> gpointer {
   base::Semaphore *semaphore = static_cast<base::Semaphore *>(data);
   semaphore->wait();
 
@@ -66,7 +66,7 @@ gpointer thread_function1(gpointer data) {
   return NULL;
 }
 
-gpointer thread_function2(gpointer data) {
+auto thread_function2(gpointer data) -> gpointer {
   base::Semaphore *semaphore = static_cast<base::Semaphore *>(data);
   semaphore->wait();
   g_atomic_int_inc(&counter);

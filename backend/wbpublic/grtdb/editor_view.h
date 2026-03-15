@@ -34,12 +34,12 @@ namespace bec {
   public:
     ViewEditorBE(const db_ViewRef &view);
 
-    virtual std::string get_title();
+    virtual auto get_title() -> std::string;
 
-    db_ViewRef get_view() {
+    auto get_view() -> db_ViewRef {
       return db_ViewRef::cast_from(get_object());
     };
 
-    virtual std::string get_sql();
+    virtual auto get_sql() -> std::string;
   };
 };

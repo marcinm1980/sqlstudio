@@ -57,14 +57,14 @@ namespace ScriptImport {
     CheckBox _autoplaceCheck;
     CheckBox _ansiQuotesCheck;
 
-    void fill_encodings_list();
+    auto fill_encodings_list() -> void;
 
   public:
     ImportInputPage(WizardPlugin *form);
-    void file_changed();
-    virtual bool allow_next();
-    virtual std::string next_button_caption();
-    void gather_options(bool advancing);
+    auto file_changed() -> void;
+    virtual auto allow_next() -> bool;
+    virtual auto next_button_caption() -> std::string;
+    auto gather_options(bool advancing) -> void;
   };
 
   /**
@@ -80,14 +80,14 @@ namespace ScriptImport {
 
   public:
     ImportProgressPage(WizardForm *form, const std::function<void(bool, std::string)> &finished_cb);
-    void import_objects_finished(grt::ValueRef value);
-    bool import_objects();
-    bool verify_results();
-    bool place_objects();
-    virtual bool allow_back();
-    virtual void enter(bool advancing);
-    virtual void tasks_finished(bool success);
-    std::string get_summary();
+    auto import_objects_finished(grt::ValueRef value) -> void;
+    auto import_objects() -> bool;
+    auto verify_results() -> bool;
+    auto place_objects() -> bool;
+    virtual auto allow_back() -> bool;
+    virtual auto enter(bool advancing) -> void;
+    virtual auto tasks_finished(bool success) -> void;
+    auto get_summary() -> std::string;
   };
 
   /**
@@ -102,10 +102,10 @@ namespace ScriptImport {
 
   public:
     WbPluginSQLImport(grt::Module *module);
-    void update_summary(bool success, const std::string &summary);
+    auto update_summary(bool success, const std::string &summary) -> void;
   };
 
 }; // namespace ScriptImport
 
-grtui::WizardPlugin *createImportScriptWizard(grt::Module *module, db_CatalogRef catalog);
+auto createImportScriptWizard(grt::Module *module, db_CatalogRef catalog) -> grtui::WizardPlugin *;
 

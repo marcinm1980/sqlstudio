@@ -37,7 +37,7 @@ namespace mforms {
     protected:
       Gtk::ProgressBar *_pbar;
       sigc::connection _pbar_pulser;
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _pbar;
       }
       sigc::connection _idle_set_val;
@@ -48,17 +48,17 @@ namespace mforms {
         setup();
       }
 
-      static bool create(::mforms::ProgressBar *self) {
+      static auto create(::mforms::ProgressBar *self) -> bool {
         return new ProgressBarImpl(self) != 0;
       }
 
-      static void set_value(::mforms::ProgressBar *self, float pct) {
+      static auto set_value(::mforms::ProgressBar *self, float pct) -> void {
         ProgressBarImpl *progressbar = self->get_data<ProgressBarImpl>();
         if (progressbar)
           progressbar->set_value(pct);
       }
 
-      void set_value(float pct) {
+      auto set_value(float pct) -> void {
         if (_pbar) {
           if (Utilities::in_main_thread())
             _pbar->set_fraction(pct);
@@ -72,19 +72,19 @@ namespace mforms {
         }
       }
 
-      bool pulse() {
+      auto pulse() -> bool {
         if (_pbar)
           this->_pbar->pulse();
 
         return true;
       }
 
-      void start() {
+      auto start() -> void {
         if (_pbar != NULL && _pbar_pulser.empty())
           _pbar_pulser = Glib::signal_timeout().connect(sigc::mem_fun(this, &ProgressBarImpl::pulse), 125);
       }
 
-      void stop() {
+      auto stop() -> void {
         if (!_pbar_pulser.empty())
           _pbar_pulser.disconnect();
 
@@ -101,7 +101,7 @@ namespace mforms {
         }
       }
 
-      static void set_started(::mforms::ProgressBar *self, bool flag) {
+      static auto set_started(::mforms::ProgressBar *self, bool flag) -> void {
         ProgressBarImpl *progressbar = self->get_data<ProgressBarImpl>();
         if (progressbar) {
           if (flag)
@@ -111,11 +111,11 @@ namespace mforms {
         }
       }
 
-      static void set_indeterminate(::mforms::ProgressBar *self, bool flag) {
+      static auto set_indeterminate(::mforms::ProgressBar *self, bool flag) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_progressbar_impl.create = &ProgressBarImpl::create;

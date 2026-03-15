@@ -43,7 +43,7 @@ Interface::Interface(CPPModuleLoader *loader) : Module(loader) {
 
 //--------------------------------------------------------------------------------------------------
 
-Interface *Interface::create(const char *name, ...) {
+auto Interface::create(const char *name, ...) -> Interface * {
   Interface *iface = new Interface(dynamic_cast<CPPModuleLoader *>(grt::GRT::get()->get_module_loader("cpp")));
   va_list args;
   ModuleFunctorBase *func;
@@ -84,7 +84,7 @@ Interface *Interface::create(const char *name, ...) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool Interface::check_conformance(const Module *module) const {
+auto Interface::check_conformance(const Module *module) const -> bool {
   for (std::vector<Function>::const_iterator f = _functions.begin(); f != _functions.end(); ++f) {
     const Function *function = module->get_function(f->name);
 
@@ -121,7 +121,7 @@ bool Interface::check_conformance(const Module *module) const {
 
 //--------------------------------------------------------------------------------------------------
 
-void CPPModule::register_functions(ModuleFunctorBase *first, ...) {
+auto CPPModule::register_functions(ModuleFunctorBase *first, ...) -> void {
   if (first) {
     va_list args;
     ModuleFunctorBase *func = first;
@@ -146,14 +146,14 @@ void CPPModule::register_functions(ModuleFunctorBase *first, ...) {
   _interfaces = _implemented_interfaces;
 }
 
-void CPPModule::closeModule() noexcept {
+auto CPPModule::closeModule() noexcept -> void {
   for (std::list<ModuleFunctorBase *>::iterator iter = _functors.begin(); iter != _functors.end(); ++iter) {
     delete *iter;
   }
   _functors.clear();
 }
 
-GModule* CPPModule::getModule() const {
+auto CPPModule::getModule() const -> GModule* {
   return _gmodule;
 }
 
@@ -164,7 +164,7 @@ CPPModule::CPPModule(CPPModuleLoader *loader) : Module(loader), _gmodule(NULL) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CPPModule::set_name(const std::string &name) {
+auto CPPModule::set_name(const std::string &name) -> void {
   _name = name;
 
   if (!g_str_has_suffix(_name.c_str(), "Impl")) {
@@ -190,11 +190,11 @@ CPPModule::~CPPModule() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string CPPModule::get_module_datadir() {
+auto CPPModule::get_module_datadir() -> std::string {
   return _path + "/modules/data";
 }
 
-std::string CPPModule::get_resource_file_path(const std::string &file) {
+auto CPPModule::get_resource_file_path(const std::string &file) -> std::string {
   return get_module_datadir() + "/" + file;
 }
 
@@ -210,7 +210,7 @@ CPPModuleLoader::~CPPModuleLoader() {
 
 //--------------------------------------------------------------------------------------------------
 
-Module *CPPModuleLoader::init_module(const std::string &path) {
+auto CPPModuleLoader::init_module(const std::string &path) -> Module * {
   GModule *gmodule;
   Module *(*module_init)(CPPModuleLoader * loader, const char *grt_version);
 
@@ -246,12 +246,12 @@ Module *CPPModuleLoader::init_module(const std::string &path) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CPPModuleLoader::refresh() {
+auto CPPModuleLoader::refresh() -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool CPPModuleLoader::check_file_extension(const std::string &path) {
+auto CPPModuleLoader::check_file_extension(const std::string &path) -> bool {
 #ifdef __APPLE__
   static const char *ext = ".dylib";
 #elif defined(_MSC_VER)

@@ -33,14 +33,14 @@ namespace MySQL {
     protected:
       ImageBoxWrapper(mforms::ImageBox *backend);
 
-      static bool create(mforms::ImageBox *backend);
-      static void set_image(mforms::ImageBox *backend, const std::string &file);
-      static void set_image_align(mforms::ImageBox *backend, mforms::Alignment alignment);
-      static void set_image_data(mforms::ImageBox *backend, const char *data, size_t length);
-      static void set_scale_contents(mforms::ImageBox *backend, bool flag);
+      static auto create(mforms::ImageBox *backend) -> bool;
+      static auto set_image(mforms::ImageBox *backend, const std::string &file) -> void;
+      static auto set_image_align(mforms::ImageBox *backend, mforms::Alignment alignment) -> void;
+      static auto set_image_data(mforms::ImageBox *backend, const char *data, size_t length) -> void;
+      static auto set_scale_contents(mforms::ImageBox *backend, bool flag) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

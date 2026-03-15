@@ -35,11 +35,11 @@
 using namespace grt;
 using namespace base;
 
-static void function_dealloc(PyGRTFunctionObject *self) {
+static auto function_dealloc(PyGRTFunctionObject *self) -> void {
   Py_TYPE(self)->tp_free(self);
 }
 
-static PyObject *function_call(PyGRTFunctionObject *self, PyObject *args, PyObject *kw) {
+static auto function_call(PyGRTFunctionObject *self, PyObject *args, PyObject *kw) -> PyObject * {
   PythonContext *ctx = PythonContext::get_and_check();
   if (!ctx)
     return nullptr;
@@ -211,7 +211,7 @@ static PyTypeObject PyGRTFunctionObjectType = {
 
 //----------------------------------------------------------------------------------------------
 
-static int module_init(PyGRTModuleObject *self, PyObject *args, PyObject *kwds) {
+static auto module_init(PyGRTModuleObject *self, PyObject *args, PyObject *kwds) -> int {
   PythonContext *ctx = PythonContext::get_and_check();
   if (ctx) {
     const char *name = nullptr;
@@ -230,11 +230,11 @@ static int module_init(PyGRTModuleObject *self, PyObject *args, PyObject *kwds) 
   return -1;
 }
 
-static void module_dealloc(PyGRTModuleObject *self) {
+static auto module_dealloc(PyGRTModuleObject *self) -> void {
   Py_TYPE(self)->tp_free(self);
 }
 
-static PyObject *module_getattro(PyGRTModuleObject *self, PyObject *attr_name) {
+static auto module_getattro(PyGRTModuleObject *self, PyObject *attr_name) -> PyObject * {
   if (PyUnicode_Check(attr_name)) {
     const char *attrname = PyUnicode_AsUTF8(attr_name);
 
@@ -290,11 +290,11 @@ static PyObject *module_getattro(PyGRTModuleObject *self, PyObject *attr_name) {
   return nullptr;
 }
 
-static PyObject *module_str(PyGRTModuleObject *self) {
+static auto module_str(PyGRTModuleObject *self) -> PyObject * {
   return PyUnicode_FromString(strfmt("<GRT Module '%s'>", self->module->name().c_str()).c_str());
 }
 
-static PyObject *module_get_doc(PyGRTModuleObject *self, void *closure) {
+static auto module_get_doc(PyGRTModuleObject *self, void *closure) -> PyObject * {
   return Py_BuildValue("s", self->module->description().c_str());
 }
 
@@ -399,7 +399,7 @@ static PyTypeObject PyGRTModuleObjectType = {
 #endif
 };
 
-void grt::PythonContext::init_grt_module_type() {
+auto grt::PythonContext::init_grt_module_type() -> void {
   {
 //     PyGRTModuleObjectType.tp_new = PyType_GenericNew;
     if (PyType_Ready(&PyGRTModuleObjectType) < 0) {

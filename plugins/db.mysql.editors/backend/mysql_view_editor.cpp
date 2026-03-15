@@ -47,7 +47,7 @@ MySQLViewEditorBE::MySQLViewEditorBE(const db_mysql_ViewRef& view) : bec::ViewEd
 /**
  * Loads the current view sql text into the editor control without touching its state.
  */
-void MySQLViewEditorBE::load_view_sql() {
+auto MySQLViewEditorBE::load_view_sql() -> void {
   mforms::CodeEditor* editor = get_sql_editor()->get_editor_control();
   std::string sql = get_sql();
   editor->set_text_keeping_state(sql.c_str());
@@ -55,7 +55,7 @@ void MySQLViewEditorBE::load_view_sql() {
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLViewEditorBE::commit_changes() {
+auto MySQLViewEditorBE::commit_changes() -> void {
   mforms::CodeEditor* editor = get_sql_editor()->get_editor_control();
   if (editor->is_dirty()) {
     const std::string sql = editor->get_text(false);
@@ -75,7 +75,7 @@ void MySQLViewEditorBE::commit_changes() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLViewEditorBE::can_close() {
+auto MySQLViewEditorBE::can_close() -> bool {
   commit_changes();
   return bec::ViewEditorBE::can_close();
 }

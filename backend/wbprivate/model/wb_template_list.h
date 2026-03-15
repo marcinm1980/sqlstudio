@@ -44,17 +44,17 @@ class TableTemplatePanel;
 class TableTemplateList : public BaseSnippetList, public bec::ListModel {
   TableTemplatePanel *_owner;
 
-  void prepare_context_menu();
-  void menu_will_show();
+  auto prepare_context_menu() -> void;
+  auto menu_will_show() -> void;
 
-  virtual bool mouse_double_click(mforms::MouseButton button, int x, int y);
+  virtual auto mouse_double_click(mforms::MouseButton button, int x, int y) -> bool;
 
-  virtual size_t count();
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, std::string &value);
-  virtual void refresh();
+  virtual auto count() -> size_t;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+  virtual auto refresh() -> void;
 
 public:
-  std::string get_selected_template();
+  auto get_selected_template() -> std::string;
   TableTemplateList(TableTemplatePanel *owner);
   ~TableTemplateList();
 };
@@ -65,10 +65,10 @@ class TableTemplatePanel : public mforms::Box {
   mforms::ScrollPanel *_scroll_panel;
   wb::WBContextModel *_context;
 
-  void toolbar_item_activated(mforms::ToolBarItem *item);
+  auto toolbar_item_activated(mforms::ToolBarItem *item) -> void;
 
 public:
   TableTemplatePanel(wb::WBContextModel *cmodel);
 
-  void on_action(const std::string &action);
+  auto on_action(const std::string &action) -> void;
 };

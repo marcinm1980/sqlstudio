@@ -36,8 +36,7 @@ namespace mysql_parser
     length of result string
 */
 
-int my_vsnprintf(char *to, size_t n, const char* fmt, va_list ap)
-{
+auto my_vsnprintf(char *to, size_t n, const char* fmt, va_list ap) -> int {
   char *start=to, *end=to+n-1;
   uint length, width, pre_zero, have_long;
 
@@ -158,8 +157,7 @@ int my_vsnprintf(char *to, size_t n, const char* fmt, va_list ap)
   return (uint) (to - start);
 }
 
-int my_snprintf(char* to, size_t n, const char* fmt, ...)
-{
+auto my_snprintf(char* to, size_t n, const char* fmt, ...) -> int {
   int result;
   va_list args;
   va_start(args,fmt);
@@ -170,8 +168,7 @@ int my_snprintf(char* to, size_t n, const char* fmt, ...)
 
 #ifdef MAIN
 #define OVERRUN_SENTRY  250
-static void my_printf(const char * fmt, ...)
-{
+static auto my_printf(const char * fmt, ...) -> void {
   char buf[33];
   int n;
   va_list ar;
@@ -189,8 +186,7 @@ static void my_printf(const char * fmt, ...)
 }
 
 
-int main()
-{
+auto main() -> int {
 
   my_printf("Hello\n");
   my_printf("Hello int, %d\n", 1);

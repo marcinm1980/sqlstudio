@@ -28,7 +28,7 @@
 ActionList::ActionList() {
 }
 
-void ActionList::reset() {
+auto ActionList::reset() -> void {
   _actions.clear();
   _node_actions.clear();
   _nodes_actions.clear();
@@ -81,50 +81,50 @@ bool ActionList::trigger_action_(const std::string &name, Slots &slots, const Co
   }
 }
 
-void ActionList::register_action(const std::string &name, const ActionSlot &slot) {
+auto ActionList::register_action(const std::string &name, const ActionSlot &slot) -> void {
   register_action_(name, _actions, slot);
 }
 
-void ActionList::register_node_action(const std::string &name, const NodeActionSlot &slot) {
+auto ActionList::register_node_action(const std::string &name, const NodeActionSlot &slot) -> void {
   register_action_(name, _node_actions, slot);
 }
 
-void ActionList::register_nodes_action(const std::string &name, const NodesActionSlot &slot) {
+auto ActionList::register_nodes_action(const std::string &name, const NodesActionSlot &slot) -> void {
   register_action_(name, _nodes_actions, slot);
 }
 
-void ActionList::register_rows_col_action(const std::string &name, const RowsColActionSlot &slot) {
+auto ActionList::register_rows_col_action(const std::string &name, const RowsColActionSlot &slot) -> void {
   register_action_(name, _rows_col_actions, slot);
 }
 
-void ActionList::unregister_action(const std::string &name) {
+auto ActionList::unregister_action(const std::string &name) -> void {
   unregister_action_(name, _actions);
 }
 
-void ActionList::unregister_node_action(const std::string &name) {
+auto ActionList::unregister_node_action(const std::string &name) -> void {
   unregister_action_(name, _node_actions);
 }
 
-void ActionList::unregister_nodes_action(const std::string &name) {
+auto ActionList::unregister_nodes_action(const std::string &name) -> void {
   unregister_action_(name, _nodes_actions);
 }
 
-void ActionList::unregister_rows_col_action(const std::string &name) {
+auto ActionList::unregister_rows_col_action(const std::string &name) -> void {
   unregister_action_(name, _rows_col_actions);
 }
 
-bool ActionList::trigger_action(const std::string &name) {
+auto ActionList::trigger_action(const std::string &name) -> bool {
   return trigger_action_(name, _actions);
 }
 
-bool ActionList::trigger_action(const std::string &name, const bec::NodeId &node) {
+auto ActionList::trigger_action(const std::string &name, const bec::NodeId &node) -> bool {
   return trigger_action_(name, _node_actions, node);
 }
 
-bool ActionList::trigger_action(const std::string &name, const std::vector<bec::NodeId> &nodes) {
+auto ActionList::trigger_action(const std::string &name, const std::vector<bec::NodeId> &nodes) -> bool {
   return trigger_action_(name, _nodes_actions, nodes);
 }
 
-bool ActionList::trigger_action(const std::string &name, const std::vector<int> &rows, int column) {
+auto ActionList::trigger_action(const std::string &name, const std::vector<int> &rows, int column) -> bool {
   return trigger_action_(name, _rows_col_actions, rows, column);
 }

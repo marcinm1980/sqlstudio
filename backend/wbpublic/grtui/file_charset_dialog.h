@@ -44,14 +44,14 @@ class WBPUBLICBACKEND_PUBLIC_FUNC FileCharsetDialog : public mforms::Form {
 
   FileCharsetDialog(const std::string &title, const std::string &message);
 
-  void run_clicked();
+  auto run_clicked() -> void;
 
 public:
   enum Result { Cancelled, Accepted, RunInstead };
 
-  std::string run(const std::string &default_encoding);
+  auto run(const std::string &default_encoding) -> std::string;
 
-  static Result ensure_filedata_utf8(const char *data, size_t length, const std::string &encoding,
+  static auto ensure_filedata_utf8(const char *data, size_t length, const std::string &encoding,
                                      const std::string &filename, char *&utf8_data,
-                                     std::string *original_encoding = nullptr);
+                                     std::string *original_encoding = nullptr) -> Result;
 };

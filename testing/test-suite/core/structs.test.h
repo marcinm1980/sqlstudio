@@ -73,7 +73,7 @@ public:
   {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "test.Bridged";
   }
 
@@ -83,12 +83,12 @@ public:
    \par In Python:
 value = obj.books
    */
-  grt::ListRef<test_Book> books() const {
+  auto books() const -> grt::ListRef<test_Book> {
     return _books;
   }
 
 private: // the next attribute is read-only
-  virtual void books(const grt::ListRef<test_Book> &value) {
+  virtual auto books(const grt::ListRef<test_Book> &value) -> void {
     grt::ValueRef ovalue(_books);
     _books = value;
     member_changed("books", ovalue, value);
@@ -101,7 +101,7 @@ public:
    \par In Python:
 value = obj.name
    */
-  grt::StringRef name() const {
+  auto name() const -> grt::StringRef {
     return _name;
   }
   /** Setter for attribute name
@@ -110,7 +110,7 @@ value = obj.name
     \par In Python:
 obj.name = value
    */
-  virtual void name(const grt::StringRef &value) {
+  virtual auto name(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_name);
     _name = value;
     member_changed("name", ovalue, value);
@@ -122,7 +122,7 @@ obj.name = value
    \par In Python:
 value = obj.x
    */
-  grt::IntegerRef x() const {
+  auto x() const -> grt::IntegerRef {
     return _x;
   }
   /** Setter for attribute x
@@ -131,7 +131,7 @@ value = obj.x
     \par In Python:
 obj.x = value
    */
-  virtual void x(const grt::IntegerRef &value) {
+  virtual auto x(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_x);
     _x = value;
     member_changed("x", ovalue, value);
@@ -143,7 +143,7 @@ obj.x = value
    \par In Python:
 value = obj.y
    */
-  grt::IntegerRef y() const {
+  auto y() const -> grt::IntegerRef {
     return _y;
   }
   /** Setter for attribute y
@@ -152,7 +152,7 @@ value = obj.y
     \par In Python:
 obj.y = value
    */
-  virtual void y(const grt::IntegerRef &value) {
+  virtual auto y(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_y);
     _y = value;
     member_changed("y", ovalue, value);
@@ -165,12 +165,12 @@ protected:
   grt::IntegerRef _y;
 
 private: // wrapper methods for use by grt
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new test_Bridged);
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (!meta)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -208,18 +208,18 @@ public:
   {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "test.Base";
   }
 
 protected:
 private: // wrapper methods for use by grt
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new test_Base);
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (!meta)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -240,7 +240,7 @@ public:
   {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "test.Publisher";
   }
 
@@ -251,12 +251,12 @@ public:
    \par In Python:
 value = obj.books
    */
-  grt::ListRef<test_Book> books() const {
+  auto books() const -> grt::ListRef<test_Book> {
     return _books;
   }
 
 private: // the next attribute is read-only
-  virtual void books(const grt::ListRef<test_Book> &value) {
+  virtual auto books(const grt::ListRef<test_Book> &value) -> void {
     grt::ValueRef ovalue(_books);
 
     _books = value;
@@ -270,7 +270,7 @@ public:
    \par In Python:
 value = obj.name
    */
-  grt::StringRef name() const {
+  auto name() const -> grt::StringRef {
     return _name;
   }
   /** Setter for attribute name
@@ -279,7 +279,7 @@ value = obj.name
     \par In Python:
 obj.name = value
    */
-  virtual void name(const grt::StringRef &value) {
+  virtual auto name(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_name);
     _name = value;
     member_changed("name", ovalue, value);
@@ -291,7 +291,7 @@ obj.name = value
    \par In Python:
 value = obj.phone
    */
-  grt::StringRef phone() const {
+  auto phone() const -> grt::StringRef {
     return _phone;
   }
   /** Setter for attribute phone
@@ -300,7 +300,7 @@ value = obj.phone
     \par In Python:
 obj.phone = value
    */
-  virtual void phone(const grt::StringRef &value) {
+  virtual auto phone(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_phone);
     _phone = value;
     member_changed("phone", ovalue, value);
@@ -312,12 +312,12 @@ protected:
   grt::StringRef _phone;
 
 private: // wrapper methods for use by grt
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new test_Publisher);
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (!meta)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -352,7 +352,7 @@ public:
   {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "test.Author";
   }
 
@@ -362,7 +362,7 @@ public:
    \par In Python:
 value = obj.name
    */
-  grt::StringRef name() const {
+  auto name() const -> grt::StringRef {
     return _name;
   }
   /** Setter for attribute name
@@ -371,7 +371,7 @@ value = obj.name
     \par In Python:
 obj.name = value
    */
-  virtual void name(const grt::StringRef &value) {
+  virtual auto name(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_name);
     _name = value;
     member_changed("name", ovalue, value);
@@ -381,12 +381,12 @@ protected:
   grt::StringRef _name;
 
 private: // wrapper methods for use by grt
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new test_Author);
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (!meta)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -410,7 +410,7 @@ public:
   {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "test.Publication";
   }
 
@@ -420,7 +420,7 @@ public:
    \par In Python:
 value = obj.title
    */
-  grt::StringRef title() const {
+  auto title() const -> grt::StringRef {
     return _title;
   }
   /** Setter for attribute title
@@ -429,7 +429,7 @@ value = obj.title
     \par In Python:
 obj.title = value
    */
-  virtual void title(const grt::StringRef &value) {
+  virtual auto title(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_title);
     _title = value;
     member_changed("title", ovalue, value);
@@ -439,12 +439,12 @@ protected:
   grt::StringRef _title;
 
 private: // wrapper methods for use by grt
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new test_Publication);
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (!meta)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -471,7 +471,7 @@ public:
   {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "test.Book";
   }
 
@@ -482,12 +482,12 @@ public:
    \par In Python:
 value = obj.authors
    */
-  grt::ListRef<test_Author> authors() const {
+  auto authors() const -> grt::ListRef<test_Author> {
     return _authors;
   }
 
 private: // the next attribute is read-only
-  virtual void authors(const grt::ListRef<test_Author> &value) {
+  virtual auto authors(const grt::ListRef<test_Author> &value) -> void {
     grt::ValueRef ovalue(_authors);
 
     _authors = value;
@@ -501,12 +501,12 @@ public:
    \par In Python:
 value = obj.extras
    */
-  grt::DictRef extras() const {
+  auto extras() const -> grt::DictRef {
     return _extras;
   }
 
 private: // the next attribute is read-only
-  virtual void extras(const grt::DictRef &value) {
+  virtual auto extras(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_extras);
     _extras = value;
     member_changed("extras", ovalue, value);
@@ -519,7 +519,7 @@ public:
    \par In Python:
 value = obj.pages
    */
-  grt::IntegerRef pages() const {
+  auto pages() const -> grt::IntegerRef {
     return _pages;
   }
   /** Setter for attribute pages
@@ -528,7 +528,7 @@ value = obj.pages
     \par In Python:
 obj.pages = value
    */
-  virtual void pages(const grt::IntegerRef &value) {
+  virtual auto pages(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_pages);
     _pages = value;
     member_changed("pages", ovalue, value);
@@ -540,7 +540,7 @@ obj.pages = value
    \par In Python:
 value = obj.price
    */
-  grt::DoubleRef price() const {
+  auto price() const -> grt::DoubleRef {
     return _price;
   }
   /** Setter for attribute price
@@ -549,7 +549,7 @@ value = obj.price
     \par In Python:
 obj.price = value
    */
-  virtual void price(const grt::DoubleRef &value) {
+  virtual auto price(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_price);
     _price = value;
     member_changed("price", ovalue, value);
@@ -561,7 +561,7 @@ obj.price = value
    \par In Python:
 value = obj.publisher
    */
-  grt::Ref<test_Publisher> publisher() const {
+  auto publisher() const -> grt::Ref<test_Publisher> {
     return _publisher;
   }
   /** Setter for attribute publisher
@@ -570,7 +570,7 @@ value = obj.publisher
     \par In Python:
 obj.publisher = value
    */
-  virtual void publisher(const grt::Ref<test_Publisher> &value) {
+  virtual auto publisher(const grt::Ref<test_Publisher> &value) -> void {
     grt::ValueRef ovalue(_publisher);
     _publisher = value;
     member_changed("publisher", ovalue, value);
@@ -584,15 +584,15 @@ protected:
   grt::Ref<test_Publisher> _publisher;
 
 private: // wrapper methods for use by grt
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new test_Book);
   }
 
 public:
-  std::string toString() const {
+  auto toString() const -> std::string {
     return std::string("Book - title: ") + _title.toString();
   }
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (!meta)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -626,7 +626,7 @@ public:
   }
 };
 
-inline void register_structs_test_xml() {
+inline auto register_structs_test_xml() -> void {
   grt::internal::ClassRegistry::register_class<test_Bridged>();
   grt::internal::ClassRegistry::register_class<test_Base>();
   grt::internal::ClassRegistry::register_class<test_Publisher>();

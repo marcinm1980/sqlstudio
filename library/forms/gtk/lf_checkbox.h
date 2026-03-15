@@ -35,23 +35,23 @@ namespace mforms {
 
     class CheckBoxImpl : public ButtonImpl {
       Gtk::CheckButton *_check;
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _check;
       }
 
     protected:
-      static bool create(::mforms::CheckBox *self, bool square) {
+      static auto create(::mforms::CheckBox *self, bool square) -> bool {
         return new CheckBoxImpl(self, square) != 0;
       }
 
-      static void set_active(::mforms::CheckBox *self, bool flag) {
+      static auto set_active(::mforms::CheckBox *self, bool flag) -> void {
         CheckBoxImpl *cb = self->get_data<CheckBoxImpl>();
 
         if (cb)
           cb->_check->set_active(flag);
       }
 
-      static bool get_active(::mforms::CheckBox *self) {
+      static auto get_active(::mforms::CheckBox *self) -> bool {
         CheckBoxImpl *cb = self->get_data<CheckBoxImpl>();
         return (cb ? cb->_check->get_active() : false);
       }
@@ -65,11 +65,11 @@ namespace mforms {
         _check->show();
       }
 
-      static void callback(::mforms::CheckBox *self) {
+      static auto callback(::mforms::CheckBox *self) -> void {
         self->callback();
       }
 
-      virtual void set_text(const std::string &text) {
+      virtual auto set_text(const std::string &text) -> void {
         if (_label)
           _label->set_label(text);
         else
@@ -77,7 +77,7 @@ namespace mforms {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_checkbox_impl.create = &CheckBoxImpl::create;

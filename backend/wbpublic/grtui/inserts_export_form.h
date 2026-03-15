@@ -36,7 +36,7 @@ public:
   InsertsExportForm(mforms::Form *owner, Recordset::Ref rset = Recordset::Ref(),
                     const std::string &default_extension = "");
 
-  std::string run();
+  auto run() -> std::string;
 
 private:
   Recordset::Ref _record_set;

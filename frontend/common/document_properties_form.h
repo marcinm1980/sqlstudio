@@ -57,19 +57,19 @@ class MYSQLWBBACKEND_PUBLIC_FUNC DocumentPropertiesForm : public mforms::Form {
   mforms::Button _ok_button;
   mforms::Button _cancel_button;
 
-  void add_control(const std::string &caption, mforms::View *control, bool expand = false);
+  auto add_control(const std::string &caption, mforms::View *control, bool expand = false) -> void;
 
-  void ok_clicked();
-  void cancel_clicked();
+  auto ok_clicked() -> void;
+  auto cancel_clicked() -> void;
 
-  void pull_values();
-  void push_values();
+  auto pull_values() -> void;
+  auto push_values() -> void;
 
 public:
   DocumentPropertiesForm();
   virtual ~DocumentPropertiesForm();
 
-  void show();
+  auto show() -> void;
 };
 
 #endif /* _DOCUMENT_PROPERTIES_FORM_H_ */

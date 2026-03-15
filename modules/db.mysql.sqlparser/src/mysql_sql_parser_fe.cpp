@@ -89,7 +89,7 @@ struct Context {
 
 class Lex_helper {
 public:
-  static CHARSET_INFO *charset() {
+  static auto charset() -> CHARSET_INFO * {
     return get_charset_by_name(MYSQL_DEFAULT_CHARSET, MYF(0));
   }
   Lex_helper(const char *statement, const Mysql_sql_parser_fe::SqlMode &sql_mode, bool is_ast_generation_enabled) {
@@ -114,7 +114,7 @@ public:
   ~Lex_helper() {
     myx_free_parser_source();
   }
-  LEX *lex() {
+  auto lex() -> LEX * {
     return &_lex;
   }
 
@@ -126,7 +126,7 @@ private:
 #define LEX_HELPER(statement, sql_mode, is_ast_generation_enabled) \
   Lex_helper _lex_helper(statement, sql_mode, is_ast_generation_enabled);
 
-std::string get_first_sql_token(const char *statement, Mysql_sql_parser_fe::SqlMode sql_mode, int *first_token_pos) {
+auto get_first_sql_token(const char *statement, Mysql_sql_parser_fe::SqlMode sql_mode, int *first_token_pos) -> std::string {
   LEX_HELPER(statement, sql_mode, true)
 
   void *token = NULL;
@@ -143,7 +143,7 @@ std::string get_first_sql_token(const char *statement, Mysql_sql_parser_fe::SqlM
   return "";
 }
 
-bool is_statement_relevant(const char *statement, const Context *context) {
+auto is_statement_relevant(const char *statement, const Context *context) -> bool {
   int first_token_pos;
   std::string token = get_first_sql_token(statement, context->sql_mode, &first_token_pos);
 
@@ -163,8 +163,8 @@ bool is_statement_relevant(const char *statement, const Context *context) {
 // this function removes comment braces of form /*!NUMBER */
 // making their contents a part of the query itself
 
-void remove_versioning_comments(const std::string &sql, std::string &effective_sql, CHARSET_INFO *cs,
-                                bool *ignore_statement, int *first_versioning_comment_pos) {
+auto remove_versioning_comments(const std::string &sql, std::string &effective_sql, CHARSET_INFO *cs,
+                                bool *ignore_statement, int *first_versioning_comment_pos) -> void {
   *first_versioning_comment_pos = -1;
 
   const char *begin = sql.c_str();
@@ -271,7 +271,7 @@ Mysql_sql_parser_fe::SqlMode::SqlMode() {
   reset();
 }
 
-void Mysql_sql_parser_fe::SqlMode::reset() {
+auto Mysql_sql_parser_fe::SqlMode::reset() -> void {
   MODE_ANSI_QUOTES = false;
   MODE_HIGH_NOT_PRECEDENCE = false;
   MODE_PIPES_AS_CONCAT = false;
@@ -279,7 +279,7 @@ void Mysql_sql_parser_fe::SqlMode::reset() {
   MODE_IGNORE_SPACE = false;
 }
 
-void Mysql_sql_parser_fe::SqlMode::parse(const std::string &text_value) {
+auto Mysql_sql_parser_fe::SqlMode::parse(const std::string &text_value) -> void {
   reset();
 
   std::string sql_mode_string = base::toupper(text_value);
@@ -314,7 +314,7 @@ Mysql_sql_parser_fe::Mysql_sql_parser_fe(const std::string &sql_mode_)
 
 std::shared_ptr<base::Mutex> _parser_fe_critical_section(new base::Mutex);
 
-void Mysql_sql_parser_fe::reset() {
+auto Mysql_sql_parser_fe::reset() -> void {
   SqlAstStatics::tree(NULL);
   ::parser_is_stopped = false;
 
@@ -325,15 +325,15 @@ void Mysql_sql_parser_fe::reset() {
   }
 }
 
-int Mysql_sql_parser_fe::stop() {
+auto Mysql_sql_parser_fe::stop() -> int {
   return ::parser_is_stopped = true;
 }
 
-void Mysql_sql_parser_fe::parse_sql_mode(const std::string &sql_mode_string) {
+auto Mysql_sql_parser_fe::parse_sql_mode(const std::string &sql_mode_string) -> void {
   sql_mode.parse(sql_mode_string);
 }
 
-int Mysql_sql_parser_fe::parse_sql_script(const char *sql, fe_process_sql_statement_callback cb, void *user_data) {
+auto Mysql_sql_parser_fe::parse_sql_script(const char *sql, fe_process_sql_statement_callback cb, void *user_data) -> int {
   base::MutexLock parser_fe_critical_section(*_parser_fe_critical_section);
   reset();
   Context context = {this,
@@ -351,8 +351,8 @@ int Mysql_sql_parser_fe::parse_sql_script(const char *sql, fe_process_sql_statem
   return context.err_count;
 }
 
-int Mysql_sql_parser_fe::parse_sql_script_file(const std::string &filename, fe_process_sql_statement_callback cb,
-                                               void *user_data) {
+auto Mysql_sql_parser_fe::parse_sql_script_file(const std::string &filename, fe_process_sql_statement_callback cb,
+                                               void *user_data) -> int {
   base::MutexLock parser_fe_critical_section(*_parser_fe_critical_section);
   reset();
   Context context = {this,
@@ -371,20 +371,20 @@ int Mysql_sql_parser_fe::parse_sql_script_file(const std::string &filename, fe_p
   return context.err_count;
 }
 
-int Mysql_sql_parser_fe::escape_string(const std::string &in_text, std::string &out_text) {
+auto Mysql_sql_parser_fe::escape_string(const std::string &in_text, std::string &out_text) -> int {
   boost::scoped_array<char> out(new char[in_text.size() * 2 + 1]);
   int res = escape_string(out.get(), 0, in_text.c_str(), (unsigned long)in_text.size());
   out_text = out.get();
   return res;
 }
 
-int Mysql_sql_parser_fe::escape_string(char *out, unsigned long out_size, const char *in, unsigned long in_size) {
+auto Mysql_sql_parser_fe::escape_string(char *out, unsigned long out_size, const char *in, unsigned long in_size) -> int {
   static CHARSET_INFO *cs = get_charset_by_name(MYSQL_DEFAULT_CHARSET, MYF(0));
   return (int)mysql_parser::escape_string_for_mysql(cs, out, out_size, in, in_size);
 }
 
-int Mysql_sql_parser_fe::process_sql_statement_cb(const MyxStatementParser *splitter, const char *statement,
-                                                  void *context_ptr) {
+auto Mysql_sql_parser_fe::process_sql_statement_cb(const MyxStatementParser *splitter, const char *statement,
+                                                  void *context_ptr) -> int {
   // possible values for result:
   // -1 - statement was ignored
   // 0 - statement was successfully processed
@@ -528,9 +528,9 @@ int Mysql_sql_parser_fe::process_sql_statement_cb(const MyxStatementParser *spli
   return result;
 }
 
-void Mysql_sql_parser_fe::determine_token_position(const SqlAstNode *item, const MyxStatementParser *splitter,
+auto Mysql_sql_parser_fe::determine_token_position(const SqlAstNode *item, const MyxStatementParser *splitter,
                                                    const char *statement, int &lineno, int &token_line_pos,
-                                                   int &token_len) {
+                                                   int &token_len) -> void {
   lineno = item->stmt_lineno();
   const char *tokenbeg = statement + item->stmt_boffset();
   const char *tokenend = statement + item->stmt_eoffset();
@@ -587,8 +587,8 @@ void Mysql_sql_parser_fe::determine_token_position(const SqlAstNode *item, const
     token_line_pos += splitter->statement_first_line_first_symbol_pos();
 }
 
-std::string Mysql_sql_parser_fe::get_first_sql_token(const std::string &sql,
-                                                     const std::string &versioning_comment_subst_token) {
+auto Mysql_sql_parser_fe::get_first_sql_token(const std::string &sql,
+                                                     const std::string &versioning_comment_subst_token) -> std::string {
   base::MutexLock parser_fe_critical_section(*_parser_fe_critical_section);
   reset();
   static Mysql_sql_parser_fe::SqlMode sql_mode;

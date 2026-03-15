@@ -98,8 +98,8 @@ namespace MySQL {
       void Remove(System::Windows::Forms::Control ^ control);
       void Move(System::Windows::Forms::Control ^ control, int x, int y);
       mforms::Alignment GetAlignment(System::Windows::Forms::Control ^ control);
-      void SetBackend(mforms::DrawBox *backend);
-      void DoRepaint();
+      auto SetBackend(mforms::DrawBox *backend) -> void;
+      auto DoRepaint() -> void;
 
       virtual void OnKeyDown(System::Windows::Forms::KeyEventArgs ^ args) override;
       virtual void OnPaint(System::Windows::Forms::PaintEventArgs ^ args) override;
@@ -116,18 +116,18 @@ namespace MySQL {
     protected:
       DrawBoxWrapper(mforms::DrawBox *backend);
 
-      static bool create(mforms::DrawBox *backend);
-      static void set_needs_repaint(mforms::DrawBox *backend);
-      static void add(mforms::DrawBox *backend, mforms::View *view, mforms::Alignment alignment);
-      static void remove(mforms::DrawBox *backend, mforms::View *view);
-      static void move(mforms::DrawBox *backend, mforms::View *view, int x, int y);
-      static void drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base::Rect r);
+      static auto create(mforms::DrawBox *backend) -> bool;
+      static auto set_needs_repaint(mforms::DrawBox *backend) -> void;
+      static auto add(mforms::DrawBox *backend, mforms::View *view, mforms::Alignment alignment) -> void;
+      static auto remove(mforms::DrawBox *backend, mforms::View *view) -> void;
+      static auto move(mforms::DrawBox *backend, mforms::View *view, int x, int y) -> void;
+      static auto drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base::Rect r) -> void;
 
       void OnRepaint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e);
       void OnKeyDown(System::Object ^ sender, System::Windows::Forms::KeyEventArgs ^ e);
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

@@ -52,19 +52,19 @@ namespace MySQL {
       System::Windows::Forms::PictureBox ^ _picture;
       System::Windows::Forms::CheckBox ^ _checkbox;
 
-      void ComputeLayout();
+      auto ComputeLayout() -> void;
       void ButtonClick(System::Object ^ sender, EventArgs ^ e);
 
-      static mforms::DialogResult ShowInternal(const std::string &title, const std::string &text, PCWSTR mainIcon,
+      static auto ShowInternal(const std::string &title, const std::string &text, PCWSTR mainIcon,
                                                const std::string &buttonOK, const std::string &buttonCancel,
                                                const std::string &buttonOther, const std::string &checkbox,
-                                               bool &checked);
+                                               bool &checked) -> mforms::DialogResult;
 
     public:
       // C++ interface
-      static mforms::DialogResult Show(const std::string &title, const std::string &text, PCWSTR mainIcon,
+      static auto Show(const std::string &title, const std::string &text, PCWSTR mainIcon,
                                        const std::string &buttonOK, const std::string &buttonCancel,
-                                       const std::string &buttonOther, const std::string &checkbox, bool &checked);
+                                       const std::string &buttonOther, const std::string &checkbox, bool &checked) -> mforms::DialogResult;
 
       // C# interface
       static System::Windows::Forms::DialogResult Show(MessageType type, String ^ title, String ^ text,
@@ -84,7 +84,7 @@ namespace MySQL {
         _result = result;
       }
 
-      property void *Result{void * get(){return _result;
+      auto get() -> property void *Result{void * {return _result;
     }
   };
 };
@@ -110,7 +110,7 @@ private:
   InvokationResult ^ RunSlot(SlotWrapper ^ wrapper);
 
 public:
-  void *RunOnMainThread(const std::function<void *()> &slot, bool wait);
+  auto RunOnMainThread(const std::function<void *()> &slot, bool wait) -> void *;
 };
 
 public
@@ -120,53 +120,53 @@ private:
 
   static gcroot<Drawing::Font ^> last_font;
 
-  static void load_passwords();
-  static void unload_passwords(bool store);
+  static auto load_passwords() -> void;
+  static auto unload_passwords(bool store) -> void;
 
 protected:
   UtilitiesWrapper();
 
-  static void beep();
-  static int show_message(const std::string &title, const std::string &text, const std::string &ok,
-                          const std::string &cancel, const std::string &other);
-  static int show_error(const std::string &title, const std::string &text, const std::string &ok,
-                        const std::string &cancel, const std::string &other);
-  static int show_warning(const std::string &title, const std::string &text, const std::string &ok,
-                          const std::string &cancel, const std::string &other);
-  static int show_message_with_checkbox(const std::string &title, const std::string &text, const std::string &ok,
+  static auto beep() -> void;
+  static auto show_message(const std::string &title, const std::string &text, const std::string &ok,
+                          const std::string &cancel, const std::string &other) -> int;
+  static auto show_error(const std::string &title, const std::string &text, const std::string &ok,
+                        const std::string &cancel, const std::string &other) -> int;
+  static auto show_warning(const std::string &title, const std::string &text, const std::string &ok,
+                          const std::string &cancel, const std::string &other) -> int;
+  static auto show_message_with_checkbox(const std::string &title, const std::string &text, const std::string &ok,
                                         const std::string &cancel, const std::string &other,
-                                        const std::string &checkbox_text, bool &isChecked);
-  static void show_wait_message(const std::string &title, const std::string &text);
-  static bool hide_wait_message();
-  static bool run_cancelable_wait_message(const std::string &title, const std::string &text,
+                                        const std::string &checkbox_text, bool &isChecked) -> int;
+  static auto show_wait_message(const std::string &title, const std::string &text) -> void;
+  static auto hide_wait_message() -> bool;
+  static auto run_cancelable_wait_message(const std::string &title, const std::string &text,
                                           const std::function<void()> &signal_ready,
-                                          const std::function<bool()> &cancel_slot);
-  static void stop_cancelable_wait_message();
+                                          const std::function<bool()> &cancel_slot) -> bool;
+  static auto stop_cancelable_wait_message() -> void;
 
-  static void set_clipboard_text(const std::string &content);
-  static std::string get_clipboard_text();
-  static std::string get_special_folder(mforms::FolderType type);
+  static auto set_clipboard_text(const std::string &content) -> void;
+  static auto get_clipboard_text() -> std::string;
+  static auto get_special_folder(mforms::FolderType type) -> std::string;
 
-  static void open_url(const std::string &url);
-  static bool move_to_trash(const std::string &file_name);
-  static void reveal_file(const std::string &path);
+  static auto open_url(const std::string &url) -> void;
+  static auto move_to_trash(const std::string &file_name) -> bool;
+  static auto reveal_file(const std::string &path) -> void;
 
-  static mforms::TimeoutHandle add_timeout(float interval, const std::function<bool()> &slot);
-  static void cancel_timeout(mforms::TimeoutHandle h);
+  static auto add_timeout(float interval, const std::function<bool()> &slot) -> mforms::TimeoutHandle;
+  static auto cancel_timeout(mforms::TimeoutHandle h) -> void;
 
-  static void store_password(const std::string &service, const std::string &account, const std::string &password);
-  static bool find_password(const std::string &service, const std::string &account, std::string &password);
-  static void forget_password(const std::string &service, const std::string &account);
+  static auto store_password(const std::string &service, const std::string &account, const std::string &password) -> void;
+  static auto find_password(const std::string &service, const std::string &account, std::string &password) -> bool;
+  static auto forget_password(const std::string &service, const std::string &account) -> void;
 
-  static void *perform_from_main_thread(const std::function<void *()> &slot, bool wait);
-  static void set_thread_name(const std::string &name);
+  static auto perform_from_main_thread(const std::function<void *()> &slot, bool wait) -> void *;
+  static auto set_thread_name(const std::string &name) -> void;
 
-  static double get_text_width(const std::string &text, const std::string &font);
+  static auto get_text_width(const std::string &text, const std::string &font) -> double;
 
 public:
-  static System::Windows::Forms::Form ^ get_mainform();
+  static auto get_mainform() -> System::Windows::Forms::Form ^;
 
-  static void init();
+  static auto init() -> void;
 };
 }
 ;

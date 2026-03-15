@@ -34,8 +34,7 @@
 namespace MySQL {
   namespace Grt {
 
-  public
-    delegate void TextChangeDelegate(int line, int linesAdded);
+  auto TextChangeDelegate(int line, int linesAdded) -> public delegate void;
 
   public
     ref class StoredNoteEditorWrapper : public BaseEditorWrapper {
@@ -49,12 +48,12 @@ namespace MySQL {
       StoredNoteEditorWrapper(MySQL::Grt::GrtValue ^ arglist);
       ~StoredNoteEditorWrapper();
 
-      StoredNoteEditorBE *get_unmanaged_object();
-      void commit_changes();
-      void load_text();
+      auto get_unmanaged_object() -> StoredNoteEditorBE *;
+      auto commit_changes() -> void;
+      auto load_text() -> void;
       void set_name(String ^ name);
-      String ^ get_name();
-      bool is_sql_script();
+      auto get_name() -> String ^;
+      auto is_sql_script() -> bool;
     };
 
   } // namespace Grt

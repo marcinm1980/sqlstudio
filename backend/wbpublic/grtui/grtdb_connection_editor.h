@@ -43,8 +43,8 @@ namespace grtui {
     //  DbConnectionEditor(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &allowed_rdbms);
     ~DbConnectionEditor();
 
-    void run();
-    db_mgmt_ConnectionRef run(const db_mgmt_ConnectionRef &connection);
+    auto run() -> void;
+    auto run(const db_mgmt_ConnectionRef &connection) -> db_mgmt_ConnectionRef;
 
   protected:
     db_mgmt_ManagementRef _mgmt;
@@ -71,23 +71,23 @@ namespace grtui {
     bool _mysql_only;
 
     //! Called from selector/list of connections to tell that things changed
-    void change_active_stored_conn();
+    auto change_active_stored_conn() -> void;
 
-    void name_changed();
+    auto name_changed() -> void;
 
   private:
-    void add_stored_conn(bool copy);
-    void del_stored_conn();
+    auto add_stored_conn(bool copy) -> void;
+    auto del_stored_conn() -> void;
 
-    void ok_clicked();
-    void cancel_clicked();
-    void reorder_conn(bool up);
+    auto ok_clicked() -> void;
+    auto cancel_clicked() -> void;
+    auto reorder_conn(bool up) -> void;
 
-    void reset_stored_conn_list();
+    auto reset_stored_conn_list() -> void;
 
-    bool rename_stored_conn(const std::string &oname, const std::string &name);
+    auto rename_stored_conn(const std::string &oname, const std::string &name) -> bool;
 
-    void init();
+    auto init() -> void;
   };
 };
 

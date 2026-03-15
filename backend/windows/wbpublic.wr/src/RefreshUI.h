@@ -43,10 +43,10 @@ namespace MySQL {
       }
 
     public:
-      void block_auto_refresh() {
+      auto block_auto_refresh() -> void {
         _inner->block_auto_refresh();
       }
-      void unblock_auto_refresh() {
+      auto unblock_auto_refresh() -> void {
         _inner->unblock_auto_refresh();
       }
 

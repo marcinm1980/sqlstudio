@@ -55,13 +55,13 @@
 #include "../lf_toolbar.h"
 #include "../lf_canvas.h"
 
-extern void lf_findpanel_init();
+extern auto lf_findpanel_init() -> void;
 namespace mforms {
   namespace gtk {
     bool force_sys_colors = false;
 
-    extern void HyperText_init();
-    extern void Popover_init();
+    extern auto HyperText_init() -> void;
+    extern auto Popover_init() -> void;
   }
 }
 void ::mforms::gtk::init(bool force_sys_colors_) {

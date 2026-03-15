@@ -1038,7 +1038,7 @@ TEST_F(FileUtilitiesTest, LockFileCtorsDtorsAndCheck) {
 #if 0
 #ifdef _MSC_VER
   // Child thread function
-  gpointer _child_thread_func(gpointer data) {
+  auto _child_thread_func(gpointer data) -> gpointer {
     // Miscellaneous variables
     FILE *test_result = NULL;
     FILE *expected_result = NULL;

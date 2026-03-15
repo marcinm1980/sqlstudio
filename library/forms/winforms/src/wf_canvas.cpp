@@ -43,7 +43,7 @@ CanvasWrapper::CanvasWrapper(mforms::Canvas *canvas) : ViewWrapper(canvas) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool CanvasWrapper::create(mforms::Canvas *backend) {
+auto CanvasWrapper::create(mforms::Canvas *backend) -> bool {
   CanvasWrapper *wrapper = new CanvasWrapper(backend);
 
   MySQL::GUI::Mdc::WindowsCanvasViewer ^ canvas =
@@ -54,7 +54,7 @@ bool CanvasWrapper::create(mforms::Canvas *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-mdc::CanvasView *CanvasWrapper::canvas(mforms::Canvas *backend) {
+auto CanvasWrapper::canvas(mforms::Canvas *backend) -> mdc::CanvasView * {
   CanvasWrapper *wrapper = backend->get_data<CanvasWrapper>();
   MySQL::GUI::Mdc::WindowsCanvasViewer ^ canvas = wrapper->GetManagedObject<MySQL::GUI::Mdc::WindowsCanvasViewer>();
 
@@ -63,7 +63,7 @@ mdc::CanvasView *CanvasWrapper::canvas(mforms::Canvas *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CanvasWrapper::init() {
+auto CanvasWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_canvas_impl.create = &CanvasWrapper::create;

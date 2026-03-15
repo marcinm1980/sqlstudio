@@ -36,13 +36,13 @@ class WBEDITOR_BACKEND_PUBLIC_FUNC NoteEditorBE : public bec::BaseEditor {
 public:
   NoteEditorBE(const studio_model_NoteFigureRef &note);
 
-  virtual bool should_close_on_delete_of(const std::string &oid);
+  virtual auto should_close_on_delete_of(const std::string &oid) -> bool;
 
-  void set_text(const std::string &text);
-  std::string get_text();
+  auto set_text(const std::string &text) -> void;
+  auto get_text() -> std::string;
 
-  void set_name(const std::string &name);
-  std::string get_name();
+  auto set_name(const std::string &name) -> void;
+  auto get_name() -> std::string;
 
-  virtual std::string get_title();
+  virtual auto get_title() -> std::string;
 };

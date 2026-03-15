@@ -52,7 +52,7 @@ DEFAULT_LOG_DOMAIN("SqlEditor")
 using namespace bec;
 using namespace base;
 
-void SqlEditorForm::auto_save() {
+auto SqlEditorForm::auto_save() -> void {
   if (!_autosave_disabled && _startup_done) {
     logDebug("Auto saving workspace\n");
 
@@ -71,7 +71,7 @@ void SqlEditorForm::auto_save() {
 }
 
 // Save all script buffers, including scratch buffers
-void SqlEditorForm::save_workspace(const std::string &workspace_name, bool is_autosave) {
+auto SqlEditorForm::save_workspace(const std::string &workspace_name, bool is_autosave) -> void {
   std::string path;
 
   // if we're autosaving, just use the same path from previous saves
@@ -148,8 +148,8 @@ void SqlEditorForm::save_workspace(const std::string &workspace_name, bool is_au
   save_workspace_order(path);
 }
 
-std::string SqlEditorForm::find_workspace_state(const std::string &workspace_name,
-                                                std::unique_ptr<base::LockFile> &lock_file) {
+auto SqlEditorForm::find_workspace_state(const std::string &workspace_name,
+                                                std::unique_ptr<base::LockFile> &lock_file) -> std::string {
   std::string path_prefix = base::makePath(bec::GRTManager::get()->get_user_datadir(), "sql_workspaces");
 
   // find workspaces on disk
@@ -224,7 +224,7 @@ struct GuardBoolFlag {
 
 // Restore a previously saved workspace for this connection. The loaded data is deleted immediately after loading
 // (unless its an autosave)
-bool SqlEditorForm::load_workspace(const std::string &workspace_name) {
+auto SqlEditorForm::load_workspace(const std::string &workspace_name) -> bool {
   std::string path_prefix = base::makePath(bec::GRTManager::get()->get_user_datadir(), "sql_workspaces");
 
   GuardBoolFlag flag(&_loading_workspace);
@@ -369,7 +369,7 @@ bool SqlEditorForm::load_workspace(const std::string &workspace_name) {
   return true;
 }
 
-SqlEditorPanel *SqlEditorForm::add_sql_editor(bool scratch, bool start_collapsed) {
+auto SqlEditorForm::add_sql_editor(bool scratch, bool start_collapsed) -> SqlEditorPanel * {
   SqlEditorPanel *editor(mforms::manage(new SqlEditorPanel(this, scratch, start_collapsed)));
   editor->editor_be()->register_file_drop_for(this);
 
@@ -391,9 +391,9 @@ SqlEditorPanel *SqlEditorForm::add_sql_editor(bool scratch, bool start_collapsed
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::DragOperation SqlEditorForm::drag_over(mforms::View *sender, base::Point p,
+auto SqlEditorForm::drag_over(mforms::View *sender, base::Point p,
                                                mforms::DragOperation allowedOperations,
-                                               const std::vector<std::string> &formats) {
+                                               const std::vector<std::string> &formats) -> mforms::DragOperation {
   // We can accept dropped files.
   if (std::find(formats.begin(), formats.end(), mforms::DragFormatFileName) != formats.end())
     return allowedOperations & mforms::DragOperationCopy; // Copy to indicate we don't do anything with the files.
@@ -402,9 +402,9 @@ mforms::DragOperation SqlEditorForm::drag_over(mforms::View *sender, base::Point
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::DragOperation SqlEditorForm::files_dropped(mforms::View *sender, base::Point p,
+auto SqlEditorForm::files_dropped(mforms::View *sender, base::Point p,
                                                    mforms::DragOperation allowedOperations,
-                                                   const std::vector<std::string> &file_names) {
+                                                   const std::vector<std::string> &file_names) -> mforms::DragOperation {
   if ((allowedOperations & mforms::DragOperationCopy) != mforms::DragOperationCopy)
     return mforms::DragOperationNone;
 
@@ -445,7 +445,7 @@ mforms::DragOperation SqlEditorForm::files_dropped(mforms::View *sender, base::P
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::remove_sql_editor(SqlEditorPanel *panel) {
+auto SqlEditorForm::remove_sql_editor(SqlEditorPanel *panel) -> void {
   panel->grtobj()->owner().clear();
   grtobj()->queryEditors().remove_value(panel->grtobj());
 
@@ -465,13 +465,13 @@ void SqlEditorForm::remove_sql_editor(SqlEditorPanel *panel) {
   // delete panel;
 }
 
-SqlEditorPanel *SqlEditorForm::active_sql_editor_panel() {
+auto SqlEditorForm::active_sql_editor_panel() -> SqlEditorPanel * {
   if (_tabdock)
     return dynamic_cast<SqlEditorPanel *>(_tabdock->selected_view());
   return nullptr;
 }
 
-void SqlEditorForm::sql_editor_panel_switched() {
+auto SqlEditorForm::sql_editor_panel_switched() -> void {
   SqlEditorPanel *panel = active_sql_editor_panel();
   if (panel)
     bec::GRTManager::get()->run_once_when_idle(
@@ -480,7 +480,7 @@ void SqlEditorForm::sql_editor_panel_switched() {
   validate_menubar();
 }
 
-void SqlEditorForm::sql_editor_panel_closed(mforms::AppView *view) {
+auto SqlEditorForm::sql_editor_panel_closed(mforms::AppView *view) -> void {
   if (!_closing) {
     if (_tabdock->view_count() == 0)
       new_sql_scratch_area();
@@ -501,7 +501,7 @@ void SqlEditorForm::sql_editor_panel_closed(mforms::AppView *view) {
   }
 }
 
-void SqlEditorForm::save_workspace_order(const std::string &prefix) {
+auto SqlEditorForm::save_workspace_order(const std::string &prefix) -> void {
   if (prefix.empty())
     logError("save with empty path\n");
 
@@ -516,7 +516,7 @@ void SqlEditorForm::save_workspace_order(const std::string &prefix) {
   }
 }
 
-void SqlEditorForm::sql_editor_reordered(SqlEditorPanel *panel, int to) {
+auto SqlEditorForm::sql_editor_reordered(SqlEditorPanel *panel, int to) -> void {
   if (!panel || to < 0)
     return;
 
@@ -567,13 +567,13 @@ void SqlEditorForm::sql_editor_reordered(SqlEditorPanel *panel, int to) {
 
 //--------------------------------------------------------------------------------------------------
 
-SqlEditorPanel *SqlEditorForm::sql_editor_panel(int index) {
+auto SqlEditorForm::sql_editor_panel(int index) -> SqlEditorPanel * {
   if (index >= 0 && index < _tabdock->view_count())
     return dynamic_cast<SqlEditorPanel *>(_tabdock->view_at_index(index));
   return NULL;
 }
 
-int SqlEditorForm::sql_editor_panel_index(SqlEditorPanel *panel) {
+auto SqlEditorForm::sql_editor_panel_index(SqlEditorPanel *panel) -> int {
   for (int c = _tabdock->view_count(), i = 0; i < c; i++) {
     if (sql_editor_panel(i) == panel)
       return i;
@@ -581,21 +581,21 @@ int SqlEditorForm::sql_editor_panel_index(SqlEditorPanel *panel) {
   return -1;
 }
 
-int SqlEditorForm::sql_editor_count() {
+auto SqlEditorForm::sql_editor_count() -> int {
   if (_tabdock)
     return _tabdock->view_count();
   return 0;
 }
 //--------------------------------------------------------------------------------------------------
 
-SqlEditorPanel *SqlEditorForm::new_sql_script_file() {
+auto SqlEditorForm::new_sql_script_file() -> SqlEditorPanel * {
   SqlEditorPanel *panel = add_sql_editor(false);
   bec::GRTManager::get()->replace_status_text(_("Added new script editor"));
   update_menu_and_toolbar();
   return panel;
 }
 
-SqlEditorPanel *SqlEditorForm::new_sql_scratch_area(bool start_collapsed) {
+auto SqlEditorForm::new_sql_scratch_area(bool start_collapsed) -> SqlEditorPanel * {
   SqlEditorPanel *panel = add_sql_editor(true, start_collapsed);
   bec::GRTManager::get()->replace_status_text(_("Added new scratch query editor"));
   update_menu_and_toolbar();
@@ -604,7 +604,7 @@ SqlEditorPanel *SqlEditorForm::new_sql_scratch_area(bool start_collapsed) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::open_file(const std::string &path, bool in_new_tab, bool askForFile) {
+auto SqlEditorForm::open_file(const std::string &path, bool in_new_tab, bool askForFile) -> void {
   std::string file_path = path;
 
   bec::GRTManager::get()->replace_status_text(base::strfmt(_("Opening %s..."), path.c_str()));
@@ -672,14 +672,14 @@ void SqlEditorForm::open_file(const std::string &path, bool in_new_tab, bool ask
 
 //--------------------------------------------------------------------------------------------------
 
-std::string SqlEditorForm::restore_sql_from_history(int entry_index, std::list<int> &detail_indexes) {
+auto SqlEditorForm::restore_sql_from_history(int entry_index, std::list<int> &detail_indexes) -> std::string {
   return _history->restore_sql_from_history(entry_index, detail_indexes);
 }
 
-void SqlEditorForm::set_autosave_disabled(const bool autosave_disabled) {
+auto SqlEditorForm::set_autosave_disabled(const bool autosave_disabled) -> void {
   _autosave_disabled = autosave_disabled;
 }
 
-bool SqlEditorForm::get_autosave_disabled(void) {
+auto SqlEditorForm::get_autosave_disabled(void) -> bool {
   return _autosave_disabled;
 }

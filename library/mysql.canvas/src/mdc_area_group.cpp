@@ -47,7 +47,7 @@ AreaGroup::AreaGroup(Layer *layer) : Group(layer), _dragged(false) {
 AreaGroup::~AreaGroup() {
 }
 
-void AreaGroup::repaint_contents(const Rect &localClipArea, bool direct) {
+auto AreaGroup::repaint_contents(const Rect &localClipArea, bool direct) -> void {
   if (_contents.size() > 0) {
     CairoCtx *cr = _layer->get_view()->cairoctx();
 
@@ -72,7 +72,7 @@ void AreaGroup::repaint_contents(const Rect &localClipArea, bool direct) {
   }
 }
 
-void AreaGroup::repaint(const Rect &clipArea, bool direct) {
+auto AreaGroup::repaint(const Rect &clipArea, bool direct) -> void {
   Rect localClipArea(clipArea);
 
   if (this != _layer->get_root_area_group()) {
@@ -83,13 +83,13 @@ void AreaGroup::repaint(const Rect &clipArea, bool direct) {
   repaint_contents(localClipArea, direct);
 }
 
-void AreaGroup::move_item(CanvasItem *item, const Point &pos) {
+auto AreaGroup::move_item(CanvasItem *item, const Point &pos) -> void {
   Point npos = constrain_rect_to_bounds(Rect(pos, item->get_size())).pos;
 
   item->move_to(npos);
 }
 
-Rect AreaGroup::constrain_rect_to_bounds(const Rect &rect) {
+auto AreaGroup::constrain_rect_to_bounds(const Rect &rect) -> Rect {
   Rect r = rect;
 
   if (r.right() > get_size().width)
@@ -107,15 +107,15 @@ Rect AreaGroup::constrain_rect_to_bounds(const Rect &rect) {
   return r;
 }
 
-void AreaGroup::set_selected(bool flag) {
+auto AreaGroup::set_selected(bool flag) -> void {
   Layouter::set_selected(flag);
 }
 
-void AreaGroup::update_bounds() {
+auto AreaGroup::update_bounds() -> void {
   // no op
 }
 
-bool AreaGroup::on_button_press(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto AreaGroup::on_button_press(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   Point p = convert_point_to(point, 0);
 
   _dragged = false;
@@ -127,7 +127,7 @@ bool AreaGroup::on_button_press(CanvasItem *target, const Point &point, MouseBut
   return false;
 }
 
-bool AreaGroup::on_button_release(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto AreaGroup::on_button_release(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   Point p = convert_point_to(point, 0);
 
   if (_drag_selects_contents)
@@ -142,7 +142,7 @@ bool AreaGroup::on_button_release(CanvasItem *target, const Point &point, MouseB
   return Group::on_button_release(target, point, button, state);
 }
 
-bool AreaGroup::on_drag(CanvasItem *target, const Point &point, EventState state) {
+auto AreaGroup::on_drag(CanvasItem *target, const Point &point, EventState state) -> bool {
   Point p = convert_point_to(point, 0);
 
   _dragged = true;
@@ -155,7 +155,7 @@ bool AreaGroup::on_drag(CanvasItem *target, const Point &point, EventState state
   return true;
 }
 
-bool AreaGroup::on_click(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto AreaGroup::on_click(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   if (!_dragged && accepts_selection()) {
     if (state & SControlMask) {
       if (!get_selected())

@@ -38,18 +38,18 @@
 #define lmwdprint(...)
 #endif
 
-static void process_menu_actions(
+static auto process_menu_actions(
   const std::string& command, bec::ListModel* model, const std::vector<bec::NodeId>& nodes,
-  const sigc::slot<void, const std::string&, const std::vector<bec::NodeId>&> fe_menu_handler) {
+  const sigc::slot<void, const std::string&, const std::vector<bec::NodeId>&> fe_menu_handler) -> void {
   if (!model->activate_popup_item_for_nodes(command, nodes) && !fe_menu_handler.empty())
     fe_menu_handler(command, nodes);
 }
 
 //------------------------------------------------------------------------------
-static void run_menu_and_forward_action(
+static auto run_menu_and_forward_action(
   const bec::MenuItemList& items, const int x, const int y, const int time, bec::ListModel* model,
   const std::vector<bec::NodeId>& nodes,
-  const sigc::slot<void, const std::string&, const std::vector<bec::NodeId>&> fe_menu_handler, Gtk::Menu* menu) {
+  const sigc::slot<void, const std::string&, const std::vector<bec::NodeId>&> fe_menu_handler, Gtk::Menu* menu) -> void {
   if (!items.empty())
     run_popup_menu(items, time, sigc::bind(sigc::ptr_fun(process_menu_actions), model, nodes, fe_menu_handler), menu);
 }
@@ -87,22 +87,22 @@ Index::Index(const GtkTreeIter* it) : _raw_data((char*)it), _ext(0) {
 }
 
 //------------------------------------------------------------------------------
-void Index::stamp(const int st) {
+auto Index::stamp(const int st) -> void {
   ((Info*)_raw_data)->stamp = st % StampMax;
 }
 
 //------------------------------------------------------------------------------
-int Index::stamp() const {
+auto Index::stamp() const -> int {
   return ((Info*)_raw_data)->stamp;
 }
 
 //------------------------------------------------------------------------------
-bool Index::cmp_stamp(const int st) const {
+auto Index::cmp_stamp(const int st) const -> bool {
   return ((Info*)_raw_data)->stamp == (st % StampMax);
 }
 
 //------------------------------------------------------------------------------
-int Index::word(const int w) const {
+auto Index::word(const int w) const -> int {
   int ret = 0;
 
   if (mode() == Internal) {
@@ -116,7 +116,7 @@ int Index::word(const int w) const {
 }
 
 //------------------------------------------------------------------------------
-void Index::word(const int w, const int v) {
+auto Index::word(const int w, const int v) -> void {
   if (mode() == Internal) {
     int start_byte = (w * K) + 1;
     char* dest = _raw_data + start_byte;
@@ -129,7 +129,7 @@ void Index::word(const int w, const int v) {
 }
 
 //------------------------------------------------------------------------------
-bec::NodeId Index::to_node() const {
+auto Index::to_node() const -> bec::NodeId {
   bec::NodeId node;
   if (mode() == Internal) {
     int v;
@@ -155,7 +155,7 @@ bec::NodeId Index::to_node() const {
 }
 
 //------------------------------------------------------------------------------
-void Index::reset_iter(GtkTreeIter* it) {
+auto Index::reset_iter(GtkTreeIter* it) -> void {
   memset(it, 0xff, sizeof(*it));
   *((char*)it) = 0;
 }
@@ -177,7 +177,7 @@ ColumnsModel::~ColumnsModel() {
 }
 
 //------------------------------------------------------------------------------
-void ColumnsModel::reset(const bool cleanup_only_self) {
+auto ColumnsModel::reset(const bool cleanup_only_self) -> void {
   if (!cleanup_only_self)
     _treeview->remove_all_columns();
 
@@ -191,19 +191,19 @@ void ColumnsModel::reset(const bool cleanup_only_self) {
 }
 
 //------------------------------------------------------------------------------
-void ColumnsModel::add_bec_index_mapping(const int bec_tm_index) {
+auto ColumnsModel::add_bec_index_mapping(const int bec_tm_index) -> void {
   _ui2bec.push_back(bec_tm_index);
 }
 
 //------------------------------------------------------------------------------
-int ColumnsModel::ui2bec(const int index_of_ui_column) const {
+auto ColumnsModel::ui2bec(const int index_of_ui_column) const -> int {
   g_assert((size_t)index_of_ui_column < _ui2bec.size());
 
   return _ui2bec[index_of_ui_column];
 }
 
 //------------------------------------------------------------------------------
-const StringColumn& ColumnsModel::set_text_column(const int bec_tm_idx, const bool editable, Gtk::IconView* iv) {
+auto ColumnsModel::set_text_column(const int bec_tm_idx, const bool editable, Gtk::IconView* iv) -> const StringColumn& {
   // Create columns
   // add mapping from ui to bec
   // add them with add() to the model
@@ -229,7 +229,7 @@ const StringColumn& ColumnsModel::set_text_column(const int bec_tm_idx, const bo
 }
 
 //------------------------------------------------------------------------------
-void ColumnsModel::add_tooltip_column(int bec_tm_idx) {
+auto ColumnsModel::add_tooltip_column(int bec_tm_idx) -> void {
   Gtk::TreeModelColumn<Glib::ustring>* col = new Gtk::TreeModelColumn<Glib::ustring>;
   add(*col);
   add_bec_index_mapping(-bec_tm_idx); // negative means pick description
@@ -238,8 +238,8 @@ void ColumnsModel::add_tooltip_column(int bec_tm_idx) {
 }
 
 //------------------------------------------------------------------------------
-const IntColumn& ColumnsModel::append_int_column(const int bec_tm_idx, const std::string& name,
-                                                 const Editable editable) {
+auto ColumnsModel::append_int_column(const int bec_tm_idx, const std::string& name,
+                                                 const Editable editable) -> const IntColumn& {
   Gtk::TreeModelColumn<int>* col = new Gtk::TreeModelColumn<int>;
 
   add(*col);
@@ -263,8 +263,8 @@ const IntColumn& ColumnsModel::append_int_column(const int bec_tm_idx, const std
 }
 
 //------------------------------------------------------------------------------
-const DoubleColumn& ColumnsModel::append_double_column(const int bec_tm_idx, const std::string& name,
-                                                       const Editable editable) {
+auto ColumnsModel::append_double_column(const int bec_tm_idx, const std::string& name,
+                                                       const Editable editable) -> const DoubleColumn& {
   Gtk::TreeModelColumn<double>* col = new Gtk::TreeModelColumn<double>;
   add_bec_index_mapping(bec_tm_idx);
   add(*col);
@@ -275,7 +275,7 @@ const DoubleColumn& ColumnsModel::append_double_column(const int bec_tm_idx, con
 }
 
 //------------------------------------------------------------------------------
-void ColumnsModel::disable_edit_first_row(Gtk::CellRenderer* cell, const Gtk::TreeIter& iter) {
+auto ColumnsModel::disable_edit_first_row(Gtk::CellRenderer* cell, const Gtk::TreeIter& iter) -> void {
   Gtk::CellRendererText* txt = (Gtk::CellRendererText*)cell;
   if (txt) {
     Gtk::TreeModel::Path path = this->_treeview->get_model()->get_path(iter);
@@ -286,8 +286,8 @@ void ColumnsModel::disable_edit_first_row(Gtk::CellRenderer* cell, const Gtk::Tr
   }
 }
 
-const StringColumn& ColumnsModel::append_string_column(const int bec_tm_idx, const std::string& name,
-                                                       const Editable editable, const Iconic have_icon) {
+auto ColumnsModel::append_string_column(const int bec_tm_idx, const std::string& name,
+                                                       const Editable editable, const Iconic have_icon) -> const StringColumn& {
   Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>* icon = 0;
 
   Gtk::TreeViewColumn* column = Gtk::manage(new Gtk::TreeViewColumn(base::replaceString(name, "_", "__")));
@@ -327,8 +327,8 @@ const StringColumn& ColumnsModel::append_string_column(const int bec_tm_idx, con
 }
 
 //------------------------------------------------------------------------------
-const StringColumn& ColumnsModel::append_markup_column(const int bec_tm_idx, const std::string& name,
-                                                       const Iconic have_icon) {
+auto ColumnsModel::append_markup_column(const int bec_tm_idx, const std::string& name,
+                                                       const Iconic have_icon) -> const StringColumn& {
   Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>>* icon = 0;
 
   Gtk::TreeViewColumn* column = Gtk::manage(new Gtk::TreeViewColumn(base::replaceString(name, "_", "__")));
@@ -358,9 +358,9 @@ const StringColumn& ColumnsModel::append_markup_column(const int bec_tm_idx, con
 }
 
 //------------------------------------------------------------------------------
-const StringColumn& ColumnsModel::append_combo_column(const int bec_tm_idx, const std::string& name,
+auto ColumnsModel::append_combo_column(const int bec_tm_idx, const std::string& name,
                                                       Glib::RefPtr<Gtk::ListStore> list_w, const Editable editable,
-                                                      bool popup_only) {
+                                                      bool popup_only) -> const StringColumn& {
   Gtk::TreeModelColumn<Glib::ustring>* choosen = new Gtk::TreeModelColumn<Glib::ustring>;
   _columns.push_back(choosen);
   add(*choosen);
@@ -396,8 +396,8 @@ const StringColumn& ColumnsModel::append_combo_column(const int bec_tm_idx, cons
 }
 
 //------------------------------------------------------------------------------
-int ColumnsModel::append_check_column(const int bec_tm_idx, const std::string& name, const Editable editable,
-                                      const ToggleAction action) {
+auto ColumnsModel::append_check_column(const int bec_tm_idx, const std::string& name, const Editable editable,
+                                      const ToggleAction action) -> int {
   Gtk::TreeModelColumn<bool>* col = new Gtk::TreeModelColumn<bool>;
   _columns.push_back(col);
   add(*col);
@@ -427,8 +427,8 @@ int ColumnsModel::append_check_column(const int bec_tm_idx, const std::string& n
 
 //------------------------------------------------------------------------------
 
-int ColumnsModel::add_generic_column(const int bec_tm_idx, Gtk::TreeModelColumnBase* column,
-                                     Gtk::TreeViewColumn* vcolumn) {
+auto ColumnsModel::add_generic_column(const int bec_tm_idx, Gtk::TreeModelColumnBase* column,
+                                     Gtk::TreeViewColumn* vcolumn) -> int {
   add(*column);
   add_bec_index_mapping(bec_tm_idx);
 
@@ -436,7 +436,7 @@ int ColumnsModel::add_generic_column(const int bec_tm_idx, Gtk::TreeModelColumnB
 }
 
 //------------------------------------------------------------------------------
-void ColumnsModel::add_model_column(Gtk::TreeModelColumnBase* col, int bec_tm_idx) {
+auto ColumnsModel::add_model_column(Gtk::TreeModelColumnBase* col, int bec_tm_idx) -> void {
   add(*col);
   add_bec_index_mapping(bec_tm_idx);
   _columns.push_back(col);
@@ -473,7 +473,7 @@ ListModelWrapper::ListModelWrapper(bec::ListModel* tm, Gtk::TreeView* treeview, 
 }
 
 //------------------------------------------------------------------------------
-void* ListModelWrapper::on_bec_model_destroyed(void* data) {
+auto ListModelWrapper::on_bec_model_destroyed(void* data) -> void* {
   bec::ListModel** ptr = (bec::ListModel**)data;
   *ptr = 0;
   return 0;
@@ -488,7 +488,7 @@ ListModelWrapper::~ListModelWrapper() {
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::set_iconview(Gtk::IconView* iv) {
+auto ListModelWrapper::set_iconview(Gtk::IconView* iv) -> void {
   _iconview = iv;
 #ifndef NO_MENU_MANAGER
   if (_iconview)
@@ -497,7 +497,7 @@ void ListModelWrapper::set_iconview(Gtk::IconView* iv) {
 }
 
 //------------------------------------------------------------------------------
-ListModelWrapper::NodeIdArray ListModelWrapper::get_selection() const {
+auto ListModelWrapper::get_selection() const -> ListModelWrapper::NodeIdArray {
   NodeIdArray nodes;
   std::vector<Gtk::TreePath> paths;
 
@@ -515,7 +515,7 @@ ListModelWrapper::NodeIdArray ListModelWrapper::get_selection() const {
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::set_be_model(bec::ListModel* tm) {
+auto ListModelWrapper::set_be_model(bec::ListModel* tm) -> void {
   if (*_tm)
     (*_tm)->remove_destroy_notify_callback(_tm);
   *_tm = tm;
@@ -526,7 +526,7 @@ void ListModelWrapper::set_be_model(bec::ListModel* tm) {
 
 #ifndef NO_MENU_MANAGER
 //------------------------------------------------------------------------------
-void ListModelWrapper::handle_popup(const int x, const int y, const int time, GdkEventButton* evb) {
+auto ListModelWrapper::handle_popup(const int x, const int y, const int time, GdkEventButton* evb) -> void {
   Gtk::TreeModel::Path path;
   Gtk::TreeView::Column* column(0);
   int cell_x(-1);
@@ -581,7 +581,7 @@ void ListModelWrapper::handle_popup(const int x, const int y, const int time, Gd
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::handle_popup_event(GdkEvent* event) {
+auto ListModelWrapper::handle_popup_event(GdkEvent* event) -> bool {
   bool ret = false;
   if ((event->type == GDK_BUTTON_PRESS && event->button.button == 3) ||
       (event->type == GDK_KEY_RELEASE && event->key.keyval == GDK_KEY_Menu)) {
@@ -596,19 +596,19 @@ bool ListModelWrapper::handle_popup_event(GdkEvent* event) {
 #endif
 
 //------------------------------------------------------------------------------
-Gtk::TreeModelFlags ListModelWrapper::get_flags_vfunc() const {
+auto ListModelWrapper::get_flags_vfunc() const -> Gtk::TreeModelFlags {
   return Gtk::TREE_MODEL_ITERS_PERSIST | Gtk::TREE_MODEL_LIST_ONLY;
 }
 
 //------------------------------------------------------------------------------
-bec::NodeId ListModelWrapper::get_node_for_path(const Gtk::TreeModel::Path& path) const {
+auto ListModelWrapper::get_node_for_path(const Gtk::TreeModel::Path& path) const -> bec::NodeId {
   if (path.empty())
     return bec::NodeId();
   return bec::NodeId(path.to_string());
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::init_gtktreeiter(GtkTreeIter* it, const bec::NodeId& node) const {
+auto ListModelWrapper::init_gtktreeiter(GtkTreeIter* it, const bec::NodeId& node) const -> bool {
   if (*_tm && it && node.is_valid()) {
     Index id(it, node);
     id.stamp(_stamp);
@@ -617,7 +617,7 @@ bool ListModelWrapper::init_gtktreeiter(GtkTreeIter* it, const bec::NodeId& node
 }
 
 //------------------------------------------------------------------------------
-bec::NodeId ListModelWrapper::node_for_iter(const iterator& iter) const {
+auto ListModelWrapper::node_for_iter(const iterator& iter) const -> bec::NodeId {
   const GtkTreeIter* it = iter.gobj();
   bec::NodeId node;
 
@@ -631,14 +631,14 @@ bec::NodeId ListModelWrapper::node_for_iter(const iterator& iter) const {
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::refresh() {
+auto ListModelWrapper::refresh() -> void {
   if (*_tm)
     (*_tm)->refresh();
   model_changed(bec::NodeId(), -1);
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::note_row_added() {
+auto ListModelWrapper::note_row_added() -> void {
   if (*_tm) {
     (*_tm)->refresh();
     Gtk::TreePath path((*_tm)->count() - 1);
@@ -648,12 +648,12 @@ void ListModelWrapper::note_row_added() {
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::set_fake_column_value_getter(FakeColumnValueGetter fake_getter) {
+auto ListModelWrapper::set_fake_column_value_getter(FakeColumnValueGetter fake_getter) -> void {
   _fake_column_value_getter = fake_getter;
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::set_fake_column_value_setter(FakeColumnValueSetter fake_setter) {
+auto ListModelWrapper::set_fake_column_value_setter(FakeColumnValueSetter fake_setter) -> void {
   _fake_column_value_setter = fake_setter;
 }
 
@@ -664,17 +664,17 @@ void ListModelWrapper::reset_iter(iterator& iter) const throw() {
 }
 
 //------------------------------------------------------------------------------
-int ListModelWrapper::get_n_columns_vfunc() const {
+auto ListModelWrapper::get_n_columns_vfunc() const -> int {
   return _columns.size();
 }
 
 //------------------------------------------------------------------------------
-GType ListModelWrapper::get_column_type_vfunc(int index) const {
+auto ListModelWrapper::get_column_type_vfunc(int index) const -> GType {
   return *(_columns.types() + index);
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::iter_next_vfunc(const iterator& iter, iterator& iter_next) const {
+auto ListModelWrapper::iter_next_vfunc(const iterator& iter, iterator& iter_next) const -> bool {
   bool ret = false;
   bec::NodeId current_node = node_for_iter(iter);
 
@@ -700,7 +700,7 @@ bool ListModelWrapper::iter_next_vfunc(const iterator& iter, iterator& iter_next
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::get_iter_vfunc(const Path& path, iterator& iter) const {
+auto ListModelWrapper::get_iter_vfunc(const Path& path, iterator& iter) const -> bool {
   bool ret = false;
   GtkTreeIter* it = iter.gobj();
 
@@ -717,22 +717,22 @@ bool ListModelWrapper::get_iter_vfunc(const Path& path, iterator& iter) const {
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::iter_children_vfunc(const iterator& parent, iterator& iter) const {
+auto ListModelWrapper::iter_children_vfunc(const iterator& parent, iterator& iter) const -> bool {
   return false;
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::iter_parent_vfunc(const iterator& child, iterator& iter) const {
+auto ListModelWrapper::iter_parent_vfunc(const iterator& child, iterator& iter) const -> bool {
   return false;
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::iter_nth_child_vfunc(const iterator& parent, int n, iterator& iter) const {
+auto ListModelWrapper::iter_nth_child_vfunc(const iterator& parent, int n, iterator& iter) const -> bool {
   return false;
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::iter_nth_root_child_vfunc(int n, iterator& iter) const {
+auto ListModelWrapper::iter_nth_root_child_vfunc(int n, iterator& iter) const -> bool {
   bool ret = false;
   // Sets @a iter to be the child of at the root level using the given index.  The first
   // index is 0.  If @a n is too big, or if there are no children, @a iter is set
@@ -748,23 +748,23 @@ bool ListModelWrapper::iter_nth_root_child_vfunc(int n, iterator& iter) const {
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::iter_has_child_vfunc(const iterator& iter) const {
+auto ListModelWrapper::iter_has_child_vfunc(const iterator& iter) const -> bool {
   return iter_n_children_vfunc(iter) != 0;
 }
 
 //------------------------------------------------------------------------------
-int ListModelWrapper::iter_n_children_vfunc(const iterator& iter) const {
+auto ListModelWrapper::iter_n_children_vfunc(const iterator& iter) const -> int {
   return 0;
 }
 
 //------------------------------------------------------------------------------
-int ListModelWrapper::iter_n_root_children_vfunc() const {
+auto ListModelWrapper::iter_n_root_children_vfunc() const -> int {
   const int ret = *_tm ? (*_tm)->count() : 0;
   return ret;
 }
 
 //------------------------------------------------------------------------------
-Gtk::TreeModel::Path ListModelWrapper::get_path_vfunc(const iterator& iter) const {
+auto ListModelWrapper::get_path_vfunc(const iterator& iter) const -> Gtk::TreeModel::Path {
   const bec::NodeId node = node_for_iter(iter);
   Gtk::TreeModel::Path path;
 
@@ -779,8 +779,8 @@ Gtk::TreeModel::Path ListModelWrapper::get_path_vfunc(const iterator& iter) cons
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::get_icon_value(const iterator& iter, int column, const bec::NodeId& node,
-                                      Glib::ValueBase& value) const {
+auto ListModelWrapper::get_icon_value(const iterator& iter, int column, const bec::NodeId& node,
+                                      Glib::ValueBase& value) const -> void {
   if (!*_tm)
     return;
 
@@ -800,7 +800,7 @@ void ListModelWrapper::get_icon_value(const iterator& iter, int column, const be
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::get_value_vfunc(const iterator& iter, int column, Glib::ValueBase& value) const {
+auto ListModelWrapper::get_value_vfunc(const iterator& iter, int column, Glib::ValueBase& value) const -> void {
   if (!*_tm)
     return;
 
@@ -871,14 +871,14 @@ void ListModelWrapper::get_value_vfunc(const iterator& iter, int column, Glib::V
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::iter_is_valid(const iterator& iter) const {
+auto ListModelWrapper::iter_is_valid(const iterator& iter) const -> bool {
   bec::NodeId node(node_for_iter(iter));
 
   return node.is_valid();
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::set_value_impl(const iterator& row, int column, const Glib::ValueBase& value) {
+auto ListModelWrapper::set_value_impl(const iterator& row, int column, const Glib::ValueBase& value) -> void {
   if (!*_tm)
     return;
 
@@ -931,28 +931,28 @@ void ListModelWrapper::set_value_impl(const iterator& row, int column, const Gli
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::get_value_impl(const iterator& row, int column, Glib::ValueBase& value) const {
+auto ListModelWrapper::get_value_impl(const iterator& row, int column, Glib::ValueBase& value) const -> void {
   get_value_vfunc(row, column, value);
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::set_row_draggable_slot(const sigc::slot<bool, Gtk::TreeModel::Path>& slot) {
+auto ListModelWrapper::set_row_draggable_slot(const sigc::slot<bool, Gtk::TreeModel::Path>& slot) -> void {
   _row_draggable = slot;
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::drag_data_get_vfunc(const Gtk::TreeModel::Path& path, Gtk::SelectionData& selection_data) const {
+auto ListModelWrapper::drag_data_get_vfunc(const Gtk::TreeModel::Path& path, Gtk::SelectionData& selection_data) const -> bool {
   selection_data.set("text/path", path.to_string());
   return true;
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::drag_data_delete_vfunc(const Gtk::TreeModel::Path& path) {
+auto ListModelWrapper::drag_data_delete_vfunc(const Gtk::TreeModel::Path& path) -> bool {
   return true;
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::row_draggable_vfunc(const TreeModel::Path& path) const {
+auto ListModelWrapper::row_draggable_vfunc(const TreeModel::Path& path) const -> bool {
   if (_row_draggable)
     return _row_draggable(path);
 
@@ -960,14 +960,14 @@ bool ListModelWrapper::row_draggable_vfunc(const TreeModel::Path& path) const {
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::row_drop_possible_vfunc(const Gtk::TreeModel::Path& dest,
-                                               const Gtk::SelectionData& selection_data) const {
+auto ListModelWrapper::row_drop_possible_vfunc(const Gtk::TreeModel::Path& dest,
+                                               const Gtk::SelectionData& selection_data) const -> bool {
   return true;
 }
 
 //------------------------------------------------------------------------------
-bool ListModelWrapper::drag_data_received_vfunc(const Gtk::TreeModel::Path& dest,
-                                                const Gtk::SelectionData& selection_data) {
+auto ListModelWrapper::drag_data_received_vfunc(const Gtk::TreeModel::Path& dest,
+                                                const Gtk::SelectionData& selection_data) -> bool {
   bool ret = false;
   // Currently this works for linear lists
   try {
@@ -979,7 +979,7 @@ bool ListModelWrapper::drag_data_received_vfunc(const Gtk::TreeModel::Path& dest
 }
 
 //------------------------------------------------------------------------------
-void ListModelWrapper::invalidate() {
+auto ListModelWrapper::invalidate() -> void {
   _invalid = true;
   *_tm = 0;
   _stamp++;

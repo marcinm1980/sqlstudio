@@ -36,29 +36,29 @@ Box::Box(bool horiz) {
   _box_impl->create(this, horiz);
 }
 
-void Box::add(View *subview, bool expand, bool fill) {
+auto Box::add(View *subview, bool expand, bool fill) -> void {
   cache_view(subview);
   _box_impl->add(this, subview, expand, fill); // Add to platform dependent hierarchy.
 }
 
-void Box::add_end(View *subview, bool expand, bool fill) {
+auto Box::add_end(View *subview, bool expand, bool fill) -> void {
   cache_view(subview);
   _box_impl->add_end(this, subview, expand, fill);
 }
 
-void Box::remove(View *subview) {
+auto Box::remove(View *subview) -> void {
   _box_impl->remove(this, subview);
   remove_from_cache(subview);
 }
 
-void Box::set_homogeneous(bool flag) {
+auto Box::set_homogeneous(bool flag) -> void {
   _box_impl->set_homogeneous(this, flag);
 }
 
-void Box::set_spacing(int space) {
+auto Box::set_spacing(int space) -> void {
   _box_impl->set_spacing(this, space);
 }
 
-bool mforms::Box::is_horizontal() {
+auto mforms::Box::is_horizontal() -> bool {
   return _is_horizontal;
 }

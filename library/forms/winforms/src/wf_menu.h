@@ -33,17 +33,17 @@ namespace MySQL {
     protected:
       MenuWrapper(mforms::Menu* backend);
 
-      static bool create(mforms::Menu* backend);
-      static void remove_item(mforms::Menu* backend, int i);
-      static int add_item(mforms::Menu* backend, const std::string& caption, const std::string& action);
-      static int add_separator(mforms::Menu* backend);
-      static int add_submenu(mforms::Menu* backend, const std::string& caption, mforms::Menu* submenu);
-      static void set_item_enabled(mforms::Menu* backend, int i, bool flag);
-      static void popup_at(mforms::Menu* backend, mforms::Object* control, int x, int y);
-      static void clear(mforms::Menu* backend);
+      static auto create(mforms::Menu* backend) -> bool;
+      static auto remove_item(mforms::Menu* backend, int i) -> void;
+      static auto add_item(mforms::Menu* backend, const std::string& caption, const std::string& action) -> int;
+      static auto add_separator(mforms::Menu* backend) -> int;
+      static auto add_submenu(mforms::Menu* backend, const std::string& caption, mforms::Menu* submenu) -> int;
+      static auto set_item_enabled(mforms::Menu* backend, int i, bool flag) -> void;
+      static auto popup_at(mforms::Menu* backend, mforms::Object* control, int x, int y) -> void;
+      static auto clear(mforms::Menu* backend) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

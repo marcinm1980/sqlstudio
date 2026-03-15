@@ -63,11 +63,11 @@ namespace wb {
     virtual ~InlineEditContext() {
     }
 
-    virtual void begin_editing(int x, int y, int width, int height, const std::string &text) = 0;
-    virtual void end_editing() = 0;
+    virtual auto begin_editing(int x, int y, int width, int height, const std::string &text) -> void = 0;
+    virtual auto end_editing() -> void = 0;
 
-    virtual void set_font_size(float size) = 0;
-    virtual void set_multiline(bool flag) = 0;
+    virtual auto set_font_size(float size) -> void = 0;
+    virtual auto set_multiline(bool flag) -> void = 0;
 
     boost::signals2::signal<void(std::string, EditFinishReason)> *signal_edit_finished() {
       return &_signal_edit_finished;
@@ -83,163 +83,163 @@ namespace wb {
     ModelDiagramForm(WBComponent *owner, const model_DiagramRef &view);
     virtual ~ModelDiagramForm();
 
-    void attach_canvas_view(mdc::CanvasView *cview);
+    auto attach_canvas_view(mdc::CanvasView *cview) -> void;
 
-    virtual bool is_main_form() {
+    virtual auto is_main_form() -> bool {
       return true;
     }
-    virtual std::string get_form_context_name() const;
+    virtual auto get_form_context_name() const -> std::string;
 
-    mdc::CanvasView *get_view() {
+    auto get_view() -> mdc::CanvasView * {
       return _view;
     }
-    model_DiagramRef &get_model_diagram() {
+    auto get_model_diagram() -> model_DiagramRef & {
       return _model_diagram;
     }
 
-    grt::DictRef get_model_options() {
+    auto get_model_options() -> grt::DictRef {
       return _model_diagram->owner()->options();
     }
-    grt::DictRef get_diagram_options() {
+    auto get_diagram_options() -> grt::DictRef {
       return _model_diagram->options();
     }
-    CatalogTreeView *get_catalog_tree();
-    void notify_catalog_tree(const wb::CatalogNodeNotificationType &notify_type, grt::ValueRef value);
-    void refill_catalog_tree();
+    auto get_catalog_tree() -> CatalogTreeView *;
+    auto notify_catalog_tree(const wb::CatalogNodeNotificationType &notify_type, grt::ValueRef value) -> void;
+    auto refill_catalog_tree() -> void;
 
-    void set_closed(bool flag);
-    bool is_closed();
-    virtual void close();
+    auto set_closed(bool flag) -> void;
+    auto is_closed() -> bool;
+    virtual auto close() -> void;
 
-    mdc::CanvasItem *get_leaf_item_at(const base::Point &pos);
+    auto get_leaf_item_at(const base::Point &pos) -> mdc::CanvasItem *;
 
-    bec::Clipboard *get_clipboard();
+    auto get_clipboard() -> bec::Clipboard *;
 
-    WBContext *get_wb();
+    auto get_wb() -> WBContext *;
 
-    virtual std::string get_title();
+    virtual auto get_title() -> std::string;
 
-    virtual bool can_undo();
-    virtual bool can_redo();
-    virtual bool can_copy();
-    virtual bool can_paste();
-    virtual bool can_delete();
-    virtual bool can_select_all();
+    virtual auto can_undo() -> bool;
+    virtual auto can_redo() -> bool;
+    virtual auto can_copy() -> bool;
+    virtual auto can_paste() -> bool;
+    virtual auto can_delete() -> bool;
+    virtual auto can_select_all() -> bool;
 
-    virtual void undo();
-    virtual void redo();
-    virtual void cut();
-    virtual void copy();
-    virtual void paste();
-    virtual void delete_selection();
-    virtual void select_all();
+    virtual auto undo() -> void;
+    virtual auto redo() -> void;
+    virtual auto cut() -> void;
+    virtual auto copy() -> void;
+    virtual auto paste() -> void;
+    virtual auto delete_selection() -> void;
+    virtual auto select_all() -> void;
 
-    void remove_selection(bool deleteSelection = false);
+    auto remove_selection(bool deleteSelection = false) -> void;
 
-    virtual std::string get_edit_target_name();
+    virtual auto get_edit_target_name() -> std::string;
 
-    std::string get_diagram_info_text();
+    auto get_diagram_info_text() -> std::string;
 
-    std::vector<std::string> get_accepted_drop_types();
+    auto get_accepted_drop_types() -> std::vector<std::string>;
 
-    grt::ListRef<model_Object> get_selection();
-    grt::ListRef<model_Object> get_copiable_selection();
-    bool has_selection();
+    auto get_selection() -> grt::ListRef<model_Object>;
+    auto get_copiable_selection() -> grt::ListRef<model_Object>;
+    auto has_selection() -> bool;
 
-    double get_zoom();
-    void set_zoom(double zoom);
-    void zoom_in();
-    void zoom_out();
+    auto get_zoom() -> double;
+    auto set_zoom(double zoom) -> void;
+    auto zoom_in() -> void;
+    auto zoom_out() -> void;
 
-    void set_button_callback(
-      const std::function<bool(ModelDiagramForm *, mdc::MouseButton, bool, base::Point, mdc::EventState)> &cb);
-    void set_motion_callback(const std::function<bool(ModelDiagramForm *, base::Point, mdc::EventState)> &cb);
-    void set_reset_tool_callback(const std::function<void(ModelDiagramForm *)> &cb);
+    auto set_button_callback(
+      const std::function<bool(ModelDiagramForm *, mdc::MouseButton, bool, base::Point, mdc::EventState)> &cb) -> void;
+    auto set_motion_callback(const std::function<bool(ModelDiagramForm *, base::Point, mdc::EventState)> &cb) -> void;
+    auto set_reset_tool_callback(const std::function<void(ModelDiagramForm *)> &cb) -> void;
 
-    std::string get_tool() {
+    auto get_tool() -> std::string {
       return _tool;
     }
-    void set_tool(std::string tool);
-    void reset_tool(bool notify);
-    void set_tool_argument(const std::string &option, const std::string &value);
-    std::string get_tool_argument(const std::string &option);
+    auto set_tool(std::string tool) -> void;
+    auto reset_tool(bool notify) -> void;
+    auto set_tool_argument(const std::string &option, const std::string &value) -> void;
+    auto get_tool_argument(const std::string &option) -> std::string;
 
-    bool is_visible(const model_ObjectRef &object, bool partially);
-    void focus_and_make_visible(const model_ObjectRef &object, bool select);
+    auto is_visible(const model_ObjectRef &object, bool partially) -> bool;
+    auto focus_and_make_visible(const model_ObjectRef &object, bool select) -> void;
 
-    bool search_and_focus_object(const std::string &text);
+    auto search_and_focus_object(const std::string &text) -> bool;
 
-    void set_cursor(const std::string &cursor);
-    inline const std::string &get_cursor() {
+    auto set_cursor(const std::string &cursor) -> void;
+    inline auto get_cursor() -> const std::string & {
       return _cursor;
     }
 
     // sidebar
-    mforms::TreeView *get_layer_tree();
-    MiniView *get_mini_view() {
+    auto get_layer_tree() -> mforms::TreeView *;
+    auto get_mini_view() -> MiniView * {
       return _mini_view;
     }
 
-    void setup_mini_view(mdc::CanvasView *view);
-    void update_mini_view_size(int w, int h);
-    void setBackgroundColor(base::Color const &color);
+    auto setup_mini_view(mdc::CanvasView *view) -> void;
+    auto update_mini_view_size(int w, int h) -> void;
+    auto setBackgroundColor(base::Color const &color) -> void;
 
     // events
-    void handle_mouse_move(int x, int y, mdc::EventState state);
-    void handle_mouse_button(mdc::MouseButton button, bool press, int x, int y, mdc::EventState state);
-    void handle_mouse_double_click(mdc::MouseButton button, int x, int y, mdc::EventState state);
-    void handle_mouse_leave(int x, int y, mdc::EventState state);
-    bool handle_key(const mdc::KeyInfo &key, bool press, mdc::EventState state);
+    auto handle_mouse_move(int x, int y, mdc::EventState state) -> void;
+    auto handle_mouse_button(mdc::MouseButton button, bool press, int x, int y, mdc::EventState state) -> void;
+    auto handle_mouse_double_click(mdc::MouseButton button, int x, int y, mdc::EventState state) -> void;
+    auto handle_mouse_leave(int x, int y, mdc::EventState state) -> void;
+    auto handle_key(const mdc::KeyInfo &key, bool press, mdc::EventState state) -> bool;
 
-    bool current_mouse_position(int &x, int &y);
-    bool current_mouse_position(base::Point &pos);
+    auto current_mouse_position(int &x, int &y) -> bool;
+    auto current_mouse_position(base::Point &pos) -> bool;
 
     // drag&drop
-    bool accepts_drop(int x, int y, const std::string &type, const std::list<GrtObjectRef> &objects);
-    bool accepts_drop(int x, int y, const std::string &type, const std::string &text);
+    auto accepts_drop(int x, int y, const std::string &type, const std::list<GrtObjectRef> &objects) -> bool;
+    auto accepts_drop(int x, int y, const std::string &type, const std::string &text) -> bool;
 
-    bool perform_drop(int x, int y, const std::string &type, const std::list<GrtObjectRef> &objects);
-    bool perform_drop(int x, int y, const std::string &type, const std::string &text);
+    auto perform_drop(int x, int y, const std::string &type, const std::list<GrtObjectRef> &objects) -> bool;
+    auto perform_drop(int x, int y, const std::string &type, const std::string &text) -> bool;
 
-    model_LayerRef get_layer_at(const base::Point &pos, base::Point &offset);
-    model_LayerRef get_layer_bounding(const base::Rect &rect, base::Point &offset);
-    model_ObjectRef get_object_at(const base::Point &pos);
+    auto get_layer_at(const base::Point &pos, base::Point &offset) -> model_LayerRef;
+    auto get_layer_bounding(const base::Rect &rect, base::Point &offset) -> model_LayerRef;
+    auto get_object_at(const base::Point &pos) -> model_ObjectRef;
 
-    mdc::Layer *get_floater_layer();
-    void add_floater(Floater *floater);
+    auto get_floater_layer() -> mdc::Layer *;
+    auto add_floater(Floater *floater) -> void;
 
-    void enable_panning(bool flag);
-    void enable_zoom_click(bool enable, bool zoomin);
+    auto enable_panning(bool flag) -> void;
+    auto enable_zoom_click(bool enable, bool zoomin) -> void;
 
     boost::signals2::signal<void(std::string)> *signal_tool_argument_changed() {
       return &_tool_argument_changed;
     }
 
-    WBComponent *get_owner() {
+    auto get_owner() -> WBComponent * {
       return _owner;
     }
 
-    bool get_highlight_fks() {
+    auto get_highlight_fks() -> bool {
       return _highlight_fks;
     }
-    void set_highlight_fks(bool flag);
+    auto set_highlight_fks(bool flag) -> void;
 
     // inline editing
-    void begin_editing(const base::Rect &rect, const std::string &text, float text_size, bool multiline);
-    void stop_editing();
+    auto begin_editing(const base::Rect &rect, const std::string &text, float text_size, bool multiline) -> void;
+    auto stop_editing() -> void;
     boost::signals2::signal<void(std::string, EditFinishReason)> *signal_editing_done() {
       return &_signal_editing_done;
     }
 
-    void set_inline_editor_context(InlineEditContext *context);
+    auto set_inline_editor_context(InlineEditContext *context) -> void;
 
-    virtual mforms::ToolBar *get_toolbar();
-    mforms::ToolBar *get_tools_toolbar();
-    mforms::ToolBar *get_options_toolbar();
-    void update_options_toolbar();
+    virtual auto get_toolbar() -> mforms::ToolBar *;
+    auto get_tools_toolbar() -> mforms::ToolBar *;
+    auto get_options_toolbar() -> mforms::ToolBar *;
+    auto update_options_toolbar() -> void;
 
-    virtual mforms::MenuBar *get_menubar();
-    void revalidate_menu();
+    virtual auto get_menubar() -> mforms::MenuBar *;
+    auto revalidate_menu() -> void;
 
   protected:
     struct OldPosition {
@@ -295,27 +295,27 @@ namespace wb {
     std::function<bool(ModelDiagramForm *, mdc::MouseButton, bool, base::Point, mdc::EventState)> _old_handle_button;
     std::function<bool(ModelDiagramForm *, base::Point, mdc::EventState)> _old_handle_motion;
 
-    void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
-    void update_toolbar_icons();
-    void clipboard_changed();
+    auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
+    auto update_toolbar_icons() -> void;
+    auto clipboard_changed() -> void;
 
-    bool relocate_figures();
+    auto relocate_figures() -> bool;
 
-    void begin_selection_drag();
-    void end_selection_drag();
+    auto begin_selection_drag() -> void;
+    auto end_selection_drag() -> void;
 
-    void diagram_changed(grt::internal::OwnedList *, bool, const grt::ValueRef &);
+    auto diagram_changed(grt::internal::OwnedList *, bool, const grt::ValueRef &) -> void;
 
-    void mark_catalog_node(grt::ValueRef val, bool mark);
+    auto mark_catalog_node(grt::ValueRef val, bool mark) -> void;
 
-    void selection_changed();
+    auto selection_changed() -> void;
 
-    std::vector<std::string> get_dropdown_items(const std::string &name, const std::string &option,
-                                                std::string &selected);
-    void select_dropdown_item(const std::string &option, mforms::ToolBarItem *item);
-    void toggle_checkbox_item(const std::string &name, const std::string &option, bool state);
+    auto get_dropdown_items(const std::string &name, const std::string &option,
+                                                std::string &selected) -> std::vector<std::string>;
+    auto select_dropdown_item(const std::string &option, mforms::ToolBarItem *item) -> void;
+    auto toggle_checkbox_item(const std::string &name, const std::string &option, bool state) -> void;
 
-    void activate_catalog_tree_item(const grt::ValueRef &value);
+    auto activate_catalog_tree_item(const grt::ValueRef &value) -> void;
 
   private:
     int _update_count; // If > 0 don't refresh depending structures.

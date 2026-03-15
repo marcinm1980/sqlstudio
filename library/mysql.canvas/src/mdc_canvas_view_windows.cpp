@@ -41,7 +41,7 @@ using namespace mdc;
 /**
  * Determines a proper pixel format needed for creating an OpenGL rendering context.
  */
-bool FindPixelFormatForDeviceContext(HDC context) {
+auto FindPixelFormatForDeviceContext(HDC context) -> bool {
   logDebug("Determine a proper pixel format\n");
 
   PIXELFORMATDESCRIPTOR pfd = {
@@ -98,7 +98,7 @@ WindowsGLCanvasView::~WindowsGLCanvasView() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool WindowsGLCanvasView::initialize() {
+auto WindowsGLCanvasView::initialize() -> bool {
   // Find a proper pixel format.
   _hdc = GetDC(_window);
   if (!FindPixelFormatForDeviceContext(_hdc)) {
@@ -137,7 +137,7 @@ bool WindowsGLCanvasView::initialize() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsGLCanvasView::make_current() {
+auto WindowsGLCanvasView::make_current() -> void {
   if (_hdc != 0)
     ReleaseDC(_window, _hdc); // Shouldn't happen actually.
 
@@ -151,7 +151,7 @@ void WindowsGLCanvasView::make_current() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsGLCanvasView::remove_current() {
+auto WindowsGLCanvasView::remove_current() -> void {
   cairo_surface_destroy(_crsurface);
   _crsurface = NULL;
   _cairo->update_cairo_backend(_offline_surface);
@@ -165,13 +165,13 @@ void WindowsGLCanvasView::remove_current() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsGLCanvasView::swap_buffers() {
+auto WindowsGLCanvasView::swap_buffers() -> void {
   SwapBuffers(_hdc);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsGLCanvasView::update_view_size(int width, int height) {
+auto WindowsGLCanvasView::update_view_size(int width, int height) -> void {
   logDebug2("Updating OpenGL canvas view size (%i x %i pixels)\n", width, height);
 
   if (_view_width != width || _view_height != height) {
@@ -212,13 +212,13 @@ WindowsCanvasView::~WindowsCanvasView() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool WindowsCanvasView::initialize() {
+auto WindowsCanvasView::initialize() -> bool {
   return CanvasView::initialize();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsCanvasView::update_view_size(int width, int height) {
+auto WindowsCanvasView::update_view_size(int width, int height) -> void {
   logDebug2("Updating GDI canvas view size (%i x %i pixels)\n", width, height);
 
   if (_view_width != width || _view_height != height) {
@@ -239,13 +239,13 @@ void WindowsCanvasView::update_view_size(int width, int height) {
  * As the base class does not allow to pass it in the repaint() function an additional one is needed
  * to set the context for the next paint cycle.
  */
-void WindowsCanvasView::set_target_context(HDC hdc) {
+auto WindowsCanvasView::set_target_context(HDC hdc) -> void {
   _hdc = hdc;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsCanvasView::begin_repaint(int x, int y, int w, int h) {
+auto WindowsCanvasView::begin_repaint(int x, int y, int w, int h) -> void {
   _crsurface = cairo_win32_surface_create(_hdc);
   _cairo->update_cairo_backend(_crsurface);
   cairo_set_tolerance(_cairo->get_cr(), 0.1);
@@ -253,7 +253,7 @@ void WindowsCanvasView::begin_repaint(int x, int y, int w, int h) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WindowsCanvasView::end_repaint() {
+auto WindowsCanvasView::end_repaint() -> void {
   _hdc = 0;
 
   cairo_surface_destroy(_crsurface);

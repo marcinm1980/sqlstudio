@@ -39,12 +39,12 @@ namespace grtui {
     ViewTextPage(WizardForm *form, const char *name = "preview", Buttons buttons = (Buttons)0,
                  const std::string &filetype = "");
 
-    void set_text(const std::string &text);
-    std::string get_text();
+    auto set_text(const std::string &text) -> void;
+    auto get_text() -> std::string;
 
-    void set_editable(bool flag = true);
+    auto set_editable(bool flag = true) -> void;
 
-    void save_text_to(const std::string &path);
+    auto save_text_to(const std::string &path) -> void;
 
   protected:
     mforms::CodeEditor _text;
@@ -56,8 +56,8 @@ namespace grtui {
     std::string _filetype;
     bool _editable;
 
-    void save_clicked();
-    void copy_clicked();
+    auto save_clicked() -> void;
+    auto copy_clicked() -> void;
   };
 };
 

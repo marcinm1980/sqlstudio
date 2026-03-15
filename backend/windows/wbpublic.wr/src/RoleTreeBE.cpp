@@ -54,7 +54,7 @@ RoleTreeBE::~RoleTreeBE() {
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::RoleTreeBE *RoleTreeBE::get_unmanaged_object() {
+auto RoleTreeBE::get_unmanaged_object() -> ::bec::RoleTreeBE * {
   return static_cast<::bec::RoleTreeBE *>(inner);
 }
 

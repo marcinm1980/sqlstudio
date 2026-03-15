@@ -21,16 +21,16 @@ C_MODE_START
 
 namespace mysql_parser
 {
-static inline int my_close(int file, myf unused) { return close(file); }
-static inline int my_open(const char *FileName,int Flags, int unused) { return open(FileName, Flags); }
-static inline char *my_once_alloc(unsigned int Size, int unused) { return (gptr)malloc(Size); }
-static inline char *my_once_strdup(const char *src, int unused) { return strdup(src); }
-static inline char *my_once_memdup(const char *src, unsigned int len, int unused) { return (char*)memcpy(malloc(len), src, len); }
-static inline char *my_malloc(unsigned int Size, int unused) { return (gptr)malloc(Size); }
-static inline void my_no_flags_free(char* ptr) { free(ptr); }
-static inline void my_free(char* ptr, int unused) { free(ptr); }
+static inline auto my_close(int file, myf unused) -> int { return close(file); }
+static inline auto my_open(const char *FileName,int Flags, int unused) -> int { return open(FileName, Flags); }
+static inline auto my_once_alloc(unsigned int Size, int unused) -> char * { return (gptr)malloc(Size); }
+static inline auto my_once_strdup(const char *src, int unused) -> char * { return strdup(src); }
+static inline auto my_once_memdup(const char *src, unsigned int len, int unused) -> char * { return (char*)memcpy(malloc(len), src, len); }
+static inline auto my_malloc(unsigned int Size, int unused) -> char * { return (gptr)malloc(Size); }
+static inline auto my_no_flags_free(char* ptr) -> void { free(ptr); }
+static inline auto my_free(char* ptr, int unused) -> void { free(ptr); }
 //static inline char *get_charsets_dir(char *buf);
-static inline int my_error(int nr, int MyFlags, ...) { printf("my_error called: %d\n", nr); return 0; }
+static inline auto my_error(int nr, int MyFlags, ...) -> int { printf("my_error called: %d\n", nr); return 0; }
 } // namespace mysql_parser
 
 #ifdef HAVE_AIOWAIT
@@ -180,12 +180,12 @@ extern ulonglong sf_malloc_mem_limit;
 #define my_malloc_ci(SZ,FLAG) my_malloc( SZ, FLAG )
 namespace mysql_parser
 {
-extern gptr my_realloc(gptr oldpoint,uint Size,myf MyFlags);
+extern auto my_realloc(gptr oldpoint,uint Size,myf MyFlags) -> gptr;
 //extern void my_no_flags_free(gptr ptr);
-extern gptr my_memdup(const byte *from,uint length,myf MyFlags);
-extern char *my_strdup(const char *from,myf MyFlags);
-extern char *my_strndup(const byte *from, uint length,
-				   myf MyFlags);
+extern auto my_memdup(const byte *from,uint length,myf MyFlags) -> gptr;
+extern auto my_strdup(const char *from,myf MyFlags) -> char *;
+extern auto my_strndup(const byte *from, uint length,
+				   myf MyFlags) -> char *;
 } // namespace mysql_parser
 /* we do use FG (as a no-op) in below so that a typo on FG is caught */
 //#define my_free(PTR,FG) ((void)FG,my_no_flags_free(PTR))
@@ -198,9 +198,9 @@ extern char *my_strndup(const byte *from, uint length,
 #ifdef HAVE_LARGE_PAGES
 namespace mysql_parser
 {
-extern uint my_get_large_page_size(void);
-extern gptr my_large_malloc(uint size, myf my_flags);
-extern void my_large_free(gptr ptr, myf my_flags);
+extern auto my_get_large_page_size(void) -> uint;
+extern auto my_large_malloc(uint size, myf my_flags) -> gptr;
+extern auto my_large_free(gptr ptr, myf my_flags) -> void;
 } // namespace mysql_parser
 #else
 #define my_get_large_page_size() (0)
@@ -230,8 +230,8 @@ extern void my_large_free(gptr ptr, myf my_flags);
 #ifdef __ZTC__
 namespace mysql_parser
 {
-void * __CDECL halloc(long count,size_t length);
-void   __CDECL hfree(void *ptr);
+auto halloc(long count,size_t length) -> void * __CDECL;
+auto hfree(void *ptr) -> void __CDECL;
 } // namespace mysql_parser
 #endif
 #if defined(USE_HALLOC)
@@ -566,8 +566,8 @@ typedef int (*qsort2_cmp)(const void *, const void *, const void *);
 			 (uint) (*(info)->current_pos - (info)->request_pos))
 
 /* tell write offset in the SEQ_APPEND cache */
-my_off_t my_b_append_tell(IO_CACHE* info);
-my_off_t my_b_safe_tell(IO_CACHE* info); /* picks the correct tell() */
+auto my_b_append_tell(IO_CACHE* info) -> my_off_t;
+auto my_b_safe_tell(IO_CACHE* info) -> my_off_t; /* picks the correct tell() */
 
 #define my_b_bytes_in_cache(info) (uint) (*(info)->current_end - \
 					  *(info)->current_pos)
@@ -582,233 +582,233 @@ typedef int (*Process_option_func)(void *ctx, const char *group_name,
 
 	/* Prototypes for mysys and my_func functions */
 
-extern int my_copy(const char *from,const char *to,myf MyFlags);
-extern int my_append(const char *from,const char *to,myf MyFlags);
-extern int my_delete(const char *name,myf MyFlags);
-extern int my_getwd(my_string buf,uint size,myf MyFlags);
-extern int my_setwd(const char *dir,myf MyFlags);
-extern int my_lock(File fd,int op,my_off_t start, my_off_t length,myf MyFlags);
+extern auto my_copy(const char *from,const char *to,myf MyFlags) -> int;
+extern auto my_append(const char *from,const char *to,myf MyFlags) -> int;
+extern auto my_delete(const char *name,myf MyFlags) -> int;
+extern auto my_getwd(my_string buf,uint size,myf MyFlags) -> int;
+extern auto my_setwd(const char *dir,myf MyFlags) -> int;
+extern auto my_lock(File fd,int op,my_off_t start, my_off_t length,myf MyFlags) -> int;
 //extern gptr my_once_alloc(uint Size,myf MyFlags);
-extern void my_once_free(void);
+extern auto my_once_free(void) -> void;
 //extern char *my_once_strdup(const char *src,myf myflags);
 //extern char *my_once_memdup(const char *src, uint len, myf myflags);
 //extern File my_open(const char *FileName,int Flags,myf MyFlags);
-extern File my_register_filename(File fd, const char *FileName,
+extern auto my_register_filename(File fd, const char *FileName,
 				 enum file_type type_of_file,
-				 uint error_message_number, myf MyFlags);
-extern File my_create(const char *FileName,int CreateFlags,
-		      int AccsesFlags, myf MyFlags);
+				 uint error_message_number, myf MyFlags) -> File;
+extern auto my_create(const char *FileName,int CreateFlags,
+		      int AccsesFlags, myf MyFlags) -> File;
 //extern int my_close(File Filedes,myf MyFlags);
-extern File my_dup(File file, myf MyFlags);
-extern int my_mkdir(const char *dir, int Flags, myf MyFlags);
-extern int my_readlink(char *to, const char *filename, myf MyFlags);
-extern int my_realpath(char *to, const char *filename, myf MyFlags);
-extern File my_create_with_symlink(const char *linkname, const char *filename,
+extern auto my_dup(File file, myf MyFlags) -> File;
+extern auto my_mkdir(const char *dir, int Flags, myf MyFlags) -> int;
+extern auto my_readlink(char *to, const char *filename, myf MyFlags) -> int;
+extern auto my_realpath(char *to, const char *filename, myf MyFlags) -> int;
+extern auto my_create_with_symlink(const char *linkname, const char *filename,
 				   int createflags, int access_flags,
-				   myf MyFlags);
-extern int my_delete_with_symlink(const char *name, myf MyFlags);
-extern int my_rename_with_symlink(const char *from,const char *to,myf MyFlags);
-extern int my_symlink(const char *content, const char *linkname, myf MyFlags);
-extern uint my_read(File Filedes,byte *Buffer,uint Count,myf MyFlags);
-extern uint my_pread(File Filedes,byte *Buffer,uint Count,my_off_t offset,
-		     myf MyFlags);
-extern int my_rename(const char *from,const char *to,myf MyFlags);
-extern my_off_t my_seek(File fd,my_off_t pos,int whence,myf MyFlags);
-extern my_off_t my_tell(File fd,myf MyFlags);
-extern uint my_write(File Filedes,const byte *Buffer,uint Count,
-		     myf MyFlags);
-extern uint my_pwrite(File Filedes,const byte *Buffer,uint Count,
-		      my_off_t offset,myf MyFlags);
-extern uint my_fread(FILE *stream,byte *Buffer,uint Count,myf MyFlags);
-extern uint my_fwrite(FILE *stream,const byte *Buffer,uint Count,
-		      myf MyFlags);
-extern my_off_t my_fseek(FILE *stream,my_off_t pos,int whence,myf MyFlags);
-extern my_off_t my_ftell(FILE *stream,myf MyFlags);
-extern gptr _mymalloc(uint uSize,const char *sFile,
-		      uint uLine, myf MyFlag);
-extern gptr _myrealloc(gptr pPtr,uint uSize,const char *sFile,
-		       uint uLine, myf MyFlag);
+				   myf MyFlags) -> File;
+extern auto my_delete_with_symlink(const char *name, myf MyFlags) -> int;
+extern auto my_rename_with_symlink(const char *from,const char *to,myf MyFlags) -> int;
+extern auto my_symlink(const char *content, const char *linkname, myf MyFlags) -> int;
+extern auto my_read(File Filedes,byte *Buffer,uint Count,myf MyFlags) -> uint;
+extern auto my_pread(File Filedes,byte *Buffer,uint Count,my_off_t offset,
+		     myf MyFlags) -> uint;
+extern auto my_rename(const char *from,const char *to,myf MyFlags) -> int;
+extern auto my_seek(File fd,my_off_t pos,int whence,myf MyFlags) -> my_off_t;
+extern auto my_tell(File fd,myf MyFlags) -> my_off_t;
+extern auto my_write(File Filedes,const byte *Buffer,uint Count,
+		     myf MyFlags) -> uint;
+extern auto my_pwrite(File Filedes,const byte *Buffer,uint Count,
+		      my_off_t offset,myf MyFlags) -> uint;
+extern auto my_fread(FILE *stream,byte *Buffer,uint Count,myf MyFlags) -> uint;
+extern auto my_fwrite(FILE *stream,const byte *Buffer,uint Count,
+		      myf MyFlags) -> uint;
+extern auto my_fseek(FILE *stream,my_off_t pos,int whence,myf MyFlags) -> my_off_t;
+extern auto my_ftell(FILE *stream,myf MyFlags) -> my_off_t;
+extern auto _mymalloc(uint uSize,const char *sFile,
+		      uint uLine, myf MyFlag) -> gptr;
+extern auto _myrealloc(gptr pPtr,uint uSize,const char *sFile,
+		       uint uLine, myf MyFlag) -> gptr;
 extern gptr my_multi_malloc _VARARGS((myf MyFlags, ...));
-extern void _myfree(gptr pPtr,const char *sFile,uint uLine, myf MyFlag);
-extern int _sanity(const char *sFile,unsigned int uLine);
-extern gptr _my_memdup(const byte *from,uint length,
-		       const char *sFile, uint uLine,myf MyFlag);
-extern my_string _my_strdup(const char *from, const char *sFile, uint uLine,
-			    myf MyFlag);
-extern char *_my_strndup(const byte *from, uint length,
+extern auto _myfree(gptr pPtr,const char *sFile,uint uLine, myf MyFlag) -> void;
+extern auto _sanity(const char *sFile,unsigned int uLine) -> int;
+extern auto _my_memdup(const byte *from,uint length,
+		       const char *sFile, uint uLine,myf MyFlag) -> gptr;
+extern auto _my_strdup(const char *from, const char *sFile, uint uLine,
+			    myf MyFlag) -> my_string;
+extern auto _my_strndup(const byte *from, uint length,
 				    const char *sFile, uint uLine,
-				    myf MyFlag);
+				    myf MyFlag) -> char *;
 
 #ifdef __WIN__
-extern int my_access(const char *path, int amode);
-extern File my_sopen(const char *path, int oflag, int shflag, int pmode);
+extern auto my_access(const char *path, int amode) -> int;
+extern auto my_sopen(const char *path, int oflag, int shflag, int pmode) -> File;
 #else
 #define my_access access
 #endif
-extern int check_if_legal_filename(const char *path);
+extern auto check_if_legal_filename(const char *path) -> int;
 
 #ifndef TERMINATE
-extern void TERMINATE(FILE *file);
+extern auto TERMINATE(FILE *file) -> void;
 #endif
-extern void init_glob_errs(void);
-extern FILE *my_fopen(const char *FileName,int Flags,myf MyFlags);
-extern FILE *my_fdopen(File Filedes,const char *name, int Flags,myf MyFlags);
-extern int my_fclose(FILE *fd,myf MyFlags);
-extern int my_chsize(File fd,my_off_t newlength, int filler, myf MyFlags);
-extern int my_sync(File fd, myf my_flags);
+extern auto init_glob_errs(void) -> void;
+extern auto my_fopen(const char *FileName,int Flags,myf MyFlags) -> FILE *;
+extern auto my_fdopen(File Filedes,const char *name, int Flags,myf MyFlags) -> FILE *;
+extern auto my_fclose(FILE *fd,myf MyFlags) -> int;
+extern auto my_chsize(File fd,my_off_t newlength, int filler, myf MyFlags) -> int;
+extern auto my_sync(File fd, myf my_flags) -> int;
 extern int my_error _VARARGS((int nr,myf MyFlags, ...));
 extern int my_printf_error _VARARGS((uint my_err, const char *format,
 				     myf MyFlags, ...)
 				    __attribute__ ((format (printf, 2, 4))));
-extern int my_error_register(const char **errmsgs, int first, int last);
-extern const char **my_error_unregister(int first, int last);
-extern int my_message(uint my_err, const char *str,myf MyFlags);
-extern int my_message_no_curses(uint my_err, const char *str,myf MyFlags);
-extern int my_message_curses(uint my_err, const char *str,myf MyFlags);
-extern my_bool my_init(void);
-extern void my_end(int infoflag);
-extern int my_redel(const char *from, const char *to, int MyFlags);
-extern int my_copystat(const char *from, const char *to, int MyFlags);
-extern my_string my_filename(File fd);
+extern auto my_error_register(const char **errmsgs, int first, int last) -> int;
+extern auto my_error_unregister(int first, int last) -> const char **;
+extern auto my_message(uint my_err, const char *str,myf MyFlags) -> int;
+extern auto my_message_no_curses(uint my_err, const char *str,myf MyFlags) -> int;
+extern auto my_message_curses(uint my_err, const char *str,myf MyFlags) -> int;
+extern auto my_init(void) -> my_bool;
+extern auto my_end(int infoflag) -> void;
+extern auto my_redel(const char *from, const char *to, int MyFlags) -> int;
+extern auto my_copystat(const char *from, const char *to, int MyFlags) -> int;
+extern auto my_filename(File fd) -> my_string;
 
 #ifndef THREAD
-extern void dont_break(void);
-extern void allow_break(void);
+extern auto dont_break(void) -> void;
+extern auto allow_break(void) -> void;
 #else
 #define dont_break()
 #define allow_break()
 #endif
 
-extern my_bool init_tmpdir(MY_TMPDIR *tmpdir, const char *pathlist);
-extern char *my_tmpdir(MY_TMPDIR *tmpdir);
-extern void free_tmpdir(MY_TMPDIR *tmpdir);
+extern auto init_tmpdir(MY_TMPDIR *tmpdir, const char *pathlist) -> my_bool;
+extern auto my_tmpdir(MY_TMPDIR *tmpdir) -> char *;
+extern auto free_tmpdir(MY_TMPDIR *tmpdir) -> void;
 
-extern void my_remember_signal(int signal_number, void (*func)(int));
-extern uint dirname_part(my_string to,const char *name);
-extern uint dirname_length(const char *name);
+extern auto my_remember_signal(int signal_number, void (*func)(int)) -> void;
+extern auto dirname_part(my_string to,const char *name) -> uint;
+extern auto dirname_length(const char *name) -> uint;
 #define base_name(A) (A+dirname_length(A))
-extern int test_if_hard_path(const char *dir_name);
-extern my_bool has_path(const char *name);
-extern char *convert_dirname(char *to, const char *from, const char *from_end);
-extern void to_unix_path(my_string name);
-extern my_string fn_ext(const char *name);
-extern my_string fn_same(my_string toname,const char *name,int flag);
-extern my_string fn_format(my_string to,const char *name,const char *dir,
-			   const char *form, uint flag);
-extern size_s strlength(const char *str);
-extern void pack_dirname(my_string to,const char *from);
-extern uint unpack_dirname(my_string to,const char *from);
-extern uint cleanup_dirname(my_string to,const char *from);
-extern uint system_filename(my_string to,const char *from);
-extern uint unpack_filename(my_string to,const char *from);
-extern my_string intern_filename(my_string to,const char *from);
-extern my_string directory_file_name(my_string dst, const char *src);
-extern int pack_filename(my_string to, const char *name, size_s max_length);
-extern my_string my_path(my_string to,const char *progname,
-			 const char *own_pathname_part);
-extern my_string my_load_path(my_string to, const char *path,
-			      const char *own_path_prefix);
-extern int wild_compare(const char *str,const char *wildstr,pbool str_is_pattern);
-extern WF_PACK *wf_comp(my_string str);
-extern int wf_test(struct wild_file_pack *wf_pack,const char *name);
-extern void wf_end(struct wild_file_pack *buffer);
-extern size_s strip_sp(my_string str);
-extern void get_date(my_string to,int timeflag,time_t use_time);
-extern void soundex(CHARSET_INFO *, my_string out_pntr, my_string in_pntr,pbool remove_garbage);
-extern int init_record_cache(RECORD_CACHE *info,uint cachesize,File file,
+extern auto test_if_hard_path(const char *dir_name) -> int;
+extern auto has_path(const char *name) -> my_bool;
+extern auto convert_dirname(char *to, const char *from, const char *from_end) -> char *;
+extern auto to_unix_path(my_string name) -> void;
+extern auto fn_ext(const char *name) -> my_string;
+extern auto fn_same(my_string toname,const char *name,int flag) -> my_string;
+extern auto fn_format(my_string to,const char *name,const char *dir,
+			   const char *form, uint flag) -> my_string;
+extern auto strlength(const char *str) -> size_s;
+extern auto pack_dirname(my_string to,const char *from) -> void;
+extern auto unpack_dirname(my_string to,const char *from) -> uint;
+extern auto cleanup_dirname(my_string to,const char *from) -> uint;
+extern auto system_filename(my_string to,const char *from) -> uint;
+extern auto unpack_filename(my_string to,const char *from) -> uint;
+extern auto intern_filename(my_string to,const char *from) -> my_string;
+extern auto directory_file_name(my_string dst, const char *src) -> my_string;
+extern auto pack_filename(my_string to, const char *name, size_s max_length) -> int;
+extern auto my_path(my_string to,const char *progname,
+			 const char *own_pathname_part) -> my_string;
+extern auto my_load_path(my_string to, const char *path,
+			      const char *own_path_prefix) -> my_string;
+extern auto wild_compare(const char *str,const char *wildstr,pbool str_is_pattern) -> int;
+extern auto wf_comp(my_string str) -> WF_PACK *;
+extern auto wf_test(struct wild_file_pack *wf_pack,const char *name) -> int;
+extern auto wf_end(struct wild_file_pack *buffer) -> void;
+extern auto strip_sp(my_string str) -> size_s;
+extern auto get_date(my_string to,int timeflag,time_t use_time) -> void;
+extern auto soundex(CHARSET_INFO *, my_string out_pntr, my_string in_pntr,pbool remove_garbage) -> void;
+extern auto init_record_cache(RECORD_CACHE *info,uint cachesize,File file,
 			     uint reclength,enum cache_type type,
-			     pbool use_async_io);
-extern int read_cache_record(RECORD_CACHE *info,byte *to);
-extern int end_record_cache(RECORD_CACHE *info);
-extern int write_cache_record(RECORD_CACHE *info,my_off_t filepos,
-			      const byte *record,uint length);
-extern int flush_write_cache(RECORD_CACHE *info);
-extern long my_clock(void);
-extern void sigtstp_handler(int signal_number);
-extern void handle_recived_signals(void);
+			     pbool use_async_io) -> int;
+extern auto read_cache_record(RECORD_CACHE *info,byte *to) -> int;
+extern auto end_record_cache(RECORD_CACHE *info) -> int;
+extern auto write_cache_record(RECORD_CACHE *info,my_off_t filepos,
+			      const byte *record,uint length) -> int;
+extern auto flush_write_cache(RECORD_CACHE *info) -> int;
+extern auto my_clock(void) -> long;
+extern auto sigtstp_handler(int signal_number) -> void;
+extern auto handle_recived_signals(void) -> void;
 
-extern void my_set_alarm_variable(int signo);
-extern void my_string_ptr_sort(void *base,uint items,size_s size);
-extern void radixsort_for_str_ptr(uchar* base[], uint number_of_elements,
-				  size_s size_of_element,uchar *buffer[]);
-extern void qsort2(void *base_ptr, size_t total_elems, size_t size,
-		      qsort2_cmp cmp, void *cmp_argument);
+extern auto my_set_alarm_variable(int signo) -> void;
+extern auto my_string_ptr_sort(void *base,uint items,size_s size) -> void;
+extern auto radixsort_for_str_ptr(uchar* base[], uint number_of_elements,
+				  size_s size_of_element,uchar *buffer[]) -> void;
+extern auto qsort2(void *base_ptr, size_t total_elems, size_t size,
+		      qsort2_cmp cmp, void *cmp_argument) -> void;
 extern qsort2_cmp get_ptr_compare(uint);
-void my_store_ptr(byte *buff, uint pack_length, my_off_t pos);
-my_off_t my_get_ptr(byte *ptr, uint pack_length);
-extern int init_io_cache(IO_CACHE *info,File file,uint cachesize,
+auto my_store_ptr(byte *buff, uint pack_length, my_off_t pos) -> void;
+auto my_get_ptr(byte *ptr, uint pack_length) -> my_off_t;
+extern auto init_io_cache(IO_CACHE *info,File file,uint cachesize,
 			 enum cache_type type,my_off_t seek_offset,
-			 pbool use_async_io, myf cache_myflags);
-extern my_bool reinit_io_cache(IO_CACHE *info,enum cache_type type,
+			 pbool use_async_io, myf cache_myflags) -> int;
+extern auto reinit_io_cache(IO_CACHE *info,enum cache_type type,
 			       my_off_t seek_offset,pbool use_async_io,
-			       pbool clear_cache);
-extern void setup_io_cache(IO_CACHE* info);
-extern int _my_b_read(IO_CACHE *info,byte *Buffer,uint Count);
+			       pbool clear_cache) -> my_bool;
+extern auto setup_io_cache(IO_CACHE* info) -> void;
+extern auto _my_b_read(IO_CACHE *info,byte *Buffer,uint Count) -> int;
 #ifdef THREAD
-extern int _my_b_read_r(IO_CACHE *info,byte *Buffer,uint Count);
-extern void init_io_cache_share(IO_CACHE *info,
-				IO_CACHE_SHARE *s, uint num_threads);
-extern void remove_io_thread(IO_CACHE *info);
+extern auto _my_b_read_r(IO_CACHE *info,byte *Buffer,uint Count) -> int;
+extern auto init_io_cache_share(IO_CACHE *info,
+				IO_CACHE_SHARE *s, uint num_threads) -> void;
+extern auto remove_io_thread(IO_CACHE *info) -> void;
 #endif
-extern int _my_b_seq_read(IO_CACHE *info,byte *Buffer,uint Count);
-extern int _my_b_net_read(IO_CACHE *info,byte *Buffer,uint Count);
-extern int _my_b_get(IO_CACHE *info);
-extern int _my_b_async_read(IO_CACHE *info,byte *Buffer,uint Count);
-extern int _my_b_write(IO_CACHE *info,const byte *Buffer,uint Count);
-extern int my_b_append(IO_CACHE *info,const byte *Buffer,uint Count);
-extern int my_b_safe_write(IO_CACHE *info,const byte *Buffer,uint Count);
+extern auto _my_b_seq_read(IO_CACHE *info,byte *Buffer,uint Count) -> int;
+extern auto _my_b_net_read(IO_CACHE *info,byte *Buffer,uint Count) -> int;
+extern auto _my_b_get(IO_CACHE *info) -> int;
+extern auto _my_b_async_read(IO_CACHE *info,byte *Buffer,uint Count) -> int;
+extern auto _my_b_write(IO_CACHE *info,const byte *Buffer,uint Count) -> int;
+extern auto my_b_append(IO_CACHE *info,const byte *Buffer,uint Count) -> int;
+extern auto my_b_safe_write(IO_CACHE *info,const byte *Buffer,uint Count) -> int;
 
-extern int my_block_write(IO_CACHE *info, const byte *Buffer,
-			  uint Count, my_off_t pos);
-extern int my_b_flush_io_cache(IO_CACHE *info, int need_append_buffer_lock);
+extern auto my_block_write(IO_CACHE *info, const byte *Buffer,
+			  uint Count, my_off_t pos) -> int;
+extern auto my_b_flush_io_cache(IO_CACHE *info, int need_append_buffer_lock) -> int;
 
 #define flush_io_cache(info) my_b_flush_io_cache((info),1)
 
-extern int end_io_cache(IO_CACHE *info);
-extern uint my_b_fill(IO_CACHE *info);
-extern void my_b_seek(IO_CACHE *info,my_off_t pos);
-extern uint my_b_gets(IO_CACHE *info, char *to, uint max_length);
-extern my_off_t my_b_filelength(IO_CACHE *info);
-extern uint my_b_printf(IO_CACHE *info, const char* fmt, ...);
-extern uint my_b_vprintf(IO_CACHE *info, const char* fmt, va_list ap);
-extern my_bool open_cached_file(IO_CACHE *cache,const char *dir,
+extern auto end_io_cache(IO_CACHE *info) -> int;
+extern auto my_b_fill(IO_CACHE *info) -> uint;
+extern auto my_b_seek(IO_CACHE *info,my_off_t pos) -> void;
+extern auto my_b_gets(IO_CACHE *info, char *to, uint max_length) -> uint;
+extern auto my_b_filelength(IO_CACHE *info) -> my_off_t;
+extern auto my_b_printf(IO_CACHE *info, const char* fmt, ...) -> uint;
+extern auto my_b_vprintf(IO_CACHE *info, const char* fmt, va_list ap) -> uint;
+extern auto open_cached_file(IO_CACHE *cache,const char *dir,
 				 const char *prefix, uint cache_size,
-				 myf cache_myflags);
-extern my_bool real_open_cached_file(IO_CACHE *cache);
-extern void close_cached_file(IO_CACHE *cache);
-File create_temp_file(char *to, const char *dir, const char *pfx,
-		      int mode, myf MyFlags);
+				 myf cache_myflags) -> my_bool;
+extern auto real_open_cached_file(IO_CACHE *cache) -> my_bool;
+extern auto close_cached_file(IO_CACHE *cache) -> void;
+auto create_temp_file(char *to, const char *dir, const char *pfx,
+		      int mode, myf MyFlags) -> File;
 #define my_init_dynamic_array(A,B,C,D) init_dynamic_array(A,B,C,D CALLER_INFO)
 #define my_init_dynamic_array_ci(A,B,C,D) init_dynamic_array(A,B,C,D ORIG_CALLER_INFO)
-extern my_bool init_dynamic_array(DYNAMIC_ARRAY *array,uint element_size,
+extern auto init_dynamic_array(DYNAMIC_ARRAY *array,uint element_size,
                                   uint init_alloc,uint alloc_increment
-                                  CALLER_INFO_PROTO);
+                                  CALLER_INFO_PROTO) -> my_bool;
 //unused extern my_bool insert_dynamic(DYNAMIC_ARRAY *array,gptr element);
-extern byte *alloc_dynamic(DYNAMIC_ARRAY *array);
+extern auto alloc_dynamic(DYNAMIC_ARRAY *array) -> byte *;
 extern byte *pop_dynamic(DYNAMIC_ARRAY*);
-extern my_bool set_dynamic(DYNAMIC_ARRAY *array,gptr element,uint array_index);
-extern void get_dynamic(DYNAMIC_ARRAY *array,gptr element,uint array_index);
-extern void delete_dynamic(DYNAMIC_ARRAY *array);
-extern void delete_dynamic_element(DYNAMIC_ARRAY *array, uint array_index);
-extern void freeze_size(DYNAMIC_ARRAY *array);
-extern int  get_index_dynamic(DYNAMIC_ARRAY *array, gptr element);
+extern auto set_dynamic(DYNAMIC_ARRAY *array,gptr element,uint array_index) -> my_bool;
+extern auto get_dynamic(DYNAMIC_ARRAY *array,gptr element,uint array_index) -> void;
+extern auto delete_dynamic(DYNAMIC_ARRAY *array) -> void;
+extern auto delete_dynamic_element(DYNAMIC_ARRAY *array, uint array_index) -> void;
+extern auto freeze_size(DYNAMIC_ARRAY *array) -> void;
+extern auto get_index_dynamic(DYNAMIC_ARRAY *array, gptr element) -> int;
 #define dynamic_array_ptr(array,array_index) ((array)->buffer+(array_index)*(array)->size_of_element)
 #define dynamic_element(array,array_index,type) ((type)((array)->buffer) +(array_index))
 //unused #define push_dynamic(A,B) insert_dynamic((A),(B))
 #define reset_dynamic(array) ((array)->elements= 0)
 #define sort_dynamic(A,cmp) qsort((A)->buffer, (A)->elements, (A)->size_of_element, (cmp))
 
-extern my_bool init_dynamic_string(DYNAMIC_STRING *str, const char *init_str,
-				   uint init_alloc,uint alloc_increment);
-extern my_bool dynstr_append(DYNAMIC_STRING *str, const char *append);
-my_bool dynstr_append_mem(DYNAMIC_STRING *str, const char *append,
-			  uint length);
-extern my_bool dynstr_set(DYNAMIC_STRING *str, const char *init_str);
-extern my_bool dynstr_realloc(DYNAMIC_STRING *str, ulong additional_size);
-extern void dynstr_free(DYNAMIC_STRING *str);
+extern auto init_dynamic_string(DYNAMIC_STRING *str, const char *init_str,
+				   uint init_alloc,uint alloc_increment) -> my_bool;
+extern auto dynstr_append(DYNAMIC_STRING *str, const char *append) -> my_bool;
+auto dynstr_append_mem(DYNAMIC_STRING *str, const char *append,
+			  uint length) -> my_bool;
+extern auto dynstr_set(DYNAMIC_STRING *str, const char *init_str) -> my_bool;
+extern auto dynstr_realloc(DYNAMIC_STRING *str, ulong additional_size) -> my_bool;
+extern auto dynstr_free(DYNAMIC_STRING *str) -> void;
 #ifdef HAVE_MLOCK
-extern byte *my_malloc_lock(uint length,myf flags);
-extern void my_free_lock(byte *ptr,myf flags);
+extern auto my_malloc_lock(uint length,myf flags) -> byte *;
+extern auto my_free_lock(byte *ptr,myf flags) -> void;
 #else
 #define my_malloc_lock(A,B) my_malloc((A),(B))
 #define my_free_lock(A,B) my_free((A),(B))
@@ -820,7 +820,7 @@ extern void my_free_lock(byte *ptr,myf flags);
 //			    uint pre_alloc_size);
 
 //extern gptr alloc_root(MEM_ROOT *mem_root,unsigned int Size);
-extern gptr alloc_root(unsigned int Size);
+extern auto alloc_root(unsigned int Size) -> gptr;
 
 //extern gptr multi_alloc_root(MEM_ROOT *mem_root, ...);
 //extern void free_root(MEM_ROOT *root, myf MyFLAGS);
@@ -829,45 +829,45 @@ extern gptr alloc_root(unsigned int Size);
 //                                uint prealloc_size);
 
 //extern char *strdup_root(MEM_ROOT *root,const char *str);
-extern char *strdup_root(const char *str);
+extern auto strdup_root(const char *str) -> char *;
 
 //extern char *strmake_root(MEM_ROOT *root,const char *str,uint len);
-extern char *strmake_root(const char *str,uint len);
+extern auto strmake_root(const char *str,uint len) -> char *;
 
 //extern char *memdup_root(MEM_ROOT *root,const char *str,uint len);
-extern char *memdup_root(const char *str,uint len);
+extern auto memdup_root(const char *str,uint len) -> char *;
 
-extern int get_defaults_options(int argc, char **argv,
+extern auto get_defaults_options(int argc, char **argv,
                                 char **defaults, char **extra_defaults,
-                                char **group_suffix);
-extern int load_defaults(const char *conf_file, const char **groups,
-			 int *argc, char ***argv);
-extern int modify_defaults_file(const char *file_location, const char *option,
+                                char **group_suffix) -> int;
+extern auto load_defaults(const char *conf_file, const char **groups,
+			 int *argc, char ***argv) -> int;
+extern auto modify_defaults_file(const char *file_location, const char *option,
                                 const char *option_value,
-                                const char *section_name, int remove_option);
-extern int my_search_option_files(const char *conf_file, int *argc,
+                                const char *section_name, int remove_option) -> int;
+extern auto my_search_option_files(const char *conf_file, int *argc,
                                   char ***argv, uint *args_used,
-                                  Process_option_func func, void *func_ctx);
-extern void free_defaults(char **argv);
-extern void my_print_default_files(const char *conf_file);
-extern void print_defaults(const char *conf_file, const char **groups);
+                                  Process_option_func func, void *func_ctx) -> int;
+extern auto free_defaults(char **argv) -> void;
+extern auto my_print_default_files(const char *conf_file) -> void;
+extern auto print_defaults(const char *conf_file, const char **groups) -> void;
 extern my_bool my_compress(byte *, ulong *, ulong *);
 extern my_bool my_uncompress(byte *, ulong *, ulong *);
-extern byte *my_compress_alloc(const byte *packet, ulong *len, ulong *complen);
-extern int packfrm(const void *, uint, const void **, uint *);
-extern int unpackfrm(const void **, uint *, const void *);
+extern auto my_compress_alloc(const byte *packet, ulong *len, ulong *complen) -> byte *;
+extern auto packfrm(const void *, uint, const void **, uint *) -> int;
+extern auto unpackfrm(const void **, uint *, const void *) -> int;
 
-extern ha_checksum my_checksum(ha_checksum crc, const byte *mem, uint count);
-extern uint my_bit_log2(ulong value);
-extern uint my_count_bits(ulonglong v);
-extern uint my_count_bits_ushort(ushort v);
-extern void my_sleep(ulong m_seconds);
-extern ulong crc32(ulong crc, const uchar *buf, uint len);
-extern uint my_set_max_open_files(uint files);
-void my_free_open_file_info(void);
+extern auto my_checksum(ha_checksum crc, const byte *mem, uint count) -> ha_checksum;
+extern auto my_bit_log2(ulong value) -> uint;
+extern auto my_count_bits(ulonglong v) -> uint;
+extern auto my_count_bits_ushort(ushort v) -> uint;
+extern auto my_sleep(ulong m_seconds) -> void;
+extern auto crc32(ulong crc, const uchar *buf, uint len) -> ulong;
+extern auto my_set_max_open_files(uint files) -> uint;
+auto my_free_open_file_info(void) -> void;
 
-ulonglong my_getsystime(void);
-my_bool my_gethwaddr(uchar *to);
+auto my_getsystime(void) -> ulonglong;
+auto my_gethwaddr(uchar *to) -> my_bool;
 
 } // namespace mysql_parser
 
@@ -912,7 +912,7 @@ my_bool my_gethwaddr(uchar *to);
 namespace mysql_parser
 {
 
-int my_getpagesize(void);
+auto my_getpagesize(void) -> int;
 void *my_mmap(void *, size_t, int, int, int, my_off_t);
 int my_munmap(void *, size_t);
 } // namespace mysql_parser
@@ -924,53 +924,53 @@ namespace mysql_parser
 int my_msync(int, void *, size_t, int);
 
 /* character sets */
-extern uint get_charset_number(const char *cs_name, uint cs_flags);
-extern uint get_collation_number(const char *name);
-extern const char *get_charset_name(uint cs_number);
+extern auto get_charset_number(const char *cs_name, uint cs_flags) -> uint;
+extern auto get_collation_number(const char *name) -> uint;
+extern auto get_charset_name(uint cs_number) -> const char *;
 
 typedef struct charset_info_st CHARSET_INFO;
-extern CHARSET_INFO *get_charset(uint cs_number, myf flags);
-extern CHARSET_INFO *get_charset_by_name(const char *cs_name, myf flags);
-extern CHARSET_INFO *get_charset_by_csname(const char *cs_name,
-					   uint cs_flags, myf my_flags);
-extern void free_charsets(void);
+extern auto get_charset(uint cs_number, myf flags) -> CHARSET_INFO *;
+extern auto get_charset_by_name(const char *cs_name, myf flags) -> CHARSET_INFO *;
+extern auto get_charset_by_csname(const char *cs_name,
+					   uint cs_flags, myf my_flags) -> CHARSET_INFO *;
+extern auto free_charsets(void) -> void;
 //extern char *get_charsets_dir(char *buf);
-extern my_bool my_charset_same(CHARSET_INFO *cs1, CHARSET_INFO *cs2);
-extern my_bool init_compiled_charsets(myf flags);
-extern void add_compiled_collation(CHARSET_INFO *cs);
-extern ulong escape_string_for_mysql(CHARSET_INFO *charset_info,
+extern auto my_charset_same(CHARSET_INFO *cs1, CHARSET_INFO *cs2) -> my_bool;
+extern auto init_compiled_charsets(myf flags) -> my_bool;
+extern auto add_compiled_collation(CHARSET_INFO *cs) -> void;
+extern auto escape_string_for_mysql(CHARSET_INFO *charset_info,
                                      char *to, ulong to_length,
-                                     const char *from, ulong length);
+                                     const char *from, ulong length) -> ulong;
 #ifdef __WIN__
 #define BACKSLASH_MBTAIL
 /* File system character set */
-extern CHARSET_INFO *fs_character_set(void);
+extern auto fs_character_set(void) -> CHARSET_INFO *;
 #endif
-extern ulong escape_quotes_for_mysql(CHARSET_INFO *charset_info,
+extern auto escape_quotes_for_mysql(CHARSET_INFO *charset_info,
                                      char *to, ulong to_length,
-                                     const char *from, ulong length);
+                                     const char *from, ulong length) -> ulong;
 
-extern void thd_increment_bytes_sent(ulong length);
-extern void thd_increment_bytes_received(ulong length);
-extern void thd_increment_net_big_packet_count(ulong length);
+extern auto thd_increment_bytes_sent(ulong length) -> void;
+extern auto thd_increment_bytes_received(ulong length) -> void;
+extern auto thd_increment_net_big_packet_count(ulong length) -> void;
 
 #ifdef __WIN__
 extern my_bool have_tcpip;		/* Is set if tcpip is used */
 
 /* implemented in my_windac.c */
 
-int my_security_attr_create(SECURITY_ATTRIBUTES **psa, const char **perror,
-                            DWORD owner_rights, DWORD everybody_rights);
+auto my_security_attr_create(SECURITY_ATTRIBUTES **psa, const char **perror,
+                            DWORD owner_rights, DWORD everybody_rights) -> int;
 
-void my_security_attr_free(SECURITY_ATTRIBUTES *sa);
+auto my_security_attr_free(SECURITY_ATTRIBUTES *sa) -> void;
 
 /* implemented in my_conio.c */
-char* my_cgets(char *string, unsigned long clen, unsigned long* plen);
+auto my_cgets(char *string, unsigned long clen, unsigned long* plen) -> char*;
 
 #endif
 #ifdef __NETWARE__
-void netware_reg_user(const char *ip, const char *user,
-		      const char *application);
+auto netware_reg_user(const char *ip, const char *user,
+		      const char *application) -> void;
 #endif
 
 } // namespace mysql_parser

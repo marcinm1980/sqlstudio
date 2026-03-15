@@ -89,18 +89,18 @@ namespace mdc {
     virtual auto intersects(const base::Rect &bounds) const -> bool;
     virtual auto contains_point(const base::Point &point) const -> bool;
 
-    virtual void resize_to(const base::Size &size);
-    virtual void move_to(const base::Point &pos);
-    void set_position(const base::Point &pos);
-    void set_size(const base::Size &size);
-    void set_bounds(const base::Rect &rect);
+    virtual auto resize_to(const base::Size &size) -> void;
+    virtual auto move_to(const base::Point &pos) -> void;
+    auto set_position(const base::Point &pos) -> void;
+    auto set_size(const base::Size &size) -> void;
+    auto set_bounds(const base::Rect &rect) -> void;
 
     auto get_root_position() const -> base::Point;
     inline auto get_position() const -> base::Point {
       return _pos;
     };
 
-    virtual void set_fixed_min_size(const base::Size &size);
+    virtual auto set_fixed_min_size(const base::Size &size) -> void;
     auto get_min_size() -> base::Size;
     virtual auto calc_min_size() -> base::Size;
     inline auto get_size() const -> base::Size {
@@ -109,13 +109,13 @@ namespace mdc {
     inline auto get_fixed_size() const -> base::Size {
       return _fixed_size;
     }
-    virtual void set_fixed_size(const base::Size &size);
-    virtual void set_auto_sizing(bool flag);
+    virtual auto set_fixed_size(const base::Size &size) -> void;
+    virtual auto set_auto_sizing(bool flag) -> void;
     auto auto_sizing() const -> bool {
       return _auto_sizing;
     }
 
-    virtual void set_padding(double xpad, double ypad);
+    virtual auto set_padding(double xpad, double ypad) -> void;
 
     auto convert_point_from(const base::Point &pt, CanvasItem *item) const -> base::Point;
     auto convert_point_to(const base::Point &pt, CanvasItem *item) const -> base::Point;
@@ -127,8 +127,8 @@ namespace mdc {
     auto get_layer() const -> Layer * {
       return _layer;
     };
-    virtual void set_parent(CanvasItem *parent);
-    void remove_from_parent();
+    virtual auto set_parent(CanvasItem *parent) -> void;
+    auto remove_from_parent() -> void;
 
     auto get_view() const -> CanvasView *;
 
@@ -144,62 +144,62 @@ namespace mdc {
     auto get_visible() const -> bool {
       return _visible;
     };
-    void set_visible(bool flag);
+    auto set_visible(bool flag) -> void;
     auto get_parents_visible() const -> bool;
 
-    void set_cache_toplevel_contents(bool flag);
-    void invalidate_cache();
+    auto set_cache_toplevel_contents(bool flag) -> void;
+    auto invalidate_cache() -> void;
 
-    void set_has_shadow(bool flag);
+    auto set_has_shadow(bool flag) -> void;
 
-    virtual void auto_size();
-    void relayout();
-    virtual void repaint(const base::Rect &clipRect, bool direct);
-    virtual void render(CairoCtx *cr);
-    void repaint_gl(const base::Rect &clipRect);
-    virtual void render_gl(mdc::CairoCtx *cr);
-    void render_to_surface(cairo_surface_t *surf, bool use_padding = true);
+    virtual auto auto_size() -> void;
+    auto relayout() -> void;
+    virtual auto repaint(const base::Rect &clipRect, bool direct) -> void;
+    virtual auto render(CairoCtx *cr) -> void;
+    auto repaint_gl(const base::Rect &clipRect) -> void;
+    virtual auto render_gl(mdc::CairoCtx *cr) -> void;
+    auto render_to_surface(cairo_surface_t *surf, bool use_padding = true) -> void;
 
     virtual auto can_render_gl() -> bool {
       return false;
     }
 
-    virtual void draw_state(CairoCtx *cr);
-    virtual void draw_state_gl();
-    virtual void draw_outline_ring(CairoCtx *cr, const base::Color &color);
-    virtual void draw_outline_ring_gl(const base::Color &color);
+    virtual auto draw_state(CairoCtx *cr) -> void;
+    virtual auto draw_state_gl() -> void;
+    virtual auto draw_outline_ring(CairoCtx *cr, const base::Color &color) -> void;
+    virtual auto draw_outline_ring_gl(const base::Color &color) -> void;
 
     auto get_state() -> State;
-    virtual void stroke_outline(CairoCtx *, float offset = 0) const {
+    virtual auto stroke_outline(CairoCtx *, float offset = 0) const -> void {
     }
-    virtual void stroke_outline_gl(float offset = 0) const {
+    virtual auto stroke_outline_gl(float offset = 0) const -> void {
     }
 
-    virtual void set_needs_relayout();
-    void set_needs_render();
-    void set_needs_repaint();
+    virtual auto set_needs_relayout() -> void;
+    auto set_needs_render() -> void;
+    auto set_needs_repaint() -> void;
 
     // behaviour
 
-    virtual void set_selected(bool flag = true);
-    virtual void set_focused(bool flag = true);
-    void set_accepts_selection(bool flag = true);
+    virtual auto set_selected(bool flag = true) -> void;
+    virtual auto set_focused(bool flag = true) -> void;
+    auto set_accepts_selection(bool flag = true) -> void;
     auto accepts_selection() const -> bool {
       return _accepts_selection;
     };
-    void set_accepts_focus(bool flag = true);
+    auto set_accepts_focus(bool flag = true) -> void;
     auto accepts_focus() const -> bool {
       return _accepts_focus;
     };
-    void set_draws_hover(bool flag = true);
-    void set_highlighted(bool flag = true);
-    void set_highlight_color(const base::Color *color); // NULL unsets the color
+    auto set_draws_hover(bool flag = true) -> void;
+    auto set_highlighted(bool flag = true) -> void;
+    auto set_highlight_color(const base::Color *color) -> void; // NULL unsets the color
 
-    void set_draggable(bool flag);
+    auto set_draggable(bool flag) -> void;
     auto is_draggable() -> bool {
       return _draggable;
     }
-    void set_allowed_resizing(bool horizontal, bool vertical);
+    auto set_allowed_resizing(bool horizontal, bool vertical) -> void;
 
     auto is_dragging() -> bool {
       return _dragging;
@@ -212,23 +212,23 @@ namespace mdc {
       return _selected;
     };
 
-    virtual void set_state_drawing(bool flag);
+    virtual auto set_state_drawing(bool flag) -> void;
     auto get_state_drawing() -> bool {
       return !_disable_state_drawing;
     }
 
     // private stuff
-    virtual void create_handles(InteractionLayer *ilayer);
-    virtual void update_handles();
-    void destroy_handles();
+    virtual auto create_handles(InteractionLayer *ilayer) -> void;
+    virtual auto update_handles() -> void;
+    auto destroy_handles() -> void;
 
-    void magnetize_bounds();
-    void add_magnet(Magnet *magnet);
+    auto magnetize_bounds() -> void;
+    auto add_magnet(Magnet *magnet) -> void;
 
     auto get_bounds_magnet() -> BoundsMagnet *;
     auto get_closest_magnet(const base::Point &point) -> Magnet *;
 
-    void set_drag_handle_constrainer(const std::function<void(ItemHandle *, base::Size &)> &slot);
+    auto set_drag_handle_constrainer(const std::function<void(ItemHandle *, base::Size &)> &slot) -> void;
 
     // signals
 
@@ -248,7 +248,7 @@ namespace mdc {
     }
 
     // other stuff
-    void set_tag(const std::string &tag) {
+    auto set_tag(const std::string &tag) -> void {
       _tag = tag;
     }
     auto get_tag() const -> std::string {
@@ -265,8 +265,8 @@ namespace mdc {
     boost::signals2::scoped_connection _parent_bounds_con;
     boost::signals2::scoped_connection _grand_parent_bounds_con;
 
-    void parent_bounds_changed(const base::Rect &obounds, CanvasItem *item);
-    void grand_parent_bounds_changed(CanvasItem *item, const base::Rect &obounds);
+    auto parent_bounds_changed(const base::Rect &obounds, CanvasItem *item) -> void;
+    auto grand_parent_bounds_changed(CanvasItem *item, const base::Rect &obounds) -> void;
 
     static auto parent_destroyed(void *data) -> void *;
 
@@ -327,9 +327,9 @@ namespace mdc {
     unsigned int _disable_state_drawing : 1;
 
     auto get_texture_size(base::Size size) -> base::Size;
-    void repaint_direct();
-    void repaint_cached();
-    void regenerate_cache(base::Size size);
+    auto repaint_direct() -> void;
+    auto repaint_cached() -> void;
+    auto regenerate_cache(base::Size size) -> void;
 
     // virtual bool can_drag_handle_to(const base::Point &pos);
     // virtual void end_drag_handle_to(const base::Point &pos);

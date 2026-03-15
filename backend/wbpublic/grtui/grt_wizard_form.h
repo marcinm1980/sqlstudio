@@ -54,39 +54,39 @@ namespace grtui {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #endif
-    virtual bool run_modal();
+    virtual auto run_modal() -> bool;
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
 
-    void add_page(WizardPage *page);
+    auto add_page(WizardPage *page) -> void;
 
-    void update_buttons();
-    void update_heading();
+    auto update_buttons() -> void;
+    auto update_heading() -> void;
 
-    void set_problem(const std::string &text);
-    void clear_problem();
+    auto set_problem(const std::string &text) -> void;
+    auto clear_problem() -> void;
 
-    virtual void reset();
+    virtual auto reset() -> void;
 
-    void switch_to_page(WizardPage *page, bool advancing);
-    WizardPage *get_active_page() {
+    auto switch_to_page(WizardPage *page, bool advancing) -> void;
+    auto get_active_page() -> WizardPage * {
       return _active_page;
     }
-    int get_active_page_number();
+    auto get_active_page_number() -> int;
 
-    WizardPage *get_page_with_id(const std::string &id);
+    auto get_page_with_id(const std::string &id) -> WizardPage *;
 
-    grt::DictRef values() {
+    auto values() -> grt::DictRef {
       return _values;
     }
 
     // util stuff for storing state
-    void set_wizard_option(const std::string &key, const std::string &value);
+    auto set_wizard_option(const std::string &key, const std::string &value) -> void;
     std::string string_wizard_option(const std::string &key, const std::string &default_value = "");
 
-    void set_wizard_option(const std::string &key, int value);
-    int int_wizard_option(const std::string &key, int default_value = 0);
+    auto set_wizard_option(const std::string &key, int value) -> void;
+    auto int_wizard_option(const std::string &key, int default_value = 0) -> int;
 
   private:
     grt::DictRef _values;
@@ -100,16 +100,16 @@ namespace grtui {
     bool _cancelled;
 
   protected:
-    virtual WizardPage *get_next_page(WizardPage *current);
-    void refresh_step_list();
+    virtual auto get_next_page(WizardPage *current) -> WizardPage *;
+    auto refresh_step_list() -> void;
 
-    void extra_clicked();
+    auto extra_clicked() -> void;
 
   public:
-    void go_to_next();
-    void go_to_back();
-    void finish();
-    virtual bool cancel();
+    auto go_to_next() -> void;
+    auto go_to_back() -> void;
+    auto finish() -> void;
+    virtual auto cancel() -> bool;
   };
 
   /** A page of a wizard.
@@ -118,21 +118,21 @@ namespace grtui {
   public:
     WizardPage(WizardForm *form, const std::string &pageid);
 
-    std::string get_id() const {
+    auto get_id() const -> std::string {
       return _id;
     }
 
-    std::string get_title() const {
+    auto get_title() const -> std::string {
       return _title;
     }
-    std::string get_short_title() const {
+    auto get_short_title() const -> std::string {
       return _short_title;
     }
 
-    void set_title(const std::string &title);
-    void set_short_title(const std::string &title);
+    auto set_title(const std::string &title) -> void;
+    auto set_short_title(const std::string &title) -> void;
 
-    void validate();
+    auto validate() -> void;
 
     boost::signals2::signal<void(bool)> *signal_enter() {
       return &_signal_enter;
@@ -145,56 +145,56 @@ namespace grtui {
   protected:
     friend class WizardForm;
 
-    WizardForm *wizard() {
+    auto wizard() -> WizardForm * {
       return _form;
     }
 
-    grt::DictRef values() {
+    auto values() -> grt::DictRef {
       return _form->values();
     }
 
     //! Subclasses must override this to implement validation.
     //! If there is a validation error, it must call _form->set_problem()
-    virtual void do_validate() {
+    virtual auto do_validate() -> void {
     }
 
-    virtual int load() {
+    virtual auto load() -> int {
       return -1;
     } // delme XXX
 
-    virtual bool pre_load();
-    virtual void enter(bool advancing);
-    virtual bool advance();
-    virtual void leave(bool advancing);
+    virtual auto pre_load() -> bool;
+    virtual auto enter(bool advancing) -> void;
+    virtual auto advance() -> bool;
+    virtual auto leave(bool advancing) -> void;
 
-    virtual bool allow_next() {
+    virtual auto allow_next() -> bool {
       return true;
     }
-    virtual bool allow_back() {
+    virtual auto allow_back() -> bool {
       return true;
     }
-    virtual bool allow_cancel() {
+    virtual auto allow_cancel() -> bool {
       return true;
     }
-    virtual bool skip_page() {
+    virtual auto skip_page() -> bool {
       return false;
     } // Return true if the page should not be displayed (due to some condition).
 
     //! return true if this is the last page and pressing next should close wizard
-    virtual bool next_closes_wizard() {
+    virtual auto next_closes_wizard() -> bool {
       return false;
     }
 
     //! overrider may return "" for default caption
-    virtual std::string next_button_caption() {
+    virtual auto next_button_caption() -> std::string {
       return "";
     }
 
-    virtual std::string extra_button_caption() {
+    virtual auto extra_button_caption() -> std::string {
       return "";
     }
 
-    std::string finish_button_caption() const {
+    auto finish_button_caption() const -> std::string {
 #ifdef __APPLE__
       return _("Close");
 #elif defined(_MSC_VER)
@@ -204,7 +204,7 @@ namespace grtui {
 #endif
     }
 
-    virtual void extra_clicked() {
+    virtual auto extra_clicked() -> void {
     }
 
   protected:
@@ -215,7 +215,7 @@ namespace grtui {
     std::string _title;
     std::string _short_title;
 
-    std::string execute_caption() const {
+    auto execute_caption() const -> std::string {
 #ifdef __APPLE__
       return _("Execute");
 #elif defined(_MSC_VER)
@@ -225,7 +225,7 @@ namespace grtui {
 #endif
     }
 
-    std::string finish_caption() const {
+    auto finish_caption() const -> std::string {
 #ifdef __APPLE__
       return _("Finish");
 #else
@@ -233,7 +233,7 @@ namespace grtui {
 #endif
     }
 
-    virtual std::string close_caption() const {
+    virtual auto close_caption() const -> std::string {
 #ifdef __APPLE__
       return _("Close");
 #else
@@ -242,7 +242,7 @@ namespace grtui {
     }
 
   private:
-    void filename_changed(mforms::TextEntry *entry);
-    void browse_file_callback(mforms::TextEntry *entry, mforms::FileChooserType type, const std::string &extensions);
+    auto filename_changed(mforms::TextEntry *entry) -> void;
+    auto browse_file_callback(mforms::TextEntry *entry, mforms::FileChooserType type, const std::string &extensions) -> void;
   };
 };

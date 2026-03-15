@@ -104,7 +104,7 @@ SynchronizeDifferencesPage::~SynchronizeDifferencesPage() {
    */
 }
 
-void SynchronizeDifferencesPage::update_original_columns(std::list<db_ColumnRef> &changed_columns) {
+auto SynchronizeDifferencesPage::update_original_columns(std::list<db_ColumnRef> &changed_columns) -> void {
   // maps from obejct id of copy to the original one
   std::map<std::string, db_SchemaRef> schema_map;
   std::map<std::string, db_TableRef> table_map;
@@ -146,7 +146,7 @@ void SynchronizeDifferencesPage::update_original_columns(std::list<db_ColumnRef>
   }
 }
 
-void SynchronizeDifferencesPage::edit_column_mapping() {
+auto SynchronizeDifferencesPage::edit_column_mapping() -> void {
   mforms::TreeNodeRef node;
   db_TableRef left, right;
   if ((node = _tree.get_selected_node())) {
@@ -177,7 +177,7 @@ void SynchronizeDifferencesPage::edit_column_mapping() {
   }
 }
 
-void SynchronizeDifferencesPage::update_original_tables(std::list<db_TableRef> &changed_tables) {
+auto SynchronizeDifferencesPage::update_original_tables(std::list<db_TableRef> &changed_tables) -> void {
   for (std::list<db_TableRef>::const_iterator tbl = changed_tables.begin(); tbl != changed_tables.end(); ++tbl) {
     db_SchemaRef orig_schema = grt::find_named_object_in_list(_src->schemata(), (*tbl)->owner()->name());
     if (!orig_schema.is_valid()) {
@@ -192,7 +192,7 @@ void SynchronizeDifferencesPage::update_original_tables(std::list<db_TableRef> &
   }
 }
 
-void SynchronizeDifferencesPage::edit_table_mapping() {
+auto SynchronizeDifferencesPage::edit_table_mapping() -> void {
   mforms::TreeNodeRef node;
   db_SchemaRef left, right;
   if ((node = _tree.get_selected_node())) {
@@ -212,7 +212,7 @@ void SynchronizeDifferencesPage::edit_table_mapping() {
   }
 }
 
-void SynchronizeDifferencesPage::select_row() {
+auto SynchronizeDifferencesPage::select_row() -> void {
   mforms::TreeNodeRef node;
   std::string sql;
   if ((node = _tree.get_selected_node())) {
@@ -256,7 +256,7 @@ void SynchronizeDifferencesPage::select_row() {
   _diff_sql_text.set_features(mforms::FeatureReadOnly, true);
 }
 
-void SynchronizeDifferencesPage::activate_node(mforms::TreeNodeRef node, int column) {
+auto SynchronizeDifferencesPage::activate_node(mforms::TreeNodeRef node, int column) -> void {
   if (column == 1) {
     bec::NodeId n(node->get_tag());
     _be->set_next_apply_direction(n);
@@ -266,7 +266,7 @@ void SynchronizeDifferencesPage::activate_node(mforms::TreeNodeRef node, int col
   }
 }
 
-void SynchronizeDifferencesPage::refresh_node(mforms::TreeNodeRef node) {
+auto SynchronizeDifferencesPage::refresh_node(mforms::TreeNodeRef node) -> void {
   bec::NodeId n(node->get_tag());
   node->set_icon_path(0, get_icon_path(_diff_tree->get_field_icon(n, DiffTreeBE::ModelObjectName, bec::Icon16)));
   node->set_icon_path(1, get_icon_path(_diff_tree->get_field_icon(n, DiffTreeBE::ApplyDirection, bec::Icon16)));
@@ -276,21 +276,21 @@ void SynchronizeDifferencesPage::refresh_node(mforms::TreeNodeRef node) {
     refresh_node(node->get_child(i));
 }
 
-void SynchronizeDifferencesPage::set_catalog_getter_slot(const std::function<db_CatalogRef()> &source_catalog_slot,
-                                                         const std::function<db_CatalogRef()> &target_catalog_slot) {
+auto SynchronizeDifferencesPage::set_catalog_getter_slot(const std::function<db_CatalogRef()> &source_catalog_slot,
+                                                         const std::function<db_CatalogRef()> &target_catalog_slot) -> void {
   get_source_catalog = source_catalog_slot;
   get_target_catalog = target_catalog_slot;
 }
 
-void SynchronizeDifferencesPage::set_src(const db_CatalogRef cat) {
+auto SynchronizeDifferencesPage::set_src(const db_CatalogRef cat) -> void {
   _src = cat;
 }
 
-void SynchronizeDifferencesPage::set_dst(const db_CatalogRef cat) {
+auto SynchronizeDifferencesPage::set_dst(const db_CatalogRef cat) -> void {
   _dst = cat;
 }
 
-std::string SynchronizeDifferencesPage::get_icon_path(bec::IconId icon) {
+auto SynchronizeDifferencesPage::get_icon_path(bec::IconId icon) -> std::string {
   if (_icons.find(icon) == _icons.end()) {
     std::string p = bec::IconManager::get_instance()->get_icon_file(icon);
     _icons[icon] = p;
@@ -299,8 +299,8 @@ std::string SynchronizeDifferencesPage::get_icon_path(bec::IconId icon) {
   return _icons[icon];
 }
 
-void SynchronizeDifferencesPage::load_model(std::shared_ptr<DiffTreeBE> model, bec::NodeId node,
-                                            mforms::TreeNodeRef tnode) {
+auto SynchronizeDifferencesPage::load_model(std::shared_ptr<DiffTreeBE> model, bec::NodeId node,
+                                            mforms::TreeNodeRef tnode) -> void {
   for (size_t c = model->count_children(node), i = 0; i < c; i++) {
     std::string value;
     mforms::TreeNodeRef child = tnode->add_child();
@@ -316,7 +316,7 @@ void SynchronizeDifferencesPage::load_model(std::shared_ptr<DiffTreeBE> model, b
   }
 }
 
-bool SynchronizeDifferencesPage::pre_load() {
+auto SynchronizeDifferencesPage::pre_load() -> bool {
   grt::StringListRef schemas_to_skip(grt::StringListRef::cast_from(values().get("unSelectedSchemata")));
   if (get_source_catalog)
     _src = get_source_catalog();
@@ -364,7 +364,7 @@ bool SynchronizeDifferencesPage::pre_load() {
   return true;
 }
 
-void SynchronizeDifferencesPage::update_source() {
+auto SynchronizeDifferencesPage::update_source() -> void {
   std::list<mforms::TreeNodeRef> nodes;
   if (!(nodes = _tree.get_selection()).empty()) {
     for (std::list<mforms::TreeNodeRef>::const_iterator iter = nodes.begin(); iter != nodes.end(); ++iter) {
@@ -376,7 +376,7 @@ void SynchronizeDifferencesPage::update_source() {
   select_row();
 }
 
-void SynchronizeDifferencesPage::update_model() {
+auto SynchronizeDifferencesPage::update_model() -> void {
   std::list<mforms::TreeNodeRef> nodes;
   if (!(nodes = _tree.get_selection()).empty()) {
     for (std::list<mforms::TreeNodeRef>::const_iterator iter = nodes.begin(); iter != nodes.end(); ++iter) {
@@ -388,7 +388,7 @@ void SynchronizeDifferencesPage::update_model() {
   select_row();
 }
 
-void SynchronizeDifferencesPage::update_none() {
+auto SynchronizeDifferencesPage::update_none() -> void {
   std::list<mforms::TreeNodeRef> nodes;
   if (!(nodes = _tree.get_selection()).empty()) {
     for (std::list<mforms::TreeNodeRef>::const_iterator iter = nodes.begin(); iter != nodes.end(); ++iter) {

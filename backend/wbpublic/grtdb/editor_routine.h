@@ -33,11 +33,11 @@ namespace bec {
   public:
     RoutineEditorBE(const db_RoutineRef &routine);
 
-    virtual std::string get_title();
-    db_RoutineRef get_routine() {
+    virtual auto get_title() -> std::string;
+    auto get_routine() -> db_RoutineRef {
       return db_RoutineRef::cast_from(get_dbobject());
     }
-    virtual std::string get_sql();
+    virtual auto get_sql() -> std::string;
   };
 
 } // namespace bec

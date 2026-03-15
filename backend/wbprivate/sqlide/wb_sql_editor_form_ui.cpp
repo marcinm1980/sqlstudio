@@ -56,11 +56,11 @@ DEFAULT_LOG_DOMAIN("SQL Editor Form")
 
 using boost::signals2::scoped_connection;
 
-void SqlEditorForm::activate_command(const std::string &command) {
+auto SqlEditorForm::activate_command(const std::string &command) -> void {
   _wbsql->get_cmdui()->activate_command(command);
 }
 
-mforms::ToolBar *SqlEditorForm::get_toolbar() {
+auto SqlEditorForm::get_toolbar() -> mforms::ToolBar * {
   if (!_toolbar) {
     _toolbar = _wbsql->get_cmdui()->create_toolbar(
       "data/dbquery_toolbar.xml", std::bind(&SqlEditorForm::activate_command, this, std::placeholders::_1));
@@ -74,7 +74,7 @@ mforms::ToolBar *SqlEditorForm::get_toolbar() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::limit_rows(const std::string &limit_text) {
+auto SqlEditorForm::limit_rows(const std::string &limit_text) -> void {
   int limit;
   if (sscanf(limit_text.c_str(), _("Limit to %i rows"), &limit) < 1)
     limit = 0; // Don't Limit
@@ -122,7 +122,7 @@ void SqlEditorForm::limit_rows(const std::string &limit_text) {
 
 static int limit_counts[] = {10, 50, 100, 200, 300, 400, 500, 1000, 2000, 5000, 10000, 50000, 0};
 
-mforms::MenuBar *SqlEditorForm::get_menubar() {
+auto SqlEditorForm::get_menubar() -> mforms::MenuBar * {
   if (!_menu) {
     _menu = _wbsql->get_cmdui()->create_menubar_for_context(WB_CONTEXT_QUERY);
 
@@ -214,7 +214,7 @@ mforms::MenuBar *SqlEditorForm::get_menubar() {
   return _menu;
 }
 
-void SqlEditorForm::update_menu_and_toolbar() {
+auto SqlEditorForm::update_menu_and_toolbar() -> void {
   if (!bec::GRTManager::get()->in_main_thread()) {
     exec_sql_task->execute_in_main_thread(std::bind(&SqlEditorForm::update_menu_and_toolbar, this), false, false);
     return;
@@ -267,7 +267,7 @@ void SqlEditorForm::update_menu_and_toolbar() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string find_icon_name(std::string icon_name, bool use_win8) {
+auto find_icon_name(std::string icon_name, bool use_win8) -> std::string {
   std::string::size_type dot_position = icon_name.rfind(".");
   if (dot_position != std::string::npos) {
     std::string extension = icon_name.substr(dot_position);
@@ -286,7 +286,7 @@ std::string find_icon_name(std::string icon_name, bool use_win8) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::update_toolbar_icons() {
+auto SqlEditorForm::update_toolbar_icons() -> void {
   bool use_win8;
 
   switch (base::Color::get_active_scheme()) {
@@ -320,7 +320,7 @@ void SqlEditorForm::update_toolbar_icons() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::validate_menubar() {
+auto SqlEditorForm::validate_menubar() -> void {
   if (get_menubar())
     wb::WBContextUI::get()->get_command_ui()->revalidate_menu_bar(get_menubar());
 }
@@ -330,7 +330,7 @@ void SqlEditorForm::validate_menubar() {
 /**
  * Setup of schema browser/object info/quick help side palette.
  */
-void SqlEditorForm::setup_side_palette() {
+auto SqlEditorForm::setup_side_palette() -> void {
   // Right hand side (quick help, snippets).
   _side_palette = mforms::manage(new QuerySidePalette(shared_from_this()));
 
@@ -349,7 +349,7 @@ void SqlEditorForm::setup_side_palette() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::toolbar_command(const std::string &command) {
+auto SqlEditorForm::toolbar_command(const std::string &command) -> void {
   if (command == "query.new_schema")
     _live_tree->tree_create_object(LiveSchemaTree::Schema, "", "");
   else if (command == "query.new_table")
@@ -400,7 +400,7 @@ void SqlEditorForm::toolbar_command(const std::string &command) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::inspect_object(const std::string &schema, const std::string &object, const std::string &type) {
+auto SqlEditorForm::inspect_object(const std::string &schema, const std::string &object, const std::string &type) -> void {
   db_query_EditorRef editor(_wbsql->get_grt_editor_object(this));
   if (editor.is_valid()) {
     grt::BaseListRef selected_items(true);
@@ -420,7 +420,7 @@ void SqlEditorForm::inspect_object(const std::string &schema, const std::string 
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::show_output_area() {
+auto SqlEditorForm::show_output_area() -> void {
   mforms::ToolBarItem *item = _toolbar->find_item("wb.toggleOutputArea");
   if (item && !item->get_checked()) {
     item->set_checked(true);
@@ -430,19 +430,19 @@ void SqlEditorForm::show_output_area() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::View *SqlEditorForm::get_sidebar() {
+auto SqlEditorForm::get_sidebar() -> mforms::View * {
   return _live_tree->get_sidebar();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::View *SqlEditorForm::get_side_palette() {
+auto SqlEditorForm::get_side_palette() -> mforms::View * {
   return _side_palette_host;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorForm::set_editor_tool_items_enbled(const std::string &name, bool flag) {
+auto SqlEditorForm::set_editor_tool_items_enbled(const std::string &name, bool flag) -> void {
   if (_tabdock) {
     for (int c = _tabdock->view_count(), i = 0; i < c; i++) {
       SqlEditorPanel *panel = dynamic_cast<SqlEditorPanel *>(_tabdock->view_at_index(i));
@@ -452,7 +452,7 @@ void SqlEditorForm::set_editor_tool_items_enbled(const std::string &name, bool f
   }
 }
 
-void SqlEditorForm::set_editor_tool_items_checked(const std::string &name, bool flag) {
+auto SqlEditorForm::set_editor_tool_items_checked(const std::string &name, bool flag) -> void {
   if (_tabdock) {
     for (int c = _tabdock->view_count(), i = 0; i < c; i++) {
       SqlEditorPanel *panel = dynamic_cast<SqlEditorPanel *>(_tabdock->view_at_index(i));
@@ -462,13 +462,13 @@ void SqlEditorForm::set_editor_tool_items_checked(const std::string &name, bool 
   }
 }
 
-void SqlEditorForm::set_tool_item_checked(const std::string &name, bool flag) {
+auto SqlEditorForm::set_tool_item_checked(const std::string &name, bool flag) -> void {
   _toolbar->set_item_checked(name, flag);
 }
 
-bool SqlEditorForm::run_live_object_alteration_wizard(const std::string &alter_script,
+auto SqlEditorForm::run_live_object_alteration_wizard(const std::string &alter_script,
                                                       bec::DBObjectEditorBE *obj_editor, RowId log_id,
-                                                      const std::string &log_context) {
+                                                      const std::string &log_context) -> bool {
   on_sql_script_run_error.disconnect_all_slots();
   on_sql_script_run_progress.disconnect_all_slots();
   on_sql_script_run_statistics.disconnect_all_slots();
@@ -515,12 +515,12 @@ bool SqlEditorForm::run_live_object_alteration_wizard(const std::string &alter_s
   return wizard.applied() && !wizard.has_errors();
 }
 
-void SqlEditorForm::abort_apply_object_alter_script() {
+auto SqlEditorForm::abort_apply_object_alter_script() -> void {
   cancel_query();
 }
 
-int SqlEditorForm::sql_script_apply_error(long long code, const std::string &msg, const std::string &stmt,
-                                          std::string &errors) {
+auto SqlEditorForm::sql_script_apply_error(long long code, const std::string &msg, const std::string &stmt,
+                                          std::string &errors) -> int {
   if (code >= 0)
     errors.append(strfmt("Error %li: ", (long)code));
   errors.append(msg).append("\n");
@@ -529,15 +529,15 @@ int SqlEditorForm::sql_script_apply_error(long long code, const std::string &msg
   return 0;
 }
 
-int SqlEditorForm::sql_script_apply_progress(float) {
+auto SqlEditorForm::sql_script_apply_progress(float) -> int {
   return 0;
 }
 
-int SqlEditorForm::sql_script_stats(long, long) {
+auto SqlEditorForm::sql_script_stats(long, long) -> int {
   return 0;
 }
 
-void SqlEditorForm::handle_tab_menu_action(const std::string &action, int tab_index) {
+auto SqlEditorForm::handle_tab_menu_action(const std::string &action, int tab_index) -> void {
   if (action == "new_tab")
     new_sql_script_file();
   else if (action == "save_tab") {
@@ -563,7 +563,7 @@ void SqlEditorForm::handle_tab_menu_action(const std::string &action, int tab_in
   }
 }
 
-void SqlEditorForm::handle_history_action(const std::string &action, const std::string &sql) {
+auto SqlEditorForm::handle_history_action(const std::string &action, const std::string &sql) -> void {
   if (action == "copy")
     mforms::Utilities::set_clipboard_text(sql);
   else if (action == "append") {

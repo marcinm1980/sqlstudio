@@ -37,8 +37,8 @@ public:
   virtual ~SampleInterface1Impl() {
   }
 
-  virtual int getNumber() = 0;
-  virtual int calculate() = 0;
+  virtual auto getNumber() -> int = 0;
+  virtual auto calculate() -> int = 0;
 };
 
 struct SampleInterface2Impl : protected grt::InterfaceImplBase {
@@ -48,7 +48,7 @@ public:
   virtual ~SampleInterface2Impl() {
   }
 
-  virtual int calcSum(int num1) = 0;
+  virtual auto calcSum(int num1) -> int = 0;
 };
 
 class SampleModule1Impl : public grt::ModuleImplBase, public SampleInterface1Impl {
@@ -83,7 +83,7 @@ public:
 };
 
 #ifdef DEFINE_TEST_MODULES_CODE
-int SampleModule1Impl::calculate() {
+auto SampleModule1Impl::calculate() -> int {
   SampleModule2Impl *s2 = grt::GRT::get()->get_native_module<SampleModule2Impl>();
   return s2->calcSum(1);
 }
@@ -102,22 +102,22 @@ public:
                      DECLARE_MODULE_FUNCTION(SampleModule3Impl::doSomethingWithDict),
                      DECLARE_MODULE_FUNCTION(SampleModule3Impl::doSomethingWithAuthorList));
 
-  int doSomethingWithObject(grt::ObjectRef object) {
+  auto doSomethingWithObject(grt::ObjectRef object) -> int {
     return 0;
   }
-  grt::StringRef doSomethingWithNumbers(grt::IntegerRef a, grt::DoubleRef b, int c, double d) {
+  auto doSomethingWithNumbers(grt::IntegerRef a, grt::DoubleRef b, int c, double d) -> grt::StringRef {
     return grt::StringRef("");
   }
-  int doSomethingWithNumberList(grt::IntegerListRef ilist) {
+  auto doSomethingWithNumberList(grt::IntegerListRef ilist) -> int {
     return 0;
   }
-  grt::StringListRef doSomethingWithTypedObject(std::string s, test_AuthorRef object) {
+  auto doSomethingWithTypedObject(std::string s, test_AuthorRef object) -> grt::StringListRef {
     return grt::StringListRef();
   }
-  int doSomethingWithDict(grt::DictRef d) {
+  auto doSomethingWithDict(grt::DictRef d) -> int {
     return 0;
   }
-  grt::ListRef<test_Author> doSomethingWithAuthorList(grt::ListRef<test_Author> authors) {
+  auto doSomethingWithAuthorList(grt::ListRef<test_Author> authors) -> grt::ListRef<test_Author> {
     return grt::ListRef<test_Author>();
   }
 };
@@ -129,7 +129,7 @@ public:
 
   DEFINE_INIT_MODULE("1.0", "", SampleModule2Impl, DECLARE_MODULE_FUNCTION(BadModuleImpl::calcSum), NULL);
 
-  int calcSum() {
+  auto calcSum() -> int {
     return 0;
   }
 };

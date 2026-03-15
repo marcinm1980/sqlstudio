@@ -145,11 +145,11 @@ public:
     _top_level.set_spacing(12);
   }
 
-  virtual void enter(grt::DictRef values) {
+  virtual auto enter(grt::DictRef values) -> void {
     validate();
   }
 
-  void left_changed() {
+  auto left_changed() -> void {
     if (_left_model.get_active()) {
       _right_model.set_enabled(false);
       _left_filebox_b.set_enabled(false);
@@ -166,7 +166,7 @@ public:
     validate();
   }
 
-  void right_changed() {
+  auto right_changed() -> void {
     if (_right_model.get_active()) {
       _left_model.set_enabled(false);
       _right_filebox_b.set_enabled(false);
@@ -183,7 +183,7 @@ public:
     validate();
   }
 
-  virtual void do_validate() {
+  virtual auto do_validate() -> void {
     bool ok = true;
 
     if (_left_file.get_active()) {
@@ -209,11 +209,11 @@ public:
       _form->set_problem("");
   }
 
-  virtual std::string get_title() {
+  virtual auto get_title() -> std::string {
     return "Wizard Test";
   }
 
-  virtual std::string get_subtitle() {
+  virtual auto get_subtitle() -> std::string {
     return "Wizard page description.";
   }
 };
@@ -240,11 +240,11 @@ public:
     add(&_dbconnect, true, true);
   }
 
-  virtual std::string get_title() {
+  virtual auto get_title() -> std::string {
     return "Wizard Test";
   }
 
-  virtual std::string get_subtitle() {
+  virtual auto get_subtitle() -> std::string {
     return "Connection parameters.";
   }
 };
@@ -307,9 +307,9 @@ protected:
 };
 
 #ifdef _MSC_VER
-GRTUI_EXPORT void wiztest();
+auto wiztest() -> GRTUI_EXPORT void;
 
-void wiztest() {
+auto wiztest() -> void {
 #if 0
   Form window;
   Box vbox(false);

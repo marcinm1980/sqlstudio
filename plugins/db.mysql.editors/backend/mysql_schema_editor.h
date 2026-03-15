@@ -37,11 +37,11 @@ private:
 public:
   MySQLSchemaEditorBE(const db_mysql_SchemaRef &schema);
 
-  virtual db_SchemaRef get_schema() {
+  virtual auto get_schema() -> db_SchemaRef {
     return _schema;
   }
 
-  void refactor_catalog_upon_schema_rename(const std::string &old_name, const std::string &new_name);
-  bool refactor_possible();
-  void refactor_catalog();
+  auto refactor_catalog_upon_schema_rename(const std::string &old_name, const std::string &new_name) -> void;
+  auto refactor_possible() -> bool;
+  auto refactor_catalog() -> void;
 };

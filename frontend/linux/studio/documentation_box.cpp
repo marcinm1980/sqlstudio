@@ -63,7 +63,7 @@ DocumentationBox::~DocumentationBox() {
     _timer.disconnect();
 }
 
-void DocumentationBox::update_for_form(bec::UIForm *form) {
+auto DocumentationBox::update_for_form(bec::UIForm *form) -> void {
   if (_timer)
     commit();
 
@@ -117,14 +117,14 @@ void DocumentationBox::update_for_form(bec::UIForm *form) {
   _initializing = false;
 }
 
-void DocumentationBox::commit() {
+auto DocumentationBox::commit() -> void {
   puts("COMMIT");
   _timer.disconnect();
 
   wb::WBContextUI::get()->set_description_for_selection(_object_list, _text.get_buffer()->get_text());
 }
 
-void DocumentationBox::text_changed() {
+auto DocumentationBox::text_changed() -> void {
   if (!_initializing) {
     _timer.disconnect();
     _timer = Glib::signal_timeout().connect(sigc::bind_return(sigc::mem_fun(this, &DocumentationBox::commit), false),
@@ -132,7 +132,7 @@ void DocumentationBox::text_changed() {
   }
 }
 
-void DocumentationBox::text_button_press(GdkEventButton *ev) {
+auto DocumentationBox::text_button_press(GdkEventButton *ev) -> void {
   if (ev->type == GDK_2BUTTON_PRESS && _multiple_items && !_text.get_editable()) {
     _initializing = true;
 
@@ -143,7 +143,7 @@ void DocumentationBox::text_button_press(GdkEventButton *ev) {
   }
 }
 
-void DocumentationBox::combo_changed() {
+auto DocumentationBox::combo_changed() -> void {
   if (!_initializing)
   {
     if (_combo.get_model()->children().size())
@@ -151,7 +151,7 @@ void DocumentationBox::combo_changed() {
   }
 }
 
-void DocumentationBox::text_key_press(GdkEventKey *key) {
+auto DocumentationBox::text_key_press(GdkEventKey *key) -> void {
   if ((key->state & GDK_CONTROL_MASK) && key->keyval == GDK_KEY_Return && _text.get_editable()) {
     commit();
   }

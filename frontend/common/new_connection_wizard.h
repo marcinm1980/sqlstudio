@@ -46,7 +46,7 @@ public:
   NewConnectionWizard(wb::WBContext *context, const db_mgmt_ManagementRef &mgmt);
   ~NewConnectionWizard();
 
-  db_mgmt_ConnectionRef run();
+  auto run() -> db_mgmt_ConnectionRef;
 
 private:
   wb::WBContext *_context;
@@ -63,7 +63,7 @@ private:
   mforms::Button _test_button;
   mforms::Button _config_button;
 
-  void open_remote_mgm_config();
+  auto open_remote_mgm_config() -> void;
 };
 
 #endif /* _NEWCONNECTIONWIZARD_H_ */

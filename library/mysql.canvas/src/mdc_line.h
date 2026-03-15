@@ -83,11 +83,11 @@ namespace mdc {
     virtual auto get_end_point() -> base::Point = 0;
 
     virtual auto create_handles(Line *line, InteractionLayer *ilayer) -> std::vector<ItemHandle *>;
-    virtual void update_handles(Line *line, std::vector<ItemHandle *> &handles);
+    virtual auto update_handles(Line *line, std::vector<ItemHandle *> &handles) -> void;
 
     virtual auto handle_dragged(Line *line, ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
 
-    virtual void update() = 0;
+    virtual auto update() -> void = 0;
 
   protected:
     struct Segment {
@@ -103,23 +103,23 @@ namespace mdc {
     Line(Layer *layer, LineLayouter *layouter = 0);
     virtual ~Line();
 
-    void set_layouter(LineLayouter *layouter);
+    auto set_layouter(LineLayouter *layouter) -> void;
     auto get_layouter() -> LineLayouter * {
       return _layouter;
     }
 
-    virtual void resize_to(const base::Size &size);
-    virtual void move_to(const base::Point &pos);
+    virtual auto resize_to(const base::Size &size) -> void;
+    virtual auto move_to(const base::Point &pos) -> void;
 
     virtual auto contains_point(const base::Point &point) const -> bool;
 
-    virtual void draw_contents(CairoCtx *cr);
-    virtual void stroke_outline(CairoCtx *cr, float offset = 0) const;
-    virtual void stroke_outline_gl(float offset = 0) const;
+    virtual auto draw_contents(CairoCtx *cr) -> void;
+    virtual auto stroke_outline(CairoCtx *cr, float offset = 0) const -> void;
+    virtual auto stroke_outline_gl(float offset = 0) const -> void;
 
-    void set_vertices(const std::vector<base::Point> &points);
-    void add_vertex(const base::Point &pos);
-    void set_vertex(size_t vertex, const base::Point &pos);
+    auto set_vertices(const std::vector<base::Point> &points) -> void;
+    auto add_vertex(const base::Point &pos) -> void;
+    auto set_vertex(size_t vertex, const base::Point &pos) -> void;
     inline auto get_vertex(size_t vertex) -> base::Point {
       return _vertices[vertex];
     }
@@ -127,18 +127,18 @@ namespace mdc {
       return _vertices.size();
     }
 
-    void set_end_type(LineEndType start, LineEndType end);
-    void set_line_pattern(LinePatternType pattern);
+    auto set_end_type(LineEndType start, LineEndType end) -> void;
+    auto set_line_pattern(LinePatternType pattern) -> void;
 
-    void set_hops_crossings(bool flag);
+    auto set_hops_crossings(bool flag) -> void;
     auto get_hops_crossings() const -> bool {
       return _hop_crossings;
     }
 
-    virtual void mark_crossings(Line *line);
+    virtual auto mark_crossings(Line *line) -> void;
 
-    virtual void create_handles(InteractionLayer *ilayer);
-    virtual void update_handles();
+    virtual auto create_handles(InteractionLayer *ilayer) -> void;
+    virtual auto update_handles() -> void;
 
     auto signal_layout_changed() -> boost::signals2::signal<void()> * {
       return &_layout_changed;
@@ -174,19 +174,19 @@ namespace mdc {
 
     bool _hop_crossings;
 
-    void update_bounds();
-    void update_layout();
+    auto update_bounds() -> void;
+    auto update_layout() -> void;
 
-    void set_line_pattern(CairoCtx *cr, LinePatternType pattern);
+    auto set_line_pattern(CairoCtx *cr, LinePatternType pattern) -> void;
     auto get_gl_pattern(LinePatternType pattern) -> GLushort;
 
     auto get_line_start_angle() -> double;
     auto get_line_end_angle() -> double;
 
-    void draw_line_ends(CairoCtx *cr);
-    void draw_line_ends_gl();
-    virtual void draw_outline_ring(CairoCtx *cr, const base::Color &color);
-    virtual void draw_outline_ring_gl(const base::Color &color);
+    auto draw_line_ends(CairoCtx *cr) -> void;
+    auto draw_line_ends_gl() -> void;
+    virtual auto draw_outline_ring(CairoCtx *cr, const base::Color &color) -> void;
+    virtual auto draw_outline_ring_gl(const base::Color &color) -> void;
 
   private:
     virtual auto on_drag_handle(ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;

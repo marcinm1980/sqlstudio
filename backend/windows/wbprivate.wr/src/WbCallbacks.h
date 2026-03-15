@@ -73,9 +73,9 @@ namespace MySQL {
     ref class WbFrontendCallbacks {
     public:
       // Delegates used by C#.
-      delegate void VoidDelegate();
-      delegate bool BoolDelegate();
-      delegate void VoidBoolDelegate(bool f);
+      auto VoidDelegate() -> delegate void;
+      auto BoolDelegate() -> delegate bool;
+      auto VoidBoolDelegate(bool f) -> delegate void;
       delegate void VoidStrDelegate(String ^ str1);
       delegate void VoidStrStrDelegate(String ^ str1, String ^ str2);
       delegate String ^ StrStrStrStrDelegate(String ^ str1, String ^ str2, String ^ str3);
@@ -88,7 +88,7 @@ namespace MySQL {
       delegate IntPtr IntPtrGRTManagerModuleStrStrGrtListFlagsDelegate(GrtManager ^ grtManager, GrtModule ^ module,
                                                                        String ^ str1, String ^ str2, GrtValue ^ grtlist,
                                                                        GUIPluginFlags flags);
-      delegate void VoidIntPtrDelegate(IntPtr p2);
+      auto VoidIntPtrDelegate(IntPtr p2) -> delegate void;
       delegate void VoidRefreshTypeStringIntPtrDelegate(RefreshType refresh, String ^ str, IntPtr ptr);
 
     private:
@@ -200,24 +200,24 @@ namespace MySQL {
 
       StrStrStrStrDelegate ^ show_file_dialog_delegate;
       StrStrStrStrWrapperDelegate ^ show_file_dialog_wrapper_delegate;
-      std::string show_file_dialog_wrapper(const std::string& str1, const std::string& str2, const std::string& str3);
+      auto show_file_dialog_wrapper(const std::string& str1, const std::string& str2, const std::string& str3) -> std::string;
 
       VoidStrDelegate ^ show_status_text_delegate;
       VoidStrWrapperDelegate ^ show_status_text_wrapper_delegate;
-      void show_status_text_wrapper(const std::string& str1);
+      auto show_status_text_wrapper(const std::string& str1) -> void;
 
       BoolStrStrFloatDelegate ^ show_progress_delegate;
       BoolStrStrFloatWrapperDelegate ^ show_progress_wrapper_delegate;
-      bool show_progress_wrapper(const std::string& str1, const std::string& str2, float f3);
+      auto show_progress_wrapper(const std::string& str1, const std::string& str2, float f3) -> bool;
 
       VoidStrDelegate ^ shell_output_delegate;
       VoidStrWrapperDelegate ^ shell_output_wrapper_delegate;
-      void shell_output_wrapper(const std::string& str1);
+      auto shell_output_wrapper(const std::string& str1) -> void;
 
       // CanvasView
       CanvasViewStringStringDelegate ^ create_diagram_delegate;
       CanvasViewDiagramWrapperDelegate ^ create_diagram_wrapper_delegate;
-      ::mdc::CanvasView* create_diagram_wrapper(const model_DiagramRef& model);
+      auto create_diagram_wrapper(const model_DiagramRef& model) -> ::mdc::CanvasView*;
 
       VoidCanvasViewDelegate ^ destroy_view_delegate;
       VoidCanvasViewWrapperDelegate ^ destroy_view_wrapper_delegate;
@@ -234,33 +234,33 @@ namespace MySQL {
       // Editors
       IntPtrGRTManagerModuleStrStrGrtListFlagsDelegate ^ open_editor_delegate;
       IntGRTManagerModuleStrStrGrtListFlagsWrapperDelegate ^ open_editor_wrapper_delegate;
-      uintptr_t open_editor_wrapper(grt::Module* module, const std::string& str2, const std::string& str3,
-                                    const grt::BaseListRef& grt_list, bec::GUIPluginFlags flags);
+      auto open_editor_wrapper(grt::Module* module, const std::string& str2, const std::string& str3,
+                                    const grt::BaseListRef& grt_list, bec::GUIPluginFlags flags) -> uintptr_t;
 
       VoidIntPtrDelegate ^ show_editor_delegate;
       VoidIntPtrWrapperDelegate ^ show_editor_wrapper_delegate;
-      void show_editor_wrapper(uintptr_t native_handle);
+      auto show_editor_wrapper(uintptr_t native_handle) -> void;
 
       VoidIntPtrDelegate ^ hide_editor_delegate;
       VoidIntPtrWrapperDelegate ^ hide_editor_wrapper_delegate;
-      void hide_editor_wrapper(uintptr_t native_handle);
+      auto hide_editor_wrapper(uintptr_t native_handle) -> void;
 
       // UI related callbacks.
       VoidRefreshTypeStringIntPtrDelegate ^ refresh_gui_delegate;
       VoidRefreshTypeStringIntPtrWrapperDelegate ^ refresh_gui_wrapper_delegate;
-      void refresh_gui_wrapper(::wb::RefreshType refresh, const std::string& str, uintptr_t ptr);
+      auto refresh_gui_wrapper(::wb::RefreshType refresh, const std::string& str, uintptr_t ptr) -> void;
 
       VoidStrDelegate ^ perform_command_delegate;
       VoidStrWrapperDelegate ^ perform_command_wrapper_delegate;
-      void perform_command_wrapper(const std::string& command);
+      auto perform_command_wrapper(const std::string& command) -> void;
 
       VoidBoolDelegate ^ lock_gui_delegate;
       VoidBoolWrapperDelegate ^ lock_gui_wrapper_delegate;
-      void lock_gui_wrapper(bool flag);
+      auto lock_gui_wrapper(bool flag) -> void;
 
       BoolDelegate ^ quit_application_delegate;
       VoidWrapperDelegate ^ quit_application_wrapper_delegate;
-      void quit_application_wrapper();
+      auto quit_application_wrapper() -> void;
 
     public:
       WbFrontendCallbacks(StrStrStrStrDelegate ^ show_file_dialog, VoidStrDelegate ^ show_status_text,
@@ -274,7 +274,7 @@ namespace MySQL {
 
       ~WbFrontendCallbacks();
 
-      ::wb::WBFrontendCallbacks* get_callbacks();
+      auto get_callbacks() -> ::wb::WBFrontendCallbacks*;
     };
   };
 }

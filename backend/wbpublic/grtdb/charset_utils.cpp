@@ -352,7 +352,7 @@ static std::map<std::string, std::string> collationToCharset{
 
 //--------------------------------------------------------------------------------------------------
 
-std::string defaultCollationForCharset(const std::string &charsetName) {
+auto defaultCollationForCharset(const std::string &charsetName) -> std::string {
   auto i = charsetToCollation.find(base::tolower(charsetName));
   if (i != charsetToCollation.end())
     return i->second;
@@ -365,7 +365,7 @@ std::string defaultCollationForCharset(const std::string &charsetName) {
 /**
  * Returns the character set for a given collation.
  */
-std::string charsetForCollation(const std::string &collationName) {
+auto charsetForCollation(const std::string &collationName) -> std::string {
   auto i = collationToCharset.find(base::tolower(collationName));
   if (i != collationToCharset.end())
     return i->second;

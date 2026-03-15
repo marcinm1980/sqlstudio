@@ -60,18 +60,18 @@ DbConnectionDialog::DbConnectionDialog(const db_mgmt_ManagementRef &mgmt)
   center();
 }
 
-db_mgmt_ConnectionRef DbConnectionDialog::run() {
+auto DbConnectionDialog::run() -> db_mgmt_ConnectionRef {
   if (run_modal(&_ok_button, &_cancel_button))
     return _panel.get_connection();
 
   return db_mgmt_ConnectionRef();
 }
 
-void DbConnectionDialog::ok_clicked() {
+auto DbConnectionDialog::ok_clicked() -> void {
 }
 
-void DbConnectionDialog::cancel_clicked() {
+auto DbConnectionDialog::cancel_clicked() -> void {
 }
 
-void DbConnectionDialog::test_clicked() {
+auto DbConnectionDialog::test_clicked() -> void {
 }

@@ -53,10 +53,8 @@ char NEAR _dig_vec_lower[] =
     Pointer to ending NUL character or NullS if radix is bad.
 */
   
-char *
-int2str(register long int val, register char *dst, register int radix, 
-        int upcase)
-{
+auto int2str(register long int val, register char *dst, register int radix, 
+        int upcase) -> char * {
   char buffer[65];
   register char *p;
   long int new_val;
@@ -132,8 +130,7 @@ int2str(register long int val, register char *dst, register int radix,
     Pointer to ending NUL character.
 */
 
-char *int10_to_str(long int val,char *dst,int radix)
-{
+auto int10_to_str(long int val,char *dst,int radix) -> char * {
   char buffer[65];
   register char *p;
   long int new_val;

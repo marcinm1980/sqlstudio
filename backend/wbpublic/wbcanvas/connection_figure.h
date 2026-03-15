@@ -35,12 +35,12 @@ namespace wbfig {
   class ConnectionLineLayouter : public mdc::OrthogonalLineLayouter {
     using super = mdc::OrthogonalLineLayouter;
 
-    virtual std::vector<mdc::ItemHandle *> create_handles(mdc::Line *line, mdc::InteractionLayer *ilayer);
+    virtual auto create_handles(mdc::Line *line, mdc::InteractionLayer *ilayer) -> std::vector<mdc::ItemHandle *>;
 
-    virtual bool update_start_point();
-    virtual bool update_end_point();
+    virtual auto update_start_point() -> bool;
+    virtual auto update_end_point() -> bool;
 
-    virtual bool handle_dragged(mdc::Line *line, mdc::ItemHandle *handle, const base::Point &pos, bool dragging);
+    virtual auto handle_dragged(mdc::Line *line, mdc::ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
 
   public:
     enum Type { NormalLine, ZLine };
@@ -48,13 +48,13 @@ namespace wbfig {
   private:
     Type _type;
 
-    virtual std::vector<base::Point> get_points_for_subline(int subline);
+    virtual auto get_points_for_subline(int subline) -> std::vector<base::Point>;
 
   public:
     ConnectionLineLayouter(mdc::Connector *sconn, mdc::Connector *econn);
 
-    void set_type(Type type);
-    Type get_type() const {
+    auto set_type(Type type) -> void;
+    auto get_type() const -> Type {
       return _type;
     }
   };
@@ -68,48 +68,48 @@ namespace wbfig {
 
     Connection(mdc::Layer *layer, FigureEventHub *hub, model_Object *represented_object);
 
-    void set_splitted(bool flag);
+    auto set_splitted(bool flag) -> void;
 
-    base::Point get_middle_caption_pos(const base::Size &size, CaptionPos pos);
-    base::Point get_start_caption_pos(const base::Size &size);
-    base::Point get_end_caption_pos(const base::Size &size);
+    auto get_middle_caption_pos(const base::Size &size, CaptionPos pos) -> base::Point;
+    auto get_start_caption_pos(const base::Size &size) -> base::Point;
+    auto get_end_caption_pos(const base::Size &size) -> base::Point;
 
-    void set_start_dashed(bool flag);
-    void set_end_dashed(bool flag);
+    auto set_start_dashed(bool flag) -> void;
+    auto set_end_dashed(bool flag) -> void;
 
-    virtual void render(mdc::CairoCtx *cr);
-    virtual void render_gl(mdc::CairoCtx *cr);
+    virtual auto render(mdc::CairoCtx *cr) -> void;
+    virtual auto render_gl(mdc::CairoCtx *cr) -> void;
 
-    void set_start_figure(mdc::CanvasItem *item);
-    void set_end_figure(mdc::CanvasItem *item);
-    mdc::CanvasItem *get_start_figure() {
+    auto set_start_figure(mdc::CanvasItem *item) -> void;
+    auto set_end_figure(mdc::CanvasItem *item) -> void;
+    auto get_start_figure() -> mdc::CanvasItem * {
       return _start_figure;
     }
-    mdc::CanvasItem *get_end_figure() {
+    auto get_end_figure() -> mdc::CanvasItem * {
       return _end_figure;
     }
 
-    void set_diamond_type(DiamondType type);
+    auto set_diamond_type(DiamondType type) -> void;
 
-    double get_segment_offset(int subline);
-    void set_segment_offset(int subline, double offset);
+    auto get_segment_offset(int subline) -> double;
+    auto set_segment_offset(int subline, double offset) -> void;
 
-    virtual bool on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                          mdc::EventState state);
-    virtual bool on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_enter(mdc::CanvasItem *target, const base::Point &point);
-    virtual bool on_leave(mdc::CanvasItem *target, const base::Point &point);
-    virtual bool on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                   mdc::EventState state);
+    virtual auto on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                          mdc::EventState state) -> bool;
+    virtual auto on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_enter(mdc::CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_leave(mdc::CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                   mdc::EventState state) -> bool;
 
-    void set_center_captions(bool flag);
-    bool get_center_captions() {
+    auto set_center_captions(bool flag) -> void;
+    auto get_center_captions() -> bool {
       return _center_captions;
     }
-    virtual bool can_render_gl() {
+    virtual auto can_render_gl() -> bool {
       return true;
     }
 
@@ -126,16 +126,16 @@ namespace wbfig {
     bool _split;
     bool _center_captions;
 
-    virtual bool contains_point(const base::Point &point) const;
+    virtual auto contains_point(const base::Point &point) const -> bool;
 
-    virtual void stroke_outline(mdc::CairoCtx *cr, float offset = 0) const;
-    void stroke_outline_gl(float offset = 0) const;
+    virtual auto stroke_outline(mdc::CairoCtx *cr, float offset = 0) const -> void;
+    auto stroke_outline_gl(float offset = 0) const -> void;
 
-    double get_middle_segment_angle();
+    auto get_middle_segment_angle() -> double;
 
-    void update_layouter();
+    auto update_layouter() -> void;
 
-    virtual void mark_crossings(mdc::Line *line);
+    virtual auto mark_crossings(mdc::Line *line) -> void;
   };
 }; // namespace wbfig
 

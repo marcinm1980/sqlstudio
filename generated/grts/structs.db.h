@@ -134,7 +134,7 @@ public:
       _syncLog(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.DatabaseSyncObject";
   }
 
@@ -145,7 +145,7 @@ public:
    * \par In Python:
    *    value = obj.alterDirection
    */
-  grt::IntegerRef alterDirection() const { return _alterDirection; }
+  auto alterDirection() const -> grt::IntegerRef { return _alterDirection; }
 
   /**
    * Setter for attribute alterDirection
@@ -154,7 +154,7 @@ public:
    * \par In Python:
    *   obj.alterDirection = value
    */
-  virtual void alterDirection(const grt::IntegerRef &value) {
+  virtual auto alterDirection(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_alterDirection);
     _alterDirection = value;
     member_changed("alterDirection", ovalue, value);
@@ -167,7 +167,7 @@ public:
    * \par In Python:
    *    value = obj.changed
    */
-  grt::IntegerRef changed() const { return _changed; }
+  auto changed() const -> grt::IntegerRef { return _changed; }
 
   /**
    * Setter for attribute changed
@@ -176,7 +176,7 @@ public:
    * \par In Python:
    *   obj.changed = value
    */
-  virtual void changed(const grt::IntegerRef &value) {
+  virtual auto changed(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_changed);
     _changed = value;
     member_changed("changed", ovalue, value);
@@ -190,11 +190,11 @@ public:
    * \par In Python:
    *    value = obj.children
    */
-  grt::ListRef<db_DatabaseSyncObject> children() const { return _children; }
+  auto children() const -> grt::ListRef<db_DatabaseSyncObject> { return _children; }
 
 
 private: // The next attribute is read-only.
-  virtual void children(const grt::ListRef<db_DatabaseSyncObject> &value) {
+  virtual auto children(const grt::ListRef<db_DatabaseSyncObject> &value) -> void {
     grt::ValueRef ovalue(_children);
 
     _children = value;
@@ -209,7 +209,7 @@ public:
    * \par In Python:
    *    value = obj.dbObject
    */
-  GrtNamedObjectRef dbObject() const { return _dbObject; }
+  auto dbObject() const -> GrtNamedObjectRef { return _dbObject; }
 
   /**
    * Setter for attribute dbObject
@@ -218,7 +218,7 @@ public:
    * \par In Python:
    *   obj.dbObject = value
    */
-  virtual void dbObject(const GrtNamedObjectRef &value) {
+  virtual auto dbObject(const GrtNamedObjectRef &value) -> void {
     grt::ValueRef ovalue(_dbObject);
     _dbObject = value;
     member_changed("dbObject", ovalue, value);
@@ -231,7 +231,7 @@ public:
    * \par In Python:
    *    value = obj.modelObject
    */
-  GrtNamedObjectRef modelObject() const { return _modelObject; }
+  auto modelObject() const -> GrtNamedObjectRef { return _modelObject; }
 
   /**
    * Setter for attribute modelObject
@@ -240,7 +240,7 @@ public:
    * \par In Python:
    *   obj.modelObject = value
    */
-  virtual void modelObject(const GrtNamedObjectRef &value) {
+  virtual auto modelObject(const GrtNamedObjectRef &value) -> void {
     grt::ValueRef ovalue(_modelObject);
     _modelObject = value;
     member_changed("modelObject", ovalue, value);
@@ -254,11 +254,11 @@ public:
    * \par In Python:
    *    value = obj.syncLog
    */
-  grt::ListRef<GrtLogObject> syncLog() const { return _syncLog; }
+  auto syncLog() const -> grt::ListRef<GrtLogObject> { return _syncLog; }
 
 
 private: // The next attribute is read-only.
-  virtual void syncLog(const grt::ListRef<GrtLogObject> &value) {
+  virtual auto syncLog(const grt::ListRef<GrtLogObject> &value) -> void {
     grt::ValueRef ovalue(_syncLog);
 
     _syncLog = value;
@@ -276,12 +276,12 @@ protected:
   grt::ListRef<GrtLogObject> _syncLog;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_DatabaseSyncObject());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -328,7 +328,7 @@ public:
     : GrtObject(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.DatabaseSync";
   }
 
@@ -340,7 +340,7 @@ public:
    * \par In Python:
    *    value = obj.changeTree
    */
-  db_DatabaseSyncObjectRef changeTree() const { return _changeTree; }
+  auto changeTree() const -> db_DatabaseSyncObjectRef { return _changeTree; }
 
   /**
    * Setter for attribute changeTree
@@ -349,7 +349,7 @@ public:
    * \par In Python:
    *   obj.changeTree = value
    */
-  virtual void changeTree(const db_DatabaseSyncObjectRef &value) {
+  virtual auto changeTree(const db_DatabaseSyncObjectRef &value) -> void {
     grt::ValueRef ovalue(_changeTree);
 
     _changeTree = value;
@@ -364,7 +364,7 @@ public:
    * \par In Python:
    *    value = obj.dbCatalog
    */
-  db_CatalogRef dbCatalog() const { return _dbCatalog; }
+  auto dbCatalog() const -> db_CatalogRef { return _dbCatalog; }
 
   /**
    * Setter for attribute dbCatalog
@@ -373,7 +373,7 @@ public:
    * \par In Python:
    *   obj.dbCatalog = value
    */
-  virtual void dbCatalog(const db_CatalogRef &value) {
+  virtual auto dbCatalog(const db_CatalogRef &value) -> void {
     grt::ValueRef ovalue(_dbCatalog);
 
     _dbCatalog = value;
@@ -386,12 +386,12 @@ protected:
   db_CatalogRef _dbCatalog;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_DatabaseSync());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -420,7 +420,7 @@ public:
       _synchronizeScriptPosition("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Script";
   }
 
@@ -431,7 +431,7 @@ public:
    * \par In Python:
    *    value = obj.forwardEngineerScriptPosition
    */
-  grt::StringRef forwardEngineerScriptPosition() const { return _forwardEngineerScriptPosition; }
+  auto forwardEngineerScriptPosition() const -> grt::StringRef { return _forwardEngineerScriptPosition; }
 
   /**
    * Setter for attribute forwardEngineerScriptPosition
@@ -440,7 +440,7 @@ public:
    * \par In Python:
    *   obj.forwardEngineerScriptPosition = value
    */
-  virtual void forwardEngineerScriptPosition(const grt::StringRef &value) {
+  virtual auto forwardEngineerScriptPosition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_forwardEngineerScriptPosition);
     _forwardEngineerScriptPosition = value;
     member_changed("forwardEngineerScriptPosition", ovalue, value);
@@ -453,7 +453,7 @@ public:
    * \par In Python:
    *    value = obj.synchronizeScriptPosition
    */
-  grt::StringRef synchronizeScriptPosition() const { return _synchronizeScriptPosition; }
+  auto synchronizeScriptPosition() const -> grt::StringRef { return _synchronizeScriptPosition; }
 
   /**
    * Setter for attribute synchronizeScriptPosition
@@ -462,7 +462,7 @@ public:
    * \par In Python:
    *   obj.synchronizeScriptPosition = value
    */
-  virtual void synchronizeScriptPosition(const grt::StringRef &value) {
+  virtual auto synchronizeScriptPosition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_synchronizeScriptPosition);
     _synchronizeScriptPosition = value;
     member_changed("synchronizeScriptPosition", ovalue, value);
@@ -474,12 +474,12 @@ protected:
   grt::StringRef _synchronizeScriptPosition;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Script());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -508,7 +508,7 @@ public:
       _description("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.CharacterSet";
   }
 
@@ -519,11 +519,11 @@ public:
    * \par In Python:
    *    value = obj.collations
    */
-  grt::StringListRef collations() const { return _collations; }
+  auto collations() const -> grt::StringListRef { return _collations; }
 
 
 private: // The next attribute is read-only.
-  virtual void collations(const grt::StringListRef &value) {
+  virtual auto collations(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_collations);
     _collations = value;
     member_changed("collations", ovalue, value);
@@ -537,7 +537,7 @@ public:
    * \par In Python:
    *    value = obj.defaultCollation
    */
-  grt::StringRef defaultCollation() const { return _defaultCollation; }
+  auto defaultCollation() const -> grt::StringRef { return _defaultCollation; }
 
   /**
    * Setter for attribute defaultCollation
@@ -546,7 +546,7 @@ public:
    * \par In Python:
    *   obj.defaultCollation = value
    */
-  virtual void defaultCollation(const grt::StringRef &value) {
+  virtual auto defaultCollation(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultCollation);
     _defaultCollation = value;
     member_changed("defaultCollation", ovalue, value);
@@ -559,7 +559,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -568,7 +568,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -581,12 +581,12 @@ protected:
   grt::StringRef _description;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_CharacterSet());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -629,7 +629,7 @@ public:
 
   virtual ~db_ForeignKey();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.ForeignKey";
   }
 
@@ -640,11 +640,11 @@ public:
    * \par In Python:
    *    value = obj.columns
    */
-  grt::ListRef<db_Column> columns() const { return _columns; }
+  auto columns() const -> grt::ListRef<db_Column> { return _columns; }
 
 
 private: // The next attribute is read-only.
-  virtual void columns(const grt::ListRef<db_Column> &value) {
+  virtual auto columns(const grt::ListRef<db_Column> &value) -> void {
     grt::ValueRef ovalue(_columns);
     _columns = value;
     member_changed("columns", ovalue, value);
@@ -658,11 +658,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -676,7 +676,7 @@ public:
    * \par In Python:
    *    value = obj.deferability
    */
-  grt::IntegerRef deferability() const { return _deferability; }
+  auto deferability() const -> grt::IntegerRef { return _deferability; }
 
   /**
    * Setter for attribute deferability
@@ -685,7 +685,7 @@ public:
    * \par In Python:
    *   obj.deferability = value
    */
-  virtual void deferability(const grt::IntegerRef &value) {
+  virtual auto deferability(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_deferability);
     _deferability = value;
     member_changed("deferability", ovalue, value);
@@ -698,7 +698,7 @@ public:
    * \par In Python:
    *    value = obj.deleteRule
    */
-  grt::StringRef deleteRule() const { return _deleteRule; }
+  auto deleteRule() const -> grt::StringRef { return _deleteRule; }
 
   /**
    * Setter for attribute deleteRule
@@ -707,7 +707,7 @@ public:
    * \par In Python:
    *   obj.deleteRule = value
    */
-  virtual void deleteRule(const grt::StringRef &value) {
+  virtual auto deleteRule(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_deleteRule);
     _deleteRule = value;
     member_changed("deleteRule", ovalue, value);
@@ -720,7 +720,7 @@ public:
    * \par In Python:
    *    value = obj.index
    */
-  db_IndexRef index() const { return _index; }
+  auto index() const -> db_IndexRef { return _index; }
 
   /**
    * Setter for attribute index
@@ -729,7 +729,7 @@ public:
    * \par In Python:
    *   obj.index = value
    */
-  virtual void index(const db_IndexRef &value) {
+  virtual auto index(const db_IndexRef &value) -> void {
     grt::ValueRef ovalue(_index);
     _index = value;
     member_changed("index", ovalue, value);
@@ -742,7 +742,7 @@ public:
    * \par In Python:
    *    value = obj.mandatory
    */
-  grt::IntegerRef mandatory() const { return _mandatory; }
+  auto mandatory() const -> grt::IntegerRef { return _mandatory; }
 
   /**
    * Setter for attribute mandatory
@@ -751,7 +751,7 @@ public:
    * \par In Python:
    *   obj.mandatory = value
    */
-  virtual void mandatory(const grt::IntegerRef &value) {
+  virtual auto mandatory(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_mandatory);
     _mandatory = value;
     member_changed("mandatory", ovalue, value);
@@ -764,7 +764,7 @@ public:
    * \par In Python:
    *    value = obj.many
    */
-  grt::IntegerRef many() const { return _many; }
+  auto many() const -> grt::IntegerRef { return _many; }
 
   /**
    * Setter for attribute many
@@ -773,7 +773,7 @@ public:
    * \par In Python:
    *   obj.many = value
    */
-  virtual void many(const grt::IntegerRef &value) {
+  virtual auto many(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_many);
     _many = value;
     member_changed("many", ovalue, value);
@@ -786,7 +786,7 @@ public:
    * \par In Python:
    *    value = obj.modelOnly
    */
-  grt::IntegerRef modelOnly() const { return _modelOnly; }
+  auto modelOnly() const -> grt::IntegerRef { return _modelOnly; }
 
   /**
    * Setter for attribute modelOnly
@@ -795,7 +795,7 @@ public:
    * \par In Python:
    *   obj.modelOnly = value
    */
-  virtual void modelOnly(const grt::IntegerRef &value) {
+  virtual auto modelOnly(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_modelOnly);
     _modelOnly = value;
     member_changed("modelOnly", ovalue, value);
@@ -808,7 +808,7 @@ public:
    * \par In Python:
    *    value = obj.owner
    */
-  db_TableRef owner() const { return db_TableRef::cast_from(_owner); }
+  auto owner() const -> db_TableRef { return db_TableRef::cast_from(_owner); }
 
   /**
    * Setter for attribute owner
@@ -817,7 +817,7 @@ public:
    * \par In Python:
    *   obj.owner = value
    */
-  virtual void owner(const db_TableRef &value);
+  virtual auto owner(const db_TableRef &value) -> void;
 
   /**
    * Getter for attribute referencedColumns (read-only)
@@ -826,11 +826,11 @@ public:
    * \par In Python:
    *    value = obj.referencedColumns
    */
-  grt::ListRef<db_Column> referencedColumns() const { return _referencedColumns; }
+  auto referencedColumns() const -> grt::ListRef<db_Column> { return _referencedColumns; }
 
 
 private: // The next attribute is read-only.
-  virtual void referencedColumns(const grt::ListRef<db_Column> &value) {
+  virtual auto referencedColumns(const grt::ListRef<db_Column> &value) -> void {
     grt::ValueRef ovalue(_referencedColumns);
     _referencedColumns = value;
     member_changed("referencedColumns", ovalue, value);
@@ -844,7 +844,7 @@ public:
    * \par In Python:
    *    value = obj.referencedMandatory
    */
-  grt::IntegerRef referencedMandatory() const { return _referencedMandatory; }
+  auto referencedMandatory() const -> grt::IntegerRef { return _referencedMandatory; }
 
   /**
    * Setter for attribute referencedMandatory
@@ -853,7 +853,7 @@ public:
    * \par In Python:
    *   obj.referencedMandatory = value
    */
-  virtual void referencedMandatory(const grt::IntegerRef &value) {
+  virtual auto referencedMandatory(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_referencedMandatory);
     _referencedMandatory = value;
     member_changed("referencedMandatory", ovalue, value);
@@ -866,7 +866,7 @@ public:
    * \par In Python:
    *    value = obj.referencedTable
    */
-  db_TableRef referencedTable() const { return _referencedTable; }
+  auto referencedTable() const -> db_TableRef { return _referencedTable; }
 
   /**
    * Setter for attribute referencedTable
@@ -875,7 +875,7 @@ public:
    * \par In Python:
    *   obj.referencedTable = value
    */
-  virtual void referencedTable(const db_TableRef &value);
+  virtual auto referencedTable(const db_TableRef &value) -> void;
 
   /**
    * Getter for attribute updateRule
@@ -884,7 +884,7 @@ public:
    * \par In Python:
    *    value = obj.updateRule
    */
-  grt::StringRef updateRule() const { return _updateRule; }
+  auto updateRule() const -> grt::StringRef { return _updateRule; }
 
   /**
    * Setter for attribute updateRule
@@ -893,7 +893,7 @@ public:
    * \par In Python:
    *   obj.updateRule = value
    */
-  virtual void updateRule(const grt::StringRef &value) {
+  virtual auto updateRule(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_updateRule);
     _updateRule = value;
     member_changed("updateRule", ovalue, value);
@@ -903,13 +903,13 @@ public:
    * Method. 
    * \return 
    */
-  virtual grt::IntegerRef checkCompleteness();
+  virtual auto checkCompleteness() -> grt::IntegerRef;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
-  virtual void owned_list_item_added(grt::internal::OwnedList *list, const grt::ValueRef &value);
-  virtual void owned_list_item_removed(grt::internal::OwnedList *list, const grt::ValueRef &value);
+  virtual auto owned_list_item_added(grt::internal::OwnedList *list, const grt::ValueRef &value) -> void;
+  virtual auto owned_list_item_removed(grt::internal::OwnedList *list, const grt::ValueRef &value) -> void;
 
   grt::ListRef<db_Column> _columns;
   grt::DictRef _customData;
@@ -925,14 +925,14 @@ protected:
   grt::StringRef _updateRule;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_ForeignKey());
   }
 
   static grt::ValueRef call_checkCompleteness(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<db_ForeignKey*>(self)->checkCompleteness(); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1018,7 +1018,7 @@ public:
       _expression("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.IndexColumn";
   }
 
@@ -1029,7 +1029,7 @@ public:
    * \par In Python:
    *    value = obj.columnLength
    */
-  grt::IntegerRef columnLength() const { return _columnLength; }
+  auto columnLength() const -> grt::IntegerRef { return _columnLength; }
 
   /**
    * Setter for attribute columnLength
@@ -1038,7 +1038,7 @@ public:
    * \par In Python:
    *   obj.columnLength = value
    */
-  virtual void columnLength(const grt::IntegerRef &value) {
+  virtual auto columnLength(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_columnLength);
     _columnLength = value;
     member_changed("columnLength", ovalue, value);
@@ -1051,7 +1051,7 @@ public:
    * \par In Python:
    *    value = obj.comment
    */
-  grt::StringRef comment() const { return _comment; }
+  auto comment() const -> grt::StringRef { return _comment; }
 
   /**
    * Setter for attribute comment
@@ -1060,7 +1060,7 @@ public:
    * \par In Python:
    *   obj.comment = value
    */
-  virtual void comment(const grt::StringRef &value) {
+  virtual auto comment(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_comment);
     _comment = value;
     member_changed("comment", ovalue, value);
@@ -1073,7 +1073,7 @@ public:
    * \par In Python:
    *    value = obj.descend
    */
-  grt::IntegerRef descend() const { return _descend; }
+  auto descend() const -> grt::IntegerRef { return _descend; }
 
   /**
    * Setter for attribute descend
@@ -1082,7 +1082,7 @@ public:
    * \par In Python:
    *   obj.descend = value
    */
-  virtual void descend(const grt::IntegerRef &value) {
+  virtual auto descend(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_descend);
     _descend = value;
     member_changed("descend", ovalue, value);
@@ -1095,7 +1095,7 @@ public:
    * \par In Python:
    *    value = obj.expression
    */
-  grt::StringRef expression() const { return _expression; }
+  auto expression() const -> grt::StringRef { return _expression; }
 
   /**
    * Setter for attribute expression
@@ -1104,7 +1104,7 @@ public:
    * \par In Python:
    *   obj.expression = value
    */
-  virtual void expression(const grt::StringRef &value) {
+  virtual auto expression(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_expression);
     _expression = value;
     member_changed("expression", ovalue, value);
@@ -1117,7 +1117,7 @@ public:
    * \par In Python:
    *    value = obj.referencedColumn
    */
-  db_ColumnRef referencedColumn() const { return _referencedColumn; }
+  auto referencedColumn() const -> db_ColumnRef { return _referencedColumn; }
 
   /**
    * Setter for attribute referencedColumn
@@ -1126,7 +1126,7 @@ public:
    * \par In Python:
    *   obj.referencedColumn = value
    */
-  virtual void referencedColumn(const db_ColumnRef &value) {
+  virtual auto referencedColumn(const db_ColumnRef &value) -> void {
     grt::ValueRef ovalue(_referencedColumn);
     _referencedColumn = value;
     member_changed("referencedColumn", ovalue, value);
@@ -1141,12 +1141,12 @@ protected:
   db_ColumnRef _referencedColumn;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_IndexColumn());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1188,7 +1188,7 @@ public:
       _searchCondition("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.CheckConstraint";
   }
 
@@ -1199,7 +1199,7 @@ public:
    * \par In Python:
    *    value = obj.searchCondition
    */
-  grt::StringRef searchCondition() const { return _searchCondition; }
+  auto searchCondition() const -> grt::StringRef { return _searchCondition; }
 
   /**
    * Setter for attribute searchCondition
@@ -1208,7 +1208,7 @@ public:
    * \par In Python:
    *   obj.searchCondition = value
    */
-  virtual void searchCondition(const grt::StringRef &value) {
+  virtual auto searchCondition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_searchCondition);
     _searchCondition = value;
     member_changed("searchCondition", ovalue, value);
@@ -1219,12 +1219,12 @@ protected:
   grt::StringRef _searchCondition;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_CheckConstraint());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1247,7 +1247,7 @@ public:
       _sqlDefinition("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.UserDatatype";
   }
 
@@ -1258,7 +1258,7 @@ public:
    * \par In Python:
    *    value = obj.actualType
    */
-  db_SimpleDatatypeRef actualType() const { return _actualType; }
+  auto actualType() const -> db_SimpleDatatypeRef { return _actualType; }
 
   /**
    * Setter for attribute actualType
@@ -1267,7 +1267,7 @@ public:
    * \par In Python:
    *   obj.actualType = value
    */
-  virtual void actualType(const db_SimpleDatatypeRef &value) {
+  virtual auto actualType(const db_SimpleDatatypeRef &value) -> void {
     grt::ValueRef ovalue(_actualType);
     _actualType = value;
     member_changed("actualType", ovalue, value);
@@ -1280,7 +1280,7 @@ public:
    * \par In Python:
    *    value = obj.flags
    */
-  grt::StringRef flags() const { return _flags; }
+  auto flags() const -> grt::StringRef { return _flags; }
 
   /**
    * Setter for attribute flags
@@ -1289,7 +1289,7 @@ public:
    * \par In Python:
    *   obj.flags = value
    */
-  virtual void flags(const grt::StringRef &value) {
+  virtual auto flags(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_flags);
     _flags = value;
     member_changed("flags", ovalue, value);
@@ -1302,7 +1302,7 @@ public:
    * \par In Python:
    *    value = obj.sqlDefinition
    */
-  grt::StringRef sqlDefinition() const { return _sqlDefinition; }
+  auto sqlDefinition() const -> grt::StringRef { return _sqlDefinition; }
 
   /**
    * Setter for attribute sqlDefinition
@@ -1311,7 +1311,7 @@ public:
    * \par In Python:
    *   obj.sqlDefinition = value
    */
-  virtual void sqlDefinition(const grt::StringRef &value) {
+  virtual auto sqlDefinition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_sqlDefinition);
     _sqlDefinition = value;
     member_changed("sqlDefinition", ovalue, value);
@@ -1324,12 +1324,12 @@ protected:
   grt::StringRef _sqlDefinition;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_UserDatatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1371,7 +1371,7 @@ public:
       _validity("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.SimpleDatatype";
   }
 
@@ -1382,7 +1382,7 @@ public:
    * \par In Python:
    *    value = obj.characterMaximumLength
    */
-  grt::IntegerRef characterMaximumLength() const { return _characterMaximumLength; }
+  auto characterMaximumLength() const -> grt::IntegerRef { return _characterMaximumLength; }
 
   /**
    * Setter for attribute characterMaximumLength
@@ -1391,7 +1391,7 @@ public:
    * \par In Python:
    *   obj.characterMaximumLength = value
    */
-  virtual void characterMaximumLength(const grt::IntegerRef &value) {
+  virtual auto characterMaximumLength(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_characterMaximumLength);
     _characterMaximumLength = value;
     member_changed("characterMaximumLength", ovalue, value);
@@ -1404,7 +1404,7 @@ public:
    * \par In Python:
    *    value = obj.characterOctetLength
    */
-  grt::IntegerRef characterOctetLength() const { return _characterOctetLength; }
+  auto characterOctetLength() const -> grt::IntegerRef { return _characterOctetLength; }
 
   /**
    * Setter for attribute characterOctetLength
@@ -1413,7 +1413,7 @@ public:
    * \par In Python:
    *   obj.characterOctetLength = value
    */
-  virtual void characterOctetLength(const grt::IntegerRef &value) {
+  virtual auto characterOctetLength(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_characterOctetLength);
     _characterOctetLength = value;
     member_changed("characterOctetLength", ovalue, value);
@@ -1426,7 +1426,7 @@ public:
    * \par In Python:
    *    value = obj.dateTimePrecision
    */
-  grt::IntegerRef dateTimePrecision() const { return _dateTimePrecision; }
+  auto dateTimePrecision() const -> grt::IntegerRef { return _dateTimePrecision; }
 
   /**
    * Setter for attribute dateTimePrecision
@@ -1435,7 +1435,7 @@ public:
    * \par In Python:
    *   obj.dateTimePrecision = value
    */
-  virtual void dateTimePrecision(const grt::IntegerRef &value) {
+  virtual auto dateTimePrecision(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_dateTimePrecision);
     _dateTimePrecision = value;
     member_changed("dateTimePrecision", ovalue, value);
@@ -1448,11 +1448,11 @@ public:
    * \par In Python:
    *    value = obj.flags
    */
-  grt::StringListRef flags() const { return _flags; }
+  auto flags() const -> grt::StringListRef { return _flags; }
 
 
 private: // The next attribute is read-only.
-  virtual void flags(const grt::StringListRef &value) {
+  virtual auto flags(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_flags);
     _flags = value;
     member_changed("flags", ovalue, value);
@@ -1466,7 +1466,7 @@ public:
    * \par In Python:
    *    value = obj.group
    */
-  db_DatatypeGroupRef group() const { return _group; }
+  auto group() const -> db_DatatypeGroupRef { return _group; }
 
   /**
    * Setter for attribute group
@@ -1475,7 +1475,7 @@ public:
    * \par In Python:
    *   obj.group = value
    */
-  virtual void group(const db_DatatypeGroupRef &value) {
+  virtual auto group(const db_DatatypeGroupRef &value) -> void {
     grt::ValueRef ovalue(_group);
     _group = value;
     member_changed("group", ovalue, value);
@@ -1488,7 +1488,7 @@ public:
    * \par In Python:
    *    value = obj.needsQuotes
    */
-  grt::IntegerRef needsQuotes() const { return _needsQuotes; }
+  auto needsQuotes() const -> grt::IntegerRef { return _needsQuotes; }
 
   /**
    * Setter for attribute needsQuotes
@@ -1497,7 +1497,7 @@ public:
    * \par In Python:
    *   obj.needsQuotes = value
    */
-  virtual void needsQuotes(const grt::IntegerRef &value) {
+  virtual auto needsQuotes(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_needsQuotes);
     _needsQuotes = value;
     member_changed("needsQuotes", ovalue, value);
@@ -1510,7 +1510,7 @@ public:
    * \par In Python:
    *    value = obj.numericPrecision
    */
-  grt::IntegerRef numericPrecision() const { return _numericPrecision; }
+  auto numericPrecision() const -> grt::IntegerRef { return _numericPrecision; }
 
   /**
    * Setter for attribute numericPrecision
@@ -1519,7 +1519,7 @@ public:
    * \par In Python:
    *   obj.numericPrecision = value
    */
-  virtual void numericPrecision(const grt::IntegerRef &value) {
+  virtual auto numericPrecision(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_numericPrecision);
     _numericPrecision = value;
     member_changed("numericPrecision", ovalue, value);
@@ -1532,7 +1532,7 @@ public:
    * \par In Python:
    *    value = obj.numericPrecisionRadix
    */
-  grt::IntegerRef numericPrecisionRadix() const { return _numericPrecisionRadix; }
+  auto numericPrecisionRadix() const -> grt::IntegerRef { return _numericPrecisionRadix; }
 
   /**
    * Setter for attribute numericPrecisionRadix
@@ -1541,7 +1541,7 @@ public:
    * \par In Python:
    *   obj.numericPrecisionRadix = value
    */
-  virtual void numericPrecisionRadix(const grt::IntegerRef &value) {
+  virtual auto numericPrecisionRadix(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_numericPrecisionRadix);
     _numericPrecisionRadix = value;
     member_changed("numericPrecisionRadix", ovalue, value);
@@ -1554,7 +1554,7 @@ public:
    * \par In Python:
    *    value = obj.numericScale
    */
-  grt::IntegerRef numericScale() const { return _numericScale; }
+  auto numericScale() const -> grt::IntegerRef { return _numericScale; }
 
   /**
    * Setter for attribute numericScale
@@ -1563,7 +1563,7 @@ public:
    * \par In Python:
    *   obj.numericScale = value
    */
-  virtual void numericScale(const grt::IntegerRef &value) {
+  virtual auto numericScale(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_numericScale);
     _numericScale = value;
     member_changed("numericScale", ovalue, value);
@@ -1576,7 +1576,7 @@ public:
    * \par In Python:
    *    value = obj.parameterFormatType
    */
-  grt::IntegerRef parameterFormatType() const { return _parameterFormatType; }
+  auto parameterFormatType() const -> grt::IntegerRef { return _parameterFormatType; }
 
   /**
    * Setter for attribute parameterFormatType
@@ -1585,7 +1585,7 @@ public:
    * \par In Python:
    *   obj.parameterFormatType = value
    */
-  virtual void parameterFormatType(const grt::IntegerRef &value) {
+  virtual auto parameterFormatType(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_parameterFormatType);
     _parameterFormatType = value;
     member_changed("parameterFormatType", ovalue, value);
@@ -1598,11 +1598,11 @@ public:
    * \par In Python:
    *    value = obj.synonyms
    */
-  grt::StringListRef synonyms() const { return _synonyms; }
+  auto synonyms() const -> grt::StringListRef { return _synonyms; }
 
 
 private: // The next attribute is read-only.
-  virtual void synonyms(const grt::StringListRef &value) {
+  virtual auto synonyms(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_synonyms);
     _synonyms = value;
     member_changed("synonyms", ovalue, value);
@@ -1616,7 +1616,7 @@ public:
    * \par In Python:
    *    value = obj.validity
    */
-  grt::StringRef validity() const { return _validity; }
+  auto validity() const -> grt::StringRef { return _validity; }
 
   /**
    * Setter for attribute validity
@@ -1625,7 +1625,7 @@ public:
    * \par In Python:
    *   obj.validity = value
    */
-  virtual void validity(const grt::StringRef &value) {
+  virtual auto validity(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_validity);
     _validity = value;
     member_changed("validity", ovalue, value);
@@ -1647,12 +1647,12 @@ protected:
   grt::StringRef _validity;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_SimpleDatatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1730,7 +1730,7 @@ public:
       _description("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.DatatypeGroup";
   }
 
@@ -1741,7 +1741,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -1750,7 +1750,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -1763,7 +1763,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -1772,7 +1772,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -1784,12 +1784,12 @@ protected:
   grt::StringRef _description;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_DatatypeGroup());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1828,7 +1828,7 @@ public:
 
   virtual ~db_Column();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Column";
   }
 
@@ -1839,7 +1839,7 @@ public:
    * \par In Python:
    *    value = obj.characterSetName
    */
-  grt::StringRef characterSetName() const { return _characterSetName; }
+  auto characterSetName() const -> grt::StringRef { return _characterSetName; }
 
   /**
    * Setter for attribute characterSetName
@@ -1848,7 +1848,7 @@ public:
    * \par In Python:
    *   obj.characterSetName = value
    */
-  virtual void characterSetName(const grt::StringRef &value) {
+  virtual auto characterSetName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_characterSetName);
     _characterSetName = value;
     member_changed("characterSetName", ovalue, value);
@@ -1862,11 +1862,11 @@ public:
    * \par In Python:
    *    value = obj.checks
    */
-  grt::ListRef<db_CheckConstraint> checks() const { return _checks; }
+  auto checks() const -> grt::ListRef<db_CheckConstraint> { return _checks; }
 
 
 private: // The next attribute is read-only.
-  virtual void checks(const grt::ListRef<db_CheckConstraint> &value) {
+  virtual auto checks(const grt::ListRef<db_CheckConstraint> &value) -> void {
     grt::ValueRef ovalue(_checks);
 
     _checks = value;
@@ -1881,7 +1881,7 @@ public:
    * \par In Python:
    *    value = obj.collationName
    */
-  grt::StringRef collationName() const { return _collationName; }
+  auto collationName() const -> grt::StringRef { return _collationName; }
 
   /**
    * Setter for attribute collationName
@@ -1890,7 +1890,7 @@ public:
    * \par In Python:
    *   obj.collationName = value
    */
-  virtual void collationName(const grt::StringRef &value) {
+  virtual auto collationName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_collationName);
     _collationName = value;
     member_changed("collationName", ovalue, value);
@@ -1903,7 +1903,7 @@ public:
    * \par In Python:
    *    value = obj.datatypeExplicitParams
    */
-  grt::StringRef datatypeExplicitParams() const { return _datatypeExplicitParams; }
+  auto datatypeExplicitParams() const -> grt::StringRef { return _datatypeExplicitParams; }
 
   /**
    * Setter for attribute datatypeExplicitParams
@@ -1912,7 +1912,7 @@ public:
    * \par In Python:
    *   obj.datatypeExplicitParams = value
    */
-  virtual void datatypeExplicitParams(const grt::StringRef &value) {
+  virtual auto datatypeExplicitParams(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_datatypeExplicitParams);
     _datatypeExplicitParams = value;
     member_changed("datatypeExplicitParams", ovalue, value);
@@ -1925,7 +1925,7 @@ public:
    * \par In Python:
    *    value = obj.defaultValue
    */
-  grt::StringRef defaultValue() const { return _defaultValue; }
+  auto defaultValue() const -> grt::StringRef { return _defaultValue; }
 
   /**
    * Setter for attribute defaultValue
@@ -1934,7 +1934,7 @@ public:
    * \par In Python:
    *   obj.defaultValue = value
    */
-  virtual void defaultValue(const grt::StringRef &value) {
+  virtual auto defaultValue(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultValue);
     _defaultValue = value;
     member_changed("defaultValue", ovalue, value);
@@ -1947,7 +1947,7 @@ public:
    * \par In Python:
    *    value = obj.defaultValueIsNull
    */
-  grt::IntegerRef defaultValueIsNull() const { return _defaultValueIsNull; }
+  auto defaultValueIsNull() const -> grt::IntegerRef { return _defaultValueIsNull; }
 
   /**
    * Setter for attribute defaultValueIsNull
@@ -1956,7 +1956,7 @@ public:
    * \par In Python:
    *   obj.defaultValueIsNull = value
    */
-  virtual void defaultValueIsNull(const grt::IntegerRef &value) {
+  virtual auto defaultValueIsNull(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_defaultValueIsNull);
     _defaultValueIsNull = value;
     member_changed("defaultValueIsNull", ovalue, value);
@@ -1969,11 +1969,11 @@ public:
    * \par In Python:
    *    value = obj.flags
    */
-  grt::StringListRef flags() const { return _flags; }
+  auto flags() const -> grt::StringListRef { return _flags; }
 
 
 private: // The next attribute is read-only.
-  virtual void flags(const grt::StringListRef &value) {
+  virtual auto flags(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_flags);
     _flags = value;
     member_changed("flags", ovalue, value);
@@ -1987,7 +1987,7 @@ public:
    * \par In Python:
    *    value = obj.formattedRawType
    */
-  grt::StringRef formattedRawType() const;
+  auto formattedRawType() const -> grt::StringRef;
 
 
 private: // The next attribute is read-only.
@@ -2000,7 +2000,7 @@ public:
    * \par In Python:
    *    value = obj.formattedType
    */
-  grt::StringRef formattedType() const;
+  auto formattedType() const -> grt::StringRef;
 
   /**
    * Setter for attribute formattedType
@@ -2009,7 +2009,7 @@ public:
    * \par In Python:
    *   obj.formattedType = value
    */
-  virtual void formattedType(const grt::StringRef &value);
+  virtual auto formattedType(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute isNotNull
@@ -2018,7 +2018,7 @@ public:
    * \par In Python:
    *    value = obj.isNotNull
    */
-  grt::IntegerRef isNotNull() const { return _isNotNull; }
+  auto isNotNull() const -> grt::IntegerRef { return _isNotNull; }
 
   /**
    * Setter for attribute isNotNull
@@ -2027,7 +2027,7 @@ public:
    * \par In Python:
    *   obj.isNotNull = value
    */
-  virtual void isNotNull(const grt::IntegerRef &value) {
+  virtual auto isNotNull(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isNotNull);
     _isNotNull = value;
     member_changed("isNotNull", ovalue, value);
@@ -2040,7 +2040,7 @@ public:
    * \par In Python:
    *    value = obj.length
    */
-  grt::IntegerRef length() const { return _length; }
+  auto length() const -> grt::IntegerRef { return _length; }
 
   /**
    * Setter for attribute length
@@ -2049,7 +2049,7 @@ public:
    * \par In Python:
    *   obj.length = value
    */
-  virtual void length(const grt::IntegerRef &value) {
+  virtual auto length(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_length);
     _length = value;
     member_changed("length", ovalue, value);
@@ -2062,7 +2062,7 @@ public:
    * \par In Python:
    *    value = obj.precision
    */
-  grt::IntegerRef precision() const { return _precision; }
+  auto precision() const -> grt::IntegerRef { return _precision; }
 
   /**
    * Setter for attribute precision
@@ -2071,7 +2071,7 @@ public:
    * \par In Python:
    *   obj.precision = value
    */
-  virtual void precision(const grt::IntegerRef &value) {
+  virtual auto precision(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_precision);
     _precision = value;
     member_changed("precision", ovalue, value);
@@ -2084,7 +2084,7 @@ public:
    * \par In Python:
    *    value = obj.scale
    */
-  grt::IntegerRef scale() const { return _scale; }
+  auto scale() const -> grt::IntegerRef { return _scale; }
 
   /**
    * Setter for attribute scale
@@ -2093,7 +2093,7 @@ public:
    * \par In Python:
    *   obj.scale = value
    */
-  virtual void scale(const grt::IntegerRef &value) {
+  virtual auto scale(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_scale);
     _scale = value;
     member_changed("scale", ovalue, value);
@@ -2106,7 +2106,7 @@ public:
    * \par In Python:
    *    value = obj.simpleType
    */
-  db_SimpleDatatypeRef simpleType() const { return _simpleType; }
+  auto simpleType() const -> db_SimpleDatatypeRef { return _simpleType; }
 
   /**
    * Setter for attribute simpleType
@@ -2115,7 +2115,7 @@ public:
    * \par In Python:
    *   obj.simpleType = value
    */
-  virtual void simpleType(const db_SimpleDatatypeRef &value) {
+  virtual auto simpleType(const db_SimpleDatatypeRef &value) -> void {
     grt::ValueRef ovalue(_simpleType);
     _simpleType = value;
     member_changed("simpleType", ovalue, value);
@@ -2128,7 +2128,7 @@ public:
    * \par In Python:
    *    value = obj.structuredType
    */
-  db_StructuredDatatypeRef structuredType() const { return _structuredType; }
+  auto structuredType() const -> db_StructuredDatatypeRef { return _structuredType; }
 
   /**
    * Setter for attribute structuredType
@@ -2137,7 +2137,7 @@ public:
    * \par In Python:
    *   obj.structuredType = value
    */
-  virtual void structuredType(const db_StructuredDatatypeRef &value) {
+  virtual auto structuredType(const db_StructuredDatatypeRef &value) -> void {
     grt::ValueRef ovalue(_structuredType);
     _structuredType = value;
     member_changed("structuredType", ovalue, value);
@@ -2150,7 +2150,7 @@ public:
    * \par In Python:
    *    value = obj.userType
    */
-  db_UserDatatypeRef userType() const { return _userType; }
+  auto userType() const -> db_UserDatatypeRef { return _userType; }
 
   /**
    * Setter for attribute userType
@@ -2159,7 +2159,7 @@ public:
    * \par In Python:
    *   obj.userType = value
    */
-  virtual void userType(const db_UserDatatypeRef &value) {
+  virtual auto userType(const db_UserDatatypeRef &value) -> void {
     grt::ValueRef ovalue(_userType);
     _userType = value;
     member_changed("userType", ovalue, value);
@@ -2171,9 +2171,9 @@ public:
    * \param typeList 
    * \return 
    */
-  virtual grt::IntegerRef setParseType(const std::string &type, const grt::ListRef<db_SimpleDatatype> &typeList);
+  virtual auto setParseType(const std::string &type, const grt::ListRef<db_SimpleDatatype> &typeList) -> grt::IntegerRef;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -2193,14 +2193,14 @@ protected:
   db_UserDatatypeRef _userType;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Column());
   }
 
   static grt::ValueRef call_setParseType(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<db_Column*>(self)->setParseType(grt::StringRef::cast_from(args[0]), grt::ListRef<db_SimpleDatatype>::cast_from(args[1])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2296,7 +2296,7 @@ public:
       _privileges(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.RolePrivilege";
   }
 
@@ -2307,7 +2307,7 @@ public:
    * \par In Python:
    *    value = obj.databaseObject
    */
-  db_DatabaseObjectRef databaseObject() const { return _databaseObject; }
+  auto databaseObject() const -> db_DatabaseObjectRef { return _databaseObject; }
 
   /**
    * Setter for attribute databaseObject
@@ -2316,7 +2316,7 @@ public:
    * \par In Python:
    *   obj.databaseObject = value
    */
-  virtual void databaseObject(const db_DatabaseObjectRef &value) {
+  virtual auto databaseObject(const db_DatabaseObjectRef &value) -> void {
     grt::ValueRef ovalue(_databaseObject);
     _databaseObject = value;
     member_changed("databaseObject", ovalue, value);
@@ -2329,7 +2329,7 @@ public:
    * \par In Python:
    *    value = obj.databaseObjectName
    */
-  grt::StringRef databaseObjectName() const { return _databaseObjectName; }
+  auto databaseObjectName() const -> grt::StringRef { return _databaseObjectName; }
 
   /**
    * Setter for attribute databaseObjectName
@@ -2338,7 +2338,7 @@ public:
    * \par In Python:
    *   obj.databaseObjectName = value
    */
-  virtual void databaseObjectName(const grt::StringRef &value) {
+  virtual auto databaseObjectName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_databaseObjectName);
     _databaseObjectName = value;
     member_changed("databaseObjectName", ovalue, value);
@@ -2351,7 +2351,7 @@ public:
    * \par In Python:
    *    value = obj.databaseObjectType
    */
-  grt::StringRef databaseObjectType() const { return _databaseObjectType; }
+  auto databaseObjectType() const -> grt::StringRef { return _databaseObjectType; }
 
   /**
    * Setter for attribute databaseObjectType
@@ -2360,7 +2360,7 @@ public:
    * \par In Python:
    *   obj.databaseObjectType = value
    */
-  virtual void databaseObjectType(const grt::StringRef &value) {
+  virtual auto databaseObjectType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_databaseObjectType);
     _databaseObjectType = value;
     member_changed("databaseObjectType", ovalue, value);
@@ -2373,11 +2373,11 @@ public:
    * \par In Python:
    *    value = obj.privileges
    */
-  grt::StringListRef privileges() const { return _privileges; }
+  auto privileges() const -> grt::StringListRef { return _privileges; }
 
 
 private: // The next attribute is read-only.
-  virtual void privileges(const grt::StringListRef &value) {
+  virtual auto privileges(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_privileges);
     _privileges = value;
     member_changed("privileges", ovalue, value);
@@ -2392,12 +2392,12 @@ protected:
   grt::StringListRef _privileges;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_RolePrivilege());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2445,7 +2445,7 @@ public:
       _users(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Catalog";
   }
 
@@ -2456,11 +2456,11 @@ public:
    * \par In Python:
    *    value = obj.characterSets
    */
-  grt::ListRef<db_CharacterSet> characterSets() const { return _characterSets; }
+  auto characterSets() const -> grt::ListRef<db_CharacterSet> { return _characterSets; }
 
 
 private: // The next attribute is read-only.
-  virtual void characterSets(const grt::ListRef<db_CharacterSet> &value) {
+  virtual auto characterSets(const grt::ListRef<db_CharacterSet> &value) -> void {
     grt::ValueRef ovalue(_characterSets);
     _characterSets = value;
     member_changed("characterSets", ovalue, value);
@@ -2474,11 +2474,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -2492,7 +2492,7 @@ public:
    * \par In Python:
    *    value = obj.defaultCharacterSetName
    */
-  grt::StringRef defaultCharacterSetName() const { return _defaultCharacterSetName; }
+  auto defaultCharacterSetName() const -> grt::StringRef { return _defaultCharacterSetName; }
 
   /**
    * Setter for attribute defaultCharacterSetName
@@ -2501,7 +2501,7 @@ public:
    * \par In Python:
    *   obj.defaultCharacterSetName = value
    */
-  virtual void defaultCharacterSetName(const grt::StringRef &value) {
+  virtual auto defaultCharacterSetName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultCharacterSetName);
     _defaultCharacterSetName = value;
     member_changed("defaultCharacterSetName", ovalue, value);
@@ -2514,7 +2514,7 @@ public:
    * \par In Python:
    *    value = obj.defaultCollationName
    */
-  grt::StringRef defaultCollationName() const { return _defaultCollationName; }
+  auto defaultCollationName() const -> grt::StringRef { return _defaultCollationName; }
 
   /**
    * Setter for attribute defaultCollationName
@@ -2523,7 +2523,7 @@ public:
    * \par In Python:
    *   obj.defaultCollationName = value
    */
-  virtual void defaultCollationName(const grt::StringRef &value) {
+  virtual auto defaultCollationName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultCollationName);
     _defaultCollationName = value;
     member_changed("defaultCollationName", ovalue, value);
@@ -2536,7 +2536,7 @@ public:
    * \par In Python:
    *    value = obj.defaultSchema
    */
-  db_SchemaRef defaultSchema() const { return _defaultSchema; }
+  auto defaultSchema() const -> db_SchemaRef { return _defaultSchema; }
 
   /**
    * Setter for attribute defaultSchema
@@ -2545,7 +2545,7 @@ public:
    * \par In Python:
    *   obj.defaultSchema = value
    */
-  virtual void defaultSchema(const db_SchemaRef &value) {
+  virtual auto defaultSchema(const db_SchemaRef &value) -> void {
     grt::ValueRef ovalue(_defaultSchema);
     _defaultSchema = value;
     member_changed("defaultSchema", ovalue, value);
@@ -2559,11 +2559,11 @@ public:
    * \par In Python:
    *    value = obj.logFileGroups
    */
-  grt::ListRef<db_LogFileGroup> logFileGroups() const { return _logFileGroups; }
+  auto logFileGroups() const -> grt::ListRef<db_LogFileGroup> { return _logFileGroups; }
 
 
 private: // The next attribute is read-only.
-  virtual void logFileGroups(const grt::ListRef<db_LogFileGroup> &value) {
+  virtual auto logFileGroups(const grt::ListRef<db_LogFileGroup> &value) -> void {
     grt::ValueRef ovalue(_logFileGroups);
 
     _logFileGroups = value;
@@ -2579,11 +2579,11 @@ public:
    * \par In Python:
    *    value = obj.roles
    */
-  grt::ListRef<db_Role> roles() const { return _roles; }
+  auto roles() const -> grt::ListRef<db_Role> { return _roles; }
 
 
 private: // The next attribute is read-only.
-  virtual void roles(const grt::ListRef<db_Role> &value) {
+  virtual auto roles(const grt::ListRef<db_Role> &value) -> void {
     grt::ValueRef ovalue(_roles);
 
     _roles = value;
@@ -2599,11 +2599,11 @@ public:
    * \par In Python:
    *    value = obj.schemata
    */
-  grt::ListRef<db_Schema> schemata() const { return _schemata; }
+  auto schemata() const -> grt::ListRef<db_Schema> { return _schemata; }
 
 
 private: // The next attribute is read-only.
-  virtual void schemata(const grt::ListRef<db_Schema> &value) {
+  virtual auto schemata(const grt::ListRef<db_Schema> &value) -> void {
     grt::ValueRef ovalue(_schemata);
 
     _schemata = value;
@@ -2619,11 +2619,11 @@ public:
    * \par In Python:
    *    value = obj.serverLinks
    */
-  grt::ListRef<db_ServerLink> serverLinks() const { return _serverLinks; }
+  auto serverLinks() const -> grt::ListRef<db_ServerLink> { return _serverLinks; }
 
 
 private: // The next attribute is read-only.
-  virtual void serverLinks(const grt::ListRef<db_ServerLink> &value) {
+  virtual auto serverLinks(const grt::ListRef<db_ServerLink> &value) -> void {
     grt::ValueRef ovalue(_serverLinks);
 
     _serverLinks = value;
@@ -2638,11 +2638,11 @@ public:
    * \par In Python:
    *    value = obj.simpleDatatypes
    */
-  grt::ListRef<db_SimpleDatatype> simpleDatatypes() const { return _simpleDatatypes; }
+  auto simpleDatatypes() const -> grt::ListRef<db_SimpleDatatype> { return _simpleDatatypes; }
 
 
 private: // The next attribute is read-only.
-  virtual void simpleDatatypes(const grt::ListRef<db_SimpleDatatype> &value) {
+  virtual auto simpleDatatypes(const grt::ListRef<db_SimpleDatatype> &value) -> void {
     grt::ValueRef ovalue(_simpleDatatypes);
     _simpleDatatypes = value;
     member_changed("simpleDatatypes", ovalue, value);
@@ -2657,11 +2657,11 @@ public:
    * \par In Python:
    *    value = obj.tablespaces
    */
-  grt::ListRef<db_Tablespace> tablespaces() const { return _tablespaces; }
+  auto tablespaces() const -> grt::ListRef<db_Tablespace> { return _tablespaces; }
 
 
 private: // The next attribute is read-only.
-  virtual void tablespaces(const grt::ListRef<db_Tablespace> &value) {
+  virtual auto tablespaces(const grt::ListRef<db_Tablespace> &value) -> void {
     grt::ValueRef ovalue(_tablespaces);
 
     _tablespaces = value;
@@ -2677,11 +2677,11 @@ public:
    * \par In Python:
    *    value = obj.userDatatypes
    */
-  grt::ListRef<db_UserDatatype> userDatatypes() const { return _userDatatypes; }
+  auto userDatatypes() const -> grt::ListRef<db_UserDatatype> { return _userDatatypes; }
 
 
 private: // The next attribute is read-only.
-  virtual void userDatatypes(const grt::ListRef<db_UserDatatype> &value) {
+  virtual auto userDatatypes(const grt::ListRef<db_UserDatatype> &value) -> void {
     grt::ValueRef ovalue(_userDatatypes);
 
     _userDatatypes = value;
@@ -2697,11 +2697,11 @@ public:
    * \par In Python:
    *    value = obj.users
    */
-  grt::ListRef<db_User> users() const { return _users; }
+  auto users() const -> grt::ListRef<db_User> { return _users; }
 
 
 private: // The next attribute is read-only.
-  virtual void users(const grt::ListRef<db_User> &value) {
+  virtual auto users(const grt::ListRef<db_User> &value) -> void {
     grt::ValueRef ovalue(_users);
 
     _users = value;
@@ -2717,7 +2717,7 @@ public:
    * \par In Python:
    *    value = obj.version
    */
-  GrtVersionRef version() const { return _version; }
+  auto version() const -> GrtVersionRef { return _version; }
 
   /**
    * Setter for attribute version
@@ -2726,7 +2726,7 @@ public:
    * \par In Python:
    *   obj.version = value
    */
-  virtual void version(const GrtVersionRef &value) {
+  virtual auto version(const GrtVersionRef &value) -> void {
     grt::ValueRef ovalue(_version);
 
     _version = value;
@@ -2751,12 +2751,12 @@ protected:
   GrtVersionRef _version;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Catalog());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2850,7 +2850,7 @@ public:
 
   virtual ~db_DatabaseObject();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.DatabaseObject";
   }
 
@@ -2861,7 +2861,7 @@ public:
    * \par In Python:
    *    value = obj.commentedOut
    */
-  grt::IntegerRef commentedOut() const { return _commentedOut; }
+  auto commentedOut() const -> grt::IntegerRef { return _commentedOut; }
 
   /**
    * Setter for attribute commentedOut
@@ -2870,7 +2870,7 @@ public:
    * \par In Python:
    *   obj.commentedOut = value
    */
-  virtual void commentedOut(const grt::IntegerRef &value) {
+  virtual auto commentedOut(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_commentedOut);
     _commentedOut = value;
     member_changed("commentedOut", ovalue, value);
@@ -2883,7 +2883,7 @@ public:
    * \par In Python:
    *    value = obj.createDate
    */
-  grt::StringRef createDate() const { return _createDate; }
+  auto createDate() const -> grt::StringRef { return _createDate; }
 
   /**
    * Setter for attribute createDate
@@ -2892,7 +2892,7 @@ public:
    * \par In Python:
    *   obj.createDate = value
    */
-  virtual void createDate(const grt::StringRef &value) {
+  virtual auto createDate(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_createDate);
     _createDate = value;
     member_changed("createDate", ovalue, value);
@@ -2905,11 +2905,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -2923,7 +2923,7 @@ public:
    * \par In Python:
    *    value = obj.lastChangeDate
    */
-  grt::StringRef lastChangeDate() const { return _lastChangeDate; }
+  auto lastChangeDate() const -> grt::StringRef { return _lastChangeDate; }
 
   /**
    * Setter for attribute lastChangeDate
@@ -2932,7 +2932,7 @@ public:
    * \par In Python:
    *   obj.lastChangeDate = value
    */
-  virtual void lastChangeDate(const grt::StringRef &value);
+  virtual auto lastChangeDate(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute modelOnly
@@ -2941,7 +2941,7 @@ public:
    * \par In Python:
    *    value = obj.modelOnly
    */
-  grt::IntegerRef modelOnly() const { return _modelOnly; }
+  auto modelOnly() const -> grt::IntegerRef { return _modelOnly; }
 
   /**
    * Setter for attribute modelOnly
@@ -2950,7 +2950,7 @@ public:
    * \par In Python:
    *   obj.modelOnly = value
    */
-  virtual void modelOnly(const grt::IntegerRef &value) {
+  virtual auto modelOnly(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_modelOnly);
     _modelOnly = value;
     member_changed("modelOnly", ovalue, value);
@@ -2963,7 +2963,7 @@ public:
    * \par In Python:
    *    value = obj.name
    */
-  grt::StringRef name() const { return super::name(); }
+  auto name() const -> grt::StringRef { return super::name(); }
 
   /**
    * Setter for attribute name
@@ -2972,7 +2972,7 @@ public:
    * \par In Python:
    *   obj.name = value
    */
-  virtual void name(const grt::StringRef &value);
+  virtual auto name(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute owner
@@ -2981,7 +2981,7 @@ public:
    * \par In Python:
    *    value = obj.owner
    */
-  GrtNamedObjectRef owner() const { return GrtNamedObjectRef::cast_from(_owner); }
+  auto owner() const -> GrtNamedObjectRef { return GrtNamedObjectRef::cast_from(_owner); }
 
   /**
    * Setter for attribute owner
@@ -2990,7 +2990,7 @@ public:
    * \par In Python:
    *   obj.owner = value
    */
-  virtual void owner(const GrtNamedObjectRef &value);
+  virtual auto owner(const GrtNamedObjectRef &value) -> void;
 
   /**
    * Getter for attribute temp_sql
@@ -2999,7 +2999,7 @@ public:
    * \par In Python:
    *    value = obj.temp_sql
    */
-  grt::StringRef temp_sql() const { return _temp_sql; }
+  auto temp_sql() const -> grt::StringRef { return _temp_sql; }
 
   /**
    * Setter for attribute temp_sql
@@ -3008,14 +3008,14 @@ public:
    * \par In Python:
    *   obj.temp_sql = value
    */
-  virtual void temp_sql(const grt::StringRef &value) {
+  virtual auto temp_sql(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_temp_sql);
     _temp_sql = value;
     member_changed("temp_sql", ovalue, value);
   }
 
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -3027,12 +3027,12 @@ protected:
   grt::StringRef _temp_sql;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_DatabaseObject());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3097,7 +3097,7 @@ public:
       _startValue("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Sequence";
   }
 
@@ -3108,7 +3108,7 @@ public:
    * \par In Python:
    *    value = obj.cacheSize
    */
-  grt::StringRef cacheSize() const { return _cacheSize; }
+  auto cacheSize() const -> grt::StringRef { return _cacheSize; }
 
   /**
    * Setter for attribute cacheSize
@@ -3117,7 +3117,7 @@ public:
    * \par In Python:
    *   obj.cacheSize = value
    */
-  virtual void cacheSize(const grt::StringRef &value) {
+  virtual auto cacheSize(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_cacheSize);
     _cacheSize = value;
     member_changed("cacheSize", ovalue, value);
@@ -3130,7 +3130,7 @@ public:
    * \par In Python:
    *    value = obj.cycleFlag
    */
-  grt::IntegerRef cycleFlag() const { return _cycleFlag; }
+  auto cycleFlag() const -> grt::IntegerRef { return _cycleFlag; }
 
   /**
    * Setter for attribute cycleFlag
@@ -3139,7 +3139,7 @@ public:
    * \par In Python:
    *   obj.cycleFlag = value
    */
-  virtual void cycleFlag(const grt::IntegerRef &value) {
+  virtual auto cycleFlag(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_cycleFlag);
     _cycleFlag = value;
     member_changed("cycleFlag", ovalue, value);
@@ -3152,7 +3152,7 @@ public:
    * \par In Python:
    *    value = obj.incrementBy
    */
-  grt::StringRef incrementBy() const { return _incrementBy; }
+  auto incrementBy() const -> grt::StringRef { return _incrementBy; }
 
   /**
    * Setter for attribute incrementBy
@@ -3161,7 +3161,7 @@ public:
    * \par In Python:
    *   obj.incrementBy = value
    */
-  virtual void incrementBy(const grt::StringRef &value) {
+  virtual auto incrementBy(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_incrementBy);
     _incrementBy = value;
     member_changed("incrementBy", ovalue, value);
@@ -3174,7 +3174,7 @@ public:
    * \par In Python:
    *    value = obj.lastNumber
    */
-  grt::StringRef lastNumber() const { return _lastNumber; }
+  auto lastNumber() const -> grt::StringRef { return _lastNumber; }
 
   /**
    * Setter for attribute lastNumber
@@ -3183,7 +3183,7 @@ public:
    * \par In Python:
    *   obj.lastNumber = value
    */
-  virtual void lastNumber(const grt::StringRef &value) {
+  virtual auto lastNumber(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_lastNumber);
     _lastNumber = value;
     member_changed("lastNumber", ovalue, value);
@@ -3196,7 +3196,7 @@ public:
    * \par In Python:
    *    value = obj.maxValue
    */
-  grt::StringRef maxValue() const { return _maxValue; }
+  auto maxValue() const -> grt::StringRef { return _maxValue; }
 
   /**
    * Setter for attribute maxValue
@@ -3205,7 +3205,7 @@ public:
    * \par In Python:
    *   obj.maxValue = value
    */
-  virtual void maxValue(const grt::StringRef &value) {
+  virtual auto maxValue(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_maxValue);
     _maxValue = value;
     member_changed("maxValue", ovalue, value);
@@ -3218,7 +3218,7 @@ public:
    * \par In Python:
    *    value = obj.minValue
    */
-  grt::StringRef minValue() const { return _minValue; }
+  auto minValue() const -> grt::StringRef { return _minValue; }
 
   /**
    * Setter for attribute minValue
@@ -3227,7 +3227,7 @@ public:
    * \par In Python:
    *   obj.minValue = value
    */
-  virtual void minValue(const grt::StringRef &value) {
+  virtual auto minValue(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_minValue);
     _minValue = value;
     member_changed("minValue", ovalue, value);
@@ -3240,7 +3240,7 @@ public:
    * \par In Python:
    *    value = obj.orderFlag
    */
-  grt::IntegerRef orderFlag() const { return _orderFlag; }
+  auto orderFlag() const -> grt::IntegerRef { return _orderFlag; }
 
   /**
    * Setter for attribute orderFlag
@@ -3249,7 +3249,7 @@ public:
    * \par In Python:
    *   obj.orderFlag = value
    */
-  virtual void orderFlag(const grt::IntegerRef &value) {
+  virtual auto orderFlag(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_orderFlag);
     _orderFlag = value;
     member_changed("orderFlag", ovalue, value);
@@ -3262,7 +3262,7 @@ public:
    * \par In Python:
    *    value = obj.startValue
    */
-  grt::StringRef startValue() const { return _startValue; }
+  auto startValue() const -> grt::StringRef { return _startValue; }
 
   /**
    * Setter for attribute startValue
@@ -3271,7 +3271,7 @@ public:
    * \par In Python:
    *   obj.startValue = value
    */
-  virtual void startValue(const grt::StringRef &value) {
+  virtual auto startValue(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_startValue);
     _startValue = value;
     member_changed("startValue", ovalue, value);
@@ -3289,12 +3289,12 @@ protected:
   grt::StringRef _startValue;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Sequence());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3353,7 +3353,7 @@ public:
       _referencedSchemaName("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Synonym";
   }
 
@@ -3364,7 +3364,7 @@ public:
    * \par In Python:
    *    value = obj.isPublic
    */
-  grt::IntegerRef isPublic() const { return _isPublic; }
+  auto isPublic() const -> grt::IntegerRef { return _isPublic; }
 
   /**
    * Setter for attribute isPublic
@@ -3373,7 +3373,7 @@ public:
    * \par In Python:
    *   obj.isPublic = value
    */
-  virtual void isPublic(const grt::IntegerRef &value) {
+  virtual auto isPublic(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isPublic);
     _isPublic = value;
     member_changed("isPublic", ovalue, value);
@@ -3386,7 +3386,7 @@ public:
    * \par In Python:
    *    value = obj.referencedObject
    */
-  db_DatabaseObjectRef referencedObject() const { return _referencedObject; }
+  auto referencedObject() const -> db_DatabaseObjectRef { return _referencedObject; }
 
   /**
    * Setter for attribute referencedObject
@@ -3395,7 +3395,7 @@ public:
    * \par In Python:
    *   obj.referencedObject = value
    */
-  virtual void referencedObject(const db_DatabaseObjectRef &value) {
+  virtual auto referencedObject(const db_DatabaseObjectRef &value) -> void {
     grt::ValueRef ovalue(_referencedObject);
     _referencedObject = value;
     member_changed("referencedObject", ovalue, value);
@@ -3408,7 +3408,7 @@ public:
    * \par In Python:
    *    value = obj.referencedObjectName
    */
-  grt::StringRef referencedObjectName() const { return _referencedObjectName; }
+  auto referencedObjectName() const -> grt::StringRef { return _referencedObjectName; }
 
   /**
    * Setter for attribute referencedObjectName
@@ -3417,7 +3417,7 @@ public:
    * \par In Python:
    *   obj.referencedObjectName = value
    */
-  virtual void referencedObjectName(const grt::StringRef &value) {
+  virtual auto referencedObjectName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_referencedObjectName);
     _referencedObjectName = value;
     member_changed("referencedObjectName", ovalue, value);
@@ -3430,7 +3430,7 @@ public:
    * \par In Python:
    *    value = obj.referencedSchemaName
    */
-  grt::StringRef referencedSchemaName() const { return _referencedSchemaName; }
+  auto referencedSchemaName() const -> grt::StringRef { return _referencedSchemaName; }
 
   /**
    * Setter for attribute referencedSchemaName
@@ -3439,7 +3439,7 @@ public:
    * \par In Python:
    *   obj.referencedSchemaName = value
    */
-  virtual void referencedSchemaName(const grt::StringRef &value) {
+  virtual auto referencedSchemaName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_referencedSchemaName);
     _referencedSchemaName = value;
     member_changed("referencedSchemaName", ovalue, value);
@@ -3453,12 +3453,12 @@ protected:
   grt::StringRef _referencedSchemaName;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Synonym());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3500,7 +3500,7 @@ public:
 
   virtual ~db_RoutineGroup();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.RoutineGroup";
   }
 
@@ -3513,11 +3513,11 @@ public:
    * \par In Python:
    *    value = obj.routineExpandedHeights
    */
-  grt::IntegerListRef routineExpandedHeights() const { return _routineExpandedHeights; }
+  auto routineExpandedHeights() const -> grt::IntegerListRef { return _routineExpandedHeights; }
 
 
 private: // The next attribute is read-only.
-  virtual void routineExpandedHeights(const grt::IntegerListRef &value) {
+  virtual auto routineExpandedHeights(const grt::IntegerListRef &value) -> void {
     grt::ValueRef ovalue(_routineExpandedHeights);
     _routineExpandedHeights = value;
     member_changed("routineExpandedHeights", ovalue, value);
@@ -3531,11 +3531,11 @@ public:
    * \par In Python:
    *    value = obj.routineExpandedStates
    */
-  grt::IntegerListRef routineExpandedStates() const { return _routineExpandedStates; }
+  auto routineExpandedStates() const -> grt::IntegerListRef { return _routineExpandedStates; }
 
 
 private: // The next attribute is read-only.
-  virtual void routineExpandedStates(const grt::IntegerListRef &value) {
+  virtual auto routineExpandedStates(const grt::IntegerListRef &value) -> void {
     grt::ValueRef ovalue(_routineExpandedStates);
     _routineExpandedStates = value;
     member_changed("routineExpandedStates", ovalue, value);
@@ -3550,11 +3550,11 @@ public:
    * \par In Python:
    *    value = obj.routines
    */
-  grt::ListRef<db_Routine> routines() const { return _routines; }
+  auto routines() const -> grt::ListRef<db_Routine> { return _routines; }
 
 
 private: // The next attribute is read-only.
-  virtual void routines(const grt::ListRef<db_Routine> &value) {
+  virtual auto routines(const grt::ListRef<db_Routine> &value) -> void {
     grt::ValueRef ovalue(_routines);
 
     _routines = value;
@@ -3563,7 +3563,7 @@ private: // The next attribute is read-only.
 public:
 
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
   boost::signals2::signal<void ()> _signal_contentChanged;
@@ -3573,12 +3573,12 @@ protected:
   grt::ListRef<db_Routine> _routines;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_RoutineGroup());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3616,7 +3616,7 @@ public:
 
   virtual ~db_Index();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Index";
   }
 
@@ -3628,11 +3628,11 @@ public:
    * \par In Python:
    *    value = obj.columns
    */
-  grt::ListRef<db_IndexColumn> columns() const { return _columns; }
+  auto columns() const -> grt::ListRef<db_IndexColumn> { return _columns; }
 
 
 private: // The next attribute is read-only.
-  virtual void columns(const grt::ListRef<db_IndexColumn> &value) {
+  virtual auto columns(const grt::ListRef<db_IndexColumn> &value) -> void {
     grt::ValueRef ovalue(_columns);
 
     _columns = value;
@@ -3663,7 +3663,7 @@ public:
    * \par In Python:
    *    value = obj.deferability
    */
-  grt::IntegerRef deferability() const { return _deferability; }
+  auto deferability() const -> grt::IntegerRef { return _deferability; }
 
   /**
    * Setter for attribute deferability
@@ -3672,7 +3672,7 @@ public:
    * \par In Python:
    *   obj.deferability = value
    */
-  virtual void deferability(const grt::IntegerRef &value) {
+  virtual auto deferability(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_deferability);
     _deferability = value;
     member_changed("deferability", ovalue, value);
@@ -3685,7 +3685,7 @@ public:
    * \par In Python:
    *    value = obj.indexType
    */
-  grt::StringRef indexType() const { return _indexType; }
+  auto indexType() const -> grt::StringRef { return _indexType; }
 
   /**
    * Setter for attribute indexType
@@ -3694,7 +3694,7 @@ public:
    * \par In Python:
    *   obj.indexType = value
    */
-  virtual void indexType(const grt::StringRef &value) {
+  virtual auto indexType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_indexType);
     _indexType = value;
     member_changed("indexType", ovalue, value);
@@ -3707,7 +3707,7 @@ public:
    * \par In Python:
    *    value = obj.isPrimary
    */
-  grt::IntegerRef isPrimary() const { return _isPrimary; }
+  auto isPrimary() const -> grt::IntegerRef { return _isPrimary; }
 
   /**
    * Setter for attribute isPrimary
@@ -3716,7 +3716,7 @@ public:
    * \par In Python:
    *   obj.isPrimary = value
    */
-  virtual void isPrimary(const grt::IntegerRef &value) {
+  virtual auto isPrimary(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isPrimary);
     _isPrimary = value;
     member_changed("isPrimary", ovalue, value);
@@ -3729,7 +3729,7 @@ public:
    * \par In Python:
    *    value = obj.name
    */
-  grt::StringRef name() const { return super::name(); }
+  auto name() const -> grt::StringRef { return super::name(); }
 
   /**
    * Setter for attribute name
@@ -3738,7 +3738,7 @@ public:
    * \par In Python:
    *   obj.name = value
    */
-  virtual void name(const grt::StringRef &value);
+  virtual auto name(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute unique
@@ -3747,7 +3747,7 @@ public:
    * \par In Python:
    *    value = obj.unique
    */
-  grt::IntegerRef unique() const { return _unique; }
+  auto unique() const -> grt::IntegerRef { return _unique; }
 
   /**
    * Setter for attribute unique
@@ -3756,14 +3756,14 @@ public:
    * \par In Python:
    *   obj.unique = value
    */
-  virtual void unique(const grt::IntegerRef &value) {
+  virtual auto unique(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_unique);
     _unique = value;
     member_changed("unique", ovalue, value);
   }
 
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -3774,12 +3774,12 @@ protected:
   grt::IntegerRef _unique;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Index());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3831,7 +3831,7 @@ public:
       _distinctTypes(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.StructuredDatatype";
   }
 
@@ -3843,11 +3843,11 @@ public:
    * \par In Python:
    *    value = obj.distinctTypes
    */
-  grt::ListRef<db_Column> distinctTypes() const { return _distinctTypes; }
+  auto distinctTypes() const -> grt::ListRef<db_Column> { return _distinctTypes; }
 
 
 private: // The next attribute is read-only.
-  virtual void distinctTypes(const grt::ListRef<db_Column> &value) {
+  virtual auto distinctTypes(const grt::ListRef<db_Column> &value) -> void {
     grt::ValueRef ovalue(_distinctTypes);
 
     _distinctTypes = value;
@@ -3862,7 +3862,7 @@ public:
    * \par In Python:
    *    value = obj.parentType
    */
-  db_StructuredDatatypeRef parentType() const { return _parentType; }
+  auto parentType() const -> db_StructuredDatatypeRef { return _parentType; }
 
   /**
    * Setter for attribute parentType
@@ -3871,7 +3871,7 @@ public:
    * \par In Python:
    *   obj.parentType = value
    */
-  virtual void parentType(const db_StructuredDatatypeRef &value) {
+  virtual auto parentType(const db_StructuredDatatypeRef &value) -> void {
     grt::ValueRef ovalue(_parentType);
     _parentType = value;
     member_changed("parentType", ovalue, value);
@@ -3883,12 +3883,12 @@ protected:
   db_StructuredDatatypeRef _parentType;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_StructuredDatatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3925,7 +3925,7 @@ public:
 
   virtual ~db_Table();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Table";
   }
 
@@ -3941,11 +3941,11 @@ public:
    * \par In Python:
    *    value = obj.columns
    */
-  grt::ListRef<db_Column> columns() const { return _columns; }
+  auto columns() const -> grt::ListRef<db_Column> { return _columns; }
 
 
 private: // The next attribute is read-only.
-  virtual void columns(const grt::ListRef<db_Column> &value) {
+  virtual auto columns(const grt::ListRef<db_Column> &value) -> void {
     grt::ValueRef ovalue(_columns);
 
     _columns = value;
@@ -3961,11 +3961,11 @@ public:
    * \par In Python:
    *    value = obj.foreignKeys
    */
-  grt::ListRef<db_ForeignKey> foreignKeys() const { return _foreignKeys; }
+  auto foreignKeys() const -> grt::ListRef<db_ForeignKey> { return _foreignKeys; }
 
 
 private: // The next attribute is read-only.
-  virtual void foreignKeys(const grt::ListRef<db_ForeignKey> &value) {
+  virtual auto foreignKeys(const grt::ListRef<db_ForeignKey> &value) -> void {
     grt::ValueRef ovalue(_foreignKeys);
 
     _foreignKeys = value;
@@ -3981,11 +3981,11 @@ public:
    * \par In Python:
    *    value = obj.indices
    */
-  grt::ListRef<db_Index> indices() const { return _indices; }
+  auto indices() const -> grt::ListRef<db_Index> { return _indices; }
 
 
 private: // The next attribute is read-only.
-  virtual void indices(const grt::ListRef<db_Index> &value) {
+  virtual auto indices(const grt::ListRef<db_Index> &value) -> void {
     grt::ValueRef ovalue(_indices);
 
     _indices = value;
@@ -4000,7 +4000,7 @@ public:
    * \par In Python:
    *    value = obj.isStub
    */
-  grt::IntegerRef isStub() const { return _isStub; }
+  auto isStub() const -> grt::IntegerRef { return _isStub; }
 
   /**
    * Setter for attribute isStub
@@ -4009,7 +4009,7 @@ public:
    * \par In Python:
    *   obj.isStub = value
    */
-  virtual void isStub(const grt::IntegerRef &value) {
+  virtual auto isStub(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isStub);
     _isStub = value;
     member_changed("isStub", ovalue, value);
@@ -4022,7 +4022,7 @@ public:
    * \par In Python:
    *    value = obj.isSystem
    */
-  grt::IntegerRef isSystem() const { return _isSystem; }
+  auto isSystem() const -> grt::IntegerRef { return _isSystem; }
 
   /**
    * Setter for attribute isSystem
@@ -4031,7 +4031,7 @@ public:
    * \par In Python:
    *   obj.isSystem = value
    */
-  virtual void isSystem(const grt::IntegerRef &value) {
+  virtual auto isSystem(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isSystem);
     _isSystem = value;
     member_changed("isSystem", ovalue, value);
@@ -4044,7 +4044,7 @@ public:
    * \par In Python:
    *    value = obj.isTemporary
    */
-  grt::IntegerRef isTemporary() const { return _isTemporary; }
+  auto isTemporary() const -> grt::IntegerRef { return _isTemporary; }
 
   /**
    * Setter for attribute isTemporary
@@ -4053,7 +4053,7 @@ public:
    * \par In Python:
    *   obj.isTemporary = value
    */
-  virtual void isTemporary(const grt::IntegerRef &value) {
+  virtual auto isTemporary(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isTemporary);
     _isTemporary = value;
     member_changed("isTemporary", ovalue, value);
@@ -4066,7 +4066,7 @@ public:
    * \par In Python:
    *    value = obj.primaryKey
    */
-  db_IndexRef primaryKey() const { return _primaryKey; }
+  auto primaryKey() const -> db_IndexRef { return _primaryKey; }
 
   /**
    * Setter for attribute primaryKey
@@ -4075,7 +4075,7 @@ public:
    * \par In Python:
    *   obj.primaryKey = value
    */
-  virtual void primaryKey(const db_IndexRef &value) {
+  virtual auto primaryKey(const db_IndexRef &value) -> void {
     grt::ValueRef ovalue(_primaryKey);
     _primaryKey = value;
     member_changed("primaryKey", ovalue, value);
@@ -4088,7 +4088,7 @@ public:
    * \par In Python:
    *    value = obj.temporaryScope
    */
-  grt::StringRef temporaryScope() const { return _temporaryScope; }
+  auto temporaryScope() const -> grt::StringRef { return _temporaryScope; }
 
   /**
    * Setter for attribute temporaryScope
@@ -4097,7 +4097,7 @@ public:
    * \par In Python:
    *   obj.temporaryScope = value
    */
-  virtual void temporaryScope(const grt::StringRef &value) {
+  virtual auto temporaryScope(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_temporaryScope);
     _temporaryScope = value;
     member_changed("temporaryScope", ovalue, value);
@@ -4111,11 +4111,11 @@ public:
    * \par In Python:
    *    value = obj.triggers
    */
-  grt::ListRef<db_Trigger> triggers() const { return _triggers; }
+  auto triggers() const -> grt::ListRef<db_Trigger> { return _triggers; }
 
 
 private: // The next attribute is read-only.
-  virtual void triggers(const grt::ListRef<db_Trigger> &value) {
+  virtual auto triggers(const grt::ListRef<db_Trigger> &value) -> void {
     grt::ValueRef ovalue(_triggers);
 
     _triggers = value;
@@ -4128,79 +4128,79 @@ public:
    * \param column 
    * \return 
    */
-  virtual void addColumn(const db_ColumnRef &column);
+  virtual auto addColumn(const db_ColumnRef &column) -> void;
   /**
    * Method. 
    * \param index 
    * \return 
    */
-  virtual void addIndex(const db_IndexRef &index);
+  virtual auto addIndex(const db_IndexRef &index) -> void;
   /**
    * Method. 
    * \param column 
    * \return 
    */
-  virtual void addPrimaryKeyColumn(const db_ColumnRef &column);
+  virtual auto addPrimaryKeyColumn(const db_ColumnRef &column) -> void;
   /**
    * Method. 
    * \param name 
    * \return 
    */
-  virtual db_ForeignKeyRef createForeignKey(const std::string &name);
+  virtual auto createForeignKey(const std::string &name) -> db_ForeignKeyRef;
   /**
    * Method. creates a grid object representing the inserts data, suitable for browsing and editing its contents
    * \return 
    */
-  virtual db_query_EditableResultsetRef createInsertsEditor();
+  virtual auto createInsertsEditor() -> db_query_EditableResultsetRef;
   /**
    * Method. 
    * \return 
    */
-  virtual grt::StringRef inserts();
+  virtual auto inserts() -> grt::StringRef;
   /**
    * Method. 
    * \return 
    */
-  virtual grt::IntegerRef isDependantTable();
-  /**
-   * Method. 
-   * \param column 
-   * \return 
-   */
-  virtual grt::IntegerRef isForeignKeyColumn(const db_ColumnRef &column);
+  virtual auto isDependantTable() -> grt::IntegerRef;
   /**
    * Method. 
    * \param column 
    * \return 
    */
-  virtual grt::IntegerRef isPrimaryKeyColumn(const db_ColumnRef &column);
+  virtual auto isForeignKeyColumn(const db_ColumnRef &column) -> grt::IntegerRef;
   /**
    * Method. 
    * \param column 
    * \return 
    */
-  virtual void removeColumn(const db_ColumnRef &column);
+  virtual auto isPrimaryKeyColumn(const db_ColumnRef &column) -> grt::IntegerRef;
+  /**
+   * Method. 
+   * \param column 
+   * \return 
+   */
+  virtual auto removeColumn(const db_ColumnRef &column) -> void;
   /**
    * Method. 
    * \param fk 
    * \param removeColumns 
    * \return 
    */
-  virtual void removeForeignKey(const db_ForeignKeyRef &fk, ssize_t removeColumns);
+  virtual auto removeForeignKey(const db_ForeignKeyRef &fk, ssize_t removeColumns) -> void;
   /**
    * Method. 
    * \param index 
    * \return 
    */
-  virtual void removeIndex(const db_IndexRef &index);
+  virtual auto removeIndex(const db_IndexRef &index) -> void;
   /**
    * Method. 
    * \param column 
    * \return 
    */
-  virtual void removePrimaryKeyColumn(const db_ColumnRef &column);
+  virtual auto removePrimaryKeyColumn(const db_ColumnRef &column) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
   boost::signals2::signal<void (std::string)> _signal_refreshDisplay;
@@ -4217,7 +4217,7 @@ protected:
   grt::ListRef<db_Trigger> _triggers;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Table());
   }
 
@@ -4248,7 +4248,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_removePrimaryKeyColumn(grt::internal::Object *self, const grt::BaseListRef &args){ dynamic_cast<db_Table*>(self)->removePrimaryKeyColumn(db_ColumnRef::cast_from(args[0])); return grt::ValueRef(); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -4330,7 +4330,7 @@ public:
       _wrapperName("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.ServerLink";
   }
 
@@ -4341,7 +4341,7 @@ public:
    * \par In Python:
    *    value = obj.host
    */
-  grt::StringRef host() const { return _host; }
+  auto host() const -> grt::StringRef { return _host; }
 
   /**
    * Setter for attribute host
@@ -4350,7 +4350,7 @@ public:
    * \par In Python:
    *   obj.host = value
    */
-  virtual void host(const grt::StringRef &value) {
+  virtual auto host(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_host);
     _host = value;
     member_changed("host", ovalue, value);
@@ -4363,7 +4363,7 @@ public:
    * \par In Python:
    *    value = obj.ownerUser
    */
-  grt::StringRef ownerUser() const { return _ownerUser; }
+  auto ownerUser() const -> grt::StringRef { return _ownerUser; }
 
   /**
    * Setter for attribute ownerUser
@@ -4372,7 +4372,7 @@ public:
    * \par In Python:
    *   obj.ownerUser = value
    */
-  virtual void ownerUser(const grt::StringRef &value) {
+  virtual auto ownerUser(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_ownerUser);
     _ownerUser = value;
     member_changed("ownerUser", ovalue, value);
@@ -4385,7 +4385,7 @@ public:
    * \par In Python:
    *    value = obj.password
    */
-  grt::StringRef password() const { return _password; }
+  auto password() const -> grt::StringRef { return _password; }
 
   /**
    * Setter for attribute password
@@ -4394,7 +4394,7 @@ public:
    * \par In Python:
    *   obj.password = value
    */
-  virtual void password(const grt::StringRef &value) {
+  virtual auto password(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_password);
     _password = value;
     member_changed("password", ovalue, value);
@@ -4407,7 +4407,7 @@ public:
    * \par In Python:
    *    value = obj.port
    */
-  grt::StringRef port() const { return _port; }
+  auto port() const -> grt::StringRef { return _port; }
 
   /**
    * Setter for attribute port
@@ -4416,7 +4416,7 @@ public:
    * \par In Python:
    *   obj.port = value
    */
-  virtual void port(const grt::StringRef &value) {
+  virtual auto port(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_port);
     _port = value;
     member_changed("port", ovalue, value);
@@ -4429,7 +4429,7 @@ public:
    * \par In Python:
    *    value = obj.schema
    */
-  grt::StringRef schema() const { return _schema; }
+  auto schema() const -> grt::StringRef { return _schema; }
 
   /**
    * Setter for attribute schema
@@ -4438,7 +4438,7 @@ public:
    * \par In Python:
    *   obj.schema = value
    */
-  virtual void schema(const grt::StringRef &value) {
+  virtual auto schema(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_schema);
     _schema = value;
     member_changed("schema", ovalue, value);
@@ -4451,7 +4451,7 @@ public:
    * \par In Python:
    *    value = obj.socket
    */
-  grt::StringRef socket() const { return _socket; }
+  auto socket() const -> grt::StringRef { return _socket; }
 
   /**
    * Setter for attribute socket
@@ -4460,7 +4460,7 @@ public:
    * \par In Python:
    *   obj.socket = value
    */
-  virtual void socket(const grt::StringRef &value) {
+  virtual auto socket(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_socket);
     _socket = value;
     member_changed("socket", ovalue, value);
@@ -4473,7 +4473,7 @@ public:
    * \par In Python:
    *    value = obj.user
    */
-  grt::StringRef user() const { return _user; }
+  auto user() const -> grt::StringRef { return _user; }
 
   /**
    * Setter for attribute user
@@ -4482,7 +4482,7 @@ public:
    * \par In Python:
    *   obj.user = value
    */
-  virtual void user(const grt::StringRef &value) {
+  virtual auto user(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_user);
     _user = value;
     member_changed("user", ovalue, value);
@@ -4495,7 +4495,7 @@ public:
    * \par In Python:
    *    value = obj.wrapperName
    */
-  grt::StringRef wrapperName() const { return _wrapperName; }
+  auto wrapperName() const -> grt::StringRef { return _wrapperName; }
 
   /**
    * Setter for attribute wrapperName
@@ -4504,7 +4504,7 @@ public:
    * \par In Python:
    *   obj.wrapperName = value
    */
-  virtual void wrapperName(const grt::StringRef &value) {
+  virtual auto wrapperName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_wrapperName);
     _wrapperName = value;
     member_changed("wrapperName", ovalue, value);
@@ -4522,12 +4522,12 @@ protected:
   grt::StringRef _wrapperName;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_ServerLink());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -4595,7 +4595,7 @@ public:
 
   virtual ~db_Schema();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Schema";
   }
 
@@ -4608,7 +4608,7 @@ public:
    * \par In Python:
    *    value = obj.defaultCharacterSetName
    */
-  grt::StringRef defaultCharacterSetName() const { return _defaultCharacterSetName; }
+  auto defaultCharacterSetName() const -> grt::StringRef { return _defaultCharacterSetName; }
 
   /**
    * Setter for attribute defaultCharacterSetName
@@ -4617,7 +4617,7 @@ public:
    * \par In Python:
    *   obj.defaultCharacterSetName = value
    */
-  virtual void defaultCharacterSetName(const grt::StringRef &value) {
+  virtual auto defaultCharacterSetName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultCharacterSetName);
     _defaultCharacterSetName = value;
     member_changed("defaultCharacterSetName", ovalue, value);
@@ -4630,7 +4630,7 @@ public:
    * \par In Python:
    *    value = obj.defaultCollationName
    */
-  grt::StringRef defaultCollationName() const { return _defaultCollationName; }
+  auto defaultCollationName() const -> grt::StringRef { return _defaultCollationName; }
 
   /**
    * Setter for attribute defaultCollationName
@@ -4639,7 +4639,7 @@ public:
    * \par In Python:
    *   obj.defaultCollationName = value
    */
-  virtual void defaultCollationName(const grt::StringRef &value) {
+  virtual auto defaultCollationName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultCollationName);
     _defaultCollationName = value;
     member_changed("defaultCollationName", ovalue, value);
@@ -4653,11 +4653,11 @@ public:
    * \par In Python:
    *    value = obj.events
    */
-  grt::ListRef<db_Event> events() const { return _events; }
+  auto events() const -> grt::ListRef<db_Event> { return _events; }
 
 
 private: // The next attribute is read-only.
-  virtual void events(const grt::ListRef<db_Event> &value) {
+  virtual auto events(const grt::ListRef<db_Event> &value) -> void {
     grt::ValueRef ovalue(_events);
 
     _events = value;
@@ -4673,11 +4673,11 @@ public:
    * \par In Python:
    *    value = obj.routineGroups
    */
-  grt::ListRef<db_RoutineGroup> routineGroups() const { return _routineGroups; }
+  auto routineGroups() const -> grt::ListRef<db_RoutineGroup> { return _routineGroups; }
 
 
 private: // The next attribute is read-only.
-  virtual void routineGroups(const grt::ListRef<db_RoutineGroup> &value) {
+  virtual auto routineGroups(const grt::ListRef<db_RoutineGroup> &value) -> void {
     grt::ValueRef ovalue(_routineGroups);
 
     _routineGroups = value;
@@ -4693,11 +4693,11 @@ public:
    * \par In Python:
    *    value = obj.routines
    */
-  grt::ListRef<db_Routine> routines() const { return _routines; }
+  auto routines() const -> grt::ListRef<db_Routine> { return _routines; }
 
 
 private: // The next attribute is read-only.
-  virtual void routines(const grt::ListRef<db_Routine> &value) {
+  virtual auto routines(const grt::ListRef<db_Routine> &value) -> void {
     grt::ValueRef ovalue(_routines);
 
     _routines = value;
@@ -4713,11 +4713,11 @@ public:
    * \par In Python:
    *    value = obj.sequences
    */
-  grt::ListRef<db_Sequence> sequences() const { return _sequences; }
+  auto sequences() const -> grt::ListRef<db_Sequence> { return _sequences; }
 
 
 private: // The next attribute is read-only.
-  virtual void sequences(const grt::ListRef<db_Sequence> &value) {
+  virtual auto sequences(const grt::ListRef<db_Sequence> &value) -> void {
     grt::ValueRef ovalue(_sequences);
 
     _sequences = value;
@@ -4733,11 +4733,11 @@ public:
    * \par In Python:
    *    value = obj.structuredTypes
    */
-  grt::ListRef<db_StructuredDatatype> structuredTypes() const { return _structuredTypes; }
+  auto structuredTypes() const -> grt::ListRef<db_StructuredDatatype> { return _structuredTypes; }
 
 
 private: // The next attribute is read-only.
-  virtual void structuredTypes(const grt::ListRef<db_StructuredDatatype> &value) {
+  virtual auto structuredTypes(const grt::ListRef<db_StructuredDatatype> &value) -> void {
     grt::ValueRef ovalue(_structuredTypes);
 
     _structuredTypes = value;
@@ -4753,11 +4753,11 @@ public:
    * \par In Python:
    *    value = obj.synonyms
    */
-  grt::ListRef<db_Synonym> synonyms() const { return _synonyms; }
+  auto synonyms() const -> grt::ListRef<db_Synonym> { return _synonyms; }
 
 
 private: // The next attribute is read-only.
-  virtual void synonyms(const grt::ListRef<db_Synonym> &value) {
+  virtual auto synonyms(const grt::ListRef<db_Synonym> &value) -> void {
     grt::ValueRef ovalue(_synonyms);
 
     _synonyms = value;
@@ -4773,11 +4773,11 @@ public:
    * \par In Python:
    *    value = obj.tables
    */
-  grt::ListRef<db_Table> tables() const { return _tables; }
+  auto tables() const -> grt::ListRef<db_Table> { return _tables; }
 
 
 private: // The next attribute is read-only.
-  virtual void tables(const grt::ListRef<db_Table> &value) {
+  virtual auto tables(const grt::ListRef<db_Table> &value) -> void {
     grt::ValueRef ovalue(_tables);
 
     _tables = value;
@@ -4793,11 +4793,11 @@ public:
    * \par In Python:
    *    value = obj.views
    */
-  grt::ListRef<db_View> views() const { return _views; }
+  auto views() const -> grt::ListRef<db_View> { return _views; }
 
 
 private: // The next attribute is read-only.
-  virtual void views(const grt::ListRef<db_View> &value) {
+  virtual auto views(const grt::ListRef<db_View> &value) -> void {
     grt::ValueRef ovalue(_views);
 
     _views = value;
@@ -4810,39 +4810,39 @@ public:
    * \param dbpackage 
    * \return 
    */
-  virtual db_RoutineRef addNewRoutine(const std::string &dbpackage);
+  virtual auto addNewRoutine(const std::string &dbpackage) -> db_RoutineRef;
   /**
    * Method. 
    * \param dbpackage 
    * \return 
    */
-  virtual db_RoutineGroupRef addNewRoutineGroup(const std::string &dbpackage);
+  virtual auto addNewRoutineGroup(const std::string &dbpackage) -> db_RoutineGroupRef;
   /**
    * Method. create and add a new table to the schema. For MySQL tables, pass db.mysql as the dbpackage argument
    * \param dbpackage 
    * \return 
    */
-  virtual db_TableRef addNewTable(const std::string &dbpackage);
+  virtual auto addNewTable(const std::string &dbpackage) -> db_TableRef;
   /**
    * Method. 
    * \param dbpackage 
    * \return 
    */
-  virtual db_ViewRef addNewView(const std::string &dbpackage);
+  virtual auto addNewView(const std::string &dbpackage) -> db_ViewRef;
   /**
    * Method. 
    * \param table 
    * \return 
    */
-  virtual grt::ListRef<db_ForeignKey> getForeignKeysReferencingTable(const db_TableRef &table);
+  virtual auto getForeignKeysReferencingTable(const db_TableRef &table) -> grt::ListRef<db_ForeignKey>;
   /**
    * Method. 
    * \param table 
    * \return 
    */
-  virtual void removeTable(const db_TableRef &table);
+  virtual auto removeTable(const db_TableRef &table) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
   boost::signals2::signal<void (db_DatabaseObjectRef)> _signal_refreshDisplay;
@@ -4859,7 +4859,7 @@ protected:
   grt::ListRef<db_View> _views;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Schema());
   }
 
@@ -4876,7 +4876,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_removeTable(grt::internal::Object *self, const grt::BaseListRef &args){ dynamic_cast<db_Schema*>(self)->removeTable(db_TableRef::cast_from(args[0])); return grt::ValueRef(); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -4958,7 +4958,7 @@ public:
       _wait(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Tablespace";
   }
 
@@ -4969,7 +4969,7 @@ public:
    * \par In Python:
    *    value = obj.autoExtendSize
    */
-  grt::IntegerRef autoExtendSize() const { return _autoExtendSize; }
+  auto autoExtendSize() const -> grt::IntegerRef { return _autoExtendSize; }
 
   /**
    * Setter for attribute autoExtendSize
@@ -4978,7 +4978,7 @@ public:
    * \par In Python:
    *   obj.autoExtendSize = value
    */
-  virtual void autoExtendSize(const grt::IntegerRef &value) {
+  virtual auto autoExtendSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_autoExtendSize);
     _autoExtendSize = value;
     member_changed("autoExtendSize", ovalue, value);
@@ -4991,7 +4991,7 @@ public:
    * \par In Python:
    *    value = obj.dataFile
    */
-  grt::StringRef dataFile() const { return _dataFile; }
+  auto dataFile() const -> grt::StringRef { return _dataFile; }
 
   /**
    * Setter for attribute dataFile
@@ -5000,7 +5000,7 @@ public:
    * \par In Python:
    *   obj.dataFile = value
    */
-  virtual void dataFile(const grt::StringRef &value) {
+  virtual auto dataFile(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_dataFile);
     _dataFile = value;
     member_changed("dataFile", ovalue, value);
@@ -5013,7 +5013,7 @@ public:
    * \par In Python:
    *    value = obj.encryption
    */
-  grt::StringRef encryption() const { return _encryption; }
+  auto encryption() const -> grt::StringRef { return _encryption; }
 
   /**
    * Setter for attribute encryption
@@ -5022,7 +5022,7 @@ public:
    * \par In Python:
    *   obj.encryption = value
    */
-  virtual void encryption(const grt::StringRef &value) {
+  virtual auto encryption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_encryption);
     _encryption = value;
     member_changed("encryption", ovalue, value);
@@ -5035,7 +5035,7 @@ public:
    * \par In Python:
    *    value = obj.engine
    */
-  grt::StringRef engine() const { return _engine; }
+  auto engine() const -> grt::StringRef { return _engine; }
 
   /**
    * Setter for attribute engine
@@ -5044,7 +5044,7 @@ public:
    * \par In Python:
    *   obj.engine = value
    */
-  virtual void engine(const grt::StringRef &value) {
+  virtual auto engine(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_engine);
     _engine = value;
     member_changed("engine", ovalue, value);
@@ -5057,7 +5057,7 @@ public:
    * \par In Python:
    *    value = obj.extentSize
    */
-  grt::IntegerRef extentSize() const { return _extentSize; }
+  auto extentSize() const -> grt::IntegerRef { return _extentSize; }
 
   /**
    * Setter for attribute extentSize
@@ -5066,7 +5066,7 @@ public:
    * \par In Python:
    *   obj.extentSize = value
    */
-  virtual void extentSize(const grt::IntegerRef &value) {
+  virtual auto extentSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_extentSize);
     _extentSize = value;
     member_changed("extentSize", ovalue, value);
@@ -5079,7 +5079,7 @@ public:
    * \par In Python:
    *    value = obj.fileBlockSize
    */
-  grt::IntegerRef fileBlockSize() const { return _fileBlockSize; }
+  auto fileBlockSize() const -> grt::IntegerRef { return _fileBlockSize; }
 
   /**
    * Setter for attribute fileBlockSize
@@ -5088,7 +5088,7 @@ public:
    * \par In Python:
    *   obj.fileBlockSize = value
    */
-  virtual void fileBlockSize(const grt::IntegerRef &value) {
+  virtual auto fileBlockSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_fileBlockSize);
     _fileBlockSize = value;
     member_changed("fileBlockSize", ovalue, value);
@@ -5101,7 +5101,7 @@ public:
    * \par In Python:
    *    value = obj.initialSize
    */
-  grt::IntegerRef initialSize() const { return _initialSize; }
+  auto initialSize() const -> grt::IntegerRef { return _initialSize; }
 
   /**
    * Setter for attribute initialSize
@@ -5110,7 +5110,7 @@ public:
    * \par In Python:
    *   obj.initialSize = value
    */
-  virtual void initialSize(const grt::IntegerRef &value) {
+  virtual auto initialSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_initialSize);
     _initialSize = value;
     member_changed("initialSize", ovalue, value);
@@ -5123,7 +5123,7 @@ public:
    * \par In Python:
    *    value = obj.logFileGroup
    */
-  db_LogFileGroupRef logFileGroup() const { return _logFileGroup; }
+  auto logFileGroup() const -> db_LogFileGroupRef { return _logFileGroup; }
 
   /**
    * Setter for attribute logFileGroup
@@ -5132,7 +5132,7 @@ public:
    * \par In Python:
    *   obj.logFileGroup = value
    */
-  virtual void logFileGroup(const db_LogFileGroupRef &value) {
+  virtual auto logFileGroup(const db_LogFileGroupRef &value) -> void {
     grt::ValueRef ovalue(_logFileGroup);
     _logFileGroup = value;
     member_changed("logFileGroup", ovalue, value);
@@ -5145,7 +5145,7 @@ public:
    * \par In Python:
    *    value = obj.maxSize
    */
-  grt::IntegerRef maxSize() const { return _maxSize; }
+  auto maxSize() const -> grt::IntegerRef { return _maxSize; }
 
   /**
    * Setter for attribute maxSize
@@ -5154,7 +5154,7 @@ public:
    * \par In Python:
    *   obj.maxSize = value
    */
-  virtual void maxSize(const grt::IntegerRef &value) {
+  virtual auto maxSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_maxSize);
     _maxSize = value;
     member_changed("maxSize", ovalue, value);
@@ -5167,7 +5167,7 @@ public:
    * \par In Python:
    *    value = obj.nodeGroup
    */
-  grt::IntegerRef nodeGroup() const { return _nodeGroup; }
+  auto nodeGroup() const -> grt::IntegerRef { return _nodeGroup; }
 
   /**
    * Setter for attribute nodeGroup
@@ -5176,7 +5176,7 @@ public:
    * \par In Python:
    *   obj.nodeGroup = value
    */
-  virtual void nodeGroup(const grt::IntegerRef &value) {
+  virtual auto nodeGroup(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_nodeGroup);
     _nodeGroup = value;
     member_changed("nodeGroup", ovalue, value);
@@ -5189,7 +5189,7 @@ public:
    * \par In Python:
    *    value = obj.wait
    */
-  grt::IntegerRef wait() const { return _wait; }
+  auto wait() const -> grt::IntegerRef { return _wait; }
 
   /**
    * Setter for attribute wait
@@ -5198,7 +5198,7 @@ public:
    * \par In Python:
    *   obj.wait = value
    */
-  virtual void wait(const grt::IntegerRef &value) {
+  virtual auto wait(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_wait);
     _wait = value;
     member_changed("wait", ovalue, value);
@@ -5219,12 +5219,12 @@ protected:
   grt::IntegerRef _wait;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Tablespace());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -5302,7 +5302,7 @@ public:
       _wait(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.LogFileGroup";
   }
 
@@ -5313,7 +5313,7 @@ public:
    * \par In Python:
    *    value = obj.engine
    */
-  grt::StringRef engine() const { return _engine; }
+  auto engine() const -> grt::StringRef { return _engine; }
 
   /**
    * Setter for attribute engine
@@ -5322,7 +5322,7 @@ public:
    * \par In Python:
    *   obj.engine = value
    */
-  virtual void engine(const grt::StringRef &value) {
+  virtual auto engine(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_engine);
     _engine = value;
     member_changed("engine", ovalue, value);
@@ -5335,7 +5335,7 @@ public:
    * \par In Python:
    *    value = obj.initialSize
    */
-  grt::IntegerRef initialSize() const { return _initialSize; }
+  auto initialSize() const -> grt::IntegerRef { return _initialSize; }
 
   /**
    * Setter for attribute initialSize
@@ -5344,7 +5344,7 @@ public:
    * \par In Python:
    *   obj.initialSize = value
    */
-  virtual void initialSize(const grt::IntegerRef &value) {
+  virtual auto initialSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_initialSize);
     _initialSize = value;
     member_changed("initialSize", ovalue, value);
@@ -5357,7 +5357,7 @@ public:
    * \par In Python:
    *    value = obj.nodeGroup
    */
-  grt::IntegerRef nodeGroup() const { return _nodeGroup; }
+  auto nodeGroup() const -> grt::IntegerRef { return _nodeGroup; }
 
   /**
    * Setter for attribute nodeGroup
@@ -5366,7 +5366,7 @@ public:
    * \par In Python:
    *   obj.nodeGroup = value
    */
-  virtual void nodeGroup(const grt::IntegerRef &value) {
+  virtual auto nodeGroup(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_nodeGroup);
     _nodeGroup = value;
     member_changed("nodeGroup", ovalue, value);
@@ -5379,7 +5379,7 @@ public:
    * \par In Python:
    *    value = obj.redoBufferSize
    */
-  grt::IntegerRef redoBufferSize() const { return _redoBufferSize; }
+  auto redoBufferSize() const -> grt::IntegerRef { return _redoBufferSize; }
 
   /**
    * Setter for attribute redoBufferSize
@@ -5388,7 +5388,7 @@ public:
    * \par In Python:
    *   obj.redoBufferSize = value
    */
-  virtual void redoBufferSize(const grt::IntegerRef &value) {
+  virtual auto redoBufferSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_redoBufferSize);
     _redoBufferSize = value;
     member_changed("redoBufferSize", ovalue, value);
@@ -5401,7 +5401,7 @@ public:
    * \par In Python:
    *    value = obj.undoBufferSize
    */
-  grt::IntegerRef undoBufferSize() const { return _undoBufferSize; }
+  auto undoBufferSize() const -> grt::IntegerRef { return _undoBufferSize; }
 
   /**
    * Setter for attribute undoBufferSize
@@ -5410,7 +5410,7 @@ public:
    * \par In Python:
    *   obj.undoBufferSize = value
    */
-  virtual void undoBufferSize(const grt::IntegerRef &value) {
+  virtual auto undoBufferSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_undoBufferSize);
     _undoBufferSize = value;
     member_changed("undoBufferSize", ovalue, value);
@@ -5423,7 +5423,7 @@ public:
    * \par In Python:
    *    value = obj.undoFile
    */
-  grt::StringRef undoFile() const { return _undoFile; }
+  auto undoFile() const -> grt::StringRef { return _undoFile; }
 
   /**
    * Setter for attribute undoFile
@@ -5432,7 +5432,7 @@ public:
    * \par In Python:
    *   obj.undoFile = value
    */
-  virtual void undoFile(const grt::StringRef &value) {
+  virtual auto undoFile(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_undoFile);
     _undoFile = value;
     member_changed("undoFile", ovalue, value);
@@ -5445,7 +5445,7 @@ public:
    * \par In Python:
    *    value = obj.wait
    */
-  grt::IntegerRef wait() const { return _wait; }
+  auto wait() const -> grt::IntegerRef { return _wait; }
 
   /**
    * Setter for attribute wait
@@ -5454,7 +5454,7 @@ public:
    * \par In Python:
    *   obj.wait = value
    */
-  virtual void wait(const grt::IntegerRef &value) {
+  virtual auto wait(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_wait);
     _wait = value;
     member_changed("wait", ovalue, value);
@@ -5471,12 +5471,12 @@ protected:
   grt::IntegerRef _wait;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_LogFileGroup());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -5529,7 +5529,7 @@ public:
       _roles(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.User";
   }
 
@@ -5540,7 +5540,7 @@ public:
    * \par In Python:
    *    value = obj.password
    */
-  grt::StringRef password() const { return _password; }
+  auto password() const -> grt::StringRef { return _password; }
 
   /**
    * Setter for attribute password
@@ -5549,7 +5549,7 @@ public:
    * \par In Python:
    *   obj.password = value
    */
-  virtual void password(const grt::StringRef &value) {
+  virtual auto password(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_password);
     _password = value;
     member_changed("password", ovalue, value);
@@ -5562,11 +5562,11 @@ public:
    * \par In Python:
    *    value = obj.roles
    */
-  grt::ListRef<db_Role> roles() const { return _roles; }
+  auto roles() const -> grt::ListRef<db_Role> { return _roles; }
 
 
 private: // The next attribute is read-only.
-  virtual void roles(const grt::ListRef<db_Role> &value) {
+  virtual auto roles(const grt::ListRef<db_Role> &value) -> void {
     grt::ValueRef ovalue(_roles);
     _roles = value;
     member_changed("roles", ovalue, value);
@@ -5579,12 +5579,12 @@ protected:
   grt::ListRef<db_Role> _roles;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_User());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -5612,7 +5612,7 @@ public:
       _privileges(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Role";
   }
 
@@ -5623,11 +5623,11 @@ public:
    * \par In Python:
    *    value = obj.childRoles
    */
-  grt::ListRef<db_Role> childRoles() const { return _childRoles; }
+  auto childRoles() const -> grt::ListRef<db_Role> { return _childRoles; }
 
 
 private: // The next attribute is read-only.
-  virtual void childRoles(const grt::ListRef<db_Role> &value) {
+  virtual auto childRoles(const grt::ListRef<db_Role> &value) -> void {
     grt::ValueRef ovalue(_childRoles);
     _childRoles = value;
     member_changed("childRoles", ovalue, value);
@@ -5641,7 +5641,7 @@ public:
    * \par In Python:
    *    value = obj.parentRole
    */
-  db_RoleRef parentRole() const { return _parentRole; }
+  auto parentRole() const -> db_RoleRef { return _parentRole; }
 
   /**
    * Setter for attribute parentRole
@@ -5650,7 +5650,7 @@ public:
    * \par In Python:
    *   obj.parentRole = value
    */
-  virtual void parentRole(const db_RoleRef &value) {
+  virtual auto parentRole(const db_RoleRef &value) -> void {
     grt::ValueRef ovalue(_parentRole);
     _parentRole = value;
     member_changed("parentRole", ovalue, value);
@@ -5664,11 +5664,11 @@ public:
    * \par In Python:
    *    value = obj.privileges
    */
-  grt::ListRef<db_RolePrivilege> privileges() const { return _privileges; }
+  auto privileges() const -> grt::ListRef<db_RolePrivilege> { return _privileges; }
 
 
 private: // The next attribute is read-only.
-  virtual void privileges(const grt::ListRef<db_RolePrivilege> &value) {
+  virtual auto privileges(const grt::ListRef<db_RolePrivilege> &value) -> void {
     grt::ValueRef ovalue(_privileges);
 
     _privileges = value;
@@ -5683,12 +5683,12 @@ protected:
   grt::ListRef<db_RolePrivilege> _privileges;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Role());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -5722,7 +5722,7 @@ public:
       _sqlDefinition("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.DatabaseDdlObject";
   }
 
@@ -5733,7 +5733,7 @@ public:
    * \par In Python:
    *    value = obj.definer
    */
-  grt::StringRef definer() const { return _definer; }
+  auto definer() const -> grt::StringRef { return _definer; }
 
   /**
    * Setter for attribute definer
@@ -5742,7 +5742,7 @@ public:
    * \par In Python:
    *   obj.definer = value
    */
-  virtual void definer(const grt::StringRef &value) {
+  virtual auto definer(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_definer);
     _definer = value;
     member_changed("definer", ovalue, value);
@@ -5755,7 +5755,7 @@ public:
    * \par In Python:
    *    value = obj.sqlBody
    */
-  grt::StringRef sqlBody() const { return _sqlBody; }
+  auto sqlBody() const -> grt::StringRef { return _sqlBody; }
 
   /**
    * Setter for attribute sqlBody
@@ -5764,7 +5764,7 @@ public:
    * \par In Python:
    *   obj.sqlBody = value
    */
-  virtual void sqlBody(const grt::StringRef &value) {
+  virtual auto sqlBody(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_sqlBody);
     _sqlBody = value;
     member_changed("sqlBody", ovalue, value);
@@ -5777,7 +5777,7 @@ public:
    * \par In Python:
    *    value = obj.sqlDefinition
    */
-  grt::StringRef sqlDefinition() const { return _sqlDefinition; }
+  auto sqlDefinition() const -> grt::StringRef { return _sqlDefinition; }
 
   /**
    * Setter for attribute sqlDefinition
@@ -5786,7 +5786,7 @@ public:
    * \par In Python:
    *   obj.sqlDefinition = value
    */
-  virtual void sqlDefinition(const grt::StringRef &value) {
+  virtual auto sqlDefinition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_sqlDefinition);
     _sqlDefinition = value;
     member_changed("sqlDefinition", ovalue, value);
@@ -5799,12 +5799,12 @@ protected:
   grt::StringRef _sqlDefinition;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_DatabaseDdlObject());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -5843,7 +5843,7 @@ public:
       _useInterval(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Event";
   }
 
@@ -5854,7 +5854,7 @@ public:
    * \par In Python:
    *    value = obj.at
    */
-  grt::StringRef at() const { return _at; }
+  auto at() const -> grt::StringRef { return _at; }
 
   /**
    * Setter for attribute at
@@ -5863,7 +5863,7 @@ public:
    * \par In Python:
    *   obj.at = value
    */
-  virtual void at(const grt::StringRef &value) {
+  virtual auto at(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_at);
     _at = value;
     member_changed("at", ovalue, value);
@@ -5908,7 +5908,7 @@ public:
    * \par In Python:
    *    value = obj.enabled
    */
-  grt::IntegerRef enabled() const { return _enabled; }
+  auto enabled() const -> grt::IntegerRef { return _enabled; }
 
   /**
    * Setter for attribute enabled
@@ -5917,7 +5917,7 @@ public:
    * \par In Python:
    *   obj.enabled = value
    */
-  virtual void enabled(const grt::IntegerRef &value) {
+  virtual auto enabled(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_enabled);
     _enabled = value;
     member_changed("enabled", ovalue, value);
@@ -5930,7 +5930,7 @@ public:
    * \par In Python:
    *    value = obj.interval
    */
-  grt::StringRef interval() const { return _interval; }
+  auto interval() const -> grt::StringRef { return _interval; }
 
   /**
    * Setter for attribute interval
@@ -5939,7 +5939,7 @@ public:
    * \par In Python:
    *   obj.interval = value
    */
-  virtual void interval(const grt::StringRef &value) {
+  virtual auto interval(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_interval);
     _interval = value;
     member_changed("interval", ovalue, value);
@@ -5952,7 +5952,7 @@ public:
    * \par In Python:
    *    value = obj.intervalEnd
    */
-  grt::StringRef intervalEnd() const { return _intervalEnd; }
+  auto intervalEnd() const -> grt::StringRef { return _intervalEnd; }
 
   /**
    * Setter for attribute intervalEnd
@@ -5961,7 +5961,7 @@ public:
    * \par In Python:
    *   obj.intervalEnd = value
    */
-  virtual void intervalEnd(const grt::StringRef &value) {
+  virtual auto intervalEnd(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_intervalEnd);
     _intervalEnd = value;
     member_changed("intervalEnd", ovalue, value);
@@ -5974,7 +5974,7 @@ public:
    * \par In Python:
    *    value = obj.intervalStart
    */
-  grt::StringRef intervalStart() const { return _intervalStart; }
+  auto intervalStart() const -> grt::StringRef { return _intervalStart; }
 
   /**
    * Setter for attribute intervalStart
@@ -5983,7 +5983,7 @@ public:
    * \par In Python:
    *   obj.intervalStart = value
    */
-  virtual void intervalStart(const grt::StringRef &value) {
+  virtual auto intervalStart(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_intervalStart);
     _intervalStart = value;
     member_changed("intervalStart", ovalue, value);
@@ -5996,7 +5996,7 @@ public:
    * \par In Python:
    *    value = obj.intervalUnit
    */
-  grt::StringRef intervalUnit() const { return _intervalUnit; }
+  auto intervalUnit() const -> grt::StringRef { return _intervalUnit; }
 
   /**
    * Setter for attribute intervalUnit
@@ -6005,7 +6005,7 @@ public:
    * \par In Python:
    *   obj.intervalUnit = value
    */
-  virtual void intervalUnit(const grt::StringRef &value) {
+  virtual auto intervalUnit(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_intervalUnit);
     _intervalUnit = value;
     member_changed("intervalUnit", ovalue, value);
@@ -6034,7 +6034,7 @@ public:
    * \par In Python:
    *    value = obj.preserved
    */
-  grt::IntegerRef preserved() const { return _preserved; }
+  auto preserved() const -> grt::IntegerRef { return _preserved; }
 
   /**
    * Setter for attribute preserved
@@ -6043,7 +6043,7 @@ public:
    * \par In Python:
    *   obj.preserved = value
    */
-  virtual void preserved(const grt::IntegerRef &value) {
+  virtual auto preserved(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_preserved);
     _preserved = value;
     member_changed("preserved", ovalue, value);
@@ -6072,7 +6072,7 @@ public:
    * \par In Python:
    *    value = obj.useInterval
    */
-  grt::IntegerRef useInterval() const { return _useInterval; }
+  auto useInterval() const -> grt::IntegerRef { return _useInterval; }
 
   /**
    * Setter for attribute useInterval
@@ -6081,7 +6081,7 @@ public:
    * \par In Python:
    *   obj.useInterval = value
    */
-  virtual void useInterval(const grt::IntegerRef &value) {
+  virtual auto useInterval(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_useInterval);
     _useInterval = value;
     member_changed("useInterval", ovalue, value);
@@ -6099,12 +6099,12 @@ protected:
   grt::IntegerRef _useInterval;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Event());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -6187,7 +6187,7 @@ public:
 
   virtual ~db_Trigger();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Trigger";
   }
 
@@ -6198,7 +6198,7 @@ public:
    * \par In Python:
    *    value = obj.enabled
    */
-  grt::IntegerRef enabled() const { return _enabled; }
+  auto enabled() const -> grt::IntegerRef { return _enabled; }
 
   /**
    * Setter for attribute enabled
@@ -6207,7 +6207,7 @@ public:
    * \par In Python:
    *   obj.enabled = value
    */
-  virtual void enabled(const grt::IntegerRef &value) {
+  virtual auto enabled(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_enabled);
     _enabled = value;
     member_changed("enabled", ovalue, value);
@@ -6220,7 +6220,7 @@ public:
    * \par In Python:
    *    value = obj.event
    */
-  grt::StringRef event() const { return _event; }
+  auto event() const -> grt::StringRef { return _event; }
 
   /**
    * Setter for attribute event
@@ -6229,7 +6229,7 @@ public:
    * \par In Python:
    *   obj.event = value
    */
-  virtual void event(const grt::StringRef &value);
+  virtual auto event(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute name
@@ -6238,7 +6238,7 @@ public:
    * \par In Python:
    *    value = obj.name
    */
-  grt::StringRef name() const { return super::name(); }
+  auto name() const -> grt::StringRef { return super::name(); }
 
   /**
    * Setter for attribute name
@@ -6247,7 +6247,7 @@ public:
    * \par In Python:
    *   obj.name = value
    */
-  virtual void name(const grt::StringRef &value);
+  virtual auto name(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute ordering
@@ -6256,7 +6256,7 @@ public:
    * \par In Python:
    *    value = obj.ordering
    */
-  grt::StringRef ordering() const { return _ordering; }
+  auto ordering() const -> grt::StringRef { return _ordering; }
 
   /**
    * Setter for attribute ordering
@@ -6265,7 +6265,7 @@ public:
    * \par In Python:
    *   obj.ordering = value
    */
-  virtual void ordering(const grt::StringRef &value) {
+  virtual auto ordering(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_ordering);
     _ordering = value;
     member_changed("ordering", ovalue, value);
@@ -6278,7 +6278,7 @@ public:
    * \par In Python:
    *    value = obj.otherTrigger
    */
-  grt::StringRef otherTrigger() const { return _otherTrigger; }
+  auto otherTrigger() const -> grt::StringRef { return _otherTrigger; }
 
   /**
    * Setter for attribute otherTrigger
@@ -6287,7 +6287,7 @@ public:
    * \par In Python:
    *   obj.otherTrigger = value
    */
-  virtual void otherTrigger(const grt::StringRef &value) {
+  virtual auto otherTrigger(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_otherTrigger);
     _otherTrigger = value;
     member_changed("otherTrigger", ovalue, value);
@@ -6300,7 +6300,7 @@ public:
    * \par In Python:
    *    value = obj.timing
    */
-  grt::StringRef timing() const { return _timing; }
+  auto timing() const -> grt::StringRef { return _timing; }
 
   /**
    * Setter for attribute timing
@@ -6309,10 +6309,10 @@ public:
    * \par In Python:
    *   obj.timing = value
    */
-  virtual void timing(const grt::StringRef &value);
+  virtual auto timing(const grt::StringRef &value) -> void;
 
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -6323,12 +6323,12 @@ protected:
   grt::StringRef _timing;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Trigger());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -6377,7 +6377,7 @@ public:
       _sequenceNumber(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.Routine";
   }
 
@@ -6404,7 +6404,7 @@ public:
    * \par In Python:
    *    value = obj.routineType
    */
-  grt::StringRef routineType() const { return _routineType; }
+  auto routineType() const -> grt::StringRef { return _routineType; }
 
   /**
    * Setter for attribute routineType
@@ -6413,7 +6413,7 @@ public:
    * \par In Python:
    *   obj.routineType = value
    */
-  virtual void routineType(const grt::StringRef &value) {
+  virtual auto routineType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_routineType);
     _routineType = value;
     member_changed("routineType", ovalue, value);
@@ -6426,7 +6426,7 @@ public:
    * \par In Python:
    *    value = obj.sequenceNumber
    */
-  grt::IntegerRef sequenceNumber() const { return _sequenceNumber; }
+  auto sequenceNumber() const -> grt::IntegerRef { return _sequenceNumber; }
 
   /**
    * Setter for attribute sequenceNumber
@@ -6435,7 +6435,7 @@ public:
    * \par In Python:
    *   obj.sequenceNumber = value
    */
-  virtual void sequenceNumber(const grt::IntegerRef &value) {
+  virtual auto sequenceNumber(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_sequenceNumber);
     _sequenceNumber = value;
     member_changed("sequenceNumber", ovalue, value);
@@ -6447,12 +6447,12 @@ protected:
   grt::IntegerRef _sequenceNumber;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_Routine());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -6490,7 +6490,7 @@ public:
       _withCheckCondition(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.View";
   }
 
@@ -6501,7 +6501,7 @@ public:
    * \par In Python:
    *    value = obj.algorithm
    */
-  grt::IntegerRef algorithm() const { return _algorithm; }
+  auto algorithm() const -> grt::IntegerRef { return _algorithm; }
 
   /**
    * Setter for attribute algorithm
@@ -6510,7 +6510,7 @@ public:
    * \par In Python:
    *   obj.algorithm = value
    */
-  virtual void algorithm(const grt::IntegerRef &value) {
+  virtual auto algorithm(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_algorithm);
     _algorithm = value;
     member_changed("algorithm", ovalue, value);
@@ -6523,11 +6523,11 @@ public:
    * \par In Python:
    *    value = obj.columns
    */
-  grt::StringListRef columns() const { return _columns; }
+  auto columns() const -> grt::StringListRef { return _columns; }
 
 
 private: // The next attribute is read-only.
-  virtual void columns(const grt::StringListRef &value) {
+  virtual auto columns(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_columns);
     _columns = value;
     member_changed("columns", ovalue, value);
@@ -6541,7 +6541,7 @@ public:
    * \par In Python:
    *    value = obj.isReadOnly
    */
-  grt::IntegerRef isReadOnly() const { return _isReadOnly; }
+  auto isReadOnly() const -> grt::IntegerRef { return _isReadOnly; }
 
   /**
    * Setter for attribute isReadOnly
@@ -6550,7 +6550,7 @@ public:
    * \par In Python:
    *   obj.isReadOnly = value
    */
-  virtual void isReadOnly(const grt::IntegerRef &value) {
+  virtual auto isReadOnly(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isReadOnly);
     _isReadOnly = value;
     member_changed("isReadOnly", ovalue, value);
@@ -6579,7 +6579,7 @@ public:
    * \par In Python:
    *    value = obj.oldModelSqlDefinition
    */
-  grt::StringRef oldModelSqlDefinition() const { return _oldModelSqlDefinition; }
+  auto oldModelSqlDefinition() const -> grt::StringRef { return _oldModelSqlDefinition; }
 
   /**
    * Setter for attribute oldModelSqlDefinition
@@ -6588,7 +6588,7 @@ public:
    * \par In Python:
    *   obj.oldModelSqlDefinition = value
    */
-  virtual void oldModelSqlDefinition(const grt::StringRef &value) {
+  virtual auto oldModelSqlDefinition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_oldModelSqlDefinition);
     _oldModelSqlDefinition = value;
     member_changed("oldModelSqlDefinition", ovalue, value);
@@ -6601,7 +6601,7 @@ public:
    * \par In Python:
    *    value = obj.oldServerSqlDefinition
    */
-  grt::StringRef oldServerSqlDefinition() const { return _oldServerSqlDefinition; }
+  auto oldServerSqlDefinition() const -> grt::StringRef { return _oldServerSqlDefinition; }
 
   /**
    * Setter for attribute oldServerSqlDefinition
@@ -6610,7 +6610,7 @@ public:
    * \par In Python:
    *   obj.oldServerSqlDefinition = value
    */
-  virtual void oldServerSqlDefinition(const grt::StringRef &value) {
+  virtual auto oldServerSqlDefinition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_oldServerSqlDefinition);
     _oldServerSqlDefinition = value;
     member_changed("oldServerSqlDefinition", ovalue, value);
@@ -6623,7 +6623,7 @@ public:
    * \par In Python:
    *    value = obj.withCheckCondition
    */
-  grt::IntegerRef withCheckCondition() const { return _withCheckCondition; }
+  auto withCheckCondition() const -> grt::IntegerRef { return _withCheckCondition; }
 
   /**
    * Setter for attribute withCheckCondition
@@ -6632,7 +6632,7 @@ public:
    * \par In Python:
    *   obj.withCheckCondition = value
    */
-  virtual void withCheckCondition(const grt::IntegerRef &value) {
+  virtual auto withCheckCondition(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_withCheckCondition);
     _withCheckCondition = value;
     member_changed("withCheckCondition", ovalue, value);
@@ -6648,12 +6648,12 @@ protected:
   grt::IntegerRef _withCheckCondition;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_View());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -6698,7 +6698,7 @@ public:
 
 
 
-inline void register_structs_db_xml() {
+inline auto register_structs_db_xml() -> void {
   grt::internal::ClassRegistry::register_class<db_DatabaseSyncObject>();
   grt::internal::ClassRegistry::register_class<db_DatabaseSync>();
   grt::internal::ClassRegistry::register_class<db_Script>();

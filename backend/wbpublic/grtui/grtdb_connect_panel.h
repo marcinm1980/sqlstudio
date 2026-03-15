@@ -53,57 +53,57 @@ namespace grtui {
     DbConnectPanel(DbConnectPanelFlags = DbConnectPanelDefaults);
     virtual ~DbConnectPanel();
 
-    void init(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &allowed_rdbms,
-              const db_mgmt_ConnectionRef &default_conn = db_mgmt_ConnectionRef());
-    void init(const db_mgmt_ManagementRef &mgmt, const db_mgmt_ConnectionRef &default_conn = db_mgmt_ConnectionRef());
+    auto init(const db_mgmt_ManagementRef &mgmt, const grt::ListRef<db_mgmt_Rdbms> &allowed_rdbms,
+              const db_mgmt_ConnectionRef &default_conn = db_mgmt_ConnectionRef()) -> void;
+    auto init(const db_mgmt_ManagementRef &mgmt, const db_mgmt_ConnectionRef &default_conn = db_mgmt_ConnectionRef()) -> void;
 
-    void init(DbConnection *conn, const db_mgmt_ConnectionRef &default_conn = db_mgmt_ConnectionRef());
+    auto init(DbConnection *conn, const db_mgmt_ConnectionRef &default_conn = db_mgmt_ConnectionRef()) -> void;
 
-    static bool is_connectable_driver_type(db_mgmt_DriverRef driver);
+    static auto is_connectable_driver_type(db_mgmt_DriverRef driver) -> bool;
 
-    void set_default_host_name(const std::string &host, bool update = false);
-    std::string default_host_name() {
+    auto set_default_host_name(const std::string &host, bool update = false) -> void;
+    auto default_host_name() -> std::string {
       return _default_host_name;
     }
 
-    void set_skip_schema_name(bool flag);
+    auto set_skip_schema_name(bool flag) -> void;
 
-    void set_enabled(bool flag);
+    auto set_enabled(bool flag) -> void;
 
-    mforms::TextEntry *get_name_entry() {
+    auto get_name_entry() -> mforms::TextEntry * {
       return &_name_entry;
     }
 
-    DbConnection *get_be() const {
+    auto get_be() const -> DbConnection * {
       return _connection;
     }
 
-    void set_active_stored_conn(const std::string &name);
-    void set_active_stored_conn(db_mgmt_ConnectionRef connection);
+    auto set_active_stored_conn(const std::string &name) -> void;
+    auto set_active_stored_conn(db_mgmt_ConnectionRef connection) -> void;
 
-    db_mgmt_ConnectionRef get_default_connection() {
+    auto get_default_connection() -> db_mgmt_ConnectionRef {
       return _anonymous_connection;
     }
 
-    db_mgmt_ConnectionRef get_connection(bool initInvalid = false);
-    void set_connection(const db_mgmt_ConnectionRef &conn);
+    auto get_connection(bool initInvalid = false) -> db_mgmt_ConnectionRef;
+    auto set_connection(const db_mgmt_ConnectionRef &conn) -> void;
 
     boost::signals2::signal<void(std::string, bool)> *signal_validation_state_changed() {
       return &_signal_validation_state_changed;
     }
 
-    void save_connection_as(const std::string &name);
+    auto save_connection_as(const std::string &name) -> void;
 
-    void set_driver_changed_cb(const std::function<void(db_mgmt_DriverRef)> &cb) {
+    auto set_driver_changed_cb(const std::function<void(db_mgmt_DriverRef)> &cb) -> void {
       _driver_changed_cb = cb;
     };
 
-    bool test_connection();
+    auto test_connection() -> bool;
 
-    void connection_user_input(std::string &text_entry, bool &create_group, bool new_entry = true);
+    auto connection_user_input(std::string &text_entry, bool &create_group, bool new_entry = true) -> void;
 
-    db_mgmt_RdbmsRef selected_rdbms();
-    db_mgmt_DriverRef selected_driver();
+    auto selected_rdbms() -> db_mgmt_RdbmsRef;
+    auto selected_driver() -> db_mgmt_DriverRef;
 
   protected:
     grt::ListRef<db_mgmt_Rdbms> _allowed_rdbms;
@@ -149,8 +149,8 @@ namespace grtui {
     mforms::Label _warning;
 
   private:
-    void save_param(const std::string &name, const grt::StringRef &param);
-    std::string get_saved_param(const std::string &name);
+    auto save_param(const std::string &name, const grt::StringRef &param) -> void;
+    auto get_saved_param(const std::string &name) -> std::string;
 
     boost::signals2::signal<void(std::string, bool)> _signal_validation_state_changed;
 
@@ -167,34 +167,34 @@ namespace grtui {
 
     int _last_active_tab;
 
-    void suspend_view_layout(bool flag);
-    void begin_layout();
-    void end_layout();
-    void create_control(DbDriverParam *driver_param, ControlType ctrl_type, const base::ControlBounds &bounds,
-                        const std::string &caption);
+    auto suspend_view_layout(bool flag) -> void;
+    auto begin_layout() -> void;
+    auto end_layout() -> void;
+    auto create_control(DbDriverParam *driver_param, ControlType ctrl_type, const base::ControlBounds &bounds,
+                        const std::string &caption) -> void;
 
-    void change_active_rdbms();
-    void change_active_driver();
+    auto change_active_rdbms() -> void;
+    auto change_active_driver() -> void;
 
-    void set_keychain_password(DbDriverParam *param, bool clear);
+    auto set_keychain_password(DbDriverParam *param, bool clear) -> void;
 
-    void param_value_changed(mforms::View *sender, bool trim_whitespace);
-    void enum_param_value_changed(mforms::Selector *sender, std::vector<std::string> options);
+    auto param_value_changed(mforms::View *sender, bool trim_whitespace) -> void;
+    auto enum_param_value_changed(mforms::Selector *sender, std::vector<std::string> options) -> void;
 
-    void refresh_stored_connections();
+    auto refresh_stored_connections() -> void;
 
-    void change_active_stored_conn();
-    void reset_stored_conn_list();
-    void change_connection_name();
+    auto change_active_stored_conn() -> void;
+    auto reset_stored_conn_list() -> void;
+    auto change_connection_name() -> void;
 
-    void launch_ssl_wizard();
-    void open_ssl_wizard_directory();
+    auto launch_ssl_wizard() -> void;
+    auto open_ssl_wizard_directory() -> void;
 
-    grt::ListRef<db_mgmt_Connection> connection_list();
+    auto connection_list() -> grt::ListRef<db_mgmt_Connection>;
 
-    db_mgmt_ConnectionRef open_editor();
+    auto open_editor() -> db_mgmt_ConnectionRef;
 
-    grt::StringListRef get_enum_values(db_mgmt_DriverParameterRef param);
+    auto get_enum_values(db_mgmt_DriverParameterRef param) -> grt::StringListRef;
 
     std::function<void(const db_mgmt_DriverRef &)> _driver_changed_cb;
   };

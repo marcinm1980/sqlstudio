@@ -34,7 +34,7 @@ Connector::Connector(CanvasItem *owner) : _owner(owner), _magnet(0), _tag(0) {
   _draggable = true;
 }
 
-void Connector::set_update_handler(const std::function<void(Connector *)> &update_handler) {
+auto Connector::set_update_handler(const std::function<void(Connector *)> &update_handler) -> void {
   _update_handler = update_handler;
 }
 
@@ -43,11 +43,11 @@ Connector::~Connector() {
     _magnet->remove_connector(this);
 }
 
-void Connector::set_draggable(bool flag) {
+auto Connector::set_draggable(bool flag) -> void {
   _draggable = flag;
 }
 
-void Connector::connect(Magnet *magnet) {
+auto Connector::connect(Magnet *magnet) -> void {
   if (_magnet)
     throw std::logic_error("connecting an already connected connector");
 
@@ -56,7 +56,7 @@ void Connector::connect(Magnet *magnet) {
   magnet_moved(magnet);
 }
 
-bool Connector::try_connect(Magnet *magnet) {
+auto Connector::try_connect(Magnet *magnet) -> bool {
   if (_magnet == magnet)
     return true;
 
@@ -67,7 +67,7 @@ bool Connector::try_connect(Magnet *magnet) {
   return false;
 }
 
-bool Connector::try_disconnect() {
+auto Connector::try_disconnect() -> bool {
   if (_magnet != 0) {
     if (_magnet->allows_disconnection(this)) {
       disconnect();
@@ -77,12 +77,12 @@ bool Connector::try_disconnect() {
   return false;
 }
 
-void Connector::magnet_moved(Magnet *magnet) {
+auto Connector::magnet_moved(Magnet *magnet) -> void {
   if (_update_handler)
     _update_handler(this);
 }
 
-Point Connector::get_position(const Point &srcpos) {
+auto Connector::get_position(const Point &srcpos) -> Point {
   // returns the position that the connector should be
   if (_magnet)
     return _magnet->get_position_for_connector(this, srcpos);
@@ -90,7 +90,7 @@ Point Connector::get_position(const Point &srcpos) {
   return Point();
 }
 
-Point Connector::get_position() {
+auto Connector::get_position() -> Point {
   // returns the position that the connector should be
   if (_magnet)
     return _magnet->get_position();
@@ -98,14 +98,14 @@ Point Connector::get_position() {
   return Point();
 }
 
-void Connector::disconnect() {
+auto Connector::disconnect() -> void {
   if (_magnet) {
     _magnet->remove_connector(this);
     _magnet = 0;
   }
 }
 
-mdc::CanvasItem *Connector::get_connected_item() {
+auto Connector::get_connected_item() -> mdc::CanvasItem * {
   if (_magnet)
     return _magnet->get_owner();
   return 0;

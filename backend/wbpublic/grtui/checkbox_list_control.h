@@ -38,18 +38,18 @@ class WBPUBLICBACKEND_PUBLIC_FUNC StringCheckBoxList : public mforms::ScrollPane
   mforms::Box _box;
   boost::signals2::signal<void()> _signal_changed;
 
-  void toggled();
+  auto toggled() -> void;
 
 public:
   StringCheckBoxList();
 
-  void set_strings(const std::vector<std::string> &strings);
-  void set_strings(const grt::StringListRef &strings);
+  auto set_strings(const std::vector<std::string> &strings) -> void;
+  auto set_strings(const grt::StringListRef &strings) -> void;
 
-  std::vector<std::string> get_selection();
-  bool has_selection();
+  auto get_selection() -> std::vector<std::string>;
+  auto has_selection() -> bool;
 
-  void set_selected(const std::string &name, bool flag);
+  auto set_selected(const std::string &name, bool flag) -> void;
 
   boost::signals2::signal<void()> *signal_changed() {
     return &_signal_changed;

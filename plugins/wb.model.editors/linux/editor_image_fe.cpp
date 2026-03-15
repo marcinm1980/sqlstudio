@@ -36,7 +36,7 @@ class ImageEditorFE : public PluginEditorBase {
   Glib::RefPtr<Gtk::Builder> _xml;
   Gtk::Image *_image;
 
-  virtual bec::BaseEditor *get_be() {
+  virtual auto get_be() -> bec::BaseEditor * {
     return &_be;
   }
 
@@ -77,7 +77,7 @@ public:
     refresh_form_data();
   }
 
-  void browse_file() {
+  auto browse_file() -> void {
     std::string filename = open_file_chooser();
     if (!filename.empty()) {
       _be.set_filename(filename);
@@ -85,21 +85,21 @@ public:
     }
   }
 
-  void aspect_toggled() {
+  auto aspect_toggled() -> void {
     Gtk::CheckButton *check;
     _xml->get_widget("aspect_check", check);
 
     _be.set_keep_aspect_ratio(check->get_active());
   }
 
-  void reset_aspect() {
+  auto reset_aspect() -> void {
     int w = _image->get_pixbuf()->get_width();
     int h = _image->get_pixbuf()->get_height();
 
     _be.set_size(w, h);
   }
 
-  virtual void do_refresh_form_data() {
+  virtual auto do_refresh_form_data() -> void {
     Gtk::Entry *entry;
     int w, h;
     _be.get_size(w, h);
@@ -120,7 +120,7 @@ public:
                 _be.get_attached_image_path().c_str());
   }
 
-  void width_changed() {
+  auto width_changed() -> void {
     Gtk::Entry *entry;
     _xml->get_widget("width_entry", entry);
     int i = base::atoi<int>(entry->get_text().c_str(), 0);
@@ -129,7 +129,7 @@ public:
     do_refresh_form_data();
   }
 
-  void height_changed() {
+  auto height_changed() -> void {
     Gtk::Entry *entry;
     _xml->get_widget("height_entry", entry);
     int i = base::atoi<int>(entry->get_text().c_str(), 0);
@@ -140,7 +140,7 @@ public:
 };
 
 extern "C" {
-GUIPluginBase *createImageEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createImageEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new ImageEditorFE(m, args));
 }
 };

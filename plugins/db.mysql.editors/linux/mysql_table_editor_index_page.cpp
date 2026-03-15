@@ -100,7 +100,7 @@ DbMySQLTableEditorIndexPage::~DbMySQLTableEditorIndexPage() {
 
 #include <iostream>
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::update_gui_for_server() {
+auto DbMySQLTableEditorIndexPage::update_gui_for_server() -> void {
   Gtk::TextView *text(0);
   _xml->get_widget("index_comment", text);
   if (_be->is_editing_live_object()) {
@@ -111,7 +111,7 @@ void DbMySQLTableEditorIndexPage::update_gui_for_server() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::switch_be(MySQLTableEditorBE *be) {
+auto DbMySQLTableEditorIndexPage::switch_be(MySQLTableEditorBE *be) -> void {
   if (!_editing_sig.empty())
     _editing_sig.disconnect();
 
@@ -145,14 +145,14 @@ void DbMySQLTableEditorIndexPage::switch_be(MySQLTableEditorBE *be) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::refresh() {
+auto DbMySQLTableEditorIndexPage::refresh() -> void {
   if (!_refresh_sig.empty())
     _refresh_sig.disconnect();
   // We need to call it from idle, because of some bug in model implementation.
   _refresh_sig = Glib::signal_idle().connect(sigc::mem_fun(this, &DbMySQLTableEditorIndexPage::real_refresh));
 }
 
-bool DbMySQLTableEditorIndexPage::real_refresh() {
+auto DbMySQLTableEditorIndexPage::real_refresh() -> bool {
   if (!_editing_sig.empty())
     _editing_sig.disconnect();
 
@@ -191,7 +191,7 @@ bool DbMySQLTableEditorIndexPage::real_refresh() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::index_cursor_changed() {
+auto DbMySQLTableEditorIndexPage::index_cursor_changed() -> void {
   Gtk::TreeModel::Path path;
   Gtk::TreeView::Column *column(0);
 
@@ -204,7 +204,7 @@ void DbMySQLTableEditorIndexPage::index_cursor_changed() {
 }
 
 //------------------------------------------------------------------------------
-Glib::RefPtr<Gtk::ListStore> DbMySQLTableEditorIndexPage::recreate_order_model() {
+auto DbMySQLTableEditorIndexPage::recreate_order_model() -> Glib::RefPtr<Gtk::ListStore> {
   MySQLTableIndexListBE *indices_be = _be->get_indexes();
   std::vector<std::string> order_list;
 
@@ -228,7 +228,7 @@ Glib::RefPtr<Gtk::ListStore> DbMySQLTableEditorIndexPage::recreate_order_model()
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::update_index_details() {
+auto DbMySQLTableEditorIndexPage::update_index_details() -> void {
   MySQLTableIndexListBE *indices_be = _be->get_indexes();
   if (indices_be) {
     std::string index_name;
@@ -330,7 +330,7 @@ void DbMySQLTableEditorIndexPage::update_index_details() {
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::update_index_storage_type_in_be() {
+auto DbMySQLTableEditorIndexPage::update_index_storage_type_in_be() -> void {
   MySQLTableIndexListBE *indices_be = _be->get_indexes();
 
   if (indices_be && _index_node.is_valid()) {
@@ -338,14 +338,14 @@ void DbMySQLTableEditorIndexPage::update_index_storage_type_in_be() {
     indices_be->set_field(_index_node, ::MySQLTableIndexListBE::StorageType, new_storage_type);
   }
 }
-void DbMySQLTableEditorIndexPage::cell_editing_done_proxy(GtkCellEditable *ce, gpointer data) {
+auto DbMySQLTableEditorIndexPage::cell_editing_done_proxy(GtkCellEditable *ce, gpointer data) -> void {
   DbMySQLTableEditorIndexPage *this_ptr = static_cast<DbMySQLTableEditorIndexPage *>(data);
   if (this_ptr)
     this_ptr->cell_editing_done(ce);
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::cell_editing_started(Gtk::CellEditable *cell, const Glib::ustring &path) {
+auto DbMySQLTableEditorIndexPage::cell_editing_started(Gtk::CellEditable *cell, const Glib::ustring &path) -> void {
   bec::NodeId node(path);
   if (node.is_valid())
     _index_node = node;
@@ -364,7 +364,7 @@ void DbMySQLTableEditorIndexPage::cell_editing_started(Gtk::CellEditable *cell, 
   }
 }
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::cell_editing_done(GtkCellEditable *ce) {
+auto DbMySQLTableEditorIndexPage::cell_editing_done(GtkCellEditable *ce) -> void {
   if (_editing_done_id != 0 && _editable_cell != 0) {
     g_signal_handler_disconnect(_editable_cell, _editing_done_id);
     _editing_done_id = 0;
@@ -397,8 +397,8 @@ void DbMySQLTableEditorIndexPage::cell_editing_done(GtkCellEditable *ce) {
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::get_value(const Gtk::TreeModel::iterator &iter, int column, GType type,
-                                            Glib::ValueBase &value) {
+auto DbMySQLTableEditorIndexPage::get_value(const Gtk::TreeModel::iterator &iter, int column, GType type,
+                                            Glib::ValueBase &value) -> void {
   bec::IndexColumnsListBE *columns_be = _be->get_indexes()->get_columns();
   bec::NodeId node(_indexes_columns_model->node_for_iter(iter));
 
@@ -423,8 +423,8 @@ void DbMySQLTableEditorIndexPage::get_value(const Gtk::TreeModel::iterator &iter
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::set_value(const Gtk::TreeModel::iterator &iter, int column, GType type,
-                                            const Glib::ValueBase &value) {
+auto DbMySQLTableEditorIndexPage::set_value(const Gtk::TreeModel::iterator &iter, int column, GType type,
+                                            const Glib::ValueBase &value) -> void {
   bec::IndexColumnsListBE *columns_be = _be->get_indexes()->get_columns();
   bec::NodeId node(_indexes_columns_model->node_for_iter(iter));
 
@@ -449,19 +449,19 @@ void DbMySQLTableEditorIndexPage::set_value(const Gtk::TreeModel::iterator &iter
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::set_index_key_block_size(const std::string &value) {
+auto DbMySQLTableEditorIndexPage::set_index_key_block_size(const std::string &value) -> void {
   MySQLTableIndexListBE *indices_be = _be->get_indexes();
   indices_be->set_field(_index_node, ::MySQLTableIndexListBE::RowBlockSize, value);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::set_index_parser(const std::string &value) {
+auto DbMySQLTableEditorIndexPage::set_index_parser(const std::string &value) -> void {
   MySQLTableIndexListBE *indices_be = _be->get_indexes();
   indices_be->set_field(_index_node, ::MySQLTableIndexListBE::Parser, value);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorIndexPage::set_index_comment(const std::string &value) {
+auto DbMySQLTableEditorIndexPage::set_index_comment(const std::string &value) -> void {
   MySQLTableIndexListBE *indices_be = _be->get_indexes();
   indices_be->set_field(_index_node, ::MySQLTableIndexListBE::Comment, value);
 }

@@ -102,8 +102,7 @@ public:
 /**
  * Helper method for basic setup of a flat tabview glued to the backend tabview by the given wrapper.
  */
-FlatTabControl ^
-  CreateFlatTabControl(mforms::TabView *backend, TabViewWrapper *wrapper) {
+auto CreateFlatTabControl(mforms::TabView *backend, TabViewWrapper *wrapper) -> FlatTabControl ^ {
     MformsFlatTabControl ^ result = TabViewWrapper::Create<MformsFlatTabControl>(backend, wrapper);
     result->UpdateColors();
 
@@ -126,7 +125,7 @@ FlatTabControl ^
 
 //--------------------------------------------------------------------------------------------------
 
-bool TabViewWrapper::create(mforms::TabView *backend, mforms::TabViewType type) {
+auto TabViewWrapper::create(mforms::TabView *backend, mforms::TabViewType type) -> bool {
   TabViewWrapper *wrapper = new TabViewWrapper(backend, type);
 
   switch (type) {
@@ -190,7 +189,7 @@ bool TabViewWrapper::create(mforms::TabView *backend, mforms::TabViewType type) 
 
 //--------------------------------------------------------------------------------------------------
 
-void TabViewWrapper::set_active_tab(mforms::TabView *backend, int index) {
+auto TabViewWrapper::set_active_tab(mforms::TabView *backend, int index) -> void {
   TabViewWrapper *wrapper = backend->get_data<TabViewWrapper>();
   wrapper->GetManagedObject<TabControl>()->SelectedIndex = index;
   (*backend->signal_tab_changed())();
@@ -200,15 +199,15 @@ void TabViewWrapper::set_active_tab(mforms::TabView *backend, int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-int TabViewWrapper::get_active_tab(mforms::TabView *backend) {
+auto TabViewWrapper::get_active_tab(mforms::TabView *backend) -> int {
   TabViewWrapper *wrapper = backend->get_data<TabViewWrapper>();
   return wrapper->GetManagedObject<TabControl>()->SelectedIndex;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TabViewWrapper::add_page(mforms::TabView *backend, mforms::View *page, const std::string &caption,
-                             bool hasCloseButton) {
+auto TabViewWrapper::add_page(mforms::TabView *backend, mforms::View *page, const std::string &caption,
+                             bool hasCloseButton) -> int {
   TabViewWrapper *wrapper = backend->get_data<TabViewWrapper>();
   int new_index = -1;
 
@@ -239,7 +238,7 @@ int TabViewWrapper::add_page(mforms::TabView *backend, mforms::View *page, const
 
 //--------------------------------------------------------------------------------------------------
 
-void TabViewWrapper::remove_page(mforms::TabView *backend, mforms::View *page) {
+auto TabViewWrapper::remove_page(mforms::TabView *backend, mforms::View *page) -> void {
   TabViewWrapper *wrapper = backend->get_data<TabViewWrapper>();
   ViewWrapper *view = page->get_data<ViewWrapper>();
 
@@ -257,7 +256,7 @@ void TabViewWrapper::remove_page(mforms::TabView *backend, mforms::View *page) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabViewWrapper::set_tab_title(mforms::TabView *backend, int tab, const std::string &caption) {
+auto TabViewWrapper::set_tab_title(mforms::TabView *backend, int tab, const std::string &caption) -> void {
   TabControl ^ tabControl = TabViewWrapper::GetManagedObject<TabControl>(backend);
   if (tab >= 0 && tab < tabControl->TabPages->Count)
     tabControl->TabPages[tab]->Text = CppStringToNative(caption);
@@ -265,7 +264,7 @@ void TabViewWrapper::set_tab_title(mforms::TabView *backend, int tab, const std:
 
 //--------------------------------------------------------------------------------------------------
 
-void TabViewWrapper::set_aux_view(mforms::TabView *backend, mforms::View *aux) {
+auto TabViewWrapper::set_aux_view(mforms::TabView *backend, mforms::View *aux) -> void {
   FlatTabControl ^ tabControl = TabViewWrapper::GetManagedObject<FlatTabControl>(backend);
 
   if (tabControl != nullptr) {
@@ -282,7 +281,7 @@ void TabViewWrapper::set_aux_view(mforms::TabView *backend, mforms::View *aux) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabViewWrapper::set_allows_reordering(mforms::TabView *backend, bool flag) {
+auto TabViewWrapper::set_allows_reordering(mforms::TabView *backend, bool flag) -> void {
   FlatTabControl ^ tabControl = TabViewWrapper::GetManagedObject<FlatTabControl>(backend);
   if (tabControl != nullptr)
     tabControl->CanReorderTabs = flag;
@@ -290,7 +289,7 @@ void TabViewWrapper::set_allows_reordering(mforms::TabView *backend, bool flag) 
 
 //--------------------------------------------------------------------------------------------------
 
-void TabViewWrapper::init() {
+auto TabViewWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_tabview_impl.create = &TabViewWrapper::create;

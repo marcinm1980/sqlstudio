@@ -31,27 +31,27 @@
 
 namespace mdc {
 
-  MYSQLCANVAS_PUBLIC_FUNC std::string detect_opengl_version();
+  MYSQLCANVAS_PUBLIC_FUNC auto detect_opengl_version() -> std::string;
 
   class MYSQLCANVAS_PUBLIC_FUNC OpenGLCanvasView : public CanvasView {
   public:
     OpenGLCanvasView(int width, int height);
     virtual ~OpenGLCanvasView();
 
-    virtual bool has_gl() const {
+    virtual auto has_gl() const -> bool {
       return true;
     }
 
-    virtual bool initialize();
+    virtual auto initialize() -> bool;
 
-    static void check_error();
+    static auto check_error() -> void;
 
-    virtual void make_current() = 0;
-    virtual void remove_current() = 0;
-    virtual void swap_buffers() = 0;
+    virtual auto make_current() -> void = 0;
+    virtual auto remove_current() -> void = 0;
+    virtual auto swap_buffers() -> void = 0;
 
-    virtual void begin_repaint(int, int, int, int);
-    virtual void end_repaint();
+    virtual auto begin_repaint(int, int, int, int) -> void;
+    virtual auto end_repaint() -> void;
   };
 
 } // end of mdc namespace

@@ -58,18 +58,18 @@ IconManager::IconManager() {
   */
 }
 
-void IconManager::set_basedir(const std::string &basedir) {
+auto IconManager::set_basedir(const std::string &basedir) -> void {
   _basedir = basedir;
 }
 
-IconManager *IconManager::get_instance() {
+auto IconManager::get_instance() -> IconManager * {
   static IconManager inst;
 
   return &inst;
 }
 
-static std::string get_icon_file_for_size(const std::string &aicon_file, IconSize size,
-                                          const std::string &extra_qualifier) {
+static auto get_icon_file_for_size(const std::string &aicon_file, IconSize size,
+                                          const std::string &extra_qualifier) -> std::string {
   std::string file;
   std::string icon_file = aicon_file;
 
@@ -110,7 +110,7 @@ static std::string get_icon_file_for_size(const std::string &aicon_file, IconSiz
   return file;
 }
 
-std::string IconManager::get_icon_path(const std::string &file) {
+auto IconManager::get_icon_path(const std::string &file) -> std::string {
   std::unordered_map<std::string, std::string>::const_iterator it = _icon_paths.find(file);
   if (it != _icon_paths.end())
     return it->second;
@@ -138,7 +138,7 @@ std::string IconManager::get_icon_path(const std::string &file) {
   return "";
 }
 
-IconId IconManager::get_icon_id(const std::string &icon_file, IconSize size, const std::string &extra_qualifier) {
+auto IconManager::get_icon_id(const std::string &icon_file, IconSize size, const std::string &extra_qualifier) -> IconId {
   std::map<std::string, IconId>::iterator it;
   std::string file = get_icon_file_for_size(icon_file, size, extra_qualifier);
 
@@ -150,11 +150,11 @@ IconId IconManager::get_icon_id(const std::string &icon_file, IconSize size, con
   return _next_id++;
 }
 
-IconId IconManager::get_icon_id(const grt::ObjectRef &object, IconSize size, const std::string &extra_qualifier) {
+auto IconManager::get_icon_id(const grt::ObjectRef &object, IconSize size, const std::string &extra_qualifier) -> IconId {
   return get_icon_id(object.get_metaclass(), size, extra_qualifier);
 }
 
-IconId IconManager::get_icon_id(grt::MetaClass *metaclass, IconSize size, const std::string &extra_qualifier) {
+auto IconManager::get_icon_id(grt::MetaClass *metaclass, IconSize size, const std::string &extra_qualifier) -> IconId {
   grt::MetaClass *parent, *gstruct;
   std::string file, path;
 
@@ -183,14 +183,14 @@ IconId IconManager::get_icon_id(grt::MetaClass *metaclass, IconSize size, const 
   return _next_id++;
 }
 
-std::string IconManager::get_icon_file(IconId icon) {
+auto IconManager::get_icon_file(IconId icon) -> std::string {
   if (icon == 0)
     return "";
 
   return _icon_files[icon];
 }
 
-std::string IconManager::get_icon_path(IconId icon) {
+auto IconManager::get_icon_path(IconId icon) -> std::string {
   std::string file = get_icon_file(icon);
   if (file.empty())
     return "";
@@ -198,7 +198,7 @@ std::string IconManager::get_icon_path(IconId icon) {
   return get_icon_path(file);
 }
 
-void IconManager::add_search_path(const std::string &path) {
+auto IconManager::add_search_path(const std::string &path) -> void {
   std::string npath;
 
 #ifdef _MSC_VER

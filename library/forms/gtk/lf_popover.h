@@ -36,12 +36,12 @@ namespace mforms {
   public:
     PopoverWidget(PopoverStyle style) : _style(style){};
     virtual ~PopoverWidget(){};
-    virtual void showPopover(const int x, const int y, const StartPosition pos) = 0;
-    virtual void close() = 0;
-    virtual void setSize(const int w, const int h) = 0;
-    virtual void setContent(Gtk::Widget *w) = 0;
-    virtual void setName(const std::string &name) = 0;
-    PopoverStyle getStyle() const {
+    virtual auto showPopover(const int x, const int y, const StartPosition pos) -> void = 0;
+    virtual auto close() -> void = 0;
+    virtual auto setSize(const int w, const int h) -> void = 0;
+    virtual auto setContent(Gtk::Widget *w) -> void = 0;
+    virtual auto setName(const std::string &name) -> void = 0;
+    auto getStyle() const -> PopoverStyle {
       return _style;
     };
   };
@@ -68,7 +68,7 @@ namespace mforms {
     mforms::StartPosition _contentPos;
     int _handleX;
     int _handleY;
-    void adjustPosition();
+    auto adjustPosition() -> void;
 
   public:
     PopoverTooltip(mforms::View *owner);
@@ -78,7 +78,7 @@ namespace mforms {
     virtual void setSize(const int w, const int h) override;
     virtual void setContent(Gtk::Widget *w) override;
     virtual void setName(const std::string &name) override;
-    bool tooltipSignalEvent(GdkEvent *ev);
-    void parentKeyRelease(GdkEventKey *ev);
+    auto tooltipSignalEvent(GdkEvent *ev) -> bool;
+    auto parentKeyRelease(GdkEventKey *ev) -> void;
   };
 }

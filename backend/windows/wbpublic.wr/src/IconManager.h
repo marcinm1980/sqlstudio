@@ -74,13 +74,12 @@ namespace MySQL {
       bec::IconManager *inner;
 
     public:
-      inline bec::IconManager *get_unmanaged_object() {
+      inline auto get_unmanaged_object() -> bec::IconManager * {
         return inner;
       }
 
       // Singleton class.
-      static IconManagerWrapper ^
-        get_instance() {
+      static auto get_instance() -> IconManagerWrapper ^ {
           if (_grtIconManager == nullptr)
             _grtIconManager = gcnew IconManagerWrapper();
 
@@ -93,15 +92,13 @@ namespace MySQL {
 
       String ^ get_icon_file(IconId icon) { return CppStringToNative(inner->get_icon_file(icon)); }
 
-        String
-        ^ get_icon_path(IconId icon) { return CppStringToNative(inner->get_icon_path(icon)); }
+        auto get_icon_path(IconId icon) -> String ^ { return CppStringToNative(inner->get_icon_path(icon)); }
 
         void add_search_path(String ^ path) {
         inner->add_search_path(NativeToCppString(path));
       }
 
-      Bitmap ^
-        get_icon(IconId icon) {
+      auto get_icon(IconId icon) -> Bitmap ^ {
           if (icon == 0)
             return nullptr;
           else if (icon_cache->ContainsKey(icon))
@@ -120,7 +117,7 @@ namespace MySQL {
           }
         }
 
-        int add_icon_to_imagelist(IconId iconId, IconSize iconSize) {
+        auto add_icon_to_imagelist(IconId iconId, IconSize iconSize) -> int {
         ImageList ^ imageList;
 
         // Choose the correct ImageList
@@ -160,7 +157,7 @@ namespace MySQL {
         }
       }
 
-      int add_icon_to_imagelist(IconId iconId) {
+      auto add_icon_to_imagelist(IconId iconId) -> int {
         Bitmap ^ img = get_icon(iconId);
         IconSize iconSize = IconSize::Icon48;
 
@@ -177,16 +174,13 @@ namespace MySQL {
           return -1;
       }
 
-      property static ImageList ^ ImageList16 { ImageList ^ get() { return get_instance()->imageList16; } }
+      static auto get() -> property ImageList ^ ImageList16 { ImageList ^ { return get_instance()->imageList16; } }
 
-        property static ImageList ^
-        ImageList24 { ImageList ^ get() { return get_instance()->imageList24; } }
+        static auto get() -> property ImageList ^ ImageList24 { ImageList ^ { return get_instance()->imageList24; } }
 
-        property static ImageList ^
-        ImageList32 { ImageList ^ get() { return get_instance()->imageList32; } }
+        static auto get() -> property ImageList ^ ImageList32 { ImageList ^ { return get_instance()->imageList32; } }
 
-        property static ImageList ^
-        ImageList48 { ImageList ^ get() { return get_instance()->imageList48; } }
+        static auto get() -> property ImageList ^ ImageList48 { ImageList ^ { return get_instance()->imageList48; } }
     };
   } // namespace Grt
 } // namespace MySQL

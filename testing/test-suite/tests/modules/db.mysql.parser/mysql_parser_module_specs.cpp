@@ -44,7 +44,7 @@ class Parser_moduleTest : public ::testing::Test {
 protected:
   static std::unique_ptr<MysqlParserModuleData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<MysqlParserModuleData>();
     data->tester.reset(new MySqlStudioTester(false));
     data->tester->initializeRuntime();
@@ -57,7 +57,7 @@ protected:
     data->context = MySQLParserServices::get()->createParserContext(data->tester->getRdbms()->characterSets(), version, "", true);
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data->context.reset();
     data.reset();
   }

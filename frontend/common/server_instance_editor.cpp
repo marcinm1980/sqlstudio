@@ -55,13 +55,13 @@ DEFAULT_LOG_DOMAIN(DOMAIN_WB_CONTEXT_UI)
 using namespace mforms;
 using namespace base;
 
-inline Label *RLabel(const std::string &text) {
+inline auto RLabel(const std::string &text) -> Label * {
   Label *l = new Label(text);
   l->set_text_align(MiddleRight);
   return l;
 }
 
-inline Table *NewTable(int rows, int cols) {
+inline auto NewTable(int rows, int cols) -> Table * {
   Table *table = new Table();
   table->set_row_count(rows);
   table->set_column_count(cols);
@@ -76,7 +76,7 @@ inline Table *NewTable(int rows, int cols) {
 /**
  * Determines if the given connection is an SSH connection and returns true if so.
  */
-static bool is_ssh_connection(const db_mgmt_ConnectionRef &connection) {
+static auto is_ssh_connection(const db_mgmt_ConnectionRef &connection) -> bool {
   if (connection.is_valid()) {
     std::string driver = connection->driver().is_valid() ? connection->driver()->name() : "";
     return (driver == "MysqlNativeSSH");
@@ -89,7 +89,7 @@ static bool is_ssh_connection(const db_mgmt_ConnectionRef &connection) {
 /**
  * Determines if the given connection is a local connection (i.e. to the current box).
  */
-static bool is_local_connection(const db_mgmt_ConnectionRef &connection) {
+static auto is_local_connection(const db_mgmt_ConnectionRef &connection) -> bool {
   if (connection.is_valid()) {
     std::string hostname = connection->parameterValues().get_string("hostName");
 
@@ -473,7 +473,7 @@ ServerInstanceEditor::~ServerInstanceEditor() {
   delete _connect_panel;
 }
 
-void ServerInstanceEditor::set_password(bool clear) {
+auto ServerInstanceEditor::set_password(bool clear) -> void {
   std::string port = _ssh_port.get_string_value();
 
   std::string storageKey;
@@ -508,7 +508,7 @@ void ServerInstanceEditor::set_password(bool clear) {
   show_connection();
 }
 
-db_mgmt_ServerInstanceRef ServerInstanceEditor::run(db_mgmt_ConnectionRef select_connection, bool show_admin) {
+auto ServerInstanceEditor::run(db_mgmt_ConnectionRef select_connection, bool show_admin) -> db_mgmt_ServerInstanceRef {
   _top_vbox.suspend_layout();
 
   refresh_connection_list();
@@ -568,7 +568,7 @@ void ServerInstanceEditor::run_filechooser_wrapper(
   }
 }
 
-void ServerInstanceEditor::run_filechooser(mforms::TextEntry *entry) {
+auto ServerInstanceEditor::run_filechooser(mforms::TextEntry *entry) -> void {
   mforms::FileChooser fc(mforms::OpenFile, true);
   // TODO: Add set directory
   if (fc.run_modal()) {
@@ -579,7 +579,7 @@ void ServerInstanceEditor::run_filechooser(mforms::TextEntry *entry) {
   }
 }
 
-void ServerInstanceEditor::system_type_changed() {
+auto ServerInstanceEditor::system_type_changed() -> void {
   db_mgmt_ServerInstanceRef instance(selected_instance());
 
   if (instance.is_valid()) {
@@ -592,7 +592,7 @@ void ServerInstanceEditor::system_type_changed() {
   }
 }
 
-void ServerInstanceEditor::refresh_profile_list() {
+auto ServerInstanceEditor::refresh_profile_list() -> void {
   std::string system = _os_type.get_string_value();
   if (!system.empty()) {
     _sys_profile_type.clear();
@@ -606,7 +606,7 @@ void ServerInstanceEditor::refresh_profile_list() {
   }
 }
 
-void ServerInstanceEditor::refresh_connection_list() {
+auto ServerInstanceEditor::refresh_connection_list() -> void {
   _stored_connection_list.clear();
 
   GRTLIST_FOREACH(db_mgmt_Connection, _connections, conn) {
@@ -615,7 +615,7 @@ void ServerInstanceEditor::refresh_connection_list() {
   }
 }
 
-db_mgmt_ConnectionRef ServerInstanceEditor::selected_connection() {
+auto ServerInstanceEditor::selected_connection() -> db_mgmt_ConnectionRef {
   TreeNodeRef node = _stored_connection_list.get_selected_node();
   int row = _stored_connection_list.row_for_node(node);
   if (row >= 0)
@@ -624,7 +624,7 @@ db_mgmt_ConnectionRef ServerInstanceEditor::selected_connection() {
   return db_mgmt_ConnectionRef();
 }
 
-db_mgmt_ServerInstanceRef ServerInstanceEditor::selected_instance() {
+auto ServerInstanceEditor::selected_instance() -> db_mgmt_ServerInstanceRef {
   db_mgmt_ConnectionRef conn(selected_connection());
   if (conn.is_valid()) {
     GRTLIST_FOREACH(db_mgmt_ServerInstance, _instances, inst) {
@@ -635,7 +635,7 @@ db_mgmt_ServerInstanceRef ServerInstanceEditor::selected_instance() {
   return db_mgmt_ServerInstanceRef();
 }
 
-void ServerInstanceEditor::autodetect_system() {
+auto ServerInstanceEditor::autodetect_system() -> void {
   grt::Module *module = grt::GRT::get()->get_module("WbAdmin");
   if (module) {
     grt::BaseListRef args(true);
@@ -645,7 +645,7 @@ void ServerInstanceEditor::autodetect_system() {
   }
 }
 
-void ServerInstanceEditor::test_settings() {
+auto ServerInstanceEditor::test_settings() -> void {
   if (_ssh_remote_admin.get_active()) {
     grt::Module *module = grt::GRT::get()->get_module("WbAdmin");
     if (module) {
@@ -667,7 +667,7 @@ void ServerInstanceEditor::test_settings() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ServerInstanceEditor::toggle_administration() {
+auto ServerInstanceEditor::toggle_administration() -> void {
   db_mgmt_ServerInstanceRef instance(selected_instance());
   bool local_connection = false;
   bool ssh_administration = _ssh_remote_admin.get_active();
@@ -737,7 +737,7 @@ void ServerInstanceEditor::toggle_administration() {
   _sys_box.set_enabled(can_administer);
 }
 
-void ServerInstanceEditor::tab_changed() {
+auto ServerInstanceEditor::tab_changed() -> void {
   db_mgmt_ServerInstanceRef instance(selected_instance());
   if (!instance.is_valid()) {
     db_mgmt_ConnectionRef connection(selected_connection());
@@ -765,7 +765,7 @@ void ServerInstanceEditor::tab_changed() {
     show_instance_info(instance->connection(), instance);
 }
 //--------------------------------------------------------------------------------------------------
-void ServerInstanceEditor::driver_changed_cb(const db_mgmt_DriverRef &driver) {
+auto ServerInstanceEditor::driver_changed_cb(const db_mgmt_DriverRef &driver) -> void {
   db_mgmt_ConnectionRef connection(selected_connection());
   {
     if (_tabview.get_page_index(&_remote_admin_box) == -1)
@@ -776,7 +776,7 @@ void ServerInstanceEditor::driver_changed_cb(const db_mgmt_DriverRef &driver) {
   }
 }
 
-void ServerInstanceEditor::add_instance() {
+auto ServerInstanceEditor::add_instance() -> void {
   db_mgmt_ConnectionRef connection(grt::Initialized);
   std::string name = "new connection";
   TreeNodeRef node;
@@ -811,7 +811,7 @@ void ServerInstanceEditor::add_instance() {
   show_connection();
 }
 
-void ServerInstanceEditor::delete_instance() {
+auto ServerInstanceEditor::delete_instance() -> void {
   TreeNodeRef node(_stored_connection_list.get_selected_node());
 
   if (node) {
@@ -834,7 +834,7 @@ void ServerInstanceEditor::delete_instance() {
   }
 }
 
-void ServerInstanceEditor::duplicate_instance() {
+auto ServerInstanceEditor::duplicate_instance() -> void {
   db_mgmt_ConnectionRef orig_conn(selected_connection());
   db_mgmt_ConnectionRef copy_conn(grt::Initialized);
   db_mgmt_ServerInstanceRef orig_inst(selected_instance());
@@ -872,7 +872,7 @@ void ServerInstanceEditor::duplicate_instance() {
   show_connection();
 }
 
-void ServerInstanceEditor::reorder_instance(bool up) {
+auto ServerInstanceEditor::reorder_instance(bool up) -> void {
   int row = _stored_connection_list.get_selected_row();
 
   if (row < 0)
@@ -896,7 +896,7 @@ void ServerInstanceEditor::reorder_instance(bool up) {
   }
 }
 
-void ServerInstanceEditor::browse_file() {
+auto ServerInstanceEditor::browse_file() -> void {
   FileChooser fsel(mforms::OpenFile, true);
 
   fsel.set_title(_("Pick SSH Private Key"));
@@ -907,7 +907,7 @@ void ServerInstanceEditor::browse_file() {
   }
 }
 
-grt::DictRef ServerInstanceEditor::get_preset(const std::string &system, const std::string &preset_name) {
+auto ServerInstanceEditor::get_preset(const std::string &system, const std::string &preset_name) -> grt::DictRef {
   grt::DictRef result;
 
   for (std::vector<std::pair<std::string, grt::DictRef> >::const_iterator iter = _presets[system].begin();
@@ -921,7 +921,7 @@ grt::DictRef ServerInstanceEditor::get_preset(const std::string &system, const s
   return result;
 }
 
-void ServerInstanceEditor::entry_changed(mforms::TextEntry *sender) {
+auto ServerInstanceEditor::entry_changed(mforms::TextEntry *sender) -> void {
   const std::string value = base::trim(sender->get_string_value());
   db_mgmt_ConnectionRef connection(selected_connection());
   db_mgmt_ServerInstanceRef instance(selected_instance());
@@ -988,7 +988,7 @@ void ServerInstanceEditor::entry_changed(mforms::TextEntry *sender) {
   }
 }
 
-void ServerInstanceEditor::check_changed(mforms::CheckBox *sender) {
+auto ServerInstanceEditor::check_changed(mforms::CheckBox *sender) -> void {
   const bool value = sender->get_active();
   db_mgmt_ServerInstanceRef instance(selected_instance());
 
@@ -1080,7 +1080,7 @@ void ServerInstanceEditor::connection_changed()
   toggle_administration();
 }*/
 
-void ServerInstanceEditor::profile_changed() {
+auto ServerInstanceEditor::profile_changed() -> void {
   db_mgmt_ServerInstanceRef instance(selected_instance());
   const int systype = _sys_profile_type.get_selected_index();
   if (systype >= 0 && instance.is_valid()) {
@@ -1097,7 +1097,7 @@ void ServerInstanceEditor::profile_changed() {
   }
 }
 
-void ServerInstanceEditor::reset_setup_pending() {
+auto ServerInstanceEditor::reset_setup_pending() -> void {
   db_mgmt_ServerInstanceRef instance(selected_instance());
   if (instance.is_valid())
     instance->serverInfo().gset("setupPending", 0);
@@ -1105,7 +1105,7 @@ void ServerInstanceEditor::reset_setup_pending() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ServerInstanceEditor::show_connection() {
+auto ServerInstanceEditor::show_connection() -> void {
   db_mgmt_ConnectionRef connection = selected_connection();
   db_mgmt_ServerInstanceRef instance = selected_instance();
 
@@ -1142,7 +1142,7 @@ void ServerInstanceEditor::show_connection() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ServerInstanceEditor::show_instance_info(db_mgmt_ConnectionRef connection, db_mgmt_ServerInstanceRef instance) {
+auto ServerInstanceEditor::show_instance_info(db_mgmt_ConnectionRef connection, db_mgmt_ServerInstanceRef instance) -> void {
   grt::DictRef serverInfo(instance.is_valid() ? instance->serverInfo() : grt::DictRef(true));
   grt::DictRef defaults;
 

@@ -46,11 +46,11 @@
 namespace mysql_parser
 {
 
-extern void * new_ast_node(sql::symbol name);
-extern void * reuse_ast_node(void *node_, sql::symbol name);
-extern void * set_ast_node_name(void *node_, sql::symbol name);
-extern void add_ast_child_node(void *parent_node_, void *child_node_);
-extern void merge_ast_child_nodes(void *dest_node_, void *src_node_);
+extern auto new_ast_node(sql::symbol name) -> void *;
+extern auto reuse_ast_node(void *node_, sql::symbol name) -> void *;
+extern auto set_ast_node_name(void *node_, sql::symbol name) -> void *;
+extern auto add_ast_child_node(void *parent_node_, void *child_node_) -> void;
+extern auto merge_ast_child_nodes(void *dest_node_, void *src_node_) -> void;
 
 } // namespace mysql_parser
 
@@ -60,14 +60,14 @@ namespace mysql_parser
 
 #define ARR_CAPACITY(arr) (sizeof(arr)/sizeof(arr[0]))
 
-bool are_cstrings_eq(const char *str1, const char *str2, bool case_sensitive);
-bool are_strings_eq(const std::string &str1, const std::string &str2, bool case_sensitive);
+auto are_cstrings_eq(const char *str1, const char *str2, bool case_sensitive) -> bool;
+auto are_strings_eq(const std::string &str1, const std::string &str2, bool case_sensitive) -> bool;
 
-bool are_cstrings_eq_ci(const char *str1, const char *str2);
-bool are_strings_eq_ci(const std::string &str1, const std::string &str2);
+auto are_cstrings_eq_ci(const char *str1, const char *str2) -> bool;
+auto are_strings_eq_ci(const std::string &str1, const std::string &str2) -> bool;
 
-const char* find_cstr_in_array_ci(const char *arr[], size_t arr_size, const char *str);
-const char* find_str_in_array_ci(const char *arr[], size_t arr_size, const std::string &str);
+auto find_cstr_in_array_ci(const char *arr[], size_t arr_size, const char *str) -> const char*;
+auto find_str_in_array_ci(const char *arr[], size_t arr_size, const std::string &str) -> const char*;
 
 
 #ifdef __cplusplus
@@ -80,32 +80,31 @@ class SqlAstStatics
 private:
   static std::list<SqlAstNode *> _ast_nodes; // flat list of all allocated ast nodes
 public:
-  static SqlAstNode * add_ast_node(SqlAstNode *ast_node)
-  {
+  static auto add_ast_node(SqlAstNode *ast_node) -> SqlAstNode * {
     _ast_nodes.push_back(ast_node);
     return ast_node;
   }
-  static void cleanup_ast_nodes();
+  static auto cleanup_ast_nodes() -> void;
 
 private:
   static const SqlAstNode *_tree;
 public:
-  static const SqlAstNode * tree() { return _tree; }
-  static void tree(const SqlAstNode *tree);
+  static auto tree() -> const SqlAstNode * { return _tree; }
+  static auto tree(const SqlAstNode *tree) -> void;
 
 public:
   static bool is_ast_generation_enabled;
   
-  static std::shared_ptr<SqlAstTerminalNode> first_terminal_node();
-  static std::shared_ptr<SqlAstTerminalNode> last_terminal_node();
+  static auto first_terminal_node() -> std::shared_ptr<SqlAstTerminalNode>;
+  static auto last_terminal_node() -> std::shared_ptr<SqlAstTerminalNode>;
   
-  static void first_terminal_node(std::shared_ptr<SqlAstTerminalNode> value);
-  static void last_terminal_node(std::shared_ptr<SqlAstTerminalNode> value);
+  static auto first_terminal_node(std::shared_ptr<SqlAstTerminalNode> value) -> void;
+  static auto last_terminal_node(std::shared_ptr<SqlAstTerminalNode> value) -> void;
 private:
   static const char *_sql_statement;
 public:
-  static const char * sql_statement() { return _sql_statement; }
-  static void sql_statement(const char *val) { _sql_statement= val; }
+  static auto sql_statement() -> const char * { return _sql_statement; }
+  static auto sql_statement(const char *val) -> void { _sql_statement= val; }
 };
 
 // pattern composite
@@ -123,57 +122,57 @@ private:
   int _stmt_eoffset;
   SubItemList* _subitems;
 
-  const SqlAstNode * left_most_subitem() const;
-  const SqlAstNode * right_most_subitem() const;
-  const SqlAstNode * subitem_by_name(sql::symbol name, const SqlAstNode *start_item) const;
-  const SqlAstNode * subitem_by_name(sql::symbol name, size_t position= 0) const;
-  const SqlAstNode * rsubitem_by_name(sql::symbol name, size_t position= 0) const; // reverse
+  auto left_most_subitem() const -> const SqlAstNode *;
+  auto right_most_subitem() const -> const SqlAstNode *;
+  auto subitem_by_name(sql::symbol name, const SqlAstNode *start_item) const -> const SqlAstNode *;
+  auto subitem_by_name(sql::symbol name, size_t position= 0) const -> const SqlAstNode *;
+  auto rsubitem_by_name(sql::symbol name, size_t position= 0) const -> const SqlAstNode *; // reverse
 
-  inline const SqlAstNode * subseq__(const SqlAstNode *start_subitem, sql::symbol name, va_list args) const;
-  inline const SqlAstNode * find_subseq__(const SqlAstNode *start_subitem, sql::symbol name, va_list args) const;
+  inline auto subseq__(const SqlAstNode *start_subitem, sql::symbol name, va_list args) const -> const SqlAstNode *;
+  inline auto find_subseq__(const SqlAstNode *start_subitem, sql::symbol name, va_list args) const -> const SqlAstNode *;
 
-  const SqlAstNode * check_words(sql::symbol words[], size_t words_count, const SqlAstNode *start_item= NULL) const;
-  const SqlAstNode * find_words(sql::symbol words[], size_t words_count, const SqlAstNode *start_item= NULL) const;
+  auto check_words(sql::symbol words[], size_t words_count, const SqlAstNode *start_item= NULL) const -> const SqlAstNode *;
+  auto find_words(sql::symbol words[], size_t words_count, const SqlAstNode *start_item= NULL) const -> const SqlAstNode *;
 
   char * subitems_as_string(const char *delim= " ") const;
 
-  void restore_sql_text(int &boffset, int &eoffset, const SqlAstNode *first_subitem, const SqlAstNode *last_subitem) const;
+  auto restore_sql_text(int &boffset, int &eoffset, const SqlAstNode *first_subitem, const SqlAstNode *last_subitem) const -> void;
 
 public:
   SqlAstNode(sql::symbol name, const char *value, int value_length, int stmt_lineno, int stmt_boffset, int stmt_eoffset, SubItemList *items);
   virtual ~SqlAstNode();
 
-  void set_name(sql::symbol name) { _name= name; }
-  bool name_equals(sql::symbol to) const { return _name == to; }
-  sql::symbol name() const { return _name; }
-  std::string value() const;
-  int value_length() const { return _value_length; }
-  int stmt_lineno() const;
-  int stmt_boffset() const;
-  int stmt_eoffset() const;
+  auto set_name(sql::symbol name) -> void { _name= name; }
+  auto name_equals(sql::symbol to) const -> bool { return _name == to; }
+  auto name() const -> sql::symbol { return _name; }
+  auto value() const -> std::string;
+  auto value_length() const -> int { return _value_length; }
+  auto stmt_lineno() const -> int;
+  auto stmt_boffset() const -> int;
+  auto stmt_eoffset() const -> int;
 
-  SubItemList *subitems() const { return _subitems; }
+  auto subitems() const -> SubItemList * { return _subitems; }
 
 #define subitem(...) subitem_(__VA_ARGS__, NULL)
-  const SqlAstNode * subitem_(int position, ...) const;
-  const SqlAstNode * subitem_(sql::symbol name, ...) const; // name1, name2, ...
-  const SqlAstNode * subitem__(sql::symbol name, va_list args) const;
+  auto subitem_(int position, ...) const -> const SqlAstNode *;
+  auto subitem_(sql::symbol name, ...) const -> const SqlAstNode *; // name1, name2, ...
+  auto subitem__(sql::symbol name, va_list args) const -> const SqlAstNode *;
 
-  const SqlAstNode * subitem_by_path(sql::symbol path[]) const;
+  auto subitem_by_path(sql::symbol path[]) const -> const SqlAstNode *;
 
 #define subseq(...) subseq_(__VA_ARGS__, NULL)
-  const SqlAstNode * subseq_(const SqlAstNode *start_subitem, sql::symbol name, ...) const;
-  const SqlAstNode * subseq_(sql::symbol name, ...) const;
+  auto subseq_(const SqlAstNode *start_subitem, sql::symbol name, ...) const -> const SqlAstNode *;
+  auto subseq_(sql::symbol name, ...) const -> const SqlAstNode *;
 
 #define find_subseq(...) find_subseq_(__VA_ARGS__, NULL)
-  const SqlAstNode * find_subseq_(const SqlAstNode *start_subitem, sql::symbol name, ...) const;
-  const SqlAstNode * find_subseq_(sql::symbol name, ...) const;
+  auto find_subseq_(const SqlAstNode *start_subitem, sql::symbol name, ...) const -> const SqlAstNode *;
+  auto find_subseq_(sql::symbol name, ...) const -> const SqlAstNode *;
 
-  const SqlAstNode * search_by_names(sql::symbol names[], size_t path_count) const;
-  const SqlAstNode * search_by_paths(sql::symbol * paths[], size_t path_count) const;
+  auto search_by_names(sql::symbol names[], size_t path_count) const -> const SqlAstNode *;
+  auto search_by_paths(sql::symbol * paths[], size_t path_count) const -> const SqlAstNode *;
 
-  std::string restore_sql_text(const std::string &sql_statement, const SqlAstNode *first_subitem= NULL, const SqlAstNode *last_subitem= NULL) const;
-  void build_sql(std::string &sql) const; // warning - produces incorrect sql now
+  auto restore_sql_text(const std::string &sql_statement, const SqlAstNode *first_subitem= NULL, const SqlAstNode *last_subitem= NULL) const -> std::string;
+  auto build_sql(std::string &sql) const -> void; // warning - produces incorrect sql now
 };
 
 

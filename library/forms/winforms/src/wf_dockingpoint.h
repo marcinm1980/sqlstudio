@@ -41,7 +41,7 @@ namespace MySQL {
       ManagedDockDelegate(Object ^ represented_object);
       ~ManagedDockDelegate();
 
-      mforms::DockingPointDelegate* get_unmanaged_delegate();
+      auto get_unmanaged_delegate() -> mforms::DockingPointDelegate*;
 
       virtual String ^ get_type(Object ^ represented_object) = 0;
       virtual void dock_view(Object ^ represented_object, AppViewDockContent ^ view, String ^ arg1, int arg2) = 0;
@@ -50,9 +50,9 @@ namespace MySQL {
       virtual void set_view_title(Object ^ represented_object, AppViewDockContent ^ view, String ^ title) = 0;
       virtual Drawing::Size get_size(Object ^ represented_object) = 0;
 
-      virtual int view_count() = 0;
-      virtual AppViewDockContent ^ view_at_index(int i) = 0;
-      virtual AppViewDockContent ^ selected_view() = 0;
+      virtual auto view_count() -> int = 0;
+      virtual auto view_at_index(int i) -> AppViewDockContent ^ = 0;
+      virtual auto selected_view() -> AppViewDockContent ^ = 0;
     };
   }
 }

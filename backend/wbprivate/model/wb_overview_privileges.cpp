@@ -65,25 +65,25 @@ public:
 
   std::function<void(WBComponentPhysical *)> remove;
 
-  virtual void delete_object(WBContext *wb) {
+  virtual auto delete_object(WBContext *wb) -> void {
     remove(wb->get_component<WBComponentPhysical>());
   }
 
-  virtual bool is_deletable() {
+  virtual auto is_deletable() -> bool {
     return true;
   }
 
-  virtual void copy_object(WBContext *wb, bec::Clipboard *clip) {
+  virtual auto copy_object(WBContext *wb, bec::Clipboard *clip) -> void {
     clip->clear();
     clip->append_data(grt::copy_object(object));
     clip->set_content_description(label);
   }
 
-  virtual bool is_copyable() {
+  virtual auto is_copyable() -> bool {
     return true;
   }
 
-  virtual bool is_renameable() {
+  virtual auto is_renameable() -> bool {
     return true;
   }
 };
@@ -129,7 +129,7 @@ public:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #endif
-  void refresh(const std::string &member, const grt::ValueRef &) {
+  auto refresh(const std::string &member, const grt::ValueRef &) -> void {
     if (member == "name")
       _owner->send_refresh_users();
   }
@@ -137,7 +137,7 @@ public:
 #pragma GCC diagnostic pop
 #endif
 
-  virtual void refresh_children() {
+  virtual auto refresh_children() -> void {
     Node *add_item = 0;
     if (!children.empty()) {
       add_item = children.front();
@@ -162,7 +162,7 @@ public:
     }
   }
 
-  virtual std::string get_unique_id() {
+  virtual auto get_unique_id() -> std::string {
     return id;
   }
 };
@@ -192,7 +192,7 @@ public:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #endif
-  void refresh(const std::string &member, const grt::ValueRef &) {
+  auto refresh(const std::string &member, const grt::ValueRef &) -> void {
     if (member == "name")
       _owner->send_refresh_roles();
   }
@@ -200,7 +200,7 @@ public:
 #pragma GCC diagnostic push
 #endif
 
-  virtual void refresh_children() {
+  virtual auto refresh_children() -> void {
     Node *add_item = 0;
 
     if (!children.empty()) {
@@ -225,14 +225,14 @@ public:
     }
   }
 
-  virtual std::string get_unique_id() {
+  virtual auto get_unique_id() -> std::string {
     return id;
   }
 };
 
 //----------------------------------------------------------------------
 
-void wb::internal::PrivilegeInfoNode::paste_object(WBContext *wb, bec::Clipboard *clip) {
+auto wb::internal::PrivilegeInfoNode::paste_object(WBContext *wb, bec::Clipboard *clip) -> void {
   std::list<grt::ObjectRef> objects(clip->get_data());
   db_CatalogRef catalog(db_CatalogRef::cast_from(object));
 
@@ -261,7 +261,7 @@ void wb::internal::PrivilegeInfoNode::paste_object(WBContext *wb, bec::Clipboard
   }
 }
 
-bool wb::internal::PrivilegeInfoNode::is_pasteable(bec::Clipboard *clip) {
+auto wb::internal::PrivilegeInfoNode::is_pasteable(bec::Clipboard *clip) -> bool {
   std::list<grt::ObjectRef> objects(clip->get_data());
   for (std::list<grt::ObjectRef>::const_iterator iter = objects.begin(); iter != objects.end(); ++iter) {
     if (!(*iter).is_instance(db_User::static_class_name()) && !(*iter).is_instance(db_Role::static_class_name()))
@@ -270,13 +270,13 @@ bool wb::internal::PrivilegeInfoNode::is_pasteable(bec::Clipboard *clip) {
   return !objects.empty();
 }
 
-bool wb::internal::PrivilegeInfoNode::add_new_user(WBContext *wb) {
+auto wb::internal::PrivilegeInfoNode::add_new_user(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(
     wb->get_component<WBComponentPhysical>()->add_new_user(studio_physical_ModelRef::cast_from(object->owner())));
   return true;
 }
 
-bool wb::internal::PrivilegeInfoNode::add_new_role(WBContext *wb) {
+auto wb::internal::PrivilegeInfoNode::add_new_role(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(
     wb->get_component<WBComponentPhysical>()->add_new_role(studio_physical_ModelRef::cast_from(object->owner())));
   return true;

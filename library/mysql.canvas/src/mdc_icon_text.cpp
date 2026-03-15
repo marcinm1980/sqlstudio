@@ -39,7 +39,7 @@ IconTextFigure::~IconTextFigure() {
     cairo_surface_destroy(_icon);
 }
 
-Size IconTextFigure::calc_min_size() {
+auto IconTextFigure::calc_min_size() -> Size {
   Size size = TextFigure::calc_min_size();
 
   if (_icon) {
@@ -53,7 +53,7 @@ Size IconTextFigure::calc_min_size() {
   return size;
 }
 
-void IconTextFigure::auto_size() {
+auto IconTextFigure::auto_size() -> void {
   Size size = get_text_size();
   size.width += _xpadding * 2;
   size.height += _ypadding * 2;
@@ -64,7 +64,7 @@ void IconTextFigure::auto_size() {
   resize_to(size);
 }
 
-void IconTextFigure::draw_contents(CairoCtx *cr) {
+auto IconTextFigure::draw_contents(CairoCtx *cr) -> void {
   Rect bounds = get_bounds();
 
   if (_fill_background) {
@@ -96,7 +96,7 @@ void IconTextFigure::draw_contents(CairoCtx *cr) {
   _fill_background = fill_bg;
 }
 
-void IconTextFigure::set_icon(cairo_surface_t *icon) {
+auto IconTextFigure::set_icon(cairo_surface_t *icon) -> void {
   if (icon != _icon) {
     if (_icon)
       cairo_surface_destroy(_icon);
@@ -108,7 +108,7 @@ void IconTextFigure::set_icon(cairo_surface_t *icon) {
   }
 }
 
-void IconTextFigure::set_spacing(double space) {
+auto IconTextFigure::set_spacing(double space) -> void {
   _spacing = space;
   set_needs_relayout();
 }

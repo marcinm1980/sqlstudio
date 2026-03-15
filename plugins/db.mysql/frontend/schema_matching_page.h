@@ -42,18 +42,18 @@ public:
                      const std::string &left_name = "Model", const std::string &right_name = "Source",
                      bool unselect_by_default = false);
 
-  void cell_edited(mforms::TreeNodeRef node, int column, const std::string &value);
+  auto cell_edited(mforms::TreeNodeRef node, int column, const std::string &value) -> void;
 
-  virtual bool allow_next();
+  virtual auto allow_next() -> bool;
 
-  virtual void leave(bool advancing);
-  virtual void enter(bool advancing);
+  virtual auto leave(bool advancing) -> void;
+  virtual auto enter(bool advancing) -> void;
 
-  std::map<std::string, std::string> get_mapping();
+  auto get_mapping() -> std::map<std::string, std::string>;
 
 private:
-  void selection_changed();
-  void action_clicked();
+  auto selection_changed() -> void;
+  auto action_clicked() -> void;
 
 private:
   mforms::Box _header;

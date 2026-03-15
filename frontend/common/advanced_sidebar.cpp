@@ -96,14 +96,14 @@ SidebarEntry::~SidebarEntry() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarEntry::set_title(const std::string& title) {
+auto SidebarEntry::set_title(const std::string& title) -> void {
   _title = title;
   _accessibilityName = title;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarEntry::set_icon(const std::string& icon) {
+auto SidebarEntry::set_icon(const std::string& icon) -> void {
   if (_icon)
     cairo_surface_destroy(_icon);
   _icon = Utilities::load_icon(icon, true);
@@ -111,13 +111,13 @@ void SidebarEntry::set_icon(const std::string& icon) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarEntry::set_enabled(bool flag) {
+auto SidebarEntry::set_enabled(bool flag) -> void {
   _enabled = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarEntry::paint(cairo_t* cr, base::Rect bounds, bool hot, bool active, const Color& selection_color) {
+auto SidebarEntry::paint(cairo_t* cr, base::Rect bounds, bool hot, bool active, const Color& selection_color) -> void {
   _bounds = bounds;
 
   // Fill background if the item is active.
@@ -162,7 +162,7 @@ void SidebarEntry::paint(cairo_t* cr, base::Rect bounds, bool hot, bool active, 
 
 //--------------------------------------------------------------------------------------------------
 
-bool SidebarEntry::contains(double x, double y) {
+auto SidebarEntry::contains(double x, double y) -> bool {
   return false;
 }
 
@@ -201,7 +201,7 @@ SidebarSection::Button::~Button() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::Button::draw(cairo_t* cr) {
+auto SidebarSection::Button::draw(cairo_t* cr) -> void {
   if (Utilities::icon_needs_reload(icon)) {
     if (icon)
       cairo_surface_destroy(icon);
@@ -255,13 +255,13 @@ void SidebarSection::Button::draw(cairo_t* cr) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool SidebarSection::Button::check_hit(ssize_t x, ssize_t y) {
+auto SidebarSection::Button::check_hit(ssize_t x, ssize_t y) -> bool {
   return (x >= this->x && x < this->x + bounds_width && y >= this->y && y < this->y + bounds_height);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::Button::move(int x, int y) {
+auto SidebarSection::Button::move(int x, int y) -> void {
   this->x = x;
   this->y = y;
 }
@@ -327,7 +327,7 @@ SidebarSection::~SidebarSection() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::set_selected(SidebarEntry* entry) {
+auto SidebarSection::set_selected(SidebarEntry* entry) -> void {
   if (entry)
     _owner->clear_selection();
 
@@ -342,7 +342,7 @@ void SidebarSection::set_selected(SidebarEntry* entry) {
 /**
  * Creates a cairo context on a small image surface, to be used for layouting.
  */
-void SidebarSection::create_context_for_layout() {
+auto SidebarSection::create_context_for_layout() -> void {
   if (_layout_surface == NULL)
     _layout_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, get_width(), get_height());
   if (_layout_context == NULL)
@@ -358,7 +358,7 @@ void SidebarSection::create_context_for_layout() {
 #define SECTION_HEADER_HEIGHT 12 // Height of the section heading.
 #define SECTION_ICON_SPACING 4   // Horizontal distance between buttons and/or text.
 
-void SidebarSection::layout(cairo_t* cr) {
+auto SidebarSection::layout(cairo_t* cr) -> void {
   set_layout_dirty(false);
 
   _layout_height = SECTION_TOP_SPACING + SECTION_HEADER_HEIGHT;
@@ -408,7 +408,7 @@ void SidebarSection::layout(cairo_t* cr) {
 
 //--------------------------------------------------------------------------------------------------
 
-SidebarEntry* SidebarSection::entry_from_point(double x, double y) {
+auto SidebarSection::entry_from_point(double x, double y) -> SidebarEntry* {
   if (x < 0 || y < SECTION_TOP_SPACING + SECTION_HEADER_HEIGHT + SECTION_HEADER_SPACING || x > get_width() ||
       y > get_height() || _entries.size() == 0)
     return NULL;
@@ -427,7 +427,7 @@ SidebarEntry* SidebarSection::entry_from_point(double x, double y) {
 /**
  * Find an entry with the given title and return its index or -1 if there is none.
  */
-int SidebarSection::find_entry(const std::string& name) {
+auto SidebarSection::find_entry(const std::string& name) -> int {
   for (size_t i = 0; i < _entries.size(); i++) {
     if (_entries[i]->name() == name)
       return (int)i;
@@ -438,7 +438,7 @@ int SidebarSection::find_entry(const std::string& name) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::toggle_expand() {
+auto SidebarSection::toggle_expand() -> void {
   _expanded = !_expanded;
   set_layout_dirty(true);
   set_needs_repaint();
@@ -449,8 +449,8 @@ void SidebarSection::toggle_expand() {
 
 //--------------------------------------------------------------------------------------------------
 
-int SidebarSection::add_entry(const std::string& name, const std::string& accessibilityName, const std::string& title,
-                              const std::string& icon, TaskEntryType type) {
+auto SidebarSection::add_entry(const std::string& name, const std::string& accessibilityName, const std::string& title,
+                              const std::string& icon, TaskEntryType type) -> int {
   int result = find_entry(name);
   if (result > -1)
     return result;
@@ -464,28 +464,28 @@ int SidebarSection::add_entry(const std::string& name, const std::string& access
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::set_entry_text(int index, const std::string& title) {
+auto SidebarSection::set_entry_text(int index, const std::string& title) -> void {
   if (index >= 0 && index < (int)_entries.size())
     _entries[index]->set_title(title);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::set_entry_icon(int index, const std::string& icon) {
+auto SidebarSection::set_entry_icon(int index, const std::string& icon) -> void {
   if (index >= 0 && index < (int)_entries.size())
     _entries[index]->set_icon(icon);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::set_entry_enabled(int index, bool flag) {
+auto SidebarSection::set_entry_enabled(int index, bool flag) -> void {
   if (index >= 0 && index < (int)_entries.size())
     _entries[index]->set_enabled(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::mark_busy(bool busy) {
+auto SidebarSection::mark_busy(bool busy) -> void {
   if (_refresh_button)
     _refresh_button->state = busy;
   set_needs_repaint();
@@ -493,7 +493,7 @@ void SidebarSection::mark_busy(bool busy) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::remove_entry(const std::string& entry) {
+auto SidebarSection::remove_entry(const std::string& entry) -> void {
   int index = find_entry(entry);
   if (index < 0)
     return;
@@ -506,7 +506,7 @@ void SidebarSection::remove_entry(const std::string& entry) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::clear() {
+auto SidebarSection::clear() -> void {
   for (size_t i = 0; i < _entries.size(); i++)
     delete _entries[i];
   _entries.clear();
@@ -516,7 +516,7 @@ void SidebarSection::clear() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool SidebarSection::select(const std::string& name) {
+auto SidebarSection::select(const std::string& name) -> bool {
   const int index = find_entry(name);
   if (index >= 0 && index < (int)_entries.size()) {
     set_selected(_entries[index]);
@@ -529,13 +529,13 @@ bool SidebarSection::select(const std::string& name) {
 
 //------------------------------------------------------------------------------------------------
 
-size_t SidebarSection::getAccessibilityChildCount() {
+auto SidebarSection::getAccessibilityChildCount() -> size_t {
   return (int)(_entries.size() + _enabled_buttons.size());
 }
 
 //------------------------------------------------------------------------------------------------
 
-Accessible* SidebarSection::getAccessibilityChild(size_t index) {
+auto SidebarSection::getAccessibilityChild(size_t index) -> Accessible* {
   base::Accessible* accessible = NULL;
 
   if ((size_t)index < _enabled_buttons.size())
@@ -548,7 +548,7 @@ Accessible* SidebarSection::getAccessibilityChild(size_t index) {
 
 //------------------------------------------------------------------------------------------------
 
-base::Accessible* SidebarSection::accessibilityHitTest(ssize_t x, ssize_t y) {
+auto SidebarSection::accessibilityHitTest(ssize_t x, ssize_t y) -> base::Accessible* {
   base::Accessible* accessible = NULL;
 
   if (_config_button && _config_button->check_hit(x, y))
@@ -563,7 +563,7 @@ base::Accessible* SidebarSection::accessibilityHitTest(ssize_t x, ssize_t y) {
 
 //--------------------------------------------------------------------------------------------------
 
-void draw_header_text(cairo_t* cr, Rect& bounds, const std::string& text, Color color) {
+auto draw_header_text(cairo_t* cr, Rect& bounds, const std::string& text, Color color) -> void {
   cairo_set_source_rgba(cr, color.red, color.green, color.blue, color.alpha);
   cairo_move_to(cr, bounds.left(), bounds.top());
   cairo_show_text(cr, text.c_str());
@@ -572,7 +572,7 @@ void draw_header_text(cairo_t* cr, Rect& bounds, const std::string& text, Color 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SidebarSection::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) {
+auto SidebarSection::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) -> void {
   double width = get_width();
   if (_last_width != width) {
     _last_width = width;
@@ -622,7 +622,7 @@ void SidebarSection::repaint(cairo_t* cr, int areax, int areay, int areaw, int a
 
 //--------------------------------------------------------------------------------------------------
 
-bool SidebarSection::mouse_leave() {
+auto SidebarSection::mouse_leave() -> bool {
   if (DrawBox::mouse_leave())
     return true;
 
@@ -651,7 +651,7 @@ bool SidebarSection::mouse_leave() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool SidebarSection::mouse_move(mforms::MouseButton button, int x, int y) {
+auto SidebarSection::mouse_move(mforms::MouseButton button, int x, int y) -> bool {
   if (DrawBox::mouse_move(button, x, y))
     return true;
 
@@ -716,7 +716,7 @@ bool SidebarSection::mouse_move(mforms::MouseButton button, int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool SidebarSection::mouse_down(mforms::MouseButton button, int x, int y) {
+auto SidebarSection::mouse_down(mforms::MouseButton button, int x, int y) -> bool {
   if (DrawBox::mouse_down(button, x, y))
     return true;
 
@@ -748,7 +748,7 @@ bool SidebarSection::mouse_down(mforms::MouseButton button, int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool SidebarSection::mouse_click(mforms::MouseButton button, int x, int y) {
+auto SidebarSection::mouse_click(mforms::MouseButton button, int x, int y) -> bool {
   if (DrawBox::mouse_click(button, x, y))
     return true;
 
@@ -795,7 +795,7 @@ bool SidebarSection::mouse_click(mforms::MouseButton button, int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool SidebarSection::mouse_up(mforms::MouseButton button, int x, int y) {
+auto SidebarSection::mouse_up(mforms::MouseButton button, int x, int y) -> bool {
   if (DrawBox::mouse_up(button, x, y))
     return true;
 
@@ -827,7 +827,7 @@ bool SidebarSection::mouse_up(mforms::MouseButton button, int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-base::Size SidebarSection::getLayoutSize(base::Size proposedSize) {
+auto SidebarSection::getLayoutSize(base::Size proposedSize) -> base::Size {
   if (is_layout_dirty()) {
     create_context_for_layout();
     layout(_layout_context);
@@ -838,7 +838,7 @@ base::Size SidebarSection::getLayoutSize(base::Size proposedSize) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SidebarSection::clear_selection() {
+auto SidebarSection::clear_selection() -> void {
   const bool had_selection = _selected_entry != 0;
 
   set_selected(0);
@@ -852,7 +852,7 @@ void SidebarSection::clear_selection() {
 // implicitly initialize the adv. sidebar
 bool SimpleSidebar::__init = init_factory_method();
 
-bool SimpleSidebar::init_factory_method() {
+auto SimpleSidebar::init_factory_method() -> bool {
   register_factory("Simple", &create_instance);
   return true;
 }
@@ -877,7 +877,7 @@ SimpleSidebar::~SimpleSidebar() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::updateColors() {
+auto SimpleSidebar::updateColors() -> void {
   std::string backColor;
   switch (Color::get_active_scheme()) {
     case base::ColorSchemeHighContrast:
@@ -903,13 +903,13 @@ void SimpleSidebar::updateColors() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::TaskSidebar* SimpleSidebar::create_instance() {
+auto SimpleSidebar::create_instance() -> mforms::TaskSidebar* {
   return new SimpleSidebar();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::handle_notification(const std::string& name, void* sender, NotificationInfo& info) {
+auto SimpleSidebar::handle_notification(const std::string& name, void* sender, NotificationInfo& info) -> void {
   if (name == "GNColorsChanged")
     updateColors();
   else if (name == "GNApplicationActivated") {
@@ -928,7 +928,7 @@ void SimpleSidebar::handle_notification(const std::string& name, void* sender, N
 /**
  * Find a section with the given name and return its index or -1 if there is none.
  */
-int SimpleSidebar::find_section(const std::string& name) {
+auto SimpleSidebar::find_section(const std::string& name) -> int {
   for (size_t i = 0; i < _sections.size(); i++) {
     if (_sections[i]->getInternalName() == name)
       return (int)i;
@@ -939,8 +939,8 @@ int SimpleSidebar::find_section(const std::string& name) {
 
 //--------------------------------------------------------------------------------------------------
 
-int SimpleSidebar::add_section(const std::string& name, const std::string& accessbilityName, const string& title,
-  mforms::TaskSectionFlags flags) {
+auto SimpleSidebar::add_section(const std::string& name, const std::string& accessbilityName, const string& title,
+  mforms::TaskSectionFlags flags) -> int {
 
   int result = find_section(title);
   if (result > -1)
@@ -957,7 +957,7 @@ int SimpleSidebar::add_section(const std::string& name, const std::string& acces
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::remove_section(const std::string& section_name) {
+auto SimpleSidebar::remove_section(const std::string& section_name) -> void {
   int index = find_section(section_name);
   if (index < 0)
     return;
@@ -969,8 +969,8 @@ void SimpleSidebar::remove_section(const std::string& section_name) {
 
 //--------------------------------------------------------------------------------------------------
 
-int SimpleSidebar::add_section_entry(const std::string& section_name, const std::string& name,
-  const std::string& accessibilityName, const std::string& title, const std::string& icon, TaskEntryType type) {
+auto SimpleSidebar::add_section_entry(const std::string& section_name, const std::string& name,
+  const std::string& accessibilityName, const std::string& title, const std::string& icon, TaskEntryType type) -> int {
   int index = find_section(section_name);
   if (index < 0)
     return -1;
@@ -980,7 +980,7 @@ int SimpleSidebar::add_section_entry(const std::string& section_name, const std:
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::set_section_entry_text(const std::string& section_entry, const std::string& title) {
+auto SimpleSidebar::set_section_entry_text(const std::string& section_entry, const std::string& title) -> void {
   for (std::vector<SidebarSection*>::const_iterator section = _sections.begin(); section != _sections.end();
        ++section) {
     int entry_index = (*section)->find_entry(section_entry);
@@ -993,7 +993,7 @@ void SimpleSidebar::set_section_entry_text(const std::string& section_entry, con
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::set_section_entry_icon(const std::string& section_entry, const std::string& icon) {
+auto SimpleSidebar::set_section_entry_icon(const std::string& section_entry, const std::string& icon) -> void {
   for (std::vector<SidebarSection*>::const_iterator section = _sections.begin(); section != _sections.end();
        ++section) {
     int entry_index = (*section)->find_entry(section_entry);
@@ -1006,7 +1006,7 @@ void SimpleSidebar::set_section_entry_icon(const std::string& section_entry, con
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::set_section_entry_enabled(const std::string& section_entry, bool enabled) {
+auto SimpleSidebar::set_section_entry_enabled(const std::string& section_entry, bool enabled) -> void {
   for (std::vector<SidebarSection*>::const_iterator section = _sections.begin(); section != _sections.end();
        ++section) {
     int entry_index = (*section)->find_entry(section_entry);
@@ -1019,7 +1019,7 @@ void SimpleSidebar::set_section_entry_enabled(const std::string& section_entry, 
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::mark_section_busy(const std::string& section, bool busy) {
+auto SimpleSidebar::mark_section_busy(const std::string& section, bool busy) -> void {
   int index = find_section(section);
   if (index < 0)
     return;
@@ -1029,7 +1029,7 @@ void SimpleSidebar::mark_section_busy(const std::string& section, bool busy) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::remove_section_entry(const std::string& entry_name) {
+auto SimpleSidebar::remove_section_entry(const std::string& entry_name) -> void {
   for (std::vector<SidebarSection*>::const_iterator section = _sections.begin(); section != _sections.end();
        ++section) {
     int entry_index = (*section)->find_entry(entry_name);
@@ -1042,7 +1042,7 @@ void SimpleSidebar::remove_section_entry(const std::string& entry_name) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::set_collapse_states(const std::string& data) {
+auto SimpleSidebar::set_collapse_states(const std::string& data) -> void {
   std::vector<std::string> collapsed_sections = base::split(data, ",");
   for (std::vector<std::string>::const_iterator iter = collapsed_sections.begin(); iter != collapsed_sections.end();
        ++iter) {
@@ -1065,7 +1065,7 @@ void SimpleSidebar::set_collapse_states(const std::string& data) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string SimpleSidebar::get_collapse_states() {
+auto SimpleSidebar::get_collapse_states() -> std::string {
   std::string states;
   for (int i = 0; i < (int)_sections.size(); i++) {
     if (i > 0)
@@ -1077,7 +1077,7 @@ std::string SimpleSidebar::get_collapse_states() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::clear_sections() {
+auto SimpleSidebar::clear_sections() -> void {
   for (size_t i = 0; i < _sections.size(); i++)
     delete _sections[i];
   _sections.clear();
@@ -1087,7 +1087,7 @@ void SimpleSidebar::clear_sections() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::clear_section(const std::string& section) {
+auto SimpleSidebar::clear_section(const std::string& section) -> void {
   int index = find_section(section);
   if (index > -1) {
     delete _sections[index];
@@ -1099,20 +1099,20 @@ void SimpleSidebar::clear_section(const std::string& section) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::set_selection_color(const std::string& color) {
+auto SimpleSidebar::set_selection_color(const std::string& color) -> void {
   _selection_color = Color::parse(color);
   set_needs_repaint();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::set_selection_color(const base::SystemColor color) {
+auto SimpleSidebar::set_selection_color(const base::SystemColor color) -> void {
   set_selection_color(Color::getSystemColor(color).to_html());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int SimpleSidebar::select_entry(const std::string& entry_name) {
+auto SimpleSidebar::select_entry(const std::string& entry_name) -> int {
   int was_selected = 0;
 
   for (std::vector<SidebarSection*>::const_iterator section = _sections.begin(); section != _sections.end();
@@ -1130,7 +1130,7 @@ int SimpleSidebar::select_entry(const std::string& entry_name) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string SimpleSidebar::selected_entry() {
+auto SimpleSidebar::selected_entry() -> std::string {
   for (std::vector<SidebarSection*>::const_iterator section = _sections.begin(); section != _sections.end();
        ++section) {
     SidebarEntry* entry = (*section)->selected();
@@ -1142,7 +1142,7 @@ std::string SimpleSidebar::selected_entry() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SimpleSidebar::clear_selection() {
+auto SimpleSidebar::clear_selection() -> void {
   for (size_t i = 0; i < _sections.size(); i++)
     _sections[i]->clear_selection();
 }
@@ -1152,7 +1152,7 @@ void SimpleSidebar::clear_selection() {
 // implicitly initialize the adv. sidebar
 bool AdvancedSidebar::__init = init_factory_method();
 
-bool AdvancedSidebar::init_factory_method() {
+auto AdvancedSidebar::init_factory_method() -> bool {
   //  log_debug3("Initializing AdvancedSidebar factory method\n");
   register_factory("SchemaTree", &create_instance);
   return true;
@@ -1188,7 +1188,7 @@ AdvancedSidebar::~AdvancedSidebar() {
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::mark_section_busy(const std::string& section, bool busy) {
+auto AdvancedSidebar::mark_section_busy(const std::string& section, bool busy) -> void {
   if (section.empty()) {
     //    _schema_tree_heading->mark_busy(busy);
     return;
@@ -1201,7 +1201,7 @@ void AdvancedSidebar::mark_section_busy(const std::string& section, bool busy) {
 /**
  * Factory method for this control to be used by mforms to create the instance.
  */
-mforms::TaskSidebar* AdvancedSidebar::create_instance() {
+auto AdvancedSidebar::create_instance() -> mforms::TaskSidebar* {
   return new AdvancedSidebar();
 }
 
@@ -1210,7 +1210,7 @@ mforms::TaskSidebar* AdvancedSidebar::create_instance() {
 /**
  * Do all the necessary setup for the schema tree (colors, columns and other visual stuff).
  */
-void AdvancedSidebar::setup_schema_tree() {
+auto AdvancedSidebar::setup_schema_tree() -> void {
   std::string background_color;
   switch (Color::get_active_scheme()) {
     case base::ColorSchemeHighContrast: // Don't touch the tree back color. We use the one provided by the OS.
@@ -1294,7 +1294,7 @@ void AdvancedSidebar::setup_schema_tree() {
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::updateColors() {
+auto AdvancedSidebar::updateColors() -> void {
   SimpleSidebar::updateColors();
 
   std::string background_color;
@@ -1324,14 +1324,14 @@ void AdvancedSidebar::updateColors() {
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::on_search_text_changed_prepare() {
+auto AdvancedSidebar::on_search_text_changed_prepare() -> void {
   if (_filterTimer)
     bec::GRTManager::get()->cancel_timer(_filterTimer);
 
   _filterTimer = bec::GRTManager::get()->run_every(std::bind(&AdvancedSidebar::on_search_text_changed, this), 1.0);
 }
 
-bool AdvancedSidebar::on_search_text_changed() {
+auto AdvancedSidebar::on_search_text_changed() -> bool {
   bec::GRTManager::get()->cancel_timer(_filterTimer);
   _filterTimer = NULL;
 
@@ -1378,13 +1378,13 @@ bool AdvancedSidebar::on_search_text_changed() {
   return false;
 }
 
-void AdvancedSidebar::on_tree_node_selected() {
+auto AdvancedSidebar::on_tree_node_selected() -> void {
   _tree_node_selected();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::on_remote_search_clicked() {
+auto AdvancedSidebar::on_remote_search_clicked() -> void {
   std::vector<std::string> filter = base::split(_schema_search_text.get_string_value(), ".", 2);
   std::string schema_filter = filter[0];
   std::string object_filter = "";
@@ -1396,7 +1396,7 @@ void AdvancedSidebar::on_remote_search_clicked() {
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::add_items_from_list(mforms::MenuBase& menu, const bec::MenuItemList& items) {
+auto AdvancedSidebar::add_items_from_list(mforms::MenuBase& menu, const bec::MenuItemList& items) -> void {
   for (bec::MenuItemList::const_iterator item = items.begin(); item != items.end(); ++item) {
     if (item->type == bec::MenuAction) {
       mforms::MenuItem* mitem =
@@ -1422,7 +1422,7 @@ void AdvancedSidebar::add_items_from_list(mforms::MenuBase& menu, const bec::Men
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::on_show_menu(mforms::MenuItem* parent_item) {
+auto AdvancedSidebar::on_show_menu(mforms::MenuItem* parent_item) -> void {
   if (!parent_item) {
     _tree_context_menu.remove_all();
 
@@ -1436,7 +1436,7 @@ void AdvancedSidebar::on_show_menu(mforms::MenuItem* parent_item) {
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::handle_menu_command(const std::string& command) {
+auto AdvancedSidebar::handle_menu_command(const std::string& command) -> void {
   std::list<mforms::TreeNodeRef> nodes =
     _schema_model == _base_model ? _new_schema_tree.get_selection() : _filtered_schema_tree.get_selection();
 
@@ -1445,14 +1445,14 @@ void AdvancedSidebar::handle_menu_command(const std::string& command) {
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::tool_action_clicked(const std::string& action) {
+auto AdvancedSidebar::tool_action_clicked(const std::string& action) -> void {
   std::list<mforms::TreeNodeRef> nodes;
   _schema_model->activate_popup_item_for_nodes(action, nodes);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void AdvancedSidebar::set_schema_model(LiveSchemaTree* model) {
+auto AdvancedSidebar::set_schema_model(LiveSchemaTree* model) -> void {
   // Sets the given model as the base model if none assigned already
   if (!_base_model) {
     _base_model = model;
@@ -1468,7 +1468,7 @@ void AdvancedSidebar::set_schema_model(LiveSchemaTree* model) {
   _schema_box.show(_schema_model != NULL);
 }
 
-void AdvancedSidebar::set_filtered_schema_model(wb::LiveSchemaTree* model) {
+auto AdvancedSidebar::set_filtered_schema_model(wb::LiveSchemaTree* model) -> void {
   _filtered_schema_model = model;
   _filtered_schema_model->set_model_view(&_filtered_schema_tree);
 }
@@ -1478,7 +1478,7 @@ void AdvancedSidebar::set_filtered_schema_model(wb::LiveSchemaTree* model) {
 /**
  * Expands the schema node with the given index. A schema node is a top level node.
  */
-void AdvancedSidebar::expand_schema(int schema_index) {
+auto AdvancedSidebar::expand_schema(int schema_index) -> void {
   // TODO: _new_schema_tree
   //_schema_tree.set_expanded(schema_index, true);
 }

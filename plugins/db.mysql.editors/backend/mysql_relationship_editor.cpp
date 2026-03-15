@@ -34,7 +34,7 @@ RelationshipEditorBE::RelationshipEditorBE(const studio_physical_ConnectionRef &
   : BaseEditor(relationship), _relationship(relationship) {
 }
 
-bool RelationshipEditorBE::should_close_on_delete_of(const std::string &oid) {
+auto RelationshipEditorBE::should_close_on_delete_of(const std::string &oid) -> bool {
   if (_relationship.id() == oid)
     return true;
 
@@ -55,7 +55,7 @@ bool RelationshipEditorBE::should_close_on_delete_of(const std::string &oid) {
   return false;
 }
 
-void RelationshipEditorBE::set_model_only(bool flag) {
+auto RelationshipEditorBE::set_model_only(bool flag) -> void {
   if (flag != model_only()) {
     AutoUndoEdit undo(this, _relationship, "caption");
     _relationship->foreignKey()->modelOnly(flag);
@@ -63,7 +63,7 @@ void RelationshipEditorBE::set_model_only(bool flag) {
   }
 }
 
-void RelationshipEditorBE::set_caption(const std::string &caption) {
+auto RelationshipEditorBE::set_caption(const std::string &caption) -> void {
   if (*_relationship->caption() != caption) {
     AutoUndoEdit undo(this, _relationship, "caption");
     _relationship->caption(caption);
@@ -71,16 +71,16 @@ void RelationshipEditorBE::set_caption(const std::string &caption) {
   }
 }
 
-std::string RelationshipEditorBE::get_caption() {
+auto RelationshipEditorBE::get_caption() -> std::string {
   return _relationship->caption();
 }
 
-std::string RelationshipEditorBE::get_caption_long() {
+auto RelationshipEditorBE::get_caption_long() -> std::string {
   return strfmt("'%s'  (%s)  '%s'", get_left_table_name().c_str(), get_caption().c_str(),
                 get_right_table_name().c_str());
 }
 
-void RelationshipEditorBE::set_extra_caption(const std::string &caption) {
+auto RelationshipEditorBE::set_extra_caption(const std::string &caption) -> void {
   if (*_relationship->extraCaption() != caption) {
     AutoUndoEdit undo(this, _relationship, "extraCaption");
     _relationship->extraCaption(caption);
@@ -88,16 +88,16 @@ void RelationshipEditorBE::set_extra_caption(const std::string &caption) {
   }
 }
 
-std::string RelationshipEditorBE::get_extra_caption() {
+auto RelationshipEditorBE::get_extra_caption() -> std::string {
   return _relationship->extraCaption();
 }
 
-std::string RelationshipEditorBE::get_extra_caption_long() {
+auto RelationshipEditorBE::get_extra_caption_long() -> std::string {
   return strfmt("'%s' (%s) '%s'", get_right_table_name().c_str(), get_extra_caption().c_str(),
                 get_left_table_name().c_str());
 }
 
-void RelationshipEditorBE::set_left_mandatory(bool flag) {
+auto RelationshipEditorBE::set_left_mandatory(bool flag) -> void {
   if (flag != (*_relationship->foreignKey()->mandatory() == 1)) {
     AutoUndoEdit undo(this);
     _relationship->foreignKey()->mandatory(flag ? 1 : 0);
@@ -106,14 +106,14 @@ void RelationshipEditorBE::set_left_mandatory(bool flag) {
   }
 }
 
-bool RelationshipEditorBE::get_left_mandatory() {
+auto RelationshipEditorBE::get_left_mandatory() -> bool {
   if (_relationship->foreignKey().is_valid())
     return _relationship->foreignKey()->mandatory() != 0;
 
   return false;
 }
 
-void RelationshipEditorBE::set_right_mandatory(bool flag) {
+auto RelationshipEditorBE::set_right_mandatory(bool flag) -> void {
   if (flag != (*_relationship->foreignKey()->referencedMandatory() == 1)) {
     AutoUndoEdit undo(this);
     _relationship->foreignKey()->referencedMandatory(flag ? 1 : 0);
@@ -129,14 +129,14 @@ void RelationshipEditorBE::set_right_mandatory(bool flag) {
   }
 }
 
-bool RelationshipEditorBE::get_right_mandatory() {
+auto RelationshipEditorBE::get_right_mandatory() -> bool {
   if (_relationship->foreignKey().is_valid())
     return _relationship->foreignKey()->referencedMandatory() != 0;
 
   return false;
 }
 
-void RelationshipEditorBE::set_to_many(bool flag) {
+auto RelationshipEditorBE::set_to_many(bool flag) -> void {
   if (flag != (*_relationship->foreignKey()->many() == 1)) {
     AutoUndoEdit undo(this);
     _relationship->foreignKey()->many(flag ? 1 : 0);
@@ -144,14 +144,14 @@ void RelationshipEditorBE::set_to_many(bool flag) {
   }
 }
 
-bool RelationshipEditorBE::get_to_many() {
+auto RelationshipEditorBE::get_to_many() -> bool {
   if (_relationship->foreignKey().is_valid())
     return _relationship->foreignKey()->many() != 0;
 
   return false;
 }
 
-void RelationshipEditorBE::set_comment(const std::string &comment) {
+auto RelationshipEditorBE::set_comment(const std::string &comment) -> void {
   if (comment != *_relationship->comment()) {
     AutoUndoEdit undo(this, _relationship, "comment");
     _relationship->comment(comment);
@@ -159,11 +159,11 @@ void RelationshipEditorBE::set_comment(const std::string &comment) {
   }
 }
 
-std::string RelationshipEditorBE::get_comment() {
+auto RelationshipEditorBE::get_comment() -> std::string {
   return _relationship->comment();
 }
 
-RelationshipEditorBE::VisibilityType RelationshipEditorBE::get_visibility() {
+auto RelationshipEditorBE::get_visibility() -> RelationshipEditorBE::VisibilityType {
   if (*_relationship->drawSplit() && *_relationship->visible())
     return Splitted;
   else if (!*_relationship->drawSplit() && *_relationship->visible())
@@ -172,7 +172,7 @@ RelationshipEditorBE::VisibilityType RelationshipEditorBE::get_visibility() {
     return Hidden;
 }
 
-void RelationshipEditorBE::set_visibility(VisibilityType type) {
+auto RelationshipEditorBE::set_visibility(VisibilityType type) -> void {
   if (get_visibility() == type)
     return;
 
@@ -195,19 +195,19 @@ void RelationshipEditorBE::set_visibility(VisibilityType type) {
   undo.end(_("Change Relationship Visibility"));
 }
 
-std::string RelationshipEditorBE::get_left_table_name() {
+auto RelationshipEditorBE::get_left_table_name() -> std::string {
   if (_relationship->foreignKey().is_valid())
     return *_relationship->foreignKey()->owner()->name();
   return std::string();
 }
 
-std::string RelationshipEditorBE::get_right_table_name() {
+auto RelationshipEditorBE::get_right_table_name() -> std::string {
   if (_relationship->foreignKey().is_valid())
     return *_relationship->foreignKey()->referencedTable()->name();
   return std::string();
 }
 
-std::string RelationshipEditorBE::get_left_table_info() {
+auto RelationshipEditorBE::get_left_table_info() -> std::string {
   std::string text;
   db_ForeignKeyRef fk(_relationship->foreignKey());
   if (fk.is_valid())
@@ -218,7 +218,7 @@ std::string RelationshipEditorBE::get_left_table_info() {
   return text;
 }
 
-std::string RelationshipEditorBE::get_right_table_info() {
+auto RelationshipEditorBE::get_right_table_info() -> std::string {
   std::string text;
   db_ForeignKeyRef fk(_relationship->foreignKey());
   if (fk.is_valid())
@@ -230,7 +230,7 @@ std::string RelationshipEditorBE::get_right_table_info() {
   return text;
 }
 
-std::string RelationshipEditorBE::get_left_table_fk() {
+auto RelationshipEditorBE::get_left_table_fk() -> std::string {
   std::string text;
   db_ForeignKeyRef fk(_relationship->foreignKey());
   if (fk.is_valid())
@@ -240,7 +240,7 @@ std::string RelationshipEditorBE::get_left_table_fk() {
   return text;
 }
 
-void RelationshipEditorBE::open_editor_for_table(const db_TableRef &table) {
+auto RelationshipEditorBE::open_editor_for_table(const db_TableRef &table) -> void {
   if (table.is_valid()) {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(table);
@@ -257,26 +257,26 @@ void RelationshipEditorBE::open_editor_for_table(const db_TableRef &table) {
   }
 }
 
-void RelationshipEditorBE::open_editor_for_left_table() {
+auto RelationshipEditorBE::open_editor_for_left_table() -> void {
   open_editor_for_table(_relationship->foreignKey()->owner());
 }
 
-void RelationshipEditorBE::open_editor_for_right_table() {
+auto RelationshipEditorBE::open_editor_for_right_table() -> void {
   open_editor_for_table(_relationship->foreignKey()->referencedTable());
 }
 
-void RelationshipEditorBE::edit_left_table() {
+auto RelationshipEditorBE::edit_left_table() -> void {
   open_editor_for_table(_relationship->foreignKey()->owner());
 }
 
-void RelationshipEditorBE::edit_right_table() {
+auto RelationshipEditorBE::edit_right_table() -> void {
   open_editor_for_table(_relationship->foreignKey()->referencedTable());
 }
 
-void RelationshipEditorBE::invert_relationship() {
+auto RelationshipEditorBE::invert_relationship() -> void {
 }
 
-bool RelationshipEditorBE::get_is_identifying() {
+auto RelationshipEditorBE::get_is_identifying() -> bool {
   if (_relationship->foreignKey().is_valid()) {
     db_TableRef table(_relationship->foreignKey()->owner());
 
@@ -289,7 +289,7 @@ bool RelationshipEditorBE::get_is_identifying() {
   return false;
 }
 
-void RelationshipEditorBE::set_is_identifying(bool flag) {
+auto RelationshipEditorBE::set_is_identifying(bool flag) -> void {
   db_TableRef table(_relationship->foreignKey()->owner());
 
   if (get_is_identifying() != flag) {
@@ -312,6 +312,6 @@ void RelationshipEditorBE::set_is_identifying(bool flag) {
   }
 }
 
-std::string RelationshipEditorBE::get_title() {
+auto RelationshipEditorBE::get_title() -> std::string {
   return base::strfmt("Relationship");
 }

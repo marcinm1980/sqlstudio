@@ -42,18 +42,18 @@ Image::Image(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self
   _keep_aspect_ratio = false;
 }
 
-static void constrain_aspect_ratio(mdc::ItemHandle *handle, Size &size, double ratio) {
+static auto constrain_aspect_ratio(mdc::ItemHandle *handle, Size &size, double ratio) -> void {
   if ((handle->get_tag() & (HDL_LEFT | HDL_RIGHT)) != 0)
     size.height = size.width / ratio;
   else
     size.width = size.height * ratio;
 }
 
-cairo_surface_t *Image::get_image() {
+auto Image::get_image() -> cairo_surface_t * {
   return _image.get_image();
 }
 
-void Image::keep_aspect_ratio(bool flag) {
+auto Image::keep_aspect_ratio(bool flag) -> void {
   _keep_aspect_ratio = flag;
 
   if (flag) {
@@ -74,21 +74,21 @@ void Image::keep_aspect_ratio(bool flag) {
     set_drag_handle_constrainer(std::function<void(mdc::ItemHandle *, Size &)>());
 }
 
-double Image::get_aspect_ratio() {
+auto Image::get_aspect_ratio() -> double {
   Size size = _image.get_image_size();
 
   return size.width / size.height;
 }
 
-void Image::set_image(cairo_surface_t *image) {
+auto Image::set_image(cairo_surface_t *image) -> void {
   _image.set_image(image);
 }
 
-bool Image::set_image(const std::string &filename) {
+auto Image::set_image(const std::string &filename) -> bool {
   return _image.set_image(filename);
 }
 
-void Image::set_allow_manual_resizing(bool flag) {
+auto Image::set_allow_manual_resizing(bool flag) -> void {
   if (!flag && _image.auto_sizing()) {
     // if auto-sizing is being disabled, set the fixed size to the current size, so that it
     // has an initial size
@@ -102,7 +102,7 @@ void Image::set_allow_manual_resizing(bool flag) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool Image::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button, mdc::EventState state) {
+auto Image::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button, mdc::EventState state) -> bool {
   if (!_hub->figure_click(represented_object(), target, point, button, state))
     return super::on_click(target, point, button, state);
   return false;
@@ -110,8 +110,8 @@ bool Image::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButt
 
 //--------------------------------------------------------------------------------------------------
 
-bool Image::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                            mdc::EventState state) {
+auto Image::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                            mdc::EventState state) -> bool {
   if (!_hub->figure_double_click(represented_object(), target, point, button, state))
     return super::on_double_click(target, point, button, state);
   return false;

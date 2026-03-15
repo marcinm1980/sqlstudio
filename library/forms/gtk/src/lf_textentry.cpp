@@ -30,11 +30,11 @@
 namespace mforms {
   namespace gtk {
 
-    bool TextEntryImpl::create(::mforms::TextEntry *self, TextEntryType type) {
+    auto TextEntryImpl::create(::mforms::TextEntry *self, TextEntryType type) -> bool {
       return new TextEntryImpl(self, type);
     }
 
-    void TextEntryImpl::set_text(::mforms::TextEntry *self, const std::string &text) {
+    auto TextEntryImpl::set_text(::mforms::TextEntry *self, const std::string &text) -> void {
       TextEntryImpl *cb = self->get_data<TextEntryImpl>();
 
       if (cb) {
@@ -42,7 +42,7 @@ namespace mforms {
       }
     }
 
-    void TextEntryImpl::set_placeholder_text(::mforms::TextEntry *self, const std::string &text) {
+    auto TextEntryImpl::set_placeholder_text(::mforms::TextEntry *self, const std::string &text) -> void {
       TextEntryImpl *cb = self->get_data<TextEntryImpl>();
 
       if (cb) {
@@ -50,7 +50,7 @@ namespace mforms {
       }
     }
 
-    void TextEntryImpl::set_max_length(::mforms::TextEntry *self, int len) {
+    auto TextEntryImpl::set_max_length(::mforms::TextEntry *self, int len) -> void {
       TextEntryImpl *cb = self->get_data<TextEntryImpl>();
 
       if (cb) {
@@ -58,7 +58,7 @@ namespace mforms {
       }
     }
 
-    std::string TextEntryImpl::get_text(::mforms::TextEntry *self) {
+    auto TextEntryImpl::get_text(::mforms::TextEntry *self) -> std::string {
       TextEntryImpl *cb = self->get_data<TextEntryImpl>();
       std::string ret("");
       if (cb && cb->_has_real_text) {
@@ -67,13 +67,13 @@ namespace mforms {
       return ret;
     }
 
-    void TextEntryImpl::set_read_only(::mforms::TextEntry *self, bool flag) {
+    auto TextEntryImpl::set_read_only(::mforms::TextEntry *self, bool flag) -> void {
       TextEntryImpl *cb = self->get_data<TextEntryImpl>();
       if (cb && cb->_entry)
         cb->_entry->set_editable(!flag);
     }
 
-    void TextEntryImpl::set_bordered(::mforms::TextEntry *self, bool flag) {
+    auto TextEntryImpl::set_bordered(::mforms::TextEntry *self, bool flag) -> void {
       TextEntryImpl *te = self->get_data<TextEntryImpl>();
       if (te)
         te->_entry->set_has_frame(flag);
@@ -109,16 +109,16 @@ namespace mforms {
       setup();
     }
 
-    void TextEntryImpl::icon_pressed(Gtk::EntryIconPosition pos, const GdkEventButton *ev) {
+    auto TextEntryImpl::icon_pressed(Gtk::EntryIconPosition pos, const GdkEventButton *ev) -> void {
       if (pos == Gtk::ENTRY_ICON_SECONDARY)
         set_text("");
     }
 
-    void TextEntryImpl::activated(mforms::TextEntry *self) {
+    auto TextEntryImpl::activated(mforms::TextEntry *self) -> void {
       self->action(mforms::EntryActivate);
     }
 
-    bool TextEntryImpl::key_press(GdkEventKey *event, mforms::TextEntry *self) {
+    auto TextEntryImpl::key_press(GdkEventKey *event, mforms::TextEntry *self) -> bool {
       if (event->keyval == GDK_KEY_Up) {
         if (event->state & GDK_CONTROL_MASK)
           self->action(mforms::EntryCKeyUp);
@@ -138,7 +138,7 @@ namespace mforms {
       return false;
     }
 
-    void TextEntryImpl::changed(mforms::TextEntry *self) {
+    auto TextEntryImpl::changed(mforms::TextEntry *self) -> void {
       if (_changing_text)
         return;
       if (_has_real_text) {
@@ -156,11 +156,11 @@ namespace mforms {
       self->callback();
     }
 
-    void TextEntryImpl::set_front_color(const std::string &color) {
+    auto TextEntryImpl::set_front_color(const std::string &color) -> void {
       this->_text_color = color_to_rgba(Gdk::Color(color));
     }
 
-    void TextEntryImpl::set_back_color(const std::string &color) {
+    auto TextEntryImpl::set_back_color(const std::string &color) -> void {
       ViewImpl::set_back_color(color);
       Glib::RefPtr<Gtk::CssProvider> provider = Gtk::CssProvider::create();
       if (!color.empty())
@@ -168,7 +168,7 @@ namespace mforms {
       _entry->get_style_context()->add_provider(provider, GTK_STYLE_PROVIDER_PRIORITY_USER);
     }
 
-    void TextEntryImpl::set_text(const std::string &text) {
+    auto TextEntryImpl::set_text(const std::string &text) -> void {
       if (!text.empty()) {
         if (!_has_real_text)
           focus_out(NULL);
@@ -181,45 +181,45 @@ namespace mforms {
       _entry->set_text(text);
     }
 
-    void TextEntryImpl::set_placeholder_text(const std::string &text) {
+    auto TextEntryImpl::set_placeholder_text(const std::string &text) -> void {
       _entry->set_placeholder_text(text);
     }
 
-    void TextEntryImpl::set_placeholder_color(::mforms::TextEntry *self, const std::string &color) {
+    auto TextEntryImpl::set_placeholder_color(::mforms::TextEntry *self, const std::string &color) -> void {
       TextEntryImpl *te = self->get_data<TextEntryImpl>();
       if (te)
         te->_placeholder_color = color_to_rgba(Gdk::Color(color));
     }
 
-    void TextEntryImpl::focus_in(GdkEventFocus *) {
+    auto TextEntryImpl::focus_in(GdkEventFocus *) -> void {
       if (!_has_real_text)
         _entry->override_color(_text_color, Gtk::STATE_FLAG_NORMAL);
     }
 
-    void TextEntryImpl::focus_out(GdkEventFocus *) {
+    auto TextEntryImpl::focus_out(GdkEventFocus *) -> void {
       if (!_has_real_text)
         _entry->override_color(_placeholder_color, Gtk::STATE_FLAG_NORMAL);
     }
 
-    void TextEntryImpl::cut(::mforms::TextEntry *self) {
+    auto TextEntryImpl::cut(::mforms::TextEntry *self) -> void {
       TextEntryImpl *te = self->get_data<TextEntryImpl>();
       if (te)
         te->_entry->cut_clipboard();
     }
 
-    void TextEntryImpl::copy(::mforms::TextEntry *self) {
+    auto TextEntryImpl::copy(::mforms::TextEntry *self) -> void {
       TextEntryImpl *te = self->get_data<TextEntryImpl>();
       if (te)
         te->_entry->copy_clipboard();
     }
 
-    void TextEntryImpl::paste(::mforms::TextEntry *self) {
+    auto TextEntryImpl::paste(::mforms::TextEntry *self) -> void {
       TextEntryImpl *te = self->get_data<TextEntryImpl>();
       if (te)
         te->_entry->paste_clipboard();
     }
 
-    void TextEntryImpl::select(::mforms::TextEntry *self, const base::Range &range) {
+    auto TextEntryImpl::select(::mforms::TextEntry *self, const base::Range &range) -> void {
       TextEntryImpl *te = self->get_data<TextEntryImpl>();
       if (te) {
         if (range.size > 0)
@@ -229,7 +229,7 @@ namespace mforms {
       }
     }
 
-    base::Range TextEntryImpl::get_selection(::mforms::TextEntry *self) {
+    auto TextEntryImpl::get_selection(::mforms::TextEntry *self) -> base::Range {
       TextEntryImpl *te = self->get_data<TextEntryImpl>();
       base::Range range;
       int start, end;
@@ -243,7 +243,7 @@ namespace mforms {
       return range;
     }
 
-    void TextEntryImpl::init() {
+    auto TextEntryImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_textentry_impl.create = &TextEntryImpl::create;

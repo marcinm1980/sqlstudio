@@ -31,15 +31,15 @@
 
 using namespace mforms;
 
-static mforms::GridView *create_record_grid(std::shared_ptr<Recordset> rset) {
+static auto create_record_grid(std::shared_ptr<Recordset> rset) -> mforms::GridView * {
   return new RecordGridView(rset);
 }
 
-void lf_record_grid_init() {
+auto lf_record_grid_init() -> void {
   mforms::GridView::register_factory(create_record_grid);
 }
 
-static void destroy_nativecontainer(void *ptr) {
+static auto destroy_nativecontainer(void *ptr) -> void {
   gtk::NativeContainerImpl *container = (gtk::NativeContainerImpl *)ptr;
   if (container)
     delete container;
@@ -61,26 +61,26 @@ RecordGridView::~RecordGridView() {
   delete viewer;
 }
 
-int RecordGridView::get_column_count() {
+auto RecordGridView::get_column_count() -> int {
   return viewer->model()->get_column_count();
 }
 
-int RecordGridView::get_column_width(int column) {
+auto RecordGridView::get_column_width(int column) -> int {
   Gtk::TreeViewColumn *tc = viewer->grid_view()->get_column(column + 1);
   if (tc)
     return tc->get_width();
   return 0;
 }
 
-void RecordGridView::set_column_width(int column, int width) {
+auto RecordGridView::set_column_width(int column, int width) -> void {
   viewer->grid_view()->view_model()->set_column_width(column, width);
 }
 
-void RecordGridView::update_columns() {
+auto RecordGridView::update_columns() -> void {
   viewer->grid_view()->refresh(true);
 }
 
-bool RecordGridView::current_cell(size_t &row, int &column) {
+auto RecordGridView::current_cell(size_t &row, int &column) -> bool {
   int r, c;
   if (viewer->grid_view()->current_cell(r, c).is_valid())
     return false;
@@ -89,11 +89,11 @@ bool RecordGridView::current_cell(size_t &row, int &column) {
   return true;
 }
 
-void RecordGridView::set_current_cell(size_t row, int column) {
+auto RecordGridView::set_current_cell(size_t row, int column) -> void {
   viewer->grid_view()->select_cell(row, column);
 }
 
-void RecordGridView::set_column_header_indicator(int column_index, ColumnHeaderIndicator order) {
+auto RecordGridView::set_column_header_indicator(int column_index, ColumnHeaderIndicator order) -> void {
   Gtk::TreeViewColumn *column = viewer->grid_view()->get_column(column_index + 1);
   switch (order) {
     case NoIndicator:
@@ -110,11 +110,11 @@ void RecordGridView::set_column_header_indicator(int column_index, ColumnHeaderI
   }
 }
 
-void RecordGridView::set_font(const std::string &font) {
+auto RecordGridView::set_font(const std::string &font) -> void {
   viewer->grid_view()->override_font(Pango::FontDescription(font));
 }
 
-void RecordGridView::column_right_clicked(int c, int x, int y) {
+auto RecordGridView::column_right_clicked(int c, int x, int y) -> void {
   clicked_header_column(c);
   if (header_menu())
     header_menu()->popup_at(this, base::Point(x, y));

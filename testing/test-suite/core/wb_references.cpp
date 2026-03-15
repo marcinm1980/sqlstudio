@@ -26,7 +26,7 @@
 
 #ifndef __APPLE__
 // for linux only
-void* get_mainwindow_impl() {
+auto get_mainwindow_impl() -> void* {
   return 0;
 }
 #endif

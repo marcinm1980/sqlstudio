@@ -40,7 +40,7 @@ InternalSchema::InternalSchema(const std::string &schema_name, sql::Dbc_connecti
 InternalSchema::~InternalSchema(void) {
 }
 
-bool InternalSchema::check_schema_exist() {
+auto InternalSchema::check_schema_exist() -> bool {
   bool ret_val = false;
   try {
     std::unique_ptr<sql::Statement> stmt(_connection->ref->createStatement());
@@ -56,15 +56,15 @@ bool InternalSchema::check_schema_exist() {
   return ret_val;
 }
 
-bool InternalSchema::check_function_exists(const std::string &function_name) {
+auto InternalSchema::check_function_exists(const std::string &function_name) -> bool {
   return check_function_or_sp_exists(function_name, true);
 }
 
-bool InternalSchema::check_stored_procedure_exists(const std::string &spname) {
+auto InternalSchema::check_stored_procedure_exists(const std::string &spname) -> bool {
   return check_function_or_sp_exists(spname, false);
 }
 
-bool InternalSchema::check_function_or_sp_exists(const std::string object_name, bool check_function) {
+auto InternalSchema::check_function_or_sp_exists(const std::string object_name, bool check_function) -> bool {
   bool ret_val = false;
   std::string what = check_function ? "FUNCTION" : "PROCEDURE";
   std::string statement = "SHOW " + what + " STATUS LIKE ?";
@@ -87,15 +87,15 @@ bool InternalSchema::check_function_or_sp_exists(const std::string object_name, 
   return ret_val;
 }
 
-bool InternalSchema::check_table_exists(const std::string &table_name) {
+auto InternalSchema::check_table_exists(const std::string &table_name) -> bool {
   return check_table_or_view_exists(table_name, false);
 }
 
-bool InternalSchema::check_view_exists(const std::string &view_name) {
+auto InternalSchema::check_view_exists(const std::string &view_name) -> bool {
   return check_table_or_view_exists(view_name, true);
 }
 
-bool InternalSchema::check_table_or_view_exists(const std::string object_name, bool check_view) {
+auto InternalSchema::check_table_or_view_exists(const std::string object_name, bool check_view) -> bool {
   std::string what = check_view ? "view" : "table";
   bool ret_val = false;
   try {
@@ -118,13 +118,13 @@ bool InternalSchema::check_table_or_view_exists(const std::string object_name, b
   return ret_val;
 }
 
-std::string InternalSchema::create_schema() {
+auto InternalSchema::create_schema() -> std::string {
   std::string statement(base::sqlstring("CREATE SCHEMA !", 0) << _schema_name);
 
   return execute_sql(statement);
 }
 
-bool InternalSchema::is_remote_search_deployed() {
+auto InternalSchema::is_remote_search_deployed() -> bool {
   bool ret_val = check_schema_exist() && check_stored_procedure_exists("SEARCH_OBJECTS") &&
                  check_stored_procedure_exists("SEARCH_TABLES_AND_VIEWS") &&
                  check_stored_procedure_exists("SEARCH_ROUTINES");
@@ -132,7 +132,7 @@ bool InternalSchema::is_remote_search_deployed() {
   return ret_val;
 }
 
-std::string InternalSchema::execute_sql(const std::string &statement) {
+auto InternalSchema::execute_sql(const std::string &statement) -> std::string {
   std::string ret_val("");
   try {
     std::unique_ptr<sql::Statement> stmt(_connection->ref->createStatement());
@@ -145,7 +145,7 @@ std::string InternalSchema::execute_sql(const std::string &statement) {
   return ret_val;
 }
 
-std::string InternalSchema::deploy_remote_search() {
+auto InternalSchema::deploy_remote_search() -> std::string {
   std::string ret_val("");
 
   if (!check_schema_exist())
@@ -163,7 +163,7 @@ std::string InternalSchema::deploy_remote_search() {
   return ret_val;
 }
 
-std::string InternalSchema::deploy_get_objects_sp() {
+auto InternalSchema::deploy_get_objects_sp() -> std::string {
   std::string statement =
     "CREATE PROCEDURE `" + _schema_name +
     "`.`SEARCH_OBJECTS`(IN schema_filter VARCHAR(255), IN object_filter VARCHAR(255), IN matching_type INT)\n"
@@ -220,7 +220,7 @@ std::string InternalSchema::deploy_get_objects_sp() {
   return execute_sql(statement);
 }
 
-std::string InternalSchema::deploy_get_tables_and_views_sp() {
+auto InternalSchema::deploy_get_tables_and_views_sp() -> std::string {
   std::string statement =
     "CREATE PROCEDURE `" + _schema_name +
     "`.`SEARCH_TABLES_AND_VIEWS`( IN schema_name VARCHAR(255), IN object_filter VARCHAR(255), IN matching_type INT)\n"
@@ -288,7 +288,7 @@ std::string InternalSchema::deploy_get_tables_and_views_sp() {
   return execute_sql(statement);
 }
 
-std::string InternalSchema::deploy_get_routines() {
+auto InternalSchema::deploy_get_routines() -> std::string {
   std::string statement =
     "CREATE PROCEDURE `" + _schema_name +
     "`.`SEARCH_ROUTINES`(IN schema_filter VARCHAR(255), IN object_filter VARCHAR(255), IN matching_type INT, IN "
@@ -354,11 +354,11 @@ std::string InternalSchema::deploy_get_routines() {
 
 // SQL Editor snippets
 
-bool InternalSchema::check_snippets_table_exist() {
+auto InternalSchema::check_snippets_table_exist() -> bool {
   return check_schema_exist() && check_table_exists("snippet");
 }
 
-std::string InternalSchema::create_snippets_table_exist() {
+auto InternalSchema::create_snippets_table_exist() -> std::string {
   if (!check_table_exists("snippet")) {
     if (!check_schema_exist()) {
       std::string error = create_schema();
@@ -375,7 +375,7 @@ std::string InternalSchema::create_snippets_table_exist() {
   return "";
 }
 
-int InternalSchema::insert_snippet(const std::string &title, const std::string &code) {
+auto InternalSchema::insert_snippet(const std::string &title, const std::string &code) -> int {
   std::string statement(base::sqlstring("INSERT INTO !.snippet (title, code) VALUES (?, ?)", 0) << _schema_name << title
                                                                                                 << code);
 
@@ -388,14 +388,14 @@ int InternalSchema::insert_snippet(const std::string &title, const std::string &
   return 0;
 }
 
-void InternalSchema::delete_snippet(int snippet_id) {
+auto InternalSchema::delete_snippet(int snippet_id) -> void {
   std::string statement(base::sqlstring("DELETE FROM !.snippet WHERE id = ?", 0) << _schema_name << snippet_id);
 
   std::unique_ptr<sql::Statement> stmt(_connection->ref->createStatement());
   stmt->execute(statement);
 }
 
-void InternalSchema::set_snippet_title(int snippet_id, const std::string &title) {
+auto InternalSchema::set_snippet_title(int snippet_id, const std::string &title) -> void {
   std::string statement(base::sqlstring("UPDATE !.snippet SET title = ? WHERE id = ?", 0) << _schema_name << title
                                                                                           << snippet_id);
 
@@ -403,7 +403,7 @@ void InternalSchema::set_snippet_title(int snippet_id, const std::string &title)
   stmt->execute(statement);
 }
 
-void InternalSchema::set_snippet_code(int snippet_id, const std::string &code) {
+auto InternalSchema::set_snippet_code(int snippet_id, const std::string &code) -> void {
   std::string statement(base::sqlstring("UPDATE !.snippet SET code = ? WHERE id = ?", 0) << _schema_name << code
                                                                                          << snippet_id);
 

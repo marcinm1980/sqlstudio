@@ -44,7 +44,7 @@ ItemHandle::~ItemHandle() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ItemHandle::move(const Point &point) {
+auto ItemHandle::move(const Point &point) -> void {
   Point delta = _pos;
 
   _layer->queue_repaint(get_bounds());
@@ -60,7 +60,7 @@ void ItemHandle::move(const Point &point) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ItemHandle::set_highlighted(bool flag) {
+auto ItemHandle::set_highlighted(bool flag) -> void {
   _highlighted = flag;
   _layer->queue_repaint(get_bounds());
   _dirty = true;
@@ -68,20 +68,20 @@ void ItemHandle::set_highlighted(bool flag) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ItemHandle::set_draggable(bool flag) {
+auto ItemHandle::set_draggable(bool flag) -> void {
   _draggable = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ItemHandle::set_color(const Color &color) {
+auto ItemHandle::set_color(const Color &color) -> void {
   _color = color;
   _dirty = true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ItemHandle::repaint(CairoCtx *cr) {
+auto ItemHandle::repaint(CairoCtx *cr) -> void {
   Rect r = get_bounds();
 
   if (_layer->get_view()->has_gl())
@@ -114,7 +114,7 @@ void ItemHandle::repaint(CairoCtx *cr) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ItemHandle::paint_gl(Rect &r) {
+auto ItemHandle::paint_gl(Rect &r) -> void {
   if (_dirty || _display_list == 0) {
     _dirty = false;
     if (_display_list == 0)

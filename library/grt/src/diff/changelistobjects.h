@@ -53,7 +53,7 @@ namespace grt {
     size_t _index;
 
   public:
-    size_t get_index() const {
+    auto get_index() const -> size_t {
       return _index;
     };
     ListItemChange(ChangeType atype, size_t index) : DiffChange(atype), _index(index){};
@@ -72,18 +72,18 @@ namespace grt {
       subchange->set_parent(this);
     }
 
-    virtual ValueRef get_old_value() const {
+    virtual auto get_old_value() const -> ValueRef {
       return _old_value;
     };
-    virtual ValueRef get_new_value() const {
+    virtual auto get_new_value() const -> ValueRef {
       return _new_value;
     };
 
-    const std::shared_ptr<DiffChange> get_subchange() const {
+    auto get_subchange() const -> const std::shared_ptr<DiffChange> {
       return subchange;
     }
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name() << std::endl;
       //_subchange->dump_log(level+1);
@@ -91,8 +91,8 @@ namespace grt {
     }
   };
 
-  std::shared_ptr<ListItemModifiedChange> create_item_modified_change(const ValueRef &source, const ValueRef &target,
-                                                                      const Omf *omf, const size_t index);
+  auto create_item_modified_change(const ValueRef &source, const ValueRef &target,
+                                                                      const Omf *omf, const size_t index) -> std::shared_ptr<ListItemModifiedChange>;
 
   //////////////////////////////////////////////////////////////
   class MYSQLGRT_PUBLIC ListItemAddedChange : public ListItemChange {
@@ -104,16 +104,16 @@ namespace grt {
       : ListItemChange(ListItemAdded, index), _value(value), _prev_value(prev_value) {
     }
 
-    virtual ValueRef get_value() const {
+    virtual auto get_value() const -> ValueRef {
       return _value;
     };
 
     // Used in column's AFTER statemen
-    grt::ValueRef get_prev_item() const {
+    auto get_prev_item() const -> grt::ValueRef {
       return _prev_value;
     };
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       if (ObjectRef::can_wrap(_value) && ObjectRef::cast_from(_value).has_member("name"))
         std::cout << " name:" << ObjectRef::cast_from(_value).get_string_member("name").c_str();
@@ -130,11 +130,11 @@ namespace grt {
     ListItemRemovedChange(const ValueRef value, size_t index) : ListItemChange(ListItemRemoved, index), _value(value) {
     }
 
-    virtual ValueRef get_value() const {
+    virtual auto get_value() const -> ValueRef {
       return _value;
     };
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       if (ObjectRef::can_wrap(_value) && ObjectRef::cast_from(_value).has_member("name"))
         std::cout << " name:" << ObjectRef::cast_from(_value).get_string_member("name").c_str() << std::endl;
@@ -160,26 +160,26 @@ namespace grt {
       cs.append(_subchange);
     }
 
-    virtual ValueRef get_old_value() const {
+    virtual auto get_old_value() const -> ValueRef {
       return _old_value;
     };
-    virtual ValueRef get_new_value() const {
+    virtual auto get_new_value() const -> ValueRef {
       return _new_value;
     };
-    std::shared_ptr<ListItemModifiedChange> get_subchange() const {
+    auto get_subchange() const -> std::shared_ptr<ListItemModifiedChange> {
       return _subchange;
     };
 
     // Used in column's AFTER statemen
-    grt::ValueRef get_prev_item() const {
+    auto get_prev_item() const -> grt::ValueRef {
       return _prev_value;
     };
 
-    virtual const grt::ChangeSet *subchanges() const {
+    virtual auto subchanges() const -> const grt::ChangeSet * {
       return &cs;
     }
 
-    void dump_log(int level) const {
+    auto dump_log(int level) const -> void {
       std::cout << std::string(level, ' ');
       std::cout << get_type_name() << std::endl;
       if (_subchange)

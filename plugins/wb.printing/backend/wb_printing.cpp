@@ -33,7 +33,7 @@
 
 //--------------------------------------------------------------------------------------------------
 
-int wbprint::getPageCount(model_DiagramRef view) {
+auto wbprint::getPageCount(model_DiagramRef view) -> int {
   mdc::Count xc, yc;
   view->get_data()->get_canvas_view()->get_page_layout(xc, yc);
 
@@ -42,7 +42,7 @@ int wbprint::getPageCount(model_DiagramRef view) {
 
 //--------------------------------------------------------------------------------------------------
 
-void wbprint::getPageLayout(model_DiagramRef view, int &xpages, int &ypages) {
+auto wbprint::getPageLayout(model_DiagramRef view, int &xpages, int &ypages) -> void {
   mdc::Count xc, yc;
 
   view->get_data()->get_canvas_view()->get_page_layout(xc, yc);
@@ -52,7 +52,7 @@ void wbprint::getPageLayout(model_DiagramRef view, int &xpages, int &ypages) {
 
 //--------------------------------------------------------------------------------------------------
 
-app_PageSettingsRef wbprint::getPageSettings(model_DiagramRef diagram) {
+auto wbprint::getPageSettings(model_DiagramRef diagram) -> app_PageSettingsRef {
   return studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings();
 }
 
@@ -60,7 +60,7 @@ app_PageSettingsRef wbprint::getPageSettings(model_DiagramRef diagram) {
 
 #ifdef _MSC_VER
 
-int wbprint::printPageHDC(model_DiagramRef view, int pagenum, HDC hdc, int width, int height) {
+auto wbprint::printPageHDC(model_DiagramRef view, int pagenum, HDC hdc, int width, int height) -> int {
   mdc::CanvasViewExtras extras(view->get_data()->get_canvas_view());
 
   app_PageSettingsRef page(studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"))->pageSettings());

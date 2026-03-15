@@ -72,7 +72,7 @@ ColumnWidthCache::~ColumnWidthCache() {
   delete _sqconn;
 }
 
-void ColumnWidthCache::init_db() {
+auto ColumnWidthCache::init_db() -> void {
   std::string code = "create table widths (column_id varchar(100) primary key, width int)";
 
   logInfo("Initializing column width cache for %s\n", _connection_id.c_str());
@@ -83,7 +83,7 @@ void ColumnWidthCache::init_db() {
   }
 }
 
-void ColumnWidthCache::save_column_width(const std::string &column_id, int width) {
+auto ColumnWidthCache::save_column_width(const std::string &column_id, int width) -> void {
   try {
     sqlite::query q(*_sqconn, "insert or replace into widths values (?, ?)");
     q.bind(1, column_id);
@@ -94,7 +94,7 @@ void ColumnWidthCache::save_column_width(const std::string &column_id, int width
   }
 }
 
-void ColumnWidthCache::save_columns_width(const std::map<std::string, int> &columns) {
+auto ColumnWidthCache::save_columns_width(const std::map<std::string, int> &columns) -> void {
   std::map<std::string, int>::const_iterator it;
   try {
     sqlide::Sqlite_transaction_guarder transaction(_sqconn);
@@ -110,7 +110,7 @@ void ColumnWidthCache::save_columns_width(const std::map<std::string, int> &colu
   }
 }
 
-int ColumnWidthCache::get_column_width(const std::string &column_id) {
+auto ColumnWidthCache::get_column_width(const std::string &column_id) -> int {
   sqlite::query q(*_sqconn, "select width from widths where column_id = ?");
   q.bind(1, column_id);
   try {
@@ -124,7 +124,7 @@ int ColumnWidthCache::get_column_width(const std::string &column_id) {
   return -1;
 }
 
-void ColumnWidthCache::delete_column_width(const std::string &column_id) {
+auto ColumnWidthCache::delete_column_width(const std::string &column_id) -> void {
   sqlite::query q(*_sqconn, "delete from widths where column_id = ?");
   q.bind(1, column_id);
   try {

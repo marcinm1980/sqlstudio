@@ -97,20 +97,20 @@ namespace wb {
     virtual auto set_field(const bec::NodeId &node, ColumnId column, const std::string &value) -> bool;
 
     // only leaf nodes can be selected (for now)
-    void begin_selection_marking();
-    void end_selection_marking();
-    void unselect_all(const bec::NodeId &node);
-    void select_node(const bec::NodeId &node);
+    auto begin_selection_marking() -> void;
+    auto end_selection_marking() -> void;
+    auto unselect_all(const bec::NodeId &node) -> void;
+    auto select_node(const bec::NodeId &node) -> void;
 
     auto signal_selection_changed() -> boost::signals2::signal<void()> * {
       return &_selection_change_signal;
     }
     auto get_selection() -> grt::ListRef<GrtObject>;
 
-    std::list<int> get_selected_children(const bec::NodeId &node);
+    auto get_selected_children(const bec::NodeId &node) -> std::list<int>;
 
     // only 1 node can be focused in each container node
-    void focus_node(const bec::NodeId &node);
+    auto focus_node(const bec::NodeId &node) -> void;
     auto get_focused_child(const bec::NodeId &node) -> bec::NodeId;
 
     auto get_node_child_for_object(const bec::NodeId &node, const grt::ObjectRef &object) -> bec::NodeId;
@@ -144,18 +144,18 @@ namespace wb {
     virtual auto activate_toolbar_item(const bec::NodeId &node, const std::string &name) -> bool;
 
     // for use by backend
-    void send_refresh_node(const bec::NodeId &node);
-    void send_refresh_children(const bec::NodeId &node);
+    auto send_refresh_node(const bec::NodeId &node) -> void;
+    auto send_refresh_children(const bec::NodeId &node) -> void;
 
     // for use by frontend
     std::function<void()> pre_refresh_groups;
-    void refresh();
+    auto refresh() -> void;
 #ifndef _MSC_VER
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #endif
     // This is ok, as Overview contains children which also need to be refreshed.
-    virtual void refresh_node(const bec::NodeId &node, bool children) = 0;
+    virtual auto refresh_node(const bec::NodeId &node, bool children) -> void = 0;
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
@@ -168,10 +168,10 @@ namespace wb {
     virtual auto can_paste() -> bool;
     virtual auto can_delete() -> bool;
 
-    virtual void cut();
-    virtual void copy();
-    virtual void paste();
-    virtual void delete_selection();
+    virtual auto cut() -> void;
+    virtual auto copy() -> void;
+    virtual auto paste() -> void;
+    virtual auto delete_selection() -> void;
 
     // external drag & drop
     virtual auto get_node_drag_type(const bec::NodeId &node) -> std::string {
@@ -182,9 +182,9 @@ namespace wb {
       return false;
     }
 
-    virtual void add_file_to_node(const bec::NodeId &node, const std::string &path) {
+    virtual auto add_file_to_node(const bec::NodeId &node, const std::string &path) -> void {
     }
-    virtual void add_file_data_to_node(const bec::NodeId &node, const char *data, size_t length) {
+    virtual auto add_file_data_to_node(const bec::NodeId &node, const char *data, size_t length) -> void {
     }
     virtual auto get_file_for_node(const bec::NodeId &node) -> std::string {
       return "";
@@ -211,10 +211,10 @@ namespace wb {
       virtual auto count_children() -> size_t {
         return 0;
       }
-      virtual void refresh() {
+      virtual auto refresh() -> void {
       }
 
-      virtual void focus(OverviewBE *sender) {
+      virtual auto focus(OverviewBE *sender) -> void {
       }
       virtual auto activate(WBContext *wb) -> bool {
         return false;
@@ -222,17 +222,17 @@ namespace wb {
       virtual auto add_object(WBContext *wb) -> bool {
         return false;
       }
-      virtual void delete_object(WBContext *wb) {
+      virtual auto delete_object(WBContext *wb) -> void {
       }
       virtual auto is_deletable() -> bool {
         return false;
       }
-      virtual void copy_object(WBContext *wb, bec::Clipboard *clip) {
+      virtual auto copy_object(WBContext *wb, bec::Clipboard *clip) -> void {
       }
       virtual auto is_copyable() -> bool {
         return false;
       }
-      virtual void paste_object(WBContext *wb, bec::Clipboard *clip) {
+      virtual auto paste_object(WBContext *wb, bec::Clipboard *clip) -> void {
       }
       virtual auto is_pasteable(bec::Clipboard *clip) -> bool {
         return false;
@@ -265,7 +265,7 @@ namespace wb {
         return panel;
       }
 
-      virtual void restore_state(const studio_OverviewPanelRef &panel) {
+      virtual auto restore_state(const studio_OverviewPanelRef &panel) -> void {
         expanded = *panel->expanded() ? true : false;
         display_mode = (OverviewDisplayMode)*panel->itemDisplayMode();
       }
@@ -300,7 +300,7 @@ namespace wb {
       virtual auto activate(WBContext *wb) -> bool;
       virtual auto rename(WBContext *wb, const std::string &name) -> bool;
 
-      virtual void refresh() {
+      virtual auto refresh() -> void {
         label = object->name();
       }
     };
@@ -320,7 +320,7 @@ namespace wb {
 
     class MYSQLWBBACKEND_PUBLIC_FUNC ContainerNode : public virtual Node {
     public:
-      virtual void init() {
+      virtual auto init() -> void {
       }
 
     public:
@@ -343,7 +343,7 @@ namespace wb {
         return panel;
       }
 
-      virtual void restore_state(const studio_OverviewPanelRef &panel) {
+      virtual auto restore_state(const studio_OverviewPanelRef &panel) -> void {
         Node::restore_state(panel);
 
         // selection.clear();
@@ -365,7 +365,7 @@ namespace wb {
         return children.size();
       }
 
-      void clear_children() {
+      auto clear_children() -> void {
         for (std::vector<Node *>::iterator iter = children.begin(); iter != children.end(); ++iter)
           delete *iter;
         children.clear();
@@ -388,7 +388,7 @@ namespace wb {
         return -1;
       }
 
-      virtual void refresh_children() {
+      virtual auto refresh_children() -> void {
       }
     };
 
@@ -405,8 +405,8 @@ namespace wb {
 
     auto get_deepest_focused() -> Node *;
 
-    void store_node_states(Node *node);
-    void store_state();
-    void restore_state();
+    auto store_node_states(Node *node) -> void;
+    auto store_state() -> void;
+    auto restore_state() -> void;
   };
 };

@@ -39,124 +39,124 @@ namespace mforms {
         _root = new TreeNodeWrapper();
       }
 
-      int add_column(TreeColumnType type, const std::string &name, int initial_width, bool editable) {
+      auto add_column(TreeColumnType type, const std::string &name, int initial_width, bool editable) -> int {
         return 0;
       }
 
-      void end_columns() {
+      auto end_columns() -> void {
       }
 
-      static bool create(TreeView *self, mforms::TreeOptions opt) {
+      static auto create(TreeView *self, mforms::TreeOptions opt) -> bool {
         new TreeViewWrapper(self, opt);
         return true;
       }
 
-      static int add_column(TreeView *self, TreeColumnType type, const std::string &name, int width, bool editable) {
+      static auto add_column(TreeView *self, TreeColumnType type, const std::string &name, int width, bool editable) -> int {
         return 0;
       }
 
-      static int add_column(TreeView *self, TreeColumnType type, const std::string &name, int width, bool editable,
-                            bool a) {
+      static auto add_column(TreeView *self, TreeColumnType type, const std::string &name, int width, bool editable,
+                            bool a) -> int {
         return 0;
       }
 
-      static void end_columns(TreeView *self) {
+      static auto end_columns(TreeView *self) -> void {
       }
 
-      static void clear(TreeView *self) {
+      static auto clear(TreeView *self) -> void {
       }
 
-      static TreeSelectionMode get_selection_mode(TreeView *self) {
+      static auto get_selection_mode(TreeView *self) -> TreeSelectionMode {
         return TreeSelectSingle;
       }
 
-      static void set_selection_mode(TreeView *self, TreeSelectionMode mode) {
+      static auto set_selection_mode(TreeView *self, TreeSelectionMode mode) -> void {
       }
 
-      static TreeNodeRef get_selected_node(TreeView *self) {
+      static auto get_selected_node(TreeView *self) -> TreeNodeRef {
         return TreeNodeRef();
       }
 
-      static TreeNodeRef root_node(TreeView *tree) {
+      static auto root_node(TreeView *tree) -> TreeNodeRef {
         TreeViewWrapper *ptree_node_view = dynamic_cast<TreeViewWrapper *>(ObjectWrapper::getData(tree));
         return ptree_node_view->root_node();
       }
 
-      TreeNodeRef root_node() {
+      auto root_node() -> TreeNodeRef {
         return mforms::TreeNodeRef(_root);
       }
 
-      static std::list<TreeNodeRef> get_selection(TreeView *self) {
+      static auto get_selection(TreeView *self) -> std::list<TreeNodeRef> {
         return std::list<TreeNodeRef>();
       }
 
-      static void set_selected(TreeView *self, TreeNodeRef node, bool flag) {
+      static auto set_selected(TreeView *self, TreeNodeRef node, bool flag) -> void {
       }
 
-      static void set_allow_sorting(TreeView *self, bool) {
+      static auto set_allow_sorting(TreeView *self, bool) -> void {
       }
 
-      static void freeze_refresh(TreeView *self, bool) {
+      static auto freeze_refresh(TreeView *self, bool) -> void {
       }
 
-      static int row_for_node(TreeView *self, TreeNodeRef node) {
+      static auto row_for_node(TreeView *self, TreeNodeRef node) -> int {
         return 0;
       }
 
-      static TreeNodeRef node_at_row(TreeView *self, int row) {
+      static auto node_at_row(TreeView *self, int row) -> TreeNodeRef {
         return self->root_node();
       }
 
-      static void set_row_height(TreeView *self, int height) {
+      static auto set_row_height(TreeView *self, int height) -> void {
       }
 
-      static void clear_selection(TreeView *self) {
+      static auto clear_selection(TreeView *self) -> void {
       }
 
-      static TreeNodeRef node_with_tag(TreeView *self, const std::string &tag) {
+      static auto node_with_tag(TreeView *self, const std::string &tag) -> TreeNodeRef {
         return TreeNodeRef();
       }
 
-      static void scrollToNode(TreeView *self, TreeNodeRef node) {
+      static auto scrollToNode(TreeView *self, TreeNodeRef node) -> void {
       }
 
-      static int rowForNode(TreeView *self, TreeNodeRef node) {
+      static auto rowForNode(TreeView *self, TreeNodeRef node) -> int {
         return 0;
       }
 
-      static TreeNodeRef nodeAtRow(TreeView *self, int row) {
+      static auto nodeAtRow(TreeView *self, int row) -> TreeNodeRef {
         return TreeNodeRef();
       }
 
-      static TreeNodeRef nodeAtPosition(TreeView *self, base::Point position) {
+      static auto nodeAtPosition(TreeView *self, base::Point position) -> TreeNodeRef {
         return TreeNodeRef();
       }
 
-      static void setColumnTitle(TreeView *self, int column, const std::string &title) {
+      static auto setColumnTitle(TreeView *self, int column, const std::string &title) -> void {
       }
 
-      static void setColumnVisible(TreeView *self, int column, bool flag) {
+      static auto setColumnVisible(TreeView *self, int column, bool flag) -> void {
       }
 
-      static bool getColumnVisible(TreeView *self, int column) {
+      static auto getColumnVisible(TreeView *self, int column) -> bool {
         return false;
       }
 
-      static void setColumnWidth(TreeView *self, int column, int width) {
+      static auto setColumnWidth(TreeView *self, int column, int width) -> void {
       }
 
-      static int getColumnWidth(TreeView *self, int column) {
+      static auto getColumnWidth(TreeView *self, int column) -> int {
         return 0;
       }
 
-      static void BeginUpdate(TreeView *self) {
+      static auto BeginUpdate(TreeView *self) -> void {
       }
 
-      static void EndUpdate(TreeView *self) {
+      static auto EndUpdate(TreeView *self) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_treeview_impl.create = &TreeViewWrapper::create;

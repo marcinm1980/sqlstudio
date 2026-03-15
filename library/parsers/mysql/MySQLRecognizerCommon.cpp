@@ -39,7 +39,7 @@ using namespace antlr4::dfa;
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void replaceStringInplace(std::string &value, const std::string &search, const std::string &replacement) {
+static auto replaceStringInplace(std::string &value, const std::string &search, const std::string &replacement) -> void {
   std::string::size_type next;
 
   for (next = value.find(search); next != std::string::npos; next = value.find(search, next)) {
@@ -50,13 +50,13 @@ static void replaceStringInplace(std::string &value, const std::string &search, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLRecognizerCommon::isSqlModeActive(size_t mode) {
+auto MySQLRecognizerCommon::isSqlModeActive(size_t mode) -> bool {
   return (sqlMode & mode) != 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void trim(std::string &s) {
+static auto trim(std::string &s) -> void {
   std::locale locale;
   s.erase(s.begin(), std::find_if_not(s.begin(), s.end(), [&locale](char c) { return std::isspace(c, locale); }));
   s.erase(std::find_if_not(s.rbegin(), s.rend(), [&locale](char c) { return std::isspace(c, locale); }).base(),
@@ -65,7 +65,7 @@ static void trim(std::string &s) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySQLRecognizerCommon::sqlModeFromString(std::string modes) {
+auto MySQLRecognizerCommon::sqlModeFromString(std::string modes) -> void {
   sqlMode = NoMode;
 
   for (auto &c : modes)
@@ -92,7 +92,7 @@ void MySQLRecognizerCommon::sqlModeFromString(std::string modes) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::string dumpTree(RuleContext *context, const Vocabulary &vocabulary, const std::string &indentation) {
+static auto dumpTree(RuleContext *context, const Vocabulary &vocabulary, const std::string &indentation) -> std::string {
   std::stringstream stream;
 
   for (size_t index = 0; index < context->children.size(); ++index) {
@@ -129,19 +129,19 @@ static std::string dumpTree(RuleContext *context, const Vocabulary &vocabulary, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string MySQLRecognizerCommon::dumpTree(RuleContext *context, const antlr4::dfa::Vocabulary &vocabulary) {
+auto MySQLRecognizerCommon::dumpTree(RuleContext *context, const antlr4::dfa::Vocabulary &vocabulary) -> std::string {
   return ::dumpTree(context, vocabulary, "");
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string MySQLRecognizerCommon::sourceTextForContext(ParserRuleContext *ctx, bool keepQuotes) {
+auto MySQLRecognizerCommon::sourceTextForContext(ParserRuleContext *ctx, bool keepQuotes) -> std::string {
   return sourceTextForRange(ctx->start, ctx->stop, keepQuotes);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string MySQLRecognizerCommon::sourceTextForRange(tree::ParseTree *start, tree::ParseTree *stop, bool keepQuotes) {
+auto MySQLRecognizerCommon::sourceTextForRange(tree::ParseTree *start, tree::ParseTree *stop, bool keepQuotes) -> std::string {
   Token *startToken = antlrcpp::is<tree::TerminalNode *>(start) ? dynamic_cast<tree::TerminalNode *>(start)->getSymbol()
                                                                 : dynamic_cast<ParserRuleContext *>(start)->start;
   Token *stopToken = antlrcpp::is<tree::TerminalNode *>(stop) ? dynamic_cast<tree::TerminalNode *>(start)->getSymbol()
@@ -151,7 +151,7 @@ std::string MySQLRecognizerCommon::sourceTextForRange(tree::ParseTree *start, tr
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string MySQLRecognizerCommon::sourceTextForRange(Token *start, Token *stop, bool keepQuotes) {
+auto MySQLRecognizerCommon::sourceTextForRange(Token *start, Token *stop, bool keepQuotes) -> std::string {
   CharStream *cs = start->getTokenSource()->getInputStream();
   size_t stopIndex = stop != nullptr ? stop->getStopIndex() : std::numeric_limits<size_t>::max();
   std::string result = cs->getText(misc::Interval(start->getStartIndex(), stopIndex));
@@ -177,7 +177,7 @@ std::string MySQLRecognizerCommon::sourceTextForRange(Token *start, Token *stop,
  * Returns the previous sibling of the given tree, which could be a
  * non-terminal. Requires that tree has a valid parent.
  */
-ParseTree *getPreviousSibling(ParseTree *tree) {
+auto getPreviousSibling(ParseTree *tree) -> ParseTree * {
   ParseTree *parent = tree->parent;
   if (parent == nullptr)
     return nullptr;
@@ -200,7 +200,7 @@ ParseTree *getPreviousSibling(ParseTree *tree) {
  * be a terminal or non-terminal node.
  * Returns nullptr if there is no such node.
  */
-ParseTree *MySQLRecognizerCommon::getPrevious(ParseTree *tree) {
+auto MySQLRecognizerCommon::getPrevious(ParseTree *tree) -> ParseTree * {
   do {
     ParseTree *sibling = getPreviousSibling(tree);
     if (sibling != nullptr) {
@@ -225,7 +225,7 @@ ParseTree *MySQLRecognizerCommon::getPrevious(ParseTree *tree) {
  * Returns the next sibling of the given tree, which could be a non-terminal.
  * Requires that tree has a valid parent.
  */
-ParseTree *getNextSibling(ParseTree *tree) {
+auto getNextSibling(ParseTree *tree) -> ParseTree * {
   ParseTree *parent = tree->parent;
   if (parent == nullptr)
     return nullptr;
@@ -248,7 +248,7 @@ ParseTree *getNextSibling(ParseTree *tree) {
  * be a terminal or non-terminal node.
  * Returns nullptr if there is no such node.
  */
-ParseTree *MySQLRecognizerCommon::getNext(ParseTree *tree) {
+auto MySQLRecognizerCommon::getNext(ParseTree *tree) -> ParseTree * {
   // If we have children return the first one.
   if (!tree->children.empty()) {
     do {
@@ -279,7 +279,7 @@ ParseTree *MySQLRecognizerCommon::getNext(ParseTree *tree) {
  * instead (which could also be EOF).
  * Note: the line is one-based.
  */
-ParseTree* MySQLRecognizerCommon::terminalFromPosition(ParseTree *root, std::pair<size_t, size_t> position) {
+auto MySQLRecognizerCommon::terminalFromPosition(ParseTree *root, std::pair<size_t, size_t> position) -> ParseTree* {
   do {
     root = getNext(root);
     if (antlrcpp::is<TerminalNode *>(root)) {
@@ -305,7 +305,7 @@ ParseTree* MySQLRecognizerCommon::terminalFromPosition(ParseTree *root, std::pai
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool treeContainsPosition(ParseTree *node, size_t position) {
+static auto treeContainsPosition(ParseTree *node, size_t position) -> bool {
   auto terminal = dynamic_cast<TerminalNode *>(node);
   if (terminal != nullptr) {
     return terminal->getSymbol()->getStartIndex() <= position && position <= terminal->getSymbol()->getStopIndex();
@@ -323,7 +323,7 @@ static bool treeContainsPosition(ParseTree *node, size_t position) {
 /**
  * Returns the parser context at the given character index position or nullptr if there's none.
  */
-ParseTree* MySQLRecognizerCommon::contextFromPosition(ParseTree *root, size_t position) {
+auto MySQLRecognizerCommon::contextFromPosition(ParseTree *root, size_t position) -> ParseTree* {
   if (!treeContainsPosition(root, position))
     return nullptr;
 
@@ -339,7 +339,7 @@ ParseTree* MySQLRecognizerCommon::contextFromPosition(ParseTree *root, size_t po
 
 //----------------------------------------------------------------------------------------------------------------------
 
-SymbolTable *parsers::functionSymbolsForVersion(MySQLVersion version) {
+auto parsers::functionSymbolsForVersion(MySQLVersion version) -> SymbolTable * {
   static std::map<MySQLVersion, SymbolTable> functionSymbols;
 
   if (functionSymbols.count(version) == 0) {

@@ -43,47 +43,47 @@ namespace bec {
 
     auto setup(const std::string &lang) -> bool;
 
-    void set_save_directory(const std::string &path);
-    void start();
+    auto set_save_directory(const std::string &path) -> void;
+    auto start() -> void;
 
-    void process_line_async(const std::string &line);
+    auto process_line_async(const std::string &line) -> void;
 
-    void run_script_file(const std::string &path);
+    auto run_script_file(const std::string &path) -> void;
     auto run_script(const std::string &script, const std::string &language) -> bool;
 
     auto previous_history_line(const std::string &current_line, std::string &line) -> bool;
     auto next_history_line(std::string &line) -> bool;
-    void reset_history_position();
+    auto reset_history_position() -> void;
 
-    std::vector<std::string> get_grt_tree_bookmarks();
-    void add_grt_tree_bookmark(const std::string &path);
-    void delete_grt_tree_bookmark(const std::string &path);
+    auto get_grt_tree_bookmarks() -> std::vector<std::string>;
+    auto add_grt_tree_bookmark(const std::string &path) -> void;
+    auto delete_grt_tree_bookmark(const std::string &path) -> void;
 
-    void write_line(const std::string &line);
-    void write(const std::string &text);
-    void writef(const char *fmt, ...);
+    auto write_line(const std::string &line) -> void;
+    auto write(const std::string &text) -> void;
+    auto writef(const char *fmt, ...) -> void;
 
-    void set_output_handler(const std::function<void(const std::string &)> &slot);
-    void set_ready_handler(const std::function<void(const std::string &)> &slot);
+    auto set_output_handler(const std::function<void(const std::string &)> &slot) -> void;
+    auto set_ready_handler(const std::function<void(const std::string &)> &slot) -> void;
 
-    void flush_shell_output();
+    auto flush_shell_output() -> void;
 
-    void set_saves_history(int line_count);
+    auto set_saves_history(int line_count) -> void;
 
-    std::vector<std::string> complete_line(const std::string &line, std::string &nprefix);
+    auto complete_line(const std::string &line, std::string &nprefix) -> std::vector<std::string>;
 
     auto get_shell_variable(const std::string &varname) -> grt::ValueRef;
 
-    void clear_history();
-    void save_history_line(const std::string &line);
+    auto clear_history() -> void;
+    auto save_history_line(const std::string &line) -> void;
 
     auto get_snippet_data() -> std::string;
-    void set_snippet_data(const std::string &data);
+    auto set_snippet_data(const std::string &data) -> void;
 
-    void store_state();
-    void restore_state();
+    auto store_state() -> void;
+    auto restore_state() -> void;
 
-    void handle_msg(const grt::Message &msgs);
+    auto handle_msg(const grt::Message &msgs) -> void;
 
   protected:
     grt::Shell *_shell;
@@ -109,6 +109,6 @@ namespace bec {
     int _skip_history;
 
   private:
-    void shell_finished_cb(grt::ShellCommand result, const std::string &prompt, const std::string &line);
+    auto shell_finished_cb(grt::ShellCommand result, const std::string &prompt, const std::string &line) -> void;
   };
 };

@@ -39,19 +39,19 @@ Button::Button(ButtonType btype) : _updating(false) {
 #endif
 }
 
-void Button::set_icon(const std::string &icon) {
+auto Button::set_icon(const std::string &icon) -> void {
   _button_impl->set_icon(this, icon);
 }
 
-void Button::set_text(const std::string &text) {
+auto Button::set_text(const std::string &text) -> void {
   _button_impl->set_text(this, text);
 }
 
-void Button::enable_internal_padding(bool flag) {
+auto Button::enable_internal_padding(bool flag) -> void {
   _button_impl->enable_internal_padding(this, flag);
 }
 
-void Button::callback() {
+auto Button::callback() -> void {
   if (!_updating)
     _clicked();
 }

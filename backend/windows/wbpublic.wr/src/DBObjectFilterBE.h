@@ -49,19 +49,19 @@ namespace MySQL {
           delete inner;
         }
 
-        ::bec::DBObjectFilterBE *get_unmanaged_object() {
+        auto get_unmanaged_object() -> ::bec::DBObjectFilterBE * {
           return static_cast<::bec::DBObjectFilterBE *>(inner);
         }
 
         void set_object_type_name(String ^ type_name);
-        String ^ get_full_type_name();
-        int icon_id(MySQL::Grt::IconSize icon_size);
+        auto get_full_type_name() -> String ^;
+        auto icon_id(MySQL::Grt::IconSize icon_size) -> int;
 
         void filter_model(GrtStringListModel ^ filter_model);
-        GrtStringListModel ^ filter_model();
+        auto filter_model() -> GrtStringListModel ^;
         void add_stored_filter_set(String ^ name);
-        void remove_stored_filter_set(int index);
-        void load_stored_filter_set(int index);
+        auto remove_stored_filter_set(int index) -> void;
+        auto load_stored_filter_set(int index) -> void;
         void load_stored_filter_set_list(List<String ^> ^ % names);
       };
 

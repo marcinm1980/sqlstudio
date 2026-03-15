@@ -33,58 +33,58 @@ namespace mforms {
 
     class ViewWrapper : public ObjectWrapper {
     protected:
-      static void destroy(View *self);
+      static auto destroy(View *self) -> void;
 
-      static int get_width(const mforms::View *self);
-      static int get_height(const mforms::View *self);
-      static int get_preferred_width(mforms::View *self);
-      static int get_preferred_height(mforms::View *self);
-      static void set_size(mforms::View *self, int w, int h);
-      static void set_min_size(mforms::View *self, int w, int h);
-      static void set_padding(View *self, int, int, int, int);
+      static auto get_width(const mforms::View *self) -> int;
+      static auto get_height(const mforms::View *self) -> int;
+      static auto get_preferred_width(mforms::View *self) -> int;
+      static auto get_preferred_height(mforms::View *self) -> int;
+      static auto set_size(mforms::View *self, int w, int h) -> void;
+      static auto set_min_size(mforms::View *self, int w, int h) -> void;
+      static auto set_padding(View *self, int, int, int, int) -> void;
 
-      static int get_x(const mforms::View *self);
-      static int get_y(const mforms::View *self);
-      static void set_position(mforms::View *self, int x, int y);
-      static std::pair<int, int> client_to_screen(View *self, int, int);
-      static std::pair<int, int> screen_to_client(View *self, int, int);
+      static auto get_x(const mforms::View *self) -> int;
+      static auto get_y(const mforms::View *self) -> int;
+      static auto set_position(mforms::View *self, int x, int y) -> void;
+      static auto client_to_screen(View *self, int, int) -> std::pair<int, int>;
+      static auto screen_to_client(View *self, int, int) -> std::pair<int, int>;
 
-      static void show(mforms::View *self, bool show);
-      static bool is_shown(mforms::View *self);
+      static auto show(mforms::View *self, bool show) -> void;
+      static auto is_shown(mforms::View *self) -> bool;
 
-      static void set_tooltip(mforms::View *self, const std::string &text);
-      static void set_name(mforms::View *view, const std::string &name);
-      static void set_font(mforms::View *view, const std::string &font);
+      static auto set_tooltip(mforms::View *self, const std::string &text) -> void;
+      static auto set_name(mforms::View *view, const std::string &name) -> void;
+      static auto set_font(mforms::View *view, const std::string &font) -> void;
 
-      static void set_enabled(mforms::View *self, bool flag);
-      static bool is_enabled(View *self);
-      static void relayout(mforms::View *view);
-      static void set_needs_repaint(mforms::View *view);
+      static auto set_enabled(mforms::View *self, bool flag) -> void;
+      static auto is_enabled(View *self) -> bool;
+      static auto relayout(mforms::View *view) -> void;
+      static auto set_needs_repaint(mforms::View *view) -> void;
 
-      static void suspend_layout(View *self, bool);
-      static void set_front_color(mforms::View *self, const std::string &color);
-      static std::string get_front_color(View *self);
-      static void set_back_color(mforms::View *self, const std::string &color);
-      static std::string get_back_color(View *self);
-      static void set_back_image(mforms::View *self, const std::string &path, mforms::Alignment layout);
+      static auto suspend_layout(View *self, bool) -> void;
+      static auto set_front_color(mforms::View *self, const std::string &color) -> void;
+      static auto get_front_color(View *self) -> std::string;
+      static auto set_back_color(mforms::View *self, const std::string &color) -> void;
+      static auto get_back_color(View *self) -> std::string;
+      static auto set_back_image(mforms::View *self, const std::string &path, mforms::Alignment layout) -> void;
 
-      static void flush_events(View *self);
+      static auto flush_events(View *self) -> void;
 
-      static void focus(View *self);
+      static auto focus(View *self) -> void;
 
-      static void register_drop_formats(View *self, DropDelegate *target, const std::vector<std::string> &);
-      static DragOperation drag_text(View *self, DragDetails details, const std::string &text);
-      static DragOperation drag_data(View *self, DragDetails details, void *data, const std::string &format);
+      static auto register_drop_formats(View *self, DropDelegate *target, const std::vector<std::string> &) -> void;
+      static auto drag_text(View *self, DragDetails details, const std::string &text) -> DragOperation;
+      static auto drag_data(View *self, DragDetails details, void *data, const std::string &format) -> DragOperation;
 
       ViewWrapper(mforms::View *view);
 
-      virtual int get_preferred_width();
-      virtual int get_preferred_height();
-      virtual void set_size(int width, int height);
-      void size_changed();
+      virtual auto get_preferred_width() -> int;
+      virtual auto get_preferred_height() -> int;
+      virtual auto set_size(int width, int height) -> void;
+      auto size_changed() -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

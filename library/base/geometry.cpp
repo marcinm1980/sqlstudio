@@ -57,7 +57,7 @@ Size::Size(double w, double h) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool Size::empty() {
+auto Size::empty() -> bool {
   return (width == 0) || (height == 0);
 }
 
@@ -98,13 +98,13 @@ Rect::Rect(const Point &apos, const Size &asize) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool Rect::contains(double x, double y) const {
+auto Rect::contains(double x, double y) const -> bool {
   return !empty() && (x >= pos.x) && (x <= pos.x + size.width) && (y >= pos.y) && (y <= pos.y + size.height);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Rect::contains_flipped(double x, double y) const {
+auto Rect::contains_flipped(double x, double y) const -> bool {
   // For cairo text the top is actually the bottom (when using it for hit tests).
   return !empty() && (x >= pos.x) && (x <= pos.x + size.width) && (y >= pos.y - size.height) && (y <= pos.y);
 }
@@ -115,7 +115,7 @@ bool Rect::contains_flipped(double x, double y) const {
  * Inflates the rectangle by adding the given amounts to the left/top coordinate and subtracting them
  * from the right/bottom coordinate.
  */
-void Rect::inflate(double horizontal, double vertical) {
+auto Rect::inflate(double horizontal, double vertical) -> void {
   pos.x += horizontal;
   size.width -= 2 * horizontal;
   pos.y += vertical;
@@ -124,7 +124,7 @@ void Rect::inflate(double horizontal, double vertical) {
 
 //--------------------------------------------------------------------------------------------------
 
-double Rect::right() const {
+auto Rect::right() const -> double {
   if (use_inter_pixel)
     return (int)(pos.x + size.width) + 0.5;
   else
@@ -133,7 +133,7 @@ double Rect::right() const {
 
 //--------------------------------------------------------------------------------------------------
 
-double Rect::bottom() const {
+auto Rect::bottom() const -> double {
   if (use_inter_pixel)
     return (int)(pos.y + size.height) + 0.5;
   else
@@ -142,7 +142,7 @@ double Rect::bottom() const {
 
 //--------------------------------------------------------------------------------------------------
 
-double Rect::left() const {
+auto Rect::left() const -> double {
   if (use_inter_pixel)
     return (int)pos.x + 0.5;
   else
@@ -151,7 +151,7 @@ double Rect::left() const {
 
 //--------------------------------------------------------------------------------------------------
 
-double Rect::top() const {
+auto Rect::top() const -> double {
   if (use_inter_pixel)
     return (int)pos.y + 0.5;
   else
@@ -205,13 +205,13 @@ Padding::Padding(int left, int top, int right, int bottom) {
 
 //--------------------------------------------------------------------------------------------------
 
-int Padding::horizontal() {
+auto Padding::horizontal() -> int {
   return left + right;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int Padding::vertical() {
+auto Padding::vertical() -> int {
   return top + bottom;
 }
 
@@ -231,13 +231,13 @@ Range::Range(size_t position, size_t size) {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t Range::end() {
+auto Range::end() -> size_t {
   return position + size;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Range::contains_point(size_t point) {
+auto Range::contains_point(size_t point) -> bool {
   return (point >= position) && (point - position <= size);
 }
 

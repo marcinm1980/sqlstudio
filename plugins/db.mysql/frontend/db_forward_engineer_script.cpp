@@ -141,24 +141,24 @@ public:
     _skip_FK_indexes_check.set_enabled(_skip_foreign_keys_check.get_active());
   }
 
-  void SkipFKToggled() {
+  auto SkipFKToggled() -> void {
     _skip_FK_indexes_check.set_enabled(_skip_foreign_keys_check.get_active());
   }
 
-  void OmitSchemaToggled() {
+  auto OmitSchemaToggled() -> void {
     _generate_use_check.set_enabled(_omit_schema_qualifier_check.get_active());
   }
 
-  void file_changed() {
+  auto file_changed() -> void {
     validate();
   }
 
-  virtual bool allow_next() {
+  virtual auto allow_next() -> bool {
     return true;
     // return !_filename.get_string_value().empty();
   }
 
-  virtual bool advance() {
+  virtual auto advance() -> bool {
     std::string filename = _file_selector->get_filename();
 
     if (_confirmed_overwrite_for != filename && !_file_selector->check_and_confirm_file_overwrite())
@@ -168,7 +168,7 @@ public:
     return WizardPage::advance();
   }
 
-  virtual void leave(bool advancing) {
+  virtual auto leave(bool advancing) -> void {
     if (advancing) {
       values().gset("OutputFileName", _file_selector->get_filename());
 
@@ -256,14 +256,14 @@ public:
   }
 
 protected:
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing && !_table_filter)
       setup_filters();
 
     WizardObjectFilterPage::enter(advancing);
   }
 
-  void setup_filters() {
+  auto setup_filters() -> void {
     bec::GrtStringListModel *users_model;
     bec::GrtStringListModel *users_imodel;
     bec::GrtStringListModel *tables_model;
@@ -293,7 +293,7 @@ protected:
     _user_filter = add_filter(db_User::static_class_name(), _("Export %s Objects"), users_model, users_imodel, NULL);
   }
 
-  virtual bool advance() {
+  virtual auto advance() -> bool {
     std::string header;
 
     db_CatalogRef catalog(_export_be->get_catalog());
@@ -372,7 +372,7 @@ public:
     set_editable(true);
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       if (_export_be->get_output_filename().empty())
         _label.set_text(_("Review the generated script."));
@@ -392,7 +392,7 @@ public:
     }
   }
 
-  virtual bool advance() {
+  virtual auto advance() -> bool {
     std::string path = values().get_string("OutputFileName");
     if (!path.empty()) {
       save_text_to(path);
@@ -403,11 +403,11 @@ public:
     return true;
   }
 
-  virtual std::string next_button_caption() {
+  virtual auto next_button_caption() -> std::string {
     return finish_caption();
   }
 
-  virtual bool next_closes_wizard() {
+  virtual auto next_closes_wizard() -> bool {
     return true;
   }
 };
@@ -429,10 +429,10 @@ public:
   }
 };
 
-grtui::WizardPlugin *createExportCREATEScriptWizard(grt::Module *module, db_CatalogRef catalog) {
+auto createExportCREATEScriptWizard(grt::Module *module, db_CatalogRef catalog) -> grtui::WizardPlugin * {
   return new WbPluginSQLExport(module);
 }
 
-void deleteExportCREATEScriptWizard(grtui::WizardPlugin *plugin) {
+auto deleteExportCREATEScriptWizard(grtui::WizardPlugin *plugin) -> void {
   delete plugin;
 }

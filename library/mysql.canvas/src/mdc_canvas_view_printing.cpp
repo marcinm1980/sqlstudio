@@ -55,65 +55,65 @@ CanvasViewExtras::CanvasViewExtras(CanvasView *view) : _view(view) {
   _margin_right = 0;
 }
 
-void CanvasViewExtras::set_progress_callback(const std::function<void(int, int)> &progress) {
+auto CanvasViewExtras::set_progress_callback(const std::function<void(int, int)> &progress) -> void {
   _progress_cb = progress;
 }
 
-void CanvasViewExtras::enable_custom_layout() {
+auto CanvasViewExtras::enable_custom_layout() -> void {
 }
 
-void CanvasViewExtras::set_show_print_guides(bool flag) {
+auto CanvasViewExtras::set_show_print_guides(bool flag) -> void {
 }
 
-void CanvasViewExtras::get_page_counts(Count &xpages, Count &ypages) {
+auto CanvasViewExtras::get_page_counts(Count &xpages, Count &ypages) -> void {
   _view->get_page_layout(xpages, ypages);
 }
 
-void CanvasViewExtras::set_paper_size(double width, double height) {
+auto CanvasViewExtras::set_paper_size(double width, double height) -> void {
   _page_width = width;
   _page_height = height;
 }
 
-void CanvasViewExtras::get_paper_size(double &width, double &height) {
+auto CanvasViewExtras::get_paper_size(double &width, double &height) -> void {
   width = _page_width;
   height = _page_height;
 }
 
-void CanvasViewExtras::set_page_margins(double top, double left, double bottom, double right) {
+auto CanvasViewExtras::set_page_margins(double top, double left, double bottom, double right) -> void {
   _margin_top = top;
   _margin_bottom = bottom;
   _margin_left = left;
   _margin_right = right;
 }
 
-void CanvasViewExtras::set_orientation(PageOrientation orientation) {
+auto CanvasViewExtras::set_orientation(PageOrientation orientation) -> void {
   _orientation = orientation;
 }
 
-void CanvasViewExtras::set_print_border(bool flag) {
+auto CanvasViewExtras::set_print_border(bool flag) -> void {
   _print_border = flag;
 }
 
-void CanvasViewExtras::set_print_page_numbers(bool flag) {
+auto CanvasViewExtras::set_print_page_numbers(bool flag) -> void {
   _print_page_numbers = flag;
 }
 
-void CanvasViewExtras::set_scale(double scale) {
+auto CanvasViewExtras::set_scale(double scale) -> void {
   _xscale = _yscale = scale;
 }
 
-void CanvasViewExtras::set_scale(double xscale, double yscale) {
+auto CanvasViewExtras::set_scale(double xscale, double yscale) -> void {
   _xscale = xscale;
   _yscale = yscale;
 }
 
-void CanvasViewExtras::set_scale_to_fit() {
+auto CanvasViewExtras::set_scale_to_fit() -> void {
 }
 
-void CanvasViewExtras::set_print_area(const Rect &area) {
+auto CanvasViewExtras::set_print_area(const Rect &area) -> void {
 }
 
-Size CanvasViewExtras::get_adjusted_paper_size() {
+auto CanvasViewExtras::get_adjusted_paper_size() -> Size {
   Size size(_page_width, _page_height);
 
   // if (_orientation == Landscape)
@@ -122,7 +122,7 @@ Size CanvasViewExtras::get_adjusted_paper_size() {
   return size;
 }
 
-Rect CanvasViewExtras::get_adjusted_printable_area() {
+auto CanvasViewExtras::get_adjusted_printable_area() -> Rect {
   Rect rect;
 
   rect.pos.x = _margin_left;
@@ -142,7 +142,7 @@ Rect CanvasViewExtras::get_adjusted_printable_area() {
   return rect;
 }
 
-int CanvasViewExtras::print_to_pdf(const std::string &path) {
+auto CanvasViewExtras::print_to_pdf(const std::string &path) -> int {
   Size paper_size = get_adjusted_paper_size();
   int count;
 
@@ -176,20 +176,20 @@ int CanvasViewExtras::print_to_pdf(const std::string &path) {
   return count;
 }
 
-PDFSurface *CanvasViewExtras::create_pdf_surface(FileHandle &fh) {
+auto CanvasViewExtras::create_pdf_surface(FileHandle &fh) -> PDFSurface * {
   Size paper_size = get_adjusted_paper_size();
   return new PDFSurface(cairo_pdf_surface_create_for_stream(&write_to_surface, fh.file(), MM_TO_PT(paper_size.width),
                                                             MM_TO_PT(paper_size.height)));
 }
 
-PSSurface *CanvasViewExtras::create_ps_surface(FileHandle &fh) {
+auto CanvasViewExtras::create_ps_surface(FileHandle &fh) -> PSSurface * {
   Size paper_size = get_adjusted_paper_size();
   return new PSSurface(cairo_ps_surface_create_for_stream(&write_to_surface, fh.file(), MM_TO_PT(paper_size.width),
                                                           MM_TO_PT(paper_size.height)));
 }
 
-int CanvasViewExtras::print_to_surface(Surface *surf, const std::string &header_text, const std::string &footer_text,
-                                       int gpage_start, int gtotal_pages) {
+auto CanvasViewExtras::print_to_surface(Surface *surf, const std::string &header_text, const std::string &footer_text,
+                                       int gpage_start, int gtotal_pages) -> int {
   int count;
 
   _view->lock();
@@ -215,7 +215,7 @@ int CanvasViewExtras::print_to_surface(Surface *surf, const std::string &header_
   return count;
 }
 
-int CanvasViewExtras::print_to_ps(const std::string &path) {
+auto CanvasViewExtras::print_to_ps(const std::string &path) -> int {
   Size paper_size = get_adjusted_paper_size();
   int count;
 
@@ -248,7 +248,7 @@ int CanvasViewExtras::print_to_ps(const std::string &path) {
 }
 
 #ifdef _MSC_VER
-int CanvasViewExtras::print_native(HDC hdc, int paper_width, int paper_height, int page) {
+auto CanvasViewExtras::print_native(HDC hdc, int paper_width, int paper_height, int page) -> int {
   int count;
 
   _view->lock();
@@ -280,9 +280,9 @@ int CanvasViewExtras::print_native(HDC hdc, int paper_width, int paper_height, i
 }
 #endif
 
-int CanvasViewExtras::render_pages(CairoCtx *cr, double render_scale, int page, bool rotate_for_landscape,
+auto CanvasViewExtras::render_pages(CairoCtx *cr, double render_scale, int page, bool rotate_for_landscape,
                                    const std::string &header_text, const std::string &footer_text, int gpage_start,
-                                   int gtotal_pages) {
+                                   int gtotal_pages) -> int {
   Size paper_size = get_adjusted_paper_size();
   Rect content_area = get_adjusted_printable_area();
   Count xc, yc;
@@ -378,7 +378,7 @@ int CanvasViewExtras::render_pages(CairoCtx *cr, double render_scale, int page, 
 }
 
 // used in macosx (and linux)
-void CanvasViewExtras::render_page(CairoCtx *cr, int x, int y) {
+auto CanvasViewExtras::render_page(CairoCtx *cr, int x, int y) -> void {
   Rect content_area = get_adjusted_printable_area();
   Rect bounds;
 

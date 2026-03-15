@@ -42,7 +42,7 @@ namespace MySQL {
         }
 
       public:
-        bec::ViewEditorBE *get_unmanaged_object() {
+        auto get_unmanaged_object() -> bec::ViewEditorBE * {
           return static_cast<bec::ViewEditorBE *>(inner);
         }
       };

@@ -41,7 +41,7 @@
 #define FRONTEND_LIBNAME(obj, windows_dll, linux_so, osx_dylib) obj->moduleName(linux_so)
 #endif
 
-static grt::ListRef<app_Plugin> get_plugins_info(grt::GRT *grt);
+static auto get_plugins_info(grt::GRT *grt) -> grt::ListRef<app_Plugin>;
 
 class WbTaggingModuleImpl : public grt::ModuleImplBase, public PluginInterfaceImpl {
 public:
@@ -51,12 +51,12 @@ public:
   DEFINE_INIT_MODULE(MODULE_VERSION, "Sun Microsystems Inc", grt::ModuleImplBase,
                      DECLARE_MODULE_FUNCTION(WbTaggingModuleImpl::getPluginInfo), NULL);
 
-  virtual grt::ListRef<app_Plugin> getPluginInfo() {
+  virtual auto getPluginInfo() -> grt::ListRef<app_Plugin> {
     return get_plugins_info(get_grt());
   }
 };
 
-static void set_object_argument(app_PluginRef &plugin, const std::string &struct_name) {
+static auto set_object_argument(app_PluginRef &plugin, const std::string &struct_name) -> void {
   app_PluginObjectInputRef pdef(plugin.get_grt());
 
   pdef->objectStructName(struct_name);
@@ -65,7 +65,7 @@ static void set_object_argument(app_PluginRef &plugin, const std::string &struct
   plugin->inputValues().insert(pdef);
 }
 
-static grt::ListRef<app_Plugin> get_plugins_info(grt::GRT *grt) {
+static auto get_plugins_info(grt::GRT *grt) -> grt::ListRef<app_Plugin> {
   grt::ListRef<app_Plugin> editors(grt);
 
   app_PluginRef tag_editor(grt);

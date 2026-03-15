@@ -40,12 +40,12 @@ namespace grt {
     PythonModule(PythonModuleLoader *loader, PyObject *module);
     virtual ~PythonModule();
 
-    void add_parse_function(const std::string &name, PyObject *return_type, PyObject *arguments, PyObject *callable);
+    auto add_parse_function(const std::string &name, PyObject *return_type, PyObject *arguments, PyObject *callable) -> void;
 
   protected:
     PyObject *_module;
 
-    virtual ValueRef call_python_function(const BaseListRef &args, PyObject *function, const Function &funcdef);
+    virtual auto call_python_function(const BaseListRef &args, PyObject *function, const Function &funcdef) -> ValueRef;
   };
 
   class MYSQLGRT_PUBLIC PythonModuleLoader : public ModuleLoader {
@@ -53,23 +53,23 @@ namespace grt {
     PythonModuleLoader(const std::string &module_path);
     virtual ~PythonModuleLoader();
 
-    virtual std::string get_loader_name() {
+    virtual auto get_loader_name() -> std::string {
       return LanguagePython;
     }
 
-    virtual Module *init_module(const std::string &path);
+    virtual auto init_module(const std::string &path) -> Module *;
 
-    virtual void refresh();
+    virtual auto refresh() -> void;
 
-    void add_module_dir(const std::string &path);
-    virtual bool load_library(const std::string &file);
+    auto add_module_dir(const std::string &path) -> void;
+    virtual auto load_library(const std::string &file) -> bool;
 
-    virtual bool run_script_file(const std::string &path);
-    virtual bool run_script(const std::string &script);
+    virtual auto run_script_file(const std::string &path) -> bool;
+    virtual auto run_script(const std::string &script) -> bool;
 
-    virtual bool check_file_extension(const std::string &path);
+    virtual auto check_file_extension(const std::string &path) -> bool;
 
-    PythonContext *get_python_context() {
+    auto get_python_context() -> PythonContext * {
       return &_pycontext;
     }
 

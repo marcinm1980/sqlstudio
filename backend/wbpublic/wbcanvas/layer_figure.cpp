@@ -82,30 +82,30 @@ LayerAreaGroup::~LayerAreaGroup() {
 
 //--------------------------------------------------------------------------------------------------
 
-void LayerAreaGroup::set_title(const std::string &title) {
+auto LayerAreaGroup::set_title(const std::string &title) -> void {
   _title = title;
   _extents_invalid = true;
   set_needs_repaint();
 }
 
-void LayerAreaGroup::set_font(const mdc::FontSpec &font) {
+auto LayerAreaGroup::set_font(const mdc::FontSpec &font) -> void {
   _font = font;
   _extents_invalid = true;
   set_needs_repaint();
 }
 
-static void get_bounding_area(mdc::CanvasItem *item, Point *maxpos) {
+static auto get_bounding_area(mdc::CanvasItem *item, Point *maxpos) -> void {
   Rect bounds = item->get_bounds();
 
   maxpos->x = max(maxpos->x, bounds.right());
   maxpos->y = max(maxpos->y, bounds.bottom());
 }
 
-void LayerAreaGroup::move_item(mdc::CanvasItem *item, const Point &pos) {
+auto LayerAreaGroup::move_item(mdc::CanvasItem *item, const Point &pos) -> void {
   item->move_to(pos);
 }
 
-bool LayerAreaGroup::on_drag_handle(mdc::ItemHandle *handle, const Point &pos, bool dragging) {
+auto LayerAreaGroup::on_drag_handle(mdc::ItemHandle *handle, const Point &pos, bool dragging) -> bool {
   if (!_resizing) {
     Point maxpos;
 
@@ -134,8 +134,8 @@ bool LayerAreaGroup::on_drag_handle(mdc::ItemHandle *handle, const Point &pos, b
   return flag;
 }
 
-bool LayerAreaGroup::on_button_press(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                                     mdc::EventState state) {
+auto LayerAreaGroup::on_button_press(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                                     mdc::EventState state) -> bool {
   if (mdc::bounds_contain_point(get_title_bounds(), point.x, point.y)) {
     _drag_selects_contents = false;
   }
@@ -146,8 +146,8 @@ bool LayerAreaGroup::on_button_press(mdc::CanvasItem *target, const Point &point
   return false;
 }
 
-bool LayerAreaGroup::on_button_release(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                                       mdc::EventState state) {
+auto LayerAreaGroup::on_button_release(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                                       mdc::EventState state) -> bool {
   bool ret = false;
 
   if (!_hub || !_hub->figure_button_release(_represented_object, target, point, button, state))
@@ -160,8 +160,8 @@ bool LayerAreaGroup::on_button_release(mdc::CanvasItem *target, const Point &poi
 
 //--------------------------------------------------------------------------------------------------
 
-bool LayerAreaGroup::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                              mdc::EventState state) {
+auto LayerAreaGroup::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                              mdc::EventState state) -> bool {
   if (!_hub || !_hub->figure_click(_represented_object, target, point, button, state))
     return mdc::AreaGroup::on_click(target, point, button, state);
 
@@ -170,8 +170,8 @@ bool LayerAreaGroup::on_click(mdc::CanvasItem *target, const Point &point, mdc::
 
 //--------------------------------------------------------------------------------------------------
 
-bool LayerAreaGroup::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                                     mdc::EventState state) {
+auto LayerAreaGroup::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                                     mdc::EventState state) -> bool {
   if (!_hub || !_hub->figure_double_click(_represented_object, target, point, button, state))
     return mdc::AreaGroup::on_double_click(target, point, button, state);
 
@@ -180,13 +180,13 @@ bool LayerAreaGroup::on_double_click(mdc::CanvasItem *target, const Point &point
 
 //--------------------------------------------------------------------------------------------------
 
-bool LayerAreaGroup::on_enter(mdc::CanvasItem *target, const Point &point) {
+auto LayerAreaGroup::on_enter(mdc::CanvasItem *target, const Point &point) -> bool {
   if (!_hub || !_hub->figure_enter(_represented_object, target, point))
     return super::on_enter(target, point);
   return false;
 }
 
-bool LayerAreaGroup::on_leave(mdc::CanvasItem *target, const Point &point) {
+auto LayerAreaGroup::on_leave(mdc::CanvasItem *target, const Point &point) -> bool {
   if (!_hub || !_hub->figure_leave(_represented_object, target, point))
     return super::on_leave(target, point);
   return false;
@@ -194,7 +194,7 @@ bool LayerAreaGroup::on_leave(mdc::CanvasItem *target, const Point &point) {
 
 #define TEXT_PADDING 5
 
-void LayerAreaGroup::render(mdc::CairoCtx *cr) {
+auto LayerAreaGroup::render(mdc::CairoCtx *cr) -> void {
   mdc::AreaGroup::render(cr);
 
   if (_extents_invalid) {
@@ -226,7 +226,7 @@ void LayerAreaGroup::render(mdc::CairoCtx *cr) {
 
 //--------------------------------------------------------------------------------------------------
 
-void LayerAreaGroup::render_gl(mdc::CairoCtx *cr) {
+auto LayerAreaGroup::render_gl(mdc::CairoCtx *cr) -> void {
   mdc::AreaGroup::render_gl(cr);
 
 #ifndef __APPLE__
@@ -344,7 +344,7 @@ void LayerAreaGroup::render_gl(mdc::CairoCtx *cr) {
 #endif
 }
 
-Rect LayerAreaGroup::get_title_bounds() const {
+auto LayerAreaGroup::get_title_bounds() const -> Rect {
   Rect rect;
 
   double width = _extents.width + 10;

@@ -34,10 +34,10 @@ using namespace mdc;
 BoundsMagnet::BoundsMagnet(CanvasItem *owner) : Magnet(owner) {
 }
 
-base::Point BoundsMagnet::get_position_for_connector(Connector *conn, const base::Point &srcpos) const {
+auto BoundsMagnet::get_position_for_connector(Connector *conn, const base::Point &srcpos) const -> base::Point {
   return _owner->get_intersection_with_line_to(srcpos);
 }
 
-void BoundsMagnet::owner_bounds_changed(const base::Rect &obounds) {
+auto BoundsMagnet::owner_bounds_changed(const base::Rect &obounds) -> void {
   notify_connected();
 }

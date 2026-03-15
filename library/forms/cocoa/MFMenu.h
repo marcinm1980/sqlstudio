@@ -40,6 +40,4 @@
   mforms::Menu *mOwner;
 }
 
-@end
-
-NSMenu *nsmenuForMenu(mforms::Menu *menu);
+auto nsmenuForMenu(mforms::Menu *menu) -> @end NSMenu *;

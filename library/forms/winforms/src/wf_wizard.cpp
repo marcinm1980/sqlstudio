@@ -73,7 +73,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void SetupLayout() {
+  auto SetupLayout() -> void {
     sidebar = gcnew BufferedPanel;
     title = gcnew Label;
     extraButton = gcnew Button;
@@ -246,7 +246,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void SetStepList(const std::vector<std::string> &steps) {
+  auto SetStepList(const std::vector<std::string> &steps) -> void {
     SuspendLayout();
     try {
       sidebar->Controls->Clear();
@@ -298,7 +298,7 @@ WizardWrapper::WizardWrapper(mforms::Wizard *backend, mforms::Form *owner)
 
 //--------------------------------------------------------------------------------------------------
 
-bool WizardWrapper::create(mforms::Wizard *backend, mforms::Form *owner) {
+auto WizardWrapper::create(mforms::Wizard *backend, mforms::Form *owner) -> bool {
   WizardWrapper *wrapper = new WizardWrapper(backend, owner);
   WizardForm ^ form = WizardWrapper::Create<WizardForm>(backend, wrapper);
   form->backend = backend;
@@ -309,28 +309,28 @@ bool WizardWrapper::create(mforms::Wizard *backend, mforms::Form *owner) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_title(mforms::Wizard *backend, const std::string &title) {
+auto WizardWrapper::set_title(mforms::Wizard *backend, const std::string &title) -> void {
   Form ^ form = WizardWrapper::GetManagedObject<Form>(backend);
   form->Text = CppStringToNative(title);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::run_modal(mforms::Wizard *backend) {
+auto WizardWrapper::run_modal(mforms::Wizard *backend) -> void {
   WizardWrapper *wrapper = backend->get_data<WizardWrapper>();
   wrapper->GetManagedObject<Form>()->ShowDialog(wrapper->_owner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::close(mforms::Wizard *backend) {
+auto WizardWrapper::close(mforms::Wizard *backend) -> void {
   Form ^ form = WizardWrapper::GetManagedObject<Form>(backend);
   form->Close();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_content(mforms::Wizard *backend, mforms::View *view) {
+auto WizardWrapper::set_content(mforms::Wizard *backend, mforms::View *view) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   if (view == NULL)
     form->SetContent(nullptr);
@@ -343,56 +343,56 @@ void WizardWrapper::set_content(mforms::Wizard *backend, mforms::View *view) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_heading(mforms::Wizard *backend, const std::string &heading) {
+auto WizardWrapper::set_heading(mforms::Wizard *backend, const std::string &heading) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   form->title->Text = CppStringToNative(heading);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_step_list(mforms::Wizard *backend, const std::vector<std::string> &steps) {
+auto WizardWrapper::set_step_list(mforms::Wizard *backend, const std::vector<std::string> &steps) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   form->SetStepList(steps);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_allow_cancel(mforms::Wizard *backend, bool flag) {
+auto WizardWrapper::set_allow_cancel(mforms::Wizard *backend, bool flag) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   form->cancelButton->Enabled = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_allow_back(mforms::Wizard *backend, bool flag) {
+auto WizardWrapper::set_allow_back(mforms::Wizard *backend, bool flag) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   form->backButton->Enabled = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_allow_next(mforms::Wizard *backend, bool flag) {
+auto WizardWrapper::set_allow_next(mforms::Wizard *backend, bool flag) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   form->nextButton->Enabled = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_show_extra(mforms::Wizard *backend, bool flag) {
+auto WizardWrapper::set_show_extra(mforms::Wizard *backend, bool flag) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   form->extraButton->Visible = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_extra_caption(mforms::Wizard *backend, const std::string &caption) {
+auto WizardWrapper::set_extra_caption(mforms::Wizard *backend, const std::string &caption) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   form->extraButton->Text = CppStringToNative(caption);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::set_next_caption(mforms::Wizard *backend, const std::string &caption) {
+auto WizardWrapper::set_next_caption(mforms::Wizard *backend, const std::string &caption) -> void {
   WizardForm ^ form = WizardWrapper::GetManagedObject<WizardForm>(backend);
   if (caption.empty())
     form->nextButton->Text = "&Next";
@@ -402,7 +402,7 @@ void WizardWrapper::set_next_caption(mforms::Wizard *backend, const std::string 
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardWrapper::init() {
+auto WizardWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_wizard_impl.create = &WizardWrapper::create;

@@ -44,9 +44,9 @@ WizardObjectFilterPage::~WizardObjectFilterPage() {
   reset();
 }
 
-DBObjectFilterFrame *WizardObjectFilterPage::add_filter(const std::string &class_name, const std::string &caption_fmt,
+auto WizardObjectFilterPage::add_filter(const std::string &class_name, const std::string &caption_fmt,
                                                         bec::GrtStringListModel *model,
-                                                        bec::GrtStringListModel *excl_model, bool *enabled_flag) {
+                                                        bec::GrtStringListModel *excl_model, bool *enabled_flag) -> DBObjectFilterFrame * {
   DBObjectFilterFrame *filter;
 
   filter = new DBObjectFilterFrame();
@@ -59,7 +59,7 @@ DBObjectFilterFrame *WizardObjectFilterPage::add_filter(const std::string &class
   return filter;
 }
 
-void WizardObjectFilterPage::reset() {
+auto WizardObjectFilterPage::reset() -> void {
   for (std::vector<DBObjectFilterFrame *>::const_iterator iter = _filters.begin(); iter != _filters.end(); ++iter) {
     _box.remove(*iter);
     //   (*iter)->release();

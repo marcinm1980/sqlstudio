@@ -33,42 +33,42 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool MenuWrapper::create(Menu* self) {
+    auto MenuWrapper::create(Menu* self) -> bool {
       return true;
     }
 
     //------------------------------------------------------------------------------
-    void MenuWrapper::remove_item(Menu* self, int i) {
+    auto MenuWrapper::remove_item(Menu* self, int i) -> void {
     }
 
     //------------------------------------------------------------------------------
-    int MenuWrapper::add_item(Menu* self, const std::string& caption, const std::string& action) {
+    auto MenuWrapper::add_item(Menu* self, const std::string& caption, const std::string& action) -> int {
       return 0;
     }
 
     //------------------------------------------------------------------------------
-    int MenuWrapper::add_separator(Menu* self) {
+    auto MenuWrapper::add_separator(Menu* self) -> int {
       return 0;
     }
 
     //------------------------------------------------------------------------------
-    int MenuWrapper::add_submenu(Menu* self, const std::string& caption, Menu* submenu) {
+    auto MenuWrapper::add_submenu(Menu* self, const std::string& caption, Menu* submenu) -> int {
       return 0;
     }
 
     //------------------------------------------------------------------------------
-    void MenuWrapper::set_item_enabled(Menu* self, int i, bool flag) {
+    auto MenuWrapper::set_item_enabled(Menu* self, int i, bool flag) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void MenuWrapper::popup_at(Menu* self, Object* control, int x, int y) {
+    auto MenuWrapper::popup_at(Menu* self, Object* control, int x, int y) -> void {
     }
 
-    void MenuWrapper::clear(Menu* self) {
+    auto MenuWrapper::clear(Menu* self) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void MenuWrapper::init() {
+    auto MenuWrapper::init() -> void {
       ::mforms::ControlFactory* f = ::mforms::ControlFactory::get_instance();
 
       f->_menu_impl.create = &MenuWrapper::create;

@@ -42,7 +42,7 @@ namespace mforms {
         child->show();
       }
 
-      void remove() {
+      auto remove() -> void {
         ((Gtk::Bin *)_view->get_inner())->remove();
       }
 

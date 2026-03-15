@@ -29,14 +29,14 @@
 NoteEditorBE::NoteEditorBE(const studio_model_NoteFigureRef &note) : bec::BaseEditor(note), _note(note) {
 }
 
-bool NoteEditorBE::should_close_on_delete_of(const std::string &oid) {
+auto NoteEditorBE::should_close_on_delete_of(const std::string &oid) -> bool {
   if (_note.id() == oid || _note->owner().id() == oid)
     return true;
 
   return false;
 }
 
-void NoteEditorBE::set_text(const std::string &text) {
+auto NoteEditorBE::set_text(const std::string &text) -> void {
   if (*_note->text() != text) {
     bec::AutoUndoEdit undo(this, _note, "text");
     _note->text(text);
@@ -44,11 +44,11 @@ void NoteEditorBE::set_text(const std::string &text) {
   }
 }
 
-std::string NoteEditorBE::get_text() {
+auto NoteEditorBE::get_text() -> std::string {
   return _note->text();
 }
 
-void NoteEditorBE::set_name(const std::string &name) {
+auto NoteEditorBE::set_name(const std::string &name) -> void {
   if (name != *_note->name()) {
     bec::AutoUndoEdit undo(this, _note, "name");
     _note->name(name);
@@ -56,10 +56,10 @@ void NoteEditorBE::set_name(const std::string &name) {
   }
 }
 
-std::string NoteEditorBE::get_name() {
+auto NoteEditorBE::get_name() -> std::string {
   return _note->name();
 }
 
-std::string NoteEditorBE::get_title() {
+auto NoteEditorBE::get_title() -> std::string {
   return base::strfmt("%s - Note", get_name().c_str());
 }

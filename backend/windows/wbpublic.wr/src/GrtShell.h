@@ -44,14 +44,14 @@ namespace MySQL {
       VoidStringDelegate ^ ready_handler_delegate;
       VoidStringWrapperDelegate ^ ready_handler_wrapper_delegate;
 
-      void ready_handler_wrapper(const std::string& str) {
+      auto ready_handler_wrapper(const std::string& str) -> void {
         ready_handler_delegate(CppStringToNative(str));
       }
 
       VoidStringDelegate ^ output_handler_delegate;
       VoidStringWrapperDelegate ^ output_handler_wrapper_delegate;
 
-      void output_handler_wrapper(const std::string& str) {
+      auto output_handler_wrapper(const std::string& str) -> void {
         output_handler_delegate(CppStringToNative(str));
       }
 
@@ -68,7 +68,7 @@ namespace MySQL {
         inner->set_save_directory(NativeToCppString(path));
       }
 
-      void start() {
+      auto start() -> void {
         inner->start();
       }
 
@@ -90,7 +90,7 @@ namespace MySQL {
         return retval;
       }
 
-      void reset_history_position() {
+      auto reset_history_position() -> void {
         inner->reset_history_position();
       }
 
@@ -112,7 +112,7 @@ namespace MySQL {
         inner->set_ready_handler(cb);
       }
 
-      void set_saves_history(bool flag) {
+      auto set_saves_history(bool flag) -> void {
         inner->set_saves_history(flag);
       }
 
@@ -122,11 +122,11 @@ namespace MySQL {
         inner->set_snippet_data(NativeToCppString(data));
       }
 
-      void store_history() {
+      auto store_history() -> void {
         inner->store_state();
       }
 
-      void restore_history() {
+      auto restore_history() -> void {
         inner->restore_state();
       }
 

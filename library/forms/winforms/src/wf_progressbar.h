@@ -33,13 +33,13 @@ namespace MySQL {
     protected:
       ProgressBarWrapper(mforms::ProgressBar *pbar);
 
-      static bool create(mforms::ProgressBar *backend);
-      static void set_value(mforms::ProgressBar *backend, float pct);
-      static void set_indeterminate(mforms::ProgressBar *backend, bool flag);
-      static void set_started(mforms::ProgressBar *backend, bool flag);
+      static auto create(mforms::ProgressBar *backend) -> bool;
+      static auto set_value(mforms::ProgressBar *backend, float pct) -> void;
+      static auto set_indeterminate(mforms::ProgressBar *backend, bool flag) -> void;
+      static auto set_started(mforms::ProgressBar *backend, bool flag) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

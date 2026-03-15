@@ -27,9 +27,9 @@ class WBPUBLICBACKEND_PUBLIC_FUNC db_mgmt_SSHFile::ImplData {
 public:
   ImplData();
   virtual ~ImplData();
-  virtual grt::StringRef getPath() = 0;
-  virtual grt::StringRef read(const size_t length) = 0;
-  virtual grt::StringRef readline() = 0;
-  virtual grt::IntegerRef seek(const size_t offset) = 0;
-  virtual grt::IntegerRef tell() = 0;
+  virtual auto getPath() -> grt::StringRef = 0;
+  virtual auto read(const size_t length) -> grt::StringRef = 0;
+  virtual auto readline() -> grt::StringRef = 0;
+  virtual auto seek(const size_t offset) -> grt::IntegerRef = 0;
+  virtual auto tell() -> grt::IntegerRef = 0;
 };

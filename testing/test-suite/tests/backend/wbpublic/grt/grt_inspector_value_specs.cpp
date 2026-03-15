@@ -42,7 +42,7 @@ using namespace bec;
 
 namespace {
 
-static void expectFilesEqual(const std::string &test, const std::string file, const std::string reffile) {
+static auto expectFilesEqual(const std::string &test, const std::string file, const std::string reffile) -> void {
   std::string line, refline;
   std::ifstream ref(reffile);
   std::ifstream f(file);

@@ -47,43 +47,37 @@ namespace MySQL {
 
         public : ScintillaControl();
 
-      sptr_t direct_call(unsigned int message, uptr_t wParam, sptr_t lParam);
-      void SetBackend(mforms::CodeEditor *editor);
-      void SetDropTarget(mforms::DropDelegate *target);
+      auto direct_call(unsigned int message, uptr_t wParam, sptr_t lParam) -> sptr_t;
+      auto SetBackend(mforms::CodeEditor *editor) -> void;
+      auto SetDropTarget(mforms::DropDelegate *target) -> void;
 
-      mforms::KeyCode GetKeyCode(int code);
-      mforms::ModifierKey GetModifiers(System::Windows::Forms::Keys keyData);
+      auto GetKeyCode(int code) -> mforms::KeyCode;
+      auto GetModifiers(System::Windows::Forms::Keys keyData) -> mforms::ModifierKey;
 
       // For interaction with the UI we need some public methods/properties and forward these events
       // to the backend.
-      property bool CanUndo {
-        bool get();
+      auto get() -> property bool CanUndo { bool;
       }
-      property bool CanRedo {
-        bool get();
+      auto get() -> property bool CanRedo { bool;
       }
-      property bool CanCopy {
-        bool get();
+      auto get() -> property bool CanCopy { bool;
       }
-      property bool CanCut {
-        bool get();
+      auto get() -> property bool CanCut { bool;
       }
-      property bool CanPaste {
-        bool get();
+      auto get() -> property bool CanPaste { bool;
       }
-      property bool CanDelete {
-        bool get();
+      auto get() -> property bool CanDelete { bool;
       }
 
-      void Undo();
-      void Redo();
-      void Copy();
-      void Cut();
-      void Paste();
-      void Delete();
-      void SelectAll();
+      auto Undo() -> void;
+      auto Redo() -> void;
+      auto Copy() -> void;
+      auto Cut() -> void;
+      auto Paste() -> void;
+      auto Delete() -> void;
+      auto SelectAll() -> void;
 
-      void ShowFindPanel(bool doReplace);
+      auto ShowFindPanel(bool doReplace) -> void;
     };
 
     ref class ScintillaControl;
@@ -94,14 +88,14 @@ namespace MySQL {
     protected:
       CodeEditorWrapper(mforms::CodeEditor *backend);
 
-      static bool create(mforms::CodeEditor *editor, bool showInfo);
-      static sptr_t send_editor(mforms::CodeEditor *editor, unsigned int message, uptr_t wParam, sptr_t lParam);
-      static void show_find_panel(mforms::CodeEditor *editor, bool show);
+      static auto create(mforms::CodeEditor *editor, bool showInfo) -> bool;
+      static auto send_editor(mforms::CodeEditor *editor, unsigned int message, uptr_t wParam, sptr_t lParam) -> sptr_t;
+      static auto show_find_panel(mforms::CodeEditor *editor, bool show) -> void;
 
-      virtual void register_file_drop(mforms::DropDelegate *target);
+      virtual auto register_file_drop(mforms::DropDelegate *target) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

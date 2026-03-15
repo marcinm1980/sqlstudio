@@ -29,7 +29,7 @@
 #include "grt/common.h"
 
 //------------------------------------------------------------------------------
-Glib::RefPtr<Gdk::Pixbuf> ImageCache::image_from_filename(const std::string &filename, bool cache) {
+auto ImageCache::image_from_filename(const std::string &filename, bool cache) -> Glib::RefPtr<Gdk::Pixbuf> {
   Glib::RefPtr<Gdk::Pixbuf> im(0);
 
   const std::string path = bec::IconManager::get_instance()->get_icon_path(filename);
@@ -40,7 +40,7 @@ Glib::RefPtr<Gdk::Pixbuf> ImageCache::image_from_filename(const std::string &fil
 }
 
 //------------------------------------------------------------------------------
-Glib::RefPtr<Gdk::Pixbuf> ImageCache::image_from_path(const std::string &path, bool cache) {
+auto ImageCache::image_from_path(const std::string &path, bool cache) -> Glib::RefPtr<Gdk::Pixbuf> {
   Glib::RefPtr<Gdk::Pixbuf> im(0);
 
   if (!path.empty()) {
@@ -64,7 +64,7 @@ Glib::RefPtr<Gdk::Pixbuf> ImageCache::image_from_path(const std::string &path, b
 }
 
 //------------------------------------------------------------------------------
-ImageCache *ImageCache::get_instance() {
+auto ImageCache::get_instance() -> ImageCache * {
   static ImageCache *imgs = new ImageCache;
 
   return imgs;

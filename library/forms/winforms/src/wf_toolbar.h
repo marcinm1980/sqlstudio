@@ -68,29 +68,29 @@ namespace MySQL {
     protected:
       ToolBarWrapper(mforms::ToolBar *toolbar);
 
-      static bool create_tool_bar(mforms::ToolBar *backend, mforms::ToolBarType type);
-      static void insert_item(mforms::ToolBar *backend, int index, mforms::ToolBarItem *item);
-      static void remove_item(mforms::ToolBar *backend, mforms::ToolBarItem *item);
+      static auto create_tool_bar(mforms::ToolBar *backend, mforms::ToolBarType type) -> bool;
+      static auto insert_item(mforms::ToolBar *backend, int index, mforms::ToolBarItem *item) -> void;
+      static auto remove_item(mforms::ToolBar *backend, mforms::ToolBarItem *item) -> void;
 
-      static bool create_tool_item(mforms::ToolBarItem *item, mforms::ToolBarItemType type);
-      static void set_item_icon(mforms::ToolBarItem *item, const std::string &path);
-      static void set_item_alt_icon(mforms::ToolBarItem *item, const std::string &path);
-      static void set_item_text(mforms::ToolBarItem *item, const std::string &text);
-      static std::string get_item_text(mforms::ToolBarItem *item);
-      static void set_item_name(mforms::ToolBarItem *item, const std::string &);
-      static void set_item_enabled(mforms::ToolBarItem *item, bool state);
-      static bool get_item_enabled(mforms::ToolBarItem *item);
-      static void set_item_checked(mforms::ToolBarItem *item, bool state);
-      static bool get_item_checked(mforms::ToolBarItem *item);
-      static void set_item_tooltip(mforms::ToolBarItem *item, const std::string &text);
+      static auto create_tool_item(mforms::ToolBarItem *item, mforms::ToolBarItemType type) -> bool;
+      static auto set_item_icon(mforms::ToolBarItem *item, const std::string &path) -> void;
+      static auto set_item_alt_icon(mforms::ToolBarItem *item, const std::string &path) -> void;
+      static auto set_item_text(mforms::ToolBarItem *item, const std::string &text) -> void;
+      static auto get_item_text(mforms::ToolBarItem *item) -> std::string;
+      static auto set_item_name(mforms::ToolBarItem *item, const std::string &) -> void;
+      static auto set_item_enabled(mforms::ToolBarItem *item, bool state) -> void;
+      static auto get_item_enabled(mforms::ToolBarItem *item) -> bool;
+      static auto set_item_checked(mforms::ToolBarItem *item, bool state) -> void;
+      static auto get_item_checked(mforms::ToolBarItem *item) -> bool;
+      static auto set_item_tooltip(mforms::ToolBarItem *item, const std::string &text) -> void;
 
       // For selector items only.
-      static void set_selector_items(mforms::ToolBarItem *item, const std::vector<std::string> &values);
+      static auto set_selector_items(mforms::ToolBarItem *item, const std::vector<std::string> &values) -> void;
 
       static Drawing::Bitmap ^ create_color_image(String ^ color);
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

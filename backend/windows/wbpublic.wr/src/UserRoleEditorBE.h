@@ -42,7 +42,7 @@ namespace MySQL {
 
         RolePrivilegeListWrapper(::bec::RolePrivilegeListBE *inn);
 
-        ::bec::RolePrivilegeListBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> ::bec::RolePrivilegeListBE *;
       };
 
     public
@@ -52,7 +52,7 @@ namespace MySQL {
 
         RoleObjectListWrapper(::bec::RoleObjectListBE *inn);
 
-        ::bec::RoleObjectListBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> ::bec::RoleObjectListBE *;
         void set_selected_node(NodeIdWrapper ^ node);
       };
 
@@ -62,16 +62,16 @@ namespace MySQL {
         RoleEditorBE(MySQL::Grt::GrtValue ^ arglist);
         ~RoleEditorBE();
 
-        ::bec::RoleEditorBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> ::bec::RoleEditorBE *;
 
-        String ^ get_name();
+        auto get_name() -> String ^;
         void set_name(String ^ name);
         void set_parent_role(String ^ name);
-        String ^ get_parent_role();
-        RoleTreeBE ^ get_role_tree();
-        List<String ^> ^ get_role_list();
-        RolePrivilegeListWrapper ^ get_privilege_list();
-        RoleObjectListWrapper ^ get_object_list();
+        auto get_parent_role() -> String ^;
+        auto get_role_tree() -> RoleTreeBE ^;
+        auto get_role_list() -> List<String ^> ^;
+        auto get_privilege_list() -> RolePrivilegeListWrapper ^;
+        auto get_object_list() -> RoleObjectListWrapper ^;
         void add_object(GrtValue ^ object);
         void remove_object(NodeIdWrapper ^ node);
       };

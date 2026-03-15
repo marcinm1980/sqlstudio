@@ -41,17 +41,17 @@ public:
     add(&_button, false, true);
   }
 
-  void override() {
+  auto override() -> void {
     std::string s = _selector.get_string_value();
     _node->set_string(2, s);
     _node->set_string(3, "overriden");
   }
 
-  void set_schemas(const std::list<std::string> &schema_names) {
+  auto set_schemas(const std::list<std::string> &schema_names) -> void {
     _selector.add_items(schema_names);
   }
 
-  void set_active(mforms::TreeNodeRef node) {
+  auto set_active(mforms::TreeNodeRef node) -> void {
     _node = node;
     _selector.set_value(node->get_string(2));
   }
@@ -62,13 +62,13 @@ private:
   mforms::Button _button;
 };
 
-static void select_all(mforms::TreeView *tree, SchemaMatchingPage *page) {
+static auto select_all(mforms::TreeView *tree, SchemaMatchingPage *page) -> void {
   for (int i = 0; i < tree->count(); i++)
     tree->node_at_row(i)->set_bool(0, true);
   page->validate();
 }
 
-static void unselect_all(mforms::TreeView *tree, SchemaMatchingPage *page) {
+static auto unselect_all(mforms::TreeView *tree, SchemaMatchingPage *page) -> void {
   for (int i = 0; i < tree->count(); i++)
     tree->node_at_row(i)->set_bool(0, false);
   page->validate();
@@ -119,14 +119,14 @@ SchemaMatchingPage::SchemaMatchingPage(grtui::WizardForm *form, const char *name
   _missing_label.set_style(mforms::SmallHelpTextStyle);
 }
 
-void SchemaMatchingPage::cell_edited(mforms::TreeNodeRef node, int column, const std::string &value) {
+auto SchemaMatchingPage::cell_edited(mforms::TreeNodeRef node, int column, const std::string &value) -> void {
   if (column == 0) {
     node->set_bool(column, value != "0");
     validate();
   }
 }
 
-bool SchemaMatchingPage::allow_next() {
+auto SchemaMatchingPage::allow_next() -> bool {
   int c = _tree.count();
   for (int i = 0; i < c; i++) {
     mforms::TreeNodeRef node(_tree.root_node()->get_child(i));
@@ -136,7 +136,7 @@ bool SchemaMatchingPage::allow_next() {
   return false;
 }
 
-void SchemaMatchingPage::leave(bool advancing) {
+auto SchemaMatchingPage::leave(bool advancing) -> void {
   if (advancing) {
     grt::StringListRef unlist(grt::Initialized);
     grt::StringListRef list(grt::Initialized);
@@ -158,7 +158,7 @@ void SchemaMatchingPage::leave(bool advancing) {
   WizardPage::leave(advancing);
 }
 
-std::map<std::string, std::string> SchemaMatchingPage::get_mapping() {
+auto SchemaMatchingPage::get_mapping() -> std::map<std::string, std::string> {
   std::map<std::string, std::string> mapping;
   int c = _tree.count();
   for (int i = 0; i < c; i++) {
@@ -171,7 +171,7 @@ std::map<std::string, std::string> SchemaMatchingPage::get_mapping() {
   return mapping;
 }
 
-void SchemaMatchingPage::enter(bool advancing) {
+auto SchemaMatchingPage::enter(bool advancing) -> void {
   if (advancing) {
     int missing = 0;
     _tree.clear();
@@ -239,7 +239,7 @@ void SchemaMatchingPage::enter(bool advancing) {
   }
 }
 
-void SchemaMatchingPage::selection_changed() {
+auto SchemaMatchingPage::selection_changed() -> void {
   mforms::TreeNodeRef sel(_tree.get_selected_node());
   if (sel) {
     _override->set_enabled(true);

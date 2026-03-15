@@ -46,20 +46,20 @@ using namespace mforms;
 
 static DbSqlEditorSnippets *singleton = 0;
 
-void DbSqlEditorSnippets::setup(wb::WBContextSQLIDE *sqlide, const std::string &path) {
+auto DbSqlEditorSnippets::setup(wb::WBContextSQLIDE *sqlide, const std::string &path) -> void {
   if (singleton != 0)
     return;
 
   singleton = new DbSqlEditorSnippets(sqlide, path);
 }
 
-DbSqlEditorSnippets *DbSqlEditorSnippets::get_instance() {
+auto DbSqlEditorSnippets::get_instance() -> DbSqlEditorSnippets * {
   return singleton;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool DbSqlEditorSnippets::activate_toolbar_item(const bec::NodeId &selected, const std::string &name) {
+auto DbSqlEditorSnippets::activate_toolbar_item(const bec::NodeId &selected, const std::string &name) -> bool {
   if (name == "restore_snippets") {
     DialogResult result = (DialogResult)Utilities::show_message(
       _("Restore snippet list"),
@@ -140,7 +140,7 @@ static struct SnippetNameMapping {
 #endif
   {NULL, NULL}};
 
-static std::string category_file_to_name(const std::string &file) {
+static auto category_file_to_name(const std::string &file) -> std::string {
   for (int i = 0; snippet_name_mapping[i].file; i++) {
     if (strcmp(snippet_name_mapping[i].file, file.c_str()) == 0)
       return snippet_name_mapping[i].name;
@@ -148,7 +148,7 @@ static std::string category_file_to_name(const std::string &file) {
   return file;
 }
 
-static std::string category_name_to_file(const std::string &name) {
+static auto category_name_to_file(const std::string &name) -> std::string {
   for (int i = 0; snippet_name_mapping[i].file; i++) {
     if (strcmp(snippet_name_mapping[i].name, name.c_str()) == 0)
       return snippet_name_mapping[i].file;
@@ -156,7 +156,7 @@ static std::string category_name_to_file(const std::string &name) {
   return name;
 }
 
-std::vector<std::string> DbSqlEditorSnippets::get_category_list() {
+auto DbSqlEditorSnippets::get_category_list() -> std::vector<std::string> {
   std::vector<std::string> categories;
 
   GDir *dir = g_dir_open(_path.c_str(), 0, NULL);
@@ -181,7 +181,7 @@ std::vector<std::string> DbSqlEditorSnippets::get_category_list() {
   return categories;
 }
 
-void DbSqlEditorSnippets::select_category(const std::string &category) {
+auto DbSqlEditorSnippets::select_category(const std::string &category) -> void {
   _selected_category = category_name_to_file(category);
   if (_selected_category.empty())
     load_from_db();
@@ -189,15 +189,15 @@ void DbSqlEditorSnippets::select_category(const std::string &category) {
     load();
 }
 
-std::string DbSqlEditorSnippets::selected_category() {
+auto DbSqlEditorSnippets::selected_category() -> std::string {
   return category_file_to_name(_selected_category);
 }
 
-bool DbSqlEditorSnippets::shared_snippets_usable() {
+auto DbSqlEditorSnippets::shared_snippets_usable() -> bool {
   return _sqlide->get_active_sql_editor() != NULL && _sqlide->get_active_sql_editor()->connected();
 }
 
-void DbSqlEditorSnippets::load_from_db(SqlEditorForm *editor) {
+auto DbSqlEditorSnippets::load_from_db(SqlEditorForm *editor) -> void {
   if (!editor)
     editor = _sqlide->get_active_sql_editor();
 
@@ -241,7 +241,7 @@ void DbSqlEditorSnippets::load_from_db(SqlEditorForm *editor) {
   }
 }
 
-int DbSqlEditorSnippets::add_db_snippet(const std::string &name, const std::string &code) {
+auto DbSqlEditorSnippets::add_db_snippet(const std::string &name, const std::string &code) -> int {
   if (_sqlide->get_active_sql_editor()) {
     sql::Dbc_connection_handler::Ref conn;
     base::RecMutexLock aux_dbc_conn_mutex(_sqlide->get_active_sql_editor()->ensure_valid_aux_connection(conn));
@@ -273,7 +273,7 @@ int DbSqlEditorSnippets::add_db_snippet(const std::string &name, const std::stri
   return 0;
 }
 
-void DbSqlEditorSnippets::delete_db_snippet(int snippet_id) {
+auto DbSqlEditorSnippets::delete_db_snippet(int snippet_id) -> void {
   if (_sqlide->get_active_sql_editor()) {
     sql::Dbc_connection_handler::Ref conn;
     base::RecMutexLock aux_dbc_conn_mutex(_sqlide->get_active_sql_editor()->ensure_valid_aux_connection(conn));
@@ -287,7 +287,7 @@ void DbSqlEditorSnippets::delete_db_snippet(int snippet_id) {
   }
 }
 
-void DbSqlEditorSnippets::load() {
+auto DbSqlEditorSnippets::load() -> void {
   _entries.clear();
 
   FILE *f = base_fopen(base::strfmt("%s/%s.txt", _path.c_str(), _selected_category.c_str()).c_str(), "r");
@@ -332,7 +332,7 @@ void DbSqlEditorSnippets::load() {
   std::sort(_entries.begin(), _entries.end(), [](Snippet& a, Snippet& b) { return a.title < b.title; });
 }
 
-void DbSqlEditorSnippets::save() {
+auto DbSqlEditorSnippets::save() -> void {
   if (_selected_category.empty()) {
     // nothing to do here
   } else {
@@ -382,7 +382,7 @@ DbSqlEditorSnippets::DbSqlEditorSnippets(wb::WBContextSQLIDE *sqlide, const std:
 
 //--------------------------------------------------------------------------------------------------
 
-void DbSqlEditorSnippets::copy_original_file(const std::string &name, bool overwrite) {
+auto DbSqlEditorSnippets::copy_original_file(const std::string &name, bool overwrite) -> void {
   std::string datadir = bec::GRTManager::get()->get_data_file_path("snippets");
   std::string dest = base::makePath(_path, name);
   bool target_exists = g_file_test(dest.c_str(), G_FILE_TEST_EXISTS) == TRUE;
@@ -397,7 +397,7 @@ void DbSqlEditorSnippets::copy_original_file(const std::string &name, bool overw
 
 //--------------------------------------------------------------------------------------------------
 
-void DbSqlEditorSnippets::add_snippet(const std::string &name, const std::string &code, bool edit) {
+auto DbSqlEditorSnippets::add_snippet(const std::string &name, const std::string &code, bool edit) -> void {
   Snippet snippet;
   snippet.db_snippet_id = 0;
   snippet.title = base::trim_left(name);
@@ -413,11 +413,11 @@ void DbSqlEditorSnippets::add_snippet(const std::string &name, const std::string
   }
 }
 
-size_t DbSqlEditorSnippets::count() {
+auto DbSqlEditorSnippets::count() -> size_t {
   return _entries.size();
 }
 
-bool DbSqlEditorSnippets::get_field(const bec::NodeId &node, ColumnId column, std::string &value) {
+auto DbSqlEditorSnippets::get_field(const bec::NodeId &node, ColumnId column, std::string &value) -> bool {
   if (node.is_valid() && node[0] < _entries.size()) {
     switch ((Column)column) {
       case Description:
@@ -434,7 +434,7 @@ bool DbSqlEditorSnippets::get_field(const bec::NodeId &node, ColumnId column, st
   return false;
 }
 
-bool DbSqlEditorSnippets::set_field(const bec::NodeId &node, ColumnId column, const std::string &value) {
+auto DbSqlEditorSnippets::set_field(const bec::NodeId &node, ColumnId column, const std::string &value) -> bool {
   if (node.is_valid() && node[0] < _entries.size()) {
     switch ((Column)column) {
       case Description:
@@ -470,11 +470,11 @@ bool DbSqlEditorSnippets::set_field(const bec::NodeId &node, ColumnId column, co
   return false;
 }
 
-bool DbSqlEditorSnippets::can_delete_node(const bec::NodeId &node) {
+auto DbSqlEditorSnippets::can_delete_node(const bec::NodeId &node) -> bool {
   return node.is_valid() && node[0] < _entries.size();
 }
 
-bool DbSqlEditorSnippets::delete_node(const bec::NodeId &node) {
+auto DbSqlEditorSnippets::delete_node(const bec::NodeId &node) -> bool {
   if (node.is_valid() && node[0] < _entries.size()) {
     int entry_id = _entries[node[0]].db_snippet_id;
 

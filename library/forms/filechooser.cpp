@@ -50,11 +50,11 @@ FileChooser::FileChooser(mforms::Form *owner, FileChooserType type, bool show_hi
     _filechooser_impl->set_directory(this, last_directory);
 }
 
-void FileChooser::set_title(const std::string &title) {
+auto FileChooser::set_title(const std::string &title) -> void {
   _filechooser_impl->set_title(this, title);
 }
 
-bool FileChooser::run_modal() {
+auto FileChooser::run_modal() -> bool {
   bool retval = _filechooser_impl->run_modal(this);
   if (retval) {
     std::string path = _filechooser_impl->get_path(this);
@@ -64,29 +64,29 @@ bool FileChooser::run_modal() {
   return retval;
 }
 
-void FileChooser::set_directory(const std::string &path) {
+auto FileChooser::set_directory(const std::string &path) -> void {
   _filechooser_impl->set_directory(this, path);
 }
 
-void FileChooser::set_path(const std::string &path) {
+auto FileChooser::set_path(const std::string &path) -> void {
   _filechooser_impl->set_path(this, path);
 }
 
-std::string FileChooser::get_path() {
+auto FileChooser::get_path() -> std::string {
   return _filechooser_impl->get_path(this);
 }
 
-std::string FileChooser::get_directory() {
+auto FileChooser::get_directory() -> std::string {
   return _filechooser_impl->get_directory(this);
 }
 
-void FileChooser::set_extensions(const std::string &extensions, const std::string &default_extension,
-                                 bool allow_all_file_types) {
+auto FileChooser::set_extensions(const std::string &extensions, const std::string &default_extension,
+                                 bool allow_all_file_types) -> void {
   _filechooser_impl->set_extensions(this, extensions, default_extension, allow_all_file_types);
 }
 
-void FileChooser::add_selector_option(const std::string &name, const std::string &label,
-                                      const StringPairVector &options) {
+auto FileChooser::add_selector_option(const std::string &name, const std::string &label,
+                                      const StringPairVector &options) -> void {
   std::vector<std::string> values;
   for (StringPairVector::const_iterator i = options.begin(); i != options.end(); ++i)
     values.push_back(i->first);
@@ -94,7 +94,7 @@ void FileChooser::add_selector_option(const std::string &name, const std::string
   _filechooser_impl->add_selector_option(this, name, label, options);
 }
 
-void FileChooser::add_selector_option(const std::string &name, const std::string &label, const std::string &options) {
+auto FileChooser::add_selector_option(const std::string &name, const std::string &label, const std::string &options) -> void {
   std::vector<std::pair<std::string, std::string> > olist(split_extensions(options, false));
   std::vector<std::string> values;
   for (std::vector<std::pair<std::string, std::string> >::const_iterator i = olist.begin(); i != olist.end(); ++i)
@@ -103,11 +103,11 @@ void FileChooser::add_selector_option(const std::string &name, const std::string
   _filechooser_impl->add_selector_option(this, name, label, olist);
 }
 
-std::string FileChooser::get_selector_option_value(const std::string &name) {
+auto FileChooser::get_selector_option_value(const std::string &name) -> std::string {
   return _filechooser_impl->get_selector_option_value(this, name);
 }
 
-FileChooser::StringPairVector FileChooser::split_extensions(const std::string &extensions, bool file_extensions) {
+auto FileChooser::split_extensions(const std::string &extensions, bool file_extensions) -> FileChooser::StringPairVector {
   StringPairVector exts;
   std::string::size_type s, e;
   std::string label, pattern;

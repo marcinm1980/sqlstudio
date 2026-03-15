@@ -174,65 +174,65 @@ public:
     NULL);
 
   // returns connection-id or -1 for error
-  int openConnection(const db_mgmt_ConnectionRef &info);
-  int openConnectionP(const db_mgmt_ConnectionRef &info, const grt::StringRef &password);
+  auto openConnection(const db_mgmt_ConnectionRef &info) -> int;
+  auto openConnectionP(const db_mgmt_ConnectionRef &info, const grt::StringRef &password) -> int;
 
-  int closeConnection(int conn);
+  auto closeConnection(int conn) -> int;
 
-  std::string lastError();
-  int lastErrorCode();
+  auto lastError() -> std::string;
+  auto lastErrorCode() -> int;
 
-  int lastConnectionErrorCode(int conn);
-  std::string lastConnectionError(int conn);
+  auto lastConnectionErrorCode(int conn) -> int;
+  auto lastConnectionError(int conn) -> std::string;
   //  #ifdef DEFINE_INT_FUNCTIONS
-  size_t lastUpdateCount(int conn);
+  auto lastUpdateCount(int conn) -> size_t;
   //  #else
   //  uint64_t lastUpdateCount(int conn);
   //  #endif
 
   // returns 1/0 for ok, -1 for error
-  int execute(int conn, const std::string &query);
+  auto execute(int conn, const std::string &query) -> int;
 
   // returns result-id or -1 for error
-  int executeQuery(int conn, const std::string &query);
+  auto executeQuery(int conn, const std::string &query) -> int;
 
   //  returns a list with all the result ids. On error will return an empty list
-  grt::IntegerListRef executeQueryMultiResult(int conn, const std::string &query);
+  auto executeQueryMultiResult(int conn, const std::string &query) -> grt::IntegerListRef;
 
-  size_t resultNumRows(int result);
-  int resultNumFields(int result);
-  std::string resultFieldType(int result, int field);
-  std::string resultFieldName(int result, int field);
+  auto resultNumRows(int result) -> size_t;
+  auto resultNumFields(int result) -> int;
+  auto resultFieldType(int result, int field) -> std::string;
+  auto resultFieldName(int result, int field) -> std::string;
   // returns 1 if ok, 0 if no more rows
-  int resultFirstRow(int result);
-  int resultNextRow(int result);
-  grt::IntegerRef resultFieldIntValue(int result, int field);
-  double resultFieldDoubleValue(int result, int field);
-  grt::StringRef resultFieldStringValue(int result, int field);
+  auto resultFirstRow(int result) -> int;
+  auto resultNextRow(int result) -> int;
+  auto resultFieldIntValue(int result, int field) -> grt::IntegerRef;
+  auto resultFieldDoubleValue(int result, int field) -> double;
+  auto resultFieldStringValue(int result, int field) -> grt::StringRef;
 
-  grt::IntegerRef resultFieldIntValueByName(int result, const std::string &field);
-  double resultFieldDoubleValueByName(int result, const std::string &field);
-  grt::StringRef resultFieldStringValueByName(int result, const std::string &field);
+  auto resultFieldIntValueByName(int result, const std::string &field) -> grt::IntegerRef;
+  auto resultFieldDoubleValueByName(int result, const std::string &field) -> double;
+  auto resultFieldStringValueByName(int result, const std::string &field) -> grt::StringRef;
 
-  int closeResult(int result);
+  auto closeResult(int result) -> int;
 
-  int loadSchemata(int conn, grt::StringListRef schemata);
-  int loadSchemaObjects(int conn, grt::StringRef schema, grt::StringRef object_type, grt::DictRef objects);
+  auto loadSchemata(int conn, grt::StringListRef schemata) -> int;
+  auto loadSchemaObjects(int conn, grt::StringRef schema, grt::StringRef object_type, grt::DictRef objects) -> int;
 
-  grt::DictRef getServerVariables(int conn);
+  auto getServerVariables(int conn) -> grt::DictRef;
 
-  grt::StringListRef loadSchemaList(int conn);
-  grt::DictRef loadSchemaObjectList(int conn, grt::StringRef schema, grt::StringRef object_type);
+  auto loadSchemaList(int conn) -> grt::StringListRef;
+  auto loadSchemaObjectList(int conn, grt::StringRef schema, grt::StringRef object_type) -> grt::DictRef;
 
-  std::string generateDdlScript(grt::StringRef schema, grt::DictRef objects);
+  auto generateDdlScript(grt::StringRef schema, grt::DictRef objects) -> std::string;
 
   // open SSH tunnel using the connection info
   // returns tunnel id or 0 if no tunnel needed
-  int openTunnel(const db_mgmt_ConnectionRef &info);
-  int getTunnelPort(int tunnel);
-  int closeTunnel(int tunnel);
+  auto openTunnel(const db_mgmt_ConnectionRef &info) -> int;
+  auto getTunnelPort(int tunnel) -> int;
+  auto closeTunnel(int tunnel) -> int;
 
-  std::string scramblePassword(const std::string &pass);
+  auto scramblePassword(const std::string &pass) -> std::string;
 
 private:
   struct ConnectionInfo {
@@ -241,7 +241,7 @@ private:
     ConnectionInfo(sql::ConnectionWrapper &c) : conn(c), last_error_code(0), last_update_count(0) {
     }
 
-    sql::Connection *prepare() {
+    auto prepare() -> sql::Connection * {
       last_error.clear();
       last_error_code = 0;
       last_update_count = 0;
@@ -280,11 +280,11 @@ GRT_MODULE_ENTRY_POINT(DbMySQLQueryImpl);
     _last_error_code = 0; \
   } while (0)
 
-int DbMySQLQueryImpl::openConnection(const db_mgmt_ConnectionRef &info) {
+auto DbMySQLQueryImpl::openConnection(const db_mgmt_ConnectionRef &info) -> int {
   return openConnectionP(info, grt::StringRef());
 }
 
-int DbMySQLQueryImpl::openConnectionP(const db_mgmt_ConnectionRef &info, const grt::StringRef &password) {
+auto DbMySQLQueryImpl::openConnectionP(const db_mgmt_ConnectionRef &info, const grt::StringRef &password) -> int {
   sql::DriverManager *dm = sql::DriverManager::getDriverManager();
 
   if (!info.is_valid())
@@ -330,7 +330,7 @@ int DbMySQLQueryImpl::openConnectionP(const db_mgmt_ConnectionRef &info, const g
   return new_connection_id;
 }
 
-int DbMySQLQueryImpl::closeConnection(int conn) {
+auto DbMySQLQueryImpl::closeConnection(int conn) -> int {
   CLEAR_ERROR();
 
   base::MutexLock lock(_mutex);
@@ -341,15 +341,15 @@ int DbMySQLQueryImpl::closeConnection(int conn) {
   return 0;
 }
 
-std::string DbMySQLQueryImpl::lastError() {
+auto DbMySQLQueryImpl::lastError() -> std::string {
   return _last_error;
 }
 
-int DbMySQLQueryImpl::lastErrorCode() {
+auto DbMySQLQueryImpl::lastErrorCode() -> int {
   return _last_error_code;
 }
 
-int DbMySQLQueryImpl::execute(int conn, const std::string &query) {
+auto DbMySQLQueryImpl::execute(int conn, const std::string &query) -> int {
   CLEAR_ERROR();
 
   ConnectionInfo::Ref cinfo;
@@ -382,7 +382,7 @@ int DbMySQLQueryImpl::execute(int conn, const std::string &query) {
   return -1;
 }
 
-int DbMySQLQueryImpl::executeQuery(int conn, const std::string &query) {
+auto DbMySQLQueryImpl::executeQuery(int conn, const std::string &query) -> int {
   CLEAR_ERROR();
 
   ConnectionInfo::Ref cinfo;
@@ -430,7 +430,7 @@ int DbMySQLQueryImpl::executeQuery(int conn, const std::string &query) {
   return _resultset_id;
 }
 
-grt::IntegerListRef DbMySQLQueryImpl::executeQueryMultiResult(int conn, const std::string &query) {
+auto DbMySQLQueryImpl::executeQueryMultiResult(int conn, const std::string &query) -> grt::IntegerListRef {
   CLEAR_ERROR();
 
   ConnectionInfo::Ref cinfo;
@@ -481,7 +481,7 @@ grt::IntegerListRef DbMySQLQueryImpl::executeQueryMultiResult(int conn, const st
 }
 
 //#ifdef DEFINE_INT_FUNCTIONS
-size_t DbMySQLQueryImpl::lastUpdateCount(int conn) {
+auto DbMySQLQueryImpl::lastUpdateCount(int conn) -> size_t {
   base::MutexLock lock(_mutex);
   if (_connections.find(conn) == _connections.end())
     throw std::invalid_argument("Invalid connection");
@@ -497,21 +497,21 @@ uint64_t DbMySQLQueryImpl::lastUpdateCount(int conn)
 }
 #endif*/
 
-int DbMySQLQueryImpl::lastConnectionErrorCode(int conn) {
+auto DbMySQLQueryImpl::lastConnectionErrorCode(int conn) -> int {
   base::MutexLock lock(_mutex);
   if (_connections.find(conn) == _connections.end())
     throw std::invalid_argument("Invalid connection");
   return _connections[conn]->last_error_code;
 }
 
-std::string DbMySQLQueryImpl::lastConnectionError(int conn) {
+auto DbMySQLQueryImpl::lastConnectionError(int conn) -> std::string {
   base::MutexLock lock(_mutex);
   if (_connections.find(conn) == _connections.end())
     throw std::invalid_argument("Invalid connection");
   return _connections[conn]->last_error;
 }
 
-size_t DbMySQLQueryImpl::resultNumRows(int result) {
+auto DbMySQLQueryImpl::resultNumRows(int result) -> size_t {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -521,7 +521,7 @@ size_t DbMySQLQueryImpl::resultNumRows(int result) {
   return res->rowsCount();
 }
 
-int DbMySQLQueryImpl::resultNumFields(int result) {
+auto DbMySQLQueryImpl::resultNumFields(int result) -> int {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -531,7 +531,7 @@ int DbMySQLQueryImpl::resultNumFields(int result) {
   return res->getMetaData()->getColumnCount();
 }
 
-std::string DbMySQLQueryImpl::resultFieldType(int result, int field) {
+auto DbMySQLQueryImpl::resultFieldType(int result, int field) -> std::string {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -541,7 +541,7 @@ std::string DbMySQLQueryImpl::resultFieldType(int result, int field) {
   return res->getMetaData()->getColumnTypeName(field);
 }
 
-std::string DbMySQLQueryImpl::resultFieldName(int result, int field) {
+auto DbMySQLQueryImpl::resultFieldName(int result, int field) -> std::string {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -551,7 +551,7 @@ std::string DbMySQLQueryImpl::resultFieldName(int result, int field) {
   return res->getMetaData()->getColumnLabel(field);
 }
 
-int DbMySQLQueryImpl::resultFirstRow(int result) {
+auto DbMySQLQueryImpl::resultFirstRow(int result) -> int {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -561,7 +561,7 @@ int DbMySQLQueryImpl::resultFirstRow(int result) {
   return res->first() ? 1 : 0;
 }
 
-int DbMySQLQueryImpl::resultNextRow(int result) {
+auto DbMySQLQueryImpl::resultNextRow(int result) -> int {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -571,7 +571,7 @@ int DbMySQLQueryImpl::resultNextRow(int result) {
   return res->next() ? 1 : 0;
 }
 
-grt::IntegerRef DbMySQLQueryImpl::resultFieldIntValue(int result, int field) {
+auto DbMySQLQueryImpl::resultFieldIntValue(int result, int field) -> grt::IntegerRef {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -584,7 +584,7 @@ grt::IntegerRef DbMySQLQueryImpl::resultFieldIntValue(int result, int field) {
     return grt::IntegerRef(res->getInt(field));
 }
 
-double DbMySQLQueryImpl::resultFieldDoubleValue(int result, int field) {
+auto DbMySQLQueryImpl::resultFieldDoubleValue(int result, int field) -> double {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -594,7 +594,7 @@ double DbMySQLQueryImpl::resultFieldDoubleValue(int result, int field) {
   return (double)res->getDouble(field);
 }
 
-grt::StringRef DbMySQLQueryImpl::resultFieldStringValue(int result, int field) {
+auto DbMySQLQueryImpl::resultFieldStringValue(int result, int field) -> grt::StringRef {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -608,7 +608,7 @@ grt::StringRef DbMySQLQueryImpl::resultFieldStringValue(int result, int field) {
     return grt::StringRef(res->getString(field));
 }
 
-grt::IntegerRef DbMySQLQueryImpl::resultFieldIntValueByName(int result, const std::string &field) {
+auto DbMySQLQueryImpl::resultFieldIntValueByName(int result, const std::string &field) -> grt::IntegerRef {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -622,7 +622,7 @@ grt::IntegerRef DbMySQLQueryImpl::resultFieldIntValueByName(int result, const st
     return grt::IntegerRef(res->getInt(field));
 }
 
-double DbMySQLQueryImpl::resultFieldDoubleValueByName(int result, const std::string &field) {
+auto DbMySQLQueryImpl::resultFieldDoubleValueByName(int result, const std::string &field) -> double {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -633,7 +633,7 @@ double DbMySQLQueryImpl::resultFieldDoubleValueByName(int result, const std::str
   return (double)res->getDouble(field);
 }
 
-grt::StringRef DbMySQLQueryImpl::resultFieldStringValueByName(int result, const std::string &field) {
+auto DbMySQLQueryImpl::resultFieldStringValueByName(int result, const std::string &field) -> grt::StringRef {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     throw std::invalid_argument("Invalid resultset");
@@ -647,7 +647,7 @@ grt::StringRef DbMySQLQueryImpl::resultFieldStringValueByName(int result, const 
     return grt::StringRef(res->getString(field));
 }
 
-int DbMySQLQueryImpl::closeResult(int result) {
+auto DbMySQLQueryImpl::closeResult(int result) -> int {
   base::MutexLock lock(_mutex);
   if (_resultsets.find(result) == _resultsets.end())
     return -1;
@@ -657,7 +657,7 @@ int DbMySQLQueryImpl::closeResult(int result) {
   return 0;
 }
 
-int DbMySQLQueryImpl::loadSchemata(int conn, grt::StringListRef schemata) {
+auto DbMySQLQueryImpl::loadSchemata(int conn, grt::StringListRef schemata) -> int {
   CLEAR_ERROR();
 
   ConnectionInfo::Ref cinfo;
@@ -693,7 +693,7 @@ int DbMySQLQueryImpl::loadSchemata(int conn, grt::StringListRef schemata) {
   return 0;
 }
 
-grt::DictRef DbMySQLQueryImpl::getServerVariables(int conn) {
+auto DbMySQLQueryImpl::getServerVariables(int conn) -> grt::DictRef {
   grt::DictRef dict(true);
 
   CLEAR_ERROR();
@@ -730,15 +730,15 @@ grt::DictRef DbMySQLQueryImpl::getServerVariables(int conn) {
   return dict;
 }
 
-grt::StringListRef DbMySQLQueryImpl::loadSchemaList(int conn) {
+auto DbMySQLQueryImpl::loadSchemaList(int conn) -> grt::StringListRef {
   grt::StringListRef list(grt::Initialized);
   if (loadSchemata(conn, list) == 0)
     return list;
   return grt::StringListRef();
 }
 
-int DbMySQLQueryImpl::loadSchemaObjects(int conn, grt::StringRef schema, grt::StringRef object_type,
-                                        grt::DictRef objects) {
+auto DbMySQLQueryImpl::loadSchemaObjects(int conn, grt::StringRef schema, grt::StringRef object_type,
+                                        grt::DictRef objects) -> int {
   CLEAR_ERROR();
 
   ConnectionInfo::Ref cinfo;
@@ -785,14 +785,14 @@ int DbMySQLQueryImpl::loadSchemaObjects(int conn, grt::StringRef schema, grt::St
   return 0;
 }
 
-grt::DictRef DbMySQLQueryImpl::loadSchemaObjectList(int conn, grt::StringRef schema, grt::StringRef object_type) {
+auto DbMySQLQueryImpl::loadSchemaObjectList(int conn, grt::StringRef schema, grt::StringRef object_type) -> grt::DictRef {
   grt::DictRef objects(true);
   if (loadSchemaObjects(conn, schema, object_type, objects) == 0)
     return objects;
   return grt::DictRef();
 }
 
-int DbMySQLQueryImpl::openTunnel(const db_mgmt_ConnectionRef &info) {
+auto DbMySQLQueryImpl::openTunnel(const db_mgmt_ConnectionRef &info) -> int {
   sql::DriverManager *dm = sql::DriverManager::getDriverManager();
   std::shared_ptr<wb::SSHTunnel> tun = dm->getTunnel(info);
   if (tun) {
@@ -802,13 +802,13 @@ int DbMySQLQueryImpl::openTunnel(const db_mgmt_ConnectionRef &info) {
   return 0;
 }
 
-int DbMySQLQueryImpl::getTunnelPort(int tunnel) {
+auto DbMySQLQueryImpl::getTunnelPort(int tunnel) -> int {
   if (_tunnels.find(tunnel) == _tunnels.end())
     throw std::invalid_argument("Invalid tunnel-id");
   return _tunnels[tunnel]->getConfig().localport;
 }
 
-int DbMySQLQueryImpl::closeTunnel(int tunnel) {
+auto DbMySQLQueryImpl::closeTunnel(int tunnel) -> int {
   if (_tunnels.find(tunnel) == _tunnels.end())
     throw std::invalid_argument("Invalid tunnel-id");
   _tunnels.erase(tunnel);

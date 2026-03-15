@@ -46,17 +46,17 @@ using namespace wb;
 using namespace bec;
 using namespace base;
 
-int OverviewBE::Node::get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) {
+auto OverviewBE::Node::get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int {
   return 0;
 }
 
-bool OverviewBE::ObjectNode::activate(WBContext *wb) {
+auto OverviewBE::ObjectNode::activate(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(object, bec::NoFlags);
 
   return true;
 }
 
-bool OverviewBE::ObjectNode::rename(WBContext *wb, const std::string &name) {
+auto OverviewBE::ObjectNode::rename(WBContext *wb, const std::string &name) -> bool {
   db_DatabaseObjectRef dbobj(db_DatabaseObjectRef::cast_from(object));
 
   if (dbobj.is_valid()) {
@@ -79,21 +79,21 @@ OverviewBE::~OverviewBE() {
   delete _root_node;
 }
 
-std::string OverviewBE::get_title() {
+auto OverviewBE::get_title() -> std::string {
   if (_root_node)
     return _root_node->label;
 
   return "";
 }
 
-NodeId OverviewBE::get_child(const NodeId &parent, size_t index) {
+auto OverviewBE::get_child(const NodeId &parent, size_t index) -> NodeId {
   if (!parent.is_valid() && index < count_children(parent))
     return index;
 
   return NodeId(parent).append(index);
 }
 
-size_t OverviewBE::count_children(const NodeId &parent) {
+auto OverviewBE::count_children(const NodeId &parent) -> size_t {
   if (!_root_node)
     return 0;
 
@@ -106,7 +106,7 @@ size_t OverviewBE::count_children(const NodeId &parent) {
   return 0;
 }
 
-bec::NodeId OverviewBE::get_node_child_for_object(const bec::NodeId &node, const grt::ObjectRef &object) {
+auto OverviewBE::get_node_child_for_object(const bec::NodeId &node, const grt::ObjectRef &object) -> bec::NodeId {
   ContainerNode *n;
 
   if (node.is_valid())
@@ -125,7 +125,7 @@ bec::NodeId OverviewBE::get_node_child_for_object(const bec::NodeId &node, const
   return NodeId();
 }
 
-bool OverviewBE::get_field(const NodeId &node, ColumnId column, std::string &value) {
+auto OverviewBE::get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
   Node *n = get_node_by_id(node);
   if (!n)
     return false;
@@ -150,14 +150,14 @@ bool OverviewBE::get_field(const NodeId &node, ColumnId column, std::string &val
   return false;
 }
 
-grt::ValueRef OverviewBE::get_grt_value(const NodeId &node, ColumnId column) {
+auto OverviewBE::get_grt_value(const NodeId &node, ColumnId column) -> grt::ValueRef {
   Node *n = get_node_by_id(node);
   if (n)
     return n->object;
   return grt::ValueRef();
 }
 
-bool OverviewBE::get_field(const NodeId &node, ColumnId column, ssize_t &value) {
+auto OverviewBE::get_field(const NodeId &node, ColumnId column, ssize_t &value) -> bool {
   Node *n = get_node_by_id(node);
   if (!n)
     return false;
@@ -196,7 +196,7 @@ bool OverviewBE::get_field(const NodeId &node, ColumnId column, ssize_t &value) 
   return false;
 }
 
-int OverviewBE::get_details_field_count(const bec::NodeId &node) {
+auto OverviewBE::get_details_field_count(const bec::NodeId &node) -> int {
   ContainerNode *n = dynamic_cast<ContainerNode *>(get_node_by_id(node));
   if (!n)
     return 0;
@@ -204,7 +204,7 @@ int OverviewBE::get_details_field_count(const bec::NodeId &node) {
   return n->count_detail_fields();
 }
 
-std::string OverviewBE::get_field_name(const bec::NodeId &node, ColumnId column) {
+auto OverviewBE::get_field_name(const bec::NodeId &node, ColumnId column) -> std::string {
   ContainerNode *n = dynamic_cast<ContainerNode *>(get_node_by_id(node));
   if (!n)
     return "";
@@ -212,7 +212,7 @@ std::string OverviewBE::get_field_name(const bec::NodeId &node, ColumnId column)
   return n->get_detail_name((int)column - FirstDetailField);
 }
 
-bool OverviewBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto OverviewBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   Node *n = get_node_by_id(node);
   if (!n)
     return false;
@@ -235,7 +235,7 @@ bool OverviewBE::set_field(const NodeId &node, ColumnId column, const std::strin
   return false;
 }
 
-std::string OverviewBE::get_field_description(const NodeId &node, ColumnId column) {
+auto OverviewBE::get_field_description(const NodeId &node, ColumnId column) -> std::string {
   Node *n = get_node_by_id(node);
   if (!n)
     return "";
@@ -243,7 +243,7 @@ std::string OverviewBE::get_field_description(const NodeId &node, ColumnId colum
   return n->description;
 }
 
-IconId OverviewBE::get_field_icon(const NodeId &node, ColumnId column, bec::IconSize size) {
+auto OverviewBE::get_field_icon(const NodeId &node, ColumnId column, bec::IconSize size) -> IconId {
   Node *n = get_node_by_id(node);
   if (!n)
     return 0;
@@ -254,7 +254,7 @@ IconId OverviewBE::get_field_icon(const NodeId &node, ColumnId column, bec::Icon
     return n->large_icon;
 }
 
-OverviewBE::Node *OverviewBE::do_get_node(const NodeId &node) const {
+auto OverviewBE::do_get_node(const NodeId &node) const -> OverviewBE::Node * {
   Node *n = 0;
   size_t i;
   if (!node.is_valid())
@@ -274,7 +274,7 @@ OverviewBE::Node *OverviewBE::do_get_node(const NodeId &node) const {
   return n;
 }
 
-OverviewBE::Node *OverviewBE::get_deepest_focused() {
+auto OverviewBE::get_deepest_focused() -> OverviewBE::Node * {
   ContainerNode *parent = _root_node;
 
   while (parent && dynamic_cast<ContainerNode *>(parent->focused))
@@ -288,8 +288,8 @@ OverviewBE::Node *OverviewBE::get_deepest_focused() {
  * Search will begin at starting_node until the last node of the tree. If it's the nil node, it will
  * start at the beginning of the tree.
  */
-bec::NodeId OverviewBE::search_child_item_node_matching(const bec::NodeId &node, const bec::NodeId &starting_node,
-                                                        const std::string &text) {
+auto OverviewBE::search_child_item_node_matching(const bec::NodeId &node, const bec::NodeId &starting_node,
+                                                        const std::string &text) -> bec::NodeId {
   bec::NodeId start_node = node;
   bec::NodeId parent;
   size_t start;
@@ -342,7 +342,7 @@ bec::NodeId OverviewBE::search_child_item_node_matching(const bec::NodeId &node,
   return bec::NodeId();
 }
 
-void OverviewBE::refresh() {
+auto OverviewBE::refresh() -> void {
   /* needs to be refactored so that the tree is refreshed not rebuilt
 
   studio_DocumentRef document= _wb->get_document();
@@ -379,21 +379,21 @@ void OverviewBE::refresh() {
   */
 }
 
-bool OverviewBE::activate_node(const NodeId &node) {
+auto OverviewBE::activate_node(const NodeId &node) -> bool {
   Node *n = get_node_by_id(node);
   if (n)
     return n->activate(_wb);
   return false;
 }
 
-std::string OverviewBE::get_node_unique_id(const NodeId &node) {
+auto OverviewBE::get_node_unique_id(const NodeId &node) -> std::string {
   Node *n = get_node_by_id(node);
   if (n)
     return n->get_unique_id();
   return "";
 }
 
-static void unselect_all(OverviewBE::ContainerNode &node) {
+static auto unselect_all(OverviewBE::ContainerNode &node) -> void {
   node.selected = false;
 
   for (std::vector<OverviewBE::Node *>::iterator i = node.children.begin(); i != node.children.end(); ++i) {
@@ -405,23 +405,23 @@ static void unselect_all(OverviewBE::ContainerNode &node) {
   }
 }
 
-void OverviewBE::unselect_all(const NodeId &node) {
+auto OverviewBE::unselect_all(const NodeId &node) -> void {
   ContainerNode *container = dynamic_cast<ContainerNode *>(get_node_by_id(node));
 
   if (container)
     ::unselect_all(*container);
 }
 
-void OverviewBE::begin_selection_marking() {
+auto OverviewBE::begin_selection_marking() -> void {
   if (_root_node)
     ::unselect_all(*_root_node);
 }
 
-void OverviewBE::end_selection_marking() {
+auto OverviewBE::end_selection_marking() -> void {
   _selection_change_signal();
 }
 
-void OverviewBE::select_node(const NodeId &node) {
+auto OverviewBE::select_node(const NodeId &node) -> void {
   Node *n = get_node_by_id(node);
 
   if (n) {
@@ -435,7 +435,7 @@ void OverviewBE::select_node(const NodeId &node) {
   }
 }
 
-grt::ListRef<GrtObject> OverviewBE::get_selection() {
+auto OverviewBE::get_selection() -> grt::ListRef<GrtObject> {
   ContainerNode *node = dynamic_cast<ContainerNode *>(get_deepest_focused());
   grt::ListRef<GrtObject> selection(true);
 
@@ -448,7 +448,7 @@ grt::ListRef<GrtObject> OverviewBE::get_selection() {
   return selection;
 }
 
-std::list<int> OverviewBE::get_selected_children(const bec::NodeId &node) {
+auto OverviewBE::get_selected_children(const bec::NodeId &node) -> std::list<int> {
   std::list<int> list;
   ContainerNode *n = dynamic_cast<ContainerNode *>(get_node_by_id(node));
   if (n) {
@@ -462,7 +462,7 @@ std::list<int> OverviewBE::get_selected_children(const bec::NodeId &node) {
   return list;
 }
 
-void OverviewBE::focus_node(const bec::NodeId &node) {
+auto OverviewBE::focus_node(const bec::NodeId &node) -> void {
   NodeId parent_id = get_parent(node);
 
   ContainerNode *parent;
@@ -482,7 +482,7 @@ void OverviewBE::focus_node(const bec::NodeId &node) {
     focus_node(parent_id);
 }
 
-bec::NodeId OverviewBE::get_focused_child(const bec::NodeId &node) {
+auto OverviewBE::get_focused_child(const bec::NodeId &node) -> bec::NodeId {
   ContainerNode *parent = dynamic_cast<ContainerNode *>(get_node_by_id(node));
   if (parent && parent->focused) {
     size_t i = std::find(parent->children.begin(), parent->children.end(), parent->focused) - parent->children.begin();
@@ -494,7 +494,7 @@ bec::NodeId OverviewBE::get_focused_child(const bec::NodeId &node) {
   return bec::NodeId();
 }
 
-bool OverviewBE::request_add_object(const NodeId &node) {
+auto OverviewBE::request_add_object(const NodeId &node) -> bool {
   Node *n = get_node_by_id(node);
   if (n)
     return n->add_object(_wb);
@@ -508,7 +508,7 @@ bool OverviewBE::request_add_object(const NodeId &node) {
  * until the individually selected leaf nodes.
  *
  */
-int OverviewBE::request_delete_selected() {
+auto OverviewBE::request_delete_selected() -> int {
   ContainerNode *parent = dynamic_cast<ContainerNode *>(get_deepest_focused());
 
   if (parent) {
@@ -532,25 +532,25 @@ int OverviewBE::request_delete_selected() {
   return 0;
 }
 
-bool OverviewBE::is_editable(const bec::NodeId &node) const {
+auto OverviewBE::is_editable(const bec::NodeId &node) const -> bool {
   Node *n = get_node_by_id(node);
 
   return n ? n->is_renameable() : false;
 }
 
-bool OverviewBE::is_deletable(const bec::NodeId &node) const {
+auto OverviewBE::is_deletable(const bec::NodeId &node) const -> bool {
   Node *n = get_node_by_id(node);
 
   return n ? n->is_deletable() : false;
 }
 
-bool OverviewBE::is_copyable(const bec::NodeId &node) const {
+auto OverviewBE::is_copyable(const bec::NodeId &node) const -> bool {
   Node *n = get_node_by_id(node);
 
   return n ? n->is_copyable() : false;
 }
 
-bool OverviewBE::request_delete_object(const bec::NodeId &node) {
+auto OverviewBE::request_delete_object(const bec::NodeId &node) -> bool {
   Node *n = get_node_by_id(node);
   if (n) {
     n->delete_object(_wb);
@@ -559,7 +559,7 @@ bool OverviewBE::request_delete_object(const bec::NodeId &node) {
   return false;
 }
 
-void OverviewBE::store_node_states(Node *node) {
+auto OverviewBE::store_node_states(Node *node) -> void {
   studio_DocumentRef document = _wb->get_document();
 
   if (node->type != OItem) {
@@ -577,7 +577,7 @@ void OverviewBE::store_node_states(Node *node) {
   }
 }
 
-void OverviewBE::store_state() {
+auto OverviewBE::store_state() -> void {
   while (_wb->get_document()->overviewPanels().count() > 0)
     _wb->get_document()->overviewPanels().remove(0);
 
@@ -585,7 +585,7 @@ void OverviewBE::store_state() {
     store_node_states(*iter);
 }
 
-void OverviewBE::restore_state() {
+auto OverviewBE::restore_state() -> void {
   studio_DocumentRef document = _wb->get_document();
 
   for (size_t c = document->overviewPanels().count(), i = 0; i < c; i++) {
@@ -597,11 +597,11 @@ void OverviewBE::restore_state() {
   }
 }
 
-bool OverviewBE::can_cut() {
+auto OverviewBE::can_cut() -> bool {
   return can_copy() && can_delete();
 }
 
-bool OverviewBE::can_copy() {
+auto OverviewBE::can_copy() -> bool {
   ContainerNode *parent = dynamic_cast<ContainerNode *>(get_deepest_focused());
 
   if (parent && !parent->children.empty()) {
@@ -620,7 +620,7 @@ bool OverviewBE::can_copy() {
 
 //--------------------------------------------------------------------------------------------------
 
-static OverviewBE::ContainerNode *get_pasteable_container(OverviewBE::ContainerNode *parent, bec::Clipboard *clip) {
+static auto get_pasteable_container(OverviewBE::ContainerNode *parent, bec::Clipboard *clip) -> OverviewBE::ContainerNode * {
   OverviewBE::ContainerNode *focused_container = dynamic_cast<OverviewBE::ContainerNode *>(parent->focused);
   if (focused_container != NULL) {
     OverviewBE::ContainerNode *pastable_child = get_pasteable_container(focused_container, clip);
@@ -635,7 +635,7 @@ static OverviewBE::ContainerNode *get_pasteable_container(OverviewBE::ContainerN
 
 //--------------------------------------------------------------------------------------------------
 
-static bool check_focused_pasteable(OverviewBE::ContainerNode *container, bec::Clipboard *clip) {
+static auto check_focused_pasteable(OverviewBE::ContainerNode *container, bec::Clipboard *clip) -> bool {
   if (dynamic_cast<OverviewBE::ContainerNode *>(container->focused))
     if (check_focused_pasteable(dynamic_cast<OverviewBE::ContainerNode *>(container->focused), clip))
       return true;
@@ -645,7 +645,7 @@ static bool check_focused_pasteable(OverviewBE::ContainerNode *container, bec::C
 
 //--------------------------------------------------------------------------------------------------
 
-bool OverviewBE::can_paste() {
+auto OverviewBE::can_paste() -> bool {
   //  ContainerNode *parent= dynamic_cast<ContainerNode*>(get_deepest_focused());
   if (_root_node && _wb->get_clipboard())
     return check_focused_pasteable(_root_node, _wb->get_clipboard());
@@ -654,7 +654,7 @@ bool OverviewBE::can_paste() {
 
 //--------------------------------------------------------------------------------------------------
 
-static int count_selection(OverviewBE::ContainerNode *node) {
+static auto count_selection(OverviewBE::ContainerNode *node) -> int {
   if (node && !node->children.empty()) {
     int count = 0;
     for (std::vector<OverviewBE::Node *>::const_iterator i = node->children.begin(); i != node->children.end(); ++i)
@@ -668,14 +668,14 @@ static int count_selection(OverviewBE::ContainerNode *node) {
   return 0;
 }
 
-bool OverviewBE::can_delete() {
+auto OverviewBE::can_delete() -> bool {
   ContainerNode *node = dynamic_cast<ContainerNode *>(get_deepest_focused());
   if (node)
     return count_selection(node) > 0;
   return false;
 }
 
-std::string OverviewBE::get_edit_target_name() {
+auto OverviewBE::get_edit_target_name() -> std::string {
   ContainerNode *node = dynamic_cast<ContainerNode *>(get_deepest_focused());
 
   if (node) {
@@ -697,7 +697,7 @@ std::string OverviewBE::get_edit_target_name() {
   return "";
 }
 
-std::string OverviewBE::get_target_name_for_nodes(const std::vector<bec::NodeId> &nodes) {
+auto OverviewBE::get_target_name_for_nodes(const std::vector<bec::NodeId> &nodes) -> std::string {
   int count = 0;
   std::string text;
   for (std::vector<bec::NodeId>::const_iterator i = nodes.begin(); i != nodes.end(); ++i) {
@@ -716,7 +716,7 @@ std::string OverviewBE::get_target_name_for_nodes(const std::vector<bec::NodeId>
   return "";
 }
 
-void OverviewBE::cut() {
+auto OverviewBE::cut() -> void {
   grt::AutoUndo undo;
 
   copy();
@@ -725,7 +725,7 @@ void OverviewBE::cut() {
   _wb->_frontendCallbacks->show_status_text(strfmt(_("%i object(s) cut."), count));
 }
 
-void OverviewBE::copy() {
+auto OverviewBE::copy() -> void {
   ContainerNode *parent = dynamic_cast<ContainerNode *>(get_deepest_focused());
   int count = 0;
 
@@ -747,7 +747,7 @@ void OverviewBE::copy() {
     _wb->_frontendCallbacks->show_status_text(strfmt(_("%i object(s) copied."), count));
 }
 
-void OverviewBE::paste() {
+auto OverviewBE::paste() -> void {
   std::stack<ContainerNode *> focused;
 
   ContainerNode *parent = _root_node;
@@ -771,7 +771,7 @@ void OverviewBE::paste() {
   }
 }
 
-void OverviewBE::delete_selection() {
+auto OverviewBE::delete_selection() -> void {
   grt::AutoUndo undo;
   request_delete_selected();
   undo.end(strfmt(_("Delete %s"), get_edit_target_name().c_str()));
@@ -784,7 +784,7 @@ void OverviewBE::delete_selection() {
  the container of that item has other selected items, it will return the items for the
  multiple items.
  */
-bec::MenuItemList OverviewBE::get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) {
+auto OverviewBE::get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) -> bec::MenuItemList {
   bec::MenuItemList items;
 
   // Don't go early out here if no node was passed in. We also have to add selection independent
@@ -865,7 +865,7 @@ bec::MenuItemList OverviewBE::get_popup_items_for_nodes(const std::vector<bec::N
   return items;
 }
 
-bool OverviewBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<bec::NodeId> &nodes) {
+auto OverviewBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<bec::NodeId> &nodes) -> bool {
   if (name == "builtin:paste") {
     Node *n = get_pasteable_container(_root_node, _wb->get_clipboard());
 
@@ -923,22 +923,22 @@ bool OverviewBE::activate_popup_item_for_nodes(const std::string &name, const st
   return true;
 }
 
-bec::ToolbarItemList OverviewBE::get_toolbar_items(const bec::NodeId &node) {
+auto OverviewBE::get_toolbar_items(const bec::NodeId &node) -> bec::ToolbarItemList {
   bec::ToolbarItemList items;
   return items;
 }
 
-bool OverviewBE::activate_toolbar_item(const bec::NodeId &node, const std::string &name) {
+auto OverviewBE::activate_toolbar_item(const bec::NodeId &node, const std::string &name) -> bool {
   return false;
 }
 
-void OverviewBE::send_refresh_node(const bec::NodeId &node) {
+auto OverviewBE::send_refresh_node(const bec::NodeId &node) -> void {
   UIForm *frm = dynamic_cast<UIForm *>(this);
   if (frm && _wb)
     _wb->request_refresh(RefreshOverviewNodeInfo, node.toString(), reinterpret_cast<NativeHandle>(frm));
 }
 
-void OverviewBE::send_refresh_children(const bec::NodeId &node) {
+auto OverviewBE::send_refresh_children(const bec::NodeId &node) -> void {
   UIForm *frm = dynamic_cast<UIForm *>(this);
   if (frm && _wb)
     _wb->request_refresh(RefreshOverviewNodeChildren, node.toString(), reinterpret_cast<NativeHandle>(frm));

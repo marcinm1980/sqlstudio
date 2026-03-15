@@ -123,7 +123,7 @@ ModelDiagramForm::~ModelDiagramForm() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto ModelDiagramForm::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   if (name == "GNColorsChanged") {
     // Single colors or the entire color scheme changed.
     update_toolbar_icons();
@@ -132,13 +132,13 @@ void ModelDiagramForm::handle_notification(const std::string &name, void *sender
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string ModelDiagramForm::get_form_context_name() const {
+auto ModelDiagramForm::get_form_context_name() const -> std::string {
   return WB_CONTEXT_MODEL;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::ToolBar* ModelDiagramForm::get_toolbar() {
+auto ModelDiagramForm::get_toolbar() -> mforms::ToolBar* {
   if (!_toolbar) {
     _toolbar = WBContextUI::get()->get_command_ui()->create_toolbar("data/model_diagram_toolbar.xml");
     update_toolbar_icons();
@@ -149,11 +149,11 @@ mforms::ToolBar* ModelDiagramForm::get_toolbar() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Implemented in wb_sql_editor_form_ui.cpp.
-extern std::string find_icon_name(std::string icon_name, bool use_win8);
+extern auto find_icon_name(std::string icon_name, bool use_win8) -> std::string;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::update_toolbar_icons() {
+auto ModelDiagramForm::update_toolbar_icons() -> void {
   if (_toolbar == NULL)
     return; // Can happen if the diagram hasn't shown yet.
 
@@ -184,7 +184,7 @@ void ModelDiagramForm::update_toolbar_icons() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::TreeView *ModelDiagramForm::get_layer_tree() {
+auto ModelDiagramForm::get_layer_tree() -> mforms::TreeView * {
   if (!_layer_tree) {
     _layer_tree = new LayerTree(this, _model_diagram);
     _layer_tree->refresh();
@@ -194,7 +194,7 @@ mforms::TreeView *ModelDiagramForm::get_layer_tree() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::ToolBar *ModelDiagramForm::get_tools_toolbar() {
+auto ModelDiagramForm::get_tools_toolbar() -> mforms::ToolBar * {
   if (!_tools_toolbar) {
     _tools_toolbar = new mforms::ToolBar(mforms::ToolPickerToolBar);
     app_ToolbarRef toolbar[3];
@@ -251,14 +251,14 @@ mforms::ToolBar *ModelDiagramForm::get_tools_toolbar() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::ToolBar* ModelDiagramForm::get_options_toolbar() {
+auto ModelDiagramForm::get_options_toolbar() -> mforms::ToolBar* {
   update_options_toolbar();
   return _options_toolbar;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mforms::MenuBar *ModelDiagramForm::get_menubar() {
+auto ModelDiagramForm::get_menubar() -> mforms::MenuBar * {
   if (!_menu) {
     _menu = WBContextUI::get()->get_command_ui()->create_menubar_for_context(WB_CONTEXT_MODEL);
     scoped_connect(_menu->signal_will_show(), std::bind(&ModelDiagramForm::revalidate_menu, this));
@@ -276,7 +276,7 @@ mforms::MenuBar *ModelDiagramForm::get_menubar() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::revalidate_menu() {
+auto ModelDiagramForm::revalidate_menu() -> void {
   static const char *figure_notations[] = {"studio/default", "studio/simple", "studio/pkonly",
                                            "classic",           "idef1x",           NULL};
   static const char *relationship_notations[] = {"crowsfoot", "classic", "fromcolumn", "uml", "idef1x", NULL};
@@ -320,7 +320,7 @@ void ModelDiagramForm::revalidate_menu() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::update_options_toolbar() {
+auto ModelDiagramForm::update_options_toolbar() -> void {
   app_ToolbarRef toolbar = get_wb()->get_component_named("basic")->get_tool_options(get_tool());
 
   _options_toolbar->remove_all();
@@ -380,8 +380,8 @@ void ModelDiagramForm::update_options_toolbar() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::vector<std::string> ModelDiagramForm::get_dropdown_items(const std::string &name, const std::string &option,
-                                                              std::string &selected) {
+auto ModelDiagramForm::get_dropdown_items(const std::string &name, const std::string &option,
+                                                              std::string &selected) -> std::vector<std::string> {
   std::vector<std::string> items;
   WBComponent *compo;
 
@@ -399,7 +399,7 @@ std::vector<std::string> ModelDiagramForm::get_dropdown_items(const std::string 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::select_dropdown_item(const std::string &option, mforms::ToolBarItem *item) {
+auto ModelDiagramForm::select_dropdown_item(const std::string &option, mforms::ToolBarItem *item) -> void {
   WBComponent *compo;
 
   compo = get_wb()->get_component_named(base::split(item->getInternalName(), "/")[0]);
@@ -414,7 +414,7 @@ void ModelDiagramForm::select_dropdown_item(const std::string &option, mforms::T
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::toggle_checkbox_item(const std::string &name, const std::string &option, bool state) {
+auto ModelDiagramForm::toggle_checkbox_item(const std::string &name, const std::string &option, bool state) -> void {
   WBComponent *compo;
 
   compo = get_wb()->get_component_named(base::split(name, "/")[0]);
@@ -429,7 +429,7 @@ void ModelDiagramForm::toggle_checkbox_item(const std::string &name, const std::
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::activate_catalog_tree_item(const grt::ValueRef &value) {
+auto ModelDiagramForm::activate_catalog_tree_item(const grt::ValueRef &value) -> void {
   if (value.is_valid() && db_DatabaseObjectRef::can_wrap(value)) {
     db_DatabaseObjectRef object(db_DatabaseObjectRef::cast_from(value));
 
@@ -439,7 +439,7 @@ void ModelDiagramForm::activate_catalog_tree_item(const grt::ValueRef &value) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::selection_changed() {
+auto ModelDiagramForm::selection_changed() -> void {
   get_wb()->request_refresh(RefreshSelection, "", 0);
 
   if (bec::GRTManager::get()->in_main_thread())
@@ -450,7 +450,7 @@ void ModelDiagramForm::selection_changed() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::diagram_changed(grt::internal::OwnedList *olist, bool added, const grt::ValueRef &val) {
+auto ModelDiagramForm::diagram_changed(grt::internal::OwnedList *olist, bool added, const grt::ValueRef &val) -> void {
   _idle_node_mark.disconnect();
   if (added)
     _idle_node_mark =
@@ -459,7 +459,7 @@ void ModelDiagramForm::diagram_changed(grt::internal::OwnedList *olist, bool add
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::mark_catalog_node(grt::ValueRef val, bool mark) {
+auto ModelDiagramForm::mark_catalog_node(grt::ValueRef val, bool mark) -> void {
   if (model_ObjectRef::can_wrap(val)) {
     model_ObjectRef f(model_ObjectRef::cast_from(val));
     if (f.is_valid())
@@ -469,7 +469,7 @@ void ModelDiagramForm::mark_catalog_node(grt::ValueRef val, bool mark) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::attach_canvas_view(mdc::CanvasView *cview) {
+auto ModelDiagramForm::attach_canvas_view(mdc::CanvasView *cview) -> void {
   _view = cview;
 
   cview->set_tag(_model_diagram.id());
@@ -493,7 +493,7 @@ void ModelDiagramForm::attach_canvas_view(mdc::CanvasView *cview) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::close() {
+auto ModelDiagramForm::close() -> void {
   set_closed(true);
   _mini_view->set_active_view(NULL, model_DiagramRef());
 
@@ -507,7 +507,7 @@ void ModelDiagramForm::close() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-CatalogTreeView *ModelDiagramForm::get_catalog_tree() {
+auto ModelDiagramForm::get_catalog_tree() -> CatalogTreeView * {
   if (_catalog_tree == NULL) {
     _catalog_tree = new CatalogTreeView(this);
     _catalog_tree->set_activate_callback(
@@ -518,7 +518,7 @@ CatalogTreeView *ModelDiagramForm::get_catalog_tree() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::notify_catalog_tree(const CatalogNodeNotificationType &notify_type, grt::ValueRef value) {
+auto ModelDiagramForm::notify_catalog_tree(const CatalogNodeNotificationType &notify_type, grt::ValueRef value) -> void {
   _idle_node_mark.disconnect(); // if there is pending mark_node, disable it
   if (_catalog_tree) {
     switch (notify_type) {
@@ -536,7 +536,7 @@ void ModelDiagramForm::notify_catalog_tree(const CatalogNodeNotificationType &no
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::refill_catalog_tree() {
+auto ModelDiagramForm::refill_catalog_tree() -> void {
   if (!_catalog_tree) {
     _catalog_tree = new CatalogTreeView(this);
     _catalog_tree->set_activate_callback(
@@ -548,33 +548,33 @@ void ModelDiagramForm::refill_catalog_tree() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_closed(bool flag) {
+auto ModelDiagramForm::set_closed(bool flag) -> void {
   if (_model_diagram.is_valid())
     _model_diagram->closed(flag != 0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::is_closed() {
+auto ModelDiagramForm::is_closed() -> bool {
   return *_model_diagram->closed() != 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_button_callback(
-  const std::function<bool(ModelDiagramForm *, mdc::MouseButton, bool, Point, mdc::EventState)> &cb) {
+auto ModelDiagramForm::set_button_callback(
+  const std::function<bool(ModelDiagramForm *, mdc::MouseButton, bool, Point, mdc::EventState)> &cb) -> void {
   _handle_button = cb;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_motion_callback(const std::function<bool(ModelDiagramForm *, Point, mdc::EventState)> &cb) {
+auto ModelDiagramForm::set_motion_callback(const std::function<bool(ModelDiagramForm *, Point, mdc::EventState)> &cb) -> void {
   _handle_motion = cb;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_reset_tool_callback(const std::function<void(ModelDiagramForm *)> &cb) {
+auto ModelDiagramForm::set_reset_tool_callback(const std::function<void(ModelDiagramForm *)> &cb) -> void {
   _reset_tool = cb;
 }
 
@@ -586,7 +586,7 @@ void ModelDiagramForm::set_reset_tool_callback(const std::function<void(ModelDia
  * @param enable If true the tool is enabled otherwise the previous tool is restored.
  * @param zoomin If true mouse clicks will zoom into the diagram otherwise zoom out.
  */
-void ModelDiagramForm::enable_zoom_click(bool enable, bool zoomin) {
+auto ModelDiagramForm::enable_zoom_click(bool enable, bool zoomin) -> void {
   if (!enable) {
     _reset_tool(this);
     _tool = _old_tool;
@@ -619,7 +619,7 @@ void ModelDiagramForm::enable_zoom_click(bool enable, bool zoomin) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::enable_panning(bool flag) {
+auto ModelDiagramForm::enable_panning(bool flag) -> void {
   if (flag) {
     _old_tool = _tool;
     _old_reset_tool = _reset_tool;
@@ -644,7 +644,7 @@ void ModelDiagramForm::enable_panning(bool flag) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::begin_selection_drag() {
+auto ModelDiagramForm::begin_selection_drag() -> void {
   mdc::Selection::ContentType selection(_view->get_selection()->get_contents());
   mdc::AreaGroup *root = _view->get_current_layer()->get_root_area_group();
 
@@ -682,7 +682,7 @@ void ModelDiagramForm::begin_selection_drag() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::end_selection_drag() {
+auto ModelDiagramForm::end_selection_drag() -> void {
   std::string name;
   bool moved = false;
   int count = 0;
@@ -747,7 +747,7 @@ void ModelDiagramForm::end_selection_drag() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::current_mouse_position(int &x, int &y) {
+auto ModelDiagramForm::current_mouse_position(int &x, int &y) -> bool {
   int w, h;
 
   _view->get_view_size(w, h);
@@ -761,7 +761,7 @@ bool ModelDiagramForm::current_mouse_position(int &x, int &y) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::current_mouse_position(Point &pos) {
+auto ModelDiagramForm::current_mouse_position(Point &pos) -> bool {
   int x, y;
   bool inside = current_mouse_position(x, y);
 
@@ -772,13 +772,13 @@ bool ModelDiagramForm::current_mouse_position(Point &pos) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mdc::CanvasItem *ModelDiagramForm::get_leaf_item_at(const Point &pos) {
+auto ModelDiagramForm::get_leaf_item_at(const Point &pos) -> mdc::CanvasItem * {
   return _view->get_leaf_item_at(pos);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::handle_mouse_button(mdc::MouseButton button, bool press, int x, int y, mdc::EventState state) {
+auto ModelDiagramForm::handle_mouse_button(mdc::MouseButton button, bool press, int x, int y, mdc::EventState state) -> void {
   if (_features)
     _features->tooltip_cancel();
 
@@ -857,7 +857,7 @@ void ModelDiagramForm::handle_mouse_button(mdc::MouseButton button, bool press, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::handle_mouse_double_click(mdc::MouseButton button, int x, int y, mdc::EventState state) {
+auto ModelDiagramForm::handle_mouse_double_click(mdc::MouseButton button, int x, int y, mdc::EventState state) -> void {
   stop_editing();
 
   if (button != mdc::ButtonLeft && button != mdc::ButtonMiddle)
@@ -868,7 +868,7 @@ void ModelDiagramForm::handle_mouse_double_click(mdc::MouseButton button, int x,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::handle_mouse_move(int x, int y, mdc::EventState state) {
+auto ModelDiagramForm::handle_mouse_move(int x, int y, mdc::EventState state) -> void {
   Point pos(_view->window_to_canvas(x, y));
 
   _current_mouse_x = x;
@@ -882,13 +882,13 @@ void ModelDiagramForm::handle_mouse_move(int x, int y, mdc::EventState state) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::handle_mouse_leave(int x, int y, mdc::EventState state) {
+auto ModelDiagramForm::handle_mouse_leave(int x, int y, mdc::EventState state) -> void {
   _view->handle_mouse_leave(x, y, state);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::handle_key(const mdc::KeyInfo &key, bool press, mdc::EventState state) {
+auto ModelDiagramForm::handle_key(const mdc::KeyInfo &key, bool press, mdc::EventState state) -> bool {
   if (press) {
     // cancel tooltip on keypress
     if (_features)
@@ -949,7 +949,7 @@ bool ModelDiagramForm::handle_key(const mdc::KeyInfo &key, bool press, mdc::Even
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_tool(std::string tool) {
+auto ModelDiagramForm::set_tool(std::string tool) -> void {
   if (_tool != DEFAULT_TOOL)
     reset_tool(false);
 
@@ -977,7 +977,7 @@ void ModelDiagramForm::set_tool(std::string tool) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::reset_tool(bool notify) {
+auto ModelDiagramForm::reset_tool(bool notify) -> void {
   if (_tools_toolbar) {
     mforms::ToolBarItem *item = _tools_toolbar->find_item(_tool);
     if (!_tool.empty() && item)
@@ -1003,7 +1003,7 @@ void ModelDiagramForm::reset_tool(bool notify) {
     _owner->get_wb()->_frontendCallbacks->tool_changed(_view);
 }
 
-std::string ModelDiagramForm::get_tool_argument(const std::string &option) {
+auto ModelDiagramForm::get_tool_argument(const std::string &option) -> std::string {
   return _tool_args[option];
 }
 
@@ -1017,7 +1017,7 @@ std::string ModelDiagramForm::get_tool_argument(const std::string &option) {
  * @param option name of the option
  * @param value value of the option
  */
-void ModelDiagramForm::set_tool_argument(const std::string &option, const std::string &value) {
+auto ModelDiagramForm::set_tool_argument(const std::string &option, const std::string &value) -> void {
   _tool_args[option] = value;
 
   _tool_argument_changed(option);
@@ -1025,56 +1025,56 @@ void ModelDiagramForm::set_tool_argument(const std::string &option, const std::s
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_zoom(double zoom) {
+auto ModelDiagramForm::set_zoom(double zoom) -> void {
   _model_diagram->zoom(zoom);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-double ModelDiagramForm::get_zoom() {
+auto ModelDiagramForm::get_zoom() -> double {
   return _model_diagram->zoom();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bec::Clipboard *ModelDiagramForm::get_clipboard() {
+auto ModelDiagramForm::get_clipboard() -> bec::Clipboard * {
   return bec::GRTManager::get()->get_clipboard();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::can_undo() {
+auto ModelDiagramForm::can_undo() -> bool {
   return grt::GRT::get()->get_undo_manager()->can_undo();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::can_redo() {
+auto ModelDiagramForm::can_redo() -> bool {
   return grt::GRT::get()->get_undo_manager()->can_redo();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::can_copy() {
+auto ModelDiagramForm::can_copy() -> bool {
   return get_copiable_selection().count() > 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::can_select_all() {
+auto ModelDiagramForm::can_select_all() -> bool {
   return true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void check_if_can_paste(WBComponent *compo, const grt::ObjectRef &object, bool *result) {
+static auto check_if_can_paste(WBComponent *compo, const grt::ObjectRef &object, bool *result) -> void {
   if (compo->can_paste_object(object))
     *result = true;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::can_paste() {
+auto ModelDiagramForm::can_paste() -> bool {
   std::list<grt::ObjectRef> data(get_clipboard()->get_data());
   WBContext *wb = _owner->get_wb();
 
@@ -1093,11 +1093,11 @@ bool ModelDiagramForm::can_paste() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::can_delete() {
+auto ModelDiagramForm::can_delete() -> bool {
   return has_selection();
 }
 
-std::string ModelDiagramForm::get_edit_target_name() {
+auto ModelDiagramForm::get_edit_target_name() -> std::string {
   grt::ListRef<model_Object> sel(get_copiable_selection());
 
   if (sel.count() == 0)
@@ -1117,19 +1117,19 @@ std::string ModelDiagramForm::get_edit_target_name() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::undo() {
+auto ModelDiagramForm::undo() -> void {
   grt::GRT::get()->get_undo_manager()->undo();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::redo() {
+auto ModelDiagramForm::redo() -> void {
   grt::GRT::get()->get_undo_manager()->redo();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::cut() {
+auto ModelDiagramForm::cut() -> void {
   grt::UndoManager *um = grt::GRT::get()->get_undo_manager();
 
   std::string edit_target_name = get_edit_target_name();
@@ -1147,7 +1147,7 @@ void ModelDiagramForm::cut() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::copy() {
+auto ModelDiagramForm::copy() -> void {
   // object must be duplicated on copy because if the object is edited after copy
   // whatever is pasted should still be in the same state as it was on copy
   grt::ListRef<model_Object> selection(get_copiable_selection());
@@ -1173,20 +1173,20 @@ void ModelDiagramForm::copy() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::clipboard_changed() {
+auto ModelDiagramForm::clipboard_changed() -> void {
   _paste_offset = 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void get_component_that_can_paste(WBComponent *compo, const grt::ObjectRef &object, WBComponent **result) {
+static auto get_component_that_can_paste(WBComponent *compo, const grt::ObjectRef &object, WBComponent **result) -> void {
   if (compo->can_paste_object(object))
     *result = compo;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::paste() {
+auto ModelDiagramForm::paste() -> void {
   // Prevent too many updates.
   UpdateLock lock(this);
 
@@ -1242,7 +1242,7 @@ void ModelDiagramForm::paste() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::select_all() {
+auto ModelDiagramForm::select_all() -> void {
   for (size_t c = get_model_diagram()->figures().count(), i = 0; i < c; i++)
     get_model_diagram()->selectObject(get_model_diagram()->figures().get(i));
 
@@ -1252,7 +1252,7 @@ void ModelDiagramForm::select_all() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::remove_selection(bool deleteSelection) {
+auto ModelDiagramForm::remove_selection(bool deleteSelection) -> void {
   grt::UndoManager *um = grt::GRT::get()->get_undo_manager();
   grt::ListRef<model_Object> selection = get_selection();
 
@@ -1290,13 +1290,13 @@ void ModelDiagramForm::remove_selection(bool deleteSelection) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::delete_selection() {
+auto ModelDiagramForm::delete_selection() -> void {
   remove_selection(true);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string ModelDiagramForm::get_diagram_info_text() {
+auto ModelDiagramForm::get_diagram_info_text() -> std::string {
   if (_model_diagram.is_valid())
     return strfmt("%i x %i mm", (int)*_model_diagram->width(), (int)*_model_diagram->height());
   return "";
@@ -1304,7 +1304,7 @@ std::string ModelDiagramForm::get_diagram_info_text() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::vector<std::string> ModelDiagramForm::get_accepted_drop_types() {
+auto ModelDiagramForm::get_accepted_drop_types() -> std::vector<std::string> {
   std::vector<std::string> vec;
   vec.push_back(WB_DBOBJECT_DRAG_TYPE);
   return vec;
@@ -1312,13 +1312,13 @@ std::vector<std::string> ModelDiagramForm::get_accepted_drop_types() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-grt::ListRef<model_Object> ModelDiagramForm::get_selection() {
+auto ModelDiagramForm::get_selection() -> grt::ListRef<model_Object> {
   return _model_diagram->selection();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-grt::ListRef<model_Object> ModelDiagramForm::get_copiable_selection() {
+auto ModelDiagramForm::get_copiable_selection() -> grt::ListRef<model_Object> {
   grt::ListRef<model_Object> sel(_model_diagram->selection());
   grt::ListRef<model_Object> copiable(true);
 
@@ -1331,13 +1331,13 @@ grt::ListRef<model_Object> ModelDiagramForm::get_copiable_selection() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::has_selection() {
+auto ModelDiagramForm::has_selection() -> bool {
   return _model_diagram->selection().count() > 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static mdc::CanvasItem *extractItem(const model_ObjectRef &object) {
+static auto extractItem(const model_ObjectRef &object) -> mdc::CanvasItem * {
   mdc::CanvasItem *item = nullptr;
 
   if (object.is_instance(model_Figure::static_class_name())) {
@@ -1354,7 +1354,7 @@ static mdc::CanvasItem *extractItem(const model_ObjectRef &object) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::is_visible(const model_ObjectRef &object, bool partially) {
+auto ModelDiagramForm::is_visible(const model_ObjectRef &object, bool partially) -> bool {
   mdc::CanvasItem *item = extractItem(object);
 
   if (item == nullptr)
@@ -1371,7 +1371,7 @@ bool ModelDiagramForm::is_visible(const model_ObjectRef &object, bool partially)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::focus_and_make_visible(const model_ObjectRef &object, bool select) {
+auto ModelDiagramForm::focus_and_make_visible(const model_ObjectRef &object, bool select) -> void {
   mdc::CanvasItem *item = extractItem(object);
   if (item) {
     mdc::CanvasView *view = item->get_view();
@@ -1403,8 +1403,8 @@ void ModelDiagramForm::focus_and_make_visible(const model_ObjectRef &object, boo
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static model_ObjectRef search_object_list(const grt::ListRef<model_Object> &objects, size_t starting_index,
-                                          const std::string &text) {
+static auto search_object_list(const grt::ListRef<model_Object> &objects, size_t starting_index,
+                                          const std::string &text) -> model_ObjectRef {
   for (size_t count = objects.count(), i = starting_index; i < count; i++) {
     model_ObjectRef object(objects[i]);
 
@@ -1417,7 +1417,7 @@ static model_ObjectRef search_object_list(const grt::ListRef<model_Object> &obje
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::search_and_focus_object(const std::string &text) {
+auto ModelDiagramForm::search_and_focus_object(const std::string &text) -> bool {
   if (text.empty())
     return false;
   grt::ListRef<model_Object> selection(get_selection());
@@ -1485,13 +1485,13 @@ bool ModelDiagramForm::search_and_focus_object(const std::string &text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_cursor(const std::string &cursor) {
+auto ModelDiagramForm::set_cursor(const std::string &cursor) -> void {
   _cursor = cursor;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-model_LayerRef ModelDiagramForm::get_layer_at(const Point &pos, Point &offset) {
+auto ModelDiagramForm::get_layer_at(const Point &pos, Point &offset) -> model_LayerRef {
   model_LayerRef layer;
   mdc::AreaGroup *ag = 0;
 
@@ -1525,7 +1525,7 @@ model_LayerRef ModelDiagramForm::get_layer_at(const Point &pos, Point &offset) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-model_LayerRef ModelDiagramForm::get_layer_bounding(const Rect &rect, Point &offset) {
+auto ModelDiagramForm::get_layer_bounding(const Rect &rect, Point &offset) -> model_LayerRef {
   grt::ListRef<model_Layer> layers(_model_diagram->layers());
 
   for (grt::ListRef<model_Layer>::const_reverse_iterator layer = layers.rbegin(); layer != layers.rend(); ++layer) {
@@ -1539,7 +1539,7 @@ model_LayerRef ModelDiagramForm::get_layer_bounding(const Rect &rect, Point &off
 
 //----------------------------------------------------------------------------------------------------------------------
 
-model_ObjectRef ModelDiagramForm::get_object_at(const Point &pos) {
+auto ModelDiagramForm::get_object_at(const Point &pos) -> model_ObjectRef {
   mdc::CanvasItem *item = _view->get_item_at(pos);
 
   if (!item)
@@ -1568,7 +1568,7 @@ model_ObjectRef ModelDiagramForm::get_object_at(const Point &pos) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::relocate_figures() {
+auto ModelDiagramForm::relocate_figures() -> bool {
   bool relocated = false;
   grt::ListRef<model_Figure> figures(_model_diagram->figures());
 
@@ -1584,19 +1584,19 @@ bool ModelDiagramForm::relocate_figures() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::accepts_drop(int x, int y, const std::string &type, const std::list<GrtObjectRef> &objects) {
+auto ModelDiagramForm::accepts_drop(int x, int y, const std::string &type, const std::list<GrtObjectRef> &objects) -> bool {
   return _owner->accepts_drop(this, x, y, type, objects);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::accepts_drop(int x, int y, const std::string &type, const std::string &text) {
+auto ModelDiagramForm::accepts_drop(int x, int y, const std::string &type, const std::string &text) -> bool {
   return _owner->accepts_drop(this, x, y, type, text);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::perform_drop(int x, int y, const std::string &type, const std::list<GrtObjectRef> &objects) {
+auto ModelDiagramForm::perform_drop(int x, int y, const std::string &type, const std::list<GrtObjectRef> &objects) -> bool {
   bool retval = _owner->perform_drop(this, x, y, type, objects);
   if (_catalog_tree && retval) // if it was accepted then we can mark all objects
   { // we will do the long way so we will not need to reload the whole tree and remember expanded rows
@@ -1609,19 +1609,19 @@ bool ModelDiagramForm::perform_drop(int x, int y, const std::string &type, const
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool ModelDiagramForm::perform_drop(int x, int y, const std::string &type, const std::string &text) {
+auto ModelDiagramForm::perform_drop(int x, int y, const std::string &type, const std::string &text) -> bool {
   return _owner->perform_drop(this, x, y, type, text);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-mdc::Layer *ModelDiagramForm::get_floater_layer() {
+auto ModelDiagramForm::get_floater_layer() -> mdc::Layer * {
   return _floater_layer;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::add_floater(Floater *floater) {
+auto ModelDiagramForm::add_floater(Floater *floater) -> void {
   Point pos;
 
   pos.x = _view->get_viewport().right() - 200;
@@ -1633,14 +1633,14 @@ void ModelDiagramForm::add_floater(Floater *floater) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-WBContext *ModelDiagramForm::get_wb() {
+auto ModelDiagramForm::get_wb() -> WBContext * {
   return _owner->get_wb();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
 // inline editing
-void ModelDiagramForm::begin_editing(const Rect &rect, const std::string &text, float text_size, bool multiline) {
+auto ModelDiagramForm::begin_editing(const Rect &rect, const std::string &text, float text_size, bool multiline) -> void {
   if (_inline_edit_context) {
     int x, y;
     int width, height;
@@ -1656,20 +1656,20 @@ void ModelDiagramForm::begin_editing(const Rect &rect, const std::string &text, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::stop_editing() {
+auto ModelDiagramForm::stop_editing() -> void {
   if (_inline_edit_context)
     _inline_edit_context->end_editing();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void forward_edit_finished(const std::string &text, EditFinishReason reason, ModelDiagramForm *form) {
+static auto forward_edit_finished(const std::string &text, EditFinishReason reason, ModelDiagramForm *form) -> void {
   (*form->signal_editing_done())(text, reason);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_inline_editor_context(InlineEditContext *context) {
+auto ModelDiagramForm::set_inline_editor_context(InlineEditContext *context) -> void {
   _inline_edit_context = context;
 
   scoped_connect(_inline_edit_context->signal_edit_finished(),
@@ -1678,7 +1678,7 @@ void ModelDiagramForm::set_inline_editor_context(InlineEditContext *context) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::zoom_in() {
+auto ModelDiagramForm::zoom_in() -> void {
   model_DiagramRef view(get_model_diagram());
   double zoom = *view->zoom();
 
@@ -1694,7 +1694,7 @@ void ModelDiagramForm::zoom_in() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::zoom_out() {
+auto ModelDiagramForm::zoom_out() -> void {
   model_DiagramRef view(get_model_diagram());
   double zoom = *view->zoom();
 
@@ -1710,7 +1710,7 @@ void ModelDiagramForm::zoom_out() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::setup_mini_view(mdc::CanvasView *view) {
+auto ModelDiagramForm::setup_mini_view(mdc::CanvasView *view) -> void {
   if (!_mini_view) {
     _mini_view = new MiniView(view->get_current_layer());
 
@@ -1732,7 +1732,7 @@ void ModelDiagramForm::setup_mini_view(mdc::CanvasView *view) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::update_mini_view_size(int w, int h) {
+auto ModelDiagramForm::update_mini_view_size(int w, int h) -> void {
   if (_mini_view) {
     mdc::CanvasView *view = _mini_view->get_layer()->get_view();
 
@@ -1745,7 +1745,7 @@ void ModelDiagramForm::update_mini_view_size(int w, int h) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::setBackgroundColor(base::Color const& color) {
+auto ModelDiagramForm::setBackgroundColor(base::Color const& color) -> void {
   if (_mini_view != nullptr)
     _mini_view->setBackgroundColor(color);
   if (_view != nullptr)
@@ -1754,13 +1754,13 @@ void ModelDiagramForm::setBackgroundColor(base::Color const& color) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string ModelDiagramForm::get_title() {
+auto ModelDiagramForm::get_title() -> std::string {
   return std::string(_model_diagram->name());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ModelDiagramForm::set_highlight_fks(bool flag) {
+auto ModelDiagramForm::set_highlight_fks(bool flag) -> void {
   _highlight_fks = flag;
   _features->highlight_all_connections(flag);
 }

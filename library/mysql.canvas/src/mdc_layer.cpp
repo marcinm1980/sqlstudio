@@ -47,7 +47,7 @@ Layer::Layer(CanvasView *view) : _owner(view) {
   scoped_connect(view->signal_resized(), std::bind(&Layer::view_resized, this));
 }
 
-void Layer::set_root_area(AreaGroup *group) {
+auto Layer::set_root_area(AreaGroup *group) -> void {
   delete _root_area;
   _root_area = group;
   _root_area->set_cache_toplevel_contents(false);
@@ -58,15 +58,15 @@ Layer::~Layer() {
   delete _root_area;
 }
 
-void Layer::set_name(const std::string &name) {
+auto Layer::set_name(const std::string &name) -> void {
   _name = name;
 }
 
-void Layer::view_resized() {
+auto Layer::view_resized() -> void {
   _root_area->resize_to(_owner->get_total_view_size());
 }
 
-void Layer::set_visible(bool flag) {
+auto Layer::set_visible(bool flag) -> void {
   if (_visible != flag) {
     _visible = flag;
     if (flag)
@@ -75,7 +75,7 @@ void Layer::set_visible(bool flag) {
   }
 }
 
-void Layer::add_item(CanvasItem *item, AreaGroup *location) {
+auto Layer::add_item(CanvasItem *item, AreaGroup *location) -> void {
   get_view()->lock();
 
   if (!location)
@@ -90,7 +90,7 @@ void Layer::add_item(CanvasItem *item, AreaGroup *location) {
   queue_repaint();
 }
 
-void Layer::remove_item(CanvasItem *item) {
+auto Layer::remove_item(CanvasItem *item) -> void {
   get_view()->get_selection()->remove(item);
 
   if (item->get_parent())
@@ -103,22 +103,22 @@ void Layer::remove_item(CanvasItem *item) {
   queue_repaint();
 }
 
-static void invalidate(CanvasItem *item) {
+static auto invalidate(CanvasItem *item) -> void {
   item->invalidate_cache();
   Layouter *l = dynamic_cast<Layouter *>(item);
   if (l)
     l->foreach(std::bind(&invalidate, std::placeholders::_1));
 }
 
-void Layer::invalidate_caches() {
+auto Layer::invalidate_caches() -> void {
   _root_area->foreach(std::bind(&invalidate, std::placeholders::_1));
 }
 
-void Layer::set_needs_repaint_all_items() {
+auto Layer::set_needs_repaint_all_items() -> void {
   _root_area->foreach (std::bind(&CanvasItem::set_needs_repaint, std::placeholders::_1));
 }
 
-void Layer::repaint_pending() {
+auto Layer::repaint_pending() -> void {
   if (_needs_repaint) {
     // XXX record pending areas and repaint only what's needed
     repaint(Rect(Point(0, 0), _owner->get_total_view_size()));
@@ -126,7 +126,7 @@ void Layer::repaint_pending() {
   }
 }
 
-void Layer::repaint(const Rect &bounds) {
+auto Layer::repaint(const Rect &bounds) -> void {
   for (std::list<CanvasItem *>::iterator iter = _relayout_queue.begin(); iter != _relayout_queue.end(); ++iter) {
     (*iter)->relayout();
   }
@@ -136,7 +136,7 @@ void Layer::repaint(const Rect &bounds) {
     _root_area->repaint(bounds, false);
 }
 
-void Layer::repaint_for_export(const Rect &aBounds) {
+auto Layer::repaint_for_export(const Rect &aBounds) -> void {
   for (std::list<CanvasItem *>::iterator iter = _relayout_queue.begin(); iter != _relayout_queue.end(); ++iter) {
     (*iter)->relayout();
   }
@@ -148,21 +148,21 @@ void Layer::repaint_for_export(const Rect &aBounds) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Layer::queue_repaint() {
+auto Layer::queue_repaint() -> void {
   _needs_repaint = true;
   _owner->queue_repaint();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Layer::queue_repaint(const Rect &bounds) {
+auto Layer::queue_repaint(const Rect &bounds) -> void {
   _needs_repaint = true;
   _owner->queue_repaint(bounds);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Layer::queue_relayout(CanvasItem *item) {
+auto Layer::queue_relayout(CanvasItem *item) -> void {
   if (!item->is_toplevel())
     throw std::logic_error("trying to queue non-toplevel item for relayout");
 
@@ -172,19 +172,19 @@ void Layer::queue_relayout(CanvasItem *item) {
   }
 }
 
-CanvasItem *Layer::get_other_item_at(const Point &point, CanvasItem *item) {
+auto Layer::get_other_item_at(const Point &point, CanvasItem *item) -> CanvasItem * {
   return _root_area->get_other_item_at(point, item);
 }
 
-CanvasItem *Layer::get_item_at(const Point &point) {
+auto Layer::get_item_at(const Point &point) -> CanvasItem * {
   return _root_area->get_item_at(point);
 }
 
-CanvasItem *Layer::get_top_item_at(const Point &point) {
+auto Layer::get_top_item_at(const Point &point) -> CanvasItem * {
   return _root_area->get_direct_subitem_at(point);
 }
 
-static std::list<CanvasItem *> get_items_bounded_by(const Rect &rect, const Layer::ItemCheckFunc &pred, Group *group) {
+static auto get_items_bounded_by(const Rect &rect, const Layer::ItemCheckFunc &pred, Group *group) -> std::list<CanvasItem *> {
   std::list<CanvasItem *> &items = group->get_contents();
   std::list<CanvasItem *> result;
 
@@ -204,14 +204,14 @@ static std::list<CanvasItem *> get_items_bounded_by(const Rect &rect, const Laye
   return result;
 }
 
-std::list<CanvasItem *> Layer::get_items_bounded_by(const Rect &rect, const ItemCheckFunc &pred,
-                                                    mdc::Group *inside_group) {
+auto Layer::get_items_bounded_by(const Rect &rect, const ItemCheckFunc &pred,
+                                                    mdc::Group *inside_group) -> std::list<CanvasItem *> {
   if (!inside_group)
     inside_group = _root_area;
   return ::get_items_bounded_by(rect, pred, inside_group);
 }
 
-Rect Layer::get_bounds_of_item_list(const std::list<CanvasItem *> &items) {
+auto Layer::get_bounds_of_item_list(const std::list<CanvasItem *> &items) -> Rect {
   std::list<CanvasItem *>::const_iterator it = items.begin();
   Rect rect;
 
@@ -233,7 +233,7 @@ Rect Layer::get_bounds_of_item_list(const std::list<CanvasItem *> &items) {
   return rect;
 }
 
-Group *Layer::create_group_with(const std::list<CanvasItem *> &contents) {
+auto Layer::create_group_with(const std::list<CanvasItem *> &contents) -> Group * {
   if (contents.size() <= 1)
     return 0;
 
@@ -258,7 +258,7 @@ Group *Layer::create_group_with(const std::list<CanvasItem *> &contents) {
   return group;
 }
 
-AreaGroup *Layer::create_area_group_with(const std::list<CanvasItem *> &contents) {
+auto Layer::create_area_group_with(const std::list<CanvasItem *> &contents) -> AreaGroup * {
   if (contents.size() <= 1)
     return 0;
 
@@ -290,7 +290,7 @@ AreaGroup *Layer::create_area_group_with(const std::list<CanvasItem *> &contents
   return group;
 }
 
-void Layer::dissolve_group(Group *group) {
+auto Layer::dissolve_group(Group *group) -> void {
   group->dissolve();
   remove_item(group);
   delete group;

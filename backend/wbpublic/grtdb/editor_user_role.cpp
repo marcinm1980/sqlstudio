@@ -35,13 +35,13 @@ using namespace base;
 RolePrivilegeListBE::RolePrivilegeListBE(RoleEditorBE *owner) : _owner(owner) {
 }
 
-size_t RolePrivilegeListBE::count() {
+auto RolePrivilegeListBE::count() -> size_t {
   if (_privileges.is_valid())
     return _privileges.count();
   return 0;
 }
 
-void RolePrivilegeListBE::refresh() {
+auto RolePrivilegeListBE::refresh() -> void {
   _role_privilege = _owner->get_object_list()->get_selected_object_info();
 
   _privileges = grt::StringListRef();
@@ -76,7 +76,7 @@ void RolePrivilegeListBE::refresh() {
   }
 }
 
-bool RolePrivilegeListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto RolePrivilegeListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   if (node[0] >= count() || !_role_privilege.is_valid())
     return false;
 
@@ -94,7 +94,7 @@ bool RolePrivilegeListBE::get_field_grt(const NodeId &node, ColumnId column, grt
   return false;
 }
 
-bool RolePrivilegeListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto RolePrivilegeListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   size_t index;
 
   if (node[0] >= count() || !_role_privilege.is_valid())
@@ -129,7 +129,7 @@ bool RolePrivilegeListBE::set_field(const NodeId &node, ColumnId column, ssize_t
   return false;
 }
 
-void RolePrivilegeListBE::add_all() {
+auto RolePrivilegeListBE::add_all() -> void {
   if (_role_privilege.is_valid()) {
     AutoUndoEdit undo(_owner);
 
@@ -143,7 +143,7 @@ void RolePrivilegeListBE::add_all() {
   }
 }
 
-void RolePrivilegeListBE::remove_all() {
+auto RolePrivilegeListBE::remove_all() -> void {
   if (_role_privilege.is_valid()) {
     // grt::AutoUndo undo;
     AutoUndoEdit undo(_owner);
@@ -160,25 +160,25 @@ void RolePrivilegeListBE::remove_all() {
 RoleObjectListBE::RoleObjectListBE(RoleEditorBE *owner) : _owner(owner) {
 }
 
-void RoleObjectListBE::set_selected_node(const NodeId &node) {
+auto RoleObjectListBE::set_selected_node(const NodeId &node) -> void {
   _selection = node;
   _owner->get_privilege_list()->refresh();
 }
 
-db_RolePrivilegeRef RoleObjectListBE::get_selected_object_info() {
+auto RoleObjectListBE::get_selected_object_info() -> db_RolePrivilegeRef {
   if (_selection.is_valid() && _selection[0] < count())
     return _owner->get_role()->privileges().get(_selection[0]);
 
   return db_RolePrivilegeRef();
 }
 
-size_t RoleObjectListBE::count() {
+auto RoleObjectListBE::count() -> size_t {
   if (_owner->get_role().is_valid())
     return _owner->get_role()->privileges().count();
   return 0;
 }
 
-MenuItemList RoleObjectListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) {
+auto RoleObjectListBE::get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList {
   MenuItemList items;
 
   MenuItem item;
@@ -221,7 +221,7 @@ MenuItemList RoleObjectListBE::get_popup_items_for_nodes(const std::vector<NodeI
   return items;
 }
 
-bool RoleObjectListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) {
+auto RoleObjectListBE::activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool {
   if (name == "deleteObject") {
     for (std::vector<NodeId>::const_reverse_iterator node = nodes.rbegin(); node != nodes.rend(); ++node)
       _owner->remove_object(*node);
@@ -247,7 +247,7 @@ bool RoleObjectListBE::activate_popup_item_for_nodes(const std::string &name, co
   return true;
 }
 
-bool RoleObjectListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto RoleObjectListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   if (node[0] >= count())
     return false;
 
@@ -263,7 +263,7 @@ bool RoleObjectListBE::get_field_grt(const NodeId &node, ColumnId column, grt::V
   return false;
 }
 
-IconId RoleObjectListBE::get_field_icon(const NodeId &node, ColumnId column, IconSize size) {
+auto RoleObjectListBE::get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId {
   db_RolePrivilegeRef priv(_owner->get_role()->privileges().get(node[0]));
   if (priv.is_valid()) {
     if (priv->databaseObject().is_valid())
@@ -296,7 +296,7 @@ RoleEditorBE::RoleEditorBE(const db_RoleRef &role, const db_mgmt_RdbmsRef &rdbms
     _object_list(this) {
 }
 
-void RoleEditorBE::set_name(const std::string &name) {
+auto RoleEditorBE::set_name(const std::string &name) -> void {
   if (get_name() != name) {
     AutoUndoEdit undo(this, get_role(), "name");
     std::string name_ = base::trim_right(name);
@@ -305,15 +305,15 @@ void RoleEditorBE::set_name(const std::string &name) {
   }
 }
 
-std::string RoleEditorBE::get_name() {
+auto RoleEditorBE::get_name() -> std::string {
   return get_role()->name();
 }
 
-std::string RoleEditorBE::get_title() {
+auto RoleEditorBE::get_title() -> std::string {
   return strfmt("%s - Role", get_name().c_str());
 }
 
-void RoleEditorBE::set_parent_role(const std::string &name) {
+auto RoleEditorBE::set_parent_role(const std::string &name) -> void {
   if (name != get_parent_role()) {
     grt::ListRef<db_Role> roles(db_CatalogRef::cast_from(get_role()->owner())->roles());
     db_RoleRef new_parent_role(grt::find_named_object_in_list(roles, name));
@@ -345,14 +345,14 @@ void RoleEditorBE::set_parent_role(const std::string &name) {
   }
 }
 
-std::string RoleEditorBE::get_parent_role() {
+auto RoleEditorBE::get_parent_role() -> std::string {
   if (get_role()->parentRole().is_valid())
     return *get_role()->parentRole()->name();
 
   return "";
 }
 
-std::vector<std::string> RoleEditorBE::get_role_list() {
+auto RoleEditorBE::get_role_list() -> std::vector<std::string> {
   grt::ListRef<db_Role> roles(db_CatalogRef::cast_from(get_role()->owner())->roles());
   std::vector<std::string> names;
 
@@ -372,7 +372,7 @@ std::vector<std::string> RoleEditorBE::get_role_list() {
   return names;
 }
 
-bool RoleEditorBE::add_dropped_objectdata(const std::string &data) {
+auto RoleEditorBE::add_dropped_objectdata(const std::string &data) -> bool {
   std::list<db_DatabaseObjectRef> objects;
   bool flag = false;
 
@@ -385,7 +385,7 @@ bool RoleEditorBE::add_dropped_objectdata(const std::string &data) {
   return flag;
 }
 
-bool RoleEditorBE::add_object(const std::string &type, const std::string &name) {
+auto RoleEditorBE::add_object(const std::string &type, const std::string &name) -> bool {
   db_RolePrivilegeRef priv(grt::Initialized);
   priv->databaseObjectType(type);
   priv->databaseObjectName(name);
@@ -399,7 +399,7 @@ bool RoleEditorBE::add_object(const std::string &type, const std::string &name) 
   return true;
 }
 
-bool RoleEditorBE::add_object(db_DatabaseObjectRef object) {
+auto RoleEditorBE::add_object(db_DatabaseObjectRef object) -> bool {
   grt::ListRef<db_mgmt_PrivilegeMapping> mappings(get_rdbms()->privilegeNames());
   bool ok = false;
 
@@ -440,7 +440,7 @@ bool RoleEditorBE::add_object(db_DatabaseObjectRef object) {
 //! As it is hard to get to the db_DatabaseObjectRef to remove
 //! via
 //!
-void RoleEditorBE::remove_object(const bec::NodeId &object_node_id) {
+auto RoleEditorBE::remove_object(const bec::NodeId &object_node_id) -> void {
   // object_node_id is an id of the object in the role
   size_t object_idx = -1;
   try {

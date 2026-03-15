@@ -53,7 +53,7 @@ class CanvasViewer : public mdc::GtkCanvas {
   wb::ModelDiagramForm *_be;
 
   // override the event handlers from the base canvas widget
-  virtual bool on_button_press_event(GdkEventButton *event) {
+  virtual auto on_button_press_event(GdkEventButton *event) -> bool {
     mdc::MouseButton button = mdc::ButtonLeft;
 
     grab_focus();
@@ -78,7 +78,7 @@ class CanvasViewer : public mdc::GtkCanvas {
     return true;
   }
 
-  virtual bool on_button_release_event(GdkEventButton *event) {
+  virtual auto on_button_release_event(GdkEventButton *event) -> bool {
     mdc::MouseButton button = mdc::ButtonLeft;
 
     switch (event->button) {
@@ -98,13 +98,13 @@ class CanvasViewer : public mdc::GtkCanvas {
     return true;
   }
 
-  virtual bool on_motion_notify_event(GdkEventMotion *event) {
+  virtual auto on_motion_notify_event(GdkEventMotion *event) -> bool {
     _be->handle_mouse_move(event->x, event->y, get_event_state(event->state));
 
     return true;
   }
 
-  mdc::KeyInfo getKeyInfo(GdkEventKey *e) {
+  auto getKeyInfo(GdkEventKey *e) -> mdc::KeyInfo {
     static struct KeyCodeMapping {
       guint key;
       mdc::KeyCode kcode;
@@ -163,7 +163,7 @@ class CanvasViewer : public mdc::GtkCanvas {
     return k;
   }
 
-  virtual bool on_key_press_event(GdkEventKey *event) {
+  virtual auto on_key_press_event(GdkEventKey *event) -> bool {
     mdc::KeyInfo key = getKeyInfo(event);
     mdc::EventState state = get_event_state(event->state);
 
@@ -171,7 +171,7 @@ class CanvasViewer : public mdc::GtkCanvas {
     return true;
   }
 
-  virtual bool on_key_release_event(GdkEventKey *event) {
+  virtual auto on_key_release_event(GdkEventKey *event) -> bool {
     mdc::KeyInfo key = getKeyInfo(event);
     mdc::EventState state = get_event_state(event->state);
 
@@ -180,11 +180,11 @@ class CanvasViewer : public mdc::GtkCanvas {
     return true;
   }
 
-  virtual void on_zoom_in_event() {
+  virtual auto on_zoom_in_event() -> void {
     _be->zoom_in();
   }
 
-  virtual void on_zoom_out_event() {
+  virtual auto on_zoom_out_event() -> void {
     _be->zoom_out();
   }
 
@@ -201,7 +201,7 @@ ModelDiagramPanel::InlineEditor::InlineEditor(ModelDiagramPanel *owner) : _owner
   _edit_field = Gtk::manage(new Gtk::Entry());
 }
 
-void ModelDiagramPanel::InlineEditor::begin_editing(int x, int y, int width, int height, const std::string &text) {
+auto ModelDiagramPanel::InlineEditor::begin_editing(int x, int y, int width, int height, const std::string &text) -> void {
   if (!_edit_field->get_parent()) {
     _owner->_canvas->put(*_edit_field, x, y);
   }
@@ -211,19 +211,19 @@ void ModelDiagramPanel::InlineEditor::begin_editing(int x, int y, int width, int
   _edit_field->show();
 }
 
-void ModelDiagramPanel::InlineEditor::end_editing() {
+auto ModelDiagramPanel::InlineEditor::end_editing() -> void {
   _edit_field->hide();
 }
 
-void ModelDiagramPanel::InlineEditor::set_font_size(float size) {
+auto ModelDiagramPanel::InlineEditor::set_font_size(float size) -> void {
 }
 
-void ModelDiagramPanel::InlineEditor::set_multiline(bool flag) {
+auto ModelDiagramPanel::InlineEditor::set_multiline(bool flag) -> void {
 }
 
 //--------------------------------------------------------------------------------
 
-ModelDiagramPanel *ModelDiagramPanel::create() {
+auto ModelDiagramPanel::create() -> ModelDiagramPanel * {
   Glib::RefPtr<Gtk::Builder> xml =
     Gtk::Builder::create_from_file(bec::GRTManager::get()->get_data_file_path("diagram_view.glade"));
 
@@ -234,7 +234,7 @@ ModelDiagramPanel *ModelDiagramPanel::create() {
   return panel;
 }
 
-void ModelDiagramPanel::on_activate() {
+auto ModelDiagramPanel::on_activate() -> void {
   mforms::View *sidebar = wb::WBContextUI::get()->get_wb()->get_model_context()->shared_secondary_sidebar();
   Gtk::Widget *w = mforms::widget_for_view(sidebar);
   Gtk::Frame *secondary_sidebar;
@@ -269,7 +269,7 @@ ModelDiagramPanel::ModelDiagramPanel(GtkPaned *paned, const Glib::RefPtr<Gtk::Bu
     _xml(builder) {
 }
 
-void ModelDiagramPanel::post_construct() {
+auto ModelDiagramPanel::post_construct() -> void {
   _diagram_hbox = 0;
   _xml->get_widget("diagram_hbox", _diagram_hbox);
   _top_box.show();
@@ -290,7 +290,7 @@ void ModelDiagramPanel::post_construct() {
   _xml->get_widget("side_model_pane2", _side_model_pane2);
 }
 
-void ModelDiagramPanel::view_realized() {
+auto ModelDiagramPanel::view_realized() -> void {
   _canvas->get_canvas()->set_user_data(dynamic_cast<FormViewBase *>(this));
 
   // changing zoom or scrolling should cancel any editing in place
@@ -298,7 +298,7 @@ void ModelDiagramPanel::view_realized() {
                       sigc::mem_fun(_be, &wb::ModelDiagramForm::stop_editing));
 }
 
-void ModelDiagramPanel::init(const std::string &view_id) {
+auto ModelDiagramPanel::init(const std::string &view_id) -> void {
   _be = wb::WBContextUI::get()->get_wb()->get_model_context()->get_diagram_form_for_diagram_id(view_id);
   _be->set_frontend_data(dynamic_cast<FormViewBase *>(this));
   _canvas = Gtk::manage(new CanvasViewer(_be, false)); //_wb->get_wb()->using_opengl()));
@@ -429,7 +429,7 @@ void ModelDiagramPanel::init(const std::string &view_id) {
   _side_model_pane2->set_position(
     bec::GRTManager::get()->get_app_option_int("Sidebar:VBox2:Position", _side_model_pane2->get_position()));
 }
-bool ModelDiagramPanel::drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) {
+auto ModelDiagramPanel::drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) -> bool {
   context->drag_status(context->get_suggested_action(), time);
 
   this->drag_highlight();
@@ -444,7 +444,7 @@ ModelDiagramPanel::~ModelDiagramPanel() {
   delete _history_list;
 }
 
-bool ModelDiagramPanel::drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) {
+auto ModelDiagramPanel::drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) -> bool {
   std::vector<std::string> targets(context->list_targets());
   if (!targets.empty())
     drag_get_data(context, targets[0], time);
@@ -452,8 +452,8 @@ bool ModelDiagramPanel::drag_drop(const Glib::RefPtr<Gdk::DragContext> &context,
   return true;
 }
 
-void ModelDiagramPanel::drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                                           const Gtk::SelectionData &selection_data, guint, guint time) {
+auto ModelDiagramPanel::drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                                           const Gtk::SelectionData &selection_data, guint, guint time) -> void {
   mforms::gtk::DataWrapper *dwrapper = (mforms::gtk::DataWrapper *)selection_data.get_data();
 
   if (!dwrapper)
@@ -469,7 +469,7 @@ void ModelDiagramPanel::drag_data_received(const Glib::RefPtr<Gdk::DragContext> 
     context->drag_finish(false, false, time);
 }
 
-static Glib::RefPtr<Gdk::Cursor> load_cursor(const std::string &path) {
+static auto load_cursor(const std::string &path) -> Glib::RefPtr<Gdk::Cursor> {
   gsize size;
   guint8 *buffer;
   Glib::RefPtr<Gdk::Pixbuf> pixbuf;
@@ -547,7 +547,7 @@ static Glib::RefPtr<Gdk::Cursor> load_cursor(const std::string &path) {
   return Glib::RefPtr<Gdk::Cursor>();
 }
 
-void ModelDiagramPanel::update_tool_cursor() {
+auto ModelDiagramPanel::update_tool_cursor() -> void {
   if (_canvas->get_realized()) {
     std::string cursor = _be->get_cursor();
     std::string path = bec::IconManager::get_instance()->get_icon_path(cursor + ".png");
@@ -567,7 +567,7 @@ void ModelDiagramPanel::update_tool_cursor() {
   }
 }
 
-bool ModelDiagramPanel::on_close() {
+auto ModelDiagramPanel::on_close() -> bool {
   bec::GRTManager::get()->set_app_option("Sidebar:VBox1:Position", grt::IntegerRef(_sidebar->get_position()));
 
   bec::GRTManager::get()->set_app_option("Sidebar:VBox2:Position", grt::IntegerRef(_side_model_pane2->get_position()));
@@ -578,23 +578,23 @@ bool ModelDiagramPanel::on_close() {
   return false; // don't close
 }
 
-void ModelDiagramPanel::refresh_catalog(bool hard) {
+auto ModelDiagramPanel::refresh_catalog(bool hard) -> void {
 }
 
-void ModelDiagramPanel::setup_navigator() {
+auto ModelDiagramPanel::setup_navigator() -> void {
   _navigator_box->set_model(_be);
 }
 
-void ModelDiagramPanel::refresh_zoom() {
+auto ModelDiagramPanel::refresh_zoom() -> void {
   _navigator_box->refresh();
 }
 
-void ModelDiagramPanel::selection_changed() {
+auto ModelDiagramPanel::selection_changed() -> void {
   _properties_tree->update();
 
   _documentation_box->update_for_form(_be);
 }
 
-void ModelDiagramPanel::find_text(const std::string &text) {
+auto ModelDiagramPanel::find_text(const std::string &text) -> void {
   _be->search_and_focus_object(text);
 }

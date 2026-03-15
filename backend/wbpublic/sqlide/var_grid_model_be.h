@@ -52,8 +52,8 @@ protected:
   friend class Recordset_data_storage;
 
 public:
-  virtual void reset();
-  virtual void refresh() {
+  virtual auto reset() -> void;
+  virtual auto refresh() -> void {
   }
   std::function<void()> rows_changed;
   boost::signals2::signal<void()> refresh_ui_signal;
@@ -61,29 +61,29 @@ public:
 protected:
   boost::signals2::scoped_connection _refresh_connection;
 
-  virtual int refresh_ui();
+  virtual auto refresh_ui() -> int;
 
 public:
-  virtual size_t row_count() const {
+  virtual auto row_count() const -> size_t {
     return _row_count;
   }
-  virtual size_t count();
-  virtual size_t get_column_count() const {
+  virtual auto count() -> size_t;
+  virtual auto get_column_count() const -> size_t {
     return _column_count;
   }
-  virtual std::string get_column_caption(ColumnId index);
-  virtual ColumnType get_column_type(ColumnId column);
-  virtual ColumnType get_real_column_type(ColumnId column);
-  virtual int get_column_width_hint(int column) {
+  virtual auto get_column_caption(ColumnId index) -> std::string;
+  virtual auto get_column_type(ColumnId column) -> ColumnType;
+  virtual auto get_real_column_type(ColumnId column) -> ColumnType;
+  virtual auto get_column_width_hint(int column) -> int {
     return 0; /* 0 - no hint */
   }
-  virtual bool isGeometry(ColumnId);
+  virtual auto isGeometry(ColumnId) -> bool;
 
 public:
-  virtual bool is_readonly() const {
+  virtual auto is_readonly() const -> bool {
     return _readonly;
   }
-  virtual std::string readonly_reason() const {
+  virtual auto readonly_reason() const -> std::string {
     return _readonly_reason;
   }
 
@@ -104,52 +104,52 @@ protected:
   using Cell = Data::iterator;
 
 public:
-  virtual bec::IconId get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size);
+  virtual auto get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size) -> bec::IconId;
 
 private:
   class IconForVal;
   std::unique_ptr<IconForVal> _icon_for_val;
 
 public:
-  virtual bool set_field(const bec::NodeId &node, ColumnId column, const sqlite::variant_t &value);
-  virtual bool set_field(const bec::NodeId &node, ColumnId column, const std::string &value);
-  virtual bool set_field(const bec::NodeId &node, ColumnId column, double value);
-  virtual bool set_field(const bec::NodeId &node, ColumnId column, bool value);
-  virtual bool set_field(const bec::NodeId &node, ColumnId column, ssize_t value);
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, std::string &value);
-  virtual bool get_field_repr(const bec::NodeId &node, ColumnId column, std::string &value);
-  bool get_field_repr_no_truncate(const bec::NodeId &node, ColumnId column, std::string &value);
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, ssize_t &value);
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, double &value);
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, bool &value);
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, sqlite::variant_t &value);
+  virtual auto set_field(const bec::NodeId &node, ColumnId column, const sqlite::variant_t &value) -> bool;
+  virtual auto set_field(const bec::NodeId &node, ColumnId column, const std::string &value) -> bool;
+  virtual auto set_field(const bec::NodeId &node, ColumnId column, double value) -> bool;
+  virtual auto set_field(const bec::NodeId &node, ColumnId column, bool value) -> bool;
+  virtual auto set_field(const bec::NodeId &node, ColumnId column, ssize_t value) -> bool;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+  virtual auto get_field_repr(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+  auto get_field_repr_no_truncate(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, ssize_t &value) -> bool;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, double &value) -> bool;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, bool &value) -> bool;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, sqlite::variant_t &value) -> bool;
 
 protected:
-  bool get_field_(const bec::NodeId &node, ColumnId column, std::string &value);
-  bool get_field_repr_(const bec::NodeId &node, ColumnId column, std::string &value);
-  bool get_field_(const bec::NodeId &node, ColumnId column, ssize_t &value);
-  bool get_field_(const bec::NodeId &node, ColumnId column, double &value);
-  bool get_field_(const bec::NodeId &node, ColumnId column, bool &value);
-  bool get_field_(const bec::NodeId &node, ColumnId column, sqlite::variant_t &value);
+  auto get_field_(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+  auto get_field_repr_(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+  auto get_field_(const bec::NodeId &node, ColumnId column, ssize_t &value) -> bool;
+  auto get_field_(const bec::NodeId &node, ColumnId column, double &value) -> bool;
+  auto get_field_(const bec::NodeId &node, ColumnId column, bool &value) -> bool;
+  auto get_field_(const bec::NodeId &node, ColumnId column, sqlite::variant_t &value) -> bool;
 
 protected:
-  virtual bool get_field_grt(const bec::NodeId &node, ColumnId column, grt::ValueRef &value);
-  virtual void after_set_field(const bec::NodeId &node, ColumnId column, const sqlite::variant_t &value) {
+  virtual auto get_field_grt(const bec::NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
+  virtual auto after_set_field(const bec::NodeId &node, ColumnId column, const sqlite::variant_t &value) -> void {
   }
 
 public:
-  virtual bool is_field_null(const bec::NodeId &node, ColumnId column);
-  virtual bool set_field_null(const bec::NodeId &node, ColumnId column);
+  virtual auto is_field_null(const bec::NodeId &node, ColumnId column) -> bool;
+  virtual auto set_field_null(const bec::NodeId &node, ColumnId column) -> bool;
 
 public:
-  virtual const Data &data() {
+  virtual auto data() -> const Data & {
     return _data;
   }
 
 protected:
-  virtual bool get_cell(Cell &cell, const bec::NodeId &node, ColumnId column, bool allow_new_row);
-  virtual Cell cell(RowId row, ColumnId column);
-  void add_column(const std::string &name, const sqlite::variant_t &type);
+  virtual auto get_cell(Cell &cell, const bec::NodeId &node, ColumnId column, bool allow_new_row) -> bool;
+  virtual auto cell(RowId row, ColumnId column) -> Cell;
+  auto add_column(const std::string &name, const sqlite::variant_t &type) -> void;
 
 protected:
   Data _data;
@@ -166,10 +166,10 @@ protected:
   base::RecMutex _data_mutex;
 
 protected:
-  std::shared_ptr<sqlite::connection> data_swap_db() const;
+  auto data_swap_db() const -> std::shared_ptr<sqlite::connection>;
 
 private:
-  std::shared_ptr<sqlite::connection> create_data_swap_db_connection() const;
+  auto create_data_swap_db_connection() const -> std::shared_ptr<sqlite::connection>;
 
 private:
   mutable std::shared_ptr<sqlite::connection> _data_swap_db;
@@ -179,26 +179,26 @@ public:
   static const int DATA_SWAP_DB_TABLE_MAX_COL_COUNT;
 
 public:
-  size_t data_swap_db_partition_count() const;
+  auto data_swap_db_partition_count() const -> size_t;
 
 public:
-  static size_t data_swap_db_partition_count(ColumnId column_count);
-  static std::string data_swap_db_partition_suffix(size_t partition);
-  static size_t data_swap_db_column_partition(ColumnId column); // returns partition number containing passed column
-  static bec::ListModel::ColumnId translate_data_swap_db_column(
-    ListModel::ColumnId column, size_t *partition = NULL); // returns column number relative to containing partition
-  static void prepare_partition_queries(sqlite::connection *data_swap_db, const std::string &query_text_template,
-                                        std::list<std::shared_ptr<sqlite::query> > &queries);
-  static bool emit_partition_queries(sqlite::connection *data_swap_db,
+  static auto data_swap_db_partition_count(ColumnId column_count) -> size_t;
+  static auto data_swap_db_partition_suffix(size_t partition) -> std::string;
+  static auto data_swap_db_column_partition(ColumnId column) -> size_t; // returns partition number containing passed column
+  static auto translate_data_swap_db_column(
+    ListModel::ColumnId column, size_t *partition = NULL) -> bec::ListModel::ColumnId; // returns column number relative to containing partition
+  static auto prepare_partition_queries(sqlite::connection *data_swap_db, const std::string &query_text_template,
+                                        std::list<std::shared_ptr<sqlite::query> > &queries) -> void;
+  static auto emit_partition_queries(sqlite::connection *data_swap_db,
                                      std::list<std::shared_ptr<sqlite::query> > &queries,
                                      std::vector<std::shared_ptr<sqlite::result> > &results,
-                                     const std::list<sqlite::variant_t> &bind_vars = std::list<sqlite::variant_t>());
-  static void emit_partition_commands(sqlite::connection *data_swap_db, size_t partition_count,
+                                     const std::list<sqlite::variant_t> &bind_vars = std::list<sqlite::variant_t>()) -> bool;
+  static auto emit_partition_commands(sqlite::connection *data_swap_db, size_t partition_count,
                                       const std::string &command_text_template,
-                                      const std::list<sqlite::variant_t> &bind_vars = std::list<sqlite::variant_t>());
+                                      const std::list<sqlite::variant_t> &bind_vars = std::list<sqlite::variant_t>()) -> void;
 
 protected:
-  void cache_data_frame(RowId center_row, bool force_reload);
+  auto cache_data_frame(RowId center_row, bool force_reload) -> void;
 
 protected:
   RowId _data_frame_begin;
@@ -206,8 +206,8 @@ protected:
   sqlide::VarCast _var_cast;
 
 public:
-  virtual int floating_point_visible_scale();
-  const sqlide::VarToStr *var2str_convertor() const {
+  virtual auto floating_point_visible_scale() -> int;
+  auto var2str_convertor() const -> const sqlide::VarToStr * {
     return &_var_to_str;
   }
 
@@ -219,13 +219,13 @@ protected:
   sqlide::VarToLongDouble _var_to_long_double;
 
 public:
-  virtual void set_edited_field(RowId row_index, ColumnId col_index);
-  bool is_field_value_truncation_enabled(bool val);
+  virtual auto set_edited_field(RowId row_index, ColumnId col_index) -> void;
+  auto is_field_value_truncation_enabled(bool val) -> bool;
 
-  RowId edited_field_row() {
+  auto edited_field_row() -> RowId {
     return _edited_field_row;
   }
-  ColumnId edited_field_column() {
+  auto edited_field_column() -> ColumnId {
     return _edited_field_col;
   }
 
@@ -238,7 +238,7 @@ protected:
   ColumnId _edited_field_col;
 
 public:
-  bool optimized_blob_fetching() const {
+  auto optimized_blob_fetching() const -> bool {
     return _optimized_blob_fetching;
   }
 

@@ -88,7 +88,7 @@ public:
 };
 
   // Create a mockup symbol table with all database objects we support.
-void createDBObjects(SymbolTable &symbolTable) {
+auto createDBObjects(SymbolTable &symbolTable) -> void {
   auto sakila = symbolTable.addNewSymbol<SchemaSymbol>(nullptr, "sakila");
   symbolTable.addNewSymbol<SchemaSymbol>(nullptr, "sakila_test");
   symbolTable.addNewSymbol<SchemaSymbol>(nullptr, "mysql");

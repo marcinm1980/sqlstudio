@@ -34,10 +34,10 @@
 // don't hold reference to the fk!
 static std::map<grt::internal::Value *, std::set<db_ForeignKey *> > referenced_table_to_fk;
 
-void db_ForeignKey::init() {
+auto db_ForeignKey::init() -> void {
 }
 
-void delete_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk) {
+auto delete_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk) -> void {
   if (table.is_valid()) {
     grt::internal::Value *t = table.valueptr();
     std::map<grt::internal::Value *, std::set<db_ForeignKey *> >::iterator iter = referenced_table_to_fk.find(t);
@@ -52,7 +52,7 @@ void delete_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk) {
   }
 }
 
-void add_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk) {
+auto add_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk) -> void {
   if (table.is_valid()) {
     std::set<db_ForeignKey *> list;
     std::map<grt::internal::Value *, std::set<db_ForeignKey *> >::iterator iter;
@@ -70,7 +70,7 @@ db_ForeignKey::~db_ForeignKey() {
     delete_foreign_key_mapping(_referencedTable, this);
 }
 
-grt::ListRef<db_ForeignKey> get_foreign_keys_referencing_table(const db_TableRef &value) {
+auto get_foreign_keys_referencing_table(const db_TableRef &value) -> grt::ListRef<db_ForeignKey> {
   std::map<grt::internal::Value *, std::set<db_ForeignKey *> >::const_iterator iter;
   grt::ListRef<db_ForeignKey> result(true);
 
@@ -82,7 +82,7 @@ grt::ListRef<db_ForeignKey> get_foreign_keys_referencing_table(const db_TableRef
   return result;
 }
 
-void db_ForeignKey::referencedTable(const db_TableRef &value) {
+auto db_ForeignKey::referencedTable(const db_TableRef &value) -> void {
   grt::ValueRef ovalue(_referencedTable);
 
   // remove old referenced table from backreference map
@@ -99,21 +99,21 @@ void db_ForeignKey::referencedTable(const db_TableRef &value) {
     (*owner()->signal_foreignKeyChanged())(this);
 }
 
-void db_ForeignKey::owner(const db_TableRef &value) {
+auto db_ForeignKey::owner(const db_TableRef &value) -> void {
   super::owner(value);
 
   if (value.is_valid())
     (*value->signal_foreignKeyChanged())(this);
 }
 
-void db_ForeignKey::owned_list_item_added(grt::internal::OwnedList *list, const grt::ValueRef &value) {
+auto db_ForeignKey::owned_list_item_added(grt::internal::OwnedList *list, const grt::ValueRef &value) -> void {
   super::owned_list_item_added(list, value);
 
   if (_owner.is_valid())
     (*owner()->signal_foreignKeyChanged())(this);
 }
 
-void db_ForeignKey::owned_list_item_removed(grt::internal::OwnedList *list, const grt::ValueRef &value) {
+auto db_ForeignKey::owned_list_item_removed(grt::internal::OwnedList *list, const grt::ValueRef &value) -> void {
   super::owned_list_item_removed(list, value);
 
   if (_owner.is_valid())
@@ -122,7 +122,7 @@ void db_ForeignKey::owned_list_item_removed(grt::internal::OwnedList *list, cons
 
 /** Performs basic validation of the foreign key
  */
-grt::IntegerRef db_ForeignKey::checkCompleteness() {
+auto db_ForeignKey::checkCompleteness() -> grt::IntegerRef {
   if (!_owner.is_valid() || !_referencedTable.is_valid())
     return 0;
 

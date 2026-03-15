@@ -29,22 +29,22 @@ class LexerTestException {};
 
 class LexerTest
 {
-  void cppunit_assert(bool cond);
+  auto cppunit_assert(bool cond) -> void;
 
-  void stmtscanTest();
-  void basicLexerTest();
-  void sqlTest();
+  auto stmtscanTest() -> void;
+  auto basicLexerTest() -> void;
+  auto sqlTest() -> void;
 
-  void basicParserTest();
+  auto basicParserTest() -> void;
 
-  void fileParse(const char* fileName);
+  auto fileParse(const char* fileName) -> void;
 
 
 public:
   LexerTest() {}
   virtual ~LexerTest() {}
 
-  void testLexer();
+  auto testLexer() -> void;
 
-  void stringParse(const char* str);
+  auto stringParse(const char* str) -> void;
 };

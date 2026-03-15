@@ -85,7 +85,7 @@ DocumentPropertiesForm::DocumentPropertiesForm()
   pull_values();
 }
 
-void DocumentPropertiesForm::push_values() {
+auto DocumentPropertiesForm::push_values() -> void {
   std::string caption, version, author, project, dateCreated, dateChanged, description;
 
   // fetch values from backend
@@ -101,7 +101,7 @@ void DocumentPropertiesForm::push_values() {
   wb::WBContextUI::get()->set_doc_properties(caption, version, author, project, dateCreated, dateChanged, description);
 }
 
-void DocumentPropertiesForm::pull_values() {
+auto DocumentPropertiesForm::pull_values() -> void {
   std::string caption, version, author, project, dateCreated, dateChanged, description;
 
   // fetch values from backend
@@ -117,7 +117,7 @@ void DocumentPropertiesForm::pull_values() {
   _text.set_value(description);
 }
 
-static void destroy(mforms::Object *object) {
+static auto destroy(mforms::Object *object) -> void {
   delete object;
 }
 
@@ -125,7 +125,7 @@ DocumentPropertiesForm::~DocumentPropertiesForm() {
   std::for_each(_widgets.begin(), _widgets.end(), std::bind(&destroy, std::placeholders::_1));
 }
 
-void DocumentPropertiesForm::add_control(const std::string &caption, mforms::View *control, bool expand) {
+auto DocumentPropertiesForm::add_control(const std::string &caption, mforms::View *control, bool expand) -> void {
   mforms::Label *label;
   int row = (int)_widgets.size();
   label = new mforms::Label();
@@ -140,13 +140,13 @@ void DocumentPropertiesForm::add_control(const std::string &caption, mforms::Vie
   _widgets.push_back(label);
 }
 
-void DocumentPropertiesForm::ok_clicked() {
+auto DocumentPropertiesForm::ok_clicked() -> void {
   push_values();
 }
 
-void DocumentPropertiesForm::cancel_clicked() {
+auto DocumentPropertiesForm::cancel_clicked() -> void {
 }
 
-void DocumentPropertiesForm::show() {
+auto DocumentPropertiesForm::show() -> void {
   run_modal(&_ok_button, &_cancel_button);
 }

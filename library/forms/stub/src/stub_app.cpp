@@ -34,7 +34,7 @@ using namespace mforms::stub;
 
 static std::list<std::string> directory_names;
 
-static void scan_dir_names(const std::string &dir) {
+static auto scan_dir_names(const std::string &dir) -> void {
   GError *error = NULL;
   GDir *d = g_dir_open(dir.c_str(), 0, &error);
   if (d) {
@@ -49,7 +49,7 @@ static void scan_dir_names(const std::string &dir) {
   }
 }
 
-std::string AppWrapper::get_resource_path(App *app, const std::string &file) {
+auto AppWrapper::get_resource_path(App *app, const std::string &file) -> std::string {
   if (directory_names.empty()) {
     std::string basedir = (options != NULL) ? options->basedir + "/" : "";
     scan_dir_names(basedir + "data");
@@ -75,7 +75,7 @@ std::string AppWrapper::get_resource_path(App *app, const std::string &file) {
   return f;
 }
 
-void AppWrapper::init(wb::WBOptions *theOptions) {
+auto AppWrapper::init(wb::WBOptions *theOptions) -> void {
   options = theOptions;
 
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();

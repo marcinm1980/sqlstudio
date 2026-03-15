@@ -35,12 +35,12 @@ namespace MySQL {
         RoutineEditorWrapper(::bec::RoutineEditorBE *inn);
 
       public:
-        ::bec::RoutineEditorBE *get_unmanaged_object();
-        String ^ get_sql();
+        auto get_unmanaged_object() -> ::bec::RoutineEditorBE *;
+        auto get_sql() -> String ^;
         void set_sql(String ^ query);
-        String ^ get_name();
+        auto get_name() -> String ^;
         void set_name(String ^ name);
-        String ^ get_comment();
+        auto get_comment() -> String ^;
         void set_comment(String ^ comment);
       };
 

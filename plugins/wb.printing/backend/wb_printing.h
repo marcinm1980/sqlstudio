@@ -45,12 +45,12 @@ namespace wbprint {
 
 #ifdef _MSC_VER
 
-  int WBPRINTINGBE_PUBLIC_FUNC printPageHDC(model_DiagramRef view, int page, HDC hdc, int width, int height);
+  auto printPageHDC(model_DiagramRef view, int page, HDC hdc, int width, int height) -> int WBPRINTINGBE_PUBLIC_FUNC;
 
 #endif
 
-  int WBPRINTINGBE_PUBLIC_FUNC getPageCount(model_DiagramRef view);
-  void WBPRINTINGBE_PUBLIC_FUNC getPageLayout(model_DiagramRef view, int &xpages, int &ypages);
+  auto getPageCount(model_DiagramRef view) -> int WBPRINTINGBE_PUBLIC_FUNC;
+  auto getPageLayout(model_DiagramRef view, int &xpages, int &ypages) -> void WBPRINTINGBE_PUBLIC_FUNC;
 
-  app_PageSettingsRef WBPRINTINGBE_PUBLIC_FUNC getPageSettings(model_DiagramRef diagram);
+  auto getPageSettings(model_DiagramRef diagram) -> app_PageSettingsRef WBPRINTINGBE_PUBLIC_FUNC;
 };

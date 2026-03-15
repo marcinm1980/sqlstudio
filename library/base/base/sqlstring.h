@@ -47,10 +47,10 @@ namespace base {
     std::string _format_string_left;
     sqlstringformat _format;
 
-    std::string consume_until_next_escape();
-    int next_escape();
+    auto consume_until_next_escape() -> std::string;
+    auto next_escape() -> int;
 
-    sqlstring &append(const std::string &s);
+    auto append(const std::string &s) -> sqlstring &;
 
   public:
     static const sqlstring null;
@@ -59,7 +59,7 @@ namespace base {
     sqlstring(const std::string &format_string, const sqlstringformat format = 0);
     sqlstring(const char format_string[], const sqlstringformat format = 0);
     sqlstring(const sqlstring &copy);
-    bool done() const;
+    auto done() const -> bool;
 
     operator std::string() const;
 

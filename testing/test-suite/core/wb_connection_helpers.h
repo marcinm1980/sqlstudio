@@ -29,5 +29,5 @@
 #include "cppdbc.h"
 
 // Use environment variables for connection setup
-void setupConnectionEnvironment(const db_mgmt_ConnectionRef &connectionProperties, db_mgmt_DriverRef driver = db_mgmt_DriverRef());
-sql::ConnectionWrapper createConnectionForImport();
+auto setupConnectionEnvironment(const db_mgmt_ConnectionRef &connectionProperties, db_mgmt_DriverRef driver = db_mgmt_DriverRef()) -> void;
+auto createConnectionForImport() -> sql::ConnectionWrapper;

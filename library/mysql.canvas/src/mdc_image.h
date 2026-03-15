@@ -35,7 +35,7 @@ namespace mdc {
     ImageFigure(Layer *layer);
     virtual ~ImageFigure();
 
-    virtual void draw_contents(CairoCtx *cr);
+    virtual auto draw_contents(CairoCtx *cr) -> void;
 
     auto set_image(cairo_surface_t *surface) -> bool;
     auto set_image(const std::string &path) -> bool;

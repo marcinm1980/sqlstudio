@@ -46,7 +46,7 @@ namespace MySQL {
 
       ~VarGridModelWrapper();
 
-      Ref ref() {
+      auto ref() -> Ref {
         return _ref;
       }
 
@@ -54,8 +54,8 @@ namespace MySQL {
       void set_update_selection_delegate(DelegateSlot0<void, void>::ManagedDelegate ^ selection);
       void set_rows_changed(DelegateSlot0<void, void>::ManagedDelegate ^ update);
 
-      int edited_field_row();
-      int edited_field_column();
+      auto edited_field_row() -> int;
+      auto edited_field_column() -> int;
     };
 
   }; // namespace Grt

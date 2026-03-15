@@ -77,16 +77,16 @@ namespace ssh {
 #endif
   }
 
-  base::RecMutexLock SSHTunnelManager::lockSocketList() {
+  auto SSHTunnelManager::lockSocketList() -> base::RecMutexLock {
     base::RecMutexLock mutexLock(_socketMutex);
     return mutexLock;
   }
 
-  void SSHTunnelManager::run() {
+  auto SSHTunnelManager::run() -> void {
     localSocketHandler();
   }
 
-  sockInfo SSHTunnelManager::createSocket() {
+  auto SSHTunnelManager::createSocket() -> sockInfo {
     sockInfo returnVal;
     errno = 0;
     returnVal.socketHandle = socket(AF_INET, SOCK_STREAM, 0);
@@ -126,7 +126,7 @@ namespace ssh {
     return returnVal;
   }
 
-  std::tuple<SSHReturnType, base::any> SSHTunnelManager::createTunnel(std::shared_ptr<SSHSession> &session) {
+  auto SSHTunnelManager::createTunnel(std::shared_ptr<SSHSession> &session) -> std::tuple<SSHReturnType, base::any> {
     logDebug3("About to create ssh tunnel.\n");
     auto sockLock = lockSocketList();
     for (auto &it : _socketList) {
@@ -145,7 +145,7 @@ namespace ssh {
     return std::make_tuple(SSHReturnType::CONNECTED, ret.port);
   }
 
-  int SSHTunnelManager::lookupTunnel(const SSHConnectionConfig &config) {
+  auto SSHTunnelManager::lookupTunnel(const SSHConnectionConfig &config) -> int {
     auto sockLock = lockSocketList();
 
     for (auto &it : _socketList) {
@@ -163,7 +163,7 @@ namespace ssh {
   }
 
   // We need to handle wakeupsocket connection, this should be enough.
-  static void acceptAndClose(int socket) {
+  static auto acceptAndClose(int socket) -> void {
     struct sockaddr_in client;
     socklen_t addrlen = sizeof(client);
     errno = 0;
@@ -171,7 +171,7 @@ namespace ssh {
     wbCloseSocket(clientSock);
   }
 
-  std::vector<pollfd> SSHTunnelManager::getSocketList() {
+  auto SSHTunnelManager::getSocketList() -> std::vector<pollfd> {
     std::vector<pollfd> socketList;
     {
       auto sockLock = lockSocketList();
@@ -192,7 +192,7 @@ namespace ssh {
     return socketList;
   }
 
-  void SSHTunnelManager::localSocketHandler() {
+  auto SSHTunnelManager::localSocketHandler() -> void {
     auto socketList = getSocketList();
     int rc = 0;
     do {
@@ -268,7 +268,7 @@ namespace ssh {
     _socketList.clear();
   }
 
-  void SSHTunnelManager::pokeWakeupSocket() {
+  auto SSHTunnelManager::pokeWakeupSocket() -> void {
     if (_wakeupSocketPort == 0) {
       logError("Somehow wakeup socket isn't set yet.\n");
       return;
@@ -300,7 +300,7 @@ namespace ssh {
     shutdown(sock, SHUT_RDWR);
   }
 
-  void SSHTunnelManager::disconnect(const SSHConnectionConfig &config) {
+  auto SSHTunnelManager::disconnect(const SSHConnectionConfig &config) -> void {
     auto sockLock = lockSocketList();
     for (auto &it : _socketList) {
       if (it.second->getConfig() == config) {

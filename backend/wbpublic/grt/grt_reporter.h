@@ -41,20 +41,20 @@ namespace bec {
     Reporter();
     virtual ~Reporter() {};
 
-    virtual bool is_tracking() const;
-    virtual void start_tracking() const;
+    virtual auto is_tracking() const -> bool;
+    virtual auto start_tracking() const -> void;
 
-    virtual void flush() const;
+    virtual auto flush() const -> void;
 
-    virtual void report_warning(const char* format, ...) const;
-    virtual void report_error(const char* format, ...) const;
-    virtual void report_info(const char* format, ...) const;
-    virtual void report_heading(const char* format, ...) const;
+    virtual auto report_warning(const char* format, ...) const -> void;
+    virtual auto report_error(const char* format, ...) const -> void;
+    virtual auto report_info(const char* format, ...) const -> void;
+    virtual auto report_heading(const char* format, ...) const -> void;
 
-    virtual void report_summary(const char* operation_name) const;
+    virtual auto report_summary(const char* operation_name) const -> void;
 
-    virtual int error_count() const;
-    virtual int warning_count() const;
+    virtual auto error_count() const -> int;
+    virtual auto warning_count() const -> int;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC SummaryCentry {

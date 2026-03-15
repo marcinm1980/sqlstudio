@@ -31,7 +31,7 @@
 #include "wbvalidation.h"
 #include "wb_model_reporting.h"
 
-inline void register_interfaces() {
+inline auto register_interfaces() -> void {
   if (!grt::GRT::get()->get_interface("PluginInterface"))
     PluginInterfaceImpl::register_interface(); // this is already registered in PluginManager
   SQLGeneratorInterfaceImpl::register_interface();

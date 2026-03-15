@@ -37,7 +37,7 @@ UserEditorBE::UserEditorBE(const db_UserRef &user)
 
 //--------------------------------------------------------------------------------------------------
 
-void UserEditorBE::set_password(const std::string &pass) {
+auto UserEditorBE::set_password(const std::string &pass) -> void {
   if (get_password() != pass) {
     AutoUndoEdit undo(this, get_user(), "password");
 
@@ -50,19 +50,19 @@ void UserEditorBE::set_password(const std::string &pass) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string UserEditorBE::get_password() {
+auto UserEditorBE::get_password() -> std::string {
   return get_user()->password();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-RoleTreeBE *UserEditorBE::get_role_tree() {
+auto UserEditorBE::get_role_tree() -> RoleTreeBE * {
   return &_role_tree;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void UserEditorBE::add_role(const std::string &role_name) {
+auto UserEditorBE::add_role(const std::string &role_name) -> void {
   db_RoleRef role(grt::find_named_object_in_list(db_CatalogRef::cast_from(get_user()->owner())->roles(), role_name));
 
   if (role.is_valid() && BaseListRef::npos == get_user()->roles().get_index(role)) {
@@ -75,7 +75,7 @@ void UserEditorBE::add_role(const std::string &role_name) {
 
 //--------------------------------------------------------------------------------------------------
 
-void UserEditorBE::remove_role(const std::string &role_name) {
+auto UserEditorBE::remove_role(const std::string &role_name) -> void {
   db_RoleRef role(grt::find_named_object_in_list(db_CatalogRef::cast_from(get_user()->owner())->roles(), role_name));
 
   if (role.is_valid()) {
@@ -91,7 +91,7 @@ void UserEditorBE::remove_role(const std::string &role_name) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> UserEditorBE::get_roles() {
+auto UserEditorBE::get_roles() -> std::vector<std::string> {
   std::vector<std::string> roles;
 
   for (size_t c = get_user()->roles().count(), i = 0; i < c; i++)
@@ -102,13 +102,13 @@ std::vector<std::string> UserEditorBE::get_roles() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string UserEditorBE::get_title() {
+auto UserEditorBE::get_title() -> std::string {
   return base::strfmt("%s - User", get_name().c_str());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool UserEditorBE::can_close() {
+auto UserEditorBE::can_close() -> bool {
   return true; // There's nothing that can prevent closing the editor.
 }
 

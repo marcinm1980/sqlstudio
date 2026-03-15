@@ -42,7 +42,7 @@ namespace MySQL {
         }
 
       public:
-        bec::DBObjectEditorBE *get_unmanaged_object() {
+        auto get_unmanaged_object() -> bec::DBObjectEditorBE * {
           return static_cast<::bec::DBObjectEditorBE *>(inner);
         }
 
@@ -60,31 +60,26 @@ namespace MySQL {
 
         String ^ get_sql() { return CppStringToNative(get_unmanaged_object()->get_sql()); }
 
-          bool is_sql_commented() {
+          auto is_sql_commented() -> bool {
           return get_unmanaged_object()->is_sql_commented();
         }
 
-        void set_sql_commented(bool flag) {
+        auto set_sql_commented(bool flag) -> void {
           get_unmanaged_object()->set_sql_commented(flag);
         }
 
         // Helpers
-        GrtValue ^
-          get_catalog() { return gcnew GrtValue(static_cast<::bec::DBObjectEditorBE *>(inner)->get_catalog()); }
+        auto get_catalog() -> GrtValue ^ { return gcnew GrtValue(static_cast<::bec::DBObjectEditorBE *>(inner)->get_catalog()); }
 
-          GrtValue
-          ^ get_schema() { return gcnew GrtValue(static_cast<::bec::DBObjectEditorBE *>(inner)->get_schema()); }
+          auto get_schema() -> GrtValue ^ { return gcnew GrtValue(static_cast<::bec::DBObjectEditorBE *>(inner)->get_schema()); }
 
-          String
-          ^ get_schema_name() { return CppStringToNative(get_unmanaged_object()->get_schema_name()); }
+          auto get_schema_name() -> String ^ { return CppStringToNative(get_unmanaged_object()->get_schema_name()); }
 
-          List<String ^> ^
-          get_all_table_names() {
+          auto get_all_table_names() -> List<String ^> ^ {
             return CppStringListToNative(static_cast<::bec::DBObjectEditorBE *>(inner)->get_all_table_names());
           }
 
-          List<String ^> ^
-          get_schema_table_names() {
+          auto get_schema_table_names() -> List<String ^> ^ {
             return CppStringListToNative(static_cast<::bec::DBObjectEditorBE *>(inner)->get_schema_table_names());
           }
 
@@ -101,13 +96,11 @@ namespace MySQL {
               db_TableRef::cast_from(table->get_unmanaged_object())));
           }
 
-          List<String ^> ^
-            get_charset_list() {
+          auto get_charset_list() -> List<String ^> ^ {
             return CppStringListToNative(static_cast<::bec::DBObjectEditorBE *>(inner)->get_charset_list());
           }
 
-          List<String ^> ^
-          get_charset_collation_list() {
+          auto get_charset_collation_list() -> List<String ^> ^ {
             return CppStringListToNative(static_cast<::bec::DBObjectEditorBE *>(inner)->get_charset_collation_list());
           }
 

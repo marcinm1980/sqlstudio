@@ -40,8 +40,8 @@ private:
 
 public:
   DbMySQLSync();
-  void set_option(const std::string& name, const std::string& value);
-  void start_apply_script_to_db();
+  auto set_option(const std::string& name, const std::string& value) -> void;
+  auto start_apply_script_to_db() -> void;
 };
 
 #endif // _DB_MYSQL_SQL_SYNC_H_

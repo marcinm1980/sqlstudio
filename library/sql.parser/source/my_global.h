@@ -299,10 +299,7 @@ C_MODE_END
 /* #define _AIX32_CURSES */	/* XXX: this breaks AIX 4.3.3 (others?). */
 #define ulonglong2double(A) my_ulonglong2double(A)
 #define my_off_t2double(A)  my_ulonglong2double(A)
-C_MODE_START
-namespace mysql_parser
-{
-double my_ulonglong2double(unsigned long long A);
+auto my_ulonglong2double(unsigned long long A) -> C_MODE_START namespace mysql_parser { double;
 } // namespace mysql_parser
 C_MODE_END
 #endif /* _AIX */
@@ -446,7 +443,7 @@ C_MODE_END
 #if HAVE_MADVISE && !HAVE_DECL_MADVISE && defined(__cplusplus)
 namespace mysql_parser
 {
-extern /*"C"*/ int madvise(void *addr, size_t len, int behav);
+extern auto madvise(void *addr, size_t len, int behav) -> /*"C"*/ int;
 } // namespace mysql_parser
 #endif
 

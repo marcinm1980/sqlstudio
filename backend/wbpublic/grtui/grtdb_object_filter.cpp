@@ -33,7 +33,7 @@ using namespace base;
 
 //--------------------------------------------------------------------------------------------------
 
-static void refill_list(mforms::ListBox &list, bec::GrtStringListModel *model) {
+static auto refill_list(mforms::ListBox &list, bec::GrtStringListModel *model) -> void {
   list.clear();
   for (size_t c = model->count(), i = 0; i < c; i++) {
     std::string item;
@@ -183,7 +183,7 @@ DBObjectFilterFrame::DBObjectFilterFrame()
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::set_object_class(const std::string &oclass, const std::string &caption_format) {
+auto DBObjectFilterFrame::set_object_class(const std::string &oclass, const std::string &caption_format) -> void {
   _filter_be.set_object_type_name(oclass);
 
   _summary_label.set_text(strfmt(_("%i Total Objects, %i Selected"), 0, 0));
@@ -201,8 +201,8 @@ void DBObjectFilterFrame::set_object_class(const std::string &oclass, const std:
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::set_models(bec::GrtStringListModel *model, bec::GrtStringListModel *excl_model,
-                                     bool *enabled_flag) {
+auto DBObjectFilterFrame::set_models(bec::GrtStringListModel *model, bec::GrtStringListModel *excl_model,
+                                     bool *enabled_flag) -> void {
   _model = model;
   _exclude_model = excl_model;
   _enabled_flag = enabled_flag;
@@ -221,7 +221,7 @@ void DBObjectFilterFrame::set_models(bec::GrtStringListModel *model, bec::GrtStr
 /**
  * Reloads the models and the list boxes. Selects the given indices if > -1.
  */
-void DBObjectFilterFrame::refresh(ssize_t object_list_selection, ssize_t mask_list_selection) {
+auto DBObjectFilterFrame::refresh(ssize_t object_list_selection, ssize_t mask_list_selection) -> void {
   _model->refresh();
   _exclude_model->refresh();
 
@@ -242,14 +242,14 @@ void DBObjectFilterFrame::refresh(ssize_t object_list_selection, ssize_t mask_li
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::update_button_enabled() {
+auto DBObjectFilterFrame::update_button_enabled() -> void {
   _add1_button.set_enabled(!_object_list.get_selected_indices().empty());
   _del1_button.set_enabled(!_mask_list.get_selected_indices().empty());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::toggle_enabled() {
+auto DBObjectFilterFrame::toggle_enabled() -> void {
   if (_enabled_flag)
     *_enabled_flag = get_active();
   //  _box.set_enabled(get_active());
@@ -257,19 +257,19 @@ void DBObjectFilterFrame::toggle_enabled() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::set_active(bool flag) {
+auto DBObjectFilterFrame::set_active(bool flag) -> void {
   _check.set_active(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool DBObjectFilterFrame::get_active() {
+auto DBObjectFilterFrame::get_active() -> bool {
   return _check.get_active();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::toggle_detailed() {
+auto DBObjectFilterFrame::toggle_detailed() -> void {
   if (_detailed_table.is_shown()) {
     _show_button.set_text(_("Show Filter"));
     _detailed_table.show(false);
@@ -282,7 +282,7 @@ void DBObjectFilterFrame::toggle_detailed() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::add_mask() {
+auto DBObjectFilterFrame::add_mask() -> void {
   TextInputDialog dlg(get_parent_form());
 
   dlg.set_description("Pattern mask for objects to be ignored.\nYou may use wildcards such as * and ?");
@@ -298,7 +298,7 @@ void DBObjectFilterFrame::add_mask() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::add_clicked(bool all) {
+auto DBObjectFilterFrame::add_clicked(bool all) -> void {
   _filter_combo.set_selected(-1);
 
   std::vector<size_t> indices;
@@ -320,7 +320,7 @@ void DBObjectFilterFrame::add_clicked(bool all) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectFilterFrame::del_clicked(bool all) {
+auto DBObjectFilterFrame::del_clicked(bool all) -> void {
   _filter_combo.set_selected(-1);
 
   std::vector<size_t> indices;

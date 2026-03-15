@@ -39,7 +39,7 @@ RoutineEditorBE::RoutineEditorBE(const db_RoutineRef &routine) : DBObjectEditorB
 
 //--------------------------------------------------------------------------------------------------
 
-std::string RoutineEditorBE::get_sql() {
+auto RoutineEditorBE::get_sql() -> std::string {
   std::string sql = DBObjectEditorBE::get_sql();
   if (sql.empty()) {
     std::string routineType = get_routine()->routineType();
@@ -57,7 +57,7 @@ std::string RoutineEditorBE::get_sql() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string RoutineEditorBE::get_title() {
+auto RoutineEditorBE::get_title() -> std::string {
   return base::strfmt("%s - Routine", get_name().c_str());
 }
 

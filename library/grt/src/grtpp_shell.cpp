@@ -31,7 +31,7 @@ using namespace grt;
 
 #define O_VECTOR_COUNT 64 // max # of ()*2+2
 
-std::string get_value_from_text_ex(const std::string& txt, const std::string& regexpr, unsigned int substringNr) {
+auto get_value_from_text_ex(const std::string& txt, const std::string& regexpr, unsigned int substringNr) -> std::string {
   std::regex regex(regexpr, std::regex::icase);
   auto begin = std::sregex_iterator(txt.begin(), txt.end(), regex);
   auto end = std::sregex_iterator();
@@ -60,7 +60,7 @@ Shell::~Shell() {
 
 #define MAX_NESTING 100
 
-std::string Shell::get_abspath(const std::string &curpath, const std::string &dir) {
+auto Shell::get_abspath(const std::string &curpath, const std::string &dir) -> std::string {
   if (dir.empty() || dir == ".") {
     // No real path info to add. Simply return a duplicate of what is current.
     return curpath;
@@ -123,11 +123,11 @@ std::string Shell::get_abspath(const std::string &curpath, const std::string &di
   };
 }
 
-void Shell::print(const std::string &str) {
+auto Shell::print(const std::string &str) -> void {
   grt::GRT::get()->send_output(str);
 }
 
-bool Shell::set_disable_quit(bool flag) {
+auto Shell::set_disable_quit(bool flag) -> bool {
   bool o = _disable_quit;
   _disable_quit = flag;
   return o;
@@ -147,7 +147,7 @@ bool Shell::set_disable_quit(bool flag) {
  * @return
  ****************************************************************************
  */
-ShellCommand Shell::execute(const std::string &linebuf) {
+auto Shell::execute(const std::string &linebuf) -> ShellCommand {
     ShellCommand res = ShellCommandUnknown;
   char *preprocessed_cmd = NULL;
   

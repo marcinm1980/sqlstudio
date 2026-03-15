@@ -36,18 +36,18 @@ NotebookDockingPoint::NotebookDockingPoint(Gtk::Notebook *note, const std::strin
       sigc::hide(sigc::hide(sigc::mem_fun(_dpoint, &mforms::DockingPoint::view_switched))));
 }
 
-void NotebookDockingPoint::set_notebook(Gtk::Notebook *note) {
+auto NotebookDockingPoint::set_notebook(Gtk::Notebook *note) -> void {
   _notebook = note;
   _notebook->signal_switch_page().connect(
     sigc::hide(sigc::hide(sigc::mem_fun(_dpoint, &mforms::DockingPoint::view_switched))));
 }
 
-void NotebookDockingPoint::close_appview_page(mforms::AppView *view) {
+auto NotebookDockingPoint::close_appview_page(mforms::AppView *view) -> void {
   if (view->on_close())
     view->close();
 }
 
-bool NotebookDockingPoint::close_page(Gtk::Widget *w) {
+auto NotebookDockingPoint::close_page(Gtk::Widget *w) -> bool {
   mforms::AppView *aview = dynamic_cast<mforms::AppView *>(mforms::gtk::ViewImpl::get_view_for_widget(w));
   if (aview) {
     if (aview->on_close()) {
@@ -59,13 +59,13 @@ bool NotebookDockingPoint::close_page(Gtk::Widget *w) {
   return true;
 }
 
-void NotebookDockingPoint::set_name(const std::string &name) {
+auto NotebookDockingPoint::set_name(const std::string &name) -> void {
   auto acc = _notebook->get_accessible();
   if (acc)
     acc->set_name(name);
 }
 
-void NotebookDockingPoint::dock_view(mforms::AppView *view, const std::string &arg1, int arg2) {
+auto NotebookDockingPoint::dock_view(mforms::AppView *view, const std::string &arg1, int arg2) -> void {
   Gtk::Widget *w = mforms::widget_for_view(view);
   if (w) {
     ActiveLabel *l = Gtk::manage(
@@ -84,7 +84,7 @@ void NotebookDockingPoint::dock_view(mforms::AppView *view, const std::string &a
   }
 }
 
-bool NotebookDockingPoint::select_view(mforms::AppView *view) {
+auto NotebookDockingPoint::select_view(mforms::AppView *view) -> bool {
   Gtk::Widget *w = mforms::widget_for_view(view);
   if (w) {
     int p = _notebook->page_num(*w);
@@ -96,7 +96,7 @@ bool NotebookDockingPoint::select_view(mforms::AppView *view) {
   return false;
 }
 
-void NotebookDockingPoint::undock_view(mforms::AppView *view) {
+auto NotebookDockingPoint::undock_view(mforms::AppView *view) -> void {
   Gtk::Widget *w = mforms::widget_for_view(view);
   if (w) {
     // before remove, unset menu if it was set
@@ -106,7 +106,7 @@ void NotebookDockingPoint::undock_view(mforms::AppView *view) {
   }
 }
 
-void NotebookDockingPoint::set_view_title(mforms::AppView *view, const std::string &title) {
+auto NotebookDockingPoint::set_view_title(mforms::AppView *view, const std::string &title) -> void {
   Gtk::Widget *w = mforms::widget_for_view(view);
   if (w) {
     int idx = _notebook->page_num(*w);
@@ -122,22 +122,22 @@ void NotebookDockingPoint::set_view_title(mforms::AppView *view, const std::stri
   }
 }
 
-std::pair<int, int> NotebookDockingPoint::get_size() {
+auto NotebookDockingPoint::get_size() -> std::pair<int, int> {
   return std::pair<int, int>(_notebook->get_width(), _notebook->get_height());
 }
 
-mforms::AppView *NotebookDockingPoint::selected_view() {
+auto NotebookDockingPoint::selected_view() -> mforms::AppView * {
   int i = _notebook->get_current_page();
   if (i >= 0)
     return view_at_index(i);
   return NULL;
 }
 
-int NotebookDockingPoint::view_count() {
+auto NotebookDockingPoint::view_count() -> int {
   return _notebook->get_n_pages();
 }
 
-mforms::AppView *NotebookDockingPoint::view_at_index(int index) {
+auto NotebookDockingPoint::view_at_index(int index) -> mforms::AppView * {
   Gtk::Widget *w = _notebook->get_nth_page(index);
   if (w)
     return dynamic_cast<mforms::AppView *>(mforms::gtk::ViewImpl::get_view_for_widget(w));

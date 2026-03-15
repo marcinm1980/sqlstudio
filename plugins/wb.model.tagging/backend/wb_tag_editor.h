@@ -50,17 +50,17 @@ public:
 
   TagObjectListBE(const db_CatalogRef &catalog);
 
-  bool add_dropped_objectdata(const std::string &data);
+  auto add_dropped_objectdata(const std::string &data) -> bool;
 
-  void set_tag(const meta_TagRef &tag);
+  auto set_tag(const meta_TagRef &tag) -> void;
 
-  virtual bool get_field(const bec::NodeId &node, int column, std::string &value);
-  virtual bool set_field(const bec::NodeId &node, int column, const std::string &value);
-  virtual bec::IconId get_field_icon(const bec::NodeId &node, int column, bec::IconSize size);
-  virtual void refresh();
-  virtual int count();
+  virtual auto get_field(const bec::NodeId &node, int column, std::string &value) -> bool;
+  virtual auto set_field(const bec::NodeId &node, int column, const std::string &value) -> bool;
+  virtual auto get_field_icon(const bec::NodeId &node, int column, bec::IconSize size) -> bec::IconId;
+  virtual auto refresh() -> void;
+  virtual auto count() -> int;
 
-  bool commit();
+  auto commit() -> bool;
 };
 
 class TagEditorBE : public sigc::trackable {
@@ -74,39 +74,39 @@ class TagEditorBE : public sigc::trackable {
 public:
   TagEditorBE(const studio_physical_ModelRef &model);
 
-  TagObjectListBE *get_object_list() {
+  auto get_object_list() -> TagObjectListBE * {
     return &_object_list;
   }
 
-  std::vector<std::string> get_categories() const;
+  auto get_categories() const -> std::vector<std::string>;
 
-  void edit_categories();
-  void set_selected_category(int index);
-  int get_selected_category() const {
+  auto edit_categories() -> void;
+  auto set_selected_category(int index) -> void;
+  auto get_selected_category() const -> int {
     return _selected_category;
   }
 
-  std::vector<std::string> get_tags() const;
+  auto get_tags() const -> std::vector<std::string>;
 
-  void add_tag();
-  bool delete_tag();
+  auto add_tag() -> void;
+  auto delete_tag() -> bool;
 
-  void begin_save();
-  void end_save();
+  auto begin_save() -> void;
+  auto end_save() -> void;
 
-  void set_selected_tag(int index);
+  auto set_selected_tag(int index) -> void;
 
-  void set_tag_name(const std::string &name);
-  void set_tag_label(const std::string &label);
-  void set_tag_color(const std::string &color);
-  void set_tag_comment(const std::string &color);
+  auto set_tag_name(const std::string &name) -> void;
+  auto set_tag_label(const std::string &label) -> void;
+  auto set_tag_color(const std::string &color) -> void;
+  auto set_tag_comment(const std::string &color) -> void;
 
-  std::string get_tag_name();
-  std::string get_tag_label();
-  std::string get_tag_color();
-  std::string get_tag_comment();
+  auto get_tag_name() -> std::string;
+  auto get_tag_label() -> std::string;
+  auto get_tag_color() -> std::string;
+  auto get_tag_comment() -> std::string;
 
-  std::vector<std::string> get_objects();
+  auto get_objects() -> std::vector<std::string>;
 };
 
 #endif

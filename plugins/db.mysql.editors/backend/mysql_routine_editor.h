@@ -33,7 +33,7 @@ class MYSQLWBMYSQLSUPPORTBACKEND_PUBLIC_FUNC MySQLRoutineEditorBE : public bec::
 public:
   MySQLRoutineEditorBE(const db_mysql_RoutineRef &routine);
 
-  void load_routine_sql();
-  virtual void commit_changes();
-  virtual bool can_close();
+  auto load_routine_sql() -> void;
+  virtual auto commit_changes() -> void;
+  virtual auto can_close() -> bool;
 };

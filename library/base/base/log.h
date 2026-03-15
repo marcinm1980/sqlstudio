@@ -97,24 +97,24 @@ namespace base {
     Logger(const std::string& dir, const bool stderr_log = DEFAULT_LOG_TO_STDERR, const std::string& file_name = "wb",
            int limit = 10); // Later logdir or set of log files can be passed
 
-    static void enable_level(const LogLevel level);
-    static void disable_level(const LogLevel level);
+    static auto enable_level(const LogLevel level) -> void;
+    static auto disable_level(const LogLevel level) -> void;
 #if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
     static void log(const LogLevel level, const char* const domain, const char* format, ...) G_GNUC_PRINTF(3, 4);
 #else
-    static void log(const LogLevel level, const char* const domain, const char* format, ...);
+    static auto log(const LogLevel level, const char* const domain, const char* format, ...) -> void;
 #endif
-    static void log_throw(const LogLevel level, const char* const domain, const char* format, ...);
-    static void log_exc(const LogLevel level, const char* const domain, const char* msg, const std::exception& exc);
+    static auto log_throw(const LogLevel level, const char* const domain, const char* format, ...) -> void;
+    static auto log_exc(const LogLevel level, const char* const domain, const char* msg, const std::exception& exc) -> void;
     static auto get_state() -> std::string;
-    static void set_state(const std::string& state);
+    static auto set_state(const std::string& state) -> void;
     static auto log_filename() -> std::string;
     static auto log_dir() -> std::string;
 
     static auto active_level() -> std::string;
     static auto active_level(const std::string& value) -> bool;
 
-    static void log_to_stderr(bool value);
+    static auto log_to_stderr(bool value) -> void;
 
     static auto logLevelName(std::size_t index) -> const std::string& {
       return _logLevelNames[index];
@@ -123,12 +123,12 @@ namespace base {
     static auto wasLogLevelSpecifiedByUser() -> bool {
       return _logLevelSpecifiedByUser;
     }
-    static void setLogLevelSpecifiedByUser() {
+    static auto setLogLevelSpecifiedByUser() -> void {
       _logLevelSpecifiedByUser = true;
     }
 
   protected:
-    static void logv(const LogLevel level, const char* const domain, const char* format, va_list args);
+    static auto logv(const LogLevel level, const char* const domain, const char* format, va_list args) -> void;
 
   private:
     struct LoggerImpl;

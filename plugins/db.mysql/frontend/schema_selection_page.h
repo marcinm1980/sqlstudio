@@ -35,7 +35,7 @@ public:
     set_title(_("Select Schemas to Reverse Engineer"));
   }
 
-  virtual void leave(bool advancing) {
+  virtual auto leave(bool advancing) -> void {
     if (advancing) {
       grt::StringListRef list(grt::Initialized);
       std::vector<std::string> selection = _check_list.get_selection();
@@ -48,7 +48,7 @@ public:
     WizardSchemaFilterPage::leave(advancing);
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       _schemas.clear();
       grt::ListRef<db_Schema> schemas(_dbplugin->model_catalog()->schemata());
@@ -62,7 +62,7 @@ public:
     }
   }
 
-  void set_db_plugin(Db_plugin *pl) {
+  auto set_db_plugin(Db_plugin *pl) -> void {
     _dbplugin = pl;
   }
 

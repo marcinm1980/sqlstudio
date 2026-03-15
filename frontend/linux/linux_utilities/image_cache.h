@@ -38,11 +38,11 @@ public:
   ImageCache() {
   }
 
-  Glib::RefPtr<Gdk::Pixbuf> image_from_path(const std::string& name, bool cache = true);
-  Glib::RefPtr<Gdk::Pixbuf> image_from_filename(const std::string& name, bool cache = true);
-  Glib::RefPtr<Gdk::Pixbuf> image(bec::IconId name);
+  auto image_from_path(const std::string& name, bool cache = true) -> Glib::RefPtr<Gdk::Pixbuf>;
+  auto image_from_filename(const std::string& name, bool cache = true) -> Glib::RefPtr<Gdk::Pixbuf>;
+  auto image(bec::IconId name) -> Glib::RefPtr<Gdk::Pixbuf>;
 
-  static ImageCache* get_instance();
+  static auto get_instance() -> ImageCache*;
 
 private:
   typedef std::map<std::string, Glib::RefPtr<Gdk::Pixbuf> > ImageMap;
@@ -52,7 +52,7 @@ private:
 };
 
 //------------------------------------------------------------------------------
-inline Glib::RefPtr<Gdk::Pixbuf> ImageCache::image(bec::IconId icon) {
+inline auto ImageCache::image(bec::IconId icon) -> Glib::RefPtr<Gdk::Pixbuf> {
   std::string path = bec::IconManager::get_instance()->get_icon_path(icon);
 
   // if (path.empty())

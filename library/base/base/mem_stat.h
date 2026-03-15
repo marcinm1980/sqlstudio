@@ -32,8 +32,8 @@
 namespace base {
   struct BASELIBRARY_PUBLIC_FUNC MemUsage {
   public:
-    static void StartCounting();
-    static void PrintUsage();
+    static auto StartCounting() -> void;
+    static auto PrintUsage() -> void;
   };
 }
 

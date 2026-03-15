@@ -36,26 +36,26 @@ using mforms::ColumnHeaderIndicator;
 class RecordGridView : public mforms::GridView {
   RecordsetView *viewer;
 
-  void columns_resized(const std::vector<int> cols) {
+  auto columns_resized(const std::vector<int> cols) -> void {
     (*signal_columns_resized())(cols);
   }
-  void column_right_clicked(int c, int x, int y);
+  auto column_right_clicked(int c, int x, int y) -> void;
 
 public:
   RecordGridView(std::shared_ptr<Recordset> rset);
   virtual ~RecordGridView();
 
-  virtual int get_column_count();
-  virtual int get_column_width(int column);
-  virtual void set_column_width(int column, int width);
-  virtual void update_columns();
+  virtual auto get_column_count() -> int;
+  virtual auto get_column_width(int column) -> int;
+  virtual auto set_column_width(int column, int width) -> void;
+  virtual auto update_columns() -> void;
 
-  virtual bool current_cell(size_t &row, int &column);
-  virtual void set_current_cell(size_t row, int column);
+  virtual auto current_cell(size_t &row, int &column) -> bool;
+  virtual auto set_current_cell(size_t row, int column) -> void;
 
-  virtual void set_column_header_indicator(int column, ColumnHeaderIndicator order);
+  virtual auto set_column_header_indicator(int column, ColumnHeaderIndicator order) -> void;
 
-  virtual void set_font(const std::string &font);
+  virtual auto set_font(const std::string &font) -> void;
   //};
 };
 #endif

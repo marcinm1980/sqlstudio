@@ -38,7 +38,7 @@ namespace wb {
   public:
     Button(mdc::Layer *layer);
 
-    virtual void draw_contents(mdc::CairoCtx *cr);
+    virtual auto draw_contents(mdc::CairoCtx *cr) -> void;
   };
 
   class Floater : public mdc::Box {
@@ -48,7 +48,7 @@ namespace wb {
     Floater(mdc::Layer *layer, const std::string &title);
     virtual ~Floater();
 
-    void set_title(const std::string &title);
+    auto set_title(const std::string &title) -> void;
 
   protected:
     wbfig::Titlebar *_title;
@@ -58,13 +58,13 @@ namespace wb {
     base::Point _drag_offset;
     bool _dragging;
 
-    void update_position();
+    auto update_position() -> void;
 
-    virtual bool on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
-    virtual bool on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                   mdc::EventState state);
-    virtual bool on_drag(mdc::CanvasItem *target, const base::Point &point, mdc::EventState state);
+    virtual auto on_button_press(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
+    virtual auto on_button_release(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                   mdc::EventState state) -> bool;
+    virtual auto on_drag(mdc::CanvasItem *target, const base::Point &point, mdc::EventState state) -> bool;
   };
 }; // namespace wb
 

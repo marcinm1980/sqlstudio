@@ -35,31 +35,31 @@ namespace Gtk {
 }
 
 namespace mforms {
-  Gtk::MenuBar *widget_for_menubar(MenuBar *self);
-  void on_add_menubar_to_window(MenuBar *menu, Gtk::Window *window);
+  auto widget_for_menubar(MenuBar *self) -> Gtk::MenuBar *;
+  auto on_add_menubar_to_window(MenuBar *menu, Gtk::Window *window) -> void;
 
   namespace gtk {
-    void lf_menubar_init();
+    auto lf_menubar_init() -> void;
 
     struct MenuItemImpl {
-      static bool create_menu_bar(MenuBar *item);
-      static bool create_context_menu(ContextMenu *item);
-      static bool create_menu_item(MenuItem *item, const std::string &, const MenuItemType type);
-      static bool copy_menu_item(MenuItem *item, const MenuItem *other);
-      static void set_title(MenuItem *item, const std::string &);
-      static std::string get_title(MenuItem *item);
-      static void set_shortcut(MenuItem *item, const std::string &);
-      static void set_enabled(MenuBase *item, bool);
-      static bool get_enabled(MenuBase *item);
-      static void set_checked(MenuItem *item, bool);
-      static bool get_checked(MenuItem *item);
+      static auto create_menu_bar(MenuBar *item) -> bool;
+      static auto create_context_menu(ContextMenu *item) -> bool;
+      static auto create_menu_item(MenuItem *item, const std::string &, const MenuItemType type) -> bool;
+      static auto copy_menu_item(MenuItem *item, const MenuItem *other) -> bool;
+      static auto set_title(MenuItem *item, const std::string &) -> void;
+      static auto get_title(MenuItem *item) -> std::string;
+      static auto set_shortcut(MenuItem *item, const std::string &) -> void;
+      static auto set_enabled(MenuBase *item, bool) -> void;
+      static auto get_enabled(MenuBase *item) -> bool;
+      static auto set_checked(MenuItem *item, bool) -> void;
+      static auto get_checked(MenuItem *item) -> bool;
 
-      static void insert_item(MenuBase *menu, int index, MenuItem *item);
-      static void remove_item(MenuBase *menu, MenuItem *item); // NULL item to remove all
-      static void popup_menu(mforms::ContextMenu *menu, View *owner, base::Point location);
+      static auto insert_item(MenuBase *menu, int index, MenuItem *item) -> void;
+      static auto remove_item(MenuBase *menu, MenuItem *item) -> void; // NULL item to remove all
+      static auto popup_menu(mforms::ContextMenu *menu, View *owner, base::Point location) -> void;
       
-      static void set_name(MenuItem *item, const std::string &);
-      static std::string get_name(MenuItem *item);
+      static auto set_name(MenuItem *item, const std::string &) -> void;
+      static auto get_name(MenuItem *item) -> std::string;
     };
 
   }; // namespace gtk

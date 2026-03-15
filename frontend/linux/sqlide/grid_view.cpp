@@ -32,7 +32,7 @@
 #include "base/string_utilities.h"
 
 //------------------------------------------------------------------------------
-GridView *GridView::create(bec::GridModel::Ref model, bool fixed_height_mode, bool allow_cell_selection) {
+auto GridView::create(bec::GridModel::Ref model, bool fixed_height_mode, bool allow_cell_selection) -> GridView * {
   GridView *view = Gtk::manage(new GridView(model, fixed_height_mode, allow_cell_selection));
   // This function is used only by recordset so if we're forcing fixed height mode, then we need speed optimization.
   view->set_text_cell_fixed_height(fixed_height_mode);
@@ -62,11 +62,11 @@ GridView::GridView(bec::GridModel::Ref model, bool fixed_height_mode, bool allow
 GridView::~GridView() {
 }
 
-void GridView::set_text_cell_fixed_height(bool val) {
+auto GridView::set_text_cell_fixed_height(bool val) -> void {
   _text_cell_fixed_height = val;
 }
 
-void GridView::on_signal_cursor_changed() {
+auto GridView::on_signal_cursor_changed() -> void {
   int row = -1, col = -1;
   current_cell(row, col);
   if (col == -2) // It can be -2 if we have _row_numbers_visible.
@@ -74,7 +74,7 @@ void GridView::on_signal_cursor_changed() {
   _model->set_edited_field(row, col);
 }
 
-void GridView::on_signal_button_release_event(GdkEventButton *ev) {
+auto GridView::on_signal_button_release_event(GdkEventButton *ev) -> void {
   Gtk::TreeModel::Path path;
   Gtk::TreeViewColumn *col;
   int x, y;
@@ -85,15 +85,15 @@ void GridView::on_signal_button_release_event(GdkEventButton *ev) {
   }
 }
 
-void GridView::set_context_menu(mforms::Menu *menu) {
+auto GridView::set_context_menu(mforms::Menu *menu) -> void {
   _context_menu = menu;
 }
 
-void GridView::set_context_menu_responder(const sigc::slot<void> &slot) {
+auto GridView::set_context_menu_responder(const sigc::slot<void> &slot) -> void {
   _context_menu_responder = slot;
 }
 
-void GridView::init() {
+auto GridView::init() -> void {
   //! set_fixed_height_mode(true);
   //  set_grid_lines(Gtk::TREE_VIEW_GRID_LINES_BOTH);
 
@@ -105,13 +105,13 @@ void GridView::init() {
   show();
 }
 
-void GridView::model(bec::GridModel::Ref value) {
+auto GridView::model(bec::GridModel::Ref value) -> void {
   _model = value;
   _view_model = GridViewModel::create(_model, this, "grid_view");
   _view_model->set_text_cell_fixed_height(_text_cell_fixed_height);
 }
 
-int GridView::refresh(bool reset_columns) {
+auto GridView::refresh(bool reset_columns) -> int {
   freeze_notify();
 
   Gtk::ScrolledWindow *swin = dynamic_cast<Gtk::ScrolledWindow *>(get_parent());
@@ -153,7 +153,7 @@ int GridView::refresh(bool reset_columns) {
   return 0;
 }
 
-void GridView::copy() {
+auto GridView::copy() -> void {
   if (_copy_func_ptr)
     _copy_func_ptr(this->get_selected_rows());
 }
@@ -169,7 +169,7 @@ void GridView::scroll_to(const int whence) // whence == 0 seeks to start, whence
   }
 }
 
-bec::NodeId GridView::current_cell(int &row, int &col) {
+auto GridView::current_cell(int &row, int &col) -> bec::NodeId {
   bec::NodeId node;
   Gtk::TreeModel::Path path;
   Gtk::TreeViewColumn *column;
@@ -185,7 +185,7 @@ bec::NodeId GridView::current_cell(int &row, int &col) {
   return node;
 }
 
-void GridView::select_cell(int row, Gtk::TreeViewColumn &col) {
+auto GridView::select_cell(int row, Gtk::TreeViewColumn &col) -> void {
   Gtk::TreePath path;
   path.push_back(row);
   set_cursor(path, col, false);
@@ -193,7 +193,7 @@ void GridView::select_cell(int row, Gtk::TreeViewColumn &col) {
   queue_draw();
 }
 
-void GridView::select_cell(int row, int col) {
+auto GridView::select_cell(int row, int col) -> void {
   Gtk::TreePath path;
   path.push_back(row);
   set_cursor(path, *get_column(col + 1), false);
@@ -204,7 +204,7 @@ void GridView::select_cell(int row, int col) {
   queue_draw();
 }
 
-void GridView::delete_selected_rows() {
+auto GridView::delete_selected_rows() -> void {
   std::vector<int> rows = get_selected_rows();
   std::sort(rows.begin(), rows.end());
   for (ssize_t i = rows.size() - 1; i >= 0; --i)
@@ -212,13 +212,13 @@ void GridView::delete_selected_rows() {
   sync_row_count();
 }
 
-int GridView::current_row() {
+auto GridView::current_row() -> int {
   int row, col;
   current_cell(row, col);
   return row;
 }
 
-bool GridView::on_key_press_event(GdkEventKey *event) {
+auto GridView::on_key_press_event(GdkEventKey *event) -> bool {
   bool processed = false;
 
   if (GDK_KEY_PRESS == event->type) {
@@ -334,7 +334,7 @@ bool GridView::on_key_press_event(GdkEventKey *event) {
   return processed;
 }
 
-bool GridView::on_button_press_event(GdkEventButton *event) {
+auto GridView::on_button_press_event(GdkEventButton *event) -> bool {
   if (event->button == 1) {
     Gtk::TreePath path, opath;
     Gtk::TreeViewColumn *column, *ocolumn;
@@ -362,22 +362,22 @@ bool GridView::on_button_press_event(GdkEventButton *event) {
   return Gtk::TreeView::on_button_press_event(event);
 }
 
-static void add_node_for_path(const Gtk::TreeModel::Path &path, std::vector<int> *rows) {
+static auto add_node_for_path(const Gtk::TreeModel::Path &path, std::vector<int> *rows) -> void {
   rows->push_back((int)path[0]);
 }
 
-std::vector<int> GridView::get_selected_rows() {
+auto GridView::get_selected_rows() -> std::vector<int> {
   std::vector<int> rows;
   get_selection()->selected_foreach_path(sigc::bind(sigc::ptr_fun(add_node_for_path), &rows));
   return rows;
 }
 
-void GridView::on_cell_edited(const Glib::ustring &path_string, const Glib::ustring &new_text) {
+auto GridView::on_cell_edited(const Glib::ustring &path_string, const Glib::ustring &new_text) -> void {
   _signal_cell_edited.emit(path_string, new_text);
   sync_row_count();
 }
 
-bool GridView::on_focus_out(GdkEventFocus *event, Gtk::CellRenderer *cell, Gtk::Entry *e) {
+auto GridView::on_focus_out(GdkEventFocus *event, Gtk::CellRenderer *cell, Gtk::Entry *e) -> bool {
   // Emulate pressing Enter on the text entry so that a focus out will save ongoing changes
   // instead of discarding them
   if (!event->in) {
@@ -389,7 +389,7 @@ bool GridView::on_focus_out(GdkEventFocus *event, Gtk::CellRenderer *cell, Gtk::
   return false;
 }
 
-void GridView::on_cell_editing_started(Gtk::CellEditable *e, const Glib::ustring &path, Gtk::TreeViewColumn *column) {
+auto GridView::on_cell_editing_started(Gtk::CellEditable *e, const Glib::ustring &path, Gtk::TreeViewColumn *column) -> void {
   _path_edited = Gtk::TreePath(path);
   _column_edited = column;
   _cell_editable = e;
@@ -409,7 +409,7 @@ void GridView::on_cell_editing_started(Gtk::CellEditable *e, const Glib::ustring
   }
 }
 
-void GridView::on_text_insert(unsigned int position, const char *incoming_text, unsigned int character_num) {
+auto GridView::on_text_insert(unsigned int position, const char *incoming_text, unsigned int character_num) -> void {
   if ((unsigned int)g_utf8_strlen(incoming_text, -1) != character_num)
     mforms::Utilities::show_warning(_("Text Truncation"),
                                     _("Inserted data has been truncated as the control's limit was reached. Please use "
@@ -417,19 +417,19 @@ void GridView::on_text_insert(unsigned int position, const char *incoming_text, 
                                     "Ok", "", "");
 }
 
-void GridView::on_cell_editing_done() {
+auto GridView::on_cell_editing_done() -> void {
   _column_edited = 0;
   _cell_editable = 0;
 }
 
-void GridView::sync_row_count() {
+auto GridView::sync_row_count() -> void {
   if (_model->count() != _row_count) {
     refresh(false);
     _signal_row_count_changed.emit();
   }
 }
 
-void GridView::on_column_header_clicked(Gtk::TreeViewColumn *column, int column_index) {
+auto GridView::on_column_header_clicked(Gtk::TreeViewColumn *column, int column_index) -> void {
   if (column_index >= 0) {
     int sort_direction = 1;
 
@@ -446,12 +446,12 @@ void GridView::on_column_header_clicked(Gtk::TreeViewColumn *column, int column_
   }
 }
 
-void GridView::sort_by_column(int column_index, int sort_direction, bool retaining) {
+auto GridView::sort_by_column(int column_index, int sort_direction, bool retaining) -> void {
   _model->sort_by(column_index, sort_direction, retaining);
   reset_sorted_columns();
 }
 
-void GridView::reset_sorted_columns() {
+auto GridView::reset_sorted_columns() -> void {
   bec::GridModel::SortColumns sort_columns = _model->sort_columns();
   BOOST_FOREACH (bec::GridModel::SortColumns::value_type &sort_column, sort_columns) {
     Gtk::TreeViewColumn *column = get_column(
@@ -462,6 +462,6 @@ void GridView::reset_sorted_columns() {
   }
 }
 
-int GridView::row_count() const {
+auto GridView::row_count() const -> int {
   return _row_count;
 }

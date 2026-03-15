@@ -49,13 +49,13 @@ public:
   virtual ~Sql_inserts_loader() {
   }
 
-  virtual void load(const std::string &sql, const std::string &schema_name) = 0;
+  virtual auto load(const std::string &sql, const std::string &schema_name) -> void = 0;
 
   using Strings = std::vector<std::string>;
   using Process_insert = std::function<void(
     const std::string &, const std::pair<std::string, std::string> &, const Strings &, const Strings &,
     const std::vector<bool> &)>; // sql, schema_name, table_name, fields_names, fields_values
-  void process_insert_cb(Process_insert cb) {
+  auto process_insert_cb(Process_insert cb) -> void {
     _process_insert = cb;
   }
 

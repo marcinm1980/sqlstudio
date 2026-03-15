@@ -77,7 +77,7 @@ struct AutoCompletionContext {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void collectCandidates(MySQLParser *parser, Scanner &scanner, size_t caretOffset, size_t caretLine) {
+  auto collectCandidates(MySQLParser *parser, Scanner &scanner, size_t caretOffset, size_t caretLine) -> void {
     CodeCompletionCore c3(parser);
 
     c3.ignoredTokens = {
@@ -314,7 +314,7 @@ private:
    * Called if one of the candidates is a column reference, for table references *before* the caret.
    * SQL code must be valid up to the caret, so we can check nesting strictly.
    */
-  void collectLeadingTableReferences(MySQLParser *parser, Scanner &scanner, size_t caretIndex, bool forTableAlter) {
+  auto collectLeadingTableReferences(MySQLParser *parser, Scanner &scanner, size_t caretIndex, bool forTableAlter) -> void {
     scanner.push();
 
     if (forTableAlter) {
@@ -398,7 +398,7 @@ private:
    * Because inner queries can use table references from outer queries we can simply scan for all outer FROM clauses
    * (skip over subqueries).
    */
-  void collectRemainingTableReferences(MySQLParser *parser, Scanner &scanner) {
+  auto collectRemainingTableReferences(MySQLParser *parser, Scanner &scanner) -> void {
     scanner.push();
 
     // Continously scan forward to all FROM clauses on the current or any higher nesting level.
@@ -448,7 +448,7 @@ private:
   /**
    * Parses the given FROM clause text using a local parser and collects all found table references.
    */
-  void parseTableReferences(std::string const& fromClause, MySQLParser *parserTemplate) {
+  auto parseTableReferences(std::string const& fromClause, MySQLParser *parserTemplate) -> void {
     // We use a local parser just for the FROM clause to avoid messing up tokens on the autocompletion
     // parser (which would affect the processing of the found candidates).
     ANTLRInputStream input(fromClause);
@@ -474,7 +474,7 @@ private:
   /**
    * Copies the current references stack into the references map.
    */
-  void takeReferencesSnapshot() {
+  auto takeReferencesSnapshot() -> void {
     // Don't clear the references map here. Can happen we have to take multiple snapshots.
     // We automatically remove duplicates by using a map.
     for (auto &entry : referencesStack) {
@@ -510,8 +510,8 @@ enum ObjectFlags {
  *       (or the token following it, solely for getting a terminator). Since we cannot know the user's
  *       intention, we never look forward.
  */
-static ObjectFlags determineQualifier(Scanner &scanner, MySQLLexer *lexer, size_t offsetInLine,
-                                      std::string &qualifier) {
+static auto determineQualifier(Scanner &scanner, MySQLLexer *lexer, size_t offsetInLine,
+                                      std::string &qualifier) -> ObjectFlags {
   // Five possible positions here:
   //   - In the first id (including the position directly after the last char).
   //   - In the space between first id and a dot.
@@ -565,8 +565,8 @@ static ObjectFlags determineQualifier(Scanner &scanner, MySQLLexer *lexer, size_
  * The returned schema can be either for a schema.table situation (which requires to show tables)
  * or a schema.table.column situation. Which one is determined by whether showing columns alone or not.
  */
-static ObjectFlags determineSchemaTableQualifier(Scanner &scanner, MySQLLexer *lexer, std::string &schema,
-                                                 std::string &table) {
+static auto determineSchemaTableQualifier(Scanner &scanner, MySQLLexer *lexer, std::string &schema,
+                                                 std::string &table) -> ObjectFlags {
   size_t position = scanner.tokenIndex();
   if (scanner.tokenChannel() != 0)
     scanner.next(true);
@@ -637,7 +637,7 @@ typedef std::set<std::pair<int, std::string>, CompareAcEntries> CompletionSet;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void insertSchemas(SymbolTable &symbolTable, CompletionSet &set) {
+static auto insertSchemas(SymbolTable &symbolTable, CompletionSet &set) -> void {
   auto symbols = symbolTable.getSymbolsOfType<SchemaSymbol>();
   for (auto symbol : symbols)
     set.insert({ AC_SCHEMA_IMAGE, symbol->name });
@@ -645,7 +645,7 @@ static void insertSchemas(SymbolTable &symbolTable, CompletionSet &set) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void insertTables(SymbolTable &symbolTable, CompletionSet &set, std::set<std::string> &schemas) {
+static auto insertTables(SymbolTable &symbolTable, CompletionSet &set, std::set<std::string> &schemas) -> void {
 
   for (auto &schema : schemas) {
     SchemaSymbol *schemaSymbol = dynamic_cast<SchemaSymbol *>(symbolTable.resolve(schema));
@@ -660,7 +660,7 @@ static void insertTables(SymbolTable &symbolTable, CompletionSet &set, std::set<
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void insertViews(SymbolTable &symbolTable, CompletionSet &set, const std::set<std::string> &schemas) {
+static auto insertViews(SymbolTable &symbolTable, CompletionSet &set, const std::set<std::string> &schemas) -> void {
 
   for (auto &schema : schemas) {
     Symbol *symbol = symbolTable.resolve(schema);
@@ -676,7 +676,7 @@ static void insertViews(SymbolTable &symbolTable, CompletionSet &set, const std:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void insertRoutines(SymbolTable &symbolTable, CompletionSet &set, std::string const &schema) {
+static auto insertRoutines(SymbolTable &symbolTable, CompletionSet &set, std::string const &schema) -> void {
 
   SchemaSymbol *schemaSymbol = dynamic_cast<SchemaSymbol *>(symbolTable.resolve(schema));
   if (schemaSymbol != nullptr) {
@@ -688,8 +688,8 @@ static void insertRoutines(SymbolTable &symbolTable, CompletionSet &set, std::st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void insertColumns(SymbolTable &symbolTable, CompletionSet &set, const std::set<std::string> &schemas,
-                          const std::set<std::string> &tables) {
+static auto insertColumns(SymbolTable &symbolTable, CompletionSet &set, const std::set<std::string> &schemas,
+                          const std::set<std::string> &tables) -> void {
 
   for (auto &schema : schemas) {
     Symbol *symbol = symbolTable.resolve(schema);

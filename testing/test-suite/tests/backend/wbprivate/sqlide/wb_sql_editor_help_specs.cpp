@@ -55,7 +55,7 @@ struct HelpTestEntry {
   unsigned testLineNumber;  // The line number of the test entry for reporting.
 };
 
-void checkTopics(size_t start, const std::vector<HelpTestEntry> entries, TestData *dt) {
+auto checkTopics(size_t start, const std::vector<HelpTestEntry> entries, TestData *dt) -> void {
   for (size_t i = start; i < entries.size(); i++) {
     // Ignore disabled test cases or those defined for a different server version.
     if (entries[i].lowVersion > dt->version || entries[i].highVersion < dt->version)

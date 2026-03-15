@@ -34,17 +34,17 @@ namespace mforms {
     public:
       MenuWrapper(Menu* self);
 
-      static bool create(Menu* self);
-      static void remove_item(Menu* self, int i);
-      static int add_item(Menu* self, const std::string& caption, const std::string& action);
-      static int add_separator(Menu* self);
-      static int add_submenu(Menu* self, const std::string& caption, Menu* submenu);
-      static void set_item_enabled(Menu* self, int i, bool flag);
-      static void popup_at(Menu* self, Object* control, int x, int y);
-      static void clear(Menu* self);
+      static auto create(Menu* self) -> bool;
+      static auto remove_item(Menu* self, int i) -> void;
+      static auto add_item(Menu* self, const std::string& caption, const std::string& action) -> int;
+      static auto add_separator(Menu* self) -> int;
+      static auto add_submenu(Menu* self, const std::string& caption, Menu* submenu) -> int;
+      static auto set_item_enabled(Menu* self, int i, bool flag) -> void;
+      static auto popup_at(Menu* self, Object* control, int x, int y) -> void;
+      static auto clear(Menu* self) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

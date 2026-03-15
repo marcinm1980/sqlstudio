@@ -43,7 +43,7 @@ using namespace MySQL::Utilities::SysUtils;
 /**
  * Converts Windows specific mouse button identifiers to plain numbers for the back end.
  */
-static mforms::MouseButton convert_mouse_button(MouseButtons button) {
+static auto convert_mouse_button(MouseButtons button) -> mforms::MouseButton {
   switch (button) {
     case MouseButtons::Left:
       return mforms::MouseButtonLeft;
@@ -101,7 +101,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  void UpdateAndShowPopover(bool doAnimated) {
+  auto UpdateAndShowPopover(bool doAnimated) -> void {
     ComputeOutline();
     Region = gcnew System::Drawing::Region(outline);
 
@@ -131,7 +131,7 @@ protected:
 #define ARROW_SIZE 16 // Number of pixels from arrow base to arrow tip.
 #define ARROW_BASE 32 // Number of pixels the base line of the arrow is wide.
 
-  void ComputeCoordinatesAndPadding() {
+  auto ComputeCoordinatesAndPadding() -> void {
     // The base size is the size of the main part, without arrow.
     System::Drawing::Size actualSize = baseSize;
     actualSize.Width += 2 * DEFAULT_PADDING;
@@ -224,7 +224,7 @@ protected:
 
   //------------------------------------------------------------------------------------------------
 
-  void ComputeOutline() {
+  auto ComputeOutline() -> void {
     // Generate the outline of the actual content area.
     outline = gcnew GraphicsPath();
 
@@ -336,13 +336,13 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void SetBaseSize(int width, int height) {
+  auto SetBaseSize(int width, int height) -> void {
     baseSize = System::Drawing::Size(width, height);
   }
 
   //------------------------------------------------------------------------------------------------
 
-  void DoRepaint() {
+  auto DoRepaint() -> void {
     Invalidate();
   }
 
@@ -352,7 +352,7 @@ public:
    * Shows the popover with its hotspot at the given position. The window is moved accordingly and also
    * considers screen borders.
    */
-  void Show(int x, int y, mforms::StartPosition position) {
+  auto Show(int x, int y, mforms::StartPosition position) -> void {
     if (x < 0 && y < 0) {
       x = ::Cursor::Position.X + 8;
       y = ::Cursor::Position.Y + 8;
@@ -375,7 +375,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void HidePopup() {
+  auto HidePopup() -> void {
     if (animated && !IsDisposed) {
       for (int i = animationSteps; i > 0; i--) {
         Opacity = i / (float)animationSteps;
@@ -387,8 +387,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual property base::Rect DisplayRect {
-    base::Rect get() {
+  virtual auto get() -> property base::Rect DisplayRect { base::Rect {
       System::Drawing::Rectangle content_area = ClientRectangle;
       content_area.X += Padding.Left;
       content_area.Y += Padding.Top;
@@ -423,12 +422,11 @@ public:
 
     //------------------------------------------------------------------------------------------------
 
-    property mforms::PopoverStyle Style {
-    mforms::PopoverStyle get() {
+    auto get() -> property mforms::PopoverStyle Style { mforms::PopoverStyle {
       return style;
     };
 
-    void set(mforms::PopoverStyle aStyle) {
+    auto set(mforms::PopoverStyle aStyle) -> void {
       style = aStyle;
       switch (style) {
         case mforms::PopoverStyleTooltip:
@@ -450,7 +448,7 @@ PopoverWrapper::PopoverWrapper(mforms::Popover *backend) : ObjectWrapper(backend
 
 //--------------------------------------------------------------------------------------------------
 
-bool PopoverWrapper::create(mforms::Popover *backend, mforms::View *owner, mforms::PopoverStyle style) {
+auto PopoverWrapper::create(mforms::Popover *backend, mforms::View *owner, mforms::PopoverStyle style) -> bool {
   PopoverWrapper *wrapper = new PopoverWrapper(backend);
   PopoverControl ^ control = PopoverWrapper::Create<PopoverControl>(backend, wrapper);
   control->Style = style;
@@ -460,7 +458,7 @@ bool PopoverWrapper::create(mforms::Popover *backend, mforms::View *owner, mform
 
 //--------------------------------------------------------------------------------------------------
 
-void PopoverWrapper::destroy(mforms::Popover *backend) {
+auto PopoverWrapper::destroy(mforms::Popover *backend) -> void {
   PopoverControl ^ popover = PopoverWrapper::GetManagedObject<PopoverControl>(backend);
   PopoverWrapper *wrapper = PopoverWrapper::GetWrapper<PopoverWrapper>(popover);
   wrapper->_track_connection.disconnect();
@@ -468,7 +466,7 @@ void PopoverWrapper::destroy(mforms::Popover *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void PopoverWrapper::set_content(mforms::Popover *backend, mforms::View *content) {
+auto PopoverWrapper::set_content(mforms::Popover *backend, mforms::View *content) -> void {
   Control ^ child = PopoverWrapper::GetControl(content);
   child->Dock = DockStyle::Fill;
 
@@ -478,22 +476,22 @@ void PopoverWrapper::set_content(mforms::Popover *backend, mforms::View *content
 
 //--------------------------------------------------------------------------------------------------
 
-void PopoverWrapper::set_size(mforms::Popover *backend, int width, int height) {
+auto PopoverWrapper::set_size(mforms::Popover *backend, int width, int height) -> void {
   PopoverControl ^ popover = PopoverWrapper::GetManagedObject<PopoverControl>(backend);
   popover->SetBaseSize(width, height);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PopoverWrapper::show(mforms::Popover *backend, int spot_x, int spot_y, mforms::StartPosition position) {
+auto PopoverWrapper::show(mforms::Popover *backend, int spot_x, int spot_y, mforms::StartPosition position) -> void {
   PopoverControl ^ popover = PopoverWrapper::GetManagedObject<PopoverControl>(backend);
   popover->Show(spot_x, spot_y, position);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PopoverWrapper::show_and_track(mforms::Popover *backend, mforms::View *owner, int spot_x, int spot_y,
-                                    mforms::StartPosition position) {
+auto PopoverWrapper::show_and_track(mforms::Popover *backend, mforms::View *owner, int spot_x, int spot_y,
+                                    mforms::StartPosition position) -> void {
   PopoverControl ^ popover = PopoverWrapper::GetManagedObject<PopoverControl>(backend);
   PopoverWrapper *wrapper = PopoverWrapper::GetWrapper<PopoverWrapper>(popover);
   wrapper->_track_connection =
@@ -504,7 +502,7 @@ void PopoverWrapper::show_and_track(mforms::Popover *backend, mforms::View *owne
 
 //--------------------------------------------------------------------------------------------------
 
-bool PopoverWrapper::mouse_left_tracked_object() {
+auto PopoverWrapper::mouse_left_tracked_object() -> bool {
   _track_connection.disconnect();
 
   mforms::Popover *popover = GetBackend<mforms::Popover>();
@@ -515,21 +513,21 @@ bool PopoverWrapper::mouse_left_tracked_object() {
 
 //--------------------------------------------------------------------------------------------------
 
-base::Rect PopoverWrapper::get_content_rect(mforms::Popover *backend) {
+auto PopoverWrapper::get_content_rect(mforms::Popover *backend) -> base::Rect {
   PopoverControl ^ popover = PopoverWrapper::GetManagedObject<PopoverControl>(backend);
   return popover->DisplayRect;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PopoverWrapper::close(mforms::Popover *backend) {
+auto PopoverWrapper::close(mforms::Popover *backend) -> void {
   PopoverControl ^ popover = PopoverWrapper::GetManagedObject<PopoverControl>(backend);
   popover->HidePopup();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PopoverWrapper::setName(mforms::Popover *backend, const std::string &name) {
+auto PopoverWrapper::setName(mforms::Popover *backend, const std::string &name) -> void {
   PopoverControl ^ popover = PopoverWrapper::GetManagedObject<PopoverControl>(backend);
   popover->Name = CppStringToNative(name);
   popover->AccessibleName = popover->Name;
@@ -537,7 +535,7 @@ void PopoverWrapper::setName(mforms::Popover *backend, const std::string &name) 
 
 //--------------------------------------------------------------------------------------------------
 
-void PopoverWrapper::init() {
+auto PopoverWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_popover_impl.create = &PopoverWrapper::create;

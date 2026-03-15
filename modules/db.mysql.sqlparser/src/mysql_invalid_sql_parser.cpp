@@ -57,13 +57,13 @@ Mysql_invalid_sql_parser::Mysql_invalid_sql_parser() : _leading_use_found(false)
   NULL_STATE_KEEPER
 }
 
-int Mysql_invalid_sql_parser::parse_inserts(db_TableRef table, const std::string &sql) {
+auto Mysql_invalid_sql_parser::parse_inserts(db_TableRef table, const std::string &sql) -> int {
   NULL_STATE_KEEPER
 
   return pr_processed; //!
 }
 
-Sql_parser_base::Parse_result Mysql_invalid_sql_parser::process_create_trigger_statement(const SqlAstNode *tree) {
+auto Mysql_invalid_sql_parser::process_create_trigger_statement(const SqlAstNode *tree) -> Sql_parser_base::Parse_result {
   Parse_result result = Mysql_sql_parser::process_create_trigger_statement(tree);
   if (result == pr_irrelevant) {
     ++_stub_num;
@@ -88,7 +88,7 @@ Sql_parser_base::Parse_result Mysql_invalid_sql_parser::process_create_trigger_s
   return result;
 }
 
-int Mysql_invalid_sql_parser::parse_triggers(db_TableRef table, const std::string &sql) {
+auto Mysql_invalid_sql_parser::parse_triggers(db_TableRef table, const std::string &sql) -> int {
   NULL_STATE_KEEPER
 
   _active_grand_obj = table;
@@ -109,7 +109,7 @@ int Mysql_invalid_sql_parser::parse_triggers(db_TableRef table, const std::strin
 /**
  * Helper to determine if an explicit DELIMITER statement in the sql string is needed.
  */
-bool needs_delimiter_for_trigger(const std::string &sql) {
+auto needs_delimiter_for_trigger(const std::string &sql) -> bool {
   std::vector<std::pair<size_t, size_t> > statement_ranges;
   SqlFacade::Ref facade = SqlFacade::instance_for_rdbms_name("Mysql");
   facade->splitSqlScript(sql.c_str(), sql.size(), ";", statement_ranges);
@@ -136,7 +136,7 @@ bool needs_delimiter_for_trigger(const std::string &sql) {
 
 //--------------------------------------------------------------------------------------------------
 
-int Mysql_invalid_sql_parser::parse_trigger(db_TriggerRef trigger, const std::string &sql) {
+auto Mysql_invalid_sql_parser::parse_trigger(db_TriggerRef trigger, const std::string &sql) -> int {
   NULL_STATE_KEEPER
 
   _active_grand_obj = db_mysql_TableRef::cast_from(trigger->owner());
@@ -171,7 +171,7 @@ int Mysql_invalid_sql_parser::parse_trigger(db_TriggerRef trigger, const std::st
 
 //--------------------------------------------------------------------------------------------------
 
-int Mysql_invalid_sql_parser::parse_routines(db_RoutineGroupRef routine_group, const std::string &sql) {
+auto Mysql_invalid_sql_parser::parse_routines(db_RoutineGroupRef routine_group, const std::string &sql) -> int {
   NULL_STATE_KEEPER
 
   _active_grand_obj = routine_group;
@@ -193,7 +193,7 @@ int Mysql_invalid_sql_parser::parse_routines(db_RoutineGroupRef routine_group, c
   return res;
 }
 
-int Mysql_invalid_sql_parser::parse_routine(db_RoutineRef routine, const std::string &sql) {
+auto Mysql_invalid_sql_parser::parse_routine(db_RoutineRef routine, const std::string &sql) -> int {
   NULL_STATE_KEEPER
 
   _active_obj = routine;
@@ -213,7 +213,7 @@ int Mysql_invalid_sql_parser::parse_routine(db_RoutineRef routine, const std::st
   return res;
 }
 
-int Mysql_invalid_sql_parser::parse_view(db_ViewRef view, const std::string &sql) {
+auto Mysql_invalid_sql_parser::parse_view(db_ViewRef view, const std::string &sql) -> int {
   NULL_STATE_KEEPER
 
   _active_obj = view;
@@ -230,7 +230,7 @@ int Mysql_invalid_sql_parser::parse_view(db_ViewRef view, const std::string &sql
   return parse_invalid_sql_script(sql_);
 }
 
-int Mysql_invalid_sql_parser::parse_invalid_sql_script(const std::string &sql) {
+auto Mysql_invalid_sql_parser::parse_invalid_sql_script(const std::string &sql) -> int {
   set_options(DictRef());
 
   if (!_active_obj_list2.is_valid())
@@ -291,7 +291,7 @@ int Mysql_invalid_sql_parser::parse_invalid_sql_script(const std::string &sql) {
   return res;
 }
 
-int Mysql_invalid_sql_parser::process_sql_statement(const SqlAstNode *tree) {
+auto Mysql_invalid_sql_parser::process_sql_statement(const SqlAstNode *tree) -> int {
   int err = Mysql_sql_parser::process_sql_statement(tree);
   if (0 != err) {
     ++_stub_num;
@@ -324,17 +324,17 @@ int Mysql_invalid_sql_parser::process_sql_statement(const SqlAstNode *tree) {
   return err;
 }
 
-void Mysql_invalid_sql_parser::create_stub_view(db_DatabaseDdlObjectRef &obj) {
+auto Mysql_invalid_sql_parser::create_stub_view(db_DatabaseDdlObjectRef &obj) -> void {
   obj = db_mysql_ViewRef::cast_from(_active_obj);
   obj->sqlDefinition(strip_sql_statement(sql_statement(), _strip_sql));
 }
 
-void Mysql_invalid_sql_parser::create_stub_routine(db_DatabaseDdlObjectRef &obj) {
+auto Mysql_invalid_sql_parser::create_stub_routine(db_DatabaseDdlObjectRef &obj) -> void {
   obj = db_mysql_RoutineRef::cast_from(_active_obj);
   obj->sqlDefinition(strip_sql_statement(sql_statement(), _strip_sql));
 }
 
-void Mysql_invalid_sql_parser::create_stub_group_routine(db_DatabaseDdlObjectRef &obj) {
+auto Mysql_invalid_sql_parser::create_stub_group_routine(db_DatabaseDdlObjectRef &obj) -> void {
   db_mysql_RoutineRef routine(grt::Initialized);
   routine->owner(_active_schema);
   setup_stub_obj(routine, true);
@@ -345,17 +345,17 @@ void Mysql_invalid_sql_parser::create_stub_group_routine(db_DatabaseDdlObjectRef
   obj = routine;
 }
 
-void Mysql_invalid_sql_parser::remove_stub_group_routine(db_DatabaseDdlObjectRef &obj) {
+auto Mysql_invalid_sql_parser::remove_stub_group_routine(db_DatabaseDdlObjectRef &obj) -> void {
   _active_obj_list2.remove_value(obj);
 }
 
-void Mysql_invalid_sql_parser::shape_group_routine(db_mysql_RoutineRef &obj) {
+auto Mysql_invalid_sql_parser::shape_group_routine(db_mysql_RoutineRef &obj) -> void {
   if (!find_named_object_in_list(_active_obj_list2, obj->name(), _case_sensitive_identifiers).is_valid())
     _active_obj_list2.insert(obj);
   obj->sequenceNumber(_next_group_routine_seqno++);
 }
 
-void Mysql_invalid_sql_parser::create_stub_trigger(db_DatabaseDdlObjectRef &obj) {
+auto Mysql_invalid_sql_parser::create_stub_trigger(db_DatabaseDdlObjectRef &obj) -> void {
   if (_active_obj.is_valid()) {
     obj = db_mysql_TriggerRef::cast_from(_active_obj);
     obj->sqlDefinition(strip_sql_statement(sql_statement(), _strip_sql));
@@ -368,11 +368,11 @@ void Mysql_invalid_sql_parser::create_stub_trigger(db_DatabaseDdlObjectRef &obj)
   }
 }
 
-void Mysql_invalid_sql_parser::shape_trigger(db_mysql_TriggerRef &obj) {
+auto Mysql_invalid_sql_parser::shape_trigger(db_mysql_TriggerRef &obj) -> void {
   // obj->sequenceNumber(_next_trigger_seqno++);
 }
 
-void Mysql_invalid_sql_parser::setup_stub_obj(db_DatabaseDdlObjectRef obj, bool set_name) {
+auto Mysql_invalid_sql_parser::setup_stub_obj(db_DatabaseDdlObjectRef obj, bool set_name) -> void {
   // First set the sql then the name. Both trigger a UI refresh (<sigh>) but if the name comes first
   // wrong sql is loaded.
   obj->sqlDefinition(strip_sql_statement(sql_statement(), _strip_sql));
@@ -386,7 +386,7 @@ void Mysql_invalid_sql_parser::setup_stub_obj(db_DatabaseDdlObjectRef obj, bool 
     db_mysql_RoutineRef::cast_from(obj)->sequenceNumber(_next_group_routine_seqno++);
 }
 
-std::string Mysql_invalid_sql_parser::stub_obj_name() {
+auto Mysql_invalid_sql_parser::stub_obj_name() -> std::string {
   std::ostringstream oss;
   oss << _stub_name << _stub_num;
   return oss.str();

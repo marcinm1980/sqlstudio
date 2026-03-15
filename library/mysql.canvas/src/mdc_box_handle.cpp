@@ -37,7 +37,7 @@ BoxHandle::BoxHandle(InteractionLayer *ilayer, CanvasItem *item, const Point &po
 BoxHandle::~BoxHandle() {
 }
 
-Rect BoxHandle::get_bounds() const {
+auto BoxHandle::get_bounds() const -> Rect {
   Rect r;
 
   // try to unscale the zoom factor, so the handles are +/- the same size regardless of the zoom level

@@ -188,9 +188,8 @@ static uchar NEAR sort_order_eucjpms[]=
 #define iseucjpms_ss3(c) (((c)&0xff) == 0x8f)
 
 
-static int ismbchar_eucjpms(CHARSET_INFO *cs __attribute__((unused)),
-		  const char* p, const char *e)
-{
+static auto ismbchar_eucjpms(CHARSET_INFO *cs __attribute__((unused)),
+		  const char* p, const char *e) -> int {
   return ((*(uchar*)(p)<0x80)? 0:\
     iseucjpms(*(p)) && (e)-(p)>1 && iseucjpms(*((p)+1))? 2:\
     iseucjpms_ss2(*(p)) && (e)-(p)>1 && iskata(*((p)+1))? 2:\
@@ -198,8 +197,7 @@ static int ismbchar_eucjpms(CHARSET_INFO *cs __attribute__((unused)),
     0);
 }
 
-static int mbcharlen_eucjpms(CHARSET_INFO *cs __attribute__((unused)),uint c)
-{
+static auto mbcharlen_eucjpms(CHARSET_INFO *cs __attribute__((unused)),uint c) -> int {
   return (iseucjpms(c)? 2: iseucjpms_ss2(c)? 2: iseucjpms_ss3(c)? 3: 1);
 }
 
@@ -240,21 +238,17 @@ static uint16 tab_jisx0201_uni[256]={
 };
 
 
-static int 
-my_mb_wc_jisx0201(CHARSET_INFO *cs  __attribute__((unused)),
+static auto my_mb_wc_jisx0201(CHARSET_INFO *cs  __attribute__((unused)),
 		  my_wc_t *wc,const uchar *s,
-		  const uchar *e __attribute__((unused)))
-{
+		  const uchar *e __attribute__((unused))) -> int {
   wc[0]=tab_jisx0201_uni[*s];
   return (!wc[0] && s[0]) ? -1 : 1;
 }
 
 
-static int
-my_wc_mb_jisx0201(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_wc_mb_jisx0201(CHARSET_INFO *cs __attribute__((unused)),
 		  my_wc_t wc, uchar *s, 
-		  uchar *e __attribute__((unused)))
-{
+		  uchar *e __attribute__((unused))) -> int {
 
   if ((int) wc <= 0x7D)
   {
@@ -1410,8 +1404,7 @@ static uint16 tab_nec13_uni0[]={
 0x2261,0x222B,0x222E,0x2211,0x221A,0x22A5,0x2220,0x221F,
 0x22BF,0x2235,0x2229,0x222A};
 
-static int
-my_jisx0208_uni_onechar(int code){
+static auto my_jisx0208_uni_onechar(int code) -> int {
     if ((code>=0x2121)&&(code<=0x217E))
       return(tab_jisx0208_uni0[code-0x2121]);
     if ((code>=0x2221)&&(code<=0x227E))
@@ -4344,8 +4337,7 @@ static uint16 tab_uni_jisx020858[]={
 static uint16 tab_uni_jisx020859[]={
 0x2171,0x2172,0x224C,0x2131,     0,0x216F};
 
-static int
-my_uni_jisx0208_onechar(int code){
+static auto my_uni_jisx0208_onechar(int code) -> int {
     if ((code>=0x005C)&&(code<=0x005C))
       return(tab_uni_jisx02080[code-0x005C]);
     if ((code>=0x00A2)&&(code<=0x00B6))
@@ -7113,8 +7105,7 @@ static uint16 tab_uni_jisx021249[]={
 static uint16 tab_uni_jisx021250[]={
 0x2243};
 
-static int
-my_uni_jisx0212_onechar(int code){
+static auto my_uni_jisx0212_onechar(int code) -> int {
     if ((code>=0x007E)&&(code<=0x007E))
       return(tab_uni_jisx02120[code-0x007E]);
     if ((code>=0x00A1)&&(code<=0x017E))
@@ -8232,8 +8223,7 @@ static uint16 tab_jisx0212_uni71[]={
 0x9592,0xF9DC,0xFA29,0x973B,0x974D,0x9751,0xFA2A,0xFA2B,
 0xFA2C,0x999E,0x9AD9,0x9B72,0xFA2D,0x9ED1};
 
-static int
-my_jisx0212_uni_onechar(int code){
+static auto my_jisx0212_uni_onechar(int code) -> int {
     if ((code>=0x222F)&&(code<=0x2244))
       return(tab_jisx0212_uni0[code-0x222F]);
     if ((code>=0x226B)&&(code<=0x2271))
@@ -8390,9 +8380,8 @@ my_jisx0212_uni_onechar(int code){
 */
 
 static
-uint my_well_formed_len_eucjpms(CHARSET_INFO *cs __attribute__((unused)),
-                             const char *beg, const char *end, uint pos, int *error)
-{
+auto my_well_formed_len_eucjpms(CHARSET_INFO *cs __attribute__((unused)),
+                             const char *beg, const char *end, uint pos, int *error) -> uint {
   const uchar *b= (uchar *) beg;
   *error=0;
 
@@ -8437,9 +8426,8 @@ uint my_well_formed_len_eucjpms(CHARSET_INFO *cs __attribute__((unused)),
 
 
 static
-uint my_numcells_eucjp(CHARSET_INFO *cs __attribute__((unused)),
-                       const char *str, const char *strend)
-{
+auto my_numcells_eucjp(CHARSET_INFO *cs __attribute__((unused)),
+                       const char *str, const char *strend) -> uint {
   uint clen= 0;
   const unsigned char *b= (const unsigned char *) str;
   const unsigned char *e= (const unsigned char *) strend;
@@ -8470,9 +8458,7 @@ uint my_numcells_eucjp(CHARSET_INFO *cs __attribute__((unused)),
   return clen;
 }
 
-static int
-my_mb_wc_euc_jp(CHARSET_INFO *cs,my_wc_t *pwc, const uchar *s, const uchar *e)
-{
+static auto my_mb_wc_euc_jp(CHARSET_INFO *cs,my_wc_t *pwc, const uchar *s, const uchar *e) -> int {
   int c1,c2,c3;
   
   if (s >= e)
@@ -8557,9 +8543,7 @@ my_mb_wc_euc_jp(CHARSET_INFO *cs,my_wc_t *pwc, const uchar *s, const uchar *e)
   return MY_CS_ILSEQ;
 }
 
-static int
-my_wc_mb_euc_jp(CHARSET_INFO *c,my_wc_t wc, unsigned char *s, unsigned char *e)
-{
+static auto my_wc_mb_euc_jp(CHARSET_INFO *c,my_wc_t wc, unsigned char *s, unsigned char *e) -> int {
   unsigned char c1;
   int jp;
   

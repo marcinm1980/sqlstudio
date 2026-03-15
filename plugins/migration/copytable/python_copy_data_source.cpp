@@ -71,7 +71,7 @@ PythonCopyDataSource::~PythonCopyDataSource() {
   PyGILState_Release(state);
 }
 
-bool PythonCopyDataSource::pystring_to_string(PyObject *strobject, std::string &ret_string, bool convert = false) {
+auto PythonCopyDataSource::pystring_to_string(PyObject *strobject, std::string &ret_string, bool convert = false) -> bool {
   if (strobject == Py_None) {
     ret_string = "";
     return true;
@@ -196,9 +196,9 @@ void PythonCopyDataSource::_init() // This has to be executed from the same thre
   PyGILState_Release(state);
 }
 
-size_t PythonCopyDataSource::count_rows(const std::string &schema, const std::string &table,
+auto PythonCopyDataSource::count_rows(const std::string &schema, const std::string &table,
                                         const std::vector<std::string> &pk_columns, const CopySpec &spec,
-                                        const std::vector<std::string> &last_pkeys) {
+                                        const std::vector<std::string> &last_pkeys) -> size_t {
   _init();
 
   PyGILState_STATE state = PyGILState_Ensure();
@@ -276,9 +276,9 @@ size_t PythonCopyDataSource::count_rows(const std::string &schema, const std::st
   return count;
 }
 
-std::shared_ptr<std::vector<ColumnInfo> > PythonCopyDataSource::begin_select_table(
+auto PythonCopyDataSource::begin_select_table(
   const std::string &schema, const std::string &table, const std::vector<std::string> &pk_columns,
-  const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) {
+  const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) -> std::shared_ptr<std::vector<ColumnInfo> > {
   _init();
 
   std::shared_ptr<std::vector<ColumnInfo> > columns(new std::vector<ColumnInfo>());
@@ -372,10 +372,10 @@ std::shared_ptr<std::vector<ColumnInfo> > PythonCopyDataSource::begin_select_tab
   return columns;
 }
 
-void PythonCopyDataSource::end_select_table() {
+auto PythonCopyDataSource::end_select_table() -> void {
 }
 
-bool PythonCopyDataSource::fetch_row(RowBuffer &rowbuffer) {
+auto PythonCopyDataSource::fetch_row(RowBuffer &rowbuffer) -> bool {
   PyGILState_STATE state = PyGILState_Ensure();
   if (!_cursor || _cursor == Py_None) {
     if (PyErr_Occurred())

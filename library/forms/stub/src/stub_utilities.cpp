@@ -48,8 +48,8 @@ extern Global_test_parameters *test_params;
 
 DEFAULT_LOG_DOMAIN("mforms");
 
-int UtilitiesWrapper::show_message(const std::string &title, const std::string &text, const std::string &ok,
-                                   const std::string &cancel, const std::string &other) {
+auto UtilitiesWrapper::show_message(const std::string &title, const std::string &text, const std::string &ok,
+                                   const std::string &cancel, const std::string &other) -> int {
   logInfo("DIALOG: %s: %s\n", title.c_str(), text.c_str());
   if (message_callback)
     return message_callback();
@@ -59,8 +59,8 @@ int UtilitiesWrapper::show_message(const std::string &title, const std::string &
   return mforms::ResultOk;
 }
 
-int UtilitiesWrapper::show_error(const std::string &title, const std::string &text, const std::string &ok,
-                                 const std::string &cancel, const std::string &other) {
+auto UtilitiesWrapper::show_error(const std::string &title, const std::string &text, const std::string &ok,
+                                 const std::string &cancel, const std::string &other) -> int {
   logInfo("DIALOG: %s: %s\n", title.c_str(), text.c_str());
   if (message_callback)
     return message_callback();
@@ -68,8 +68,8 @@ int UtilitiesWrapper::show_error(const std::string &title, const std::string &te
   return mforms::ResultOk;
 }
 
-int UtilitiesWrapper::show_warning(const std::string &title, const std::string &text, const std::string &ok,
-                                   const std::string &cancel, const std::string &other) {
+auto UtilitiesWrapper::show_warning(const std::string &title, const std::string &text, const std::string &ok,
+                                   const std::string &cancel, const std::string &other) -> int {
   logInfo("DIALOG: %s: %s\n", title.c_str(), text.c_str());
   if (message_callback)
     return message_callback();
@@ -89,51 +89,51 @@ int UtilitiesWrapper::show_message_with_checkbox(
   return mforms::ResultOk;
 }
 
-void UtilitiesWrapper::show_wait_message(const std::string &title, const std::string &text) {
+auto UtilitiesWrapper::show_wait_message(const std::string &title, const std::string &text) -> void {
 }
 
-bool UtilitiesWrapper::hide_wait_message() {
+auto UtilitiesWrapper::hide_wait_message() -> bool {
   return true;
 }
 
-bool UtilitiesWrapper::run_cancelable_wait_message(const std::string &title, const std::string &text,
+auto UtilitiesWrapper::run_cancelable_wait_message(const std::string &title, const std::string &text,
                                                    const std::function<void()> &start_task,
-                                                   const std::function<bool()> &cancel_task) {
+                                                   const std::function<bool()> &cancel_task) -> bool {
   return true;
 }
 
-void UtilitiesWrapper::stop_cancelable_wait_message() {
+auto UtilitiesWrapper::stop_cancelable_wait_message() -> void {
 }
 
-void UtilitiesWrapper::set_clipboard_text(const std::string &text) {
+auto UtilitiesWrapper::set_clipboard_text(const std::string &text) -> void {
 }
 
-std::string UtilitiesWrapper::get_clipboard_text() {
+auto UtilitiesWrapper::get_clipboard_text() -> std::string {
   return "";
 }
 
-void UtilitiesWrapper::open_url(const std::string &url) {
+auto UtilitiesWrapper::open_url(const std::string &url) -> void {
 }
 
-std::string UtilitiesWrapper::get_special_folder(mforms::FolderType type) {
+auto UtilitiesWrapper::get_special_folder(mforms::FolderType type) -> std::string {
   return "./";
 }
 
-mforms::TimeoutHandle UtilitiesWrapper::add_timeout(float interval, const std::function<bool()> &slot) {
+auto UtilitiesWrapper::add_timeout(float interval, const std::function<bool()> &slot) -> mforms::TimeoutHandle {
   return 0;
 }
 
-void UtilitiesWrapper::cancel_timeout(mforms::TimeoutHandle) {
+auto UtilitiesWrapper::cancel_timeout(mforms::TimeoutHandle) -> void {
 }
 
-void UtilitiesWrapper::store_password(const std::string &service, const std::string &account,
-                                      const std::string &password) {
+auto UtilitiesWrapper::store_password(const std::string &service, const std::string &account,
+                                      const std::string &password) -> void {
   passwords()[service + ":" + account] = password;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool UtilitiesWrapper::find_password(const std::string &service, const std::string &account, std::string &password) {
+auto UtilitiesWrapper::find_password(const std::string &service, const std::string &account, std::string &password) -> bool {
   static bool loaded_passwords = false;
   bool ret_val = false;
   if (!loaded_passwords) {
@@ -167,7 +167,7 @@ bool UtilitiesWrapper::find_password(const std::string &service, const std::stri
 
 //--------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::forget_password(const std::string &service, const std::string &account) {
+auto UtilitiesWrapper::forget_password(const std::string &service, const std::string &account) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -176,40 +176,40 @@ enum { Gnome_keyring_results_size = 10 };
 
 //--------------------------------------------------------------------------------------------------
 
-void *UtilitiesWrapper::perform_from_main_thread(const std::function<void *()> &slot, bool wait) {
+auto UtilitiesWrapper::perform_from_main_thread(const std::function<void *()> &slot, bool wait) -> void * {
   return slot();
 };
 
 //--------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::beep() {
+auto UtilitiesWrapper::beep() -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::revealFile(const std::string &url) {
+auto UtilitiesWrapper::revealFile(const std::string &url) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool UtilitiesWrapper::moveToTrash(const std::string &path) {
+auto UtilitiesWrapper::moveToTrash(const std::string &path) -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::setThreadName(const std::string &name) {
+auto UtilitiesWrapper::setThreadName(const std::string &name) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-double UtilitiesWrapper::getTextWidth(const std::string &text, const std::string &font) {
+auto UtilitiesWrapper::getTextWidth(const std::string &text, const std::string &font) -> double {
   return 0.0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::init() {
+auto UtilitiesWrapper::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_utilities_impl.show_message = &UtilitiesWrapper::show_message;
@@ -241,7 +241,7 @@ void UtilitiesWrapper::init() {
 
 //--------------------------------------------------------------------------------------------------
 
-void UtilitiesWrapper::set_message_callback(std::function<mforms::DialogResult(void)> callback) {
+auto UtilitiesWrapper::set_message_callback(std::function<mforms::DialogResult(void)> callback) -> void {
   message_callback = callback;
 }
 

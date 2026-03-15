@@ -39,7 +39,7 @@ using base::strfmt;
 //
 //==============================================================================
 
-void drop_eol(const int column, Glib::ValueBase* vbase) {
+auto drop_eol(const int column, Glib::ValueBase* vbase) -> void {
   if (column == 7) {
     GValue* vb = vbase->gobj();
     char* str = g_value_dup_string(vb);
@@ -52,7 +52,7 @@ void drop_eol(const int column, Glib::ValueBase* vbase) {
   }
 }
 
-static const std::vector<bec::NodeId> selected_nodeids(GridView& g) {
+static auto selected_nodeids(GridView& g) -> const std::vector<bec::NodeId> {
   std::vector<int> rows = g.get_selected_rows();
 
   std::vector<bec::NodeId> entries;
@@ -78,7 +78,7 @@ struct SigcBlocker {
   sigc::connection& _c;
 };
 
-static void copy_accessibility_name(Gtk::Widget& w) {
+static auto copy_accessibility_name(Gtk::Widget& w) -> void {
   Glib::RefPtr<Atk::Object> acc = w.get_accessible();
   if (acc)
     acc->set_name(w.get_name());
@@ -214,7 +214,7 @@ QueryOutputView::~QueryOutputView() {
   _refresh_ui_sig_details.disconnect();
 }
 //------------------------------------------------------------------------------
-bool QueryOutputView::on_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip) {
+auto QueryOutputView::on_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip) -> bool {
   Gtk::TreePath path;
   int bx, by;
   _action_output.convert_widget_to_bin_window_coords(x, y, bx, by);
@@ -236,14 +236,14 @@ bool QueryOutputView::on_query_tooltip(int x, int y, bool keyboard_tooltip, cons
 }
 
 //------------------------------------------------------------------------------
-void QueryOutputView::mode_change_requested() {
+auto QueryOutputView::mode_change_requested() -> void {
   const int mode = _mode.get_active_row_number();
   if (mode >= 0)
     _note.set_current_page(mode);
 }
 
 //------------------------------------------------------------------------------
-void QueryOutputView::refresh() {
+auto QueryOutputView::refresh() -> void {
   const int mode = _mode.get_active_row_number();
   switch (mode) {
     case 2: // History output
@@ -274,7 +274,7 @@ void QueryOutputView::refresh() {
 }
 
 //------------------------------------------------------------------------------
-int QueryOutputView::on_history_entries_refresh() {
+auto QueryOutputView::on_history_entries_refresh() -> int {
   SigcBlocker signal_block(_on_history_entries_selection_changed_conn);
 
   _entries_grid.refresh(false);
@@ -284,7 +284,7 @@ int QueryOutputView::on_history_entries_refresh() {
 }
 
 //------------------------------------------------------------------------------
-int QueryOutputView::on_history_details_refresh() {
+auto QueryOutputView::on_history_details_refresh() -> int {
   SigcBlocker signal_block(_on_history_entries_selection_changed_conn);
 
   _details_grid.refresh(false);
@@ -294,7 +294,7 @@ int QueryOutputView::on_history_details_refresh() {
 }
 
 //------------------------------------------------------------------------------
-void QueryOutputView::on_history_entries_selection_changed() {
+auto QueryOutputView::on_history_entries_selection_changed() -> void {
   const int row = _entries_grid.current_row();
   if (-1 < row) {
     _be->history()->current_entry(row);
@@ -303,13 +303,13 @@ void QueryOutputView::on_history_entries_selection_changed() {
 }
 
 //------------------------------------------------------------------------------
-void QueryOutputView::output_menu_will_show() {
+auto QueryOutputView::output_menu_will_show() -> void {
   std::vector<int> sel_indices = _action_output.get_selected_rows();
   _be->log()->set_selection(sel_indices);
 }
 
 //------------------------------------------------------------------------------
-void QueryOutputView::handle_history_context_menu(const std::string& action) {
+auto QueryOutputView::handle_history_context_menu(const std::string& action) -> void {
   DbSqlEditorHistory::EntriesModel::Ref entries_model = _be->history()->entries_model();
 
   const std::vector<bec::NodeId> entries = selected_nodeids(_entries_grid);
@@ -358,7 +358,7 @@ void QueryOutputView::handle_history_context_menu(const std::string& action) {
 }
 
 //------------------------------------------------------------------------------
-void QueryOutputView::history_context_menu_responder() {
+auto QueryOutputView::history_context_menu_responder() -> void {
   const std::vector<bec::NodeId> entries = selected_nodeids(_entries_grid);
   const bec::MenuItemList menuitems = _be->history()->entries_model()->get_popup_items_for_nodes(entries);
 
@@ -367,7 +367,7 @@ void QueryOutputView::history_context_menu_responder() {
 }
 
 //------------------------------------------------------------------------------
-void QueryOutputView::output_text(const std::string& text, const bool bring_to_front) {
+auto QueryOutputView::output_text(const std::string& text, const bool bring_to_front) -> void {
   Glib::RefPtr<Gtk::TextBuffer> buf = _text_output.get_buffer();
   buf->insert(buf->end(), text);
 

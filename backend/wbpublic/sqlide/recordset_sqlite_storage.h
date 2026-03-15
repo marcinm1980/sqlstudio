@@ -36,7 +36,7 @@ namespace sqlite {
 class WBPUBLICBACKEND_PUBLIC_FUNC Recordset_sqlite_storage : public Recordset_sql_storage {
 public:
   using Ref = std::shared_ptr<Recordset_sqlite_storage>;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Recordset_sqlite_storage());
   }
   virtual ~Recordset_sqlite_storage();
@@ -45,22 +45,22 @@ protected:
   Recordset_sqlite_storage();
 
 protected:
-  virtual void do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db);
-  virtual void do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db);
-  virtual void do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
-                                   sqlite::variant_t &blob_value);
+  virtual auto do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  virtual auto do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  virtual auto do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
+                                   sqlite::variant_t &blob_value) -> void;
 
 protected:
-  virtual void run_sql_script(const Sql_script &sql_script, bool skip_commit);
+  virtual auto run_sql_script(const Sql_script &sql_script, bool skip_commit) -> void;
 
 protected:
-  std::string decorated_sql_query(Recordset::Column_names &column_names);
+  auto decorated_sql_query(Recordset::Column_names &column_names) -> std::string;
 
 public:
-  void db_path(const std::string &db_path) {
+  auto db_path(const std::string &db_path) -> void {
     _db_path = db_path;
   }
-  const std::string &db_path() const {
+  auto db_path() const -> const std::string & {
     return _db_path;
   }
 

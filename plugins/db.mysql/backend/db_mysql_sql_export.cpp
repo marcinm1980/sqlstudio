@@ -76,11 +76,11 @@ DbMySQLSQLExport::DbMySQLSQLExport(db_mysql_CatalogRef catalog) : DbMySQLValidat
   _triggers_exc_model = std::shared_ptr<bec::GrtStringListModel>(new bec::GrtStringListModel());
 }
 
-db_mysql_CatalogRef DbMySQLSQLExport::get_model_catalog() {
+auto DbMySQLSQLExport::get_model_catalog() -> db_mysql_CatalogRef {
   return db_mysql_CatalogRef::cast_from(grt::GRT::get()->get("/wb/doc/physicalModels/0/catalog"));
 }
 
-void DbMySQLSQLExport::set_option(const std::string &name, bool value) {
+auto DbMySQLSQLExport::set_option(const std::string &name, bool value) -> void {
   if (name.compare("GenerateDrops") == 0)
     _gen_drops = value;
   else if (name.compare("GenerateSchemaDrops") == 0)
@@ -125,14 +125,14 @@ void DbMySQLSQLExport::set_option(const std::string &name, bool value) {
     _sortTablesAlphabetically = value;
 }
 
-void DbMySQLSQLExport::set_option(const std::string &name, const std::string &value) {
+auto DbMySQLSQLExport::set_option(const std::string &name, const std::string &value) -> void {
   if (name.compare("OutputFileName") == 0)
     _output_filename = value;
   else if (name.compare("OutputScriptHeader") == 0)
     _output_header = value;
 }
 
-void DbMySQLSQLExport::set_db_options_for_version(const GrtVersionRef &version) {
+auto DbMySQLSQLExport::set_db_options_for_version(const GrtVersionRef &version) -> void {
   SQLGeneratorInterfaceImpl *diffsql_module =
     dynamic_cast<SQLGeneratorInterfaceImpl *>(grt::GRT::get()->get_module("DbMySQL"));
   if (diffsql_module != NULL)
@@ -140,11 +140,11 @@ void DbMySQLSQLExport::set_db_options_for_version(const GrtVersionRef &version) 
                                                             (int)version->releaseNumber());
 }
 
-void DbMySQLSQLExport::set_db_options(grt::DictRef &db_options) {
+auto DbMySQLSQLExport::set_db_options(grt::DictRef &db_options) -> void {
   _db_options = db_options;
 }
 
-grt::StringListRef convert_string_vector_to_grt_list(const std::vector<std::string> &v) {
+auto convert_string_vector_to_grt_list(const std::vector<std::string> &v) -> grt::StringListRef {
   grt::StringListRef grt_list(grt::Initialized);
   for (std::vector<std::string>::const_iterator e = v.end(), it = v.begin(); it != e; it++) {
     grt_list.insert(grt::StringRef(*it));
@@ -164,9 +164,9 @@ grt::StringListRef convert_string_vector_to_grt_list(const std::vector<std::stri
 
 typedef std::map<std::string, std::list<std::string> > StringListMap;
 
-std::vector<std::string> get_names(const bec::GrtStringListModel *list,
+auto get_names(const bec::GrtStringListModel *list,
                                    const std::map<std::string, GrtNamedObjectRef> &obj_map,
-                                   std::set<db_mysql_SchemaRef> &schemas, const bool case_sensitive) {
+                                   std::set<db_mysql_SchemaRef> &schemas, const bool case_sensitive) -> std::vector<std::string> {
   std::vector<std::string> work_vector;
   const std::vector<std::string> &list_items = list->items();
   for (std::vector<std::string>::const_iterator It = list_items.begin(); It != list_items.end(); ++It) {
@@ -182,7 +182,7 @@ std::vector<std::string> get_names(const bec::GrtStringListModel *list,
   return work_vector;
 };
 
-grt::DictRef DbMySQLSQLExport::get_options_as_dict() {
+auto DbMySQLSQLExport::get_options_as_dict() -> grt::DictRef {
   grt::DictRef options(true);
 
   // general options
@@ -251,7 +251,7 @@ grt::DictRef DbMySQLSQLExport::get_options_as_dict() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DbMySQLSQLExport::start_export(bool wait_finish) {
+auto DbMySQLSQLExport::start_export(bool wait_finish) -> void {
   bec::GRTTask::Ref task = bec::GRTTask::create_task("SQL export", bec::GRTManager::get()->get_dispatcher(),
                                                      std::bind(&DbMySQLSQLExport::export_task, this, grt::StringRef()));
 
@@ -265,7 +265,7 @@ void DbMySQLSQLExport::start_export(bool wait_finish) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DbMySQLSQLExport::export_finished(grt::ValueRef res) {
+auto DbMySQLSQLExport::export_finished(grt::ValueRef res) -> void {
   CatalogMap cmap;
   update_all_old_names(get_model_catalog(), false, cmap);
   logInfo("%s\n", grt::StringRef::cast_from(res).c_str());
@@ -273,7 +273,7 @@ void DbMySQLSQLExport::export_finished(grt::ValueRef res) {
     _task_finish_cb();
 }
 
-ValueRef DbMySQLSQLExport::export_task(grt::StringRef) {
+auto DbMySQLSQLExport::export_task(grt::StringRef) -> ValueRef {
   bec::Reporter rep;
 
   try {
@@ -339,12 +339,12 @@ ValueRef DbMySQLSQLExport::export_task(grt::StringRef) {
   }
 }
 
-void DbMySQLSQLExport::setup_grt_string_list_models_from_catalog(
+auto DbMySQLSQLExport::setup_grt_string_list_models_from_catalog(
   bec::GrtStringListModel **users_model, bec::GrtStringListModel **users_exc_model,
   bec::GrtStringListModel **tables_model, bec::GrtStringListModel **tables_exc_model,
   bec::GrtStringListModel **views_model, bec::GrtStringListModel **views_exc_model,
   bec::GrtStringListModel **routines_model, bec::GrtStringListModel **routines_exc_model,
-  bec::GrtStringListModel **triggers_model, bec::GrtStringListModel **triggers_exc_model) {
+  bec::GrtStringListModel **triggers_model, bec::GrtStringListModel **triggers_exc_model) -> void {
   std::list<std::string> empty_list, users_list, tables_list, views_list, routines_list, triggers_list;
 
   grt::ListRef<db_User> users = _catalog->users();

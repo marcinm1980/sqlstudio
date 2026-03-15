@@ -46,8 +46,8 @@ namespace sql {
 
   using Param_types = std::map<std::string, std::string>;
 
-  static bool conv_to_dbc_value(const std::string &key, const grt::ValueRef value, ConnectOptionsMap &properties,
-                                Param_types &param_types) {
+  static auto conv_to_dbc_value(const std::string &key, const grt::ValueRef value, ConnectOptionsMap &properties,
+                                Param_types &param_types) -> bool {
     ConnectPropertyVal tmp;
 
     switch (value.type()) {
@@ -90,7 +90,7 @@ namespace sql {
 
   ////
 
-  Authentication::Ref Authentication::create(const db_mgmt_ConnectionRef &props, const std::string &service) {
+  auto Authentication::create(const db_mgmt_ConnectionRef &props, const std::string &service) -> Authentication::Ref {
     return Authentication::Ref(new Authentication(props, service));
   }
 
@@ -105,12 +105,12 @@ namespace sql {
     invalidate();
   }
 
-  void Authentication::set_password(const char *password) {
+  auto Authentication::set_password(const char *password) -> void {
     invalidate();
     _password = g_strdup(password);
   }
 
-  void Authentication::invalidate() {
+  auto Authentication::invalidate() -> void {
     if (_password != NULL) {
       memset(_password, 0, strlen(_password));
       g_free(_password);
@@ -118,7 +118,7 @@ namespace sql {
     }
   }
 
-  std::string Authentication::uri(bool withPassword) {
+  auto Authentication::uri(bool withPassword) -> std::string {
     std::vector<std::string> v;
     grt::DictRef parameter_values = connectionProperties()->parameterValues();
 
@@ -140,7 +140,7 @@ namespace sql {
 
   //----------------- DriverManager ------------------------------------------------------------------
 
-  DriverManager *DriverManager::getDriverManager() {
+  auto DriverManager::getDriverManager() -> DriverManager * {
     static DriverManager *dm = new DriverManager;
     return dm;
   }
@@ -148,23 +148,23 @@ namespace sql {
   DriverManager::DriverManager() : _driver_path("."), _cacheTime(0), _testing(false) {
   }
 
-  void DriverManager::setTunnelFactoryFunction(TunnelFactoryFunction function) {
+  auto DriverManager::setTunnelFactoryFunction(TunnelFactoryFunction function) -> void {
     _createTunnel = function;
   }
 
-  void DriverManager::setPasswordFindFunction(PasswordFindFunction function) {
+  auto DriverManager::setPasswordFindFunction(PasswordFindFunction function) -> void {
     _findPassword = function;
   }
 
-  void DriverManager::setPasswordRequestFunction(PasswordRequestFunction function) {
+  auto DriverManager::setPasswordRequestFunction(PasswordRequestFunction function) -> void {
     _requestPassword = function;
   }
 
-  void DriverManager::set_driver_dir(const std::string &path) {
+  auto DriverManager::set_driver_dir(const std::string &path) -> void {
     _driver_path = path;
   }
 
-  std::shared_ptr<SSHTunnel> DriverManager::getTunnel(const db_mgmt_ConnectionRef &connectionProperties) {
+  auto DriverManager::getTunnel(const db_mgmt_ConnectionRef &connectionProperties) -> std::shared_ptr<SSHTunnel> {
     db_mgmt_DriverRef drv = connectionProperties->driver();
     if (!drv.is_valid())
       throw SQLException("Invalid connection settings: undefined connection driver");
@@ -178,8 +178,8 @@ namespace sql {
 
 #define MYSQL_PASSWORD_CACHE_TIMEOUT 60
 
-  ConnectionWrapper DriverManager::getConnection(const db_mgmt_ConnectionRef &connectionProperties,
-                                                 ConnectionInitSlot connection_init_slot) {
+  auto DriverManager::getConnection(const db_mgmt_ConnectionRef &connectionProperties,
+                                                 ConnectionInitSlot connection_init_slot) -> ConnectionWrapper {
     db_mgmt_DriverRef drv = connectionProperties->driver();
     if (!drv.is_valid())
       throw SQLException("Invalid connection settings: undefined connection driver");
@@ -199,25 +199,25 @@ namespace sql {
   // This method is called when each dispatcher is ending is about to be gone
   // it needs to be called right after that to cleanup the thread storage allocated by driver.
   // If we will not free the mem then after wb close we will get error about "threads didn't exit"
-  void DriverManager::thread_cleanup() {
+  auto DriverManager::thread_cleanup() -> void {
     for (auto &it : _drivers)
       it.second();
   }
 
-  void DriverManager::set_testing() {
+  auto DriverManager::set_testing() -> void {
     _testing = true;
   }
 
   //--------------------------------------------------------------------------------------------------
 
-  unsigned int DriverManager::getClientLibVersionNumeric(Driver *driver) {
+  auto DriverManager::getClientLibVersionNumeric(Driver *driver) -> unsigned int {
     assert(driver != NULL);
     return driver->getMajorVersion() * 10000 + driver->getMinorVersion() * 100 + driver->getPatchVersion();
   }
 
   //--------------------------------------------------------------------------------------------------
 
-  void DriverManager::getClientLibVersion(Driver *driver) {
+  auto DriverManager::getClientLibVersion(Driver *driver) -> void {
     assert(driver != NULL);
     _versionInfo = "C++ " + std::to_string(driver->getMajorVersion()) + ".";
     _versionInfo += std::to_string(driver->getMinorVersion()) + ".";
@@ -226,15 +226,15 @@ namespace sql {
 
   //--------------------------------------------------------------------------------------------------
 
-  const std::string &DriverManager::getClientLibVersion() const {
+  auto DriverManager::getClientLibVersion() const -> const std::string & {
     return _versionInfo;
   }
 
   //--------------------------------------------------------------------------------------------------
 
-  ConnectionWrapper DriverManager::getConnection(const db_mgmt_ConnectionRef &connectionProperties,
+  auto DriverManager::getConnection(const db_mgmt_ConnectionRef &connectionProperties,
                                                  std::shared_ptr<SSHTunnel> tunnel, Authentication::Ref password,
-                                                 ConnectionInitSlot connection_init_slot) {
+                                                 ConnectionInitSlot connection_init_slot) -> ConnectionWrapper {
     grt::DictRef parameter_values = connectionProperties->parameterValues();
 
     // Load the driver for the connection dynamically. However for the C++ connector we have a static

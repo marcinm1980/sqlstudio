@@ -49,15 +49,15 @@ WizardFinishedPage::WizardFinishedPage(WizardForm *form, const std::string &top_
   add(&_label2, true, true);
 }
 
-void WizardFinishedPage::set_heading(const std::string &title) {
+auto WizardFinishedPage::set_heading(const std::string &title) -> void {
   _label1.set_text(title);
 }
 
-void WizardFinishedPage::set_summary(const std::string &text) {
+auto WizardFinishedPage::set_summary(const std::string &text) -> void {
   _label2.set_text(text);
 }
 
-std::string WizardFinishedPage::next_button_caption() {
+auto WizardFinishedPage::next_button_caption() -> std::string {
 #ifdef __APPLE__
   return _("Close");
 #elif defined(_MSC_VER)

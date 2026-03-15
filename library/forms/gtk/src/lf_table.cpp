@@ -26,11 +26,11 @@
 #include "../lf_table.h"
 #include "base/string_utilities.h"
 
-Gtk::Widget *mforms::gtk::TableImpl::get_outer() const {
+auto mforms::gtk::TableImpl::get_outer() const -> Gtk::Widget * {
   return _outerBox;
 }
 //------------------------------------------------------------------------------
-Gtk::Widget *mforms::gtk::TableImpl::get_inner() const {
+auto mforms::gtk::TableImpl::get_inner() const -> Gtk::Widget * {
   return _grid;
 }
 //------------------------------------------------------------------------------
@@ -52,25 +52,25 @@ mforms::gtk::TableImpl::~TableImpl() {
   delete _outerBox;
 }
 //------------------------------------------------------------------------------
-bool mforms::gtk::TableImpl::create(::mforms::Table *self) {
+auto mforms::gtk::TableImpl::create(::mforms::Table *self) -> bool {
   return new TableImpl(self);
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::set_row_count(Table *self, int count) {
+auto mforms::gtk::TableImpl::set_row_count(Table *self, int count) -> void {
   // Gtk::set_row_count is deprecated.
   TableImpl *table = self->get_data<TableImpl>();
   if (table)
     table->_rowCount = count;
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::set_col_count(Table *self, int count) {
+auto mforms::gtk::TableImpl::set_col_count(Table *self, int count) -> void {
   // Gtk::set_col_count is deprecated.
   TableImpl *table = self->get_data<TableImpl>();
   if (table)
     table->_colCount = count;
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::add(Table *self, View *child, int left, int right, int top, int bottom, int flags) {
+auto mforms::gtk::TableImpl::add(Table *self, View *child, int left, int right, int top, int bottom, int flags) -> void {
   TableImpl *table = self->get_data<TableImpl>();
   if (table) {
     if ((int)table->_colCount < right || (int)table->_rowCount < bottom)
@@ -96,32 +96,32 @@ void mforms::gtk::TableImpl::add(Table *self, View *child, int left, int right, 
   }
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::remove(Table *self, View *child) {
+auto mforms::gtk::TableImpl::remove(Table *self, View *child) -> void {
   TableImpl *table = self->get_data<TableImpl>();
 
   table->_grid->remove(*child->get_data<ViewImpl>()->get_outer());
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::set_row_spacing(Table *self, int space) {
+auto mforms::gtk::TableImpl::set_row_spacing(Table *self, int space) -> void {
   TableImpl *table = self->get_data<TableImpl>();
 
   table->_grid->set_row_spacing(space);
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::set_col_spacing(Table *self, int space) {
+auto mforms::gtk::TableImpl::set_col_spacing(Table *self, int space) -> void {
   TableImpl *table = self->get_data<TableImpl>();
 
   table->_grid->set_column_spacing(space);
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::set_homogeneous(Table *self, bool flag) {
+auto mforms::gtk::TableImpl::set_homogeneous(Table *self, bool flag) -> void {
   TableImpl *table = self->get_data<TableImpl>();
 
   table->_grid->set_column_homogeneous(flag);
   table->_grid->set_row_homogeneous(flag);
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::set_padding_impl(int left, int top, int right, int bottom) {
+auto mforms::gtk::TableImpl::set_padding_impl(int left, int top, int right, int bottom) -> void {
   if (left < 0 && top < 0 && right < 0 && bottom < 0) {
     _grid->set_valign(Gtk::ALIGN_CENTER);
     _grid->set_halign(Gtk::ALIGN_CENTER);
@@ -133,7 +133,7 @@ void mforms::gtk::TableImpl::set_padding_impl(int left, int top, int right, int 
   }
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::TableImpl::init() {
+auto mforms::gtk::TableImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_table_impl.create = &TableImpl::create;

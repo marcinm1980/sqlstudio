@@ -48,7 +48,7 @@ namespace MySQL {
       BoolStringStringFloatDelegate ^ progress_callback_delegate;
       BoolStringStringFloatWrapperDelegate ^ progress_callback_wrapper_delegate;
 
-      bool progress_callback_wrapper(const std::string& str1, const std::string& str2, float f) {
+      auto progress_callback_wrapper(const std::string& str1, const std::string& str2, float f) -> bool {
         return progress_callback_delegate(CppStringToNative(str1), CppStringToNative(str2), f);
       }
 
@@ -89,53 +89,51 @@ namespace MySQL {
                                                    NativeToCppString(libs_sp));
       }
 
-      GRT ^
-        get_grt() {
+      auto get_grt() -> GRT ^ {
           if (managed_grt == nullptr)
             managed_grt = gcnew GRT;
           return managed_grt;
         }
 
-        void initialize() {
+        auto initialize() -> void {
         ::bec::GRTManager::get()->initialize(true);
       }
 
-      void perform_idle_tasks() {
+      auto perform_idle_tasks() -> void {
         ::bec::GRTManager::get()->perform_idle_tasks();
       }
 
-      void rescan_modules() {
+      auto rescan_modules() -> void {
         ::bec::GRTManager::get()->rescan_modules();
       }
 
       // shell
-      GrtShell ^
-        get_shell() {
+      auto get_shell() -> GrtShell ^ {
           if (managed_shell == nullptr)
             managed_shell = gcnew GrtShell(::bec::GRTManager::get()->get_shell());
           return managed_shell;
         }
 
-        void terminate() {
+        auto terminate() -> void {
         bec::GRTManager::get()->terminate();
       };
-      bool terminated() {
+      auto terminated() -> bool {
         return ::bec::GRTManager::get()->terminated();
       };
-      void resetTermination() {
+      auto resetTermination() -> void {
         ::bec::GRTManager::get()->reset_termination();
       };
 
-      bool try_soft_lock_globals_tree() {
+      auto try_soft_lock_globals_tree() -> bool {
         return ::bec::GRTManager::get()->try_soft_lock_globals_tree();
       };
-      void soft_lock_globals_tree() {
+      auto soft_lock_globals_tree() -> void {
         ::bec::GRTManager::get()->soft_lock_globals_tree();
       };
-      void soft_unlock_globals_tree() {
+      auto soft_unlock_globals_tree() -> void {
         ::bec::GRTManager::get()->soft_unlock_globals_tree();
       };
-      bool is_globals_tree_locked() {
+      auto is_globals_tree_locked() -> bool {
         return ::bec::GRTManager::get()->is_globals_tree_locked();
       };
     };

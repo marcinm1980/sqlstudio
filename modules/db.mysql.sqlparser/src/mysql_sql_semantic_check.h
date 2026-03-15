@@ -36,7 +36,7 @@ class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_semantic_check : virtual protected 
                                                               virtual public Sql_semantic_check {
 public:
   typedef std::shared_ptr<Mysql_sql_semantic_check> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_sql_semantic_check());
   }
 
@@ -48,10 +48,10 @@ protected:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
 #endif
-  virtual Parse_result check_sql(const SqlAstNode *tree);
-  virtual Parse_result check_trigger(const SqlAstNode *tree, const SqlAstNode *trigger_tail);
-  virtual Parse_result check_view(const SqlAstNode *tree, const SqlAstNode *view_tail);
-  virtual Parse_result check_routine(const SqlAstNode *tree, const SqlAstNode *routine_tail);
+  virtual auto check_sql(const SqlAstNode *tree) -> Parse_result;
+  virtual auto check_trigger(const SqlAstNode *tree, const SqlAstNode *trigger_tail) -> Parse_result;
+  virtual auto check_view(const SqlAstNode *tree, const SqlAstNode *view_tail) -> Parse_result;
+  virtual auto check_routine(const SqlAstNode *tree, const SqlAstNode *routine_tail) -> Parse_result;
 #ifndef _WIN32
 #pragma GCC diagnostic pop
 #endif

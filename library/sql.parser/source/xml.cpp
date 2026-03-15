@@ -40,8 +40,7 @@ typedef struct xml_attr_st
 } MY_XML_ATTR;
 
 
-static const char *lex2str(int lex)
-{
+static auto lex2str(int lex) -> const char * {
   switch(lex)
   {
     case MY_XML_EOF:      return "EOF";
@@ -59,15 +58,13 @@ static const char *lex2str(int lex)
   return "UNKNOWN";
 }
 
-static void my_xml_norm_text(MY_XML_ATTR *a)
-{
+static auto my_xml_norm_text(MY_XML_ATTR *a) -> void {
   for ( ; (a->beg < a->end) && strchr(" \t\r\n",a->beg[0]) ; a->beg++ );
   for ( ; (a->beg < a->end) && strchr(" \t\r\n",a->end[-1]) ; a->end-- );
 }
 
 
-static int my_xml_scan(MY_XML_PARSER *p,MY_XML_ATTR *a)
-{
+static auto my_xml_scan(MY_XML_PARSER *p,MY_XML_ATTR *a) -> int {
   int lex;
   
   for(  ; ( p->cur < p->end) && strchr(" \t\r\n",p->cur[0]) ;  p->cur++);
@@ -130,14 +127,12 @@ ret:
 }
 
 
-static int my_xml_value(MY_XML_PARSER *st, const char *str, uint len)
-{
+static auto my_xml_value(MY_XML_PARSER *st, const char *str, uint len) -> int {
   return (st->value) ? (st->value)(st,str,len) : MY_XML_OK;
 }
 
 
-static int my_xml_enter(MY_XML_PARSER *st, const char *str, uint len)
-{
+static auto my_xml_enter(MY_XML_PARSER *st, const char *str, uint len) -> int {
   if ((uint) (st->attrend-st->attr+len+1) > sizeof(st->attr))
   {
     sprintf(st->errstr,"To deep XML");
@@ -163,16 +158,14 @@ static int my_xml_enter(MY_XML_PARSER *st, const char *str, uint len)
 }
 
 
-static void mstr(char *s,const char *src,uint l1, uint l2)
-{
+static auto mstr(char *s,const char *src,uint l1, uint l2) -> void {
   l1 = l1<l2 ? l1 : l2;
   memcpy(s,src,l1);
   s[l1]='\0';
 }
 
 
-static int my_xml_leave(MY_XML_PARSER *p, const char *str, uint slen)
-{
+static auto my_xml_leave(MY_XML_PARSER *p, const char *str, uint slen) -> int {
   char *e;
   uint glen;
   char s[32];
@@ -203,8 +196,7 @@ static int my_xml_leave(MY_XML_PARSER *p, const char *str, uint slen)
 }
 
 
-int my_xml_parse(MY_XML_PARSER *p,const char *str, uint len)
-{
+auto my_xml_parse(MY_XML_PARSER *p,const char *str, uint len) -> int {
   p->attrend=p->attr;
   p->beg=str;
   p->cur=str;
@@ -348,54 +340,46 @@ gt:
 }
 
 
-void my_xml_parser_create(MY_XML_PARSER *p)
-{
+auto my_xml_parser_create(MY_XML_PARSER *p) -> void {
   bzero((void*)p,sizeof(p[0]));
 }
 
 
-void my_xml_parser_free(MY_XML_PARSER *p  __attribute__((unused)))
-{
+auto my_xml_parser_free(MY_XML_PARSER *p  __attribute__((unused))) -> void {
 }
 
 
-void my_xml_set_value_handler(MY_XML_PARSER *p,
+auto my_xml_set_value_handler(MY_XML_PARSER *p,
 			      int (*action)(MY_XML_PARSER *p, const char *s,
-					    uint l))
-{
+					    uint l)) -> void {
   p->value=action;
 }
 
-void my_xml_set_enter_handler(MY_XML_PARSER *p,
+auto my_xml_set_enter_handler(MY_XML_PARSER *p,
 			      int (*action)(MY_XML_PARSER *p, const char *s,
-					    uint l))
-{
+					    uint l)) -> void {
   p->enter=action;
 }
 
 
-void my_xml_set_leave_handler(MY_XML_PARSER *p,
+auto my_xml_set_leave_handler(MY_XML_PARSER *p,
 			      int (*action)(MY_XML_PARSER *p, const char *s,
-					    uint l))
-{
+					    uint l)) -> void {
   p->leave_xml=action;
 }
 
 
-void my_xml_set_user_data(MY_XML_PARSER *p, void *user_data)
-{
+auto my_xml_set_user_data(MY_XML_PARSER *p, void *user_data) -> void {
   p->user_data=user_data;
 }
 
 
-const char *my_xml_error_string(MY_XML_PARSER *p)
-{
+auto my_xml_error_string(MY_XML_PARSER *p) -> const char * {
   return p->errstr;
 }
 
 
-uint my_xml_error_pos(MY_XML_PARSER *p)
-{
+auto my_xml_error_pos(MY_XML_PARSER *p) -> uint {
   const char *beg=p->beg;
   const char *s;
   for ( s=p->beg ; s<p->cur; s++)
@@ -406,8 +390,7 @@ uint my_xml_error_pos(MY_XML_PARSER *p)
   return (uint) (p->cur-beg);
 }
 
-uint my_xml_error_lineno(MY_XML_PARSER *p)
-{
+auto my_xml_error_lineno(MY_XML_PARSER *p) -> uint {
   uint res=0;
   const char *s;
   for (s=p->beg ; s<p->cur; s++)

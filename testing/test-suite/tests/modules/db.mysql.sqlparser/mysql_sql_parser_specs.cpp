@@ -49,7 +49,7 @@ namespace {
 
     DictRef options;
 
-    void testImportSQL(size_t test_no, const char *old_schema_name = nullptr, const char *new_schema_name = nullptr) {
+    auto testImportSQL(size_t test_no, const char *old_schema_name = nullptr, const char *new_schema_name = nullptr) -> void {
       std::string dataDir = testing::Context::get().tmpDataDir() + "/modules_grt/wb_mysql_import/sql/";
 
       // Set filenames & messages based on test number.

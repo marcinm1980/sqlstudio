@@ -36,9 +36,9 @@ namespace mdc {
     virtual ~VertexHandle();
 
     virtual auto get_bounds() const -> base::Rect;
-    virtual void repaint(CairoCtx *cr);
+    virtual auto repaint(CairoCtx *cr) -> void;
 
-    void set_connected(bool flag);
+    auto set_connected(bool flag) -> void;
 
   protected:
     bool _connectable;

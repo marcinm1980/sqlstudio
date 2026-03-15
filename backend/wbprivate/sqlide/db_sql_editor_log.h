@@ -41,35 +41,35 @@ public:
   virtual ~DbSqlEditorLog() {
   }
 
-  static Ref create(SqlEditorForm *owner, int max_entry_count) {
+  static auto create(SqlEditorForm *owner, int max_entry_count) -> Ref {
     return Ref(new DbSqlEditorLog(owner, max_entry_count));
   }
 
-  virtual void reset();
-  virtual void refresh();
+  virtual auto reset() -> void;
+  virtual auto refresh() -> void;
 
-  virtual bec::IconId get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size);
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, std::string &value);
-  virtual bool get_field(const bec::NodeId &node, ColumnId column, ssize_t &value) {
+  virtual auto get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size) -> bec::IconId;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+  virtual auto get_field(const bec::NodeId &node, ColumnId column, ssize_t &value) -> bool {
     return VarGridModel::get_field(node, column, value);
   }
-  virtual bool get_field_description_value(const bec::NodeId &node, ColumnId column, std::string &value);
+  virtual auto get_field_description_value(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
 
-  std::string get_selection_text(bool time, bool query, bool result, bool duration);
+  auto get_selection_text(bool time, bool query, bool result, bool duration) -> std::string;
 
-  RowId add_message(int msg_type, const std::string &context, const std::string &msg, const std::string &duration);
-  void set_message(RowId row, int msg_type, const std::string &context, const std::string &msg,
-                   const std::string &duration);
+  auto add_message(int msg_type, const std::string &context, const std::string &msg, const std::string &duration) -> RowId;
+  auto set_message(RowId row, int msg_type, const std::string &context, const std::string &msg,
+                   const std::string &duration) -> void;
 
-  mforms::Menu *get_context_menu();
-  void set_selection(const std::vector<int> &selection);
+  auto get_context_menu() -> mforms::Menu *;
+  auto set_selection(const std::vector<int> &selection) -> void;
 
 protected:
   // max_entry_count < 0 means unlimited number of messages.
   DbSqlEditorLog(SqlEditorForm *owner, int max_entry_count);
 
-  void add_message_with_id(RowId id, const std::string &time, int msg_type, const std::string &context,
-                           const std::string &msg, const std::string &duration);
+  auto add_message_with_id(RowId id, const std::string &time, int msg_type, const std::string &context,
+                           const std::string &msg, const std::string &duration) -> void;
 
 private:
   SqlEditorForm *_owner;
@@ -79,7 +79,7 @@ private:
   std::string _logDir;
   unsigned _next_id;
 
-  void handle_context_menu(const std::string &action);
+  auto handle_context_menu(const std::string &action) -> void;
 };
 
 #endif /* _DB_SQL_EDITOR_LOG_BE_H_ */

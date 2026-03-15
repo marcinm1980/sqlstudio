@@ -40,7 +40,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Sql_import::grtm() {
+auto Sql_import::grtm() -> void {
   _options = grt::DictRef(true);
   _doc = studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
 
@@ -56,7 +56,7 @@ void Sql_import::grtm() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_CatalogRef Sql_import::target_catalog() {
+auto Sql_import::target_catalog() -> db_CatalogRef {
   return _doc->physicalModels().get(0)->catalog();
 }
 
@@ -74,7 +74,7 @@ std::function<grt::ValueRef()> Sql_import::get_autoplace_task_slot() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-grt::StringRef Sql_import::parse_sql_script(db_CatalogRef catalog, const std::string &sql_script) {
+auto Sql_import::parse_sql_script(db_CatalogRef catalog, const std::string &sql_script) -> grt::StringRef {
   grt::ListRef<GrtObject> created_objects(grt::Initialized);
   _options.set("created_objects", created_objects);
   grt::StringListRef errors(grt::Initialized);
@@ -99,8 +99,8 @@ grt::StringRef Sql_import::parse_sql_script(db_CatalogRef catalog, const std::st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Sql_import::parse_sql_script(parsers::MySQLParserServices::Ref sql_parser, parsers::MySQLParserContext::Ref context,
-  db_CatalogRef &catalog, const std::string &sql_script, grt::DictRef &options) {
+auto Sql_import::parse_sql_script(parsers::MySQLParserServices::Ref sql_parser, parsers::MySQLParserContext::Ref context,
+  db_CatalogRef &catalog, const std::string &sql_script, grt::DictRef &options) -> void {
   grt::AutoUndo undo;
 
   std::string sql = base::getTextFileContent(sql_script);
@@ -114,13 +114,13 @@ void Sql_import::parse_sql_script(parsers::MySQLParserServices::Ref sql_parser, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-grt::ListRef<GrtObject> Sql_import::get_created_objects() {
+auto Sql_import::get_created_objects() -> grt::ListRef<GrtObject> {
   return grt::ListRef<GrtObject>::cast_from(_options.get("created_objects"));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-grt::ValueRef Sql_import::autoplace_grt() {
+auto Sql_import::autoplace_grt() -> grt::ValueRef {
   db_CatalogRef catalog = target_catalog();
 
   studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(catalog->owner()));

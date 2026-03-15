@@ -41,7 +41,7 @@
 DEFAULT_LOG_DOMAIN("SSHSession")
 
 namespace ssh {
-  std::shared_ptr<SSHSession> SSHSession::createSession() {
+  auto SSHSession::createSession() -> std::shared_ptr<SSHSession> {
     return std::shared_ptr<SSHSession>(new SSHSession());
   }
 
@@ -56,8 +56,8 @@ namespace ssh {
     delete _session;
   }
 
-  std::tuple<SSHReturnType, base::any> SSHSession::connect(const SSHConnectionConfig &config,
-                                                           const SSHConnectionCredentials &credentials) {
+  auto SSHSession::connect(const SSHConnectionConfig &config,
+                                                           const SSHConnectionCredentials &credentials) -> std::tuple<SSHReturnType, base::any> {
     if (isConnected()) {
       throw std::runtime_error("Unable to connect already connected SSHSession, please disconnect first.");
     }
@@ -184,7 +184,7 @@ namespace ssh {
   }
 
 
-  void SSHSession::pollEvent() {
+  auto SSHSession::pollEvent() -> void {
     if (!_isConnected)
       return;
 
@@ -203,7 +203,7 @@ namespace ssh {
     _sessionMutex.unlock();
   }
 
-  void SSHSession::disconnect() {
+  auto SSHSession::disconnect() -> void {
     logDebug2("SSHSession disconnect\n");
 
     bool locked = _sessionMutex.tryLock();
@@ -235,20 +235,20 @@ namespace ssh {
     _sessionMutex.unlock();
   }
 
-  bool SSHSession::isConnected() const {
+  auto SSHSession::isConnected() const -> bool {
     return _isConnected && ssh_is_connected(_session->getCSession());
   }
 
-  SSHConnectionConfig SSHSession::getConfig() const {
+  auto SSHSession::getConfig() const -> SSHConnectionConfig {
     return _config;
   }
 
-  ssh::Session* SSHSession::getSession() const {
+  auto SSHSession::getSession() const -> ssh::Session* {
     return _session;
   }
 
 
-  bool SSHSession::openChannel(ssh::Channel *chann) {
+  auto SSHSession::openChannel(ssh::Channel *chann) -> bool {
     int rc = SSH_ERROR;
     std::size_t i = 0;
     while (i < _config.connectTimeout) {
@@ -274,7 +274,7 @@ namespace ssh {
    * Execute command on the remote server.
    * It returns std::tuple<stdout, stderr, exitStatus>.
    */
-  std::tuple<std::string, std::string, int> SSHSession::execCmd(std::string command, std::size_t logSize) {
+  auto SSHSession::execCmd(std::string command, std::size_t logSize) -> std::tuple<std::string, std::string, int> {
     logDebug2("About to execute command: %s\n", command.c_str());
 
     logDebug3("Before session lock.\n");
@@ -371,8 +371,8 @@ namespace ssh {
    * Execute command on the remote server using sudo authentication.
    * It returns std::tuple <stdout, stderr, exitStatus>.
    */
-  std::tuple<std::string, std::string, int> SSHSession::execCmdSudo(std::string command, std::string password,
-                                                               std::string passwordQuery, std::size_t logSize) {
+  auto SSHSession::execCmdSudo(std::string command, std::string password,
+                                                               std::string passwordQuery, std::size_t logSize) -> std::tuple<std::string, std::string, int> {
     logDebug2("About to execute elevated command: %s\n", command.c_str());
     auto lock = lockSession();
     auto channel = std::unique_ptr<ssh::Channel, std::function<void(ssh::Channel *)>>(
@@ -487,19 +487,19 @@ namespace ssh {
     return std::make_tuple(so.str(), retError, channel->getExitStatus());
   }
 
-  void SSHSession::reconnect() {
+  auto SSHSession::reconnect() -> void {
     if (!ssh_is_connected(_session->getCSession())) {
       disconnect();
       connect(_config, _credentials);
     }
   }
 
-  base::MutexLock SSHSession::lockSession() {
+  auto SSHSession::lockSession() -> base::MutexLock {
     base::MutexLock mutexLock(_sessionMutex);
     return mutexLock;
   }
 
-  int SSHSession::verifyKnownHost(const ssh::SSHConnectionConfig &config, std::string &fingerprint) {
+  auto SSHSession::verifyKnownHost(const ssh::SSHConnectionConfig &config, std::string &fingerprint) -> int {
     std::unique_ptr<unsigned char, void (*)(unsigned char*)> hash(
         nullptr, [](unsigned char* v) {if (v != nullptr) ssh_clean_pubkey_hash(&v);});
     ssh_key srvPubKey;
@@ -572,7 +572,7 @@ namespace ssh {
     return SSH_SERVER_KNOWN_OK;
   }
 
-  void SSHSession::authenticateUser(const SSHConnectionCredentials &credentials) {
+  auto SSHSession::authenticateUser(const SSHConnectionCredentials &credentials) -> void {
     // We first try to use the none method. If that succeeds we're done. In other cases we will try other options.
     try {
       if (_session->userauthNone() == SSH_AUTH_SUCCESS)
@@ -610,7 +610,7 @@ namespace ssh {
     }
   }
 
-  void SSHSession::authPassword(const std::string &password) {
+  auto SSHSession::authPassword(const std::string &password) -> void {
     int authList = _session->getAuthList();
     if (authList & SSH_AUTH_METHOD_INTERACTIVE) {
       int ret;
@@ -630,7 +630,7 @@ namespace ssh {
     }
   }
 
-  void SSHSession::authAutoPubkey() {
+  auto SSHSession::authAutoPubkey() -> void {
     try {
       handleAuthReturn(_session->userauthPublickeyAuto());
     } catch (ssh::SshException &sxc) {
@@ -638,7 +638,7 @@ namespace ssh {
     }
   }
 
-  void SSHSession::handleAuthReturn(int auth) {
+  auto SSHSession::handleAuthReturn(int auth) -> void {
     if (auth == SSH_AUTH_DENIED)
       throw SSHTunnelException("Authentication failed, access denied.");
     else if (auth == SSH_AUTH_PARTIAL)

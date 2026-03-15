@@ -33,12 +33,12 @@ CheckBox::CheckBox(bool square) {
   _checkbox_impl->create(this, square);
 }
 
-void CheckBox::set_active(bool flag) {
+auto CheckBox::set_active(bool flag) -> void {
   _updating = true;
   _checkbox_impl->set_active(this, flag);
   _updating = false;
 }
 
-bool CheckBox::get_active() {
+auto CheckBox::get_active() -> bool {
   return _checkbox_impl->get_active(this);
 }

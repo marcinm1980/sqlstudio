@@ -48,7 +48,7 @@ studio_physical_TableFigure::ImplData::ImplData(studio_physical_TableFigure *sel
                  std::bind(&ImplData::member_changed, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void studio_physical_TableFigure::ImplData::update_options(const std::string &key) {
+auto studio_physical_TableFigure::ImplData::update_options(const std::string &key) -> void {
   if (key == "studio.physical.TableFigure:MaxColumnsDisplayed") {
     studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(self()->owner()->owner()));
     int max_columns = model->get_data()->get_int_option(key, 30);
@@ -75,7 +75,7 @@ void studio_physical_TableFigure::ImplData::update_options(const std::string &ke
   }
 }
 
-void studio_physical_TableFigure::ImplData::set_in_view(bool flag) {
+auto studio_physical_TableFigure::ImplData::set_in_view(bool flag) -> void {
   if (!self()->owner().is_valid())
     throw std::logic_error("adding figure to view before setting owner");
 
@@ -94,7 +94,7 @@ void studio_physical_TableFigure::ImplData::set_in_view(bool flag) {
   model_Figure::ImplData::set_in_view(flag);
 }
 
-void studio_physical_TableFigure::ImplData::set_table(const db_TableRef &table) {
+auto studio_physical_TableFigure::ImplData::set_table(const db_TableRef &table) -> void {
   // Check if we had a valid table before and revert the previous setup if so.
   if (self()->_table.is_valid()) {
     if (self()->_owner.is_valid())
@@ -140,8 +140,8 @@ void studio_physical_TableFigure::ImplData::set_table(const db_TableRef &table) 
     unrealize();
 }
 
-void studio_physical_TableFigure::ImplData::table_member_changed(const std::string &name,
-                                                                    const grt::ValueRef &ovalue) {
+auto studio_physical_TableFigure::ImplData::table_member_changed(const std::string &name,
+                                                                    const grt::ValueRef &ovalue) -> void {
   if (name == "name") {
     self()->_name = self()->_table->name();
 
@@ -157,7 +157,7 @@ void studio_physical_TableFigure::ImplData::table_member_changed(const std::stri
   }
 }
 
-void studio_physical_TableFigure::ImplData::fk_changed(const db_ForeignKeyRef &fk) {
+auto studio_physical_TableFigure::ImplData::fk_changed(const db_ForeignKeyRef &fk) -> void {
   // resync columns to update FK indicators
   if (_figure) {
     if (!_pending_columns_sync) {
@@ -167,7 +167,7 @@ void studio_physical_TableFigure::ImplData::fk_changed(const db_ForeignKeyRef &f
   }
 }
 
-void studio_physical_TableFigure::ImplData::content_changed(const std::string &where) {
+auto studio_physical_TableFigure::ImplData::content_changed(const std::string &where) -> void {
   if ((where == "column" || where == "foreignKey") && _figure && !_pending_columns_sync) {
     _pending_columns_sync = true;
     run_later(std::bind(&studio_physical_TableFigure::ImplData::sync_columns, this));
@@ -184,7 +184,7 @@ void studio_physical_TableFigure::ImplData::content_changed(const std::string &w
   }
 }
 
-void studio_physical_TableFigure::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) {
+auto studio_physical_TableFigure::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void {
   /* not good  if (name == "name")
     {
       if (self()->_table.is_valid())
@@ -224,7 +224,7 @@ void studio_physical_TableFigure::ImplData::member_changed(const std::string &na
   }
 }
 
-void studio_physical_TableFigure::ImplData::sync_columns() {
+auto studio_physical_TableFigure::ImplData::sync_columns() -> void {
   if (_figure) {
     wbfig::Table::ItemList::iterator iter = _figure->begin_columns_sync();
 
@@ -279,7 +279,7 @@ void studio_physical_TableFigure::ImplData::sync_columns() {
   _pending_columns_sync = false;
 }
 
-void studio_physical_TableFigure::ImplData::sync_indexes() {
+auto studio_physical_TableFigure::ImplData::sync_indexes() -> void {
   if (_figure) {
     wbfig::Table::ItemList::iterator iter = _figure->begin_indexes_sync();
 
@@ -301,12 +301,12 @@ void studio_physical_TableFigure::ImplData::sync_indexes() {
   _pending_index_sync = false;
 }
 
-static bool compare_trigger(const std::pair<std::string, std::string> &a,
-                            const std::pair<std::string, std::string> &b) {
+static auto compare_trigger(const std::pair<std::string, std::string> &a,
+                            const std::pair<std::string, std::string> &b) -> bool {
   return a.second.substr(5) > b.second.substr(5);
 }
 
-void studio_physical_TableFigure::ImplData::sync_triggers() {
+auto studio_physical_TableFigure::ImplData::sync_triggers() -> void {
   if (_figure) {
     grt::ListRef<db_Trigger> triggers(self()->_table->triggers());
     std::vector<std::pair<std::string, std::string> > items;
@@ -346,7 +346,7 @@ void studio_physical_TableFigure::ImplData::sync_triggers() {
   _pending_trigger_sync = false;
 }
 
-bool studio_physical_TableFigure::ImplData::is_realizable() {
+auto studio_physical_TableFigure::ImplData::is_realizable() -> bool {
   if (!super::is_realizable())
     return false;
 
@@ -356,7 +356,7 @@ bool studio_physical_TableFigure::ImplData::is_realizable() {
   return false;
 }
 
-void studio_physical_TableFigure::ImplData::unrealize() {
+auto studio_physical_TableFigure::ImplData::unrealize() -> void {
   studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(self()->owner()->owner()));
 
   notify_will_unrealize();
@@ -373,7 +373,7 @@ void studio_physical_TableFigure::ImplData::unrealize() {
   _figure = 0;
 }
 
-bool studio_physical_TableFigure::ImplData::realize() {
+auto studio_physical_TableFigure::ImplData::realize() -> bool {
   if (_figure)
     return true;
   if (!is_realizable())
@@ -464,7 +464,7 @@ bool studio_physical_TableFigure::ImplData::realize() {
   return true;
 }
 
-void studio_physical_TableFigure::ImplData::toggle_title(bool expanded, wbfig::Titlebar *sender) {
+auto studio_physical_TableFigure::ImplData::toggle_title(bool expanded, wbfig::Titlebar *sender) -> void {
   if (sender == _figure->get_title()) {
     grt::AutoUndo undo;
     self()->expanded(expanded);
@@ -480,7 +480,7 @@ void studio_physical_TableFigure::ImplData::toggle_title(bool expanded, wbfig::T
   }
 }
 
-db_ColumnRef studio_physical_TableFigure::ImplData::get_column_at(mdc::CanvasItem *item) {
+auto studio_physical_TableFigure::ImplData::get_column_at(mdc::CanvasItem *item) -> db_ColumnRef {
   if (_figure && !_figure->get_columns()->empty()) {
     for (wbfig::Table::ItemList::const_iterator iter = _figure->get_columns()->begin();
          iter != _figure->get_columns()->end(); ++iter) {
@@ -491,7 +491,7 @@ db_ColumnRef studio_physical_TableFigure::ImplData::get_column_at(mdc::CanvasIte
   return db_ColumnRef();
 }
 
-db_IndexRef studio_physical_TableFigure::ImplData::get_index_at(mdc::CanvasItem *item) {
+auto studio_physical_TableFigure::ImplData::get_index_at(mdc::CanvasItem *item) -> db_IndexRef {
   if (_figure && _figure->get_indexes() && !_figure->get_indexes()->empty()) {
     for (wbfig::Table::ItemList::const_iterator iter = _figure->get_indexes()->begin();
          iter != _figure->get_indexes()->end(); ++iter) {
@@ -502,7 +502,7 @@ db_IndexRef studio_physical_TableFigure::ImplData::get_index_at(mdc::CanvasItem 
   return db_IndexRef();
 }
 
-void studio_physical_TableFigure::ImplData::set_column_highlighted(const db_ColumnRef &column, const Color *color) {
+auto studio_physical_TableFigure::ImplData::set_column_highlighted(const db_ColumnRef &column, const Color *color) -> void {
   if (_figure) {
     for (wbfig::Table::ItemList::const_iterator iter = _figure->get_columns()->begin();
          iter != _figure->get_columns()->end(); ++iter) {
@@ -516,7 +516,7 @@ void studio_physical_TableFigure::ImplData::set_column_highlighted(const db_Colu
   }
 }
 
-void studio_physical_TableFigure::ImplData::set_column_unhighlighted(const db_ColumnRef &column) {
+auto studio_physical_TableFigure::ImplData::set_column_unhighlighted(const db_ColumnRef &column) -> void {
   if (_figure) {
     for (wbfig::Table::ItemList::const_iterator iter = _figure->get_columns()->begin();
          iter != _figure->get_columns()->end(); ++iter) {

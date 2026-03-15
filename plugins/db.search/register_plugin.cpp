@@ -57,7 +57,7 @@ private:
   grt::ListRef<db_query_LiveDBObject> _tree_selection;
   time_t _last_selection_change;
 
-  bool check_selection() {
+  auto check_selection() -> bool {
     if (time(NULL) - _last_selection_change > 0) {
       _check_selection_timeout = 0;
 
@@ -69,7 +69,7 @@ private:
     return true;
   }
 
-  virtual void handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info) {
+  virtual auto handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info) -> void {
     if (name == "GRNLiveDBObjectSelectionDidChange") {
       _tree_selection = grt::ListRef<db_query_LiveDBObject>();
       if (info.get_int("selection-size") == 0) {
@@ -82,7 +82,7 @@ private:
     }
   }
 
-  grt::StringListRef get_filters_from_schema_tree_selection() {
+  auto get_filters_from_schema_tree_selection() -> grt::StringListRef {
     grt::StringListRef filters(grt::Initialized);
     std::set<std::string> selected_parents;
 
@@ -117,33 +117,33 @@ private:
     return filters;
   }
 
-  bool search_activate_from_timeout() {
+  auto search_activate_from_timeout() -> bool {
     _search_timeout = 0;
     start_search();
     return false;
   }
 
-  void search_activate(mforms::TextEntryAction action) {
+  auto search_activate(mforms::TextEntryAction action) -> void {
     // we need to call this from timeout or idle, cause in gtk, we're blocking the application
     if (action == mforms::EntryActivate && _search_timeout == 0)
       _search_timeout =
         mforms::Utilities::add_timeout(0.1f, std::bind(&DBSearchView::search_activate_from_timeout, this));
   }
 
-  void finished_search() {
+  auto finished_search() -> void {
     _filter_panel.set_searching(false);
     _search_panel._search_finished = true;
     mforms::App::get()->set_status_text("Searching finished");
   }
 
-  void failed_search() {
+  auto failed_search() -> void {
     // we need to allow user to start search again
     _filter_panel.set_searching(false);
     _search_panel._search_finished = true;
     mforms::App::get()->set_status_text("Searching failed");
   }
 
-  void start_search() {
+  auto start_search() -> void {
     if (_search_panel.stop_search_if_working())
       return;
     // build filter list in format schema.table.column from the selection
@@ -266,7 +266,7 @@ public:
     return plugins;
   }
 
-  int showSearchPanel(db_query_EditorRef editor) {
+  auto showSearchPanel(db_query_EditorRef editor) -> int {
     mforms::DockingPoint *dpoint = dynamic_cast<mforms::DockingPoint *>(mforms_from_grt(editor->dockingPoint()));
 
     DBSearchView *v;

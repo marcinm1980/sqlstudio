@@ -34,16 +34,16 @@ namespace {
 using namespace grt;
 using namespace bec;
 
-static void finished(grt::ValueRef result, bool *flag) {
+static auto finished(grt::ValueRef result, bool *flag) -> void {
   *flag = true;
 }
 
-static void finished_with_wait(grt::ValueRef result, bool *flag) {
+static auto finished_with_wait(grt::ValueRef result, bool *flag) -> void {
   g_usleep(2000000);
   *flag = true;
 }
 
-static grt::ValueRef normal_test_function() {
+static auto normal_test_function() -> grt::ValueRef {
   return grt::IntegerRef(123);
 }
 

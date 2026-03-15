@@ -35,7 +35,7 @@ DEFAULT_LOG_DOMAIN("RecordsetView");
 
 using base::strfmt;
 
-RecordsetView *RecordsetView::create(Recordset::Ref model) {
+auto RecordsetView::create(Recordset::Ref model) -> RecordsetView * {
   RecordsetView *view = new RecordsetView(model);
   view->init();
   return view;
@@ -51,7 +51,7 @@ RecordsetView::~RecordsetView() {
   _refresh_ui_stat_sig.disconnect();
 }
 
-void RecordsetView::init() {
+auto RecordsetView::init() -> void {
   // We change the fixed_height_mode based on number of rows,
   // it should be ok to have different row height for small results,
   // for for bigger output we need to optimize the height so we change it to fixed.
@@ -87,7 +87,7 @@ void RecordsetView::init() {
   _model->update_edited_field = std::bind(&RecordsetView::selected_record_changed, this);
 }
 
-void RecordsetView::model(Recordset::Ref value) {
+auto RecordsetView::model(Recordset::Ref value) -> void {
   _model = value;
   _refresh_ui_sig = _model->refresh_ui_signal.connect(sigc::mem_fun(this, &RecordsetView::refresh));
   _model->update_edited_field = std::bind(&RecordsetView::selected_record_changed, this);
@@ -97,12 +97,12 @@ void RecordsetView::model(Recordset::Ref value) {
     _grid->model(_model);
 }
 
-void RecordsetView::copy(const std::vector<int> &rows) {
+auto RecordsetView::copy(const std::vector<int> &rows) -> void {
   if (_model)
     _model->copy_rows_to_clipboard(rows, ", ");
 }
 
-bool RecordsetView::activate_toolbar_item(const std::string &action) {
+auto RecordsetView::activate_toolbar_item(const std::string &action) -> bool {
   try {
     bool r = _model->action_list().trigger_action(action);
     return r;
@@ -113,11 +113,11 @@ bool RecordsetView::activate_toolbar_item(const std::string &action) {
   return false;
 }
 
-void RecordsetView::reset() {
+auto RecordsetView::reset() -> void {
   _model->reset();
 }
 
-void RecordsetView::refresh() {
+auto RecordsetView::refresh() -> void {
   _grid->refresh(false);
 
   // calculate the height of a row with single line of text
@@ -137,7 +137,7 @@ void RecordsetView::refresh() {
     set_fixed_row_height(-1);
 }
 
-bool RecordsetView::on_event(GdkEvent *event) {
+auto RecordsetView::on_event(GdkEvent *event) -> bool {
   bool processed = false;
 
   if ((GDK_BUTTON_PRESS == event->type && 3 == event->button.button)) {
@@ -186,24 +186,24 @@ bool RecordsetView::on_event(GdkEvent *event) {
   return processed;
 }
 
-void RecordsetView::selected_record_changed() {
+auto RecordsetView::selected_record_changed() -> void {
   _grid->get_selection()->unselect_all();
   _grid->select_cell(_model->edited_field_row(), _model->edited_field_column());
 }
 
-void RecordsetView::on_commit_btn_clicked() {
+auto RecordsetView::on_commit_btn_clicked() -> void {
   _model->apply_changes();
 }
 
-void RecordsetView::on_rollback_btn_clicked() {
+auto RecordsetView::on_rollback_btn_clicked() -> void {
   _model->rollback();
 }
 
-bool RecordsetView::has_changes() {
+auto RecordsetView::has_changes() -> bool {
   return _model->has_pending_changes();
 }
 
-void RecordsetView::on_goto_first_row_btn_clicked() {
+auto RecordsetView::on_goto_first_row_btn_clicked() -> void {
   if (_model->row_count() == 0)
     return;
 
@@ -212,7 +212,7 @@ void RecordsetView::on_goto_first_row_btn_clicked() {
   _grid->set_cursor(tree_path);
 }
 
-void RecordsetView::on_goto_last_row_btn_clicked() {
+auto RecordsetView::on_goto_last_row_btn_clicked() -> void {
   Gtk::TreePath tree_path(1);
   size_t row_count = _model->row_count();
   if (row_count == 0)
@@ -221,7 +221,7 @@ void RecordsetView::on_goto_last_row_btn_clicked() {
   _grid->set_cursor(tree_path);
 }
 
-void RecordsetView::on_record_prev() {
+auto RecordsetView::on_record_prev() -> void {
   Gtk::TreeModel::Path path;
   Gtk::TreeViewColumn *column = NULL;
   _grid->get_cursor(path, column);
@@ -231,7 +231,7 @@ void RecordsetView::on_record_prev() {
   _grid->set_cursor(path, *column);
 }
 
-void RecordsetView::on_record_next() {
+auto RecordsetView::on_record_next() -> void {
   Gtk::TreeModel::Path path;
   Gtk::TreeViewColumn *column = NULL;
   _grid->get_cursor(path, column);
@@ -241,7 +241,7 @@ void RecordsetView::on_record_next() {
   _grid->set_cursor(path, *column);
 }
 
-void RecordsetView::on_record_edit() {
+auto RecordsetView::on_record_edit() -> void {
   if (_model->is_readonly())
     return;
   Gtk::TreeModel::Path path;
@@ -252,7 +252,7 @@ void RecordsetView::on_record_edit() {
   _grid->set_cursor(path, *column, true);
 }
 
-void RecordsetView::on_record_add() {
+auto RecordsetView::on_record_add() -> void {
   if (_model->is_readonly())
     return;
   Gtk::TreePath tree_path(1);
@@ -264,7 +264,7 @@ void RecordsetView::on_record_add() {
   on_record_edit();
 }
 
-void RecordsetView::on_record_del() {
+auto RecordsetView::on_record_del() -> void {
   if (_model->is_readonly())
     return;
   std::vector<int> rows = _grid->get_selected_rows();
@@ -282,7 +282,7 @@ void RecordsetView::on_record_del() {
   _grid->queue_draw();
 }
 
-void RecordsetView::on_record_sort_asc() {
+auto RecordsetView::on_record_sort_asc() -> void {
   int row, col;
   _grid->current_cell(row, col);
   if (col < 0)
@@ -290,7 +290,7 @@ void RecordsetView::on_record_sort_asc() {
   _grid->sort_by_column(col, -1, true);
 }
 
-void RecordsetView::on_record_sort_desc() {
+auto RecordsetView::on_record_sort_desc() -> void {
   int row, col;
   _grid->current_cell(row, col);
   if (col < 0)
@@ -298,12 +298,12 @@ void RecordsetView::on_record_sort_desc() {
   _grid->sort_by_column(col, 1, true);
 }
 
-void RecordsetView::on_toggle_vertical_sizing() {
+auto RecordsetView::on_toggle_vertical_sizing() -> void {
   _grid->set_fixed_height_mode(!_grid->get_fixed_height_mode());
   refresh();
 }
 
-void RecordsetView::set_fixed_row_height(int height) {
+auto RecordsetView::set_fixed_row_height(int height) -> void {
   if (_grid && _grid->view_model()) {
     std::vector<Gtk::TreeViewColumn *> columns = _grid->get_columns();
     if (_grid->view_model()->row_numbers_visible() && !columns.empty())

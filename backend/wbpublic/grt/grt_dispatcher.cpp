@@ -70,13 +70,13 @@ DispatcherCallbackBase::~DispatcherCallbackBase() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DispatcherCallbackBase::wait() {
+auto DispatcherCallbackBase::wait() -> void {
   _semaphore.wait();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DispatcherCallbackBase::signal() {
+auto DispatcherCallbackBase::signal() -> void {
   _semaphore.post();
 }
 
@@ -88,44 +88,44 @@ GRTTaskBase::~GRTTaskBase() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::set_finished() {
+auto GRTTaskBase::set_finished() -> void {
   _finished = true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::cancel() {
+auto GRTTaskBase::cancel() -> void {
   _cancelled = true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::started() {
+auto GRTTaskBase::started() -> void {
   signal_starting_task();
   _dispatcher->call_from_main_thread<void>(std::bind(&GRTTaskBase::started_m, this), false, false);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::started_m() {
+auto GRTTaskBase::started_m() -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::finished(const grt::ValueRef &result) {
+auto GRTTaskBase::finished(const grt::ValueRef &result) -> void {
   signal_finishing_task();
   _dispatcher->call_from_main_thread<void>(std::bind(&GRTTaskBase::finished_m, this, result), true, false);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::finished_m(const grt::ValueRef &result) {
+auto GRTTaskBase::finished_m(const grt::ValueRef &result) -> void {
   set_finished();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::failed(const std::exception &exc) {
+auto GRTTaskBase::failed(const std::exception &exc) -> void {
   const grt::grt_runtime_error *rterr = dynamic_cast<const grt::grt_runtime_error *>(&exc);
 
   if (rterr)
@@ -139,13 +139,13 @@ void GRTTaskBase::failed(const std::exception &exc) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::failed_m(const std::exception &exc) {
+auto GRTTaskBase::failed_m(const std::exception &exc) -> void {
   set_finished();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool GRTTaskBase::process_message(const grt::Message &msg) {
+auto GRTTaskBase::process_message(const grt::Message &msg) -> bool {
   if (_messages_to_main_thread)
     _dispatcher->call_from_main_thread<void>(std::bind(&GRTTaskBase::process_message_m, this, msg), false, false);
   else
@@ -156,7 +156,7 @@ bool GRTTaskBase::process_message(const grt::Message &msg) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTaskBase::process_message_m(const grt::Message &msg) {
+auto GRTTaskBase::process_message_m(const grt::Message &msg) -> void {
 }
 
 //----------------- GrtNullTask --------------------------------------------------------------------
@@ -165,9 +165,9 @@ class GrtNullTask : public GRTTaskBase {
 public:
   GrtNullTask(const GRTDispatcher::Ref dispatcher) : GRTTaskBase("Terminate Worker Thread", dispatcher) {
   }
-  virtual void finished(const grt::ValueRef &result) {
+  virtual auto finished(const grt::ValueRef &result) -> void {
   }
-  virtual grt::ValueRef execute() {
+  virtual auto execute() -> grt::ValueRef {
     _result = grt::ValueRef();
     return _result;
   }
@@ -179,8 +179,8 @@ class GRTSimpleTask : public GRTTaskBase {
 public:
   using Ref = std::shared_ptr<GRTSimpleTask>;
 
-  static Ref create_task(const std::string &name, const GRTDispatcher::Ref dispatcher,
-                         const std::function<grt::ValueRef()> &function) {
+  static auto create_task(const std::string &name, const GRTDispatcher::Ref dispatcher,
+                         const std::function<grt::ValueRef()> &function) -> Ref {
     return Ref(new GRTSimpleTask(name, dispatcher, function));
   }
 
@@ -190,7 +190,7 @@ protected:
     : GRTTaskBase(name, dispatcher), _function(function) {
   }
 
-  grt::ValueRef execute() {
+  auto execute() -> grt::ValueRef {
     try {
       _result = _function();
     } catch (const std::exception &e) {
@@ -200,13 +200,13 @@ protected:
     return _result;
   }
 
-  virtual void started() {
+  virtual auto started() -> void {
   }
-  virtual void finished(const grt::ValueRef &result) {
+  virtual auto finished(const grt::ValueRef &result) -> void {
     set_finished();
   }
 
-  virtual void failed(const std::exception &exc) {
+  virtual auto failed(const std::exception &exc) -> void {
     const grt::grt_runtime_error *rterr = dynamic_cast<const grt::grt_runtime_error *>(&exc);
 
     if (rterr)
@@ -228,27 +228,27 @@ GRTTask::GRTTask(const std::string &name, const GRTDispatcher::Ref dispatcher,
 
 //--------------------------------------------------------------------------------------------------
 
-GRTTask::Ref GRTTask::create_task(const std::string &name, const GRTDispatcher::Ref dispatcher,
-                                  const std::function<grt::ValueRef()> &function) {
+auto GRTTask::create_task(const std::string &name, const GRTDispatcher::Ref dispatcher,
+                                  const std::function<grt::ValueRef()> &function) -> GRTTask::Ref {
   return Ref(new GRTTask(name, dispatcher, function));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef GRTTask::execute() {
+auto GRTTask::execute() -> grt::ValueRef {
   _result = _function();
   return _result;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTask::started_m() {
+auto GRTTask::started_m() -> void {
   _sigStarted();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTask::finished_m(const grt::ValueRef &result) {
+auto GRTTask::finished_m(const grt::ValueRef &result) -> void {
   _sigFinished(result);
 
   GRTTaskBase::finished_m(result);
@@ -256,14 +256,14 @@ void GRTTask::finished_m(const grt::ValueRef &result) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTask::failed_m(const std::exception &error) {
+auto GRTTask::failed_m(const std::exception &error) -> void {
   GRTTaskBase::failed_m(*_exception);
   _sigFailed(*_exception);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool GRTTask::process_message(const grt::Message &msg) {
+auto GRTTask::process_message(const grt::Message &msg) -> bool {
   if (_message.empty())
     return false;
 
@@ -272,7 +272,7 @@ bool GRTTask::process_message(const grt::Message &msg) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTTask::process_message_m(const grt::Message &msgs) {
+auto GRTTask::process_message_m(const grt::Message &msgs) -> void {
   _message(msgs);
 }
 
@@ -285,14 +285,14 @@ GRTShellTask::GRTShellTask(const std::string &name, const GRTDispatcher::Ref dis
 
 //--------------------------------------------------------------------------------------------------
 
-GRTShellTask::Ref GRTShellTask::create_task(const std::string &name, const GRTDispatcher::Ref dispatcher,
-                                            const std::string &command) {
+auto GRTShellTask::create_task(const std::string &name, const GRTDispatcher::Ref dispatcher,
+                                            const std::string &command) -> GRTShellTask::Ref {
   return Ref(new GRTShellTask(name, dispatcher, command));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef GRTShellTask::execute() {
+auto GRTShellTask::execute() -> grt::ValueRef {
   _result = grt::GRT::get()->get_shell()->execute(_command);
   _prompt = grt::GRT::get()->get_shell()->get_prompt();
 
@@ -301,7 +301,7 @@ grt::ValueRef GRTShellTask::execute() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellTask::finished_m(const grt::ValueRef &result) {
+auto GRTShellTask::finished_m(const grt::ValueRef &result) -> void {
   _finished_signal(_result, _prompt);
 
   GRTTaskBase::finished_m(result);
@@ -309,7 +309,7 @@ void GRTShellTask::finished_m(const grt::ValueRef &result) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool GRTShellTask::process_message(const grt::Message &msg) {
+auto GRTShellTask::process_message(const grt::Message &msg) -> bool {
   if (_message.empty())
     return false;
 
@@ -318,13 +318,13 @@ bool GRTShellTask::process_message(const grt::Message &msg) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTShellTask::process_message_m(const grt::Message &msg) {
+auto GRTShellTask::process_message_m(const grt::Message &msg) -> void {
   _message(msg);
 }
 
 //----------------- GRTDispatcher ------------------------------------------------------------------
 
-static void sleep_2ms() {
+static auto sleep_2ms() -> void {
   g_usleep(2000);
 }
 
@@ -371,13 +371,13 @@ GRTDispatcher::~GRTDispatcher() {
 
 //--------------------------------------------------------------------------------------------------
 
-GRTDispatcher::Ref GRTDispatcher::create_dispatcher(bool threaded, bool is_main_dispatcher) {
+auto GRTDispatcher::create_dispatcher(bool threaded, bool is_main_dispatcher) -> GRTDispatcher::Ref {
   return Ref(new GRTDispatcher(threaded, is_main_dispatcher));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::start() {
+auto GRTDispatcher::start() -> void {
   _grtm = bec::GRTManager::get();
 
   _shut_down = false;
@@ -403,7 +403,7 @@ void GRTDispatcher::start() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::shutdown() {
+auto GRTDispatcher::shutdown() -> void {
   if (_shut_down)
     return;
 
@@ -431,7 +431,7 @@ void GRTDispatcher::shutdown() {
 
 //--------------------------------------------------------------------------------------------------
 
-gpointer GRTDispatcher::worker_thread(gpointer data) {
+auto GRTDispatcher::worker_thread(gpointer data) -> gpointer {
   GrtDispatcherHelper *helper = static_cast<GrtDispatcherHelper *>(data);
   GRTDispatcher::Ref self = helper->dispatcher;
   delete helper;
@@ -528,7 +528,7 @@ gpointer GRTDispatcher::worker_thread(gpointer data) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::execute_now(const GRTTaskBase::Ref task) {
+auto GRTDispatcher::execute_now(const GRTTaskBase::Ref task) -> void {
   g_atomic_int_inc(&_busy);
   prepare_task(task);
 
@@ -539,7 +539,7 @@ void GRTDispatcher::execute_now(const GRTTaskBase::Ref task) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::add_task(const GRTTaskBase::Ref task) {
+auto GRTDispatcher::add_task(const GRTTaskBase::Ref task) -> void {
   // If threading is disabled or the worker thread is calling another
   // task, we have to execute it immediately otherwise we'd just deadlock.
   if (_threading_disabled || _thread == g_thread_self())
@@ -552,13 +552,13 @@ void GRTDispatcher::add_task(const GRTTaskBase::Ref task) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::cancel_task(const GRTTaskBase::Ref task) {
+auto GRTDispatcher::cancel_task(const GRTTaskBase::Ref task) -> void {
   task->cancel();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool GRTDispatcher::get_busy() {
+auto GRTDispatcher::get_busy() -> bool {
   return (_task_queue && g_async_queue_length(_task_queue) > 0) || g_atomic_int_get(&_busy);
 }
 
@@ -573,13 +573,13 @@ bool GRTDispatcher::get_busy() {
  * etc. It should not handle mouse and keyboard events or anything that could
  * cause another call to the backend.
  */
-void GRTDispatcher::set_main_thread_flush_and_wait(FlushAndWaitCallback callback) {
+auto GRTDispatcher::set_main_thread_flush_and_wait(FlushAndWaitCallback callback) -> void {
   _flush_main_thread_and_wait = callback;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::flush_pending_callbacks() {
+auto GRTDispatcher::flush_pending_callbacks() -> void {
   if (_callback_queue) {
     while (true) {
       CallbackHelper *helper = static_cast<CallbackHelper *>(g_async_queue_try_pop(_callback_queue));
@@ -600,7 +600,7 @@ void GRTDispatcher::flush_pending_callbacks() {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::call_from_main_thread(const DispatcherCallbackBase::Ref callback, bool wait, bool force_queue) {
+auto GRTDispatcher::call_from_main_thread(const DispatcherCallbackBase::Ref callback, bool wait, bool force_queue) -> void {
   bool is_main_thread = (g_thread_self() == _main_thread);
   if (force_queue && is_main_thread)
     wait = false;
@@ -620,25 +620,25 @@ void GRTDispatcher::call_from_main_thread(const DispatcherCallbackBase::Ref call
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::worker_thread_init() {
+auto GRTDispatcher::worker_thread_init() -> void {
   // QQQ  grt::GRT::get()->enable_thread_notifications();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::worker_thread_release() {
+auto GRTDispatcher::worker_thread_release() -> void {
   mforms::Utilities::driver_shutdown();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::worker_thread_iteration() {
+auto GRTDispatcher::worker_thread_iteration() -> void {
   // QQQ  grt::GRT::get()->flush_notifications();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool GRTDispatcher::message_callback(const grt::Message &msgs, void *sender) {
+auto GRTDispatcher::message_callback(const grt::Message &msgs, void *sender) -> bool {
   if (sender == NULL) {
     if (_current_task)
       return _current_task->process_message(msgs);
@@ -652,7 +652,7 @@ bool GRTDispatcher::message_callback(const grt::Message &msgs, void *sender) {
 
 //--------------------------------------------------------------------------------------------------
 
-static bool call_process_message(const grt::Message &msgs, void *sender, const GRTTaskBase::Ref task) {
+static auto call_process_message(const grt::Message &msgs, void *sender, const GRTTaskBase::Ref task) -> bool {
   if (sender != NULL) {
     GRTTaskBase *task = static_cast<GRTTask *>(sender);
     return task->process_message(msgs);
@@ -662,7 +662,7 @@ static bool call_process_message(const grt::Message &msgs, void *sender, const G
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::prepare_task(const GRTTaskBase::Ref gtask) {
+auto GRTDispatcher::prepare_task(const GRTTaskBase::Ref gtask) -> void {
   _current_task = gtask;
 
   // Directly set the task callbacks.
@@ -673,7 +673,7 @@ void GRTDispatcher::prepare_task(const GRTTaskBase::Ref gtask) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::restore_callbacks(const GRTTaskBase::Ref task) {
+auto GRTDispatcher::restore_callbacks(const GRTTaskBase::Ref task) -> void {
   // Restore originally set msg callbacks.
   if (_is_main_dispatcher)
     grt::GRT::get()->popMessageHandler();
@@ -683,7 +683,7 @@ void GRTDispatcher::restore_callbacks(const GRTTaskBase::Ref task) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::execute_task(const GRTTaskBase::Ref gtask) {
+auto GRTDispatcher::execute_task(const GRTTaskBase::Ref gtask) -> void {
   try {
     gtask->started();
     grt::ValueRef result = gtask->execute();
@@ -707,7 +707,7 @@ void GRTDispatcher::execute_task(const GRTTaskBase::Ref gtask) {
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::wait_task(const GRTTaskBase::Ref task) {
+auto GRTDispatcher::wait_task(const GRTTaskBase::Ref task) -> void {
   bool is_main_thread = g_thread_self() == _main_thread;
 
   // wait for a task to be completed, making sure that
@@ -724,7 +724,7 @@ void GRTDispatcher::wait_task(const GRTTaskBase::Ref task) {
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef GRTDispatcher::add_task_and_wait(const GRTTaskBase::Ref task) {
+auto GRTDispatcher::add_task_and_wait(const GRTTaskBase::Ref task) -> grt::ValueRef {
 #if 0
   if (is_busy())
   {
@@ -752,8 +752,8 @@ grt::ValueRef GRTDispatcher::add_task_and_wait(const GRTTaskBase::Ref task) {
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef GRTDispatcher::execute_sync_function(const std::string &name,
-                                                   const std::function<grt::ValueRef()> &function) {
+auto GRTDispatcher::execute_sync_function(const std::string &name,
+                                                   const std::function<grt::ValueRef()> &function) -> grt::ValueRef {
   GRTSimpleTask::Ref task(GRTSimpleTask::create_task(name, shared_from_this(), function));
   add_task_and_wait(task);
 
@@ -762,7 +762,7 @@ grt::ValueRef GRTDispatcher::execute_sync_function(const std::string &name,
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTDispatcher::execute_async_function(const std::string &name, const std::function<grt::ValueRef()> &function) {
+auto GRTDispatcher::execute_async_function(const std::string &name, const std::function<grt::ValueRef()> &function) -> void {
   add_task(GRTSimpleTask::create_task(name, shared_from_this(), function));
 }
 

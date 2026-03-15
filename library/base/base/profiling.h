@@ -48,11 +48,11 @@ namespace base {
     std::map<std::string, clock_t> _starts;
 
   public:
-    void add(const std::string& id);
-    void on(const std::string& id);
-    void off(const std::string& id);
-    void dump(const std::string& message);
-    void clear();
+    auto add(const std::string& id) -> void;
+    auto on(const std::string& id) -> void;
+    auto off(const std::string& id) -> void;
+    auto dump(const std::string& message) -> void;
+    auto clear() -> void;
   };
 
   class BASELIBRARY_PUBLIC_FUNC GlobalTA {
@@ -60,19 +60,19 @@ namespace base {
     static TimeAccumulator _tacc;
 
   public:
-    static void add(const std::string& id) {
+    static auto add(const std::string& id) -> void {
       _tacc.add(id);
     };
-    static void on(const std::string& id) {
+    static auto on(const std::string& id) -> void {
       _tacc.on(id);
     };
-    static void off(const std::string& id) {
+    static auto off(const std::string& id) -> void {
       _tacc.off(id);
     };
-    static void dump(const std::string& message) {
+    static auto dump(const std::string& message) -> void {
       _tacc.dump(message);
     };
-    static void clear() {
+    static auto clear() -> void {
       _tacc.clear();
     };
   };
@@ -94,14 +94,14 @@ namespace base {
     clock_t _lap_start;
     clock_t _end;
 
-    std::string format_time(clock_t time);
+    auto format_time(clock_t time) -> std::string;
 
   public:
     StopWatch() : _initialized(false) {
     }
-    void start(const std::string& message);
-    void lap(const std::string& message);
-    void stop(const std::string& message);
+    auto start(const std::string& message) -> void;
+    auto lap(const std::string& message) -> void;
+    auto stop(const std::string& message) -> void;
   };
 
   class BASELIBRARY_PUBLIC_FUNC GlobalSW {
@@ -109,13 +109,13 @@ namespace base {
     static StopWatch _sw;
 
   public:
-    static void start(const std::string& message) {
+    static auto start(const std::string& message) -> void {
       _sw.start(message);
     };
-    static void lap(const std::string& message) {
+    static auto lap(const std::string& message) -> void {
       _sw.lap(message);
     };
-    static void stop(const std::string& message) {
+    static auto stop(const std::string& message) -> void {
       _sw.stop(message);
     };
   };

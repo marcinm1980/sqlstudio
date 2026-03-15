@@ -74,42 +74,42 @@ RoutineGroup::~RoutineGroup() {
     delete *i;
 }
 
-void RoutineGroup::set_title(const std::string &title, const std::string &subtitle) {
+auto RoutineGroup::set_title(const std::string &title, const std::string &subtitle) -> void {
   _title.set_title(title);
   _footer.set_title(subtitle);
 }
 
-void RoutineGroup::set_title_font(const mdc::FontSpec &font) {
+auto RoutineGroup::set_title_font(const mdc::FontSpec &font) -> void {
   _title.set_font(font);
 }
 
-void RoutineGroup::set_content_font(const mdc::FontSpec &font) {
+auto RoutineGroup::set_content_font(const mdc::FontSpec &font) -> void {
   super::set_content_font(font);
 
   for (ItemList::iterator i = _routines.begin(); i != _routines.end(); ++i)
     (*i)->set_font(font);
 }
 
-void RoutineGroup::set_color(const Color &color) {
+auto RoutineGroup::set_color(const Color &color) -> void {
   _title.set_color(color);
   _footer.set_color(color);
   set_needs_render();
 }
 
-void RoutineGroup::toggle(bool flag) {
+auto RoutineGroup::toggle(bool flag) -> void {
   _title.set_expanded(flag);
   _content_box.set_visible(flag);
 }
 
-RoutineGroup::ItemList::iterator RoutineGroup::begin_routines_sync() {
+auto RoutineGroup::begin_routines_sync() -> RoutineGroup::ItemList::iterator {
   return begin_sync(_content_box, _routines);
 }
 
-RoutineGroup::ItemList::iterator RoutineGroup::sync_next_routine(ItemList::iterator iter, const std::string &id,
-                                                                 const std::string &text) {
+auto RoutineGroup::sync_next_routine(ItemList::iterator iter, const std::string &id,
+                                                                 const std::string &text) -> RoutineGroup::ItemList::iterator {
   return sync_next(_content_box, _routines, iter, id, 0, text);
 }
 
-void RoutineGroup::end_routines_sync(ItemList::iterator iter) {
+auto RoutineGroup::end_routines_sync(ItemList::iterator iter) -> void {
   end_sync(_content_box, _routines, iter);
 }

@@ -33,7 +33,7 @@
 
 #define MODULE_VERSION "1.0.0"
 
-static grt::ListRef<app_Plugin> get_mysql_plugins_info();
+static auto get_mysql_plugins_info() -> grt::ListRef<app_Plugin>;
 
 class MySQLModelSnippetsModuleImpl : public grt::ModuleImplBase, public PluginInterfaceImpl {
 public:
@@ -48,7 +48,7 @@ public:
     return get_mysql_plugins_info();
   }
 
-  virtual grt::IntegerRef includeModel(const std::string &path) {
+  virtual auto includeModel(const std::string &path) -> grt::IntegerRef {
     grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
     if (!module)
       throw std::runtime_error("MySqlStudio module not found");
@@ -79,8 +79,8 @@ public:
     return grt::IntegerRef(0);
   }
 
-  virtual grt::IntegerRef includeModelObjects(const studio_DocumentRef &document,
-                                              grt::StringListRef objectNameList) {
+  virtual auto includeModelObjects(const studio_DocumentRef &document,
+                                              grt::StringListRef objectNameList) -> grt::IntegerRef {
     return grt::IntegerRef(0);
   }
 };
@@ -97,7 +97,7 @@ public:
 //}
 //
 
-static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
+static auto get_mysql_plugins_info() -> grt::ListRef<app_Plugin> {
   grt::ListRef<app_Plugin> plugins(true);
   {
     app_PluginRef plugin(grt::Initialized);

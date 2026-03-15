@@ -101,8 +101,7 @@ static uchar to_upper_lex[]=
 };
 
 
-inline int lex_casecmp(const char *s, const char *t, uint len)
-{
+inline auto lex_casecmp(const char *s, const char *t, uint len) -> int {
   while (len-- != 0 &&
 	 to_upper_lex[(uchar) *s++] == to_upper_lex[(uchar) *t++]) ;
   return (int) len+1;
@@ -115,8 +114,7 @@ inline int lex_casecmp(const char *s, const char *t, uint len)
 namespace mysql_parser
 {
 
-static inline SYMBOL *get_hash_symbol(const char *s, unsigned int len, bool function)
-{
+static inline auto get_hash_symbol(const char *s, unsigned int len, bool function) -> SYMBOL * {
 #if defined(__APPLE__) || defined(_MSC_VER)
   typedef std::unordered_multimap<size_t, SYMBOL *> Hash_ind;
 #else
@@ -143,8 +141,7 @@ static inline SYMBOL *get_hash_symbol(const char *s, unsigned int len, bool func
       func_hash_ind_end= func_hash_ind.end();
     }
   private:
-    void add_from_list(Hash_ind *hash_ind, SYMBOL sym_arr[], size_t sym_arr_sz)
-    {
+    auto add_from_list(Hash_ind *hash_ind, SYMBOL sym_arr[], size_t sym_arr_sz) -> void {
       SYMBOL *sym= sym_arr;
       for (size_t n= 0; sym_arr_sz > n; ++n, ++sym)
       {
@@ -189,8 +186,7 @@ static inline SYMBOL *get_hash_symbol(const char *s, unsigned int len, bool func
   return NULL;
 }
 
-void lex_init(void)
-{
+auto lex_init(void) -> void {
   uint i;
   DBUG_ENTER("lex_init");
   for (i=0 ; i < array_elements(symbols) ; i++)
@@ -202,8 +198,7 @@ void lex_init(void)
 }
 
 
-void lex_free(void)
-{					// Call this when daemon ends
+auto lex_free(void) -> void {					// Call this when daemon ends
   DBUG_ENTER("lex_free");
   DBUG_VOID_RETURN;
 }
@@ -316,8 +311,7 @@ void lex_start(/*THD *thd, */LEX *lex, const uchar *buf, uint length)
   DBUG_VOID_RETURN;
 }
 
-void lex_end(LEX *lex)
-{
+auto lex_end(LEX *lex) -> void {
 #if 0
   DBUG_ENTER("lex_end");
   DBUG_PRINT("enter", ("lex: 0x%lx", (long) lex));
@@ -339,8 +333,7 @@ void lex_end(LEX *lex)
 }
 
 int token_start_lineno;
-inline SqlAstNode * new_ast_terminal_node(LEX *lex, const char* value, int value_length, char *lex_string_to_free)
-{
+inline auto new_ast_terminal_node(LEX *lex, const char* value, int value_length, char *lex_string_to_free) -> SqlAstNode * {
   if (SqlAstStatics::is_ast_generation_enabled)
   {
     lex->last_item= *lex->yylval= SqlAstStatics::add_ast_node(new SqlAstTerminalNode(
@@ -377,13 +370,11 @@ inline SqlAstNode * new_ast_terminal_node(LEX *lex, const char* value, int value
   }
 }
 
-inline SqlAstNode * new_ast_terminal_node(LEX *lex, int value_length, char *lex_string_to_free)
-{
+inline auto new_ast_terminal_node(LEX *lex, int value_length, char *lex_string_to_free) -> SqlAstNode * {
   return new_ast_terminal_node(lex, NULL, value_length, lex_string_to_free);
 }
 
-static int find_keyword(LEX *lex, uint len, bool function)
-{
+static auto find_keyword(LEX *lex, uint len, bool function) -> int {
   const uchar *tok=lex->tok_start;
 
   SYMBOL *symbol= get_hash_symbol((const char *)tok,len,function);
@@ -420,8 +411,7 @@ static int find_keyword(LEX *lex, uint len, bool function)
     1         name isn't a keyword
 */
 
-bool is_keyword(const char *name, uint len)
-{
+auto is_keyword(const char *name, uint len) -> bool {
   DBUG_ASSERT(len != 0);
   return get_hash_symbol(name,len,0)!=0;
 }
@@ -471,8 +461,7 @@ static LEX_STRING get_quoted_token(LEX *lex,uint length, char quote)
   Fix sometimes to do only one scan of the string
 */
 
-static char *get_text(LEX *lex)
-{
+static auto get_text(LEX *lex) -> char * {
   reg1 uchar c,sep;
   uint found_escape=0;
   CHARSET_INFO *cs= lex->charset;//lex->thd->charset();
@@ -628,8 +617,7 @@ static const uint signed_longlong_len=19;
 static const char *unsigned_longlong_str="18446744073709551615";
 static const uint unsigned_longlong_len=20;
 
-static inline uint int_token(const char *str,uint length)
-{
+static inline auto int_token(const char *str,uint length) -> uint {
   if (length < long_len)			// quick normal case
     return NUM;
   bool neg=0;
@@ -711,8 +699,7 @@ bool parser_is_stopped;
 */
 
 //int MYSQLlex(void *arg, void *yythd)
-int MYSQLlex(void **arg, void *yyl)
-{
+auto MYSQLlex(void **arg, void *yyl) -> int {
   reg1	uchar c = 0;
   int	tokval, result_state;
   uint length;
@@ -1433,8 +1420,7 @@ st_lex::st_lex()
     TRUE  - VIEWs with MERGE algorithms can be used
 */
 
-bool st_lex::can_use_merged()
-{
+auto st_lex::can_use_merged() -> bool {
   switch (sql_command)
   {
   case SQLCOM_SELECT:
@@ -1469,8 +1455,7 @@ bool st_lex::can_use_merged()
     TRUE  - VIEWs with MERGE algorithms can be used
 */
 
-bool st_lex::can_not_use_merged()
-{
+auto st_lex::can_not_use_merged() -> bool {
   switch (sql_command)
   {
   case SQLCOM_CREATE_VIEW:
@@ -1498,8 +1483,7 @@ bool st_lex::can_not_use_merged()
     FALSE no, we need data
 */
 
-bool st_lex::only_view_structure()
-{
+auto st_lex::only_view_structure() -> bool {
   switch (sql_command) {
   case SQLCOM_SHOW_CREATE:
   case SQLCOM_SHOW_TABLES:
@@ -1527,8 +1511,7 @@ bool st_lex::only_view_structure()
 */
 
 
-bool st_lex::need_correct_ident()
-{
+auto st_lex::need_correct_ident() -> bool {
   switch(sql_command)
   {
   case SQLCOM_SHOW_CREATE:

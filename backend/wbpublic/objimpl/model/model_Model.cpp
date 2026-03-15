@@ -32,10 +32,10 @@
 //================================================================================
 // model_Model
 
-void model_Model::init() {
+auto model_Model::init() -> void {
 }
 
-void model_Model::set_data(ImplData *data) {
+auto model_Model::set_data(ImplData *data) -> void {
   _data = data;
 }
 

@@ -61,6 +61,6 @@ namespace mtemplate {
     virtual base::utf8string modify(const base::utf8string &input, const base::utf8string arg = "");
   };
 
-  MTEMPLATELIBRARY_PUBLIC_FUNC Modifier *GetModifier(const base::utf8string &name);
+  auto GetModifier(const base::utf8string &name) -> MTEMPLATELIBRARY_PUBLIC_FUNC Modifier *;
 
 } //  namespace mtemplate

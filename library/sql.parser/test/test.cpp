@@ -61,12 +61,11 @@ typedef void* YYSTYPE;
 #include "sql_lex.h"
 
 
-int MYSQLlex(void **arg, void *yylex);
-void lex_init(void);
-void lex_start(LEX *lex, const uchar *buf, uint length);
+auto MYSQLlex(void **arg, void *yylex) -> int;
+auto lex_init(void) -> void;
+auto lex_start(LEX *lex, const uchar *buf, uint length) -> void;
 
-int main(int argc, char* argv[])
-{
+auto main(int argc, char* argv[]) -> int {
   YYSTYPE yystype;
 
   lex_init();

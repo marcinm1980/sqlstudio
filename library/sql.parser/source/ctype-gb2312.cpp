@@ -169,14 +169,12 @@ static uchar NEAR sort_order_gb2312[]=
 #define isgb2312tail(c) (0xa1<=(uchar)(c) && (uchar)(c)<=0xfe)
 
 
-static int ismbchar_gb2312(CHARSET_INFO *cs __attribute__((unused)),
-		    const char* p, const char *e)
-{
+static auto ismbchar_gb2312(CHARSET_INFO *cs __attribute__((unused)),
+		    const char* p, const char *e) -> int {
   return (isgb2312head(*(p)) && (e)-(p)>1 && isgb2312tail(*((p)+1))? 2: 0);
 }
 
-static int mbcharlen_gb2312(CHARSET_INFO *cs __attribute__((unused)),uint c)
-{
+static auto mbcharlen_gb2312(CHARSET_INFO *cs __attribute__((unused)),uint c) -> int {
   return (isgb2312head(c)? 2 : 1);
 }
 
@@ -2716,7 +2714,7 @@ static uint16 tab_gb2312_uni2[]={
 0x9EE2,0x9EE9,0x9EE7,0x9EE5,0x9EEA,0x9EEF,0x9F22,0x9F2C,
 0x9F2F,0x9F39,0x9F37,0x9F3D,0x9F3E,0x9F44};
 
-static int func_gb2312_uni_onechar(int code){
+static auto func_gb2312_uni_onechar(int code) -> int {
   if ((code>=0x2121)&&(code<=0x2658))
     return(tab_gb2312_uni0[code-0x2121]);
   if ((code>=0x2721)&&(code<=0x296F))
@@ -5610,7 +5608,7 @@ static uint16 tab_uni_gb23129[]={
      0,     0,     0,     0,     0,     0,     0,0x2169,
 0x216A,     0,0x237E,     0,0x2324};
 
-static int func_uni_gb2312_onechar(int code){
+static auto func_uni_gb2312_onechar(int code) -> int {
   if ((code>=0x00A4)&&(code<=0x01DC))
     return(tab_uni_gb23120[code-0x00A4]);
   if ((code>=0x02C7)&&(code<=0x0451))
@@ -5635,10 +5633,8 @@ static int func_uni_gb2312_onechar(int code){
 }
 
 
-static int
-my_wc_mb_gb2312(CHARSET_INFO *cs  __attribute__((unused)),
-		my_wc_t wc, uchar *s, uchar *e)
-{
+static auto my_wc_mb_gb2312(CHARSET_INFO *cs  __attribute__((unused)),
+		my_wc_t wc, uchar *s, uchar *e) -> int {
   int code;
   
   if (s >= e)
@@ -5663,9 +5659,8 @@ my_wc_mb_gb2312(CHARSET_INFO *cs  __attribute__((unused)),
 }
 
 
-static int 
-my_mb_wc_gb2312(CHARSET_INFO *cs  __attribute__((unused)),
-		my_wc_t *pwc, const uchar *s, const uchar *e){
+static auto my_mb_wc_gb2312(CHARSET_INFO *cs  __attribute__((unused)),
+		my_wc_t *pwc, const uchar *s, const uchar *e) -> int {
   int hi;
   
   hi=(int) s[0];
@@ -5692,11 +5687,9 @@ my_mb_wc_gb2312(CHARSET_INFO *cs  __attribute__((unused)),
 /*
   Returns well formed length of a EUC-KR string.
 */
-static uint
-my_well_formed_len_gb2312(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_well_formed_len_gb2312(CHARSET_INFO *cs __attribute__((unused)),
                           const char *b, const char *e,
-                          uint pos, int *error)
-{
+                          uint pos, int *error) -> uint {
   const char *b0= b;
   const char *emb= e - 1; /* Last possible end of an MB character */
 

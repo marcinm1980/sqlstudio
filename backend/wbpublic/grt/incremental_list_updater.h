@@ -49,29 +49,29 @@ namespace bec {
     virtual ~IncrementalListUpdater() {
     }
 
-    virtual dest_iterator get_dest_iterator() = 0;
-    virtual source_iterator get_source_iterator() = 0;
+    virtual auto get_dest_iterator() -> dest_iterator = 0;
+    virtual auto get_source_iterator() -> source_iterator = 0;
 
-    virtual dest_iterator increment_dest(dest_iterator &iter) = 0;
-    virtual source_iterator increment_source(source_iterator &iter) = 0;
+    virtual auto increment_dest(dest_iterator &iter) -> dest_iterator = 0;
+    virtual auto increment_source(source_iterator &iter) -> source_iterator = 0;
 
-    virtual bool has_more_dest(dest_iterator iter) = 0;
-    virtual bool has_more_source(source_iterator iter) = 0;
+    virtual auto has_more_dest(dest_iterator iter) -> bool = 0;
+    virtual auto has_more_source(source_iterator iter) -> bool = 0;
 
-    virtual bool items_match(dest_iterator diter, source_iterator siter) = 0;
+    virtual auto items_match(dest_iterator diter, source_iterator siter) -> bool = 0;
 
-    virtual dest_ref get_dest(dest_iterator iter) = 0;
+    virtual auto get_dest(dest_iterator iter) -> dest_ref = 0;
 
-    virtual void update(dest_ref dest_item, source_iterator source_item) = 0;
+    virtual auto update(dest_ref dest_item, source_iterator source_item) -> void = 0;
 
     // begin adding items to the begginning of the dest list
-    virtual dest_iterator begin_adding() = 0;
-    virtual dest_iterator add(dest_iterator &iter, source_iterator source_item) = 0;
-    virtual dest_iterator add(dest_iterator &iter, dest_ref item) = 0;
+    virtual auto begin_adding() -> dest_iterator = 0;
+    virtual auto add(dest_iterator &iter, source_iterator source_item) -> dest_iterator = 0;
+    virtual auto add(dest_iterator &iter, dest_ref item) -> dest_iterator = 0;
     // end adding items to the dest item, stuff after the last item added must be removed
-    virtual void end_adding(dest_iterator iter) = 0;
+    virtual auto end_adding(dest_iterator iter) -> void = 0;
 
-    virtual void execute() {
+    virtual auto execute() -> void {
       // find location of items in the source list in the dest list
       for (source_iterator src_item = get_source_iterator(); has_more_source(src_item); increment_source(src_item)) {
         //        bool found= false;
@@ -102,11 +102,11 @@ namespace bec {
   protected:
     std::map<source_iterator, dest_ref> source_mapping;
 
-    bool dest_exists(source_iterator item) {
+    auto dest_exists(source_iterator item) -> bool {
       return source_mapping.find(item) != source_mapping.end();
     }
 
-    dest_ref get_dest_for_source(source_iterator item) {
+    auto get_dest_for_source(source_iterator item) -> dest_ref {
       return source_mapping[item];
     }
   };

@@ -57,57 +57,57 @@ protected:
   virtual ~FormViewBase(){};
 
 public:
-  sigc::signal<void, std::string> signal_title_changed() {
+  auto signal_title_changed() -> sigc::signal<void, std::string> {
     return _title_changed;
   }
 
-  std::string get_title() {
+  auto get_title() -> std::string {
     return get_form()->get_title();
   }
-  virtual Gtk::Widget *get_panel() = 0;
+  virtual auto get_panel() -> Gtk::Widget * = 0;
 
-  virtual bec::UIForm *get_form() const = 0;
+  virtual auto get_form() const -> bec::UIForm * = 0;
 
-  virtual bool on_close() {
+  virtual auto on_close() -> bool {
     return true;
   }
-  virtual void on_activate() {
+  virtual auto on_activate() -> void {
   }
 
-  virtual void toggle_sidebar(bool show);
-  virtual void toggle_secondary_sidebar(bool show);
+  virtual auto toggle_sidebar(bool show) -> void;
+  virtual auto toggle_secondary_sidebar(bool show) -> void;
 
-  virtual void reset_layout() {
+  virtual auto reset_layout() -> void {
   }
   // close the selected tab and return true or false if no tab is active
-  virtual bool close_focused_tab();
+  virtual auto close_focused_tab() -> bool;
 
-  virtual void find_text(const std::string &text) {
+  virtual auto find_text(const std::string &text) -> void {
   }
 
-  virtual void dispose() {
+  virtual auto dispose() -> void {
   }
 
-  virtual bool perform_command(const std::string &cmd);
+  virtual auto perform_command(const std::string &cmd) -> bool;
 
 protected:
   sigc::slot<void, PluginEditorBase *> _close_editor;
 
-  virtual void plugin_tab_added(PluginEditorBase *plugin){};
+  virtual auto plugin_tab_added(PluginEditorBase *plugin) -> void {};
 
 public:
-  bool close_plugin_tab(PluginEditorBase *editor);
+  auto close_plugin_tab(PluginEditorBase *editor) -> bool;
 
-  void set_close_editor_callback(const sigc::slot<void, PluginEditorBase *> &handler);
+  auto set_close_editor_callback(const sigc::slot<void, PluginEditorBase *> &handler) -> void;
 
-  void add_plugin_tab(PluginEditorBase *plugin);
-  void remove_plugin_tab(PluginEditorBase *plugin);
-  bool close_editors_for_object(const std::string &id);
+  auto add_plugin_tab(PluginEditorBase *plugin) -> void;
+  auto remove_plugin_tab(PluginEditorBase *plugin) -> void;
+  auto close_editors_for_object(const std::string &id) -> bool;
 
-  PluginEditorBase *get_focused_plugin_tab();
+  auto get_focused_plugin_tab() -> PluginEditorBase *;
 
-  void sidebar_resized(bool primary);
-  virtual void restore_sidebar_layout(const int firstSidebarDefaultWidth = 200, const int secondSidebarDefaultWidt = 200);
+  auto sidebar_resized(bool primary) -> void;
+  virtual auto restore_sidebar_layout(const int firstSidebarDefaultWidth = 200, const int secondSidebarDefaultWidt = 200) -> void;
 };
 
 #endif

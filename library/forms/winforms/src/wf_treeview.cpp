@@ -156,14 +156,13 @@ public:
    * Workaround for tree manipulations not going via the model (which would trigger the
    * structure change event automatically).
    */
-  void SortableTreeModel::Resort() {
+  auto SortableTreeModel::Resort() -> void {
     OnStructureChanged(gcnew TreePathEventArgs());
   }
 
   //------------------------------------------------------------------------------------------------
 
-  property Collections::Generic::IComparer<Node ^> ^ Comparer {
-    Collections::Generic::IComparer<Node ^> ^ get() { return _comparer; }
+  auto get() -> property Collections::Generic::IComparer<Node ^> ^ Comparer { Collections::Generic::IComparer<Node ^> ^ { return _comparer; }
 
       void
       set(Collections::Generic::IComparer<Node ^> ^ value) {
@@ -308,13 +307,13 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void UseTagMap() {
+  auto UseTagMap() -> void {
     tagMap = gcnew Dictionary<String ^, TreeNodeAdv ^>();
   }
 
   //------------------------------------------------------------------------------------------------
 
-  void CleanUp(bool clearNodes) {
+  auto CleanUp(bool clearNodes) -> void {
     HideEditor();
 
     for (int i = 0; i < model->Root->Nodes->Count; ++i)
@@ -419,7 +418,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void EndColumns() {
+  auto EndColumns() -> void {
     Model = model; // Trigger refresh.
   }
 
@@ -450,7 +449,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------
 
-  void AllowSorting(bool flag) {
+  auto AllowSorting(bool flag) -> void {
     canSortColumn = flag;
     if (currentSortColumn > -1)
       Columns[currentSortColumn]->SortOrder = currentSortOrder;
@@ -458,14 +457,14 @@ public:
 
   //--------------------------------------------------------------------------------------------------
 
-  void UpdateSorting(int column) {
+  auto UpdateSorting(int column) -> void {
     if ((freezeCount == 0) && column == currentSortColumn)
       model->Resort();
   }
 
   //--------------------------------------------------------------------------------------------------
 
-  void FreezeRefresh(bool flag) {
+  auto FreezeRefresh(bool flag) -> void {
     if (flag)
       ++freezeCount;
     else if (freezeCount == 0)
@@ -961,7 +960,7 @@ TreeViewWrapper::~TreeViewWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeViewWrapper::create(mforms::TreeView *backend, mforms::TreeOptions options) {
+auto TreeViewWrapper::create(mforms::TreeView *backend, mforms::TreeOptions options) -> bool {
   TreeViewWrapper *wrapper = new TreeViewWrapper(backend);
 
   MformsTree ^ tree = TreeViewWrapper::Create<MformsTree>(backend, wrapper);
@@ -1002,43 +1001,43 @@ bool TreeViewWrapper::create(mforms::TreeView *backend, mforms::TreeOptions opti
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeViewWrapper::add_column(mforms::TreeView *backend, mforms::TreeColumnType type, const std::string &name,
-                                int initial_width, bool editable) {
+auto TreeViewWrapper::add_column(mforms::TreeView *backend, mforms::TreeColumnType type, const std::string &name,
+                                int initial_width, bool editable) -> int {
   MformsTree ^ control = TreeViewWrapper::GetManagedObject<MformsTree>(backend);
   return control->AddColumn(type, CppStringToNative(name), initial_width, editable);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::end_columns(mforms::TreeView *backend) {
+auto TreeViewWrapper::end_columns(mforms::TreeView *backend) -> void {
   MformsTree ^ control = TreeViewWrapper::GetManagedObject<MformsTree>(backend);
   control->EndColumns();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::clear(mforms::TreeView *backend) {
+auto TreeViewWrapper::clear(mforms::TreeView *backend) -> void {
   MformsTree ^ control = TreeViewWrapper::GetManagedObject<MformsTree>(backend);
   control->CleanUp(true);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_row_height(mforms::TreeView *backend, int h) {
+auto TreeViewWrapper::set_row_height(mforms::TreeView *backend, int h) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->set_row_height(h);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::list<mforms::TreeNodeRef> TreeViewWrapper::get_selection(mforms::TreeView *backend) {
+auto TreeViewWrapper::get_selection(mforms::TreeView *backend) -> std::list<mforms::TreeNodeRef> {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   return wrapper->get_selection();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeViewWrapper::get_selected_node(mforms::TreeView *backend) {
+auto TreeViewWrapper::get_selected_node(mforms::TreeView *backend) -> mforms::TreeNodeRef {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   TreeViewAdv ^ tree = wrapper->GetManagedObject<TreeViewAdv>();
   TreeNodeAdv ^ node = tree->SelectedNode;
@@ -1049,154 +1048,154 @@ mforms::TreeNodeRef TreeViewWrapper::get_selected_node(mforms::TreeView *backend
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeViewWrapper::root_node(mforms::TreeView *backend) {
+auto TreeViewWrapper::root_node(mforms::TreeView *backend) -> mforms::TreeNodeRef {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   return wrapper->root_node();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_selected(mforms::TreeView *backend, mforms::TreeNodeRef node, bool flag) {
+auto TreeViewWrapper::set_selected(mforms::TreeView *backend, mforms::TreeNodeRef node, bool flag) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->set_selected(node, flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::scrollToNode(mforms::TreeView *backend, mforms::TreeNodeRef node) {
+auto TreeViewWrapper::scrollToNode(mforms::TreeView *backend, mforms::TreeNodeRef node) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->scrollToNode(node);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::clear_selection(mforms::TreeView *backend) {
+auto TreeViewWrapper::clear_selection(mforms::TreeView *backend) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->clear_selection();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeSelectionMode TreeViewWrapper::get_selection_mode(mforms::TreeView *backend) {
+auto TreeViewWrapper::get_selection_mode(mforms::TreeView *backend) -> mforms::TreeSelectionMode {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   return wrapper->get_selection_mode();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_selection_mode(mforms::TreeView *backend, mforms::TreeSelectionMode mode) {
+auto TreeViewWrapper::set_selection_mode(mforms::TreeView *backend, mforms::TreeSelectionMode mode) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->set_selection_mode(mode);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_allow_sorting(mforms::TreeView *backend, bool flag) {
+auto TreeViewWrapper::set_allow_sorting(mforms::TreeView *backend, bool flag) -> void {
   MformsTree ^ control = TreeViewWrapper::GetManagedObject<MformsTree>(backend);
   control->AllowSorting(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::freeze_refresh(mforms::TreeView *backend, bool flag) {
+auto TreeViewWrapper::freeze_refresh(mforms::TreeView *backend, bool flag) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->freeze_refresh(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeViewWrapper::node_at_row(mforms::TreeView *backend, int row) {
+auto TreeViewWrapper::node_at_row(mforms::TreeView *backend, int row) -> mforms::TreeNodeRef {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   return wrapper->node_at_row(row);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeViewWrapper::node_at_position(mforms::TreeView *backend, base::Point position) {
+auto TreeViewWrapper::node_at_position(mforms::TreeView *backend, base::Point position) -> mforms::TreeNodeRef {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   return wrapper->node_at_position(position);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeViewWrapper::row_for_node(mforms::TreeView *backend, mforms::TreeNodeRef node) {
+auto TreeViewWrapper::row_for_node(mforms::TreeView *backend, mforms::TreeNodeRef node) -> int {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   return wrapper->row_for_node(node);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeViewWrapper::node_with_tag(mforms::TreeView *backend, const std::string &tag) {
+auto TreeViewWrapper::node_with_tag(mforms::TreeView *backend, const std::string &tag) -> mforms::TreeNodeRef {
   MformsTree ^ control = TreeViewWrapper::GetManagedObject<MformsTree>(backend);
   return control->NodeFromTag(CppStringToNative(tag));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_column_title(mforms::TreeView *backend, int column, const std::string &title) {
+auto TreeViewWrapper::set_column_title(mforms::TreeView *backend, int column, const std::string &title) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->set_column_title(column, title);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_column_visible(mforms::TreeView *backend, int column, bool flag) {
+auto TreeViewWrapper::set_column_visible(mforms::TreeView *backend, int column, bool flag) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->set_column_visible(column, flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeViewWrapper::get_column_visible(mforms::TreeView *backend, int column) {
+auto TreeViewWrapper::get_column_visible(mforms::TreeView *backend, int column) -> bool {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   return wrapper->is_column_visible(column);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_column_width(mforms::TreeView *backend, int column, int width) {
+auto TreeViewWrapper::set_column_width(mforms::TreeView *backend, int column, int width) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->set_column_width(column, width);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeViewWrapper::get_column_width(mforms::TreeView *backend, int column) {
+auto TreeViewWrapper::get_column_width(mforms::TreeView *backend, int column) -> int {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   return wrapper->get_column_width(column);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::BeginUpdate(mforms::TreeView *backend) {
+auto TreeViewWrapper::BeginUpdate(mforms::TreeView *backend) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->BeginUpdate();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::EndUpdate(mforms::TreeView *backend) {
+auto TreeViewWrapper::EndUpdate(mforms::TreeView *backend) -> void {
   TreeViewWrapper *wrapper = backend->get_data<TreeViewWrapper>();
   wrapper->EndUpdate();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_row_height(int h) {
+auto TreeViewWrapper::set_row_height(int h) -> void {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   tree->RowHeight = h;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::clear_selection() {
+auto TreeViewWrapper::clear_selection() -> void {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   tree->ClearSelection();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::list<mforms::TreeNodeRef> TreeViewWrapper::get_selection() {
+auto TreeViewWrapper::get_selection() -> std::list<mforms::TreeNodeRef> {
   std::list<mforms::TreeNodeRef> selection;
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   ReadOnlyCollection<TreeNodeAdv ^> ^ sel = tree->SelectedNodes;
@@ -1209,7 +1208,7 @@ std::list<mforms::TreeNodeRef> TreeViewWrapper::get_selection() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeSelectionMode TreeViewWrapper::get_selection_mode() {
+auto TreeViewWrapper::get_selection_mode() -> mforms::TreeSelectionMode {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   switch (tree->SelectionMode) {
     case Aga::Controls::Tree::TreeSelectionMode::Single:
@@ -1225,7 +1224,7 @@ mforms::TreeSelectionMode TreeViewWrapper::get_selection_mode() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_selection_mode(mforms::TreeSelectionMode mode) {
+auto TreeViewWrapper::set_selection_mode(mforms::TreeSelectionMode mode) -> void {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   switch (mode) {
     case mforms::TreeSelectSingle:
@@ -1238,13 +1237,13 @@ void TreeViewWrapper::set_selection_mode(mforms::TreeSelectionMode mode) {
 }
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeViewWrapper::root_node() {
+auto TreeViewWrapper::root_node() -> mforms::TreeNodeRef {
   return mforms::TreeNodeRef(new TreeNodeWrapper(this));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-static mforms::TreeNodeRef find_node_at_row(mforms::TreeNodeRef node, int &row_counter, int row) {
+static auto find_node_at_row(mforms::TreeNodeRef node, int &row_counter, int row) -> mforms::TreeNodeRef {
   mforms::TreeNodeRef res;
   for (int i = 0, c = node->count(); i < c; i++) {
     mforms::TreeNodeRef child = node->get_child(i);
@@ -1262,7 +1261,7 @@ static mforms::TreeNodeRef find_node_at_row(mforms::TreeNodeRef node, int &row_c
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeViewWrapper::node_at_row(int row) {
+auto TreeViewWrapper::node_at_row(int row) -> mforms::TreeNodeRef {
   int i = 0;
   mforms::TreeNodeRef node = find_node_at_row(root_node(), i, row);
   return node;
@@ -1270,7 +1269,7 @@ mforms::TreeNodeRef TreeViewWrapper::node_at_row(int row) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeViewWrapper::node_at_position(base::Point position) {
+auto TreeViewWrapper::node_at_position(base::Point position) -> mforms::TreeNodeRef {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   TreeNodeAdv ^ node = tree->GetNodeAt(::Point((int)position.x, (int)position.y));
   if (node == nullptr)
@@ -1281,7 +1280,7 @@ mforms::TreeNodeRef TreeViewWrapper::node_at_position(base::Point position) {
 
 //--------------------------------------------------------------------------------------------------
 
-static int count_rows_in_node(mforms::TreeNodeRef node) {
+static auto count_rows_in_node(mforms::TreeNodeRef node) -> int {
   if (node->is_expanded()) {
     int count = node->count();
     for (int i = 0, c = node->count(); i < c; i++) {
@@ -1296,7 +1295,7 @@ static int count_rows_in_node(mforms::TreeNodeRef node) {
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeViewWrapper::row_for_node(mforms::TreeNodeRef node) {
+auto TreeViewWrapper::row_for_node(mforms::TreeNodeRef node) -> int {
   TreeNodeWrapper *impl = dynamic_cast<TreeNodeWrapper *>(node.ptr());
   if (impl) {
     mforms::TreeNodeRef parent = node->get_parent();
@@ -1319,42 +1318,42 @@ int TreeViewWrapper::row_for_node(mforms::TreeNodeRef node) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_column_title(int column, const std::string &title) {
+auto TreeViewWrapper::set_column_title(int column, const std::string &title) -> void {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   tree->Columns[column]->Header = CppStringToNative(title);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_column_visible(int column, bool flag) {
+auto TreeViewWrapper::set_column_visible(int column, bool flag) -> void {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   tree->Columns[column]->IsVisible = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeViewWrapper::is_column_visible(int column) {
+auto TreeViewWrapper::is_column_visible(int column) -> bool {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   return tree->Columns[column]->IsVisible;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_column_width(int column, int width) {
+auto TreeViewWrapper::set_column_width(int column, int width) -> void {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   tree->Columns[column]->Width = width;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeViewWrapper::get_column_width(int column) {
+auto TreeViewWrapper::get_column_width(int column) -> int {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   return tree->Columns[column]->Width;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::DropPosition TreeViewWrapper::get_drop_position() {
+auto TreeViewWrapper::get_drop_position() -> mforms::DropPosition {
   TreeViewAdv ^ tree = GetManagedObject<TreeViewAdv>();
   switch (tree->DropPosition.Position) {
     case NodePosition::Inside:
@@ -1384,49 +1383,49 @@ void TreeViewWrapper::process_mapping(TreeNodeAdv ^ node, const std::string &tag
 /**
  * Called by a treeview node if new text was set.
  */
-void TreeViewWrapper::node_value_set(int column) {
+auto TreeViewWrapper::node_value_set(int column) -> void {
   MformsTree ^ tree = GetManagedObject<MformsTree>();
   tree->UpdateSorting(column);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::set_selected(mforms::TreeNodeRef node, bool flag) {
+auto TreeViewWrapper::set_selected(mforms::TreeNodeRef node, bool flag) -> void {
   TreeNodeWrapper *wrapper = dynamic_cast<TreeNodeWrapper *>(node.ptr());
   wrapper->set_selected(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::scrollToNode(mforms::TreeNodeRef node) {
+auto TreeViewWrapper::scrollToNode(mforms::TreeNodeRef node) -> void {
   TreeNodeWrapper *wrapper = dynamic_cast<TreeNodeWrapper *>(node.ptr());
   wrapper->scrollToNode();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::freeze_refresh(bool flag) {
+auto TreeViewWrapper::freeze_refresh(bool flag) -> void {
   MformsTree ^ tree = GetManagedObject<MformsTree>();
   tree->FreezeRefresh(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::BeginUpdate() {
+auto TreeViewWrapper::BeginUpdate() -> void {
   MformsTree ^ tree = GetManagedObject<MformsTree>();
   tree->BeginUpdate();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::EndUpdate() {
+auto TreeViewWrapper::EndUpdate() -> void {
   MformsTree ^ tree = GetManagedObject<MformsTree>();
   tree->EndUpdate();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewWrapper::init() {
+auto TreeViewWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_treeview_impl.create = &TreeViewWrapper::create;

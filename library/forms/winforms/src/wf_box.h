@@ -110,12 +110,11 @@ namespace MySQL {
           }
         }
 
-        virtual property bool Homogeneous {
-        bool get() {
+        virtual auto get() -> property bool Homogeneous { bool {
           return homogeneous;
         }
 
-        void set(bool value) {
+        auto set(bool value) -> void {
           if (homogeneous != value) {
             ViewWrapper::set_layout_dirty(this, true);
             homogeneous = value;
@@ -124,12 +123,11 @@ namespace MySQL {
         }
       }
 
-      virtual property int Spacing {
-        int get() {
+      virtual auto get() -> property int Spacing { int {
           return spacing;
         }
 
-        void set(int value) {
+        auto set(int value) -> void {
           if (spacing != value) {
             ViewWrapper::set_layout_dirty(this, true);
             spacing = value;
@@ -138,12 +136,11 @@ namespace MySQL {
         }
       }
 
-      virtual property bool Horizontal {
-        bool get() {
+      virtual auto get() -> property bool Horizontal { bool {
           return horizontal;
         }
 
-        void set(bool value) {
+        auto set(bool value) -> void {
           if (horizontal != value) {
             horizontal = value;
             layoutEngine = nullptr;
@@ -157,17 +154,17 @@ namespace MySQL {
   public
     class BoxWrapper : public ViewWrapper {
     protected:
-      static bool create(mforms::Box *backend, bool horizontal);
-      static void add(mforms::Box *backend, mforms::View *child, bool expand, bool fill);
-      static void add_end(mforms::Box *backend, mforms::View *child, bool expand, bool fill);
-      static void remove(mforms::Box *backend, mforms::View *child);
-      static void set_spacing(mforms::Box *backend, int space);
-      static void set_homogeneous(mforms::Box *backend, bool value);
+      static auto create(mforms::Box *backend, bool horizontal) -> bool;
+      static auto add(mforms::Box *backend, mforms::View *child, bool expand, bool fill) -> void;
+      static auto add_end(mforms::Box *backend, mforms::View *child, bool expand, bool fill) -> void;
+      static auto remove(mforms::Box *backend, mforms::View *child) -> void;
+      static auto set_spacing(mforms::Box *backend, int space) -> void;
+      static auto set_homogeneous(mforms::Box *backend, bool value) -> void;
 
     public:
       BoxWrapper(mforms::Box *box);
 
-      static void init();
+      static auto init() -> void;
     };
   };
 };

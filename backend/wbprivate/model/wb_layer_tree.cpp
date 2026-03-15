@@ -56,7 +56,7 @@ LayerTree::LayerTree(ModelDiagramForm *form, const model_DiagramRef &diagram)
                            std::placeholders::_3));
 }
 
-void LayerTree::add_figure_node(mforms::TreeNodeRef parent, model_FigureRef figure, int insertion_point) {
+auto LayerTree::add_figure_node(mforms::TreeNodeRef parent, model_FigureRef figure, int insertion_point) -> void {
   bec::IconManager *im = bec::IconManager::get_instance();
   mforms::TreeNodeRef fnode;
   FigureNode *fchild = new FigureNode();
@@ -91,7 +91,7 @@ void LayerTree::add_figure_node(mforms::TreeNodeRef parent, model_FigureRef figu
   }
 }
 
-void LayerTree::refresh() {
+auto LayerTree::refresh() -> void {
   bec::IconManager *im = bec::IconManager::get_instance();
   model_LayerRef layer = _diagram->rootLayer();
 
@@ -138,7 +138,7 @@ void LayerTree::refresh() {
   refresh_selection_status();
 }
 
-void LayerTree::object_changed(const std::string &key, const grt::ValueRef &value, mforms::TreeNodeRef node) {
+auto LayerTree::object_changed(const std::string &key, const grt::ValueRef &value, mforms::TreeNodeRef node) -> void {
   FigureNode *fn = dynamic_cast<FigureNode *>(node->get_data());
 
   if (key == "name")
@@ -170,7 +170,7 @@ void LayerTree::object_changed(const std::string &key, const grt::ValueRef &valu
   }
 }
 
-void LayerTree::selection_changed() {
+auto LayerTree::selection_changed() -> void {
   std::vector<model_ObjectRef> new_selection;
   std::vector<model_ObjectRef> old_selection;
   {
@@ -206,7 +206,7 @@ void LayerTree::selection_changed() {
   _updating_selection = false;
 }
 
-void LayerTree::refresh_selection_status() {
+auto LayerTree::refresh_selection_status() -> void {
   clear_selection();
   for (size_t c = _diagram->selection().count(), i = 0; i < c; i++) {
     std::string id = _diagram->selection().get(i)->id();
@@ -216,7 +216,7 @@ void LayerTree::refresh_selection_status() {
   }
 }
 
-void LayerTree::diagram_objects_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) {
+auto LayerTree::diagram_objects_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) -> void {
   if (list == _diagram->figures().valueptr()) {
     model_FigureRef figure(model_FigureRef::cast_from(value));
     if (added) {
@@ -283,13 +283,13 @@ void LayerTree::diagram_objects_changed(grt::internal::OwnedList *list, bool add
   }
 }
 
-void LayerTree::activate_node(const mforms::TreeNodeRef &node, int column) {
+auto LayerTree::activate_node(const mforms::TreeNodeRef &node, int column) -> void {
   FigureNode *fnode = dynamic_cast<FigureNode *>(node->get_data());
   if (fnode)
     _form->focus_and_make_visible(fnode->object, true);
 }
 
-void LayerTree::handle_menu_action(const std::string &name) {
+auto LayerTree::handle_menu_action(const std::string &name) -> void {
   /*
   std::vector<bec::NodeId> nodes(unsorted_nodes);
   std::sort(nodes.begin(), nodes.end());

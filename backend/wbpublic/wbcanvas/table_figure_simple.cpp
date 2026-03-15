@@ -53,28 +53,28 @@ SimpleTable::SimpleTable(mdc::Layer *layer, FigureEventHub *hub, const model_Obj
   add(&_column_box, false, true, true);
 }
 
-void SimpleTable::set_color(const Color &color) {
+auto SimpleTable::set_color(const Color &color) -> void {
   set_background_color(color);
   set_needs_render();
 }
 
-void SimpleTable::set_barker_notation(bool flag) {
+auto SimpleTable::set_barker_notation(bool flag) -> void {
   _barker = true;
 }
 
-void SimpleTable::set_dependant(bool flag) {
+auto SimpleTable::set_dependant(bool flag) -> void {
   if (flag)
     set_background_corners(mdc::CAll, 8.0);
   else
     set_background_corners(mdc::CNone, 0.0);
 }
 
-Table::ItemList::iterator SimpleTable::begin_columns_sync() {
+auto SimpleTable::begin_columns_sync() -> Table::ItemList::iterator {
   return begin_sync(_column_box, _columns);
 }
 
-Table::ItemList::iterator SimpleTable::sync_next_column(ItemList::iterator iter, const std::string &id,
-                                                        ColumnFlags flags, const std::string &text) {
+auto SimpleTable::sync_next_column(ItemList::iterator iter, const std::string &id,
+                                                        ColumnFlags flags, const std::string &text) -> Table::ItemList::iterator {
   std::string pref;
 
   if (_barker) {
@@ -103,6 +103,6 @@ Table::ItemList::iterator SimpleTable::sync_next_column(ItemList::iterator iter,
                      std::bind(&SimpleTable::update_column_item, this, std::placeholders::_1, flags));
 }
 
-void SimpleTable::end_columns_sync(ItemList::iterator iter) {
+auto SimpleTable::end_columns_sync(ItemList::iterator iter) -> void {
   end_sync(_column_box, _columns, iter);
 }

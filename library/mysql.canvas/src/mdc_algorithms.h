@@ -189,7 +189,7 @@ namespace mdc {
 
   //----------------------------------------------------------------------------------------------------------------------
 
-  inline void points_reorder(base::Point &topleft, base::Point &bottomright) {
+  inline auto points_reorder(base::Point &topleft, base::Point &bottomright) -> void {
     double tmp;
 
     if (topleft.x > bottomright.x) {

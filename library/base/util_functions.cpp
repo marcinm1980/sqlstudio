@@ -89,7 +89,7 @@ struct hardware_info {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-char *auto_line_break(const char *txt, unsigned int width, char sep) {
+auto auto_line_break(const char *txt, unsigned int width, char sep) -> char * {
   char *dst = (char *)g_malloc((width + 2) * 80);
   unsigned int i, o = 0, p = 0, w = 0, l = (unsigned int)strlen(txt);
 
@@ -124,7 +124,7 @@ char *auto_line_break(const char *txt, unsigned int width, char sep) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int str_is_numeric(const char *str) {
+auto str_is_numeric(const char *str) -> int {
   unsigned int len = (unsigned int)strlen(str);
   unsigned int i;
 
@@ -137,7 +137,7 @@ int str_is_numeric(const char *str) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-char *str_toupper(char *str) {
+auto str_toupper(char *str) -> char * {
   char *s = str;
 
   while (*s) {
@@ -154,8 +154,8 @@ char *str_toupper(char *str) {
 #define BUFSIZE 256
 #define VER_SUITE_WH_SERVER 0x00008000
 
-int get_value_from_registry(HKEY root_key, const char *sub_key, const char *key, const char *def, char *value,
-                            int target_size) {
+auto get_value_from_registry(HKEY root_key, const char *sub_key, const char *key, const char *def, char *value,
+                            int target_size) -> int {
   HKEY hSubKey;
   DWORD dwType;
   DWORD dwSize;
@@ -184,7 +184,7 @@ int get_value_from_registry(HKEY root_key, const char *sub_key, const char *key,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int set_value_to_registry(HKEY root_key, const char *sub_key, const char *key, const char *value) {
+auto set_value_to_registry(HKEY root_key, const char *sub_key, const char *key, const char *value) -> int {
   HKEY hSubKey;
   LONG retval;
   DWORD dwDispo;
@@ -208,7 +208,7 @@ int set_value_to_registry(HKEY root_key, const char *sub_key, const char *key, c
 typedef void(WINAPI *PGNSI)(LPSYSTEM_INFO);
 typedef BOOL(WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 
-std::string get_local_os_name() {
+auto get_local_os_name() -> std::string {
   std::string result;
   char buffer[BUFSIZE];
 
@@ -232,7 +232,7 @@ std::string get_local_os_name() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string get_local_hardware_info() {
+auto get_local_hardware_info() -> std::string {
   char *hardware_string;
   SYSTEM_INFO sysinfo;
   MEMORYSTATUSEX memstat;
@@ -289,7 +289,7 @@ std::string get_local_hardware_info() {
 
 #if defined(__APPLE__) && defined(__MACH__)
 
-std::string get_local_os_name() {
+auto get_local_os_name() -> std::string {
   struct utsname info;
 
   if (uname(&info) < 0)
@@ -316,7 +316,7 @@ std::string get_local_os_name() {
   return "unknown";
 }
 
-static const char *get_cpu_type_name(int cpu_type, int cpu_subtype) {
+static auto get_cpu_type_name(int cpu_type, int cpu_subtype) -> const char * {
   switch (cpu_type) {
     case CPU_TYPE_I386:
       switch (cpu_subtype) {
@@ -423,7 +423,7 @@ static const char *get_cpu_type_name(int cpu_type, int cpu_subtype) {
 //----------------------------------------------------------------------------------------------------------------------
 
 // macOS
-static int _get_hardware_info(hardware_info &info) {
+static auto _get_hardware_info(hardware_info &info) -> int {
   int mib[2];
   size_t length;
   int tmp;
@@ -481,7 +481,7 @@ static int _get_hardware_info(hardware_info &info) {
 
 // Linux/Unix version
 
-std::string get_local_os_name() {
+auto get_local_os_name() -> std::string {
   auto is_debian_based = [](struct utsname &info) -> bool {
     return strstr(info.version, "Ubuntu") or strstr(info.version, "Debian");
   };
@@ -535,7 +535,7 @@ std::string get_local_os_name() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static int _get_hardware_info(hardware_info &info) {
+static auto _get_hardware_info(hardware_info &info) -> int {
   FILE *proc;
   char line[256];
 
@@ -567,7 +567,7 @@ static int _get_hardware_info(hardware_info &info) {
 #endif
 
 //----------------------------------------------------------------------------------------------------------------------
-std::string get_local_hardware_info() {
+auto get_local_hardware_info() -> std::string {
   std::stringstream hardware_string;
   hardware_info info;
 
@@ -590,7 +590,7 @@ std::string get_local_hardware_info() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::int64_t get_physical_memory_size() {
+auto get_physical_memory_size() -> std::int64_t {
 #if defined(_MSC_VER)
   MEMORYSTATUS memstat;
 
@@ -655,7 +655,7 @@ std::int64_t get_physical_memory_size() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::int64_t get_file_size(const char *filename) {
+auto get_file_size(const char *filename) -> std::int64_t {
 #if _MSC_VER
   DWORD dwSizeLow;
   DWORD dwSizeHigh = 0;
@@ -695,7 +695,7 @@ std::int64_t get_file_size(const char *filename) {
 }
 
 // note, needle has to be ascii!
-char *strcasestr_len(const char *haystack, int haystack_len, const char *needle) {
+auto strcasestr_len(const char *haystack, int haystack_len, const char *needle) -> char * {
   gssize needle_len = (gssize)strlen(needle);
   int i;
 
@@ -713,7 +713,7 @@ char *strcasestr_len(const char *haystack, int haystack_len, const char *needle)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-const char *strfindword(const char *str, const char *word) {
+auto strfindword(const char *str, const char *word) -> const char * {
   const char *result = NULL;
   const char *ptr;
   size_t wordlen = strlen(word);
@@ -744,7 +744,7 @@ const char *strfindword(const char *str, const char *word) {
 /**
  * Copies all files non-recursively from source to target. Target will be created on the fly.
  */
-int copy_folder(const char *source_folder, const char *target_folder) {
+auto copy_folder(const char *source_folder, const char *target_folder) -> int {
   const char *entry;
   GDir *dir;
 
@@ -780,7 +780,7 @@ int copy_folder(const char *source_folder, const char *target_folder) {
 
 namespace base {
 
-  double timestamp() {
+  auto timestamp() -> double {
 #if defined(_MSC_VER)
     return (double)GetTickCount() / 1000.0;
 #else
@@ -794,7 +794,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string fmttime(time_t t, const char *fmt) {
+  auto fmttime(time_t t, const char *fmt) -> std::string {
     char date[100];
 #ifdef _MSC_VER
     errno_t err;
@@ -822,7 +822,7 @@ namespace base {
   }
 
 
-  BASELIBRARY_PUBLIC_FUNC std::string getVersion(void) {
+  BASELIBRARY_PUBLIC_FUNC auto getVersion(void) -> std::string {
     return strfmt("%u.%u.%u", APP_MAJOR_NUMBER, APP_MINOR_NUMBER, APP_RELEASE_NUMBER);
   }
 

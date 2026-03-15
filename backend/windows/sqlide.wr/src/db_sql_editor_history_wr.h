@@ -41,7 +41,7 @@ namespace MySQL {
         typedef ManagedRef<::DbSqlEditorHistory> ^ Ref;
 
         DbSqlEditorHistoryWrapper(Ref ref);
-        Ref ref() {
+        auto ref() -> Ref {
           return _ref;
         }
 
@@ -51,19 +51,19 @@ namespace MySQL {
         ~DbSqlEditorHistoryWrapper();
 
       public:
-        VarGridModelWrapper ^ entries_model() { return _entries_model; } VarGridModelWrapper ^
+        auto entries_model() -> VarGridModelWrapper ^ { return _entries_model; } VarGridModelWrapper ^
           details_model() { return _details_model; } private : VarGridModelWrapper ^ _entries_model;
         VarGridModelWrapper ^ _details_model;
 
       public:
-        void current_entry(int index) {
+        auto current_entry(int index) -> void {
           _ref->current_entry(index);
         }
-        int current_entry() {
+        auto current_entry() -> int {
           return _ref->current_entry();
         }
 
-        System::Windows::Forms::ContextMenuStrip ^ get_details_context_menu();
+        auto get_details_context_menu() -> System::Windows::Forms::ContextMenuStrip ^;
       };
 
     }; // namespace MySqlStudio

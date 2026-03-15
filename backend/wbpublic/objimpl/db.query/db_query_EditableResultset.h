@@ -31,7 +31,7 @@
 
 #include "wbpublic_public_interface.h"
 
-db_query_EditableResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC grtwrap_editablerecordset(GrtObjectRef owner,
-                                                                                    Recordset::Ref rset);
+auto grtwrap_editablerecordset(GrtObjectRef owner,
+                                                                                    Recordset::Ref rset) -> db_query_EditableResultsetRef WBPUBLICBACKEND_PUBLIC_FUNC;
 
 #endif

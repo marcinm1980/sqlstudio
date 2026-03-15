@@ -36,27 +36,27 @@ namespace grtui {
   public:
     WizardFinishedPage(WizardForm *form, const std::string &top_title);
 
-    void set_heading(const std::string &title);
-    void set_summary(const std::string &text);
+    auto set_heading(const std::string &title) -> void;
+    auto set_summary(const std::string &text) -> void;
 
   private:
     mforms::Label _label1;
     mforms::Label _label2;
     std::string _top_title;
 
-    virtual bool next_closes_wizard() {
+    virtual auto next_closes_wizard() -> bool {
       return true;
     }
 
-    virtual bool allow_next() {
+    virtual auto allow_next() -> bool {
       return true;
     }
 
-    virtual bool allow_cancel() {
+    virtual auto allow_cancel() -> bool {
       return false;
     }
 
-    virtual std::string next_button_caption();
+    virtual auto next_button_caption() -> std::string;
   };
 };
 

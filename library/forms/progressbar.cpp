@@ -33,18 +33,18 @@ ProgressBar::ProgressBar() {
   _progressbar_impl->create(this);
 }
 
-void ProgressBar::set_value(float pct) {
+auto ProgressBar::set_value(float pct) -> void {
   _progressbar_impl->set_value(this, pct);
 }
 
-void ProgressBar::set_indeterminate(bool flag) {
+auto ProgressBar::set_indeterminate(bool flag) -> void {
   _progressbar_impl->set_indeterminate(this, flag);
 }
 
-void ProgressBar::start() {
+auto ProgressBar::start() -> void {
   _progressbar_impl->set_started(this, true);
 }
 
-void ProgressBar::stop() {
+auto ProgressBar::stop() -> void {
   _progressbar_impl->set_started(this, false);
 }

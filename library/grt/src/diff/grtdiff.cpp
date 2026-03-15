@@ -41,7 +41,7 @@
 
 namespace grt {
 
-  time_t timestamp() {
+  auto timestamp() -> time_t {
 #if defined(_MSC_VER)
     return GetTickCount();
 #else
@@ -52,8 +52,8 @@ namespace grt {
   }
 
   //#define LOG_DIFF_TIME
-  std::shared_ptr<DiffChange> diff_make(const ValueRef &source, const ValueRef &target, const Omf *omf,
-                                        bool dont_clone_values) {
+  auto diff_make(const ValueRef &source, const ValueRef &target, const Omf *omf,
+                                        bool dont_clone_values) -> std::shared_ptr<DiffChange> {
 #ifdef LOG_DIFF_TIME
     time_t start = timestamp();
 #endif
@@ -65,15 +65,15 @@ namespace grt {
     return result;
   }
 
-  bool is_any(const ValueRef &v) {
+  auto is_any(const ValueRef &v) -> bool {
     return !v.is_valid() || v.type() == AnyType;
   }
 
-  inline bool XOR(bool a, bool b) {
+  inline auto XOR(bool a, bool b) -> bool {
     return a ^ b;
   }
 
-  bool are_compatible(const ValueRef &source, const ValueRef &target, Type *cmptype) {
+  auto are_compatible(const ValueRef &source, const ValueRef &target, Type *cmptype) -> bool {
     Type st = source.type();
     Type tt = target.type();
 
@@ -83,7 +83,7 @@ namespace grt {
     return ((st == tt) && !is_any(source)) || XOR(is_any(source), is_any(target));
   }
 
-  bool are_compatible_lists(const BaseListRef &source, const BaseListRef &target, Type *cmptype) {
+  auto are_compatible_lists(const BaseListRef &source, const BaseListRef &target, Type *cmptype) -> bool {
     Type stl = is_any(source) ? AnyType : source.content_type();
     Type ttl = is_any(target) ? AnyType : target.content_type();
 
@@ -95,12 +95,12 @@ namespace grt {
            (XOR(is_any(source), is_any(target)) && (is_simple_type(type) || type == ObjectType));
   }
 
-  std::shared_ptr<DiffChange> GrtDiff::diff(const ValueRef &source, const ValueRef &target, const Omf *omf) {
+  auto GrtDiff::diff(const ValueRef &source, const ValueRef &target, const Omf *omf) -> std::shared_ptr<DiffChange> {
     return on_value(std::shared_ptr<DiffChange>(), source, target);
   }
 
-  std::shared_ptr<DiffChange> GrtDiff::on_value(std::shared_ptr<DiffChange> parent, const ValueRef &source,
-                                                const ValueRef &target) {
+  auto GrtDiff::on_value(std::shared_ptr<DiffChange> parent, const ValueRef &source,
+                                                const ValueRef &target) -> std::shared_ptr<DiffChange> {
     Type type;
     if (!are_compatible(source, target, &type))
       return on_uncompatible(parent, source, target);
@@ -135,8 +135,8 @@ namespace grt {
     return std::shared_ptr<DiffChange>();
   }
 
-  std::shared_ptr<DiffChange> GrtDiff::on_object(std::shared_ptr<DiffChange> parent, const ObjectRef &source,
-                                                 const ObjectRef &target) {
+  auto GrtDiff::on_object(std::shared_ptr<DiffChange> parent, const ObjectRef &source,
+                                                 const ObjectRef &target) -> std::shared_ptr<DiffChange> {
     ChangeSet changes;
     MetaClass *meta = source.get_metaclass();
 
@@ -248,8 +248,8 @@ namespace grt {
     return ChangeFactory::create_object_modified_change(parent, source, target, changes);
   }
 
-  std::shared_ptr<DiffChange> GrtDiff::on_list(std::shared_ptr<DiffChange> parent, const BaseListRef &source,
-                                               const BaseListRef &target) {
+  auto GrtDiff::on_list(std::shared_ptr<DiffChange> parent, const BaseListRef &source,
+                                               const BaseListRef &target) -> std::shared_ptr<DiffChange> {
     Type type;
 
     if (!are_compatible_lists(source, target, &type))
@@ -258,8 +258,8 @@ namespace grt {
     return GrtListDiff::diff(source, target, omf);
   }
 
-  std::shared_ptr<DiffChange> GrtDiff::on_dict(std::shared_ptr<DiffChange> parent, const DictRef &source,
-                                               const DictRef &target) {
+  auto GrtDiff::on_dict(std::shared_ptr<DiffChange> parent, const DictRef &source,
+                                               const DictRef &target) -> std::shared_ptr<DiffChange> {
     ChangeSet changes;
 
     for (internal::Dict::const_iterator iter = source.begin(); iter != source.end(); ++iter) {
@@ -284,8 +284,8 @@ namespace grt {
     return ChangeFactory::create_dict_change(parent, source, target, changes);
   }
 
-  std::shared_ptr<DiffChange> GrtDiff::on_uncompatible(std::shared_ptr<DiffChange> parent, const ValueRef &source,
-                                                       const ValueRef &target) {
+  auto GrtDiff::on_uncompatible(std::shared_ptr<DiffChange> parent, const ValueRef &source,
+                                                       const ValueRef &target) -> std::shared_ptr<DiffChange> {
     return ChangeFactory::create_value_added_change(parent, source, target);
   }
 }

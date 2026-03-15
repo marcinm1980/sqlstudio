@@ -33,23 +33,23 @@ namespace bec {
   public:
     RoutineGroupEditorBE(const db_RoutineGroupRef &group);
 
-    virtual std::string get_title();
+    virtual auto get_title() -> std::string;
 
-    virtual db_RoutineGroupRef get_routine_group() = 0;
+    virtual auto get_routine_group() -> db_RoutineGroupRef = 0;
 
-    virtual std::string get_sql();
-    std::string get_routine_sql(db_RoutineRef routine);
+    virtual auto get_sql() -> std::string;
+    auto get_routine_sql(db_RoutineRef routine) -> std::string;
 
-    virtual std::vector<std::string> get_routines_names();
+    virtual auto get_routines_names() -> std::vector<std::string>;
 
-    void delete_routine_with_name(const std::string &str);
-    void remove_routine_by_index(size_t index);
-    void append_routine_with_id(const std::string &id);
+    auto delete_routine_with_name(const std::string &str) -> void;
+    auto remove_routine_by_index(size_t index) -> void;
+    auto append_routine_with_id(const std::string &id) -> void;
 
-    void open_editor_for_routine_at_index(size_t index);
+    auto open_editor_for_routine_at_index(size_t index) -> void;
 
   private:
-    std::string set_routine_newlines(const std::string &routine);
+    auto set_routine_newlines(const std::string &routine) -> std::string;
   };
 
 } // namespace bec

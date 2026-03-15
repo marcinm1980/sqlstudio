@@ -42,7 +42,7 @@ ImageBoxWrapper::ImageBoxWrapper(mforms::ImageBox *backend) : ViewWrapper(backen
 
 //--------------------------------------------------------------------------------------------------
 
-bool ImageBoxWrapper::create(mforms::ImageBox *backend) {
+auto ImageBoxWrapper::create(mforms::ImageBox *backend) -> bool {
   ImageBoxWrapper *wrapper = new ImageBoxWrapper(backend);
   PictureBox ^ imagebox = ImageBoxWrapper::Create<PictureBox>(backend, wrapper);
   imagebox->SizeMode = PictureBoxSizeMode::CenterImage;
@@ -51,7 +51,7 @@ bool ImageBoxWrapper::create(mforms::ImageBox *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageBoxWrapper::set_image(mforms::ImageBox *backend, const std::string &file) {
+auto ImageBoxWrapper::set_image(mforms::ImageBox *backend, const std::string &file) -> void {
   if (!file.empty()) {
     PictureBox ^ box = ImageBoxWrapper::GetManagedObject<PictureBox>(backend);
     String ^ name = CppStringToNative(mforms::App::get()->get_resource_path(file));
@@ -70,7 +70,7 @@ void ImageBoxWrapper::set_image(mforms::ImageBox *backend, const std::string &fi
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageBoxWrapper::set_image_align(mforms::ImageBox *backend, mforms::Alignment alignment) {
+auto ImageBoxWrapper::set_image_align(mforms::ImageBox *backend, mforms::Alignment alignment) -> void {
   // Alignment within a picture box is only partially adjustable. Embed the box in an own container
   // to have more control over the alignment.
   PictureBox ^ box = ImageBoxWrapper::GetManagedObject<PictureBox>(backend);
@@ -89,7 +89,7 @@ void ImageBoxWrapper::set_image_align(mforms::ImageBox *backend, mforms::Alignme
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageBoxWrapper::set_image_data(mforms::ImageBox *backend, const char *data, size_t length) {
+auto ImageBoxWrapper::set_image_data(mforms::ImageBox *backend, const char *data, size_t length) -> void {
   if (data != NULL && length > 0) {
     UnmanagedMemoryStream ^ stream = gcnew UnmanagedMemoryStream((byte *)data, length);
     try {
@@ -107,7 +107,7 @@ void ImageBoxWrapper::set_image_data(mforms::ImageBox *backend, const char *data
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageBoxWrapper::set_scale_contents(mforms::ImageBox *backend, bool flag) {
+auto ImageBoxWrapper::set_scale_contents(mforms::ImageBox *backend, bool flag) -> void {
   PictureBox ^ box = ImageBoxWrapper::GetManagedObject<PictureBox>(backend);
   if (flag)
     box->SizeMode = PictureBoxSizeMode::StretchImage;
@@ -117,7 +117,7 @@ void ImageBoxWrapper::set_scale_contents(mforms::ImageBox *backend, bool flag) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ImageBoxWrapper::init() {
+auto ImageBoxWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_imagebox_impl.create = &ImageBoxWrapper::create;

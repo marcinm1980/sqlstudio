@@ -36,38 +36,38 @@ namespace mforms {
       TabViewWrapper(::mforms::TabView *self, bool tabless) : ViewWrapper(self) {
       }
 
-      static bool create(::mforms::TabView *self, ::mforms::TabViewType) {
+      static auto create(::mforms::TabView *self, ::mforms::TabViewType) -> bool {
         return true;
       }
 
-      static void set_active_tab(::mforms::TabView *self, int index) {
+      static auto set_active_tab(::mforms::TabView *self, int index) -> void {
       }
 
-      static int get_active_tab(::mforms::TabView *self) {
+      static auto get_active_tab(::mforms::TabView *self) -> int {
         return -1;
       }
 
-      static int add_page(::mforms::TabView *self, ::mforms::View *page, const std::string &caption,
-                          bool hasCloseButton) {
+      static auto add_page(::mforms::TabView *self, ::mforms::View *page, const std::string &caption,
+                          bool hasCloseButton) -> int {
         return 0;
       }
 
-      static void set_tab_title(TabView *, int, const std::string &) {
+      static auto set_tab_title(TabView *, int, const std::string &) -> void {
       }
 
-      static void remove_page(TabView *, View *) {
+      static auto remove_page(TabView *, View *) -> void {
       }
 
-      static void setAuxView(TabView *, View *) {
+      static auto setAuxView(TabView *, View *) -> void {
 
       }
 
-      static void setAllowsReordering(TabView *, bool) {
+      static auto setAllowsReordering(TabView *, bool) -> void {
 
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_tabview_impl.create = &TabViewWrapper::create;

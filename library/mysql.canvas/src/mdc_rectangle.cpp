@@ -34,15 +34,15 @@ RectangleFigure::RectangleFigure(Layer *layer) : Figure(layer) {
   _filled = false;
 }
 
-void RectangleFigure::stroke_outline(CairoCtx *cr, float offset) const {
+auto RectangleFigure::stroke_outline(CairoCtx *cr, float offset) const -> void {
   stroke_rounded_rectangle(cr, get_bounds(), _corners, _corner_radius, offset);
 }
 
-void RectangleFigure::stroke_outline_gl(float offset) const {
+auto RectangleFigure::stroke_outline_gl(float offset) const -> void {
   stroke_rounded_rectangle_gl(get_bounds(), _corners, _corner_radius, offset);
 }
 
-void RectangleFigure::draw_contents(CairoCtx *cr) {
+auto RectangleFigure::draw_contents(CairoCtx *cr) -> void {
   cr->set_line_width(_line_width);
   stroke_outline(cr);
 
@@ -59,7 +59,7 @@ void RectangleFigure::draw_contents(CairoCtx *cr) {
   }
 }
 
-void RectangleFigure::draw_contents_gl() {
+auto RectangleFigure::draw_contents_gl() -> void {
 #ifndef __APPLE__
   glLineWidth(_line_width);
   if (_filled) {
@@ -73,13 +73,13 @@ void RectangleFigure::draw_contents_gl() {
 #endif
 }
 
-void RectangleFigure::set_rounded_corners(float radius, CornerMask corners) {
+auto RectangleFigure::set_rounded_corners(float radius, CornerMask corners) -> void {
   _corner_radius = radius;
   _corners = corners;
   set_needs_render();
 }
 
-void RectangleFigure::set_filled(bool flag) {
+auto RectangleFigure::set_filled(bool flag) -> void {
   _filled = flag;
   set_needs_render();
 }

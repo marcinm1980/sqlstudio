@@ -41,8 +41,8 @@ studio_physical_RoutineGroupFigure::ImplData::ImplData(studio_physical_RoutineGr
                  std::bind(&ImplData::member_changed, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void studio_physical_RoutineGroupFigure::ImplData::routinegroup_member_changed(const std::string &name,
-                                                                                  const grt::ValueRef &ovalue) {
+auto studio_physical_RoutineGroupFigure::ImplData::routinegroup_member_changed(const std::string &name,
+                                                                                  const grt::ValueRef &ovalue) -> void {
   if (name == "name") {
     self()->_name = self()->_routineGroup->name();
 
@@ -51,11 +51,11 @@ void studio_physical_RoutineGroupFigure::ImplData::routinegroup_member_changed(c
   }
 }
 
-void studio_physical_RoutineGroupFigure::ImplData::contents_changed() {
+auto studio_physical_RoutineGroupFigure::ImplData::contents_changed() -> void {
   sync_routines();
 }
 
-void studio_physical_RoutineGroupFigure::ImplData::set_in_view(bool flag) {
+auto studio_physical_RoutineGroupFigure::ImplData::set_in_view(bool flag) -> void {
   if (!self()->owner().is_valid())
     throw std::logic_error("adding figure to view before setting owner");
 
@@ -70,7 +70,7 @@ void studio_physical_RoutineGroupFigure::ImplData::set_in_view(bool flag) {
   model_Figure::ImplData::set_in_view(flag);
 }
 
-void studio_physical_RoutineGroupFigure::ImplData::set_routine_group(const db_RoutineGroupRef &rgroup) {
+auto studio_physical_RoutineGroupFigure::ImplData::set_routine_group(const db_RoutineGroupRef &rgroup) -> void {
   // Check if we had a valid rg before and revert the previous setup if so.
   if (self()->_routineGroup.is_valid()) {
     if (self()->_owner.is_valid())
@@ -104,8 +104,8 @@ void studio_physical_RoutineGroupFigure::ImplData::set_routine_group(const db_Ro
   }
 }
 
-void studio_physical_RoutineGroupFigure::ImplData::member_changed(const std::string &name,
-                                                                     const grt::ValueRef &ovalue) {
+auto studio_physical_RoutineGroupFigure::ImplData::member_changed(const std::string &name,
+                                                                     const grt::ValueRef &ovalue) -> void {
   if (name == "color" && self()->owner().is_valid() && self()->owner()->owner().is_valid() &&
       self()->owner()->owner()->get_data()->get_int_option("SynchronizeObjectColors", 0)) {
     if (*grt::StringRef::cast_from(ovalue) != "")
@@ -116,7 +116,7 @@ void studio_physical_RoutineGroupFigure::ImplData::member_changed(const std::str
   }
 }
 
-bool studio_physical_RoutineGroupFigure::ImplData::is_realizable() {
+auto studio_physical_RoutineGroupFigure::ImplData::is_realizable() -> bool {
   if (!super::is_realizable())
     return false;
 
@@ -126,7 +126,7 @@ bool studio_physical_RoutineGroupFigure::ImplData::is_realizable() {
   return false;
 }
 
-void studio_physical_RoutineGroupFigure::ImplData::unrealize() {
+auto studio_physical_RoutineGroupFigure::ImplData::unrealize() -> void {
   studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(self()->owner()->owner()));
 
   notify_will_unrealize();
@@ -143,7 +143,7 @@ void studio_physical_RoutineGroupFigure::ImplData::unrealize() {
   _figure = 0;
 }
 
-bool studio_physical_RoutineGroupFigure::ImplData::realize() {
+auto studio_physical_RoutineGroupFigure::ImplData::realize() -> bool {
   if (_figure)
     return true;
   if (!is_realizable())
@@ -190,7 +190,7 @@ bool studio_physical_RoutineGroupFigure::ImplData::realize() {
   return true;
 }
 
-void studio_physical_RoutineGroupFigure::ImplData::sync_routines() {
+auto studio_physical_RoutineGroupFigure::ImplData::sync_routines() -> void {
   if (_figure) {
     wbfig::BaseFigure::ItemList::iterator iter = _figure->begin_routines_sync();
 

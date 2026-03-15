@@ -38,7 +38,7 @@ namespace testing {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string grt_type_to_str(grt::Type grt_type) {
+auto grt_type_to_str(grt::Type grt_type) -> std::string {
   switch (grt_type) {
     case grt::AnyType:
       return "AnyType";
@@ -61,8 +61,8 @@ std::string grt_type_to_str(grt::Type grt_type) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void dump_tree_node(std::ofstream &out, bec::TreeModel *tree, const bec::NodeId &node,
-                           const std::vector<ssize_t> &columns, bool dump_type) {
+static auto dump_tree_node(std::ofstream &out, bec::TreeModel *tree, const bec::NodeId &node,
+                           const std::vector<ssize_t> &columns, bool dump_type) -> void {
   out << node.toString() << ":" << tree->count_children(node) << ":";
 
   for (std::vector<ssize_t>::const_iterator column = columns.begin(); column != columns.end(); ++column) {
@@ -113,7 +113,7 @@ public:
     if (_clear_stack_on_destroy)
       _followed_obj_stack.clear();
   }
-  static std::list<std::string> *followed_obj_stack() {
+  static auto followed_obj_stack() -> std::list<std::string> * {
     return &_followed_obj_stack;
   }
 
@@ -126,7 +126,7 @@ std::list<std::string> FollowedObjectsStackHelper::_followed_obj_stack;
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string pathToString(const std::string &msg, const std::list<std::string> &l) {
+static auto pathToString(const std::string &msg, const std::list<std::string> &l) -> std::string {
   std::ostringstream oss;
 
   oss << msg << " ";
@@ -139,8 +139,8 @@ static std::string pathToString(const std::string &msg, const std::list<std::str
 
 //--------------------------------------------------------------------------------------------------
 
-void compareValues(std::string const& major_msg, grt::ValueRef actualValue, grt::ValueRef expectedValue,
-  bool compare_obj_id, std::list<std::string> *followed_obj_stack, std::list<std::string> &followed_path) {
+auto compareValues(std::string const& major_msg, grt::ValueRef actualValue, grt::ValueRef expectedValue,
+  bool compare_obj_id, std::list<std::string> *followed_obj_stack, std::list<std::string> &followed_path) -> void {
   std::string msg = pathToString(major_msg, followed_path);
   if (actualValue.is_valid() && !expectedValue.is_valid())
     FAIL() << msg + ", have an actual value where none was expected";
@@ -293,15 +293,15 @@ void compareValues(std::string const& major_msg, grt::ValueRef actualValue, grt:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void deepCompareGrtValues(std::string const& major_msg, const grt::ValueRef &actual, const grt::ValueRef &expected,
-  bool compare_obj_id, std::list<std::string> *followed_obj_stack) {
+auto deepCompareGrtValues(std::string const& major_msg, const grt::ValueRef &actual, const grt::ValueRef &expected,
+  bool compare_obj_id, std::list<std::string> *followed_obj_stack) -> void {
   std::list<std::string> path;
   compareValues(major_msg, actual, expected, compare_obj_id, followed_obj_stack, path);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void dumpTreeModel(const std::string &path, bec::TreeModel *tree, const std::vector<ssize_t> &columns, bool dump_type) {
+auto dumpTreeModel(const std::string &path, bec::TreeModel *tree, const std::vector<ssize_t> &columns, bool dump_type) -> void {
   std::ofstream out(path.c_str(), std::ios::out | std::ios::trunc);
 
   if (out.is_open()) {

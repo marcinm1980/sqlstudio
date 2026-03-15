@@ -121,18 +121,18 @@ WindowsGDICanvasView ^ WindowsCanvasViewerPanel::CreateGDICanvas(Form ^ ownerFor
   return (WindowsGDICanvasView ^)canvas;
 }
 
-void WindowsCanvasViewerPanel::FinalizeCanvas() {
+auto WindowsCanvasViewerPanel::FinalizeCanvas() -> void {
   canvasInitialized = false;
   canvas->SetOwnerForm(nullptr);
   // canvas->Dispose();
   canvas = nullptr;
 }
 
-void WindowsCanvasViewerPanel::OnNeedsRepaint(int x, int y, int w, int h) {
+auto WindowsCanvasViewerPanel::OnNeedsRepaint(int x, int y, int w, int h) -> void {
   Invalidate(gcnew System::Drawing::Region(System::Drawing::Rectangle(x, y, w, h)));
 }
 
-void WindowsCanvasViewerPanel::OnViewportChanged() {
+auto WindowsCanvasViewerPanel::OnViewportChanged() -> void {
   if (scrolling)
     return;
   UpdateScrollbars();
@@ -249,12 +249,12 @@ void WindowsCanvasViewerPanel::OnPaint(PaintEventArgs ^ e) {
   }
 }
 
-void WindowsCanvasViewerPanel::UpdateScrollbars() {
+auto WindowsCanvasViewerPanel::UpdateScrollbars() -> void {
   UpdateScrollBarSizes();
   UpdateScrollBarPositions();
 }
 
-void WindowsCanvasViewerPanel::UpdateScrollBarPositions() {
+auto WindowsCanvasViewerPanel::UpdateScrollBarPositions() -> void {
   double x, y, w, h;
 
   if (canvas != nullptr) {
@@ -277,7 +277,7 @@ void WindowsCanvasViewerPanel::UpdateScrollBarPositions() {
   }
 }
 
-void WindowsCanvasViewerPanel::UpdateScrollBarSizes() {
+auto WindowsCanvasViewerPanel::UpdateScrollBarSizes() -> void {
   double x, y, w, h;
   double total_w, total_h;
 

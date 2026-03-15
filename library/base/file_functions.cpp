@@ -46,7 +46,7 @@ using namespace base;
  * @return If successful, base_fopen returns opened FILE*.
  *           Otherwise, it returns NULL.
  */
-FILE *base_fopen(const char *filename, const char *mode) {
+auto base_fopen(const char *filename, const char *mode) -> FILE * {
 #ifdef _MSC_VER
   std::wstring wmode;
   while (*mode != '\0')
@@ -78,7 +78,7 @@ FILE *base_fopen(const char *filename, const char *mode) {
  *	mode (only matters on Windows).
  *	Also here, the filename must be UTF-8 encoded.
  */
-int base_open(const std::string &filename, int open_flag, int permissions) {
+auto base_open(const std::string &filename, int open_flag, int permissions) -> int {
   int fd;
 
 #ifdef _MSC_VER
@@ -100,7 +100,7 @@ int base_open(const std::string &filename, int open_flag, int permissions) {
 
 //--------------------------------------------------------------------------------------------------
 
-int base_remove(const std::string &filename) {
+auto base_remove(const std::string &filename) -> int {
 #ifdef _MSC_VER
   return _wremove(string_to_wstring(filename).c_str());
 #else
@@ -116,7 +116,7 @@ int base_remove(const std::string &filename) {
 
 //--------------------------------------------------------------------------------------------------
 
-int base_rename(const char *oldname, const char *newname) {
+auto base_rename(const char *oldname, const char *newname) -> int {
 #ifdef _MSC_VER
 
   int result;
@@ -168,7 +168,7 @@ int base_rename(const char *oldname, const char *newname) {
 //--------------------------------------------------------------------------------------------------
 
 #ifdef _MSC_VER
-int base_stat(const char *filename, struct _stat *stbuf) {
+auto base_stat(const char *filename, struct _stat *stbuf) -> int {
   // Convert filename from UTF-8 to UTF-16.
   int required;
   WCHAR *converted;
@@ -188,14 +188,14 @@ int base_stat(const char *filename, struct _stat *stbuf) {
   return result;
 }
 #else
-int base_stat(const char *filename, struct stat *stbuf) {
+auto base_stat(const char *filename, struct stat *stbuf) -> int {
   return g_stat(filename, stbuf);
 }
 #endif
 
 //--------------------------------------------------------------------------------------------------
 
-int base_rmdir_recursively(const char *path) {
+auto base_rmdir_recursively(const char *path) -> int {
   int res = 0;
   GError *error = NULL;
   GDir *dir;
@@ -226,7 +226,7 @@ int base_rmdir_recursively(const char *path) {
 /**
  * Returns the size of the specified file (if it exists and can be accessed, otherwise 0).
  */
-long base_get_file_size(const char *filename) {
+auto base_get_file_size(const char *filename) -> long {
   long result = 0;
 
 #ifdef _MSC_VER

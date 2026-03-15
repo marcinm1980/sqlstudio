@@ -39,10 +39,10 @@ namespace mforms {
       bool _autohide;
       bool _noAutoScroll;
 
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _swin;
       }
-      virtual Gtk::Widget *get_inner() const {
+      virtual auto get_inner() const -> Gtk::Widget * {
         return _swin;
       }
 
@@ -50,19 +50,19 @@ namespace mforms {
       ScrollPanelImpl(::mforms::ScrollPanel *self, mforms::ScrollPanelFlags flags);
       ~ScrollPanelImpl();
 
-      static bool create(::mforms::ScrollPanel *self, mforms::ScrollPanelFlags flags);
-      static void add(::mforms::ScrollPanel *self, ::mforms::View *child);
-      static void remove(::mforms::ScrollPanel *self);
-      static void set_visible_scrollers(::mforms::ScrollPanel *self, bool vertical, bool horizontal);
-      static void set_autohide_scrollers(::mforms::ScrollPanel *self, bool flag);
-      static void scroll_to_view(mforms::ScrollPanel *, mforms::View *);
-      static base::Rect get_content_rect(mforms::ScrollPanel *);
-      static void scroll_to(mforms::ScrollPanel *self, int x, int y);
-      virtual void set_padding_impl(int left, int top, int right, int bottom);
-      void disableAutomaticScrollToChildren();
+      static auto create(::mforms::ScrollPanel *self, mforms::ScrollPanelFlags flags) -> bool;
+      static auto add(::mforms::ScrollPanel *self, ::mforms::View *child) -> void;
+      static auto remove(::mforms::ScrollPanel *self) -> void;
+      static auto set_visible_scrollers(::mforms::ScrollPanel *self, bool vertical, bool horizontal) -> void;
+      static auto set_autohide_scrollers(::mforms::ScrollPanel *self, bool flag) -> void;
+      static auto scroll_to_view(mforms::ScrollPanel *, mforms::View *) -> void;
+      static auto get_content_rect(mforms::ScrollPanel *) -> base::Rect;
+      static auto scroll_to(mforms::ScrollPanel *self, int x, int y) -> void;
+      virtual auto set_padding_impl(int left, int top, int right, int bottom) -> void;
+      auto disableAutomaticScrollToChildren() -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

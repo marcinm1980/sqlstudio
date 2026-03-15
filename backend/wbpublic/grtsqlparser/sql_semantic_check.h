@@ -41,13 +41,13 @@ protected:
   Sql_semantic_check();
 
 public:
-  void reset_context_objects();
-  void context_object(db_SchemaRef obj);
-  void context_object(db_TableRef obj);
-  void context_object(db_TriggerRef obj);
-  void context_object(db_ViewRef obj);
-  void context_object(db_RoutineRef obj);
-  void context_object(db_RoutineGroupRef obj);
+  auto reset_context_objects() -> void;
+  auto context_object(db_SchemaRef obj) -> void;
+  auto context_object(db_TableRef obj) -> void;
+  auto context_object(db_TriggerRef obj) -> void;
+  auto context_object(db_ViewRef obj) -> void;
+  auto context_object(db_RoutineRef obj) -> void;
+  auto context_object(db_RoutineGroupRef obj) -> void;
 
 protected:
   db_SchemaRef _context_schema;

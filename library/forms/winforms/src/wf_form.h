@@ -46,21 +46,21 @@ namespace MySQL {
 
       FormWrapper(mforms::Form *form, mforms::Form *owner, mforms::FormFlag flag);
 
-      static bool create(mforms::Form *backend, mforms::Form *owner, mforms::FormFlag flag);
-      static void set_title(mforms::Form *backend, const std::string &title);
-      static void show_modal(mforms::Form *backend, mforms::Button *accept, mforms::Button *cancel);
-      static bool run_modal(mforms::Form *backend, mforms::Button *accept, mforms::Button *cancel);
-      static void close(mforms::Form *backend);
-      static void set_content(mforms::Form *backend, mforms::View *view);
-      static void center(mforms::Form *backend);
-      static void flush_events(mforms::Form *backend);
-      static void end_modal(mforms::Form *backend, bool result);
-      static void set_menubar(mforms::Form *backend, mforms::MenuBar *menubar);
+      static auto create(mforms::Form *backend, mforms::Form *owner, mforms::FormFlag flag) -> bool;
+      static auto set_title(mforms::Form *backend, const std::string &title) -> void;
+      static auto show_modal(mforms::Form *backend, mforms::Button *accept, mforms::Button *cancel) -> void;
+      static auto run_modal(mforms::Form *backend, mforms::Button *accept, mforms::Button *cancel) -> bool;
+      static auto close(mforms::Form *backend) -> void;
+      static auto set_content(mforms::Form *backend, mforms::View *view) -> void;
+      static auto center(mforms::Form *backend) -> void;
+      static auto flush_events(mforms::Form *backend) -> void;
+      static auto end_modal(mforms::Form *backend, bool result) -> void;
+      static auto set_menubar(mforms::Form *backend, mforms::MenuBar *menubar) -> void;
 
     public:
-      bool hide_on_close();
+      auto hide_on_close() -> bool;
 
-      static void init();
+      static auto init() -> void;
     };
   };
 };

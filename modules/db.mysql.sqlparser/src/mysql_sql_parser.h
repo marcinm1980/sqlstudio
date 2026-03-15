@@ -38,7 +38,7 @@ using namespace grt;
 class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_parser : protected Mysql_sql_parser_base, public Sql_parser {
 public:
   typedef std::shared_ptr<Mysql_sql_parser> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_sql_parser());
   }
   virtual ~Mysql_sql_parser() {
@@ -48,8 +48,8 @@ protected:
   Mysql_sql_parser();
 
 public:
-  virtual int parse_sql_script(db_CatalogRef catalog, const std::string &sql, grt::DictRef options);
-  virtual int parse_sql_script_file(db_CatalogRef catalog, const std::string &filename, grt::DictRef options);
+  virtual auto parse_sql_script(db_CatalogRef catalog, const std::string &sql, grt::DictRef options) -> int;
+  virtual auto parse_sql_script_file(db_CatalogRef catalog, const std::string &filename, grt::DictRef options) -> int;
 
 protected:
   typedef boost::function<Parse_result(const SqlAstNode *)> Process_specific_create_statement;
@@ -72,12 +72,12 @@ protected:
   Parse_result _last_parse_result;
 
   // higher level
-  int parse_sql_script(db_CatalogRef &catalog, const std::string &sql, bool from_file, grt::DictRef &options);
-  int process_sql_statement(const SqlAstNode *tree);
-  Parse_result process_create_statement(const SqlAstNode *tree);
-  Parse_result process_drop_statement(const SqlAstNode *tree);
-  Parse_result process_alter_statement(const SqlAstNode *tree);
-  void set_fk_references();
+  auto parse_sql_script(db_CatalogRef &catalog, const std::string &sql, bool from_file, grt::DictRef &options) -> int;
+  auto process_sql_statement(const SqlAstNode *tree) -> int;
+  auto process_create_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_drop_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_alter_statement(const SqlAstNode *tree) -> Parse_result;
+  auto set_fk_references() -> void;
 
   // shapers
   typedef boost::function<void(db_mysql_SchemaRef &)> Shape_schema;
@@ -98,24 +98,24 @@ protected:
   Shape_tablespace _shape_tablespace;
   typedef boost::function<void(db_mysql_ServerLinkRef &)> Shape_serverlink;
   Shape_serverlink _shape_serverlink;
-  void set_obj_name(GrtNamedObjectRef obj, const std::string &val);
-  void set_obj_sql_def(db_DatabaseDdlObjectRef obj);
+  auto set_obj_name(GrtNamedObjectRef obj, const std::string &val) -> void;
+  auto set_obj_sql_def(db_DatabaseDdlObjectRef obj) -> void;
 
   // catalog helpers
-  db_mysql_SchemaRef set_active_schema(const std::string &schema_name);
-  db_mysql_SchemaRef ensure_schema_created(const std::string &schema_name, bool check_obj_name_uniqueness);
-  void create_stub_table(db_mysql_SchemaRef &schema, db_mysql_TableRef &obj, const std::string &obj_name);
-  void create_stub_column(db_mysql_TableRef &table, db_mysql_ColumnRef &obj, const std::string &obj_name,
-                          db_mysql_ColumnRef tpl_obj);
-  void blame_existing_obj(bool critical, const GrtNamedObjectRef &obj,
+  auto set_active_schema(const std::string &schema_name) -> db_mysql_SchemaRef;
+  auto ensure_schema_created(const std::string &schema_name, bool check_obj_name_uniqueness) -> db_mysql_SchemaRef;
+  auto create_stub_table(db_mysql_SchemaRef &schema, db_mysql_TableRef &obj, const std::string &obj_name) -> void;
+  auto create_stub_column(db_mysql_TableRef &table, db_mysql_ColumnRef &obj, const std::string &obj_name,
+                          db_mysql_ColumnRef tpl_obj) -> void;
+  auto blame_existing_obj(bool critical, const GrtNamedObjectRef &obj,
                           const GrtNamedObjectRef &container1 = GrtNamedObjectRef(),
-                          const GrtNamedObjectRef &container2 = GrtNamedObjectRef());
+                          const GrtNamedObjectRef &container2 = GrtNamedObjectRef()) -> void;
 
   template <typename T>
   bool drop_obj(grt::ListRef<T> obj_list, const std::string &obj_name, bool if_exists,
                 GrtNamedObjectRef owner = GrtNamedObjectRef(), GrtNamedObjectRef grand_owner = GrtNamedObjectRef());
 
-  virtual GrtNamedObjectRef get_active_object() {
+  virtual auto get_active_object() -> GrtNamedObjectRef {
     return GrtNamedObjectRef();
   };
 
@@ -131,55 +131,55 @@ protected:
                                            const GrtNamedObjectRef &container2 = GrtNamedObjectRef());
 
   // parse tree core
-  Parse_result process_use_schema_statement(const SqlAstNode *tree);
-  Parse_result process_create_schema_statement(const SqlAstNode *tree);
-  Parse_result process_create_table_statement(const SqlAstNode *tree);
-  Parse_result process_create_index_statement(const SqlAstNode *tree);
-  Parse_result process_create_view_statement(const SqlAstNode *tree);
-  Parse_result process_create_trigger_statement(const SqlAstNode *tree);
-  Parse_result process_create_routine_statement(const SqlAstNode *tree);
-  Parse_result process_create_server_link_statement(const SqlAstNode *tree);
-  Parse_result process_create_tablespace_statement(const SqlAstNode *tree);
-  Parse_result process_create_logfile_group_statement(const SqlAstNode *tree);
+  auto process_use_schema_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_schema_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_table_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_index_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_view_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_trigger_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_routine_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_server_link_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_tablespace_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_create_logfile_group_statement(const SqlAstNode *tree) -> Parse_result;
 
-  Parse_result process_drop_schema_statement(const SqlAstNode *tree);
-  Parse_result process_drop_table_statement(const SqlAstNode *tree);
-  Parse_result process_drop_view_statement(const SqlAstNode *tree);
-  Parse_result process_drop_routine_statement(const SqlAstNode *tree);
-  Parse_result process_drop_trigger_statement(const SqlAstNode *tree);
+  auto process_drop_schema_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_drop_table_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_drop_view_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_drop_routine_statement(const SqlAstNode *tree) -> Parse_result;
+  auto process_drop_trigger_statement(const SqlAstNode *tree) -> Parse_result;
 
-  Parse_result process_alter_table_statement(const SqlAstNode *tree);
+  auto process_alter_table_statement(const SqlAstNode *tree) -> Parse_result;
 
   // parse tree helpers
-  std::string process_obj_full_name_item(const SqlAstNode *item, db_mysql_SchemaRef *schema);
-  void process_field_type_item(const SqlAstNode *item, db_mysql_ColumnRef &column);
-  void process_field_attributes_item(const SqlAstNode *item, db_mysql_ColumnRef &column, db_mysql_TableRef &table);
-  std::string process_float_options_item(const SqlAstNode *item, std::string *precision = NULL,
-                                         std::string *scale = NULL);
-  std::string process_field_name_item(const SqlAstNode *item, GrtNamedObjectRef obj = GrtNamedObjectRef(),
-                                      std::string *name3 = NULL, std::string *name2 = NULL, std::string *name1 = NULL);
-  void process_index_item(const SqlAstNode *tree, db_mysql_TableRef &table);
-  void process_fk_item(const SqlAstNode *tree, db_mysql_TableRef &table);
-  void process_fk_references_item(const SqlAstNode *tree, db_mysql_ForeignKeyRef &fk, Fk_ref &fk_ref);
-  void process_index_options_item(db_mysql_IndexRef &obj, const SqlAstNode *item);
-  void process_index_kind_item(db_mysql_IndexRef &obj, const SqlAstNode *item);
+  auto process_obj_full_name_item(const SqlAstNode *item, db_mysql_SchemaRef *schema) -> std::string;
+  auto process_field_type_item(const SqlAstNode *item, db_mysql_ColumnRef &column) -> void;
+  auto process_field_attributes_item(const SqlAstNode *item, db_mysql_ColumnRef &column, db_mysql_TableRef &table) -> void;
+  auto process_float_options_item(const SqlAstNode *item, std::string *precision = NULL,
+                                         std::string *scale = NULL) -> std::string;
+  auto process_field_name_item(const SqlAstNode *item, GrtNamedObjectRef obj = GrtNamedObjectRef(),
+                                      std::string *name3 = NULL, std::string *name2 = NULL, std::string *name1 = NULL) -> std::string;
+  auto process_index_item(const SqlAstNode *tree, db_mysql_TableRef &table) -> void;
+  auto process_fk_item(const SqlAstNode *tree, db_mysql_TableRef &table) -> void;
+  auto process_fk_references_item(const SqlAstNode *tree, db_mysql_ForeignKeyRef &fk, Fk_ref &fk_ref) -> void;
+  auto process_index_options_item(db_mysql_IndexRef &obj, const SqlAstNode *item) -> void;
+  auto process_index_kind_item(db_mysql_IndexRef &obj, const SqlAstNode *item) -> void;
 
   // prepare/clear routines
-  void set_options(const grt::DictRef &options);
-  void build_datatype_cache();
-  void clear_datatype_cache();
+  auto set_options(const grt::DictRef &options) -> void;
+  auto build_datatype_cache() -> void;
+  auto clear_datatype_cache() -> void;
 
   // logging
-  void log_db_obj_created(const GrtNamedObjectRef &obj1, const GrtNamedObjectRef &obj2 = GrtNamedObjectRef(),
-                          const GrtNamedObjectRef &obj3 = GrtNamedObjectRef());
-  void log_db_obj_dropped(const GrtNamedObjectRef &obj1, const GrtNamedObjectRef &obj2 = GrtNamedObjectRef(),
-                          const GrtNamedObjectRef &obj3 = GrtNamedObjectRef());
-  void log_db_obj_operation(const std::string &op_name, const GrtNamedObjectRef &obj1,
+  auto log_db_obj_created(const GrtNamedObjectRef &obj1, const GrtNamedObjectRef &obj2 = GrtNamedObjectRef(),
+                          const GrtNamedObjectRef &obj3 = GrtNamedObjectRef()) -> void;
+  auto log_db_obj_dropped(const GrtNamedObjectRef &obj1, const GrtNamedObjectRef &obj2 = GrtNamedObjectRef(),
+                          const GrtNamedObjectRef &obj3 = GrtNamedObjectRef()) -> void;
+  auto log_db_obj_operation(const std::string &op_name, const GrtNamedObjectRef &obj1,
                             const GrtNamedObjectRef &obj2 = GrtNamedObjectRef(),
-                            const GrtNamedObjectRef &obj3 = GrtNamedObjectRef());
+                            const GrtNamedObjectRef &obj3 = GrtNamedObjectRef()) -> void;
 
   // module utils
-  void do_transactable_list_insert(grt::ListRef<GrtObject> list, GrtObjectRef object);
+  auto do_transactable_list_insert(grt::ListRef<GrtObject> list, GrtObjectRef object) -> void;
 
   class Active_schema_keeper {
   public:

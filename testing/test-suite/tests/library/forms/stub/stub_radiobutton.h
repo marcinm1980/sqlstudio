@@ -39,22 +39,22 @@ namespace mforms {
       virtual ~RadioButtonWrapper() {
       }
 
-      static void callback(::mforms::RadioButton *self) {
+      static auto callback(::mforms::RadioButton *self) -> void {
       }
 
-      static bool create(::mforms::RadioButton *self, int group_id) {
+      static auto create(::mforms::RadioButton *self, int group_id) -> bool {
         return true;
       }
 
-      static bool get_active(::mforms::RadioButton *self) {
+      static auto get_active(::mforms::RadioButton *self) -> bool {
         return false;
       }
 
-      static void set_active(::mforms::RadioButton *self, bool flag) {
+      static auto set_active(::mforms::RadioButton *self, bool flag) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_radio_impl.create = &RadioButtonWrapper::create;

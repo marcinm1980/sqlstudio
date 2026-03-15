@@ -466,8 +466,7 @@ static uchar NEAR sort_order_tis620[]=
     len			Length of tstr
 */
 
-static uint thai2sortable(uchar *tstr, uint len)
-{
+static auto thai2sortable(uchar *tstr, uint len) -> uint {
   uchar	*p;
   int	tlen;
   uchar	l2bias;
@@ -530,11 +529,10 @@ static uint thai2sortable(uchar *tstr, uint len)
 */
 
 static
-int my_strnncoll_tis620(CHARSET_INFO *cs __attribute__((unused)),
+auto my_strnncoll_tis620(CHARSET_INFO *cs __attribute__((unused)),
                         const uchar * s1, uint len1, 
                         const uchar * s2, uint len2,
-                        my_bool s2_is_prefix)
-{
+                        my_bool s2_is_prefix) -> int {
   uchar	buf[80] ;
   uchar *tc1, *tc2;
   int i;
@@ -560,11 +558,10 @@ int my_strnncoll_tis620(CHARSET_INFO *cs __attribute__((unused)),
 
 
 static
-int my_strnncollsp_tis620(CHARSET_INFO * cs __attribute__((unused)),
+auto my_strnncollsp_tis620(CHARSET_INFO * cs __attribute__((unused)),
 			  const uchar *a0, uint a_length, 
 			  const uchar *b0, uint b_length,
-                          my_bool diff_if_only_endspace_difference)
-{
+                          my_bool diff_if_only_endspace_difference) -> int {
   uchar	buf[80], *end, *a, *b, *alloced= NULL;
   uint length;
   int res= 0;
@@ -637,10 +634,9 @@ ret:
 */
 
 static
-int my_strnxfrm_tis620(CHARSET_INFO *cs __attribute__((unused)),
+auto my_strnxfrm_tis620(CHARSET_INFO *cs __attribute__((unused)),
                        uchar * dest, uint len,
-                       const uchar * src, uint srclen)
-{
+                       const uchar * src, uint srclen) -> int {
   uint dstlen= len;
   len= (uint) (strmake((char*) dest, (char*) src, min(len, srclen)) -
 	       (char*) dest);
@@ -824,11 +820,10 @@ NULL,NULL,NULL,NULL,NULL,NULL,NULL,plFF
 
 
 static
-int my_mb_wc_tis620(CHARSET_INFO *cs  __attribute__((unused)),
+auto my_mb_wc_tis620(CHARSET_INFO *cs  __attribute__((unused)),
 		  my_wc_t *wc,
 		  const unsigned char *str,
-		  const unsigned char *end __attribute__((unused)))
-{
+		  const unsigned char *end __attribute__((unused))) -> int {
   if (str >= end)
     return MY_CS_TOOSMALL;
   
@@ -837,11 +832,10 @@ int my_mb_wc_tis620(CHARSET_INFO *cs  __attribute__((unused)),
 }
 
 static
-int my_wc_mb_tis620(CHARSET_INFO *cs  __attribute__((unused)),
+auto my_wc_mb_tis620(CHARSET_INFO *cs  __attribute__((unused)),
 		  my_wc_t wc,
 		  unsigned char *str,
-		  unsigned char *end __attribute__((unused)))
-{
+		  unsigned char *end __attribute__((unused))) -> int {
   unsigned char *pl;
   
   if (str >= end)

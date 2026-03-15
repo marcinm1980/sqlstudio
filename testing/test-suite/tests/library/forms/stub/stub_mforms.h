@@ -34,8 +34,8 @@ namespace wb {
 
 namespace mforms {
   namespace stub {
-    void init(wb::WBOptions *options);
-    void check();
+    auto init(wb::WBOptions *options) -> void;
+    auto check() -> void;
   };
 };
 

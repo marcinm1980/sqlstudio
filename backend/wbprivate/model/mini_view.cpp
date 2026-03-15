@@ -65,7 +65,7 @@ MiniView::~MiniView() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MiniView::view_button_cb(mdc::CanvasView *view, mdc::MouseButton btn, bool press, Point pos, mdc::EventState) {
+auto MiniView::view_button_cb(mdc::CanvasView *view, mdc::MouseButton btn, bool press, Point pos, mdc::EventState) -> bool {
   if (btn == mdc::ButtonLeft && _viewport_figure) {
     if (press)
       _click_pos = pos;
@@ -101,13 +101,13 @@ bool MiniView::view_button_cb(mdc::CanvasView *view, mdc::MouseButton btn, bool 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MiniView::view_motion_cb(mdc::CanvasView *, Point, mdc::EventState) {
+auto MiniView::view_motion_cb(mdc::CanvasView *, Point, mdc::EventState) -> bool {
   return false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::update_size() {
+auto MiniView::update_size() -> void {
   Size size = get_layer()->get_view()->get_total_view_size();
 
   set_fixed_size(size);
@@ -118,7 +118,7 @@ void MiniView::update_size() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::render_figure(CairoCtx *cr, const model_FigureRef &elem) {
+auto MiniView::render_figure(CairoCtx *cr, const model_FigureRef &elem) -> void {
   model_Figure::ImplData *e = elem->get_data();
 
   if (e)
@@ -127,7 +127,7 @@ void MiniView::render_figure(CairoCtx *cr, const model_FigureRef &elem) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::render_layer(CairoCtx *cr, const model_LayerRef &layer) {
+auto MiniView::render_layer(CairoCtx *cr, const model_LayerRef &layer) -> void {
   model_Layer::ImplData *l = layer->get_data();
 
   if (l)
@@ -136,7 +136,7 @@ void MiniView::render_layer(CairoCtx *cr, const model_LayerRef &layer) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::render_layer_figures(mdc::CairoCtx *cr, const model_LayerRef &layer) {
+auto MiniView::render_layer_figures(mdc::CairoCtx *cr, const model_LayerRef &layer) -> void {
   for (size_t c = layer->figures().count(), i = 0; i < c; i++) {
     model_FigureRef figure(layer->figures()[i]);
     mdc::CanvasItem *figure_layer;
@@ -156,7 +156,7 @@ void MiniView::render_layer_figures(mdc::CairoCtx *cr, const model_LayerRef &lay
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Rect MiniView::get_scaled_target_bounds(double &scale) {
+auto MiniView::get_scaled_target_bounds(double &scale) -> Rect {
   Rect rect;
 
   scale = 1.0;
@@ -184,7 +184,7 @@ Rect MiniView::get_scaled_target_bounds(double &scale) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::draw_contents(CairoCtx *cr) {
+auto MiniView::draw_contents(CairoCtx *cr) -> void {
   cr->set_operator(CAIRO_OPERATOR_SOURCE);
   cr->set_color(Color(0.5, 0.5, 0.5));
   cr->paint();
@@ -247,7 +247,7 @@ void MiniView::draw_contents(CairoCtx *cr) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::viewport_changed() {
+auto MiniView::viewport_changed() -> void {
   if (_viewport_figure && _canvas_view && !_updating_viewport) {
     Rect vp = _canvas_view->get_viewport();
     double scale;
@@ -267,7 +267,7 @@ void MiniView::viewport_changed() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::viewport_dragged(const Rect &orect) {
+auto MiniView::viewport_dragged(const Rect &orect) -> void {
   if (!_skip_viewport_update) {
     double scale;
     Rect bounds = get_scaled_target_bounds(scale);
@@ -305,7 +305,7 @@ void MiniView::viewport_dragged(const Rect &orect) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::set_active_view(mdc::CanvasView *canvas_view, const model_DiagramRef &model_diagram) {
+auto MiniView::set_active_view(mdc::CanvasView *canvas_view, const model_DiagramRef &model_diagram) -> void {
   _canvas_view = canvas_view;
   _model_diagram = model_diagram;
 
@@ -356,7 +356,7 @@ void MiniView::set_active_view(mdc::CanvasView *canvas_view, const model_Diagram
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MiniView::setBackgroundColor(base::Color const& color) {
+auto MiniView::setBackgroundColor(base::Color const& color) -> void {
   // The same applies here like for the mdc back layer: drawing anything else but a white background produces
   // problems with other elements. In the mini view this is not that apparent, but we have to follow the color
   // of the main canvas.

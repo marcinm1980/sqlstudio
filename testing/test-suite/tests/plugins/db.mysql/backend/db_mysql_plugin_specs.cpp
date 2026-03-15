@@ -77,7 +77,7 @@ protected:
   }
 
 public:
-  void set_model_catalog(const db_mysql_CatalogRef &catalog) {
+  auto set_model_catalog(const db_mysql_CatalogRef &catalog) -> void {
     model_catalog = catalog;
   }
   DbMySQLScriptSyncTest() : DbMySQLScriptSync() {
@@ -101,10 +101,10 @@ public:
     set_model_catalog(cat);
   }
 
-  void set_model_catalog(db_mysql_CatalogRef catalog) {
+  auto set_model_catalog(db_mysql_CatalogRef catalog) -> void {
     model_catalog = catalog;
   }
-  void set_options_as_dict(DictRef options_dict) {
+  auto set_options_as_dict(DictRef options_dict) -> void {
     options = options_dict;
   }
 };
@@ -121,7 +121,7 @@ struct DbMysqlPluginData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  db_mysql_CatalogRef createCatalogFromScript(const std::string &sql) {
+  auto createCatalogFromScript(const std::string &sql) -> db_mysql_CatalogRef {
     GrtVersionRef version = tester->getRdbms()->version();
     db_mysql_CatalogRef cat = createEmptyCatalog();
     MySQLParserServices::Ref services = MySQLParserServices::get();
@@ -136,7 +136,7 @@ struct DbMysqlPluginData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::string generateScript(const std::vector<std::string> &, db_mysql_CatalogRef org_cat, db_mysql_CatalogRef mod_cat) {
+  auto generateScript(const std::vector<std::string> &, db_mysql_CatalogRef org_cat, db_mysql_CatalogRef mod_cat) -> std::string {
     syncPlugin.reset(new DbMySQLScriptSyncTest());
     static_cast<DbMySQLScriptSyncTest *>(syncPlugin.get())->set_model_catalog(mod_cat);
     syncPlugin->init_diff_tree(std::vector<std::string>(), mod_cat, org_cat);
@@ -145,7 +145,7 @@ struct DbMysqlPluginData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void applyToModel(const std::vector<std::string> &schemata, db_mysql_CatalogRef org_cat, db_mysql_CatalogRef mod_cat) {
+  auto applyToModel(const std::vector<std::string> &schemata, db_mysql_CatalogRef org_cat, db_mysql_CatalogRef mod_cat) -> void {
     syncPlugin.reset(new DbMySQLScriptSyncTest());
     static_cast<DbMySQLScriptSyncTest *>(syncPlugin.get())->set_model_catalog(mod_cat);
     syncPlugin->init_diff_tree(std::vector<std::string>(), org_cat, ValueRef());
@@ -154,7 +154,7 @@ struct DbMysqlPluginData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::string runFwGenerateScript(db_mysql_CatalogRef cat, DbMySQLSQLExportTest *plugin) {
+  auto runFwGenerateScript(db_mysql_CatalogRef cat, DbMySQLSQLExportTest *plugin) -> std::string {
     fwePlugin.reset(plugin);
     ValueRef retval = fwePlugin->export_task(StringRef());
     return fwePlugin->export_sql_script();
@@ -162,7 +162,7 @@ struct DbMysqlPluginData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::shared_ptr<DiffChange> compareCatalogToServer(db_mysql_CatalogRef org_cat, const std::string &schema_name) {
+  auto compareCatalogToServer(db_mysql_CatalogRef org_cat, const std::string &schema_name) -> std::shared_ptr<DiffChange> {
     syncPlugin.reset(new DbMySQLScriptSyncTest());
     std::list<std::string> schemas = { "db_mysql_plugin_test" };
     db_mysql_CatalogRef cat = tester->reverseEngineerSchemas(schemas);
@@ -191,7 +191,7 @@ struct DbMysqlPluginData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void applySqlToModel(const std::string &sql) {
+  auto applySqlToModel(const std::string &sql) -> void {
     db_mysql_CatalogRef org_cat = createCatalogFromScript(sql);
 
     std::vector<std::string> schemata;
@@ -222,7 +222,7 @@ class db_mysql_plugin_testTest : public ::testing::Test {
 protected:
   static std::unique_ptr<DbMysqlPluginData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<DbMysqlPluginData>();
     data->dataDir = testing::Context::get().tmpDataDir();
 
@@ -241,7 +241,7 @@ protected:
     data->tester->getRdbms()->version(parse_version(target_version));
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data->syncPlugin.reset();
     data->fwePlugin.reset();
     data.reset();

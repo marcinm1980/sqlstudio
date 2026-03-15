@@ -41,7 +41,7 @@ using namespace base;
 /**
  * Determines if the given connection is an SSH connection and returns true if so.
  */
-static bool is_ssh_connection(const db_mgmt_ConnectionRef &connection) {
+static auto is_ssh_connection(const db_mgmt_ConnectionRef &connection) -> bool {
   if (connection.is_valid()) {
     std::string driver = connection->driver().is_valid() ? connection->driver()->name() : "";
     return (driver == "MysqlNativeSSH");
@@ -54,7 +54,7 @@ static bool is_ssh_connection(const db_mgmt_ConnectionRef &connection) {
 /**
  * Determines if the given connection is a local connection (i.e. to the current box).
  */
-static bool is_local_connection(const db_mgmt_ConnectionRef &connection) {
+static auto is_local_connection(const db_mgmt_ConnectionRef &connection) -> bool {
   if (connection.is_valid()) {
     std::string hostname = connection->parameterValues().get_string("hostName");
 
@@ -114,14 +114,14 @@ NewConnectionWizard::~NewConnectionWizard() {
 
 //--------------------------------------------------------------------------------------------------
 
-void NewConnectionWizard::open_remote_mgm_config() {
+auto NewConnectionWizard::open_remote_mgm_config() -> void {
   NewServerInstanceWizard wizard(_context, _panel.get_connection());
   wizard.run_modal();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-db_mgmt_ConnectionRef NewConnectionWizard::run() {
+auto NewConnectionWizard::run() -> db_mgmt_ConnectionRef {
   _connection = db_mgmt_ConnectionRef(grt::Initialized);
   _connection->driver(_mgmt->rdbms()[0]->defaultDriver());
   if (find_named_object_in_list(_connection->driver()->parameters(), "useSSL").is_valid()) {

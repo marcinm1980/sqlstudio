@@ -42,8 +42,8 @@ FileChooserWrapper::FileChooserWrapper(mforms::FileChooser *backend, mforms::For
 
 //-------------------------------------------------------------------------------------------------
 
-bool FileChooserWrapper::create(mforms::FileChooser *backend, mforms::Form *owner, mforms::FileChooserType type,
-                                bool show_hidden) {
+auto FileChooserWrapper::create(mforms::FileChooser *backend, mforms::Form *owner, mforms::FileChooserType type,
+                                bool show_hidden) -> bool {
   // On Windows hiding/showing hidden files is a global switch in Explorer so we can just
   // ignore the show_hidden flag here. It is necessary for Linux/Mac.
   FileChooserWrapper *wrapper = new FileChooserWrapper(backend, owner);
@@ -74,7 +74,7 @@ bool FileChooserWrapper::create(mforms::FileChooser *backend, mforms::Form *owne
 
 //-------------------------------------------------------------------------------------------------
 
-void FileChooserWrapper::set_title(mforms::FileChooser *backend, const std::string &title) {
+auto FileChooserWrapper::set_title(mforms::FileChooser *backend, const std::string &title) -> void {
   FileChooserWrapper *wrapper = backend->get_data<FileChooserWrapper>();
 
   switch (wrapper->type) {
@@ -95,7 +95,7 @@ void FileChooserWrapper::set_title(mforms::FileChooser *backend, const std::stri
 
 //-------------------------------------------------------------------------------------------------
 
-bool FileChooserWrapper::run_modal(mforms::FileChooser *backend) {
+auto FileChooserWrapper::run_modal(mforms::FileChooser *backend) -> bool {
   FileChooserWrapper *wrapper = backend->get_data<FileChooserWrapper>();
 
   switch (wrapper->type) {
@@ -116,7 +116,7 @@ bool FileChooserWrapper::run_modal(mforms::FileChooser *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-void FileChooserWrapper::set_directory(mforms::FileChooser *backend, const std::string &path) {
+auto FileChooserWrapper::set_directory(mforms::FileChooser *backend, const std::string &path) -> void {
   FileChooserWrapper *wrapper = backend->get_data<FileChooserWrapper>();
 
   switch (wrapper->type) {
@@ -137,7 +137,7 @@ void FileChooserWrapper::set_directory(mforms::FileChooser *backend, const std::
 
 //-------------------------------------------------------------------------------------------------
 
-std::string FileChooserWrapper::get_directory(mforms::FileChooser *backend) {
+auto FileChooserWrapper::get_directory(mforms::FileChooser *backend) -> std::string {
   FileChooserWrapper *wrapper = backend->get_data<FileChooserWrapper>();
 
   switch (wrapper->type) {
@@ -158,7 +158,7 @@ std::string FileChooserWrapper::get_directory(mforms::FileChooser *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-std::string FileChooserWrapper::get_path(mforms::FileChooser *backend) {
+auto FileChooserWrapper::get_path(mforms::FileChooser *backend) -> std::string {
   FileChooserWrapper *wrapper = backend->get_data<FileChooserWrapper>();
 
   switch (wrapper->type) {
@@ -179,7 +179,7 @@ std::string FileChooserWrapper::get_path(mforms::FileChooser *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-void FileChooserWrapper::set_path(mforms::FileChooser *backend, const std::string &path) {
+auto FileChooserWrapper::set_path(mforms::FileChooser *backend, const std::string &path) -> void {
   FileChooserWrapper *wrapper = backend->get_data<FileChooserWrapper>();
 
   switch (wrapper->type) {
@@ -201,8 +201,8 @@ void FileChooserWrapper::set_path(mforms::FileChooser *backend, const std::strin
 
 //-------------------------------------------------------------------------------------------------
 
-void FileChooserWrapper::set_extensions(mforms::FileChooser *backend, const std::string &extensions,
-                                        const std::string &default_extension, bool allow_all_file_types) {
+auto FileChooserWrapper::set_extensions(mforms::FileChooser *backend, const std::string &extensions,
+                                        const std::string &default_extension, bool allow_all_file_types) -> void {
   FileChooserWrapper *wrapper = backend->get_data<FileChooserWrapper>();
 
   switch (wrapper->type) {
@@ -226,9 +226,9 @@ void FileChooserWrapper::set_extensions(mforms::FileChooser *backend, const std:
 
 //-------------------------------------------------------------------------------------------------
 
-void FileChooserWrapper::add_selector_option(mforms::FileChooser *backend, const std::string &name,
+auto FileChooserWrapper::add_selector_option(mforms::FileChooser *backend, const std::string &name,
                                              const std::string &label,
-                                             const mforms::FileChooser::StringPairVector &options) {
+                                             const mforms::FileChooser::StringPairVector &options) -> void {
   if (name == "format") {
     // The backend split the properly formatted string, we now have to concatenate the parts again
     // (and we lost the default extension).
@@ -245,7 +245,7 @@ void FileChooserWrapper::add_selector_option(mforms::FileChooser *backend, const
 
 //-------------------------------------------------------------------------------------------------
 
-std::string FileChooserWrapper::get_selector_option_value(mforms::FileChooser *backend, const std::string &name) {
+auto FileChooserWrapper::get_selector_option_value(mforms::FileChooser *backend, const std::string &name) -> std::string {
   if (name == "format") {
     FileChooserWrapper *wrapper = backend->get_data<FileChooserWrapper>();
 
@@ -267,7 +267,7 @@ std::string FileChooserWrapper::get_selector_option_value(mforms::FileChooser *b
 
 //-------------------------------------------------------------------------------------------------
 
-void FileChooserWrapper::init() {
+auto FileChooserWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_filechooser_impl.create = &FileChooserWrapper::create;

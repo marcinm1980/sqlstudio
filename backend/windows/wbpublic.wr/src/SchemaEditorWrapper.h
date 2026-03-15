@@ -39,7 +39,7 @@ namespace MySQL {
         SchemaEditorWrapper(::bec::SchemaEditorBE *inn);
 
       public:
-        ::bec::SchemaEditorBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> ::bec::SchemaEditorBE *;
         void set_schema_option_by_name(System::String ^ name, System::String ^ value);
         String ^ get_schema_option_by_name(String ^ name);
       };

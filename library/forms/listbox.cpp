@@ -37,7 +37,7 @@ ListBox::ListBox(bool multi_select) : _updating(false) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBox::clear() {
+auto ListBox::clear() -> void {
   _updating = true;
   _listbox_impl->clear(this);
   _updating = false;
@@ -45,37 +45,37 @@ void ListBox::clear() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBox::set_heading(const std::string &text) {
+auto ListBox::set_heading(const std::string &text) -> void {
   _listbox_impl->set_heading(this, text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-size_t ListBox::add_item(const std::string &item) {
+auto ListBox::add_item(const std::string &item) -> size_t {
   return _listbox_impl->add_item(this, item);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBox::add_items(const std::list<std::string> &items) {
+auto ListBox::add_items(const std::list<std::string> &items) -> void {
   _listbox_impl->add_items(this, items);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBox::remove_index(size_t index) {
+auto ListBox::remove_index(size_t index) -> void {
   _listbox_impl->remove_index(this, index);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBox::remove_indexes(const std::vector<size_t> &indexes) {
+auto ListBox::remove_indexes(const std::vector<size_t> &indexes) -> void {
   _listbox_impl->remove_indexes(this, indexes);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBox::set_selected(ssize_t index) {
+auto ListBox::set_selected(ssize_t index) -> void {
   _updating = true;
   _listbox_impl->set_index(this, index);
   _updating = false;
@@ -83,37 +83,37 @@ void ListBox::set_selected(ssize_t index) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ListBox::get_string_value() {
+auto ListBox::get_string_value() -> std::string {
   return _listbox_impl->get_text(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-ssize_t ListBox::get_selected_index() {
+auto ListBox::get_selected_index() -> ssize_t {
   return _listbox_impl->get_index(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<size_t> ListBox::get_selected_indices() {
+auto ListBox::get_selected_indices() -> std::vector<size_t> {
   return _listbox_impl->get_selected_indices(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBox::selection_changed() {
+auto ListBox::selection_changed() -> void {
   if (!_updating)
     _signal_changed();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-size_t ListBox::get_count() {
+auto ListBox::get_count() -> size_t {
   return _listbox_impl->get_count(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ListBox::get_string_value_from_index(size_t index) {
+auto ListBox::get_string_value_from_index(size_t index) -> std::string {
   return _listbox_impl->get_string_value_from_index(this, index);
 }

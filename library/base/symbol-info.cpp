@@ -38,7 +38,7 @@ using namespace base;
 
 static std::set<std::string> empty;
 
-std::set<std::string> const& MySQLSymbolInfo::systemFunctionsForVersion(MySQLVersion version) {
+auto MySQLSymbolInfo::systemFunctionsForVersion(MySQLVersion version) -> std::set<std::string> const& {
   switch (version) {
     case MySQLVersion::MySQL56:
       return systemFunctions56;
@@ -56,7 +56,7 @@ std::set<std::string> const& MySQLSymbolInfo::systemFunctionsForVersion(MySQLVer
 
 static std::map<MySQLVersion, std::set<std::string>> keywords;
 static std::map<MySQLVersion, std::set<std::string>> reservedKeywords;
-std::set<std::string> const& MySQLSymbolInfo::keywordsForVersion(MySQLVersion version) {
+auto MySQLSymbolInfo::keywordsForVersion(MySQLVersion version) -> std::set<std::string> const& {
   if (keywords.count(version) == 0) {
     std::set<std::string> list;
     std::set<std::string> reservedList;
@@ -105,7 +105,7 @@ std::set<std::string> const& MySQLSymbolInfo::keywordsForVersion(MySQLVersion ve
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLSymbolInfo::isReservedKeyword(std::string const& identifier, MySQLVersion version) {
+auto MySQLSymbolInfo::isReservedKeyword(std::string const& identifier, MySQLVersion version) -> bool {
   std::ignore = keywordsForVersion(version);
   return reservedKeywords[version].count(identifier) > 0;
 }
@@ -115,14 +115,14 @@ bool MySQLSymbolInfo::isReservedKeyword(std::string const& identifier, MySQLVers
 /**
  * For both, reserved and non-reserved keywords.
  */
-bool MySQLSymbolInfo::isKeyword(std::string const& identifier, MySQLVersion version) {
+auto MySQLSymbolInfo::isKeyword(std::string const& identifier, MySQLVersion version) -> bool {
   auto keywords = keywordsForVersion(version);
   return keywords.count(identifier) > 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-MySQLVersion MySQLSymbolInfo::numberToVersion(long version) {
+auto MySQLSymbolInfo::numberToVersion(long version) -> MySQLVersion {
   long major = version / 10000, minor = (version / 100) % 100;
 
   if (major < 5 || major > 8)

@@ -42,7 +42,7 @@ runtime::loop::~loop() {
   }
 }
 
-void runtime::loop::run() {
+auto runtime::loop::run() -> void {
   if (!runtime::app::get().isMainThread())
     throw std::runtime_error("Loops are only supported from inside of main thread");
 
@@ -61,12 +61,12 @@ void runtime::loop::run() {
   _loop = nullptr;
 }
 
-void runtime::loop::quit() {
+auto runtime::loop::quit() -> void {
   if (_loop != nullptr && g_main_loop_is_running(_loop))
     g_main_loop_quit(_loop);
 }
 
-bool runtime::loop::isRunning() const {
+auto runtime::loop::isRunning() const -> bool {
   return _loop != nullptr && g_main_loop_is_running(_loop);
 }
 
@@ -74,7 +74,7 @@ runtime::app::app() {
   _mainThread = g_thread_self();
 }
 
-runtime::app &runtime::app::get() {
+auto runtime::app::get() -> runtime::app & {
   static app app;
   return app;
 }
@@ -82,7 +82,7 @@ runtime::app &runtime::app::get() {
 runtime::app::~app() {
 }
 
-static GOptionArg convertOptionType(dataTypes::OptionArgumentType type) {
+static auto convertOptionType(dataTypes::OptionArgumentType type) -> GOptionArg {
   switch (type) {
     case dataTypes::OptionArgumentNumeric:
       return G_OPTION_ARG_INT;
@@ -96,7 +96,7 @@ static GOptionArg convertOptionType(dataTypes::OptionArgumentType type) {
   }
 }
 
-void runtime::app::init(const std::string &name, int argc, char **argv) {
+auto runtime::app::init(const std::string &name, int argc, char **argv) -> void {
   auto cmdOptions = getCmdOptions();
   std::vector<GOptionEntry> entries;
   for (auto &o : *(cmdOptions->getEntries())) {
@@ -143,7 +143,7 @@ void runtime::app::init(const std::string &name, int argc, char **argv) {
   });
 }
 
-int runtime::app::onCommand(const Glib::RefPtr<Gio::ApplicationCommandLine> &appCmdLine) {
+auto runtime::app::onCommand(const Glib::RefPtr<Gio::ApplicationCommandLine> &appCmdLine) -> int {
   auto optDict = appCmdLine->get_options_dict();
   auto cmdOptions = getCmdOptions();
   for (auto &o : *(cmdOptions->getEntries())) {
@@ -178,17 +178,17 @@ int runtime::app::onCommand(const Glib::RefPtr<Gio::ApplicationCommandLine> &app
   return EXIT_SUCCESS;
 }
 
-int runtime::app::run() {
+auto runtime::app::run() -> int {
   if (_app)
     return _app->run();
   return EXIT_FAILURE;
 }
 
-void runtime::app::quit() {
+auto runtime::app::quit() -> void {
   if (_app)
     _app->quit();
 }
 
-bool runtime::app::isMainThread() {
+auto runtime::app::isMainThread() -> bool {
   return _mainThread == g_thread_self();
 }

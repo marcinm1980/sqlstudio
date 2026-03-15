@@ -48,53 +48,53 @@ namespace wb {
     WBComponentBasic(WBContext *wb);
     virtual ~WBComponentBasic();
 
-    static std::string name() {
+    static auto name() -> std::string {
       return "basic";
     }
-    virtual std::string get_name() {
+    virtual auto get_name() -> std::string {
       return WBComponentBasic::name();
     }
-    virtual std::string get_diagram_class_name() {
+    virtual auto get_diagram_class_name() -> std::string {
       return model_Diagram::static_class_name();
     }
 
     // void delete_selection();
 
   protected:
-    virtual void load_app_options(bool update);
+    virtual auto load_app_options(bool update) -> void;
 
     // Canvas Handling
-    virtual void setup_canvas_tool(ModelDiagramForm *view, const std::string &tool);
+    virtual auto setup_canvas_tool(ModelDiagramForm *view, const std::string &tool) -> void;
 
     // Toolbar Handling
-    virtual app_ToolbarRef get_tools_toolbar();
-    virtual app_ToolbarRef get_tool_options(const std::string &tool);
+    virtual auto get_tools_toolbar() -> app_ToolbarRef;
+    virtual auto get_tool_options(const std::string &tool) -> app_ToolbarRef;
 
-    virtual std::vector<std::string> get_command_dropdown_items(const std::string &option);
+    virtual auto get_command_dropdown_items(const std::string &option) -> std::vector<std::string>;
 
-    virtual grt::ListRef<app_ShortcutItem> get_shortcut_items();
+    virtual auto get_shortcut_items() -> grt::ListRef<app_ShortcutItem>;
 
-    virtual bool handles_figure(const model_ObjectRef &object);
+    virtual auto handles_figure(const model_ObjectRef &object) -> bool;
 
-    virtual void activate_canvas_object(const model_ObjectRef &figure, bool newwindow);
+    virtual auto activate_canvas_object(const model_ObjectRef &figure, bool newwindow) -> void;
 
   private:
     std::map<std::string, app_ToolbarRef> _toolbars;
     grt::ListRef<app_ShortcutItem> _shortcuts;
 
     // Model Objects
-    grt::ValueRef place_layer(ModelDiagramForm *view, const base::Rect &rect);
+    auto place_layer(ModelDiagramForm *view, const base::Rect &rect) -> grt::ValueRef;
 
-    void delete_object(ModelDiagramForm *view, const base::Point &pos);
+    auto delete_object(ModelDiagramForm *view, const base::Point &pos) -> void;
 
-    virtual bool delete_model_object(const model_ObjectRef &object, bool figure_only);
+    virtual auto delete_model_object(const model_ObjectRef &object, bool figure_only) -> bool;
 
-    virtual bool can_paste_object(const grt::ObjectRef &object);
-    virtual model_ObjectRef paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
-                                         grt::CopyContext &copy_context);
-    virtual void copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context);
+    virtual auto can_paste_object(const grt::ObjectRef &object) -> bool;
+    virtual auto paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
+                                         grt::CopyContext &copy_context) -> model_ObjectRef;
+    virtual auto copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context) -> void;
 
-    void reset_tool(ModelDiagramForm *view, void *);
+    auto reset_tool(ModelDiagramForm *view, void *) -> void;
     bool handle_motion_event(ModelDiagramForm *, base::Point, mdc::EventState, void *);
     bool handle_button_event(ModelDiagramForm *, mdc::MouseButton, bool, base::Point, mdc::EventState, void *);
   };

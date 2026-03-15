@@ -32,13 +32,13 @@ WidgetsAutoCleaner::~WidgetsAutoCleaner() {
 }
 
 //------------------------------------------------------------------------------
-void WidgetsAutoCleaner::add(Gtk::Widget* w) {
+auto WidgetsAutoCleaner::add(Gtk::Widget* w) -> void {
   if (_widgets.end() != std::find(_widgets.begin(), _widgets.end(), w))
     _widgets.push_back(w);
 }
 
 //------------------------------------------------------------------------------
-void WidgetsAutoCleaner::delete_widgets() {
+auto WidgetsAutoCleaner::delete_widgets() -> void {
   const int n = _widgets.size();
   for (int i = n - 1; i >= 0; --i) {
     delete _widgets[i];

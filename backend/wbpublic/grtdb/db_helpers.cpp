@@ -32,7 +32,7 @@ using namespace base;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string bec::get_host_identifier_for_connection(const db_mgmt_ConnectionRef &connection) {
+auto bec::get_host_identifier_for_connection(const db_mgmt_ConnectionRef &connection) -> std::string {
   grt::DictRef params(connection->parameterValues());
   std::string host_id;
 
@@ -48,7 +48,7 @@ std::string bec::get_host_identifier_for_connection(const db_mgmt_ConnectionRef 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string bec::get_description_for_connection(const db_mgmt_ConnectionRef &connection) {
+auto bec::get_description_for_connection(const db_mgmt_ConnectionRef &connection) -> std::string {
   std::string conn_type;
   std::string driver, server;
   grt::DictRef params(connection->parameterValues());
@@ -80,7 +80,7 @@ std::string bec::get_description_for_connection(const db_mgmt_ConnectionRef &con
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string bec::sanitize_server_version_number(const std::string &version) {
+auto bec::sanitize_server_version_number(const std::string &version) -> std::string {
   int major, minor, release, patch;
   if (sscanf(version.c_str(), "%i.%i.%i-%i", &major, &minor, &release, &patch) == 4) {
     return base::strfmt("%i.%i.%i-%i", major, minor, release, patch);
@@ -96,7 +96,7 @@ std::string bec::sanitize_server_version_number(const std::string &version) {
  * Parses the given version string into its components and returns a GRT version class.
  * Unspecified components are set to -1 to allow for fuzzy comparisons.
  */
-GrtVersionRef bec::parse_version(const std::string &target_version) {
+auto bec::parse_version(const std::string &target_version) -> GrtVersionRef {
   int major = 0, minor = -1, release = -1, build = -1;
 
   sscanf(target_version.c_str(), "%i.%i.%i.%i", &major, &minor, &release, &build);
@@ -117,7 +117,7 @@ GrtVersionRef bec::parse_version(const std::string &target_version) {
  * Converts a grt version struct into a plain long usable by parsers.
  * Returns a default version number if the given version is invalid or has no major version.
  */
-int bec::version_to_int(const GrtVersionRef &version) {
+auto bec::version_to_int(const GrtVersionRef &version) -> int {
   if (!version.is_valid() || version->majorNumber() == -1)
     return 80000;
 
@@ -135,7 +135,7 @@ int bec::version_to_int(const GrtVersionRef &version) {
 /**
  * Converts a grt version struct into one of the version enums.
  */
-MySQLVersion bec::versionToEnum(const GrtVersionRef &version) {
+auto bec::versionToEnum(const GrtVersionRef &version) -> MySQLVersion {
   if (!version.is_valid() || version->majorNumber() == -1)
     return MySQLVersion::Unknown;
 
@@ -163,7 +163,7 @@ MySQLVersion bec::versionToEnum(const GrtVersionRef &version) {
  * Converts the int form of a server version to a grt version ref.
  * The build member in the returned version is always -1.
  */
-GrtVersionRef bec::intToVersion(int version) {
+auto bec::intToVersion(int version) -> GrtVersionRef {
   int major = version / 10000, minor = (version / 100) % 100, release = version % 100, build = -1;
 
   GrtVersionRef version_(grt::Initialized);
@@ -185,7 +185,7 @@ GrtVersionRef bec::intToVersion(int version) {
  *
  * Do not use for comparing supported MySQL server versions.
  */
-bool bec::version_equal(GrtVersionRef a, GrtVersionRef b) {
+auto bec::version_equal(GrtVersionRef a, GrtVersionRef b) -> bool {
   // Major version number is always there.
   if (a->majorNumber() != b->majorNumber())
     return false;
@@ -220,7 +220,7 @@ bool bec::version_equal(GrtVersionRef a, GrtVersionRef b) {
  *
  * Do not use for comparing supported MySQL server versions.
  */
-bool bec::version_greater(GrtVersionRef a, GrtVersionRef b) {
+auto bec::version_greater(GrtVersionRef a, GrtVersionRef b) -> bool {
   if (a->majorNumber() > b->majorNumber()) // Major number should always be set.
     return true;
 
@@ -267,14 +267,14 @@ bool bec::version_greater(GrtVersionRef a, GrtVersionRef b) {
 
 /** Checks if the given server version numbers is in the set of supported MySQL servers
  */
-bool bec::is_supported_mysql_version(int mysql_major, int mysql_minor, int mysql_release) {
+auto bec::is_supported_mysql_version(int mysql_major, int mysql_minor, int mysql_release) -> bool {
   return ((mysql_major == 5 && (mysql_minor == 6 || mysql_minor == 7)) ||
           (mysql_major == 8 && mysql_minor == 0));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool bec::is_supported_mysql_version(const std::string &mysql_version) {
+auto bec::is_supported_mysql_version(const std::string &mysql_version) -> bool {
   int my_major = 0, my_minor = -1, my_release = -1, my_build = -1;
 
   sscanf(mysql_version.c_str(), "%i.%i.%i.%i", &my_major, &my_minor, &my_release, &my_build);
@@ -287,8 +287,8 @@ bool bec::is_supported_mysql_version(const std::string &mysql_version) {
 /** Checks whether the version number supplied is in the known set of versions larger than it.
  Use for server version checks for features.
  */
-bool bec::is_supported_mysql_version_at_least(int mysql_major, int mysql_minor, int mysql_release, int major, int minor,
-                                              int release) {
+auto bec::is_supported_mysql_version_at_least(int mysql_major, int mysql_minor, int mysql_release, int major, int minor,
+                                              int release) -> bool {
   // if the version required is older (<) than 5.6, then any server that matches is fine
   // if the version required is newer (>=) than 5.6, then we can only guarantee that known servers versions have the
   // feature
@@ -312,7 +312,7 @@ bool bec::is_supported_mysql_version_at_least(int mysql_major, int mysql_minor, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool bec::is_supported_mysql_version_at_least(const std::string &mysql_version, int major, int minor, int release) {
+auto bec::is_supported_mysql_version_at_least(const std::string &mysql_version, int major, int minor, int release) -> bool {
   int my_major = 0, my_minor = -1, my_release = -1, my_build = -1;
 
   sscanf(mysql_version.c_str(), "%i.%i.%i.%i", &my_major, &my_minor, &my_release, &my_build);
@@ -322,7 +322,7 @@ bool bec::is_supported_mysql_version_at_least(const std::string &mysql_version, 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool bec::is_supported_mysql_version_at_least(const GrtVersionRef &mysql_version, int major, int minor, int release) {
+auto bec::is_supported_mysql_version_at_least(const GrtVersionRef &mysql_version, int major, int minor, int release) -> bool {
   if (mysql_version.is_valid())
     return is_supported_mysql_version_at_least((int)mysql_version->majorNumber(), (int)mysql_version->minorNumber(),
                                                (int)mysql_version->releaseNumber(), major, minor, release);

@@ -109,7 +109,7 @@ public:
     : GrtObject(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.PluginInputDefinition";
   }
 
@@ -117,12 +117,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_PluginInputDefinition());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -139,7 +139,7 @@ public:
       _objectStructName("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.PluginObjectInput";
   }
 
@@ -150,7 +150,7 @@ public:
    * \par In Python:
    *    value = obj.objectStructName
    */
-  grt::StringRef objectStructName() const { return _objectStructName; }
+  auto objectStructName() const -> grt::StringRef { return _objectStructName; }
 
   /**
    * Setter for attribute objectStructName
@@ -159,7 +159,7 @@ public:
    * \par In Python:
    *   obj.objectStructName = value
    */
-  virtual void objectStructName(const grt::StringRef &value) {
+  virtual auto objectStructName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_objectStructName);
     _objectStructName = value;
     member_changed("objectStructName", ovalue, value);
@@ -170,12 +170,12 @@ protected:
   grt::StringRef _objectStructName;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_PluginObjectInput());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -199,7 +199,7 @@ public:
       _fileExtensions("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.PluginFileInput";
   }
 
@@ -210,7 +210,7 @@ public:
    * \par In Python:
    *    value = obj.dialogTitle
    */
-  grt::StringRef dialogTitle() const { return _dialogTitle; }
+  auto dialogTitle() const -> grt::StringRef { return _dialogTitle; }
 
   /**
    * Setter for attribute dialogTitle
@@ -219,7 +219,7 @@ public:
    * \par In Python:
    *   obj.dialogTitle = value
    */
-  virtual void dialogTitle(const grt::StringRef &value) {
+  virtual auto dialogTitle(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_dialogTitle);
     _dialogTitle = value;
     member_changed("dialogTitle", ovalue, value);
@@ -232,7 +232,7 @@ public:
    * \par In Python:
    *    value = obj.dialogType
    */
-  grt::StringRef dialogType() const { return _dialogType; }
+  auto dialogType() const -> grt::StringRef { return _dialogType; }
 
   /**
    * Setter for attribute dialogType
@@ -241,7 +241,7 @@ public:
    * \par In Python:
    *   obj.dialogType = value
    */
-  virtual void dialogType(const grt::StringRef &value) {
+  virtual auto dialogType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_dialogType);
     _dialogType = value;
     member_changed("dialogType", ovalue, value);
@@ -254,7 +254,7 @@ public:
    * \par In Python:
    *    value = obj.fileExtensions
    */
-  grt::StringRef fileExtensions() const { return _fileExtensions; }
+  auto fileExtensions() const -> grt::StringRef { return _fileExtensions; }
 
   /**
    * Setter for attribute fileExtensions
@@ -263,7 +263,7 @@ public:
    * \par In Python:
    *   obj.fileExtensions = value
    */
-  virtual void fileExtensions(const grt::StringRef &value) {
+  virtual auto fileExtensions(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_fileExtensions);
     _fileExtensions = value;
     member_changed("fileExtensions", ovalue, value);
@@ -276,12 +276,12 @@ protected:
   grt::StringRef _fileExtensions;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_PluginFileInput());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -315,7 +315,7 @@ public:
       _objectStructNames(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.PluginSelectionInput";
   }
 
@@ -326,7 +326,7 @@ public:
    * \par In Python:
    *    value = obj.argumentCardinality
    */
-  grt::StringRef argumentCardinality() const { return _argumentCardinality; }
+  auto argumentCardinality() const -> grt::StringRef { return _argumentCardinality; }
 
   /**
    * Setter for attribute argumentCardinality
@@ -335,7 +335,7 @@ public:
    * \par In Python:
    *   obj.argumentCardinality = value
    */
-  virtual void argumentCardinality(const grt::StringRef &value) {
+  virtual auto argumentCardinality(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_argumentCardinality);
     _argumentCardinality = value;
     member_changed("argumentCardinality", ovalue, value);
@@ -348,11 +348,11 @@ public:
    * \par In Python:
    *    value = obj.objectStructNames
    */
-  grt::StringListRef objectStructNames() const { return _objectStructNames; }
+  auto objectStructNames() const -> grt::StringListRef { return _objectStructNames; }
 
 
 private: // The next attribute is read-only.
-  virtual void objectStructNames(const grt::StringListRef &value) {
+  virtual auto objectStructNames(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_objectStructNames);
     _objectStructNames = value;
     member_changed("objectStructNames", ovalue, value);
@@ -365,12 +365,12 @@ protected:
   grt::StringListRef _objectStructNames;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_PluginSelectionInput());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -409,7 +409,7 @@ public:
       _showProgress(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Plugin";
   }
 
@@ -420,7 +420,7 @@ public:
    * \par In Python:
    *    value = obj.accessibilityName
    */
-  grt::StringRef accessibilityName() const { return _accessibilityName; }
+  auto accessibilityName() const -> grt::StringRef { return _accessibilityName; }
 
   /**
    * Setter for attribute accessibilityName
@@ -429,7 +429,7 @@ public:
    * \par In Python:
    *   obj.accessibilityName = value
    */
-  virtual void accessibilityName(const grt::StringRef &value) {
+  virtual auto accessibilityName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_accessibilityName);
     _accessibilityName = value;
     member_changed("accessibilityName", ovalue, value);
@@ -442,11 +442,11 @@ public:
    * \par In Python:
    *    value = obj.attributes
    */
-  grt::DictRef attributes() const { return _attributes; }
+  auto attributes() const -> grt::DictRef { return _attributes; }
 
 
 private: // The next attribute is read-only.
-  virtual void attributes(const grt::DictRef &value) {
+  virtual auto attributes(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_attributes);
     _attributes = value;
     member_changed("attributes", ovalue, value);
@@ -460,7 +460,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -469,7 +469,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -482,7 +482,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -491,7 +491,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -504,11 +504,11 @@ public:
    * \par In Python:
    *    value = obj.documentStructNames
    */
-  grt::StringListRef documentStructNames() const { return _documentStructNames; }
+  auto documentStructNames() const -> grt::StringListRef { return _documentStructNames; }
 
 
 private: // The next attribute is read-only.
-  virtual void documentStructNames(const grt::StringListRef &value) {
+  virtual auto documentStructNames(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_documentStructNames);
     _documentStructNames = value;
     member_changed("documentStructNames", ovalue, value);
@@ -522,11 +522,11 @@ public:
    * \par In Python:
    *    value = obj.groups
    */
-  grt::StringListRef groups() const { return _groups; }
+  auto groups() const -> grt::StringListRef { return _groups; }
 
 
 private: // The next attribute is read-only.
-  virtual void groups(const grt::StringListRef &value) {
+  virtual auto groups(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_groups);
     _groups = value;
     member_changed("groups", ovalue, value);
@@ -541,11 +541,11 @@ public:
    * \par In Python:
    *    value = obj.inputValues
    */
-  grt::ListRef<app_PluginInputDefinition> inputValues() const { return _inputValues; }
+  auto inputValues() const -> grt::ListRef<app_PluginInputDefinition> { return _inputValues; }
 
 
 private: // The next attribute is read-only.
-  virtual void inputValues(const grt::ListRef<app_PluginInputDefinition> &value) {
+  virtual auto inputValues(const grt::ListRef<app_PluginInputDefinition> &value) -> void {
     grt::ValueRef ovalue(_inputValues);
 
     _inputValues = value;
@@ -560,7 +560,7 @@ public:
    * \par In Python:
    *    value = obj.moduleFunctionName
    */
-  grt::StringRef moduleFunctionName() const { return _moduleFunctionName; }
+  auto moduleFunctionName() const -> grt::StringRef { return _moduleFunctionName; }
 
   /**
    * Setter for attribute moduleFunctionName
@@ -569,7 +569,7 @@ public:
    * \par In Python:
    *   obj.moduleFunctionName = value
    */
-  virtual void moduleFunctionName(const grt::StringRef &value) {
+  virtual auto moduleFunctionName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_moduleFunctionName);
     _moduleFunctionName = value;
     member_changed("moduleFunctionName", ovalue, value);
@@ -582,7 +582,7 @@ public:
    * \par In Python:
    *    value = obj.moduleName
    */
-  grt::StringRef moduleName() const { return _moduleName; }
+  auto moduleName() const -> grt::StringRef { return _moduleName; }
 
   /**
    * Setter for attribute moduleName
@@ -591,7 +591,7 @@ public:
    * \par In Python:
    *   obj.moduleName = value
    */
-  virtual void moduleName(const grt::StringRef &value) {
+  virtual auto moduleName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_moduleName);
     _moduleName = value;
     member_changed("moduleName", ovalue, value);
@@ -604,7 +604,7 @@ public:
    * \par In Python:
    *    value = obj.pluginType
    */
-  grt::StringRef pluginType() const { return _pluginType; }
+  auto pluginType() const -> grt::StringRef { return _pluginType; }
 
   /**
    * Setter for attribute pluginType
@@ -613,7 +613,7 @@ public:
    * \par In Python:
    *   obj.pluginType = value
    */
-  virtual void pluginType(const grt::StringRef &value) {
+  virtual auto pluginType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_pluginType);
     _pluginType = value;
     member_changed("pluginType", ovalue, value);
@@ -626,7 +626,7 @@ public:
    * \par In Python:
    *    value = obj.rating
    */
-  grt::IntegerRef rating() const { return _rating; }
+  auto rating() const -> grt::IntegerRef { return _rating; }
 
   /**
    * Setter for attribute rating
@@ -635,7 +635,7 @@ public:
    * \par In Python:
    *   obj.rating = value
    */
-  virtual void rating(const grt::IntegerRef &value) {
+  virtual auto rating(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_rating);
     _rating = value;
     member_changed("rating", ovalue, value);
@@ -648,7 +648,7 @@ public:
    * \par In Python:
    *    value = obj.showProgress
    */
-  grt::IntegerRef showProgress() const { return _showProgress; }
+  auto showProgress() const -> grt::IntegerRef { return _showProgress; }
 
   /**
    * Setter for attribute showProgress
@@ -657,7 +657,7 @@ public:
    * \par In Python:
    *   obj.showProgress = value
    */
-  virtual void showProgress(const grt::IntegerRef &value) {
+  virtual auto showProgress(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_showProgress);
     _showProgress = value;
     member_changed("showProgress", ovalue, value);
@@ -679,12 +679,12 @@ protected:
   grt::IntegerRef _showProgress;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Plugin());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -761,7 +761,7 @@ public:
     _documentStructNames.content().__retype(grt::ObjectType, "");
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.DocumentPlugin";
   }
 
@@ -781,12 +781,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_DocumentPlugin());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -811,7 +811,7 @@ public:
       _plugins(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.PluginGroup";
   }
 
@@ -822,7 +822,7 @@ public:
    * \par In Python:
    *    value = obj.accessibilityName
    */
-  grt::StringRef accessibilityName() const { return _accessibilityName; }
+  auto accessibilityName() const -> grt::StringRef { return _accessibilityName; }
 
   /**
    * Setter for attribute accessibilityName
@@ -831,7 +831,7 @@ public:
    * \par In Python:
    *   obj.accessibilityName = value
    */
-  virtual void accessibilityName(const grt::StringRef &value) {
+  virtual auto accessibilityName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_accessibilityName);
     _accessibilityName = value;
     member_changed("accessibilityName", ovalue, value);
@@ -844,7 +844,7 @@ public:
    * \par In Python:
    *    value = obj.category
    */
-  grt::StringRef category() const { return _category; }
+  auto category() const -> grt::StringRef { return _category; }
 
   /**
    * Setter for attribute category
@@ -853,7 +853,7 @@ public:
    * \par In Python:
    *   obj.category = value
    */
-  virtual void category(const grt::StringRef &value) {
+  virtual auto category(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_category);
     _category = value;
     member_changed("category", ovalue, value);
@@ -867,11 +867,11 @@ public:
    * \par In Python:
    *    value = obj.plugins
    */
-  grt::ListRef<app_Plugin> plugins() const { return _plugins; }
+  auto plugins() const -> grt::ListRef<app_Plugin> { return _plugins; }
 
 
 private: // The next attribute is read-only.
-  virtual void plugins(const grt::ListRef<app_Plugin> &value) {
+  virtual auto plugins(const grt::ListRef<app_Plugin> &value) -> void {
     grt::ValueRef ovalue(_plugins);
 
     _plugins = value;
@@ -886,12 +886,12 @@ protected:
   grt::ListRef<app_Plugin> _plugins;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_PluginGroup());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -924,7 +924,7 @@ public:
       _items(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Toolbar";
   }
 
@@ -935,7 +935,7 @@ public:
    * \par In Python:
    *    value = obj.accessibilityName
    */
-  grt::StringRef accessibilityName() const { return _accessibilityName; }
+  auto accessibilityName() const -> grt::StringRef { return _accessibilityName; }
 
   /**
    * Setter for attribute accessibilityName
@@ -944,7 +944,7 @@ public:
    * \par In Python:
    *   obj.accessibilityName = value
    */
-  virtual void accessibilityName(const grt::StringRef &value) {
+  virtual auto accessibilityName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_accessibilityName);
     _accessibilityName = value;
     member_changed("accessibilityName", ovalue, value);
@@ -958,11 +958,11 @@ public:
    * \par In Python:
    *    value = obj.items
    */
-  grt::ListRef<app_ToolbarItem> items() const { return _items; }
+  auto items() const -> grt::ListRef<app_ToolbarItem> { return _items; }
 
 
 private: // The next attribute is read-only.
-  virtual void items(const grt::ListRef<app_ToolbarItem> &value) {
+  virtual auto items(const grt::ListRef<app_ToolbarItem> &value) -> void {
     grt::ValueRef ovalue(_items);
 
     _items = value;
@@ -976,12 +976,12 @@ protected:
   grt::ListRef<app_ToolbarItem> _items;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Toolbar());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1010,7 +1010,7 @@ public:
       _platform("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.CommandItem";
   }
 
@@ -1021,7 +1021,7 @@ public:
    * \par In Python:
    *    value = obj.command
    */
-  grt::StringRef command() const { return _command; }
+  auto command() const -> grt::StringRef { return _command; }
 
   /**
    * Setter for attribute command
@@ -1030,7 +1030,7 @@ public:
    * \par In Python:
    *   obj.command = value
    */
-  virtual void command(const grt::StringRef &value) {
+  virtual auto command(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_command);
     _command = value;
     member_changed("command", ovalue, value);
@@ -1043,7 +1043,7 @@ public:
    * \par In Python:
    *    value = obj.context
    */
-  grt::StringRef context() const { return _context; }
+  auto context() const -> grt::StringRef { return _context; }
 
   /**
    * Setter for attribute context
@@ -1052,7 +1052,7 @@ public:
    * \par In Python:
    *   obj.context = value
    */
-  virtual void context(const grt::StringRef &value) {
+  virtual auto context(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_context);
     _context = value;
     member_changed("context", ovalue, value);
@@ -1065,7 +1065,7 @@ public:
    * \par In Python:
    *    value = obj.platform
    */
-  grt::StringRef platform() const { return _platform; }
+  auto platform() const -> grt::StringRef { return _platform; }
 
   /**
    * Setter for attribute platform
@@ -1074,7 +1074,7 @@ public:
    * \par In Python:
    *   obj.platform = value
    */
-  virtual void platform(const grt::StringRef &value) {
+  virtual auto platform(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_platform);
     _platform = value;
     member_changed("platform", ovalue, value);
@@ -1087,12 +1087,12 @@ protected:
   grt::StringRef _platform;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_CommandItem());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1130,7 +1130,7 @@ public:
       _tooltip("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.ToolbarItem";
   }
 
@@ -1141,7 +1141,7 @@ public:
    * \par In Python:
    *    value = obj.accessibilityName
    */
-  grt::StringRef accessibilityName() const { return _accessibilityName; }
+  auto accessibilityName() const -> grt::StringRef { return _accessibilityName; }
 
   /**
    * Setter for attribute accessibilityName
@@ -1150,7 +1150,7 @@ public:
    * \par In Python:
    *   obj.accessibilityName = value
    */
-  virtual void accessibilityName(const grt::StringRef &value) {
+  virtual auto accessibilityName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_accessibilityName);
     _accessibilityName = value;
     member_changed("accessibilityName", ovalue, value);
@@ -1163,7 +1163,7 @@ public:
    * \par In Python:
    *    value = obj.altIcon
    */
-  grt::StringRef altIcon() const { return _altIcon; }
+  auto altIcon() const -> grt::StringRef { return _altIcon; }
 
   /**
    * Setter for attribute altIcon
@@ -1172,7 +1172,7 @@ public:
    * \par In Python:
    *   obj.altIcon = value
    */
-  virtual void altIcon(const grt::StringRef &value) {
+  virtual auto altIcon(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_altIcon);
     _altIcon = value;
     member_changed("altIcon", ovalue, value);
@@ -1185,7 +1185,7 @@ public:
    * \par In Python:
    *    value = obj.darkIcon
    */
-  grt::StringRef darkIcon() const { return _darkIcon; }
+  auto darkIcon() const -> grt::StringRef { return _darkIcon; }
 
   /**
    * Setter for attribute darkIcon
@@ -1194,7 +1194,7 @@ public:
    * \par In Python:
    *   obj.darkIcon = value
    */
-  virtual void darkIcon(const grt::StringRef &value) {
+  virtual auto darkIcon(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_darkIcon);
     _darkIcon = value;
     member_changed("darkIcon", ovalue, value);
@@ -1207,7 +1207,7 @@ public:
    * \par In Python:
    *    value = obj.icon
    */
-  grt::StringRef icon() const { return _icon; }
+  auto icon() const -> grt::StringRef { return _icon; }
 
   /**
    * Setter for attribute icon
@@ -1216,7 +1216,7 @@ public:
    * \par In Python:
    *   obj.icon = value
    */
-  virtual void icon(const grt::StringRef &value) {
+  virtual auto icon(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_icon);
     _icon = value;
     member_changed("icon", ovalue, value);
@@ -1229,7 +1229,7 @@ public:
    * \par In Python:
    *    value = obj.initialState
    */
-  grt::IntegerRef initialState() const { return _initialState; }
+  auto initialState() const -> grt::IntegerRef { return _initialState; }
 
   /**
    * Setter for attribute initialState
@@ -1238,7 +1238,7 @@ public:
    * \par In Python:
    *   obj.initialState = value
    */
-  virtual void initialState(const grt::IntegerRef &value) {
+  virtual auto initialState(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_initialState);
     _initialState = value;
     member_changed("initialState", ovalue, value);
@@ -1251,7 +1251,7 @@ public:
    * \par In Python:
    *    value = obj.itemType
    */
-  grt::StringRef itemType() const { return _itemType; }
+  auto itemType() const -> grt::StringRef { return _itemType; }
 
   /**
    * Setter for attribute itemType
@@ -1260,7 +1260,7 @@ public:
    * \par In Python:
    *   obj.itemType = value
    */
-  virtual void itemType(const grt::StringRef &value) {
+  virtual auto itemType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_itemType);
     _itemType = value;
     member_changed("itemType", ovalue, value);
@@ -1273,7 +1273,7 @@ public:
    * \par In Python:
    *    value = obj.tooltip
    */
-  grt::StringRef tooltip() const { return _tooltip; }
+  auto tooltip() const -> grt::StringRef { return _tooltip; }
 
   /**
    * Setter for attribute tooltip
@@ -1282,7 +1282,7 @@ public:
    * \par In Python:
    *   obj.tooltip = value
    */
-  virtual void tooltip(const grt::StringRef &value) {
+  virtual auto tooltip(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tooltip);
     _tooltip = value;
     member_changed("tooltip", ovalue, value);
@@ -1299,12 +1299,12 @@ protected:
   grt::StringRef _tooltip;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_ToolbarItem());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1356,7 +1356,7 @@ public:
       _shortcut("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.ShortcutItem";
   }
 
@@ -1367,7 +1367,7 @@ public:
    * \par In Python:
    *    value = obj.shortcut
    */
-  grt::StringRef shortcut() const { return _shortcut; }
+  auto shortcut() const -> grt::StringRef { return _shortcut; }
 
   /**
    * Setter for attribute shortcut
@@ -1376,7 +1376,7 @@ public:
    * \par In Python:
    *   obj.shortcut = value
    */
-  virtual void shortcut(const grt::StringRef &value) {
+  virtual auto shortcut(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_shortcut);
     _shortcut = value;
     member_changed("shortcut", ovalue, value);
@@ -1387,12 +1387,12 @@ protected:
   grt::StringRef _shortcut;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_ShortcutItem());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1418,7 +1418,7 @@ public:
       _subItems(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.MenuItem";
   }
 
@@ -1429,7 +1429,7 @@ public:
    * \par In Python:
    *    value = obj.accessibilityName
    */
-  grt::StringRef accessibilityName() const { return _accessibilityName; }
+  auto accessibilityName() const -> grt::StringRef { return _accessibilityName; }
 
   /**
    * Setter for attribute accessibilityName
@@ -1438,7 +1438,7 @@ public:
    * \par In Python:
    *   obj.accessibilityName = value
    */
-  virtual void accessibilityName(const grt::StringRef &value) {
+  virtual auto accessibilityName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_accessibilityName);
     _accessibilityName = value;
     member_changed("accessibilityName", ovalue, value);
@@ -1451,7 +1451,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -1460,7 +1460,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -1473,7 +1473,7 @@ public:
    * \par In Python:
    *    value = obj.itemType
    */
-  grt::StringRef itemType() const { return _itemType; }
+  auto itemType() const -> grt::StringRef { return _itemType; }
 
   /**
    * Setter for attribute itemType
@@ -1482,7 +1482,7 @@ public:
    * \par In Python:
    *   obj.itemType = value
    */
-  virtual void itemType(const grt::StringRef &value) {
+  virtual auto itemType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_itemType);
     _itemType = value;
     member_changed("itemType", ovalue, value);
@@ -1495,7 +1495,7 @@ public:
    * \par In Python:
    *    value = obj.shortcut
    */
-  grt::StringRef shortcut() const { return _shortcut; }
+  auto shortcut() const -> grt::StringRef { return _shortcut; }
 
   /**
    * Setter for attribute shortcut
@@ -1504,7 +1504,7 @@ public:
    * \par In Python:
    *   obj.shortcut = value
    */
-  virtual void shortcut(const grt::StringRef &value) {
+  virtual auto shortcut(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_shortcut);
     _shortcut = value;
     member_changed("shortcut", ovalue, value);
@@ -1518,11 +1518,11 @@ public:
    * \par In Python:
    *    value = obj.subItems
    */
-  grt::ListRef<app_MenuItem> subItems() const { return _subItems; }
+  auto subItems() const -> grt::ListRef<app_MenuItem> { return _subItems; }
 
 
 private: // The next attribute is read-only.
-  virtual void subItems(const grt::ListRef<app_MenuItem> &value) {
+  virtual auto subItems(const grt::ListRef<app_MenuItem> &value) -> void {
     grt::ValueRef ovalue(_subItems);
 
     _subItems = value;
@@ -1539,12 +1539,12 @@ protected:
   grt::ListRef<app_MenuItem> _subItems;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_MenuItem());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1589,7 +1589,7 @@ public:
       _type("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.CustomDataField";
   }
 
@@ -1600,7 +1600,7 @@ public:
    * \par In Python:
    *    value = obj.defaultValue
    */
-  grt::StringRef defaultValue() const { return _defaultValue; }
+  auto defaultValue() const -> grt::StringRef { return _defaultValue; }
 
   /**
    * Setter for attribute defaultValue
@@ -1609,7 +1609,7 @@ public:
    * \par In Python:
    *   obj.defaultValue = value
    */
-  virtual void defaultValue(const grt::StringRef &value) {
+  virtual auto defaultValue(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultValue);
     _defaultValue = value;
     member_changed("defaultValue", ovalue, value);
@@ -1622,7 +1622,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -1631,7 +1631,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -1644,7 +1644,7 @@ public:
    * \par In Python:
    *    value = obj.objectStruct
    */
-  grt::StringRef objectStruct() const { return _objectStruct; }
+  auto objectStruct() const -> grt::StringRef { return _objectStruct; }
 
   /**
    * Setter for attribute objectStruct
@@ -1653,7 +1653,7 @@ public:
    * \par In Python:
    *   obj.objectStruct = value
    */
-  virtual void objectStruct(const grt::StringRef &value) {
+  virtual auto objectStruct(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_objectStruct);
     _objectStruct = value;
     member_changed("objectStruct", ovalue, value);
@@ -1666,7 +1666,7 @@ public:
    * \par In Python:
    *    value = obj.type
    */
-  grt::StringRef type() const { return _type; }
+  auto type() const -> grt::StringRef { return _type; }
 
   /**
    * Setter for attribute type
@@ -1675,7 +1675,7 @@ public:
    * \par In Python:
    *   obj.type = value
    */
-  virtual void type(const grt::StringRef &value) {
+  virtual auto type(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_type);
     _type = value;
     member_changed("type", ovalue, value);
@@ -1689,12 +1689,12 @@ protected:
   grt::StringRef _type;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_CustomDataField());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1736,7 +1736,7 @@ public:
       _scale(5) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.PageSettings";
   }
 
@@ -1747,7 +1747,7 @@ public:
    * \par In Python:
    *    value = obj.marginBottom
    */
-  grt::DoubleRef marginBottom() const { return _marginBottom; }
+  auto marginBottom() const -> grt::DoubleRef { return _marginBottom; }
 
   /**
    * Setter for attribute marginBottom
@@ -1756,7 +1756,7 @@ public:
    * \par In Python:
    *   obj.marginBottom = value
    */
-  virtual void marginBottom(const grt::DoubleRef &value) {
+  virtual auto marginBottom(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_marginBottom);
     _marginBottom = value;
     member_changed("marginBottom", ovalue, value);
@@ -1769,7 +1769,7 @@ public:
    * \par In Python:
    *    value = obj.marginLeft
    */
-  grt::DoubleRef marginLeft() const { return _marginLeft; }
+  auto marginLeft() const -> grt::DoubleRef { return _marginLeft; }
 
   /**
    * Setter for attribute marginLeft
@@ -1778,7 +1778,7 @@ public:
    * \par In Python:
    *   obj.marginLeft = value
    */
-  virtual void marginLeft(const grt::DoubleRef &value) {
+  virtual auto marginLeft(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_marginLeft);
     _marginLeft = value;
     member_changed("marginLeft", ovalue, value);
@@ -1791,7 +1791,7 @@ public:
    * \par In Python:
    *    value = obj.marginRight
    */
-  grt::DoubleRef marginRight() const { return _marginRight; }
+  auto marginRight() const -> grt::DoubleRef { return _marginRight; }
 
   /**
    * Setter for attribute marginRight
@@ -1800,7 +1800,7 @@ public:
    * \par In Python:
    *   obj.marginRight = value
    */
-  virtual void marginRight(const grt::DoubleRef &value) {
+  virtual auto marginRight(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_marginRight);
     _marginRight = value;
     member_changed("marginRight", ovalue, value);
@@ -1813,7 +1813,7 @@ public:
    * \par In Python:
    *    value = obj.marginTop
    */
-  grt::DoubleRef marginTop() const { return _marginTop; }
+  auto marginTop() const -> grt::DoubleRef { return _marginTop; }
 
   /**
    * Setter for attribute marginTop
@@ -1822,7 +1822,7 @@ public:
    * \par In Python:
    *   obj.marginTop = value
    */
-  virtual void marginTop(const grt::DoubleRef &value) {
+  virtual auto marginTop(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_marginTop);
     _marginTop = value;
     member_changed("marginTop", ovalue, value);
@@ -1835,7 +1835,7 @@ public:
    * \par In Python:
    *    value = obj.orientation
    */
-  grt::StringRef orientation() const { return _orientation; }
+  auto orientation() const -> grt::StringRef { return _orientation; }
 
   /**
    * Setter for attribute orientation
@@ -1844,7 +1844,7 @@ public:
    * \par In Python:
    *   obj.orientation = value
    */
-  virtual void orientation(const grt::StringRef &value) {
+  virtual auto orientation(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_orientation);
     _orientation = value;
     member_changed("orientation", ovalue, value);
@@ -1857,7 +1857,7 @@ public:
    * \par In Python:
    *    value = obj.paperType
    */
-  app_PaperTypeRef paperType() const { return _paperType; }
+  auto paperType() const -> app_PaperTypeRef { return _paperType; }
 
   /**
    * Setter for attribute paperType
@@ -1866,7 +1866,7 @@ public:
    * \par In Python:
    *   obj.paperType = value
    */
-  virtual void paperType(const app_PaperTypeRef &value) {
+  virtual auto paperType(const app_PaperTypeRef &value) -> void {
     grt::ValueRef ovalue(_paperType);
     _paperType = value;
     member_changed("paperType", ovalue, value);
@@ -1879,7 +1879,7 @@ public:
    * \par In Python:
    *    value = obj.scale
    */
-  grt::DoubleRef scale() const { return _scale; }
+  auto scale() const -> grt::DoubleRef { return _scale; }
 
   /**
    * Setter for attribute scale
@@ -1888,7 +1888,7 @@ public:
    * \par In Python:
    *   obj.scale = value
    */
-  virtual void scale(const grt::DoubleRef &value) {
+  virtual auto scale(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_scale);
     _scale = value;
     member_changed("scale", ovalue, value);
@@ -1905,12 +1905,12 @@ protected:
   grt::DoubleRef _scale;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_PageSettings());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1969,7 +1969,7 @@ public:
       _width(0.0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.PaperType";
   }
 
@@ -1980,7 +1980,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -1989,7 +1989,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -2002,7 +2002,7 @@ public:
    * \par In Python:
    *    value = obj.height
    */
-  grt::DoubleRef height() const { return _height; }
+  auto height() const -> grt::DoubleRef { return _height; }
 
   /**
    * Setter for attribute height
@@ -2011,7 +2011,7 @@ public:
    * \par In Python:
    *   obj.height = value
    */
-  virtual void height(const grt::DoubleRef &value) {
+  virtual auto height(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_height);
     _height = value;
     member_changed("height", ovalue, value);
@@ -2024,7 +2024,7 @@ public:
    * \par In Python:
    *    value = obj.marginBottom
    */
-  grt::DoubleRef marginBottom() const { return _marginBottom; }
+  auto marginBottom() const -> grt::DoubleRef { return _marginBottom; }
 
   /**
    * Setter for attribute marginBottom
@@ -2033,7 +2033,7 @@ public:
    * \par In Python:
    *   obj.marginBottom = value
    */
-  virtual void marginBottom(const grt::DoubleRef &value) {
+  virtual auto marginBottom(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_marginBottom);
     _marginBottom = value;
     member_changed("marginBottom", ovalue, value);
@@ -2046,7 +2046,7 @@ public:
    * \par In Python:
    *    value = obj.marginLeft
    */
-  grt::DoubleRef marginLeft() const { return _marginLeft; }
+  auto marginLeft() const -> grt::DoubleRef { return _marginLeft; }
 
   /**
    * Setter for attribute marginLeft
@@ -2055,7 +2055,7 @@ public:
    * \par In Python:
    *   obj.marginLeft = value
    */
-  virtual void marginLeft(const grt::DoubleRef &value) {
+  virtual auto marginLeft(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_marginLeft);
     _marginLeft = value;
     member_changed("marginLeft", ovalue, value);
@@ -2068,7 +2068,7 @@ public:
    * \par In Python:
    *    value = obj.marginRight
    */
-  grt::DoubleRef marginRight() const { return _marginRight; }
+  auto marginRight() const -> grt::DoubleRef { return _marginRight; }
 
   /**
    * Setter for attribute marginRight
@@ -2077,7 +2077,7 @@ public:
    * \par In Python:
    *   obj.marginRight = value
    */
-  virtual void marginRight(const grt::DoubleRef &value) {
+  virtual auto marginRight(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_marginRight);
     _marginRight = value;
     member_changed("marginRight", ovalue, value);
@@ -2090,7 +2090,7 @@ public:
    * \par In Python:
    *    value = obj.marginTop
    */
-  grt::DoubleRef marginTop() const { return _marginTop; }
+  auto marginTop() const -> grt::DoubleRef { return _marginTop; }
 
   /**
    * Setter for attribute marginTop
@@ -2099,7 +2099,7 @@ public:
    * \par In Python:
    *   obj.marginTop = value
    */
-  virtual void marginTop(const grt::DoubleRef &value) {
+  virtual auto marginTop(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_marginTop);
     _marginTop = value;
     member_changed("marginTop", ovalue, value);
@@ -2112,7 +2112,7 @@ public:
    * \par In Python:
    *    value = obj.marginsSet
    */
-  grt::IntegerRef marginsSet() const { return _marginsSet; }
+  auto marginsSet() const -> grt::IntegerRef { return _marginsSet; }
 
   /**
    * Setter for attribute marginsSet
@@ -2121,7 +2121,7 @@ public:
    * \par In Python:
    *   obj.marginsSet = value
    */
-  virtual void marginsSet(const grt::IntegerRef &value) {
+  virtual auto marginsSet(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_marginsSet);
     _marginsSet = value;
     member_changed("marginsSet", ovalue, value);
@@ -2134,7 +2134,7 @@ public:
    * \par In Python:
    *    value = obj.width
    */
-  grt::DoubleRef width() const { return _width; }
+  auto width() const -> grt::DoubleRef { return _width; }
 
   /**
    * Setter for attribute width
@@ -2143,7 +2143,7 @@ public:
    * \par In Python:
    *   obj.width = value
    */
-  virtual void width(const grt::DoubleRef &value) {
+  virtual auto width(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_width);
     _width = value;
     member_changed("width", ovalue, value);
@@ -2161,12 +2161,12 @@ protected:
   grt::DoubleRef _width;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_PaperType());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2228,7 +2228,7 @@ public:
       _plugins(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Registry";
   }
 
@@ -2239,7 +2239,7 @@ public:
    * \par In Python:
    *    value = obj.appDataDirectory
    */
-  grt::StringRef appDataDirectory() const { return _appDataDirectory; }
+  auto appDataDirectory() const -> grt::StringRef { return _appDataDirectory; }
 
   /**
    * Setter for attribute appDataDirectory
@@ -2248,7 +2248,7 @@ public:
    * \par In Python:
    *   obj.appDataDirectory = value
    */
-  virtual void appDataDirectory(const grt::StringRef &value) {
+  virtual auto appDataDirectory(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_appDataDirectory);
     _appDataDirectory = value;
     member_changed("appDataDirectory", ovalue, value);
@@ -2261,7 +2261,7 @@ public:
    * \par In Python:
    *    value = obj.appExecutablePath
    */
-  grt::StringRef appExecutablePath() const { return _appExecutablePath; }
+  auto appExecutablePath() const -> grt::StringRef { return _appExecutablePath; }
 
   /**
    * Setter for attribute appExecutablePath
@@ -2270,7 +2270,7 @@ public:
    * \par In Python:
    *   obj.appExecutablePath = value
    */
-  virtual void appExecutablePath(const grt::StringRef &value) {
+  virtual auto appExecutablePath(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_appExecutablePath);
     _appExecutablePath = value;
     member_changed("appExecutablePath", ovalue, value);
@@ -2284,11 +2284,11 @@ public:
    * \par In Python:
    *    value = obj.customDataFields
    */
-  grt::ListRef<app_CustomDataField> customDataFields() const { return _customDataFields; }
+  auto customDataFields() const -> grt::ListRef<app_CustomDataField> { return _customDataFields; }
 
 
 private: // The next attribute is read-only.
-  virtual void customDataFields(const grt::ListRef<app_CustomDataField> &value) {
+  virtual auto customDataFields(const grt::ListRef<app_CustomDataField> &value) -> void {
     grt::ValueRef ovalue(_customDataFields);
 
     _customDataFields = value;
@@ -2304,11 +2304,11 @@ public:
    * \par In Python:
    *    value = obj.pluginGroups
    */
-  grt::ListRef<app_PluginGroup> pluginGroups() const { return _pluginGroups; }
+  auto pluginGroups() const -> grt::ListRef<app_PluginGroup> { return _pluginGroups; }
 
 
 private: // The next attribute is read-only.
-  virtual void pluginGroups(const grt::ListRef<app_PluginGroup> &value) {
+  virtual auto pluginGroups(const grt::ListRef<app_PluginGroup> &value) -> void {
     grt::ValueRef ovalue(_pluginGroups);
 
     _pluginGroups = value;
@@ -2324,11 +2324,11 @@ public:
    * \par In Python:
    *    value = obj.plugins
    */
-  grt::ListRef<app_Plugin> plugins() const { return _plugins; }
+  auto plugins() const -> grt::ListRef<app_Plugin> { return _plugins; }
 
 
 private: // The next attribute is read-only.
-  virtual void plugins(const grt::ListRef<app_Plugin> &value) {
+  virtual auto plugins(const grt::ListRef<app_Plugin> &value) -> void {
     grt::ValueRef ovalue(_plugins);
 
     _plugins = value;
@@ -2345,12 +2345,12 @@ protected:
   grt::ListRef<app_Plugin> _plugins;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Registry());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2401,7 +2401,7 @@ public:
       _type("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Starter";
   }
 
@@ -2412,7 +2412,7 @@ public:
    * \par In Python:
    *    value = obj.authorHome
    */
-  grt::StringRef authorHome() const { return _authorHome; }
+  auto authorHome() const -> grt::StringRef { return _authorHome; }
 
   /**
    * Setter for attribute authorHome
@@ -2421,7 +2421,7 @@ public:
    * \par In Python:
    *   obj.authorHome = value
    */
-  virtual void authorHome(const grt::StringRef &value) {
+  virtual auto authorHome(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_authorHome);
     _authorHome = value;
     member_changed("authorHome", ovalue, value);
@@ -2434,7 +2434,7 @@ public:
    * \par In Python:
    *    value = obj.command
    */
-  grt::StringRef command() const { return _command; }
+  auto command() const -> grt::StringRef { return _command; }
 
   /**
    * Setter for attribute command
@@ -2443,7 +2443,7 @@ public:
    * \par In Python:
    *   obj.command = value
    */
-  virtual void command(const grt::StringRef &value) {
+  virtual auto command(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_command);
     _command = value;
     member_changed("command", ovalue, value);
@@ -2456,7 +2456,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -2465,7 +2465,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -2478,7 +2478,7 @@ public:
    * \par In Python:
    *    value = obj.edition
    */
-  grt::StringRef edition() const { return _edition; }
+  auto edition() const -> grt::StringRef { return _edition; }
 
   /**
    * Setter for attribute edition
@@ -2487,7 +2487,7 @@ public:
    * \par In Python:
    *   obj.edition = value
    */
-  virtual void edition(const grt::StringRef &value) {
+  virtual auto edition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_edition);
     _edition = value;
     member_changed("edition", ovalue, value);
@@ -2500,7 +2500,7 @@ public:
    * \par In Python:
    *    value = obj.introduction
    */
-  grt::StringRef introduction() const { return _introduction; }
+  auto introduction() const -> grt::StringRef { return _introduction; }
 
   /**
    * Setter for attribute introduction
@@ -2509,7 +2509,7 @@ public:
    * \par In Python:
    *   obj.introduction = value
    */
-  virtual void introduction(const grt::StringRef &value) {
+  virtual auto introduction(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_introduction);
     _introduction = value;
     member_changed("introduction", ovalue, value);
@@ -2522,7 +2522,7 @@ public:
    * \par In Python:
    *    value = obj.largeIcon
    */
-  grt::StringRef largeIcon() const { return _largeIcon; }
+  auto largeIcon() const -> grt::StringRef { return _largeIcon; }
 
   /**
    * Setter for attribute largeIcon
@@ -2531,7 +2531,7 @@ public:
    * \par In Python:
    *   obj.largeIcon = value
    */
-  virtual void largeIcon(const grt::StringRef &value) {
+  virtual auto largeIcon(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_largeIcon);
     _largeIcon = value;
     member_changed("largeIcon", ovalue, value);
@@ -2544,7 +2544,7 @@ public:
    * \par In Python:
    *    value = obj.publisher
    */
-  grt::StringRef publisher() const { return _publisher; }
+  auto publisher() const -> grt::StringRef { return _publisher; }
 
   /**
    * Setter for attribute publisher
@@ -2553,7 +2553,7 @@ public:
    * \par In Python:
    *   obj.publisher = value
    */
-  virtual void publisher(const grt::StringRef &value) {
+  virtual auto publisher(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_publisher);
     _publisher = value;
     member_changed("publisher", ovalue, value);
@@ -2566,7 +2566,7 @@ public:
    * \par In Python:
    *    value = obj.smallIcon
    */
-  grt::StringRef smallIcon() const { return _smallIcon; }
+  auto smallIcon() const -> grt::StringRef { return _smallIcon; }
 
   /**
    * Setter for attribute smallIcon
@@ -2575,7 +2575,7 @@ public:
    * \par In Python:
    *   obj.smallIcon = value
    */
-  virtual void smallIcon(const grt::StringRef &value) {
+  virtual auto smallIcon(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_smallIcon);
     _smallIcon = value;
     member_changed("smallIcon", ovalue, value);
@@ -2588,7 +2588,7 @@ public:
    * \par In Python:
    *    value = obj.title
    */
-  grt::StringRef title() const { return _title; }
+  auto title() const -> grt::StringRef { return _title; }
 
   /**
    * Setter for attribute title
@@ -2597,7 +2597,7 @@ public:
    * \par In Python:
    *   obj.title = value
    */
-  virtual void title(const grt::StringRef &value) {
+  virtual auto title(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_title);
     _title = value;
     member_changed("title", ovalue, value);
@@ -2610,7 +2610,7 @@ public:
    * \par In Python:
    *    value = obj.type
    */
-  grt::StringRef type() const { return _type; }
+  auto type() const -> grt::StringRef { return _type; }
 
   /**
    * Setter for attribute type
@@ -2619,7 +2619,7 @@ public:
    * \par In Python:
    *   obj.type = value
    */
-  virtual void type(const grt::StringRef &value) {
+  virtual auto type(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_type);
     _type = value;
     member_changed("type", ovalue, value);
@@ -2639,12 +2639,12 @@ protected:
   grt::StringRef _type;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Starter());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2714,7 +2714,7 @@ public:
       _predefined(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Starters";
   }
 
@@ -2726,11 +2726,11 @@ public:
    * \par In Python:
    *    value = obj.custom
    */
-  grt::ListRef<app_Starter> custom() const { return _custom; }
+  auto custom() const -> grt::ListRef<app_Starter> { return _custom; }
 
 
 private: // The next attribute is read-only.
-  virtual void custom(const grt::ListRef<app_Starter> &value) {
+  virtual auto custom(const grt::ListRef<app_Starter> &value) -> void {
     grt::ValueRef ovalue(_custom);
 
     _custom = value;
@@ -2745,11 +2745,11 @@ public:
    * \par In Python:
    *    value = obj.displayList
    */
-  grt::ListRef<app_Starter> displayList() const { return _displayList; }
+  auto displayList() const -> grt::ListRef<app_Starter> { return _displayList; }
 
 
 private: // The next attribute is read-only.
-  virtual void displayList(const grt::ListRef<app_Starter> &value) {
+  virtual auto displayList(const grt::ListRef<app_Starter> &value) -> void {
     grt::ValueRef ovalue(_displayList);
     _displayList = value;
     member_changed("displayList", ovalue, value);
@@ -2764,11 +2764,11 @@ public:
    * \par In Python:
    *    value = obj.predefined
    */
-  grt::ListRef<app_Starter> predefined() const { return _predefined; }
+  auto predefined() const -> grt::ListRef<app_Starter> { return _predefined; }
 
 
 private: // The next attribute is read-only.
-  virtual void predefined(const grt::ListRef<app_Starter> &value) {
+  virtual auto predefined(const grt::ListRef<app_Starter> &value) -> void {
     grt::ValueRef ovalue(_predefined);
 
     _predefined = value;
@@ -2783,12 +2783,12 @@ protected:
   grt::ListRef<app_Starter> _predefined;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Starters());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2825,7 +2825,7 @@ public:
       _recentFiles(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Options";
   }
 
@@ -2836,11 +2836,11 @@ public:
    * \par In Python:
    *    value = obj.commonOptions
    */
-  grt::DictRef commonOptions() const { return _commonOptions; }
+  auto commonOptions() const -> grt::DictRef { return _commonOptions; }
 
 
 private: // The next attribute is read-only.
-  virtual void commonOptions(const grt::DictRef &value) {
+  virtual auto commonOptions(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_commonOptions);
     _commonOptions = value;
     member_changed("commonOptions", ovalue, value);
@@ -2854,11 +2854,11 @@ public:
    * \par In Python:
    *    value = obj.disabledPlugins
    */
-  grt::StringListRef disabledPlugins() const { return _disabledPlugins; }
+  auto disabledPlugins() const -> grt::StringListRef { return _disabledPlugins; }
 
 
 private: // The next attribute is read-only.
-  virtual void disabledPlugins(const grt::StringListRef &value) {
+  virtual auto disabledPlugins(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_disabledPlugins);
     _disabledPlugins = value;
     member_changed("disabledPlugins", ovalue, value);
@@ -2872,11 +2872,11 @@ public:
    * \par In Python:
    *    value = obj.options
    */
-  grt::DictRef options() const { return _options; }
+  auto options() const -> grt::DictRef { return _options; }
 
 
 private: // The next attribute is read-only.
-  virtual void options(const grt::DictRef &value) {
+  virtual auto options(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_options);
     _options = value;
     member_changed("options", ovalue, value);
@@ -2891,11 +2891,11 @@ public:
    * \par In Python:
    *    value = obj.paperTypes
    */
-  grt::ListRef<app_PaperType> paperTypes() const { return _paperTypes; }
+  auto paperTypes() const -> grt::ListRef<app_PaperType> { return _paperTypes; }
 
 
 private: // The next attribute is read-only.
-  virtual void paperTypes(const grt::ListRef<app_PaperType> &value) {
+  virtual auto paperTypes(const grt::ListRef<app_PaperType> &value) -> void {
     grt::ValueRef ovalue(_paperTypes);
 
     _paperTypes = value;
@@ -2910,11 +2910,11 @@ public:
    * \par In Python:
    *    value = obj.recentFiles
    */
-  grt::StringListRef recentFiles() const { return _recentFiles; }
+  auto recentFiles() const -> grt::StringListRef { return _recentFiles; }
 
 
 private: // The next attribute is read-only.
-  virtual void recentFiles(const grt::StringListRef &value) {
+  virtual auto recentFiles(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_recentFiles);
     _recentFiles = value;
     member_changed("recentFiles", ovalue, value);
@@ -2930,12 +2930,12 @@ protected:
   grt::StringListRef _recentFiles;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Options());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2984,7 +2984,7 @@ public:
       _version("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.DocumentInfo";
   }
 
@@ -2995,7 +2995,7 @@ public:
    * \par In Python:
    *    value = obj.author
    */
-  grt::StringRef author() const { return _author; }
+  auto author() const -> grt::StringRef { return _author; }
 
   /**
    * Setter for attribute author
@@ -3004,7 +3004,7 @@ public:
    * \par In Python:
    *   obj.author = value
    */
-  virtual void author(const grt::StringRef &value) {
+  virtual auto author(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_author);
     _author = value;
     member_changed("author", ovalue, value);
@@ -3017,7 +3017,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -3026,7 +3026,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -3039,7 +3039,7 @@ public:
    * \par In Python:
    *    value = obj.dateChanged
    */
-  grt::StringRef dateChanged() const { return _dateChanged; }
+  auto dateChanged() const -> grt::StringRef { return _dateChanged; }
 
   /**
    * Setter for attribute dateChanged
@@ -3048,7 +3048,7 @@ public:
    * \par In Python:
    *   obj.dateChanged = value
    */
-  virtual void dateChanged(const grt::StringRef &value) {
+  virtual auto dateChanged(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_dateChanged);
     _dateChanged = value;
     member_changed("dateChanged", ovalue, value);
@@ -3061,7 +3061,7 @@ public:
    * \par In Python:
    *    value = obj.dateCreated
    */
-  grt::StringRef dateCreated() const { return _dateCreated; }
+  auto dateCreated() const -> grt::StringRef { return _dateCreated; }
 
   /**
    * Setter for attribute dateCreated
@@ -3070,7 +3070,7 @@ public:
    * \par In Python:
    *   obj.dateCreated = value
    */
-  virtual void dateCreated(const grt::StringRef &value) {
+  virtual auto dateCreated(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_dateCreated);
     _dateCreated = value;
     member_changed("dateCreated", ovalue, value);
@@ -3083,7 +3083,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -3092,7 +3092,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -3105,7 +3105,7 @@ public:
    * \par In Python:
    *    value = obj.project
    */
-  grt::StringRef project() const { return _project; }
+  auto project() const -> grt::StringRef { return _project; }
 
   /**
    * Setter for attribute project
@@ -3114,7 +3114,7 @@ public:
    * \par In Python:
    *   obj.project = value
    */
-  virtual void project(const grt::StringRef &value) {
+  virtual auto project(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_project);
     _project = value;
     member_changed("project", ovalue, value);
@@ -3127,7 +3127,7 @@ public:
    * \par In Python:
    *    value = obj.version
    */
-  grt::StringRef version() const { return _version; }
+  auto version() const -> grt::StringRef { return _version; }
 
   /**
    * Setter for attribute version
@@ -3136,7 +3136,7 @@ public:
    * \par In Python:
    *   obj.version = value
    */
-  virtual void version(const grt::StringRef &value) {
+  virtual auto version(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_version);
     _version = value;
     member_changed("version", ovalue, value);
@@ -3153,12 +3153,12 @@ protected:
   grt::StringRef _version;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_DocumentInfo());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3215,7 +3215,7 @@ public:
       _license("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Info";
   }
 
@@ -3226,7 +3226,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -3235,7 +3235,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -3248,7 +3248,7 @@ public:
    * \par In Python:
    *    value = obj.copyright
    */
-  grt::StringRef copyright() const { return _copyright; }
+  auto copyright() const -> grt::StringRef { return _copyright; }
 
   /**
    * Setter for attribute copyright
@@ -3257,7 +3257,7 @@ public:
    * \par In Python:
    *   obj.copyright = value
    */
-  virtual void copyright(const grt::StringRef &value) {
+  virtual auto copyright(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_copyright);
     _copyright = value;
     member_changed("copyright", ovalue, value);
@@ -3270,7 +3270,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -3279,7 +3279,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -3292,7 +3292,7 @@ public:
    * \par In Python:
    *    value = obj.edition
    */
-  grt::StringRef edition() const { return _edition; }
+  auto edition() const -> grt::StringRef { return _edition; }
 
   /**
    * Setter for attribute edition
@@ -3301,7 +3301,7 @@ public:
    * \par In Python:
    *   obj.edition = value
    */
-  virtual void edition(const grt::StringRef &value) {
+  virtual auto edition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_edition);
     _edition = value;
     member_changed("edition", ovalue, value);
@@ -3314,7 +3314,7 @@ public:
    * \par In Python:
    *    value = obj.license
    */
-  grt::StringRef license() const { return _license; }
+  auto license() const -> grt::StringRef { return _license; }
 
   /**
    * Setter for attribute license
@@ -3323,7 +3323,7 @@ public:
    * \par In Python:
    *   obj.license = value
    */
-  virtual void license(const grt::StringRef &value) {
+  virtual auto license(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_license);
     _license = value;
     member_changed("license", ovalue, value);
@@ -3337,7 +3337,7 @@ public:
    * \par In Python:
    *    value = obj.version
    */
-  GrtVersionRef version() const { return _version; }
+  auto version() const -> GrtVersionRef { return _version; }
 
   /**
    * Setter for attribute version
@@ -3346,7 +3346,7 @@ public:
    * \par In Python:
    *   obj.version = value
    */
-  virtual void version(const GrtVersionRef &value) {
+  virtual auto version(const GrtVersionRef &value) -> void {
     grt::ValueRef ovalue(_version);
 
     _version = value;
@@ -3363,12 +3363,12 @@ protected:
   GrtVersionRef _version;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Info());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3416,7 +3416,7 @@ public:
       _customData(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Document";
   }
 
@@ -3427,11 +3427,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -3446,7 +3446,7 @@ public:
    * \par In Python:
    *    value = obj.info
    */
-  app_DocumentInfoRef info() const { return _info; }
+  auto info() const -> app_DocumentInfoRef { return _info; }
 
   /**
    * Setter for attribute info
@@ -3455,7 +3455,7 @@ public:
    * \par In Python:
    *   obj.info = value
    */
-  virtual void info(const app_DocumentInfoRef &value) {
+  virtual auto info(const app_DocumentInfoRef &value) -> void {
     grt::ValueRef ovalue(_info);
 
     _info = value;
@@ -3470,7 +3470,7 @@ public:
    * \par In Python:
    *    value = obj.pageSettings
    */
-  app_PageSettingsRef pageSettings() const { return _pageSettings; }
+  auto pageSettings() const -> app_PageSettingsRef { return _pageSettings; }
 
   /**
    * Setter for attribute pageSettings
@@ -3479,7 +3479,7 @@ public:
    * \par In Python:
    *   obj.pageSettings = value
    */
-  virtual void pageSettings(const app_PageSettingsRef &value) {
+  virtual auto pageSettings(const app_PageSettingsRef &value) -> void {
     grt::ValueRef ovalue(_pageSettings);
 
     _pageSettings = value;
@@ -3493,12 +3493,12 @@ protected:
   app_PageSettingsRef _pageSettings;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Document());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3532,7 +3532,7 @@ public:
       _state(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "app.Application";
   }
 
@@ -3543,11 +3543,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -3562,7 +3562,7 @@ public:
    * \par In Python:
    *    value = obj.doc
    */
-  app_DocumentRef doc() const { return _doc; }
+  auto doc() const -> app_DocumentRef { return _doc; }
 
   /**
    * Setter for attribute doc
@@ -3571,7 +3571,7 @@ public:
    * \par In Python:
    *   obj.doc = value
    */
-  virtual void doc(const app_DocumentRef &value) {
+  virtual auto doc(const app_DocumentRef &value) -> void {
     grt::ValueRef ovalue(_doc);
 
     _doc = value;
@@ -3585,7 +3585,7 @@ public:
    * \par In Python:
    *    value = obj.info
    */
-  app_InfoRef info() const { return _info; }
+  auto info() const -> app_InfoRef { return _info; }
 
   /**
    * Setter for attribute info
@@ -3594,7 +3594,7 @@ public:
    * \par In Python:
    *   obj.info = value
    */
-  virtual void info(const app_InfoRef &value) {
+  virtual auto info(const app_InfoRef &value) -> void {
     grt::ValueRef ovalue(_info);
     _info = value;
     member_changed("info", ovalue, value);
@@ -3607,7 +3607,7 @@ public:
    * \par In Python:
    *    value = obj.options
    */
-  app_OptionsRef options() const { return _options; }
+  auto options() const -> app_OptionsRef { return _options; }
 
   /**
    * Setter for attribute options
@@ -3616,7 +3616,7 @@ public:
    * \par In Python:
    *   obj.options = value
    */
-  virtual void options(const app_OptionsRef &value) {
+  virtual auto options(const app_OptionsRef &value) -> void {
     grt::ValueRef ovalue(_options);
     _options = value;
     member_changed("options", ovalue, value);
@@ -3629,7 +3629,7 @@ public:
    * \par In Python:
    *    value = obj.registry
    */
-  app_RegistryRef registry() const { return _registry; }
+  auto registry() const -> app_RegistryRef { return _registry; }
 
   /**
    * Setter for attribute registry
@@ -3638,7 +3638,7 @@ public:
    * \par In Python:
    *   obj.registry = value
    */
-  virtual void registry(const app_RegistryRef &value) {
+  virtual auto registry(const app_RegistryRef &value) -> void {
     grt::ValueRef ovalue(_registry);
     _registry = value;
     member_changed("registry", ovalue, value);
@@ -3651,7 +3651,7 @@ public:
    * \par In Python:
    *    value = obj.starters
    */
-  app_StartersRef starters() const { return _starters; }
+  auto starters() const -> app_StartersRef { return _starters; }
 
   /**
    * Setter for attribute starters
@@ -3660,7 +3660,7 @@ public:
    * \par In Python:
    *   obj.starters = value
    */
-  virtual void starters(const app_StartersRef &value) {
+  virtual auto starters(const app_StartersRef &value) -> void {
     grt::ValueRef ovalue(_starters);
     _starters = value;
     member_changed("starters", ovalue, value);
@@ -3673,11 +3673,11 @@ public:
    * \par In Python:
    *    value = obj.state
    */
-  grt::DictRef state() const { return _state; }
+  auto state() const -> grt::DictRef { return _state; }
 
 
 private: // The next attribute is read-only.
-  virtual void state(const grt::DictRef &value) {
+  virtual auto state(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_state);
     _state = value;
     member_changed("state", ovalue, value);
@@ -3695,12 +3695,12 @@ protected:
   grt::DictRef _state;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new app_Application());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3745,7 +3745,7 @@ public:
 
 
 
-inline void register_structs_app_xml() {
+inline auto register_structs_app_xml() -> void {
   grt::internal::ClassRegistry::register_class<app_PluginInputDefinition>();
   grt::internal::ClassRegistry::register_class<app_PluginObjectInput>();
   grt::internal::ClassRegistry::register_class<app_PluginFileInput>();

@@ -40,11 +40,11 @@ RoleTreeBE::~RoleTreeBE() {
   delete _root;
 }
 
-void RoleTreeBE::set_object(const db_DatabaseObjectRef &object) {
+auto RoleTreeBE::set_object(const db_DatabaseObjectRef &object) -> void {
   _object_id = object.id();
 }
 
-void RoleTreeBE::add_role_children_to_node(Node *parent_node) {
+auto RoleTreeBE::add_role_children_to_node(Node *parent_node) -> void {
   if (!parent_node->role->childRoles().is_valid())
     return;
 
@@ -60,7 +60,7 @@ void RoleTreeBE::add_role_children_to_node(Node *parent_node) {
   }
 }
 
-void RoleTreeBE::refresh() {
+auto RoleTreeBE::refresh() -> void {
   /*
     //delete _root;
 
@@ -120,7 +120,7 @@ void RoleTreeBE::refresh() {
   }
 }
 
-size_t RoleTreeBE::count_children(const NodeId &parent) {
+auto RoleTreeBE::count_children(const NodeId &parent) -> size_t {
   Node *node = get_node_with_id(parent);
 
   if (node)
@@ -129,7 +129,7 @@ size_t RoleTreeBE::count_children(const NodeId &parent) {
   return 0;
 }
 
-NodeId RoleTreeBE::get_child(const NodeId &parent, size_t index) {
+auto RoleTreeBE::get_child(const NodeId &parent, size_t index) -> NodeId {
   Node *n = get_node_with_id(parent);
   if (n && index < n->children.size())
     return NodeId(parent).append(index);
@@ -139,7 +139,7 @@ NodeId RoleTreeBE::get_child(const NodeId &parent, size_t index) {
   return NodeId();
 }
 
-bool RoleTreeBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto RoleTreeBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   Node *n;
 
   switch ((Columns)column) {
@@ -164,7 +164,7 @@ bool RoleTreeBE::set_field(const NodeId &node, ColumnId column, const std::strin
   return false;
 }
 
-grt::Type RoleTreeBE::get_field_type(const NodeId &node, ColumnId column) {
+auto RoleTreeBE::get_field_type(const NodeId &node, ColumnId column) -> grt::Type {
   switch ((Columns)column) {
     case Enabled:
       return grt::IntegerType;
@@ -174,7 +174,7 @@ grt::Type RoleTreeBE::get_field_type(const NodeId &node, ColumnId column) {
   throw std::logic_error("Invalid column");
 }
 
-bool RoleTreeBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto RoleTreeBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   Node *n;
 
   switch ((Columns)column) {
@@ -211,7 +211,7 @@ bool RoleTreeBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRe
   return false;
 }
 
-RoleTreeBE::Node *RoleTreeBE::get_node_with_id(const NodeId &node) {
+auto RoleTreeBE::get_node_with_id(const NodeId &node) -> RoleTreeBE::Node * {
   Node *n = _root;
 
   if (!n)
@@ -229,7 +229,7 @@ RoleTreeBE::Node *RoleTreeBE::get_node_with_id(const NodeId &node) {
   return n;
 }
 
-bool RoleTreeBE::find_role(const RoleTreeBE::Node *node, const db_RoleRef &role, bec::NodeId &path) {
+auto RoleTreeBE::find_role(const RoleTreeBE::Node *node, const db_RoleRef &role, bec::NodeId &path) -> bool {
   int i = 0;
 
   if (node->role == role)
@@ -245,14 +245,14 @@ bool RoleTreeBE::find_role(const RoleTreeBE::Node *node, const db_RoleRef &role,
   return false;
 }
 
-NodeId RoleTreeBE::node_id_for_role(const db_RoleRef &role) {
+auto RoleTreeBE::node_id_for_role(const db_RoleRef &role) -> NodeId {
   NodeId node;
   if (find_role(_root, role, node))
     return node;
   return NodeId();
 }
 
-void RoleTreeBE::erase_node(const NodeId &node) {
+auto RoleTreeBE::erase_node(const NodeId &node) -> void {
   Node *n = get_node_with_id(node);
   if (!n)
     return;
@@ -264,7 +264,7 @@ void RoleTreeBE::erase_node(const NodeId &node) {
   parent->erase_child(n);
 }
 
-bool RoleTreeBE::is_parent_child(Node *parent, Node *child) {
+auto RoleTreeBE::is_parent_child(Node *parent, Node *child) -> bool {
   for (; child; child = child->parent) {
     if (child->parent == parent)
       return true;
@@ -272,7 +272,7 @@ bool RoleTreeBE::is_parent_child(Node *parent, Node *child) {
   return false;
 }
 
-void RoleTreeBE::append_child(const NodeId &parent, const NodeId &child) {
+auto RoleTreeBE::append_child(const NodeId &parent, const NodeId &child) -> void {
   Node *p = get_node_with_id(parent);
   Node *c = get_node_with_id(child);
 
@@ -284,7 +284,7 @@ void RoleTreeBE::append_child(const NodeId &parent, const NodeId &child) {
   p->append_child(c);
 }
 
-void RoleTreeBE::insert_node_after(const NodeId &after, const NodeId &node) {
+auto RoleTreeBE::insert_node_after(const NodeId &after, const NodeId &node) -> void {
   Node *n = get_node_with_id(node);
   Node *a = get_node_with_id(after);
 
@@ -296,7 +296,7 @@ void RoleTreeBE::insert_node_after(const NodeId &after, const NodeId &node) {
   a->parent->insert_child_after(a, n);
 }
 
-void RoleTreeBE::insert_node_before(const NodeId &before, const NodeId &node) {
+auto RoleTreeBE::insert_node_before(const NodeId &before, const NodeId &node) -> void {
   Node *n = get_node_with_id(node);
   Node *b = get_node_with_id(before);
 
@@ -308,7 +308,7 @@ void RoleTreeBE::insert_node_before(const NodeId &before, const NodeId &node) {
   b->parent->insert_child_before(b, n);
 }
 
-void RoleTreeBE::move_to_top_level(const NodeId &node) {
+auto RoleTreeBE::move_to_top_level(const NodeId &node) -> void {
   Node *n = get_node_with_id(node);
   if (n != NULL)
     n->role->parentRole(db_RoleRef());

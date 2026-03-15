@@ -45,32 +45,32 @@ namespace bec {
     boost::signals2::signal<void()>* signal_changed() {
       return &_changed_signal;
     }
-    void changed() {
+    auto changed() -> void {
       _changed_signal();
     }
 
-    virtual void clear() {
+    virtual auto clear() -> void {
       _contents.clear();
     }
 
-    virtual bool empty() {
+    virtual auto empty() -> bool {
       return _contents.empty();
     }
 
-    virtual void append_data(const grt::ObjectRef& data) {
+    virtual auto append_data(const grt::ObjectRef& data) -> void {
       _contents.push_back(data);
     }
-    virtual bool is_data() const {
+    virtual auto is_data() const -> bool {
       return !_contents.empty();
     }
-    virtual std::list<grt::ObjectRef> get_data() {
+    virtual auto get_data() -> std::list<grt::ObjectRef> {
       return _contents;
     }
 
-    void set_content_description(const std::string description) {
+    auto set_content_description(const std::string description) -> void {
       _description = description;
     }
-    std::string get_content_description() {
+    auto get_content_description() -> std::string {
       return _description;
     }
   };

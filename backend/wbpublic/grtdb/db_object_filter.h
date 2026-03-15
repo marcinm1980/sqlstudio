@@ -41,21 +41,21 @@ namespace bec {
     DBObjectFilterBE();
     virtual ~DBObjectFilterBE(){};
 
-    virtual void set_object_type_name(const std::string &type_name);
-    virtual const std::string &get_full_type_name() const;
-    bec::IconId icon_id(bec::IconSize icon_size);
+    virtual auto set_object_type_name(const std::string &type_name) -> void;
+    virtual auto get_full_type_name() const -> const std::string &;
+    auto icon_id(bec::IconSize icon_size) -> bec::IconId;
 
-    void filter_model(GrtStringListModel *filter_model) {
+    auto filter_model(GrtStringListModel *filter_model) -> void {
       _filter_model = filter_model;
     }
-    GrtStringListModel *filter_model() {
+    auto filter_model() -> GrtStringListModel * {
       return _filter_model;
     }
-    void add_stored_filter_set(const std::string &name);
-    void remove_stored_filter_set(int index);
-    void load_stored_filter_set(int index);
-    int stored_filter_set_index(const std::string &name);
-    void load_stored_filter_set_list(std::list<std::string> &names);
+    auto add_stored_filter_set(const std::string &name) -> void;
+    auto remove_stored_filter_set(int index) -> void;
+    auto load_stored_filter_set(int index) -> void;
+    auto stored_filter_set_index(const std::string &name) -> int;
+    auto load_stored_filter_set_list(std::list<std::string> &names) -> void;
 
   protected:
     std::string _grt_type_name;

@@ -39,7 +39,7 @@ namespace mforms {
       ObjectWrapper(mforms::Object *object);
       virtual ~ObjectWrapper();
 
-      static ObjectWrapper *getData(mforms::Object *backend);
+      static auto getData(mforms::Object *backend) -> ObjectWrapper *;
     };
   };
 };

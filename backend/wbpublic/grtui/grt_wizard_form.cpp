@@ -56,11 +56,11 @@ WizardForm::~WizardForm() {
     (*iter)->release();
 }
 
-void WizardForm::add_page(WizardPage *page) {
+auto WizardForm::add_page(WizardPage *page) -> void {
   _pages.push_back(page);
 }
 
-WizardPage *WizardForm::get_page_with_id(const std::string &id) {
+auto WizardForm::get_page_with_id(const std::string &id) -> WizardPage * {
   for (std::vector<WizardPage *>::const_iterator iter = _pages.begin(); iter != _pages.end(); ++iter) {
     if ((*iter)->get_id() == id)
       return *iter;
@@ -68,7 +68,7 @@ WizardPage *WizardForm::get_page_with_id(const std::string &id) {
   return 0;
 }
 
-void WizardForm::reset() {
+auto WizardForm::reset() -> void {
   if (_active_page) {
     set_content(0);
     _turned_pages.clear();
@@ -83,7 +83,7 @@ void WizardForm::reset() {
  * Runs the wizard modally and returns true if it was successfully finished, false if it has been cancelled.
  * Presetting values or reading results is done via WizardForm::values().
  */
-bool WizardForm::run_modal() {
+auto WizardForm::run_modal() -> bool {
   refresh_step_list();
 
   reset();
@@ -97,7 +97,7 @@ bool WizardForm::run_modal() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardForm::refresh_step_list() {
+auto WizardForm::refresh_step_list() -> void {
   int i = 0;
   std::vector<std::string> steps;
 
@@ -118,7 +118,7 @@ void WizardForm::refresh_step_list() {
   set_step_list(steps);
 }
 
-void WizardForm::switch_to_page(WizardPage *page, bool advancing) {
+auto WizardForm::switch_to_page(WizardPage *page, bool advancing) -> void {
   if (_active_page) {
     if (page != _active_page)
       _active_page->leave(advancing);
@@ -165,11 +165,11 @@ void WizardForm::switch_to_page(WizardPage *page, bool advancing) {
   refresh_step_list();
 }
 
-int WizardForm::get_active_page_number() {
+auto WizardForm::get_active_page_number() -> int {
   return (int)(std::find(_pages.begin(), _pages.end(), _active_page) - _pages.begin());
 }
 
-void WizardForm::set_problem(const std::string &problem) {
+auto WizardForm::set_problem(const std::string &problem) -> void {
   _problem = problem;
 
   update_buttons();
@@ -178,12 +178,12 @@ void WizardForm::set_problem(const std::string &problem) {
   // Utilities::show_error(_("Error"), problem, _("OK"));
 }
 
-void WizardForm::clear_problem() {
+auto WizardForm::clear_problem() -> void {
   _problem.clear();
   update_buttons();
 }
 
-void WizardForm::update_buttons() {
+auto WizardForm::update_buttons() -> void {
   if (_active_page) {
     std::string caption = _active_page->next_button_caption();
     if (caption.empty()) {
@@ -210,14 +210,14 @@ void WizardForm::update_buttons() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardForm::update_heading() {
+auto WizardForm::update_heading() -> void {
   if (_active_page != NULL)
     set_heading(_active_page->get_title());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-WizardPage *WizardForm::get_next_page(WizardPage *current) {
+auto WizardForm::get_next_page(WizardPage *current) -> WizardPage * {
   bool found_current = false;
   for (std::vector<WizardPage *>::const_iterator iter = _pages.begin(); iter != _pages.end(); ++iter) {
     if (*iter == current)
@@ -229,19 +229,19 @@ WizardPage *WizardForm::get_next_page(WizardPage *current) {
   return 0;
 }
 
-void WizardForm::finish() {
+auto WizardForm::finish() -> void {
   if (_active_page)
     _active_page->leave(true);
 
   close();
 }
 
-void WizardForm::extra_clicked() {
+auto WizardForm::extra_clicked() -> void {
   if (_active_page)
     _active_page->extra_clicked();
 }
 
-void WizardForm::go_to_next() {
+auto WizardForm::go_to_next() -> void {
   if (!_problem.empty()) {
     Utilities::show_error(_("Cannot Advance"), _problem, _("OK"));
     return;
@@ -278,7 +278,7 @@ void WizardForm::go_to_next() {
   }
 }
 
-void WizardForm::go_to_back() {
+auto WizardForm::go_to_back() -> void {
   if (!_turned_pages.empty()) {
     WizardPage *back_page = _turned_pages.back();
     _turned_pages.pop_back();
@@ -289,7 +289,7 @@ void WizardForm::go_to_back() {
   }
 }
 
-bool WizardForm::cancel() {
+auto WizardForm::cancel() -> bool {
   _cancelled = true;
   return true;
 }
@@ -298,17 +298,17 @@ bool WizardForm::cancel() {
 
  The key will be prepended by a module specific prefix to avoid name collisions.
  */
-void WizardForm::set_wizard_option(const std::string &key, const std::string &value) {
+auto WizardForm::set_wizard_option(const std::string &key, const std::string &value) -> void {
 }
 
-std::string WizardForm::string_wizard_option(const std::string &key, const std::string &default_value) {
+auto WizardForm::string_wizard_option(const std::string &key, const std::string &default_value) -> std::string {
   return default_value;
 }
 
-void WizardForm::set_wizard_option(const std::string &key, int value) {
+auto WizardForm::set_wizard_option(const std::string &key, int value) -> void {
 }
 
-int WizardForm::int_wizard_option(const std::string &key, int default_value) {
+auto WizardForm::int_wizard_option(const std::string &key, int default_value) -> int {
   return default_value;
 }
 
@@ -321,7 +321,7 @@ WizardPage::WizardPage(WizardForm *form, const std::string &id) : Box(false), _f
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardPage::set_title(const std::string &title) {
+auto WizardPage::set_title(const std::string &title) -> void {
   _title = title;
   if (_form != NULL)
     _form->update_heading();
@@ -329,7 +329,7 @@ void WizardPage::set_title(const std::string &title) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WizardPage::set_short_title(const std::string &title) {
+auto WizardPage::set_short_title(const std::string &title) -> void {
   _short_title = title;
 }
 
@@ -342,7 +342,7 @@ void WizardPage::set_short_title(const std::string &title) {
  * the wizard to continue or provide that allows_next() returns false. clear_problem()
  * must be called if the problem raised by set_problem() is cleared.
  */
-void WizardPage::validate() {
+auto WizardPage::validate() -> void {
   if (_form->get_active_page() == this) {
     do_validate();
   }
@@ -355,7 +355,7 @@ void WizardPage::validate() {
  * page leaves. This gives a chance to cancel leaving the previous page and denying entry to the
  * new page by returning false in case there was invalid input given by the user in a previous page.
  */
-bool WizardPage::pre_load() {
+auto WizardPage::pre_load() -> bool {
   return true;
 }
 
@@ -365,7 +365,7 @@ bool WizardPage::pre_load() {
  * If true is returned the page will be switched to the next one, otherwise the current page
  * will remain.
  */
-bool WizardPage::advance() {
+auto WizardPage::advance() -> bool {
   return true;
 }
 
@@ -375,7 +375,7 @@ bool WizardPage::advance() {
  * The advancing argument will be true if the page was hit by pressing Next. If it's false, it
  * was entered by pressing Back.
  */
-void WizardPage::enter(bool advancing) {
+auto WizardPage::enter(bool advancing) -> void {
   mforms::FsObjectSelector::clear_stored_filenames();
 
   _signal_enter(advancing);
@@ -387,6 +387,6 @@ void WizardPage::enter(bool advancing) {
  * The advancing argument will be true if the page was hit by pressing Next. If it's false, it
  * was entered by pressing Back.
  */
-void WizardPage::leave(bool advancing) {
+auto WizardPage::leave(bool advancing) -> void {
   _signal_leave(advancing);
 }

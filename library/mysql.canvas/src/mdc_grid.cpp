@@ -40,8 +40,7 @@ Grid::Grid(CanvasView *canvas, int rows, int cols)
 
 
 
-void Grid::relayout()
-{
+auto Grid::relayout() -> void {
   
   
 }

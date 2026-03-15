@@ -39,7 +39,7 @@ AutoCompletable::AutoCompletable(Gtk::Entry* entry)
 }
 
 //------------------------------------------------------------------------------
-void AutoCompletable::add_completion_text(const std::string& s) {
+auto AutoCompletable::add_completion_text(const std::string& s) -> void {
   Gtk::TreeModel::iterator iter = _completion_model->append();
   Gtk::TreeModel::Row row = *iter;
 
@@ -47,16 +47,16 @@ void AutoCompletable::add_completion_text(const std::string& s) {
 }
 
 //------------------------------------------------------------------------------
-void AutoCompletable::add_to_entry(Gtk::Entry* entry) {
+auto AutoCompletable::add_to_entry(Gtk::Entry* entry) -> void {
   entry->set_completion(_completion);
 }
 
 //------------------------------------------------------------------------------
-void AutoCompletable::set_popup_enabled(const bool enabled) {
+auto AutoCompletable::set_popup_enabled(const bool enabled) -> void {
   _completion->set_popup_completion(enabled);
 }
 
 //------------------------------------------------------------------------------
-void AutoCompletable::clear() {
+auto AutoCompletable::clear() -> void {
   _completion_model->clear();
 }

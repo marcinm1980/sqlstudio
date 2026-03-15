@@ -36,24 +36,24 @@ namespace mforms {
     protected:
       Gtk::RadioButton *_radio;
       int _group_id;
-      virtual Gtk::Widget *get_outer() const;
+      virtual auto get_outer() const -> Gtk::Widget *;
 
       RadioButtonImpl(::mforms::RadioButton *self, int group_id);
 
-      static void *unregister_group(void *data);
+      static auto unregister_group(void *data) -> void *;
 
-      static void toggled(::mforms::RadioButton *self);
+      static auto toggled(::mforms::RadioButton *self) -> void;
 
-      static bool create(::mforms::RadioButton *self, int group_id);
+      static auto create(::mforms::RadioButton *self, int group_id) -> bool;
 
-      static bool get_active(::mforms::RadioButton *self);
+      static auto get_active(::mforms::RadioButton *self) -> bool;
 
-      static void set_active(::mforms::RadioButton *self, bool flag);
+      static auto set_active(::mforms::RadioButton *self, bool flag) -> void;
 
-      virtual void set_text(const std::string &text);
+      virtual auto set_text(const std::string &text) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   }
 }

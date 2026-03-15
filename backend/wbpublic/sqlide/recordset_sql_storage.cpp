@@ -92,7 +92,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-std::string Recordset_sql_storage::statements_as_sql_script(const Sql_script::Statements &statements) {
+auto Recordset_sql_storage::statements_as_sql_script(const Sql_script::Statements &statements) -> std::string {
   std::string sql_script;
   for (const auto &statement : statements)
     sql_script += statement + ";\n";
@@ -109,7 +109,7 @@ Recordset_sql_storage::Recordset_sql_storage()
 Recordset_sql_storage::~Recordset_sql_storage() {
 }
 
-void Recordset_sql_storage::init_variant_quoter(sqlide::QuoteVar &qv) const {
+auto Recordset_sql_storage::init_variant_quoter(sqlide::QuoteVar &qv) const -> void {
   if (_rdbms.is_valid()) {
     SqlFacade::Ref sql_facade = SqlFacade::instance_for_rdbms(_rdbms);
     Sql_specifics::Ref sql_specifics = sql_facade->sqlSpecifics();
@@ -128,7 +128,7 @@ void Recordset_sql_storage::init_variant_quoter(sqlide::QuoteVar &qv) const {
                         : std::bind(sqlide::QuoteVar::blob_to_hex_string, std::placeholders::_1, std::placeholders::_2);
 }
 
-void Recordset_sql_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_sql_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   Recordset::Column_names &column_names = get_column_names(recordset);
   Recordset::Column_types &column_types = get_column_types(recordset);
   Recordset::Column_types &real_column_types = get_real_column_types(recordset);
@@ -188,12 +188,12 @@ void Recordset_sql_storage::do_unserialize(Recordset *recordset, sqlite::connect
   }
 }
 
-void Recordset_sql_storage::load_insert_statement(const std::string &sql,
+auto Recordset_sql_storage::load_insert_statement(const std::string &sql,
                                                   const std::pair<std::string, std::string> &schema_table,
                                                   const Sql_inserts_loader::Strings &fields_names,
                                                   const Sql_inserts_loader::Strings &fields_values,
                                                   const std::vector<bool> &null_fields,
-                                                  Recordset::Column_names *column_names, Var_list *var_list) {
+                                                  Recordset::Column_names *column_names, Var_list *var_list) -> void {
   if ((schema_table.first != _schema_name) || (schema_table.second != _table_name)) {
     grt::GRT::get()->send_error("Irrelevant insert statement (skipped): " + sql);
     return;
@@ -230,7 +230,7 @@ void Recordset_sql_storage::load_insert_statement(const std::string &sql,
   }
 }
 
-void Recordset_sql_storage::do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_sql_storage::do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   _sql_script = std::string();
   Sql_script sql_script;
   generate_inserts(recordset, data_swap_db, sql_script);
@@ -239,8 +239,8 @@ void Recordset_sql_storage::do_serialize(const Recordset *recordset, sqlite::con
   _sql_script = oss.str();
 }
 
-void Recordset_sql_storage::do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db,
-                                             bool skip_commit) {
+auto Recordset_sql_storage::do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db,
+                                             bool skip_commit) -> void {
   if (_table_name.empty())
     return;
 
@@ -249,8 +249,8 @@ void Recordset_sql_storage::do_apply_changes(const Recordset *recordset, sqlite:
   run_sql_script(sql_script, skip_commit);
 }
 
-void Recordset_sql_storage::fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
-                                             ColumnId column, sqlite::variant_t &blob_value) {
+auto Recordset_sql_storage::fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
+                                             ColumnId column, sqlite::variant_t &blob_value) -> void {
   blob_value = sqlite::null_t();
 
   // first check if requested blob is already in cache
@@ -272,11 +272,11 @@ void Recordset_sql_storage::fetch_blob_value(Recordset *recordset, sqlite::conne
   Recordset_data_storage::fetch_blob_value(recordset, data_swap_db, rowid, column, blob_value);
 }
 
-void Recordset_sql_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
-                                                ColumnId column, sqlite::variant_t &blob_value) {
+auto Recordset_sql_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
+                                                ColumnId column, sqlite::variant_t &blob_value) -> void {
 }
 
-std::string Recordset_sql_storage::full_table_name() const {
+auto Recordset_sql_storage::full_table_name() const -> std::string {
   if (_table_name.empty())
     return "";
 
@@ -287,14 +287,14 @@ std::string Recordset_sql_storage::full_table_name() const {
   return res;
 }
 
-void Recordset_sql_storage::init_sql_script_substitute(const Recordset::Ptr &recordset_ptr, bool is_update_script) {
+auto Recordset_sql_storage::init_sql_script_substitute(const Recordset::Ptr &recordset_ptr, bool is_update_script) -> void {
   RETURN_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, recordset_ptr, recordset)
   std::shared_ptr<sqlite::connection> data_swap_db = this->data_swap_db(recordset_ref);
   do_init_sql_script_substitute(recordset, data_swap_db.get(), is_update_script);
 }
 
-void Recordset_sql_storage::do_init_sql_script_substitute(const Recordset *recordset, sqlite::connection *data_swap_db,
-                                                          bool is_update_script) {
+auto Recordset_sql_storage::do_init_sql_script_substitute(const Recordset *recordset, sqlite::connection *data_swap_db,
+                                                          bool is_update_script) -> void {
   // temporarily disable is_sql_script_substitute_enabled flag to allow generation of sql script
   bool temporarily_disabled = false;
   AutoSwap<bool> flag_keeper(_is_sql_script_substitute_enabled, temporarily_disabled);
@@ -303,13 +303,13 @@ void Recordset_sql_storage::do_init_sql_script_substitute(const Recordset *recor
   generate_sql_script(recordset, data_swap_db, _sql_script_substitute, is_update_script);
 }
 
-void Recordset_sql_storage::omit_schema_qualifier(bool flag) {
+auto Recordset_sql_storage::omit_schema_qualifier(bool flag) -> void {
   _omit_schema_qualifier = flag;
 }
 
-void Recordset_sql_storage::get_pkey_predicate_for_data_cache_rowid(Recordset *recordset,
+auto Recordset_sql_storage::get_pkey_predicate_for_data_cache_rowid(Recordset *recordset,
                                                                     sqlite::connection *data_swap_db, RowId rowid,
-                                                                    std::string &pkey_predicate) {
+                                                                    std::string &pkey_predicate) -> void {
   Recordset::Column_names &column_names = get_column_names(recordset);
   Recordset::Column_types &column_types = get_column_types(recordset);
 
@@ -330,8 +330,8 @@ void Recordset_sql_storage::get_pkey_predicate_for_data_cache_rowid(Recordset *r
   pkey_predicate = pkey_pred(data_row_results);
 }
 
-void Recordset_sql_storage::generate_sql_script(const Recordset *recordset, sqlite::connection *data_swap_db,
-                                                Sql_script &sql_script, bool is_update_script, bool binaryAsString) {
+auto Recordset_sql_storage::generate_sql_script(const Recordset *recordset, sqlite::connection *data_swap_db,
+                                                Sql_script &sql_script, bool is_update_script, bool binaryAsString) -> void {
   // this one is used mostly internally, for eg.: sqlite inserts storage
 
   if (_is_sql_script_substitute_enabled) {
@@ -565,8 +565,8 @@ void Recordset_sql_storage::generate_sql_script(const Recordset *recordset, sqli
   }
 }
 
-void Recordset_sql_storage::generate_inserts(const Recordset *recordset, sqlite::connection *data_swap_db,
-                                             Sql_script &sql_script) {
+auto Recordset_sql_storage::generate_inserts(const Recordset *recordset, sqlite::connection *data_swap_db,
+                                             Sql_script &sql_script) -> void {
   // This one is used for generating inserts for export
 
   if (_is_sql_script_substitute_enabled) {

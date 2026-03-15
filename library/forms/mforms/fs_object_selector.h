@@ -52,29 +52,29 @@ namespace mforms {
     bool _show_hidden;
 
   protected:
-    void enable_file_browsing();
-    void filename_changed();
-    void browse_file_callback();
+    auto enable_file_browsing() -> void;
+    auto filename_changed() -> void;
+    auto browse_file_callback() -> void;
 
   public:
     FsObjectSelector(bool horizontal = true);
     FsObjectSelector(Button* button, TextEntry* edit);
     ~FsObjectSelector();
 
-    void initialize(const std::string& initial_path, FileChooserType type, const std::string& extensions,
-                    bool show_hidden = false, std::function<void()> on_validate = std::function<void()>());
-    void set_filename(const std::string& path);
-    std::string get_filename();
-    void set_enabled(bool value);
-    void set_browse_callback(std::function<void()> browse_callback);
+    auto initialize(const std::string& initial_path, FileChooserType type, const std::string& extensions,
+                    bool show_hidden = false, std::function<void()> on_validate = std::function<void()>()) -> void;
+    auto set_filename(const std::string& path) -> void;
+    auto get_filename() -> std::string;
+    auto set_enabled(bool value) -> void;
+    auto set_browse_callback(std::function<void()> browse_callback) -> void;
 
-    TextEntry* get_entry() const {
+    auto get_entry() const -> TextEntry* {
       return _edit;
     }
 
-    virtual std::string get_string_value();
-    virtual int get_int_value();
-    virtual bool get_bool_value();
+    virtual auto get_string_value() -> std::string;
+    virtual auto get_int_value() -> int;
+    virtual auto get_bool_value() -> bool;
 
 #ifndef SWIG
     boost::signals2::signal<void()>* signal_changed() {
@@ -82,8 +82,8 @@ namespace mforms {
     }
 #endif
 
-    static void clear_stored_filenames();
+    static auto clear_stored_filenames() -> void;
     static bool check_and_confirm_file_overwrite(TextEntry* entry, const std::string& default_extension = "");
-    bool check_and_confirm_file_overwrite();
+    auto check_and_confirm_file_overwrite() -> bool;
   };
 }

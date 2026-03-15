@@ -88,23 +88,23 @@ namespace mforms {
     SidebarSection(HomeScreen *owner);
     virtual ~SidebarSection();
 
-    void updateColors();
+    auto updateColors() -> void;
 
-    void drawTriangle(cairo_t *cr, int x1, int y1, int x2, int y2, float alpha);
-    void repaint(cairo_t *cr, int areax, int areay, int areaw, int areah);
-    int shortcutFromPoint(int x, int y);
-    void addEntry(const std::string &title, const std::string &icon_name, HomeScreenSection *section,
-                  std::function<void()> callback, bool canSelect);
-    HomeScreenSection *getActive();
-    void setActive(HomeScreenSection *section);
-    virtual bool mouse_click(mforms::MouseButton button, int x, int y);
-    bool mouse_leave();
+    auto drawTriangle(cairo_t *cr, int x1, int y1, int x2, int y2, float alpha) -> void;
+    auto repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) -> void;
+    auto shortcutFromPoint(int x, int y) -> int;
+    auto addEntry(const std::string &title, const std::string &icon_name, HomeScreenSection *section,
+                  std::function<void()> callback, bool canSelect) -> void;
+    auto getActive() -> HomeScreenSection *;
+    auto setActive(HomeScreenSection *section) -> void;
+    virtual auto mouse_click(mforms::MouseButton button, int x, int y) -> bool;
+    auto mouse_leave() -> bool;
 
-    virtual bool mouse_move(mforms::MouseButton button, int x, int y);
-    virtual size_t getAccessibilityChildCount();
-    virtual Accessible *getAccessibilityChild(size_t index);
-    virtual Accessible::Role getAccessibilityRole();
-    virtual base::Accessible *accessibilityHitTest(ssize_t x, ssize_t y);
+    virtual auto mouse_move(mforms::MouseButton button, int x, int y) -> bool;
+    virtual auto getAccessibilityChildCount() -> size_t;
+    virtual auto getAccessibilityChild(size_t index) -> Accessible *;
+    virtual auto getAccessibilityRole() -> Accessible::Role;
+    virtual auto accessibilityHitTest(ssize_t x, ssize_t y) -> base::Accessible *;
   };
 
   /**
@@ -127,26 +127,26 @@ namespace mforms {
     HomeScreen();
     virtual ~HomeScreen();
 
-    void addSection(HomeScreenSection *section);
-    void addSectionEntry(const std::string &title, const std::string &icon_name, std::function<void()> callback,
-                         bool canSelect);
+    auto addSection(HomeScreenSection *section) -> void;
+    auto addSectionEntry(const std::string &title, const std::string &icon_name, std::function<void()> callback,
+                         bool canSelect) -> void;
 
-    void trigger_callback(HomeScreenAction action, const base::any &object);
+    auto trigger_callback(HomeScreenAction action, const base::any &object) -> void;
 
-    void cancelOperation();
+    auto cancelOperation() -> void;
 
-    void set_menu(mforms::Menu *menu, HomeScreenMenuType type);
+    auto set_menu(mforms::Menu *menu, HomeScreenMenuType type) -> void;
 
-    void on_resize();
-    void setup_done();
-    void showSection(size_t index);
+    auto on_resize() -> void;
+    auto setup_done() -> void;
+    auto showSection(size_t index) -> void;
 
-    bool isDarkModeActive() const { return _darkMode; };
+    auto isDarkModeActive() const -> bool { return _darkMode; };
 
-    void updateColors();
-    void updateIcons();
+    auto updateColors() -> void;
+    auto updateIcons() -> void;
 
-    virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
+    virtual auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
   };
 }
 

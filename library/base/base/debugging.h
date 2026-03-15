@@ -42,7 +42,7 @@ private:
   // One of the 4 hardware registers that are needed for hw watch points.
   REGISTER_TYPE _register_index;
 
-  void SetBits(REGISTER_TYPE& target, REGISTER_TYPE offset, REGISTER_TYPE bits, REGISTER_TYPE value);
+  auto SetBits(REGISTER_TYPE& target, REGISTER_TYPE offset, REGISTER_TYPE bits, REGISTER_TYPE value) -> void;
 
 public:
   DataBreakpoint();
@@ -51,8 +51,8 @@ public:
   // Enum values used by the Intel Pentium. Don't change them!
   enum Condition { Write = 1, Read /* or write! */ = 3 };
 
-  void Set(void* address, int size, Condition when);
-  void Clear();
+  auto Set(void* address, int size, Condition when) -> void;
+  auto Clear() -> void;
 };
 
 #endif // _MSC_VER && _DEBUG

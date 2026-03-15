@@ -2575,8 +2575,7 @@ static uint16 NEAR gbk_order[]=
 22997,22998,22999,23000,23001,23002,23003,23004,23005,23006
 };
 
-static uint16 gbksortorder(uint16 i)
-{
+static auto gbksortorder(uint16 i) -> uint16 {
   uint idx=gbktail(i);
   if (idx>0x7f) idx-=0x41;
   else idx-=0x40;
@@ -2585,9 +2584,8 @@ static uint16 gbksortorder(uint16 i)
 }
 
 
-int my_strnncoll_gbk_internal(const uchar **a_res, const uchar **b_res,
-			      uint length)
-{
+auto my_strnncoll_gbk_internal(const uchar **a_res, const uchar **b_res,
+			      uint length) -> int {
   const uchar *a= *a_res, *b= *b_res;
   uint a_char,b_char; 
 
@@ -2615,22 +2613,20 @@ int my_strnncoll_gbk_internal(const uchar **a_res, const uchar **b_res,
 
 
 
-int my_strnncoll_gbk(CHARSET_INFO *cs __attribute__((unused)),
+auto my_strnncoll_gbk(CHARSET_INFO *cs __attribute__((unused)),
 		     const uchar *a, uint a_length,
                      const uchar *b, uint b_length,
-                     my_bool b_is_prefix)
-{
+                     my_bool b_is_prefix) -> int {
   uint length= min(a_length, b_length);
   int res= my_strnncoll_gbk_internal(&a, &b, length);
   return res ? res : (int) ((b_is_prefix ? length : a_length) - b_length);
 }
 
 
-static int my_strnncollsp_gbk(CHARSET_INFO * cs __attribute__((unused)),
+static auto my_strnncollsp_gbk(CHARSET_INFO * cs __attribute__((unused)),
 			      const uchar *a, uint a_length, 
 			      const uchar *b, uint b_length,
-                              my_bool diff_if_only_endspace_difference)
-{
+                              my_bool diff_if_only_endspace_difference) -> int {
   uint length= min(a_length, b_length);
   int res= my_strnncoll_gbk_internal(&a, &b, length);
 
@@ -2666,10 +2662,9 @@ static int my_strnncollsp_gbk(CHARSET_INFO * cs __attribute__((unused)),
 }
 
 
-static int my_strnxfrm_gbk(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnxfrm_gbk(CHARSET_INFO *cs __attribute__((unused)),
                     uchar * dest, uint len,
-                    const uchar * src, uint srclen)
-{
+                    const uchar * src, uint srclen) -> int {
   uint16 e;
   uint dstlen= len;
 
@@ -2711,12 +2706,11 @@ static int my_strnxfrm_gbk(CHARSET_INFO *cs __attribute__((unused)),
 
 #define max_sort_char ((uchar) 255)
 
-static my_bool my_like_range_gbk(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_like_range_gbk(CHARSET_INFO *cs __attribute__((unused)),
                                  const char *ptr,uint ptr_length,
                                  pbool escape, pbool w_one, pbool w_many,
                                  uint res_length, char *min_str,char *max_str,
-                                 uint *min_length,uint *max_length)
-{
+                                 uint *min_length,uint *max_length) -> my_bool {
   const char *end= ptr + ptr_length;
   char *min_org=min_str;
   char *min_end=min_str+res_length;
@@ -2771,14 +2765,12 @@ static my_bool my_like_range_gbk(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-static int ismbchar_gbk(CHARSET_INFO *cs __attribute__((unused)),
-		 const char* p, const char *e)
-{
+static auto ismbchar_gbk(CHARSET_INFO *cs __attribute__((unused)),
+		 const char* p, const char *e) -> int {
   return (isgbkhead(*(p)) && (e)-(p)>1 && isgbktail(*((p)+1))? 2: 0);
 }
 
-static int mbcharlen_gbk(CHARSET_INFO *cs __attribute__((unused)),uint c)
-{
+static auto mbcharlen_gbk(CHARSET_INFO *cs __attribute__((unused)),uint c) -> int {
   return (isgbkhead(c)? 2 : 1);
 }
 
@@ -6788,7 +6780,7 @@ static uint16 tab_gbk_uni0[]={
 0xFA1F,0xFA20,0xFA21,0xFA23,0xFA24,0xFA27,0xFA28,0xFA29
 };
 
-static int func_gbk_uni_onechar(int code){
+static auto func_gbk_uni_onechar(int code) -> int {
   if  ((code>=0x8140)&&(code<=0xFE4F))
     return(tab_gbk_uni0[code-0x8140]);
   return(0);
@@ -9864,7 +9856,7 @@ static uint16 tab_uni_gbk8[]={
      0,     0,     0,     0,     0,     0,     0,     0,
 0xA1E9,0xA1EA,0xA956,0xA3FE,0xA957,0xA3A4};
 
-static int func_uni_gbk_onechar(int code){
+static auto func_uni_gbk_onechar(int code) -> int {
   if ((code>=0x00A4)&&(code<=0x0451))
     return(tab_uni_gbk0[code-0x00A4]);
   if ((code>=0x2010)&&(code<=0x2312))
@@ -9886,10 +9878,8 @@ static int func_uni_gbk_onechar(int code){
   return(0);
 }
 
-static int
-my_wc_mb_gbk(CHARSET_INFO *cs  __attribute__((unused)),
-	      my_wc_t wc, uchar *s, uchar *e)
-{
+static auto my_wc_mb_gbk(CHARSET_INFO *cs  __attribute__((unused)),
+	      my_wc_t wc, uchar *s, uchar *e) -> int {
   int code;
   
   if (s >= e)
@@ -9912,10 +9902,8 @@ my_wc_mb_gbk(CHARSET_INFO *cs  __attribute__((unused)),
   return 2;
 }
 
-static int
-my_mb_wc_gbk(CHARSET_INFO *cs __attribute__((unused)),
-	      my_wc_t *pwc, const uchar *s, const uchar *e)
-{
+static auto my_mb_wc_gbk(CHARSET_INFO *cs __attribute__((unused)),
+	      my_wc_t *pwc, const uchar *s, const uchar *e) -> int {
   int hi;
   
   if (s >= e)
@@ -9944,10 +9932,9 @@ my_mb_wc_gbk(CHARSET_INFO *cs __attribute__((unused)),
   Returns well formed length of a GBK string.
 */
 static
-uint my_well_formed_len_gbk(CHARSET_INFO *cs __attribute__((unused)),
+auto my_well_formed_len_gbk(CHARSET_INFO *cs __attribute__((unused)),
                             const char *b, const char *e,
-                            uint pos, int *error)
-{
+                            uint pos, int *error) -> uint {
   const char *b0= b;
   const char *emb= e - 1; /* Last possible end of an MB character */
 

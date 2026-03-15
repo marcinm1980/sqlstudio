@@ -125,7 +125,7 @@ static const char *argv0 = NULL;
 
 static base::Mutex option_mutex;
 
-static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data) {
+static auto log_func(const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data) -> void {
   base::Logger::LogLevel level = base::Logger::LogLevel::Disabled;
   if (log_level & (G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL))
     level = base::Logger::LogLevel::Error;
@@ -141,7 +141,7 @@ static void log_func(const gchar *log_domain, GLogLevelFlags log_level, const gc
 #endif
 }
 
-static grt::ValueRef get_app_option(const std::string &option, WBContext *wb) {
+static auto get_app_option(const std::string &option, WBContext *wb) -> grt::ValueRef {
   base::MutexLock lock(option_mutex);
 
   if (option.empty())
@@ -158,7 +158,7 @@ static grt::ValueRef get_app_option(const std::string &option, WBContext *wb) {
   return wb->get_wb_options().get(option);
 }
 
-static void set_app_option(const std::string &option, grt::ValueRef value, WBContext *wb) {
+static auto set_app_option(const std::string &option, grt::ValueRef value, WBContext *wb) -> void {
   base::MutexLock lock(option_mutex);
 
   if (wb->get_document().is_valid() && wb->get_document()->physicalModels().is_valid() &&
@@ -178,7 +178,7 @@ static void set_app_option(const std::string &option, grt::ValueRef value, WBCon
 
 //----------------- WBOptions ----------------------------------------------------------------------
 
-static bool parse_loglevel(const std::string &line) {
+static auto parse_loglevel(const std::string &line) -> bool {
   bool ret = false;
 
   ret = base::Logger::active_level(line);
@@ -394,7 +394,7 @@ WBOptions::~WBOptions() {
   delete programOptions;
 }
 
-void WBOptions::analyzeCommandLineArguments() {
+auto WBOptions::analyzeCommandLineArguments() -> void {
   auto entry = programOptions->getEntry("log-level");
   if (entry->value.textValue.empty()) {
     const char *log_setting = getenv("WB_LOG_LEVEL");
@@ -420,7 +420,7 @@ void WBOptions::analyzeCommandLineArguments() {
 }
 //----------------- WBContext ----------------------------------------------------------------------
 
-extern void register_all_metaclasses();
+extern auto register_all_metaclasses() -> void;
 
 WBContext::WBContext(bool verbose) : _frontendCallbacks(nullptr) {
 
@@ -529,19 +529,19 @@ WBContext::~WBContext() {
 
 #ifndef Components____
 
-WBComponent *WBContext::get_component_named(const std::string &name) {
+auto WBContext::get_component_named(const std::string &name) -> WBComponent * {
   FOREACH_COMPONENT(_components, iter)
   if ((*iter)->get_name() == name)
     return (*iter);
   return 0;
 }
 
-void WBContext::foreach_component(const std::function<void(WBComponent *)> &slot) {
+auto WBContext::foreach_component(const std::function<void(WBComponent *)> &slot) -> void {
   FOREACH_COMPONENT(_components, iter)
   slot(*iter);
 }
 
-WBComponent *WBContext::get_component_handling(const model_ObjectRef &object) {
+auto WBContext::get_component_handling(const model_ObjectRef &object) -> WBComponent * {
   FOREACH_COMPONENT(_components, iter)
   if ((*iter)->handles_figure(object))
     return *iter;
@@ -552,24 +552,24 @@ WBComponent *WBContext::get_component_handling(const model_ObjectRef &object) {
 
 //--------------------------------------------------------------------------------------------------
 
-bec::UIForm *WBContext::get_active_form() {
+auto WBContext::get_active_form() -> bec::UIForm * {
   return wb::WBContextUI::get()->get_active_form();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool wb::WBContext::is_commercial() {
+auto wb::WBContext::is_commercial() -> bool {
   std::string edition = base::tolower(get_root()->info()->edition());
   return (edition == "commercial") || (edition == "development");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bec::UIForm *WBContext::get_active_main_form() {
+auto WBContext::get_active_main_form() -> bec::UIForm * {
   return wb::WBContextUI::get()->get_active_main_form();
 }
 
-void WBContext::finalize() {
+auto WBContext::finalize() -> void {
   // Stop any scheduled events, animations etc. before continuing.
   ThreadedTimer::stop();
 
@@ -603,7 +603,7 @@ void WBContext::finalize() {
     PluginManagerImpl::ShowGUIPluginSlot{}, PluginManagerImpl::CloseGUIPluginSlot{});
 }
 
-void WBContext::block_user_interaction(bool flag) {
+auto WBContext::block_user_interaction(bool flag) -> void {
   // Use a mutext to protect this whole function
   base::RecMutexLock _lock(_block_user_interaction_mutex);
 
@@ -627,13 +627,13 @@ void WBContext::block_user_interaction(bool flag) {
 
 //--------------------------------------------------------------------------------
 
-bool WBContext::opengl_rendering_enforced() {
+auto WBContext::opengl_rendering_enforced() -> bool {
   return _force_opengl_rendering;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool WBContext::software_rendering_enforced() {
+auto WBContext::software_rendering_enforced() -> bool {
   bool result = false;
 
   if (!_force_opengl_rendering) {
@@ -667,7 +667,7 @@ bool WBContext::software_rendering_enforced() {
 
 // Need to define a local function wrapper for the show_error call as sigc templates can neither handle
 // overloaded functions nor default parameters.
-bool WBContext::show_error(const std::string &title, const std::string &message) {
+auto WBContext::show_error(const std::string &title, const std::string &message) -> bool {
   logError("%s", (message + '\n').c_str());
   return mforms::Utilities::show_error(title, message, _("Close")) != 0;
 }
@@ -681,8 +681,8 @@ bool WBContext::show_error(const std::string &title, const std::string &message)
  * this function is called via the dispatcher.
  * For the same reason is the return value passed back as pointer, even though it's a bool.
  */
-void *WBContext::do_request_password(const std::string &title, const std::string &service, bool force_asking,
-                                     std::string *account, std::string *password) {
+auto WBContext::do_request_password(const std::string &title, const std::string &service, bool force_asking,
+                                     std::string *account, std::string *password) -> void * {
   bool ret = false;
 
   try {
@@ -694,8 +694,8 @@ void *WBContext::do_request_password(const std::string &title, const std::string
   return (void *)ret;
 }
 
-void *WBContext::do_find_connection_password(const std::string &hostId, const std::string &username,
-                                             std::string *ret_password) {
+auto WBContext::do_find_connection_password(const std::string &hostId, const std::string &username,
+                                             std::string *ret_password) -> void * {
   bool ret = false;
   try {
     ret = mforms::Utilities::find_password(hostId, username, *ret_password);
@@ -706,7 +706,7 @@ void *WBContext::do_find_connection_password(const std::string &hostId, const st
   return (void *)ret;
 }
 
-bool WBContext::find_connection_password(const db_mgmt_ConnectionRef &conn, std::string &password) {
+auto WBContext::find_connection_password(const db_mgmt_ConnectionRef &conn, std::string &password) -> bool {
   /*
   return execute_in_main_thread<bool>("find_password",
                         std::bind(&WBContext::do_find_connection_password, this,
@@ -722,7 +722,7 @@ bool WBContext::find_connection_password(const db_mgmt_ConnectionRef &conn, std:
 }
 
 // throws grt::user_cancelled
-std::string WBContext::request_connection_password(const db_mgmt_ConnectionRef &conn, bool reset_password) {
+auto WBContext::request_connection_password(const db_mgmt_ConnectionRef &conn, bool reset_password) -> std::string {
   std::string password_tmp;
   std::string user_tmp = conn->parameterValues().get_string("userName");
   void *ret = mforms::Utilities::perform_from_main_thread(
@@ -733,7 +733,7 @@ std::string WBContext::request_connection_password(const db_mgmt_ConnectionRef &
   throw grt::user_cancelled("Canceled by user");
 }
 
-bool WBContext::init_(WBFrontendCallbacks *callbacks, WBOptions *options) {
+auto WBContext::init_(WBFrontendCallbacks *callbacks, WBOptions *options) -> bool {
   logInfo("WbContext::init\n");
   grt::ValueRef res;
 
@@ -912,7 +912,7 @@ bool WBContext::init_(WBFrontendCallbacks *callbacks, WBOptions *options) {
 
 //--------------------------------------------------------------------------------------------------
 
-static bool output_to_stdout(const grt::Message &msg, void *sender) {
+static auto output_to_stdout(const grt::Message &msg, void *sender) -> bool {
   if (msg.type == grt::OutputMsg) {
     printf("%s", msg.text.c_str());
     fflush(stdout);
@@ -922,7 +922,7 @@ static bool output_to_stdout(const grt::Message &msg, void *sender) {
   return true;
 }
 
-void WBContext::warnIfRunningOnUnsupportedOS() {
+auto WBContext::warnIfRunningOnUnsupportedOS() -> void {
   std::string os = get_local_os_name();
   logDebug2("get_local_os_name() returned '%s'\n", os.c_str());
 
@@ -938,7 +938,7 @@ void WBContext::warnIfRunningOnUnsupportedOS() {
   }
 }
 
-void WBContext::init_finish_(WBOptions *options) {
+auto WBContext::init_finish_(WBOptions *options) -> void {
   // initialize plugins that have a initializer (start with builtins and then go through user plugins)
   // Initialization to be done ONLY when WB is first started.
   // This point is also reached when i.e. a document was opened by double clicking and a WB instance was already open
@@ -1120,7 +1120,7 @@ void WBContext::init_finish_(WBOptions *options) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContext::pushMessageHandler(grt::SlotHolder *slot) {
+auto WBContext::pushMessageHandler(grt::SlotHolder *slot) -> void {
   _messageHandlerList.push_back(slot);
   grt::GRT::get()->pushMessageHandler(slot);
 
@@ -1128,7 +1128,7 @@ void WBContext::pushMessageHandler(grt::SlotHolder *slot) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool WBContext::handle_message(const grt::Message &msg) {
+auto WBContext::handle_message(const grt::Message &msg) -> bool {
   // No need to log messages here. That happens already in the grt manager.
 
   if (_send_messages_to_shell) {
@@ -1145,7 +1145,7 @@ bool WBContext::handle_message(const grt::Message &msg) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContext::init_rdbms_modules() {
+auto WBContext::init_rdbms_modules() -> void {
   logDebug("Initializing rdbms modules\n");
 
   // Init MySQL first.
@@ -1159,7 +1159,7 @@ void WBContext::init_rdbms_modules() {
   //grt::GRT::get()->initializeOtherRDBMS();
 }
 
-grt::ValueRef WBContext::setup_context_grt(WBOptions *options) {
+auto WBContext::setup_context_grt(WBOptions *options) -> grt::ValueRef {
   std::shared_ptr<grt::internal::Unserializer> unserializer = grt::GRT::get()->get_unserializer();
   // init the GRT tree nodes, set default options
   init_grt_tree(options, unserializer);
@@ -1193,7 +1193,7 @@ grt::ValueRef WBContext::setup_context_grt(WBOptions *options) {
   return grt::IntegerRef(1);
 }
 
-void WBContext::init_templates() {
+auto WBContext::init_templates() -> void {
   // Default table templates list
   grt::DictRef options(get_root()->options()->options());
   if (!options.has_key("TableTemplates")) {
@@ -1203,7 +1203,7 @@ void WBContext::init_templates() {
   }
 }
 
-void WBContext::init_grt_tree(WBOptions *options, std::shared_ptr<grt::internal::Unserializer> unserializer) {
+auto WBContext::init_grt_tree(WBOptions *options, std::shared_ptr<grt::internal::Unserializer> unserializer) -> void {
   grt::DictRef root(true);
   studio_MySqlStudioRef app(grt::Initialized);
 
@@ -1268,7 +1268,7 @@ void WBContext::init_grt_tree(WBOptions *options, std::shared_ptr<grt::internal:
   grt::GRT::get()->set_root(root);
 }
 
-void WBContext::init_plugin_groups_grt(WBOptions *options) {
+auto WBContext::init_plugin_groups_grt(WBOptions *options) -> void {
   struct group_def {
     const char *category;
     const char *name;
@@ -1318,7 +1318,7 @@ void WBContext::init_plugin_groups_grt(WBOptions *options) {
   }
 }
 
-void WBContext::init_plugins_grt(WBOptions *options) {
+auto WBContext::init_plugins_grt(WBOptions *options) -> void {
   std::map<std::string, bool> scanned_dir_list;
   std::list<std::string> exts;
 
@@ -1354,7 +1354,7 @@ void WBContext::init_plugins_grt(WBOptions *options) {
   ValidationManager::scan();
 }
 
-void WBContext::init_properties_grt(studio_DocumentRef &doc) {
+auto WBContext::init_properties_grt(studio_DocumentRef &doc) -> void {
   app_DocumentInfoRef info(grt::Initialized);
   info->name("Properties");
   info->owner(doc);
@@ -1369,12 +1369,12 @@ void WBContext::init_properties_grt(studio_DocumentRef &doc) {
   doc->info(info);
 }
 
-static void set_default(grt::DictRef dict, const char *option, int value) {
+static auto set_default(grt::DictRef dict, const char *option, int value) -> void {
   if (!dict.has_key(option))
     dict.gset(option, value);
 }
 
-static void set_default(grt::DictRef dict, const char *option, const std::string &value) {
+static auto set_default(grt::DictRef dict, const char *option, const std::string &value) -> void {
   if (!dict.has_key(option) || option[0] == '@')
     dict.gset(option, value);
 }
@@ -1387,7 +1387,7 @@ static void set_default(grt::DictRef dict, const char *option, const std::string
  *
  ****************************************************************************
  */
-void WBContext::set_default_options(grt::DictRef options) {
+auto WBContext::set_default_options(grt::DictRef options) -> void {
   set_default(options, "studio:ForceSWRendering", 0);
   set_default(options, "studio:OSSHideMissing", 0);
   set_default(options, "studio:UndoEntries", DEFAULT_UNDO_STACK_SIZE);
@@ -1603,12 +1603,12 @@ void WBContext::set_default_options(grt::DictRef options) {
   set_default(options, "studio.logger:LogLevel", base::Logger::active_level());
 }
 
-grt::ListRef<app_PaperType> WBContext::get_paper_types(std::shared_ptr<grt::internal::Unserializer> unserializer) {
+auto WBContext::get_paper_types(std::shared_ptr<grt::internal::Unserializer> unserializer) -> grt::ListRef<app_PaperType> {
   return grt::ListRef<app_PaperType>::cast_from(
     grt::GRT::get()->unserialize(base::makePath(get_datadir(), "data/paper_types.xml"), unserializer));
 }
 
-static void strip_options_dict(grt::DictRef dict) {
+static auto strip_options_dict(grt::DictRef dict) -> void {
   std::vector<std::string> keys;
   {
     grt::DictRef::const_iterator iter = dict.begin();
@@ -1626,7 +1626,7 @@ static void strip_options_dict(grt::DictRef dict) {
   }
 }
 
-void WBContext::setLogLevelFromGuiPreferences(const grt::DictRef &dict) {
+auto WBContext::setLogLevelFromGuiPreferences(const grt::DictRef &dict) -> void {
   // don't set if user already specified log level (via commmandline or shell env variable)
   if (base::Logger::wasLogLevelSpecifiedByUser())
     return;
@@ -1643,7 +1643,7 @@ void WBContext::setLogLevelFromGuiPreferences(const grt::DictRef &dict) {
   }
 }
 
-void WBContext::load_app_options(bool update) {
+auto WBContext::load_app_options(bool update) -> void {
   // load ui related stuff (menus, toolbars etc)
   wb::WBContextUI::get()->load_app_options(update);
 
@@ -1774,7 +1774,7 @@ void WBContext::load_app_options(bool update) {
   }
 }
 
-void WBContext::load_other_connections() {
+auto WBContext::load_other_connections() -> void {
   // load list of non-MySQL connections
   unsigned int connection_count = 0;
   unsigned int total_connections = 0;
@@ -1801,7 +1801,7 @@ void WBContext::load_other_connections() {
   logInfo("Loaded %u/%u new non-MySQL connections\n", connection_count, total_connections);
 }
 
-void WBContext::attempt_options_upgrade(xmlDocPtr xmldoc, const std::string &version) {
+auto WBContext::attempt_options_upgrade(xmlDocPtr xmldoc, const std::string &version) -> void {
   std::vector<std::string> ver = base::split(version, ".");
 
   int major = base::atoi<int>(ver[0], 0);
@@ -1822,7 +1822,7 @@ void WBContext::attempt_options_upgrade(xmlDocPtr xmldoc, const std::string &ver
   }
 }
 
-void WBContext::save_app_options() {
+auto WBContext::save_app_options() -> void {
   std::string options_file = base::makePath(_user_datadir, OPTIONS_FILE_NAME);
   app_OptionsRef options(get_root()->options());
 
@@ -1840,7 +1840,7 @@ void WBContext::save_app_options() {
   (*iter)->save_app_options();
 }
 
-void WBContext::save_instances() {
+auto WBContext::save_instances() -> void {
   // save instance list
   db_mgmt_ManagementRef mgmt = get_root()->rdbmsMgmt();
   if (!mgmt.is_valid())
@@ -1849,7 +1849,7 @@ void WBContext::save_instances() {
   grt::GRT::get()->serialize(mgmt->storedInstances(), inst_list_xml);
 }
 
-void WBContext::save_connections() {
+auto WBContext::save_connections() -> void {
   db_mgmt_ManagementRef mgmt = get_root()->rdbmsMgmt();
   if (!mgmt.is_valid()) {
     logError("Failed to save connections (Invalid RDBMS management reference).\n");
@@ -1868,7 +1868,7 @@ void WBContext::save_connections() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContext::load_app_state(std::shared_ptr<grt::internal::Unserializer> unserializer) {
+auto WBContext::load_app_state(std::shared_ptr<grt::internal::Unserializer> unserializer) -> void {
   // Load saved state.
   std::string state_xml = base::makePath(_user_datadir, STATE_FILE_NAME);
   if (g_file_test(state_xml.c_str(), G_FILE_TEST_EXISTS)) {
@@ -1905,7 +1905,7 @@ void WBContext::load_app_state(std::shared_ptr<grt::internal::Unserializer> unse
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContext::save_app_state() {
+auto WBContext::save_app_state() -> void {
   // Keep the current version number so we can compare on next startup if a new version was
   // launched the first time.
   std::string version = strfmt("%i.%i.%i", APP_MAJOR_NUMBER, APP_MINOR_NUMBER, APP_RELEASE_NUMBER);
@@ -1926,7 +1926,7 @@ void WBContext::save_app_state() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContext::add_recent_file(const std::string &file) {
+auto WBContext::add_recent_file(const std::string &file) -> void {
   grt::StringListRef recentFiles(get_root()->options()->recentFiles());
   recentFiles.remove_value(file);
   recentFiles.insert(file, 0);
@@ -1941,7 +1941,7 @@ void WBContext::add_recent_file(const std::string &file) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContext::option_dict_changed(grt::internal::OwnedDict *options, bool, const std::string &) {
+auto WBContext::option_dict_changed(grt::internal::OwnedDict *options, bool, const std::string &) -> void {
   if (get_wb_options() == grt::DictRef(options)) {
     ssize_t undo_size = get_wb_options().get_int("studio:UndoEntries", DEFAULT_UNDO_STACK_SIZE);
 
@@ -1959,7 +1959,7 @@ void WBContext::option_dict_changed(grt::internal::OwnedDict *options, bool, con
  * or meaningless GUI overhead when closing down (parts of) WB.
  * Warning: canceling idle tasks unconditionally might lead to other problems, so use with extreme care.
  */
-bool WBContext::cancel_idle_tasks() {
+auto WBContext::cancel_idle_tasks() -> bool {
   bool result = bec::GRTManager::get()->cancel_idle_tasks();
 
   MutexLock lock(_pending_refresh_mutex);
@@ -1968,7 +1968,7 @@ bool WBContext::cancel_idle_tasks() {
   return result;
 }
 
-void WBContext::flush_idle_tasks(bool force) {
+auto WBContext::flush_idle_tasks(bool force) -> void {
   try {
     bec::GRTManager::get()->perform_idle_tasks();
 
@@ -2004,7 +2004,7 @@ void WBContext::flush_idle_tasks(bool force) {
   }
 }
 
-void WBContext::request_refresh(RefreshType type, const std::string &str, NativeHandle ptr) {
+auto WBContext::request_refresh(RefreshType type, const std::string &str, NativeHandle ptr) -> void {
   MutexLock lock(_pending_refresh_mutex);
 
   mdc::Timestamp now = mdc::get_time();
@@ -2042,7 +2042,7 @@ void WBContext::request_refresh(RefreshType type, const std::string &str, Native
 //--------------------------------------------------------------------------------
 // Creating/Loading documents
 
-void WBContext::new_document() {
+auto WBContext::new_document() -> void {
   try {
     _frontendCallbacks->show_status_text(_("Creating new document..."));
 
@@ -2140,15 +2140,15 @@ void WBContext::new_document() {
 /** Tells backend that frontend has finished preparing for a newly created or loaded model.
  Call as last thing done from the RefreshNewModel handler.
  */
-void WBContext::new_model_finish() {
+auto WBContext::new_model_finish() -> void {
   _model_context->realize();
 }
 
-void WBContext::open_script_file(const std::string &file) {
+auto WBContext::open_script_file(const std::string &file) -> void {
   execute_in_main_thread("openscript", std::bind(&WBContextSQLIDE::open_document, _sqlide_context, file), false);
 }
 
-void WBContext::open_recent_document(int index) {
+auto WBContext::open_recent_document(int index) -> void {
   if (index - 1 < (int)get_root()->options()->recentFiles().count()) {
     std::string file = get_root()->options()->recentFiles().get(index - 1);
 
@@ -2159,7 +2159,7 @@ void WBContext::open_recent_document(int index) {
   }
 }
 
-bool WBContext::open_file_by_extension(const std::string &path, bool interactive) {
+auto WBContext::open_file_by_extension(const std::string &path, bool interactive) -> bool {
   if (g_str_has_suffix(path.c_str(), ".mwbplugin") || g_str_has_suffix(path.c_str(), ".mwbpluginz")) {
     // install plugin
     if (interactive)
@@ -2187,7 +2187,7 @@ bool WBContext::open_file_by_extension(const std::string &path, bool interactive
   }
 }
 
-void WBContext::reset_document() {
+auto WBContext::reset_document() -> void {
   grt::GRT::get()->get_undo_manager()->reset();
 
   wb::WBContextUI::get()->reset();
@@ -2198,7 +2198,7 @@ void WBContext::reset_document() {
   grt::GRT::get()->refresh_loaders();
 }
 
-int WBContext::closeModelFile() {
+auto WBContext::closeModelFile() -> int {
   if (_model_import_file) {
     delete _model_import_file;
     _model_import_file = 0;
@@ -2206,19 +2206,19 @@ int WBContext::closeModelFile() {
   return 0;
 };
 
-std::string WBContext::getTempDir() {
+auto WBContext::getTempDir() -> std::string {
   if (_model_import_file)
     return _model_import_file->get_tempdir_path();
   return "";
 }
 
-std::string WBContext::getDbFilePath() {
+auto WBContext::getDbFilePath() -> std::string {
   if (_model_import_file)
     return _model_import_file->get_db_file_path();
   return "";
 };
 
-studio_DocumentRef WBContext::openModelFile(const std::string &file) {
+auto WBContext::openModelFile(const std::string &file) -> studio_DocumentRef {
   studio_DocumentRef doc;
   closeModelFile();
   _model_import_file = new ModelFile(get_auto_save_dir());
@@ -2240,7 +2240,7 @@ studio_DocumentRef WBContext::openModelFile(const std::string &file) {
   return doc;
 };
 
-bool WBContext::open_document(const std::string &file) {
+auto WBContext::open_document(const std::string &file) -> bool {
   if (_model_context != NULL) {
     // A model is already loaded. Warn the user it will be closed. Ask for saving pending changes
     // if there are any.
@@ -2437,7 +2437,7 @@ bool WBContext::open_document(const std::string &file) {
  *
  * @result True if the document can be closed, false otherwise.
  */
-bool WBContext::can_close_document() {
+auto WBContext::can_close_document() -> bool {
   if (!_asked_for_saving && has_unsaved_changes()) {
     int answer = execute_in_main_thread<int>("check save changes",
                                              std::bind(mforms::Utilities::show_message, _("Close Document"),
@@ -2466,7 +2466,7 @@ bool WBContext::can_close_document() {
  * XXX: this should finally be changed. can_close is the function which can cancel the closing process.
  *      When we reach here it's too late. This function is called from a destructor and hence cannot be cancelled.
  */
-bool WBContext::close_document() {
+auto WBContext::close_document() -> bool {
   if (can_close_document()) {
     _asked_for_saving = false;
 
@@ -2486,7 +2486,7 @@ bool WBContext::close_document() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContext::do_close_document(bool destroying) {
+auto WBContext::do_close_document(bool destroying) -> void {
   // This method must only be called from the main thread.
   assert(bec::GRTManager::get()->in_main_thread());
 
@@ -2521,7 +2521,7 @@ void WBContext::do_close_document(bool destroying) {
 
 /** Tells backend that the frontend has finished doing cleanup for document close.
  */
-void WBContext::close_document_finish() {
+auto WBContext::close_document_finish() -> void {
   studio_DocumentRef doc(get_document());
 
   _filename = "";
@@ -2547,7 +2547,7 @@ void WBContext::close_document_finish() {
 //--------------------------------------------------------------------------------
 // Saving
 
-grt::ValueRef WBContext::save_grt() {
+auto WBContext::save_grt() -> grt::ValueRef {
   // update last change timestamp
   app_DocumentInfoRef info(get_document()->info());
 
@@ -2603,11 +2603,11 @@ grt::ValueRef WBContext::save_grt() {
   return grt::IntegerRef(1);
 }
 
-std::string WBContext::get_filename() const {
+auto WBContext::get_filename() const -> std::string {
   return _filename;
 }
 
-std::string WBContext::get_auto_save_dir() {
+auto WBContext::get_auto_save_dir() -> std::string {
   return bec::GRTManager::get()->get_user_datadir();
 }
 
@@ -2616,7 +2616,7 @@ std::string WBContext::get_auto_save_dir() {
 /**
  * Removes outdated settings that were used previously, but are no longer needed.
  */
-void WBContext::cleanup_options() {
+auto WBContext::cleanup_options() -> void {
   logDebug("Cleaning up old options\n");
 
   grt::DictRef options = get_root()->options()->options();
@@ -2629,7 +2629,7 @@ void WBContext::cleanup_options() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool WBContext::save_as(const std::string &path) {
+auto WBContext::save_as(const std::string &path) -> bool {
   if (_frontendCallbacks->refresh_gui)
     execute_in_main_thread("commit_changes",
                            std::bind(_frontendCallbacks->refresh_gui, RefreshFinishEdits, "", (NativeHandle)0), true);
@@ -2662,7 +2662,7 @@ bool WBContext::save_as(const std::string &path) {
   return false;
 }
 
-bool WBContext::has_unsaved_changes() {
+auto WBContext::has_unsaved_changes() -> bool {
   if (bec::GRTManager::get()->has_unsaved_changes())
     return true;
 
@@ -2678,7 +2678,7 @@ bool WBContext::has_unsaved_changes() {
   return false;
 }
 
-bool WBContext::save_changes() {
+auto WBContext::save_changes() -> bool {
   save_as(_filename);
 
   return !has_unsaved_changes();
@@ -2691,7 +2691,7 @@ bool WBContext::save_changes() {
 //--------------------------------------------------------------------------------
 // Plugin Handling
 
-void WBContext::update_plugin_arguments_pool(bec::ArgumentPool &args) {
+auto WBContext::update_plugin_arguments_pool(bec::ArgumentPool &args) -> void {
   // value must be asked interactively
   if (args.find("app.PluginInputDefinition:string") == args.end()) {
     // don't add placeholder if it already has a value
@@ -2709,7 +2709,7 @@ void WBContext::update_plugin_arguments_pool(bec::ArgumentPool &args) {
     return _sqlide_context->update_plugin_arguments_pool(args);
 }
 
-void WBContext::report_bug(const std::string &errorInfo) {
+auto WBContext::report_bug(const std::string &errorInfo) -> void {
   grt::Module *module;
 
   module = grt::GRT::get()->get_module("MySqlStudio");
@@ -2724,7 +2724,7 @@ void WBContext::report_bug(const std::string &errorInfo) {
   module->call_function("reportBug", args);
 }
 
-void WBContext::execute_plugin(const std::string &plugin_name, const ArgumentPool &defaults) {
+auto WBContext::execute_plugin(const std::string &plugin_name, const ArgumentPool &defaults) -> void {
   app_PluginRef plugin(_plugin_manager->get_plugin(plugin_name));
 
   if (!plugin.is_valid())
@@ -2760,7 +2760,7 @@ void WBContext::execute_plugin(const std::string &plugin_name, const ArgumentPoo
   }
 }
 
-grt::ValueRef WBContext::execute_plugin_grt(const app_PluginRef &plugin, const grt::BaseListRef &args) {
+auto WBContext::execute_plugin_grt(const app_PluginRef &plugin, const grt::BaseListRef &args) -> grt::ValueRef {
   grt::ValueRef result;
 
   if (plugin.is_instance(app_DocumentPlugin::static_class_name())) {
@@ -2831,7 +2831,7 @@ grt::ValueRef WBContext::execute_plugin_grt(const app_PluginRef &plugin, const g
   return result;
 }
 
-void WBContext::plugin_finished(const grt::ValueRef &result, const app_PluginRef &plugin) {
+auto WBContext::plugin_finished(const grt::ValueRef &result, const app_PluginRef &plugin) -> void {
   if (*plugin->showProgress())
     _frontendCallbacks->show_status_text(strfmt(_("Execution of \"%s\" finished."), plugin->caption().c_str()));
 
@@ -2855,18 +2855,18 @@ void WBContext::plugin_finished(const grt::ValueRef &result, const app_PluginRef
 //--------------------------------------------------------------------------------
 // Object Editors
 
-void WBContext::close_gui_plugin(NativeHandle handle) {
+auto WBContext::close_gui_plugin(NativeHandle handle) -> void {
   _plugin_manager->forget_gui_plugin_handle(handle);
 
   // TODO: really closing the plugin produces flicker when an existing editor is reused. Needs investigation.
   //_plugin_manager->close_and_forget_gui_plugin(handle);
 }
 
-void WBContext::register_builtin_plugins(grt::ListRef<app_Plugin> plugins) {
+auto WBContext::register_builtin_plugins(grt::ListRef<app_Plugin> plugins) -> void {
   _plugin_manager->register_plugins(plugins);
 }
 
-bool WBContext::activate_live_object(const GrtObjectRef &object) {
+auto WBContext::activate_live_object(const GrtObjectRef &object) -> bool {
   try {
     return get_sqlide_context()->activate_live_object(object);
   } catch (grt::grt_runtime_error &exc) {
@@ -2879,8 +2879,8 @@ bool WBContext::activate_live_object(const GrtObjectRef &object) {
 
 #ifndef DB_Querying____
 
-std::shared_ptr<SqlEditorForm> WBContext::add_new_query_window(const db_mgmt_ConnectionRef &targetConnection,
-                                                               bool restore_session) {
+auto WBContext::add_new_query_window(const db_mgmt_ConnectionRef &targetConnection,
+                                                               bool restore_session) -> std::shared_ptr<SqlEditorForm> {
   db_mgmt_ConnectionRef target(targetConnection);
 
   if (!target.is_valid()) {
@@ -2961,7 +2961,7 @@ std::shared_ptr<SqlEditorForm> WBContext::add_new_query_window(const db_mgmt_Con
   return form;
 }
 
-std::shared_ptr<SqlEditorForm> WBContext::add_new_query_window() {
+auto WBContext::add_new_query_window() -> std::shared_ptr<SqlEditorForm> {
   _frontendCallbacks->show_status_text(_("Opening SQL Editor..."));
 
   SqlEditorForm::Ref form;
@@ -2987,7 +2987,7 @@ std::shared_ptr<SqlEditorForm> WBContext::add_new_query_window() {
 
 #ifndef Admin____
 
-void WBContext::add_new_admin_window(const db_mgmt_ConnectionRef &target) {
+auto WBContext::add_new_admin_window(const db_mgmt_ConnectionRef &target) -> void {
   std::shared_ptr<SqlEditorForm> conn(add_new_query_window(target));
   if (conn) {
     grt::BaseListRef args(true);
@@ -3002,7 +3002,7 @@ void WBContext::add_new_admin_window(const db_mgmt_ConnectionRef &target) {
 
 #ifndef AutoStartPlugins____
 
-void WBContext::add_new_plugin_window(const std::string &plugin_id, const std::string &caption) {
+auto WBContext::add_new_plugin_window(const std::string &plugin_id, const std::string &caption) -> void {
   _frontendCallbacks->show_status_text(strfmt(_("Starting %s Module..."), caption.c_str()));
 
   try {
@@ -3026,24 +3026,24 @@ void WBContext::add_new_plugin_window(const std::string &plugin_id, const std::s
 #endif // AutoStartPlugins____
 
 #ifndef Utilities____
-studio_MySqlStudioRef WBContext::get_root() {
+auto WBContext::get_root() -> studio_MySqlStudioRef {
   return studio_MySqlStudioRef::cast_from(grt::DictRef::cast_from(grt::GRT::get()->root()).get("wb"));
 }
 
-studio_DocumentRef WBContext::get_document() {
+auto WBContext::get_document() -> studio_DocumentRef {
   return studio_DocumentRef::cast_from(get_root()->doc());
 }
 
-grt::DictRef WBContext::get_wb_options() {
+auto WBContext::get_wb_options() -> grt::DictRef {
   return get_root()->options()->options();
 }
 
 // XXX: we have mforms::Utilities::perform_from_main_thread.
-void WBContext::execute_in_main_thread(const std::string &name, const std::function<void()> &function, bool wait) {
+auto WBContext::execute_in_main_thread(const std::string &name, const std::function<void()> &function, bool wait) -> void {
   bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<void>(function, wait, false);
 }
 
-void WBContext::show_exception(const std::string &operation, const std::exception &exc) {
+auto WBContext::show_exception(const std::string &operation, const std::exception &exc) -> void {
   const grt::grt_runtime_error *rt = dynamic_cast<const grt::grt_runtime_error *>(&exc);
 
   if (rt) {
@@ -3060,7 +3060,7 @@ void WBContext::show_exception(const std::string &operation, const std::exceptio
   }
 }
 
-void WBContext::show_exception(const std::string &operation, const grt::grt_runtime_error &exc) {
+auto WBContext::show_exception(const std::string &operation, const grt::grt_runtime_error &exc) -> void {
   if (bec::GRTManager::get()->in_main_thread())
     show_error(operation, std::string(exc.what()) + "\n" + exc.detail);
   else
@@ -3070,7 +3070,7 @@ void WBContext::show_exception(const std::string &operation, const grt::grt_runt
 
 #endif // Utilities____
 
-bool WBContext::install_module_file(const std::string &path) {
+auto WBContext::install_module_file(const std::string &path) -> bool {
   std::string module_dir = bec::GRTManager::get()->get_user_module_path();
   std::string target_path;
   std::string lang_extension;
@@ -3156,7 +3156,7 @@ bool WBContext::install_module_file(const std::string &path) {
   return true;
 }
 
-bool WBContext::uninstall_module(grt::Module *module) {
+auto WBContext::uninstall_module(grt::Module *module) -> bool {
   std::string path = module->path();
   if (path.empty()) {
     logWarning("Can't uninstall module %s\n", module->name().c_str());
@@ -3193,7 +3193,7 @@ bool WBContext::uninstall_module(grt::Module *module) {
   return false;
 }
 
-void WBContext::run_script_file(const std::string &filename) {
+auto WBContext::run_script_file(const std::string &filename) -> void {
   logDebug("Executing script %s...\n", filename.c_str());
 
   bec::GRTManager::get()->push_status_text(base::strfmt("Executing script %s...", filename.c_str()));
@@ -3215,7 +3215,7 @@ void WBContext::run_script_file(const std::string &filename) {
   bec::GRTManager::get()->pop_status_text();
 }
 
-std::string WBContext::create_attached_file(const std::string &group, const std::string &tmpl) {
+auto WBContext::create_attached_file(const std::string &group, const std::string &tmpl) -> std::string {
   if (group == "script")
     return _file->add_script_file(tmpl);
   else if (group == "note")
@@ -3224,26 +3224,26 @@ std::string WBContext::create_attached_file(const std::string &group, const std:
     throw std::invalid_argument("invalid attachment group name");
 }
 
-std::string WBContext::recreate_attached_file(const std::string &name, const std::string &data) {
+auto WBContext::recreate_attached_file(const std::string &name, const std::string &data) -> std::string {
   _file->undelete_file(name);
   _file->set_file_contents(name, data);
   return name;
 }
 
-void WBContext::save_attached_file_contents(const std::string &name, const char *data, size_t size) {
+auto WBContext::save_attached_file_contents(const std::string &name, const char *data, size_t size) -> void {
   _attachments_changed = true;
   _file->set_file_contents(name, data, size);
 }
 
-std::string WBContext::get_attached_file_contents(const std::string &name) {
+auto WBContext::get_attached_file_contents(const std::string &name) -> std::string {
   return _file->get_file_contents(name);
 }
 
-std::string WBContext::get_attached_file_tmp_path(const std::string &name) {
+auto WBContext::get_attached_file_tmp_path(const std::string &name) -> std::string {
   return _file->get_path_for(name);
 }
 
-int WBContext::export_attached_file_contents(const std::string &name, const std::string &export_to) {
+auto WBContext::export_attached_file_contents(const std::string &name, const std::string &export_to) -> int {
   try {
     _file->copy_file_to(name, export_to);
   } catch (grt::os_error &exc) {
@@ -3253,15 +3253,15 @@ int WBContext::export_attached_file_contents(const std::string &name, const std:
   return 1;
 }
 
-void WBContext::delete_attached_file(const std::string &name) {
+auto WBContext::delete_attached_file(const std::string &name) -> void {
   _file->delete_file(name);
 }
 
 /**
  * Returns the value for a state given by name as string, if it exists or the default value if not.
  */
-std::string WBContext::read_state(const std::string &name, const std::string &domain,
-                                  const std::string &default_value) {
+auto WBContext::read_state(const std::string &name, const std::string &domain,
+                                  const std::string &default_value) -> std::string {
   studio_MySqlStudioRef wb = get_root();
   grt::DictRef dict = wb->state();
 
@@ -3271,7 +3271,7 @@ std::string WBContext::read_state(const std::string &name, const std::string &do
 /**
  * Returns the value for a state given by name as int, if it exists or the default value if not.
  */
-int WBContext::read_state(const std::string &name, const std::string &domain, const int &default_value) {
+auto WBContext::read_state(const std::string &name, const std::string &domain, const int &default_value) -> int {
   grt::DictRef dict = get_root()->state();
 
   return (int)dict.get_int(domain + ":" + name, default_value);
@@ -3280,7 +3280,7 @@ int WBContext::read_state(const std::string &name, const std::string &domain, co
 /**
  * Returns the value for a state given by name as double, if it exists or the default value if not.
  */
-double WBContext::read_state(const std::string &name, const std::string &domain, const double &default_value) {
+auto WBContext::read_state(const std::string &name, const std::string &domain, const double &default_value) -> double {
   grt::DictRef dict = get_root()->state();
 
   return dict.get_double(domain + ":" + name, default_value);
@@ -3289,7 +3289,7 @@ double WBContext::read_state(const std::string &name, const std::string &domain,
 /**
  * Returns the value for a state given by name as bool, if it exists or the default value if not.
  */
-bool WBContext::read_state(const std::string &name, const std::string &domain, const bool &default_value) {
+auto WBContext::read_state(const std::string &name, const std::string &domain, const bool &default_value) -> bool {
   grt::DictRef dict = get_root()->state();
 
   return dict.get_int(domain + ":" + name, default_value ? 1 : 0) == 1;
@@ -3298,7 +3298,7 @@ bool WBContext::read_state(const std::string &name, const std::string &domain, c
 /**
  * Returns the value for a state given by name as ValueRef, if it exists or the default value if not.
  */
-grt::ValueRef WBContext::read_state(const std::string &name, const std::string &domain) {
+auto WBContext::read_state(const std::string &name, const std::string &domain) -> grt::ValueRef {
   grt::DictRef dict = get_root()->state();
 
   return dict.get(domain + ":" + name);
@@ -3307,7 +3307,7 @@ grt::ValueRef WBContext::read_state(const std::string &name, const std::string &
 /**
  * Stores the given string state value in the grt tree.
  */
-void WBContext::save_state(const std::string &name, const std::string &domain, const std::string &value) {
+auto WBContext::save_state(const std::string &name, const std::string &domain, const std::string &value) -> void {
   grt::DictRef dict = get_root()->state();
 
   // Set new value for the given state name in that domain.
@@ -3317,7 +3317,7 @@ void WBContext::save_state(const std::string &name, const std::string &domain, c
 /**
  * Stores the given int state value in the grt tree.
  */
-void WBContext::save_state(const std::string &name, const std::string &domain, const int &value) {
+auto WBContext::save_state(const std::string &name, const std::string &domain, const int &value) -> void {
   grt::DictRef dict = get_root()->state();
 
   // Set new value for the given state name in that domain.
@@ -3327,7 +3327,7 @@ void WBContext::save_state(const std::string &name, const std::string &domain, c
 /**
  * Stores the given double state value in the grt tree.
  */
-void WBContext::save_state(const std::string &name, const std::string &domain, const double &value) {
+auto WBContext::save_state(const std::string &name, const std::string &domain, const double &value) -> void {
   grt::DictRef dict = get_root()->state();
 
   // Set new value for the given state name in that domain.
@@ -3337,7 +3337,7 @@ void WBContext::save_state(const std::string &name, const std::string &domain, c
 /**
  * Stores the given bool state value in the grt tree.
  */
-void WBContext::save_state(const std::string &name, const std::string &domain, const bool &value) {
+auto WBContext::save_state(const std::string &name, const std::string &domain, const bool &value) -> void {
   grt::DictRef dict = get_root()->state();
 
   // Set new value for the given state name in that domain.
@@ -3347,7 +3347,7 @@ void WBContext::save_state(const std::string &name, const std::string &domain, c
 /**
  * Stores the given ValueRef state value in the grt tree.
  */
-void WBContext::save_state(const std::string &name, const std::string &domain, grt::ValueRef value) {
+auto WBContext::save_state(const std::string &name, const std::string &domain, grt::ValueRef value) -> void {
   grt::DictRef dict = get_root()->state();
 
   // Set new value for the given state name in that domain.
@@ -3356,7 +3356,7 @@ void WBContext::save_state(const std::string &name, const std::string &domain, g
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContext::handle_notification(const std::string &name, void *sender, std::map<std::string, std::string> &info) {
+auto WBContext::handle_notification(const std::string &name, void *sender, std::map<std::string, std::string> &info) -> void {
   if (name == "GNDocumentOpened")
     add_recent_file(info["path"]);
 }

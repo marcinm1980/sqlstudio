@@ -41,38 +41,38 @@ class DbMySQLTableEditorIndexPage {
 public:
   DbMySQLTableEditorIndexPage(DbMySQLTableEditor* owner, MySQLTableEditorBE* be, Glib::RefPtr<Gtk::Builder> xml);
 
-  void refresh();
-  bool real_refresh();
+  auto refresh() -> void;
+  auto real_refresh() -> bool;
 
-  void switch_be(MySQLTableEditorBE* be);
+  auto switch_be(MySQLTableEditorBE* be) -> void;
 
   ~DbMySQLTableEditorIndexPage();
 
 private:
-  void cell_editing_started(Gtk::CellEditable* cell, const Glib::ustring& path);
-  void cell_editing_done(GtkCellEditable* ce);
-  static void cell_editing_done_proxy(GtkCellEditable* ce, gpointer data);
+  auto cell_editing_started(Gtk::CellEditable* cell, const Glib::ustring& path) -> void;
+  auto cell_editing_done(GtkCellEditable* ce) -> void;
+  static auto cell_editing_done_proxy(GtkCellEditable* ce, gpointer data) -> void;
 
   //! index_cursor_changed is called when current item in the index treeview is changed
-  void index_cursor_changed();
+  auto index_cursor_changed() -> void;
   //! update_index_details fetches index details for selected index. selected index is stored in _index_node
-  void update_index_details();
+  auto update_index_details() -> void;
   //! get_value is a source of data for treeview columns: set/unset column for index, order of index
   //! get_value is connected to a model wrapper in update_index_details
-  void get_value(const Gtk::TreeModel::iterator& iter, int column, GType type, Glib::ValueBase& value);
+  auto get_value(const Gtk::TreeModel::iterator& iter, int column, GType type, Glib::ValueBase& value) -> void;
   //! set_value is a model wrapper setter of data for treeview columns: set/unset column for index, order of index
   //! set_value is connected to a model wrapper in update_index_details
-  void set_value(const Gtk::TreeModel::iterator& iter, int column, GType type, const Glib::ValueBase& value);
+  auto set_value(const Gtk::TreeModel::iterator& iter, int column, GType type, const Glib::ValueBase& value) -> void;
 
-  void update_index_storage_type_in_be();
+  auto update_index_storage_type_in_be() -> void;
 
-  void set_index_key_block_size(const std::string& value);
-  void set_index_parser(const std::string& value);
-  void set_index_comment(const std::string& value);
+  auto set_index_key_block_size(const std::string& value) -> void;
+  auto set_index_parser(const std::string& value) -> void;
+  auto set_index_comment(const std::string& value) -> void;
 
-  void update_gui_for_server();
+  auto update_gui_for_server() -> void;
 
-  Glib::RefPtr<Gtk::ListStore> recreate_order_model();
+  auto recreate_order_model() -> Glib::RefPtr<Gtk::ListStore>;
 
   DbMySQLTableEditor* _owner;
   MySQLTableEditorBE* _be;

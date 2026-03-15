@@ -58,14 +58,14 @@ public
 public
   ref class Conversions {
   public:
-    static base::Color NativeToColor(System::Drawing::Color color);
-    static System::Drawing::Color ColorToNative(base::Color color);
+    static auto NativeToColor(System::Drawing::Color color) -> base::Color;
+    static auto ColorToNative(base::Color color) -> System::Drawing::Color;
 
-    static System::Drawing::Color GetApplicationColor(ApplicationColor color, bool foreground);
-    static bool UseWin8Drawing();
-    static bool InHighContrastMode();
+    static auto GetApplicationColor(ApplicationColor color, bool foreground) -> System::Drawing::Color;
+    static auto UseWin8Drawing() -> bool;
+    static auto InHighContrastMode() -> bool;
 
-    static void SetColorScheme(ColorScheme newScheme);
+    static auto SetColorScheme(ColorScheme newScheme) -> void;
   };
 
 } // namespace MySQL

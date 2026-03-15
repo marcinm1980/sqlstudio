@@ -92,61 +92,61 @@ private:
   mforms::TimeoutHandle _spliter_change_timeout;
   bool _rendering;
 
-  void call_refresh_viewer();
+  auto call_refresh_viewer() -> void;
 
-  bool refresh_viewer();
+  auto refresh_viewer() -> bool;
 
-  void tree_toggled(const mforms::TreeNodeRef &node, const std::string &value);
+  auto tree_toggled(const mforms::TreeNodeRef &node, const std::string &value) -> void;
 
-  void set_color_icon(mforms::TreeNodeRef node, int column, const base::Color &color);
+  auto set_color_icon(mforms::TreeNodeRef node, int column, const base::Color &color) -> void;
 
-  void work_started(mforms::View *progress, bool reprojecting);
-  void work_finished(mforms::View *progress);
+  auto work_started(mforms::View *progress, bool reprojecting) -> void;
+  auto work_finished(mforms::View *progress) -> void;
 
-  void update_coordinates(base::Point p);
-  void handle_click(base::Point p);
+  auto update_coordinates(base::Point p) -> void;
+  auto handle_click(base::Point p) -> void;
 
-  void jump_to();
-  void export_image();
-  void auto_zoom(LayerId layer);
-  void copy_coordinates();
+  auto jump_to() -> void;
+  auto export_image() -> void;
+  auto auto_zoom(LayerId layer) -> void;
+  auto copy_coordinates() -> void;
 
-  void change_tool(mforms::ToolBarItem *item);
+  auto change_tool(mforms::ToolBarItem *item) -> void;
 
-  std::vector<std::string> layer_overlay_handler(mforms::TreeNodeRef node);
+  auto layer_overlay_handler(mforms::TreeNodeRef node) -> std::vector<std::string>;
 
   // layer currently selected in the treeview
-  LayerId get_selected_layer_id();
+  auto get_selected_layer_id() -> LayerId;
   // layer that's currently set as the active one (bolded in treeview)
   class RecordsetLayer *active_layer();
-  void set_active_layer(LayerId layer);
+  auto set_active_layer(LayerId layer) -> void;
 
-  int row_id_for_action(class RecordsetLayer *&layer);
-  void copy_record();
-  void view_record();
+  auto row_id_for_action(class RecordsetLayer *&layer) -> int;
+  auto copy_record() -> void;
+  auto view_record() -> void;
 
-  void map_menu_will_show();
-  void layer_menu_will_show();
+  auto map_menu_will_show() -> void;
+  auto layer_menu_will_show() -> void;
 
-  void area_selected();
-  void activate_layer(mforms::TreeNodeRef, int column);
+  auto area_selected() -> void;
+  auto activate_layer(mforms::TreeNodeRef, int column) -> void;
 
 public:
   SpatialDataView(SqlEditorResult *owner);
   virtual ~SpatialDataView();
 
-  mforms::ToolBar *get_toolbar() {
+  auto get_toolbar() -> mforms::ToolBar * {
     return _toolbar;
   }
 
-  void set_geometry_columns(const std::vector<SpatialDataSource> &columns);
-  int get_option(const char *opt_name, int default_value);
+  auto set_geometry_columns(const std::vector<SpatialDataSource> &columns) -> void;
+  auto get_option(const char *opt_name, int default_value) -> int;
 
-  void fillup_polygon(mforms::MenuItem *mitem);
-  void projection_item_activated(mforms::ToolBarItem *item);
+  auto fillup_polygon(mforms::MenuItem *mitem) -> void;
+  auto projection_item_activated(mforms::ToolBarItem *item) -> void;
 
-  void activate();
-  void refresh_layers();
+  auto activate() -> void;
+  auto refresh_layers() -> void;
 
-  void layer_menu_action(const std::string &action);
+  auto layer_menu_action(const std::string &action) -> void;
 };

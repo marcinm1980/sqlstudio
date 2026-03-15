@@ -33,12 +33,12 @@ namespace MySQL {
     protected:
       RadioButtonWrapper(mforms::RadioButton *button);
 
-      static bool create(mforms::RadioButton *backend, int);
-      static void set_active(mforms::RadioButton *backend, bool flag);
-      static bool get_active(mforms::RadioButton *backend);
+      static auto create(mforms::RadioButton *backend, int) -> bool;
+      static auto set_active(mforms::RadioButton *backend, bool flag) -> void;
+      static auto get_active(mforms::RadioButton *backend) -> bool;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

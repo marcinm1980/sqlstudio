@@ -51,7 +51,7 @@ namespace MySQL {
           delete inner;
       }
 
-      ::bec::GrtStringListModel *get_unmanaged_object() {
+      auto get_unmanaged_object() -> ::bec::GrtStringListModel * {
         return static_cast<::bec::GrtStringListModel *>(inner);
       }
 
@@ -63,7 +63,7 @@ namespace MySQL {
         get_unmanaged_object()->remove_items(IntListToCppVector2(item_indexes));
       }
 
-      void remove_item(int index) {
+      auto remove_item(int index) -> void {
         get_unmanaged_object()->remove_item(index);
       }
 
@@ -75,15 +75,15 @@ namespace MySQL {
         get_unmanaged_object()->items_val_mask(NativeToCppString(items_val_mask));
       }
 
-      void invalidate() {
+      auto invalidate() -> void {
         get_unmanaged_object()->invalidate();
       }
 
-      int total_items_count() {
+      auto total_items_count() -> int {
         return (int)get_unmanaged_object()->total_items_count();
       }
 
-      int active_items_count() {
+      auto active_items_count() -> int {
         return (int)get_unmanaged_object()->active_items_count();
       }
 

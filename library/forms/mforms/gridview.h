@@ -47,26 +47,26 @@ namespace mforms {
   // concrete implementation.
   class MFORMS_EXPORT GridView : public NativeContainer {
   public:
-    virtual int get_column_count() = 0;
-    virtual int get_column_width(int column) = 0;
-    virtual void set_column_width(int column, int width) = 0;
+    virtual auto get_column_count() -> int = 0;
+    virtual auto get_column_width(int column) -> int = 0;
+    virtual auto set_column_width(int column, int width) -> void = 0;
 
-    virtual void update_columns() = 0;
+    virtual auto update_columns() -> void = 0;
 
-    virtual void set_column_header_indicator(int column, ColumnHeaderIndicator order) = 0;
+    virtual auto set_column_header_indicator(int column, ColumnHeaderIndicator order) -> void = 0;
 
-    virtual bool current_cell(size_t &row, int &column) = 0;
-    virtual void set_current_cell(size_t row, int column) = 0;
+    virtual auto current_cell(size_t &row, int &column) -> bool = 0;
+    virtual auto set_current_cell(size_t row, int column) -> void = 0;
 
-    virtual void set_header_menu(ContextMenu *menu);
-    int get_clicked_header_column() {
+    virtual auto set_header_menu(ContextMenu *menu) -> void;
+    auto get_clicked_header_column() -> int {
       return _clicked_header_column;
     }
 
 #ifndef SWIG
-    static GridView *create(std::shared_ptr<Recordset> rset);
+    static auto create(std::shared_ptr<Recordset> rset) -> GridView *;
 
-    static void register_factory(GridView *(*create)(std::shared_ptr<Recordset> rset));
+    static auto register_factory(GridView *(*create)(std::shared_ptr<Recordset> rset)) -> void;
 #endif
 
     // TODO must be emited from Windows
@@ -77,12 +77,12 @@ namespace mforms {
       return &_signal_columns_resized;
     }
 
-    ContextMenu *header_menu() {
+    auto header_menu() -> ContextMenu * {
       return _header_menu;
     }
 
 #ifndef SWIG
-    void clicked_header_column(int column);
+    auto clicked_header_column(int column) -> void;
 #endif
   protected:
     GridView();

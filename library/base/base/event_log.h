@@ -32,15 +32,15 @@
 struct BASELIBRARY_PUBLIC_FUNC EventLogReader {
   EventLogReader(const std::string &query,
                  const std::function<void(std::map<std::string, std::string> &output)> &printResults);
-  void ReadEvents();
-  void SetPosition(long position);
+  auto ReadEvents() -> void;
+  auto SetPosition(long position) -> void;
 
 private:
   DWORD PrintResults(EVT_HANDLE results);
   DWORD PrintEvent(EVT_HANDLE hEvent);
   DWORD GetQueryStatusProperty(EVT_QUERY_PROPERTY_ID Id, EVT_HANDLE hResults, PEVT_VARIANT &pProperty);
   DWORD PrintQueryStatuses(EVT_HANDLE hResults);
-  std::string GetMessageString(EVT_HANDLE metadata, EVT_HANDLE eventHandle);
+  auto GetMessageString(EVT_HANDLE metadata, EVT_HANDLE eventHandle) -> std::string;
 
   std::function<void(std::map<std::string, std::string> &output)> _printResultsCallback;
   std::string _query;

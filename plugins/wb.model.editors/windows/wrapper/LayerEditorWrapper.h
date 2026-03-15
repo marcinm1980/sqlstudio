@@ -42,11 +42,11 @@ namespace MySQL {
       LayerEditorWrapper::LayerEditorWrapper(MySQL::Grt::GrtValue ^ arglist);
       ~LayerEditorWrapper();
 
-      LayerEditorBE *get_unmanaged_object();
+      auto get_unmanaged_object() -> LayerEditorBE *;
       void set_name(String ^ name);
-      String ^ get_name();
+      auto get_name() -> String ^;
       void set_color(String ^ color);
-      String ^ get_color();
+      auto get_color() -> String ^;
     };
 
   } // namespace Grt

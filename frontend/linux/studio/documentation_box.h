@@ -42,17 +42,17 @@ class DocumentationBox : public Gtk::Box {
   bool _multiple_items;
   bool _initializing;
 
-  void text_key_press(GdkEventKey *event);
-  void text_button_press(GdkEventButton *event);
-  void combo_changed();
-  void text_changed();
-  void commit();
+  auto text_key_press(GdkEventKey *event) -> void;
+  auto text_button_press(GdkEventButton *event) -> void;
+  auto combo_changed() -> void;
+  auto text_changed() -> void;
+  auto commit() -> void;
 
 public:
   DocumentationBox();
   ~DocumentationBox();
 
-  void update_for_form(bec::UIForm *form);
+  auto update_for_form(bec::UIForm *form) -> void;
 };
 
 #endif /* _DOCUMENTATION_BOX_H_ */

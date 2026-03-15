@@ -34,24 +34,24 @@ namespace grt {
   public:
     PythonShell();
 
-    virtual std::string shell_type() {
+    virtual auto shell_type() -> std::string {
       return "python";
     }
 
-    virtual void init();
-    virtual void print_welcome();
-    virtual std::string get_prompt();
-    virtual int execute_line(const std::string &linebuf);
-    virtual int run_file(const std::string &file_name, bool interactive);
-    virtual void show_help(const std::string &topic);
+    virtual auto init() -> void;
+    virtual auto print_welcome() -> void;
+    virtual auto get_prompt() -> std::string;
+    virtual auto execute_line(const std::string &linebuf) -> int;
+    virtual auto run_file(const std::string &file_name, bool interactive) -> int;
+    virtual auto show_help(const std::string &topic) -> void;
 
-    virtual std::vector<std::string> complete_line(const std::string &line, std::string &completed);
+    virtual auto complete_line(const std::string &line, std::string &completed) -> std::vector<std::string>;
 
-    virtual ValueRef get_global_var(const std::string &var_name);
-    virtual int set_global_var(const std::string &var_name, const ValueRef &value);
+    virtual auto get_global_var(const std::string &var_name) -> ValueRef;
+    virtual auto set_global_var(const std::string &var_name, const ValueRef &value) -> int;
 
   protected:
-    std::vector<std::string> get_tokens_for_prefix(const std::string &prefix);
+    auto get_tokens_for_prefix(const std::string &prefix) -> std::vector<std::string>;
 
     std::string _current_line;
 

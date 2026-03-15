@@ -44,10 +44,10 @@ public:
                      mforms::SelectorStyle style = SelectorCombobox);
   ~SelectOptionDialog();
 
-  void set_validation_function(std::function<bool(std::string)> target) {
+  auto set_validation_function(std::function<bool(std::string)> target) -> void {
     validate = target;
   }
-  std::string run();
+  auto run() -> std::string;
 
 protected:
   mforms::Box _top_vbox;

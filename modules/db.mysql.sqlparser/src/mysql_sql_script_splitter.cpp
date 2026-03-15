@@ -42,26 +42,26 @@ Mysql_sql_script_splitter::Mysql_sql_script_splitter() {
 Mysql_sql_script_splitter::~Mysql_sql_script_splitter() {
 }
 
-int Mysql_sql_script_splitter::process(const std::string &sql, std::list<std::string> &statements) {
+auto Mysql_sql_script_splitter::process(const std::string &sql, std::list<std::string> &statements) -> int {
   myx_process_sql_statements(sql.c_str(), _cs, &Mysql_sql_script_splitter::process_statement, &statements,
                              MYX_SPM_NORMAL_MODE);
   return 0;
 }
 
-int Mysql_sql_script_splitter::process(const char *sql, std::list<std::pair<size_t, size_t> > &ranges) {
+auto Mysql_sql_script_splitter::process(const char *sql, std::list<std::pair<size_t, size_t> > &ranges) -> int {
   myx_process_sql_statements(sql, _cs, &Mysql_sql_script_splitter::process_statement_ranges, &ranges,
                              MYX_SPM_NORMAL_MODE);
   return 0;
 }
 
-int Mysql_sql_script_splitter::process_statement(const MyxStatementParser *splitter, const char *sql, void *userdata) {
+auto Mysql_sql_script_splitter::process_statement(const MyxStatementParser *splitter, const char *sql, void *userdata) -> int {
   std::list<std::string> *statements = static_cast<std::list<std::string> *>(userdata);
   statements->push_back(sql);
   return 0;
 }
 
-int Mysql_sql_script_splitter::process_statement_ranges(const MyxStatementParser *splitter, const char *sql,
-                                                        void *userdata) {
+auto Mysql_sql_script_splitter::process_statement_ranges(const MyxStatementParser *splitter, const char *sql,
+                                                        void *userdata) -> int {
   std::list<std::pair<size_t, size_t> > *statements = static_cast<std::list<std::pair<size_t, size_t> > *>(userdata);
   size_t start = splitter->statement_boffset();
   statements->push_back(std::make_pair(start, strlen(sql)));

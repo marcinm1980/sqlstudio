@@ -50,7 +50,7 @@ namespace MySQL {
       ref class BaseWindowsCanvasView {
       public:
         delegate void Void4IntDelegate(int, int, int, int);
-        delegate void VoidVoidDelegate();
+        auto VoidVoidDelegate() -> delegate void;
 
       protected:
         ::mdc::CanvasView *inner;
@@ -76,24 +76,24 @@ namespace MySQL {
         VoidVoidDelegate ^ on_viewport_changed_delegate;
         VoidVoidWrapperDelegate ^ on_viewport_changed_wrapper_delegate;
 
-        void on_queue_repaint_wrapper(int x, int y, int w, int h);
-        void on_viewport_changed_wrapper();
+        auto on_queue_repaint_wrapper(int x, int y, int w, int h) -> void;
+        auto on_viewport_changed_wrapper() -> void;
 
       public:
         BaseWindowsCanvasView();
         ~BaseWindowsCanvasView();
 
-        ::mdc::CanvasView *get_unmanaged_object();
-        IntPtr GetFixedId();
-        void ReleaseHandle();
-        static BaseWindowsCanvasView ^ GetFromFixedId(IntPtr ip);
+        auto get_unmanaged_object() -> ::mdc::CanvasView *;
+        auto GetFixedId() -> IntPtr;
+        auto ReleaseHandle() -> void;
+        static auto GetFromFixedId(IntPtr ip) -> BaseWindowsCanvasView ^;
         void set_on_queue_repaint(Void4IntDelegate ^ dt);
         void set_on_viewport_changed(VoidVoidDelegate ^ dt);
-        bool initialize();
-        void repaint(IntPtr hdc, int x, int y, int width, int height);
-        void repaint(IntPtr hdc);
-        virtual void set_target_context(HDC hdc);
-        double get_fps();
+        auto initialize() -> bool;
+        auto repaint(IntPtr hdc, int x, int y, int width, int height) -> void;
+        auto repaint(IntPtr hdc) -> void;
+        virtual auto set_target_context(HDC hdc) -> void;
+        auto get_fps() -> double;
 
         void OnMouseMove(MouseEventArgs ^ e, Keys keystate, MouseButtons buttons);
         void OnMouseDown(MouseEventArgs ^ e, Keys keystate, MouseButtons buttons);
@@ -101,28 +101,27 @@ namespace MySQL {
         void OnMouseDoubleClick(MouseEventArgs ^ e, Keys keystate, MouseButtons buttons);
         bool OnKeyDown(KeyEventArgs ^ e, Keys keystate);
         void OnKeyUp(KeyEventArgs ^ e, Keys keystate);
-        void OnSizeChanged(int w, int h);
+        auto OnSizeChanged(int w, int h) -> void;
         void SetOwnerForm(System::Windows::Forms::Form ^ ownerForm);
-        System::Windows::Forms::Form ^ GetOwnerForm();
+        auto GetOwnerForm() -> System::Windows::Forms::Form ^;
 
         void get_viewport_range([Out] double % x, [Out] double % y, [Out] double % w, [Out] double % h);
         void get_viewport([Out] double % x, [Out] double % y, [Out] double % w, [Out] double % h);
-        void set_offset(double x, double y);
-        void scroll_to(double x, double y);
+        auto set_offset(double x, double y) -> void;
+        auto scroll_to(double x, double y) -> void;
         void get_total_view_size([Out] double % w, [Out] double % h);
         void window_to_canvas(int x, int y, [Out] double % ox, [Out] double % oy);
         void window_to_canvas(int x, int y, int w, int h, [Out] double % ox, [Out] double % oy, [Out] double % ow,
                               [Out] double % oh);
-        void update_view_size(int w, int h);
+        auto update_view_size(int w, int h) -> void;
 
-        static mdc::EventState getEventState(Keys keys, MouseButtons buttons);
+        static auto getEventState(Keys keys, MouseButtons buttons) -> mdc::EventState;
         static mdc::KeyInfo getKeyInfo(KeyEventArgs ^ e);
 
-        property float Zoom {
-          float get() {
+        auto get() -> property float Zoom { float {
             return get_unmanaged_object()->get_zoom();
           }
-          void set(float value) {
+          auto set(float value) -> void {
             get_unmanaged_object()->set_zoom(value);
           }
         }

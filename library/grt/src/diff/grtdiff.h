@@ -39,23 +39,23 @@ namespace grt {
     const Omf *omf;
     bool _dont_clone_values;
 
-    virtual std::shared_ptr<DiffChange> on_list(std::shared_ptr<DiffChange> parent, const BaseListRef &source,
-                                                const BaseListRef &target);
-    virtual std::shared_ptr<DiffChange> on_dict(std::shared_ptr<DiffChange> parent, const DictRef &source,
-                                                const DictRef &target);
-    virtual std::shared_ptr<DiffChange> on_object(std::shared_ptr<DiffChange> parent, const ObjectRef &source,
-                                                  const ObjectRef &target);
+    virtual auto on_list(std::shared_ptr<DiffChange> parent, const BaseListRef &source,
+                                                const BaseListRef &target) -> std::shared_ptr<DiffChange>;
+    virtual auto on_dict(std::shared_ptr<DiffChange> parent, const DictRef &source,
+                                                const DictRef &target) -> std::shared_ptr<DiffChange>;
+    virtual auto on_object(std::shared_ptr<DiffChange> parent, const ObjectRef &source,
+                                                  const ObjectRef &target) -> std::shared_ptr<DiffChange>;
 
-    virtual std::shared_ptr<DiffChange> on_uncompatible(std::shared_ptr<DiffChange> parent, const ValueRef &source,
-                                                        const ValueRef &target);
+    virtual auto on_uncompatible(std::shared_ptr<DiffChange> parent, const ValueRef &source,
+                                                        const ValueRef &target) -> std::shared_ptr<DiffChange>;
 
-    std::shared_ptr<DiffChange> on_value(std::shared_ptr<DiffChange> parent, const ValueRef &source,
-                                         const ValueRef &target);
+    auto on_value(std::shared_ptr<DiffChange> parent, const ValueRef &source,
+                                         const ValueRef &target) -> std::shared_ptr<DiffChange>;
 
   public:
     GrtDiff(const Omf *o, bool dont_clone_values = false) : omf(o), _dont_clone_values(dont_clone_values) {
     }
-    std::shared_ptr<DiffChange> diff(const ValueRef &source, const ValueRef &target, const Omf *omf);
+    auto diff(const ValueRef &source, const ValueRef &target, const Omf *omf) -> std::shared_ptr<DiffChange>;
     virtual ~GrtDiff() {
     }
   };

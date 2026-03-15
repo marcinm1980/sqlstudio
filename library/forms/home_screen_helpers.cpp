@@ -47,7 +47,7 @@ const char* HomeScreenSettings::TILE_DRAG_FORMAT = "com.mysql.studio-drag-tile-f
 
 //--------------------------------------------------------------------------------------------------
 
-base::any getAnyMapValue(const anyMap& map, const std::string& key, base::any defaultValue) {
+auto getAnyMapValue(const anyMap& map, const std::string& key, base::any defaultValue) -> base::any {
   anyMap::const_iterator iter = map.find(key);
 
   if (iter == map.end())
@@ -58,31 +58,31 @@ base::any getAnyMapValue(const anyMap& map, const std::string& key, base::any de
 
 //--------------------------------------------------------------------------------------------------
 
-std::string HomeAccessibleButton::getAccessibilityTitle() {
+auto HomeAccessibleButton::getAccessibilityTitle() -> std::string {
   return title;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string HomeAccessibleButton::getAccessibilityDescription() {
+auto HomeAccessibleButton::getAccessibilityDescription() -> std::string {
   return description;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-base::Accessible::Role HomeAccessibleButton::getAccessibilityRole() {
+auto HomeAccessibleButton::getAccessibilityRole() -> base::Accessible::Role {
   return base::Accessible::PushButton;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-base::Rect HomeAccessibleButton::getAccessibilityBounds() {
+auto HomeAccessibleButton::getAccessibilityBounds() -> base::Rect {
   return bounds;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void HomeAccessibleButton::accessibilityDoDefaultAction() {
+auto HomeAccessibleButton::accessibilityDoDefaultAction() -> void {
   if (defaultHandler)
     defaultHandler();
 }
@@ -91,7 +91,7 @@ void HomeAccessibleButton::accessibilityDoDefaultAction() {
 
 // The following helpers are just temporary. They will be replaced by a cairo context class.
 
-int mforms::imageWidth(cairo_surface_t* image) {
+auto mforms::imageWidth(cairo_surface_t* image) -> int {
   if (image != nullptr) {
     if (Utilities::is_hidpi_icon(image) && App::get()->backing_scale_factor() > 1.0)
       return (int)(cairo_image_surface_get_width(image) / App::get()->backing_scale_factor());
@@ -103,7 +103,7 @@ int mforms::imageWidth(cairo_surface_t* image) {
 
 //--------------------------------------------------------------------------------------------------
 
-int mforms::imageHeight(cairo_surface_t* image) {
+auto mforms::imageHeight(cairo_surface_t* image) -> int {
   if (image != nullptr) {
     if (Utilities::is_hidpi_icon(image) && App::get()->backing_scale_factor() > 1.0)
       return (int)(cairo_image_surface_get_height(image) / App::get()->backing_scale_factor());
@@ -118,7 +118,7 @@ int mforms::imageHeight(cairo_surface_t* image) {
 /**
  * Helper to draw text with a hot decoration.
  */
-void mforms::textWithDecoration(cairo_t* cr, double x, double y, const char* text, bool hot, double width) {
+auto mforms::textWithDecoration(cairo_t* cr, double x, double y, const char* text, bool hot, double width) -> void {
   cairo_move_to(cr, x, y);
   cairo_show_text(cr, text);
   cairo_stroke(cr);

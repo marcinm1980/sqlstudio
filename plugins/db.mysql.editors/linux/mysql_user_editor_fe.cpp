@@ -48,39 +48,39 @@ class DbMySQLUserEditor : public PluginEditorBase {
   Gtk::Entry *_user_pw;
   Gtk::ToggleButton *_show_pw;
 
-  virtual bec::BaseEditor *get_be();
+  virtual auto get_be() -> bec::BaseEditor *;
 
-  void show_password();
-  void add_role();
-  void remove_role();
+  auto show_password() -> void;
+  auto add_role() -> void;
+  auto remove_role() -> void;
 
-  void add_role_by_iter(const Gtk::TreeModel::iterator &iter);
-  void remove_role_by_iter(const Gtk::TreeModel::iterator &iter);
+  auto add_role_by_iter(const Gtk::TreeModel::iterator &iter) -> void;
+  auto remove_role_by_iter(const Gtk::TreeModel::iterator &iter) -> void;
 
   virtual ~DbMySQLUserEditor() {
     delete _be;
     _be = 0;
   }
 
-  void set_name(const std::string &name) {
+  auto set_name(const std::string &name) -> void {
     _be->set_name(name);
     _signal_title_changed.emit(_be->get_title());
   }
 
-  void set_password(const std::string &password) {
+  auto set_password(const std::string &password) -> void {
     _be->set_password(password);
   }
 
-  void set_comment(const std::string &comm) {
+  auto set_comment(const std::string &comm) -> void {
     _be->set_comment(comm);
   }
 
 public:
   DbMySQLUserEditor(grt::Module *m, const grt::BaseListRef &args);
 
-  virtual void do_refresh_form_data();
+  virtual auto do_refresh_form_data() -> void;
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args);
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool;
 };
 
 DbMySQLUserEditor::DbMySQLUserEditor(grt::Module *m, const grt::BaseListRef &args)
@@ -139,7 +139,7 @@ DbMySQLUserEditor::DbMySQLUserEditor(grt::Module *m, const grt::BaseListRef &arg
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLUserEditor::switch_edited_object(const grt::BaseListRef &args) {
+auto DbMySQLUserEditor::switch_edited_object(const grt::BaseListRef &args) -> bool {
   bec::UserEditorBE *old_be = _be;
 
   _be = new bec::UserEditorBE(db_UserRef::cast_from(args[0]));
@@ -166,12 +166,12 @@ bool DbMySQLUserEditor::switch_edited_object(const grt::BaseListRef &args) {
 }
 
 //------------------------------------------------------------------------------
-bec::BaseEditor *DbMySQLUserEditor::get_be() {
+auto DbMySQLUserEditor::get_be() -> bec::BaseEditor * {
   return _be;
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLUserEditor::do_refresh_form_data() {
+auto DbMySQLUserEditor::do_refresh_form_data() -> void {
   Gtk::Entry *entry(0);
   xml()->get_widget("user_name", entry);
   entry->set_text(_be->get_name());
@@ -192,7 +192,7 @@ void DbMySQLUserEditor::do_refresh_form_data() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLUserEditor::add_role_by_iter(const Gtk::TreeModel::iterator &iter) {
+auto DbMySQLUserEditor::add_role_by_iter(const Gtk::TreeModel::iterator &iter) -> void {
   // Get node, get role name from be
   // Add role to be
   bec::NodeId node = _roles_model->node_for_iter(iter);
@@ -202,12 +202,12 @@ void DbMySQLUserEditor::add_role_by_iter(const Gtk::TreeModel::iterator &iter) {
   _be->add_role(role_name);
 }
 //------------------------------------------------------------------------------
-void DbMySQLUserEditor::show_password() {
+auto DbMySQLUserEditor::show_password() -> void {
   if (_show_pw)
     _user_pw->set_visibility(!_user_pw->get_visibility());
 }
 //------------------------------------------------------------------------------
-void DbMySQLUserEditor::add_role() {
+auto DbMySQLUserEditor::add_role() -> void {
   // Get selection from all_roles
   // add roles to be
   Glib::RefPtr<Gtk::TreeSelection> selection = _all_roles_tv->get_selection();
@@ -216,7 +216,7 @@ void DbMySQLUserEditor::add_role() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLUserEditor::remove_role_by_iter(const Gtk::TreeModel::iterator &iter) {
+auto DbMySQLUserEditor::remove_role_by_iter(const Gtk::TreeModel::iterator &iter) -> void {
   // Get row, get role name from row
   // Remove role from be
   Gtk::TreeModel::Row row = *iter;
@@ -226,7 +226,7 @@ void DbMySQLUserEditor::remove_role_by_iter(const Gtk::TreeModel::iterator &iter
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLUserEditor::remove_role() {
+auto DbMySQLUserEditor::remove_role() -> void {
   // Get selection from user_roles
   // remove roles from be
   Glib::RefPtr<Gtk::TreeSelection> selection = _user_roles_tv->get_selection();
@@ -236,7 +236,7 @@ void DbMySQLUserEditor::remove_role() {
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createDbMysqlUserEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createDbMysqlUserEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new DbMySQLUserEditor(m, args));
 }
 };

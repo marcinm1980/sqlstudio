@@ -35,10 +35,10 @@ namespace mdc {
     BackLayer(CanvasView *view);
     virtual ~BackLayer();
 
-    virtual void repaint(const base::Rect &bounds);
+    virtual auto repaint(const base::Rect &bounds) -> void;
 
-    void set_grid_visible(bool flag);
-    void set_paper_visible(bool flag);
+    auto set_grid_visible(bool flag) -> void;
+    auto set_paper_visible(bool flag) -> void;
 
     auto get_grid_visible() -> bool {
       return _grid_visible;
@@ -47,7 +47,7 @@ namespace mdc {
       return _paper_visible;
     }
 
-    void set_color(const base::Color &color);
+    auto set_color(const base::Color &color) -> void;
 
   protected:
     base::Color _fill_color;
@@ -65,8 +65,8 @@ namespace mdc {
     bool _grid_visible;
     bool _paper_visible;
 
-    void render_page_borders(const base::Rect &aBounds);
-    void render_grid(const base::Rect &aBounds);
+    auto render_page_borders(const base::Rect &aBounds) -> void;
+    auto render_grid(const base::Rect &aBounds) -> void;
   };
 
 } // end of mdc namespace

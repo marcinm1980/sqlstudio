@@ -36,15 +36,12 @@ namespace mysql_parser
     - Setting server default character set
 */
 
-my_bool my_charset_same(CHARSET_INFO *cs1, CHARSET_INFO *cs2)
-{
+auto my_charset_same(CHARSET_INFO *cs1, CHARSET_INFO *cs2) -> my_bool {
   return ((cs1 == cs2) || !strcmp(cs1->csname,cs2->csname));
 }
 
 
-static uint
-get_collation_number_internal(const char *name)
-{
+static auto get_collation_number_internal(const char *name) -> uint {
   CHARSET_INFO **cs;
   for (cs= all_charsets;
        cs < all_charsets+array_elements(all_charsets)-1 ;
@@ -58,8 +55,7 @@ get_collation_number_internal(const char *name)
 }
 
 
-static my_bool init_state_maps(CHARSET_INFO *cs)
-{
+static auto init_state_maps(CHARSET_INFO *cs) -> my_bool {
   uint i;
   uchar *state_map;
   uchar *ident_map;
@@ -123,8 +119,7 @@ static my_bool init_state_maps(CHARSET_INFO *cs)
 }
 
 
-static void simple_cs_init_functions(CHARSET_INFO *cs)
-{
+static auto simple_cs_init_functions(CHARSET_INFO *cs) -> void {
   if (cs->state & MY_CS_BINSORT)
     cs->coll= &my_collation_8bit_bin_handler;
   else
@@ -135,8 +130,7 @@ static void simple_cs_init_functions(CHARSET_INFO *cs)
 
 
 
-static int cs_copy_data(CHARSET_INFO *to, CHARSET_INFO *from)
-{
+static auto cs_copy_data(CHARSET_INFO *to, CHARSET_INFO *from) -> int {
   to->number= from->number ? from->number : to->number;
 
   if (from->csname)
@@ -198,8 +192,7 @@ err:
 
 
 
-static my_bool simple_cs_is_full(CHARSET_INFO *cs)
-{
+static auto simple_cs_is_full(CHARSET_INFO *cs) -> my_bool {
   return ((cs->csname && cs->tab_to_uni && cs->ctype && cs->to_upper &&
 	   cs->to_lower) &&
 	  (cs->number && cs->name &&
@@ -207,8 +200,7 @@ static my_bool simple_cs_is_full(CHARSET_INFO *cs)
 }
 
 
-static int add_collation(CHARSET_INFO *cs)
-{
+static auto add_collation(CHARSET_INFO *cs) -> int {
   if (cs->name && (cs->number ||
                    (cs->number=get_collation_number_internal(cs->name))))
   {
@@ -312,8 +304,7 @@ const char *charsets_dir= NULL;
 static int charset_initialized=0;
 
 
-static my_bool my_read_charset_file(const char *filename, myf myflags)
-{
+static auto my_read_charset_file(const char *filename, myf myflags) -> my_bool {
   char *buf;
   int  fd;
   uint len;
@@ -352,8 +343,7 @@ static my_bool my_read_charset_file(const char *filename, myf myflags)
   return FALSE;
 }
 
-char *get_charsets_dir(char *buf)
-{
+auto get_charsets_dir(char *buf) -> char * {
   return strxmov(buf, "./", CHARSET_DIR, NullS);
 #if 0
   const char *sharedir= SHAREDIR;
@@ -380,14 +370,12 @@ char *get_charsets_dir(char *buf)
 CHARSET_INFO *all_charsets[256];
 CHARSET_INFO *default_charset_info = &my_charset_latin1;
 
-void add_compiled_collation(CHARSET_INFO *cs)
-{
+auto add_compiled_collation(CHARSET_INFO *cs) -> void {
   all_charsets[cs->number]= cs;
   cs->state|= MY_CS_AVAILABLE;
 }
 
-static void *cs_alloc(uint size)
-{
+static auto cs_alloc(uint size) -> void * {
   return my_once_alloc(size, MYF(MY_WME));
 }
 
@@ -440,20 +428,17 @@ static my_bool init_available_charsets(myf myflags)
   return error;
 }
 
-void free_charsets(void)
-{
+auto free_charsets(void) -> void {
   charset_initialized=0;
 }
 
-uint get_collation_number(const char *name)
-{
+auto get_collation_number(const char *name) -> uint {
   init_available_charsets(MYF(0));
   return get_collation_number_internal(name);
 }
 
 
-uint get_charset_number(const char *charset_name, uint cs_flags)
-{
+auto get_charset_number(const char *charset_name, uint cs_flags) -> uint {
   CHARSET_INFO **cs;
   init_available_charsets(MYF(0));
   
@@ -468,8 +453,7 @@ uint get_charset_number(const char *charset_name, uint cs_flags)
   return 0;
 }
 
-const char *get_charset_name(uint charset_number)
-{
+auto get_charset_name(uint charset_number) -> const char * {
   CHARSET_INFO *cs;
   init_available_charsets(MYF(0));
 
@@ -480,8 +464,7 @@ const char *get_charset_name(uint charset_number)
   return (char*) "?";   /* this mimics find_type() */
 }
 
-static CHARSET_INFO *get_internal_charset(uint cs_number, myf flags)
-{
+static auto get_internal_charset(uint cs_number, myf flags) -> CHARSET_INFO * {
   char  buf[FN_REFLEN];
   CHARSET_INFO *cs;
   /*
@@ -510,8 +493,7 @@ static CHARSET_INFO *get_internal_charset(uint cs_number, myf flags)
   return cs;
 }
 
-CHARSET_INFO *get_charset(uint cs_number, myf flags)
-{
+auto get_charset(uint cs_number, myf flags) -> CHARSET_INFO * {
   CHARSET_INFO *cs;
   if (cs_number == default_charset_info->number)
     return default_charset_info;
@@ -535,8 +517,7 @@ CHARSET_INFO *get_charset(uint cs_number, myf flags)
   return cs;
 }
 
-CHARSET_INFO *get_charset_by_name(const char *cs_name, myf flags)
-{
+auto get_charset_by_name(const char *cs_name, myf flags) -> CHARSET_INFO * {
   uint cs_number;
   CHARSET_INFO *cs;
   (void) init_available_charsets(MYF(0));	/* If it isn't initialized */
@@ -556,10 +537,9 @@ CHARSET_INFO *get_charset_by_name(const char *cs_name, myf flags)
 }
 
 
-CHARSET_INFO *get_charset_by_csname(const char *cs_name,
+auto get_charset_by_csname(const char *cs_name,
 				    uint cs_flags,
-				    myf flags)
-{
+				    myf flags) -> CHARSET_INFO * {
   uint cs_number;
   CHARSET_INFO *cs;
   DBUG_ENTER("get_charset_by_csname");
@@ -606,10 +586,9 @@ CHARSET_INFO *get_charset_by_csname(const char *cs_name,
     >=0         The length of the escaped string
 */
 
-ulong escape_string_for_mysql(CHARSET_INFO *charset_info,
+auto escape_string_for_mysql(CHARSET_INFO *charset_info,
                               char *to, ulong to_length,
-                              const char *from, ulong length)
-{
+                              const char *from, ulong length) -> ulong {
   const char *to_start= to;
   const char *end, *to_end=to_start + (to_length ? to_length-1 : 2*length);
   my_bool overflow= FALSE;
@@ -699,8 +678,7 @@ ulong escape_string_for_mysql(CHARSET_INFO *charset_info,
 #ifdef BACKSLASH_MBTAIL
 static CHARSET_INFO *fs_cset_cache= NULL;
 
-CHARSET_INFO *fs_character_set()
-{
+auto fs_character_set() -> CHARSET_INFO * {
   if (!fs_cset_cache)
   {
     char buf[10]= "cp";
@@ -746,10 +724,9 @@ CHARSET_INFO *fs_character_set()
     >=0         The length of the escaped string
 */
 
-ulong escape_quotes_for_mysql(CHARSET_INFO *charset_info,
+auto escape_quotes_for_mysql(CHARSET_INFO *charset_info,
                               char *to, ulong to_length,
-                              const char *from, ulong length)
-{
+                              const char *from, ulong length) -> ulong {
   const char *to_start= to;
   const char *end, *to_end=to_start + (to_length ? to_length-1 : 2*length);
   my_bool overflow= FALSE;

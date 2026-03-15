@@ -40,9 +40,9 @@ namespace wb {
   public:
     DiagramListNode(model_ModelRef model);
 
-    virtual void refresh_children();
+    virtual auto refresh_children() -> void;
 
-    virtual std::string get_unique_id() {
+    virtual auto get_unique_id() -> std::string {
       return id;
     }
   };

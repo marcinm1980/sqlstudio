@@ -38,24 +38,24 @@ namespace wbfig {
 
     bool _keep_aspect_ratio;
 
-    virtual bool on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                          mdc::EventState state);
-    virtual bool on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
+    virtual auto on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                          mdc::EventState state) -> bool;
+    virtual auto on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
 
   public:
     Image(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self);
 
-    void keep_aspect_ratio(bool flag);
-    double get_aspect_ratio();
+    auto keep_aspect_ratio(bool flag) -> void;
+    auto get_aspect_ratio() -> double;
 
-    void set_image(cairo_surface_t *image);
+    auto set_image(cairo_surface_t *image) -> void;
 
-    bool set_image(const std::string &filename);
+    auto set_image(const std::string &filename) -> bool;
 
-    cairo_surface_t *get_image();
+    auto get_image() -> cairo_surface_t *;
 
-    virtual void set_allow_manual_resizing(bool flag);
+    virtual auto set_allow_manual_resizing(bool flag) -> void;
   };
 };
 

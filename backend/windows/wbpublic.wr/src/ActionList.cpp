@@ -63,7 +63,7 @@ namespace MySQL {
   _inner = NULL;
     }
 
-    void ActionList::reset() {
+    auto ActionList::reset() -> void {
       _actions->Clear();
       _node_actions->Clear();
       _nodes_actions->Clear();

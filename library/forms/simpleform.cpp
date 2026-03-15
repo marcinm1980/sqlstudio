@@ -65,7 +65,7 @@ SimpleForm::~SimpleForm() {
   delete _button_box;
 }
 
-static std::string parse_newlines(const std::string &str) {
+static auto parse_newlines(const std::string &str) -> std::string {
   std::string result;
   const char *begin = str.data();
   const char *pos;
@@ -87,7 +87,7 @@ static std::string parse_newlines(const std::string &str) {
  *   textarea;name;caption;rows;default
  *   select;name;caption;item1,item2,item3;default_index
  */
-void SimpleForm::parse_definition(const std::string &definition) {
+auto SimpleForm::parse_definition(const std::string &definition) -> void {
   char line[4 * 1024];
   char arg[4 * 1024];
 
@@ -169,7 +169,7 @@ void SimpleForm::parse_definition(const std::string &definition) {
   }
 }
 
-void SimpleForm::add_label(const std::string &text, bool bold) {
+auto SimpleForm::add_label(const std::string &text, bool bold) -> void {
   Label *l = new Label(text);
   _content->set_row_count((int)_rows.size() + 1);
   _content->add(l, 0, 2, (int)_rows.size(), (int)_rows.size() + 1, HFillFlag | HExpandFlag | VExpandFlag);
@@ -182,11 +182,11 @@ void SimpleForm::add_label(const std::string &text, bool bold) {
   _rows.push_back(row);
 }
 
-void SimpleForm::add_file_picker(const std::string &name, const std::string &caption,
-                                 const std::string &default_value) {
+auto SimpleForm::add_file_picker(const std::string &name, const std::string &caption,
+                                 const std::string &default_value) -> void {
 }
 
-void SimpleForm::add_text_entry(const std::string &name, const std::string &caption, const std::string &default_value) {
+auto SimpleForm::add_text_entry(const std::string &name, const std::string &caption, const std::string &default_value) -> void {
   Label *l = 0;
 
   _content->set_row_count((int)_rows.size() + 1);
@@ -209,8 +209,8 @@ void SimpleForm::add_text_entry(const std::string &name, const std::string &capt
   _rows.push_back(row);
 }
 
-void SimpleForm::add_text_area(const std::string &name, const std::string &caption, int rows,
-                               const std::string &default_value) {
+auto SimpleForm::add_text_area(const std::string &name, const std::string &caption, int rows,
+                               const std::string &default_value) -> void {
   Label *l = 0;
 
   _content->set_row_count((int)_rows.size() + 2);
@@ -242,7 +242,7 @@ void SimpleForm::add_text_area(const std::string &name, const std::string &capti
   _rows.push_back(row);
 }
 
-void SimpleForm::add_checkbox(const std::string &name, const std::string &caption, bool default_value) {
+auto SimpleForm::add_checkbox(const std::string &name, const std::string &caption, bool default_value) -> void {
   CheckBox *t = new CheckBox();
   t->set_text(caption);
   t->set_active(default_value);
@@ -259,8 +259,8 @@ void SimpleForm::add_checkbox(const std::string &name, const std::string &captio
   _rows.push_back(row);
 }
 
-void SimpleForm::add_select(const std::string &name, const std::string &caption, const std::list<std::string> &items,
-                            int default_index) {
+auto SimpleForm::add_select(const std::string &name, const std::string &caption, const std::list<std::string> &items,
+                            int default_index) -> void {
   Label *l = 0;
 
   _content->set_row_count((int)_rows.size() + 1);
@@ -284,7 +284,7 @@ void SimpleForm::add_select(const std::string &name, const std::string &caption,
   _rows.push_back(row);
 }
 
-bool SimpleForm::show() {
+auto SimpleForm::show() -> bool {
   if (!_button_box) {
     set_content(_content);
     center();
@@ -308,7 +308,7 @@ bool SimpleForm::show() {
   return run_modal(_ok_button, _cancel_button);
 }
 
-std::map<std::string, View *> SimpleForm::get_views() {
+auto SimpleForm::get_views() -> std::map<std::string, View *> {
   std::map<std::string, View *> views;
 
   for (std::list<Row>::const_iterator iter = _rows.begin(); iter != _rows.end(); ++iter) {
@@ -319,7 +319,7 @@ std::map<std::string, View *> SimpleForm::get_views() {
   return views;
 }
 
-std::string SimpleForm::get_string_view_value(const std::string &name) {
+auto SimpleForm::get_string_view_value(const std::string &name) -> std::string {
   View *view = dynamic_cast<View *>(_content->find_subview(name));
   if (view)
     return view->get_string_value();
@@ -327,7 +327,7 @@ std::string SimpleForm::get_string_view_value(const std::string &name) {
   return "";
 }
 
-bool SimpleForm::get_bool_view_value(const std::string &name) {
+auto SimpleForm::get_bool_view_value(const std::string &name) -> bool {
   View *view = dynamic_cast<View *>(_content->find_subview(name));
   if (view)
     return view->get_bool_value();
@@ -335,7 +335,7 @@ bool SimpleForm::get_bool_view_value(const std::string &name) {
   return false;
 }
 
-int SimpleForm::get_int_view_value(const std::string &name) {
+auto SimpleForm::get_int_view_value(const std::string &name) -> int {
   View *view = dynamic_cast<View *>(_content->find_subview(name));
   if (view)
     return view->get_int_value();

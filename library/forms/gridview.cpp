@@ -29,21 +29,21 @@ using namespace mforms;
 
 static GridView* (*record_grid_factory)(std::shared_ptr<Recordset> rset) = NULL;
 
-GridView* GridView::create(std::shared_ptr<Recordset> rset) {
+auto GridView::create(std::shared_ptr<Recordset> rset) -> GridView* {
   return record_grid_factory(rset);
 }
 
 GridView::GridView() : _header_menu(NULL), _clicked_header_column(0) {
 }
 
-void GridView::register_factory(GridView* (*create)(std::shared_ptr<Recordset> rset)) {
+auto GridView::register_factory(GridView* (*create)(std::shared_ptr<Recordset> rset)) -> void {
   record_grid_factory = create;
 }
 
-void GridView::set_header_menu(ContextMenu* menu) {
+auto GridView::set_header_menu(ContextMenu* menu) -> void {
   _header_menu = menu;
 }
 
-void GridView::clicked_header_column(int column) {
+auto GridView::clicked_header_column(int column) -> void {
   _clicked_header_column = column;
 }

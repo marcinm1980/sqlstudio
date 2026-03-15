@@ -51,21 +51,21 @@ public:
 };
 
 //------------------------------------------------------------------------------
-static void process_click(Gtk::MenuItem *mi, mforms::MenuItem *item) {
+static auto process_click(Gtk::MenuItem *mi, mforms::MenuItem *item) -> void {
   const int ignore_signal = (long)mi->get_data("ignore_signal");
   if (!ignore_signal && mi)
     item->callback();
 }
 
 //------------------------------------------------------------------------------
-Gtk::MenuBar *mforms::widget_for_menubar(mforms::MenuBar *self) {
+auto mforms::widget_for_menubar(mforms::MenuBar *self) -> Gtk::MenuBar * {
   Gtk::MenuBar *mb = dynamic_cast<Gtk::MenuBar *>(self->get_data<Gtk::Object>());
   return mb;
 }
 
 //------------------------------------------------------------------------------
 
-Glib::RefPtr<Gtk::AccelGroup> get_accel_group(mforms::MenuBase *m) {
+auto get_accel_group(mforms::MenuBase *m) -> Glib::RefPtr<Gtk::AccelGroup> {
   MyMenuBar *mbar = NULL;
   while (m && !(mbar = dynamic_cast<MyMenuBar *>(m->get_data<Gtk::Object>())))
     m = m->get_parent();
@@ -75,7 +75,7 @@ Glib::RefPtr<Gtk::AccelGroup> get_accel_group(mforms::MenuBase *m) {
 }
 
 //------------------------------------------------------------------------------
-static void propagate_accel_group(mforms::MenuBase *item, Glib::RefPtr<Gtk::AccelGroup> agroup) {
+static auto propagate_accel_group(mforms::MenuBase *item, Glib::RefPtr<Gtk::AccelGroup> agroup) -> void {
   Gtk::MenuItem *mi = cast<Gtk::MenuItem *>(item->get_data_ptr());
   if (mi && mi->has_submenu())
     mi->get_submenu()->set_accel_group(agroup);
@@ -89,8 +89,8 @@ static void propagate_accel_group(mforms::MenuBase *item, Glib::RefPtr<Gtk::Acce
 }
 
 //------------------------------------------------------------------------------
-void mforms::on_add_menubar_to_window(mforms::MenuBar *menu,
-                                      Gtk::Window *window) { // must be called when a menubar is attached to a window,
+auto mforms::on_add_menubar_to_window(mforms::MenuBar *menu,
+                                      Gtk::Window *window) -> void { // must be called when a menubar is attached to a window,
                                                              // so that the accelgroup can be created and attached
   MyMenuBar *mbar = cast<MyMenuBar *>(menu->get_data_ptr());
 
@@ -101,7 +101,7 @@ void mforms::on_add_menubar_to_window(mforms::MenuBar *menu,
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::MenuItemImpl::create_menu_bar(mforms::MenuBar *item) {
+auto mforms::gtk::MenuItemImpl::create_menu_bar(mforms::MenuBar *item) -> bool {
   MyMenuBar *mb = cast<MyMenuBar *>(item->get_data_ptr());
   if (mb)
     delete mb;
@@ -115,13 +115,13 @@ bool mforms::gtk::MenuItemImpl::create_menu_bar(mforms::MenuBar *item) {
   return mb;
 }
 
-static void free_menu(Gtk::Menu *data) {
+static auto free_menu(Gtk::Menu *data) -> void {
   if (data)
     delete data;
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::MenuItemImpl::create_context_menu(mforms::ContextMenu *menu) {
+auto mforms::gtk::MenuItemImpl::create_context_menu(mforms::ContextMenu *menu) -> bool {
   Gtk::Menu *mb = NULL;
   mb = (Gtk::Menu *)menu->get_data_ptr();
   if (mb == NULL) {
@@ -145,8 +145,8 @@ bool mforms::gtk::MenuItemImpl::create_context_menu(mforms::ContextMenu *menu) {
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::MenuItemImpl::create_menu_item(mforms::MenuItem *item, const std::string &label,
-                                                 const mforms::MenuItemType type) {
+auto mforms::gtk::MenuItemImpl::create_menu_item(mforms::MenuItem *item, const std::string &label,
+                                                 const mforms::MenuItemType type) -> bool {
   Gtk::MenuItem *mi = cast<Gtk::MenuItem *>(item->get_data_ptr());
 
   if (mi) {
@@ -177,14 +177,14 @@ bool mforms::gtk::MenuItemImpl::create_menu_item(mforms::MenuItem *item, const s
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuItemImpl::set_title(mforms::MenuItem *item, const std::string &label) {
+auto mforms::gtk::MenuItemImpl::set_title(mforms::MenuItem *item, const std::string &label) -> void {
   Gtk::MenuItem *mi = cast<Gtk::MenuItem *>(item->get_data_ptr());
   if (mi)
     mi->set_label(label);
 }
 
 //------------------------------------------------------------------------------
-std::string mforms::gtk::MenuItemImpl::get_title(mforms::MenuItem *item) {
+auto mforms::gtk::MenuItemImpl::get_title(mforms::MenuItem *item) -> std::string {
   std::string ret;
   Gtk::MenuItem *mi = cast<Gtk::MenuItem *>(item->get_data_ptr());
   if (mi)
@@ -193,7 +193,7 @@ std::string mforms::gtk::MenuItemImpl::get_title(mforms::MenuItem *item) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuItemImpl::set_name(mforms::MenuItem *item, const std::string &name) {
+auto mforms::gtk::MenuItemImpl::set_name(mforms::MenuItem *item, const std::string &name) -> void {
   Gtk::MenuItem *mi = cast<Gtk::MenuItem *>(item->get_data_ptr());
 
   if (mi)
@@ -201,7 +201,7 @@ void mforms::gtk::MenuItemImpl::set_name(mforms::MenuItem *item, const std::stri
 }
 
 //------------------------------------------------------------------------------
-std::string mforms::gtk::MenuItemImpl::get_name(mforms::MenuItem *item) {
+auto mforms::gtk::MenuItemImpl::get_name(mforms::MenuItem *item) -> std::string {
   std::string ret;
   Gtk::MenuItem *mi = cast<Gtk::MenuItem *>(item->get_data_ptr());
 
@@ -210,8 +210,8 @@ std::string mforms::gtk::MenuItemImpl::get_name(mforms::MenuItem *item) {
   return ret;
 }
 
-static void add_shortcuts(Glib::RefPtr<Gtk::AccelGroup> accel_group, Gtk::MenuItem *menu_item,
-                          const std::vector<std::string> &modifiers, const std::vector<std::string> &shortcuts) {
+static auto add_shortcuts(Glib::RefPtr<Gtk::AccelGroup> accel_group, Gtk::MenuItem *menu_item,
+                          const std::vector<std::string> &modifiers, const std::vector<std::string> &shortcuts) -> void {
   std::string modifier;
 
   for (std::vector<std::string>::const_iterator iter = modifiers.begin(); iter != modifiers.end(); ++iter) {
@@ -240,7 +240,7 @@ static void add_shortcuts(Glib::RefPtr<Gtk::AccelGroup> accel_group, Gtk::MenuIt
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuItemImpl::set_shortcut(mforms::MenuItem *item, const std::string &item_shortcut) {
+auto mforms::gtk::MenuItemImpl::set_shortcut(mforms::MenuItem *item, const std::string &item_shortcut) -> void {
   if (item_shortcut.empty()) {
     logWarning("Shortcut is empty\n");
     return;
@@ -349,14 +349,14 @@ void mforms::gtk::MenuItemImpl::set_shortcut(mforms::MenuItem *item, const std::
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuItemImpl::set_enabled(mforms::MenuBase *item, bool is_on) {
+auto mforms::gtk::MenuItemImpl::set_enabled(mforms::MenuBase *item, bool is_on) -> void {
   Gtk::Widget *mb = item->get_data<Gtk::Widget>();
   if (mb)
     mb->set_sensitive(is_on);
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::MenuItemImpl::get_enabled(mforms::MenuBase *item) {
+auto mforms::gtk::MenuItemImpl::get_enabled(mforms::MenuBase *item) -> bool {
   bool ret = false;
   Gtk::Widget *mb = item->get_data<Gtk::Widget>();
   if (mb)
@@ -365,7 +365,7 @@ bool mforms::gtk::MenuItemImpl::get_enabled(mforms::MenuBase *item) {
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuItemImpl::set_checked(mforms::MenuItem *item, bool on) {
+auto mforms::gtk::MenuItemImpl::set_checked(mforms::MenuItem *item, bool on) -> void {
   Gtk::CheckMenuItem *mi = cast<Gtk::CheckMenuItem *>(item->get_data_ptr());
   if (mi) {
     mi->set_data("ignore_signal", (void *)1);
@@ -377,7 +377,7 @@ void mforms::gtk::MenuItemImpl::set_checked(mforms::MenuItem *item, bool on) {
 }
 
 //------------------------------------------------------------------------------
-bool mforms::gtk::MenuItemImpl::get_checked(mforms::MenuItem *item) {
+auto mforms::gtk::MenuItemImpl::get_checked(mforms::MenuItem *item) -> bool {
   bool ret = false;
   Gtk::CheckMenuItem *mi = cast<Gtk::CheckMenuItem *>(item->get_data_ptr());
   if (mi) {
@@ -389,13 +389,13 @@ bool mforms::gtk::MenuItemImpl::get_checked(mforms::MenuItem *item) {
 }
 
 //------------------------------------------------------------------------------
-static void menu_will_show(mforms::MenuBase *item) {
+static auto menu_will_show(mforms::MenuBase *item) -> void {
   mforms::MenuBar *mbar;
   if ((mbar = dynamic_cast<mforms::MenuBar *>(item->get_top_menu())))
     mbar->will_show_submenu_from(dynamic_cast<mforms::MenuItem *>(item));
 }
 
-void mforms::gtk::MenuItemImpl::insert_item(mforms::MenuBase *menub, int index, mforms::MenuItem *item) {
+auto mforms::gtk::MenuItemImpl::insert_item(mforms::MenuBase *menub, int index, mforms::MenuItem *item) -> void {
   Gtk::MenuShell *menu_shell = cast<Gtk::MenuShell *>(menub->get_data_ptr());
   Gtk::MenuItem *item_to_insert = cast<Gtk::MenuItem *>(item->get_data_ptr());
 
@@ -428,7 +428,7 @@ void mforms::gtk::MenuItemImpl::insert_item(mforms::MenuBase *menub, int index, 
 }
 
 //------------------------------------------------------------------------------
-void mforms::gtk::MenuItemImpl::remove_item(mforms::MenuBase *menu, mforms::MenuItem *item) {
+auto mforms::gtk::MenuItemImpl::remove_item(mforms::MenuBase *menu, mforms::MenuItem *item) -> void {
   Gtk::MenuShell *menu_shell = cast<Gtk::MenuShell *>(menu->get_data_ptr());
   if (!menu_shell) {
     Gtk::MenuItem *mi = cast<Gtk::MenuItem *>(menu->get_data_ptr());
@@ -455,13 +455,13 @@ void mforms::gtk::MenuItemImpl::remove_item(mforms::MenuBase *menu, mforms::Menu
   }
 }
 
-void mforms::gtk::MenuItemImpl::popup_menu(mforms::ContextMenu *menu, View *owner, base::Point location) {
+auto mforms::gtk::MenuItemImpl::popup_menu(mforms::ContextMenu *menu, View *owner, base::Point location) -> void {
   Gtk::Menu *mb = cast<Gtk::Menu *>(menu->get_data_ptr());
   //
   mb->popup(3, gtk_get_current_event_time()); // 3 is normally right mouse button, according to doc
 }
 //------------------------------------------------------------------------------
-void mforms::gtk::lf_menubar_init() {
+auto mforms::gtk::lf_menubar_init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_menu_item_impl.create_menu_bar = mforms::gtk::MenuItemImpl::create_menu_bar;

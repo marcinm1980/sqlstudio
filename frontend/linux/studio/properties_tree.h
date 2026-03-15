@@ -47,39 +47,39 @@ public:
   PropertyValue(PropertyInspector* owner, const bec::NodeId& node);
   virtual ~PropertyValue();
 
-  virtual void set_text(const std::string& text);
-  virtual std::string get_text() const {
+  virtual auto set_text(const std::string& text) -> void;
+  virtual auto get_text() const -> std::string {
     return _text.get_text();
   }
 
-  virtual std::string get_new_value() const = 0;
+  virtual auto get_new_value() const -> std::string = 0;
 
-  const bec::NodeId& node() const {
+  auto node() const -> const bec::NodeId& {
     return _prop_node;
   }
 
-  void stop_edit();
-  void start_edit();
+  auto stop_edit() -> void;
+  auto start_edit() -> void;
 
-  virtual grt::Type type() const = 0;
+  virtual auto type() const -> grt::Type = 0;
 
 protected:
-  virtual void start_editing() = 0;
-  virtual void stop_editing() {
+  virtual auto start_editing() -> void = 0;
+  virtual auto stop_editing() -> void {
     editor().hide();
   } // For the most editor this is sufficient
     // For more sophisticated ones, the actual
     // implementation should hide editor
-  virtual Gtk::Widget& editor() {
+  virtual auto editor() -> Gtk::Widget& {
     return _text;
   }
-  virtual Gtk::Widget& label() {
+  virtual auto label() -> Gtk::Widget& {
     return _text;
   }
 
   PropertyInspector* _owner;
 
-  bool on_event(GdkEvent* event); //!< fwd clicks to Inspector, handle Enter/Esc and tell Inspector about edit_done
+  auto on_event(GdkEvent* event) -> bool; //!< fwd clicks to Inspector, handle Enter/Esc and tell Inspector about edit_done
 private:
   Gtk::Label _text;
   bec::NodeId _prop_node;
@@ -91,14 +91,14 @@ class PropertyString : public PropertyValue {
 public:
   PropertyString(PropertyInspector* owner, const bec::NodeId& node);
 
-  virtual std::string get_new_value() const;
-  virtual grt::Type type() const {
+  virtual auto get_new_value() const -> std::string;
+  virtual auto type() const -> grt::Type {
     return grt::StringType;
   }
 
 protected:
-  virtual void start_editing();
-  virtual Gtk::Widget& editor();
+  virtual auto start_editing() -> void;
+  virtual auto editor() -> Gtk::Widget&;
 
 private:
   Gtk::Entry _entry;
@@ -109,22 +109,22 @@ class PropertyBool : public PropertyValue {
 public:
   PropertyBool(PropertyInspector* owner, const bec::NodeId& node);
 
-  virtual void set_text(const std::string& text);
-  virtual std::string get_text() const;
+  virtual auto set_text(const std::string& text) -> void;
+  virtual auto get_text() const -> std::string;
 
-  virtual std::string get_new_value() const;
-  virtual grt::Type type() const {
+  virtual auto get_new_value() const -> std::string;
+  virtual auto type() const -> grt::Type {
     return grt::IntegerType;
   }
 
 protected:
-  virtual void start_editing();
-  virtual void stop_editing(){};
-  virtual Gtk::Widget& editor();
-  virtual Gtk::Widget& label();
+  virtual auto start_editing() -> void;
+  virtual auto stop_editing() -> void {};
+  virtual auto editor() -> Gtk::Widget&;
+  virtual auto label() -> Gtk::Widget&;
 
 private:
-  void on_value_changed();
+  auto on_value_changed() -> void;
   Gtk::CheckButton _button;
   sigc::connection _conn;
 };
@@ -134,17 +134,17 @@ class PropertyColor : public PropertyValue {
 public:
   PropertyColor(PropertyInspector* owner, const bec::NodeId& node);
 
-  virtual std::string get_new_value() const;
-  virtual grt::Type type() const {
+  virtual auto get_new_value() const -> std::string;
+  virtual auto type() const -> grt::Type {
     return grt::StringType;
   }
 
 protected:
-  virtual void start_editing();
-  virtual Gtk::Widget& editor();
+  virtual auto start_editing() -> void;
+  virtual auto editor() -> Gtk::Widget&;
 
 private:
-  void show_dlg();
+  auto show_dlg() -> void;
 
   Gtk::Box _hbox;
   Gtk::ColorSelectionDialog _dlg;
@@ -157,18 +157,18 @@ class PropertyText : public PropertyValue {
 public:
   PropertyText(PropertyInspector* owner, const bec::NodeId& node);
 
-  virtual std::string get_new_value() const;
-  virtual grt::Type type() const {
+  virtual auto get_new_value() const -> std::string;
+  virtual auto type() const -> grt::Type {
     return grt::StringType;
   }
 
 protected:
-  virtual void start_editing();
+  virtual auto start_editing() -> void;
 
-  virtual void stop_editing();
+  virtual auto stop_editing() -> void;
 
 private:
-  bool handle_event(GdkEvent* event);
+  auto handle_event(GdkEvent* event) -> bool;
 
   Gtk::Dialog _wnd;
   Gtk::ScrolledWindow _scroll;
@@ -182,33 +182,33 @@ public:
   PropertyInspector();
   ~PropertyInspector();
 
-  void clear();
-  void populate();
-  void update(); //!< Updates all values in the inspector.
+  auto clear() -> void;
+  auto populate() -> void;
+  auto update() -> void; //!< Updates all values in the inspector.
 
-  void handle_click(PropertyValue* value);
-  void edit_done(PropertyValue* property, const bool finish = false);
-  void edit_canceled();
+  auto handle_click(PropertyValue* value) -> void;
+  auto edit_done(PropertyValue* property, const bool finish = false) -> void;
+  auto edit_canceled() -> void;
 
   typedef sigc::slot<int> properties_count_t;
-  void set_count_slot(const properties_count_t& count_slot) {
+  auto set_count_slot(const properties_count_t& count_slot) -> void {
     _get_properties_count = count_slot;
   }
 
   typedef sigc::slot<void, const bec::NodeId&, const std::string&, const grt::Type> set_value_slot_t;
-  void set_value_slot_setter(const set_value_slot_t& slot) {
+  auto set_value_slot_setter(const set_value_slot_t& slot) -> void {
     _set_value_slot = slot;
   }
 
   //! std::string - value, NodeId node for which value is requested, bool - is it a prop name or value
   typedef sigc::slot<std::string, const bec::NodeId&, const bool> get_value_slot_t;
-  void set_value_slot_getter(const get_value_slot_t& slot) {
+  auto set_value_slot_getter(const get_value_slot_t& slot) -> void {
     _get_value_slot = slot;
   }
 
   //! std::string - value, NodeId node for which value is requested, bool - is it a prop name or value
   typedef sigc::slot<std::string, const bec::NodeId&> get_type_slot_t;
-  void set_type_slot_getter(const get_type_slot_t& slot) {
+  auto set_type_slot_getter(const get_type_slot_t& slot) -> void {
     _get_type_slot = slot;
   }
 
@@ -230,18 +230,18 @@ class PropertiesTree : public Gtk::Box {
   bec::ValueInspectorBE* _inspector;
   PropertyInspector _inspector_view;
 
-  int get_properties_count() const;
-  void set_value(const bec::NodeId& node, const std::string&, const grt::Type type);
-  std::string get_value(const bec::NodeId& node, const bool is_name) const;
-  std::string get_prop_type(const bec::NodeId& node) const;
+  auto get_properties_count() const -> int;
+  auto set_value(const bec::NodeId& node, const std::string&, const grt::Type type) -> void;
+  auto get_value(const bec::NodeId& node, const bool is_name) const -> std::string;
+  auto get_prop_type(const bec::NodeId& node) const -> std::string;
 
-  void refresh();
+  auto refresh() -> void;
 
 public:
   PropertiesTree();
   virtual ~PropertiesTree();
 
-  void update();
+  auto update() -> void;
 };
 
 #endif /* _PROPERTIES_TREE_H_ */

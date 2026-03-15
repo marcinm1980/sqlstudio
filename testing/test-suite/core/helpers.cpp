@@ -67,19 +67,19 @@ auto splitBySet(std::string s, std::string const& separators) -> std::vector<std
 static thread_local std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> utf16Converter;
 static thread_local std::wstring_convert<std::codecvt_utf8<__int32>, __int32> utf32Converter;
 
-std::string utf32ToUtf8(std::u32string const& text) {
+auto utf32ToUtf8(std::u32string const& text) -> std::string {
   return utf32Converter.to_bytes(std::basic_string<__int32>(text.begin(), text.end()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string utf16ToUtf8(std::u16string const& text) {
+auto utf16ToUtf8(std::u16string const& text) -> std::string {
   return utf16Converter.to_bytes(std::wstring(text.begin(), text.end()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::u16string utf8ToUtf16(std::string const& s) {
+auto utf8ToUtf16(std::string const& s) -> std::u16string {
   auto result = utf16Converter.from_bytes(s);
   return std::u16string(result.begin(), result.end());
 }

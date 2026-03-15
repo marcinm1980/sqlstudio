@@ -40,7 +40,7 @@ using namespace mdc;
 ImageManager::ImageManager() {
 }
 
-ImageManager *ImageManager::get_instance() {
+auto ImageManager::get_instance() -> ImageManager * {
   static ImageManager *instance = 0;
 
   if (!instance)
@@ -51,7 +51,7 @@ ImageManager *ImageManager::get_instance() {
 
 //--------------------------------------------------------------------------------------------------
 
-cairo_surface_t *ImageManager::find_file(const std::string &name) {
+auto ImageManager::find_file(const std::string &name) -> cairo_surface_t * {
   cairo_surface_t *img = mdc::surface_from_png_image(name.c_str());
 
   if (img != NULL)
@@ -75,7 +75,7 @@ cairo_surface_t *ImageManager::find_file(const std::string &name) {
 
 //--------------------------------------------------------------------------------------------------
 
-cairo_surface_t *ImageManager::get_image(const std::string &name) {
+auto ImageManager::get_image(const std::string &name) -> cairo_surface_t * {
   if (_cache.find(name) != _cache.end())
     return _cache[name];
 
@@ -92,7 +92,7 @@ cairo_surface_t *ImageManager::get_image(const std::string &name) {
  * @param name The file name of the image.
  * @return true if the image was found and freed, otherwise false.
  */
-bool ImageManager::release_image(const std::string &name) {
+auto ImageManager::release_image(const std::string &name) -> bool {
   std::map<std::string, cairo_surface_t *>::iterator iterator = _cache.find(name);
   if (iterator != _cache.end()) {
     cairo_surface_destroy(iterator->second);
@@ -102,14 +102,14 @@ bool ImageManager::release_image(const std::string &name) {
   return false;
 }
 
-cairo_surface_t *ImageManager::get_image_nocache(const std::string &path) {
+auto ImageManager::get_image_nocache(const std::string &path) -> cairo_surface_t * {
   if (_cache.find(path) != _cache.end())
     return cairo_surface_reference(_cache[path]);
 
   return find_file(path);
 }
 
-void ImageManager::add_search_path(const std::string &directory) {
+auto ImageManager::add_search_path(const std::string &directory) -> void {
   if (std::find(_search_paths.begin(), _search_paths.end(), directory) == _search_paths.end())
     _search_paths.push_back(directory);
 }

@@ -36,7 +36,7 @@ CharsetList::CharsetList(const std::string &path) {
   _charset_list_path = path;
 }
 
-void CharsetList::picked_charset(const NodeId &node) {
+auto CharsetList::picked_charset(const NodeId &node) -> void {
   if (std::find(_recently_used.begin(), _recently_used.end(), node[0]) != _recently_used.end())
     _recently_used.erase(std::find(_recently_used.begin(), _recently_used.end(), node[0]));
   _recently_used.push_front(node[0]);
@@ -44,7 +44,7 @@ void CharsetList::picked_charset(const NodeId &node) {
     _recently_used.pop_back();
 }
 
-size_t CharsetList::count_children(const NodeId &parent) {
+auto CharsetList::count_children(const NodeId &parent) -> size_t {
   grt::ListRef<db_CharacterSet> charsets =
     grt::ListRef<db_CharacterSet>::cast_from(grt::GRT::get()->get(_charset_list_path));
 
@@ -54,7 +54,7 @@ size_t CharsetList::count_children(const NodeId &parent) {
     return charsets[parent[0]]->collations().count();
 }
 
-bool CharsetList::get_field(const NodeId &node, ColumnId column, std::string &value) {
+auto CharsetList::get_field(const NodeId &node, ColumnId column, std::string &value) -> bool {
   grt::ListRef<db_CharacterSet> charsets =
     grt::ListRef<db_CharacterSet>::cast_from(grt::GRT::get()->get(_charset_list_path));
 
@@ -91,7 +91,7 @@ bool CharsetList::get_field(const NodeId &node, ColumnId column, std::string &va
   }
 }
 
-std::string CharsetList::get_field_description(const NodeId &node, ColumnId column) {
+auto CharsetList::get_field_description(const NodeId &node, ColumnId column) -> std::string {
   grt::ListRef<db_CharacterSet> charsets =
     grt::ListRef<db_CharacterSet>::cast_from(grt::GRT::get()->get(_charset_list_path));
 

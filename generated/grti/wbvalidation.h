@@ -36,18 +36,18 @@ protected:
   }
 
 public:
-  static const char *static_get_name() {
+  static auto static_get_name() -> const char * {
     return "WbValidationInterface";
   }
 
-  ssize_t validate(const std::string & param0, const ObjectRef& param1) {
+  auto validate(const std::string & param0, const ObjectRef& param1) -> ssize_t {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(grt::StringRef(param0));
     args.ginsert(param1);
     grt::ValueRef ret = _module->call_function("validate", args);
     return *grt::IntegerRef::cast_from(ret);
   }
-  std::string getValidationDescription(const ObjectRef& param0) {
+  auto getValidationDescription(const ObjectRef& param0) -> std::string {
     grt::BaseListRef args(grt::AnyType);
     args.ginsert(param0);
     grt::ValueRef ret = _module->call_function("getValidationDescription", args);

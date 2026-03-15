@@ -43,37 +43,37 @@ Popover::~Popover() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Popover::set_content(View* content) {
+auto Popover::set_content(View* content) -> void {
   _popover_impl->set_content(this, content);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Popover::show(int x, int y, StartPosition position) {
+auto Popover::show(int x, int y, StartPosition position) -> void {
   _popover_impl->show(this, x, y, position);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Popover::show_and_track(View* owner, int x, int y, StartPosition position) {
+auto Popover::show_and_track(View* owner, int x, int y, StartPosition position) -> void {
   _popover_impl->show_and_track(this, owner, x, y, position);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Popover::set_size(int width, int height) {
+auto Popover::set_size(int width, int height) -> void {
   _popover_impl->set_size(this, width, height);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Popover::close() {
+auto Popover::close() -> void {
   _popover_impl->close(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Popover::setName(const std::string &name) {
+auto Popover::setName(const std::string &name) -> void {
   _popover_impl->setName(this, name);
 }
 

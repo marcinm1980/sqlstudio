@@ -49,21 +49,21 @@ class DbMySQLEditorPrivPage : private WidgetsAutoCleaner {
 public:
   DbMySQLEditorPrivPage(::bec::DBObjectEditorBE *be);
   ~DbMySQLEditorPrivPage();
-  void refresh();
+  auto refresh() -> void;
 
-  void switch_be(bec::DBObjectEditorBE *be);
+  auto switch_be(bec::DBObjectEditorBE *be) -> void;
 
-  Gtk::Box &page() const {
+  auto page() const -> Gtk::Box & {
     return *_holder;
   }
 
 private:
-  void assign_privilege_handler();
-  void assign_privilege(const Gtk::TreeModel::iterator &iter);
-  void remove_privilege_handler();
-  void remove_privilege(const Gtk::TreeModel::Path &path);
+  auto assign_privilege_handler() -> void;
+  auto assign_privilege(const Gtk::TreeModel::iterator &iter) -> void;
+  auto remove_privilege_handler() -> void;
+  auto remove_privilege(const Gtk::TreeModel::Path &path) -> void;
 
-  void role_selected();
+  auto role_selected() -> void;
 
   ::bec::DBObjectEditorBE *_be;
 

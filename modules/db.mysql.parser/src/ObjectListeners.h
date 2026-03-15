@@ -106,8 +106,8 @@ namespace parsers {
 
     ObjectListener(db_mysql_CatalogRef catalog, db_DatabaseObjectRef anObject, bool caseSensitive);
 
-    db_mysql_SchemaRef ensureSchemaExists(const std::string &name);
-    static db_mysql_SchemaRef ensureSchemaExists(db_CatalogRef catalog, const std::string &name, bool caseSensitive);
+    auto ensureSchemaExists(const std::string &name) -> db_mysql_SchemaRef;
+    static auto ensureSchemaExists(db_CatalogRef catalog, const std::string &name, bool caseSensitive) -> db_mysql_SchemaRef;
   };
 
   class DataTypeListener : public parsers::MySQLParserBaseListener {
@@ -215,7 +215,7 @@ namespace parsers {
   private:
     db_mysql_RoutineParamRef _currentParameter;
 
-    void readRoutineName(antlr4::ParserRuleContext *ctx);
+    auto readRoutineName(antlr4::ParserRuleContext *ctx) -> void;
   };
 
   class IndexListener : public ObjectListener {

@@ -86,7 +86,7 @@ WBComponentPhysical::~WBComponentPhysical() {
   close_document();
 }
 
-void WBComponentPhysical::load_app_options(bool update) {
+auto WBComponentPhysical::load_app_options(bool update) -> void {
   if (!update) {
     app_ToolbarRef toolbar;
     toolbar = app_ToolbarRef::cast_from(
@@ -177,7 +177,7 @@ void WBComponentPhysical::load_app_options(bool update) {
   }
 }
 
-void WBComponentPhysical::setup_context_grt(WBOptions *options) {
+auto WBComponentPhysical::setup_context_grt(WBOptions *options) -> void {
   std::string engines;
   // fill engine types list
   grt::Module *module = grt::GRT::get()->get_module("DbMySQL");
@@ -197,8 +197,8 @@ void WBComponentPhysical::setup_context_grt(WBOptions *options) {
   _wb->get_wb_options().gset("@db.ForeignKey:deleteRule/Items", "NO ACTION,CASCADE,SET NULL,RESTRICT");
 }
 
-void WBComponentPhysical::init_catalog_grt(const db_mgmt_RdbmsRef &rdbms, const std::string &db_version,
-                                           studio_physical_ModelRef &model) {
+auto WBComponentPhysical::init_catalog_grt(const db_mgmt_RdbmsRef &rdbms, const std::string &db_version,
+                                           studio_physical_ModelRef &model) -> void {
   std::string db_package = rdbms->databaseObjectPackage();
 
   // assemble struct name for catalog and schema for the requested db type
@@ -298,8 +298,8 @@ void WBComponentPhysical::init_catalog_grt(const db_mgmt_RdbmsRef &rdbms, const 
 #endif
 }
 
-grt::ListRef<db_UserDatatype> WBComponentPhysical::create_builtin_user_datatypes(const db_CatalogRef &catalog,
-                                                                                 const db_mgmt_RdbmsRef &rdbms) {
+auto WBComponentPhysical::create_builtin_user_datatypes(const db_CatalogRef &catalog,
+                                                                                 const db_mgmt_RdbmsRef &rdbms) -> grt::ListRef<db_UserDatatype> {
   grt::Module *module = grt::GRT::get()->get_module("DbMySQL");
   if (module) {
     grt::BaseListRef args(true);
@@ -318,8 +318,8 @@ grt::ListRef<db_UserDatatype> WBComponentPhysical::create_builtin_user_datatypes
   return grt::ListRef<db_UserDatatype>();
 }
 
-void WBComponentPhysical::setup_physical_model(studio_DocumentRef &doc, const std::string &rdbms_name,
-                                               const std::string &rdbms_version) {
+auto WBComponentPhysical::setup_physical_model(studio_DocumentRef &doc, const std::string &rdbms_name,
+                                               const std::string &rdbms_version) -> void {
   // init physical model
   studio_physical_ModelRef pmodel(grt::Initialized);
   pmodel->owner(doc);
@@ -348,7 +348,7 @@ void WBComponentPhysical::setup_physical_model(studio_DocumentRef &doc, const st
 //--------------------------------------------------------------------------------
 // Model Management
 
-db_SchemaRef WBComponentPhysical::add_new_db_schema(const studio_physical_ModelRef &model) {
+auto WBComponentPhysical::add_new_db_schema(const studio_physical_ModelRef &model) -> db_SchemaRef {
   db_SchemaRef schema;
   std::string name;
   std::string class_name;
@@ -376,7 +376,7 @@ db_SchemaRef WBComponentPhysical::add_new_db_schema(const studio_physical_ModelR
   return schema;
 }
 
-grt::DictRef WBComponentPhysical::delete_db_schema(const db_SchemaRef &schema, bool check_empty) {
+auto WBComponentPhysical::delete_db_schema(const db_SchemaRef &schema, bool check_empty) -> grt::DictRef {
   if (check_empty && (schema->tables().count() > 0 || schema->views().count() > 0 || schema->routines().count() > 0)) {
     grt::DictRef dict(true);
 
@@ -433,7 +433,7 @@ grt::DictRef WBComponentPhysical::delete_db_schema(const db_SchemaRef &schema, b
   return grt::DictRef();
 }
 
-void WBComponentPhysical::delete_db_schema(const db_SchemaRef &schema) {
+auto WBComponentPhysical::delete_db_schema(const db_SchemaRef &schema) -> void {
   grt::DictRef info;
 
   _wb->_frontendCallbacks->show_status_text(_("Deleting schema..."));
@@ -477,8 +477,8 @@ void WBComponentPhysical::delete_db_schema(const db_SchemaRef &schema) {
 
 #include "grts/structs.meta.h"
 
-db_DatabaseObjectRef WBComponentPhysical::add_new_db_table(const db_SchemaRef &schema,
-                                                           const std::string &template_name) {
+auto WBComponentPhysical::add_new_db_table(const db_SchemaRef &schema,
+                                                           const std::string &template_name) -> db_DatabaseObjectRef {
   grt::AutoUndo undo;
   db_TableRef table;
 
@@ -513,7 +513,7 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_table(const db_SchemaRef &s
   return table;
 }
 
-db_DatabaseObjectRef WBComponentPhysical::add_new_db_view(const db_SchemaRef &schema) {
+auto WBComponentPhysical::add_new_db_view(const db_SchemaRef &schema) -> db_DatabaseObjectRef {
   grt::AutoUndo undo;
 
   db_ViewRef view =
@@ -529,7 +529,7 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_view(const db_SchemaRef &sc
   return view;
 }
 
-db_DatabaseObjectRef WBComponentPhysical::add_new_db_routine_group(const db_SchemaRef &schema) {
+auto WBComponentPhysical::add_new_db_routine_group(const db_SchemaRef &schema) -> db_DatabaseObjectRef {
   grt::AutoUndo undo;
 
   db_RoutineGroupRef rgroup = schema->addNewRoutineGroup(
@@ -545,7 +545,7 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_routine_group(const db_Sche
   return rgroup;
 }
 
-db_DatabaseObjectRef WBComponentPhysical::add_new_db_routine(const db_SchemaRef &schema) {
+auto WBComponentPhysical::add_new_db_routine(const db_SchemaRef &schema) -> db_DatabaseObjectRef {
   grt::AutoUndo undo;
 
   db_RoutineRef routine =
@@ -561,8 +561,8 @@ db_DatabaseObjectRef WBComponentPhysical::add_new_db_routine(const db_SchemaRef 
   return routine;
 }
 
-db_ScriptRef WBComponentPhysical::add_new_stored_script(const studio_physical_ModelRef &model,
-                                                        const std::string &path) {
+auto WBComponentPhysical::add_new_stored_script(const studio_physical_ModelRef &model,
+                                                        const std::string &path) -> db_ScriptRef {
   db_ScriptRef script(grt::Initialized);
   std::string name = "script";
   if (!path.empty())
@@ -584,8 +584,8 @@ db_ScriptRef WBComponentPhysical::add_new_stored_script(const studio_physical_Mo
   return script;
 }
 
-GrtStoredNoteRef WBComponentPhysical::add_new_stored_note(const studio_physical_ModelRef &model,
-                                                          const std::string &path) {
+auto WBComponentPhysical::add_new_stored_note(const studio_physical_ModelRef &model,
+                                                          const std::string &path) -> GrtStoredNoteRef {
   GrtStoredNoteRef note(grt::Initialized);
   std::string name = _("New Note");
   if (!path.empty())
@@ -607,9 +607,9 @@ GrtStoredNoteRef WBComponentPhysical::add_new_stored_note(const studio_physical_
   return note;
 }
 
-db_DatabaseObjectRef WBComponentPhysical::clone_db_object_to_schema(const db_SchemaRef &schema,
+auto WBComponentPhysical::clone_db_object_to_schema(const db_SchemaRef &schema,
                                                                     const db_DatabaseObjectRef &object,
-                                                                    grt::CopyContext &context) {
+                                                                    grt::CopyContext &context) -> db_DatabaseObjectRef {
   grt::AutoUndo undo;
 
   if (object.is_instance(db_Table::static_class_name())) {
@@ -668,8 +668,8 @@ db_DatabaseObjectRef WBComponentPhysical::clone_db_object_to_schema(const db_Sch
 //--------------------------------------------------------------------------------
 // Canvas Object Management
 
-model_FigureRef WBComponentPhysical::place_db_object(ModelDiagramForm *view, const Point &pos,
-                                                     const db_DatabaseObjectRef &object, bool select_figure) {
+auto WBComponentPhysical::place_db_object(ModelDiagramForm *view, const Point &pos,
+                                                     const db_DatabaseObjectRef &object, bool select_figure) -> model_FigureRef {
   model_FigureRef figure;
   try {
     studio_physical_DiagramRef pview(studio_physical_DiagramRef::cast_from(view->get_model_diagram()));
@@ -725,8 +725,8 @@ model_FigureRef WBComponentPhysical::place_db_object(ModelDiagramForm *view, con
 
 //--------------------------------------------------------------------------------------------------
 
-bool WBComponentPhysical::accepts_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
-                                       const std::list<GrtObjectRef> &objects) {
+auto WBComponentPhysical::accepts_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
+                                       const std::list<GrtObjectRef> &objects) -> bool {
   if (objects.empty())
     return false;
 
@@ -740,8 +740,8 @@ bool WBComponentPhysical::accepts_drop(ModelDiagramForm *view, int x, int y, con
   return false;
 }
 
-bool WBComponentPhysical::perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
-                                       const std::list<GrtObjectRef> &objects) {
+auto WBComponentPhysical::perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
+                                       const std::list<GrtObjectRef> &objects) -> bool {
   if (objects.empty())
     return false;
 
@@ -758,8 +758,8 @@ bool WBComponentPhysical::perform_drop(ModelDiagramForm *view, int x, int y, con
   return false;
 }
 
-bool WBComponentPhysical::perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
-                                       const std::string &data) {
+auto WBComponentPhysical::perform_drop(ModelDiagramForm *view, int x, int y, const std::string &type,
+                                       const std::string &data) -> bool {
   if (data.empty())
     return false;
 
@@ -777,17 +777,17 @@ bool WBComponentPhysical::perform_drop(ModelDiagramForm *view, int x, int y, con
   return false;
 }
 
-std::list<model_FigureRef> WBComponentPhysical::interactive_place_db_objects(
-  ModelDiagramForm *vform, int x, int y, const std::list<db_DatabaseObjectRef> &objects) {
+auto WBComponentPhysical::interactive_place_db_objects(
+  ModelDiagramForm *vform, int x, int y, const std::list<db_DatabaseObjectRef> &objects) -> std::list<model_FigureRef> {
   grt::CopyContext copy_context;
   std::list<model_FigureRef> result = interactive_place_db_objects(vform, x, y, objects, copy_context);
   copy_context.finish();
   return result;
 }
 
-std::list<model_FigureRef> WBComponentPhysical::interactive_place_db_objects(
+auto WBComponentPhysical::interactive_place_db_objects(
   ModelDiagramForm *vform, int x, int y, const std::list<db_DatabaseObjectRef> &objects,
-  grt::CopyContext &copy_context) {
+  grt::CopyContext &copy_context) -> std::list<model_FigureRef> {
   int copied = 0;
   std::list<model_FigureRef> created_figures;
   //  std::vector<db_TableRef> tables;
@@ -859,7 +859,7 @@ std::list<model_FigureRef> WBComponentPhysical::interactive_place_db_objects(
   return created_figures;
 }
 
-void WBComponentPhysical::place_new_db_object(ModelDiagramForm *vform, const Point &pos, wb::ObjectType type) {
+auto WBComponentPhysical::place_new_db_object(ModelDiagramForm *vform, const Point &pos, wb::ObjectType type) -> void {
   std::string object_struct_name;
   db_SchemaRef target_schema;
   std::string schema_name;
@@ -942,9 +942,9 @@ void WBComponentPhysical::place_new_db_object(ModelDiagramForm *vform, const Poi
   undo.end(strfmt(_("Place '%s'"), object->name().c_str()));
 }
 
-bool WBComponentPhysical::create_nm_relationship(ModelDiagramForm *view, studio_physical_TableFigureRef table1,
+auto WBComponentPhysical::create_nm_relationship(ModelDiagramForm *view, studio_physical_TableFigureRef table1,
                                                  studio_physical_TableFigureRef table2, bool imandatory,
-                                                 bool fmandatory) {
+                                                 bool fmandatory) -> bool {
   grt::AutoUndo undo;
   // create the associative table for a n:m relationship
   db_TableRef atable = bec::TableHelper::create_associative_table(
@@ -978,15 +978,15 @@ bool WBComponentPhysical::create_nm_relationship(ModelDiagramForm *view, studio_
   return true;
 }
 
-WBComponentPhysical::RelationshipToolContext *WBComponentPhysical::start_relationship(ModelDiagramForm *view,
+auto WBComponentPhysical::start_relationship(ModelDiagramForm *view,
                                                                                       const Point &pos,
-                                                                                      RelationshipType type) {
+                                                                                      RelationshipType type) -> WBComponentPhysical::RelationshipToolContext * {
   RelationshipToolContext *rctx = new RelationshipToolContext(this, view, type);
 
   return rctx;
 }
 
-void WBComponentPhysical::cancel_relationship(ModelDiagramForm *view, RelationshipToolContext *rctx) {
+auto WBComponentPhysical::cancel_relationship(ModelDiagramForm *view, RelationshipToolContext *rctx) -> void {
   if (rctx) {
     rctx->cancel();
 
@@ -994,7 +994,7 @@ void WBComponentPhysical::cancel_relationship(ModelDiagramForm *view, Relationsh
   }
 }
 
-void WBComponentPhysical::delete_db_object(const db_DatabaseObjectRef &object) {
+auto WBComponentPhysical::delete_db_object(const db_DatabaseObjectRef &object) -> void {
   db_SchemaRef schema(db_SchemaRef::cast_from(object->owner()));
   studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(schema));
 
@@ -1198,7 +1198,7 @@ void WBComponentPhysical::delete_db_object(const db_DatabaseObjectRef &object) {
   }
 }
 
-bool WBComponentPhysical::delete_model_object(const model_ObjectRef &object, bool figure_only) {
+auto WBComponentPhysical::delete_model_object(const model_ObjectRef &object, bool figure_only) -> bool {
   if (object.is_instance(studio_physical_Connection::static_class_name())) {
     if (!figure_only) {
       studio_physical_ConnectionRef conn(studio_physical_ConnectionRef::cast_from(object));
@@ -1275,7 +1275,7 @@ bool WBComponentPhysical::delete_model_object(const model_ObjectRef &object, boo
   return true;
 }
 
-bool WBComponentPhysical::handles_figure(const model_ObjectRef &figure) {
+auto WBComponentPhysical::handles_figure(const model_ObjectRef &figure) -> bool {
   if (figure.is_instance(studio_physical_TableFigure::static_class_name()) ||
       figure.is_instance(studio_physical_ViewFigure::static_class_name()) ||
       figure.is_instance(studio_physical_RoutineGroupFigure::static_class_name()) ||
@@ -1284,7 +1284,7 @@ bool WBComponentPhysical::handles_figure(const model_ObjectRef &figure) {
   return false;
 }
 
-void WBComponentPhysical::copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context) {
+auto WBComponentPhysical::copy_object_to_clipboard(const grt::ObjectRef &object, grt::CopyContext &copy_context) -> void {
   std::set<std::string> skip;
   skip.insert("oldName");
 
@@ -1415,7 +1415,7 @@ copy(studio_physical_RoutineGroupFigureRef::cast_from(copy_context.copy(routineG
 }
 */
 
-bool WBComponentPhysical::can_paste_object(const grt::ObjectRef &object) {
+auto WBComponentPhysical::can_paste_object(const grt::ObjectRef &object) -> bool {
   if (object.is_instance(db_Table::static_class_name()) || object.is_instance(db_View::static_class_name()) ||
       object.is_instance(db_RoutineGroup::static_class_name()) ||
       object.is_instance(studio_physical_TableFigure::static_class_name()) ||
@@ -1426,7 +1426,7 @@ bool WBComponentPhysical::can_paste_object(const grt::ObjectRef &object) {
   return false;
 }
 
-static void updateConnectionState(studio_physical_TableFigureRef src, studio_physical_TableFigureRef dst) {
+static auto updateConnectionState(studio_physical_TableFigureRef src, studio_physical_TableFigureRef dst) -> void {
   studio_physical_DiagramRef dstView = studio_physical_DiagramRef::cast_from(dst->owner());
   studio_physical_DiagramRef srcView = studio_physical_DiagramRef::cast_from(src->owner());
 
@@ -1449,8 +1449,8 @@ static void updateConnectionState(studio_physical_TableFigureRef src, studio_phy
   }
 }
 
-model_ObjectRef WBComponentPhysical::paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
-                                                  grt::CopyContext &copy_context) {
+auto WBComponentPhysical::paste_object(ModelDiagramForm *view, const grt::ObjectRef &object,
+                                                  grt::CopyContext &copy_context) -> model_ObjectRef {
   db_DatabaseObjectRef obj;
   if (model_ObjectRef::can_wrap(object))
     obj = db_DatabaseObjectRef::cast_from(get_object_for_figure(model_ObjectRef::cast_from(object)));
@@ -1503,7 +1503,7 @@ model_ObjectRef WBComponentPhysical::paste_object(ModelDiagramForm *view, const 
   return model_ObjectRef();
 }
 
-inline const char *find_prev_space(const char *begin, const char *pos) {
+inline auto find_prev_space(const char *begin, const char *pos) -> const char * {
   const char *p = pos;
   while (p > begin) {
     if (g_unichar_isspace(g_utf8_get_char_validated(p, -1)))
@@ -1513,7 +1513,7 @@ inline const char *find_prev_space(const char *begin, const char *pos) {
   return pos;
 }
 
-std::string WBComponentPhysical::get_object_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item) {
+auto WBComponentPhysical::get_object_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item) -> std::string {
   if (studio_physical_TableFigureRef::can_wrap(object)) {
     studio_physical_TableFigureRef table_figure(studio_physical_TableFigureRef::cast_from(object));
     db_TableRef table(table_figure->table());
@@ -1773,7 +1773,7 @@ std::string WBComponentPhysical::get_object_tooltip(const model_ObjectRef &objec
   return "";
 }
 
-GrtObjectRef WBComponentPhysical::get_object_for_figure(const model_ObjectRef &object) {
+auto WBComponentPhysical::get_object_for_figure(const model_ObjectRef &object) -> GrtObjectRef {
   if (studio_physical_TableFigureRef::can_wrap(object))
     return studio_physical_TableFigureRef::cast_from(object)->table();
 
@@ -1786,7 +1786,7 @@ GrtObjectRef WBComponentPhysical::get_object_for_figure(const model_ObjectRef &o
   return GrtObjectRef();
 }
 
-void WBComponentPhysical::activate_canvas_object(const model_ObjectRef &figure, bool newwindow) {
+auto WBComponentPhysical::activate_canvas_object(const model_ObjectRef &figure, bool newwindow) -> void {
   GrtObjectRef object(get_object_for_figure(figure));
 
   if (object.is_valid())
@@ -1797,7 +1797,7 @@ void WBComponentPhysical::activate_canvas_object(const model_ObjectRef &figure, 
 }
 
 // TODO sigc _blockable_listeners seened never being filled and thus there is no sence to iterate there
-void WBComponentPhysical::block_model_notifications() {
+auto WBComponentPhysical::block_model_notifications() -> void {
   /*
   //for (std::list<sigc::connection>::iterator iter= _blockable_listeners.begin();
        iter != _blockable_listeners.end(); ++iter)
@@ -1805,7 +1805,7 @@ void WBComponentPhysical::block_model_notifications() {
     */
 }
 
-void WBComponentPhysical::unblock_model_notifications() {
+auto WBComponentPhysical::unblock_model_notifications() -> void {
   /*
   //for (std::list<sigc::connection>::iterator iter= _blockable_listeners.begin();
        iter != _blockable_listeners.end(); ++iter)
@@ -1815,22 +1815,22 @@ void WBComponentPhysical::unblock_model_notifications() {
 
 //--------------------------------------------------------------------------------
 
-app_ToolbarRef WBComponentPhysical::get_tools_toolbar() {
+auto WBComponentPhysical::get_tools_toolbar() -> app_ToolbarRef {
   return app_ToolbarRef::cast_from(
     grt::GRT::get()->unserialize(base::makePath(_wb->get_datadir(), "data/tools_toolbar_physical.xml")));
 }
 
-app_ToolbarRef WBComponentPhysical::get_tool_options(const std::string &tool) {
+auto WBComponentPhysical::get_tool_options(const std::string &tool) -> app_ToolbarRef {
   if (_toolbars.find("options/" + tool) != _toolbars.end())
     return _toolbars["options/" + tool];
   return app_ToolbarRef();
 }
 
-grt::ListRef<app_ShortcutItem> WBComponentPhysical::get_shortcut_items() {
+auto WBComponentPhysical::get_shortcut_items() -> grt::ListRef<app_ShortcutItem> {
   return _shortcuts;
 }
 
-std::vector<std::string> WBComponentPhysical::get_command_dropdown_items(const std::string &option) {
+auto WBComponentPhysical::get_command_dropdown_items(const std::string &option) -> std::vector<std::string> {
   std::vector<std::string> items;
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
 
@@ -1946,7 +1946,7 @@ std::vector<std::string> WBComponentPhysical::get_command_dropdown_items(const s
 //--------------------------------------------------------------------------------
 // Object Listeners
 
-void WBComponentPhysical::add_schema_listeners(const db_SchemaRef &schema) {
+auto WBComponentPhysical::add_schema_listeners(const db_SchemaRef &schema) -> void {
   std::map<std::string, boost::signals2::connection>::iterator it = _object_listeners.find(schema.id());
   if (it == _object_listeners.end()) {
     // listener for changes in schema itself
@@ -1968,7 +1968,7 @@ void WBComponentPhysical::add_schema_listeners(const db_SchemaRef &schema) {
 /**
  * Removes all previously set listeners.
  */
-void WBComponentPhysical::close_document() {
+auto WBComponentPhysical::close_document() -> void {
   // Model listeners.
   _catalog_object_list_listener.disconnect();
   _model_list_listener.disconnect();
@@ -1999,7 +1999,7 @@ void WBComponentPhysical::close_document() {
  * This will add listeners for a newly created or opened document.
  *
  */
-void WBComponentPhysical::reset_document() {
+auto WBComponentPhysical::reset_document() -> void {
   studio_DocumentRef doc(_wb->get_document());
 
   // add listener to all schemas, views etc
@@ -2046,7 +2046,7 @@ void WBComponentPhysical::reset_document() {
 
  - Update the userDatatypes list in the document with what we have now
  */
-void WBComponentPhysical::document_loaded() {
+auto WBComponentPhysical::document_loaded() -> void {
   grt::ListRef<studio_physical_Model> models(_wb->get_document()->physicalModels());
 
   for (grt::ListRef<studio_physical_Model>::const_iterator pmodel = models.begin(); pmodel != models.end();
@@ -2070,8 +2070,8 @@ void WBComponentPhysical::document_loaded() {
  *
  * Used for attaching listeners to new schemas and content lists.
  */
-void WBComponentPhysical::catalog_object_list_changed(grt::internal::OwnedList *list, bool added,
-                                                      const grt::ValueRef &value, const db_CatalogRef &catalog) {
+auto WBComponentPhysical::catalog_object_list_changed(grt::internal::OwnedList *list, bool added,
+                                                      const grt::ValueRef &value, const db_CatalogRef &catalog) -> void {
   if (grt::BaseListRef(list) == catalog->schemata()) {
     // we're called in the GRT thread, so just mark the refresh request
     // as pending. This has the bonus that multiple requests will be
@@ -2105,15 +2105,15 @@ void WBComponentPhysical::catalog_object_list_changed(grt::internal::OwnedList *
     privilege_list_changed(list, added, value, catalog);
 }
 
-void WBComponentPhysical::schema_member_changed(const std::string &member, const grt::ValueRef &ovalue,
-                                                const db_SchemaRef &schema) {
+auto WBComponentPhysical::schema_member_changed(const std::string &member, const grt::ValueRef &ovalue,
+                                                const db_SchemaRef &schema) -> void {
   if (wb::WBContextUI::get()->get_physical_overview())
     ((PhysicalOverviewBE *)wb::WBContextUI::get()->get_physical_overview())->send_refresh_for_schema(schema, true);
 
   _wb->get_model_context()->notify_catalog_tree_view(NodeAddUpdate, schema);
 }
 
-void WBComponentPhysical::add_schema_object_listeners(const grt::ObjectRef &object) {
+auto WBComponentPhysical::add_schema_object_listeners(const grt::ObjectRef &object) -> void {
   if (object.is_instance(db_Table::static_class_name())) {
     if (_object_listeners.find(object.id()) != _object_listeners.end())
       _object_listeners[object.id()].disconnect();
@@ -2122,8 +2122,8 @@ void WBComponentPhysical::add_schema_object_listeners(const grt::ObjectRef &obje
   }
 }
 
-void WBComponentPhysical::schema_object_list_changed(grt::internal::OwnedList *list, bool added,
-                                                     const grt::ValueRef &value, const db_SchemaRef &schema) {
+auto WBComponentPhysical::schema_object_list_changed(grt::internal::OwnedList *list, bool added,
+                                                     const grt::ValueRef &value, const db_SchemaRef &schema) -> void {
   grt::ObjectRef object(grt::ObjectRef::cast_from(value));
 
   if (added)
@@ -2143,8 +2143,8 @@ void WBComponentPhysical::schema_object_list_changed(grt::internal::OwnedList *l
       ->send_refresh_for_schema_object(GrtObjectRef::cast_from(value), false);
 }
 
-void WBComponentPhysical::view_object_list_changed(grt::internal::OwnedList *list, bool added,
-                                                   const grt::ValueRef &value, const model_DiagramRef &view) {
+auto WBComponentPhysical::view_object_list_changed(grt::internal::OwnedList *list, bool added,
+                                                   const grt::ValueRef &value, const model_DiagramRef &view) -> void {
   if (list == view->figures().valueptr()) {
     if (handles_figure(model_ObjectRef::cast_from(value))) {
       if (added) {
@@ -2201,8 +2201,8 @@ void WBComponentPhysical::view_object_list_changed(grt::internal::OwnedList *lis
 //  }
 //}
 
-void WBComponentPhysical::model_object_list_changed(grt::internal::OwnedList *list, bool added,
-                                                    const grt::ValueRef &avalue) {
+auto WBComponentPhysical::model_object_list_changed(grt::internal::OwnedList *list, bool added,
+                                                    const grt::ValueRef &avalue) -> void {
   if (avalue.type() == grt::ObjectType) {
     if (added) {
       grt::ObjectRef value(grt::ObjectRef::cast_from(avalue));
@@ -2321,7 +2321,7 @@ void WBComponentPhysical::model_object_list_changed(grt::internal::OwnedList *li
   }
 }
 
-void WBComponentPhysical::foreign_key_changed(const db_ForeignKeyRef &fk) {
+auto WBComponentPhysical::foreign_key_changed(const db_ForeignKeyRef &fk) -> void {
   // don't auto-create/remove stuff when undoing/redoing
   if (grt::GRT::get()->get_undo_manager()->is_undoing() || grt::GRT::get()->get_undo_manager()->is_redoing())
     return;
@@ -2350,7 +2350,7 @@ void WBComponentPhysical::foreign_key_changed(const db_ForeignKeyRef &fk) {
   }
 }
 
-void WBComponentPhysical::schema_content_object_changed(const db_DatabaseObjectRef &object) {
+auto WBComponentPhysical::schema_content_object_changed(const db_DatabaseObjectRef &object) -> void {
   refresh_ui_for_object(object);
 }
 
@@ -2361,7 +2361,7 @@ void WBComponentPhysical::schema_content_object_changed(const db_DatabaseObjectR
  * but rather only updates for displays of properties of this object.
  * TODO: this function is called multiple times for a single change. Optimized this situation!
  */
-void WBComponentPhysical::refresh_ui_for_object(const GrtObjectRef &object) {
+auto WBComponentPhysical::refresh_ui_for_object(const GrtObjectRef &object) -> void {
   if (object.is_valid() && object->owner().is_valid()) {
     studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(object));
     PhysicalOverviewBE *overview =
@@ -2397,7 +2397,7 @@ void WBComponentPhysical::refresh_ui_for_object(const GrtObjectRef &object) {
  * @return true if a change has happened (conn added/remove), false otherwise
  ****************************************************************************
  */
-bool WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, const db_ForeignKeyRef &fk, bool added) {
+auto WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, const db_ForeignKeyRef &fk, bool added) -> bool {
   studio_physical_ModelRef model(get_parent_for_object<studio_physical_Model>(table));
 
   if (!model.is_valid() || !model->diagrams().is_valid())
@@ -2513,7 +2513,7 @@ bool WBComponentPhysical::update_table_fk_connection(const db_TableRef &table, c
   return false;
 }
 
-bool WBComponentPhysical::has_figure_for_object_in_active_view(const GrtObjectRef &object, ModelDiagramForm *vform) {
+auto WBComponentPhysical::has_figure_for_object_in_active_view(const GrtObjectRef &object, ModelDiagramForm *vform) -> bool {
   if (!vform)
     vform = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
 
@@ -2526,7 +2526,7 @@ bool WBComponentPhysical::has_figure_for_object_in_active_view(const GrtObjectRe
   return false;
 }
 
-void WBComponentPhysical::setup_canvas_tool(ModelDiagramForm *view, const std::string &tool) {
+auto WBComponentPhysical::setup_canvas_tool(ModelDiagramForm *view, const std::string &tool) -> void {
   void *data = 0;
   bool relationship = false;
 
@@ -2611,8 +2611,8 @@ void WBComponentPhysical::setup_canvas_tool(ModelDiagramForm *view, const std::s
                                             reinterpret_cast<RelationshipToolContext *>(data)));
 }
 
-bool WBComponentPhysical::handle_button_event(ModelDiagramForm *view, mdc::MouseButton button, bool press, Point pos,
-                                              mdc::EventState, void *data) {
+auto WBComponentPhysical::handle_button_event(ModelDiagramForm *view, mdc::MouseButton button, bool press, Point pos,
+                                              mdc::EventState, void *data) -> bool {
   std::string tool = view->get_tool();
 
   if (button != mdc::ButtonLeft)
@@ -2665,8 +2665,8 @@ bool WBComponentPhysical::handle_button_event(ModelDiagramForm *view, mdc::Mouse
 //  overview->send_refresh_roles();
 //}
 
-void WBComponentPhysical::privilege_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                                                 const db_CatalogRef &catalog) {
+auto WBComponentPhysical::privilege_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                                                 const db_CatalogRef &catalog) -> void {
   if (grt::BaseListRef(list) == catalog->users())
     ((PhysicalOverviewBE *)wb::WBContextUI::get()->get_physical_overview())->send_refresh_users();
   else if (grt::BaseListRef(list) == catalog->roles())
@@ -2680,7 +2680,7 @@ void WBComponentPhysical::privilege_list_changed(grt::internal::OwnedList *list,
 //--------------------------------------------------------------------------------
 // Privilege Management
 
-db_UserRef WBComponentPhysical::add_new_user(const studio_physical_ModelRef &model) {
+auto WBComponentPhysical::add_new_user(const studio_physical_ModelRef &model) -> db_UserRef {
   db_CatalogRef catalog;
   db_UserRef user;
 
@@ -2702,7 +2702,7 @@ db_UserRef WBComponentPhysical::add_new_user(const studio_physical_ModelRef &mod
   return user;
 }
 
-void WBComponentPhysical::remove_user(const db_UserRef &user) {
+auto WBComponentPhysical::remove_user(const db_UserRef &user) -> void {
   db_CatalogRef catalog(db_CatalogRef::cast_from(user->owner()));
 
   grt::AutoUndo undo;
@@ -2712,7 +2712,7 @@ void WBComponentPhysical::remove_user(const db_UserRef &user) {
   _wb->_frontendCallbacks->show_status_text(strfmt(_("Removed user '%s'"), user->name().c_str()));
 }
 
-db_RoleRef WBComponentPhysical::add_new_role(const studio_physical_ModelRef &model) {
+auto WBComponentPhysical::add_new_role(const studio_physical_ModelRef &model) -> db_RoleRef {
   db_CatalogRef catalog;
   db_RoleRef role;
 
@@ -2733,7 +2733,7 @@ db_RoleRef WBComponentPhysical::add_new_role(const studio_physical_ModelRef &mod
   return role;
 }
 
-void WBComponentPhysical::remove_role(const db_RoleRef &role) {
+auto WBComponentPhysical::remove_role(const db_RoleRef &role) -> void {
   db_CatalogRef catalog(db_CatalogRef::cast_from(role->owner()));
 
   for (std::size_t index = 0; index < catalog->users().count(); ++index)
@@ -2755,7 +2755,7 @@ void WBComponentPhysical::remove_role(const db_RoleRef &role) {
   _wb->_frontendCallbacks->show_status_text(strfmt(_("Removed role '%s'"), role->name().c_str()));
 }
 
-void WBComponentPhysical::remove_references_to_object(const db_DatabaseObjectRef &object) {
+auto WBComponentPhysical::remove_references_to_object(const db_DatabaseObjectRef &object) -> void {
   // this is called when a object is removed from the schema.
 
   // remove all role privileges assigned to the object

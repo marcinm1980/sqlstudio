@@ -56,8 +56,8 @@ namespace sql {
     return _batch_exec_err_count;
   }
 
-  void SqlBatchExec::exec_sql_script(sql::Statement *stmt, std::list<std::string> &statements,
-                                     long &batch_exec_err_count) {
+  auto SqlBatchExec::exec_sql_script(sql::Statement *stmt, std::list<std::string> &statements,
+                                     long &batch_exec_err_count) -> void {
     _batch_exec_progress_state = 0;
     _batch_exec_progress_inc = 1.f / statements.size();
 

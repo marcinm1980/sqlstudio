@@ -44,7 +44,7 @@ namespace MySQL {
 
     //--------------------------------------------------------------------------------------------------
 
-    void Logger::EnableLogLevel(LogLevel level) {
+    auto Logger::EnableLogLevel(LogLevel level) -> void {
       base::Logger::enable_level((base::Logger::LogLevel)level);
     }
 
@@ -90,7 +90,7 @@ namespace MySQL {
 
     //--------------------------------------------------------------------------------------------------
 
-    String ^ Logger::ActiveLevel::get() {
+    auto Logger::ActiveLevel::get() -> String ^ {
       return CppStringToNative(base::Logger::active_level());
     }
 

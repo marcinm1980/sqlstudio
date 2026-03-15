@@ -37,9 +37,9 @@ namespace MySQL {
         MySQLRoutineEditorWrapper(MySQL::Grt::GrtValue ^ arglist);
         ~MySQLRoutineEditorWrapper();
 
-        MySQLRoutineEditorBE *get_unmanaged_object();
-        void load_routine_sql();
-        void commit_changes();
+        auto get_unmanaged_object() -> MySQLRoutineEditorBE *;
+        auto load_routine_sql() -> void;
+        auto commit_changes() -> void;
       };
 
     } // namespace Db

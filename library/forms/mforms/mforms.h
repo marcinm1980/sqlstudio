@@ -154,10 +154,10 @@ namespace mforms {
     ControlFactory();
     ~ControlFactory();
 
-    static ControlFactory *get_instance();
+    static auto get_instance() -> ControlFactory *;
 
-    void check_impl();
-    void shutdown();
+    auto check_impl() -> void;
+    auto shutdown() -> void;
   };
 };
 

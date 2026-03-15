@@ -44,10 +44,10 @@ private:
   mforms::Button *_cancel_button;
   mforms::Button *_execxute_button;
 
-  bool needs_quoting(const std::string &type);
+  auto needs_quoting(const std::string &type) -> bool;
 
 public:
   ExecuteRoutineWizard(db_mysql_RoutineRef routine, const std::string &sql_mode);
 
-  std::string run();
+  auto run() -> std::string;
 };

@@ -59,19 +59,19 @@ namespace ssh {
       _path.erase(_path.begin());
   }
 
-  void SSHSftp::throwOnError(int rc) const {
+  auto SSHSftp::throwOnError(int rc) const -> void {
     if (rc != SSH_OK)
       throw SSHSftpException(getSftpErrorDescription(sftp_get_error(_sftp)));
   }
 
-  static void cleanPath(std::vector<std::string> &path) {
+  static auto cleanPath(std::vector<std::string> &path) -> void {
     auto it = std::remove_if(path.begin(), path.end(), [] (const std::string& val) {
       return val == "";
     }); 
     path.erase(it, path.end());
   }
 
-  static std::string getHumanSftpError(int err) {
+  static auto getHumanSftpError(int err) -> std::string {
     switch(err) {
       case SSH_FX_OK:
         return "There was no error";
@@ -120,7 +120,7 @@ namespace ssh {
     }
   }
 
-  std::string SSHSftp::createRemotePath(const std::string &path) const {
+  auto SSHSftp::createRemotePath(const std::string &path) const -> std::string {
     if (path.empty())
       return "";
 
@@ -156,14 +156,14 @@ namespace ssh {
     sftp_free(_sftp);
   }
 
-  sftp_file SSHSftp::open(const std::string &path) const {
+  auto SSHSftp::open(const std::string &path) const -> sftp_file {
     sftp_file file = sftp_open(_sftp, createRemotePath(path).c_str(), O_RDONLY, 0);
     if (file == nullptr)
       throw SSHSftpException(_session->getSession()->getError());
     return file;
   }
 
-  void SSHSftp::mkdir(const std::string &dirname, unsigned int mode) {
+  auto SSHSftp::mkdir(const std::string &dirname, unsigned int mode) -> void {
     auto lock = _session->lockSession();
     auto rc = sftp_mkdir(_sftp, dirname.c_str(), mode);
     if (rc != SSH_OK) {
@@ -175,19 +175,19 @@ namespace ssh {
     }
   }
 
-  void SSHSftp::rmdir(const std::string &dirname) {
+  auto SSHSftp::rmdir(const std::string &dirname) -> void {
     auto lock = _session->lockSession();
     auto rc = sftp_rmdir(_sftp, createRemotePath(dirname).c_str());
     throwOnError(rc);
   }
 
-  void SSHSftp::unlink(const std::string &file) {
+  auto SSHSftp::unlink(const std::string &file) -> void {
     auto lock = _session->lockSession();
     auto rc = sftp_unlink(_sftp, createRemotePath(file).c_str());
     throwOnError(rc);
   }
 
-  SftpStatAttrib SSHSftp::stat(const std::string &path) {
+  auto SSHSftp::stat(const std::string &path) -> SftpStatAttrib {
     auto lock = _session->lockSession();
     sftp_attributes info = sftp_stat(_sftp, createRemotePath(path).c_str());
     if (info == nullptr)
@@ -215,7 +215,7 @@ namespace ssh {
 
   using ftpFileUniqueDeleter = std::unique_ptr<ftpFile, std::function<void(ftpFile*)>>;
 
-  ftpFileUniqueDeleter createPtr(sftp_file _file) {
+  auto createPtr(sftp_file _file) -> ftpFileUniqueDeleter {
     return ftpFileUniqueDeleter(new ftpFile(_file), [](ftpFile* f) {
       if (f->ptr != nullptr)
         sftp_close(f->ptr);
@@ -223,7 +223,7 @@ namespace ssh {
     });
   }
 
-  void SSHSftp::get(const std::string &src, const std::string &dest) const {
+  auto SSHSftp::get(const std::string &src, const std::string &dest) const -> void {
     auto lock = _session->lockSession();
     sftp_file file = sftp_open(_sftp, createRemotePath(src).c_str(), O_RDONLY, 0);
     if (file == nullptr)
@@ -258,7 +258,7 @@ namespace ssh {
       throw SSHSftpException(_session->getSession()->getError());
   }
 
-  void SSHSftp::setContent(const std::string &path, const std::string &data) const {
+  auto SSHSftp::setContent(const std::string &path, const std::string &data) const -> void {
     logDebug3("Set file content: %s\n", path.c_str());
     auto lock = _session->lockSession();
     auto file = createPtr(sftp_open(_sftp, createRemotePath(path).c_str(), O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU));
@@ -272,7 +272,7 @@ namespace ssh {
     logDebug3("File content succesfully saved: %s\n", path.c_str());
   }
 
-  void SSHSftp::put(const std::string &src, const std::string &dest) const {
+  auto SSHSftp::put(const std::string &src, const std::string &dest) const -> void {
     auto lock = _session->lockSession();
     auto file = createPtr(sftp_open(_sftp, createRemotePath(src).c_str(), O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU));
 
@@ -308,7 +308,7 @@ namespace ssh {
     }
   }
 
-  std::string SSHSftp::getContent(const std::string &src) const {
+  auto SSHSftp::getContent(const std::string &src) const -> std::string {
     auto lock = _session->lockSession();
     auto file = createPtr(sftp_open(_sftp, createRemotePath(src).c_str(), O_RDONLY, 0));
     if (file->ptr == nullptr)
@@ -335,11 +335,11 @@ namespace ssh {
     return buff;
   }
 
-  void SSHSftp::setMaxFileLimit(std::size_t limit) {
+  auto SSHSftp::setMaxFileLimit(std::size_t limit) -> void {
     _maxFileLimit = limit;
   }
 
-  int SSHSftp::cd(const std::string &dirname) {
+  auto SSHSftp::cd(const std::string &dirname) -> int {
     auto lock = _session->lockSession();
     if (dirname.empty())
       return false;
@@ -369,7 +369,7 @@ namespace ssh {
     return 1;
   }
 
-  std::vector<SftpStatAttrib> SSHSftp::ls(const std::string &dirname) const {
+  auto SSHSftp::ls(const std::string &dirname) const -> std::vector<SftpStatAttrib> {
     auto lock = _session->lockSession();
     std::vector<SftpStatAttrib> entries;
     if (dirname.empty())
@@ -401,11 +401,11 @@ namespace ssh {
     return entries;
   }
 
-  std::string SSHSftp::pwd() const {
+  auto SSHSftp::pwd() const -> std::string {
     return "/" + base::join(_path, "/");
   }
 
-  bool SSHSftp::fileExists(const std::string &path) const {
+  auto SSHSftp::fileExists(const std::string &path) const -> bool {
     auto lock = _session->lockSession();
     sftp_attributes info = sftp_stat(_sftp, createRemotePath(path).c_str());
     if (info == nullptr) {

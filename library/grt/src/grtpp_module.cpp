@@ -39,7 +39,7 @@ using namespace grt;
 
 // A bundle (as in macOS bundles) is a directory tree containing all files needed for
 // a self contained plugin, including dynamic libraries and data files.
-std::string GRT::module_path_in_bundle(const std::string &path) {
+auto GRT::module_path_in_bundle(const std::string &path) -> std::string {
   if (!g_str_has_suffix(path.c_str(), ".mwbplugin") || !g_file_test(path.c_str(), G_FILE_TEST_IS_DIR))
     return "";
 
@@ -94,11 +94,11 @@ std::string GRT::module_path_in_bundle(const std::string &path) {
 Module::Module(ModuleLoader *loader) : _is_bundle(false), _loader(loader) {
 }
 
-bool Module::has_function(const std::string &name) const {
+auto Module::has_function(const std::string &name) const -> bool {
   return get_function(name) != 0;
 }
 
-ValueRef Module::call_function(const std::string &name, const grt::BaseListRef &args) {
+auto Module::call_function(const std::string &name, const grt::BaseListRef &args) -> ValueRef {
   const Function *f = get_function(name);
 
   if (!f)
@@ -107,19 +107,19 @@ ValueRef Module::call_function(const std::string &name, const grt::BaseListRef &
   return f->call(args);
 }
 
-std::string Module::bundle_path() const {
+auto Module::bundle_path() const -> std::string {
   return base::dirname(_path);
 }
 
-std::string Module::default_icon_path() const {
+auto Module::default_icon_path() const -> std::string {
   return bundle_path() + "/icon.png";
 }
 
-void Module::add_function(const Function &func) {
+auto Module::add_function(const Function &func) -> void {
   _functions.push_back(func);
 }
 
-static bool parse_type_spec(const char *arg, TypeSpec &fp) {
+static auto parse_type_spec(const char *arg, TypeSpec &fp) -> bool {
   if (*arg == 'a' && strlen(arg) == 1)
     fp.base.type = AnyType;
   else if (*arg == 'i' && strlen(arg) == 1)
@@ -163,7 +163,7 @@ static bool parse_type_spec(const char *arg, TypeSpec &fp) {
   return true;
 }
 
-static bool parse_param_spec(char *arg, ArgSpec &aspec) {
+static auto parse_param_spec(char *arg, ArgSpec &aspec) -> bool {
   char *ptr;
 
   // the optional arg name
@@ -176,8 +176,8 @@ static bool parse_param_spec(char *arg, ArgSpec &aspec) {
   return parse_type_spec(arg, aspec.type);
 }
 
-bool Module::add_parse_function_spec(const std::string &spec,
-                                     const std::function<ValueRef(BaseListRef, Module *, Module::Function)> &caller) {
+auto Module::add_parse_function_spec(const std::string &spec,
+                                     const std::function<ValueRef(BaseListRef, Module *, Module::Function)> &caller) -> bool {
   if (!spec.empty()) {
     char **parts = g_strsplit(spec.c_str(), ":", 0);
     char **args;
@@ -225,7 +225,7 @@ bool Module::add_parse_function_spec(const std::string &spec,
   return false;
 }
 
-const Module::Function *Module::get_function(const std::string &name) const {
+auto Module::get_function(const std::string &name) const -> const Module::Function * {
   for (std::vector<Function>::const_iterator iter = _functions.begin(); iter != _functions.end(); ++iter) {
     if (iter->name == name)
       return &*iter;
@@ -242,7 +242,7 @@ const Module::Function *Module::get_function(const std::string &name) const {
   return 0;
 }
 
-void Module::validate() const {
+auto Module::validate() const -> void {
   if (name().empty())
     throw std::runtime_error("Invalid module, name is not set");
 
@@ -258,7 +258,7 @@ void Module::validate() const {
   }
 }
 
-void Module::set_global_data(const std::string &key, const std::string &value) {
+auto Module::set_global_data(const std::string &key, const std::string &value) -> void {
   std::string k = name();
   k.append(":").append(key);
 
@@ -269,7 +269,7 @@ void Module::set_global_data(const std::string &key, const std::string &value) {
   dict.set(k, grt::StringRef(value));
 }
 
-void Module::set_global_data(const std::string &key, int value) {
+auto Module::set_global_data(const std::string &key, int value) -> void {
   std::string k = name();
   k.append(":").append(key);
 
@@ -279,7 +279,7 @@ void Module::set_global_data(const std::string &key, int value) {
   dict.set(k, grt::IntegerRef(value));
 }
 
-int Module::global_int_data(const std::string &key, int default_value) {
+auto Module::global_int_data(const std::string &key, int default_value) -> int {
   std::string k = name();
   k.append(":").append(key);
 
@@ -289,7 +289,7 @@ int Module::global_int_data(const std::string &key, int default_value) {
   return (int)*grt::IntegerRef::cast_from(dict.get(k, grt::IntegerRef(default_value)));
 }
 
-std::string Module::global_string_data(const std::string &key, const std::string &default_value) {
+auto Module::global_string_data(const std::string &key, const std::string &default_value) -> std::string {
   std::string k = name();
   k.append(":").append(key);
 
@@ -299,7 +299,7 @@ std::string Module::global_string_data(const std::string &key, const std::string
   return *grt::StringRef::cast_from(dict.get(k, grt::StringRef(default_value)));
 }
 
-void Module::set_document_data(const std::string &key, const std::string &value) {
+auto Module::set_document_data(const std::string &key, const std::string &value) -> void {
   std::string k = name();
   k.append(":").append(key);
 
@@ -310,7 +310,7 @@ void Module::set_document_data(const std::string &key, const std::string &value)
   dict.set(k, grt::StringRef(value));
 }
 
-void Module::set_document_data(const std::string &key, int value) {
+auto Module::set_document_data(const std::string &key, int value) -> void {
   std::string k = name();
   k.append(":").append(key);
 
@@ -320,7 +320,7 @@ void Module::set_document_data(const std::string &key, int value) {
   dict.set(k, grt::IntegerRef(value));
 }
 
-int Module::document_int_data(const std::string &key, int default_value) {
+auto Module::document_int_data(const std::string &key, int default_value) -> int {
   std::string k = name();
   k.append(":").append(key);
 
@@ -330,7 +330,7 @@ int Module::document_int_data(const std::string &key, int default_value) {
   return (int)*grt::IntegerRef::cast_from(dict.get(k, grt::IntegerRef(default_value)));
 }
 
-std::string Module::document_string_data(const std::string &key, const std::string &default_value) {
+auto Module::document_string_data(const std::string &key, const std::string &default_value) -> std::string {
   std::string k = name();
   k.append(":").append(key);
 

@@ -103,7 +103,7 @@ public:
   }
 
 public:
-  void foreknown_blob_size(size_t val) {
+  auto foreknown_blob_size(size_t val) -> void {
     _foreknown_blob_size = val;
   }
 
@@ -112,9 +112,9 @@ private:
   size_t _foreknown_blob_size;
 };
 
-size_t Recordset_cdbc_storage::determine_pkey_columns(Recordset::Column_names &column_names,
+auto Recordset_cdbc_storage::determine_pkey_columns(Recordset::Column_names &column_names,
                                                       Recordset::Column_types &column_types,
-                                                      Recordset::Column_types &real_column_types) {
+                                                      Recordset::Column_types &real_column_types) -> size_t {
   // a connection other than the user connection must be used for fetching metadata, otherwise we change the state of
   // the connection
   sql::Dbc_connection_handler::Ref conn;
@@ -159,9 +159,9 @@ size_t Recordset_cdbc_storage::determine_pkey_columns(Recordset::Column_names &c
   return 0;
 }
 
-size_t Recordset_cdbc_storage::determine_pkey_columns_alt(Recordset::Column_names &column_names,
+auto Recordset_cdbc_storage::determine_pkey_columns_alt(Recordset::Column_names &column_names,
                                                           Recordset::Column_types &column_types,
-                                                          Recordset::Column_types &real_column_types) {
+                                                          Recordset::Column_types &real_column_types) -> size_t {
   // a connection other than the user connection must be used for fetching metadata, otherwise we change the state of
   // the connection
   sql::Dbc_connection_handler::Ref conn;
@@ -241,7 +241,7 @@ size_t Recordset_cdbc_storage::determine_pkey_columns_alt(Recordset::Column_name
   return 0;
 }
 
-void Recordset_cdbc_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_cdbc_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   sql::Dbc_connection_handler::Ref conn;
   base::RecMutexLock lock(
     _getUserConnection(conn, true)); // we can't perform full connection check, hence we use the simple one
@@ -470,8 +470,8 @@ void Recordset_cdbc_storage::do_unserialize(Recordset *recordset, sqlite::connec
     _pkey_columns[rowid_col] = col;
 }
 
-void Recordset_cdbc_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
-                                                 ColumnId column, sqlite::variant_t &blob_value) {
+auto Recordset_cdbc_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
+                                                 ColumnId column, sqlite::variant_t &blob_value) -> void {
   sql::Dbc_connection_handler::Ref conn;
   base::RecMutexLock lock(
     _getUserConnection(conn, true)); // we can't perform full connection check, hence we use the simple one
@@ -537,7 +537,7 @@ public:
   }
 };
 
-void Recordset_cdbc_storage::run_sql_script(const Sql_script &sql_script, bool skip_transaction) {
+auto Recordset_cdbc_storage::run_sql_script(const Sql_script &sql_script, bool skip_transaction) -> void {
   sql::Dbc_connection_handler::Ref conn;
   base::RecMutexLock lock(
     _getUserConnection(conn, true)); // we can't perform full connection check, hence we use the simple one
@@ -593,7 +593,7 @@ void Recordset_cdbc_storage::run_sql_script(const Sql_script &sql_script, bool s
   }
 }
 
-std::string Recordset_cdbc_storage::decorated_sql_query() {
+auto Recordset_cdbc_storage::decorated_sql_query() -> std::string {
   std::string sql_query;
   if (!_sql_query.empty())
     sql_query = _sql_query;

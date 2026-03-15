@@ -66,7 +66,7 @@ SelectOptionDialog::SelectOptionDialog(const std::string &title, const std::stri
 SelectOptionDialog::~SelectOptionDialog(void) {
 }
 
-std::string SelectOptionDialog::run() {
+auto SelectOptionDialog::run() -> std::string {
   bool valid_selection = false;
   std::string selection = "";
 

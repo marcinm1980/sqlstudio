@@ -40,7 +40,7 @@ static bool trace_on = false;
 static bool start_tracing = false;
 static FILE *trace_file = 0;
 
-void ___enable_tracing(bool flag) {
+auto ___enable_tracing(bool flag) -> void {
   start_tracing = flag;
   if (flag) {
     if (!trace_file)
@@ -62,7 +62,7 @@ void __cyg_profile_func_enter(void *func_address, void *call_site) __attribute__
 void __cyg_profile_func_exit(void *func_address, void *call_site) __attribute__((no_instrument_function));
 static char *resolve_function(void *addr) __attribute__((no_instrument_function));
 
-static char *resolve_function(void *addr) {
+static auto resolve_function(void *addr) -> char * {
   Dl_info info;
   int s;
 
@@ -71,7 +71,7 @@ static char *resolve_function(void *addr) {
   return __cxxabiv1::__cxa_demangle(info.dli_sname, NULL, NULL, &s);
 }
 
-void __cyg_profile_func_enter(void *func_address, void *call_site) {
+auto __cyg_profile_func_enter(void *func_address, void *call_site) -> void {
   if (trace_on) {
     char *s = resolve_function(func_address);
     struct timeval t;
@@ -86,7 +86,7 @@ void __cyg_profile_func_enter(void *func_address, void *call_site) {
   }
 }
 
-void __cyg_profile_func_exit(void *func_address, void *call_site) {
+auto __cyg_profile_func_exit(void *func_address, void *call_site) -> void {
   if (trace_on) {
     char *s = resolve_function(func_address);
     struct timeval t;
@@ -115,7 +115,7 @@ XlibCanvasView::XlibCanvasView(Display *dpy, Window win, Visual *visual, int wid
   cairo_set_tolerance(_cairo->get_cr(), 0.1);
 }
 
-void XlibCanvasView::update_view_size(int width, int height) {
+auto XlibCanvasView::update_view_size(int width, int height) -> void {
   if (_view_width != width || _view_height != height) {
     _view_width = width;
     _view_height = height;
@@ -129,14 +129,14 @@ void XlibCanvasView::update_view_size(int width, int height) {
   }
 }
 
-bool XlibCanvasView::initialize() {
+auto XlibCanvasView::initialize() -> bool {
   return CanvasView::initialize();
 }
 
-void XlibCanvasView::begin_repaint(int x, int y, int w, int h) {
+auto XlibCanvasView::begin_repaint(int x, int y, int w, int h) -> void {
 }
 
-void XlibCanvasView::end_repaint() {
+auto XlibCanvasView::end_repaint() -> void {
 }
 
 //-------------------------------------------------------------------------------------
@@ -160,11 +160,11 @@ BufferedXlibCanvasView::~BufferedXlibCanvasView() {
   XFreeGC(_display, _copy_gc);
 }
 
-bool BufferedXlibCanvasView::initialize() {
+auto BufferedXlibCanvasView::initialize() -> bool {
   return CanvasView::initialize();
 }
 
-void BufferedXlibCanvasView::update_view_size(int width, int height) {
+auto BufferedXlibCanvasView::update_view_size(int width, int height) -> void {
   if (_view_width != width || _view_height != height) {
     _view_width = width;
     _view_height = height;
@@ -189,7 +189,7 @@ void BufferedXlibCanvasView::update_view_size(int width, int height) {
   }
 }
 
-void BufferedXlibCanvasView::scroll_to(const base::Point &offs) {
+auto BufferedXlibCanvasView::scroll_to(const base::Point &offs) -> void {
   base::Point new_offset;
   base::Size viewable_size(get_viewable_size());
   base::Size total_size(get_total_view_size());
@@ -292,7 +292,7 @@ void BufferedXlibCanvasView::scroll_to(const base::Point &offs) {
   }
 }
 
-void BufferedXlibCanvasView::make_current() {
+auto BufferedXlibCanvasView::make_current() -> void {
 }
 
 /*
@@ -306,7 +306,7 @@ Surface *BufferedXlibCanvasView::create_temp_surface(const Size &size) const
   return s;
 }*/
 
-void BufferedXlibCanvasView::begin_repaint(int x, int y, int w, int h) {
+auto BufferedXlibCanvasView::begin_repaint(int x, int y, int w, int h) -> void {
 #ifdef ___TRACE
   if (start_tracing) {
     gettimeofday(&start_time, NULL);
@@ -322,7 +322,7 @@ void BufferedXlibCanvasView::begin_repaint(int x, int y, int w, int h) {
   _clip_h = h;
 }
 
-void BufferedXlibCanvasView::end_repaint() {
+auto BufferedXlibCanvasView::end_repaint() -> void {
   XCopyArea(_display, _back_buffer, _window, _copy_gc, _clip_x, _clip_y, _clip_w, _clip_h, _clip_x, _clip_y);
 
 #ifdef ___TRACE

@@ -39,31 +39,31 @@ class SynchronizeDifferencesPage : public grtui::WizardPage {
 public:
   SynchronizeDifferencesPage(grtui::WizardForm *form, SynchronizeDifferencesPageBEInterface *be);
   virtual ~SynchronizeDifferencesPage();
-  void update_original_tables(std::list<db_TableRef> &changed_tables);
-  void update_original_columns(std::list<db_ColumnRef> &changed_columns);
-  void edit_table_mapping();
-  void edit_column_mapping();
-  void select_row();
-  void activate_node(mforms::TreeNodeRef node, int column);
-  void set_catalog_getter_slot(const std::function<db_CatalogRef()> &source_catalog_slot,
-                               const std::function<db_CatalogRef()> &target_catalog_slot);
+  auto update_original_tables(std::list<db_TableRef> &changed_tables) -> void;
+  auto update_original_columns(std::list<db_ColumnRef> &changed_columns) -> void;
+  auto edit_table_mapping() -> void;
+  auto edit_column_mapping() -> void;
+  auto select_row() -> void;
+  auto activate_node(mforms::TreeNodeRef node, int column) -> void;
+  auto set_catalog_getter_slot(const std::function<db_CatalogRef()> &source_catalog_slot,
+                               const std::function<db_CatalogRef()> &target_catalog_slot) -> void;
 
-  void set_src(const db_CatalogRef cat);
-  void set_dst(const db_CatalogRef cat);
+  auto set_src(const db_CatalogRef cat) -> void;
+  auto set_dst(const db_CatalogRef cat) -> void;
 
-  std::string get_icon_path(bec::IconId icon);
-  void load_model(std::shared_ptr<DiffTreeBE> model, bec::NodeId node, mforms::TreeNodeRef tnode);
-  virtual bool pre_load();
+  auto get_icon_path(bec::IconId icon) -> std::string;
+  auto load_model(std::shared_ptr<DiffTreeBE> model, bec::NodeId node, mforms::TreeNodeRef tnode) -> void;
+  virtual auto pre_load() -> bool;
 
-  void update_source();
-  void update_model();
-  void update_none();
+  auto update_source() -> void;
+  auto update_model() -> void;
+  auto update_none() -> void;
 
   //  virtual void extra_clicked();
   //  virtual std::string extra_button_caption();
 
 protected:
-  void refresh_node(mforms::TreeNodeRef node);
+  auto refresh_node(mforms::TreeNodeRef node) -> void;
   //  bool node_has_changes(std::shared_ptr<DiffTreeBE> model, bec::NodeId);
 
   SynchronizeDifferencesPageBEInterface *_be;

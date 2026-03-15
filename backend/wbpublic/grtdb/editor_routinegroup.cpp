@@ -46,7 +46,7 @@ RoutineGroupEditorBE::RoutineGroupEditorBE(const db_RoutineGroupRef &group) : DB
  * of the object being edited (in fact, it doesn't even have this member), but collect all SQL text from the individual
  * routine objects we have in the routines() collection.
  */
-std::string RoutineGroupEditorBE::get_sql() {
+auto RoutineGroupEditorBE::get_sql() -> std::string {
   grt::ListRef<db_Routine> routines = get_routine_group()->routines();
   if (!routines.is_valid())
     return "";
@@ -82,7 +82,7 @@ std::string RoutineGroupEditorBE::get_sql() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> RoutineGroupEditorBE::get_routines_names() {
+auto RoutineGroupEditorBE::get_routines_names() -> std::vector<std::string> {
   std::vector<std::string> result;
   grt::ListRef<db_Routine> routines = get_routine_group()->routines();
   if (!routines.is_valid())
@@ -97,13 +97,13 @@ std::vector<std::string> RoutineGroupEditorBE::get_routines_names() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string RoutineGroupEditorBE::get_routine_sql(db_RoutineRef routine) {
+auto RoutineGroupEditorBE::get_routine_sql(db_RoutineRef routine) -> std::string {
   return routine->sqlDefinition();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void RoutineGroupEditorBE::delete_routine_with_name(const std::string &str) {
+auto RoutineGroupEditorBE::delete_routine_with_name(const std::string &str) -> void {
   grt::ListRef<db_Routine> routines = get_routine_group()->routines();
 
   if (!routines.is_valid())
@@ -126,7 +126,7 @@ void RoutineGroupEditorBE::delete_routine_with_name(const std::string &str) {
 /**
  * Removes the routine at the given index from this group. Does nothing if index is out of range.
  */
-void RoutineGroupEditorBE::remove_routine_by_index(size_t index) {
+auto RoutineGroupEditorBE::remove_routine_by_index(size_t index) -> void {
   grt::ListRef<db_Routine> routines = get_routine_group()->routines();
 
   if (!routines.is_valid() || index > routines.count())
@@ -139,7 +139,7 @@ void RoutineGroupEditorBE::remove_routine_by_index(size_t index) {
 
 //--------------------------------------------------------------------------------------------------
 
-void RoutineGroupEditorBE::append_routine_with_id(const std::string &id) {
+auto RoutineGroupEditorBE::append_routine_with_id(const std::string &id) -> void {
   // First ensure no routine with the same id exists already.
   grt::ListRef<db_Routine> routines = get_routine_group()->routines();
 
@@ -165,13 +165,13 @@ void RoutineGroupEditorBE::append_routine_with_id(const std::string &id) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string RoutineGroupEditorBE::get_title() {
+auto RoutineGroupEditorBE::get_title() -> std::string {
   return get_name() + " - Group";
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void RoutineGroupEditorBE::open_editor_for_routine_at_index(size_t index) {
+auto RoutineGroupEditorBE::open_editor_for_routine_at_index(size_t index) -> void {
   if (index < get_routine_group()->routines().count())
     bec::GRTManager::get()->open_object_editor(get_routine_group()->routines()[index]);
 }

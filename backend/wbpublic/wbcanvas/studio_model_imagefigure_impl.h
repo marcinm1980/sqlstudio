@@ -39,26 +39,26 @@ protected:
   cairo_surface_t *_thumbnail;
   mdc::Timestamp _last_click;
 
-  virtual bool realize();
-  bool shrink_if_needed();
+  virtual auto realize() -> bool;
+  auto shrink_if_needed() -> bool;
 
 public:
   ImplData(studio_model_ImageFigure *self);
   virtual ~ImplData(){};
 
-  virtual mdc::CanvasItem *get_canvas_item() const {
+  virtual auto get_canvas_item() const -> mdc::CanvasItem * {
     return _figure;
   }
 
-  std::string set_filename(const std::string &fn);
-  void set_keep_aspect_ratio(bool flag);
+  auto set_filename(const std::string &fn) -> std::string;
+  auto set_keep_aspect_ratio(bool flag) -> void;
 
-  virtual void unrealize();
+  virtual auto unrealize() -> void;
 
-  virtual void render_mini(mdc::CairoCtx *cr);
+  virtual auto render_mini(mdc::CairoCtx *cr) -> void;
 
 private:
-  studio_model_ImageFigure *self() const {
+  auto self() const -> studio_model_ImageFigure * {
     return (studio_model_ImageFigure *)_self;
   }
 };

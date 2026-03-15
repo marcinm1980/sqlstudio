@@ -47,18 +47,18 @@ class DbMySQLRoleEditor : public PluginEditorBase {
   TextListColumnsModel _parent_combo_model;
   bool _refreshing;
 
-  virtual bec::BaseEditor *get_be();
+  virtual auto get_be() -> bec::BaseEditor *;
 
-  void objects_tv_cursor_changed();
+  auto objects_tv_cursor_changed() -> void;
 
-  void refresh_objects();
-  void refresh_privileges();
+  auto refresh_objects() -> void;
+  auto refresh_privileges() -> void;
 
-  void check_all_privileges();
-  void clear_privileges();
-  void change_parent();
+  auto check_all_privileges() -> void;
+  auto clear_privileges() -> void;
+  auto change_parent() -> void;
 
-  void set_name(const std::string &nm) {
+  auto set_name(const std::string &nm) -> void {
     _be->set_name(nm);
     _signal_title_changed.emit(_be->get_title());
   }
@@ -69,13 +69,13 @@ public:
     delete _be;
   }
 
-  virtual void do_refresh_form_data();
-  void onObjectDrop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                      const Gtk::SelectionData &selection_data, guint info, guint time);
-  bool onKeyPressRoleObjects(GdkEventKey *ev);
-  bool onKeyPressRolePrivs(GdkEventKey *ev);
+  virtual auto do_refresh_form_data() -> void;
+  auto onObjectDrop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                      const Gtk::SelectionData &selection_data, guint info, guint time) -> void;
+  auto onKeyPressRoleObjects(GdkEventKey *ev) -> bool;
+  auto onKeyPressRolePrivs(GdkEventKey *ev) -> bool;
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args);
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool;
 };
 
 DbMySQLRoleEditor::DbMySQLRoleEditor(grt::Module *m, const grt::BaseListRef &args)
@@ -149,7 +149,7 @@ DbMySQLRoleEditor::DbMySQLRoleEditor(grt::Module *m, const grt::BaseListRef &arg
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLRoleEditor::switch_edited_object(const grt::BaseListRef &args) {
+auto DbMySQLRoleEditor::switch_edited_object(const grt::BaseListRef &args) -> bool {
   bec::RoleEditorBE *old_be = _be;
 
   _be = new bec::RoleEditorBE(db_RoleRef::cast_from(args[0]), get_rdbms_for_db_object(args[0]));
@@ -184,38 +184,38 @@ bool DbMySQLRoleEditor::switch_edited_object(const grt::BaseListRef &args) {
 }
 
 //------------------------------------------------------------------------------
-bec::BaseEditor *DbMySQLRoleEditor::get_be() {
+auto DbMySQLRoleEditor::get_be() -> bec::BaseEditor * {
   return _be;
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoleEditor::refresh_objects() {
+auto DbMySQLRoleEditor::refresh_objects() -> void {
   _role_objects_tv->unset_model();
   _role_objects_model->refresh();
   _role_objects_tv->set_model(_role_objects_model);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoleEditor::refresh_privileges() {
+auto DbMySQLRoleEditor::refresh_privileges() -> void {
   _role_privs_tv->unset_model();
   _role_privs_model->refresh();
   _role_privs_tv->set_model(_role_privs_model);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoleEditor::check_all_privileges() {
+auto DbMySQLRoleEditor::check_all_privileges() -> void {
   _be->get_privilege_list()->add_all();
   refresh_privileges();
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoleEditor::clear_privileges() {
+auto DbMySQLRoleEditor::clear_privileges() -> void {
   _be->get_privilege_list()->remove_all();
   refresh_privileges();
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoleEditor::change_parent() {
+auto DbMySQLRoleEditor::change_parent() -> void {
   if (_refreshing)
     return;
   std::string old_parent = _be->get_parent_role();
@@ -230,7 +230,7 @@ void DbMySQLRoleEditor::change_parent() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoleEditor::do_refresh_form_data() {
+auto DbMySQLRoleEditor::do_refresh_form_data() -> void {
   Gtk::Entry *entry;
 
   xml()->get_widget("name_entry", entry);
@@ -262,8 +262,8 @@ void DbMySQLRoleEditor::do_refresh_form_data() {
 
 //------------------------------------------------------------------------------
 
-void DbMySQLRoleEditor::onObjectDrop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                                       const Gtk::SelectionData &selection_data, guint info, guint time) {
+auto DbMySQLRoleEditor::onObjectDrop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                                       const Gtk::SelectionData &selection_data, guint info, guint time) -> void {
   bool dnd_status = false;
   if (selection_data.get_target() == WB_DBOBJECT_DRAG_TYPE) {
     if (selection_data.get_length() > 0) {
@@ -285,7 +285,7 @@ void DbMySQLRoleEditor::onObjectDrop(const Glib::RefPtr<Gdk::DragContext> &conte
 
 //------------------------------------------------------------------------------
 
-bool DbMySQLRoleEditor::onKeyPressRoleObjects(GdkEventKey *ev) {
+auto DbMySQLRoleEditor::onKeyPressRoleObjects(GdkEventKey *ev) -> bool {
   if (ev->keyval == GDK_KEY_Delete) {
     auto list = _role_objects_model->get_selection();
     for (const auto &node: list)
@@ -297,7 +297,7 @@ bool DbMySQLRoleEditor::onKeyPressRoleObjects(GdkEventKey *ev) {
 
 //------------------------------------------------------------------------------
 
-bool DbMySQLRoleEditor::onKeyPressRolePrivs(GdkEventKey *ev) {
+auto DbMySQLRoleEditor::onKeyPressRolePrivs(GdkEventKey *ev) -> bool {
   if (ev->keyval == GDK_KEY_space) {
     auto list = _role_privs_model->get_selection();
     for (const auto &node: list) {
@@ -316,7 +316,7 @@ bool DbMySQLRoleEditor::onKeyPressRolePrivs(GdkEventKey *ev) {
 
 //------------------------------------------------------------------------------
 
-void DbMySQLRoleEditor::objects_tv_cursor_changed() {
+auto DbMySQLRoleEditor::objects_tv_cursor_changed() -> void {
   Gtk::TreeModel::iterator iter = _role_objects_tv->get_selection()->get_selected();
   bec::NodeId obj_nodeid = _role_objects_model->node_for_iter(iter);
 
@@ -328,7 +328,7 @@ void DbMySQLRoleEditor::objects_tv_cursor_changed() {
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createDbMysqlRoleEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createDbMysqlRoleEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new DbMySQLRoleEditor(m, args));
 }
 };

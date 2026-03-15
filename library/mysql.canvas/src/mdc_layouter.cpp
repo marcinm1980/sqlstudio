@@ -39,7 +39,7 @@ Layouter::Layouter(Layer *layer) : CanvasItem(layer) {
 Layouter::~Layouter() {
 }
 
-void Layouter::render(CairoCtx *cr) {
+auto Layouter::render(CairoCtx *cr) -> void {
   draw_state(cr);
 
   if (_draw_background) {
@@ -52,28 +52,28 @@ void Layouter::render(CairoCtx *cr) {
   }
 }
 
-void Layouter::render_gl(mdc::CairoCtx *cr) {
+auto Layouter::render_gl(mdc::CairoCtx *cr) -> void {
   if (_draw_background)
     gl_box(get_bounds(), _border_color, _background_color);
   draw_state_gl();
 }
 
-void Layouter::stroke_outline(CairoCtx *cr, float offset) const {
+auto Layouter::stroke_outline(CairoCtx *cr, float offset) const -> void {
   stroke_rounded_rectangle(cr, get_bounds(), _corner_mask, _corner_radius, offset);
 }
 
-void Layouter::stroke_outline_gl(float offset) const {
+auto Layouter::stroke_outline_gl(float offset) const -> void {
   stroke_rounded_rectangle_gl(get_bounds(), _corner_mask, _corner_radius, offset);
 }
 
-void Layouter::remove_all() {
+auto Layouter::remove_all() -> void {
   foreach (std::bind(&Layouter::remove, this, std::placeholders::_1))
     ;
 
   set_needs_relayout();
 }
 
-static void find_item(mdc::CanvasItem *item, const std::string &tag, mdc::CanvasItem **found_item) {
+static auto find_item(mdc::CanvasItem *item, const std::string &tag, mdc::CanvasItem **found_item) -> void {
   if (*found_item)
     return;
 
@@ -87,29 +87,29 @@ static void find_item(mdc::CanvasItem *item, const std::string &tag, mdc::Canvas
     *found_item = sub->find_item_with_tag(tag);
 }
 
-CanvasItem *Layouter::find_item_with_tag(const std::string &tag) {
+auto Layouter::find_item_with_tag(const std::string &tag) -> CanvasItem * {
   CanvasItem *ret = 0;
   foreach (std::bind(&find_item, std::placeholders::_1, tag, &ret))
     ;
   return ret;
 }
 
-void Layouter::set_draw_background(bool flag) {
+auto Layouter::set_draw_background(bool flag) -> void {
   _draw_background = flag;
   set_needs_render();
 }
 
-void Layouter::set_background_corners(mdc::CornerMask mask, float radius) {
+auto Layouter::set_background_corners(mdc::CornerMask mask, float radius) -> void {
   _corner_mask = mask;
   _corner_radius = radius;
 }
 
-void Layouter::set_background_color(const Color &color) {
+auto Layouter::set_background_color(const Color &color) -> void {
   _background_color = color;
   set_needs_render();
 }
 
-void Layouter::set_border_color(const Color &color) {
+auto Layouter::set_border_color(const Color &color) -> void {
   _border_color = color;
   set_needs_render();
 }

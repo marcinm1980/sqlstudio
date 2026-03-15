@@ -46,7 +46,7 @@ public:
 };
 
 //--------------------------------------------------------------------------------------------------
-static std::string get_node_icon_path(NodeIcons icon) {
+static auto get_node_icon_path(NodeIcons icon) -> std::string {
   bec::IconId iconid;
 
   switch (icon) {
@@ -80,11 +80,11 @@ static std::string get_node_icon_path(NodeIcons icon) {
 
 CatalogTreeView::ObjectNodeData::ObjectNodeData(grt::ObjectRef obj_ref) : mforms::TreeNodeData(), _ref(obj_ref) {
 }
-grt::ObjectRef CatalogTreeView::ObjectNodeData::get_object_ref() {
+auto CatalogTreeView::ObjectNodeData::get_object_ref() -> grt::ObjectRef {
   return _ref;
 }
 
-bool CatalogTreeView::get_drag_data(mforms::DragDetails &details, void **data, std::string &format) {
+auto CatalogTreeView::get_drag_data(mforms::DragDetails &details, void **data, std::string &format) -> bool {
   std::list<mforms::TreeNodeRef> selection = get_selection();
 
   _dragged_objects.clear();
@@ -112,13 +112,13 @@ bool CatalogTreeView::get_drag_data(mforms::DragDetails &details, void **data, s
   return true;
 }
 
-void CatalogTreeView::menu_action(const std::string &name, grt::ValueRef val) {
+auto CatalogTreeView::menu_action(const std::string &name, grt::ValueRef val) -> void {
   if (name == "edit" && _activate_callback)
     _activate_callback(val);
 }
 
-mforms::TreeNodeRef CatalogTreeView::create_new_node(const ObjectType &otype, mforms::TreeNodeRef parent,
-                                                     const std::string &name, grt::ObjectRef obj) {
+auto CatalogTreeView::create_new_node(const ObjectType &otype, mforms::TreeNodeRef parent,
+                                                     const std::string &name, grt::ObjectRef obj) -> mforms::TreeNodeRef {
   mforms::TreeNodeRef new_node;
   if (parent.is_valid()) {
     std::string icon_path;
@@ -203,13 +203,13 @@ CatalogTreeView::~CatalogTreeView() {
   delete _menu;
 }
 
-void CatalogTreeView::node_activated(mforms::TreeNodeRef row, int column) {
+auto CatalogTreeView::node_activated(mforms::TreeNodeRef row, int column) -> void {
   ObjectNodeData *data = dynamic_cast<ObjectNodeData *>(row->get_data());
   if (data != NULL)
     _activate_callback(data->get_object_ref());
 }
 
-static bool compare_db_object(db_DatabaseObjectRef a, db_DatabaseObjectRef b) {
+static auto compare_db_object(db_DatabaseObjectRef a, db_DatabaseObjectRef b) -> bool {
   return base::string_compare(a->name(), b->name()) < 0 ? true : false;
 }
 
@@ -223,7 +223,7 @@ static std::vector<grt::Ref<T> > sort_db_object(grt::ListRef<T> list) {
   return vec;
 }
 
-void CatalogTreeView::refill(bool force) {
+auto CatalogTreeView::refill(bool force) -> void {
   if (_initialized && !force)
     return;
 
@@ -308,13 +308,13 @@ void CatalogTreeView::refill(bool force) {
   _initialized = true;
 }
 
-void CatalogTreeView::set_activate_callback(const std::function<void(grt::ValueRef)> &active_callback) {
+auto CatalogTreeView::set_activate_callback(const std::function<void(grt::ValueRef)> &active_callback) -> void {
   _activate_callback = active_callback;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void CatalogTreeView::context_menu_will_show(mforms::MenuItem *parent_item) {
+auto CatalogTreeView::context_menu_will_show(mforms::MenuItem *parent_item) -> void {
   std::list<mforms::TreeNodeRef> selection = get_selection();
 
   mforms::MenuBase *parent;
@@ -355,7 +355,7 @@ void CatalogTreeView::context_menu_will_show(mforms::MenuItem *parent_item) {
   }
 }
 //--------------------------------------------------------------------------------------------------
-void CatalogTreeView::mark_node(grt::ValueRef val, bool mark) {
+auto CatalogTreeView::mark_node(grt::ValueRef val, bool mark) -> void {
   db_DatabaseObjectRef obj;
   if (db_DatabaseObjectRef::can_wrap(val))
     obj = db_DatabaseObjectRef::cast_from(val);
@@ -368,7 +368,7 @@ void CatalogTreeView::mark_node(grt::ValueRef val, bool mark) {
     node->set_string(1, mark ? "\xe2\x97\x8f" : "");
 }
 
-void CatalogTreeView::add_update_node_caption(grt::ValueRef val) {
+auto CatalogTreeView::add_update_node_caption(grt::ValueRef val) -> void {
   ObjectType otype = ObjNone;
 
   db_DatabaseObjectRef obj;
@@ -460,7 +460,7 @@ void CatalogTreeView::add_update_node_caption(grt::ValueRef val) {
   }
 }
 
-void CatalogTreeView::remove_node(grt::ValueRef val) {
+auto CatalogTreeView::remove_node(grt::ValueRef val) -> void {
   db_DatabaseObjectRef obj;
   if (db_DatabaseObjectRef::can_wrap(val))
     obj = db_DatabaseObjectRef::cast_from(val);

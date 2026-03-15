@@ -118,16 +118,16 @@ namespace grt {
       virtual auto get_type() const -> Type = 0;
 
       auto retain() -> Value *;
-      void release();
+      auto release() -> void;
 
       virtual auto debugDescription(const std::string &indentation = "") const -> std::string = 0;
       virtual auto toString() const -> std::string = 0;
 
       auto refcount() const -> base::refcount_t;
 
-      virtual void mark_global() const {
+      virtual auto mark_global() const -> void {
       }
-      virtual void unmark_global() const {
+      virtual auto unmark_global() const -> void {
       }
 
       virtual auto equals(const Value *) const -> bool = 0;
@@ -135,7 +135,7 @@ namespace grt {
 
       // This method helps to free memory allocated by Value.
       // It is overridden in Object, List and Dict.
-      virtual void reset_references() {
+      virtual auto reset_references() -> void {
       }
 
     protected:
@@ -292,11 +292,11 @@ namespace grt {
         return _content[index];
       }
 
-      virtual void set_unchecked(size_t index, const ValueRef &value);
-      virtual void insert_unchecked(const ValueRef &value, size_t index = npos);
+      virtual auto set_unchecked(size_t index, const ValueRef &value) -> void;
+      virtual auto insert_unchecked(const ValueRef &value, size_t index = npos) -> void;
 
-      void set_checked(size_t index, const ValueRef &value);
-      void insert_checked(const ValueRef &value, size_t index = npos);
+      auto set_checked(size_t index, const ValueRef &value) -> void;
+      auto insert_checked(const ValueRef &value, size_t index = npos) -> void;
 
       auto check_assignable(const ValueRef &value) const -> bool;
       auto null_allowed() const -> bool {
@@ -307,9 +307,9 @@ namespace grt {
         return _content.size();
       }
 
-      virtual void remove(const ValueRef &value);
-      virtual void remove(size_t index);
-      void reorder(size_t oi, size_t ni);
+      virtual auto remove(const ValueRef &value) -> void;
+      virtual auto remove(size_t index) -> void;
+      auto reorder(size_t oi, size_t ni) -> void;
 
       auto get_index(const ValueRef &value) -> size_t;
 
@@ -342,12 +342,12 @@ namespace grt {
       }
 
     public:
-      void __retype(Type type, const std::string &content_class);
+      auto __retype(Type type, const std::string &content_class) -> void;
 
-      virtual void mark_global() const;
-      virtual void unmark_global() const;
+      virtual auto mark_global() const -> void;
+      virtual auto unmark_global() const -> void;
 
-      virtual void reset_references();
+      virtual auto reset_references() -> void;
 
     protected:
       friend class ::grt::GRT;
@@ -367,11 +367,11 @@ namespace grt {
     public:
       OwnedList(Type type, const std::string &content_class, Object *owner, bool allow_null);
 
-      virtual void set_unchecked(size_t index, const ValueRef &value);
-      virtual void insert_unchecked(const ValueRef &value, size_t index = npos);
+      virtual auto set_unchecked(size_t index, const ValueRef &value) -> void;
+      virtual auto insert_unchecked(const ValueRef &value, size_t index = npos) -> void;
 
-      virtual void remove(const ValueRef &value);
-      virtual void remove(size_t index);
+      virtual auto remove(const ValueRef &value) -> void;
+      virtual auto remove(size_t index) -> void;
 
       auto owner_of_owned_list() const -> Object * {
         return _owner;
@@ -416,9 +416,9 @@ namespace grt {
 
       auto has_key(const std::string &key) const -> bool;
       auto get(const std::string &key) const -> ValueRef;
-      virtual void set(const std::string &key, const ValueRef &value);
-      virtual void remove(const std::string &key);
-      virtual void reset_entries();
+      virtual auto set(const std::string &key, const ValueRef &value) -> void;
+      virtual auto remove(const std::string &key) -> void;
+      virtual auto reset_entries() -> void;
       auto count() const -> size_t {
         return _content.size();
       }
@@ -428,10 +428,10 @@ namespace grt {
       virtual auto equals(const Value *) const -> bool;
       virtual auto less_than(const Value *) const -> bool;
 
-      virtual void mark_global() const;
-      virtual void unmark_global() const;
+      virtual auto mark_global() const -> void;
+      virtual auto unmark_global() const -> void;
 
-      virtual void reset_references();
+      virtual auto reset_references() -> void;
 
     protected:
       friend class ::grt::GRT;
@@ -447,9 +447,9 @@ namespace grt {
     public:
       OwnedDict(Type type, const std::string &content_class, Object *owner, bool allow_null);
 
-      virtual void set(const std::string &key, const ValueRef &value);
-      virtual void remove(const std::string &key);
-      virtual void reset_entries();
+      virtual auto set(const std::string &key, const ValueRef &value) -> void;
+      virtual auto remove(const std::string &key) -> void;
+      virtual auto reset_entries() -> void;
 
       auto owner_of_owned_dict() const -> Object * {
         return _owner;
@@ -491,7 +491,7 @@ namespace grt {
       auto is_instance(MetaClass *gclass) const -> bool;
       auto is_instance(const std::string &name) const -> bool;
 
-      void set_member(const std::string &member, const ValueRef &value);
+      auto set_member(const std::string &member, const ValueRef &value) -> void;
       auto get_member(const std::string &member) const -> ValueRef;
       auto get_string_member(const std::string &member) const -> std::string;
       auto get_double_member(const std::string &member) const -> Double::storage_type;
@@ -519,15 +519,15 @@ namespace grt {
         return &_dict_changed_signal;
       }
 
-      virtual void reset_references();
+      virtual auto reset_references() -> void;
 
     public:
-      virtual void init();
+      virtual auto init() -> void;
 
-      void __set_id(const std::string &id);
+      auto __set_id(const std::string &id) -> void;
 
-      virtual void mark_global() const;
-      virtual void unmark_global() const;
+      virtual auto mark_global() const -> void;
+      virtual auto unmark_global() const -> void;
 
     protected:
       friend class OwnedList;
@@ -537,14 +537,14 @@ namespace grt {
 
       explicit Object(MetaClass *gclass);
 
-      void owned_member_changed(const std::string &name, const grt::ValueRef &ovalue, const grt::ValueRef &nvalue);
-      void member_changed(const std::string &name, const grt::ValueRef &ovalue, const grt::ValueRef &nvalue);
+      auto owned_member_changed(const std::string &name, const grt::ValueRef &ovalue, const grt::ValueRef &nvalue) -> void;
+      auto member_changed(const std::string &name, const grt::ValueRef &ovalue, const grt::ValueRef &nvalue) -> void;
 
-      virtual void owned_list_item_added(OwnedList *list, const grt::ValueRef &value);
-      virtual void owned_list_item_removed(OwnedList *list, const grt::ValueRef &value);
+      virtual auto owned_list_item_added(OwnedList *list, const grt::ValueRef &value) -> void;
+      virtual auto owned_list_item_removed(OwnedList *list, const grt::ValueRef &value) -> void;
 
-      virtual void owned_dict_item_set(OwnedDict *dict, const std::string &key);
-      virtual void owned_dict_item_removed(OwnedDict *dict, const std::string &key);
+      virtual auto owned_dict_item_set(OwnedDict *dict, const std::string &key) -> void;
+      virtual auto owned_dict_item_removed(OwnedDict *dict, const std::string &key) -> void;
 
       MetaClass *_metaclass;
       std::string _id;
@@ -585,12 +585,12 @@ namespace grt {
 
       /** Register all known classes in the given GRT context.
        */
-      void register_all();
+      auto register_all() -> void;
 
       /**
        * This one is neede dfor testing purposes only
        */
-      void cleanUp();
+      auto cleanUp() -> void;
 
       static auto get_instance() -> ClassRegistry *;
 

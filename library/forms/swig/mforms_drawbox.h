@@ -31,7 +31,7 @@ namespace mforms {
     PyDrawBox() : _self(NULL) {
     }
 
-    void set_instance(PyObject *instance) {
+    auto set_instance(PyObject *instance) -> void {
       //_self = PyWeakref_NewRef(instance, NULL);
       _self = instance;
       Py_INCREF(_self);
@@ -42,7 +42,7 @@ namespace mforms {
     }
 
   protected:
-    virtual void repaint(cairo_t *cr, int x, int y, int w, int h) {
+    virtual auto repaint(cairo_t *cr, int x, int y, int w, int h) -> void {
       WillEnterPython lock;
 
       PyObject *c = SWIG_NewPointerObj(cr, SWIG_TypeQuery("cairo_t *"), 0);
@@ -52,7 +52,7 @@ namespace mforms {
       Py_XDECREF(args);
     }
 
-    virtual bool mouse_down(mforms::MouseButton button, int x, int y) {
+    virtual auto mouse_down(mforms::MouseButton button, int x, int y) -> bool {
       if (DrawBox::mouse_down(button, x, y))
         return true;
 
@@ -65,7 +65,7 @@ namespace mforms {
       return result;
     }
 
-    virtual bool mouse_up(mforms::MouseButton button, int x, int y) {
+    virtual auto mouse_up(mforms::MouseButton button, int x, int y) -> bool {
       if (DrawBox::mouse_up(button, x, y))
         return true;
 
@@ -78,7 +78,7 @@ namespace mforms {
       return result;
     }
 
-    virtual bool mouse_click(mforms::MouseButton button, int x, int y) {
+    virtual auto mouse_click(mforms::MouseButton button, int x, int y) -> bool {
       if (DrawBox::mouse_click(button, x, y))
         return true;
 
@@ -91,7 +91,7 @@ namespace mforms {
       return result;
     }
 
-    virtual bool mouse_double_click(mforms::MouseButton button, int x, int y) {
+    virtual auto mouse_double_click(mforms::MouseButton button, int x, int y) -> bool {
       if (DrawBox::mouse_double_click(button, x, y))
         return true;
 
@@ -104,7 +104,7 @@ namespace mforms {
       return result;
     }
 
-    virtual bool mouse_enter() {
+    virtual auto mouse_enter() -> bool {
       if (DrawBox::mouse_enter())
         return true;
 
@@ -117,7 +117,7 @@ namespace mforms {
       return result;
     }
 
-    virtual bool mouse_leave() {
+    virtual auto mouse_leave() -> bool {
       if (DrawBox::mouse_leave())
         return true;
 
@@ -130,7 +130,7 @@ namespace mforms {
       return result;
     }
 
-    virtual bool mouse_move(mforms::MouseButton button, int x, int y) {
+    virtual auto mouse_move(mforms::MouseButton button, int x, int y) -> bool {
       if (DrawBox::mouse_move(button, x, y))
         return true;
 
@@ -145,7 +145,7 @@ namespace mforms {
 
     PyObject *_self;
 
-    bool call_method(const char *method, PyObject *args) {
+    auto call_method(const char *method, PyObject *args) -> bool {
       bool result = false;
 
       // if (PyWeakref_CheckRef(_self))

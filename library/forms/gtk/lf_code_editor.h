@@ -42,16 +42,16 @@ namespace mforms {
     public:
       CodeEditorImpl(CodeEditor *self);
       virtual ~CodeEditorImpl();
-      static void init();
+      static auto init() -> void;
 
-      virtual Gtk::Widget *get_outer() const;
+      virtual auto get_outer() const -> Gtk::Widget *;
 
-      void notify(SCNotification *event);
-      void command(unsigned long wParam, long);
+      auto notify(SCNotification *event) -> void;
+      auto command(unsigned long wParam, long) -> void;
 
     protected:
-      void keyboard_event(GdkEventKey *event, CodeEditor *editor);
-      void mouse_button_event(GdkEventButton *event, CodeEditor *editor);
+      auto keyboard_event(GdkEventKey *event, CodeEditor *editor) -> void;
+      auto mouse_button_event(GdkEventButton *event, CodeEditor *editor) -> void;
 
     private:
       // private data
@@ -59,10 +59,10 @@ namespace mforms {
       Gtk::Widget *_sci_gtkmm_widget;
       ScintillaObject *_sci;
       CodeEditor *_owner;
-      static bool create(CodeEditor *self, bool showInfo);
-      static sptr_t send_editor(CodeEditor *self, unsigned int msg, uptr_t uparam, sptr_t sparam);
-      static void show_find_panel(CodeEditor *self, bool show);
-      static void set_status_text(CodeEditor *self, const std::string &text);
+      static auto create(CodeEditor *self, bool showInfo) -> bool;
+      static auto send_editor(CodeEditor *self, unsigned int msg, uptr_t uparam, sptr_t sparam) -> sptr_t;
+      static auto show_find_panel(CodeEditor *self, bool show) -> void;
+      static auto set_status_text(CodeEditor *self, const std::string &text) -> void;
     };
 
   } // end of namespace gtk

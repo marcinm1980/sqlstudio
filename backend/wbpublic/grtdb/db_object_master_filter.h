@@ -39,13 +39,13 @@ namespace bec {
   public:
     DBObjectMasterFilterBE();
 
-    void add_filter(DBObjectFilterBE *filter);
-    void remove_all_filters();
+    auto add_filter(DBObjectFilterBE *filter) -> void;
+    auto remove_all_filters() -> void;
 
-    void add_stored_filter_set(const std::string &name, std::list<std::string> &names);
-    void remove_stored_filter_set(int index);
-    void load_stored_filter_set(int index, std::list<int> &indexes);
-    void load_stored_filter_set_list(std::list<std::string> &names);
+    auto add_stored_filter_set(const std::string &name, std::list<std::string> &names) -> void;
+    auto remove_stored_filter_set(int index) -> void;
+    auto load_stored_filter_set(int index, std::list<int> &indexes) -> void;
+    auto load_stored_filter_set_list(std::list<std::string> &names) -> void;
 
   protected:
     std::vector<DBObjectFilterBE *> _filters;

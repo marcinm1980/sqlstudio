@@ -180,8 +180,7 @@ static uchar NEAR sort_order_big5[]=
   (uchar) '\370',(uchar) '\371',(uchar) '\372',(uchar) '\373',(uchar) '\374',(uchar) '\375',(uchar) '\376',(uchar) '\377',
 };
 
-static uint16 big5strokexfrm(uint16 i)
-{
+static auto big5strokexfrm(uint16 i) -> uint16 {
   if ((i == 0xA440) || (i == 0xA441))  return 0xA440;
   else if (((i >= 0xA442) && (i <= 0xA453)) || ((i >= 0xC940) && (i <= 0xC944)))  return 0xA442;
   else if (((i >= 0xA454) && (i <= 0xA47E)) || ((i >= 0xC945) && (i <= 0xC94C)))  return 0xA454;
@@ -223,9 +222,8 @@ static uint16 big5strokexfrm(uint16 i)
 
 
 
-static int my_strnncoll_big5_internal(const uchar **a_res,
-				      const uchar **b_res, uint length)
-{
+static auto my_strnncoll_big5_internal(const uchar **a_res,
+				      const uchar **b_res, uint length) -> int {
   const uchar *a= *a_res, *b= *b_res;
 
   while (length--)
@@ -252,11 +250,10 @@ static int my_strnncoll_big5_internal(const uchar **a_res,
 
 /* Compare strings */
 
-static int my_strnncoll_big5(CHARSET_INFO *cs __attribute__((unused)), 
+static auto my_strnncoll_big5(CHARSET_INFO *cs __attribute__((unused)), 
 			     const uchar *a, uint a_length,
                              const uchar *b, uint b_length,
-                             my_bool b_is_prefix)
-{
+                             my_bool b_is_prefix) -> int {
   uint length= min(a_length, b_length);
   int res= my_strnncoll_big5_internal(&a, &b, length);
   return res ? res : (int)((b_is_prefix ? length : a_length) - b_length);
@@ -265,11 +262,10 @@ static int my_strnncoll_big5(CHARSET_INFO *cs __attribute__((unused)),
 
 /* compare strings, ignore end space */
 
-static int my_strnncollsp_big5(CHARSET_INFO * cs __attribute__((unused)), 
+static auto my_strnncollsp_big5(CHARSET_INFO * cs __attribute__((unused)), 
 			       const uchar *a, uint a_length, 
 			       const uchar *b, uint b_length,
-                               my_bool diff_if_only_endspace_difference)
-{
+                               my_bool diff_if_only_endspace_difference) -> int {
   uint length= min(a_length, b_length);
   int res= my_strnncoll_big5_internal(&a, &b, length);
 
@@ -305,10 +301,9 @@ static int my_strnncollsp_big5(CHARSET_INFO * cs __attribute__((unused)),
 }
 
 
-static int my_strnxfrm_big5(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnxfrm_big5(CHARSET_INFO *cs __attribute__((unused)),
                      uchar * dest, uint len, 
-                     const uchar * src, uint srclen)
-{
+                     const uchar * src, uint srclen) -> int {
   uint16 e;
   uint dstlen= len;
 
@@ -331,8 +326,7 @@ static int my_strnxfrm_big5(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 #if 0
-static int my_strcoll_big5(const uchar * s1, const uchar * s2)
-{
+static auto my_strcoll_big5(const uchar * s1, const uchar * s2) -> int {
 
   while (*s1 && *s2)
   {
@@ -350,8 +344,7 @@ static int my_strcoll_big5(const uchar * s1, const uchar * s2)
   return 0;
 }
 
-static int my_strxfrm_big5(uchar * dest, const uchar * src, int len)
-{
+static auto my_strxfrm_big5(uchar * dest, const uchar * src, int len) -> int {
   uint16 e;
   uchar *d = dest;
 
@@ -398,12 +391,11 @@ static int my_strxfrm_big5(uchar * dest, const uchar * src, int len)
 
 #define max_sort_char ((char) 255)
 
-static my_bool my_like_range_big5(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_like_range_big5(CHARSET_INFO *cs __attribute__((unused)),
 				  const char *ptr,uint ptr_length,
 				  pbool escape, pbool w_one, pbool w_many,
 				  uint res_length, char *min_str,char *max_str,
-				  uint *min_length,uint *max_length)
-{
+				  uint *min_length,uint *max_length) -> my_bool {
   const char *end= ptr + ptr_length;
   char *min_org=min_str;
   char *min_end=min_str+res_length;
@@ -458,15 +450,13 @@ static my_bool my_like_range_big5(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-static int ismbchar_big5(CHARSET_INFO *cs __attribute__((unused)),
-                  const char* p, const char *e)
-{
+static auto ismbchar_big5(CHARSET_INFO *cs __attribute__((unused)),
+                  const char* p, const char *e) -> int {
   return (isbig5head(*(p)) && (e)-(p)>1 && isbig5tail(*((p)+1))? 2: 0);
 }
 
 
-static int mbcharlen_big5(CHARSET_INFO *cs __attribute__((unused)), uint c)
-{
+static auto mbcharlen_big5(CHARSET_INFO *cs __attribute__((unused)), uint c) -> int {
   return (isbig5head(c)? 2 : 1);
 }
 
@@ -3273,7 +3263,7 @@ static uint16 tab_big5_uni1[]={
 0x7069,0x706A,0x9EA4,0x9F7E,0x9F49,0x9F98,0x7881,0x92B9,
 0x88CF,0x58BB,0x6052,0x7CA7,0x5AFA};
 
-static int func_big5_uni_onechar(int code){
+static auto func_big5_uni_onechar(int code) -> int {
   if ((code>=0xA140)&&(code<=0xC7FC))
     return(tab_big5_uni0[code-0xA140]);
   if ((code>=0xC940)&&(code<=0xF9DC))
@@ -6214,7 +6204,7 @@ static uint16 tab_uni_big510[]={
      0,     0,     0,     0,     0,     0,     0,     0,
      0,     0,     0,     0,     0,0xA2CE};
 
-static int func_uni_big5_onechar(int code){
+static auto func_uni_big5_onechar(int code) -> int {
   if ((code>=0x00A2)&&(code<=0x00F7))
     return(tab_uni_big50[code-0x00A2]);
   if ((code>=0x02C7)&&(code<=0x0451))
@@ -6241,10 +6231,8 @@ static int func_uni_big5_onechar(int code){
 }
 
 
-static int
-my_wc_mb_big5(CHARSET_INFO *cs __attribute__((unused)),
-	      my_wc_t wc, unsigned char *s, unsigned char *e)
-{
+static auto my_wc_mb_big5(CHARSET_INFO *cs __attribute__((unused)),
+	      my_wc_t wc, unsigned char *s, unsigned char *e) -> int {
 
   int code;
 
@@ -6270,10 +6258,8 @@ my_wc_mb_big5(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-static int 
-my_mb_wc_big5(CHARSET_INFO *cs __attribute__((unused)),
-	      my_wc_t *pwc,const uchar *s,const uchar *e)
-{
+static auto my_mb_wc_big5(CHARSET_INFO *cs __attribute__((unused)),
+	      my_wc_t *pwc,const uchar *s,const uchar *e) -> int {
 
   int hi=s[0];
   
@@ -6301,10 +6287,9 @@ my_mb_wc_big5(CHARSET_INFO *cs __attribute__((unused)),
   CP950 and HKSCS additional characters are also accepted.
 */
 static
-uint my_well_formed_len_big5(CHARSET_INFO *cs __attribute__((unused)),
+auto my_well_formed_len_big5(CHARSET_INFO *cs __attribute__((unused)),
                              const char *b, const char *e,
-                             uint pos, int *error)
-{
+                             uint pos, int *error) -> uint {
   const char *b0= b;
   const char *emb= e - 1; /* Last possible end of an MB character */
 

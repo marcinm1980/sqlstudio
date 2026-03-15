@@ -36,27 +36,27 @@ namespace mforms {
       ScrollPanelWrapper(::mforms::ScrollPanel *self, bool bordered) : ContainerWrapper(self) {
       }
 
-      static bool create(::mforms::ScrollPanel *self, ::mforms::ScrollPanelFlags flags) {
+      static auto create(::mforms::ScrollPanel *self, ::mforms::ScrollPanelFlags flags) -> bool {
         return true;
       }
 
-      static void add(::mforms::ScrollPanel *self, ::mforms::View *child) {
+      static auto add(::mforms::ScrollPanel *self, ::mforms::View *child) -> void {
       }
 
-      static void remove(::mforms::ScrollPanel *self) {
+      static auto remove(::mforms::ScrollPanel *self) -> void {
       }
 
-      static void set_visible_scrollers(::mforms::ScrollPanel *self, bool vertical, bool horizontal) {
+      static auto set_visible_scrollers(::mforms::ScrollPanel *self, bool vertical, bool horizontal) -> void {
       }
 
-      static void set_autohide_scrollers(::mforms::ScrollPanel *self, bool flag) {
+      static auto set_autohide_scrollers(::mforms::ScrollPanel *self, bool flag) -> void {
       }
 
-      static void scroll_to_view(ScrollPanel *, View *) {
+      static auto scroll_to_view(ScrollPanel *, View *) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_spanel_impl.create = &ScrollPanelWrapper::create;

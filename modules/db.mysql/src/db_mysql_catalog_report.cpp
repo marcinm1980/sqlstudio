@@ -34,7 +34,7 @@
 /// even need a table either.
 /// --alfredo
 
-std::string ActionGenerateReport::object_name(const GrtNamedObjectRef obj) const {
+auto ActionGenerateReport::object_name(const GrtNamedObjectRef obj) const -> std::string {
   std::string obj_name;
   obj_name += "`";
   if (!_omitSchemas) {
@@ -46,7 +46,7 @@ std::string ActionGenerateReport::object_name(const GrtNamedObjectRef obj) const
   return obj_name;
 }
 
-std::string ActionGenerateReport::trigger_name(const GrtNamedObjectRef obj) const {
+auto ActionGenerateReport::trigger_name(const GrtNamedObjectRef obj) const -> std::string {
   std::string obj_name;
   obj_name += "`";
   if (!_omitSchemas) {
@@ -58,7 +58,7 @@ std::string ActionGenerateReport::trigger_name(const GrtNamedObjectRef obj) cons
   return obj_name;
 }
 
-static std::string get_index_columns(db_mysql_IndexRef index) {
+static auto get_index_columns(db_mysql_IndexRef index) -> std::string {
   std::string col_list;
   for (size_t sz = index->columns().count(), i = 0; i < sz; i++) {
     if (i > 0)
@@ -74,8 +74,8 @@ static std::string get_index_columns(db_mysql_IndexRef index) {
   return col_list;
 }
 
-static void get_fk_desc(db_mysql_ForeignKeyRef fk, std::string &col_list, std::string &ref_t, std::string &ref_col_list,
-                        std::string &on_update, std::string &on_delete) {
+static auto get_fk_desc(db_mysql_ForeignKeyRef fk, std::string &col_list, std::string &ref_t, std::string &ref_col_list,
+                        std::string &on_update, std::string &on_delete) -> void {
   for (size_t sz = fk->columns().count(), i = 0; i < sz; i++) {
     if (i > 0)
       col_list += ", ";
@@ -116,7 +116,7 @@ ActionGenerateReport::~ActionGenerateReport() {
   delete dictionary;
 }
 
-std::string ActionGenerateReport::generate_output() {
+auto ActionGenerateReport::generate_output() -> std::string {
   mtemplate::Template *tpl = mtemplate::GetTemplate(fname, mtemplate::STRIP_BLANK_LINES);
   mtemplate::TemplateOutputString output;
   tpl->expand(dictionary, &output);
@@ -125,7 +125,7 @@ std::string ActionGenerateReport::generate_output() {
 }
 
 // create table
-void ActionGenerateReport::create_table_props_begin(db_mysql_TableRef table) {
+auto ActionGenerateReport::create_table_props_begin(db_mysql_TableRef table) -> void {
   current_table_dictionary = dictionary->addSectionDictionary(kbtr_CREATE_TABLE);
   current_table_dictionary->setValue(kbtr_CREATE_TABLE_NAME, object_name(table));
 
@@ -133,50 +133,50 @@ void ActionGenerateReport::create_table_props_begin(db_mysql_TableRef table) {
   has_partitioning = false;
 }
 
-void ActionGenerateReport::create_table_props_end(db_mysql_TableRef) {
+auto ActionGenerateReport::create_table_props_end(db_mysql_TableRef) -> void {
   if (has_attributes) {
     current_table_dictionary->addSectionDictionary(kbtr_CREATE_TABLE_ATTRIBUTES_HEADER);
     current_table_dictionary->addSectionDictionary(kbtr_CREATE_TABLE_ATTRIBUTES_FOOTER);
   }
 }
 
-void ActionGenerateReport::create_table_columns_begin(db_mysql_TableRef) {
+auto ActionGenerateReport::create_table_columns_begin(db_mysql_TableRef) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_CREATE_TABLE_COLUMNS_HEADER);
 }
 
-void ActionGenerateReport::create_table_column(db_mysql_ColumnRef column) {
+auto ActionGenerateReport::create_table_column(db_mysql_ColumnRef column) -> void {
   mtemplate::DictionaryInterface *c2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_COLUMN);
   c2->setValue(kbtr_TABLE_COLUMN_NAME, (std::string)column->name());
   c2->setValue(kbtr_TABLE_COLUMN_TYPE, (std::string)(column->simpleType().is_valid() ? column->simpleType()->name()
                                                                                      : "<corrupted column type>"));
 }
 
-void ActionGenerateReport::create_table_columns_end(db_mysql_TableRef) {
+auto ActionGenerateReport::create_table_columns_end(db_mysql_TableRef) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_CREATE_TABLE_COLUMNS_FOOTER);
 }
 
-void ActionGenerateReport::create_table_indexes_begin(db_mysql_TableRef table) {
+auto ActionGenerateReport::create_table_indexes_begin(db_mysql_TableRef table) -> void {
   if (table->indices().count() > 0)
     current_table_dictionary->addSectionDictionary(kbtr_CREATE_TABLE_INDEXES_HEADER);
 }
 
-void ActionGenerateReport::create_table_index(db_mysql_IndexRef index, bool gen_create_index) {
+auto ActionGenerateReport::create_table_index(db_mysql_IndexRef index, bool gen_create_index) -> void {
   mtemplate::DictionaryInterface *ix2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_INDEX);
   ix2->setValue(kbtr_TABLE_INDEX_NAME, (std::string)index->name());
   ix2->setValue(kbtr_TABLE_INDEX_COLUMNS, get_index_columns(index));
 }
 
-void ActionGenerateReport::create_table_indexes_end(db_mysql_TableRef table) {
+auto ActionGenerateReport::create_table_indexes_end(db_mysql_TableRef table) -> void {
   if (table->indices().count() > 0)
     current_table_dictionary->addSectionDictionary(kbtr_CREATE_TABLE_INDEXES_FOOTER);
 }
 
-void ActionGenerateReport::create_table_fks_begin(db_mysql_TableRef table) {
+auto ActionGenerateReport::create_table_fks_begin(db_mysql_TableRef table) -> void {
   if (table->foreignKeys().count() > 0)
     current_table_dictionary->addSectionDictionary(kbtr_CREATE_TABLE_FKS_HEADER);
 }
 
-void ActionGenerateReport::create_table_fk(db_mysql_ForeignKeyRef fk) {
+auto ActionGenerateReport::create_table_fk(db_mysql_ForeignKeyRef fk) -> void {
   std::string col_list;
   std::string ref_table;
   std::string ref_col_list;
@@ -194,131 +194,131 @@ void ActionGenerateReport::create_table_fk(db_mysql_ForeignKeyRef fk) {
   f2->setValue(kbtr_TABLE_FK_ON_DELETE, on_delete);
 }
 
-void ActionGenerateReport::create_table_fks_end(db_mysql_TableRef table) {
+auto ActionGenerateReport::create_table_fks_end(db_mysql_TableRef table) -> void {
   if (table->foreignKeys().count() > 0)
     current_table_dictionary->addSectionDictionary(kbtr_CREATE_TABLE_FKS_FOOTER);
 }
 
-void ActionGenerateReport::create_table_engine(grt::StringRef value) {
+auto ActionGenerateReport::create_table_engine(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_ENGINE);
   e2->setValue(kbtr_TABLE_ENGINE, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_next_auto_inc(grt::StringRef value) {
+auto ActionGenerateReport::create_table_next_auto_inc(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_AUTOINC);
   e2->setValue(kbtr_TABLE_AUTOINC, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_password(grt::StringRef value) {
+auto ActionGenerateReport::create_table_password(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_PASSWORD);
   e2->setValue(kbtr_TABLE_PASSWORD, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_delay_key_write(grt::IntegerRef value) {
+auto ActionGenerateReport::create_table_delay_key_write(grt::IntegerRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_DELAY_KEY_WRITE);
   e2->setValue(kbtr_TABLE_DELAY_KEY_WRITE, value.toString());
 }
 
-void ActionGenerateReport::create_table_charset(grt::StringRef value) {
+auto ActionGenerateReport::create_table_charset(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_CHARSET);
   e->setValue(kbtr_TABLE_CHARSET, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_collate(grt::StringRef value) {
+auto ActionGenerateReport::create_table_collate(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_COLLATE);
   e2->setValue(kbtr_TABLE_COLLATE, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_merge_union(grt::StringRef value) {
+auto ActionGenerateReport::create_table_merge_union(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_MERGE_UNION);
   e2->setValue(kbtr_TABLE_MERGE_UNION, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_merge_insert(grt::StringRef value) {
+auto ActionGenerateReport::create_table_merge_insert(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_MERGE_INSERT);
   e2->setValue(kbtr_TABLE_MERGE_INSERT, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_pack_keys(grt::StringRef value) {
+auto ActionGenerateReport::create_table_pack_keys(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_PACK_KEYS);
   e2->setValue(kbtr_TABLE_PACK_KEYS, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_checksum(grt::IntegerRef value) {
+auto ActionGenerateReport::create_table_checksum(grt::IntegerRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_CHECKSUM);
   e2->setValue(kbtr_TABLE_CHECKSUM, value.toString());
 }
 
-void ActionGenerateReport::create_table_row_format(grt::StringRef value) {
+auto ActionGenerateReport::create_table_row_format(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_ROW_FORMAT);
   e2->setValue(kbtr_TABLE_ROW_FORMAT, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_key_block_size(grt::StringRef value) {
+auto ActionGenerateReport::create_table_key_block_size(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_KEY_BLOCK_SIZE);
   e2->setValue(kbtr_TABLE_KEY_BLOCK_SIZE, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_avg_row_length(grt::StringRef value) {
+auto ActionGenerateReport::create_table_avg_row_length(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_AVG_ROW_LENGTH);
   e2->setValue(kbtr_TABLE_AVG_ROW_LENGTH, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_min_rows(grt::StringRef value) {
+auto ActionGenerateReport::create_table_min_rows(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_MIN_ROWS);
   e2->setValue(kbtr_TABLE_MIN_ROWS, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_max_rows(grt::StringRef value) {
+auto ActionGenerateReport::create_table_max_rows(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_MAX_ROWS);
   e2->setValue(kbtr_TABLE_MAX_ROWS, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_comment(grt::StringRef value) {
+auto ActionGenerateReport::create_table_comment(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_COMMENT);
   e2->setValue(kbtr_TABLE_COMMENT, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_data_dir(grt::StringRef value) {
+auto ActionGenerateReport::create_table_data_dir(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_DATADIR);
   e2->setValue(kbtr_TABLE_DATADIR, (std::string)value);
 }
 
-void ActionGenerateReport::create_table_index_dir(grt::StringRef value) {
+auto ActionGenerateReport::create_table_index_dir(grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_INDEXDIR);
@@ -326,13 +326,13 @@ void ActionGenerateReport::create_table_index_dir(grt::StringRef value) {
 }
 
 // drop table
-void ActionGenerateReport::drop_table(db_mysql_TableRef table) {
+auto ActionGenerateReport::drop_table(db_mysql_TableRef table) -> void {
   current_table_dictionary = dictionary->addSectionDictionary(kbtr_DROP_TABLE);
   current_table_dictionary->setValue(kbtr_DROP_TABLE_NAME, object_name(table));
 }
 
 // alter table
-void ActionGenerateReport::alter_table_props_begin(db_mysql_TableRef table) {
+auto ActionGenerateReport::alter_table_props_begin(db_mysql_TableRef table) -> void {
   current_table_dictionary = dictionary->addSectionDictionary(kbtr_ALTER_TABLE);
   current_table_dictionary->setValue(kbtr_ALTER_TABLE_NAME, object_name(table));
 
@@ -340,7 +340,7 @@ void ActionGenerateReport::alter_table_props_begin(db_mysql_TableRef table) {
   has_partitioning = false;
 }
 
-void ActionGenerateReport::alter_table_name(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_name(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_NAME);
@@ -348,7 +348,7 @@ void ActionGenerateReport::alter_table_name(db_mysql_TableRef table, grt::String
   e2->setValue(kbtr_OLD_TABLE_NAME, (std::string)table->name());
 }
 
-void ActionGenerateReport::alter_table_engine(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_engine(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_ENGINE);
@@ -357,7 +357,7 @@ void ActionGenerateReport::alter_table_engine(db_mysql_TableRef table, grt::Stri
 }
 
 // currently auto_increment attribute is ignored during diff
-void ActionGenerateReport::alter_table_next_auto_inc(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_next_auto_inc(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_AUTOINC);
@@ -365,7 +365,7 @@ void ActionGenerateReport::alter_table_next_auto_inc(db_mysql_TableRef table, gr
   e2->setValue(kbtr_OLD_TABLE_AUTOINC, (std::string)table->nextAutoInc());
 }
 
-void ActionGenerateReport::alter_table_password(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_password(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_PASSWORD);
@@ -373,7 +373,7 @@ void ActionGenerateReport::alter_table_password(db_mysql_TableRef table, grt::St
   e2->setValue(kbtr_OLD_TABLE_PASSWORD, (std::string)table->password());
 }
 
-void ActionGenerateReport::alter_table_delay_key_write(db_mysql_TableRef table, grt::IntegerRef value) {
+auto ActionGenerateReport::alter_table_delay_key_write(db_mysql_TableRef table, grt::IntegerRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_DELAY_KEY_WRITE);
@@ -381,7 +381,7 @@ void ActionGenerateReport::alter_table_delay_key_write(db_mysql_TableRef table, 
   e2->setValue(kbtr_OLD_TABLE_DELAY_KEY_WRITE, table->delayKeyWrite().toString());
 }
 
-void ActionGenerateReport::alter_table_charset(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_charset(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_CHARSET);
@@ -389,7 +389,7 @@ void ActionGenerateReport::alter_table_charset(db_mysql_TableRef table, grt::Str
   e2->setValue(kbtr_OLD_TABLE_CHARSET, (std::string)table->defaultCharacterSetName());
 }
 
-void ActionGenerateReport::alter_table_collate(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_collate(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_COLLATE);
@@ -397,7 +397,7 @@ void ActionGenerateReport::alter_table_collate(db_mysql_TableRef table, grt::Str
   e2->setValue(kbtr_OLD_TABLE_COLLATE, (std::string)table->defaultCollationName());
 }
 
-void ActionGenerateReport::alter_table_merge_union(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_merge_union(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_MERGE_UNION);
@@ -405,7 +405,7 @@ void ActionGenerateReport::alter_table_merge_union(db_mysql_TableRef table, grt:
   e2->setValue(kbtr_OLD_TABLE_MERGE_UNION, (std::string)table->mergeUnion());
 }
 
-void ActionGenerateReport::alter_table_merge_insert(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_merge_insert(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_MERGE_INSERT);
@@ -413,7 +413,7 @@ void ActionGenerateReport::alter_table_merge_insert(db_mysql_TableRef table, grt
   e2->setValue(kbtr_OLD_TABLE_MERGE_INSERT, (std::string)table->mergeInsert());
 }
 
-void ActionGenerateReport::alter_table_pack_keys(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_pack_keys(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_PACK_KEYS);
@@ -421,7 +421,7 @@ void ActionGenerateReport::alter_table_pack_keys(db_mysql_TableRef table, grt::S
   e2->setValue(kbtr_OLD_TABLE_PACK_KEYS, (std::string)table->packKeys());
 }
 
-void ActionGenerateReport::alter_table_checksum(db_mysql_TableRef table, grt::IntegerRef value) {
+auto ActionGenerateReport::alter_table_checksum(db_mysql_TableRef table, grt::IntegerRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_CHECKSUM);
@@ -429,7 +429,7 @@ void ActionGenerateReport::alter_table_checksum(db_mysql_TableRef table, grt::In
   e2->setValue(kbtr_OLD_TABLE_CHECKSUM, (std::string)table->checksum().toString());
 }
 
-void ActionGenerateReport::alter_table_row_format(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_row_format(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_ROW_FORMAT);
@@ -437,7 +437,7 @@ void ActionGenerateReport::alter_table_row_format(db_mysql_TableRef table, grt::
   e2->setValue(kbtr_OLD_TABLE_ROW_FORMAT, (std::string)table->rowFormat());
 }
 
-void ActionGenerateReport::alter_table_key_block_size(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_key_block_size(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_KEY_BLOCK_SIZE);
@@ -445,7 +445,7 @@ void ActionGenerateReport::alter_table_key_block_size(db_mysql_TableRef table, g
   e2->setValue(kbtr_OLD_TABLE_KEY_BLOCK_SIZE, (std::string)table->keyBlockSize());
 }
 
-void ActionGenerateReport::alter_table_comment(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_comment(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_COMMENT);
@@ -453,7 +453,7 @@ void ActionGenerateReport::alter_table_comment(db_mysql_TableRef table, grt::Str
   e2->setValue(kbtr_OLD_TABLE_COMMENT, (std::string)table->comment());
 }
 
-void ActionGenerateReport::alter_table_avg_row_length(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_avg_row_length(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_AVG_ROW_LENGTH);
@@ -461,7 +461,7 @@ void ActionGenerateReport::alter_table_avg_row_length(db_mysql_TableRef table, g
   e2->setValue(kbtr_OLD_TABLE_AVG_ROW_LENGTH, (std::string)table->avgRowLength());
 }
 
-void ActionGenerateReport::alter_table_min_rows(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_min_rows(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_MIN_ROWS);
@@ -469,7 +469,7 @@ void ActionGenerateReport::alter_table_min_rows(db_mysql_TableRef table, grt::St
   e2->setValue(kbtr_OLD_TABLE_MIN_ROWS, (std::string)table->minRows());
 }
 
-void ActionGenerateReport::alter_table_max_rows(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_max_rows(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_MAX_ROWS);
@@ -477,7 +477,7 @@ void ActionGenerateReport::alter_table_max_rows(db_mysql_TableRef table, grt::St
   e2->setValue(kbtr_OLD_TABLE_MAX_ROWS, (std::string)table->maxRows());
 }
 
-void ActionGenerateReport::alter_table_connection_string(db_mysql_TableRef table, grt::StringRef value) {
+auto ActionGenerateReport::alter_table_connection_string(db_mysql_TableRef table, grt::StringRef value) -> void {
   has_attributes = true;
 
   mtemplate::DictionaryInterface *e2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_ATTR_COMMENT);
@@ -485,11 +485,11 @@ void ActionGenerateReport::alter_table_connection_string(db_mysql_TableRef table
   e2->setValue(kbtr_OLD_TABLE_COMMENT, (std::string)table->comment());
 }
 
-void ActionGenerateReport::alter_table_generate_partitioning(db_mysql_TableRef table, const std::string &part_type,
+auto ActionGenerateReport::alter_table_generate_partitioning(db_mysql_TableRef table, const std::string &part_type,
                                                              const std::string &part_expr, int part_count,
                                                              const std::string &subpart_type,
                                                              const std::string &subpart_expr,
-                                                             grt::ListRef<db_mysql_PartitionDefinition> part_defs) {
+                                                             grt::ListRef<db_mysql_PartitionDefinition> part_defs) -> void {
   bool is_new = (strlen(table->partitionType().c_str()) == 0);
 
   if (is_new)
@@ -500,37 +500,37 @@ void ActionGenerateReport::alter_table_generate_partitioning(db_mysql_TableRef t
   has_partitioning = true;
 }
 
-void ActionGenerateReport::alter_table_drop_partitioning(db_mysql_TableRef table) {
+auto ActionGenerateReport::alter_table_drop_partitioning(db_mysql_TableRef table) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_PART_REMOVED);
   has_partitioning = true;
 }
 
-void ActionGenerateReport::alter_table_add_partition(db_mysql_PartitionDefinitionRef part, bool is_range) {
+auto ActionGenerateReport::alter_table_add_partition(db_mysql_PartitionDefinitionRef part, bool is_range) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_PART_MODIFIED);
   has_partitioning = true;
 }
 
-void ActionGenerateReport::alter_table_drop_partition(const std::string &part_name) {
+auto ActionGenerateReport::alter_table_drop_partition(const std::string &part_name) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_PART_MODIFIED);
   has_partitioning = true;
 }
 
-void ActionGenerateReport::alter_table_reorganize_partition(db_mysql_PartitionDefinitionRef old_part,
-                                                            db_mysql_PartitionDefinitionRef new_part, bool is_range) {
+auto ActionGenerateReport::alter_table_reorganize_partition(db_mysql_PartitionDefinitionRef old_part,
+                                                            db_mysql_PartitionDefinitionRef new_part, bool is_range) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_PART_MODIFIED);
   has_partitioning = true;
 }
 
-void ActionGenerateReport::alter_table_partition_count(db_mysql_TableRef, grt::IntegerRef) {
+auto ActionGenerateReport::alter_table_partition_count(db_mysql_TableRef, grt::IntegerRef) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_PART_MODIFIED);
   has_partitioning = true;
 }
 
-void ActionGenerateReport::alter_table_partition_definitions(db_mysql_TableRef, grt::StringRef) {
+auto ActionGenerateReport::alter_table_partition_definitions(db_mysql_TableRef, grt::StringRef) -> void {
   has_partitioning = true;
 }
 
-void ActionGenerateReport::alter_table_props_end(db_mysql_TableRef) {
+auto ActionGenerateReport::alter_table_props_end(db_mysql_TableRef) -> void {
   if (has_attributes) {
     current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_ATTRIBUTES_HEADER);
     current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_ATTRIBUTES_FOOTER);
@@ -541,56 +541,56 @@ void ActionGenerateReport::alter_table_props_end(db_mysql_TableRef) {
   }
 }
 
-void ActionGenerateReport::alter_table_columns_begin(db_mysql_TableRef table) {
+auto ActionGenerateReport::alter_table_columns_begin(db_mysql_TableRef table) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_COLUMNS_HEADER);
 }
 
-void ActionGenerateReport::alter_table_add_column(db_mysql_TableRef, std::map<std::string, std::string>,
-                                                  db_mysql_ColumnRef column, db_mysql_ColumnRef after) {
+auto ActionGenerateReport::alter_table_add_column(db_mysql_TableRef, std::map<std::string, std::string>,
+                                                  db_mysql_ColumnRef column, db_mysql_ColumnRef after) -> void {
   mtemplate::DictionaryInterface *c2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_COLUMN_ADDED);
   c2->setValue(kbtr_TABLE_COLUMN_NAME, (std::string)column->name());
   c2->setValue(kbtr_TABLE_COLUMN_TYPE, (std::string)column->formattedType());
 }
 
-void ActionGenerateReport::alter_table_drop_column(db_mysql_TableRef, db_mysql_ColumnRef column) {
+auto ActionGenerateReport::alter_table_drop_column(db_mysql_TableRef, db_mysql_ColumnRef column) -> void {
   mtemplate::DictionaryInterface *c2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_COLUMN_REMOVED);
   c2->setValue(kbtr_TABLE_COLUMN_NAME, (std::string)column->name());
 }
 
-void ActionGenerateReport::alter_table_change_column(db_mysql_TableRef table, db_mysql_ColumnRef org_col,
+auto ActionGenerateReport::alter_table_change_column(db_mysql_TableRef table, db_mysql_ColumnRef org_col,
                                                      db_mysql_ColumnRef mod_col, db_mysql_ColumnRef after,
                                                      bool modified,
-                                                     std::map<std::string, std::string> column_rename_map) {
+                                                     std::map<std::string, std::string> column_rename_map) -> void {
   mtemplate::DictionaryInterface *c2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_COLUMN_MODIFIED);
   c2->setValue(kbtr_TABLE_COLUMN_NAME, (std::string)org_col->name());
 }
 
-void ActionGenerateReport::alter_table_columns_end(db_mysql_TableRef) {
+auto ActionGenerateReport::alter_table_columns_end(db_mysql_TableRef) -> void {
   current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_COLUMNS_FOOTER);
 }
 
-void ActionGenerateReport::alter_table_indexes_begin(db_mysql_TableRef table) {
+auto ActionGenerateReport::alter_table_indexes_begin(db_mysql_TableRef table) -> void {
   if (table->indices().count() > 0)
     current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_INDEXES_HEADER);
 }
 
-void ActionGenerateReport::alter_table_add_index(db_mysql_IndexRef index) {
+auto ActionGenerateReport::alter_table_add_index(db_mysql_IndexRef index) -> void {
   mtemplate::DictionaryInterface *ix2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_INDEX_ADDED);
   ix2->setValue(kbtr_TABLE_INDEX_NAME, (std::string)index->name());
   ix2->setValue(kbtr_TABLE_INDEX_COLUMNS, get_index_columns(index));
 }
 
-void ActionGenerateReport::alter_table_drop_index(db_mysql_IndexRef index) {
+auto ActionGenerateReport::alter_table_drop_index(db_mysql_IndexRef index) -> void {
   mtemplate::DictionaryInterface *ix2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_INDEX_REMOVED);
   ix2->setValue(kbtr_TABLE_INDEX_NAME, (std::string)index->name());
 }
 
-void ActionGenerateReport::alter_table_indexes_end(db_mysql_TableRef table) {
+auto ActionGenerateReport::alter_table_indexes_end(db_mysql_TableRef table) -> void {
   if (table->indices().count() > 0)
     current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_INDEXES_FOOTER);
 }
 
-void ActionGenerateReport::alter_table_change_index(db_mysql_IndexRef orgIndex, db_mysql_IndexRef newIndex) {
+auto ActionGenerateReport::alter_table_change_index(db_mysql_IndexRef orgIndex, db_mysql_IndexRef newIndex) -> void {
   auto catalog = db_CatalogRef::cast_from(orgIndex->owner()->owner()->owner());
 
   if (!bec::is_supported_mysql_version_at_least(catalog->version(), 8, 0, 0)) {
@@ -634,12 +634,12 @@ void ActionGenerateReport::alter_table_change_index(db_mysql_IndexRef orgIndex, 
   ix2->setValue(kbtr_TABLE_INDEX_NAME, (std::string)newIndex->name());
 }
 
-void ActionGenerateReport::alter_table_fks_begin(db_mysql_TableRef table) {
+auto ActionGenerateReport::alter_table_fks_begin(db_mysql_TableRef table) -> void {
   if (table->foreignKeys().count() > 0)
     current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_FKS_HEADER);
 }
 
-void ActionGenerateReport::alter_table_add_fk(db_mysql_ForeignKeyRef fk) {
+auto ActionGenerateReport::alter_table_add_fk(db_mysql_ForeignKeyRef fk) -> void {
   std::string col_list;
   std::string ref_table;
   std::string ref_col_list;
@@ -657,67 +657,67 @@ void ActionGenerateReport::alter_table_add_fk(db_mysql_ForeignKeyRef fk) {
   f2->setValue(kbtr_TABLE_FK_ON_DELETE, on_delete);
 }
 
-void ActionGenerateReport::alter_table_drop_fk(db_mysql_ForeignKeyRef fk) {
+auto ActionGenerateReport::alter_table_drop_fk(db_mysql_ForeignKeyRef fk) -> void {
   mtemplate::DictionaryInterface *f2 = current_table_dictionary->addSectionDictionary(kbtr_TABLE_FK_REMOVED);
   f2->setValue(kbtr_TABLE_FK_NAME, (std::string)fk->name());
 }
 
-void ActionGenerateReport::alter_table_fks_end(db_mysql_TableRef table) {
+auto ActionGenerateReport::alter_table_fks_end(db_mysql_TableRef table) -> void {
   if (table->foreignKeys().count() > 0)
     current_table_dictionary->addSectionDictionary(kbtr_ALTER_TABLE_FKS_FOOTER);
 }
 
 // triggers create/drop
-void ActionGenerateReport::create_trigger(db_mysql_TriggerRef trigger, bool for_alter) {
+auto ActionGenerateReport::create_trigger(db_mysql_TriggerRef trigger, bool for_alter) -> void {
   dictionary->addSectionDictionary(kbtr_CREATE_TRIGGER)->setValue(kbtr_CREATE_TRIGGER_NAME, trigger_name(trigger));
 }
 
-void ActionGenerateReport::drop_trigger(db_mysql_TriggerRef trigger, bool for_alter) {
+auto ActionGenerateReport::drop_trigger(db_mysql_TriggerRef trigger, bool for_alter) -> void {
   dictionary->addSectionDictionary(kbtr_DROP_TRIGGER)->setValue(kbtr_DROP_TRIGGER_NAME, trigger_name(trigger));
 }
 
 // views create/drop
-void ActionGenerateReport::create_view(db_mysql_ViewRef view) {
+auto ActionGenerateReport::create_view(db_mysql_ViewRef view) -> void {
   dictionary->addSectionDictionary(kbtr_CREATE_VIEW)->setValue(kbtr_CREATE_VIEW_NAME, object_name(view));
 }
 
-void ActionGenerateReport::drop_view(db_mysql_ViewRef view) {
+auto ActionGenerateReport::drop_view(db_mysql_ViewRef view) -> void {
   dictionary->addSectionDictionary(kbtr_DROP_VIEW)->setValue(kbtr_DROP_VIEW_NAME, object_name(view));
 }
 
 // routines create/drop
-void ActionGenerateReport::create_routine(db_mysql_RoutineRef routine, bool for_alter) {
+auto ActionGenerateReport::create_routine(db_mysql_RoutineRef routine, bool for_alter) -> void {
   dictionary->addSectionDictionary(kbtr_CREATE_ROUTINE)->setValue(kbtr_CREATE_ROUTINE_NAME, object_name(routine));
 }
 
-void ActionGenerateReport::drop_routine(db_mysql_RoutineRef routine, bool for_alter) {
+auto ActionGenerateReport::drop_routine(db_mysql_RoutineRef routine, bool for_alter) -> void {
   dictionary->addSectionDictionary(kbtr_DROP_ROUTINE)->setValue(kbtr_DROP_ROUTINE_NAME, object_name(routine));
 }
 
 // users create/drop
-void ActionGenerateReport::create_user(db_UserRef user) {
+auto ActionGenerateReport::create_user(db_UserRef user) -> void {
   dictionary->addSectionDictionary(kbtr_CREATE_USER)->setValue(kbtr_CREATE_USER_NAME, object_name(user));
 }
 
-void ActionGenerateReport::drop_user(db_UserRef user) {
+auto ActionGenerateReport::drop_user(db_UserRef user) -> void {
   dictionary->addSectionDictionary(kbtr_DROP_USER)->setValue(kbtr_DROP_USER_NAME, object_name(user));
 }
 
 // schema create/drop
-void ActionGenerateReport::create_schema(db_mysql_SchemaRef schema) {
+auto ActionGenerateReport::create_schema(db_mysql_SchemaRef schema) -> void {
   dictionary->addSectionDictionary(kbtr_CREATE_SCHEMA)->setValue(kbtr_CREATE_SCHEMA_NAME, object_name(schema));
 }
 
-void ActionGenerateReport::drop_schema(db_mysql_SchemaRef schema) {
+auto ActionGenerateReport::drop_schema(db_mysql_SchemaRef schema) -> void {
   dictionary->addSectionDictionary(kbtr_DROP_SCHEMA)->setValue(kbtr_DROP_SCHEMA_NAME, object_name(schema));
 }
 
 // alter schema
-void ActionGenerateReport::alter_schema_props_begin(db_mysql_SchemaRef) {
+auto ActionGenerateReport::alter_schema_props_begin(db_mysql_SchemaRef) -> void {
   current_schema_dictionary = NULL;
 }
 
-void ActionGenerateReport::alter_schema_name(db_mysql_SchemaRef schema, grt::StringRef value) {
+auto ActionGenerateReport::alter_schema_name(db_mysql_SchemaRef schema, grt::StringRef value) -> void {
   if (current_schema_dictionary == NULL) {
     current_schema_dictionary = dictionary->addSectionDictionary(kbtr_ALTER_SCHEMA);
     current_schema_dictionary->setValue(kbtr_ALTER_SCHEMA_NAME, object_name(schema));
@@ -728,7 +728,7 @@ void ActionGenerateReport::alter_schema_name(db_mysql_SchemaRef schema, grt::Str
   c2->setValue(kbtr_NEW_SCHEMA_NAME, (std::string)value);
 }
 
-void ActionGenerateReport::alter_schema_default_charset(db_mysql_SchemaRef schema, grt::StringRef value) {
+auto ActionGenerateReport::alter_schema_default_charset(db_mysql_SchemaRef schema, grt::StringRef value) -> void {
   if (current_schema_dictionary == NULL) {
     current_schema_dictionary = dictionary->addSectionDictionary(kbtr_ALTER_SCHEMA);
     current_schema_dictionary->setValue(kbtr_ALTER_SCHEMA_NAME, object_name(schema));
@@ -740,7 +740,7 @@ void ActionGenerateReport::alter_schema_default_charset(db_mysql_SchemaRef schem
   c2->setValue(kbtr_NEW_SCHEMA_CHARSET, (std::string)value);
 }
 
-void ActionGenerateReport::alter_schema_default_collate(db_mysql_SchemaRef schema, grt::StringRef value) {
+auto ActionGenerateReport::alter_schema_default_collate(db_mysql_SchemaRef schema, grt::StringRef value) -> void {
   if (current_schema_dictionary == NULL) {
     current_schema_dictionary = dictionary->addSectionDictionary(kbtr_ALTER_SCHEMA);
     current_schema_dictionary->setValue(kbtr_ALTER_SCHEMA_NAME, object_name(schema));
@@ -752,5 +752,5 @@ void ActionGenerateReport::alter_schema_default_collate(db_mysql_SchemaRef schem
   c2->setValue(kbtr_NEW_SCHEMA_COLLATE, (std::string)value);
 }
 
-void ActionGenerateReport::alter_schema_props_end(db_mysql_SchemaRef schema) {
+auto ActionGenerateReport::alter_schema_props_end(db_mysql_SchemaRef schema) -> void {
 }

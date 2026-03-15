@@ -44,7 +44,7 @@ PythonModule::~PythonModule() {
   Py_XDECREF(_module);
 }
 
-static TypeSpec parse_type(PyObject *type) {
+static auto parse_type(PyObject *type) -> TypeSpec {
   if (PyUnicode_Check(type)) {
     TypeSpec s;
     s.base.type = str_to_type(PyUnicode_AsUTF8(type));
@@ -96,8 +96,8 @@ static TypeSpec parse_type(PyObject *type) {
   throw std::runtime_error("Invalid type specification");
 }
 
-void PythonModule::add_parse_function(const std::string &name, PyObject *return_type, PyObject *arguments,
-                                      PyObject *callable) {
+auto PythonModule::add_parse_function(const std::string &name, PyObject *return_type, PyObject *arguments,
+                                      PyObject *callable) -> void {
   Function func;
 
   func.name = name;
@@ -149,7 +149,7 @@ void PythonModule::add_parse_function(const std::string &name, PyObject *return_
   add_function(func);
 }
 
-static std::string exception_detail() {
+static auto exception_detail() -> std::string {
   PyObject *exc_class = NULL, *exc = NULL, *exc_tb = NULL;
   PyErr_Fetch(&exc_class, &exc, &exc_tb);
   if (exc) {
@@ -167,7 +167,7 @@ static std::string exception_detail() {
   return "";
 }
 
-ValueRef PythonModule::call_python_function(const BaseListRef &args, PyObject *function, const Function &funcdef) {
+auto PythonModule::call_python_function(const BaseListRef &args, PyObject *function, const Function &funcdef) -> ValueRef {
   WillEnterPython lock;
 
   PythonContext *ctx = ((PythonModuleLoader *)get_loader())->get_python_context();
@@ -244,7 +244,7 @@ PythonModuleLoader::PythonModuleLoader(const std::string &module_path) : _pycont
 PythonModuleLoader::~PythonModuleLoader() {
 }
 
-static std::string formatStringList(PyObject *list) {
+static auto formatStringList(PyObject *list) -> std::string {
     std::string result;
     PyObject *item;
 
@@ -259,7 +259,7 @@ static std::string formatStringList(PyObject *list) {
     return result;
 }
 
-static std::string handlePyError() {
+static auto handlePyError() -> std::string {
   if (!PyErr_Occurred()) 
     return "";
     
@@ -291,7 +291,7 @@ static std::string handlePyError() {
   return result;
 }
 
-Module *PythonModuleLoader::init_module(const std::string &path) {
+auto PythonModuleLoader::init_module(const std::string &path) -> Module * {
   PyObject *mod;
   std::string name;
 
@@ -441,11 +441,11 @@ Module *PythonModuleLoader::init_module(const std::string &path) {
   return 0;
 }
 
-void PythonModuleLoader::refresh() {
+auto PythonModuleLoader::refresh() -> void {
   _pycontext.refresh();
 }
 
-void PythonModuleLoader::add_module_dir(const std::string &dirpath) {
+auto PythonModuleLoader::add_module_dir(const std::string &dirpath) -> void {
   WillEnterPython lock;
 
   PyObject *sysmod, *path_list;
@@ -468,14 +468,14 @@ void PythonModuleLoader::add_module_dir(const std::string &dirpath) {
   Py_DECREF(path);
 }
 
-bool PythonModuleLoader::load_library(const std::string &file) {
+auto PythonModuleLoader::load_library(const std::string &file) -> bool {
   // add the path to the search path so that it can be imported
   { add_module_dir(base::dirname(file)); }
 
   return true;
 }
 
-bool PythonModuleLoader::run_script_file(const std::string &path) {
+auto PythonModuleLoader::run_script_file(const std::string &path) -> bool {
   if (!g_file_test(path.c_str(), G_FILE_TEST_EXISTS))
     return false;
 
@@ -485,11 +485,11 @@ bool PythonModuleLoader::run_script_file(const std::string &path) {
   return _pycontext.run_file(path, true) == 0;
 }
 
-bool PythonModuleLoader::run_script(const std::string &script) {
+auto PythonModuleLoader::run_script(const std::string &script) -> bool {
   return _pycontext.run_buffer(script, 0) == 0;
 }
 
-bool PythonModuleLoader::check_file_extension(const std::string &path) {
+auto PythonModuleLoader::check_file_extension(const std::string &path) -> bool {
   if (g_str_has_suffix(path.c_str(), ".py"))
     return true;
 

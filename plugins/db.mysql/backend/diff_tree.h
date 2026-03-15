@@ -34,7 +34,7 @@
 
 #include "grtdb/catalog_templates.h"
 
-std::string utf_to_upper(const char *str);
+auto utf_to_upper(const char *str) -> std::string;
 
 #include "diff/diffchange.h"
 #include "db_mysql_public_interface.h"
@@ -43,7 +43,7 @@ class DiffNode;
 
 std::ostream &operator<<(std::ostream &os, const DiffNode &);
 
-std::string get_old_name_or_name(GrtNamedObjectRef obj);
+auto get_old_name_or_name(GrtNamedObjectRef obj) -> std::string;
 
 template<typename T>
 std::string get_catalog_map_key(grt::Ref<T> t) {
@@ -67,19 +67,19 @@ public:
   DiffNodePart(GrtNamedObjectRef obj) : object(obj), modified(false) {
   }
 
-  bool is_modified() const {
+  auto is_modified() const -> bool {
     return modified;
   }
-  void set_modified(bool mod) {
+  auto set_modified(bool mod) -> void {
     modified = mod;
   }
-  bool is_valid_object() const {
+  auto is_valid_object() const -> bool {
     return object.is_valid();
   }
-  std::string get_name() const {
+  auto get_name() const -> std::string {
     return std::string(object->name().c_str());
   }
-  GrtNamedObjectRef get_object() const {
+  auto get_object() const -> GrtNamedObjectRef {
     return object;
   }
 };
@@ -115,55 +115,55 @@ public:
       delete *It;
   }
 
-  void dump(int depth = 0);
+  auto dump(int depth = 0) -> void;
 
-  std::shared_ptr<grt::DiffChange> get_change() const {
+  auto get_change() const -> std::shared_ptr<grt::DiffChange> {
     return change;
   };
 
-  void apply_direction(const ApplicationDirection &d) {
+  auto apply_direction(const ApplicationDirection &d) -> void {
     applyDirection = d;
   }
 
-  ApplicationDirection apply_direction() const {
+  auto apply_direction() const -> ApplicationDirection {
     return applyDirection;
   }
 
-  ApplicationDirection get_application_direction() const {
+  auto get_application_direction() const -> ApplicationDirection {
     return applyDirection;
   }
 
-  const DiffNodePart &get_model_part() const {
+  auto get_model_part() const -> const DiffNodePart & {
     return model_part;
   }
-  const DiffNodePart &get_db_part() const {
+  auto get_db_part() const -> const DiffNodePart & {
     return db_part;
   }
 
-  void append(DiffNode *child) {
+  auto append(DiffNode *child) -> void {
     children.push_back(child);
   }
 
-  size_t get_children_size() const {
+  auto get_children_size() const -> size_t {
     return children.size();
   }
-  DiffNode *get_child(size_t idx) {
+  auto get_child(size_t idx) -> DiffNode * {
     return children[idx];
   }
-  DiffNode *find_node_for_object(const grt::ObjectRef obj);
-  DiffNode *find_child_by_db_part_name(const std::string &name);
+  auto find_node_for_object(const grt::ObjectRef obj) -> DiffNode *;
+  auto find_child_by_db_part_name(const std::string &name) -> DiffNode *;
 
-  DiffNodeVector::const_iterator get_children_begin() const {
+  auto get_children_begin() const -> DiffNodeVector::const_iterator {
     return children.begin();
   }
-  DiffNodeVector::const_iterator get_children_end() const {
+  auto get_children_end() const -> DiffNodeVector::const_iterator {
     return children.end();
   }
 
-  bool is_modified() const {
+  auto is_modified() const -> bool {
     return modified;
   }
-  bool is_modified_recursive() const {
+  auto is_modified_recursive() const -> bool {
     if (modified)
       return true;
     for (DiffNodeVector::const_iterator i = children.begin(); i != children.end(); ++i)
@@ -171,19 +171,19 @@ public:
         return true;
     return false;
   }
-  void set_modified_and_update_dir(bool m, std::shared_ptr<grt::DiffChange> c);
+  auto set_modified_and_update_dir(bool m, std::shared_ptr<grt::DiffChange> c) -> void;
 
-  void get_object_list_for_script(std::vector<grt::ValueRef> &vec) const;
-  void get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec,
-                                         std::vector<grt::ValueRef> &removal_vec) const;
+  auto get_object_list_for_script(std::vector<grt::ValueRef> &vec) const -> void;
+  auto get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec,
+                                         std::vector<grt::ValueRef> &removal_vec) const -> void;
 };
 
 class WBPLUGINDBMYSQLBE_PUBLIC_FUNC DiffNodeController {
 public:
   DiffNodeController();
   DiffNodeController(const std::map<DiffNode::ApplicationDirection, DiffNode::ApplicationDirection> directions_map);
-  void set_next_apply_direction(DiffNode *node) const;
-  void set_apply_direction(DiffNode *node, DiffNode::ApplicationDirection dir, bool recursive) const;
+  auto set_next_apply_direction(DiffNode *node) const -> void;
+  auto set_apply_direction(DiffNode *node, DiffNode::ApplicationDirection dir, bool recursive) const -> void;
 
 protected:
   std::map<DiffNode::ApplicationDirection, DiffNode::ApplicationDirection> _directions_map;
@@ -208,15 +208,15 @@ private:
   std::vector<std::string> _schemata;
 
   // static void build_catalog_map(db_mysql_CatalogRef catalog, CatalogMap& map);
-  bool update_tree_with_changes(const std::shared_ptr<grt::DiffChange> diffchange);
-  void apply_change(GrtObjectRef obj, std::shared_ptr<grt::DiffChange> change);
+  auto update_tree_with_changes(const std::shared_ptr<grt::DiffChange> diffchange) -> bool;
+  auto apply_change(GrtObjectRef obj, std::shared_ptr<grt::DiffChange> change) -> void;
 
-  void fill_tree(DiffNode *root, db_mysql_CatalogRef catalog, const CatalogMap &map, bool inverse);
-  void fill_tree(DiffNode *schema_node, db_mysql_SchemaRef schema, const CatalogMap &map, bool inverse);
-  void fill_tree(DiffNode *table_node, db_mysql_TableRef table, const CatalogMap &map, bool inverse);
+  auto fill_tree(DiffNode *root, db_mysql_CatalogRef catalog, const CatalogMap &map, bool inverse) -> void;
+  auto fill_tree(DiffNode *schema_node, db_mysql_SchemaRef schema, const CatalogMap &map, bool inverse) -> void;
+  auto fill_tree(DiffNode *table_node, db_mysql_TableRef table, const CatalogMap &map, bool inverse) -> void;
 
 public:
-  DiffNode *get_node_with_id(const bec::NodeId &nodeid);
+  auto get_node_with_id(const bec::NodeId &nodeid) -> DiffNode *;
   DiffTreeBE(const std::vector<std::string> &schemata, db_mysql_CatalogRef model_catalogRef,
              db_mysql_CatalogRef external_catalog, std::shared_ptr<grt::DiffChange> diffchange,
              DiffNodeController controller = DiffNodeController());
@@ -224,18 +224,18 @@ public:
     delete _root;
   };
 
-  virtual size_t count_children(const bec::NodeId &);
-  virtual bec::NodeId get_child(const bec::NodeId &, size_t);
-  virtual bool get_field(const bec::NodeId &node_id, ColumnId column, std::string &value);
-  virtual bec::IconId get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size);
-  virtual void refresh() {
+  virtual auto count_children(const bec::NodeId &) -> size_t;
+  virtual auto get_child(const bec::NodeId &, size_t) -> bec::NodeId;
+  virtual auto get_field(const bec::NodeId &node_id, ColumnId column, std::string &value) -> bool;
+  virtual auto get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size) -> bec::IconId;
+  virtual auto refresh() -> void {
   }
 
-  void set_next_apply_direction(const bec::NodeId &node_id);
-  void set_apply_direction(const bec::NodeId &node_id, DiffNode::ApplicationDirection dir, bool recursive);
-  DiffNode::ApplicationDirection get_apply_direction(const bec::NodeId &node_id);
+  auto set_next_apply_direction(const bec::NodeId &node_id) -> void;
+  auto set_apply_direction(const bec::NodeId &node_id, DiffNode::ApplicationDirection dir, bool recursive) -> void;
+  auto get_apply_direction(const bec::NodeId &node_id) -> DiffNode::ApplicationDirection;
 
-  void get_object_list_for_script(std::vector<grt::ValueRef> &vec) const;
-  void get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec,
-                                         std::vector<grt::ValueRef> &removal_vec) const;
+  auto get_object_list_for_script(std::vector<grt::ValueRef> &vec) const -> void;
+  auto get_object_list_to_apply_to_model(std::vector<grt::ValueRef> &vec,
+                                         std::vector<grt::ValueRef> &removal_vec) const -> void;
 };

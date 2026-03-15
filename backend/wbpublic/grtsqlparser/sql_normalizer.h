@@ -54,12 +54,12 @@ protected:
   }
 
 public:
-  void delimiter(std::string val) {
+  auto delimiter(std::string val) -> void {
     _delimiter = val;
   }
 
-  virtual std::string normalize(const std::string &sql, const std::string &schema_name) = 0;
-  virtual std::string remove_inter_token_spaces(const std::string &text);
+  virtual auto normalize(const std::string &sql, const std::string &schema_name) -> std::string = 0;
+  virtual auto remove_inter_token_spaces(const std::string &text) -> std::string;
 
 protected:
   std::string _delimiter;

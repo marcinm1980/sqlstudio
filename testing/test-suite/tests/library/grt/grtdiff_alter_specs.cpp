@@ -54,7 +54,7 @@ namespace testing {
     std::string mod;
   };
 
-  db_mysql_CatalogRef createEmptyCatalog() {
+  auto createEmptyCatalog() -> db_mysql_CatalogRef {
     db_mysql_CatalogRef catalog(grt::Initialized);
     catalog->version(bec::parse_version("5.7.10"));
     catalog->name("mydb");
@@ -75,8 +75,8 @@ namespace testing {
     grt::NormalizedComparer normalizer;
     std::string dataDir;
 
-    std::shared_ptr<grt::DiffChange> createDiff(TestEntry const &entry, db_mysql_CatalogRef org_cat,
-                                                db_mysql_CatalogRef mod_cat) {
+    auto createDiff(TestEntry const &entry, db_mysql_CatalogRef org_cat,
+                                                db_mysql_CatalogRef mod_cat) -> std::shared_ptr<grt::DiffChange> {
       grt::DictRef options(true);
 
       std::string org_script = "CREATE DATABASE grtdiff_alter_test DEFAULT CHARACTER SET latin1;\n" + entry.org + ";";
@@ -111,7 +111,7 @@ namespace testing {
       return diff_make(org_cat, mod_cat, &omf);
     }
 
-    void runTestsForEntries(std::vector<TestEntry> const &entries, size_t resultIndex) {
+    auto runTestsForEntries(std::vector<TestEntry> const &entries, size_t resultIndex) -> void {
       std::shared_ptr<grt::DiffChange> alter_change;
       std::shared_ptr<grt::DiffChange> empty_change;
 

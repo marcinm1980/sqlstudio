@@ -67,25 +67,25 @@ namespace mforms {
   public:
     Menu();
 
-    bool empty() const;
-    void clear();
-    void remove_item(int i);
-    int add_item(const std::string &caption, const std::string &action);
-    int add_separator();
-    int add_submenu(const std::string &caption, Menu *submenu);
-    void add_items_from_list(const bec::MenuItemList &list);
+    auto empty() const -> bool;
+    auto clear() -> void;
+    auto remove_item(int i) -> void;
+    auto add_item(const std::string &caption, const std::string &action) -> int;
+    auto add_separator() -> int;
+    auto add_submenu(const std::string &caption, Menu *submenu) -> int;
+    auto add_items_from_list(const bec::MenuItemList &list) -> void;
 
-    void set_item_enabled(int i, bool flag);
-    void set_item_enabled(const std::string &action, bool flag);
+    auto set_item_enabled(int i, bool flag) -> void;
+    auto set_item_enabled(const std::string &action, bool flag) -> void;
 #ifndef SWIG
-    void set_handler(const std::function<void(const std::string &)> &action_handler);
+    auto set_handler(const std::function<void(const std::string &)> &action_handler) -> void;
 #endif
-    void popup_at(Object *control, int x, int y);
-    void popup();
+    auto popup_at(Object *control, int x, int y) -> void;
+    auto popup() -> void;
 
-    void handle_action(const std::string &action);
+    auto handle_action(const std::string &action) -> void;
 
-    int get_item_index(const std::string &action);
+    auto get_item_index(const std::string &action) -> int;
 #ifndef SWIG
     boost::signals2::signal<void()> *signal_will_show() {
       return &_on_will_show;

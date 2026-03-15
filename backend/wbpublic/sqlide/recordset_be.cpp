@@ -70,12 +70,12 @@ std::string Recordset::_add_change_record_statement =
 Recordset::ClientData::~ClientData() {
 }
 
-Recordset::Ref Recordset::create() {
+auto Recordset::create() -> Recordset::Ref {
   Ref instance(new Recordset());
   return instance;
 }
 
-Recordset::Ref Recordset::create(GrtThreadedTask::Ref parent_task) {
+auto Recordset::create(GrtThreadedTask::Ref parent_task) -> Recordset::Ref {
   Ref instance(new Recordset(parent_task));
   return instance;
 }
@@ -118,7 +118,7 @@ Recordset::~Recordset() {
   delete _context_menu;
 }
 
-bool Recordset::reset(Recordset_data_storage::Ptr data_storage_ptr, bool rethrow) {
+auto Recordset::reset(Recordset_data_storage::Ptr data_storage_ptr, bool rethrow) -> bool {
   base::RecMutexLock data_mutex WB_UNUSED(_data_mutex);
   VarGridModel::reset();
 
@@ -205,19 +205,19 @@ bool Recordset::reset(Recordset_data_storage::Ptr data_storage_ptr, bool rethrow
   return res;
 }
 
-void Recordset::reset() {
+auto Recordset::reset() -> void {
   reset(false);
 }
 
-bool Recordset::reset(bool rethrow) {
+auto Recordset::reset(bool rethrow) -> bool {
   return reset(_data_storage, rethrow);
 }
 
-bool Recordset::can_close() {
+auto Recordset::can_close() -> bool {
   return can_close(true);
 }
 
-bool Recordset::can_close(bool interactive) {
+auto Recordset::can_close(bool interactive) -> bool {
   bool res = !has_pending_changes();
   if (!res && interactive) {
     int r = mforms::Utilities::show_warning(
@@ -241,13 +241,13 @@ bool Recordset::can_close(bool interactive) {
   return res;
 }
 
-bool Recordset::close() {
+auto Recordset::close() -> bool {
   RETVAL_IF_FAIL_TO_RETAIN_RAW_PTR(Recordset, this, false)
   on_close(weak_ptr_from(this));
   return true;
 }
 
-void Recordset::refresh() {
+auto Recordset::refresh() -> void {
   if (has_pending_changes()) {
     task->send_msg(grt::ErrorMsg, ERRMSG_PENDING_CHANGES, _("Refresh Recordset"));
     return;
@@ -266,25 +266,25 @@ void Recordset::refresh() {
     rows_changed();
 }
 
-void Recordset::rollback() {
+auto Recordset::rollback() -> void {
   if (!reset(false))
     task->send_msg(grt::ErrorMsg, _("Rollback failed"), _("Rollback recordset changes"));
   else
     refresh_ui();
 }
 
-void Recordset::data_edited() {
+auto Recordset::data_edited() -> void {
   if (bec::GRTManager::get()->in_main_thread())
     data_edited_signal();
   else
     logError("data_edited called from thread\n");
 }
 
-RowId Recordset::real_row_count() const {
+auto Recordset::real_row_count() const -> RowId {
   return _real_row_count;
 }
 
-void Recordset::recalc_row_count(sqlite::connection *data_swap_db) {
+auto Recordset::recalc_row_count(sqlite::connection *data_swap_db) -> void {
   // row count (visible rows only, some can be filtered out by applied column filters)
   {
     sqlite::query q(*data_swap_db, "select count(*) from `data_index`");
@@ -308,7 +308,7 @@ void Recordset::recalc_row_count(sqlite::connection *data_swap_db) {
   }
 }
 
-Recordset::Cell Recordset::cell(RowId row, ColumnId column) {
+auto Recordset::cell(RowId row, ColumnId column) -> Recordset::Cell {
   if (_row_count == row) {
     RowId rowid = _next_new_rowid++; // rowid of the new record
     {
@@ -359,14 +359,14 @@ Recordset::Cell Recordset::cell(RowId row, ColumnId column) {
   return VarGridModel::cell(row, column);
 }
 
-void Recordset::after_set_field(const NodeId &node, ColumnId column, const sqlite::variant_t &value) {
+auto Recordset::after_set_field(const NodeId &node, ColumnId column, const sqlite::variant_t &value) -> void {
   VarGridModel::after_set_field(node, column, value);
   mark_dirty(node[0], column, value);
   data_edited();
   tree_changed();
 }
 
-void Recordset::mark_dirty(RowId row, ColumnId column, const sqlite::variant_t &new_value) {
+auto Recordset::mark_dirty(RowId row, ColumnId column, const sqlite::variant_t &new_value) -> void {
   base::RecMutexLock data_mutex(_data_mutex);
 
   RowId rowid(row);
@@ -401,16 +401,16 @@ void Recordset::mark_dirty(RowId row, ColumnId column, const sqlite::variant_t &
   }
 }
 
-std::string Recordset::caption() {
+auto Recordset::caption() -> std::string {
   return base::strfmt("%s%s", _caption.c_str(), has_pending_changes() ? "*" : "");
 }
 
-bool Recordset::delete_node(const bec::NodeId &node) {
+auto Recordset::delete_node(const bec::NodeId &node) -> bool {
   std::vector<bec::NodeId> nodes(1, node);
   return delete_nodes(nodes);
 }
 
-bool Recordset::delete_nodes(std::vector<bec::NodeId> &nodes) {
+auto Recordset::delete_nodes(std::vector<bec::NodeId> &nodes) -> bool {
   {
     base::RecMutexLock data_mutex(_data_mutex);
 
@@ -498,7 +498,7 @@ bool Recordset::delete_nodes(std::vector<bec::NodeId> &nodes) {
   return true;
 }
 
-bool Recordset::has_pending_changes() {
+auto Recordset::has_pending_changes() -> bool {
   std::shared_ptr<sqlite::connection> data_swap_db = this->data_swap_db();
   if (data_swap_db) {
     sqlite::query check_pending_changes_statement(*data_swap_db, "select exists(select 1 from `changes`)");
@@ -509,7 +509,7 @@ bool Recordset::has_pending_changes() {
   }
 }
 
-void Recordset::pending_changes(int &upd_count, int &ins_count, int &del_count) const {
+auto Recordset::pending_changes(int &upd_count, int &ins_count, int &del_count) const -> void {
   std::shared_ptr<sqlite::connection> data_swap_db = this->data_swap_db();
 
   std::string count_pending_changes_statement_sql =
@@ -541,8 +541,8 @@ void Recordset::pending_changes(int &upd_count, int &ins_count, int &del_count) 
   } while (rs->next_row());
 }
 
-grt::StringRef Recordset::do_apply_changes(Ptr self_ptr, Recordset_data_storage::Ptr data_storage_ptr,
-                                           bool skip_commit) {
+auto Recordset::do_apply_changes(Ptr self_ptr, Recordset_data_storage::Ptr data_storage_ptr,
+                                           bool skip_commit) -> grt::StringRef {
   RETVAL_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset, self_ptr, self, grt::StringRef(""))
   RETVAL_IF_FAIL_TO_RETAIN_WEAK_PTR(Recordset_data_storage, data_storage_ptr, data_storage, grt::StringRef(""))
   try {
@@ -561,7 +561,7 @@ grt::StringRef Recordset::do_apply_changes(Ptr self_ptr, Recordset_data_storage:
 /*
  * Actually applies recordset changes. Must run in the main thread for UI updates.
  */
-void Recordset::apply_changes_(Recordset_data_storage::Ptr data_storage_ptr) {
+auto Recordset::apply_changes_(Recordset_data_storage::Ptr data_storage_ptr) -> void {
   Recordset_data_storage::Ref storage = data_storage_ptr.lock();
   try {
     storage->apply_changes(weak_ptr_from(this), false);
@@ -574,8 +574,8 @@ void Recordset::apply_changes_(Recordset_data_storage::Ptr data_storage_ptr) {
   CATCH_AND_DISPATCH_EXCEPTION(false, "Apply recordset changes")
 }
 
-static int process_task_msg(int msgType, const std::string &message, const std::string &detail, int &error_count,
-                            std::string &messages_out) {
+static auto process_task_msg(int msgType, const std::string &message, const std::string &detail, int &error_count,
+                            std::string &messages_out) -> int {
   if (msgType == grt::ErrorMsg)
     error_count++;
 
@@ -587,7 +587,7 @@ static int process_task_msg(int msgType, const std::string &message, const std::
   return 0;
 }
 
-bool Recordset::apply_changes_and_gather_messages(std::string &messages) {
+auto Recordset::apply_changes_and_gather_messages(std::string &messages) -> bool {
   int error_count = 0;
   GrtThreadedTask::Msg_cb cb(task->msg_cb());
 
@@ -599,7 +599,7 @@ bool Recordset::apply_changes_and_gather_messages(std::string &messages) {
   return error_count == 0;
 }
 
-void Recordset::rollback_and_gather_messages(std::string &messages) {
+auto Recordset::rollback_and_gather_messages(std::string &messages) -> void {
   int error_count = 0;
   GrtThreadedTask::Msg_cb cb(task->msg_cb());
 
@@ -609,7 +609,7 @@ void Recordset::rollback_and_gather_messages(std::string &messages) {
   task->msg_cb(cb);
 }
 
-int Recordset::on_apply_changes_finished() {
+auto Recordset::on_apply_changes_finished() -> int {
   task->finish_cb(GrtThreadedTask::Finish_cb());
   if (rows_changed)
     rows_changed();
@@ -617,15 +617,15 @@ int Recordset::on_apply_changes_finished() {
   return refresh_ui();
 }
 
-void Recordset::apply_changes_() {
+auto Recordset::apply_changes_() -> void {
   apply_changes_(_data_storage);
 }
 
-bool Recordset::limit_rows() {
+auto Recordset::limit_rows() -> bool {
   return (_data_storage ? _data_storage->limit_rows() : false);
 }
 
-void Recordset::limit_rows(bool value) {
+auto Recordset::limit_rows(bool value) -> void {
   if (has_pending_changes()) {
     task->send_msg(grt::ErrorMsg, ERRMSG_PENDING_CHANGES, _("Limit Rows"));
     return;
@@ -639,34 +639,34 @@ void Recordset::limit_rows(bool value) {
   }
 }
 
-void Recordset::toggle_limit_rows() {
+auto Recordset::toggle_limit_rows() -> void {
   limit_rows(!limit_rows());
 }
 
-void Recordset::scroll_rows_frame_forward() {
+auto Recordset::scroll_rows_frame_forward() -> void {
   if (_data_storage) {
     _data_storage->scroll_rows_frame_forward();
     refresh();
   }
 }
 
-void Recordset::scroll_rows_frame_backward() {
+auto Recordset::scroll_rows_frame_backward() -> void {
   if (_data_storage && (_data_storage->limit_rows_offset() != 0)) {
     _data_storage->scroll_rows_frame_backward();
     refresh();
   }
 }
 
-int Recordset::limit_rows_count() {
+auto Recordset::limit_rows_count() -> int {
   return (_data_storage ? _data_storage->limit_rows_count() : 0);
 }
 
-void Recordset::limit_rows_count(int value) {
+auto Recordset::limit_rows_count(int value) -> void {
   if (_data_storage)
     _data_storage->limit_rows_count(value);
 }
 
-bool Recordset::limit_rows_applicable() {
+auto Recordset::limit_rows_applicable() -> bool {
   if (_data_storage && !_data_storage->limit_rows_applicable())
     return false;
 
@@ -677,7 +677,7 @@ bool Recordset::limit_rows_applicable() {
          (0 < _data_storage->limit_rows_offset());
 }
 
-Recordset_data_storage::Ref Recordset::data_storage_for_export(const std::string &format) {
+auto Recordset::data_storage_for_export(const std::string &format) -> Recordset_data_storage::Ref {
   _data_storage_for_export.reset();
 
   {
@@ -697,7 +697,7 @@ Recordset_data_storage::Ref Recordset::data_storage_for_export(const std::string
   throw std::runtime_error(strfmt("Data storage format is not supported: %s", format.c_str()));
 }
 
-std::vector<Recordset_storage_info> Recordset::data_storages_for_export() {
+auto Recordset::data_storages_for_export() -> std::vector<Recordset_storage_info> {
   std::vector<Recordset_storage_info> storage_types;
 
   storage_types = Recordset_text_storage::storage_types();
@@ -705,7 +705,7 @@ std::vector<Recordset_storage_info> Recordset::data_storages_for_export() {
   return storage_types;
 }
 
-void Recordset::sort_by(ColumnId column, int direction, bool retaining) {
+auto Recordset::sort_by(ColumnId column, int direction, bool retaining) -> void {
   if (_column_count == 0)
     return;
 
@@ -746,30 +746,30 @@ void Recordset::sort_by(ColumnId column, int direction, bool retaining) {
   rebuild_data_index(data_swap_db.get(), true, true);
 }
 
-std::string Recordset::get_column_filter_expr(ColumnId column) const {
+auto Recordset::get_column_filter_expr(ColumnId column) const -> std::string {
   Column_filter_expr_map::const_iterator i = _column_filter_expr_map.find(column);
   if (i != _column_filter_expr_map.end())
     return i->second;
   return "";
 }
 
-bool Recordset::has_column_filters() const {
+auto Recordset::has_column_filters() const -> bool {
   return !_column_filter_expr_map.empty();
 }
 
-bool Recordset::has_column_filter(ColumnId column) const {
+auto Recordset::has_column_filter(ColumnId column) const -> bool {
   Column_filter_expr_map::const_iterator i = _column_filter_expr_map.find(column);
   return (i != _column_filter_expr_map.end());
 }
 
-void Recordset::reset_column_filters() {
+auto Recordset::reset_column_filters() -> void {
   _column_filter_expr_map.clear();
 
   std::shared_ptr<sqlite::connection> data_swap_db = this->data_swap_db();
   rebuild_data_index(data_swap_db.get(), true, true);
 }
 
-void Recordset::reset_column_filter(ColumnId column) {
+auto Recordset::reset_column_filter(ColumnId column) -> void {
   Column_filter_expr_map::iterator i = _column_filter_expr_map.find(column);
   if (i == _column_filter_expr_map.end())
     return;
@@ -779,7 +779,7 @@ void Recordset::reset_column_filter(ColumnId column) {
   rebuild_data_index(data_swap_db.get(), true, true);
 }
 
-void Recordset::set_column_filter(ColumnId column, const std::string &filter_expr) {
+auto Recordset::set_column_filter(ColumnId column, const std::string &filter_expr) -> void {
   if (column >= get_column_count())
     return;
   Column_filter_expr_map::const_iterator i = _column_filter_expr_map.find(column);
@@ -791,16 +791,16 @@ void Recordset::set_column_filter(ColumnId column, const std::string &filter_exp
   rebuild_data_index(data_swap_db.get(), true, true);
 }
 
-size_t Recordset::column_filter_icon_id() const {
+auto Recordset::column_filter_icon_id() const -> size_t {
   IconManager *icon_man = IconManager::get_instance();
   return icon_man->get_icon_id("tiny_search.png");
 }
 
-const std::string &Recordset::data_search_string() const {
+auto Recordset::data_search_string() const -> const std::string & {
   return _data_search_string;
 }
 
-void Recordset::set_data_search_string(const std::string &value) {
+auto Recordset::set_data_search_string(const std::string &value) -> void {
   if (value == _data_search_string)
     return;
   _data_search_string = value;
@@ -809,7 +809,7 @@ void Recordset::set_data_search_string(const std::string &value) {
   rebuild_data_index(data_swap_db.get(), true, true);
 }
 
-void Recordset::reset_data_search_string() {
+auto Recordset::reset_data_search_string() -> void {
   if (_data_search_string.empty())
     return;
   _data_search_string.clear();
@@ -818,7 +818,7 @@ void Recordset::reset_data_search_string() {
   rebuild_data_index(data_swap_db.get(), true, true);
 }
 
-void Recordset::rebuild_data_index(sqlite::connection *data_swap_db, bool do_cache_data_frame, bool do_refresh_ui) {
+auto Recordset::rebuild_data_index(sqlite::connection *data_swap_db, bool do_cache_data_frame, bool do_refresh_ui) -> void {
   {
     base::RecMutexLock data_mutex(_data_mutex);
 
@@ -945,7 +945,7 @@ void Recordset::rebuild_data_index(sqlite::connection *data_swap_db, bool do_cac
     refresh_ui();
 }
 
-void Recordset::paste_rows_from_clipboard(ssize_t dest_row) {
+auto Recordset::paste_rows_from_clipboard(ssize_t dest_row) -> void {
   std::string text = mforms::Utilities::get_clipboard_text();
   std::vector<std::string> rows;
 
@@ -1012,7 +1012,7 @@ void Recordset::paste_rows_from_clipboard(ssize_t dest_row) {
     rows_changed();
 }
 
-void Recordset::showPointInBrowser(const bec::NodeId &node, ColumnId column) {
+auto Recordset::showPointInBrowser(const bec::NodeId &node, ColumnId column) -> void {
   base::RecMutexLock data_mutex(_data_mutex);
   if (sqlide::is_var_blob(_real_column_types[column])) {
     std::string geometry;
@@ -1059,13 +1059,13 @@ void Recordset::showPointInBrowser(const bec::NodeId &node, ColumnId column) {
   }
 }
 
-mforms::ContextMenu *Recordset::get_context_menu() {
+auto Recordset::get_context_menu() -> mforms::ContextMenu * {
   if (!_context_menu)
     _context_menu = new mforms::ContextMenu();
   return _context_menu;
 }
 
-void Recordset::update_selection_for_menu(const std::vector<int> &rows, int clicked_column) {
+auto Recordset::update_selection_for_menu(const std::vector<int> &rows, int clicked_column) -> void {
   // TODO: lift the restriction to a single column.
   //       We need to support multiple cells (in multiple columns) on all platforms.
   _selected_rows = rows;
@@ -1190,7 +1190,7 @@ void Recordset::update_selection_for_menu(const std::vector<int> &rows, int clic
   }
 }
 
-void Recordset::activate_menu_item(const std::string &action, const std::vector<int> &rows, int clicked_column) {
+auto Recordset::activate_menu_item(const std::string &action, const std::vector<int> &rows, int clicked_column) -> void {
   bool need_ui_refresh = false;
 
   // TODO: the tests here for rows count and clicked_column are all unnecessary. This has already be done.
@@ -1284,8 +1284,8 @@ void Recordset::activate_menu_item(const std::string &action, const std::vector<
     refresh_ui();
 }
 
-void Recordset::copy_rows_to_clipboard(const std::vector<int> &indeces, std::string sep, bool quoted,
-                                       bool with_header) {
+auto Recordset::copy_rows_to_clipboard(const std::vector<int> &indeces, std::string sep, bool quoted,
+                                       bool with_header) -> void {
   ColumnId editable_col_count = get_column_count();
   if (!editable_col_count)
     return;
@@ -1329,7 +1329,7 @@ void Recordset::copy_rows_to_clipboard(const std::vector<int> &indeces, std::str
   mforms::Utilities::set_clipboard_text(text);
 }
 
-void Recordset::copy_field_to_clipboard(int row, ColumnId column, bool quoted) {
+auto Recordset::copy_field_to_clipboard(int row, ColumnId column, bool quoted) -> void {
   sqlide::QuoteVar qv;
   {
     qv.escape_string = std::bind(sqlide::QuoteVar::escape_ansi_sql_string, std::placeholders::_1);
@@ -1348,7 +1348,7 @@ void Recordset::copy_field_to_clipboard(int row, ColumnId column, bool quoted) {
   mforms::Utilities::set_clipboard_text(text);
 }
 
-std::string Recordset::status_text() {
+auto Recordset::status_text() -> std::string {
   std::string limit_text;
 
   if (limit_rows_applicable() && limit_rows())
@@ -1383,9 +1383,9 @@ std::string Recordset::status_text() {
   return status_text;
 }
 
-static mforms::ToolBarItem *add_toolbar_action_item(mforms::ToolBar *toolbar, bec::IconManager *im,
+static auto add_toolbar_action_item(mforms::ToolBar *toolbar, bec::IconManager *im,
                                                     const std::string &accessibilityName, const std::string &item_icon,
-                                                    const std::string &item_name, const std::string &item_tooltip) {
+                                                    const std::string &item_name, const std::string &item_tooltip) -> mforms::ToolBarItem * {
   mforms::ToolBarItem *item = mforms::manage(new mforms::ToolBarItem(mforms::ActionItem));
   item->set_name(accessibilityName);
   item->setInternalName(item_name);
@@ -1395,13 +1395,13 @@ static mforms::ToolBarItem *add_toolbar_action_item(mforms::ToolBar *toolbar, be
   return item;
 }
 
-static mforms::ToolBarItem *add_toolbar_action_item(mforms::ToolBar *toolbar, bec::IconManager *im,
+static auto add_toolbar_action_item(mforms::ToolBar *toolbar, bec::IconManager *im,
                                                     const std::string &accessibilityName, const std::string &item_name,
-                                                    const std::string &item_tooltip) {
+                                                    const std::string &item_tooltip) -> mforms::ToolBarItem * {
   return add_toolbar_action_item(toolbar, im, accessibilityName, item_name + ".png", item_name, item_tooltip);
 }
 
-static void add_toolbar_label_item(mforms::ToolBar *toolbar, const std::string &label, const std::string &name) {
+static auto add_toolbar_label_item(mforms::ToolBar *toolbar, const std::string &label, const std::string &name) -> void {
   mforms::ToolBarItem *item = mforms::manage(new mforms::ToolBarItem(mforms::LabelItem));
   
   item->set_text(label);
@@ -1409,7 +1409,7 @@ static void add_toolbar_label_item(mforms::ToolBar *toolbar, const std::string &
   toolbar->add_item(item);
 }
 
-void Recordset::search_activated(mforms::ToolBarItem *item) {
+auto Recordset::search_activated(mforms::ToolBarItem *item) -> void {
   std::string text;
   if ((text = item->get_text()).empty())
     reset_data_search_string();
@@ -1417,7 +1417,7 @@ void Recordset::search_activated(mforms::ToolBarItem *item) {
     set_data_search_string(text);
 }
 
-void Recordset::rebuild_toolbar() {
+auto Recordset::rebuild_toolbar() -> void {
   if (_toolbar) {
     _toolbar->remove_all();
     // hack so that this label only appears for resultset grids and not inserts editor
@@ -1495,7 +1495,7 @@ void Recordset::rebuild_toolbar() {
   }
 }
 
-mforms::ToolBar *Recordset::get_toolbar() {
+auto Recordset::get_toolbar() -> mforms::ToolBar * {
   if (!_toolbar) {
     _toolbar = mforms::manage(new mforms::ToolBar(mforms::SecondaryToolBar));
     rebuild_toolbar();
@@ -1504,7 +1504,7 @@ mforms::ToolBar *Recordset::get_toolbar() {
   return _toolbar;
 }
 
-void Recordset::apply_changes() {
+auto Recordset::apply_changes() -> void {
   if (flush_ui_changes_cb)
     flush_ui_changes_cb();
 
@@ -1517,11 +1517,11 @@ void Recordset::apply_changes() {
     rows_changed();
 }
 
-ActionList &Recordset::action_list() {
+auto Recordset::action_list() -> ActionList & {
   return _action_list;
 }
 
-void Recordset::register_default_actions() {
+auto Recordset::register_default_actions() -> void {
   _action_list.register_action("record_sort_reset", std::bind(&Recordset::sort_by, this, 0, 0, false));
 
   _action_list.register_action("scroll_rows_frame_forward", std::bind(&Recordset::scroll_rows_frame_forward, this));
@@ -1540,10 +1540,10 @@ public:
   DataEditorSelector(bool read_only, const std::string &encoding, const std::string &type)
     : _encoding(encoding), _type(type), _read_only(read_only) {
   }
-  const std::string &encoding() const {
+  auto encoding() const -> const std::string & {
     return _encoding;
   }
-  void encoding(const std::string &value) {
+  auto encoding(const std::string &value) -> void {
     _encoding = value;
   }
 
@@ -1596,7 +1596,7 @@ public:
   }
 };
 
-void Recordset::open_field_data_editor(RowId row, ColumnId column, const std::string &logical_type) {
+auto Recordset::open_field_data_editor(RowId row, ColumnId column, const std::string &logical_type) -> void {
   base::RecMutexLock data_mutex(_data_mutex);
 
   try {
@@ -1640,7 +1640,7 @@ public:
   DataValueConv(const char *data, size_t length) {
     set_data(data, length);
   }
-  void set_data(const char *data, size_t length) {
+  auto set_data(const char *data, size_t length) -> void {
     _data = data;
     _length = length;
   }
@@ -1665,7 +1665,7 @@ public:
   }
 };
 
-void Recordset::set_field_value(RowId row, ColumnId column, BinaryDataEditor *data_editor) {
+auto Recordset::set_field_value(RowId row, ColumnId column, BinaryDataEditor *data_editor) -> void {
   if (!data_editor)
     return;
   set_field_raw_data(row, column, data_editor->data(), data_editor->length(), data_editor->isJson());
@@ -1682,7 +1682,7 @@ void Recordset::set_field_raw_data(RowId row, ColumnId column, const char *data,
   set_field(node, column, value);
 }
 
-void Recordset::load_from_file(const bec::NodeId &node, ColumnId column, const std::string &file) {
+auto Recordset::load_from_file(const bec::NodeId &node, ColumnId column, const std::string &file) -> void {
   char *data;
   gsize length;
   GError *error = 0;
@@ -1699,7 +1699,7 @@ void Recordset::load_from_file(const bec::NodeId &node, ColumnId column, const s
   }
 }
 
-void Recordset::load_from_file(const bec::NodeId &node, ColumnId column) {
+auto Recordset::load_from_file(const bec::NodeId &node, ColumnId column) -> void {
   mforms::FileChooser chooser(mforms::OpenFile);
 
   chooser.set_title("Load Field Value");
@@ -1726,7 +1726,7 @@ public:
   }
 };
 
-bool Recordset::get_raw_field(const bec::NodeId &node, ColumnId column, std::string &data_ret) {
+auto Recordset::get_raw_field(const bec::NodeId &node, ColumnId column, std::string &data_ret) -> bool {
   base::RecMutexLock data_mutex(_data_mutex);
 
   sqlite::variant_t blob_value;
@@ -1774,7 +1774,7 @@ public:
   }
 };
 
-void Recordset::save_to_file(const bec::NodeId &node, ColumnId column, const std::string &file) {
+auto Recordset::save_to_file(const bec::NodeId &node, ColumnId column, const std::string &file) -> void {
   base::RecMutexLock data_mutex(_data_mutex);
 
   sqlite::variant_t blob_value;
@@ -1802,7 +1802,7 @@ void Recordset::save_to_file(const bec::NodeId &node, ColumnId column, const std
   }
 }
 
-void Recordset::save_to_file(const bec::NodeId &node, ColumnId column) {
+auto Recordset::save_to_file(const bec::NodeId &node, ColumnId column) -> void {
   mforms::FileChooser chooser(mforms::SaveFile);
   chooser.set_title("Save Field Value");
   chooser.set_extensions("Text files (*.txt)|*.txt|All Files (*.*)|*.*", "txt");

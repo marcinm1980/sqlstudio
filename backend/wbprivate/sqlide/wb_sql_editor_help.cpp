@@ -62,7 +62,7 @@ public:
   CommonTokenStream tokens;
   MySQLParser parser;
 
-  ParserRuleContext *parse(const std::string &query) {
+  auto parse(const std::string &query) -> ParserRuleContext * {
     input.load(query);
     lexer.reset();
     lexer.setInputStream(&input);
@@ -109,13 +109,13 @@ HelpContext::~HelpContext() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-long HelpContext::serverVersion() const {
+auto HelpContext::serverVersion() const -> long {
   return _d->lexer.serverVersion;
 }
 
 //----------------- DbSqlEditorContextHelp -----------------------------------------------------------------------------
 
-DbSqlEditorContextHelp *DbSqlEditorContextHelp::get() {
+auto DbSqlEditorContextHelp::get() -> DbSqlEditorContextHelp * {
   static DbSqlEditorContextHelp instance;
   return &instance;
 }
@@ -139,7 +139,7 @@ static std::string helpStyleSheetTemplate = "<style>\n"
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string convertXRef(long version, std::string const &source) {
+auto convertXRef(long version, std::string const &source) -> std::string {
   if (source.find("<xref") == std::string::npos)
     return source;
 
@@ -155,7 +155,7 @@ std::string convertXRef(long version, std::string const &source) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string convertExternalLinks(long version, std::string const &source) {
+auto convertExternalLinks(long version, std::string const &source) -> std::string {
   if (source.find("<link") == std::string::npos)
     return source;
 
@@ -171,7 +171,7 @@ std::string convertExternalLinks(long version, std::string const &source) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string convertInternalLinks(std::string const &source) {
+auto convertInternalLinks(std::string const &source) -> std::string {
   if (source.find("role=\"stmt\"") == std::string::npos)
     return source;
 
@@ -184,7 +184,7 @@ std::string convertInternalLinks(std::string const &source) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string convertList(long version, Value const &list) {
+auto convertList(long version, Value const &list) -> std::string {
   std::string result;
   for (auto const &entry: list.GetArray()) {
     auto iterator = entry.FindMember("para");
@@ -218,7 +218,7 @@ std::string convertList(long version, Value const &list) {
 /**
  * Creates the HTML formatted help text from the object that's passed in.
  */
-std::string DbSqlEditorContextHelp::createHelpTextFromJson(long version, Value const &json) {
+auto DbSqlEditorContextHelp::createHelpTextFromJson(long version, Value const &json) -> std::string {
   std::string result = "<body>";
   std::string id = json.HasMember("id") ? json["id"].GetString() : "";
   result += "<h3>" + id + " Syntax:</h3>";
@@ -344,7 +344,7 @@ DbSqlEditorContextHelp::~DbSqlEditorContextHelp() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DbSqlEditorContextHelp::waitForLoading() {
+auto DbSqlEditorContextHelp::waitForLoading() -> void {
   if (loaderThread.joinable())
     loaderThread.join();
 };
@@ -354,7 +354,7 @@ void DbSqlEditorContextHelp::waitForLoading() {
 /**
  * A quick lookup if the help topic exists actually, without retrieving help text.
  */
-bool DbSqlEditorContextHelp::topicExists(long serverVersion, const std::string &topic) {
+auto DbSqlEditorContextHelp::topicExists(long serverVersion, const std::string &topic) -> bool {
   waitForLoading();
 
   auto iterator = helpTopics.find(serverVersion / 100);
@@ -365,7 +365,7 @@ bool DbSqlEditorContextHelp::topicExists(long serverVersion, const std::string &
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool DbSqlEditorContextHelp::helpTextForTopic(HelpContext *context, const std::string &topic, std::string &text) {
+auto DbSqlEditorContextHelp::helpTextForTopic(HelpContext *context, const std::string &topic, std::string &text) -> bool {
   logDebug2("Looking up help topic: %s\n", topic.c_str());
 
   // If help text is requested so quickly that loading the help content hasn't finished yet, wait here.
@@ -414,7 +414,7 @@ bool DbSqlEditorContextHelp::helpTextForTopic(HelpContext *context, const std::s
 //----------------------------------------------------------------------------------------------------------------------
 
 // Determines if the given tree is a terminal node and if so, if it is of the given type.
-bool isToken(tree::ParseTree *tree, size_t type) {
+auto isToken(tree::ParseTree *tree, size_t type) -> bool {
   auto terminal = dynamic_cast<tree::TerminalNode *>(tree);
   if (terminal != nullptr)
     return terminal->getSymbol()->getType() == type;
@@ -428,14 +428,14 @@ bool isToken(tree::ParseTree *tree, size_t type) {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Determines if the given is of the given type.
-bool isToken(Token *token, size_t type) {
+auto isToken(Token *token, size_t type) -> bool {
   return token->getType() == type;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
 // Determines if the parent of the given tree is a specific context.
-bool isParentContext(tree::ParseTree *tree, size_t type) {
+auto isParentContext(tree::ParseTree *tree, size_t type) -> bool {
   auto parent = dynamic_cast<ParserRuleContext *>(tree->parent);
   return parent->getRuleIndex() == type;
 }
@@ -455,7 +455,7 @@ static std::map<std::string, std::string> functionSynonyms = {
   { "ST_GLENGTH", "GLENGTH" },
 };
 
-std::string functionTopicForContext(ParserRuleContext *context) {
+auto functionTopicForContext(ParserRuleContext *context) -> std::string {
   std::string topic;
 
   Token *nameToken = nullptr;
@@ -698,8 +698,8 @@ static std::unordered_set<std::string> specialWords = {
 /**
  * Determines a help topic from the given query at the given position (given as column/row pair).
  */
-std::string DbSqlEditorContextHelp::helpTopicFromPosition(HelpContext *helpContext, const std::string &query,
-                                                          size_t caret) {
+auto DbSqlEditorContextHelp::helpTopicFromPosition(HelpContext *helpContext, const std::string &query,
+                                                          size_t caret) -> std::string {
   logDebug2("Finding help topic\n");
 
   // We are not interested in validity here. We simply parse in default mode (LL) and examine the returned parse tree.

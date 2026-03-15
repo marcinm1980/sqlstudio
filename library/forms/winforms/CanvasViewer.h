@@ -50,13 +50,11 @@ namespace MySQL {
         WindowsGLCanvasView ^ CreateGLCanvas(Form ^ ownerForm, bool handleInput);
         WindowsGDICanvasView ^ CreateGDICanvas(Form ^ ownerForm, bool handleInput);
 
-        void FinalizeCanvas();
+        auto FinalizeCanvas() -> void;
 
-        property BaseWindowsCanvasView ^ Canvas { BaseWindowsCanvasView ^ get() { return canvas; } }
+        auto get() -> property BaseWindowsCanvasView ^ Canvas { BaseWindowsCanvasView ^ { return canvas; } }
 
-          property Form ^
-          OwnerForm {
-            Form ^ get() {
+          auto get() -> property Form ^ OwnerForm { Form ^ {
               if (canvas != nullptr)
                 return canvas->GetOwnerForm();
               else
@@ -67,16 +65,12 @@ namespace MySQL {
             }
           }
 
-          property ScrollBar ^
-          VScrollbar {
-            ScrollBar ^ get() { return vScrollbar; } void set(ScrollBar ^ value) {
+          auto get() -> property ScrollBar ^ VScrollbar { ScrollBar ^ { return vScrollbar; } void set(ScrollBar ^ value) {
               vScrollbar = value;
             }
           }
 
-          property ScrollBar ^
-          HScrollbar {
-            ScrollBar ^ get() { return hScrollbar; } void set(ScrollBar ^ value) {
+          auto get() -> property ScrollBar ^ HScrollbar { ScrollBar ^ { return hScrollbar; } void set(ScrollBar ^ value) {
               hScrollbar = value;
             }
           }
@@ -95,13 +89,13 @@ namespace MySQL {
         virtual void OnPaint(PaintEventArgs ^ e) override;
 
       private:
-        void OnNeedsRepaint(int x, int y, int w, int h);
-        void OnViewportChanged();
+        auto OnNeedsRepaint(int x, int y, int w, int h) -> void;
+        auto OnViewportChanged() -> void;
 
         void ScrollablePanel_Click(Object ^ sender, EventArgs ^ e);
-        void UpdateScrollbars();
-        void UpdateScrollBarPositions();
-        void UpdateScrollBarSizes();
+        auto UpdateScrollbars() -> void;
+        auto UpdateScrollBarPositions() -> void;
+        auto UpdateScrollBarSizes() -> void;
 
         void DoMouseMove(MouseEventArgs ^ e);
 
@@ -117,18 +111,14 @@ namespace MySQL {
         WindowsCanvasViewer();
 
       public:
-        property BaseWindowsCanvasView ^ Canvas { BaseWindowsCanvasView ^ get() { return canvasPanel->Canvas; } }
+        auto get() -> property BaseWindowsCanvasView ^ Canvas { BaseWindowsCanvasView ^ { return canvasPanel->Canvas; } }
 
-          property System::Windows::Forms::Form ^
-          OwnerForm {
-            System::Windows::Forms::Form ^
-              get() { return canvasPanel->OwnerForm; } void set(System::Windows::Forms::Form ^ value) {
+          auto get() -> property System::Windows::Forms::Form ^ OwnerForm { System::Windows::Forms::Form ^ { return canvasPanel->OwnerForm; } void set(System::Windows::Forms::Form ^ value) {
               canvasPanel->OwnerForm = value;
             }
           }
 
-          property System::Windows::Forms::Panel ^
-          CanvasPanel { System::Windows::Forms::Panel ^ get() { return canvasPanel; } }
+          auto get() -> property System::Windows::Forms::Panel ^ CanvasPanel { System::Windows::Forms::Panel ^ { return canvasPanel; } }
 
           /// <summary>
           /// Initializes a new canvas viewer. Normally we use OpenGL for rendering, but this can be
@@ -143,7 +133,7 @@ namespace MySQL {
                    CreateCanvasView(System::Windows::Forms::Form ^ ownerForm, bool handleInput,
                                     bool software_rendering_enforced, bool opengl_rendering_enforced);
 
-        void FinalizeCanvas() {
+        auto FinalizeCanvas() -> void {
           canvasPanel->FinalizeCanvas();
         }
       };

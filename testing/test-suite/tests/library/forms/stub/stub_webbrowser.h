@@ -36,22 +36,22 @@ namespace mforms {
       WebBrowserWrapper(::mforms::WebBrowser *self) : ViewWrapper(self) {
       }
 
-      static bool create(WebBrowser *) {
+      static auto create(WebBrowser *) -> bool {
         return true;
       }
 
-      static void set_html(WebBrowser *, const std::string &) {
+      static auto set_html(WebBrowser *, const std::string &) -> void {
       }
 
-      static void navigate(WebBrowser *, const std::string &) {
+      static auto navigate(WebBrowser *, const std::string &) -> void {
       }
 
-      static std::string get_document_title(WebBrowser *) {
+      static auto get_document_title(WebBrowser *) -> std::string {
         return "";
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_webbrowser_impl.create = &WebBrowserWrapper::create;

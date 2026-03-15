@@ -54,30 +54,30 @@ SchemaObjectNode::SchemaObjectNode(const db_DatabaseObjectRef &dbobject) : Overv
   label = object->name();
 }
 
-void SchemaObjectNode::delete_object(WBContext *wb) {
+auto SchemaObjectNode::delete_object(WBContext *wb) -> void {
   wb->get_component<WBComponentPhysical>()->delete_db_object(db_DatabaseObjectRef::cast_from(object));
 }
 
-bool SchemaObjectNode::is_deletable() {
+auto SchemaObjectNode::is_deletable() -> bool {
   return true;
 }
 
-bool SchemaObjectNode::is_renameable() {
+auto SchemaObjectNode::is_renameable() -> bool {
   return true;
 }
 
-void SchemaObjectNode::copy_object(WBContext *wb, bec::Clipboard *clip) {
+auto SchemaObjectNode::copy_object(WBContext *wb, bec::Clipboard *clip) -> void {
   clip->append_data(grt::copy_object(object));
   clip->set_content_description(label);
 }
 
-bool SchemaObjectNode::is_copyable() {
+auto SchemaObjectNode::is_copyable() -> bool {
   return true;
 }
 
 //-----------------------------------------------------------------------------
 
-std::string SchemaTableNode::get_detail(int field) {
+auto SchemaTableNode::get_detail(int field) -> std::string {
   switch (field) {
     case 0: // engine
       return db_mysql_TableRef::cast_from(object)->tableEngine();
@@ -93,11 +93,11 @@ std::string SchemaTableNode::get_detail(int field) {
 
 //-----------------------------------------------------------------------------
 
-bool SchemaViewNode::is_renameable() {
+auto SchemaViewNode::is_renameable() -> bool {
   return false;
 }
 
-std::string SchemaViewNode::get_detail(int field) {
+auto SchemaViewNode::get_detail(int field) -> std::string {
   switch (field) {
     case 0: // created
       return db_ViewRef::cast_from(object)->createDate();
@@ -111,7 +111,7 @@ std::string SchemaViewNode::get_detail(int field) {
 
 //-----------------------------------------------------------------------------
 
-std::string SchemaRoutineGroupNode::get_detail(int field) {
+auto SchemaRoutineGroupNode::get_detail(int field) -> std::string {
   switch (field) {
     case 0: // created
       return db_RoutineGroupRef::cast_from(object)->createDate();
@@ -125,7 +125,7 @@ std::string SchemaRoutineGroupNode::get_detail(int field) {
 
 //-----------------------------------------------------------------------------
 
-std::string SchemaRoutineNode::get_detail(int field) {
+auto SchemaRoutineNode::get_detail(int field) -> std::string {
   switch (field) {
     case 0: // created
       return db_RoutineRef::cast_from(object)->createDate();
@@ -137,7 +137,7 @@ std::string SchemaRoutineNode::get_detail(int field) {
   return "";
 }
 
-bool SchemaRoutineNode::is_renameable() {
+auto SchemaRoutineNode::is_renameable() -> bool {
   return false;
 }
 
@@ -164,7 +164,7 @@ bool SchemaRoutineNode::is_renameable() {
  *
  */
 
-static bool CompNodeLabel(OverviewBE::Node *a, OverviewBE::Node *b) {
+static auto CompNodeLabel(OverviewBE::Node *a, OverviewBE::Node *b) -> bool {
   return g_utf8_collate(a->label.c_str(), b->label.c_str()) < 0;
 }
 
@@ -193,7 +193,7 @@ public:
     refresh_children();
   }
 
-  virtual void refresh_children() {
+  virtual auto refresh_children() -> void {
     Node *add_node = 0;
 
     focused = 0;
@@ -223,19 +223,19 @@ public:
     std::sort(children.begin() + (add_node ? 1 : 0), children.end(), CompNodeLabel);
   }
 
-  void set_detail_fields(const std::vector<std::string> &fields) {
+  auto set_detail_fields(const std::vector<std::string> &fields) -> void {
     _fields = fields;
   }
 
-  virtual int count_detail_fields() {
+  virtual auto count_detail_fields() -> int {
     return (int)_fields.size();
   }
 
-  virtual std::string get_detail_name(int field) {
+  virtual auto get_detail_name(int field) -> std::string {
     return _fields[field];
   }
 
-  virtual std::string get_unique_id() {
+  virtual auto get_unique_id() -> std::string {
     return id;
   }
 };
@@ -252,7 +252,7 @@ PhysicalSchemaNode::PhysicalSchemaNode(db_SchemaRef schema)
   large_icon = IconManager::get_instance()->get_icon_id("db.Schema.$.png", Icon32);
 }
 
-void PhysicalSchemaNode::init() {
+auto PhysicalSchemaNode::init() -> void {
   db_SchemaRef schema = db_SchemaRef::cast_from(object);
   std::vector<std::string> fields;
 
@@ -332,7 +332,7 @@ void PhysicalSchemaNode::init() {
   }
 }
 
-void PhysicalSchemaNode::paste_object(WBContext *wb, bec::Clipboard *clip) {
+auto PhysicalSchemaNode::paste_object(WBContext *wb, bec::Clipboard *clip) -> void {
   std::list<grt::ObjectRef> objects(clip->get_data());
   db_SchemaRef schema(db_SchemaRef::cast_from(object));
   WBComponentPhysical *pc = wb->get_component<WBComponentPhysical>();
@@ -347,15 +347,15 @@ void PhysicalSchemaNode::paste_object(WBContext *wb, bec::Clipboard *clip) {
   undo.end(strfmt(_("Paste %s"), clip->get_content_description().c_str()));
 }
 
-bool PhysicalSchemaNode::is_renameable() {
+auto PhysicalSchemaNode::is_renameable() -> bool {
   return false;
 }
 
-bool PhysicalSchemaNode::rename(WBContext *wb, const std::string &name) {
+auto PhysicalSchemaNode::rename(WBContext *wb, const std::string &name) -> bool {
   return false;
 }
 
-bool PhysicalSchemaNode::is_pasteable(bec::Clipboard *clip) {
+auto PhysicalSchemaNode::is_pasteable(bec::Clipboard *clip) -> bool {
   std::string prefix = object.get_metaclass()->name();
 
   prefix = prefix.substr(0, prefix.length() - strlen(".Schema"));
@@ -373,66 +373,66 @@ bool PhysicalSchemaNode::is_pasteable(bec::Clipboard *clip) {
   return !objects.empty();
 }
 
-void PhysicalSchemaNode::delete_object(WBContext *wb) {
+auto PhysicalSchemaNode::delete_object(WBContext *wb) -> void {
   wb->get_component<WBComponentPhysical>()->delete_db_schema(db_SchemaRef::cast_from(object));
 }
 
-bool PhysicalSchemaNode::activate(WBContext *wb) {
+auto PhysicalSchemaNode::activate(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(object);
   return true;
 }
 
-bool PhysicalSchemaNode::is_deletable() {
+auto PhysicalSchemaNode::is_deletable() -> bool {
   return true;
 }
 
-void PhysicalSchemaNode::focus(OverviewBE *sender) {
+auto PhysicalSchemaNode::focus(OverviewBE *sender) -> void {
   db_SchemaRef schema(db_SchemaRef::cast_from(object));
 
   if (schema->owner().is_valid())
     db_CatalogRef::cast_from(schema->owner())->defaultSchema(schema);
 }
 
-void PhysicalSchemaNode::refresh() {
+auto PhysicalSchemaNode::refresh() -> void {
   label = object->name();
 }
 
-bool PhysicalSchemaNode::add_new_db_table(WBContext *wb) {
+auto PhysicalSchemaNode::add_new_db_table(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(
     wb->get_component<WBComponentPhysical>()->add_new_db_table(db_SchemaRef::cast_from(object)));
   return true;
 }
 
-bool PhysicalSchemaNode::add_new_db_view(WBContext *wb) {
+auto PhysicalSchemaNode::add_new_db_view(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(
     wb->get_component<WBComponentPhysical>()->add_new_db_view(db_SchemaRef::cast_from(object)));
   return true;
 }
 
-bool PhysicalSchemaNode::add_new_db_routine_group(WBContext *wb) {
+auto PhysicalSchemaNode::add_new_db_routine_group(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(
     wb->get_component<WBComponentPhysical>()->add_new_db_routine_group(db_SchemaRef::cast_from(object)));
   return true;
 }
 
-bool PhysicalSchemaNode::add_new_db_routine(WBContext *wb) {
+auto PhysicalSchemaNode::add_new_db_routine(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(
     wb->get_component<WBComponentPhysical>()->add_new_db_routine(db_SchemaRef::cast_from(object)));
   return true;
 }
 
-SchemaObjectNode *PhysicalSchemaNode::create_table_node(const db_DatabaseObjectRef &dbobject) {
+auto PhysicalSchemaNode::create_table_node(const db_DatabaseObjectRef &dbobject) -> SchemaObjectNode * {
   return new SchemaTableNode(dbobject);
 }
 
-SchemaObjectNode *PhysicalSchemaNode::create_view_node(const db_DatabaseObjectRef &dbobject) {
+auto PhysicalSchemaNode::create_view_node(const db_DatabaseObjectRef &dbobject) -> SchemaObjectNode * {
   return new SchemaViewNode(dbobject);
 }
 
-SchemaObjectNode *PhysicalSchemaNode::create_routine_node(const db_DatabaseObjectRef &dbobject) {
+auto PhysicalSchemaNode::create_routine_node(const db_DatabaseObjectRef &dbobject) -> SchemaObjectNode * {
   return new SchemaRoutineNode(dbobject);
 }
 
-SchemaObjectNode *PhysicalSchemaNode::create_routine_group_node(const db_DatabaseObjectRef &dbobject) {
+auto PhysicalSchemaNode::create_routine_group_node(const db_DatabaseObjectRef &dbobject) -> SchemaObjectNode * {
   return new SchemaRoutineGroupNode(dbobject);
 }

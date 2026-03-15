@@ -57,7 +57,7 @@ namespace base {
   /**
    * Converts an UTF-8 encoded string to a wide string (UTF-16 on Windows).
    */
-  std::wstring string_to_wstring(const std::string &s) {
+  auto string_to_wstring(const std::string &s) -> std::wstring {
     if (sizeof(wchar_t) > 2) {
       auto utf32String = utf32Converter.from_bytes(s);
       return std::wstring(utf32String.begin(), utf32String.end());
@@ -70,7 +70,7 @@ namespace base {
   /**
    * Converts a wide string (UTF-16 on Windows) to an UTF-8 string.
    */
-  std::string wstring_to_string(const std::wstring &s) {
+  auto wstring_to_string(const std::wstring &s) -> std::string {
     if (sizeof(wchar_t) > 2)
       return utf32Converter.to_bytes((int32_t *)s.c_str());
     else
@@ -79,7 +79,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::wstring path_from_utf8(const std::string &s) {
+  auto path_from_utf8(const std::string &s) -> std::wstring {
     return string_to_wstring(s);
   }
 
@@ -93,7 +93,7 @@ namespace base {
   /**
    * Converts an UTF-8 encoded string to a wide string (UTF-32 on Linux).
    */
-  std::wstring string_to_wstring(const std::string &s) {
+  auto string_to_wstring(const std::string &s) -> std::wstring {
     std::wstring result;
     result.reserve(s.size());
     size_t i = 0;
@@ -136,7 +136,7 @@ namespace base {
   /**
    * Converts a wide string (UTF-32 on Linux) to an UTF-8 string.
    */
-  std::string wstring_to_string(const std::wstring &s) {
+  auto wstring_to_string(const std::wstring &s) -> std::string {
     std::string result;
     result.reserve(s.size() * 2);
     for (wchar_t wc : s) {
@@ -162,7 +162,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string path_from_utf8(const std::string &s) {
+  auto path_from_utf8(const std::string &s) -> std::string {
     return s;
   }
 
@@ -170,7 +170,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string string_to_path_for_open(const std::string &s) {
+  auto string_to_path_for_open(const std::string &s) -> std::string {
 // XXX: convert from utf-8 to wide string and then back to utf-8?
 //      How can this help in any way here?
 #ifdef _MSC_VER
@@ -200,13 +200,13 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  inline bool is_invalid_filesystem_char(int ch) {
+  inline auto is_invalid_filesystem_char(int ch) -> bool {
     static const char invalids[] = "/?<>\\:*|\"^";
 
     return memchr(invalids, ch, sizeof(invalids) - 1) != NULL;
   }
 
-  std::string sanitize_file_name(const std::string &s) {
+  auto sanitize_file_name(const std::string &s) -> std::string {
     static const char *invalid_filenames[] = {"com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8",
                                               "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7",
                                               "lpt8", "lpt9", "con",  "nul",  "prn",  ".",    "..",   NULL};
@@ -236,7 +236,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string trim_right(const std::string &s, const std::string &t) {
+  auto trim_right(const std::string &s, const std::string &t) -> std::string {
     std::string d(s);
     std::string::size_type i(d.find_last_not_of(t));
     if (i == std::string::npos)
@@ -247,14 +247,14 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string trim_left(const std::string &s, const std::string &t) {
+  auto trim_left(const std::string &s, const std::string &t) -> std::string {
     std::string d(s);
     return d.erase(0, s.find_first_not_of(t));
   }
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string trim(const std::string &s, const std::string &t) {
+  auto trim(const std::string &s, const std::string &t) -> std::string {
     std::string d(s);
     return trim_left(trim_right(d, t), t);
   }
@@ -266,7 +266,7 @@ namespace base {
    * Note: converting to lower can be wrong when the returned string is used for string comparison,
    * because in some cultures letter cases are more complicated. Use string_compare instead in such cases.
    */
-  std::string tolower(const std::string &s) {
+  auto tolower(const std::string &s) -> std::string {
     char *str_down = g_utf8_strdown(s.c_str(), (gsize)s.length());
     std::string result(str_down);
     g_free(str_down);
@@ -275,7 +275,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string toupper(const std::string &s) {
+  auto toupper(const std::string &s) -> std::string {
     char *str_up = g_utf8_strup(s.c_str(), (gsize)s.length());
     std::string result(str_up);
     g_free(str_up);
@@ -284,7 +284,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string truncate_text(const std::string &s, int max_length) {
+  auto truncate_text(const std::string &s, int max_length) -> std::string {
     if ((int)s.length() > max_length) {
       std::string shortened(s.substr(0, max_length));
       const char *prev = g_utf8_find_prev_char(shortened.c_str(), shortened.c_str() + (max_length - 1));
@@ -299,7 +299,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string sanitize_utf8(const std::string &s) {
+  auto sanitize_utf8(const std::string &s) -> std::string {
     const char *end = 0;
     if (!g_utf8_validate(s.data(), (gsize)s.size(), &end))
       return std::string(s.data(), end);
@@ -308,7 +308,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::vector<std::string> split(const std::string &s, const std::string &sep, int count) {
+  auto split(const std::string &s, const std::string &sep, int count) -> std::vector<std::string> {
     std::vector<std::string> parts;
     std::string ss = s;
 
@@ -335,7 +335,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::vector<std::string> split_by_set(const std::string &s, const std::string &separator_set, int count) {
+  auto split_by_set(const std::string &s, const std::string &separator_set, int count) -> std::vector<std::string> {
     std::vector<std::string> parts;
     std::string ss = s;
 
@@ -362,8 +362,8 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  static void findUntil(const char elem, const std::string &str, const int sep, std::string::size_type &p,
-                        std::string::size_type &pe, std::string::size_type &end, std::vector<std::string> &parts) {
+  static auto findUntil(const char elem, const std::string &str, const int sep, std::string::size_type &p,
+                        std::string::size_type &pe, std::string::size_type &end, std::vector<std::string> &parts) -> void {
     // keep going until we find closing '
     while (pe < end) {
       auto it = str[pe++];
@@ -390,7 +390,7 @@ namespace base {
     }
   }
 
-  std::vector<std::string> split_token_list(const std::string &s, int sep) {
+  auto split_token_list(const std::string &s, int sep) -> std::vector<std::string> {
     std::vector<std::string> parts;
     std::string ss = s;
 
@@ -443,7 +443,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  bool partition(const std::string &s, const std::string &sep, std::string &left, std::string &right) {
+  auto partition(const std::string &s, const std::string &sep, std::string &left, std::string &right) -> bool {
     std::string::size_type p = s.find(sep);
     if (p != std::string::npos) {
       left = s.substr(0, p);
@@ -460,7 +460,7 @@ namespace base {
   /**
    * Returns the index of the given string in the given vector or -1 if not found.
    */
-  int index_of(const std::vector<std::string> &list, const std::string &s) {
+  auto index_of(const std::vector<std::string> &list, const std::string &s) -> int {
     std::vector<std::string>::const_iterator location = std::find(list.begin(), list.end(), s);
     if (location == list.end())
       return -1;
@@ -481,7 +481,7 @@ namespace base {
    * @result Returns the first found identifier starting at "start" or an empty string if nothing was
    *         found. Parameter "start" points to the first character after the found identifier.
    */
-  std::string get_identifier(const std::string &id, std::string::const_iterator &start) {
+  auto get_identifier(const std::string &id, std::string::const_iterator &start) -> std::string {
     std::string::const_iterator token_end = id.end();
     bool is_symbol_quoted = false;
     for (std::string::const_iterator i = start, i_end = token_end; i != i_end; ++i) {
@@ -531,7 +531,7 @@ namespace base {
    * If an identifier is not separated by a dot from the rest of the input then this is considered
    * invalid input and ignored. Only identifiers found until that syntax violation are returned.
    */
-  std::vector<std::string> split_qualified_identifier(const std::string &id) {
+  auto split_qualified_identifier(const std::string &id) -> std::vector<std::string> {
     std::vector<std::string> result;
     std::string::const_iterator iterator = id.begin();
     std::string token;
@@ -550,7 +550,7 @@ namespace base {
   /**
    * Removes the first path part from @path and returns this part as well as the shortend path.
    */
-  std::string pop_path_front(std::string &path) {
+  auto pop_path_front(std::string &path) -> std::string {
     std::string::size_type p = path.find('/');
     std::string res;
     if (p == std::string::npos || p == path.length() - 1) {
@@ -568,7 +568,7 @@ namespace base {
   /**
    * Removes the last path part from @path and returns this part as well as the shortend path.
    */
-  std::string pop_path_back(std::string &path) {
+  auto pop_path_back(std::string &path) -> std::string {
     std::string::size_type p = path.rfind('/');
     std::string res;
     if (p == std::string::npos || p == path.length() - 1) {
@@ -586,7 +586,7 @@ namespace base {
   /**
    * Helper routine to format a string into an STL string using the printf parameter syntax.
    */
-  std::string strfmt(const char *fmt, ...) {
+  auto strfmt(const char *fmt, ...) -> std::string {
     va_list args;
     char *tmp;
     std::string ret;
@@ -603,7 +603,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  BASELIBRARY_PUBLIC_FUNC std::string sizefmt(int64_t s, bool metric) {
+  BASELIBRARY_PUBLIC_FUNC auto sizefmt(int64_t s, bool metric) -> std::string {
     float one_kb;
     const char *unit;
     if (metric) {
@@ -645,7 +645,7 @@ namespace base {
   /**
    * Helper routine to strip a string into an STL string using the printf parameter syntax.
    */
-  std::string strip_text(const std::string &text, bool left, bool right) { // TODO sigc rewrite it in std/boost way
+  auto strip_text(const std::string &text, bool left, bool right) -> std::string { // TODO sigc rewrite it in std/boost way
     std::locale loc;
     std::function<bool(std::string::value_type)> is_space =
       std::bind(&std::isspace<std::string::value_type>, std::placeholders::_1, loc);
@@ -669,7 +669,7 @@ namespace base {
    * a filter can be passed to the variable as in %variable|filter%
    * supported filters are upper, lower and capitalize
    */
-  std::string replaceVariable(const std::string &format, const std::string &variable, const std::string &value) {
+  auto replaceVariable(const std::string &format, const std::string &variable, const std::string &value) -> std::string {
     std::string result = format;
     std::string::size_type pos;
 
@@ -740,7 +740,7 @@ namespace base {
    * Add the given extension to the filename, if necessary.
    *
    */
-  std::string normalize_path_extension(std::string filename, std::string extension) {
+  auto normalize_path_extension(std::string filename, std::string extension) -> std::string {
     if (!extension.empty() && !filename.empty()) {
       std::string::size_type p = filename.rfind('.');
       std::string old_extension = p != std::string::npos ? filename.substr(p) : "";
@@ -766,7 +766,7 @@ namespace base {
    * If there is a parent-dir entry (../) then this as well as the directly prefacing
    * dir entry is removed.
    */
-  std::string normalize_path(const std::string path) {
+  auto normalize_path(const std::string path) -> std::string {
     // First convert all separators to the one that is used on the platform (no mix)
     // and ease so at the same time further processing here.
     std::string result;
@@ -810,7 +810,7 @@ namespace base {
     return result.substr(1);
   }
 
-  std::string expand_tilde(const std::string &path) {
+  auto expand_tilde(const std::string &path) -> std::string {
     if (!path.empty() && path[0] == '~' && (path.size() == 1 || path[1] == G_DIR_SEPARATOR)) {
       const char *homedir = g_getenv("HOME");
       if (!homedir)
@@ -826,7 +826,7 @@ namespace base {
   /**
    * Checks the input for characters not allowed in the file system and converts them to underscore.
    */
-  std::string make_valid_filename(const std::string &name) {
+  auto make_valid_filename(const std::string &name) -> std::string {
     std::string result;
     std::string illegal_chars = "\\/:?\"<>|*";
     for (std::string::const_iterator iterator = name.begin(); iterator != name.end(); ++iterator) {
@@ -843,7 +843,7 @@ namespace base {
   /**
    * Get a string containing the 'len' left most characters.
    */
-  std::string left(const std::string &s, size_t len) {
+  auto left(const std::string &s, size_t len) -> std::string {
     return s.substr(0, len);
   }
 
@@ -852,7 +852,7 @@ namespace base {
   /**
    * Get a string containing the 'len' right most characters.
    */
-  std::string right(const std::string &s, size_t len) {
+  auto right(const std::string &s, size_t len) -> std::string {
     if (len > s.size())
       len = s.size();
     if (len < 1)
@@ -866,7 +866,7 @@ namespace base {
   /**
    * Tests if s begins with part.
    */
-  bool hasPrefix(const std::string &s, const std::string &part) {
+  auto hasPrefix(const std::string &s, const std::string &part) -> bool {
     return s.compare(0, part.length(), part) == 0;
   }
 
@@ -875,7 +875,7 @@ namespace base {
   /**
    * Tests if s ends with part.
    */
-  bool hasSuffix(const std::string &s, const std::string &part) {
+  auto hasSuffix(const std::string &s, const std::string &part) -> bool {
     int start_at = (int)s.length() - (int)part.length();
 
     // If start_at < 0 then the search string is bigger then the source, so the results is false.
@@ -888,7 +888,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  void replaceStringInplace(std::string &value, const std::string &search, const std::string &replacement) {
+  auto replaceStringInplace(std::string &value, const std::string &search, const std::string &replacement) -> void {
     std::string::size_type next;
 
     for (next = value.find(search); next != std::string::npos; next = value.find(search, next)) {
@@ -899,7 +899,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string replaceString(const std::string &s, const std::string &from, const std::string &to) {
+  auto replaceString(const std::string &s, const std::string &from, const std::string &to) -> std::string {
     std::string::size_type p;
     std::string ss, res;
 
@@ -923,7 +923,7 @@ namespace base {
   /**
    * Write text data to file, converting to \r\n if in Windows.
    */
-  void setTextFileContent(const std::string &filename, const std::string &data) {
+  auto setTextFileContent(const std::string &filename, const std::string &data) -> void {
 #ifdef _MSC_VER
     // Opening a file in text mode will automatically convert \n to \r\n.
     FILE *f = base_fopen(filename.c_str(), "w+t");
@@ -951,7 +951,7 @@ namespace base {
    * Reads text data from the given file (file name encoded as utf-8) and returns the content as utf-8.
    * It can read ASCII/ANSI, utf-8 and utf-16 files (LE only) with and without BOM (BOM not included in result).
    */
-  std::string getTextFileContent(const std::string &filename) {
+  auto getTextFileContent(const std::string &filename) -> std::string {
     enum Encoding { ANSI, UTF8, UTF16LE } encoding = ANSI;
 
     std::string result;
@@ -999,7 +999,7 @@ namespace base {
    * Same code as used by mysql. Handles null bytes in the middle of the string.
    * If wildcards is true then _ and % are masked as well.
    */
-  std::string escape_sql_string(const std::string &s, bool wildcards) {
+  auto escape_sql_string(const std::string &s, bool wildcards) -> std::string {
     std::string result;
     result.reserve(s.size());
 
@@ -1049,7 +1049,7 @@ namespace base {
   /**
    * Escape a string to be used in a JSON
    */
-  std::string escape_json_string(const std::string &s) {
+  auto escape_json_string(const std::string &s) -> std::string {
     std::string result;
     result.reserve(s.size());
     for (auto ch : s) {
@@ -1094,7 +1094,7 @@ namespace base {
    * using the wrong char as normal char.
    * The outer quoting stays intact and is not removed.
    */
-  std::string unescape_sql_string(const std::string &s, char quote_char) {
+  auto unescape_sql_string(const std::string &s, char quote_char) -> std::string {
     // Early out if the string is simply empty but quoted.
     if (s.size() == 2 && s[0] == quote_char && s[1] == quote_char)
       return s;
@@ -1160,7 +1160,7 @@ namespace base {
 
   // NOTE: This is not the same as escape_sql_string, as embedded ` must be escaped as ``, not \`
   // and \ ' and " must not be escaped
-  std::string escape_backticks(const std::string &s) {
+  auto escape_backticks(const std::string &s) -> std::string {
     std::string result;
     result.reserve(s.size());
 
@@ -1201,7 +1201,7 @@ namespace base {
    * value for the given parameter. The function can only return options of the form "option-name = option-value"
    * (both quoted and unquoted).
    */
-  std::string extract_option_from_command_line(const std::string &option, const std::string &command_line) {
+  auto extract_option_from_command_line(const std::string &option, const std::string &command_line) -> std::string {
     std::string result;
     size_t position = command_line.find(option);
     if (position != std::string::npos) {
@@ -1243,7 +1243,7 @@ namespace base {
    *
    * @return True if successful, otherwise false.
    */
-  bool parse_font_description(const std::string &fontspec, std::string &font, float &size, bool &bold, bool &italic) {
+  auto parse_font_description(const std::string &fontspec, std::string &font, float &size, bool &bold, bool &italic) -> bool {
     std::vector<std::string> parts = split(fontspec, " ");
     font = fontspec;
     size = 12;
@@ -1287,7 +1287,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string unquote_identifier(const std::string &identifier) {
+  auto unquote_identifier(const std::string &identifier) -> std::string {
     int start = 0;
     int size = (int)identifier.size();
 
@@ -1313,7 +1313,7 @@ namespace base {
    * @param text Text to unquote
    * @return Return unqoted text.
    */
-  std::string unquote(const std::string &text) {
+  auto unquote(const std::string &text) -> std::string {
     if (text.size() < 2)
       return text;
 
@@ -1324,7 +1324,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string quote_identifier(const std::string &identifier, const char quote_char) {
+  auto quote_identifier(const std::string &identifier, const char quote_char) -> std::string {
     return quote_char + identifier + quote_char;
   }
 
@@ -1333,7 +1333,7 @@ namespace base {
   /**
    * Quotes the given identifier, but only if it needs to be quoted.
    */
-  std::string quoteIdentifierIfNeeded(const std::string &ident, const char quote_char, MySQLVersion version) {
+  auto quoteIdentifierIfNeeded(const std::string &ident, const char quote_char, MySQLVersion version) -> std::string {
     bool needs_quotation = MySQLSymbolInfo::isReservedKeyword(ident, version);
     size_t digits = 0;
 
@@ -1357,7 +1357,7 @@ namespace base {
       return ident;
   }
 
-  bool is_number(const std::string &word) {
+  auto is_number(const std::string &word) -> bool {
     if (word.empty())
       return false;
     size_t i = 0;
@@ -1377,7 +1377,7 @@ namespace base {
   * @param text Text to check
   * @return Return true if given string is a boolean.
   **/
-  bool isBool(const std::string &text) {
+  auto isBool(const std::string &text) -> bool {
     std::string transformed;
     std::transform(text.begin(), text.end(), std::back_inserter(transformed), ::tolower);
     if (transformed.compare("true") != 0 && transformed.compare("false") != 0)
@@ -1393,7 +1393,7 @@ namespace base {
    * Return Value : following the STL requirements should return true if the
    *                first string is lower than the second
    */
-  bool stl_string_compare(const std::string &first, const std::string &second, bool case_sensitive) {
+  auto stl_string_compare(const std::string &first, const std::string &second, bool case_sensitive) -> bool {
     return string_compare(first, second, case_sensitive) < 0;
   }
 
@@ -1411,7 +1411,7 @@ namespace base {
    *         < 0 - If first sorts before second.
    *         > 0 - If second sorts before first.
    */
-  int string_compare(const std::string &first, const std::string &second, bool case_sensitive) {
+  auto string_compare(const std::string &first, const std::string &second, bool case_sensitive) -> int {
     int result = 0;
 
     gchar *left = g_utf8_normalize(first.c_str(), -1, G_NORMALIZE_DEFAULT);
@@ -1437,7 +1437,7 @@ namespace base {
    * Convenience function to determine if 2 strings are the same. This works also for culturally
    * equal letters (e.g. german ß and ss) and any normalization form.
    */
-  bool same_string(const std::string &first, const std::string &second, bool case_sensitive) {
+  auto same_string(const std::string &first, const std::string &second, bool case_sensitive) -> bool {
     return string_compare(first, second, case_sensitive) == 0;
   }
 
@@ -1447,7 +1447,7 @@ namespace base {
    * Determines if the given candidate is part of the given text. As with the string_compare matches
    * are culturally correct.
    */
-  bool contains_string(const std::string &text, const std::string &candidate, bool case_sensitive) {
+  auto contains_string(const std::string &text, const std::string &candidate, bool case_sensitive) -> bool {
     if (text.size() == 0 || candidate.size() == 0)
       return false;
 
@@ -1495,7 +1495,7 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  EolHelpers::Eol_format EolHelpers::detect(const std::string &text) {
+  auto EolHelpers::detect(const std::string &text) -> EolHelpers::Eol_format {
     std::string::size_type pos = text.find_first_of("\r\n");
     if (std::string::npos == pos)
       return default_eol_format();
@@ -1505,13 +1505,13 @@ namespace base {
       return eol_lf;
   }
 
-  int EolHelpers::count_lines(const std::string &text) {
+  auto EolHelpers::count_lines(const std::string &text) -> int {
     Eol_format eol_format = detect(text);
     char eol_sym = (eol_cr == eol_format) ? '\r' : '\n';
     return (int)std::count(text.begin(), text.end(), eol_sym);
   }
 
-  bool EolHelpers::check(const std::string &text) {
+  auto EolHelpers::check(const std::string &text) -> bool {
     std::string::size_type pos = text.find_first_of("\n\r");
     if (std::string::npos == pos)
       return true;
@@ -1534,8 +1534,8 @@ namespace base {
     return true;
   }
 
-  void EolHelpers::conv(const std::string &src_text, Eol_format src_eol_format, std::string &dest_text,
-                        Eol_format dest_eol_format) {
+  auto EolHelpers::conv(const std::string &src_text, Eol_format src_eol_format, std::string &dest_text,
+                        Eol_format dest_eol_format) -> void {
     if (src_eol_format == dest_eol_format)
       throw std::logic_error("source and target line ending formats coincide, no need to convert");
 
@@ -1566,7 +1566,7 @@ namespace base {
     }
   }
 
-  void EolHelpers::fix(const std::string &src_text, std::string &dest_text, Eol_format eol_format) {
+  auto EolHelpers::fix(const std::string &src_text, std::string &dest_text, Eol_format eol_format) -> void {
     const std::string &dest_eol = eol(eol_format);
     std::string::size_type dest_eol_length = dest_eol.size();
 
@@ -1601,8 +1601,8 @@ namespace base {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string reflow_text(const std::string &text, unsigned int line_length, const std::string &left_fill,
-                          bool indent_first, unsigned int max_lines) {
+  auto reflow_text(const std::string &text, unsigned int line_length, const std::string &left_fill,
+                          bool indent_first, unsigned int max_lines) -> std::string {
     bool use_fill = true;
     const unsigned int minimum_text_length = 5;
 

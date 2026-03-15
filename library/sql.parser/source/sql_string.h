@@ -32,11 +32,11 @@ namespace mysql_parser
 {
 
 class String;
-int sortcmp(const String *a,const String *b, CHARSET_INFO *cs);
-String *copy_if_not_alloced(String *a,String *b,uint32 arg_length);
-uint32 copy_and_convert(char *to, uint32 to_length, CHARSET_INFO *to_cs,
+auto sortcmp(const String *a,const String *b, CHARSET_INFO *cs) -> int;
+auto copy_if_not_alloced(String *a,String *b,uint32 arg_length) -> String *;
+auto copy_and_convert(char *to, uint32 to_length, CHARSET_INFO *to_cs,
 			const char *from, uint32 from_length,
-			CHARSET_INFO *from_cs, uint *errors);
+			CHARSET_INFO *from_cs, uint *errors) -> uint32;
 
 class String
 {
@@ -84,29 +84,26 @@ public:
   { /* never called */ }
   ~String() { free(); }
 
-  inline void set_charset(CHARSET_INFO *charset) { str_charset= charset; }
-  inline CHARSET_INFO *charset() const { return str_charset; }
-  inline uint32 length() const { return str_length;}
-  inline uint32 alloced_length() const { return Alloced_length;}
+  inline auto set_charset(CHARSET_INFO *charset) -> void { str_charset= charset; }
+  inline auto charset() const -> CHARSET_INFO * { return str_charset; }
+  inline auto length() const -> uint32 { return str_length;}
+  inline auto alloced_length() const -> uint32 { return Alloced_length;}
   inline char& operator [] (uint32 i) const { return Ptr[i]; }
-  inline void length(uint32 len) { str_length=len ; }
-  inline bool is_empty() { return (str_length == 0); }
-  inline void mark_as_const() { Alloced_length= 0;}
-  inline const char *ptr() const { return Ptr; }
-  inline char *c_ptr()
-  {
+  inline auto length(uint32 len) -> void { str_length=len ; }
+  inline auto is_empty() -> bool { return (str_length == 0); }
+  inline auto mark_as_const() -> void { Alloced_length= 0;}
+  inline auto ptr() const -> const char * { return Ptr; }
+  inline auto c_ptr() -> char * {
     if (!Ptr || Ptr[str_length])		/* Should be safe */
       (void) realloc(str_length);
     return Ptr;
   }
-  inline char *c_ptr_quick()
-  {
+  inline auto c_ptr_quick() -> char * {
     if (Ptr && str_length < Alloced_length)
       Ptr[str_length]=0;
     return Ptr;
   }
-  inline char *c_ptr_safe()
-  {
+  inline auto c_ptr_safe() -> char * {
     if (Ptr && str_length < Alloced_length)
       Ptr[str_length]=0;
     else
@@ -114,8 +111,7 @@ public:
     return Ptr;
   }
 
-  void set(String &str,uint32 offset,uint32 arg_length)
-  {
+  auto set(String &str,uint32 offset,uint32 arg_length) -> void {
     DBUG_ASSERT(&str != this);
     free();
     Ptr=(char*) str.ptr()+offset; str_length=arg_length; alloced=0;
@@ -125,24 +121,22 @@ public:
       Alloced_length=0;
     str_charset=str.str_charset;
   }
-  inline void set(const char *str,uint32 arg_length, CHARSET_INFO *cs)
-  {
+  inline auto set(const char *str,uint32 arg_length, CHARSET_INFO *cs) -> void {
     free();
     Ptr=(char*) str; str_length=arg_length; Alloced_length=0 ; alloced=0;
     str_charset=cs;
   }
-  bool set_ascii(const char *str, uint32 arg_length);
-  inline void set_quick(char *str,uint32 arg_length, CHARSET_INFO *cs)
-  {
+  auto set_ascii(const char *str, uint32 arg_length) -> bool;
+  inline auto set_quick(char *str,uint32 arg_length, CHARSET_INFO *cs) -> void {
     if (!alloced)
     {
       Ptr=(char*) str; str_length=Alloced_length=arg_length;
     }
     str_charset=cs;
   }
-  bool set(longlong num, CHARSET_INFO *cs);
-  bool set(ulonglong num, CHARSET_INFO *cs);
-  bool set(double num,uint decimals, CHARSET_INFO *cs);
+  auto set(longlong num, CHARSET_INFO *cs) -> bool;
+  auto set(ulonglong num, CHARSET_INFO *cs) -> bool;
+  auto set(double num,uint decimals, CHARSET_INFO *cs) -> bool;
 
   /*
     PMG 2004.11.12
@@ -166,13 +160,11 @@ public:
     VALUES ('foo', 'fi', 'fo')
       
   */
-  inline void chop()
-  {
+  inline auto chop() -> void {
     Ptr[str_length--]= '\0'; 
   }
 
-  inline void free()
-  {
+  inline auto free() -> void {
     if (alloced)
     {
       alloced=0;
@@ -182,14 +174,13 @@ public:
       str_length=0;				/* Safety */
     }
   }
-  inline bool alloc(uint32 arg_length)
-  {
+  inline auto alloc(uint32 arg_length) -> bool {
     if (arg_length < Alloced_length)
       return 0;
     return real_alloc(arg_length);
   }
-  bool real_alloc(uint32 arg_length);			// Empties old string
-  bool realloc(uint32 arg_length);
+  auto real_alloc(uint32 arg_length) -> bool;			// Empties old string
+  auto realloc(uint32 arg_length) -> bool;
   inline void shrink(uint32 arg_length)		// Shrink buffer
   {
     if (arg_length < Alloced_length)
@@ -207,7 +198,7 @@ public:
       }
     }
   }
-  bool is_alloced() { return alloced; }
+  auto is_alloced() -> bool { return alloced; }
   inline String& operator = (const String &s)
   {
     if (&s != this)
@@ -224,30 +215,29 @@ public:
     return *this;
   }
 
-  bool copy();					// Alloc string if not alloced
-  bool copy(const String &s);			// Allocate new string
-  bool copy(const char *s,uint32 arg_length, CHARSET_INFO *cs);	// Allocate new string
-  static bool needs_conversion(uint32 arg_length,
+  auto copy() -> bool;					// Alloc string if not alloced
+  auto copy(const String &s) -> bool;			// Allocate new string
+  auto copy(const char *s,uint32 arg_length, CHARSET_INFO *cs) -> bool;	// Allocate new string
+  static auto needs_conversion(uint32 arg_length,
   			       CHARSET_INFO *cs_from, CHARSET_INFO *cs_to,
-			       uint32 *offset);
-  bool copy_aligned(const char *s, uint32 arg_length, uint32 offset,
-		    CHARSET_INFO *cs);
-  bool set_or_copy_aligned(const char *s, uint32 arg_length, CHARSET_INFO *cs);
-  bool copy(const char*s,uint32 arg_length, CHARSET_INFO *csfrom,
-	    CHARSET_INFO *csto, uint *errors);
-  bool append(const String &s);
-  bool append(const char *s);
-  bool append(const char *s,uint32 arg_length);
-  bool append(const char *s,uint32 arg_length, CHARSET_INFO *cs);
-  bool append(IO_CACHE* file, uint32 arg_length);
-  bool append_with_prefill(const char *s, uint32 arg_length, 
-			   uint32 full_length, char fill_char);
-  int strstr(const String &search,uint32 offset=0); // Returns offset to substring or -1
-  int strrstr(const String &search,uint32 offset=0); // Returns offset to substring or -1
-  bool replace(uint32 offset,uint32 arg_length,const char *to,uint32 length);
-  bool replace(uint32 offset,uint32 arg_length,const String &to);
-  inline bool append(char chr)
-  {
+			       uint32 *offset) -> bool;
+  auto copy_aligned(const char *s, uint32 arg_length, uint32 offset,
+		    CHARSET_INFO *cs) -> bool;
+  auto set_or_copy_aligned(const char *s, uint32 arg_length, CHARSET_INFO *cs) -> bool;
+  auto copy(const char*s,uint32 arg_length, CHARSET_INFO *csfrom,
+	    CHARSET_INFO *csto, uint *errors) -> bool;
+  auto append(const String &s) -> bool;
+  auto append(const char *s) -> bool;
+  auto append(const char *s,uint32 arg_length) -> bool;
+  auto append(const char *s,uint32 arg_length, CHARSET_INFO *cs) -> bool;
+  auto append(IO_CACHE* file, uint32 arg_length) -> bool;
+  auto append_with_prefill(const char *s, uint32 arg_length, 
+			   uint32 full_length, char fill_char) -> bool;
+  auto strstr(const String &search,uint32 offset=0) -> int; // Returns offset to substring or -1
+  auto strrstr(const String &search,uint32 offset=0) -> int; // Returns offset to substring or -1
+  auto replace(uint32 offset,uint32 arg_length,const char *to,uint32 length) -> bool;
+  auto replace(uint32 offset,uint32 arg_length,const String &to) -> bool;
+  inline auto append(char chr) -> bool {
     if (str_length < Alloced_length)
     {
       Ptr[str_length++]=chr;
@@ -260,70 +250,61 @@ public:
     }
     return 0;
   }
-  bool fill(uint32 max_length,char fill);
-  void strip_sp();
-  friend int sortcmp(const String *a,const String *b, CHARSET_INFO *cs);
-  friend int stringcmp(const String *a,const String *b);
-  friend String *copy_if_not_alloced(String *a,String *b,uint32 arg_length);
-  uint32 numchars();
-  int charpos(int i,uint32 offset=0);
+  auto fill(uint32 max_length,char fill) -> bool;
+  auto strip_sp() -> void;
+  friend auto sortcmp(const String *a,const String *b, CHARSET_INFO *cs) -> int;
+  friend auto stringcmp(const String *a,const String *b) -> int;
+  friend auto copy_if_not_alloced(String *a,String *b,uint32 arg_length) -> String *;
+  auto numchars() -> uint32;
+  auto charpos(int i,uint32 offset=0) -> int;
 
-  int reserve(uint32 space_needed)
-  {
+  auto reserve(uint32 space_needed) -> int {
     return realloc(str_length + space_needed);
   }
-  int reserve(uint32 space_needed, uint32 grow_by);
+  auto reserve(uint32 space_needed, uint32 grow_by) -> int;
 
   /*
     The following append operations do NOT check alloced memory
     q_*** methods writes values of parameters itself
     qs_*** methods writes string representation of value
   */
-  void q_append(const char c)
-  {
+  auto q_append(const char c) -> void {
     Ptr[str_length++] = c;
   }
-  void q_append(const uint32 n)
-  {
+  auto q_append(const uint32 n) -> void {
     int4store(Ptr + str_length, n);
     str_length += 4;
   }
-  void q_append(double d)
-  {
+  auto q_append(double d) -> void {
     float8store(Ptr + str_length, d);
     str_length += 8;
   }
-  void q_append(double *d)
-  {
+  auto q_append(double *d) -> void {
     float8store(Ptr + str_length, *d);
     str_length += 8;
   }
-  void q_append(const char *data, uint32 data_len)
-  {
+  auto q_append(const char *data, uint32 data_len) -> void {
     memcpy(Ptr + str_length, data, data_len);
     str_length += data_len;
   }
 
-  void write_at_position(int position, uint32 value)
-  {
+  auto write_at_position(int position, uint32 value) -> void {
     int4store(Ptr + position,value);
   }
 
-  void qs_append(const char *str, uint32 len);
-  void qs_append(double d);
-  void qs_append(double *d);
-  inline void qs_append(const char c)
-  {
+  auto qs_append(const char *str, uint32 len) -> void;
+  auto qs_append(double d) -> void;
+  auto qs_append(double *d) -> void;
+  inline auto qs_append(const char c) -> void {
      Ptr[str_length]= c;
      str_length++;
   }
-  void qs_append(int i);
-  void qs_append(uint i);
+  auto qs_append(int i) -> void;
+  auto qs_append(uint i) -> void;
 
   /* Inline (general) functions used by the protocol functions */
 
-  inline char *prep_append(uint32 arg_length, uint32 step_alloc)
-  {
+  inline auto prep_append(uint32 arg_length, uint32 step_alloc) -> char * {
     uint32 new_length= arg_length + str_length;
     if (new_length > Alloced_length)
     {
@@ -335,8 +316,7 @@ public:
     return Ptr+ old_length;			/* Area to use */
   }
 
-  inline bool append(const char *s, uint32 arg_length, uint32 step_alloc)
-  {
+  inline auto append(const char *s, uint32 arg_length, uint32 step_alloc) -> bool {
     uint32 new_length= arg_length + str_length;
     if (new_length > Alloced_length && realloc(new_length + step_alloc))
       return TRUE;
@@ -344,13 +324,12 @@ public:
     str_length+= arg_length;
     return FALSE;
   }
-  void print(String *print);
+  auto print(String *print) -> void;
 
   /* Swap two string objects. Efficient way to exchange data without memcpy. */
-  void swap(String &s);
+  auto swap(String &s) -> void;
 
-  inline bool uses_buffer_owned_by(const String *s) const
-  {
+  inline auto uses_buffer_owned_by(const String *s) const -> bool {
     return (s->alloced && Ptr >= s->Ptr && Ptr < s->Ptr + s->str_length);
   }
 };

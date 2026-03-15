@@ -47,10 +47,10 @@ namespace wb {
     MySqlStudioImpl(grt::CPPModuleLoader *);
     virtual ~MySqlStudioImpl();
 
-    void set_context(WBContext *wb);
-    std::string getSystemInfo(bool indent);
-    std::map<std::string, std::string> getSystemInfoMap();
-    int isOsSupported(const std::string &os);
+    auto set_context(WBContext *wb) -> void;
+    auto getSystemInfo(bool indent) -> std::string;
+    auto getSystemInfoMap() -> std::map<std::string, std::string>;
+    auto isOsSupported(const std::string &os) -> int;
 
     DEFINE_INIT_MODULE(
       WBModule_VERSION, "Oracle and/or its affiliates", grt::ModuleImplBase,
@@ -184,142 +184,142 @@ namespace wb {
 
     virtual grt::ListRef<app_Plugin> getPluginInfo() override;
 
-    int copyToClipboard(const std::string &str);
+    auto copyToClipboard(const std::string &str) -> int;
 
-    int hasUnsavedChanges();
+    auto hasUnsavedChanges() -> int;
 
     // file
-    int newDocument();
-    int newDocumentFromDB();
-    int openModel(const std::string &path);
-    int openRecentModel(const std::string &index);
-    int saveModel();
-    int saveModelAs(const std::string &path);
-    int exportPNG(const std::string &filename);
-    int exportPDF(const std::string &filename);
-    int exportPS(const std::string &filename);
-    int exportSVG(const std::string &filename);
-    int activateDiagram(const model_DiagramRef &diagram);
-    int exportDiagramToPng(const model_DiagramRef &diagram, const std::string &filename);
-    int exit();
+    auto newDocument() -> int;
+    auto newDocumentFromDB() -> int;
+    auto openModel(const std::string &path) -> int;
+    auto openRecentModel(const std::string &index) -> int;
+    auto saveModel() -> int;
+    auto saveModelAs(const std::string &path) -> int;
+    auto exportPNG(const std::string &filename) -> int;
+    auto exportPDF(const std::string &filename) -> int;
+    auto exportPS(const std::string &filename) -> int;
+    auto exportSVG(const std::string &filename) -> int;
+    auto activateDiagram(const model_DiagramRef &diagram) -> int;
+    auto exportDiagramToPng(const model_DiagramRef &diagram, const std::string &filename) -> int;
+    auto exit() -> int;
 
     // edit
-    int selectAll();
-    int selectSimilar();
-    int selectConnected();
+    auto selectAll() -> int;
+    auto selectSimilar() -> int;
+    auto selectConnected() -> int;
 
-    int editSelectedFigure(const model_DiagramRef &view);
-    int editSelectedFigureInNewWindow(const model_DiagramRef &view);
+    auto editSelectedFigure(const model_DiagramRef &view) -> int;
+    auto editSelectedFigureInNewWindow(const model_DiagramRef &view) -> int;
 
-    int editObject(const GrtObjectRef &object);
-    int editObjectInNewWindow(const GrtObjectRef &object);
+    auto editObject(const GrtObjectRef &object) -> int;
+    auto editObjectInNewWindow(const GrtObjectRef &object) -> int;
 
     // canvas manipulation
-    int raiseSelection(const model_DiagramRef &view);
-    int lowerSelection(const model_DiagramRef &view);
+    auto raiseSelection(const model_DiagramRef &view) -> int;
+    auto lowerSelection(const model_DiagramRef &view) -> int;
 
     // view
-    int newDiagram(const model_ModelRef &model);
+    auto newDiagram(const model_ModelRef &model) -> int;
 
-    int toggleGrid(const model_DiagramRef &view);
-    int togglePageGrid(const model_DiagramRef &view);
-    int toggleGridAlign(const model_DiagramRef &view);
-    int toggleFKHighlight(const model_DiagramRef &view);
+    auto toggleGrid(const model_DiagramRef &view) -> int;
+    auto togglePageGrid(const model_DiagramRef &view) -> int;
+    auto toggleGridAlign(const model_DiagramRef &view) -> int;
+    auto toggleFKHighlight(const model_DiagramRef &view) -> int;
 
-    int zoomIn();
-    int zoomOut();
-    int zoomDefault();
+    auto zoomIn() -> int;
+    auto zoomOut() -> int;
+    auto zoomDefault() -> int;
 
-    int goToNextSelected();
-    int goToPreviousSelected();
+    auto goToNextSelected() -> int;
+    auto goToPreviousSelected() -> int;
 
-    int setMarker(const std::string &marker);
-    int goToMarker(const std::string &marker);
+    auto setMarker(const std::string &marker) -> int;
+    auto goToMarker(const std::string &marker) -> int;
 
-    int setFigureNotation(const std::string &name, studio_physical_ModelRef model);
-    int setRelationshipNotation(const std::string &name, studio_physical_ModelRef model);
+    auto setFigureNotation(const std::string &name, studio_physical_ModelRef model) -> int;
+    auto setRelationshipNotation(const std::string &name, studio_physical_ModelRef model) -> int;
 
-    int highlightFigure(const model_ObjectRef &figure);
+    auto highlightFigure(const model_ObjectRef &figure) -> int;
     // undo
-    int startTrackingUndo();
-    int finishTrackingUndo(const std::string &description);
-    int cancelTrackingUndo();
+    auto startTrackingUndo() -> int;
+    auto finishTrackingUndo(const std::string &description) -> int;
+    auto cancelTrackingUndo() -> int;
 
-    int addUndoListAdd(const grt::BaseListRef &list);
-    int addUndoListRemove(const grt::BaseListRef &list, int index);
-    int addUndoObjectChange(const grt::ObjectRef &object, const std::string &member);
-    int addUndoDictSet(const grt::DictRef &dict, const std::string &key);
-    int beginUndoGroup();
-    int endUndoGroup();
-    int setUndoDescription(const std::string &text);
+    auto addUndoListAdd(const grt::BaseListRef &list) -> int;
+    auto addUndoListRemove(const grt::BaseListRef &list, int index) -> int;
+    auto addUndoObjectChange(const grt::ObjectRef &object, const std::string &member) -> int;
+    auto addUndoDictSet(const grt::DictRef &dict, const std::string &key) -> int;
+    auto beginUndoGroup() -> int;
+    auto endUndoGroup() -> int;
+    auto setUndoDescription(const std::string &text) -> int;
 
     // attached file management
-    std::string createAttachedFile(const std::string &group, const std::string &tmpl);
-    int setAttachedFileContents(const std::string &filename, const std::string &text);
-    std::string getAttachedFileContents(const std::string &filename);
-    std::string getAttachedFileTmpPath(const std::string &filename);
-    int exportAttachedFileContents(const std::string &filename, const std::string &export_to);
-    studio_DocumentRef openModelFile(const std::string &path);
-    int closeModelFile();
-    std::string getDbFilePath();
-    std::string getTempDir();
+    auto createAttachedFile(const std::string &group, const std::string &tmpl) -> std::string;
+    auto setAttachedFileContents(const std::string &filename, const std::string &text) -> int;
+    auto getAttachedFileContents(const std::string &filename) -> std::string;
+    auto getAttachedFileTmpPath(const std::string &filename) -> std::string;
+    auto exportAttachedFileContents(const std::string &filename, const std::string &export_to) -> int;
+    auto openModelFile(const std::string &path) -> studio_DocumentRef;
+    auto closeModelFile() -> int;
+    auto getDbFilePath() -> std::string;
+    auto getTempDir() -> std::string;
 
-    int runScriptFile(const std::string &filename);
-    int installModuleFile(const std::string &filename);
+    auto runScriptFile(const std::string &filename) -> int;
+    auto installModuleFile(const std::string &filename) -> int;
 
     // debugging
-    int debugValidateGRT();
+    auto debugValidateGRT() -> int;
 
-    int showUserTypeEditor(const studio_physical_ModelRef &model);
-    int showDocumentProperties();
-    int showModelOptions(const studio_physical_ModelRef &model);
-    int showOptions();
-    int showConnectionManager();
-    int showInstanceManagerFor(const db_mgmt_ConnectionRef &conn);
-    int showInstanceManager();
-    int showQueryConnectDialog();
-    int saveConnections();
-    int saveInstances();
-    int showGRTShell();
-    int showPluginManager();
-    int newGRTFile();
-    int openGRTFile();
+    auto showUserTypeEditor(const studio_physical_ModelRef &model) -> int;
+    auto showDocumentProperties() -> int;
+    auto showModelOptions(const studio_physical_ModelRef &model) -> int;
+    auto showOptions() -> int;
+    auto showConnectionManager() -> int;
+    auto showInstanceManagerFor(const db_mgmt_ConnectionRef &conn) -> int;
+    auto showInstanceManager() -> int;
+    auto showQueryConnectDialog() -> int;
+    auto saveConnections() -> int;
+    auto saveInstances() -> int;
+    auto showGRTShell() -> int;
+    auto showPluginManager() -> int;
+    auto newGRTFile() -> int;
+    auto openGRTFile() -> int;
     int reportBug(const std::string error_info = "");
 
     // UI
-    int refreshHomeConnections();
-    int confirm(const std::string &title, const std::string &caption);
+    auto refreshHomeConnections() -> int;
+    auto confirm(const std::string &title, const std::string &caption) -> int;
 
-    std::string requestFileOpen(const std::string &caption, const std::string &extensions);
-    std::string requestFileSave(const std::string &caption, const std::string &extensions);
+    auto requestFileOpen(const std::string &caption, const std::string &extensions) -> std::string;
+    auto requestFileSave(const std::string &caption, const std::string &extensions) -> std::string;
     bool _is_other_dbms_initialized;
 
 #ifdef _MSC_VER
-    int wmiOpenSession(const std::string server, const std::string &user, const std::string &password);
-    int wmiCloseSession(int session);
-    grt::DictListRef wmiQuery(int session, const std::string &query);
-    std::string wmiServiceControl(int session, const std::string &service, const std::string &action);
-    std::string wmiSystemStat(int session, const std::string &what);
+    auto wmiOpenSession(const std::string server, const std::string &user, const std::string &password) -> int;
+    auto wmiCloseSession(int session) -> int;
+    auto wmiQuery(int session, const std::string &query) -> grt::DictListRef;
+    auto wmiServiceControl(int session, const std::string &service, const std::string &action) -> std::string;
+    auto wmiSystemStat(int session, const std::string &what) -> std::string;
 
-    int wmiStartMonitoring(int session, const std::string &what);
-    std::string wmiReadValue(int monitor);
-    int wmiStopMonitoring(int monitor);
+    auto wmiStartMonitoring(int session, const std::string &what) -> int;
+    auto wmiReadValue(int monitor) -> std::string;
+    auto wmiStopMonitoring(int monitor) -> int;
 
 #endif
 
-    db_mgmt_ConnectionRef create_connection(const std::string &host, const std::string &user,
+    auto create_connection(const std::string &host, const std::string &user,
                                             const std::string socket_or_pipe_name, int can_use_networking,
-                                            int can_use_socket_or_pipe, int port, const std::string &name);
-    grt::DictListRef getLocalServerList();
-    int createConnectionsFromLocalServers();
-    int createInstancesFromLocalServers();
+                                            int can_use_socket_or_pipe, int port, const std::string &name) -> db_mgmt_ConnectionRef;
+    auto getLocalServerList() -> grt::DictListRef;
+    auto createConnectionsFromLocalServers() -> int;
+    auto createInstancesFromLocalServers() -> int;
 
-    std::string getVideoAdapter();
-    std::string getFullVideoAdapterInfo(bool indent);
-    int initializeOtherRDBMS();
-    db_mgmt_SSHConnectionRef createSSHSession(const grt::ObjectRef &val);
-    int deleteConnection(const db_mgmt_ConnectionRef &connection);
-    int deleteConnectionGroup(const std::string &group);
+    auto getVideoAdapter() -> std::string;
+    auto getFullVideoAdapterInfo(bool indent) -> std::string;
+    auto initializeOtherRDBMS() -> int;
+    auto createSSHSession(const grt::ObjectRef &val) -> db_mgmt_SSHConnectionRef;
+    auto deleteConnection(const db_mgmt_ConnectionRef &connection) -> int;
+    auto deleteConnectionGroup(const std::string &group) -> int;
   };
 }; // namespace wb
 

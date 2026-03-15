@@ -47,13 +47,13 @@ parser_ContextReference::~parser_ContextReference() {
 
 //--------------------------------------------------------------------------------------------------
 
-void parser_ContextReference::init() {
+auto parser_ContextReference::init() -> void {
   // Nothing to do. Use the reference only via parser_context_to_grt().
 }
 
 //--------------------------------------------------------------------------------------------------
 
-grt::IntegerRef parser_ContextReference::valid() const {
+auto parser_ContextReference::valid() const -> grt::IntegerRef {
   if (_data)
     return grt::IntegerRef(1);
   else
@@ -62,13 +62,13 @@ grt::IntegerRef parser_ContextReference::valid() const {
 
 //--------------------------------------------------------------------------------------------------
 
-void parser_ContextReference::set_data(ImplData *data) {
+auto parser_ContextReference::set_data(ImplData *data) -> void {
   _data = data;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-MySQLParserContext::Ref parser_context_from_grt(parser_ContextReferenceRef object) {
+auto parser_context_from_grt(parser_ContextReferenceRef object) -> MySQLParserContext::Ref {
   if (!object.is_valid() || !*object->valid())
     return MySQLParserContext::Ref();
   return object->get_data()->_ref;
@@ -76,7 +76,7 @@ MySQLParserContext::Ref parser_context_from_grt(parser_ContextReferenceRef objec
 
 //--------------------------------------------------------------------------------------------------
 
-parser_ContextReferenceRef parser_context_to_grt(const MySQLParserContext::Ref &context) {
+auto parser_context_to_grt(const MySQLParserContext::Ref &context) -> parser_ContextReferenceRef {
   if (context != NULL) {
     parser_ContextReferenceRef ref(grt::Initialized);
     parser_ContextReference::ImplData *data = new parser_ContextReference::ImplData(context);

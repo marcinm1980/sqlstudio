@@ -75,79 +75,79 @@ private:
 
   studio_physical_ModelRef _model; // nil unless we're showing model specific options
 
-  void change_font_option(const std::string &option, const std::string &value);
-  void font_preset_changed();
+  auto change_font_option(const std::string &option, const std::string &value) -> void;
+  auto font_preset_changed() -> void;
 
-  mforms::TextEntry *new_entry_option(const std::string &option, bool numeric);
-  mforms::FsObjectSelector *new_path_option(const std::string &option, bool file);
-  mforms::TextEntry *new_numeric_entry_option(const std::string &option, int minrange, int maxrange);
-  mforms::CheckBox *new_checkbox_option(const std::string &option);
+  auto new_entry_option(const std::string &option, bool numeric) -> mforms::TextEntry *;
+  auto new_path_option(const std::string &option, bool file) -> mforms::FsObjectSelector *;
+  auto new_numeric_entry_option(const std::string &option, int minrange, int maxrange) -> mforms::TextEntry *;
+  auto new_checkbox_option(const std::string &option) -> mforms::CheckBox *;
   mforms::Selector *new_selector_option(const std::string &option, std::string choices_string = "",
                                         bool numeric = false);
 
-  void ok_clicked();
-  void cancel_clicked();
+  auto ok_clicked() -> void;
+  auto cancel_clicked() -> void;
 
-  void code_completion_changed(mforms::CheckBox *cc_box, mforms::Box *subsettings_box);
+  auto code_completion_changed(mforms::CheckBox *cc_box, mforms::Box *subsettings_box) -> void;
 
-  void show_values();
-  void update_values();
+  auto show_values() -> void;
+  auto update_values() -> void;
 
-  void show_colors_and_fonts();
-  void updateColorsAndFonts();
+  auto show_colors_and_fonts() -> void;
+  auto updateColorsAndFonts() -> void;
 
-  void createLogLevelSelectionPulldown(mforms::Box *content);
+  auto createLogLevelSelectionPulldown(mforms::Box *content) -> void;
 
-  mforms::View *create_general_editor_page();
+  auto create_general_editor_page() -> mforms::View *;
 
-  mforms::View *create_admin_page();
-  mforms::View *create_sqlide_page();
-  mforms::View *create_editor_page();
-  mforms::View *create_query_page();
-  mforms::View *create_object_editor_page();
+  auto create_admin_page() -> mforms::View *;
+  auto create_sqlide_page() -> mforms::View *;
+  auto create_editor_page() -> mforms::View *;
+  auto create_query_page() -> mforms::View *;
+  auto create_object_editor_page() -> mforms::View *;
 
-  mforms::View *create_model_defaults_page();
-  mforms::View *create_model_page();
-  mforms::View *create_mysql_page();
-  mforms::View *create_diagram_page();
-  mforms::View *create_appearance_page();
+  auto create_model_defaults_page() -> mforms::View *;
+  auto create_model_page() -> mforms::View *;
+  auto create_mysql_page() -> mforms::View *;
+  auto create_diagram_page() -> mforms::View *;
+  auto create_appearance_page() -> mforms::View *;
 
-  mforms::View *create_fonts_and_colors_page();
+  auto create_fonts_and_colors_page() -> mforms::View *;
 
-  mforms::View *create_others_page();
+  auto create_others_page() -> mforms::View *;
 
-  mforms::View *createSSHPage();
+  auto createSSHPage() -> mforms::View *;
 
-  grt::DictRef get_options(bool global = false);
+  auto get_options(bool global = false) -> grt::DictRef;
 
-  void toggle_use_global();
+  auto toggle_use_global() -> void;
 
-  void show_path_option(const std::string &option_name, mforms::FsObjectSelector *entry);
-  void update_path_option(const std::string &option_name, mforms::FsObjectSelector *entry);
+  auto show_path_option(const std::string &option_name, mforms::FsObjectSelector *entry) -> void;
+  auto update_path_option(const std::string &option_name, mforms::FsObjectSelector *entry) -> void;
 
-  void show_entry_option(const std::string &option_name, mforms::TextEntry *entry, bool numeric);
-  void update_entry_option(const std::string &option_name, mforms::TextEntry *entry, bool numeric);
-  void update_entry_option_numeric(const std::string &option_name, mforms::TextEntry *entry, int minrange,
-                                   int maxrange);
+  auto show_entry_option(const std::string &option_name, mforms::TextEntry *entry, bool numeric) -> void;
+  auto update_entry_option(const std::string &option_name, mforms::TextEntry *entry, bool numeric) -> void;
+  auto update_entry_option_numeric(const std::string &option_name, mforms::TextEntry *entry, int minrange,
+                                   int maxrange) -> void;
 
-  void show_checkbox_option(const std::string &option_name, mforms::CheckBox *checkbox);
-  void update_checkbox_option(const std::string &option_name, mforms::CheckBox *checkbox);
-  void show_selector_option(const std::string &option_name, mforms::Selector *selector,
-                            const std::vector<std::string> &choices);
-  void update_selector_option(const std::string &option_name, mforms::Selector *selector,
+  auto show_checkbox_option(const std::string &option_name, mforms::CheckBox *checkbox) -> void;
+  auto update_checkbox_option(const std::string &option_name, mforms::CheckBox *checkbox) -> void;
+  auto show_selector_option(const std::string &option_name, mforms::Selector *selector,
+                            const std::vector<std::string> &choices) -> void;
+  auto update_selector_option(const std::string &option_name, mforms::Selector *selector,
                               const std::vector<std::string> &choices, const std::string &default_value,
-                              bool as_number);
+                              bool as_number) -> void;
 
-  void switch_page();
-  mforms::TreeNodeRef add_page(mforms::TreeNodeRef parent, const std::string &title, mforms::View *view);
-  bool versionIsValid(const std::string &text);
-  void version_changed(mforms::TextEntry *entry);
+  auto switch_page() -> void;
+  auto add_page(mforms::TreeNodeRef parent, const std::string &title, mforms::View *view) -> mforms::TreeNodeRef;
+  auto versionIsValid(const std::string &text) -> bool;
+  auto version_changed(mforms::TextEntry *entry) -> void;
 
 public:
   PreferencesForm(const studio_physical_ModelRef &model = studio_physical_ModelRef());
   virtual ~PreferencesForm();
 
-  void show();
+  auto show() -> void;
 };
 
 #endif /* _PREFERENCES_FORM_H_ */

@@ -63,7 +63,7 @@ namespace antlr4 {
                                                // This allows to return descriptive rules (e.g. className, instead of ID/identifier).
     CodeCompletionCore(antlr4::Parser *parser);
 
-    CandidatesCollection collectCandidates(size_t caretTokenIndex, ParserRuleContext *context);
+    auto collectCandidates(size_t caretTokenIndex, ParserRuleContext *context) -> CandidatesCollection;
 
   private:
     // Token stream position info after a rule was processed.
@@ -112,22 +112,22 @@ namespace antlr4 {
       size_t tokenIndex;
     };
 
-    bool checkPredicate(const antlr4::atn::PredicateTransition *transition) const;
-    bool translateToRuleIndex(std::vector<size_t> const& ruleStack);
-    void printRuleState(std::vector<size_t> const& stack) const;
+    auto checkPredicate(const antlr4::atn::PredicateTransition *transition) const -> bool;
+    auto translateToRuleIndex(std::vector<size_t> const& ruleStack) -> bool;
+    auto printRuleState(std::vector<size_t> const& stack) const -> void;
 
-    TokenList getFollowingTokens(antlr4::atn::ConstTransitionPtr const&  transition) const;
-    FollowSetsList determineFollowSets(antlr4::atn::ATNState *start, antlr4::atn::ATNState *stop) const;
-    void collectFollowSets(antlr4::atn::ATNState *s, antlr4::atn::ATNState *stopState,
+    auto getFollowingTokens(antlr4::atn::ConstTransitionPtr const&  transition) const -> TokenList;
+    auto determineFollowSets(antlr4::atn::ATNState *start, antlr4::atn::ATNState *stop) const -> FollowSetsList;
+    auto collectFollowSets(antlr4::atn::ATNState *s, antlr4::atn::ATNState *stopState,
                            FollowSetsList &followSets, std::unordered_set<antlr4::atn::ATNState *> &seen,
-                           std::vector<size_t> &ruleStack) const;
+                           std::vector<size_t> &ruleStack) const -> void;
 
-    RuleEndStatus processRule(antlr4::atn::ATNState *startState, size_t tokenIndex, std::vector<size_t> &callStack,
-                              std::string indentation);
+    auto processRule(antlr4::atn::ATNState *startState, size_t tokenIndex, std::vector<size_t> &callStack,
+                              std::string indentation) -> RuleEndStatus;
 
-    std::string generateBaseDescription(antlr4::atn::ATNState *state) const;
-    void printDescription(std::string const& currentIndent, antlr4::atn::ATNState *state, std::string
-                          const& baseDescription, size_t tokenIndex) const;
+    auto generateBaseDescription(antlr4::atn::ATNState *state) const -> std::string;
+    auto printDescription(std::string const& currentIndent, antlr4::atn::ATNState *state, std::string
+                          const& baseDescription, size_t tokenIndex) const -> void;
   };
   
 } // namespace antlr4

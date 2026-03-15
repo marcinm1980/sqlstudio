@@ -31,7 +31,7 @@
 
 //-----------------------------------------------------------------------------------------------------
 
-static bool count_member(const grt::MetaClass::Member *member, int *count) {
+static auto count_member(const grt::MetaClass::Member *member, int *count) -> bool {
   (*count)++;
   return true;
 }

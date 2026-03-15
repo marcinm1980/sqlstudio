@@ -37,16 +37,16 @@ namespace mdc {
   public:
     XlibCanvasView(Display *dpy, Window win, Visual *visual, int width, int height);
 
-    virtual bool initialize();
+    virtual auto initialize() -> bool;
 
-    virtual void update_view_size(int width, int height);
+    virtual auto update_view_size(int width, int height) -> void;
 
   private:
-    virtual bool has_gl() const {
+    virtual auto has_gl() const -> bool {
       return false;
     }
-    virtual void begin_repaint(int x, int y, int w, int h);
-    virtual void end_repaint();
+    virtual auto begin_repaint(int x, int y, int w, int h) -> void;
+    virtual auto end_repaint() -> void;
   };
 
   class BufferedXlibCanvasView : public CanvasView {
@@ -54,9 +54,9 @@ namespace mdc {
     BufferedXlibCanvasView(Display *dpy, Window win, Visual *visual, int depth, int width, int height);
     virtual ~BufferedXlibCanvasView();
 
-    virtual bool initialize();
+    virtual auto initialize() -> bool;
 
-    virtual bool has_gl() const {
+    virtual auto has_gl() const -> bool {
       return false;
     }
 
@@ -71,11 +71,11 @@ namespace mdc {
     int _depth;
     int _clip_x, _clip_y, _clip_w, _clip_h;
 
-    virtual void scroll_to(const base::Point &offs);
-    virtual void update_view_size(int width, int height);
-    virtual void make_current();
-    virtual void begin_repaint(int x, int y, int w, int h);
-    virtual void end_repaint();
+    virtual auto scroll_to(const base::Point &offs) -> void;
+    virtual auto update_view_size(int width, int height) -> void;
+    virtual auto make_current() -> void;
+    virtual auto begin_repaint(int x, int y, int w, int h) -> void;
+    virtual auto end_repaint() -> void;
   };
 };
 

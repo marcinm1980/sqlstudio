@@ -38,7 +38,7 @@ public:
                              DECLARE_INTERFACE_FUNCTION(WbValidationInterfaceImpl::getValidationDescription));
 
   //// Call all validations
-  virtual std::string getValidationDescription(const grt::ObjectRef& root) = 0;
+  virtual auto getValidationDescription(const grt::ObjectRef& root) -> std::string = 0;
 };
 
 #endif /* _WBVALIDATION_IF_H_ */

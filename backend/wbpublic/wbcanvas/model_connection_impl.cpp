@@ -37,7 +37,7 @@ model_Connection::ImplData::ImplData(model_Connection *self)
                  std::bind(&ImplData::member_changed, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void model_Connection::ImplData::unrealize() {
+auto model_Connection::ImplData::unrealize() -> void {
   if (_line)
     _line->get_view()->remove_item(_line);
 
@@ -55,12 +55,12 @@ void model_Connection::ImplData::unrealize() {
   _end_caption = 0;
 }
 
-void model_Connection::ImplData::object_realized(const model_ObjectRef &object) {
+auto model_Connection::ImplData::object_realized(const model_ObjectRef &object) -> void {
   if (object == self()->_startFigure || object == self()->_endFigure)
     try_realize();
 }
 
-void model_Connection::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) {
+auto model_Connection::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void {
   if (_line) {
     if (name == "drawSplit")
       _line->set_splitted(*self()->_drawSplit != 0);
@@ -89,7 +89,7 @@ void model_Connection::ImplData::member_changed(const std::string &name, const g
   }
 }
 
-mdc::CanvasItem *model_Connection::ImplData::get_start_canvas_item() {
+auto model_Connection::ImplData::get_start_canvas_item() -> mdc::CanvasItem * {
   if (self()->_startFigure.is_valid()) {
     model_Figure::ImplData *bridge = self()->_startFigure->get_data();
 
@@ -99,7 +99,7 @@ mdc::CanvasItem *model_Connection::ImplData::get_start_canvas_item() {
   return 0;
 }
 
-mdc::CanvasItem *model_Connection::ImplData::get_end_canvas_item() {
+auto model_Connection::ImplData::get_end_canvas_item() -> mdc::CanvasItem * {
   if (self()->_endFigure.is_valid()) {
     model_Figure::ImplData *bridge = self()->_endFigure->get_data();
 
@@ -111,7 +111,7 @@ mdc::CanvasItem *model_Connection::ImplData::get_end_canvas_item() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Connection::ImplData::is_realizable() {
+auto model_Connection::ImplData::is_realizable() -> bool {
   if (_in_view && self()->owner().is_valid()) {
     try {
       if (is_canvas_view_valid() && get_start_canvas_item() && get_end_canvas_item())
@@ -125,7 +125,7 @@ bool model_Connection::ImplData::is_realizable() {
 
 //--------------------------------------------------------------------------------------------------
 
-mdc::CanvasView *model_Connection::ImplData::get_canvas_view() const {
+auto model_Connection::ImplData::get_canvas_view() const -> mdc::CanvasView * {
   if (self()->owner().is_valid()) {
     model_Diagram::ImplData *view = self()->owner()->get_data();
     if (view)
@@ -136,7 +136,7 @@ mdc::CanvasView *model_Connection::ImplData::get_canvas_view() const {
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Connection::ImplData::is_canvas_view_valid() {
+auto model_Connection::ImplData::is_canvas_view_valid() -> bool {
   if (self()->owner().is_valid()) {
     model_Diagram::ImplData *view = self()->owner()->get_data();
     if (view)
@@ -145,7 +145,7 @@ bool model_Connection::ImplData::is_canvas_view_valid() {
   return false;
 }
 
-wbfig::CaptionFigure *model_Connection::ImplData::create_caption() {
+auto model_Connection::ImplData::create_caption() -> wbfig::CaptionFigure * {
   wbfig::CaptionFigure *figure = new wbfig::CaptionFigure(_line->get_layer(), self()->owner()->get_data(), self());
   figure->set_tag(self()->id());
   figure->set_font(_caption_font);
@@ -163,7 +163,7 @@ wbfig::CaptionFigure *model_Connection::ImplData::create_caption() {
 
 //--------------------------------------------------------------------------------------------------
 
-void model_Connection::ImplData::set_above_caption(const std::string &text) {
+auto model_Connection::ImplData::set_above_caption(const std::string &text) -> void {
   if (text.empty()) {
     delete _above_caption;
     _above_caption = 0;
@@ -184,7 +184,7 @@ void model_Connection::ImplData::set_above_caption(const std::string &text) {
   update_above_caption_pos();
 }
 
-void model_Connection::ImplData::set_below_caption(const std::string &text) {
+auto model_Connection::ImplData::set_below_caption(const std::string &text) -> void {
   if (text.empty()) {
     delete _below_caption;
     _below_caption = 0;
@@ -205,7 +205,7 @@ void model_Connection::ImplData::set_below_caption(const std::string &text) {
   update_below_caption_pos();
 }
 
-void model_Connection::ImplData::set_start_caption(const std::string &text) {
+auto model_Connection::ImplData::set_start_caption(const std::string &text) -> void {
   if (text.empty()) {
     delete _start_caption;
     _start_caption = 0;
@@ -220,7 +220,7 @@ void model_Connection::ImplData::set_start_caption(const std::string &text) {
   update_start_caption_pos();
 }
 
-void model_Connection::ImplData::set_end_caption(const std::string &text) {
+auto model_Connection::ImplData::set_end_caption(const std::string &text) -> void {
   if (text.empty()) {
     delete _end_caption;
     _end_caption = 0;
@@ -235,7 +235,7 @@ void model_Connection::ImplData::set_end_caption(const std::string &text) {
   update_end_caption_pos();
 }
 
-void model_Connection::ImplData::caption_bounds_changed(const Rect &obounds, mdc::TextFigure *figure) {
+auto model_Connection::ImplData::caption_bounds_changed(const Rect &obounds, mdc::TextFigure *figure) -> void {
   if (figure == _above_caption)
     _above_offset =
       figure->get_root_position() - _line->get_middle_caption_pos(_above_caption->get_size(), wbfig::Connection::Above);
@@ -248,31 +248,31 @@ void model_Connection::ImplData::caption_bounds_changed(const Rect &obounds, mdc
     _end_offset = figure->get_root_position() - _line->get_end_caption_pos(_end_caption->get_size());
 }
 
-void model_Connection::ImplData::update_above_caption_pos() {
+auto model_Connection::ImplData::update_above_caption_pos() -> void {
   Point pos = _line->get_middle_caption_pos(_above_caption->get_min_size(), wbfig::Connection::Above);
 
   _above_caption->move_to(pos + _above_offset);
 }
 
-void model_Connection::ImplData::update_below_caption_pos() {
+auto model_Connection::ImplData::update_below_caption_pos() -> void {
   Point pos = _line->get_middle_caption_pos(_below_caption->get_min_size(), wbfig::Connection::Below);
 
   _below_caption->move_to(pos + _below_offset);
 }
 
-void model_Connection::ImplData::update_start_caption_pos() {
+auto model_Connection::ImplData::update_start_caption_pos() -> void {
   Point pos = _line->get_start_caption_pos(_start_caption->get_min_size());
 
   _start_caption->move_to(pos + _start_offset);
 }
 
-void model_Connection::ImplData::update_end_caption_pos() {
+auto model_Connection::ImplData::update_end_caption_pos() -> void {
   Point pos = _line->get_end_caption_pos(_end_caption->get_min_size());
 
   _end_caption->move_to(pos + _end_offset);
 }
 
-void model_Connection::ImplData::layout_changed() {
+auto model_Connection::ImplData::layout_changed() -> void {
   if (_above_caption)
     update_above_caption_pos();
 
@@ -286,7 +286,7 @@ void model_Connection::ImplData::layout_changed() {
     update_end_caption_pos();
 }
 
-void model_Connection::ImplData::finish_realize() {
+auto model_Connection::ImplData::finish_realize() -> void {
   _line->set_tag(self()->id());
 
   _line->set_splitted(*self()->_drawSplit != 0);

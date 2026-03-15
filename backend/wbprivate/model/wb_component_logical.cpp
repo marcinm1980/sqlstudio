@@ -33,7 +33,7 @@ using namespace grt;
 WBComponentLogical::WBComponentLogical(WBContext *wb) : WBComponent(wb) {
 }
 
-void WBComponentLogical::setup_logical_model(studio_DocumentRef &doc) {
+auto WBComponentLogical::setup_logical_model(studio_DocumentRef &doc) -> void {
   // init logical model
   studio_logical_ModelRef lmodel(grt::Initialized);
   lmodel->owner(doc);

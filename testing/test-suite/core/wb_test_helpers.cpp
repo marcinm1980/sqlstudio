@@ -55,13 +55,13 @@
 using namespace wb;
 using namespace parsers;
 
-extern void register_all_metaclasses();
+extern auto register_all_metaclasses() -> void;
 
 base::Logger testLogger(".", getenv("WB_LOG_STDERR") != 0);
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string get_temp_data_dir() {
+auto get_temp_data_dir() -> std::string {
 #ifdef _WIN32
   char tempPath[MAX_PATH];
   DWORD pathLen = GetTempPathA(MAX_PATH, tempPath);
@@ -80,7 +80,7 @@ std::string get_temp_data_dir() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::reinitGRT() {
+auto MySqlStudioTester::reinitGRT() -> void {
   grt::GRT::get()->reinitialiseForTests();
   bec::GRTManager::get()->cleanUpAndReinitialize();
 }
@@ -231,7 +231,7 @@ MySqlStudioTester::~MySqlStudioTester() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::initializeRuntime() {
+auto MySqlStudioTester::initializeRuntime() -> void {
   std::string prefix;
 #ifdef __APPLE__
   prefix = "/../Resources"; // Bundle path.
@@ -270,7 +270,7 @@ void MySqlStudioTester::initializeRuntime() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::executeScript(sql::Statement *stmt, const std::string &script) {
+auto MySqlStudioTester::executeScript(sql::Statement *stmt, const std::string &script) -> void {
   std::vector<StatementRange> statementRanges;
   MySQLParserServices::get()->determineStatementRanges(script.c_str(), script.size(), ";", statementRanges);
   for (auto &range : statementRanges) {
@@ -281,7 +281,7 @@ void MySqlStudioTester::executeScript(sql::Statement *stmt, const std::string &s
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::createNewDocument() {
+auto MySqlStudioTester::createNewDocument() -> void {
   wb->new_document();
 
   // Focus the Physical model in the overview by default.
@@ -292,43 +292,43 @@ void MySqlStudioTester::createNewDocument() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::activateOverview() {
+auto MySqlStudioTester::activateOverview() -> void {
   wbui->set_active_form(wbui->get_physical_overview());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-studio_physical_ModelRef MySqlStudioTester::getPmodel() {
+auto MySqlStudioTester::getPmodel() -> studio_physical_ModelRef {
   return wb->get_document()->physicalModels()[0];
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_mgmt_RdbmsRef MySqlStudioTester::getRdbms() {
+auto MySqlStudioTester::getRdbms() -> db_mgmt_RdbmsRef {
   return db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->get("/rdbms"));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-studio_physical_DiagramRef MySqlStudioTester::getPview() {
+auto MySqlStudioTester::getPview() -> studio_physical_DiagramRef {
   return getPmodel()->diagrams().get(0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_CatalogRef MySqlStudioTester::getCatalog() {
+auto MySqlStudioTester::getCatalog() -> db_CatalogRef {
   return wb->get_document()->physicalModels().get(0)->catalog();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_SchemaRef MySqlStudioTester::getSchema() {
+auto MySqlStudioTester::getSchema() -> db_SchemaRef {
   return wb->get_document()->physicalModels().get(0)->catalog()->schemata().get(0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_mysql_CatalogRef createEmptyCatalog() {
+auto createEmptyCatalog() -> db_mysql_CatalogRef {
   db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->get("/rdbms"));
 
   db_mysql_CatalogRef cat(grt::Initialized);
@@ -343,13 +343,13 @@ db_mysql_CatalogRef createEmptyCatalog() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static mforms::DialogResult messageOtherCallback() {
+static auto messageOtherCallback() -> mforms::DialogResult {
   return mforms::ResultOther; // Indicates to ignore any pending changes.
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySqlStudioTester::closeDocument() {
+auto MySqlStudioTester::closeDocument() -> bool {
   if (!wb->cancel_idle_tasks()) {
     // Idle tasks are currently being executed. Wait a moment and then try again.
     g_usleep((int)(100000));
@@ -361,7 +361,7 @@ bool MySqlStudioTester::closeDocument() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySqlStudioTester::renewDocument() {
+auto MySqlStudioTester::renewDocument() -> bool {
   if (!closeDocument())
     return false;
 
@@ -372,13 +372,13 @@ bool MySqlStudioTester::renewDocument() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::addFileForFileDialog(const std::string &path) {
+auto MySqlStudioTester::addFileForFileDialog(const std::string &path) -> void {
   fileDialogInput.push_back(path);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::addView() {
+auto MySqlStudioTester::addView() -> void {
   wb->get_model_context()->add_new_diagram(wb->get_document()->physicalModels()[0]);
 
   syncView();
@@ -388,7 +388,7 @@ void MySqlStudioTester::addView() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::syncView() {
+auto MySqlStudioTester::syncView() -> void {
   int i = 0;
   g_usleep((int)(10000));
   i = 1;
@@ -401,7 +401,7 @@ void MySqlStudioTester::syncView() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_mysql_TableRef MySqlStudioTester::addTableFigure(const std::string &name, int x, int y) {
+auto MySqlStudioTester::addTableFigure(const std::string &name, int x, int y) -> db_mysql_TableRef {
   db_SchemaRef schema(getSchema());
 
   db_mysql_TableRef table(grt::Initialized);
@@ -423,7 +423,7 @@ db_mysql_TableRef MySqlStudioTester::addTableFigure(const std::string &name, int
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::interactivePlaceDbObjects(int x, int y, std::list<db_DatabaseObjectRef> &objects) {
+auto MySqlStudioTester::interactivePlaceDbObjects(int x, int y, std::list<db_DatabaseObjectRef> &objects) -> void {
   ModelDiagramForm *form = 0;
   form = wb->get_model_context()->get_diagram_form(lastView);
   if (!form)
@@ -434,7 +434,7 @@ void MySqlStudioTester::interactivePlaceDbObjects(int x, int y, std::list<db_Dat
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::openAllDiagrams() {
+auto MySqlStudioTester::openAllDiagrams() -> void {
   studio_DocumentRef doc = wb->get_document();
 
   for (int i = 0; i < (int)doc->physicalModels()[0]->diagrams().count(); i++) {
@@ -446,7 +446,7 @@ void MySqlStudioTester::openAllDiagrams() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::flushUntil(float timeout) {
+auto MySqlStudioTester::flushUntil(float timeout) -> void {
   time_t start = time(NULL);
   while (time(NULL) - start < timeout) {
     g_usleep((int)(100000 * timeout));
@@ -459,7 +459,7 @@ void MySqlStudioTester::flushUntil(float timeout) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::flushUntil(float timeout, std::function<bool()> condition) {
+auto MySqlStudioTester::flushUntil(float timeout, std::function<bool()> condition) -> void {
   time_t start = time(NULL);
   while (time(NULL) - start < timeout && !condition()) {
     g_usleep((int)(100000 * timeout));
@@ -471,7 +471,7 @@ void MySqlStudioTester::flushUntil(float timeout, std::function<bool()> conditio
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::flushWhile(float timeout, std::function<bool()> condition) {
+auto MySqlStudioTester::flushWhile(float timeout, std::function<bool()> condition) -> void {
   time_t start = time(NULL);
   while (time(NULL) - start < timeout && condition()) {
     g_usleep((int)(100000 * timeout));
@@ -483,7 +483,7 @@ void MySqlStudioTester::flushWhile(float timeout, std::function<bool()> conditio
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::flushUntil(float timeout, std::function<size_t()> condition, size_t value) {
+auto MySqlStudioTester::flushUntil(float timeout, std::function<size_t()> condition, size_t value) -> void {
   time_t start = time(NULL);
   while ((time(NULL) - start < timeout) && (condition() != value)) {
     g_usleep((int)(100000 * timeout));
@@ -495,13 +495,13 @@ void MySqlStudioTester::flushUntil(float timeout, std::function<size_t()> condit
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySqlStudioTester::exportPNG(const std::string &path) {
+auto MySqlStudioTester::exportPNG(const std::string &path) -> void {
   lastView->export_png(path);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_mysql_CatalogRef MySqlStudioTester::reverseEngineerSchemas(const std::list<std::string> &schema_names) {
+auto MySqlStudioTester::reverseEngineerSchemas(const std::list<std::string> &schema_names) -> db_mysql_CatalogRef {
   db_mgmt_ConnectionRef properties(grt::Initialized);
   setupConnectionEnvironment(properties, getRdbms()->drivers()[0]);
 

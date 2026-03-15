@@ -32,11 +32,11 @@
 DEFAULT_LOG_DOMAIN("spatial");
 
 #ifdef _MSC_VER
-static void __stdcall ogr_error_handler(CPLErr eErrClass, int err_no, const char *msg) {
+static auto ogr_error_handler(CPLErr eErrClass, int err_no, const char *msg) -> void __stdcall {
   logError("gdal error: %d, %s\n", err_no, msg);
 }
 #else
-static void ogr_error_handler(CPLErr eErrClass, int err_no, const char *msg) {
+static auto ogr_error_handler(CPLErr eErrClass, int err_no, const char *msg) -> void {
   logError("gdal error: %d, %s\n", err_no, msg);
 }
 #endif
@@ -57,7 +57,7 @@ bool spatial::operator!=(const Envelope &env1, const Envelope &env2) {
   return !(env1 == env2);
 }
 
-std::string spatial::stringFromErrorCode(const OGRErr &val) {
+auto spatial::stringFromErrorCode(const OGRErr &val) -> std::string {
   switch (val) {
     case OGRERR_NOT_ENOUGH_DATA:
       return "Not enough data";
@@ -82,7 +82,7 @@ std::string spatial::stringFromErrorCode(const OGRErr &val) {
   return "";
 }
 
-std::string spatial::fetchAuthorityCode(const std::string &wkt) {
+auto spatial::fetchAuthorityCode(const std::string &wkt) -> std::string {
   if (wkt.empty()) {
     logError("Unable to fetch AuthorityCode, WKT was empty.");
     return "";
@@ -121,15 +121,15 @@ spatial::Envelope::Envelope(double left, double top, double right, double bottom
   bottom_right.y = 90;
 }
 
-bool spatial::Envelope::is_init() {
+auto spatial::Envelope::is_init() -> bool {
   return (top_left.x != 180 && top_left.y != -90 && bottom_right.x != -180 && bottom_right.y != 90);
 }
 
-bool spatial::Envelope::within(const base::Point &p) const {
+auto spatial::Envelope::within(const base::Point &p) const -> bool {
   return (top_left.x <= p.x && top_left.y <= p.y && bottom_right.x >= p.x && bottom_right.y >= p.y);
 }
 
-double spatial::ShapeContainer::distance(const base::Point &p) const {
+auto spatial::ShapeContainer::distance(const base::Point &p) const -> double {
   switch (type) {
     case ShapePoint:
       return distance_point(p);
@@ -144,7 +144,7 @@ double spatial::ShapeContainer::distance(const base::Point &p) const {
   }
 }
 
-double spatial::ShapeContainer::distance_linearring(const base::Point &p) const {
+auto spatial::ShapeContainer::distance_linearring(const base::Point &p) const -> double {
   if (points.empty())
     return false;
   std::vector<base::Point> tmp = points;
@@ -154,7 +154,7 @@ double spatial::ShapeContainer::distance_linearring(const base::Point &p) const 
 }
 
 // XXX see if all this code can be replaced with boost
-static double distance_to_segment(const base::Point &start, const base::Point &end, const base::Point &p) {
+static auto distance_to_segment(const base::Point &start, const base::Point &end, const base::Point &p) -> double {
   double dx = end.x - start.x;
   double dy = end.y - start.y;
   if (dx == 0 && dy == 0)
@@ -175,7 +175,7 @@ static double distance_to_segment(const base::Point &start, const base::Point &e
   return sqrt(pow(dx, 2) + pow(dy, 2));
 }
 
-double spatial::ShapeContainer::distance_line(const std::vector<base::Point> &point_list, const base::Point &p) const {
+auto spatial::ShapeContainer::distance_line(const std::vector<base::Point> &point_list, const base::Point &p) const -> double {
   if (point_list.empty())
     return -1;
 
@@ -193,7 +193,7 @@ double spatial::ShapeContainer::distance_line(const std::vector<base::Point> &po
   return -1;
 }
 
-double spatial::ShapeContainer::distance_polygon(const base::Point &p) const {
+auto spatial::ShapeContainer::distance_polygon(const base::Point &p) const -> double {
   if (points.empty())
     return -1;
 
@@ -212,7 +212,7 @@ double spatial::ShapeContainer::distance_polygon(const base::Point &p) const {
   return c ? 0 : -1;
 }
 
-double spatial::ShapeContainer::distance_point(const base::Point &p) const {
+auto spatial::ShapeContainer::distance_point(const base::Point &p) const -> double {
   if (points.empty())
     return -1;
 
@@ -222,7 +222,7 @@ double spatial::ShapeContainer::distance_point(const base::Point &p) const {
 spatial::ShapeContainer::ShapeContainer() : type(ShapeUnknown) {
 }
 
-std::string spatial::shape_description(ShapeType shp) {
+auto spatial::shape_description(ShapeType shp) -> std::string {
   switch (shp) {
     case ShapePolygon:
       return "Polygon";
@@ -239,8 +239,7 @@ std::string spatial::shape_description(ShapeType shp) {
   return "";
 }
 
-spatial::ShapeType spatial::ogrTypeToWb(const OGRwkbGeometryType type)
-{
+auto spatial::ogrTypeToWb(const OGRwkbGeometryType type) -> spatial::ShapeType {
   switch(type)
   {
     case wkbLineString:
@@ -354,12 +353,12 @@ spatial::Projection::Projection()
   _bonne_srs.importFromWkt(&b_wkt);
 }
 
-spatial::Projection &spatial::Projection::get_instance() {
+auto spatial::Projection::get_instance() -> spatial::Projection & {
   static Projection instance;
   return instance;
 }
 
-bool spatial::Projection::check_libproj_availability() {
+auto spatial::Projection::check_libproj_availability() -> bool {
   OGRCoordinateTransformation *ref = OGRCreateCoordinateTransformation(&_geodetic_srs, &_robinson_srs);
   if (ref == NULL)
     return false;
@@ -369,7 +368,7 @@ bool spatial::Projection::check_libproj_availability() {
   }
 }
 
-OGRSpatialReference *spatial::Projection::get_projection(ProjectionType type) {
+auto spatial::Projection::get_projection(ProjectionType type) -> OGRSpatialReference * {
   switch (type) {
     case ProjMercator:
       return &_mercator_srs;
@@ -386,7 +385,7 @@ OGRSpatialReference *spatial::Projection::get_projection(ProjectionType type) {
   }
 }
 
-void spatial::Importer::extract_points(OGRGeometry *shape, std::deque<ShapeContainer> &shapes_container) {
+auto spatial::Importer::extract_points(OGRGeometry *shape, std::deque<ShapeContainer> &shapes_container) -> void {
   OGRwkbGeometryType flat_type = wkbFlatten(shape->getGeometryType());
 
   if (flat_type == wkbPoint) {
@@ -462,12 +461,12 @@ void spatial::Importer::extract_points(OGRGeometry *shape, std::deque<ShapeConta
   }
 }
 
-void spatial::Importer::get_points(std::deque<ShapeContainer> &shapes_container) {
+auto spatial::Importer::get_points(std::deque<ShapeContainer> &shapes_container) -> void {
   if (_geometry)
     extract_points(_geometry, shapes_container);
 }
 
-void spatial::Importer::get_envelope(spatial::Envelope &env) {
+auto spatial::Importer::get_envelope(spatial::Envelope &env) -> void {
   if (_geometry) {
     OGREnvelope ogr_env;
     _geometry->getEnvelope(&ogr_env);
@@ -486,13 +485,13 @@ spatial::Importer::~Importer() {
     CPLFree(_geometry);
 }
 
-OGRGeometry *spatial::Importer::steal_data() {
+auto spatial::Importer::steal_data() -> OGRGeometry * {
   OGRGeometry *tmp = _geometry;
   _geometry = NULL;
   return tmp;
 }
 
-int spatial::Importer::import_from_mysql(const std::string &data) {
+auto spatial::Importer::import_from_mysql(const std::string &data) -> int {
   if (data.size() > 4) {
     // first 4 bytes is srid let's extract it:
     std::string tmp = data.substr(0, 4);
@@ -510,7 +509,7 @@ int spatial::Importer::import_from_mysql(const std::string &data) {
   return 1;
 }
 
-int spatial::Importer::import_from_wkt(std::string data) {
+auto spatial::Importer::import_from_wkt(std::string data) -> int {
   char *d = &(*data.begin());
   OGRErr ret_val = OGRGeometryFactory::createFromWkt(&d, NULL, &_geometry);
 
@@ -523,11 +522,11 @@ int spatial::Importer::import_from_wkt(std::string data) {
     return 1;
 }
 
-int spatial::Importer::getSrid() const {
+auto spatial::Importer::getSrid() const -> int {
   return _srid;
 }
 
-std::string spatial::Importer::as_wkt() {
+auto spatial::Importer::as_wkt() -> std::string {
   char *data;
   if (_geometry) {
     OGRErr err;
@@ -542,7 +541,7 @@ std::string spatial::Importer::as_wkt() {
   return "";
 }
 
-std::string spatial::Importer::as_kml() {
+auto spatial::Importer::as_kml() -> std::string {
   char *data;
   if (_geometry) {
     if (!(data = _geometry->exportToKML())) {
@@ -556,7 +555,7 @@ std::string spatial::Importer::as_kml() {
   return "";
 }
 
-std::string spatial::Importer::as_json() {
+auto spatial::Importer::as_json() -> std::string {
   char *data;
   if (_geometry) {
     if (!(data = _geometry->exportToJson())) {
@@ -570,7 +569,7 @@ std::string spatial::Importer::as_json() {
   return "";
 }
 
-std::string spatial::Importer::as_gml() {
+auto spatial::Importer::as_gml() -> std::string {
   char *data;
   if (_geometry) {
     if (!(data = _geometry->exportToGML())) {
@@ -584,20 +583,18 @@ std::string spatial::Importer::as_gml() {
   return "";
 }
 
-void spatial::Importer::interrupt() {
+auto spatial::Importer::interrupt() -> void {
   _interrupt = true;
 }
 
-std::string spatial::Importer::getName() const
-{
+auto spatial::Importer::getName() const -> std::string {
   if (_geometry)
     return std::string(_geometry->getGeometryName());
 
   return std::string();
 }
 
-spatial::ShapeType spatial::Importer::getType() const
-{
+auto spatial::Importer::getType() const -> spatial::ShapeType {
   if (_geometry)
     return ogrTypeToWb(wkbFlatten(_geometry->getGeometryType()));
 
@@ -609,7 +606,7 @@ spatial::Converter::Converter(ProjectionView view, OGRSpatialReference *src_srs,
   change_projection(view, src_srs, dst_srs);
 }
 
-std::string spatial::Converter::dec_to_dms(double angle, AxisType axis, int precision) {
+auto spatial::Converter::dec_to_dms(double angle, AxisType axis, int precision) -> std::string {
   const char *tmp = NULL;
   switch (axis) {
     case AxisLat:
@@ -630,12 +627,12 @@ spatial::Converter::~Converter() {
   base::RecMutexLock mtx(_projection_protector);
 }
 
-void spatial::Converter::change_projection(OGRSpatialReference *src_srs, OGRSpatialReference *dst_srs) {
+auto spatial::Converter::change_projection(OGRSpatialReference *src_srs, OGRSpatialReference *dst_srs) -> void {
   change_projection(_view, src_srs, dst_srs);
 }
 
-void spatial::Converter::change_projection(ProjectionView view, OGRSpatialReference *src_srs,
-                                           OGRSpatialReference *dst_srs) {
+auto spatial::Converter::change_projection(ProjectionView view, OGRSpatialReference *src_srs,
+                                           OGRSpatialReference *dst_srs) -> void {
   base::RecMutexLock mtx(_projection_protector);
   int recalculate = 0;
 
@@ -695,41 +692,41 @@ void spatial::Converter::change_projection(ProjectionView view, OGRSpatialRefere
     logError("Unable to invert equation\n");
 }
 
-void spatial::Converter::to_projected(int x, int y, double &lat, double &lon) {
+auto spatial::Converter::to_projected(int x, int y, double &lat, double &lon) -> void {
   base::RecMutexLock mtx(_projection_protector);
   lat = _adf_projection[3] + (double)x * _adf_projection[4] + (double)y * _adf_projection[5];
   lon = _adf_projection[0] + (double)x * _adf_projection[1] + (double)y * _adf_projection[2];
 }
 
-void spatial::Converter::from_projected(double lat, double lon, int &x, int &y) {
+auto spatial::Converter::from_projected(double lat, double lon, int &x, int &y) -> void {
   base::RecMutexLock mtx(_projection_protector);
   x = (int)(_inv_projection[0] + _inv_projection[1] * lat);
   y = (int)(_inv_projection[3] + _inv_projection[5] * lon);
 }
 
-bool spatial::Converter::to_latlon(int x, int y, double &lat, double &lon) {
+auto spatial::Converter::to_latlon(int x, int y, double &lat, double &lon) -> bool {
   to_projected(x, y, lat, lon);
   // for lat/lon projection, coordinate order is reversed and it's lon/lat
   return from_proj_to_latlon(lon, lat);
 }
 
-bool spatial::Converter::from_latlon(double lat, double lon, int &x, int &y) {
+auto spatial::Converter::from_latlon(double lat, double lon, int &x, int &y) -> bool {
   bool ret_val = from_latlon_to_proj(lon, lat);
   from_projected(lon, lat, x, y);
   return ret_val;
 }
 
-bool spatial::Converter::from_latlon_to_proj(double &lat, double &lon) {
+auto spatial::Converter::from_latlon_to_proj(double &lat, double &lon) -> bool {
   base::RecMutexLock mtx(_projection_protector);
   return _geo_to_proj->Transform(1, &lat, &lon) != 0;
 }
 
-bool spatial::Converter::from_proj_to_latlon(double &lat, double &lon) {
+auto spatial::Converter::from_proj_to_latlon(double &lat, double &lon) -> bool {
   base::RecMutexLock mtx(_projection_protector);
   return _proj_to_geo->Transform(1, &lat, &lon) != 0;
 }
 
-void spatial::Converter::transform_points(std::deque<ShapeContainer> &shapes_container) {
+auto spatial::Converter::transform_points(std::deque<ShapeContainer> &shapes_container) -> void {
   std::deque<ShapeContainer>::iterator it;
   for (it = shapes_container.begin(); it != shapes_container.end() && !_interrupt; it++) {
     std::deque<size_t> for_removal;
@@ -766,7 +763,7 @@ void spatial::Converter::transform_points(std::deque<ShapeContainer> &shapes_con
   }
 }
 
-void spatial::Converter::transform_envelope(spatial::Envelope &env) {
+auto spatial::Converter::transform_envelope(spatial::Envelope &env) -> void {
   if (!env.is_init()) {
     logError("Can't transform empty envelope.\n");
     return;
@@ -788,7 +785,7 @@ void spatial::Converter::transform_envelope(spatial::Envelope &env) {
   }
 }
 
-void spatial::Converter::interrupt() {
+auto spatial::Converter::interrupt() -> void {
   _interrupt = true;
 }
 
@@ -804,7 +801,7 @@ Feature::Feature(Layer *layer, int row_id, const std::string &data, bool wkt = f
 Feature::~Feature() {
 }
 
-void Feature::get_envelope(spatial::Envelope &env, const bool &screen_coords) {
+auto Feature::get_envelope(spatial::Envelope &env, const bool &screen_coords) -> void {
   if (!screen_coords) {
     _geometry.get_envelope(env);
     return;
@@ -813,7 +810,7 @@ void Feature::get_envelope(spatial::Envelope &env, const bool &screen_coords) {
   env = _env_screen;
 }
 
-void Feature::render(Converter *converter) {
+auto Feature::render(Converter *converter) -> void {
   std::deque<ShapeContainer> tmp_shapes;
   _geometry.get_points(tmp_shapes);
   converter->transform_points(tmp_shapes);
@@ -825,7 +822,7 @@ void Feature::render(Converter *converter) {
   _shapes = tmp_shapes;
 }
 
-double Feature::distance(const base::Point &p, const double &allowed_distance) {
+auto Feature::distance(const base::Point &p, const double &allowed_distance) -> double {
   // we need to extend the envelope by allowed_distance cuase we don't want to make assumption based on number of shapes
   if (_env_screen.is_init()) {
     spatial::Envelope env = _env_screen;
@@ -848,11 +845,11 @@ double Feature::distance(const base::Point &p, const double &allowed_distance) {
   return rval;
 }
 
-void Feature::interrupt() {
+auto Feature::interrupt() -> void {
   _geometry.interrupt();
 }
 
-void Feature::repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area, base::Color fill_color) {
+auto Feature::repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area, base::Color fill_color) -> void {
   for (std::deque<ShapeContainer>::iterator it = _shapes.begin(); it != _shapes.end() && !_owner->_interrupt; it++) {
     if ((*it).points.empty()) {
       logError("%s is empty", shape_description(it->type).c_str());
@@ -901,7 +898,7 @@ void Feature::repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_are
   cr.check_state();
 }
 
-static void extend_env(spatial::Envelope &env, const spatial::Envelope &env2) {
+static auto extend_env(spatial::Envelope &env, const spatial::Envelope &env2) -> void {
   env.top_left.x = MIN(env.top_left.x, env2.top_left.x);
   env.top_left.y = MAX(env.top_left.y, env2.top_left.y);
   env.bottom_right.x = MAX(env.bottom_right.x, env2.bottom_right.x);
@@ -921,35 +918,35 @@ Layer::~Layer() {
     delete *it;
 }
 
-void Layer::set_fill_polygons(bool fill) {
+auto Layer::set_fill_polygons(bool fill) -> void {
   _fill_polygons = fill;
 }
 
-bool Layer::get_fill_polygons() {
+auto Layer::get_fill_polygons() -> bool {
   return _fill_polygons;
 }
 
-void Layer::interrupt() {
+auto Layer::interrupt() -> void {
   _interrupt = true;
   for (std::deque<Feature *>::iterator it = _features.begin(); it != _features.end(); ++it)
     (*it)->interrupt();
 }
 
-bool Layer::hidden() {
+auto Layer::hidden() -> bool {
   return !_show;
 }
 
-int Layer::layer_id() {
+auto Layer::layer_id() -> int {
   return _layer_id;
 }
 
-void Layer::set_show(bool flag) {
+auto Layer::set_show(bool flag) -> void {
   _show = flag;
   if (flag)
     load_data();
 }
 
-void Layer::add_feature(int row_id, const std::string &geom_data, bool wkt) {
+auto Layer::add_feature(int row_id, const std::string &geom_data, bool wkt) -> void {
   spatial::Envelope env;
   Feature *feature = new Feature(this, row_id, geom_data, wkt);
   feature->get_envelope(env);
@@ -957,7 +954,7 @@ void Layer::add_feature(int row_id, const std::string &geom_data, bool wkt) {
   _features.push_back(feature);
 }
 
-void Layer::repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area) {
+auto Layer::repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area) -> void {
   std::deque<ShapeContainer>::const_iterator it;
 
   cr.save();
@@ -973,15 +970,15 @@ void Layer::repaint(mdc::CairoCtx &cr, float scale, const base::Rect &clip_area)
   cr.restore();
 }
 
-float Layer::query_render_progress() {
+auto Layer::query_render_progress() -> float {
   return _render_progress;
 }
 
-spatial::Envelope spatial::Layer::get_envelope() {
+auto spatial::Layer::get_envelope() -> spatial::Envelope {
   return _spatial_envelope;
 }
 
-void Layer::render(Converter *converter) {
+auto Layer::render(Converter *converter) -> void {
   _render_progress = 0.0;
   float step = 1.0f / _features.size();
 
@@ -992,7 +989,7 @@ void Layer::render(Converter *converter) {
   }
 }
 
-spatial::Feature *Layer::feature_closest(const base::Point &p, const double &allowed_distance) {
+auto Layer::feature_closest(const base::Point &p, const double &allowed_distance) -> spatial::Feature * {
   double rval = -1;
   spatial::Feature *f = NULL;
   for (std::deque<spatial::Feature *>::iterator iter = _features.begin(); iter != _features.end() && !_interrupt;
@@ -1007,7 +1004,7 @@ spatial::Feature *Layer::feature_closest(const base::Point &p, const double &all
   return f;
 }
 
-spatial::LayerId spatial::new_layer_id() {
+auto spatial::new_layer_id() -> spatial::LayerId {
   static LayerId id = 0;
   return ++id;
 }

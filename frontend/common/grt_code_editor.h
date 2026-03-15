@@ -44,36 +44,36 @@ public:
   GRTCodeEditor(GRTShellWindow *owner, bool module, const std::string &language);
   virtual ~GRTCodeEditor();
 
-  void set_path(const std::string &path);
-  const std::string &get_path() {
+  auto set_path(const std::string &path) -> void;
+  auto get_path() -> const std::string & {
     return _filename;
   };
-  const std::string &get_language() {
+  auto get_language() -> const std::string & {
     return _language;
   };
-  void set_text(const std::string &text);
-  std::string get_title();
-  std::string get_text();
+  auto set_text(const std::string &text) -> void;
+  auto get_title() -> std::string;
+  auto get_text() -> std::string;
 
-  bool is_dirty() const {
+  auto is_dirty() const -> bool {
     return _dirty;
   }
-  bool can_close();
+  auto can_close() -> bool;
 
-  bool load(const std::string &path);
-  bool save(bool choose_file);
-  void execute();
+  auto load(const std::string &path) -> bool;
+  auto save(bool choose_file) -> bool;
+  auto execute() -> void;
 
-  GRTShellWindow *get_shell_window() {
+  auto get_shell_window() -> GRTShellWindow * {
     return _owner;
   }
 
-  mforms::CodeEditor *get_editor() {
+  auto get_editor() -> mforms::CodeEditor * {
     return &_text;
   }
 
 #ifdef _DEBUG
-  void test_markup();
+  auto test_markup() -> void;
 #endif
 protected:
   GRTShellWindow *_owner;
@@ -86,7 +86,7 @@ protected:
   bool _editing_module;
   bool _dirty;
 
-  void text_changed(int line, int linesAdded);
+  auto text_changed(int line, int linesAdded) -> void;
 };
 
 #endif /* __grt_code_editor.h__ */

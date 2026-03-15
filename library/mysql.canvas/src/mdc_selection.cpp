@@ -40,22 +40,22 @@ Selection::Selection(CanvasView *view) : _view(view) {
 Selection::~Selection() {
 }
 
-void Selection::lock() {
+auto Selection::lock() -> void {
   _mutex.lock();
 }
 
-void Selection::unlock() {
+auto Selection::unlock() -> void {
   _mutex.unlock();
 }
 
-void Selection::toggle(CanvasItem *item) {
+auto Selection::toggle(CanvasItem *item) -> void {
   if (item->get_selected())
     remove(item);
   else
     add(item);
 }
 
-void Selection::set(CanvasItem *item) {
+auto Selection::set(CanvasItem *item) -> void {
   lock();
   if (empty())
     add(item);
@@ -84,7 +84,7 @@ void Selection::set(CanvasItem *item) {
   unlock();
 }
 
-void Selection::add(CanvasItem *item) {
+auto Selection::add(CanvasItem *item) -> void {
   if (_drag_data.empty()) {
     bool notify = false;
 
@@ -120,7 +120,7 @@ void Selection::add(CanvasItem *item) {
   }
 }
 
-void Selection::remove(CanvasItem *item) {
+auto Selection::remove(CanvasItem *item) -> void {
   if (_drag_data.empty()) {
     bool notify = false;
 
@@ -140,12 +140,12 @@ void Selection::remove(CanvasItem *item) {
   }
 }
 
-void Selection::begin_multi_selection() {
+auto Selection::begin_multi_selection() -> void {
   _old_state = _items;
   _current_selection.clear();
 }
 
-void Selection::end_multi_selection() {
+auto Selection::end_multi_selection() -> void {
   _old_state.clear();
   _current_selection.clear();
 
@@ -154,7 +154,7 @@ void Selection::end_multi_selection() {
     _view->focus_item(*_items.begin());
 }
 
-void Selection::add(const std::list<CanvasItem *> &items) {
+auto Selection::add(const std::list<CanvasItem *> &items) -> void {
   _block_signals++;
   lock();
   for (std::list<CanvasItem *>::const_iterator i = items.begin(); i != items.end(); ++i)
@@ -163,7 +163,7 @@ void Selection::add(const std::list<CanvasItem *> &items) {
   _block_signals--;
 }
 
-void Selection::toggle(const std::list<CanvasItem *> &items) {
+auto Selection::toggle(const std::list<CanvasItem *> &items) -> void {
   ContentType new_selection;
 
   _block_signals++;
@@ -186,7 +186,7 @@ void Selection::toggle(const std::list<CanvasItem *> &items) {
   _block_signals--;
 }
 
-void Selection::remove_items_outside(const Rect &rect) {
+auto Selection::remove_items_outside(const Rect &rect) -> void {
   _block_signals++;
   lock();
   for (ContentType::iterator next, it = _items.begin(); it != _items.end(); it = next) {
@@ -199,7 +199,7 @@ void Selection::remove_items_outside(const Rect &rect) {
   _block_signals--;
 }
 
-void Selection::begin_moving(const Point &mouse_pos) {
+auto Selection::begin_moving(const Point &mouse_pos) -> void {
   _signal_begin_drag();
 
   lock();
@@ -215,7 +215,7 @@ void Selection::begin_moving(const Point &mouse_pos) {
   unlock();
 }
 
-void Selection::update_move(const Point &mouse_pos) {
+auto Selection::update_move(const Point &mouse_pos) -> void {
   Point snap_offset;
 
   lock();
@@ -250,11 +250,11 @@ void Selection::update_move(const Point &mouse_pos) {
   unlock();
 }
 
-bool Selection::is_moving() {
+auto Selection::is_moving() -> bool {
   return !_drag_data.empty();
 }
 
-void Selection::end_moving() {
+auto Selection::end_moving() -> void {
   _signal_end_drag();
   lock();
   // for (std::list<CanvasItem*>::const_iterator i= _items.begin(); i!= _items.end(); ++i)
@@ -295,7 +295,7 @@ void Selection::render_drag_images(CairoCtx *cr)
   }
 }*/
 
-void Selection::clear(bool keep_move_info) {
+auto Selection::clear(bool keep_move_info) -> void {
   bool was_empty = empty();
 
   lock();

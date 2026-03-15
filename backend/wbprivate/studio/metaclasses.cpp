@@ -46,7 +46,7 @@
 #include "grts/structs.wrapper.h"
 #include "wb_backend_public_interface.h"
 
-void register_all_metaclasses() {
+auto register_all_metaclasses() -> void {
   register_structs_app_xml();
   register_structs_db_xml();
   register_structs_db_mgmt_xml();

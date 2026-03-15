@@ -44,7 +44,7 @@ MySQLRelationshipEditorWrapper::~MySQLRelationshipEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-RelationshipEditorBE *MySQLRelationshipEditorWrapper::get_unmanaged_object() {
+auto MySQLRelationshipEditorWrapper::get_unmanaged_object() -> RelationshipEditorBE * {
   return static_cast<::RelationshipEditorBE *>(inner);
 }
 
@@ -56,13 +56,13 @@ void MySQLRelationshipEditorWrapper::set_caption(String ^ caption) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_caption() {
+auto MySQLRelationshipEditorWrapper::get_caption() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_caption());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_caption_long() {
+auto MySQLRelationshipEditorWrapper::get_caption_long() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_caption_long());
 }
 
@@ -74,79 +74,79 @@ void MySQLRelationshipEditorWrapper::set_extra_caption(String ^ caption) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_extra_caption() {
+auto MySQLRelationshipEditorWrapper::get_extra_caption() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_extra_caption());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_extra_caption_long() {
+auto MySQLRelationshipEditorWrapper::get_extra_caption_long() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_extra_caption_long());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_right_table_name() {
+auto MySQLRelationshipEditorWrapper::get_right_table_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_right_table_name());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_left_table_name() {
+auto MySQLRelationshipEditorWrapper::get_left_table_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_left_table_name());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_right_table_info() {
+auto MySQLRelationshipEditorWrapper::get_right_table_info() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_right_table_info());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_left_table_info() {
+auto MySQLRelationshipEditorWrapper::get_left_table_info() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_left_table_info());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_left_table_fk() {
+auto MySQLRelationshipEditorWrapper::get_left_table_fk() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_left_table_fk());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRelationshipEditorWrapper::set_left_mandatory(bool flag) {
+auto MySQLRelationshipEditorWrapper::set_left_mandatory(bool flag) -> void {
   get_unmanaged_object()->set_left_mandatory(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLRelationshipEditorWrapper::get_left_mandatory() {
+auto MySQLRelationshipEditorWrapper::get_left_mandatory() -> bool {
   return get_unmanaged_object()->get_left_mandatory();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRelationshipEditorWrapper::set_right_mandatory(bool flag) {
+auto MySQLRelationshipEditorWrapper::set_right_mandatory(bool flag) -> void {
   get_unmanaged_object()->set_right_mandatory(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLRelationshipEditorWrapper::get_right_mandatory() {
+auto MySQLRelationshipEditorWrapper::get_right_mandatory() -> bool {
   return get_unmanaged_object()->get_right_mandatory();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRelationshipEditorWrapper::set_to_many(bool flag) {
+auto MySQLRelationshipEditorWrapper::set_to_many(bool flag) -> void {
   get_unmanaged_object()->set_to_many(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLRelationshipEditorWrapper::get_to_many() {
+auto MySQLRelationshipEditorWrapper::get_to_many() -> bool {
   return get_unmanaged_object()->get_to_many();
 }
 
@@ -158,43 +158,43 @@ void MySQLRelationshipEditorWrapper::set_comment(String ^ comment) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQLRelationshipEditorWrapper::get_comment() {
+auto MySQLRelationshipEditorWrapper::get_comment() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_comment());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-RelationshipVisibilityType MySQLRelationshipEditorWrapper::get_visibility() {
+auto MySQLRelationshipEditorWrapper::get_visibility() -> RelationshipVisibilityType {
   return (RelationshipVisibilityType)get_unmanaged_object()->get_visibility();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLRelationshipEditorWrapper::get_is_identifying() {
+auto MySQLRelationshipEditorWrapper::get_is_identifying() -> bool {
   return get_unmanaged_object()->get_is_identifying();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRelationshipEditorWrapper::set_visibility(RelationshipVisibilityType v) {
+auto MySQLRelationshipEditorWrapper::set_visibility(RelationshipVisibilityType v) -> void {
   get_unmanaged_object()->set_visibility((RelationshipEditorBE::VisibilityType)v);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRelationshipEditorWrapper::open_editor_for_left_table() {
+auto MySQLRelationshipEditorWrapper::open_editor_for_left_table() -> void {
   get_unmanaged_object()->open_editor_for_left_table();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRelationshipEditorWrapper::open_editor_for_right_table() {
+auto MySQLRelationshipEditorWrapper::open_editor_for_right_table() -> void {
   get_unmanaged_object()->open_editor_for_right_table();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRelationshipEditorWrapper::set_is_identifying(bool identifying) {
+auto MySQLRelationshipEditorWrapper::set_is_identifying(bool identifying) -> void {
   get_unmanaged_object()->set_is_identifying(identifying);
 }
 

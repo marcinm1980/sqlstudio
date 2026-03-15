@@ -56,9 +56,9 @@ namespace bec {
     using Ref = std::shared_ptr<DispatcherCallbackBase>;
 
     virtual ~DispatcherCallbackBase();
-    virtual void execute() = 0;
-    void wait();
-    void signal();
+    virtual auto execute() -> void = 0;
+    auto wait() -> void;
+    auto signal() -> void;
   };
 
   //------------------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ namespace bec {
       return Ref(new DispatcherCallback<R>(slot));
     }
 
-    void execute() {
+    auto execute() -> void {
       if (_slot)
         _return_value = _slot();
     }
@@ -99,7 +99,7 @@ namespace bec {
       return Ref(new DispatcherCallback<void>(slot));
     }
 
-    void execute() {
+    auto execute() -> void {
       if (_slot)
         _slot();
     }
@@ -124,7 +124,7 @@ namespace bec {
 
     virtual auto execute() -> grt::ValueRef = 0;
 
-    void cancel();
+    auto cancel() -> void;
     inline auto is_cancelled() -> bool {
       return _cancelled;
     }
@@ -136,7 +136,7 @@ namespace bec {
       return _result;
     };
 
-    void set_handle_messages_from_thread() {
+    auto set_handle_messages_from_thread() -> void {
       _messages_to_main_thread = false;
     }
 
@@ -144,17 +144,17 @@ namespace bec {
     // the other ones are called in the grt thread and
     // schedule the call of their _m counterparts
 
-    virtual void started();
-    virtual void started_m();
+    virtual auto started() -> void;
+    virtual auto started_m() -> void;
 
-    virtual void finished(const grt::ValueRef &result);
-    virtual void finished_m(const grt::ValueRef &result);
+    virtual auto finished(const grt::ValueRef &result) -> void;
+    virtual auto finished_m(const grt::ValueRef &result) -> void;
 
-    virtual void failed(const std::exception &exc);
-    virtual void failed_m(const std::exception &exc);
+    virtual auto failed(const std::exception &exc) -> void;
+    virtual auto failed_m(const std::exception &exc) -> void;
 
     virtual auto process_message(const grt::Message &msg) -> bool;
-    virtual void process_message_m(const grt::Message &msg);
+    virtual auto process_message_m(const grt::Message &msg) -> void;
 
     auto get_error() -> grt::grt_runtime_error * {
       return _exception;
@@ -184,7 +184,7 @@ namespace bec {
         _messages_to_main_thread(true) {
     }
 
-    void set_finished();
+    auto set_finished() -> void;
 
   private:
     std::string _name;
@@ -237,12 +237,12 @@ namespace bec {
 
     GRTTask(const std::string &name, const std::shared_ptr<GRTDispatcher> dispatcher,
             const std::function<grt::ValueRef()> &function);
-    virtual void started_m();
-    virtual void finished_m(const grt::ValueRef &result);
-    virtual void failed_m(const std::exception &error);
+    virtual auto started_m() -> void;
+    virtual auto finished_m(const grt::ValueRef &result) -> void;
+    virtual auto failed_m(const std::exception &error) -> void;
 
     virtual auto process_message(const grt::Message &msg) -> bool;
-    virtual void process_message_m(const grt::Message &msg);
+    virtual auto process_message_m(const grt::Message &msg) -> void;
   };
 
   //------------------------------------------------------------------------------------------------
@@ -275,10 +275,10 @@ namespace bec {
     GRTShellTask(const std::string &name, const std::shared_ptr<GRTDispatcher> dispatcher, const std::string &command);
 
     virtual auto execute() -> grt::ValueRef;
-    virtual void finished_m(const grt::ValueRef &result);
+    virtual auto finished_m(const grt::ValueRef &result) -> void;
 
     virtual auto process_message(const grt::Message &msg) -> bool;
-    virtual void process_message_m(const grt::Message &msg);
+    virtual auto process_message_m(const grt::Message &msg) -> void;
 
     FinishedSignal _finished_signal;
     ProcessMessageSignal _message;
@@ -319,14 +319,14 @@ namespace bec {
 
     GRTDispatcher(bool threaded, bool is_main_dispatcher);
 
-    void prepare_task(const GRTTaskBase::Ref task);
-    void execute_task(const GRTTaskBase::Ref task);
+    auto prepare_task(const GRTTaskBase::Ref task) -> void;
+    auto execute_task(const GRTTaskBase::Ref task) -> void;
 
-    void worker_thread_init();
-    void worker_thread_release();
-    void worker_thread_iteration();
+    auto worker_thread_init() -> void;
+    auto worker_thread_release() -> void;
+    auto worker_thread_iteration() -> void;
 
-    void restore_callbacks(const GRTTaskBase::Ref task);
+    auto restore_callbacks(const GRTTaskBase::Ref task) -> void;
 
     auto message_callback(const grt::Message &msg, void *sender) -> bool;
 
@@ -335,17 +335,17 @@ namespace bec {
 
     virtual ~GRTDispatcher();
 
-    void execute_now(const GRTTaskBase::Ref task);
+    auto execute_now(const GRTTaskBase::Ref task) -> void;
 
-    void add_task(const GRTTaskBase::Ref task);
+    auto add_task(const GRTTaskBase::Ref task) -> void;
     auto add_task_and_wait(const GRTTaskBase::Ref task) -> grt::ValueRef;
 
     auto execute_sync_function(const std::string &name, const std::function<grt::ValueRef()> &function)
       -> grt::ValueRef;
 
-    void execute_async_function(const std::string &name, const std::function<grt::ValueRef()> &function);
+    auto execute_async_function(const std::string &name, const std::function<grt::ValueRef()> &function) -> void;
 
-    void wait_task(const GRTTaskBase::Ref task);
+    auto wait_task(const GRTTaskBase::Ref task) -> void;
 
     template <class R>
     auto call_from_main_thread(const std::function<R()> &callback, bool wait, bool force_queue) -> R {
@@ -354,21 +354,21 @@ namespace bec {
       return cb->get_result();
     }
 
-    void call_from_main_thread(const DispatcherCallbackBase::Ref callback, bool wait, bool force_queue);
+    auto call_from_main_thread(const DispatcherCallbackBase::Ref callback, bool wait, bool force_queue) -> void;
 
-    void set_main_thread_flush_and_wait(FlushAndWaitCallback callback);
-    FlushAndWaitCallback get_main_thread_flush_and_wait() {
+    auto set_main_thread_flush_and_wait(FlushAndWaitCallback callback) -> void;
+    auto get_main_thread_flush_and_wait() -> FlushAndWaitCallback {
       return _flush_main_thread_and_wait;
     }
 
-    void start();
-    void shutdown();
+    auto start() -> void;
+    auto shutdown() -> void;
 
     auto get_busy() -> bool;
 
-    void cancel_task(const GRTTaskBase::Ref task);
+    auto cancel_task(const GRTTaskBase::Ref task) -> void;
 
-    void flush_pending_callbacks();
+    auto flush_pending_callbacks() -> void;
 
     auto get_thread() const -> GThread * {
       return _thread;

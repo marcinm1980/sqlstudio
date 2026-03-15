@@ -74,13 +74,13 @@ AppView::~AppView() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void AppView::set_containing_docking_point(mforms::DockingPoint *dpoint) {
+auto AppView::set_containing_docking_point(mforms::DockingPoint *dpoint) -> void {
   _dpoint = dpoint;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void AppView::set_menubar(mforms::MenuBar *menu) {
+auto AppView::set_menubar(mforms::MenuBar *menu) -> void {
   if (_menubar != menu) {
     if (_menubar != NULL)
       _menubar->release();
@@ -97,7 +97,7 @@ void AppView::set_menubar(mforms::MenuBar *menu) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void AppView::set_toolbar(mforms::ToolBar *toolbar) {
+auto AppView::set_toolbar(mforms::ToolBar *toolbar) -> void {
   if (_toolbar != toolbar) {
     if (_toolbar)
       _toolbar->release();
@@ -114,7 +114,7 @@ void AppView::set_toolbar(mforms::ToolBar *toolbar) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void AppView::set_title(const std::string &title) {
+auto AppView::set_title(const std::string &title) -> void {
   _title = title;
   if (_dpoint)
     _dpoint->set_view_title(this, title);
@@ -122,13 +122,13 @@ void AppView::set_title(const std::string &title) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string AppView::get_title() {
+auto AppView::get_title() -> std::string {
   return _title;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool AppView::on_close() {
+auto AppView::on_close() -> bool {
   if (_on_close_slot)
     return _on_close_slot();
   return true;
@@ -136,7 +136,7 @@ bool AppView::on_close() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void AppView::close() {
+auto AppView::close() -> void {
   if (_dpoint)
     _dpoint->undock_view(this);
 }

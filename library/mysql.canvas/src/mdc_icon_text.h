@@ -39,19 +39,19 @@ namespace mdc {
 
     virtual auto calc_min_size() -> base::Size;
 
-    virtual void draw_contents(CairoCtx *cr);
+    virtual auto draw_contents(CairoCtx *cr) -> void;
 
-    void set_icon(cairo_surface_t *icon);
+    auto set_icon(cairo_surface_t *icon) -> void;
     auto get_icon() -> cairo_surface_t * {
       return _icon;
     }
 
-    void set_spacing(double space);
+    auto set_spacing(double space) -> void;
     auto get_spacing() -> double {
       return _spacing;
     }
 
-    virtual void auto_size();
+    virtual auto auto_size() -> void;
 
   protected:
     cairo_surface_t *_icon;

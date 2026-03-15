@@ -41,7 +41,7 @@ using namespace wb;
 #ifndef _MSC_VER
 #include <signal.h>
 
-void signal_handler(int sig) {
+auto signal_handler(int sig) -> void {
   printf("Exiting after signal[%d] was trapped\n", sig);
   exit(0);
 }

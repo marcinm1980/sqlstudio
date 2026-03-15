@@ -41,11 +41,11 @@ class DbMySQLRelationshipEditor : public PluginEditorBase //, public WidgetsAuto
 {
   RelationshipEditorBE *_be;
 
-  virtual bec::BaseEditor *get_be();
-  void visibility_toggled(const RelationshipEditorBE::VisibilityType visibility);
-  void mandatory_toggled(const bool is_left);
-  void set_to_many(const bool is_one_to_many);
-  void open_editor(const bool is_for_left);
+  virtual auto get_be() -> bec::BaseEditor *;
+  auto visibility_toggled(const RelationshipEditorBE::VisibilityType visibility) -> void;
+  auto mandatory_toggled(const bool is_left) -> void;
+  auto set_to_many(const bool is_one_to_many) -> void;
+  auto open_editor(const bool is_for_left) -> void;
 
   bool _refreshing;
 
@@ -54,20 +54,20 @@ class DbMySQLRelationshipEditor : public PluginEditorBase //, public WidgetsAuto
     _be = 0;
   }
 
-  void set_caption(const std::string &cap) {
+  auto set_caption(const std::string &cap) -> void {
     _be->set_caption(cap);
     _signal_title_changed.emit(_be->get_title());
   }
 
-  void set_extra_caption(const std::string &extra_cap) {
+  auto set_extra_caption(const std::string &extra_cap) -> void {
     _be->set_extra_caption(extra_cap);
   }
 
-  void set_comment(const std::string &comm) {
+  auto set_comment(const std::string &comm) -> void {
     _be->set_comment(comm);
   }
 
-  void identifying_toggled() {
+  auto identifying_toggled() -> void {
     Gtk::CheckButton *cbtn = 0;
     xml()->get_widget("identifying_cbox", cbtn);
 
@@ -77,9 +77,9 @@ class DbMySQLRelationshipEditor : public PluginEditorBase //, public WidgetsAuto
 public:
   DbMySQLRelationshipEditor(grt::Module *m, const grt::BaseListRef &args);
 
-  virtual void do_refresh_form_data();
+  virtual auto do_refresh_form_data() -> void;
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args);
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool;
 };
 
 DbMySQLRelationshipEditor::DbMySQLRelationshipEditor(grt::Module *m, const grt::BaseListRef &args)
@@ -142,7 +142,7 @@ DbMySQLRelationshipEditor::DbMySQLRelationshipEditor(grt::Module *m, const grt::
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLRelationshipEditor::switch_edited_object(const grt::BaseListRef &args) {
+auto DbMySQLRelationshipEditor::switch_edited_object(const grt::BaseListRef &args) -> bool {
   RelationshipEditorBE *old_be = _be;
 
   _be = new RelationshipEditorBE(studio_physical_ConnectionRef::cast_from(args[0]));
@@ -158,18 +158,18 @@ bool DbMySQLRelationshipEditor::switch_edited_object(const grt::BaseListRef &arg
 }
 
 //------------------------------------------------------------------------------
-bec::BaseEditor *DbMySQLRelationshipEditor::get_be() {
+auto DbMySQLRelationshipEditor::get_be() -> bec::BaseEditor * {
   return _be;
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRelationshipEditor::visibility_toggled(const RelationshipEditorBE::VisibilityType visibility) {
+auto DbMySQLRelationshipEditor::visibility_toggled(const RelationshipEditorBE::VisibilityType visibility) -> void {
   if (!_refreshing)
     _be->set_visibility(visibility);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRelationshipEditor::mandatory_toggled(const bool is_left) {
+auto DbMySQLRelationshipEditor::mandatory_toggled(const bool is_left) -> void {
   if (!_refreshing) {
     Gtk::CheckButton *cbtn(0);
     xml()->get_widget(is_left ? "table1_mandatory_cbox" : "table2_mandatory_cbox", cbtn);
@@ -183,13 +183,13 @@ void DbMySQLRelationshipEditor::mandatory_toggled(const bool is_left) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRelationshipEditor::set_to_many(const bool is_one_to_many) {
+auto DbMySQLRelationshipEditor::set_to_many(const bool is_one_to_many) -> void {
   if (!_refreshing)
     _be->set_to_many(is_one_to_many);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRelationshipEditor::open_editor(const bool is_for_left) {
+auto DbMySQLRelationshipEditor::open_editor(const bool is_for_left) -> void {
   if (is_for_left)
     _be->open_editor_for_left_table();
   else
@@ -197,7 +197,7 @@ void DbMySQLRelationshipEditor::open_editor(const bool is_for_left) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRelationshipEditor::do_refresh_form_data() {
+auto DbMySQLRelationshipEditor::do_refresh_form_data() -> void {
   _refreshing = true;
   Gtk::Entry *entry;
   xml()->get_widget("conn_name", entry);
@@ -267,7 +267,7 @@ void DbMySQLRelationshipEditor::do_refresh_form_data() {
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createDbMysqlRelationshipEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createDbMysqlRelationshipEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new DbMySQLRelationshipEditor(m, args));
 }
 };

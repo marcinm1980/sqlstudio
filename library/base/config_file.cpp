@@ -73,7 +73,7 @@ using SectionListIterator = SectionList::iterator;
 /**
  * Extracts the next key from the next key/value pair in the line and returns it.
  */
-std::string extract_next_word(std::string &line) {
+auto extract_next_word(std::string &line) -> std::string {
   size_t position = line.find_first_of(EqualIndicators);
   std::string word = std::string("");
 
@@ -99,33 +99,33 @@ public:
 
   Private(std::string file_name, ConfigFileFlags flags);
 
-  ConfigEntry *get_entry_in_section(std::string key, std::string section, bool auto_create);
-  ConfigSection *get_section(std::string section, bool auto_create);
+  auto get_entry_in_section(std::string key, std::string section, bool auto_create) -> ConfigEntry *;
+  auto get_section(std::string section, bool auto_create) -> ConfigSection *;
 
-  void clear_includes(const std::string &section_name);
-  void add_include(const std::string &section_name, const std::string &include);
-  void add_include_dir(const std::string &section_name, const std::string &include);
-  std::vector<std::string> get_includes(const std::string &section_name);
+  auto clear_includes(const std::string &section_name) -> void;
+  auto add_include(const std::string &section_name, const std::string &include) -> void;
+  auto add_include_dir(const std::string &section_name, const std::string &include) -> void;
+  auto get_includes(const std::string &section_name) -> std::vector<std::string>;
 
-  bool set_value(std::string key_name, std::string value, std::string section_name);
-  void set_dirty();
-  void clear();
+  auto set_value(std::string key_name, std::string value, std::string section_name) -> bool;
+  auto set_dirty() -> void;
+  auto clear() -> void;
 
-  bool create_key(std::string key, std::string value, std::string pre_comment, std::string post_comment,
-                  std::string section);
-  bool delete_key(std::string key, std::string section_name);
-  bool create_section(std::string section_name, std::string comment);
-  bool delete_section(std::string name);
+  auto create_key(std::string key, std::string value, std::string pre_comment, std::string post_comment,
+                  std::string section) -> bool;
+  auto delete_key(std::string key, std::string section_name) -> bool;
+  auto create_section(std::string section_name, std::string comment) -> bool;
+  auto delete_section(std::string name) -> bool;
 
-  int section_count();
-  int key_count();
-  int key_count_for_section(const std::string &section_name);
-  bool is_dirty();
+  auto section_count() -> int;
+  auto key_count() -> int;
+  auto key_count_for_section(const std::string &section_name) -> int;
+  auto is_dirty() -> bool;
 
-  std::string make_comment(const std::string &text);
+  auto make_comment(const std::string &text) -> std::string;
 
-  bool load(const std::string &file_name);
-  bool save(const std::string &file_name);
+  auto load(const std::string &file_name) -> bool;
+  auto save(const std::string &file_name) -> bool;
 };
 
 //--------------------------------------------------------------------------------------------------
@@ -146,8 +146,8 @@ ConfigurationFile::Private::Private(std::string file_name, ConfigFileFlags flags
 /**
  * Looks up the given key in the given section and returns its entry if found, otherwise NULL.
  */
-ConfigEntry *ConfigurationFile::Private::get_entry_in_section(std::string key, std::string section_name,
-                                                              bool auto_create) {
+auto ConfigurationFile::Private::get_entry_in_section(std::string key, std::string section_name,
+                                                              bool auto_create) -> ConfigEntry * {
   ConfigSection *section = get_section(section_name, auto_create && (_flags & AutoCreateSections) != 0);
 
   if (section == NULL)
@@ -176,7 +176,7 @@ ConfigEntry *ConfigurationFile::Private::get_entry_in_section(std::string key, s
  * If the section could not be found and auto_create is true then it is created and returned.
  * Otherwise NULL is returned.
  */
-ConfigSection *ConfigurationFile::Private::get_section(std::string section_name, bool auto_create) {
+auto ConfigurationFile::Private::get_section(std::string section_name, bool auto_create) -> ConfigSection * {
   section_name = base::trim(section_name);
   for (SectionListIterator iterator = _sections.begin(); iterator != _sections.end(); iterator++) {
     if (strcasecmp(iterator->name.c_str(), section_name.c_str()) == 0)
@@ -193,12 +193,12 @@ ConfigSection *ConfigurationFile::Private::get_section(std::string section_name,
 
 //--------------------------------------------------------------------------------------------------
 
-bool is_include(ConfigEntry &entry) {
+auto is_include(ConfigEntry &entry) -> bool {
   std::string key = base::tolower(entry.key);
   return key == "!include" || key == "!includedir";
 }
 
-void ConfigurationFile::Private::clear_includes(const std::string &section_name) {
+auto ConfigurationFile::Private::clear_includes(const std::string &section_name) -> void {
   ConfigSection *section = get_section(section_name, (_flags & AutoCreateSections) != 0);
 
   if (section == NULL)
@@ -210,7 +210,7 @@ void ConfigurationFile::Private::clear_includes(const std::string &section_name)
 
 //--------------------------------------------------------------------------------------------------
 
-void ConfigurationFile::Private::add_include(const std::string &section_name, const std::string &include) {
+auto ConfigurationFile::Private::add_include(const std::string &section_name, const std::string &include) -> void {
   ConfigSection *section = get_section(section_name, (_flags & AutoCreateSections) != 0);
 
   if (section == NULL)
@@ -224,7 +224,7 @@ void ConfigurationFile::Private::add_include(const std::string &section_name, co
 
 //--------------------------------------------------------------------------------------------------
 
-void ConfigurationFile::Private::add_include_dir(const std::string &section_name, const std::string &include) {
+auto ConfigurationFile::Private::add_include_dir(const std::string &section_name, const std::string &include) -> void {
   ConfigSection *section = get_section(section_name, (_flags & AutoCreateSections) != 0);
 
   if (section == NULL)
@@ -238,7 +238,7 @@ void ConfigurationFile::Private::add_include_dir(const std::string &section_name
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> ConfigurationFile::Private::get_includes(const std::string &section_name) {
+auto ConfigurationFile::Private::get_includes(const std::string &section_name) -> std::vector<std::string> {
   std::vector<std::string> result;
   ConfigSection *section = get_section(section_name, (_flags & AutoCreateSections) != 0);
 
@@ -260,7 +260,7 @@ std::vector<std::string> ConfigurationFile::Private::get_includes(const std::str
  * AutoCreateKeys flag).
  * Returns true if the value could be set, false otherwise.
  */
-bool ConfigurationFile::Private::set_value(std::string key_name, std::string value, std::string section_name) {
+auto ConfigurationFile::Private::set_value(std::string key_name, std::string value, std::string section_name) -> bool {
   ConfigEntry *entry = get_entry_in_section(key_name, section_name, (_flags & AutoCreateKeys) != 0);
 
   if (entry == NULL)
@@ -274,13 +274,13 @@ bool ConfigurationFile::Private::set_value(std::string key_name, std::string val
 
 //--------------------------------------------------------------------------------------------------
 
-void ConfigurationFile::Private::set_dirty() {
+auto ConfigurationFile::Private::set_dirty() -> void {
   _dirty = true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ConfigurationFile::Private::clear() {
+auto ConfigurationFile::Private::clear() -> void {
   _dirty = false;
   _trailing_comments = "";
   _sections.clear();
@@ -289,7 +289,7 @@ void ConfigurationFile::Private::clear() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::Private::delete_section(std::string name) {
+auto ConfigurationFile::Private::delete_section(std::string name) -> bool {
   name = base::trim(name);
   if (name.empty()) // Don't remove the default section.
     return false;
@@ -309,7 +309,7 @@ bool ConfigurationFile::Private::delete_section(std::string name) {
 /**
  * Removes the given key from the given selection. Returns true if successful, otherwise false.
  */
-bool ConfigurationFile::Private::delete_key(std::string key, std::string section_name) {
+auto ConfigurationFile::Private::delete_key(std::string key, std::string section_name) -> bool {
   ConfigSection *section = get_section(section_name, false);
 
   if (section == NULL)
@@ -334,8 +334,8 @@ bool ConfigurationFile::Private::delete_key(std::string key, std::string section
  * the new value. If it does not locate the key, it will create a new key with
  * the proper value and place it in the section requested.
  */
-bool ConfigurationFile::Private::create_key(std::string key_name, std::string value, std::string pre_comment,
-                                            std::string post_comment, std::string section_name) {
+auto ConfigurationFile::Private::create_key(std::string key_name, std::string value, std::string pre_comment,
+                                            std::string post_comment, std::string section_name) -> bool {
   ConfigEntry *entry = get_entry_in_section(key_name, section_name, true);
 
   if (entry == NULL)
@@ -355,7 +355,7 @@ bool ConfigurationFile::Private::create_key(std::string key_name, std::string va
  * Creates a new section if no section with that name exists already. Returns true if a new section
  * has been created, otherwise false.
  */
-bool ConfigurationFile::Private::create_section(std::string section_name, std::string comment) {
+auto ConfigurationFile::Private::create_section(std::string section_name, std::string comment) -> bool {
   // TODO: this should be necessary.
   if (get_section(section_name, false) != NULL)
     return false;
@@ -374,7 +374,7 @@ bool ConfigurationFile::Private::create_section(std::string section_name, std::s
 /**
  * Returns the number of sections.
  */
-int ConfigurationFile::Private::section_count() {
+auto ConfigurationFile::Private::section_count() -> int {
   return (int)_sections.size();
 }
 
@@ -383,7 +383,7 @@ int ConfigurationFile::Private::section_count() {
 /**
  * Returns the total number of keys in all sections.
  */
-int ConfigurationFile::Private::key_count() {
+auto ConfigurationFile::Private::key_count() -> int {
   int result = 0;
 
   for (SectionListIterator iterator = _sections.begin(); iterator != _sections.end(); iterator++)
@@ -397,7 +397,7 @@ int ConfigurationFile::Private::key_count() {
 /**
  * Returns the number of keys in the given section. Returns 0 if the section could not be found.
  */
-int ConfigurationFile::Private::key_count_for_section(const std::string &section_name) {
+auto ConfigurationFile::Private::key_count_for_section(const std::string &section_name) -> int {
   ConfigSection *section = get_section(section_name, false);
   if (section != NULL)
     return (int)section->keys.size();
@@ -407,7 +407,7 @@ int ConfigurationFile::Private::key_count_for_section(const std::string &section
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::Private::is_dirty() {
+auto ConfigurationFile::Private::is_dirty() -> bool {
   return _dirty;
 }
 
@@ -417,7 +417,7 @@ bool ConfigurationFile::Private::is_dirty() {
  * Converts the given text to a comment string (prefixing it with the comment character) if it is
  * not empty and does not yet have a comment character at the first position.
  */
-std::string ConfigurationFile::Private::make_comment(const std::string &text) {
+auto ConfigurationFile::Private::make_comment(const std::string &text) -> std::string {
   if (text.size() == 0)
     return text;
 
@@ -429,7 +429,7 @@ std::string ConfigurationFile::Private::make_comment(const std::string &text) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::Private::load(const std::string &file_name) {
+auto ConfigurationFile::Private::load(const std::string &file_name) -> bool {
   ifstream file(file_name.c_str());
 
   if (file.is_open()) {
@@ -529,7 +529,7 @@ bool ConfigurationFile::Private::load(const std::string &file_name) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::Private::save(const std::string &file_name) {
+auto ConfigurationFile::Private::save(const std::string &file_name) -> bool {
   if (file_name.size() == 0)
     return false;
 
@@ -621,37 +621,37 @@ ConfigurationFile::~ConfigurationFile() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ConfigurationFile::clear_includes(const std::string &section_name) {
+auto ConfigurationFile::clear_includes(const std::string &section_name) -> void {
   data->clear_includes(section_name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ConfigurationFile::add_include(const std::string &section_name, const std::string &include) {
+auto ConfigurationFile::add_include(const std::string &section_name, const std::string &include) -> void {
   data->add_include(section_name, include);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ConfigurationFile::add_include_dir(const std::string &section_name, const std::string &include) {
+auto ConfigurationFile::add_include_dir(const std::string &section_name, const std::string &include) -> void {
   data->add_include_dir(section_name, include);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> ConfigurationFile::get_includes(const std::string &section_name) {
+auto ConfigurationFile::get_includes(const std::string &section_name) -> std::vector<std::string> {
   return data->get_includes(section_name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ConfigurationFile::clear() {
+auto ConfigurationFile::clear() -> void {
   data->clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::is_dirty() {
+auto ConfigurationFile::is_dirty() -> bool {
   return data->is_dirty();
 }
 
@@ -660,13 +660,13 @@ bool ConfigurationFile::is_dirty() {
 /**
  * Checks if the a key in a given section exists.
  */
-bool ConfigurationFile::has_key(const std::string &key, const std::string &section) {
+auto ConfigurationFile::has_key(const std::string &key, const std::string &section) -> bool {
   return data->get_entry_in_section(key, section, false) != NULL;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::has_section(const std::string &section_name) {
+auto ConfigurationFile::has_section(const std::string &section_name) -> bool {
   return data->get_section(section_name, false) != NULL;
 }
 
@@ -675,7 +675,7 @@ bool ConfigurationFile::has_section(const std::string &section_name) {
 /**
  * Loads the given file and adds its content to the current content. Comments will be retained.
  */
-bool ConfigurationFile::load(const std::string &file_name) {
+auto ConfigurationFile::load(const std::string &file_name) -> bool {
   return data->load(file_name);
 }
 
@@ -684,7 +684,7 @@ bool ConfigurationFile::load(const std::string &file_name) {
 /**
  * Saves the content to the given file.
  */
-bool ConfigurationFile::save(const std::string &file_name) {
+auto ConfigurationFile::save(const std::string &file_name) -> bool {
   return data->save(file_name);
 }
 
@@ -693,7 +693,7 @@ bool ConfigurationFile::save(const std::string &file_name) {
 /**
  * Sets the comment for a given entry. Returns true if the entry was found, otherwise false.
  */
-bool ConfigurationFile::set_key_pre_comment(std::string key, std::string comment, std::string section_name) {
+auto ConfigurationFile::set_key_pre_comment(std::string key, std::string comment, std::string section_name) -> bool {
   ConfigEntry *entry = data->get_entry_in_section(key, section_name, (data->_flags & AutoCreateKeys) != 0);
   if (entry == NULL)
     return false;
@@ -709,7 +709,7 @@ bool ConfigurationFile::set_key_pre_comment(std::string key, std::string comment
 /**
  * Sets the comment for a given section. Returns true if the section was found, otherwise false.
  */
-bool ConfigurationFile::set_section_comment(std::string section_name, std::string comment) {
+auto ConfigurationFile::set_section_comment(std::string section_name, std::string comment) -> bool {
   ConfigSection *section = data->get_section(section_name, (data->_flags & AutoCreateSections) != 0);
   if (section == NULL)
     return false;
@@ -721,13 +721,13 @@ bool ConfigurationFile::set_section_comment(std::string section_name, std::strin
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::set_value(std::string key_name, std::string value, std::string section_name) {
+auto ConfigurationFile::set_value(std::string key_name, std::string value, std::string section_name) -> bool {
   return data->set_value(key_name, value, section_name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::set_float(std::string key, float value, std::string section) {
+auto ConfigurationFile::set_float(std::string key, float value, std::string section) -> bool {
   char buffer[64];
   snprintf(buffer, 64, "%f", value);
 
@@ -736,7 +736,7 @@ bool ConfigurationFile::set_float(std::string key, float value, std::string sect
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::set_int(std::string key, int value, std::string section) {
+auto ConfigurationFile::set_int(std::string key, int value, std::string section) -> bool {
   char buffer[64];
   snprintf(buffer, 64, "%d", value);
 
@@ -745,7 +745,7 @@ bool ConfigurationFile::set_int(std::string key, int value, std::string section)
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::set_bool(std::string key, bool value, std::string section) {
+auto ConfigurationFile::set_bool(std::string key, bool value, std::string section) -> bool {
   return data->set_value(key, value ? "True" : "False", section);
 }
 
@@ -755,7 +755,7 @@ bool ConfigurationFile::set_bool(std::string key, bool value, std::string sectio
  * Returns the value of the given key as string. An empty string is returned if the key could not be
  * found or is empty.
  */
-std::string ConfigurationFile::get_value(std::string key, std::string section) {
+auto ConfigurationFile::get_value(std::string key, std::string section) -> std::string {
   ConfigEntry *entry = data->get_entry_in_section(key, section, false);
 
   return (entry == NULL) ? "" : entry->value;
@@ -763,7 +763,7 @@ std::string ConfigurationFile::get_value(std::string key, std::string section) {
 
 //--------------------------------------------------------------------------------------------------
 
-double ConfigurationFile::get_float(std::string key, std::string section) {
+auto ConfigurationFile::get_float(std::string key, std::string section) -> double {
   std::string value = base::unquote_identifier(get_value(key, section));
 
   if (value.size() == 0)
@@ -791,7 +791,7 @@ double ConfigurationFile::get_float(std::string key, std::string section) {
 
 //--------------------------------------------------------------------------------------------------
 
-int ConfigurationFile::get_int(std::string key, std::string section) {
+auto ConfigurationFile::get_int(std::string key, std::string section) -> int {
   std::string value = base::unquote_identifier(get_value(key, section));
 
   if (value.size() == 0)
@@ -819,7 +819,7 @@ int ConfigurationFile::get_int(std::string key, std::string section) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::get_bool(std::string key, std::string section) {
+auto ConfigurationFile::get_bool(std::string key, std::string section) -> bool {
   std::string value = base::tolower(base::unquote_identifier(get_value(key, section)));
 
   if (value == "true" || value == "yes")
@@ -833,20 +833,20 @@ bool ConfigurationFile::get_bool(std::string key, std::string section) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::delete_section(std::string name) {
+auto ConfigurationFile::delete_section(std::string name) -> bool {
   return data->delete_section(name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::delete_key(std::string key, std::string section_name) {
+auto ConfigurationFile::delete_key(std::string key, std::string section_name) -> bool {
   return data->delete_key(key, section_name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ConfigurationFile::create_key(std::string key, std::string value, std::string pre_comment,
-                                   std::string post_comment, std::string section) {
+auto ConfigurationFile::create_key(std::string key, std::string value, std::string pre_comment,
+                                   std::string post_comment, std::string section) -> bool {
   return data->create_key(key, value, pre_comment, post_comment, section);
 }
 
@@ -856,25 +856,25 @@ bool ConfigurationFile::create_key(std::string key, std::string value, std::stri
  * Creates a new section if no section with that name exists already. Returns true if a new section
  * has been created, otherwise false.
  */
-bool ConfigurationFile::create_section(std::string section_name, std::string comment) {
+auto ConfigurationFile::create_section(std::string section_name, std::string comment) -> bool {
   return data->create_section(section_name, comment);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int ConfigurationFile::section_count() {
+auto ConfigurationFile::section_count() -> int {
   return data->section_count();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int ConfigurationFile::key_count() {
+auto ConfigurationFile::key_count() -> int {
   return data->key_count();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int ConfigurationFile::key_count_for_secton(const std::string &section_name) {
+auto ConfigurationFile::key_count_for_secton(const std::string &section_name) -> int {
   return data->key_count_for_section(section_name);
 }
 

@@ -32,10 +32,10 @@
 //================================================================================
 // model_Figure
 
-void model_Figure::init() {
+auto model_Figure::init() -> void {
 }
 
-void model_Figure::set_data(ImplData *data) {
+auto model_Figure::set_data(ImplData *data) -> void {
   _data = data;
   model_Object::set_data(data);
 }
@@ -43,13 +43,13 @@ void model_Figure::set_data(ImplData *data) {
 model_Figure::~model_Figure() {
 }
 
-void model_Figure::color(const grt::StringRef &value) {
+auto model_Figure::color(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_color);
   _color = value;
   owned_member_changed("color", ovalue, value);
 }
 
-void model_Figure::layer(const model_LayerRef &value) {
+auto model_Figure::layer(const model_LayerRef &value) -> void {
   grt::ValueRef ovalue(_layer);
   get_data()->set_layer(value);
   owned_member_changed("layer", ovalue, value);

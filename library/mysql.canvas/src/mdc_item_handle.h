@@ -38,10 +38,10 @@ namespace mdc {
     ItemHandle(InteractionLayer *ilayer, CanvasItem *item, const base::Point &pos);
     virtual ~ItemHandle();
 
-    virtual void repaint(CairoCtx *cr);
+    virtual auto repaint(CairoCtx *cr) -> void;
     virtual auto get_bounds() const -> base::Rect = 0;
 
-    void move(const base::Point &point);
+    auto move(const base::Point &point) -> void;
     auto get_position() const -> base::Point {
       return _pos;
     };
@@ -50,21 +50,21 @@ namespace mdc {
       return _item;
     };
 
-    void set_highlighted(bool flag);
-    void set_draggable(bool flag);
+    auto set_highlighted(bool flag) -> void;
+    auto set_draggable(bool flag) -> void;
     auto is_draggable() -> bool {
       return _draggable;
     }
 
-    void set_tag(int tag) {
+    auto set_tag(int tag) -> void {
       _tag = tag;
     };
     inline auto get_tag() -> int {
       return _tag;
     };
 
-    void set_color(const base::Color &color);
-    void paint_gl(base::Rect &r);
+    auto set_color(const base::Color &color) -> void;
+    auto paint_gl(base::Rect &r) -> void;
 
   protected:
     CanvasItem *_item;

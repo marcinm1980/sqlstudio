@@ -37,20 +37,20 @@ class DbMySQLViewEditor : public PluginEditorBase {
   MySQLViewEditorBE *_be;
   DbMySQLEditorPrivPage *_privs_page;
 
-  virtual bec::BaseEditor *get_be();
+  virtual auto get_be() -> bec::BaseEditor *;
 
 public:
   DbMySQLViewEditor(grt::Module *m, const grt::BaseListRef &args);
 
   virtual ~DbMySQLViewEditor();
-  virtual void do_refresh_form_data();
+  virtual auto do_refresh_form_data() -> void;
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args);
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool;
 
-  bool comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *view);
+  auto comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *view) -> bool;
 
 private:
-  virtual bool can_close() {
+  virtual auto can_close() -> bool {
     return _be->can_close();
   }
 };
@@ -106,7 +106,7 @@ DbMySQLViewEditor::~DbMySQLViewEditor() {
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLViewEditor::switch_edited_object(const grt::BaseListRef &args) {
+auto DbMySQLViewEditor::switch_edited_object(const grt::BaseListRef &args) -> bool {
   MySQLViewEditorBE *old_be = _be;
   Gtk::Box *ddl_win;
   xml()->get_widget("editor_placeholder", ddl_win);
@@ -130,7 +130,7 @@ bool DbMySQLViewEditor::switch_edited_object(const grt::BaseListRef &args) {
 
 //------------------------------------------------------------------------------
 
-bool DbMySQLViewEditor::comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *view) {
+auto DbMySQLViewEditor::comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *view) -> bool {
   if (_be) {
     _be->set_comment(view->get_buffer()->get_text());
   }
@@ -138,12 +138,12 @@ bool DbMySQLViewEditor::comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *vie
 }
 
 //------------------------------------------------------------------------------
-bec::BaseEditor *DbMySQLViewEditor::get_be() {
+auto DbMySQLViewEditor::get_be() -> bec::BaseEditor * {
   return _be;
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLViewEditor::do_refresh_form_data() {
+auto DbMySQLViewEditor::do_refresh_form_data() -> void {
   Gtk::Entry *entry(0);
   xml()->get_widget("view_name", entry);
   if (entry->get_text() != _be->get_name()) {
@@ -166,7 +166,7 @@ void DbMySQLViewEditor::do_refresh_form_data() {
 
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createDbMysqlViewEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createDbMysqlViewEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new DbMySQLViewEditor(m, args));
 }
 };

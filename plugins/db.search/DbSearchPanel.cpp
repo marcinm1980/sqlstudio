@@ -34,7 +34,7 @@
 
 DEFAULT_LOG_DOMAIN("db.search");
 
-grt::ValueRef call_search(std::function<void()> search, std::function<void()> fail_cb) {
+auto call_search(std::function<void()> search, std::function<void()> fail_cb) -> grt::ValueRef {
   try {
     search();
   } catch (...) {
@@ -44,7 +44,7 @@ grt::ValueRef call_search(std::function<void()> search, std::function<void()> fa
   return grt::ValueRef();
 };
 
-bool is_string_type(const std::string& type) {
+auto is_string_type(const std::string& type) -> bool {
   // The string types are CHAR, VARCHAR, BINARY, VARBINARY, BLOB, TEXT, ENUM, and SET
   static const std::set<std::string> chartypes = {"char", "varchar", "binary", "varbinary",
                                                   "blob", "text",    "enum",   "set"};
@@ -52,7 +52,7 @@ bool is_string_type(const std::string& type) {
   return chartypes.find(searchtype) != chartypes.end();
 };
 
-bool is_numeric_type(const std::string& type) {
+auto is_numeric_type(const std::string& type) -> bool {
   /*
   MySQL supports all standard SQL numeric data types. These types include the exact numeric data types
   (INTEGER, SMALLINT, DECIMAL, and NUMERIC), as well as the approximate numeric data types
@@ -68,7 +68,7 @@ bool is_numeric_type(const std::string& type) {
   return chartypes.find(searchtype) != chartypes.end();
 };
 
-bool is_datetime_type(const std::string& type) {
+auto is_datetime_type(const std::string& type) -> bool {
   // The date and time types for representing temporal values are DATE, TIME, DATETIME, TIMESTAMP, and YEAR.
   static const std::set<std::string> chartypes = {"date", "time", "datetime", "timestamp", "year"};
   std::string searchtype = type.substr(0, type.find("("));
@@ -113,13 +113,13 @@ protected:
   typedef std::function<void(const std::string&, const std::string&, const std::list<std::string>&,
                              const std::list<std::string>&, const std::string&, const bool match_PK)>
     select_func_t;
-  void run(select_func_t select_func);
-  void select_data(const std::string& schema_name, const std::string& table_name,
+  auto run(select_func_t select_func) -> void;
+  auto select_data(const std::string& schema_name, const std::string& table_name,
                    const std::list<std::string>& pk_columns, const std::list<std::string>& select_columns,
-                   const std::string& limit_clause, const bool match_PK);
-  void count_data(const std::string& schema_name, const std::string& table_name,
+                   const std::string& limit_clause, const bool match_PK) -> void;
+  auto count_data(const std::string& schema_name, const std::string& table_name,
                   const std::list<std::string>& pk_columns, const std::list<std::string>& select_columns,
-                  const std::string& limit_clause, const bool match_PK);
+                  const std::string& limit_clause, const bool match_PK) -> void;
 
 public:
   /*
@@ -156,65 +156,65 @@ public:
     stop();
   };
 
-  std::string get_keyword() {
+  auto get_keyword() -> std::string {
     return _search_keyword;
   }
 
-  void prepare() {
+  auto prepare() -> void {
     _starting = true;
   }
-  bool is_starting() const {
+  auto is_starting() const -> bool {
     return _starting;
   }
-  void toggle_pause() {
+  auto toggle_pause() -> void {
     _paused = !_paused;
     if (_paused)
       _pause_mutex.lock();
     else
       _pause_mutex.unlock();
   }
-  void wait_if_paused() {
+  auto wait_if_paused() -> void {
     if (is_paused()) {
       base::MutexLock lock(_pause_mutex); // Wait for unlock
     };
   };
-  bool is_paused() const {
+  auto is_paused() const -> bool {
     return _paused;
   }
-  float get_progress() const {
+  auto get_progress() const -> float {
     return _progress;
   }
-  std::string get_state() const {
+  auto get_state() const -> std::string {
     return _state;
   }
-  const std::vector<SearchResultEntry>& search_results() const {
+  auto search_results() const -> const std::vector<SearchResultEntry>& {
     return _search_result;
   }
-  base::Mutex& get_search_result_mutex() {
+  auto get_search_result_mutex() -> base::Mutex& {
     return _search_result_mutex;
   };
-  int searched_table_count() {
+  auto searched_table_count() -> int {
     return _searched_tables;
   }
-  int matched_rows() {
+  auto matched_rows() -> int {
     return _matched_rows;
   }
-  bool is_working() const {
+  auto is_working() const -> bool {
     return _working;
   }
-  void stop();
-  std::string build_where(const std::string& col, const std::string& data) const;
-  std::string build_select_query(const std::string& schema, const std::string& table,
+  auto stop() -> void;
+  auto build_where(const std::string& col, const std::string& data) const -> std::string;
+  auto build_select_query(const std::string& schema, const std::string& table,
                                  const std::list<std::string>& columns, const std::string& limit,
-                                 const bool match_PK) const;
-  std::string build_count_query(const std::string& schema, const std::string& table,
+                                 const bool match_PK) const -> std::string;
+  auto build_count_query(const std::string& schema, const std::string& table,
                                 const std::list<std::string>& columns, const std::string& limit,
-                                const bool match_PK) const;
-  void search();
-  void count();
+                                const bool match_PK) const -> std::string;
+  auto search() -> void;
+  auto count() -> void;
 };
 
-void DBSearch::stop() {
+auto DBSearch::stop() -> void {
   if (is_paused())
     toggle_pause();
   if (!_working)
@@ -225,7 +225,7 @@ void DBSearch::stop() {
   _state = "Cancelled";
 }
 
-std::string DBSearch::build_where(const std::string& col, const std::string& data) const {
+auto DBSearch::build_where(const std::string& col, const std::string& data) const -> std::string {
   static const std::vector<std::string> select_modes = {"LIKE", "=", "LIKE", "REGEXP"};
   static const std::vector<std::string> inverted_select_modes = {"LIKE", "<>", "NOT LIKE", "NOT REGEXP"};
 
@@ -248,9 +248,9 @@ std::string DBSearch::build_where(const std::string& col, const std::string& dat
   return where_condition;
 }
 
-std::string DBSearch::build_count_query(const std::string& schema, const std::string& table,
+auto DBSearch::build_count_query(const std::string& schema, const std::string& table,
                                         const std::list<std::string>& columns, const std::string& limit,
-                                        const bool match_PK) const {
+                                        const bool match_PK) const -> std::string {
   if (columns.empty())
     return std::string();
   std::string result("SELECT COUNT(*) ");
@@ -267,9 +267,9 @@ std::string DBSearch::build_count_query(const std::string& schema, const std::st
   return result;
 }
 
-std::string DBSearch::build_select_query(const std::string& schema, const std::string& table,
+auto DBSearch::build_select_query(const std::string& schema, const std::string& table,
                                          const std::list<std::string>& columns, const std::string& limit,
-                                         const bool match_PK) const {
+                                         const bool match_PK) const -> std::string {
   if (columns.empty())
     return std::string();
 
@@ -304,9 +304,9 @@ std::string DBSearch::build_select_query(const std::string& schema, const std::s
   return result;
 }
 
-void DBSearch::count_data(const std::string& schema_name, const std::string& table_name,
+auto DBSearch::count_data(const std::string& schema_name, const std::string& table_name,
                           const std::list<std::string>& pk_columns, const std::list<std::string>& select_columns,
-                          const std::string& limit_clause, const bool match_PK) {
+                          const std::string& limit_clause, const bool match_PK) -> void {
   std::string query = build_count_query(schema_name, table_name, select_columns, limit_clause, match_PK);
   if (query.empty())
     return;
@@ -331,9 +331,9 @@ void DBSearch::count_data(const std::string& schema_name, const std::string& tab
   _search_result.push_back(result);
 };
 
-void DBSearch::select_data(const std::string& schema_name, const std::string& table_name,
+auto DBSearch::select_data(const std::string& schema_name, const std::string& table_name,
                            const std::list<std::string>& pk_columns, const std::list<std::string>& select_columns,
-                           const std::string& limit_clause, const bool match_PK) {
+                           const std::string& limit_clause, const bool match_PK) -> void {
   std::string query = build_select_query(schema_name, table_name, select_columns, limit_clause, match_PK);
   if (query.empty())
     return;
@@ -362,17 +362,17 @@ void DBSearch::select_data(const std::string& schema_name, const std::string& ta
   }
 };
 
-void DBSearch::search() {
+auto DBSearch::search() -> void {
   run(std::bind(&DBSearch::select_data, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3,
                 std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
 };
 
-void DBSearch::count() {
+auto DBSearch::count() -> void {
   run(std::bind(&DBSearch::count_data, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3,
                 std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
 };
 
-void DBSearch::run(select_func_t select_func) {
+auto DBSearch::run(select_func_t select_func) -> void {
   struct working_state_guard {
     volatile bool& _state;
     working_state_guard(volatile bool& state) : _state(state) {
@@ -607,7 +607,7 @@ DBSearchPanel::~DBSearchPanel() {
     bec::GRTManager::get()->cancel_timer(_update_timer);
 }
 
-void DBSearchPanel::activate_menu_item(const std::string& action) {
+auto DBSearchPanel::activate_menu_item(const std::string& action) -> void {
   std::list<mforms::TreeNodeRef> selection(_results_tree.get_selection());
   if (selection.empty())
     return;
@@ -703,7 +703,7 @@ void DBSearchPanel::activate_menu_item(const std::string& action) {
   }
 }
 
-void DBSearchPanel::prepare_menu() {
+auto DBSearchPanel::prepare_menu() -> void {
   _context_menu.remove_all();
 
   bool searcher_is_working = !_search_finished || (_searcher && _searcher->is_working());
@@ -771,7 +771,7 @@ void DBSearchPanel::prepare_menu() {
   }
 }
 
-void DBSearchPanel::load_model(mforms::TreeNodeRef tnode) {
+auto DBSearchPanel::load_model(mforms::TreeNodeRef tnode) -> void {
   _key_columns.clear();
   for (size_t c = _searcher->search_results().size(), i = tnode->count(); i < c; i++) {
     const DBSearch::column_data_t& rows = _searcher->search_results()[i].data;
@@ -804,11 +804,11 @@ void DBSearchPanel::load_model(mforms::TreeNodeRef tnode) {
   }
 };
 
-void DBSearchPanel::search(sql::ConnectionWrapper connection, const std::string& search_keyword,
+auto DBSearchPanel::search(sql::ConnectionWrapper connection, const std::string& search_keyword,
                            const grt::StringListRef& filter_list, const SearchMode search_mode, const int limit_total,
                            const int limt_per_table, const bool invert, const int search_data_type,
                            const std::string cast_to, std::function<void(grt::ValueRef)> finished_callback,
-                           std::function<void()> failed_callback) {
+                           std::function<void()> failed_callback) -> void {
   if (_searcher)
     return;
   _progress_label.show(true);
@@ -833,7 +833,7 @@ void DBSearchPanel::search(sql::ConnectionWrapper connection, const std::string&
   _update_timer = bec::GRTManager::get()->run_every(std::bind(&DBSearchPanel::update, this), 1);
 }
 
-bool DBSearchPanel::update() {
+auto DBSearchPanel::update() -> bool {
   bool is_working = false;
   if (_searcher) {
     base::MutexLock search_lock(_searcher->get_search_result_mutex());
@@ -859,7 +859,7 @@ bool DBSearchPanel::update() {
   return is_working;
 }
 
-void DBSearchPanel::toggle_pause() {
+auto DBSearchPanel::toggle_pause() -> void {
   if (_searcher) {
     _searcher->toggle_pause();
     _pause_button.set_text(_searcher->is_paused() ? "Resume" : "Pause");
@@ -867,7 +867,7 @@ void DBSearchPanel::toggle_pause() {
   }
 }
 
-bool DBSearchPanel::stop_search_if_working() {
+auto DBSearchPanel::stop_search_if_working() -> bool {
   if (_searcher && _searcher->is_working()) {
     _searcher->stop();
     return true;

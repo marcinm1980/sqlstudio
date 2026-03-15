@@ -37,16 +37,16 @@ namespace mtemplate {
     TemplateOutput();
     virtual ~TemplateOutput();
 
-    virtual void out(const base::utf8string &str) = 0;
+    virtual auto out(const base::utf8string &str) -> void = 0;
   };
 
   class MTEMPLATELIBRARY_PUBLIC_FUNC TemplateOutputString : public TemplateOutput {
     base::utf8string _buffer;
 
   public:
-    virtual void out(const base::utf8string &str);
+    virtual auto out(const base::utf8string &str) -> void;
 
-    const base::utf8string &get();
+    auto get() -> const base::utf8string &;
   };
 
   class MTEMPLATELIBRARY_PUBLIC_FUNC TemplateOutputFile : public TemplateOutput {
@@ -54,7 +54,7 @@ namespace mtemplate {
 
   public:
     TemplateOutputFile(const base::utf8string &filename);
-    virtual void out(const base::utf8string &str);
+    virtual auto out(const base::utf8string &str) -> void;
   };
 
 } //  namespace mtemplate

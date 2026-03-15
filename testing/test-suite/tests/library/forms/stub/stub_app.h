@@ -34,31 +34,31 @@ namespace mforms {
   namespace stub {
 
     class AppWrapper : public ObjectWrapper {
-      static void set_status_text(App *app, const std::string &title) {
+      static auto set_status_text(App *app, const std::string &title) -> void {
       }
 
-      static std::string get_resource_path(App *app, const std::string &file);
+      static auto get_resource_path(App *app, const std::string &file) -> std::string;
 
-      static base::Rect get_application_bounds(App *app) {
+      static auto get_application_bounds(App *app) -> base::Rect {
         return base::Rect();
       }
 
-      static int enter_event_loop(App *app, float max_wait_time) {
+      static auto enter_event_loop(App *app, float max_wait_time) -> int {
         return 0;
       }
-      static void exit_event_loop(App *app, int result) {
+      static auto exit_event_loop(App *app, int result) -> void {
       }
 
-      static std::string getExecutablePath(App *app, const std::string &file) {
+      static auto getExecutablePath(App *app, const std::string &file) -> std::string {
         return "";
       }
 
-      static float backingScaleFactor(App *app) {
+      static auto backingScaleFactor(App *app) -> float {
         return 0.0;
       }
 
     public:
-      static void init(wb::WBOptions *theOptions);
+      static auto init(wb::WBOptions *theOptions) -> void;
     };
   };
 };

@@ -42,10 +42,10 @@ namespace mdc {
     virtual auto allows_connection(Connector *conn) const -> bool;
     virtual auto allows_disconnection(Connector *conn) const -> bool;
 
-    void remove_all_connectors();
+    auto remove_all_connectors() -> void;
 
     virtual auto add_connector(Connector *conn) -> bool;
-    virtual void remove_connector(Connector *conn);
+    virtual auto remove_connector(Connector *conn) -> void;
 
     virtual auto get_position_for_connector(Connector *conn, const base::Point &srcpos) const -> base::Point;
     virtual auto get_position() const -> base::Point;
@@ -54,8 +54,8 @@ namespace mdc {
       return angle;
     }
 
-    void set_connection_validator(const std::function<bool(Connector *)> &slot);
-    void set_disconnection_validator(const std::function<bool(Connector *)> &slot);
+    auto set_connection_validator(const std::function<bool(Connector *)> &slot) -> void;
+    auto set_disconnection_validator(const std::function<bool(Connector *)> &slot) -> void;
 
     auto get_owner() const -> CanvasItem * {
       return _owner;
@@ -69,10 +69,10 @@ namespace mdc {
     std::function<bool(Connector *)> _connection_slot;
     std::function<bool(Connector *)> _disconnection_slot;
 
-    virtual void notify_connected();
+    virtual auto notify_connected() -> void;
 
-    void owner_bounds_changed(const base::Rect &obounds);
-    virtual void owner_parent_bounds_changed(CanvasItem *item, const base::Rect &obounds);
+    auto owner_bounds_changed(const base::Rect &obounds) -> void;
+    virtual auto owner_parent_bounds_changed(CanvasItem *item, const base::Rect &obounds) -> void;
   };
 
 } // end of mdc namespace

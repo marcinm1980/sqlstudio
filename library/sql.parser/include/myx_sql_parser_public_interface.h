@@ -92,36 +92,36 @@ typedef enum myx_stmt_parse_mode {
  * Functions
  */
 
-MYX_PUBLIC_FUNC int myx_process_sql_statements(const char *sql,
+auto myx_process_sql_statements(const char *sql,
                                                CHARSET_INFO *cs,
                                                int (* process_sql_statement_callback)(const MyxStatementParser *splitter, const char *sql, void *user_data), 
                                                void *user_data,
-                                               int mode);
-MYX_PUBLIC_FUNC int myx_process_sql_statements_from_file(const char *filename,
+                                               int mode) -> MYX_PUBLIC_FUNC int;
+auto myx_process_sql_statements_from_file(const char *filename,
                                                CHARSET_INFO *cs,
                                                int (* process_sql_statement_callback)(const MyxStatementParser *splitter, const char *sql, void *user_data), 
                                                void *user_data, 
-                                               int mode);
+                                               int mode) -> MYX_PUBLIC_FUNC int;
 
-MYX_PUBLIC_FUNC void myx_set_parser_source(const char *sql);
-MYX_PUBLIC_FUNC void myx_free_parser_source(void);
-MYX_PUBLIC_FUNC void myx_parse(void);
-MYX_PUBLIC_FUNC const std::string & myx_get_err_msg(void);
-MYX_PUBLIC_FUNC const void * myx_get_parser_tree(void);
+auto myx_set_parser_source(const char *sql) -> MYX_PUBLIC_FUNC void;
+auto myx_free_parser_source(void) -> MYX_PUBLIC_FUNC void;
+auto myx_parse(void) -> MYX_PUBLIC_FUNC void;
+auto myx_get_err_msg(void) -> MYX_PUBLIC_FUNC const std::string &;
+auto myx_get_parser_tree(void) -> MYX_PUBLIC_FUNC const void *;
 
-MYX_PUBLIC_FUNC const void * tree_item_get_subitem_by_name(const void * tree,
+auto tree_item_get_subitem_by_name(const void * tree,
                                                      const char * name,
-                                                     int pos);
-MYX_PUBLIC_FUNC const char * tree_item_get_name(const void * tree);
-MYX_PUBLIC_FUNC const char * tree_item_get_value(const void * tree);
+                                                     int pos) -> MYX_PUBLIC_FUNC const void *;
+auto tree_item_get_name(const void * tree) -> MYX_PUBLIC_FUNC const char *;
+auto tree_item_get_value(const void * tree) -> MYX_PUBLIC_FUNC const char *;
 
-MYX_PUBLIC_FUNC void tree_item_dump_xml_to_file(const void * tree_item,
-                                                const char * filename);
+auto tree_item_dump_xml_to_file(const void * tree_item,
+                                                const char * filename) -> MYX_PUBLIC_FUNC void;
 
 #ifdef __cplusplus
 }
 
-MYX_PUBLIC_FUNC void myx_set_parser_input(std::istream *sqlstream);
+auto myx_set_parser_input(std::istream *sqlstream) -> MYX_PUBLIC_FUNC void;
 
 #endif /* __cplusplus */
 

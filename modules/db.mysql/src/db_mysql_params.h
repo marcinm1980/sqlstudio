@@ -45,7 +45,7 @@ namespace dbmysql {
     return true;
   }
 
-  inline std::string full_name(db_DatabaseObjectRef obj, db_SchemaRef schema = db_SchemaRef()) {
+  inline auto full_name(db_DatabaseObjectRef obj, db_SchemaRef schema = db_SchemaRef()) -> std::string {
     std::string res = '`' + *obj->name() + '`';
     if (get_parent(schema, obj))
       return '`' + *schema->name() + "`." + res;
@@ -53,5 +53,5 @@ namespace dbmysql {
     return res;
   }
 
-  grt::ListRef<db_mysql_StorageEngine> MYSQLMODULEDBMYSQL_PUBLIC_FUNC get_known_engines();
+  auto get_known_engines() -> grt::ListRef<db_mysql_StorageEngine> MYSQLMODULEDBMYSQL_PUBLIC_FUNC;
 }

@@ -33,7 +33,7 @@ using namespace std::string_literals;
 
 namespace dataTypes {
 
-  Value toJson(const ConnectionType &type) {
+  auto toJson(const ConnectionType &type) -> Value {
     switch (type) {
       case ConnectionClassic:
         return Value("ConnectionClassic");
@@ -45,7 +45,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  void fromJson(const Value &value, ConnectionType &type) {
+  auto fromJson(const Value &value, ConnectionType &type) -> void {
     if (value.GetString() == "ConnectionClassic"s)
       type = ConnectionClassic;
     else if (value.GetString() == "ConnectionNode"s)
@@ -56,7 +56,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  Value toJson(const EditorLanguage &lang) {
+  auto toJson(const EditorLanguage &lang) -> Value {
     switch (lang) {
       case EditorSql:
         return Value("EditorSql");
@@ -70,7 +70,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  void fromJson(const Value &value, EditorLanguage &lang) {
+  auto fromJson(const Value &value, EditorLanguage &lang) -> void {
     if (value.GetString() == "EditorSql"s)
       lang = EditorSql;
     else if (value.GetString() == "EditorJavaScript"s)
@@ -87,7 +87,7 @@ namespace dataTypes {
     fromJson(value);
   }
 
-  std::string BaseConnection::uri(bool withPassword) const {
+  auto BaseConnection::uri(bool withPassword) const -> std::string {
     std::vector<std::string> v;
 
     v.push_back(hostName);
@@ -106,13 +106,13 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  std::string BaseConnection::hostIdentifier() const {
+  auto BaseConnection::hostIdentifier() const -> std::string {
     return hostName + ":" + std::to_string(port);
   }
 
   //--------------------------------------------------------------------------------------------------
 
-  Value BaseConnection::toJson() const {
+  auto BaseConnection::toJson() const -> Value {
     Document document;
     Value o(kObjectType);
     o.AddMember("className", className, document.GetAllocator());
@@ -124,7 +124,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  void BaseConnection::fromJson(const Value &value, const std::string &cName) {
+  auto BaseConnection::fromJson(const Value &value, const std::string &cName) -> void {
     if (value["className"] == (cName.empty() ? className : cName))
       throw std::bad_cast();
     hostName = value["hostName"].GetString();
@@ -140,7 +140,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  Value SSHConnection::toJson() const {
+  auto SSHConnection::toJson() const -> Value {
     Value o = BaseConnection::toJson();
     Document document;
     o.AddMember("className", className, document.GetAllocator());
@@ -150,7 +150,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  void SSHConnection::fromJson(const Value &value, const std::string &cName) {
+  auto SSHConnection::fromJson(const Value &value, const std::string &cName) -> void {
     BaseConnection::fromJson(value, className);
     keyFile = value["keyFile"].GetString();
   }
@@ -176,7 +176,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  Value NodeConnection::toJson() const {
+  auto NodeConnection::toJson() const -> Value {
     Value o = BaseConnection::toJson();
     Document document;
     o.AddMember("className", className, document.GetAllocator());
@@ -190,7 +190,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  void NodeConnection::fromJson(const Value &value, const std::string &cName) {
+  auto NodeConnection::fromJson(const Value &value, const std::string &cName) -> void {
     BaseConnection::fromJson(value, className);
     uuid = value["uuid"].GetString();
     defaultSchema = value["defaultSchema"].GetString();
@@ -207,7 +207,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  Value XProject::toJson() const {
+  auto XProject::toJson() const -> Value {
     Document document;
     Value val;
     val.AddMember("className", className, document.GetAllocator());
@@ -218,7 +218,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  void XProject::fromJson(const Value &value) {
+  auto XProject::fromJson(const Value &value) -> void {
     if (value["className"] == className)
       throw std::bad_cast();
     name = value["name"].GetString();
@@ -233,7 +233,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  Value ProjectHolder::toJson() const {
+  auto ProjectHolder::toJson() const -> Value {
     Value o;
     Document document;
     Document::AllocatorType &allocator = document.GetAllocator();
@@ -251,7 +251,7 @@ namespace dataTypes {
 
   //--------------------------------------------------------------------------------------------------
 
-  void ProjectHolder::fromJson(const Value &value) {
+  auto ProjectHolder::fromJson(const Value &value) -> void {
     Document doscument;
     if (value["className"].GetString() == className)
       throw std::bad_cast();

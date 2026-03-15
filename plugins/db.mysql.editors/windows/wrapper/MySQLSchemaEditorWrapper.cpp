@@ -47,13 +47,13 @@ MySQLSchemaEditorWrapper::~MySQLSchemaEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-MySQLSchemaEditorBE *MySQLSchemaEditorWrapper::get_unmanaged_object() {
+auto MySQLSchemaEditorWrapper::get_unmanaged_object() -> MySQLSchemaEditorBE * {
   return static_cast<::MySQLSchemaEditorBE *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLSchemaEditorWrapper::is_new_object() {
+auto MySQLSchemaEditorWrapper::is_new_object() -> bool {
   return get_unmanaged_object()->get_schema()->oldName() == "";
 }
 
@@ -65,13 +65,13 @@ void MySQLSchemaEditorWrapper::refactor_catalog_upon_schema_rename(String ^ old_
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLSchemaEditorWrapper::refactor_possible() {
+auto MySQLSchemaEditorWrapper::refactor_possible() -> bool {
   return get_unmanaged_object()->refactor_possible();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLSchemaEditorWrapper::refactor_catalog() {
+auto MySQLSchemaEditorWrapper::refactor_catalog() -> void {
   get_unmanaged_object()->refactor_catalog();
 }
 

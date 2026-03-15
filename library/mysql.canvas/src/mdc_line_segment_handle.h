@@ -35,10 +35,10 @@ namespace mdc {
     LineSegmentHandle(InteractionLayer *ilayer, CanvasItem *item, const base::Point &pos, bool vertical);
     virtual ~LineSegmentHandle();
 
-    virtual base::Rect get_bounds() const;
+    virtual auto get_bounds() const -> base::Rect;
 
-    void set_vertical(bool flag);
-    bool is_vertical() {
+    auto set_vertical(bool flag) -> void;
+    auto is_vertical() -> bool {
       return _vertical;
     }
 

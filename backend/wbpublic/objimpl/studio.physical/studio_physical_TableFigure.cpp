@@ -32,13 +32,13 @@
 //================================================================================
 // studio_physical_TableFigure
 
-void studio_physical_TableFigure::init() {
+auto studio_physical_TableFigure::init() -> void {
   if (!_data)
     _data = new studio_physical_TableFigure::ImplData(this);
   model_Figure::set_data(_data);
 }
 
-void studio_physical_TableFigure::set_data(ImplData *data) {
+auto studio_physical_TableFigure::set_data(ImplData *data) -> void {
   throw std::logic_error("unexpected");
 }
 
@@ -46,7 +46,7 @@ studio_physical_TableFigure::~studio_physical_TableFigure() {
   delete _data;
 }
 
-void studio_physical_TableFigure::table(const db_TableRef &value) {
+auto studio_physical_TableFigure::table(const db_TableRef &value) -> void {
   if (_table == value)
     return;
 

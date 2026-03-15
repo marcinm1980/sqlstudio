@@ -32,7 +32,7 @@ class TextParagraph {
 public:
   TextParagraph(const std::string &text);
 
-  void stroke();
+  auto stroke() -> void;
 };
 
 #endif

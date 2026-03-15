@@ -58,7 +58,7 @@ GRT_MODULE_ENTRY_POINT(MySQLParserServicesImpl);
 
 //----------------------------------------------------------------------------------------------------------------------
 
-long shortVersion(const GrtVersionRef &version) {
+auto shortVersion(const GrtVersionRef &version) -> long {
   ssize_t short_version;
   if (version.is_valid()) {
     short_version = version->majorNumber() * 10000;
@@ -170,7 +170,7 @@ struct MySQLParserContextImpl : public MySQLParserContext {
     return mode;
   }
 
-  void addError(std::string const& message, size_t tokenType, size_t startIndex, size_t line, size_t column, size_t length) {
+  auto addError(std::string const& message, size_t tokenType, size_t startIndex, size_t line, size_t column, size_t length) -> void {
     if (length == 0)
       length = 1;
     errors.push_back({ message, tokenType, startIndex, line, column, length });
@@ -199,19 +199,19 @@ struct MySQLParserContextImpl : public MySQLParserContext {
     return lexer.isIdentifier(type);
   }
 
-  ParseTree *parse(const std::string &text, MySQLParseUnit unit) {
+  auto parse(const std::string &text, MySQLParseUnit unit) -> ParseTree * {
     input.load(text);
     return startParsing(false, unit);
   }
 
-  bool errorCheck(const std::string &text, MySQLParseUnit unit) {
+  auto errorCheck(const std::string &text, MySQLParseUnit unit) -> bool {
     parser.removeParseListeners();
     input.load(text);
     startParsing(true, unit);
     return errors.empty();
   }
 
-  MySQLQueryType determineQueryType(const std::string &text) {
+  auto determineQueryType(const std::string &text) -> MySQLQueryType {
     // Important: this call invalidates any previous parse result (because we have to reset lexer and parser to avoid
     //            dangling token references).
     parser.reset();
@@ -238,7 +238,7 @@ struct MySQLParserContextImpl : public MySQLParserContext {
   }
 
 private:
-  ParseTree *parseUnit(MySQLParseUnit unit) {
+  auto parseUnit(MySQLParseUnit unit) -> ParseTree * {
     switch (unit) {
       case MySQLParseUnit::PuCreateRoutine:
         return parser.createRoutine();
@@ -251,7 +251,7 @@ private:
     }
   }
 
-  ParseTree *startParsing(bool fast, MySQLParseUnit unit) {
+  auto startParsing(bool fast, MySQLParseUnit unit) -> ParseTree * {
     errors.clear();
     lexer.reset();
     lexer.setInputStream(&input); // Not just reset(), which only rewinds the current position.
@@ -290,7 +290,7 @@ private:
   /**
    * Debugging helper that prints all tokens recognized by the lexer with the current input.
    */
-  void dumpTokens() {
+  auto dumpTokens() -> void {
     tokens.fill();
     for (auto token : tokens.getTokens())
       std::cout << token->toString() << std::endl;
@@ -299,8 +299,8 @@ private:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LexerErrorListener::syntaxError(Recognizer *recognizer, Token *, size_t line,
-                                     size_t charPositionInLine, const std::string &, std::exception_ptr ep) {
+auto LexerErrorListener::syntaxError(Recognizer *recognizer, Token *, size_t line,
+                                     size_t charPositionInLine, const std::string &, std::exception_ptr ep) -> void {
   // The passed in string is the ANTLR generated error message which we want to improve here.
   // The token reference is always null in a lexer error.
   std::string message;
@@ -345,7 +345,7 @@ void LexerErrorListener::syntaxError(Recognizer *recognizer, Token *, size_t lin
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string intervalToString(misc::IntervalSet set, size_t maxCount, dfa::Vocabulary vocabulary) {
+auto intervalToString(misc::IntervalSet set, size_t maxCount, dfa::Vocabulary vocabulary) -> std::string {
   std::vector<ssize_t> symbols = set.toList();
 
   if (symbols.empty()) {
@@ -392,8 +392,8 @@ std::string intervalToString(misc::IntervalSet set, size_t maxCount, dfa::Vocabu
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ParserErrorListener::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line,
-                                      size_t charPositionInLine, std::string const& msg, std::exception_ptr ep)  {
+auto ParserErrorListener::syntaxError(Recognizer *recognizer, Token *offendingSymbol, size_t line,
+                                      size_t charPositionInLine, std::string const& msg, std::exception_ptr ep) -> void {
 
   std::string message;
 
@@ -622,9 +622,9 @@ void ParserErrorListener::syntaxError(Recognizer *recognizer, Token *offendingSy
 
 //------------------ MySQLParserServicesImpl ---------------------------------------------------------------------------
 
-MySQLParserContext::Ref MySQLParserServicesImpl::createParserContext(GrtCharacterSetsRef charsets,
+auto MySQLParserServicesImpl::createParserContext(GrtCharacterSetsRef charsets,
                                                                      GrtVersionRef version, const std::string &sqlMode,
-                                                                     bool caseSensitive) {
+                                                                     bool caseSensitive) -> MySQLParserContext::Ref {
   MySQLParserContext::Ref context = std::make_shared<MySQLParserContextImpl>(charsets, version, caseSensitive != 0);
   context->updateSqlMode(sqlMode);
   return context;
@@ -632,10 +632,10 @@ MySQLParserContext::Ref MySQLParserServicesImpl::createParserContext(GrtCharacte
 
 //----------------------------------------------------------------------------------------------------------------------
 
-parser_ContextReferenceRef MySQLParserServicesImpl::createNewParserContext(GrtCharacterSetsRef charsets,
+auto MySQLParserServicesImpl::createNewParserContext(GrtCharacterSetsRef charsets,
                                                                            GrtVersionRef version,
                                                                            const std::string &sqlMode,
-                                                                           int caseSensitive) {
+                                                                           int caseSensitive) -> parser_ContextReferenceRef {
   MySQLParserContext::Ref context = std::make_shared<MySQLParserContextImpl>(charsets, version, caseSensitive != 0);
   context->updateSqlMode(sqlMode);
   return parser_context_to_grt(context);
@@ -643,7 +643,7 @@ parser_ContextReferenceRef MySQLParserServicesImpl::createNewParserContext(GrtCh
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::tokenFromString(MySQLParserContext::Ref context, const std::string &token) {
+auto MySQLParserServicesImpl::tokenFromString(MySQLParserContext::Ref context, const std::string &token) -> size_t {
   MySQLParserContextImpl *impl = dynamic_cast<MySQLParserContextImpl *>(context.get());
 
   return impl->lexer.getTokenType(token);
@@ -651,7 +651,7 @@ size_t MySQLParserServicesImpl::tokenFromString(MySQLParserContext::Ref context,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-MySQLQueryType MySQLParserServicesImpl::determineQueryType(MySQLParserContext::Ref context, const std::string &text) {
+auto MySQLParserServicesImpl::determineQueryType(MySQLParserContext::Ref context, const std::string &text) -> MySQLQueryType {
   MySQLParserContextImpl *impl = dynamic_cast<MySQLParserContextImpl *>(context.get());
 
   return impl->determineQueryType(text);
@@ -663,7 +663,7 @@ MySQLQueryType MySQLParserServicesImpl::determineQueryType(MySQLParserContext::R
  *	Resolves all column/table references we collected before to existing objects.
  *	If any of the references does not point to a valid object, we create a stub object for it.
  */
-void resolveReferences(db_mysql_CatalogRef catalog, DbObjectsRefsCache &refCache, bool caseSensitive) {
+auto resolveReferences(db_mysql_CatalogRef catalog, DbObjectsRefsCache &refCache, bool caseSensitive) -> void {
   grt::ListRef<db_mysql_Schema> schemata = catalog->schemata();
 
   for (DbObjectsRefsCache::iterator refIt = refCache.begin(); refIt != refCache.end(); ++refIt) {
@@ -848,8 +848,8 @@ void resolveReferences(db_mysql_CatalogRef catalog, DbObjectsRefsCache &refCache
  * the sql contains a LIKE clause (e.g. "create table a like b") which requires to duplicate the
  * referenced table and hence replace the inner value of the passed in table reference.
  */
-size_t MySQLParserServicesImpl::parseTable(MySQLParserContext::Ref context, db_mysql_TableRef table,
-                                           const std::string &sql) {
+auto MySQLParserServicesImpl::parseTable(MySQLParserContext::Ref context, db_mysql_TableRef table,
+                                           const std::string &sql) -> size_t {
   logDebug2("Parse table\n");
 
   assert(table.is_valid());
@@ -885,8 +885,8 @@ size_t MySQLParserServicesImpl::parseTable(MySQLParserContext::Ref context, db_m
 
 //--------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseTriggerSql(parser_ContextReferenceRef context_ref, db_mysql_TriggerRef trigger,
-                                                const std::string &sql) {
+auto MySQLParserServicesImpl::parseTriggerSql(parser_ContextReferenceRef context_ref, db_mysql_TriggerRef trigger,
+                                                const std::string &sql) -> size_t {
   MySQLParserContext::Ref context = parser_context_from_grt(context_ref);
   return parseTrigger(context, trigger, sql);
 }
@@ -898,8 +898,8 @@ size_t MySQLParserServicesImpl::parseTriggerSql(parser_ContextReferenceRef conte
 * If there's an error nothing is changed.
 * Returns the number of errors.
 */
-size_t MySQLParserServicesImpl::parseTrigger(MySQLParserContext::Ref context, db_mysql_TriggerRef trigger,
-                                             const std::string &sql) {
+auto MySQLParserServicesImpl::parseTrigger(MySQLParserContext::Ref context, db_mysql_TriggerRef trigger,
+                                             const std::string &sql) -> size_t {
   logDebug2("Parse trigger\n");
 
   trigger->sqlDefinition(base::trim(sql));
@@ -961,8 +961,8 @@ size_t MySQLParserServicesImpl::parseTrigger(MySQLParserContext::Ref context, db
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseViewSql(parser_ContextReferenceRef context_ref, db_mysql_ViewRef view,
-                                             const std::string &sql) {
+auto MySQLParserServicesImpl::parseViewSql(parser_ContextReferenceRef context_ref, db_mysql_ViewRef view,
+                                             const std::string &sql) -> size_t {
   MySQLParserContext::Ref context = parser_context_from_grt(context_ref);
   return parseView(context, view, sql);
 }
@@ -974,8 +974,8 @@ size_t MySQLParserServicesImpl::parseViewSql(parser_ContextReferenceRef context_
  * If there's an error nothing changes. If the sql contains a schema reference other than that the
  * the view is in the view's name will be changed (adds _WRONG_SCHEMA) to indicate that.
  */
-size_t MySQLParserServicesImpl::parseView(MySQLParserContext::Ref context, db_mysql_ViewRef view,
-                                          const std::string &sql) {
+auto MySQLParserServicesImpl::parseView(MySQLParserContext::Ref context, db_mysql_ViewRef view,
+                                          const std::string &sql) -> size_t {
   logDebug2("Parse view\n");
 
   view->sqlDefinition(base::trim(sql));
@@ -1013,7 +1013,7 @@ size_t MySQLParserServicesImpl::parseView(MySQLParserContext::Ref context, db_my
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::pair<std::string, std::string> getRoutineNameAndType(ParseTree *context) {
+auto getRoutineNameAndType(ParseTree *context) -> std::pair<std::string, std::string> {
   auto routineTree = (MySQLParser::CreateRoutineContext *)context;
   std::pair<std::string, std::string> result;
   if (routineTree->createProcedure() != nullptr) {
@@ -1031,8 +1031,8 @@ std::pair<std::string, std::string> getRoutineNameAndType(ParseTree *context) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseRoutineSql(parser_ContextReferenceRef context_ref, db_mysql_RoutineRef routine,
-                                                const std::string &sql) {
+auto MySQLParserServicesImpl::parseRoutineSql(parser_ContextReferenceRef context_ref, db_mysql_RoutineRef routine,
+                                                const std::string &sql) -> size_t {
   MySQLParserContext::Ref context = parser_context_from_grt(context_ref);
   return parseRoutine(context, routine, sql);
 }
@@ -1044,8 +1044,8 @@ size_t MySQLParserServicesImpl::parseRoutineSql(parser_ContextReferenceRef conte
  * If there's an error nothing changes. If the sql contains a schema reference other than that the
  * the routine is in the routine's name will be changed (adds _WRONG_SCHEMA) to indicate that.
  */
-size_t MySQLParserServicesImpl::parseRoutine(MySQLParserContext::Ref context, db_mysql_RoutineRef routine,
-                                             const std::string &sql) {
+auto MySQLParserServicesImpl::parseRoutine(MySQLParserContext::Ref context, db_mysql_RoutineRef routine,
+                                             const std::string &sql) -> size_t {
   logDebug2("Parse routine\n");
 
   routine->sqlDefinition(base::trim(sql));
@@ -1081,7 +1081,7 @@ size_t MySQLParserServicesImpl::parseRoutine(MySQLParserContext::Ref context, db
 
 //--------------------------------------------------------------------------------------------------
 
-bool considerAsSameType(std::string type1, std::string type2) {
+auto considerAsSameType(std::string type1, std::string type2) -> bool {
   if (type1 == type2)
     return true;
 
@@ -1096,8 +1096,8 @@ bool considerAsSameType(std::string type1, std::string type2) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseRoutinesSql(parser_ContextReferenceRef context_ref, db_mysql_RoutineGroupRef group,
-                                                 const std::string &sql) {
+auto MySQLParserServicesImpl::parseRoutinesSql(parser_ContextReferenceRef context_ref, db_mysql_RoutineGroupRef group,
+                                                 const std::string &sql) -> size_t {
   MySQLParserContext::Ref context = parser_context_from_grt(context_ref);
   return parseRoutines(context, group, sql);
 }
@@ -1113,8 +1113,8 @@ size_t MySQLParserServicesImpl::parseRoutinesSql(parser_ContextReferenceRef cont
 *   - Update the sql text + properties for any routine that is in the script in the owning schema.
 *   - Update the list of routines in the given routine group to what is in the script.
 */
-size_t MySQLParserServicesImpl::parseRoutines(MySQLParserContext::Ref context, db_mysql_RoutineGroupRef group,
-                                              const std::string &sql) {
+auto MySQLParserServicesImpl::parseRoutines(MySQLParserContext::Ref context, db_mysql_RoutineGroupRef group,
+                                              const std::string &sql) -> size_t {
   logDebug2("Parse routine group\n");
 
   MySQLParserContextImpl *impl = dynamic_cast<MySQLParserContextImpl *>(context.get());
@@ -1218,8 +1218,8 @@ size_t MySQLParserServicesImpl::parseRoutines(MySQLParserContext::Ref context, d
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseSchema(MySQLParserContext::Ref context, db_mysql_SchemaRef schema,
-                                            const std::string &sql) {
+auto MySQLParserServicesImpl::parseSchema(MySQLParserContext::Ref context, db_mysql_SchemaRef schema,
+                                            const std::string &sql) -> size_t {
   logDebug2("Parse schema\n");
 
   MySQLParserContextImpl *impl = dynamic_cast<MySQLParserContextImpl *>(context.get());
@@ -1242,8 +1242,8 @@ size_t MySQLParserServicesImpl::parseSchema(MySQLParserContext::Ref context, db_
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseIndex(MySQLParserContext::Ref context, db_mysql_IndexRef index,
-                                           const std::string &sql) {
+auto MySQLParserServicesImpl::parseIndex(MySQLParserContext::Ref context, db_mysql_IndexRef index,
+                                           const std::string &sql) -> size_t {
   logDebug2("Parse index\n");
 
   index->lastChangeDate(base::fmttime(0, DATETIME_FMT));
@@ -1274,8 +1274,8 @@ size_t MySQLParserServicesImpl::parseIndex(MySQLParserContext::Ref context, db_m
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseEvent(MySQLParserContext::Ref context, db_mysql_EventRef event,
-                                           const std::string &sql) {
+auto MySQLParserServicesImpl::parseEvent(MySQLParserContext::Ref context, db_mysql_EventRef event,
+                                           const std::string &sql) -> size_t {
   logDebug2("Parse event\n");
 
   event->lastChangeDate(base::fmttime(0, DATETIME_FMT));
@@ -1301,8 +1301,8 @@ size_t MySQLParserServicesImpl::parseEvent(MySQLParserContext::Ref context, db_m
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseLogfileGroup(MySQLParserContext::Ref context, db_mysql_LogFileGroupRef group,
-                                                  const std::string &sql) {
+auto MySQLParserServicesImpl::parseLogfileGroup(MySQLParserContext::Ref context, db_mysql_LogFileGroupRef group,
+                                                  const std::string &sql) -> size_t {
   logDebug2("Parse logfile group\n");
 
   group->lastChangeDate(base::fmttime(0, DATETIME_FMT));
@@ -1334,8 +1334,8 @@ size_t MySQLParserServicesImpl::parseLogfileGroup(MySQLParserContext::Ref contex
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseServer(MySQLParserContext::Ref context, db_mysql_ServerLinkRef server,
-                                            const std::string &sql) {
+auto MySQLParserServicesImpl::parseServer(MySQLParserContext::Ref context, db_mysql_ServerLinkRef server,
+                                            const std::string &sql) -> size_t {
   logDebug2("Parse server\n");
 
   server->lastChangeDate(base::fmttime(0, DATETIME_FMT));
@@ -1363,8 +1363,8 @@ size_t MySQLParserServicesImpl::parseServer(MySQLParserContext::Ref context, db_
 
 //--------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseTablespace(MySQLParserContext::Ref context, db_mysql_TablespaceRef tablespace,
-                                                const std::string &sql) {
+auto MySQLParserServicesImpl::parseTablespace(MySQLParserContext::Ref context, db_mysql_TablespaceRef tablespace,
+                                                const std::string &sql) -> size_t {
   logDebug2("Parse tablespace\n");
 
   tablespace->lastChangeDate(base::fmttime(0, DATETIME_FMT));
@@ -1389,9 +1389,9 @@ size_t MySQLParserServicesImpl::parseTablespace(MySQLParserContext::Ref context,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::parseSQLIntoCatalogSql(parser_ContextReferenceRef context_ref,
+auto MySQLParserServicesImpl::parseSQLIntoCatalogSql(parser_ContextReferenceRef context_ref,
                                                        db_mysql_CatalogRef catalog, const std::string &sql,
-                                                       grt::DictRef options) {
+                                                       grt::DictRef options) -> size_t {
   MySQLParserContext::Ref context = parser_context_from_grt(context_ref);
   return parseSQLIntoCatalog(context, catalog, sql, options);
 }
@@ -1410,8 +1410,8 @@ size_t MySQLParserServicesImpl::parseSQLIntoCatalogSql(parser_ContextReferenceRe
 *
 *	@result Returns the number of errors found during parsing.
 */
-size_t MySQLParserServicesImpl::parseSQLIntoCatalog(MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
-                                                    const std::string &sql, grt::DictRef options) {
+auto MySQLParserServicesImpl::parseSQLIntoCatalog(MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
+                                                    const std::string &sql, grt::DictRef options) -> size_t {
   MySQLParserContextImpl *impl = dynamic_cast<MySQLParserContextImpl *>(context.get());
 
   static std::set<MySQLQueryType> relevantQueryTypes = {
@@ -2054,8 +2054,8 @@ size_t MySQLParserServicesImpl::parseSQLIntoCatalog(MySQLParserContext::Ref cont
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::doSyntaxCheck(parser_ContextReferenceRef context_ref, const std::string &sql,
-                                              const std::string &type) {
+auto MySQLParserServicesImpl::doSyntaxCheck(parser_ContextReferenceRef context_ref, const std::string &sql,
+                                              const std::string &type) -> size_t {
   MySQLParserContext::Ref context = parser_context_from_grt(context_ref);
   MySQLParseUnit queryType = MySQLParseUnit::PuGeneric;
   if (type == "view")
@@ -2082,8 +2082,8 @@ size_t MySQLParserServicesImpl::doSyntaxCheck(parser_ContextReferenceRef context
  * Parses the given text as a specific query type (see parser for supported types).
  * Returns the error count.
  */
-size_t MySQLParserServicesImpl::checkSqlSyntax(MySQLParserContext::Ref context, const char *sql, size_t length,
-                                               MySQLParseUnit type) {
+auto MySQLParserServicesImpl::checkSqlSyntax(MySQLParserContext::Ref context, const char *sql, size_t length,
+                                               MySQLParseUnit type) -> size_t {
   MySQLParserContextImpl *impl = dynamic_cast<MySQLParserContextImpl *>(context.get());
   impl->errorCheck({sql, length}, type);
 
@@ -2128,7 +2128,7 @@ public:
   }
 
 private:
-  void checkIdentifierContext(ParserRuleContext *ctx) {
+  auto checkIdentifierContext(ParserRuleContext *ctx) -> void {
     std::string name = ctx->getText();
     bool quoted = false;
     if (name[0] == '`' || name[0] == '"' || name[0] == '\'') {
@@ -2150,7 +2150,7 @@ private:
 /**
  * Replace all occurrences of the old by the new name according to the offsets list.
  */
-void replaceSchemaNames(std::string &sql, const std::list<size_t> &offsets, size_t length, const std::string new_name) {
+auto replaceSchemaNames(std::string &sql, const std::list<size_t> &offsets, size_t length, const std::string new_name) -> void {
   bool remove_schema = new_name.empty();
   for (std::list<size_t>::const_reverse_iterator iterator = offsets.rbegin(); iterator != offsets.rend(); ++iterator) {
     std::string::size_type start = *iterator;
@@ -2169,8 +2169,8 @@ void replaceSchemaNames(std::string &sql, const std::list<size_t> &offsets, size
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void renameInList(grt::ListRef<db_DatabaseDdlObject> list, MySQLParserContext::Ref context, MySQLParseUnit unit,
-                  const std::string oldName, const std::string newName) {
+auto renameInList(grt::ListRef<db_DatabaseDdlObject> list, MySQLParserContext::Ref context, MySQLParseUnit unit,
+                  const std::string oldName, const std::string newName) -> void {
   MySQLParserContextImpl *impl = dynamic_cast<MySQLParserContextImpl *>(context.get());
   SchemaReferencesListener listener;
   listener.oldName = oldName;
@@ -2194,8 +2194,8 @@ void renameInList(grt::ListRef<db_DatabaseDdlObject> list, MySQLParserContext::R
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLParserServicesImpl::doSchemaRefRename(parser_ContextReferenceRef context_ref, db_mysql_CatalogRef catalog,
-                                                  const std::string old_name, const std::string new_name) {
+auto MySQLParserServicesImpl::doSchemaRefRename(parser_ContextReferenceRef context_ref, db_mysql_CatalogRef catalog,
+                                                  const std::string old_name, const std::string new_name) -> size_t {
   MySQLParserContext::Ref context = parser_context_from_grt(context_ref);
   return renameSchemaReferences(context, catalog, old_name, new_name);
 }
@@ -2207,8 +2207,8 @@ size_t MySQLParserServicesImpl::doSchemaRefRename(parser_ContextReferenceRef con
  * currently refer to the old name. We also iterate non-related schemas in order to have some
  * consolidation/sanitizing in effect where wrong schema references were used.
  */
-size_t MySQLParserServicesImpl::renameSchemaReferences(MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
-                                                       const std::string oldName, const std::string newName) {
+auto MySQLParserServicesImpl::renameSchemaReferences(MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
+                                                       const std::string oldName, const std::string newName) -> size_t {
   logDebug("Rename schema references\n");
 
   ListRef<db_mysql_Schema> schemas = catalog->schemata();
@@ -2227,7 +2227,7 @@ size_t MySQLParserServicesImpl::renameSchemaReferences(MySQLParserContext::Ref c
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static const unsigned char *skipLeadingWhitespace(const unsigned char *head, const unsigned char *tail) {
+static auto skipLeadingWhitespace(const unsigned char *head, const unsigned char *tail) -> const unsigned char * {
   while (head < tail && *head <= ' ')
     head++;
   return head;
@@ -2235,7 +2235,7 @@ static const unsigned char *skipLeadingWhitespace(const unsigned char *head, con
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool isLineBreak(const unsigned char *head, const unsigned char *line_break) {
+static auto isLineBreak(const unsigned char *head, const unsigned char *line_break) -> bool {
   if (*line_break == '\0')
     return false;
 
@@ -2248,7 +2248,7 @@ static bool isLineBreak(const unsigned char *head, const unsigned char *line_bre
 
 //----------------------------------------------------------------------------------------------------------------------
 
-grt::BaseListRef MySQLParserServicesImpl::getSqlStatementRanges(const std::string &sql) {
+auto MySQLParserServicesImpl::getSqlStatementRanges(const std::string &sql) -> grt::BaseListRef {
 
   std::vector<StatementRange> ranges;
   determineStatementRanges(sql.c_str(), sql.size(), ";", ranges);
@@ -2270,8 +2270,8 @@ grt::BaseListRef MySQLParserServicesImpl::getSqlStatementRanges(const std::strin
  * A statement splitter to take a list of sql statements and split them into individual statements,
  * return their position and length in the original string (instead the copied strings).
  */
-size_t MySQLParserServicesImpl::determineStatementRanges(const char *sql, size_t length,
-  const std::string &initialDelimiter, std::vector<StatementRange> &ranges, const std::string &lineBreak) {
+auto MySQLParserServicesImpl::determineStatementRanges(const char *sql, size_t length,
+  const std::string &initialDelimiter, std::vector<StatementRange> &ranges, const std::string &lineBreak) -> size_t {
 
   static const unsigned char keyword[] = "delimiter";
 
@@ -2544,7 +2544,7 @@ public:
       _users.set(name, _currentUser);
   }
 
-  std::string fillUserDetails(MySQLParser::UserContext *ctx, grt::DictRef user) {
+  auto fillUserDetails(MySQLParser::UserContext *ctx, grt::DictRef user) -> std::string {
     std::string name;
     if (ctx->CURRENT_USER_SYMBOL() != nullptr)
       name = ctx->CURRENT_USER_SYMBOL()->getText();
@@ -2590,15 +2590,15 @@ private:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-grt::DictRef MySQLParserServicesImpl::parseStatementDetails(parser_ContextReferenceRef context_ref,
-                                                            const std::string &sql) {
+auto MySQLParserServicesImpl::parseStatementDetails(parser_ContextReferenceRef context_ref,
+                                                            const std::string &sql) -> grt::DictRef {
   MySQLParserContext::Ref context = parser_context_from_grt(context_ref);
   return parseStatement(context, sql);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-grt::DictRef MySQLParserServicesImpl::parseStatement(MySQLParserContext::Ref context, const std::string &sql) {
+auto MySQLParserServicesImpl::parseStatement(MySQLParserContext::Ref context, const std::string &sql) -> grt::DictRef {
   // This part can potentially grow very large because of the sheer amount of possible query types.
   // So it should be moved into an own file if it grows beyond a few 100 lines.
   MySQLParserContextImpl *impl = dynamic_cast<MySQLParserContextImpl *>(context.get());
@@ -2631,9 +2631,9 @@ grt::DictRef MySQLParserServicesImpl::parseStatement(MySQLParserContext::Ref con
 
 //--------------------------------------------------------------------------------------------------
 
-static bool doParseType(const std::string &type, GrtVersionRef targetVersion, SimpleDatatypeListRef typeList,
+static auto doParseType(const std::string &type, GrtVersionRef targetVersion, SimpleDatatypeListRef typeList,
                         db_SimpleDatatypeRef &simpleType, int &precision, int &scale, int &length,
-                        std::string &explicitParams) {
+                        std::string &explicitParams) -> bool {
   // No char sets necessary for parsing data types as there's no repertoire necessary/allowed in any
   // data type part. Neither do we need an sql mode (string lists in enum defs only allow
   // single quoted text). Hence we don't require to pass in a parsing context but create a local parser.
@@ -2685,12 +2685,12 @@ static bool doParseType(const std::string &type, GrtVersionRef targetVersion, Si
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLParserServicesImpl::parseTypeDefinition(const std::string &typeDefinition, GrtVersionRef targetVersion,
+auto MySQLParserServicesImpl::parseTypeDefinition(const std::string &typeDefinition, GrtVersionRef targetVersion,
                                                   SimpleDatatypeListRef typeList, UserDatatypeListRef userTypes,
                                                   SimpleDatatypeListRef defaultTypeList,
                                                   db_SimpleDatatypeRef &simpleType, db_UserDatatypeRef &userType,
                                                   int &precision, int &scale, int &length,
-                                                  std::string &datatypeExplicitParams) {
+                                                  std::string &datatypeExplicitParams) -> bool {
   if (userTypes.is_valid()) {
     std::string::size_type argp = typeDefinition.find('(');
     std::string typeName = typeDefinition;

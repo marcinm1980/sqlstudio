@@ -128,25 +128,25 @@ public:
       delete *iter;
   }
 
-  virtual bool set_collapsed(bool flag) {
+  virtual auto set_collapsed(bool flag) -> bool {
     return false;
   }
 
-  virtual bool get_collapsed() = 0;
+  virtual auto get_collapsed() -> bool = 0;
 
-  void set_selected(int index) {
+  auto set_selected(int index) -> void {
     _selected = index;
   }
 
-  int get_selected() {
+  auto get_selected() -> int {
     return _selected;
   }
 
-  std::size_t getItemCount() {
+  auto getItemCount() -> std::size_t {
     return _items.size();
   }
 
-  TabItem *getItem(int index) {
+  auto getItem(int index) -> TabItem * {
     try {
       return _items[index];
     } catch (...) {
@@ -154,9 +154,9 @@ public:
     }
   }
 
-  virtual void repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) = 0;
+  virtual auto repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) -> void = 0;
 
-  virtual void set_icon(int index, const std::string &icon_path, const std::string &alt_icon_path) {
+  virtual auto set_icon(int index, const std::string &icon_path, const std::string &alt_icon_path) -> void {
     if (index >= 0 && index < (int)_items.size()) {
       TabItem *item = _items[index];
 
@@ -170,8 +170,8 @@ public:
     }
   }
 
-  virtual int add_item(const std::string &title, const std::string &sub_title, const std::string &icon_path,
-                       const std::string &alt_icon_path) {
+  virtual auto add_item(const std::string &title, const std::string &sub_title, const std::string &icon_path,
+                       const std::string &alt_icon_path) -> int {
 
     TabItem *item = new TabItem([&](int x, int y) {
       if (_owner != nullptr) {
@@ -198,17 +198,17 @@ public:
     return (int)_items.size() - 1;
   }
 
-  virtual void remove_item(int index) {
+  virtual auto remove_item(int index) -> void {
     delete _items[index];
     _items.erase(_items.begin() + index);
   }
 
-  virtual int index_from_point(int x, int y) = 0;
+  virtual auto index_from_point(int x, int y) -> int = 0;
 
-  virtual bool go_back() {
+  virtual auto go_back() -> bool {
     return false;
   }
-  virtual bool go_next() {
+  virtual auto go_next() -> bool {
     return false;
   }
 };
@@ -271,7 +271,7 @@ public:
       cairo_surface_destroy(_selection_image);
   }
 
-  virtual void repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) {
+  virtual auto repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) -> void {
     Color color;
 
     cairo_save(cr);
@@ -409,7 +409,7 @@ public:
     cairo_restore(cr);
   }
 
-  virtual int index_from_point(int x, int y) {
+  virtual auto index_from_point(int x, int y) -> int {
     if (_items.size() == 0 || x < 0 || x > _owner->get_width() || y < 0 || y > _owner->get_height())
       return -1;
 
@@ -427,16 +427,16 @@ public:
     return -1;
   }
 
-  virtual bool set_collapsed(bool flag) {
+  virtual auto set_collapsed(bool flag) -> bool {
     _collapsed = flag;
     return true;
   }
 
-  virtual bool get_collapsed() {
+  virtual auto get_collapsed() -> bool {
     return _collapsed;
   }
 
-  virtual bool go_back() {
+  virtual auto go_back() -> bool {
     if (_first_visible > 0) {
       _first_visible--;
       _owner->set_selected(get_selected() - 1);
@@ -445,7 +445,7 @@ public:
     return false;
   }
 
-  virtual bool go_next() {
+  virtual auto go_next() -> bool {
     if (_last_visible < (int)_items.size() - 1) {
       _first_visible++;
       _owner->set_selected(get_selected() + 1);
@@ -478,13 +478,13 @@ TabSwitcher::~TabSwitcher() {
 
 //--------------------------------------------------------------------------------------------------
 
-int TabSwitcher::get_preferred_height() {
+auto TabSwitcher::get_preferred_height() -> int {
   return INITIAL_TAB_HEIGHT;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabSwitcher::attach_to_tabview(TabView *tabView) {
+auto TabSwitcher::attach_to_tabview(TabView *tabView) -> void {
   _tabView = tabView;
   set_needs_relayout();
 
@@ -493,7 +493,7 @@ void TabSwitcher::attach_to_tabview(TabView *tabView) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabSwitcher::set_collapsed(bool flag) {
+auto TabSwitcher::set_collapsed(bool flag) -> void {
   if (_pimpl->get_collapsed() != flag) {
     if (_pimpl->set_collapsed(flag)) {
       set_size(_pimpl->get_collapsed() ? 5 : VERTICAL_STYLE_WIDTH, -1);
@@ -504,14 +504,14 @@ void TabSwitcher::set_collapsed(bool flag) {
 }
 
 //--------------------------------------------------------------------------------------------------
-bool TabSwitcher::get_collapsed() {
+auto TabSwitcher::get_collapsed() -> bool {
   return _pimpl->get_collapsed();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TabSwitcher::add_item(const std::string &title, const std::string &sub_title, const std::string &icon_path,
-                          const std::string &alt_icon_path) {
+auto TabSwitcher::add_item(const std::string &title, const std::string &sub_title, const std::string &icon_path,
+                          const std::string &alt_icon_path) -> int {
   int i = _pimpl->add_item(title, sub_title, icon_path, alt_icon_path);
   set_needs_relayout();
   return i;
@@ -519,7 +519,7 @@ int TabSwitcher::add_item(const std::string &title, const std::string &sub_title
 
 //--------------------------------------------------------------------------------------------------
 
-void TabSwitcher::remove_item(int index) {
+auto TabSwitcher::remove_item(int index) -> void {
   _pimpl->remove_item(index);
 }
 
@@ -528,13 +528,13 @@ void TabSwitcher::remove_item(int index) {
 /**
  * Replaces the icon pair for the given item with the new values.
  */
-void TabSwitcher::set_icon(int index, const std::string &icon_path, const std::string &alt_icon_path) {
+auto TabSwitcher::set_icon(int index, const std::string &icon_path, const std::string &alt_icon_path) -> void {
   _pimpl->set_icon(index, icon_path, alt_icon_path);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabSwitcher::set_selected(int index) {
+auto TabSwitcher::set_selected(int index) -> void {
   _pimpl->set_selected(index);
   if (_tabView != NULL)
     _tabView->set_active_tab(index);
@@ -542,27 +542,27 @@ void TabSwitcher::set_selected(int index) {
 }
 
 //--------------------------------------------------------------------------------------------------
-int TabSwitcher::get_selected() {
+auto TabSwitcher::get_selected() -> int {
   return _pimpl->get_selected();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabSwitcher::set_needs_relayout() {
+auto TabSwitcher::set_needs_relayout() -> void {
   _needs_relayout = true;
   set_needs_repaint();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabSwitcher::set_layout_dirty(bool value) {
+auto TabSwitcher::set_layout_dirty(bool value) -> void {
   DrawBox::set_layout_dirty(true);
   set_needs_relayout();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TabSwitcher::mouse_down(mforms::MouseButton button, int x, int y) {
+auto TabSwitcher::mouse_down(mforms::MouseButton button, int x, int y) -> bool {
   if (!DrawBox::mouse_down(button, x, y)) {
     // For now ignore which button was pressed.
     _last_clicked = _pimpl->index_from_point(x, y);
@@ -573,13 +573,13 @@ bool TabSwitcher::mouse_down(mforms::MouseButton button, int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TabSwitcher::mouse_up(mforms::MouseButton button, int x, int y) {
+auto TabSwitcher::mouse_up(mforms::MouseButton button, int x, int y) -> bool {
   return DrawBox::mouse_up(button, x, y);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TabSwitcher::mouse_click(mforms::MouseButton button, int x, int y) {
+auto TabSwitcher::mouse_click(mforms::MouseButton button, int x, int y) -> bool {
   bool handled = DrawBox::mouse_click(button, x, y);
 
   // Don't change anything if the user clicked outside of any tab.
@@ -607,7 +607,7 @@ bool TabSwitcher::mouse_click(mforms::MouseButton button, int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TabSwitcher::mouse_enter() {
+auto TabSwitcher::mouse_enter() -> bool {
   if (DrawBox::mouse_enter())
     return true;
 
@@ -619,7 +619,7 @@ bool TabSwitcher::mouse_enter() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TabSwitcher::collapse() {
+auto TabSwitcher::collapse() -> bool {
   _timeout = 0;
   set_collapsed(true);
   return false;
@@ -627,7 +627,7 @@ bool TabSwitcher::collapse() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TabSwitcher::mouse_leave() {
+auto TabSwitcher::mouse_leave() -> bool {
   if (DrawBox::mouse_leave())
     return true;
 
@@ -640,25 +640,25 @@ bool TabSwitcher::mouse_leave() {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t TabSwitcher::getAccessibilityChildCount() {
+auto TabSwitcher::getAccessibilityChildCount() -> size_t {
   return _pimpl->getItemCount();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Accessible *TabSwitcher::getAccessibilityChild(size_t index) {
+auto TabSwitcher::getAccessibilityChild(size_t index) -> Accessible * {
   return dynamic_cast<Accessible*>(_pimpl->getItem(static_cast<int>(index)));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Accessible::Role TabSwitcher::getAccessibilityRole() {
+auto TabSwitcher::getAccessibilityRole() -> Accessible::Role {
   return Accessible::List;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-base::Accessible *TabSwitcher::accessibilityHitTest(ssize_t x, ssize_t y) {
+auto TabSwitcher::accessibilityHitTest(ssize_t x, ssize_t y) -> base::Accessible * {
   int idx = _pimpl->index_from_point(static_cast<int>(x), static_cast<int>(y));
   if (idx == -1)
     return nullptr;
@@ -668,13 +668,13 @@ base::Accessible *TabSwitcher::accessibilityHitTest(ssize_t x, ssize_t y) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TabSwitcher::repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) {
+auto TabSwitcher::repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) -> void {
   _pimpl->repaint(cr, areax, areay, areaw, areah);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TabSwitcher::tab_changed() {
+auto TabSwitcher::tab_changed() -> void {
   _pimpl->set_selected(_tabView->get_active_tab());
   set_needs_repaint();
 }

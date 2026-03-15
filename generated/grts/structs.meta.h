@@ -41,7 +41,7 @@ public:
   {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "meta.TaggedObject";
   }
 
@@ -51,7 +51,7 @@ public:
    \par In Python:
 value = obj.description
    */
-  grt::StringRef description() const {
+  auto description() const -> grt::StringRef {
     return _description;
   }
   /** Setter for attribute description
@@ -60,7 +60,7 @@ value = obj.description
     \par In Python:
 obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -72,7 +72,7 @@ obj.description = value
    \par In Python:
 value = obj.object
    */
-  db_DatabaseObjectRef object() const {
+  auto object() const -> db_DatabaseObjectRef {
     return _object;
   }
   /** Setter for attribute object
@@ -81,7 +81,7 @@ value = obj.object
     \par In Python:
 obj.object = value
    */
-  virtual void object(const db_DatabaseObjectRef &value) {
+  virtual auto object(const db_DatabaseObjectRef &value) -> void {
     grt::ValueRef ovalue(_object);
     _object = value;
     member_changed("object", ovalue, value);
@@ -92,12 +92,12 @@ protected:
   db_DatabaseObjectRef _object;
 
 private: // wrapper methods for use by grt
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new meta_TaggedObject());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (!meta)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -130,7 +130,7 @@ public:
   {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "meta.Tag";
   }
 
@@ -140,7 +140,7 @@ public:
    \par In Python:
 value = obj.category
    */
-  GrtObjectRef category() const {
+  auto category() const -> GrtObjectRef {
     return _category;
   }
   /** Setter for attribute category
@@ -149,7 +149,7 @@ value = obj.category
     \par In Python:
 obj.category = value
    */
-  virtual void category(const GrtObjectRef &value) {
+  virtual auto category(const GrtObjectRef &value) -> void {
     grt::ValueRef ovalue(_category);
     _category = value;
     member_changed("category", ovalue, value);
@@ -161,7 +161,7 @@ obj.category = value
    \par In Python:
 value = obj.color
    */
-  grt::StringRef color() const {
+  auto color() const -> grt::StringRef {
     return _color;
   }
   /** Setter for attribute color
@@ -170,7 +170,7 @@ value = obj.color
     \par In Python:
 obj.color = value
    */
-  virtual void color(const grt::StringRef &value) {
+  virtual auto color(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_color);
     _color = value;
     member_changed("color", ovalue, value);
@@ -182,7 +182,7 @@ obj.color = value
    \par In Python:
 value = obj.description
    */
-  grt::StringRef description() const {
+  auto description() const -> grt::StringRef {
     return _description;
   }
   /** Setter for attribute description
@@ -191,7 +191,7 @@ value = obj.description
     \par In Python:
 obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -203,7 +203,7 @@ obj.description = value
    \par In Python:
 value = obj.label
    */
-  grt::StringRef label() const {
+  auto label() const -> grt::StringRef {
     return _label;
   }
   /** Setter for attribute label
@@ -212,7 +212,7 @@ value = obj.label
     \par In Python:
 obj.label = value
    */
-  virtual void label(const grt::StringRef &value) {
+  virtual auto label(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_label);
     _label = value;
     member_changed("label", ovalue, value);
@@ -224,12 +224,12 @@ obj.label = value
    \par In Python:
 value = obj.objects
    */
-  grt::ListRef<meta_TaggedObject> objects() const {
+  auto objects() const -> grt::ListRef<meta_TaggedObject> {
     return _objects;
   }
 
 private: // the next attribute is read-only
-  virtual void objects(const grt::ListRef<meta_TaggedObject> &value) {
+  virtual auto objects(const grt::ListRef<meta_TaggedObject> &value) -> void {
     grt::ValueRef ovalue(_objects);
     _objects = value;
     member_changed("objects", ovalue, value);
@@ -244,12 +244,12 @@ protected:
   grt::ListRef<meta_TaggedObject> _objects;
 
 private: // wrapper methods for use by grt
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new meta_Tag());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (!meta)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -283,7 +283,7 @@ public:
   }
 };
 
-inline void register_structs_meta_xml() {
+inline auto register_structs_meta_xml() -> void {
   grt::internal::ClassRegistry::register_class<meta_TaggedObject>();
   grt::internal::ClassRegistry::register_class<meta_Tag>();
 }

@@ -42,36 +42,36 @@ namespace mdc {
     Layer(CanvasView *view);
     virtual ~Layer();
 
-    void set_root_area(AreaGroup *group);
+    auto set_root_area(AreaGroup *group) -> void;
 
-    void set_name(const std::string &name);
+    auto set_name(const std::string &name) -> void;
     auto get_name() const -> std::string {
       return _name;
     }
 
-    virtual void add_item(CanvasItem *item, AreaGroup *location = 0);
-    virtual void remove_item(CanvasItem *item);
+    virtual auto add_item(CanvasItem *item, AreaGroup *location = 0) -> void;
+    virtual auto remove_item(CanvasItem *item) -> void;
 
-    virtual void set_visible(bool flag);
+    virtual auto set_visible(bool flag) -> void;
     auto visible() const -> bool {
       return _visible;
     };
 
-    virtual void repaint_pending();
-    virtual void repaint(const base::Rect &aBounds);
-    void repaint_for_export(const base::Rect &aBounds);
+    virtual auto repaint_pending() -> void;
+    virtual auto repaint(const base::Rect &aBounds) -> void;
+    auto repaint_for_export(const base::Rect &aBounds) -> void;
 
     inline auto get_view() const -> CanvasView * {
       return _owner;
     };
 
-    void queue_relayout(CanvasItem *item);
-    void invalidate_caches();
+    auto queue_relayout(CanvasItem *item) -> void;
+    auto invalidate_caches() -> void;
 
-    void set_needs_repaint_all_items();
+    auto set_needs_repaint_all_items() -> void;
 
-    void queue_repaint();
-    void queue_repaint(const base::Rect &bounds);
+    auto queue_repaint() -> void;
+    auto queue_repaint(const base::Rect &bounds) -> void;
 
     auto get_other_item_at(const base::Point &point, CanvasItem *item) -> CanvasItem *;
 
@@ -88,7 +88,7 @@ namespace mdc {
                               mdc::Group *inside_group = 0) -> std::list<CanvasItem *>;
 
     auto create_group_with(const std::list<CanvasItem *> &contents) -> Group *;
-    void dissolve_group(Group *group);
+    auto dissolve_group(Group *group) -> void;
 
     auto create_area_group_with(const std::list<CanvasItem *> &contents) -> AreaGroup *;
 
@@ -109,7 +109,7 @@ namespace mdc {
     auto get_layer_under_this() -> Layer *;
 
   private:
-    void view_resized();
+    auto view_resized() -> void;
   };
 
 } // namespace mdc

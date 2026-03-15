@@ -35,7 +35,7 @@ namespace grtui {
 
   class CatalogValidationPage : public WizardProgressPage {
   public:
-    static bool has_modules() {
+    static auto has_modules() -> bool {
       return !grt::GRT::get()->get_implementing_modules<WbValidationInterfaceWrapper>().empty();
     }
 
@@ -87,11 +87,11 @@ namespace grtui {
     virtual ~CatalogValidationPage() {
     }
 
-    grt::ValueRef execute_validation_module(WbValidationInterfaceWrapper *module) {
+    auto execute_validation_module(WbValidationInterfaceWrapper *module) -> grt::ValueRef {
       return grt::IntegerRef(module->validate("All", _target_catalog));
     }
 
-    bool validation_step(WbValidationInterfaceWrapper *module, const std::string &caption) {
+    auto validation_step(WbValidationInterfaceWrapper *module, const std::string &caption) -> bool {
       add_log_text("Starting " + caption);
 
       execute_grt_task(std::bind(&CatalogValidationPage::execute_validation_module, this, module), false);
@@ -99,20 +99,20 @@ namespace grtui {
       return true;
     }
 
-    virtual void enter(bool advancing) {
+    virtual auto enter(bool advancing) -> void {
       if (advancing && !_run_button) {
         run_validations();
       }
     }
 
-    virtual void tasks_finished(bool success) {
+    virtual auto tasks_finished(bool success) -> void {
       if (success)
         _form->clear_problem();
       else
         _form->set_problem(_("Validation Errors"));
     }
 
-    void run_validations() {
+    auto run_validations() -> void {
       start_tasks();
     }
 

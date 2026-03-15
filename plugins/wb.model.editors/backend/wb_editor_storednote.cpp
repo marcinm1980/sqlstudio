@@ -55,11 +55,11 @@ StoredNoteEditorBE::StoredNoteEditorBE(const GrtStoredNoteRef &note) : bec::Base
   _ignored_object_fields_for_ui_refresh.insert("lastChangeDate");
 }
 
-bool StoredNoteEditorBE::is_script() {
+auto StoredNoteEditorBE::is_script() -> bool {
   return _note.is_instance(db_Script::static_class_name());
 }
 
-MySQLEditor::Ref StoredNoteEditorBE::get_sql_editor() {
+auto StoredNoteEditorBE::get_sql_editor() -> MySQLEditor::Ref {
   if (!_sql_editor) {
     studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(_note->owner()));
     MySQLParserServices::Ref services = MySQLParserServices::get();
@@ -127,7 +127,7 @@ MySQLEditor::Ref StoredNoteEditorBE::get_sql_editor() {
   return _sql_editor;
 }
 
-void StoredNoteEditorBE::changed_selector(mforms::ToolBarItem *item) {
+auto StoredNoteEditorBE::changed_selector(mforms::ToolBarItem *item) -> void {
   std::string value = item->get_text();
   std::string s;
   for (int i = 0; inclusion_positions[i].label != NULL; i++)
@@ -146,7 +146,7 @@ void StoredNoteEditorBE::changed_selector(mforms::ToolBarItem *item) {
   }
 }
 
-void StoredNoteEditorBE::set_text(grt::StringRef text) {
+auto StoredNoteEditorBE::set_text(grt::StringRef text) -> void {
   // XXX replace this using module wrapper class
   grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
   if (!module)
@@ -162,7 +162,7 @@ void StoredNoteEditorBE::set_text(grt::StringRef text) {
   _note->lastChangeDate(base::fmttime(0, DATETIME_FMT));
 }
 
-grt::StringRef StoredNoteEditorBE::get_text(bool &isutf8) {
+auto StoredNoteEditorBE::get_text(bool &isutf8) -> grt::StringRef {
   grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
   if (!module)
     throw std::runtime_error("MySqlStudio module not found");
@@ -182,7 +182,7 @@ grt::StringRef StoredNoteEditorBE::get_text(bool &isutf8) {
   return value;
 }
 
-void StoredNoteEditorBE::set_name(const std::string &name) {
+auto StoredNoteEditorBE::set_name(const std::string &name) -> void {
   if (_note->name() != name) {
     studio_physical_ModelRef model(studio_physical_ModelRef::cast_from(_note->owner()));
 
@@ -203,13 +203,13 @@ void StoredNoteEditorBE::set_name(const std::string &name) {
   }
 }
 
-std::string StoredNoteEditorBE::get_name() {
+auto StoredNoteEditorBE::get_name() -> std::string {
   return _note->name();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string StoredNoteEditorBE::get_title() {
+auto StoredNoteEditorBE::get_title() -> std::string {
   std::string result = is_script() ? base::strfmt("%s - Script", get_name().c_str())
                                    : base::strfmt("%s - Stored Note", get_name().c_str());
   if (is_editor_dirty())
@@ -223,7 +223,7 @@ std::string StoredNoteEditorBE::get_title() {
 /**
  * Loads the note text from the GRT into the editor.
  */
-void StoredNoteEditorBE::load_text() {
+auto StoredNoteEditorBE::load_text() -> void {
   bool isUTF8;
 
   grt::StringRef text = get_text(isUTF8);
@@ -238,7 +238,7 @@ void StoredNoteEditorBE::load_text() {
 
 //--------------------------------------------------------------------------------------------------
 
-void StoredNoteEditorBE::commit_changes() {
+auto StoredNoteEditorBE::commit_changes() -> void {
   MySQLEditor::Ref editor = get_sql_editor();
   mforms::CodeEditor *code_editor = editor->get_editor_control();
   if (code_editor->is_dirty()) {

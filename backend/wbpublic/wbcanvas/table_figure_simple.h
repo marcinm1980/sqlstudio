@@ -33,39 +33,39 @@ namespace wbfig {
   public:
     SimpleTable(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self);
 
-    virtual void set_color(const base::Color &color);
+    virtual auto set_color(const base::Color &color) -> void;
 
-    void set_barker_notation(bool flag);
+    auto set_barker_notation(bool flag) -> void;
 
-    virtual void set_dependant(bool flag);
+    virtual auto set_dependant(bool flag) -> void;
 
-    virtual ItemList::iterator begin_columns_sync();
-    virtual ItemList::iterator sync_next_column(ItemList::iterator iter, const std::string &id, ColumnFlags flags,
-                                                const std::string &text);
+    virtual auto begin_columns_sync() -> ItemList::iterator;
+    virtual auto sync_next_column(ItemList::iterator iter, const std::string &id, ColumnFlags flags,
+                                                const std::string &text) -> ItemList::iterator;
 
-    virtual void end_columns_sync(ItemList::iterator iter);
+    virtual auto end_columns_sync(ItemList::iterator iter) -> void;
 
-    virtual ItemList::iterator begin_indexes_sync() {
+    virtual auto begin_indexes_sync() -> ItemList::iterator {
       return ItemList::iterator();
     }
-    virtual ItemList::iterator sync_next_index(ItemList::iterator iter, const std::string &id,
-                                               const std::string &text) {
+    virtual auto sync_next_index(ItemList::iterator iter, const std::string &id,
+                                               const std::string &text) -> ItemList::iterator {
       return ItemList::iterator();
     }
-    virtual void end_indexes_sync(ItemList::iterator iter) {
+    virtual auto end_indexes_sync(ItemList::iterator iter) -> void {
     }
 
-    virtual ItemList::iterator begin_triggers_sync() {
+    virtual auto begin_triggers_sync() -> ItemList::iterator {
       return ItemList::iterator();
     }
-    virtual ItemList::iterator sync_next_trigger(ItemList::iterator iter, const std::string &id,
-                                                 const std::string &text) {
+    virtual auto sync_next_trigger(ItemList::iterator iter, const std::string &id,
+                                                 const std::string &text) -> ItemList::iterator {
       return ItemList::iterator();
     }
-    virtual void end_triggers_sync(ItemList::iterator iter) {
+    virtual auto end_triggers_sync(ItemList::iterator iter) -> void {
     }
 
-    virtual ItemList *get_columns() {
+    virtual auto get_columns() -> ItemList * {
       return &_columns;
     }
 

@@ -28,7 +28,7 @@
 
 #include <iomanip>
 
-std::string SelectItem::effective_alias() const {
+auto SelectItem::effective_alias() const -> std::string {
   if (wildcard)
     return "*";
   if (!alias.empty())
@@ -38,7 +38,7 @@ std::string SelectItem::effective_alias() const {
   return field;
 }
 
-std::string SelectItem::state_as_string() const {
+auto SelectItem::state_as_string() const -> std::string {
   return base::strfmt("{%s}.{%s}.{%s}.{%s}.{%s}.{%i}", schema.c_str(), table.c_str(), field.c_str(), expr.c_str(),
                       alias.c_str(), wildcard);
 }

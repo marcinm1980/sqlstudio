@@ -34,10 +34,10 @@
 class WBPUBLICBACKEND_PUBLIC_FUNC Recordset_table_inserts_storage : public Recordset_sqlite_storage {
 public:
   using Ref = std::shared_ptr<Recordset_table_inserts_storage>;
-  static Ref create() {
+  static auto create() -> Ref {
     return create_with_path(bec::GRTManager::get()->get_db_file_path());
   }
-  static Ref create_with_path(const std::string &path) {
+  static auto create_with_path(const std::string &path) -> Ref {
     return Ref(new Recordset_table_inserts_storage(path));
   }
   virtual ~Recordset_table_inserts_storage();
@@ -46,25 +46,25 @@ protected:
   Recordset_table_inserts_storage(const std::string &path);
 
 protected:
-  virtual void do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db, bool skip_commit);
-  virtual void do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db);
-  virtual void do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db);
-  void do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
-                           sqlite::variant_t &blob_value);
+  virtual auto do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db, bool skip_commit) -> void;
+  virtual auto do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  virtual auto do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  auto do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
+                           sqlite::variant_t &blob_value) -> void;
 
 private:
   Recordset::Column_names _mapped_colnames;
   std::string _mapped_table_name;
 
 protected:
-  void generate_sql_script(const Recordset *recordset, sqlite::connection *data_swap_db, Sql_script &sql_script,
-                           bool is_update_script, bool binaryAsString = false);
+  auto generate_sql_script(const Recordset *recordset, sqlite::connection *data_swap_db, Sql_script &sql_script,
+                           bool is_update_script, bool binaryAsString = false) -> void;
 
 public:
-  void table(const db_TableRef table) {
+  auto table(const db_TableRef table) -> void {
     _table = table;
   }
-  db_TableRef table() const {
+  auto table() const -> db_TableRef {
     return _table;
   }
 

@@ -64,10 +64,10 @@ public:
   ActionGenerateReport(grt::StringRef template_filename);
   virtual ~ActionGenerateReport();
 
-  std::string generate_output();
+  auto generate_output() -> std::string;
 
-  std::string object_name(const GrtNamedObjectRef obj) const;
-  std::string trigger_name(const GrtNamedObjectRef obj) const;
+  auto object_name(const GrtNamedObjectRef obj) const -> std::string;
+  auto trigger_name(const GrtNamedObjectRef obj) const -> std::string;
 
   // create table
   void create_table_props_begin(db_mysql_TableRef);
@@ -78,7 +78,7 @@ public:
   void create_table_columns_end(db_mysql_TableRef);
 
   void create_table_indexes_begin(db_mysql_TableRef);
-  void create_table_index(db_mysql_IndexRef, bool gen_create_index);
+  auto create_table_index(db_mysql_IndexRef, bool gen_create_index) -> void;
   void create_table_indexes_end(db_mysql_TableRef);
 
   void create_table_fks_begin(db_mysql_TableRef);
@@ -128,33 +128,33 @@ public:
   void alter_table_max_rows(db_mysql_TableRef, grt::StringRef);
   void alter_table_connection_string(db_mysql_TableRef, grt::StringRef);
 
-  void alter_table_generate_partitioning(db_mysql_TableRef table, const std::string& part_type,
+  auto alter_table_generate_partitioning(db_mysql_TableRef table, const std::string& part_type,
                                          const std::string& part_expr, int part_count, const std::string& subpart_type,
                                          const std::string& subpart_expr,
-                                         grt::ListRef<db_mysql_PartitionDefinition> part_defs);
-  void alter_table_drop_partitioning(db_mysql_TableRef table);
-  void alter_table_add_partition(db_mysql_PartitionDefinitionRef part, bool is_range);
-  void alter_table_drop_partition(const std::string& part_name);
-  void alter_table_reorganize_partition(db_mysql_PartitionDefinitionRef old_part,
-                                        db_mysql_PartitionDefinitionRef new_part, bool is_range);
+                                         grt::ListRef<db_mysql_PartitionDefinition> part_defs) -> void;
+  auto alter_table_drop_partitioning(db_mysql_TableRef table) -> void;
+  auto alter_table_add_partition(db_mysql_PartitionDefinitionRef part, bool is_range) -> void;
+  auto alter_table_drop_partition(const std::string& part_name) -> void;
+  auto alter_table_reorganize_partition(db_mysql_PartitionDefinitionRef old_part,
+                                        db_mysql_PartitionDefinitionRef new_part, bool is_range) -> void;
   void alter_table_partition_count(db_mysql_TableRef, grt::IntegerRef);
   void alter_table_partition_definitions(db_mysql_TableRef, grt::StringRef);
   void alter_table_props_end(db_mysql_TableRef);
 
   void alter_table_columns_begin(db_mysql_TableRef);
-  void alter_table_add_column(db_mysql_TableRef, std::map<std::string, std::string>, db_mysql_ColumnRef column,
-                              db_mysql_ColumnRef after);
+  auto alter_table_add_column(db_mysql_TableRef, std::map<std::string, std::string>, db_mysql_ColumnRef column,
+                              db_mysql_ColumnRef after) -> void;
   void alter_table_drop_column(db_mysql_TableRef, db_mysql_ColumnRef);
-  void alter_table_change_column(db_mysql_TableRef table, db_mysql_ColumnRef org_col, db_mysql_ColumnRef mod_col,
+  auto alter_table_change_column(db_mysql_TableRef table, db_mysql_ColumnRef org_col, db_mysql_ColumnRef mod_col,
                                  db_mysql_ColumnRef after, bool modified,
-                                 std::map<std::string, std::string> column_rename_map);
+                                 std::map<std::string, std::string> column_rename_map) -> void;
   void alter_table_columns_end(db_mysql_TableRef);
 
   void alter_table_indexes_begin(db_mysql_TableRef);
   void alter_table_add_index(db_mysql_IndexRef);
   void alter_table_drop_index(db_mysql_IndexRef);
   void alter_table_indexes_end(db_mysql_TableRef);
-  void alter_table_change_index(db_mysql_IndexRef orgIndex, db_mysql_IndexRef newIndex);
+  auto alter_table_change_index(db_mysql_IndexRef orgIndex, db_mysql_IndexRef newIndex) -> void;
 
   void alter_table_fks_begin(db_mysql_TableRef);
   void alter_table_add_fk(db_mysql_ForeignKeyRef);
@@ -162,16 +162,16 @@ public:
   void alter_table_fks_end(db_mysql_TableRef);
 
   // triggers create/drop
-  void create_trigger(db_mysql_TriggerRef, bool for_alter);
-  void drop_trigger(db_mysql_TriggerRef, bool for_alter);
+  auto create_trigger(db_mysql_TriggerRef, bool for_alter) -> void;
+  auto drop_trigger(db_mysql_TriggerRef, bool for_alter) -> void;
 
   // views create/drop
   void create_view(db_mysql_ViewRef);
   void drop_view(db_mysql_ViewRef);
 
   // routines create/drop5
-  void create_routine(db_mysql_RoutineRef, bool for_alter);
-  void drop_routine(db_mysql_RoutineRef, bool for_alter);
+  auto create_routine(db_mysql_RoutineRef, bool for_alter) -> void;
+  auto drop_routine(db_mysql_RoutineRef, bool for_alter) -> void;
 
   // users create/drop
   void create_user(db_UserRef);
@@ -183,9 +183,9 @@ public:
 
   // alter schema
   void alter_schema_props_begin(db_mysql_SchemaRef);
-  void alter_schema_name(db_mysql_SchemaRef, grt::StringRef value);
-  void alter_schema_default_charset(db_mysql_SchemaRef, grt::StringRef value);
-  void alter_schema_default_collate(db_mysql_SchemaRef, grt::StringRef value);
+  auto alter_schema_name(db_mysql_SchemaRef, grt::StringRef value) -> void;
+  auto alter_schema_default_charset(db_mysql_SchemaRef, grt::StringRef value) -> void;
+  auto alter_schema_default_collate(db_mysql_SchemaRef, grt::StringRef value) -> void;
   void alter_schema_props_end(db_mysql_SchemaRef);
-  virtual void disable_list_insert(const bool flag){};
+  virtual auto disable_list_insert(const bool flag) -> void {};
 };

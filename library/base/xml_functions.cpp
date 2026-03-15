@@ -35,7 +35,7 @@
 
 DEFAULT_LOG_DOMAIN("XML Functions")
 
-static void xmlErrorHandling(void *ctx, const char *msg, ...) {
+static auto xmlErrorHandling(void *ctx, const char *msg, ...) -> void {
   va_list args;
   va_start(args, msg);
   va_list args_copy;
@@ -47,7 +47,7 @@ static void xmlErrorHandling(void *ctx, const char *msg, ...) {
   logError("LibXml: %s\n", buff.data());
 }
 
-xmlDocPtr base::xml::loadXMLDoc(const std::string &path) {
+auto base::xml::loadXMLDoc(const std::string &path) -> xmlDocPtr {
   xmlSetGenericErrorFunc(nullptr, xmlErrorHandling);
 
   if (!base::file_exists(path))
@@ -61,26 +61,26 @@ xmlDocPtr base::xml::loadXMLDoc(const std::string &path) {
   return doc;
 }
 
-xmlDocPtr base::xml::xmlParseFragment(const std::string &buff) {
+auto base::xml::xmlParseFragment(const std::string &buff) -> xmlDocPtr {
   return xmlParseMemory(buff.data(), (int)buff.size());
 }
 
-xmlNodePtr base::xml::getXmlRoot(xmlDocPtr doc) {
+auto base::xml::getXmlRoot(xmlDocPtr doc) -> xmlNodePtr {
   auto cur = xmlDocGetRootElement(doc);
   if (cur == NULL)
     throw std::runtime_error("Empty document\n");
   return cur;
 }
 
-bool base::xml::nameIs(xmlNodePtr node, const std::string &name) {
+auto base::xml::nameIs(xmlNodePtr node, const std::string &name) -> bool {
   return xmlStrcmp(node->name, (const xmlChar *)name.c_str()) == 0;
 }
 
-bool base::xml::nameIs(xmlAttrPtr attrib, const std::string &name) {
+auto base::xml::nameIs(xmlAttrPtr attrib, const std::string &name) -> bool {
   return xmlStrcmp(attrib->name, (const xmlChar *)name.c_str()) == 0;
 }
 
-void base::xml::getXMLDocMetainfo(xmlDocPtr doc, std::string &doctype, std::string &docversion) {
+auto base::xml::getXMLDocMetainfo(xmlDocPtr doc, std::string &doctype, std::string &docversion) -> void {
   xmlNodePtr root = xmlDocGetRootElement(doc);
 
   while (root) {
@@ -93,21 +93,21 @@ void base::xml::getXMLDocMetainfo(xmlDocPtr doc, std::string &doctype, std::stri
   }
 }
 
-std::string base::xml::getProp(xmlNodePtr node, const std::string &name) {
+auto base::xml::getProp(xmlNodePtr node, const std::string &name) -> std::string {
   xmlChar *prop = xmlGetProp(node, (xmlChar *)name.c_str());
   std::string tmp = prop ? (char *)prop : "";
   xmlFree(prop);
   return tmp;
 }
 
-std::string base::xml::getContent(xmlNodePtr node) {
+auto base::xml::getContent(xmlNodePtr node) -> std::string {
   xmlChar *prop = xmlNodeGetContent(node);
   std::string tmp = prop ? (char *)prop : "";
   xmlFree(prop);
   return tmp;
 }
 
-std::string base::xml::getContentRecursive(xmlNodePtr node) {
+auto base::xml::getContentRecursive(xmlNodePtr node) -> std::string {
   std::string result;
   result = base::xml::getContent(node);
   auto current = node->children;
@@ -118,7 +118,7 @@ std::string base::xml::getContentRecursive(xmlNodePtr node) {
   return result;
 }
 
-std::string base::xml::encodeEntities(const std::string &input) {
+auto base::xml::encodeEntities(const std::string &input) -> std::string {
   int buffSize = (int)input.size() * 2 + 1;
   std::vector<unsigned char> buff(buffSize, '\0');
   int outLen = buffSize - 1, inLen = (int)input.size();

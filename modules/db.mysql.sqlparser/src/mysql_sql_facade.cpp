@@ -50,13 +50,13 @@ using namespace bec;
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::splitSqlScript(const std::string &sql, std::list<std::string> &statements) {
+auto MysqlSqlFacadeImpl::splitSqlScript(const std::string &sql, std::list<std::string> &statements) -> int {
   return Mysql_sql_script_splitter::create()->process(sql, statements);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-static const unsigned char *skipLeadingWhitespace(const unsigned char *head, const unsigned char *tail) {
+static auto skipLeadingWhitespace(const unsigned char *head, const unsigned char *tail) -> const unsigned char * {
   while (head < tail && *head <= ' ')
     head++;
   return head;
@@ -64,7 +64,7 @@ static const unsigned char *skipLeadingWhitespace(const unsigned char *head, con
 
 //--------------------------------------------------------------------------------------------------
 
-bool isLineBreak(const unsigned char *head, const unsigned char *line_break) {
+auto isLineBreak(const unsigned char *head, const unsigned char *line_break) -> bool {
   if (*line_break == '\0')
     return false;
 
@@ -81,9 +81,9 @@ bool isLineBreak(const unsigned char *head, const unsigned char *line_break) {
  * A statement splitter to take a list of sql statements and split them into individual statements,
  * return their position and length in the original string (instead the copied strings).
  */
-int MysqlSqlFacadeImpl::splitSqlScript(const char *sql, std::size_t length, const std::string &initial_delimiter,
+auto MysqlSqlFacadeImpl::splitSqlScript(const char *sql, std::size_t length, const std::string &initial_delimiter,
                                        std::vector<std::pair<std::size_t, std::size_t> > &ranges,
-                                       const std::string &line_break) {
+                                       const std::string &line_break) -> int {
   _stop = false;
   std::string delimiter = initial_delimiter.empty() ? ";" : initial_delimiter;
   const unsigned char *delimiter_head = (unsigned char *)delimiter.c_str();
@@ -248,7 +248,7 @@ int MysqlSqlFacadeImpl::splitSqlScript(const char *sql, std::size_t length, cons
 //--------------------------------------------------------------------------------------------------
 
 // A splitter using the grt (probably for python).
-grt::BaseListRef MysqlSqlFacadeImpl::getSqlStatementRanges(const std::string &sql) {
+auto MysqlSqlFacadeImpl::getSqlStatementRanges(const std::string &sql) -> grt::BaseListRef {
   grt::BaseListRef list(true);
   std::list<std::pair<std::size_t, std::size_t> > ranges;
   Mysql_sql_script_splitter::create()->process(sql.c_str(), ranges);
@@ -264,154 +264,154 @@ grt::BaseListRef MysqlSqlFacadeImpl::getSqlStatementRanges(const std::string &sq
 
 //--------------------------------------------------------------------------------------------------
 
-Sql_parser::Ref MysqlSqlFacadeImpl::sqlParser() {
+auto MysqlSqlFacadeImpl::sqlParser() -> Sql_parser::Ref {
   return Mysql_sql_parser::create();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::parseSqlScriptString(db_CatalogRef catalog, const std::string sql) {
+auto MysqlSqlFacadeImpl::parseSqlScriptString(db_CatalogRef catalog, const std::string sql) -> int {
   return parseSqlScriptStringEx(catalog, sql, DictRef());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::parseSqlScriptStringEx(db_CatalogRef catalog, const std::string sql,
-                                               const grt::DictRef options) {
+auto MysqlSqlFacadeImpl::parseSqlScriptStringEx(db_CatalogRef catalog, const std::string sql,
+                                               const grt::DictRef options) -> int {
   return Mysql_sql_parser::create()->parse_sql_script(db_mysql_CatalogRef::cast_from(catalog), sql, options);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::parseSqlScriptFile(db_CatalogRef catalog, const std::string filename) {
+auto MysqlSqlFacadeImpl::parseSqlScriptFile(db_CatalogRef catalog, const std::string filename) -> int {
   return parseSqlScriptFileEx(catalog, filename, DictRef());
 }
 
-int MysqlSqlFacadeImpl::parseSqlScriptFileEx(db_CatalogRef catalog, const std::string filename,
-                                             const grt::DictRef options) {
+auto MysqlSqlFacadeImpl::parseSqlScriptFileEx(db_CatalogRef catalog, const std::string filename,
+                                             const grt::DictRef options) -> int {
   return Mysql_sql_parser::create()->parse_sql_script_file(db_mysql_CatalogRef::cast_from(catalog), filename, options);
 }
 
-Invalid_sql_parser::Ref MysqlSqlFacadeImpl::invalidSqlParser() {
+auto MysqlSqlFacadeImpl::invalidSqlParser() -> Invalid_sql_parser::Ref {
   return Mysql_invalid_sql_parser::create();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::parseInserts(db_TableRef table, const std::string &sql) {
+auto MysqlSqlFacadeImpl::parseInserts(db_TableRef table, const std::string &sql) -> int {
   return Mysql_invalid_sql_parser::create()->parse_inserts(db_mysql_TableRef::cast_from(table), sql);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::parseTrigger(db_TriggerRef trigger, const std::string &sql) {
+auto MysqlSqlFacadeImpl::parseTrigger(db_TriggerRef trigger, const std::string &sql) -> int {
   return Mysql_invalid_sql_parser::create()->parse_trigger(trigger, sql);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::parseRoutine(db_RoutineRef routine, const std::string &sql) {
+auto MysqlSqlFacadeImpl::parseRoutine(db_RoutineRef routine, const std::string &sql) -> int {
   return Mysql_invalid_sql_parser::create()->parse_routine(db_mysql_RoutineRef::cast_from(routine), sql);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::parseRoutines(db_RoutineGroupRef routineGroup, const std::string &sql) {
+auto MysqlSqlFacadeImpl::parseRoutines(db_RoutineGroupRef routineGroup, const std::string &sql) -> int {
   return Mysql_invalid_sql_parser::create()->parse_routines(db_mysql_RoutineGroupRef::cast_from(routineGroup), sql);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::parseView(db_ViewRef view, const std::string &sql) {
+auto MysqlSqlFacadeImpl::parseView(db_ViewRef view, const std::string &sql) -> int {
   return Mysql_invalid_sql_parser::create()->parse_view(db_mysql_ViewRef::cast_from(view), sql);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Sql_syntax_check::Ref MysqlSqlFacadeImpl::sqlSyntaxCheck() {
+auto MysqlSqlFacadeImpl::sqlSyntaxCheck() -> Sql_syntax_check::Ref {
   return Mysql_sql_syntax_check::create();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::checkSqlSyntax(const std::string &sql) {
+auto MysqlSqlFacadeImpl::checkSqlSyntax(const std::string &sql) -> int {
   return Mysql_sql_syntax_check::create()->check_sql(sql.c_str());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::checkTriggerSyntax(const std::string &sql) {
+auto MysqlSqlFacadeImpl::checkTriggerSyntax(const std::string &sql) -> int {
   return Mysql_sql_syntax_check::create()->check_trigger(sql.c_str());
 }
 
-int MysqlSqlFacadeImpl::checkViewSyntax(const std::string &sql) {
+auto MysqlSqlFacadeImpl::checkViewSyntax(const std::string &sql) -> int {
   return Mysql_sql_syntax_check::create()->check_view(sql.c_str());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::checkRoutineSyntax(const std::string &sql) {
+auto MysqlSqlFacadeImpl::checkRoutineSyntax(const std::string &sql) -> int {
   return Mysql_sql_syntax_check::create()->check_routine(sql.c_str());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Sql_semantic_check::Ref MysqlSqlFacadeImpl::sqlSemanticCheck() {
+auto MysqlSqlFacadeImpl::sqlSemanticCheck() -> Sql_semantic_check::Ref {
   return Mysql_sql_semantic_check::create();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Sql_specifics::Ref MysqlSqlFacadeImpl::sqlSpecifics() {
+auto MysqlSqlFacadeImpl::sqlSpecifics() -> Sql_specifics::Ref {
   return Mysql_sql_specifics::create();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Sql_normalizer::Ref MysqlSqlFacadeImpl::sqlNormalizer() {
+auto MysqlSqlFacadeImpl::sqlNormalizer() -> Sql_normalizer::Ref {
   return Mysql_sql_normalizer::create();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string MysqlSqlFacadeImpl::normalizeSqlStatement(const std::string sql, const std::string schema_name) {
+auto MysqlSqlFacadeImpl::normalizeSqlStatement(const std::string sql, const std::string schema_name) -> std::string {
   return Mysql_sql_normalizer::create()->normalize(sql, schema_name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string MysqlSqlFacadeImpl::removeInterTokenSpaces(const std::string sql) {
+auto MysqlSqlFacadeImpl::removeInterTokenSpaces(const std::string sql) -> std::string {
   return Mysql_sql_normalizer::create()->remove_inter_token_spaces(sql);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Sql_inserts_loader::Ref MysqlSqlFacadeImpl::sqlInsertsLoader() {
+auto MysqlSqlFacadeImpl::sqlInsertsLoader() -> Sql_inserts_loader::Ref {
   return Mysql_sql_inserts_loader::create();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Sql_schema_rename::Ref MysqlSqlFacadeImpl::sqlSchemaRenamer() {
+auto MysqlSqlFacadeImpl::sqlSchemaRenamer() -> Sql_schema_rename::Ref {
   return Mysql_sql_schema_rename::create();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MysqlSqlFacadeImpl::renameSchemaReferences(db_CatalogRef catalog, const std::string old_schema_name,
-                                               const std::string new_schema_name) {
+auto MysqlSqlFacadeImpl::renameSchemaReferences(db_CatalogRef catalog, const std::string old_schema_name,
+                                               const std::string new_schema_name) -> int {
   return Mysql_sql_schema_rename::create()->rename_schema_references(catalog, old_schema_name, new_schema_name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Sql_statement_decomposer::Ref MysqlSqlFacadeImpl::sqlStatementDecomposer(grt::DictRef db_opts) {
+auto MysqlSqlFacadeImpl::sqlStatementDecomposer(grt::DictRef db_opts) -> Sql_statement_decomposer::Ref {
   return Mysql_sql_statement_decomposer::create(db_opts);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-grt::StringListRef MysqlSqlFacadeImpl::splitSqlStatements(const std::string &sql) {
+auto MysqlSqlFacadeImpl::splitSqlStatements(const std::string &sql) -> grt::StringListRef {
   grt::StringListRef list(grt::Initialized);
   std::list<std::string> statements;
 
@@ -425,7 +425,7 @@ grt::StringListRef MysqlSqlFacadeImpl::splitSqlStatements(const std::string &sql
 
 //--------------------------------------------------------------------------------------------------
 
-static grt::BaseListRef process_ast_node(int base_offset, const SqlAstNode &item) {
+static auto process_ast_node(int base_offset, const SqlAstNode &item) -> grt::BaseListRef {
   grt::BaseListRef tuple(true);
   sql::symbol item_name = item.name();
   tuple.ginsert(grt::StringRef(item_name ? sql::symbol_names[item_name] : ""));
@@ -462,9 +462,9 @@ static grt::BaseListRef process_ast_node(int base_offset, const SqlAstNode &item
 
 //--------------------------------------------------------------------------------------------------
 
-static int parse_callback(void *user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
+static auto parse_callback(void *user_data, const MyxStatementParser *splitter, const char *sql, const SqlAstNode *tree,
                           int stmt_begin_lineno, int stmt_begin_line_pos, int stmt_end_lineno, int stmt_end_line_pos,
-                          int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) {
+                          int err_tok_lineno, int err_tok_line_pos, int err_tok_len, const std::string &err_msg) -> int {
   grt::BaseListRef result = *(grt::BaseListRef *)user_data;
 
   if (err_msg.empty())
@@ -477,7 +477,7 @@ static int parse_callback(void *user_data, const MyxStatementParser *splitter, c
 
 //--------------------------------------------------------------------------------------------------
 
-grt::BaseListRef MysqlSqlFacadeImpl::parseAstFromSqlScript(const std::string &sql) {
+auto MysqlSqlFacadeImpl::parseAstFromSqlScript(const std::string &sql) -> grt::BaseListRef {
   Mysql_sql_parser_fe parser(bec::GRTManager::get()->get_app_option_string("SqlMode"));
   grt::BaseListRef result(true);
 
@@ -491,7 +491,7 @@ grt::BaseListRef MysqlSqlFacadeImpl::parseAstFromSqlScript(const std::string &sq
 
 //--------------------------------------------------------------------------------------------------
 
-grt::BaseListRef MysqlSqlFacadeImpl::getItemFromPath(const std::string &path, const grt::BaseListRef source) {
+auto MysqlSqlFacadeImpl::getItemFromPath(const std::string &path, const grt::BaseListRef source) -> grt::BaseListRef {
   if (!source.is_valid())
     return grt::BaseListRef();
   bool valid = true;
@@ -524,8 +524,8 @@ grt::BaseListRef MysqlSqlFacadeImpl::getItemFromPath(const std::string &path, co
 
 //--------------------------------------------------------------------------------------------------
 
-bool MysqlSqlFacadeImpl::parseSelectStatementForEdit(const std::string &sql, std::string &schema_name,
-                                                     std::string &table_name, String_tuple_list &column_names) {
+auto MysqlSqlFacadeImpl::parseSelectStatementForEdit(const std::string &sql, std::string &schema_name,
+                                                     std::string &table_name, String_tuple_list &column_names) -> bool {
   bool ret_val = false;
 
   /* gets the AST tree for the given statement */
@@ -694,8 +694,8 @@ bool MysqlSqlFacadeImpl::parseSelectStatementForEdit(const std::string &sql, std
   return ret_val;
 }
 
-std::string MysqlSqlFacadeImpl::getTypeDescription(grt::BaseListRef type_node,
-                                                   std::vector<std::string> *additional_type_data_paths) {
+auto MysqlSqlFacadeImpl::getTypeDescription(grt::BaseListRef type_node,
+                                                   std::vector<std::string> *additional_type_data_paths) -> std::string {
   // Sets the data type name..
   grt::BaseListRef temp_node = grt::BaseListRef::cast_from(type_node->get(0));
   std::string description = grt::StringRef::extract_from(temp_node->get(1));
@@ -716,9 +716,9 @@ std::string MysqlSqlFacadeImpl::getTypeDescription(grt::BaseListRef type_node,
   return description;
 }
 
-bool MysqlSqlFacadeImpl::parseRoutineDetails(const std::string &sql, std::string &type, std::string &name,
+auto MysqlSqlFacadeImpl::parseRoutineDetails(const std::string &sql, std::string &type, std::string &name,
                                              String_tuple_list &parameters, std::string &return_value,
-                                             std::string &comments) {
+                                             std::string &comments) -> bool {
   bool ret_val = false;
   grt::BaseListRef temp_node;
   std::string param_name, param_type;
@@ -838,20 +838,20 @@ bool MysqlSqlFacadeImpl::parseRoutineDetails(const std::string &sql, std::string
 }
 
 //--------------------------------------------------------------------------------------------------
-static std::string symbol_from_node(grt::ValueRef node) {
+static auto symbol_from_node(grt::ValueRef node) -> std::string {
   return grt::StringRef::cast_from(grt::BaseListRef::cast_from(node)[0]);
 }
 
-static std::string value_from_node(grt::ValueRef node) {
+static auto value_from_node(grt::ValueRef node) -> std::string {
   return grt::StringRef::cast_from(grt::BaseListRef::cast_from(node)[1]);
 }
 
-static grt::BaseListRef children_from_node(grt::ValueRef node) {
+static auto children_from_node(grt::ValueRef node) -> grt::BaseListRef {
   return grt::BaseListRef::cast_from(grt::BaseListRef::cast_from(node)[2]);
 }
 
-static bool extract_schema_object_idents(grt::BaseListRef node, std::string &schema_name, std::string &object_name,
-                                         int offset = 0) {
+static auto extract_schema_object_idents(grt::BaseListRef node, std::string &schema_name, std::string &object_name,
+                                         int offset = 0) -> bool {
   int c = (int)node.count();
   if (c > offset + 0 && symbol_from_node(node[offset + 0]) == "ident") {
     if (c > offset + 2 && symbol_from_node(node[offset + 1]) == "46" && symbol_from_node(node[offset + 2]) == "ident") {
@@ -865,8 +865,8 @@ static bool extract_schema_object_idents(grt::BaseListRef node, std::string &sch
   return false;
 }
 
-bool MysqlSqlFacadeImpl::parseDropStatement(const std::string &sql, std::string &object_type,
-                                            std::vector<std::pair<std::string, std::string> > &object_names) {
+auto MysqlSqlFacadeImpl::parseDropStatement(const std::string &sql, std::string &object_type,
+                                            std::vector<std::pair<std::string, std::string> > &object_names) -> bool {
   bool ret_val = false;
 
   /* gets the AST tree for the given statement */
@@ -959,6 +959,6 @@ bool MysqlSqlFacadeImpl::parseDropStatement(const std::string &sql, std::string 
  * Signals any ongoing process to stop. This must be called from a different thread than from where
  * the processing was started to make it work.
  */
-void MysqlSqlFacadeImpl::stop_processing() {
+auto MysqlSqlFacadeImpl::stop_processing() -> void {
   _stop = true;
 }

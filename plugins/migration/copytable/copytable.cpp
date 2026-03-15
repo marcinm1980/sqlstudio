@@ -70,7 +70,7 @@ DEFAULT_LOG_DOMAIN("copytable");
 #endif
 
 
-static const char *mysql_field_type_to_name(enum enum_field_types type) {
+static auto mysql_field_type_to_name(enum enum_field_types type) -> const char * {
   switch (type) {
     case MYSQL_TYPE_DECIMAL:
       return "MYSQL_TYPE_DECIMAL";
@@ -133,7 +133,7 @@ static const char *mysql_field_type_to_name(enum enum_field_types type) {
   }
 }
 
-static const char *odbc_type_to_name(SQLSMALLINT type) {
+static auto odbc_type_to_name(SQLSMALLINT type) -> const char * {
   switch (type) {
     case SQL_CHAR:
       return "SQL_CHAR";
@@ -218,7 +218,7 @@ static const char *odbc_type_to_name(SQLSMALLINT type) {
   }
 }
 
-std::string QueryBuilder::build_query() {
+auto QueryBuilder::build_query() -> std::string {
   std::string q;
   std::string where_cond;
   for (size_t i = 0; i < this->_where.size(); ++i) {
@@ -242,7 +242,7 @@ std::string QueryBuilder::build_query() {
   return q;
 }
 
-std::string ConnectionError::process(SQLRETURN retcode, SQLSMALLINT htype, SQLHANDLE handle) {
+auto ConnectionError::process(SQLRETURN retcode, SQLSMALLINT htype, SQLHANDLE handle) -> std::string {
   SQLINTEGER i = 0;
   SQLINTEGER native;
   SQLCHAR state[7];
@@ -397,11 +397,11 @@ RowBuffer::~RowBuffer() {
   }
 }
 
-void RowBuffer::clear() {
+auto RowBuffer::clear() -> void {
   _current_field = 0;
 }
 
-void RowBuffer::prepare_add_string(char *&buffer, size_t &buffer_len, unsigned long *&length) {
+auto RowBuffer::prepare_add_string(char *&buffer, size_t &buffer_len, unsigned long *&length) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_STRING)
     throw std::logic_error(base::strfmt("Type mismatch fetching field %i (should be string, was %s)",
@@ -412,7 +412,7 @@ void RowBuffer::prepare_add_string(char *&buffer, size_t &buffer_len, unsigned l
   length = bind.length;
 }
 
-void RowBuffer::prepare_add_float(char *&buffer, size_t &buffer_len) {
+auto RowBuffer::prepare_add_float(char *&buffer, size_t &buffer_len) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_FLOAT)
     throw std::logic_error(base::strfmt("Type mismatch fetching field %i (should be float, was %s)", _current_field + 1,
@@ -422,7 +422,7 @@ void RowBuffer::prepare_add_float(char *&buffer, size_t &buffer_len) {
   buffer_len = bind.buffer_length;
 }
 
-void RowBuffer::prepare_add_double(char *&buffer, size_t &buffer_len) {
+auto RowBuffer::prepare_add_double(char *&buffer, size_t &buffer_len) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_DOUBLE)
     throw std::logic_error(base::strfmt("Type mismatch fetching field %i (should be double, was %s)",
@@ -432,7 +432,7 @@ void RowBuffer::prepare_add_double(char *&buffer, size_t &buffer_len) {
   buffer_len = bind.buffer_length;
 }
 
-void RowBuffer::prepare_add_bigint(char *&buffer, size_t &buffer_len) {
+auto RowBuffer::prepare_add_bigint(char *&buffer, size_t &buffer_len) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_LONGLONG)
     throw std::logic_error(base::strfmt("Type mismatch fetching field %i (should be bigint, was %s)",
@@ -442,7 +442,7 @@ void RowBuffer::prepare_add_bigint(char *&buffer, size_t &buffer_len) {
   buffer_len = bind.buffer_length;
 }
 
-void RowBuffer::prepare_add_long(char *&buffer, size_t &buffer_len) {
+auto RowBuffer::prepare_add_long(char *&buffer, size_t &buffer_len) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_LONG)
     throw std::logic_error(base::strfmt("Type mismatch fetching field %i (should be long, was %s)", _current_field + 1,
@@ -452,7 +452,7 @@ void RowBuffer::prepare_add_long(char *&buffer, size_t &buffer_len) {
   buffer_len = bind.buffer_length;
 }
 
-void RowBuffer::prepare_add_short(char *&buffer, size_t &buffer_len) {
+auto RowBuffer::prepare_add_short(char *&buffer, size_t &buffer_len) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_SHORT)
     throw std::logic_error(base::strfmt("Type mismatch fetching field %i (should be short, was %s)", _current_field + 1,
@@ -462,7 +462,7 @@ void RowBuffer::prepare_add_short(char *&buffer, size_t &buffer_len) {
   buffer_len = bind.buffer_length;
 }
 
-void RowBuffer::prepare_add_tiny(char *&buffer, size_t &buffer_len) {
+auto RowBuffer::prepare_add_tiny(char *&buffer, size_t &buffer_len) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_TINY)
     throw std::logic_error(base::strfmt("Type mismatch fetching field %i (should be char, was %s)", _current_field + 1,
@@ -472,7 +472,7 @@ void RowBuffer::prepare_add_tiny(char *&buffer, size_t &buffer_len) {
   buffer_len = bind.buffer_length;
 }
 
-void RowBuffer::prepare_add_time(char *&buffer, size_t &buffer_len) {
+auto RowBuffer::prepare_add_time(char *&buffer, size_t &buffer_len) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_DATETIME && bind.buffer_type != MYSQL_TYPE_TIMESTAMP &&
       bind.buffer_type != MYSQL_TYPE_TIME && bind.buffer_type != MYSQL_TYPE_DATE &&
@@ -484,7 +484,7 @@ void RowBuffer::prepare_add_time(char *&buffer, size_t &buffer_len) {
   buffer_len = bind.buffer_length;
 }
 
-void RowBuffer::prepare_add_geometry(char *&buffer, size_t &buffer_len, unsigned long *&length) {
+auto RowBuffer::prepare_add_geometry(char *&buffer, size_t &buffer_len, unsigned long *&length) -> void {
   MYSQL_BIND &bind(at(_current_field));
   if (bind.buffer_type != MYSQL_TYPE_GEOMETRY)
     throw std::logic_error(base::strfmt("Type mismatch fetching field %i (should be geometry, was %s)",
@@ -495,13 +495,13 @@ void RowBuffer::prepare_add_geometry(char *&buffer, size_t &buffer_len, unsigned
   length = bind.length;
 }
 
-void RowBuffer::finish_field(bool was_null) {
+auto RowBuffer::finish_field(bool was_null) -> void {
   *at(_current_field).is_null = was_null;
 
   _current_field++;
 }
 
-bool RowBuffer::check_if_blob() {
+auto RowBuffer::check_if_blob() -> bool {
   if (at(_current_field).buffer_type == MYSQL_TYPE_BLOB)
     return true;
   return false;
@@ -512,7 +512,7 @@ enum enum_field_types RowBuffer::target_type(bool &unsig) {
   return at(_current_field).buffer_type;
 }
 
-void RowBuffer::send_blob_data(const char *data, size_t length) {
+auto RowBuffer::send_blob_data(const char *data, size_t length) -> void {
   _send_blob_data(_current_field, data, length);
 }
 
@@ -529,13 +529,13 @@ CopyDataSource::CopyDataSource()
 {
 }
 
-void CopyDataSource::set_max_blob_chunk_size(size_t size) {
+auto CopyDataSource::set_max_blob_chunk_size(size_t size) -> void {
   _max_blob_chunk_size = size;
   if (_blob_buffer.size() < size)
     _blob_buffer.resize(size);
 }
 
-void CopyDataSource::set_block_size(int bsize) {
+auto CopyDataSource::set_block_size(int bsize) -> void {
   _block_size = bsize;
 }
 
@@ -555,8 +555,8 @@ void CopyDataSource::set_block_size(int bsize) {
  *             col1 > val1 or (col1 = val1 and col2 > val2) or (col1 = val1 and col2 = val2 and col3 > val3)
  *           And so on...
  */
-std::string CopyDataSource::get_where_condition(const std::vector<std::string> &pk_columns,
-                                                const std::vector<std::string> &last_pk) {
+auto CopyDataSource::get_where_condition(const std::vector<std::string> &pk_columns,
+                                                const std::vector<std::string> &last_pk) -> std::string {
   std::string where_cond;
   bool add_and = false;
 
@@ -827,9 +827,9 @@ SQLRETURN ODBCCopyDataSource::get_geometry_buffer_data(RowBuffer &rowbuffer, int
   return ret;
 }
 
-size_t ODBCCopyDataSource::count_rows(const std::string &schema, const std::string &table,
+auto ODBCCopyDataSource::count_rows(const std::string &schema, const std::string &table,
                                       const std::vector<std::string> &pk_columns, const CopySpec &spec,
-                                      const std::vector<std::string> &last_pkeys) {
+                                      const std::vector<std::string> &last_pkeys) -> size_t {
   SQLHSTMT stmt;
   SQLRETURN ret;
   if (!SQL_SUCCEEDED(ret = SQLAllocHandle(SQL_HANDLE_STMT, _dbc, &stmt)))
@@ -884,9 +884,9 @@ size_t ODBCCopyDataSource::count_rows(const std::string &schema, const std::stri
   return (size_t)count;
 }
 
-std::shared_ptr<std::vector<ColumnInfo> > ODBCCopyDataSource::begin_select_table(
+auto ODBCCopyDataSource::begin_select_table(
   const std::string &schema, const std::string &table, const std::vector<std::string> &pk_columns,
-  const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) {
+  const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) -> std::shared_ptr<std::vector<ColumnInfo> > {
   std::shared_ptr<std::vector<ColumnInfo> > columns(new std::vector<ColumnInfo>());
   _columns = columns;
   _schema_name = schema;
@@ -977,14 +977,14 @@ std::shared_ptr<std::vector<ColumnInfo> > ODBCCopyDataSource::begin_select_table
   return columns;
 }
 
-void ODBCCopyDataSource::end_select_table() {
+auto ODBCCopyDataSource::end_select_table() -> void {
   SQLFreeHandle(SQL_HANDLE_STMT, _stmt);
   _column_types.clear();
   _columns.reset();
   _stmt_ok = false;
 }
 
-bool ODBCCopyDataSource::fetch_row(RowBuffer &rowbuffer) {
+auto ODBCCopyDataSource::fetch_row(RowBuffer &rowbuffer) -> bool {
   if (SQL_SUCCEEDED(SQLFetch(_stmt))) {
     for (int i = 1; i <= _column_count; i++) {
       SQLRETURN ret = 0;
@@ -1267,9 +1267,9 @@ MySQLCopyDataSource::MySQLCopyDataSource(const std::string &hostname, int port, 
     throw ConnectionError(q, &_mysql);
 }
 
-size_t MySQLCopyDataSource::count_rows(const std::string &schema, const std::string &table,
+auto MySQLCopyDataSource::count_rows(const std::string &schema, const std::string &table,
                                        const std::vector<std::string> &pk_columns, const CopySpec &spec,
-                                       const std::vector<std::string> &last_pkeys) {
+                                       const std::vector<std::string> &last_pkeys) -> size_t {
   std::string q = base::strfmt("USE %s", schema.c_str());
 
   if (mysql_query(&_mysql, q.data()) < 0)
@@ -1333,9 +1333,9 @@ size_t MySQLCopyDataSource::count_rows(const std::string &schema, const std::str
   return (size_t)count;
 }
 
-std::shared_ptr<std::vector<ColumnInfo> > MySQLCopyDataSource::begin_select_table(
+auto MySQLCopyDataSource::begin_select_table(
   const std::string &schema, const std::string &table, const std::vector<std::string> &pk_columns,
-  const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) {
+  const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) -> std::shared_ptr<std::vector<ColumnInfo> > {
   std::shared_ptr<std::vector<ColumnInfo> > columns(new std::vector<ColumnInfo>());
 
   _schema_name = schema;
@@ -1415,7 +1415,7 @@ std::shared_ptr<std::vector<ColumnInfo> > MySQLCopyDataSource::begin_select_tabl
   return columns;
 }
 
-void MySQLCopyDataSource::end_select_table() {
+auto MySQLCopyDataSource::end_select_table() -> void {
   if (_select_stmt) {
     if (mysql_stmt_close(_select_stmt))
       throw ConnectionError("mysql_stmt_close", &_mysql);
@@ -1424,7 +1424,7 @@ void MySQLCopyDataSource::end_select_table() {
   }
 }
 
-bool MySQLCopyDataSource::fetch_row(RowBuffer &rowbuffer) {
+auto MySQLCopyDataSource::fetch_row(RowBuffer &rowbuffer) -> bool {
   bool ret_val = true;
 
   if (mysql_stmt_bind_result(_select_stmt, &(rowbuffer[0])) != 0)
@@ -1494,7 +1494,7 @@ MySQLCopyDataSource::~MySQLCopyDataSource() {
 
 // -------------------------------------------------------------------------------------------------
 
-void MySQLCopyDataTarget::init() {
+auto MySQLCopyDataTarget::init() -> void {
   /*
    As of MySQL 5.1.57, the max_long_data_size system variable controls the maximum size of parameter
    values that can be sent with mysql_stmt_send_long_data(). If this variable not set at server startup,
@@ -1538,8 +1538,8 @@ void MySQLCopyDataTarget::init() {
   }
 }
 
-std::vector<std::string> MySQLCopyDataTarget::get_last_pkeys(const std::vector<std::string> &pk_columns,
-                                                             const std::string &schema, const std::string &table) {
+auto MySQLCopyDataTarget::get_last_pkeys(const std::vector<std::string> &pk_columns,
+                                                             const std::string &schema, const std::string &table) -> std::vector<std::string> {
   std::vector<std::string> ret;
   std::string order_by_cond;
   if (pk_columns.empty())
@@ -1603,7 +1603,7 @@ std::vector<std::string> MySQLCopyDataTarget::get_last_pkeys(const std::vector<s
   return ret;
 }
 
-MYSQL_RES *MySQLCopyDataTarget::get_server_value(const std::string &variable) {
+auto MySQLCopyDataTarget::get_server_value(const std::string &variable) -> MYSQL_RES * {
   std::string q = "SHOW VARIABLES LIKE '" + variable + "'";
   if (mysql_real_query(&_mysql, q.data(), (unsigned long)q.length()) < 0)
     throw ConnectionError(q, &_mysql);
@@ -1615,7 +1615,7 @@ MYSQL_RES *MySQLCopyDataTarget::get_server_value(const std::string &variable) {
   return result;
 }
 
-void MySQLCopyDataTarget::get_server_value(const std::string &variable, std::string &value) {
+auto MySQLCopyDataTarget::get_server_value(const std::string &variable, std::string &value) -> void {
   MYSQL_RES *result = get_server_value(variable);
 
   MYSQL_ROW row = mysql_fetch_row(result);
@@ -1626,7 +1626,7 @@ void MySQLCopyDataTarget::get_server_value(const std::string &variable, std::str
   mysql_free_result(result);
 }
 
-void MySQLCopyDataTarget::get_server_value(const std::string &variable, unsigned long &value) {
+auto MySQLCopyDataTarget::get_server_value(const std::string &variable, unsigned long &value) -> void {
   MYSQL_RES *result = get_server_value(variable);
 
   MYSQL_ROW row = mysql_fetch_row(result);
@@ -1639,7 +1639,7 @@ void MySQLCopyDataTarget::get_server_value(const std::string &variable, unsigned
   mysql_free_result(result);
 }
 
-void MySQLCopyDataTarget::get_server_version() {
+auto MySQLCopyDataTarget::get_server_version() -> void {
   std::string version;
 
   get_server_value("version", version);
@@ -1656,12 +1656,12 @@ void MySQLCopyDataTarget::get_server_version() {
   logDebug("Detected server version=%s\n", version.c_str());
 }
 
-bool MySQLCopyDataTarget::is_mysql_version_at_least(const int _major, const int _minor, const int _build) {
+auto MySQLCopyDataTarget::is_mysql_version_at_least(const int _major, const int _minor, const int _build) -> bool {
   return _major_version > _major || (_major_version == _major && _minor_version > _minor) ||
          (_major_version == _major && _minor_version == _minor && _build_version >= _build);
 }
 
-std::string MySQLCopyDataTarget::ps_query() {
+auto MySQLCopyDataTarget::ps_query() -> std::string {
   std::string q("INSERT INTO ");
   q.append(base::strfmt("%s.%s", _schema.c_str(), _table.c_str())).append(" (");
   for (std::vector<ColumnInfo>::const_iterator iter = _columns->begin(); iter != _columns->end(); ++iter) {
@@ -1861,12 +1861,12 @@ MySQLCopyDataTarget::~MySQLCopyDataTarget() {
   mysql_close(&_mysql);
 }
 
-void MySQLCopyDataTarget::set_truncate(bool flag) {
+auto MySQLCopyDataTarget::set_truncate(bool flag) -> void {
   _truncate = flag;
 }
 
-void MySQLCopyDataTarget::get_generated_columns(const std::string &schema, const std::string &table,
-                                                std::vector<std::string> &gc) {
+auto MySQLCopyDataTarget::get_generated_columns(const std::string &schema, const std::string &table,
+                                                std::vector<std::string> &gc) -> void {
   gc.clear();
   std::string q = base::strfmt(
     "SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '%s' AND TABLE_NAME = '%s' AND EXTRA like "
@@ -1887,8 +1887,8 @@ void MySQLCopyDataTarget::get_generated_columns(const std::string &schema, const
   mysql_free_result(result);
 }
 
-void MySQLCopyDataTarget::set_target_table(const std::string &schema, const std::string &table,
-                                           std::shared_ptr<std::vector<ColumnInfo> > columns) {
+auto MySQLCopyDataTarget::set_target_table(const std::string &schema, const std::string &table,
+                                           std::shared_ptr<std::vector<ColumnInfo> > columns) -> void {
   _schema = schema;
   _table = table;
   _columns = columns;
@@ -1969,14 +1969,14 @@ void MySQLCopyDataTarget::set_target_table(const std::string &schema, const std:
   }
 }
 
-void MySQLCopyDataTarget::send_long_data(int column, const char *data, size_t length) {
+auto MySQLCopyDataTarget::send_long_data(int column, const char *data, size_t length) -> void {
   if (mysql_stmt_send_long_data(_insert_stmt, column, data, (unsigned long)length)) {
     std::string error = base::strfmt("Error sending long data: %s", mysql_stmt_error(_insert_stmt));
     throw std::logic_error(error);
   }
 }
 
-void MySQLCopyDataTarget::begin_inserts() {
+auto MySQLCopyDataTarget::begin_inserts() -> void {
   MYSQL_STMT *stmt;
 
   // Initialize variables for non prepared insert statement
@@ -2015,7 +2015,7 @@ void MySQLCopyDataTarget::begin_inserts() {
   }
 }
 
-int MySQLCopyDataTarget::end_inserts(bool flush) {
+auto MySQLCopyDataTarget::end_inserts(bool flush) -> int {
   int ret_val = 0;
 
   // When doing bulk inserts it is possible that some records are still pending on the
@@ -2038,7 +2038,7 @@ int MySQLCopyDataTarget::end_inserts(bool flush) {
   return ret_val;
 }
 
-int MySQLCopyDataTarget::do_insert(bool final) {
+auto MySQLCopyDataTarget::do_insert(bool final) -> int {
   int ret_val = 0;
 
   if (_use_bulk_inserts) {
@@ -2105,7 +2105,7 @@ int MySQLCopyDataTarget::do_insert(bool final) {
   return ret_val;
 }
 
-bool MySQLCopyDataTarget::format_bulk_record() {
+auto MySQLCopyDataTarget::format_bulk_record() -> bool {
   bool ret_val = true;
   _bulk_insert_record.append("(", 1);
 
@@ -2124,7 +2124,7 @@ bool MySQLCopyDataTarget::format_bulk_record() {
   return ret_val;
 }
 
-bool MySQLCopyDataTarget::append_bulk_column(size_t col_index) {
+auto MySQLCopyDataTarget::append_bulk_column(size_t col_index) -> bool {
   std::string data;
   bool ret_val = true;
 
@@ -2307,18 +2307,18 @@ bool MySQLCopyDataTarget::append_bulk_column(size_t col_index) {
   return ret_val;
 }
 
-RowBuffer &MySQLCopyDataTarget::row_buffer() {
+auto MySQLCopyDataTarget::row_buffer() -> RowBuffer & {
   return *_row_buffer;
 }
 
-long long MySQLCopyDataTarget::get_max_value(const std::string &key) {
+auto MySQLCopyDataTarget::get_max_value(const std::string &key) -> long long {
   std::string q = base::sqlstring("SELECT max(!) FROM !.!", 0) << key << _schema << _table;
   mysql_query(&_mysql, q.c_str());
   return 0;
 }
 
-void MySQLCopyDataTarget::get_triggers_for_schema(const std::string &schema,
-                                                  std::map<std::string, std::string> &triggers) {
+auto MySQLCopyDataTarget::get_triggers_for_schema(const std::string &schema,
+                                                  std::map<std::string, std::string> &triggers) -> void {
   // Now pulls the trigger names
   logDebug("Retrieving trigger list\n");
   std::string get_trigger_list = base::sqlstring("SHOW TRIGGERS FROM !", 0) << schema;
@@ -2337,8 +2337,8 @@ void MySQLCopyDataTarget::get_triggers_for_schema(const std::string &schema,
   mysql_free_result(result);
 }
 
-bool MySQLCopyDataTarget::get_trigger_definitions_for_schema(const std::string &schema,
-                                                             std::map<std::string, std::string> &triggers) {
+auto MySQLCopyDataTarget::get_trigger_definitions_for_schema(const std::string &schema,
+                                                             std::map<std::string, std::string> &triggers) -> bool {
   bool success = true;
   std::map<std::string, std::string>::iterator index, end = triggers.end();
 
@@ -2372,7 +2372,7 @@ bool MySQLCopyDataTarget::get_trigger_definitions_for_schema(const std::string &
   return success;
 }
 
-void MySQLCopyDataTarget::backup_triggers_for_schema(const std::string &schema) {
+auto MySQLCopyDataTarget::backup_triggers_for_schema(const std::string &schema) -> void {
   bool created_table = false;
   std::string tmp_trigger_table(TMP_TRIGGER_TABLE);
   std::map<std::string, std::string> triggers;
@@ -2446,7 +2446,7 @@ void MySQLCopyDataTarget::backup_triggers_for_schema(const std::string &schema) 
   }
 }
 
-void MySQLCopyDataTarget::drop_trigger_backups(const std::string &schema) {
+auto MySQLCopyDataTarget::drop_trigger_backups(const std::string &schema) -> void {
   logDebug("Deleting trigger backups\n");
 
   std::string drop_trigger_table = base::sqlstring("DROP TABLE !.!", 0) << schema << TMP_TRIGGER_TABLE;
@@ -2455,7 +2455,7 @@ void MySQLCopyDataTarget::drop_trigger_backups(const std::string &schema) {
     throw ConnectionError("Dropping trigger backups", &_mysql);
 }
 
-void MySQLCopyDataTarget::backup_triggers(std::set<std::string> &schemas) {
+auto MySQLCopyDataTarget::backup_triggers(std::set<std::string> &schemas) -> void {
   std::set<std::string>::const_iterator index;
   std::set<std::string>::const_iterator end = schemas.end();
 
@@ -2463,7 +2463,7 @@ void MySQLCopyDataTarget::backup_triggers(std::set<std::string> &schemas) {
     backup_triggers_for_schema(base::unquote_identifier(*index));
 }
 
-void MySQLCopyDataTarget::restore_triggers(std::set<std::string> &schemas) {
+auto MySQLCopyDataTarget::restore_triggers(std::set<std::string> &schemas) -> void {
   std::set<std::string>::const_iterator index;
   std::set<std::string>::const_iterator end = schemas.end();
 
@@ -2529,12 +2529,12 @@ void MySQLCopyDataTarget::restore_triggers(std::set<std::string> &schemas) {
 TaskQueue::TaskQueue() {
 }
 
-void TaskQueue::add_task(const TableParam &task) {
+auto TaskQueue::add_task(const TableParam &task) -> void {
   base::MutexLock lock(_task_mutex);
   _tasks.push_back(task);
 }
 
-bool TaskQueue::get_task(TableParam &task) {
+auto TaskQueue::get_task(TableParam &task) -> bool {
   bool ret_val = false;
 
   base::MutexLock lock(_task_mutex);
@@ -2558,7 +2558,7 @@ CopyDataTask::CopyDataTask(const std::string name, CopyDataSource *psource, MySQ
   _thread = base::create_thread(&CopyDataTask::thread_func, this);
 }
 
-gpointer CopyDataTask::thread_func(gpointer data) {
+auto CopyDataTask::thread_func(gpointer data) -> gpointer {
   CopyDataTask *self = (CopyDataTask *)data;
 
   TableParam tparam;
@@ -2570,7 +2570,7 @@ gpointer CopyDataTask::thread_func(gpointer data) {
   return NULL;
 }
 
-void CopyDataTask::copy_table(const TableParam &task) {
+auto CopyDataTask::copy_table(const TableParam &task) -> void {
   std::shared_ptr<std::vector<ColumnInfo> > columns;
 
   long long i = 0, total = 0;
@@ -2636,8 +2636,8 @@ void CopyDataTask::copy_table(const TableParam &task) {
   fflush(stdout);
 }
 
-void CopyDataTask::report_progress(const std::string &schema, const std::string &table, long long current,
-                                   long long total) {
+auto CopyDataTask::report_progress(const std::string &schema, const std::string &table, long long current,
+                                   long long total) -> void {
   printf("PROGRESS:%s.%s:%lli:%lli\n", schema.c_str(), table.c_str(), current, total);
   fflush(stdout);
 }
@@ -2645,7 +2645,7 @@ void CopyDataTask::report_progress(const std::string &schema, const std::string 
 CopyDataTask::~CopyDataTask() {
 }
 
-void MySQLCopyDataTarget::InsertBuffer::reset(size_t size) {
+auto MySQLCopyDataTarget::InsertBuffer::reset(size_t size) -> void {
   length = 0;
   last_insert_length = 0;
 
@@ -2660,11 +2660,11 @@ void MySQLCopyDataTarget::InsertBuffer::reset(size_t size) {
     throw std::runtime_error(base::strfmt("Not enough memory to allocate insert buffer of size %li", (long)size));
 }
 
-void MySQLCopyDataTarget::InsertBuffer::end_insert() {
+auto MySQLCopyDataTarget::InsertBuffer::end_insert() -> void {
   last_insert_length = length;
 }
 
-bool MySQLCopyDataTarget::InsertBuffer::append(const char *data, size_t dlength) {
+auto MySQLCopyDataTarget::InsertBuffer::append(const char *data, size_t dlength) -> bool {
   if (dlength > space_left())
     return false;
   memcpy(buffer + length, data, dlength);
@@ -2672,11 +2672,11 @@ bool MySQLCopyDataTarget::InsertBuffer::append(const char *data, size_t dlength)
   return true;
 }
 
-bool MySQLCopyDataTarget::InsertBuffer::append(const char *data) {
+auto MySQLCopyDataTarget::InsertBuffer::append(const char *data) -> bool {
   return append(data, strlen(data));
 }
 
-bool MySQLCopyDataTarget::InsertBuffer::append_escaped(const char *data, size_t dlength) {
+auto MySQLCopyDataTarget::InsertBuffer::append_escaped(const char *data, size_t dlength) -> bool {
   // We need to check for the worst case scenario where all the
   // characters are escaped
   if ((dlength * 2) > space_left())
@@ -2705,6 +2705,6 @@ bool MySQLCopyDataTarget::InsertBuffer::append_escaped(const char *data, size_t 
   return true;
 }
 
-size_t MySQLCopyDataTarget::InsertBuffer::space_left() {
+auto MySQLCopyDataTarget::InsertBuffer::space_left() -> size_t {
   return size - length;
 }

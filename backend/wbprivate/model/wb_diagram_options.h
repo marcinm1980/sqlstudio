@@ -47,25 +47,25 @@ namespace wb {
 
     boost::signals2::signal<void()> _changed_signal;
 
-    void get_min_size_in_pages(int &xc, int &yc);
+    auto get_min_size_in_pages(int &xc, int &yc) -> void;
 
   public:
     DiagramOptionsBE(mdc::CanvasView *view, model_DiagramRef target_view, WBContext *wb);
     ~DiagramOptionsBE();
 
-    void update_size();
+    auto update_size() -> void;
 
-    std::string get_name();
-    void set_name(const std::string &name);
+    auto get_name() -> std::string;
+    auto set_name(const std::string &name) -> void;
 
-    int get_xpages();
-    int get_ypages();
-    void set_xpages(int c);
-    void set_ypages(int c);
+    auto get_xpages() -> int;
+    auto get_ypages() -> int;
+    auto set_xpages(int c) -> void;
+    auto set_ypages(int c) -> void;
 
-    void get_max_page_counts(int &max_xpages, int &max_ypages);
+    auto get_max_page_counts(int &max_xpages, int &max_ypages) -> void;
 
-    void commit();
+    auto commit() -> void;
 
     boost::signals2::signal<void()> *signal_changed() {
       return &_changed_signal;

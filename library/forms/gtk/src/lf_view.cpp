@@ -39,7 +39,7 @@ DEFAULT_LOG_DOMAIN("mforms.linux")
 namespace mforms {
   namespace gtk {
 
-    mforms::ModifierKey GetModifiers(const guint state, const guint keyval) {
+    auto GetModifiers(const guint state, const guint keyval) -> mforms::ModifierKey {
       mforms::ModifierKey modifiers = mforms::ModifierNoModifier;
       Gdk::ModifierType mod_type = Gtk::AccelGroup::get_default_mod_mask();
 
@@ -68,7 +68,7 @@ namespace mforms {
       return modifiers;
     }
 
-    mforms::KeyCode GetKeys(const guint keyval) {
+    auto GetKeys(const guint keyval) -> mforms::KeyCode {
       mforms::KeyCode code = mforms::KeyUnkown;
       switch (keyval) {
         case GDK_Home:
@@ -160,7 +160,7 @@ namespace mforms {
     }
 
     // get the widget that does the actual work. most of the time it will be the same as the outer one
-    Gtk::Widget *ViewImpl::get_inner() const {
+    auto ViewImpl::get_inner() const -> Gtk::Widget * {
       return get_outer();
     }
 
@@ -172,11 +172,11 @@ namespace mforms {
         _drag_image(NULL) {
     }
 
-    void ViewImpl::destroy(::mforms::View *self) {
+    auto ViewImpl::destroy(::mforms::View *self) -> void {
       // Nothing to do here. Freeing platform objects happens in lf_base.h, via data free function.
     }
 
-    void ViewImpl::show(::mforms::View *self, bool show) {
+    auto ViewImpl::show(::mforms::View *self, bool show) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
 
       if (view) {
@@ -184,7 +184,7 @@ namespace mforms {
       }
     }
 
-    void ViewImpl::show(bool show) {
+    auto ViewImpl::show(bool show) -> void {
       Gtk::Widget *widget = get_outer();
       if (show)
         widget->show();
@@ -192,14 +192,14 @@ namespace mforms {
         widget->hide();
     }
 
-    bool ViewImpl::is_shown(::mforms::View *self) {
+    auto ViewImpl::is_shown(::mforms::View *self) -> bool {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         return view->get_outer()->is_visible();
       return false;
     }
 
-    bool ViewImpl::is_fully_visible(::mforms::View *self) {
+    auto ViewImpl::is_fully_visible(::mforms::View *self) -> bool {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         // INFO: in gtk3 we can use gtk_widget_is_visible and this code can be removed.
@@ -221,7 +221,7 @@ namespace mforms {
       return false;
     }
 
-    void ViewImpl::set_tooltip(::mforms::View *self, const std::string &text) {
+    auto ViewImpl::set_tooltip(::mforms::View *self, const std::string &text) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
 #if GTK_VERSION_GT(2, 10)
@@ -231,14 +231,14 @@ namespace mforms {
       }
     }
 
-    void ViewImpl::set_font(::mforms::View *self, const std::string &fontDescription) {
+    auto ViewImpl::set_font(::mforms::View *self, const std::string &fontDescription) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         // apply font settings
       }
     }
 
-    int ViewImpl::get_width(const ::mforms::View *self) {
+    auto ViewImpl::get_width(const ::mforms::View *self) -> int {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         Gtk::Widget *widget = view->get_outer();
@@ -247,7 +247,7 @@ namespace mforms {
       return 0;
     }
 
-    int ViewImpl::get_height(const ::mforms::View *self) {
+    auto ViewImpl::get_height(const ::mforms::View *self) -> int {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         Gtk::Widget *widget = view->get_outer();
@@ -256,7 +256,7 @@ namespace mforms {
       return 0;
     }
 
-    int ViewImpl::get_preferred_width(::mforms::View *self) {
+    auto ViewImpl::get_preferred_width(::mforms::View *self) -> int {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         return view->get_preferred_width();
@@ -264,26 +264,26 @@ namespace mforms {
       return 0;
     }
 
-    int ViewImpl::get_preferred_width() {
+    auto ViewImpl::get_preferred_width() -> int {
       int minimum, natural;
       get_outer()->get_preferred_width(minimum, natural);
       return natural;
     }
 
-    int ViewImpl::get_preferred_height(::mforms::View *self) {
+    auto ViewImpl::get_preferred_height(::mforms::View *self) -> int {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         return view->get_preferred_height();
       return 0;
     }
 
-    int ViewImpl::get_preferred_height() {
+    auto ViewImpl::get_preferred_height() -> int {
       int minimum, natural;
       get_outer()->get_preferred_height(minimum, natural);
       return natural;
     }
 
-    int ViewImpl::get_x(const ::mforms::View *self) {
+    auto ViewImpl::get_x(const ::mforms::View *self) -> int {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         Gtk::Widget *widget = view->get_outer();
@@ -292,7 +292,7 @@ namespace mforms {
       return 0;
     }
 
-    int ViewImpl::get_y(const ::mforms::View *self) {
+    auto ViewImpl::get_y(const ::mforms::View *self) -> int {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         Gtk::Widget *widget = view->get_outer();
@@ -301,13 +301,13 @@ namespace mforms {
       return 0;
     }
 
-    void ViewImpl::set_size(::mforms::View *self, int w, int h) {
+    auto ViewImpl::set_size(::mforms::View *self, int w, int h) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         view->set_size(w, h);
     }
 
-    void ViewImpl::set_size(int width, int height) {
+    auto ViewImpl::set_size(int width, int height) -> void {
       Gtk::Window *wnd = dynamic_cast<Gtk::Window *>(get_outer());
       if (wnd != nullptr) {
         wnd->set_default_size(width, height);
@@ -315,17 +315,17 @@ namespace mforms {
         get_outer()->set_size_request(width, height);
     }
 
-    void ViewImpl::set_min_size(::mforms::View *self, int w, int h) {
+    auto ViewImpl::set_min_size(::mforms::View *self, int w, int h) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         view->set_min_size(w, h);
     }
 
-    void ViewImpl::set_min_size(int width, int height) {
+    auto ViewImpl::set_min_size(int width, int height) -> void {
       get_outer()->set_size_request(width, height);
     }
 
-    void ViewImpl::set_position(::mforms::View *self, int x, int y) {
+    auto ViewImpl::set_position(::mforms::View *self, int x, int y) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         mforms::View *parent = self->get_parent();
@@ -337,7 +337,7 @@ namespace mforms {
       }
     }
 
-    std::pair<int, int> ViewImpl::client_to_screen(::mforms::View *self, int x, int y) {
+    auto ViewImpl::client_to_screen(::mforms::View *self, int x, int y) -> std::pair<int, int> {
       ViewImpl *view = self->get_data<ViewImpl>();
 
       if (view) {
@@ -365,7 +365,7 @@ namespace mforms {
       return std::pair<int, int>(0, 0);
     }
 
-    void ViewImpl::set_enabled(::mforms::View *self, bool flag) {
+    auto ViewImpl::set_enabled(::mforms::View *self, bool flag) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         Gtk::Widget *widget = view->get_outer();
@@ -373,7 +373,7 @@ namespace mforms {
       }
     }
 
-    bool ViewImpl::is_enabled(::mforms::View *self) {
+    auto ViewImpl::is_enabled(::mforms::View *self) -> bool {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         Gtk::Widget *widget = view->get_outer();
@@ -382,13 +382,13 @@ namespace mforms {
       return false;
     }
 
-    void ViewImpl::set_name(::mforms::View *self, const std::string &name) {
+    auto ViewImpl::set_name(::mforms::View *self, const std::string &name) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         view->set_name(name);
     }
 
-    void ViewImpl::set_name(const std::string &name) {
+    auto ViewImpl::set_name(const std::string &name) -> void {
       get_outer()->set_name(name);
 
       {
@@ -403,11 +403,11 @@ namespace mforms {
       }
     }
 
-    void ViewImpl::relayout(::mforms::View *view) {
+    auto ViewImpl::relayout(::mforms::View *view) -> void {
       // noop
     }
 
-    void ViewImpl::set_needs_repaint(::mforms::View *self) {
+    auto ViewImpl::set_needs_repaint(::mforms::View *self) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         Gtk::Widget *widget = view->get_outer();
@@ -421,13 +421,13 @@ namespace mforms {
       }
     }
 
-    void ViewImpl::suspend_layout(::mforms::View *self, bool flag) {
+    auto ViewImpl::suspend_layout(::mforms::View *self, bool flag) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         view->suspend_layout(flag);
     }
 
-    void ViewImpl::size_changed() {
+    auto ViewImpl::size_changed() -> void {
       if (get_outer() && get_outer()->get_realized()) {
         ::mforms::View *owner_view = dynamic_cast< ::mforms::View *>(owner);
         if (owner_view)
@@ -435,7 +435,7 @@ namespace mforms {
       }
     }
 
-    void ViewImpl::on_focus_grab() {
+    auto ViewImpl::on_focus_grab() -> void {
       if (get_outer() && get_outer()->get_realized()) {
         ::mforms::View *owner_view = dynamic_cast< ::mforms::View *>(owner);
         if (owner_view)
@@ -443,14 +443,14 @@ namespace mforms {
       }
     }
 
-    bool ViewImpl::has_focus(mforms::View *self) {
+    auto ViewImpl::has_focus(mforms::View *self) -> bool {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         return view->get_inner()->has_focus();
       return false;
     }
 
-    bool ViewImpl::on_button_release(GdkEventButton *btn) {
+    auto ViewImpl::on_button_release(GdkEventButton *btn) -> bool {
       if (_last_btn_down) {
         delete _last_btn_down;
         _last_btn_down = NULL;
@@ -458,13 +458,13 @@ namespace mforms {
       return true;
     }
 
-    bool ViewImpl::on_button_press(GdkEventButton *btn) {
+    auto ViewImpl::on_button_press(GdkEventButton *btn) -> bool {
       if (_last_btn_down == NULL)
         _last_btn_down = new Gdk::Event((GdkEvent *)btn);
       return true;
     }
 
-    void ViewImpl::setup() {
+    auto ViewImpl::setup() -> void {
       get_outer()->signal_size_allocate().connect(sigc::hide(sigc::mem_fun(this, &ViewImpl::size_changed)));
       get_outer()->signal_grab_focus().connect(sigc::mem_fun(this, &ViewImpl::on_focus_grab));
       get_outer()->signal_realize().connect(sigc::mem_fun(this, &ViewImpl::size_changed));
@@ -531,11 +531,11 @@ namespace mforms {
       get_outer()->add_events(Gdk::FOCUS_CHANGE_MASK|Gdk::KEY_PRESS_MASK|Gdk::KEY_RELEASE_MASK);
     }
 
-    void ViewImpl::move_child(ViewImpl *child, int x, int y) {
+    auto ViewImpl::move_child(ViewImpl *child, int x, int y) -> void {
       throw std::logic_error("container does not implement required method");
     }
 
-    void ViewImpl::set_front_color(::mforms::View *self, const std::string &color) {
+    auto ViewImpl::set_front_color(::mforms::View *self, const std::string &color) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       Gtk::Widget *w = view->get_inner();
       if (w) {
@@ -548,7 +548,7 @@ namespace mforms {
       view->set_front_color(color);
     }
 
-    void ViewImpl::set_back_color(const std::string &color) {
+    auto ViewImpl::set_back_color(const std::string &color) -> void {
       Gtk::Widget *w = this->get_inner();
       if (w) {
         mforms::gtk::set_color(w, color, BG_COLOR);
@@ -573,13 +573,13 @@ namespace mforms {
       }
     }
 
-    void ViewImpl::set_back_color(::mforms::View *self, const std::string &color) {
+    auto ViewImpl::set_back_color(::mforms::View *self, const std::string &color) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         view->set_back_color(color);
     }
 
-    std::string ViewImpl::get_front_color(::mforms::View *self) {
+    auto ViewImpl::get_front_color(::mforms::View *self) -> std::string {
       ViewImpl *view = self->get_data<ViewImpl>();
       base::Color *c = mforms::gtk::get_color(view->get_inner(), FG_COLOR);
       if (c)
@@ -587,7 +587,7 @@ namespace mforms {
       return "";
     }
 
-    std::string ViewImpl::get_back_color(::mforms::View *self) {
+    auto ViewImpl::get_back_color(::mforms::View *self) -> std::string {
       ViewImpl *view = self->get_data<ViewImpl>();
       base::Color *c = mforms::gtk::get_color(view->get_inner(), BG_COLOR);
       if (c)
@@ -595,7 +595,7 @@ namespace mforms {
       return "";
     }
 
-    bool ViewImpl::on_draw_event(const ::Cairo::RefPtr< ::Cairo::Context> &context, Gtk::Widget *target) {
+    auto ViewImpl::on_draw_event(const ::Cairo::RefPtr< ::Cairo::Context> &context, Gtk::Widget *target) -> bool {
       int x, y;
       int iwidth, fwidth;
       int iheight, fheight;
@@ -658,12 +658,12 @@ namespace mforms {
       return false;
     }
 
-    void ViewImpl::set_back_image(::mforms::View *self, const std::string &path, mforms::Alignment ali) {
+    auto ViewImpl::set_back_image(::mforms::View *self, const std::string &path, mforms::Alignment ali) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       view->set_back_image(path, ali);
     }
 
-    void ViewImpl::set_back_image(const std::string &path, mforms::Alignment alig) {
+    auto ViewImpl::set_back_image(const std::string &path, mforms::Alignment alig) -> void {
       if (path.empty()) {
         _back_image.reset();
         return;
@@ -678,29 +678,29 @@ namespace mforms {
       }
     }
 
-    void ViewImpl::flush_events(::mforms::View *self) {
+    auto ViewImpl::flush_events(::mforms::View *self) -> void {
       while (Gtk::Main::events_pending())
         Gtk::Main::iteration();
     }
 
-    void ViewImpl::set_padding(::mforms::View *self, int left, int top, int right, int bottom) {
+    auto ViewImpl::set_padding(::mforms::View *self, int left, int top, int right, int bottom) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       view->set_padding_impl(left, top, right, bottom);
     }
 
-    void ViewImpl::set_padding_impl(int left, int top, int right, int bottom) {
+    auto ViewImpl::set_padding_impl(int left, int top, int right, int bottom) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void ViewImpl::register_drop_formats(::mforms::View *self, DropDelegate *target,
-                                         const std::vector<std::string> &formats) {
+    auto ViewImpl::register_drop_formats(::mforms::View *self, DropDelegate *target,
+                                         const std::vector<std::string> &formats) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
         view->register_drop_formats(formats, target);
       }
     }
 
-    void ViewImpl::register_drop_formats(const std::vector<std::string> &formats, DropDelegate *target) {
+    auto ViewImpl::register_drop_formats(const std::vector<std::string> &formats, DropDelegate *target) -> void {
       _target = target;
       std::vector<Gtk::TargetEntry> targets;
       _drop_formats.clear();
@@ -729,15 +729,15 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void ViewImpl::slot_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context) {
+    auto ViewImpl::slot_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context) -> void {
       if (_drag_image)
         context->set_icon(Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(_drag_image)));
     }
 
     //------------------------------------------------------------------------------
     // The drag_data_get signal is emitted on the drag source when the drop site requests the data which is dragged.
-    void ViewImpl::slot_drag_data_get(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::SelectionData &data, guint,
-                                      guint time) {
+    auto ViewImpl::slot_drag_data_get(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::SelectionData &data, guint,
+                                      guint time) -> void {
       const Glib::ustring target = data.get_target();
       std::map<std::string, DataWrapper>::iterator it = _drop_data.find(target);
       if (it != _drop_data.end()) // TODO need to store in _drop_data also data size for data to be sent
@@ -751,14 +751,14 @@ namespace mforms {
     }
 
     // The drag_end signal is emmited on the drag source when the drag was finished
-    void ViewImpl::slot_drag_end(const Glib::RefPtr<Gdk::DragContext> &context) {
+    auto ViewImpl::slot_drag_end(const Glib::RefPtr<Gdk::DragContext> &context) -> void {
       _drop_data.clear();
       _drag_image = NULL;
       _loop.quit(); // cause in do_drag_drop we called run()
     }
 
     // The drag_end signal is emmited on the drag source when the drag was failed due to user cancel, timeout, etc.
-    bool ViewImpl::slot_drag_failed(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::DragResult result) {
+    auto ViewImpl::slot_drag_failed(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::DragResult result) -> bool {
       if (result != Gtk::DRAG_RESULT_NO_TARGET && result != Gtk::DRAG_RESULT_USER_CANCELLED)
         _loop.quit(); // cause in do_drag_drop we called run()
 
@@ -768,12 +768,12 @@ namespace mforms {
     //------------------------------------------------------------------------------
     // The drag_data_delete signal is emitted on the drag source when a drag with the action Gdk::ACTION_MOVE is
     // successfully completed.
-    void ViewImpl::slot_drag_data_delete(const Glib::RefPtr<Gdk::DragContext> &context) {
+    auto ViewImpl::slot_drag_data_delete(const Glib::RefPtr<Gdk::DragContext> &context) -> void {
     }
 
     //------------------------------------------------------------------------------
     // The drag_drop signal is emitted on the drop site when the user drops the data onto the widget.
-    bool ViewImpl::slot_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) {
+    auto ViewImpl::slot_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) -> bool {
       mforms::View *view = dynamic_cast<mforms::View *>(owner);
       Gtk::Widget *widget = ViewImpl::get_widget_for_view(view);
 
@@ -829,7 +829,7 @@ namespace mforms {
     }
     //------------------------------------------------------------------------------
     // The drag_motion signal is emitted on the drop site when the user moves the cursor over the widget during a drag.
-    bool ViewImpl::slot_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) {
+    auto ViewImpl::slot_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) -> bool {
       mforms::DropDelegate *drop_delegate = _target;
       if (drop_delegate == NULL)
         drop_delegate = dynamic_cast<mforms::DropDelegate *>(owner);
@@ -888,8 +888,8 @@ namespace mforms {
     //------------------------------------------------------------------------------
     // The drag_data_received signal is emitted on the drop site when the dragged data has been received.
     // called when drag is from outside of WB
-    void ViewImpl::slot_drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                                           const Gtk::SelectionData &data, guint info, guint time) {
+    auto ViewImpl::slot_drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                                           const Gtk::SelectionData &data, guint info, guint time) -> void {
       DataWrapper *dwrapper = (DataWrapper *)data.get_data();
 
       mforms::DropDelegate *drop_delegate = _target;
@@ -929,13 +929,13 @@ namespace mforms {
       context->drag_finish(true, false, time);
     }
 
-    mforms::DragOperation ViewImpl::drag_text(::mforms::View *self, ::mforms::DragDetails details,
-                                              const std::string &text) {
+    auto ViewImpl::drag_text(::mforms::View *self, ::mforms::DragDetails details,
+                                              const std::string &text) -> mforms::DragOperation {
       return mforms::DragOperationNone;
     }
 
-    mforms::DragOperation ViewImpl::drag_data(::mforms::View *self, ::mforms::DragDetails details, void *data,
-                                              const std::string &format) {
+    auto ViewImpl::drag_data(::mforms::View *self, ::mforms::DragDetails details, void *data,
+                                              const std::string &format) -> mforms::DragOperation {
       DragOperation dop = mforms::DragOperationNone;
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view) {
@@ -944,7 +944,7 @@ namespace mforms {
       return dop;
     }
 
-    DragOperation ViewImpl::drag_data(::mforms::DragDetails details, void *data, const std::string &format) {
+    auto ViewImpl::drag_data(::mforms::DragDetails details, void *data, const std::string &format) -> DragOperation {
       DragOperation drag_op = mforms::DragOperationNone;
       Gtk::Widget *widget = get_outer();
       if (widget) {
@@ -987,16 +987,16 @@ namespace mforms {
       return drag_op;
     }
 
-    bool draw_event_slot(const ::Cairo::RefPtr< ::Cairo::Context> &context, Gtk::Widget *widget) {
+    auto draw_event_slot(const ::Cairo::RefPtr< ::Cairo::Context> &context, Gtk::Widget *widget) -> bool {
       return false;
     }
 
-    static void destroy_color(base::Color *col) {
+    static auto destroy_color(base::Color *col) -> void {
       if (col)
         delete col;
     }
 
-    void set_color(Gtk::Widget *w, const std::string &color, const mforms::gtk::WBColor col_type) {
+    auto set_color(Gtk::Widget *w, const std::string &color, const mforms::gtk::WBColor col_type) -> void {
       std::string key;
       switch (col_type) {
         case mforms::gtk::BG_COLOR:
@@ -1018,7 +1018,7 @@ namespace mforms {
       }
     }
 
-    base::Color *get_color(Gtk::Widget *w, const mforms::gtk::WBColor col_type) {
+    auto get_color(Gtk::Widget *w, const mforms::gtk::WBColor col_type) -> base::Color * {
       std::string key;
       switch (col_type) {
         case mforms::gtk::BG_COLOR:
@@ -1031,17 +1031,17 @@ namespace mforms {
       return (base::Color *)g_object_get_data(G_OBJECT(w->gobj()), key.c_str());
     }
 
-    void ViewImpl::focus(::mforms::View *self) {
+    auto ViewImpl::focus(::mforms::View *self) -> void {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view && view->get_inner())
         view->get_inner()->grab_focus();
     }
 
-    mforms::DropPosition ViewImpl::get_drop_position() {
+    auto ViewImpl::get_drop_position() -> mforms::DropPosition {
       return mforms::DropPositionUnknown;
     }
 
-    mforms::DropPosition ViewImpl::get_drop_position(::mforms::View *self) {
+    auto ViewImpl::get_drop_position(::mforms::View *self) -> mforms::DropPosition {
       ViewImpl *view = self->get_data<ViewImpl>();
       if (view)
         return view->get_drop_position();
@@ -1049,7 +1049,7 @@ namespace mforms {
       return mforms::DropPositionUnknown;
     }
 
-    void ViewImpl::init() {
+    auto ViewImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_view_impl.destroy = &ViewImpl::destroy;
@@ -1095,7 +1095,7 @@ namespace mforms {
       f->_view_impl.get_drop_position = &ViewImpl::get_drop_position;
     };
 
-    Gtk::Widget *ViewImpl::get_widget_for_view(mforms::View *view) {
+    auto ViewImpl::get_widget_for_view(mforms::View *view) -> Gtk::Widget * {
       ViewImpl *vi = view->get_data<ViewImpl>();
 
       if (vi) {
@@ -1106,7 +1106,7 @@ namespace mforms {
       return NULL;
     }
 
-    mforms::View *ViewImpl::get_view_for_widget(Gtk::Widget *w) {
+    auto ViewImpl::get_view_for_widget(Gtk::Widget *w) -> mforms::View * {
       mforms::View *view = (mforms::View *)w->get_data("mforms::View");
       if (view)
         return view;

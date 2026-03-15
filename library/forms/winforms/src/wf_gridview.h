@@ -42,7 +42,7 @@ namespace MySQL {
       gcroot<ColumnCallbackWrapper ^> column_callback_delegate;
 
     public:
-      static mforms::GridView* create(std::shared_ptr<class ::Recordset> rset);
+      static auto create(std::shared_ptr<class ::Recordset> rset) -> mforms::GridView*;
       static void init(CreateGridViewDelegate ^ creator);
 
       GridViewWrapper(mforms::GridView* backend);

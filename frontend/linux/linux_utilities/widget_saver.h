@@ -43,9 +43,9 @@ namespace mforms {
 namespace utils {
   namespace gtk {
 
-    void save_settings(Gtk::Paned* paned, const bool right_side = false);
-    sigc::connection load_settings(Gtk::Paned* paned, const sigc::slot<void> defaults_slot = sigc::slot<void>(),
-                                   const bool right_side = false, const int min_size = 0);
+    auto save_settings(Gtk::Paned* paned, const bool right_side = false) -> void;
+    auto load_settings(Gtk::Paned* paned, const sigc::slot<void> defaults_slot = sigc::slot<void>(),
+                                   const bool right_side = false, const int min_size = 0) -> sigc::connection;
 
   } // ns gtk
 } // ns utils

@@ -51,7 +51,7 @@ namespace MySQL {
 
       //--------------------------------------------------------------------------------------------------
 
-      ContextMenuStrip ^ DbSqlEditorHistoryWrapper::get_details_context_menu() {
+      auto DbSqlEditorHistoryWrapper::get_details_context_menu() -> ContextMenuStrip ^ {
         return dynamic_cast<ContextMenuStrip ^>(
           ObjectMapper::GetManagedComponent(_ref->details_model()->get_context_menu()));
       }

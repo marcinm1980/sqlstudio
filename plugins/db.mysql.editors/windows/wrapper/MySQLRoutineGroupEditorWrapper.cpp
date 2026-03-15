@@ -42,19 +42,19 @@ MySQLRoutineGroupEditorWrapper::~MySQLRoutineGroupEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-MySQLRoutineGroupEditorBE *MySQLRoutineGroupEditorWrapper::get_unmanaged_object() {
+auto MySQLRoutineGroupEditorWrapper::get_unmanaged_object() -> MySQLRoutineGroupEditorBE * {
   return static_cast<::MySQLRoutineGroupEditorBE *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRoutineGroupEditorWrapper::load_routines_sql() {
+auto MySQLRoutineGroupEditorWrapper::load_routines_sql() -> void {
   get_unmanaged_object()->load_routines_sql();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRoutineGroupEditorWrapper::commit_changes() {
+auto MySQLRoutineGroupEditorWrapper::commit_changes() -> void {
   get_unmanaged_object()->commit_changes();
 }
 

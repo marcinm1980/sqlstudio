@@ -36,17 +36,17 @@ namespace mforms {
     class DrawBoxWrapper : public ViewWrapper {
     protected:
       DrawBoxWrapper(::mforms::DrawBox *self);
-      static bool create(mforms::DrawBox *self);
-      static void set_needs_repaint(mforms::DrawBox *self);
-      static void setNeedsRepaintArea(DrawBox *, int x, int y, int w, int h);
-      static void add(mforms::DrawBox *, mforms::View *, mforms::Alignment alignment);
-      static void remove(mforms::DrawBox *, mforms::View *);
-      static void move(mforms::DrawBox *, mforms::View *, int x, int y);
+      static auto create(mforms::DrawBox *self) -> bool;
+      static auto set_needs_repaint(mforms::DrawBox *self) -> void;
+      static auto setNeedsRepaintArea(DrawBox *, int x, int y, int w, int h) -> void;
+      static auto add(mforms::DrawBox *, mforms::View *, mforms::Alignment alignment) -> void;
+      static auto remove(mforms::DrawBox *, mforms::View *) -> void;
+      static auto move(mforms::DrawBox *, mforms::View *, int x, int y) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
 
-      virtual void set_size(int width, int height);
+      virtual auto set_size(int width, int height) -> void;
     };
   };
 };

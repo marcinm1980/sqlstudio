@@ -44,12 +44,12 @@ namespace mforms {
     SimpleForm(const std::string &title, const std::string &ok_caption);
     ~SimpleForm();
 
-    void parse_definition(const std::string &definition);
+    auto parse_definition(const std::string &definition) -> void;
 
     // void begin_group();
     // void end_group();
 
-    void add_label(const std::string &text, bool bold);
+    auto add_label(const std::string &text, bool bold) -> void;
 
     void add_file_picker(const std::string &name, const std::string &caption, const std::string &default_value = "");
 
@@ -58,18 +58,18 @@ namespace mforms {
     void add_text_area(const std::string &name, const std::string &caption, int rows,
                        const std::string &default_value = "");
 
-    void add_checkbox(const std::string &name, const std::string &caption, bool default_value = false);
+    auto add_checkbox(const std::string &name, const std::string &caption, bool default_value = false) -> void;
 
     void add_select(const std::string &name, const std::string &caption, const std::list<std::string> &items,
                     int default_index = -1);
 
-    bool show();
+    auto show() -> bool;
 
-    std::map<std::string, View *> get_views();
-    std::string get_string_view_value(const std::string &name);
+    auto get_views() -> std::map<std::string, View *>;
+    auto get_string_view_value(const std::string &name) -> std::string;
 
-    bool get_bool_view_value(const std::string &name);
-    int get_int_view_value(const std::string &name);
+    auto get_bool_view_value(const std::string &name) -> bool;
+    auto get_int_view_value(const std::string &name) -> int;
 
   private:
 // Visual Studio produces a warning about this structure and its use in the list below. It complains about having no

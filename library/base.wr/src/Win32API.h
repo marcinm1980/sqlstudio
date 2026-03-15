@@ -45,8 +45,8 @@ namespace MySQL {
         static bool UnblockMySqlStudioFiles(System::String ^ folder);
         static bool UnblockFile(System::String ^ file);
 
-        static bool RedirectConsole();
-        static void ReleaseConsole();
+        static auto RedirectConsole() -> bool;
+        static auto ReleaseConsole() -> void;
       };
 
     } // SysUtilits

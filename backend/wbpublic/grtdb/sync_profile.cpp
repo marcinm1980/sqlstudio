@@ -30,8 +30,8 @@
 #include "grtpp_util.h"
 #include "grt/common.h"
 
-db_mgmt_SyncProfileRef bec::create_sync_profile(studio_physical_ModelRef model, const std::string &profile_name,
-                                                const std::string &target_schema) {
+auto bec::create_sync_profile(studio_physical_ModelRef model, const std::string &profile_name,
+                                                const std::string &target_schema) -> db_mgmt_SyncProfileRef {
   db_mgmt_SyncProfileRef profile(grt::Initialized);
   profile->targetHostIdentifier(profile_name);
   profile->targetSchemaName(grt::StringRef(target_schema));
@@ -42,8 +42,8 @@ db_mgmt_SyncProfileRef bec::create_sync_profile(studio_physical_ModelRef model, 
   return profile;
 }
 
-db_mgmt_SyncProfileRef bec::get_sync_profile(studio_physical_ModelRef model, const std::string &profile_name,
-                                             const std::string &target_schema) {
+auto bec::get_sync_profile(studio_physical_ModelRef model, const std::string &profile_name,
+                                             const std::string &target_schema) -> db_mgmt_SyncProfileRef {
   return db_mgmt_SyncProfileRef::cast_from(
     model->syncProfiles().get(base::strfmt("%s::%s", profile_name.c_str(), target_schema.c_str())));
 }
@@ -52,7 +52,7 @@ db_mgmt_SyncProfileRef bec::get_sync_profile(studio_physical_ModelRef model, con
 
  Updates synchronization related info in the schema from synchronization profile object.
  */
-void bec::update_schema_from_sync_profile(db_SchemaRef schema, db_mgmt_SyncProfileRef profile) {
+auto bec::update_schema_from_sync_profile(db_SchemaRef schema, db_mgmt_SyncProfileRef profile) -> void {
   grt::DictRef lastKnownDBNames(profile->lastKnownDBNames());
 
   schema->oldName(grt::StringRef::cast_from(lastKnownDBNames.get(schema.id(), schema->oldName())));
@@ -96,7 +96,7 @@ void bec::update_schema_from_sync_profile(db_SchemaRef schema, db_mgmt_SyncProfi
  - the model and server version of SQL DDL for views, so that we can detect view changes in either
    the server or the model. Stored in lastKnownViewDefinitions
  */
-void bec::update_sync_profile_from_schema(db_mgmt_SyncProfileRef profile, db_SchemaRef schema, bool view_code_only) {
+auto bec::update_sync_profile_from_schema(db_mgmt_SyncProfileRef profile, db_SchemaRef schema, bool view_code_only) -> void {
   grt::DictRef lastKnownDBNames(profile->lastKnownDBNames());
   if (!view_code_only)
     lastKnownDBNames.reset_entries();

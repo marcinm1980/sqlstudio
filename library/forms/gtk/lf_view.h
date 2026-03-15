@@ -45,80 +45,80 @@ namespace mforms {
         _data = data;
       }
 
-      void *GetData() {
+      auto GetData() -> void * {
         return _data;
       };
     };
 
-    mforms::ModifierKey GetModifiers(const guint state, const guint keyval);
-    mforms::KeyCode GetKeys(const guint keyval);
+    auto GetModifiers(const guint state, const guint keyval) -> mforms::ModifierKey;
+    auto GetKeys(const guint keyval) -> mforms::KeyCode;
 
     class ViewImpl : public ObjectImpl {
     public:
-      virtual Gtk::Widget *get_outer() const = 0;
+      virtual auto get_outer() const -> Gtk::Widget * = 0;
       // get the widget that does the actual work. most of the time it will be the same as the outer one
-      virtual Gtk::Widget *get_inner() const;
+      virtual auto get_inner() const -> Gtk::Widget *;
 
     protected:
       ViewImpl(::mforms::View *view);
-      static void destroy(::mforms::View *self);
-      static void show(::mforms::View *self, bool show);
-      virtual void show(bool show);
-      static bool is_shown(::mforms::View *self);
-      static bool is_fully_visible(::mforms::View *self);
-      static void set_tooltip(::mforms::View *self, const std::string &text);
-      static void set_font(::mforms::View *self, const std::string &fontDescription);
-      static int get_width(const ::mforms::View *self);
-      static int get_height(const ::mforms::View *self);
-      static int get_preferred_width(::mforms::View *self);
-      virtual int get_preferred_width();
-      static int get_preferred_height(::mforms::View *self);
-      virtual int get_preferred_height();
-      static int get_x(const ::mforms::View *self);
-      static int get_y(const ::mforms::View *self);
-      static void set_size(::mforms::View *self, int w, int h);
-      virtual void set_size(int width, int height);
-      static void set_min_size(::mforms::View *self, int w, int h);
-      virtual void set_min_size(int width, int height);
-      static void set_position(::mforms::View *self, int x, int y);
-      static std::pair<int, int> client_to_screen(::mforms::View *self, int x, int y);
-      static void set_enabled(::mforms::View *self, bool flag);
-      static bool is_enabled(::mforms::View *self);
-      static void set_name(::mforms::View *self, const std::string &name);
-      virtual void set_name(const std::string &name);
-      static void relayout(::mforms::View *view);
-      static void set_needs_repaint(::mforms::View *view);
-      void size_changed();
-      void on_focus_grab();
-      bool on_button_release(GdkEventButton *btn);
-      bool on_button_press(GdkEventButton *btn);
+      static auto destroy(::mforms::View *self) -> void;
+      static auto show(::mforms::View *self, bool show) -> void;
+      virtual auto show(bool show) -> void;
+      static auto is_shown(::mforms::View *self) -> bool;
+      static auto is_fully_visible(::mforms::View *self) -> bool;
+      static auto set_tooltip(::mforms::View *self, const std::string &text) -> void;
+      static auto set_font(::mforms::View *self, const std::string &fontDescription) -> void;
+      static auto get_width(const ::mforms::View *self) -> int;
+      static auto get_height(const ::mforms::View *self) -> int;
+      static auto get_preferred_width(::mforms::View *self) -> int;
+      virtual auto get_preferred_width() -> int;
+      static auto get_preferred_height(::mforms::View *self) -> int;
+      virtual auto get_preferred_height() -> int;
+      static auto get_x(const ::mforms::View *self) -> int;
+      static auto get_y(const ::mforms::View *self) -> int;
+      static auto set_size(::mforms::View *self, int w, int h) -> void;
+      virtual auto set_size(int width, int height) -> void;
+      static auto set_min_size(::mforms::View *self, int w, int h) -> void;
+      virtual auto set_min_size(int width, int height) -> void;
+      static auto set_position(::mforms::View *self, int x, int y) -> void;
+      static auto client_to_screen(::mforms::View *self, int x, int y) -> std::pair<int, int>;
+      static auto set_enabled(::mforms::View *self, bool flag) -> void;
+      static auto is_enabled(::mforms::View *self) -> bool;
+      static auto set_name(::mforms::View *self, const std::string &name) -> void;
+      virtual auto set_name(const std::string &name) -> void;
+      static auto relayout(::mforms::View *view) -> void;
+      static auto set_needs_repaint(::mforms::View *view) -> void;
+      auto size_changed() -> void;
+      auto on_focus_grab() -> void;
+      auto on_button_release(GdkEventButton *btn) -> bool;
+      auto on_button_press(GdkEventButton *btn) -> bool;
 
-      void setup();
-      virtual void move_child(ViewImpl *child, int x, int y);
-      static void suspend_layout(::mforms::View *view, bool flag);
-      virtual void suspend_layout(bool flag) {
+      auto setup() -> void;
+      virtual auto move_child(ViewImpl *child, int x, int y) -> void;
+      static auto suspend_layout(::mforms::View *view, bool flag) -> void;
+      virtual auto suspend_layout(bool flag) -> void {
       }
-      static void set_front_color(::mforms::View *self, const std::string &color);
-      virtual void set_front_color(const std::string &color){};
-      static void set_back_color(::mforms::View *self, const std::string &color);
-      static std::string get_front_color(::mforms::View *self);
-      static std::string get_back_color(::mforms::View *self);
-      virtual void set_back_color(const std::string &color);
-      static void set_back_image(::mforms::View *self, const std::string &path, mforms::Alignment alig);
-      static void flush_events(::mforms::View *self);
-      static void set_padding(::mforms::View *self, int left, int top, int right, int bottom);
-      virtual void set_padding_impl(int left, int top, int right, int bottom);
-      static void register_drop_formats(::mforms::View *self, DropDelegate *target,
-                                        const std::vector<std::string> &formats);
-      void register_drop_formats(const std::vector<std::string> &formats, DropDelegate *target);
-      mforms::DropPosition get_drop_position();
-      static void focus(::mforms::View *view);
-      static mforms::DropPosition get_drop_position(::mforms::View *self);
-      static bool has_focus(::mforms::View *view);
-      static DragOperation drag_text(::mforms::View *self, ::mforms::DragDetails details, const std::string &text);
-      static DragOperation drag_data(::mforms::View *self, ::mforms::DragDetails details, void *data,
-                                     const std::string &format);
-      DragOperation drag_data(::mforms::DragDetails details, void *data, const std::string &format);
+      static auto set_front_color(::mforms::View *self, const std::string &color) -> void;
+      virtual auto set_front_color(const std::string &color) -> void {};
+      static auto set_back_color(::mforms::View *self, const std::string &color) -> void;
+      static auto get_front_color(::mforms::View *self) -> std::string;
+      static auto get_back_color(::mforms::View *self) -> std::string;
+      virtual auto set_back_color(const std::string &color) -> void;
+      static auto set_back_image(::mforms::View *self, const std::string &path, mforms::Alignment alig) -> void;
+      static auto flush_events(::mforms::View *self) -> void;
+      static auto set_padding(::mforms::View *self, int left, int top, int right, int bottom) -> void;
+      virtual auto set_padding_impl(int left, int top, int right, int bottom) -> void;
+      static auto register_drop_formats(::mforms::View *self, DropDelegate *target,
+                                        const std::vector<std::string> &formats) -> void;
+      auto register_drop_formats(const std::vector<std::string> &formats, DropDelegate *target) -> void;
+      auto get_drop_position() -> mforms::DropPosition;
+      static auto focus(::mforms::View *view) -> void;
+      static auto get_drop_position(::mforms::View *self) -> mforms::DropPosition;
+      static auto has_focus(::mforms::View *view) -> bool;
+      static auto drag_text(::mforms::View *self, ::mforms::DragDetails details, const std::string &text) -> DragOperation;
+      static auto drag_data(::mforms::View *self, ::mforms::DragDetails details, void *data,
+                                     const std::string &format) -> DragOperation;
+      auto drag_data(::mforms::DragDetails details, void *data, const std::string &format) -> DragOperation;
 
     protected:
       Glib::RefPtr<Gdk::Pixbuf> _back_image;
@@ -143,40 +143,40 @@ namespace mforms {
 
       // This will only work if the specific subclass supports drawing backgroud images
       // in that case it will add on_expose_event to the expose signal
-      virtual void set_back_image(const std::string &path, mforms::Alignment alig);
+      virtual auto set_back_image(const std::string &path, mforms::Alignment alig) -> void;
 
       // for supporting subclasses that support background painting
-      bool on_draw_event(const ::Cairo::RefPtr< ::Cairo::Context> &context, Gtk::Widget *target);
+      auto on_draw_event(const ::Cairo::RefPtr< ::Cairo::Context> &context, Gtk::Widget *target) -> bool;
 
-      bool slot_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time);
-      void slot_drag_data_delete(const Glib::RefPtr<Gdk::DragContext> &context);
-      bool slot_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time);
-      void slot_drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
-                                   const Gtk::SelectionData &data, guint info, guint time);
-      void slot_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context);
-      void slot_drag_data_get(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::SelectionData &data, guint,
-                              guint time);
-      void slot_drag_end(const Glib::RefPtr<Gdk::DragContext> &context);
-      bool slot_drag_failed(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::DragResult result);
+      auto slot_drag_drop(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y, guint time) -> bool;
+      auto slot_drag_data_delete(const Glib::RefPtr<Gdk::DragContext> &context) -> void;
+      auto slot_drag_motion(const Glib::RefPtr<Gdk::DragContext> &context, int, int, guint time) -> bool;
+      auto slot_drag_data_received(const Glib::RefPtr<Gdk::DragContext> &context, int x, int y,
+                                   const Gtk::SelectionData &data, guint info, guint time) -> void;
+      auto slot_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context) -> void;
+      auto slot_drag_data_get(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::SelectionData &data, guint,
+                              guint time) -> void;
+      auto slot_drag_end(const Glib::RefPtr<Gdk::DragContext> &context) -> void;
+      auto slot_drag_failed(const Glib::RefPtr<Gdk::DragContext> &context, Gtk::DragResult result) -> bool;
 
     public:
-      static void init();
-      static Gtk::Widget *get_widget_for_view(mforms::View *view);
-      static mforms::View *get_view_for_widget(Gtk::Widget *w);
+      static auto init() -> void;
+      static auto get_widget_for_view(mforms::View *view) -> Gtk::Widget *;
+      static auto get_view_for_widget(Gtk::Widget *w) -> mforms::View *;
     };
 
-    bool draw_event_slot(const ::Cairo::RefPtr< ::Cairo::Context> &context, Gtk::Widget *w);
+    auto draw_event_slot(const ::Cairo::RefPtr< ::Cairo::Context> &context, Gtk::Widget *w) -> bool;
     enum WBColor { BG_COLOR, FG_COLOR };
 
-    void set_color(Gtk::Widget *, const std::string &color, const WBColor col);
-    base::Color *get_color(Gtk::Widget *w, const WBColor colr);
+    auto set_color(Gtk::Widget *, const std::string &color, const WBColor col) -> void;
+    auto get_color(Gtk::Widget *w, const WBColor colr) -> base::Color *;
   };
 
-  inline Gtk::Widget *widget_for_view(mforms::View *view) {
+  inline auto widget_for_view(mforms::View *view) -> Gtk::Widget * {
     return gtk::ViewImpl::get_widget_for_view(view);
   }
 
-  inline mforms::View *view_for_widget(Gtk::Widget *w) {
+  inline auto view_for_widget(Gtk::Widget *w) -> mforms::View * {
     return gtk::ViewImpl::get_view_for_widget(w);
   }
 };

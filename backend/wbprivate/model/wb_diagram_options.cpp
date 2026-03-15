@@ -63,7 +63,7 @@ public:
   ~SizerFigure() {
   }
 
-  virtual void draw_contents(mdc::CairoCtx *cr) {
+  virtual auto draw_contents(mdc::CairoCtx *cr) -> void {
     double pw = _paper_size.width;
     double ph = _paper_size.height;
     Rect bounds(get_bounds());
@@ -118,7 +118,7 @@ public:
     cr->restore();
   }
 
-  virtual bool on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button, mdc::EventState state) {
+  virtual auto on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button, mdc::EventState state) -> bool {
     if (button == mdc::ButtonLeft) {
       double xpages = ceil(point.x / _mini_pw);
       double ypages = ceil(point.y / _mini_ph);
@@ -171,30 +171,30 @@ DiagramOptionsBE::~DiagramOptionsBE() {
   delete _sizer;
 }
 
-void DiagramOptionsBE::update_size() {
+auto DiagramOptionsBE::update_size() -> void {
   _view->set_page_size(_view->get_viewable_size());
   if (_sizer)
     _sizer->set_fixed_size(_view->get_viewable_size());
 }
 
-int DiagramOptionsBE::get_xpages() {
+auto DiagramOptionsBE::get_xpages() -> int {
   if (_sizer)
     return std::max((int)(_sizer->_width / _sizer->_paper_size.width), 1);
   return 1;
 }
 
-int DiagramOptionsBE::get_ypages() {
+auto DiagramOptionsBE::get_ypages() -> int {
   if (_sizer)
     return std::max((int)(_sizer->_height / _sizer->_paper_size.height), 1);
   return 1;
 }
 
-void DiagramOptionsBE::get_max_page_counts(int &max_xpages, int &max_ypages) {
+auto DiagramOptionsBE::get_max_page_counts(int &max_xpages, int &max_ypages) -> void {
   max_xpages = MAX_X_PAGES;
   max_ypages = MAX_Y_PAGES;
 }
 
-void DiagramOptionsBE::get_min_size_in_pages(int &xc, int &yc) {
+auto DiagramOptionsBE::get_min_size_in_pages(int &xc, int &yc) -> void {
   double xmax = 0;
   double ymax = 0;
 
@@ -209,7 +209,7 @@ void DiagramOptionsBE::get_min_size_in_pages(int &xc, int &yc) {
   yc = (int)ceil(ymax / _sizer->_paper_size.height);
 }
 
-void DiagramOptionsBE::set_xpages(int c) {
+auto DiagramOptionsBE::set_xpages(int c) -> void {
   c = min(c, MAX_X_PAGES);
 
   int xc, yc;
@@ -221,7 +221,7 @@ void DiagramOptionsBE::set_xpages(int c) {
   }
 }
 
-void DiagramOptionsBE::set_ypages(int c) {
+auto DiagramOptionsBE::set_ypages(int c) -> void {
   c = min(c, MAX_Y_PAGES);
 
   int xc, yc;
@@ -233,15 +233,15 @@ void DiagramOptionsBE::set_ypages(int c) {
   }
 }
 
-std::string DiagramOptionsBE::get_name() {
+auto DiagramOptionsBE::get_name() -> std::string {
   return _target_view->name();
 }
 
-void DiagramOptionsBE::set_name(const std::string &name) {
+auto DiagramOptionsBE::set_name(const std::string &name) -> void {
   _name = name;
 }
 
-void DiagramOptionsBE::commit() {
+auto DiagramOptionsBE::commit() -> void {
   grt::AutoUndo undo;
 
   _target_view->name(_name);

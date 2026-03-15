@@ -81,7 +81,7 @@ public:
       _description("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "eer.Datatype";
   }
 
@@ -92,7 +92,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -101,7 +101,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -114,7 +114,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -123,7 +123,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -135,12 +135,12 @@ protected:
   grt::StringRef _description;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new eer_Datatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -168,7 +168,7 @@ public:
       _description("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "eer.DatatypeGroup";
   }
 
@@ -179,7 +179,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -188,7 +188,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -201,7 +201,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -210,7 +210,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -222,12 +222,12 @@ protected:
   grt::StringRef _description;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new eer_DatatypeGroup());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -257,7 +257,7 @@ public:
       _userDatatypes(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "eer.Catalog";
   }
 
@@ -268,11 +268,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -287,11 +287,11 @@ public:
    * \par In Python:
    *    value = obj.datatypes
    */
-  grt::ListRef<eer_Datatype> datatypes() const { return _datatypes; }
+  auto datatypes() const -> grt::ListRef<eer_Datatype> { return _datatypes; }
 
 
 private: // The next attribute is read-only.
-  virtual void datatypes(const grt::ListRef<eer_Datatype> &value) {
+  virtual auto datatypes(const grt::ListRef<eer_Datatype> &value) -> void {
     grt::ValueRef ovalue(_datatypes);
 
     _datatypes = value;
@@ -307,11 +307,11 @@ public:
    * \par In Python:
    *    value = obj.schemata
    */
-  grt::ListRef<eer_Schema> schemata() const { return _schemata; }
+  auto schemata() const -> grt::ListRef<eer_Schema> { return _schemata; }
 
 
 private: // The next attribute is read-only.
-  virtual void schemata(const grt::ListRef<eer_Schema> &value) {
+  virtual auto schemata(const grt::ListRef<eer_Schema> &value) -> void {
     grt::ValueRef ovalue(_schemata);
 
     _schemata = value;
@@ -327,11 +327,11 @@ public:
    * \par In Python:
    *    value = obj.userDatatypes
    */
-  grt::ListRef<eer_Datatype> userDatatypes() const { return _userDatatypes; }
+  auto userDatatypes() const -> grt::ListRef<eer_Datatype> { return _userDatatypes; }
 
 
 private: // The next attribute is read-only.
-  virtual void userDatatypes(const grt::ListRef<eer_Datatype> &value) {
+  virtual auto userDatatypes(const grt::ListRef<eer_Datatype> &value) -> void {
     grt::ValueRef ovalue(_userDatatypes);
 
     _userDatatypes = value;
@@ -347,12 +347,12 @@ protected:
   grt::ListRef<eer_Datatype> _userDatatypes;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new eer_Catalog());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -390,7 +390,7 @@ public:
       _customData(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "eer.Object";
   }
 
@@ -401,7 +401,7 @@ public:
    * \par In Python:
    *    value = obj.commentedOut
    */
-  grt::IntegerRef commentedOut() const { return _commentedOut; }
+  auto commentedOut() const -> grt::IntegerRef { return _commentedOut; }
 
   /**
    * Setter for attribute commentedOut
@@ -410,7 +410,7 @@ public:
    * \par In Python:
    *   obj.commentedOut = value
    */
-  virtual void commentedOut(const grt::IntegerRef &value) {
+  virtual auto commentedOut(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_commentedOut);
     _commentedOut = value;
     member_changed("commentedOut", ovalue, value);
@@ -423,11 +423,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -440,12 +440,12 @@ protected:
   grt::DictRef _customData;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new eer_Object());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -474,7 +474,7 @@ public:
       _startMandatory(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "eer.Relationship";
   }
 
@@ -486,11 +486,11 @@ public:
    * \par In Python:
    *    value = obj.attribute
    */
-  grt::ListRef<eer_Attribute> attribute() const { return _attribute; }
+  auto attribute() const -> grt::ListRef<eer_Attribute> { return _attribute; }
 
 
 private: // The next attribute is read-only.
-  virtual void attribute(const grt::ListRef<eer_Attribute> &value) {
+  virtual auto attribute(const grt::ListRef<eer_Attribute> &value) -> void {
     grt::ValueRef ovalue(_attribute);
 
     _attribute = value;
@@ -505,7 +505,7 @@ public:
    * \par In Python:
    *    value = obj.endMandatory
    */
-  grt::IntegerRef endMandatory() const { return _endMandatory; }
+  auto endMandatory() const -> grt::IntegerRef { return _endMandatory; }
 
   /**
    * Setter for attribute endMandatory
@@ -514,7 +514,7 @@ public:
    * \par In Python:
    *   obj.endMandatory = value
    */
-  virtual void endMandatory(const grt::IntegerRef &value) {
+  virtual auto endMandatory(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_endMandatory);
     _endMandatory = value;
     member_changed("endMandatory", ovalue, value);
@@ -527,7 +527,7 @@ public:
    * \par In Python:
    *    value = obj.startMandatory
    */
-  grt::IntegerRef startMandatory() const { return _startMandatory; }
+  auto startMandatory() const -> grt::IntegerRef { return _startMandatory; }
 
   /**
    * Setter for attribute startMandatory
@@ -536,7 +536,7 @@ public:
    * \par In Python:
    *   obj.startMandatory = value
    */
-  virtual void startMandatory(const grt::IntegerRef &value) {
+  virtual auto startMandatory(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_startMandatory);
     _startMandatory = value;
     member_changed("startMandatory", ovalue, value);
@@ -549,12 +549,12 @@ protected:
   grt::IntegerRef _startMandatory;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new eer_Relationship());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -586,7 +586,7 @@ public:
       _isIdentifying(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "eer.Attribute";
   }
 
@@ -598,7 +598,7 @@ public:
    * \par In Python:
    *    value = obj.datatype
    */
-  eer_DatatypeRef datatype() const { return _datatype; }
+  auto datatype() const -> eer_DatatypeRef { return _datatype; }
 
   /**
    * Setter for attribute datatype
@@ -607,7 +607,7 @@ public:
    * \par In Python:
    *   obj.datatype = value
    */
-  virtual void datatype(const eer_DatatypeRef &value) {
+  virtual auto datatype(const eer_DatatypeRef &value) -> void {
     grt::ValueRef ovalue(_datatype);
 
     _datatype = value;
@@ -621,7 +621,7 @@ public:
    * \par In Python:
    *    value = obj.isIdentifying
    */
-  grt::IntegerRef isIdentifying() const { return _isIdentifying; }
+  auto isIdentifying() const -> grt::IntegerRef { return _isIdentifying; }
 
   /**
    * Setter for attribute isIdentifying
@@ -630,7 +630,7 @@ public:
    * \par In Python:
    *   obj.isIdentifying = value
    */
-  virtual void isIdentifying(const grt::IntegerRef &value) {
+  virtual auto isIdentifying(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isIdentifying);
     _isIdentifying = value;
     member_changed("isIdentifying", ovalue, value);
@@ -642,12 +642,12 @@ protected:
   grt::IntegerRef _isIdentifying;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new eer_Attribute());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -674,7 +674,7 @@ public:
       _attribute(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "eer.Entity";
   }
 
@@ -686,11 +686,11 @@ public:
    * \par In Python:
    *    value = obj.attribute
    */
-  grt::ListRef<eer_Attribute> attribute() const { return _attribute; }
+  auto attribute() const -> grt::ListRef<eer_Attribute> { return _attribute; }
 
 
 private: // The next attribute is read-only.
-  virtual void attribute(const grt::ListRef<eer_Attribute> &value) {
+  virtual auto attribute(const grt::ListRef<eer_Attribute> &value) -> void {
     grt::ValueRef ovalue(_attribute);
 
     _attribute = value;
@@ -703,12 +703,12 @@ protected:
   grt::ListRef<eer_Attribute> _attribute;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new eer_Entity());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -731,7 +731,7 @@ public:
       _relationships(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "eer.Schema";
   }
 
@@ -743,11 +743,11 @@ public:
    * \par In Python:
    *    value = obj.entities
    */
-  grt::ListRef<eer_Entity> entities() const { return _entities; }
+  auto entities() const -> grt::ListRef<eer_Entity> { return _entities; }
 
 
 private: // The next attribute is read-only.
-  virtual void entities(const grt::ListRef<eer_Entity> &value) {
+  virtual auto entities(const grt::ListRef<eer_Entity> &value) -> void {
     grt::ValueRef ovalue(_entities);
 
     _entities = value;
@@ -763,11 +763,11 @@ public:
    * \par In Python:
    *    value = obj.relationships
    */
-  grt::ListRef<eer_Relationship> relationships() const { return _relationships; }
+  auto relationships() const -> grt::ListRef<eer_Relationship> { return _relationships; }
 
 
 private: // The next attribute is read-only.
-  virtual void relationships(const grt::ListRef<eer_Relationship> &value) {
+  virtual auto relationships(const grt::ListRef<eer_Relationship> &value) -> void {
     grt::ValueRef ovalue(_relationships);
 
     _relationships = value;
@@ -781,12 +781,12 @@ protected:
   grt::ListRef<eer_Relationship> _relationships;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new eer_Schema());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -806,7 +806,7 @@ public:
 
 
 
-inline void register_structs_eer_xml() {
+inline auto register_structs_eer_xml() -> void {
   grt::internal::ClassRegistry::register_class<eer_Datatype>();
   grt::internal::ClassRegistry::register_class<eer_DatatypeGroup>();
   grt::internal::ClassRegistry::register_class<eer_Catalog>();

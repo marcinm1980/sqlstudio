@@ -186,14 +186,12 @@ static uchar NEAR sort_order_cp932[]=
                        (0x80<=(c) && (c)<=0xfc))
 
 
-static int ismbchar_cp932(CHARSET_INFO *cs __attribute__((unused)),
-			 const char* p, const char *e)
-{
+static auto ismbchar_cp932(CHARSET_INFO *cs __attribute__((unused)),
+			 const char* p, const char *e) -> int {
   return (iscp932head((uchar) *p) && (e-p)>1 && iscp932tail((uchar)p[1]) ? 2: 0);
 }
 
-static int mbcharlen_cp932(CHARSET_INFO *cs __attribute__((unused)),uint c)
-{
+static auto mbcharlen_cp932(CHARSET_INFO *cs __attribute__((unused)),uint c) -> int {
   return (iscp932head((uchar) c) ? 2 : 1);
 }
 
@@ -201,10 +199,9 @@ static int mbcharlen_cp932(CHARSET_INFO *cs __attribute__((unused)),uint c)
 #define cp932code(c,d)	((((uint) (uchar)(c)) << 8) | (uint) (uchar) (d))
 
 
-static int my_strnncoll_cp932_internal(CHARSET_INFO *cs,
+static auto my_strnncoll_cp932_internal(CHARSET_INFO *cs,
 				      const uchar **a_res, uint a_length,
-				      const uchar **b_res, uint b_length)
-{
+				      const uchar **b_res, uint b_length) -> int {
   const uchar *a= *a_res, *b= *b_res;
   const uchar *a_end= a + a_length;
   const uchar *b_end= b + b_length;
@@ -233,11 +230,10 @@ static int my_strnncoll_cp932_internal(CHARSET_INFO *cs,
 }
 
 
-static int my_strnncoll_cp932(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnncoll_cp932(CHARSET_INFO *cs __attribute__((unused)),
 			      const uchar *a, uint a_length, 
 			      const uchar *b, uint b_length,
-                              my_bool b_is_prefix)
-{
+                              my_bool b_is_prefix) -> int {
   int res= my_strnncoll_cp932_internal(cs, &a, a_length, &b, b_length);
   if (b_is_prefix && a_length > b_length)
     a_length= b_length;
@@ -245,12 +241,11 @@ static int my_strnncoll_cp932(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-static int my_strnncollsp_cp932(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnncollsp_cp932(CHARSET_INFO *cs __attribute__((unused)),
                                 const uchar *a, uint a_length, 
                                 const uchar *b, uint b_length,
                                 my_bool diff_if_only_endspace_difference
-                                __attribute__((unused)))
-{
+                                __attribute__((unused))) -> int {
   const uchar *a_end= a + a_length;
   const uchar *b_end= b + b_length;
   int res= my_strnncoll_cp932_internal(cs, &a, a_length, &b, b_length);
@@ -279,10 +274,9 @@ static int my_strnncollsp_cp932(CHARSET_INFO *cs __attribute__((unused)),
 
 
 
-static int my_strnxfrm_cp932(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_strnxfrm_cp932(CHARSET_INFO *cs __attribute__((unused)),
                      uchar *dest, uint len,
-                     const uchar *src, uint srclen)
-{
+                     const uchar *src, uint srclen) -> int {
   uchar *d_end = dest + len;
   uchar *s_end = (uchar*) src + srclen;
   while (dest < d_end && src < s_end)
@@ -321,12 +315,11 @@ static int my_strnxfrm_cp932(CHARSET_INFO *cs __attribute__((unused)),
 
 #define max_sort_char ((char) 255)
 
-static my_bool my_like_range_cp932(CHARSET_INFO *cs __attribute__((unused)),
+static auto my_like_range_cp932(CHARSET_INFO *cs __attribute__((unused)),
 				  const char *ptr,uint ptr_length,
 				  pbool escape, pbool w_one, pbool w_many,
 				  uint res_length, char *min_str,char *max_str,
-				  uint *min_length,uint *max_length)
-{
+				  uint *min_length,uint *max_length) -> my_bool {
   const char *end=ptr+ptr_length;
   char *min_org=min_str;
   char *min_end=min_str+res_length;
@@ -2044,7 +2037,7 @@ static uint16 tab_cp932_uni7[]={
 0x9ADC,0x9B75,0x9B72,0x9B8F,0x9BB1,0x9BBB,0x9C00,0x9D70,
 0x9D6B,0xFA2D,0x9E19,0x9ED1};
 
-static int func_cp932_uni_onechar(int code){
+static auto func_cp932_uni_onechar(int code) -> int {
   if ((code>=0x00A1)&&(code<=0x00DF))
     return(tab_cp932_uni0[code-0x00A1]);
   if ((code>=0x8140)&&(code<=0x84BE))
@@ -5295,7 +5288,7 @@ static uint16 tab_uni_cp93210[]={
      0,     0,     0,     0,     0,     0,     0,0x8191,
 0x8192,0x81CA,0x8150,0xFA55,0x818F};
 
-static int func_uni_cp932_onechar(int code){
+static auto func_uni_cp932_onechar(int code) -> int {
   if ((code>=0x005C)&&(code<=0x00F7))
     return(tab_uni_cp9320[code-0x005C]);
   if ((code>=0x0391)&&(code<=0x0451))
@@ -5322,10 +5315,8 @@ static int func_uni_cp932_onechar(int code){
 }
 
 
-static int
-my_wc_mb_cp932(CHARSET_INFO *cs  __attribute__((unused)),
-	      my_wc_t wc, uchar *s, uchar *e)
-{
+static auto my_wc_mb_cp932(CHARSET_INFO *cs  __attribute__((unused)),
+	      my_wc_t wc, uchar *s, uchar *e) -> int {
   int code;
   
   if (s >= e)
@@ -5352,9 +5343,8 @@ my_wc_mb_cp932(CHARSET_INFO *cs  __attribute__((unused)),
 }
 
 
-static int 
-my_mb_wc_cp932(CHARSET_INFO *cs  __attribute__((unused)),
-	      my_wc_t *pwc, const uchar *s, const uchar *e){
+static auto my_mb_wc_cp932(CHARSET_INFO *cs  __attribute__((unused)),
+	      my_wc_t *pwc, const uchar *s, const uchar *e) -> int {
   int hi=s[0];
   
   if (s >= e)
@@ -5382,9 +5372,8 @@ my_mb_wc_cp932(CHARSET_INFO *cs  __attribute__((unused)),
 }
 
 static
-uint my_numcells_cp932(CHARSET_INFO *cs __attribute__((unused)),
-                      const char *str, const char *strend)
-{
+auto my_numcells_cp932(CHARSET_INFO *cs __attribute__((unused)),
+                      const char *str, const char *strend) -> uint {
   uint clen= 0;
   const unsigned char *b= (const unsigned char *) str;
   const unsigned char *e= (const unsigned char *) strend;
@@ -5415,9 +5404,8 @@ uint my_numcells_cp932(CHARSET_INFO *cs __attribute__((unused)),
   cp932 additional characters are also accepted.
 */
 static
-uint my_well_formed_len_cp932(CHARSET_INFO *cs __attribute__((unused)),
-                             const char *b, const char *e, uint pos, int *error)
-{
+auto my_well_formed_len_cp932(CHARSET_INFO *cs __attribute__((unused)),
+                             const char *b, const char *e, uint pos, int *error) -> uint {
   const char *b0= b;
   *error= 0;
   while (pos-- && b < e)

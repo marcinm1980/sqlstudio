@@ -30,7 +30,7 @@
 #include "db_query_Editor.h"
 #include "db_query_QueryBuffer.h"
 
-void db_query_QueryBuffer::init() {
+auto db_query_QueryBuffer::init() -> void {
   // _data init is delayed and done by grtwrap_sqleditor
 }
 
@@ -38,11 +38,11 @@ db_query_QueryBuffer::~db_query_QueryBuffer() {
   delete _data;
 }
 
-void db_query_QueryBuffer::set_data(ImplData *data) {
+auto db_query_QueryBuffer::set_data(ImplData *data) -> void {
   _data = data;
 }
 
-grt::IntegerRef db_query_QueryBuffer::insertionPoint() const {
+auto db_query_QueryBuffer::insertionPoint() const -> grt::IntegerRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     return grt::IntegerRef(editor->cursor_pos());
@@ -50,14 +50,14 @@ grt::IntegerRef db_query_QueryBuffer::insertionPoint() const {
   return grt::IntegerRef(0);
 }
 
-void db_query_QueryBuffer::insertionPoint(const grt::IntegerRef &value) {
+auto db_query_QueryBuffer::insertionPoint(const grt::IntegerRef &value) -> void {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     editor->set_cursor_pos(*value);
   }
 }
 
-grt::StringRef db_query_QueryBuffer::script() const {
+auto db_query_QueryBuffer::script() const -> grt::StringRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     return grt::StringRef(editor->sql());
@@ -65,7 +65,7 @@ grt::StringRef db_query_QueryBuffer::script() const {
   return grt::StringRef();
 }
 
-grt::StringRef db_query_QueryBuffer::currentStatement() const {
+auto db_query_QueryBuffer::currentStatement() const -> grt::StringRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     return grt::StringRef(editor->current_statement());
@@ -73,7 +73,7 @@ grt::StringRef db_query_QueryBuffer::currentStatement() const {
   return grt::StringRef();
 }
 
-grt::StringRef db_query_QueryBuffer::selectedText() const {
+auto db_query_QueryBuffer::selectedText() const -> grt::StringRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     return grt::StringRef(editor->selected_text());
@@ -81,7 +81,7 @@ grt::StringRef db_query_QueryBuffer::selectedText() const {
   return grt::StringRef();
 }
 
-void db_query_QueryBuffer::selectionEnd(const grt::IntegerRef &value) {
+auto db_query_QueryBuffer::selectionEnd(const grt::IntegerRef &value) -> void {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
 
@@ -92,7 +92,7 @@ void db_query_QueryBuffer::selectionEnd(const grt::IntegerRef &value) {
   }
 }
 
-void db_query_QueryBuffer::selectionStart(const grt::IntegerRef &value) {
+auto db_query_QueryBuffer::selectionStart(const grt::IntegerRef &value) -> void {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
 
@@ -103,7 +103,7 @@ void db_query_QueryBuffer::selectionStart(const grt::IntegerRef &value) {
   }
 }
 
-grt::IntegerRef db_query_QueryBuffer::selectionEnd() const {
+auto db_query_QueryBuffer::selectionEnd() const -> grt::IntegerRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     size_t start, end;
@@ -113,7 +113,7 @@ grt::IntegerRef db_query_QueryBuffer::selectionEnd() const {
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_QueryBuffer::selectionStart() const {
+auto db_query_QueryBuffer::selectionStart() const -> grt::IntegerRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     size_t start, end;
@@ -123,7 +123,7 @@ grt::IntegerRef db_query_QueryBuffer::selectionStart() const {
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_QueryBuffer::replaceContents(const std::string &text) {
+auto db_query_QueryBuffer::replaceContents(const std::string &text) -> grt::IntegerRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     editor->set_refresh_enabled(true);
@@ -132,7 +132,7 @@ grt::IntegerRef db_query_QueryBuffer::replaceContents(const std::string &text) {
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_QueryBuffer::replaceSelection(const std::string &text) {
+auto db_query_QueryBuffer::replaceSelection(const std::string &text) -> grt::IntegerRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     editor->set_selected_text(text);
@@ -140,7 +140,7 @@ grt::IntegerRef db_query_QueryBuffer::replaceSelection(const std::string &text) 
   return grt::IntegerRef(0);
 }
 
-grt::IntegerRef db_query_QueryBuffer::replaceCurrentStatement(const std::string &text) {
+auto db_query_QueryBuffer::replaceCurrentStatement(const std::string &text) -> grt::IntegerRef {
   if (_data) {
     MySQLEditor::Ref editor(_data->editor.lock());
     size_t start, end;

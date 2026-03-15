@@ -39,42 +39,36 @@ bool html_gen_mode= false;
 int yy_lineno;
 YYSTYPE yy_result;
 
-void yyrestart (FILE *input_file);
+auto yyrestart (FILE *input_file) -> void;
 
-int yyinit(FILE *input_file)
-{
+auto yyinit(FILE *input_file) -> int {
   ::yy_result= NULL;
   ::yy_lineno= 0;
   ::yyin= input_file;
   return 0;
 }
 
-int yyfreeres()
-{
+auto yyfreeres() -> int {
   fclose(::yyin);
   yyrestart(::yyin);
   return 0;
 }
 
-void yyerror(const char *msg)
-{
+auto yyerror(const char *msg) -> void {
   error(msg);
 }
 
-int error(const char *msg)
-{
+auto error(const char *msg) -> int {
   std::cerr << "Error (line: " << ::yy_lineno << "): " << msg << std::endl;
   return 0;
 }
 
-int warning(const char *msg)
-{
+auto warning(const char *msg) -> int {
   std::cerr << "Warning (line: " << ::yy_lineno << "): " << msg << std::endl;
   return 0;
 }
 
-int generate_grammar_file(const Grammar_tree_item* tree, const char *filename)
-{
+auto generate_grammar_file(const Grammar_tree_item* tree, const char *filename) -> int {
 /*
 0 - root
 |_1 - rule (has name)

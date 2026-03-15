@@ -57,42 +57,42 @@ class DbMySQLTableEditor : public PluginEditorBase {
   DbMySQLEditorPrivPage *_privs_page;
   Gtk::Widget *_main_page_widget;
 
-  void create_table_page();
-  void charset_combo_changed(const std::string &name, const std::string &value);
+  auto create_table_page() -> void;
+  auto charset_combo_changed(const std::string &name, const std::string &value) -> void;
 
-  void refresh_table_page();
-  void partial_refresh(const int what);
+  auto refresh_table_page() -> void;
+  auto partial_refresh(const int what) -> void;
 
-  void set_table_collation(Gtk::ComboBoxText *combo);
-  void set_table_engine(Gtk::ComboBoxText *combo);
+  auto set_table_collation(Gtk::ComboBoxText *combo) -> void;
+  auto set_table_engine(Gtk::ComboBoxText *combo) -> void;
 
-  virtual bec::BaseEditor *get_be();
+  virtual auto get_be() -> bec::BaseEditor *;
 
   bool event_from_table_name_entry(GdkEvent *);
 
-  void page_changed(Gtk::Widget *page, guint page_num);
+  auto page_changed(Gtk::Widget *page, guint page_num) -> void;
 
-  void set_table_name(const std::string &);
+  auto set_table_name(const std::string &) -> void;
 
   // TESTING
-  void refresh_indices();
+  auto refresh_indices() -> void;
   //\TESTING
-  void set_table_option_by_name(const std::string &name, const std::string &value);
-  void set_comment(const std::string &cmt);
+  auto set_table_option_by_name(const std::string &name, const std::string &value) -> void;
+  auto set_comment(const std::string &cmt) -> void;
 
-  void toggle_header_part();
+  auto toggle_header_part() -> void;
 
 protected:
-  virtual void decorate_object_editor();
+  virtual auto decorate_object_editor() -> void;
 
 public:
   DbMySQLTableEditor(grt::Module *m, const grt::BaseListRef &args);
 
   virtual ~DbMySQLTableEditor();
-  virtual void do_refresh_form_data(); // That's called from PluginEditorBase::refresh_form_data
+  virtual auto do_refresh_form_data() -> void; // That's called from PluginEditorBase::refresh_form_data
                                        // which is passed to the backend refresh slot
-  virtual bool can_close();
-  virtual bool switch_edited_object(const grt::BaseListRef &args);
+  virtual auto can_close() -> bool;
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool;
 };
 
 #endif

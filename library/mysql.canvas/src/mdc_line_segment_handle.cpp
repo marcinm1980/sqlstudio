@@ -37,11 +37,11 @@ LineSegmentHandle::LineSegmentHandle(InteractionLayer *ilayer, CanvasItem *item,
 LineSegmentHandle::~LineSegmentHandle() {
 }
 
-void LineSegmentHandle::set_vertical(bool flag) {
+auto LineSegmentHandle::set_vertical(bool flag) -> void {
   _vertical = flag;
 }
 
-Rect LineSegmentHandle::get_bounds() const {
+auto LineSegmentHandle::get_bounds() const -> Rect {
   Rect r;
   Point pos(_pos.round());
 

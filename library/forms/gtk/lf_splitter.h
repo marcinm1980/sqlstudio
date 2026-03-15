@@ -37,21 +37,21 @@ namespace mforms {
     protected:
       Gtk::Paned *_paned;
 
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _paned;
       }
 
       SplitterImpl(::mforms::Splitter *self, bool horiz);
 
-      static bool create(::mforms::Splitter *self, bool horiz);
-      static void add(Splitter *self, View *child, int minwidth, bool fixed);
-      static void remove(Splitter *self, View *child);
-      static void set_divider_position(Splitter *self, int pos);
-      static int get_divider_position(Splitter *self);
-      static void set_expanded(Splitter *self, bool first, bool expand);
+      static auto create(::mforms::Splitter *self, bool horiz) -> bool;
+      static auto add(Splitter *self, View *child, int minwidth, bool fixed) -> void;
+      static auto remove(Splitter *self, View *child) -> void;
+      static auto set_divider_position(Splitter *self, int pos) -> void;
+      static auto get_divider_position(Splitter *self) -> int;
+      static auto set_expanded(Splitter *self, bool first, bool expand) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
 
       virtual ~SplitterImpl();
     };

@@ -41,7 +41,7 @@ namespace help {
     HelpContext(GrtCharacterSetsRef charsets, const std::string &sqlMode, long serverVersion);
     ~HelpContext();
 
-    long serverVersion() const;
+    auto serverVersion() const -> long;
 
   private:
     friend class DbSqlEditorContextHelp;
@@ -53,12 +53,12 @@ namespace help {
   // Exported ony for public for tests.
   class MYSQLWBBACKEND_PUBLIC_FUNC DbSqlEditorContextHelp {
   public:
-    static DbSqlEditorContextHelp *get();
+    static auto get() -> DbSqlEditorContextHelp *;
 
-    void waitForLoading();
+    auto waitForLoading() -> void;
 
-    bool helpTextForTopic(HelpContext *helpContext, const std::string &topic, std::string &text);
-    std::string helpTopicFromPosition(HelpContext *helpContext, const std::string &query, size_t caretPosition);
+    auto helpTextForTopic(HelpContext *helpContext, const std::string &topic, std::string &text) -> bool;
+    auto helpTopicFromPosition(HelpContext *helpContext, const std::string &query, size_t caretPosition) -> std::string;
 
   protected:
     std::thread loaderThread;
@@ -69,8 +69,8 @@ namespace help {
     DbSqlEditorContextHelp();
     ~DbSqlEditorContextHelp();
 
-    std::string createHelpTextFromJson(long version, rapidjson::Value const &json);
-    bool topicExists(long serverVersion, const std::string &topic);
+    auto createHelpTextFromJson(long version, rapidjson::Value const &json) -> std::string;
+    auto topicExists(long serverVersion, const std::string &topic) -> bool;
   };
 
 } // namespace help

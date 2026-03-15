@@ -36,16 +36,16 @@ namespace wb {
     class PrivilegeContentListNode;
 
     class PrivilegeInfoNode : public OverviewBE::ContainerNode {
-      bool add_new_user(WBContext *wb);
-      bool add_new_role(WBContext *wb);
+      auto add_new_user(WBContext *wb) -> bool;
+      auto add_new_role(WBContext *wb) -> bool;
 
     public:
       PrivilegeInfoNode(const db_CatalogRef &catalog, PhysicalOverviewBE *owner);
 
-      virtual void paste_object(WBContext *wb, bec::Clipboard *clip);
-      virtual bool is_pasteable(bec::Clipboard *clip);
+      virtual auto paste_object(WBContext *wb, bec::Clipboard *clip) -> void;
+      virtual auto is_pasteable(bec::Clipboard *clip) -> bool;
 
-      virtual int get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) {
+      virtual auto get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int {
         return 0;
       }
     };

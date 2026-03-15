@@ -51,15 +51,15 @@ mforms::gtk::ButtonImpl::ButtonImpl(::mforms::Button *self, ::mforms::ButtonType
   }
 }
 
-void mforms::gtk::ButtonImpl::callback(::mforms::Button *self) {
+auto mforms::gtk::ButtonImpl::callback(::mforms::Button *self) -> void {
   self->callback();
 }
 
-bool mforms::gtk::ButtonImpl::create(::mforms::Button *self, ::mforms::ButtonType btype) {
+auto mforms::gtk::ButtonImpl::create(::mforms::Button *self, ::mforms::ButtonType btype) -> bool {
   return new ButtonImpl(self, btype, true) != 0;
 }
 
-void mforms::gtk::ButtonImpl::set_text(::mforms::Button *self, const std::string &text) {
+auto mforms::gtk::ButtonImpl::set_text(::mforms::Button *self, const std::string &text) -> void {
   if (self) {
     ButtonImpl *button = self->get_data<ButtonImpl>();
 
@@ -69,7 +69,7 @@ void mforms::gtk::ButtonImpl::set_text(::mforms::Button *self, const std::string
   }
 }
 
-void mforms::gtk::ButtonImpl::set_text(const std::string &text) {
+auto mforms::gtk::ButtonImpl::set_text(const std::string &text) -> void {
   if (_label) {
     _label->set_label(text);
     _button->set_use_underline(true);
@@ -84,7 +84,7 @@ void mforms::gtk::ButtonImpl::set_text(const std::string &text) {
     acc->set_name(text);
 }
 
-void mforms::gtk::ButtonImpl::set_icon(::mforms::Button *self, const std::string &path) {
+auto mforms::gtk::ButtonImpl::set_icon(::mforms::Button *self, const std::string &path) -> void {
   if (self) {
     ButtonImpl *button = self->get_data<ButtonImpl>();
 
@@ -107,7 +107,7 @@ void mforms::gtk::ButtonImpl::set_icon(::mforms::Button *self, const std::string
   }
 }
 
-void mforms::gtk::ButtonImpl::enable_internal_padding(Button *self, bool enabled) {
+auto mforms::gtk::ButtonImpl::enable_internal_padding(Button *self, bool enabled) -> void {
   ButtonImpl *button = self->get_data<ButtonImpl>();
   if (button) {
     if (!button->_holder->get_children().empty()) {
@@ -129,7 +129,7 @@ void mforms::gtk::ButtonImpl::enable_internal_padding(Button *self, bool enabled
   }
 }
 
-void mforms::gtk::ButtonImpl::init() {
+auto mforms::gtk::ButtonImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_button_impl.create = &ButtonImpl::create;

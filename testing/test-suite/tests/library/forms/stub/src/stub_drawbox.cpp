@@ -31,30 +31,30 @@ namespace mforms {
     DrawBoxWrapper::DrawBoxWrapper(mforms::DrawBox *self) : ViewWrapper(self) {
     }
 
-    void DrawBoxWrapper::set_size(int width, int height) {
+    auto DrawBoxWrapper::set_size(int width, int height) -> void {
     }
 
-    bool DrawBoxWrapper::create(mforms::DrawBox *self) {
+    auto DrawBoxWrapper::create(mforms::DrawBox *self) -> bool {
       return true;
     }
 
-    void DrawBoxWrapper::set_needs_repaint(mforms::DrawBox *self) {
+    auto DrawBoxWrapper::set_needs_repaint(mforms::DrawBox *self) -> void {
     }
 
-    void DrawBoxWrapper::setNeedsRepaintArea(DrawBox *, int x, int y, int w, int h) {
+    auto DrawBoxWrapper::setNeedsRepaintArea(DrawBox *, int x, int y, int w, int h) -> void {
 
     }
 
-    void DrawBoxWrapper::add(mforms::DrawBox *, mforms::View *, mforms::Alignment alignment) {
+    auto DrawBoxWrapper::add(mforms::DrawBox *, mforms::View *, mforms::Alignment alignment) -> void {
     }
 
-    void DrawBoxWrapper::remove(mforms::DrawBox *, mforms::View *) {
+    auto DrawBoxWrapper::remove(mforms::DrawBox *, mforms::View *) -> void {
     }
 
-    void DrawBoxWrapper::move(mforms::DrawBox *, mforms::View *, int x, int y) {
+    auto DrawBoxWrapper::move(mforms::DrawBox *, mforms::View *, int x, int y) -> void {
     }
 
-    void DrawBoxWrapper::init() {
+    auto DrawBoxWrapper::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_drawbox_impl.create = &DrawBoxWrapper::create;

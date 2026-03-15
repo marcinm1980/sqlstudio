@@ -37,5 +37,5 @@ class PluginInterfaceImpl : public grt::InterfaceImplBase {
 public:
   DECLARE_REGISTER_INTERFACE(PluginInterfaceImpl, DECLARE_INTERFACE_FUNCTION(PluginInterfaceImpl::getPluginInfo));
 
-  virtual grt::ListRef<app_Plugin> getPluginInfo() = 0;
+  virtual auto getPluginInfo() -> grt::ListRef<app_Plugin> = 0;
 };

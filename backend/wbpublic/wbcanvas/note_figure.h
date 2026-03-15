@@ -35,23 +35,23 @@ namespace wbfig {
     typedef BaseFigure super;
     mdc::TextFigure _text;
 
-    virtual bool on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                          mdc::EventState state);
-    virtual bool on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
-                                 mdc::EventState state);
+    virtual auto on_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                          mdc::EventState state) -> bool;
+    virtual auto on_double_click(mdc::CanvasItem *target, const base::Point &point, mdc::MouseButton button,
+                                 mdc::EventState state) -> bool;
 
   public:
     Note(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self);
     virtual ~Note();
 
-    void set_text_color(const base::Color &color);
-    void set_text(const std::string &text);
+    auto set_text_color(const base::Color &color) -> void;
+    auto set_text(const std::string &text) -> void;
 
-    void set_font(const std::string &text);
+    auto set_font(const std::string &text) -> void;
 
-    virtual void set_content_font(const mdc::FontSpec &font);
+    virtual auto set_content_font(const mdc::FontSpec &font) -> void;
 
-    virtual void set_allow_manual_resizing(bool flag);
+    virtual auto set_allow_manual_resizing(bool flag) -> void;
   };
 };
 

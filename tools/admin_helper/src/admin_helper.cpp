@@ -25,7 +25,7 @@
 
 //--------------------------------------------------------------------------------------------------
 
-static void clean_python(PyConfig *config, PyStatus status) {
+static auto clean_python(PyConfig *config, PyStatus status) -> void {
   PyConfig_Clear(config);
   if (PyStatus_IsExit(status)) {
     return;
@@ -35,7 +35,7 @@ static void clean_python(PyConfig *config, PyStatus status) {
 
 //--------------------------------------------------------------------------------------------------
 
-static void setup_python(PyConfig& config, int argc, wchar_t** argv) {
+static auto setup_python(PyConfig& config, int argc, wchar_t** argv) -> void {
   char *pathlist = NULL;
   TCHAR szPath[MAX_PATH];
   std::string module_path;
@@ -119,13 +119,13 @@ static void setup_python(PyConfig& config, int argc, wchar_t** argv) {
 
 //--------------------------------------------------------------------------------------------------
 
-static void finalize_python(PyConfig& config) {
+static auto finalize_python(PyConfig& config) -> void {
   PyConfig_Clear(&config);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int wmain(int argc, wchar_t **argv) {
+auto wmain(int argc, wchar_t **argv) -> int {
   // Set the python interpreter.
   PyConfig config;
   setup_python(config, argc, argv);

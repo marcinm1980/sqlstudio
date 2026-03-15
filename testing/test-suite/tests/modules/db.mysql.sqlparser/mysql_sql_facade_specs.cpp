@@ -40,7 +40,7 @@ class SQL_Parser_FE_MySQLTest : public ::testing::Test {
 protected:
   static std::unique_ptr<MysqlSqlFacadeData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<MysqlSqlFacadeData>();
     data->tester.reset(new MySqlStudioTester());
     data->facade = nullptr;
@@ -57,7 +57,7 @@ protected:
     EXPECT_NE(data->facade, nullptr) << "Failed to get sqlparser module";
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

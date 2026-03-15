@@ -73,68 +73,68 @@ PhysicalSchemataNode::PhysicalSchemataNode(studio_physical_ModelRef amodel) : Co
   display_mode = OverviewBE::MSmallIcon;
 }
 
-void PhysicalSchemataNode::init() {
+auto PhysicalSchemataNode::init() -> void {
   grt::ListRef<db_Schema> schemata = model->catalog()->schemata();
   for (size_t c = schemata.count(), i = 0; i < c; i++)
     children.push_back(create_child_node(schemata.get(i)));
 }
 
-OverviewBE::Node *PhysicalSchemataNode::create_child_node(db_SchemaRef schema) {
+auto PhysicalSchemataNode::create_child_node(db_SchemaRef schema) -> OverviewBE::Node * {
   PhysicalSchemaNode *node = new PhysicalSchemaNode(schema);
   node->init();
   return node;
 }
 
-bool PhysicalSchemataNode::add_object(WBContext *wb) {
+auto PhysicalSchemataNode::add_object(WBContext *wb) -> bool {
   bec::GRTManager::get()->open_object_editor(wb->get_component<WBComponentPhysical>()->add_new_db_schema(model));
   return true;
 }
 
-void PhysicalSchemataNode::delete_object(WBContext *wb) {
+auto PhysicalSchemataNode::delete_object(WBContext *wb) -> void {
   // dynamic_cast<WBComponentPhysical*>(wb->get_component("physical"))->delete_
 }
 
 class SchemaListUpdater
   : public IncrementalListUpdater<std::vector<OverviewBE::Node *>::iterator, OverviewBE::Node *, size_t> {
-  virtual dest_iterator get_dest_iterator() {
+  virtual auto get_dest_iterator() -> dest_iterator {
     return _nodes.begin();
   }
 
-  virtual source_iterator get_source_iterator() {
+  virtual auto get_source_iterator() -> source_iterator {
     return 0;
   }
 
-  virtual dest_iterator increment_dest(dest_iterator &iter) {
+  virtual auto increment_dest(dest_iterator &iter) -> dest_iterator {
     return ++iter;
   }
 
-  virtual source_iterator increment_source(source_iterator &iter) {
+  virtual auto increment_source(source_iterator &iter) -> source_iterator {
     return ++iter;
   }
 
-  virtual bool has_more_dest(dest_iterator iter) {
+  virtual auto has_more_dest(dest_iterator iter) -> bool {
     return iter != _nodes.end();
   }
 
-  virtual bool has_more_source(source_iterator iter) {
+  virtual auto has_more_source(source_iterator iter) -> bool {
     return _schemata.is_valid() && iter < _schemata.count();
   }
 
-  virtual bool items_match(dest_iterator diter, source_iterator siter) {
+  virtual auto items_match(dest_iterator diter, source_iterator siter) -> bool {
     return (*diter)->object == _schemata.get(siter);
   }
 
-  virtual dest_ref get_dest(dest_iterator iter) {
+  virtual auto get_dest(dest_iterator iter) -> dest_ref {
     _reused_items.insert(*iter);
     return *iter;
   }
 
-  virtual void update(dest_ref dest_item, source_iterator source_item) {
+  virtual auto update(dest_ref dest_item, source_iterator source_item) -> void {
     dest_item->refresh();
   }
 
   // begin adding items to the begginning of the dest list
-  virtual dest_iterator begin_adding() {
+  virtual auto begin_adding() -> dest_iterator {
     for (dest_iterator i = _nodes.begin(); i != _nodes.end(); ++i) {
       if (_reused_items.find(*i) == _reused_items.end())
         delete *i;
@@ -144,11 +144,11 @@ class SchemaListUpdater
     return _nodes.end();
   }
 
-  virtual dest_iterator add(dest_iterator &iter, source_iterator source_item) {
+  virtual auto add(dest_iterator &iter, source_iterator source_item) -> dest_iterator {
     return ++_nodes.insert(iter, _schema_node_instantiation_slot(_schemata.get(source_item)));
   }
 
-  virtual dest_iterator add(dest_iterator &iter, dest_ref item) {
+  virtual auto add(dest_iterator &iter, dest_ref item) -> dest_iterator {
     // store the items that are reused so they're not deleted later
     _reused_items.insert(item);
 
@@ -156,7 +156,7 @@ class SchemaListUpdater
   }
 
   // end adding items to the dest item, stuff after the last item added must be removed
-  virtual void end_adding(dest_iterator iter) {
+  virtual auto end_adding(dest_iterator iter) -> void {
   }
 
   std::vector<OverviewBE::Node *> &_nodes;
@@ -172,7 +172,7 @@ public:
   }
 };
 
-void PhysicalSchemataNode::refresh_children() {
+auto PhysicalSchemataNode::refresh_children() -> void {
   focused = 0;
 
   SchemaListUpdater updater(children, db_CatalogRef::cast_from(object)->schemata(),
@@ -187,7 +187,7 @@ class ModelObjectNode : public OverviewBE::ObjectNode, public base::trackable {
 public:
   std::string member;
 
-  virtual void delete_object(WBContext *wb) {
+  virtual auto delete_object(WBContext *wb) -> void {
     grt::AutoUndo undo;
     // removal from the list will trigger deletion of the file automatically
 
@@ -196,15 +196,15 @@ public:
     undo.end(strfmt(_("Delete '%s'"), object->name().c_str()));
   }
 
-  virtual bool is_deletable() {
+  virtual auto is_deletable() -> bool {
     return true;
   }
 
-  virtual bool is_renameable() {
+  virtual auto is_renameable() -> bool {
     return true;
   }
 
-  virtual bool rename(WBContext *wb, const std::string &name) {
+  virtual auto rename(WBContext *wb, const std::string &name) -> bool {
     //= bec::GRTManager::get();
     // QQQgrt->lock_tree_write();
 
@@ -233,7 +233,7 @@ public:
   }
 
   // XXX hack to remove Edit Notes... from script menu.. remove once bug is fixed
-  virtual int get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) {
+  virtual auto get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int {
     int c = OverviewBE::ObjectNode::get_popup_menu_items(wb, items);
 
     if (object.is_instance(db_Script::static_class_name())) {
@@ -263,7 +263,7 @@ SQLScriptsNode::SQLScriptsNode(studio_physical_ModelRef model, PhysicalOverviewB
   refresh_children();
 }
 
-int SQLScriptsNode::get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) {
+auto SQLScriptsNode::get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int {
   bec::MenuItem item;
 
   item.type = bec::MenuSeparator;
@@ -278,19 +278,19 @@ int SQLScriptsNode::get_popup_menu_items(WBContext *wb, bec::MenuItemList &items
   return 2;
 }
 
-bool SQLScriptsNode::add_new(WBContext *wb) {
+auto SQLScriptsNode::add_new(WBContext *wb) -> bool {
   WBComponentPhysical *compo = wb->get_component<WBComponentPhysical>();
 
   bec::GRTManager::get()->open_object_editor(compo->add_new_stored_script(_model, ""));
   return true;
 }
 
-static void script_object_changed(const std::string &member, const grt::ValueRef &value, PhysicalOverviewBE *owner) {
+static auto script_object_changed(const std::string &member, const grt::ValueRef &value, PhysicalOverviewBE *owner) -> void {
   if (member == "name")
     owner->send_refresh_scripts();
 }
 
-void SQLScriptsNode::refresh_children() {
+auto SQLScriptsNode::refresh_children() -> void {
   clear_children();
   if (_model->scripts().is_valid()) {
     for (size_t c = _model->scripts().count(), i = 0; i < c; i++) {
@@ -331,7 +331,7 @@ NotesNode::NotesNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner)
   refresh_children();
 }
 
-int NotesNode::get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) {
+auto NotesNode::get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int {
   bec::MenuItem item;
 
   item.type = bec::MenuSeparator;
@@ -346,19 +346,19 @@ int NotesNode::get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) {
   return 2;
 }
 
-bool NotesNode::add_new(WBContext *wb) {
+auto NotesNode::add_new(WBContext *wb) -> bool {
   WBComponentPhysical *compo = wb->get_component<WBComponentPhysical>();
 
   bec::GRTManager::get()->open_object_editor(compo->add_new_stored_note(_model, ""));
   return true;
 }
 
-static void note_object_changed(const std::string &member, const grt::ValueRef &value, PhysicalOverviewBE *owner) {
+static auto note_object_changed(const std::string &member, const grt::ValueRef &value, PhysicalOverviewBE *owner) -> void {
   if (member == "name")
     owner->send_refresh_notes();
 }
 
-void NotesNode::refresh_children() {
+auto NotesNode::refresh_children() -> void {
   clear_children();
   if (_model->notes().is_valid()) {
     for (size_t c = _model->notes().count(), i = 0; i < c; i++) {
@@ -428,7 +428,7 @@ PhysicalOverviewBE::~PhysicalOverviewBE() {
 
 //--------------------------------------------------------------------------------------------------
 
-void PhysicalOverviewBE::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto PhysicalOverviewBE::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   if (name == "GNColorsChanged") {
     // Single colors or the entire color scheme changed.
     update_toolbar_icons();
@@ -437,7 +437,7 @@ void PhysicalOverviewBE::handle_notification(const std::string &name, void *send
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::ToolBar *PhysicalOverviewBE::get_toolbar() {
+auto PhysicalOverviewBE::get_toolbar() -> mforms::ToolBar * {
   if (!_toolbar) {
     _toolbar = wb::WBContextUI::get()->get_command_ui()->create_toolbar("data/model_toolbar.xml");
     update_toolbar_icons();
@@ -448,9 +448,9 @@ mforms::ToolBar *PhysicalOverviewBE::get_toolbar() {
 //--------------------------------------------------------------------------------------------------
 
 // Implemented in wb_sql_editor_form_ui.cpp.
-extern std::string find_icon_name(std::string icon_name, bool use_win8);
+extern auto find_icon_name(std::string icon_name, bool use_win8) -> std::string;
 
-void PhysicalOverviewBE::update_toolbar_icons() {
+auto PhysicalOverviewBE::update_toolbar_icons() -> void {
   bool use_win8;
 
   switch (base::Color::get_active_scheme()) {
@@ -478,28 +478,28 @@ void PhysicalOverviewBE::update_toolbar_icons() {
 
 //--------------------------------------------------------------------------------------------------
 
-OverviewBE::ContainerNode *PhysicalOverviewBE::create_root_node(studio_physical_ModelRef model,
-                                                                PhysicalOverviewBE *owner) {
+auto PhysicalOverviewBE::create_root_node(studio_physical_ModelRef model,
+                                                                PhysicalOverviewBE *owner) -> OverviewBE::ContainerNode * {
   return new PhysicalRootNode(model, owner);
 }
 
-bool PhysicalOverviewBE::can_close() {
+auto PhysicalOverviewBE::can_close() -> bool {
   return _wb->can_close_document();
 }
 
-void PhysicalOverviewBE::close() {
+auto PhysicalOverviewBE::close() -> void {
   _wb->close_document();
 }
 
-std::string PhysicalOverviewBE::identifier() const {
+auto PhysicalOverviewBE::identifier() const -> std::string {
   return "overview.physical";
 }
 
-std::string PhysicalOverviewBE::get_form_context_name() const {
+auto PhysicalOverviewBE::get_form_context_name() const -> std::string {
   return WB_CONTEXT_PHYSICAL_OVERVIEW;
 }
 
-std::string PhysicalOverviewBE::get_title() {
+auto PhysicalOverviewBE::get_title() -> std::string {
   const char *dirty_mark = "";
   if (_wb->has_unsaved_changes())
     dirty_mark = "*";
@@ -508,7 +508,7 @@ std::string PhysicalOverviewBE::get_title() {
   return std::string(_("MySQL Model")) + dirty_mark;
 }
 
-void PhysicalOverviewBE::set_model(studio_physical_ModelRef model) {
+auto PhysicalOverviewBE::set_model(studio_physical_ModelRef model) -> void {
   if (_root_node)
     delete _root_node;
 
@@ -518,20 +518,20 @@ void PhysicalOverviewBE::set_model(studio_physical_ModelRef model) {
   tree_changed();
 }
 
-model_ModelRef PhysicalOverviewBE::get_model() {
+auto PhysicalOverviewBE::get_model() -> model_ModelRef {
   return _model;
 }
 
-int PhysicalOverviewBE::get_default_tab_page_index() {
+auto PhysicalOverviewBE::get_default_tab_page_index() -> int {
   return (int)_model->catalog()->schemata().get_index(_model->catalog()->defaultSchema());
 }
 
-static bool has_selection(PhysicalOverviewBE *overview) {
+static auto has_selection(PhysicalOverviewBE *overview) -> bool {
   grt::ListRef<GrtObject> selection(overview->get_selection());
   return selection.is_valid() && selection.count() > 0;
 }
 
-mforms::MenuBar *PhysicalOverviewBE::get_menubar() {
+auto PhysicalOverviewBE::get_menubar() -> mforms::MenuBar * {
   if (!_menu) {
     _menu = wb::WBContextUI::get()->get_command_ui()->create_menubar_for_context(WB_CONTEXT_PHYSICAL_OVERVIEW);
 
@@ -588,7 +588,7 @@ mforms::MenuBar *PhysicalOverviewBE::get_menubar() {
   return _menu;
 }
 
-internal::PhysicalSchemaNode *PhysicalOverviewBE::get_active_schema_node() {
+auto PhysicalOverviewBE::get_active_schema_node() -> internal::PhysicalSchemaNode * {
   NodeId node(get_focused_child(NodeId(_schemata_node_index)));
 
   if (node.is_valid())
@@ -596,7 +596,7 @@ internal::PhysicalSchemaNode *PhysicalOverviewBE::get_active_schema_node() {
   return 0;
 }
 
-void PhysicalOverviewBE::send_refresh_diagram(const model_DiagramRef &view) {
+auto PhysicalOverviewBE::send_refresh_diagram(const model_DiagramRef &view) -> void {
   if (view.is_valid()) {
     NodeId node = get_node_child_for_object(NodeId(0), view);
 
@@ -606,27 +606,27 @@ void PhysicalOverviewBE::send_refresh_diagram(const model_DiagramRef &view) {
   }
 }
 
-void PhysicalOverviewBE::send_refresh_roles() {
+auto PhysicalOverviewBE::send_refresh_roles() -> void {
   send_refresh_children(NodeId(2).append(1));
 }
 
-void PhysicalOverviewBE::send_refresh_users() {
+auto PhysicalOverviewBE::send_refresh_users() -> void {
   send_refresh_children(NodeId(2).append(0));
 }
 
-void PhysicalOverviewBE::send_refresh_scripts() {
+auto PhysicalOverviewBE::send_refresh_scripts() -> void {
   send_refresh_children(SCRIPT_NODE);
 }
 
-void PhysicalOverviewBE::send_refresh_notes() {
+auto PhysicalOverviewBE::send_refresh_notes() -> void {
   send_refresh_children(NOTE_NODE);
 }
 
-void PhysicalOverviewBE::send_refresh_schema_list() {
+auto PhysicalOverviewBE::send_refresh_schema_list() -> void {
   send_refresh_children(NodeId(_schemata_node_index));
 }
 
-void PhysicalOverviewBE::send_refresh_for_schema(const db_SchemaRef &schema, bool refresh_object_itself) {
+auto PhysicalOverviewBE::send_refresh_for_schema(const db_SchemaRef &schema, bool refresh_object_itself) -> void {
   NodeId schema_node = get_node_child_for_object(NodeId(_schemata_node_index), schema);
 
   if (schema_node.is_valid() && refresh_object_itself)
@@ -635,7 +635,7 @@ void PhysicalOverviewBE::send_refresh_for_schema(const db_SchemaRef &schema, boo
     send_refresh_children(NodeId(_schemata_node_index));
 }
 
-void PhysicalOverviewBE::send_refresh_for_schema_object(const GrtObjectRef &object, bool refresh_object_itself) {
+auto PhysicalOverviewBE::send_refresh_for_schema_object(const GrtObjectRef &object, bool refresh_object_itself) -> void {
   NodeId schema_node;
 
   NodeId schemata_node = NodeId(_schemata_node_index);
@@ -664,7 +664,7 @@ void PhysicalOverviewBE::send_refresh_for_schema_object(const GrtObjectRef &obje
     send_refresh_children(schema_node);
 }
 
-void PhysicalOverviewBE::refresh_node(const bec::NodeId &node_id, bool children) {
+auto PhysicalOverviewBE::refresh_node(const bec::NodeId &node_id, bool children) -> void {
   Node *node = get_node_by_id(node_id);
   if (node) {
     node->refresh();
@@ -677,7 +677,7 @@ void PhysicalOverviewBE::refresh_node(const bec::NodeId &node_id, bool children)
   }
 }
 
-std::string PhysicalOverviewBE::get_node_drag_type(const bec::NodeId &node) {
+auto PhysicalOverviewBE::get_node_drag_type(const bec::NodeId &node) -> std::string {
   // for schema objects
   if (node.depth() > 1 && node[0] == 1)
     return WB_DBOBJECT_DRAG_TYPE;
@@ -688,11 +688,11 @@ std::string PhysicalOverviewBE::get_node_drag_type(const bec::NodeId &node) {
   return OverviewBE::get_node_drag_type(node);
 }
 
-bool PhysicalOverviewBE::should_accept_file_drop_to_node(const bec::NodeId &node, const std::string &path) {
+auto PhysicalOverviewBE::should_accept_file_drop_to_node(const bec::NodeId &node, const std::string &path) -> bool {
   return true;
 }
 
-void PhysicalOverviewBE::add_file_to_node(const bec::NodeId &node, const std::string &path) {
+auto PhysicalOverviewBE::add_file_to_node(const bec::NodeId &node, const std::string &path) -> void {
   if (node == SCRIPT_NODE)
     _wb->get_component<WBComponentPhysical>()->add_new_stored_script(_model, path);
   else if (node == NOTE_NODE)
@@ -701,7 +701,7 @@ void PhysicalOverviewBE::add_file_to_node(const bec::NodeId &node, const std::st
     throw std::logic_error("Cannot add file to node");
 }
 
-bool PhysicalOverviewBE::get_file_data_for_node(const bec::NodeId &node, char *&data, size_t &length) {
+auto PhysicalOverviewBE::get_file_data_for_node(const bec::NodeId &node, char *&data, size_t &length) -> bool {
   GrtStoredNoteRef note(GrtStoredNoteRef::cast_from(get_node_by_id(node)->object));
 
   data = 0;
@@ -718,7 +718,7 @@ bool PhysicalOverviewBE::get_file_data_for_node(const bec::NodeId &node, char *&
   return false;
 }
 
-std::string PhysicalOverviewBE::get_file_for_node(const bec::NodeId &node) {
+auto PhysicalOverviewBE::get_file_for_node(const bec::NodeId &node) -> std::string {
   GrtStoredNoteRef note(GrtStoredNoteRef::cast_from(get_node_by_id(node)->object));
 
   if (note.is_valid())
@@ -726,18 +726,18 @@ std::string PhysicalOverviewBE::get_file_for_node(const bec::NodeId &node) {
   return "";
 }
 
-bool PhysicalOverviewBE::can_undo() {
+auto PhysicalOverviewBE::can_undo() -> bool {
   return grt::GRT::get()->get_undo_manager()->can_undo();
 }
 
-bool PhysicalOverviewBE::can_redo() {
+auto PhysicalOverviewBE::can_redo() -> bool {
   return grt::GRT::get()->get_undo_manager()->can_redo();
 }
 
-void PhysicalOverviewBE::undo() {
+auto PhysicalOverviewBE::undo() -> void {
   grt::GRT::get()->get_undo_manager()->undo();
 }
 
-void PhysicalOverviewBE::redo() {
+auto PhysicalOverviewBE::redo() -> void {
   grt::GRT::get()->get_undo_manager()->redo();
 }

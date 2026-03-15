@@ -35,16 +35,16 @@ namespace MySQL {
     protected:
       PopupWrapper(mforms::Popup *backend);
 
-      static bool create(mforms::Popup *backend, mforms::PopupStyle style);
-      static void destroy(mforms::Popup *backend);
-      static void set_needs_repaint(mforms::Popup *backend);
-      static void set_size(mforms::Popup *backend, int width, int height);
-      static int show(mforms::Popup *backend, int spot_x, int spot_y);
-      static base::Rect get_content_rect(mforms::Popup *backend);
-      static void set_modal_result(mforms::Popup *backend, int result);
+      static auto create(mforms::Popup *backend, mforms::PopupStyle style) -> bool;
+      static auto destroy(mforms::Popup *backend) -> void;
+      static auto set_needs_repaint(mforms::Popup *backend) -> void;
+      static auto set_size(mforms::Popup *backend, int width, int height) -> void;
+      static auto show(mforms::Popup *backend, int spot_x, int spot_y) -> int;
+      static auto get_content_rect(mforms::Popup *backend) -> base::Rect;
+      static auto set_modal_result(mforms::Popup *backend, int result) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

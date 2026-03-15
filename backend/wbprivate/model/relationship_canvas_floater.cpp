@@ -55,7 +55,7 @@ RelationshipFloater::~RelationshipFloater() {
   _columns.clear();
 }
 
-void RelationshipFloater::setup_pick_source() {
+auto RelationshipFloater::setup_pick_source() -> void {
   set_title(_("Foreign Key Columns"));
   _text.set_text(_("Pick one or more columns\nfor the foreign key."));
   //_text.set_needs_relayout();
@@ -64,7 +64,7 @@ void RelationshipFloater::setup_pick_source() {
   _button.set_text(_("Pick Referenced Columns"));
 }
 
-void RelationshipFloater::add_column(const std::string &name) {
+auto RelationshipFloater::add_column(const std::string &name) -> void {
   mdc::TextFigure *text = new mdc::TextFigure(get_layer());
   text->set_text(name);
   text->set_pen_color(Color::white());
@@ -74,7 +74,7 @@ void RelationshipFloater::add_column(const std::string &name) {
   _columns_box.add(text, false, false);
 }
 
-void RelationshipFloater::setup_pick_target() {
+auto RelationshipFloater::setup_pick_target() -> void {
   set_title(_("Referenced Columns"));
   _text.set_text(_("Pick matching columns for\nthe referenced table."));
 
@@ -87,7 +87,7 @@ void RelationshipFloater::setup_pick_target() {
   _columns[_current_column]->set_font(font);
 }
 
-void RelationshipFloater::pick_next_target() {
+auto RelationshipFloater::pick_next_target() -> void {
   mdc::FontSpec font(_columns[_current_column]->get_font());
 
   font.toggle_bold(true);

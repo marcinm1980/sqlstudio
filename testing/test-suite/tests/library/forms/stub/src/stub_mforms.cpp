@@ -57,34 +57,34 @@
 #include "mforms/dockingpoint.h"
 
 class DockingPointDelegate : public mforms::DockingPointDelegate {
-  virtual std::string get_type() {
+  virtual auto get_type() -> std::string {
     return "MainWindow";
   }
 
-  virtual void set_name(const std::string &name) {
+  virtual auto set_name(const std::string &name) -> void {
   }
 
-  virtual void dock_view(mforms::AppView *view, const std::string &arg1, int arg2) {
+  virtual auto dock_view(mforms::AppView *view, const std::string &arg1, int arg2) -> void {
   }
-  virtual bool select_view(mforms::AppView *view) {
+  virtual auto select_view(mforms::AppView *view) -> bool {
     return false;
   }
-  virtual void undock_view(mforms::AppView *view) {
+  virtual auto undock_view(mforms::AppView *view) -> void {
     view->release();
   }
-  virtual void set_view_title(mforms::AppView *view, const std::string &title) {
+  virtual auto set_view_title(mforms::AppView *view, const std::string &title) -> void {
   }
-  virtual std::pair<int, int> get_size() {
+  virtual auto get_size() -> std::pair<int, int> {
     return std::make_pair(0, 0);
   }
 
-  virtual mforms::AppView *selected_view() {
+  virtual auto selected_view() -> mforms::AppView * {
     return NULL;
   }
-  virtual int view_count() {
+  virtual auto view_count() -> int {
     return 0;
   }
-  virtual mforms::AppView *view_at_index(int index) {
+  virtual auto view_at_index(int index) -> mforms::AppView * {
     return NULL;
   }
 };

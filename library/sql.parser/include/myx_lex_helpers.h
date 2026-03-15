@@ -43,8 +43,8 @@ extern struct Lex_args lex_args;
 
 extern std::istream* lex_input_stream;
 
-extern int yylex(void **yylval);
-extern void yyerror(const char *msg);
+extern auto yylex(void **yylval) -> int;
+extern auto yyerror(const char *msg) -> void;
 //extern int yywrap();
 //extern void yy_custom_input(char *buf, int* result, int max_size);
 //extern int yy_token_match(int token, const char *value);
@@ -54,6 +54,6 @@ extern void yyerror(const char *msg);
 
 } // namespace mysql_parser
 
-extern int yyparse();
+extern auto yyparse() -> int;
 
 #endif // myx_lex_helpers_h

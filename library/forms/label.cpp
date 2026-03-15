@@ -49,31 +49,31 @@ Label::Label() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Label::set_text(const std::string &text) {
+auto Label::set_text(const std::string &text) -> void {
   _label_impl->set_text(this, text);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Label::set_color(const std::string &color) {
+auto Label::set_color(const std::string &color) -> void {
   _label_impl->set_color(this, color);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Label::set_text_align(Alignment align) {
+auto Label::set_text_align(Alignment align) -> void {
   _label_impl->set_text_align(this, align);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Label::set_style(LabelStyle style) {
+auto Label::set_style(LabelStyle style) -> void {
   _label_impl->set_style(this, style);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Label::set_wrap_text(bool flag) {
+auto Label::set_wrap_text(bool flag) -> void {
   _label_impl->set_wrap_text(this, flag);
 }
 

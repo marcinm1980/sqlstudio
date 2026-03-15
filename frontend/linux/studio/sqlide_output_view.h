@@ -47,22 +47,22 @@ public:
   QueryOutputView(const SqlEditorForm::Ref& be, DbSqlEditorView* db_sql_editor_view);
   ~QueryOutputView();
 
-  Gtk::Widget& get_outer() {
+  auto get_outer() -> Gtk::Widget& {
     return _top_box;
   }
-  void refresh();
-  void output_text(const std::string& text, const bool bring_to_front);
+  auto refresh() -> void;
+  auto output_text(const std::string& text, const bool bring_to_front) -> void;
 
 private:
-  void mode_change_requested();
-  int on_history_entries_refresh();
-  int on_history_details_refresh();
-  void on_history_entries_selection_changed();
-  bool on_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
+  auto mode_change_requested() -> void;
+  auto on_history_entries_refresh() -> int;
+  auto on_history_details_refresh() -> int;
+  auto on_history_entries_selection_changed() -> void;
+  auto on_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip) -> bool;
 
-  void output_menu_will_show();
-  void handle_history_context_menu(const std::string& action);
-  void history_context_menu_responder();
+  auto output_menu_will_show() -> void;
+  auto handle_history_context_menu(const std::string& action) -> void;
+  auto history_context_menu_responder() -> void;
 
   SqlEditorForm::Ref _be;
   Gtk::Box _top_box;

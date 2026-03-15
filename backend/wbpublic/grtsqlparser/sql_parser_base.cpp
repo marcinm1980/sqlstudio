@@ -68,22 +68,22 @@ Sql_parser_base::Sql_parser_base()
   _case_sensitive_identifiers = options.is_valid() ? (options.get_int("SqlIdentifiersCS", 1) != 0) : true;
 }
 
-void Sql_parser_base::set_options(const grt::DictRef &options) {
+auto Sql_parser_base::set_options(const grt::DictRef &options) -> void {
 }
 
-void Sql_parser_base::messages_enabled(bool value) {
+auto Sql_parser_base::messages_enabled(bool value) -> void {
   _messages_enabled = value;
 }
 
-bool Sql_parser_base::messages_enabled() {
+auto Sql_parser_base::messages_enabled() -> bool {
   return _messages_enabled;
 }
 
-std::string Sql_parser_base::normalize_identifier_case(const std::string &ident) {
+auto Sql_parser_base::normalize_identifier_case(const std::string &ident) -> std::string {
   return _case_sensitive_identifiers ? ident : base::toupper(ident);
 }
 
-void Sql_parser_base::add_log_message(const std::string &text, int entry_type) {
+auto Sql_parser_base::add_log_message(const std::string &text, int entry_type) -> void {
   // Keep it that way (don't always write to log file). Messages are usually disabled during
   // syntax checks and the like. Simple SQL errors shouldn't go into the log file.
   if (_messages_enabled) {
@@ -120,8 +120,8 @@ void Sql_parser_base::add_log_message(const std::string &text, int entry_type) {
   }
 }
 
-void Sql_parser_base::report_sql_error(int lineno, bool calc_abs_lineno, int err_tok_line_pos, int err_tok_len,
-                                       const std::string &err_msg, int entry_type, std::string resolution) {
+auto Sql_parser_base::report_sql_error(int lineno, bool calc_abs_lineno, int err_tok_line_pos, int err_tok_len,
+                                       const std::string &err_msg, int entry_type, std::string resolution) -> void {
   ++_err_count;
 
   if (calc_abs_lineno) {
@@ -141,7 +141,7 @@ void Sql_parser_base::report_sql_error(int lineno, bool calc_abs_lineno, int err
   add_log_message(oss.str(), entry_type);
 }
 
-void Sql_parser_base::step_progress(const std::string &text) {
+auto Sql_parser_base::step_progress(const std::string &text) -> void {
   if (!_messages_enabled)
     return;
 
@@ -151,26 +151,26 @@ void Sql_parser_base::step_progress(const std::string &text) {
   grt::GRT::get()->send_progress(_progress_state, _("Processing object"), text);
 }
 
-void Sql_parser_base::set_progress_state(float state, const std::string &text) {
+auto Sql_parser_base::set_progress_state(float state, const std::string &text) -> void {
   if (!_messages_enabled)
     return;
   grt::GRT::get()->send_progress(state, text);
 }
 
-const std::string &Sql_parser_base::sql_statement() {
+auto Sql_parser_base::sql_statement() -> const std::string & {
   return _sql_statement;
 }
 
-void Sql_parser_base::parse_error_cb(Parse_error_cb cb) {
+auto Sql_parser_base::parse_error_cb(Parse_error_cb cb) -> void {
   _parse_error_cb = cb;
 }
 
-Sql_parser_base::Parse_error_cb &Sql_parser_base::parse_error_cb() {
+auto Sql_parser_base::parse_error_cb() -> Sql_parser_base::Parse_error_cb & {
   return _parse_error_cb;
 }
 
-void Sql_parser_base::do_report_sql_statement_border(int begin_lineno, int begin_line_pos, int end_lineno,
-                                                     int end_line_pos) {
+auto Sql_parser_base::do_report_sql_statement_border(int begin_lineno, int begin_line_pos, int end_lineno,
+                                                     int end_line_pos) -> void {
   // calculate lineno shift to get absolute line numbers
   int lineno_shift;
   {

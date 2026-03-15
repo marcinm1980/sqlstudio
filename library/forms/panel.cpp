@@ -33,23 +33,23 @@ Panel::Panel(PanelType type) {
   _panel_impl->create(this, type);
 }
 
-void Panel::set_title(const std::string &title) {
+auto Panel::set_title(const std::string &title) -> void {
   _panel_impl->set_title(this, title);
 }
 
-void Panel::set_back_color(const std::string &color) {
+auto Panel::set_back_color(const std::string &color) -> void {
   _panel_impl->set_back_color(this, color);
 }
 
-void Panel::set_active(bool flag) {
+auto Panel::set_active(bool flag) -> void {
   _panel_impl->set_active(this, flag);
 }
 
-bool Panel::get_active() {
+auto Panel::get_active() -> bool {
   return _panel_impl->get_active(this);
 }
 
-void Panel::add(View *subview) {
+auto Panel::add(View *subview) -> void {
   cache_view(subview);
   _panel_impl->add(this, subview);
   subview->show();
@@ -59,7 +59,7 @@ void Panel::add(View *subview) {
 #endif
 }
 
-void Panel::remove(View *subview) {
+auto Panel::remove(View *subview) -> void {
   _panel_impl->remove(this, subview);
   remove_from_cache(subview);
 

@@ -84,7 +84,7 @@ DbMySQLTableEditorFKPage::DbMySQLTableEditorFKPage(DbMySQLTableEditor* owner, My
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::switch_be(MySQLTableEditorBE* be) {
+auto DbMySQLTableEditorFKPage::switch_be(MySQLTableEditorBE* be) -> void {
   _fk_columns_model.clear();
   _fk_columns_tv->unset_model();
   _fk_columns_tv->remove_all_columns();
@@ -107,7 +107,7 @@ void DbMySQLTableEditorFKPage::switch_be(MySQLTableEditorBE* be) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::refresh() {
+auto DbMySQLTableEditorFKPage::refresh() -> void {
   check_fk_support();
 
   _fk_columns_tv->unset_model();
@@ -133,7 +133,7 @@ void DbMySQLTableEditorFKPage::refresh() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::fk_cursor_changed() {
+auto DbMySQLTableEditorFKPage::fk_cursor_changed() -> void {
   _fk_columns_tv->unset_model();
   _fk_columns_tv->remove_all_columns();
 
@@ -153,7 +153,7 @@ void DbMySQLTableEditorFKPage::fk_cursor_changed() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::update_fk_details() {
+auto DbMySQLTableEditorFKPage::update_fk_details() -> void {
   ::bec::FKConstraintListBE* fk_be = _be->get_fks();
   fk_be->refresh();
 
@@ -225,7 +225,7 @@ void DbMySQLTableEditorFKPage::update_fk_details() {
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::fkcol_cell_editing_started(Gtk::CellEditable* cell, const Glib::ustring& path) {
+auto DbMySQLTableEditorFKPage::fkcol_cell_editing_started(Gtk::CellEditable* cell, const Glib::ustring& path) -> void {
   bec::NodeId node(path);
   if (node.is_valid())
     _fk_node = node;
@@ -238,8 +238,8 @@ void DbMySQLTableEditorFKPage::fkcol_cell_editing_started(Gtk::CellEditable* cel
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::cell_editing_started(GtkCellRenderer* cr, GtkCellEditable* ce, gchar* path,
-                                                    gpointer udata) {
+auto DbMySQLTableEditorFKPage::cell_editing_started(GtkCellRenderer* cr, GtkCellEditable* ce, gchar* path,
+                                                    gpointer udata) -> void {
   DbMySQLTableEditorFKPage* self = reinterpret_cast<DbMySQLTableEditorFKPage*>(udata);
 
   bec::NodeId node(path);
@@ -274,7 +274,7 @@ void DbMySQLTableEditorFKPage::cell_editing_started(GtkCellRenderer* cr, GtkCell
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::cell_editing_done(GtkCellEditable* ce, gpointer udata) {
+auto DbMySQLTableEditorFKPage::cell_editing_done(GtkCellEditable* ce, gpointer udata) -> void {
   DbMySQLTableEditorFKPage* self = reinterpret_cast<DbMySQLTableEditorFKPage*>(udata);
 
   if (self->_ce && self->_edit_conn) {
@@ -290,7 +290,7 @@ void DbMySQLTableEditorFKPage::cell_editing_done(GtkCellEditable* ce, gpointer u
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::combo_box_changed(const int model_column) {
+auto DbMySQLTableEditorFKPage::combo_box_changed(const int model_column) -> void {
   Gtk::ComboBox* combo(0);
 
   if (::bec::FKConstraintListBE::OnUpdate == model_column)
@@ -317,17 +317,17 @@ void DbMySQLTableEditorFKPage::combo_box_changed(const int model_column) {
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::set_comment(const std::string& comment) {
+auto DbMySQLTableEditorFKPage::set_comment(const std::string& comment) -> void {
   _be->get_fks()->set_field(_fk_node, ::bec::FKConstraintListBE::Comment, comment);
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::model_only_toggled() {
+auto DbMySQLTableEditorFKPage::model_only_toggled() -> void {
   _be->get_fks()->set_field(_fk_node, ::bec::FKConstraintListBE::ModelOnly, _fk_model_only->get_active());
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorFKPage::check_fk_support() {
+auto DbMySQLTableEditorFKPage::check_fk_support() -> void {
   if (_fk_page_content && _fk_page_not_supported_label) {
     if (_be && _be->engine_supports_foreign_keys()) {
       _fk_page_not_supported_label->hide();

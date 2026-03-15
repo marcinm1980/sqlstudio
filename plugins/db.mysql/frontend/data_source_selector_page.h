@@ -72,17 +72,17 @@ struct DataSourceSelector : public base::trackable {
     scoped_connect(file_radio->signal_clicked(), std::bind(&DataSourceSelector::file_source_selected, this));
   }
 
-  void file_source_selected() {
+  auto file_source_selected() -> void {
     file_selector.set_enabled(file_radio->get_active());
   }
 
-  void set_change_slot(const std::function<void()>& change_slot) {
+  auto set_change_slot(const std::function<void()>& change_slot) -> void {
     scoped_connect(model_radio->signal_clicked(), change_slot);
     scoped_connect(server_radio->signal_clicked(), change_slot);
     scoped_connect(file_radio->signal_clicked(), change_slot);
   }
 
-  void set_source(SourceType type) {
+  auto set_source(SourceType type) -> void {
     switch (type) {
       case ModelSource:
         model_radio->set_active(true);
@@ -99,7 +99,7 @@ struct DataSourceSelector : public base::trackable {
     }
   }
 
-  SourceType get_source() {
+  auto get_source() -> SourceType {
     if (model_radio->get_active())
       return ModelSource;
     else if (server_radio->get_active())

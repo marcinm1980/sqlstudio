@@ -31,15 +31,13 @@
 #include "myx_sql_parser_public_interface.h"
 #include "myx_lex_helpers.h"
 
-void LexerTest::cppunit_assert(bool cond)
-{
+auto LexerTest::cppunit_assert(bool cond) -> void {
   if(!cond) {
     throw new LexerTestException();
   }
 }
 
-void LexerTest::testLexer()
-{
+auto LexerTest::testLexer() -> void {
   //basicLexerTest();
   //sqlTest();
   //basicParserTest();
@@ -47,8 +45,7 @@ void LexerTest::testLexer()
   //fileParse("c:/co/qqq.sql");
 }
 
-void LexerTest::basicLexerTest()
-{
+auto LexerTest::basicLexerTest() -> void {
   //yyin = stdin;
   
   //lex_input_stream = new std::ifstream("c:/co/test 20051018 2143.sql");
@@ -67,8 +64,7 @@ void LexerTest::basicLexerTest()
   //::CloseHandle(h_file);
 }
 
-void LexerTest::sqlTest()
-{
+auto LexerTest::sqlTest() -> void {
   //char *yylval;
   //int token;
   //lex_input_stream = new std::istringstream("select a from tbl ");
@@ -81,14 +77,12 @@ void LexerTest::sqlTest()
   //std::ifstream s("test2.sql");
 }
 
-int stmt_parser_cb(const char *sql, void *user_data)
-{
+auto stmt_parser_cb(const char *sql, void *user_data) -> int {
   printf("stmt: '%s'\n", sql);
   return 0;
 }
 
-void LexerTest::stmtscanTest()
-{
+auto LexerTest::stmtscanTest() -> void {
   //const char *c;
   //c= "CREATE DATABASE IF NOT EXISTS `i-flow_dev` CHARACTER SET latin1 COLLATE latin1_swedish_ci;";
   //myx_process_sql_statements(c, stmt_parser_cb, NULL, MYX_SPM_NORMAL_MODE);
@@ -127,8 +121,7 @@ void LexerTest::stmtscanTest()
 
 }
 
-void LexerTest::basicParserTest()
-{
+auto LexerTest::basicParserTest() -> void {
   //"select a into outfile \"file.txt\" fields terminated by \",\" optionally enclosed by \"\\\"\" lines starting by \"x\" terminated by \"y\" from tbl1 inner join tbl2 on a = b inner join tbl3 on b = c where x = b group by x having x = z order by z asc, q desc limit 1, 2"
   //"select a from tbl where x in (1,2,3)"
   //"select a from tbl where x not in (select b from tbl where y in (select c from tbl where z in (a,b,c)))"
@@ -210,8 +203,7 @@ void LexerTest::basicParserTest()
   std::ofstream("treedump.xml") << *static_cast<SqlAstNode *>(myx_get_parser_tree());
 }
 
-void LexerTest::fileParse(const char* fileName)
-{
+auto LexerTest::fileParse(const char* fileName) -> void {
   DWORD start = GetTickCount();
 
   std::istream* stream = new std::ifstream(fileName);
@@ -224,8 +216,7 @@ void LexerTest::fileParse(const char* fileName)
   printf("Needed time: %d(ms)\n", ::GetTickCount() - start);
 }
 
-void LexerTest::stringParse(const char* str)
-{
+auto LexerTest::stringParse(const char* str) -> void {
   std::istream* stream = new std::istringstream(str);
   myx_set_parser_input(stream);
   myx_parse();

@@ -41,20 +41,20 @@ namespace mysql_parser {
  */
 class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_parser_fe {
 public:
-  static int escape_string(const std::string &in_text, std::string &out_text);
-  static int escape_string(char *out, unsigned long out_size, const char *in, unsigned long in_size);
+  static auto escape_string(const std::string &in_text, std::string &out_text) -> int;
+  static auto escape_string(char *out, unsigned long out_size, const char *in, unsigned long in_size) -> int;
 
 public:
   Mysql_sql_parser_fe(const std::string &sql_mode_);
 
-  int stop();
+  auto stop() -> int;
   typedef int (*fe_process_sql_statement_callback)(void *user_data, const MyxStatementParser *splitter, const char *sql,
                                                    const SqlAstNode *tree, int stmt_begin_lineno,
                                                    int stmt_begin_line_pos, int stmt_end_lineno, int stmt_end_line_pos,
                                                    int err_tok_lineno, int err_tok_line_pos, int err_tok_len,
                                                    const std::string &err_msg);
-  int parse_sql_script(const char *sql, fe_process_sql_statement_callback cb, void *user_data);
-  int parse_sql_script_file(const std::string &filename, fe_process_sql_statement_callback cb, void *user_data);
+  auto parse_sql_script(const char *sql, fe_process_sql_statement_callback cb, void *user_data) -> int;
+  auto parse_sql_script_file(const std::string &filename, fe_process_sql_statement_callback cb, void *user_data) -> int;
   std::string get_first_sql_token(const std::string &sql, const std::string &versioning_comment_subst_token = "");
 
 public:
@@ -65,8 +65,8 @@ public:
   bool processing_drop_statements;
   struct MYSQL_SQL_PARSER_PUBLIC_FUNC SqlMode {
     SqlMode();
-    void reset();
-    void parse(const std::string &text_value);
+    auto reset() -> void;
+    auto parse(const std::string &text_value) -> void;
 
     bool MODE_ANSI_QUOTES;
     bool MODE_HIGH_NOT_PRECEDENCE;
@@ -75,18 +75,18 @@ public:
     bool MODE_IGNORE_SPACE;
   };
   SqlMode sql_mode;
-  void parse_sql_mode(const std::string &sql_mode_string);
+  auto parse_sql_mode(const std::string &sql_mode_string) -> void;
 
 public:
   bool is_ast_generation_enabled;
 
 public:
-  static void determine_token_position(const SqlAstNode *item, const MyxStatementParser *splitter,
-                                       const char *statement, int &lineno, int &token_line_pos, int &token_len);
+  static auto determine_token_position(const SqlAstNode *item, const MyxStatementParser *splitter,
+                                       const char *statement, int &lineno, int &token_line_pos, int &token_len) -> void;
 
 private:
-  static int process_sql_statement_cb(const MyxStatementParser *splitter, const char *sql, void *context);
-  void reset();
+  static auto process_sql_statement_cb(const MyxStatementParser *splitter, const char *sql, void *context) -> int;
+  auto reset() -> void;
 
 public:
   int max_err_count;

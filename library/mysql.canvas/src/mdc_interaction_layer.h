@@ -36,26 +36,26 @@ namespace mdc {
   public:
     InteractionLayer(CanvasView *view);
 
-    virtual void repaint(const base::Rect &bounds);
+    virtual auto repaint(const base::Rect &bounds) -> void;
 
-    void add_handle(ItemHandle *handle);
-    void remove_handle(ItemHandle *handle);
+    auto add_handle(ItemHandle *handle) -> void;
+    auto remove_handle(ItemHandle *handle) -> void;
     auto get_handle_at(const base::Point &pos) -> ItemHandle *;
 
-    void set_active_area(const base::Rect &rect);
-    void reset_active_area();
+    auto set_active_area(const base::Rect &rect) -> void;
+    auto reset_active_area() -> void;
 
     auto handle_mouse_move(const base::Point &pos, EventState state) -> bool;
     auto handle_mouse_button_top(MouseButton button, bool press, const base::Point &pos, EventState state) -> bool;
     auto handle_mouse_button_bottom(MouseButton button, bool press, const base::Point &pos, EventState state) -> bool;
 
-    void start_selection_rectangle(const base::Point &pos, EventState state);
-    void update_selection_rectangle(const base::Point &end, EventState state);
-    void end_selection_rectangle(const base::Point &pos, EventState state);
+    auto start_selection_rectangle(const base::Point &pos, EventState state) -> void;
+    auto update_selection_rectangle(const base::Point &end, EventState state) -> void;
+    auto end_selection_rectangle(const base::Point &pos, EventState state) -> void;
 
-    void start_dragging_rectangle(const base::Point &pos);
-    void update_dragging_rectangle(const base::Point &pos);
-    void draw_dragging_rectangle();
+    auto start_dragging_rectangle(const base::Point &pos) -> void;
+    auto update_dragging_rectangle(const base::Point &pos) -> void;
+    auto draw_dragging_rectangle() -> void;
     auto finish_dragging_rectangle() -> base::Rect;
 
     auto signal_custom_repaint() -> boost::signals2::signal<void(CairoCtx *)> * {
@@ -80,7 +80,7 @@ namespace mdc {
     base::Point _dragging_rectangle_end;
     bool _dragging_rectangle;
 
-    void draw_selection(const base::Rect &clip);
+    auto draw_selection(const base::Rect &clip) -> void;
   };
 
 } // end of mdc namespace

@@ -39,9 +39,9 @@ class Grid : public Layouter {
 public:
   Grid(CanvasView *canvas, GridIndex rows, GridIndex cols);
 
-  virtual void add(CanvasItem *item, GridIndex row, GridIndex col, GridIndex rspan=1, GridIndex cspan=1);
+  virtual auto add(CanvasItem *item, GridIndex row, GridIndex col, GridIndex rspan=1, GridIndex cspan=1) -> void;
   
-  virtual void relayout();
+  virtual auto relayout() -> void;
 
 protected:
   struct GridCell {

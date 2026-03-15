@@ -120,8 +120,8 @@ static auto detailsForCollation(const std::string &collation,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void parseReferences(MySQLParser::ReferencesContext *ctx, const std::string &schemaName,
-                            DbObjectReferences &references) {
+static auto parseReferences(MySQLParser::ReferencesContext *ctx, const std::string &schemaName,
+                            DbObjectReferences &references) -> void {
   IdentifierListener listener(ctx->tableRef());
   Identifier identifier;
   if (listener.parts.size() == 1) {
@@ -158,15 +158,15 @@ static void parseReferences(MySQLParser::ReferencesContext *ctx, const std::stri
 /**
  * Collects only the names of each entry in a key list into the references entry.
  */
-static void columnNamesFromKeyList(MySQLParser::KeyListContext *ctx, DbObjectReferences &references) {
+static auto columnNamesFromKeyList(MySQLParser::KeyListContext *ctx, DbObjectReferences &references) -> void {
   for (auto &part : ctx->keyPart())
     references.columnNames.push_back(base::unquote(part->identifier()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void parseKeyList(ParserRuleContext *ctx, db_mysql_TableRef table, db_mysql_IndexRef index,
-                         DbObjectsRefsCache &refCache) {
+static auto parseKeyList(ParserRuleContext *ctx, db_mysql_TableRef table, db_mysql_IndexRef index,
+                         DbObjectsRefsCache &refCache) -> void {
   DbObjectReferences references(index);
   references.table = table;
   index->columns().remove_all();
@@ -243,7 +243,7 @@ IdentifierListener::IdentifierListener(tree::ParseTree *tree) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IdentifierListener::enterIdentifier(MySQLParser::IdentifierContext *ctx) {
+auto IdentifierListener::enterIdentifier(MySQLParser::IdentifierContext *ctx) -> void {
   parts.push_back(base::unquote(ctx->getText()));
 }
 
@@ -672,7 +672,7 @@ DataTypeListener::DataTypeListener(tree::ParseTree *tree, GrtVersionRef version,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DataTypeListener::exitDataType(MySQLParser::DataTypeContext *ctx) {
+auto DataTypeListener::exitDataType(MySQLParser::DataTypeContext *ctx) -> void {
   // A type name can consist of up to 3 parts. Most however just have a single part.
   size_t type = (ctx->nchar() != nullptr) ? ctx->nchar()->type->getType() : ctx->type->getType();
   std::string typeName = (ctx->nchar() != nullptr) ? "NCHAR" : base::toupper(ctx->type->getText());
@@ -730,7 +730,7 @@ void DataTypeListener::exitDataType(MySQLParser::DataTypeContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DataTypeListener::exitFieldLength(MySQLParser::FieldLengthContext *ctx) {
+auto DataTypeListener::exitFieldLength(MySQLParser::FieldLengthContext *ctx) -> void {
   // Value should be stored in the length field, but as commented above WB's handling is a bit crude.
   if (ctx->DECIMAL_NUMBER() != nullptr)
     precision = std::stoull(ctx->DECIMAL_NUMBER()->getText());
@@ -740,14 +740,14 @@ void DataTypeListener::exitFieldLength(MySQLParser::FieldLengthContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DataTypeListener::exitPrecision(MySQLParser::PrecisionContext *ctx) {
+auto DataTypeListener::exitPrecision(MySQLParser::PrecisionContext *ctx) -> void {
   precision = std::stoull(ctx->INT_NUMBER(0)->getText());
   scale = std::stoull(ctx->INT_NUMBER(1)->getText());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DataTypeListener::exitFieldOptions(MySQLParser::FieldOptionsContext *ctx) {
+auto DataTypeListener::exitFieldOptions(MySQLParser::FieldOptionsContext *ctx) -> void {
   if (!ctx->UNSIGNED_SYMBOL().empty()) {
     if (_flags.get_index("UNSIGNED") == BaseListRef::npos)
       _flags.insert("UNSIGNED");
@@ -764,7 +764,7 @@ void DataTypeListener::exitFieldOptions(MySQLParser::FieldOptionsContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DataTypeListener::exitCharsetWithOptBinary(MySQLParser::CharsetWithOptBinaryContext *ctx) {
+auto DataTypeListener::exitCharsetWithOptBinary(MySQLParser::CharsetWithOptBinaryContext *ctx) -> void {
   std::string flag;
   bool insertBinary = false;
 
@@ -787,20 +787,20 @@ void DataTypeListener::exitCharsetWithOptBinary(MySQLParser::CharsetWithOptBinar
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DataTypeListener::exitCharsetName(MySQLParser::CharsetNameContext *ctx) {
+auto DataTypeListener::exitCharsetName(MySQLParser::CharsetNameContext *ctx) -> void {
   auto info = detailsForCharset(base::unquote(ctx->getText()), "", _defaultCharsetName);
   charsetName = info.first;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DataTypeListener::exitTypeDatetimePrecision(MySQLParser::TypeDatetimePrecisionContext *ctx) {
+auto DataTypeListener::exitTypeDatetimePrecision(MySQLParser::TypeDatetimePrecisionContext *ctx) -> void {
   precision = std::stoull(ctx->INT_NUMBER()->getText());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void DataTypeListener::exitStringList(MySQLParser::StringListContext *ctx) {
+auto DataTypeListener::exitStringList(MySQLParser::StringListContext *ctx) -> void {
   std::string params;
   for (auto &entry : ctx->textString()) {
     if (!params.empty())
@@ -820,7 +820,7 @@ SchemaListener::SchemaListener(tree::ParseTree *tree, db_mysql_CatalogRef catalo
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SchemaListener::enterCreateDatabase(MySQLParser::CreateDatabaseContext *ctx) {
+auto SchemaListener::enterCreateDatabase(MySQLParser::CreateDatabaseContext *ctx) -> void {
   auto info = detailsForCharset(_catalog->defaultCharacterSetName(), _catalog->defaultCollationName(),
                                 _catalog->defaultCharacterSetName());
 
@@ -831,7 +831,7 @@ void SchemaListener::enterCreateDatabase(MySQLParser::CreateDatabaseContext *ctx
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SchemaListener::exitCreateDatabase(MySQLParser::CreateDatabaseContext *ctx) {
+auto SchemaListener::exitCreateDatabase(MySQLParser::CreateDatabaseContext *ctx) -> void {
   db_mysql_SchemaRef schema = db_mysql_SchemaRef::cast_from(_object);
   schema->name(MySQLBaseLexer::sourceTextForContext(ctx->schemaName()));
   ignoreIfExists = ctx->ifNotExists() != nullptr;
@@ -839,7 +839,7 @@ void SchemaListener::exitCreateDatabase(MySQLParser::CreateDatabaseContext *ctx)
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SchemaListener::exitCharsetName(MySQLParser::CharsetNameContext *ctx) {
+auto SchemaListener::exitCharsetName(MySQLParser::CharsetNameContext *ctx) -> void {
   db_mysql_SchemaRef schema = db_mysql_SchemaRef::cast_from(_object);
   std::string charsetName;
   if (ctx->DEFAULT_SYMBOL() != nullptr)
@@ -854,7 +854,7 @@ void SchemaListener::exitCharsetName(MySQLParser::CharsetNameContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SchemaListener::exitCollationName(MySQLParser::CollationNameContext *ctx) {
+auto SchemaListener::exitCollationName(MySQLParser::CollationNameContext *ctx) -> void {
   db_mysql_SchemaRef schema = db_mysql_SchemaRef::cast_from(_object);
   std::string collationName;
   if (ctx->DEFAULT_SYMBOL() == nullptr)
@@ -869,7 +869,7 @@ void SchemaListener::exitCollationName(MySQLParser::CollationNameContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void SchemaListener::exitDefaultEncryption(MySQLParser::DefaultEncryptionContext *ctx) {
+auto SchemaListener::exitDefaultEncryption(MySQLParser::DefaultEncryptionContext *ctx) -> void {
   //TODO: implement
 }
 
@@ -892,7 +892,7 @@ TableListener::TableListener(tree::ParseTree *tree, db_mysql_CatalogRef catalog,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitTableName(MySQLParser::TableNameContext *ctx) {
+auto TableListener::exitTableName(MySQLParser::TableNameContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
 
   IdentifierListener listener(ctx);
@@ -906,7 +906,7 @@ void TableListener::exitTableName(MySQLParser::TableNameContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitCreateTable(MySQLParser::CreateTableContext *ctx) {
+auto TableListener::exitCreateTable(MySQLParser::CreateTableContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
 
   table->isTemporary(ctx->TEMPORARY_SYMBOL() != nullptr);
@@ -924,7 +924,7 @@ void TableListener::exitCreateTable(MySQLParser::CreateTableContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitTableRef(MySQLParser::TableRefContext *ctx) {
+auto TableListener::exitTableRef(MySQLParser::TableRefContext *ctx) -> void {
   // CREATE TABLE LIKE...
   IdentifierListener listener(ctx);
 
@@ -945,7 +945,7 @@ void TableListener::exitTableRef(MySQLParser::TableRefContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitPartitionClause(MySQLParser::PartitionClauseContext *ctx) {
+auto TableListener::exitPartitionClause(MySQLParser::PartitionClauseContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
   if (ctx->PARTITIONS_SYMBOL() != nullptr)
     table->partitionCount((size_t)std::stoull(ctx->real_ulong_number()->getText()));
@@ -962,7 +962,7 @@ void TableListener::exitPartitionClause(MySQLParser::PartitionClauseContext *ctx
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitPartitionDefKey(MySQLParser::PartitionDefKeyContext *ctx) {
+auto TableListener::exitPartitionDefKey(MySQLParser::PartitionDefKeyContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
   if (ctx->LINEAR_SYMBOL() != nullptr)
     table->partitionType("LINEAR KEY");
@@ -979,7 +979,7 @@ void TableListener::exitPartitionDefKey(MySQLParser::PartitionDefKeyContext *ctx
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitPartitionDefHash(MySQLParser::PartitionDefHashContext *ctx) {
+auto TableListener::exitPartitionDefHash(MySQLParser::PartitionDefHashContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
   if (ctx->LINEAR_SYMBOL() != nullptr)
     table->partitionType("LINEAR HASH");
@@ -991,7 +991,7 @@ void TableListener::exitPartitionDefHash(MySQLParser::PartitionDefHashContext *c
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitPartitionDefRangeList(MySQLParser::PartitionDefRangeListContext *ctx) {
+auto TableListener::exitPartitionDefRangeList(MySQLParser::PartitionDefRangeListContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
   table->partitionType(ctx->RANGE_SYMBOL() != nullptr ? "RANGE" : "LISTE");
 
@@ -1005,7 +1005,7 @@ void TableListener::exitPartitionDefRangeList(MySQLParser::PartitionDefRangeList
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitSubPartitions(MySQLParser::SubPartitionsContext *ctx) {
+auto TableListener::exitSubPartitions(MySQLParser::SubPartitionsContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
 
   std::string linearPrefix;
@@ -1031,8 +1031,8 @@ void TableListener::exitSubPartitions(MySQLParser::SubPartitionsContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static void evaluatePartitionOption(db_mysql_PartitionDefinitionRef definition,
-                                    MySQLParser::PartitionOptionContext *ctx) {
+static auto evaluatePartitionOption(db_mysql_PartitionDefinitionRef definition,
+                                    MySQLParser::PartitionOptionContext *ctx) -> void {
   switch (ctx->option->getType()) {
     case MySQLLexer::TABLESPACE_SYMBOL:
       definition->tableSpace(ctx->identifier()->getText());
@@ -1073,7 +1073,7 @@ static void evaluatePartitionOption(db_mysql_PartitionDefinitionRef definition,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitPartitionDefinition(MySQLParser::PartitionDefinitionContext *ctx) {
+auto TableListener::exitPartitionDefinition(MySQLParser::PartitionDefinitionContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
 
   db_mysql_PartitionDefinitionRef definition(grt::Initialized);
@@ -1117,7 +1117,7 @@ void TableListener::exitPartitionDefinition(MySQLParser::PartitionDefinitionCont
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitDuplicateAsQueryExpression(MySQLParser::DuplicateAsQueryExpressionContext *ctx) {
+auto TableListener::exitDuplicateAsQueryExpression(MySQLParser::DuplicateAsQueryExpressionContext *ctx) -> void {
   // This is a creation-only part, i.e. it is not returned by the server when asking for the creation SQL code.
   // Similar for createSelect, which is used either in this context or createTable.
   // Implementing that is tricky, because we would essentially have to simulate a SELECT run to determine the actual
@@ -1126,7 +1126,7 @@ void TableListener::exitDuplicateAsQueryExpression(MySQLParser::DuplicateAsQuery
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableListener::exitCreateTableOptions(MySQLParser::CreateTableOptionsContext *ctx) {
+auto TableListener::exitCreateTableOptions(MySQLParser::CreateTableOptionsContext *ctx) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_object);
 
   std::string schemaName = _schema.is_valid() ? _schema->name() : "";
@@ -1308,7 +1308,7 @@ TableAlterListener::TableAlterListener(tree::ParseTree *tree, db_mysql_CatalogRe
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TableAlterListener::exitAlterListItem(MySQLParser::AlterListItemContext *ctx) {
+auto TableAlterListener::exitAlterListItem(MySQLParser::AlterListItemContext *ctx) -> void {
   db_mysql_SchemaRef schema = db_mysql_SchemaRef::cast_from(_object->owner());
 
   db_mysql_TableRef table;
@@ -1360,7 +1360,7 @@ LogfileGroupListener::LogfileGroupListener(tree::ParseTree *tree, db_mysql_Catal
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LogfileGroupListener::exitCreateLogfileGroup(MySQLParser::CreateLogfileGroupContext *ctx) {
+auto LogfileGroupListener::exitCreateLogfileGroup(MySQLParser::CreateLogfileGroupContext *ctx) -> void {
   IdentifierListener listener(ctx->logfileGroupName());
 
   db_mysql_LogFileGroupRef group = db_mysql_LogFileGroupRef::cast_from(_object);
@@ -1372,14 +1372,14 @@ void LogfileGroupListener::exitCreateLogfileGroup(MySQLParser::CreateLogfileGrou
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LogfileGroupListener::exitTsOptionInitialSize(MySQLParser::TsOptionInitialSizeContext *ctx) {
+auto LogfileGroupListener::exitTsOptionInitialSize(MySQLParser::TsOptionInitialSizeContext *ctx) -> void {
   db_mysql_LogFileGroupRef group = db_mysql_LogFileGroupRef::cast_from(_object);
   group->initialSize(numberValue(ctx->sizeNumber()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LogfileGroupListener::exitTsOptionUndoRedoBufferSize(MySQLParser::TsOptionUndoRedoBufferSizeContext *ctx) {
+auto LogfileGroupListener::exitTsOptionUndoRedoBufferSize(MySQLParser::TsOptionUndoRedoBufferSizeContext *ctx) -> void {
   db_mysql_LogFileGroupRef group = db_mysql_LogFileGroupRef::cast_from(_object);
   if (ctx->UNDO_BUFFER_SIZE_SYMBOL() != nullptr)
     group->undoBufferSize(numberValue(ctx->sizeNumber()->getText()));
@@ -1389,28 +1389,28 @@ void LogfileGroupListener::exitTsOptionUndoRedoBufferSize(MySQLParser::TsOptionU
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LogfileGroupListener::exitTsOptionNodegroup(MySQLParser::TsOptionNodegroupContext *ctx) {
+auto LogfileGroupListener::exitTsOptionNodegroup(MySQLParser::TsOptionNodegroupContext *ctx) -> void {
   db_mysql_LogFileGroupRef group = db_mysql_LogFileGroupRef::cast_from(_object);
   group->nodeGroupId(static_cast<size_t>(std::stoull(ctx->real_ulong_number()->getText())));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LogfileGroupListener::exitTsOptionEngine(MySQLParser::TsOptionEngineContext *ctx) {
+auto LogfileGroupListener::exitTsOptionEngine(MySQLParser::TsOptionEngineContext *ctx) -> void {
   db_mysql_LogFileGroupRef group = db_mysql_LogFileGroupRef::cast_from(_object);
   group->engine(base::unquote(ctx->engineRef()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LogfileGroupListener::exitTsOptionWait(MySQLParser::TsOptionWaitContext *ctx) {
+auto LogfileGroupListener::exitTsOptionWait(MySQLParser::TsOptionWaitContext *ctx) -> void {
   db_mysql_LogFileGroupRef group = db_mysql_LogFileGroupRef::cast_from(_object);
   group->wait(ctx->WAIT_SYMBOL() != nullptr);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LogfileGroupListener::exitTsOptionComment(MySQLParser::TsOptionCommentContext *ctx) {
+auto LogfileGroupListener::exitTsOptionComment(MySQLParser::TsOptionCommentContext *ctx) -> void {
   db_mysql_LogFileGroupRef group = db_mysql_LogFileGroupRef::cast_from(_object);
   group->comment(base::unquote(ctx->textLiteral()->getText()));
 }
@@ -1428,14 +1428,14 @@ RoutineListener::RoutineListener(tree::ParseTree *tree, db_mysql_CatalogRef cata
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) {
+auto RoutineListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) -> void {
   db_mysql_RoutineRef routine = db_mysql_RoutineRef::cast_from(_object);
   routine->definer(MySQLBaseLexer::sourceTextForContext(ctx->user(), true));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::exitCreateProcedure(MySQLParser::CreateProcedureContext *ctx) {
+auto RoutineListener::exitCreateProcedure(MySQLParser::CreateProcedureContext *ctx) -> void {
   db_mysql_RoutineRef routine = db_mysql_RoutineRef::cast_from(_object);
 
   routine->routineType("procedure");
@@ -1444,7 +1444,7 @@ void RoutineListener::exitCreateProcedure(MySQLParser::CreateProcedureContext *c
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::exitCreateFunction(MySQLParser::CreateFunctionContext *ctx) {
+auto RoutineListener::exitCreateFunction(MySQLParser::CreateFunctionContext *ctx) -> void {
   db_mysql_RoutineRef routine = db_mysql_RoutineRef::cast_from(_object);
 
   routine->returnDatatype(MySQLBaseLexer::sourceTextForContext(ctx->typeWithOptCollate()));
@@ -1455,7 +1455,7 @@ void RoutineListener::exitCreateFunction(MySQLParser::CreateFunctionContext *ctx
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::exitCreateUdf(MySQLParser::CreateUdfContext *ctx) {
+auto RoutineListener::exitCreateUdf(MySQLParser::CreateUdfContext *ctx) -> void {
   db_mysql_RoutineRef routine = db_mysql_RoutineRef::cast_from(_object);
 
   routine->routineType("udf");
@@ -1468,7 +1468,7 @@ void RoutineListener::exitCreateUdf(MySQLParser::CreateUdfContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::exitProcedureParameter(MySQLParser::ProcedureParameterContext *ctx) {
+auto RoutineListener::exitProcedureParameter(MySQLParser::ProcedureParameterContext *ctx) -> void {
   if (ctx->type != nullptr)
     _currentParameter->paramType(ctx->type->getText());
   else
@@ -1477,7 +1477,7 @@ void RoutineListener::exitProcedureParameter(MySQLParser::ProcedureParameterCont
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::enterFunctionParameter(MySQLParser::FunctionParameterContext *ctx) {
+auto RoutineListener::enterFunctionParameter(MySQLParser::FunctionParameterContext *ctx) -> void {
   db_mysql_RoutineRef routine = db_mysql_RoutineRef::cast_from(_object);
 
   _currentParameter = db_mysql_RoutineParamRef(grt::Initialized);
@@ -1487,7 +1487,7 @@ void RoutineListener::enterFunctionParameter(MySQLParser::FunctionParameterConte
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::exitFunctionParameter(MySQLParser::FunctionParameterContext *ctx) {
+auto RoutineListener::exitFunctionParameter(MySQLParser::FunctionParameterContext *ctx) -> void {
   // Called for both functions and procedures.
   _currentParameter->name(MySQLBaseLexer::sourceTextForContext(ctx->parameterName()));
   _currentParameter->datatype(MySQLBaseLexer::sourceTextForContext(ctx->typeWithOptCollate()));
@@ -1495,7 +1495,7 @@ void RoutineListener::exitFunctionParameter(MySQLParser::FunctionParameterContex
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::exitRoutineOption(MySQLParser::RoutineOptionContext *ctx) {
+auto RoutineListener::exitRoutineOption(MySQLParser::RoutineOptionContext *ctx) -> void {
   db_mysql_RoutineRef routine = db_mysql_RoutineRef::cast_from(_object);
 
   // For now we only store comments and security settings.
@@ -1515,7 +1515,7 @@ void RoutineListener::exitRoutineOption(MySQLParser::RoutineOptionContext *ctx) 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void RoutineListener::readRoutineName(ParserRuleContext *ctx) {
+auto RoutineListener::readRoutineName(ParserRuleContext *ctx) -> void {
   db_mysql_RoutineRef routine = db_mysql_RoutineRef::cast_from(_object);
 
   IdentifierListener listener(ctx);
@@ -1535,7 +1535,7 @@ IndexListener::IndexListener(tree::ParseTree *tree, db_mysql_CatalogRef catalog,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListener::exitCreateIndex(MySQLParser::CreateIndexContext *ctx) {
+auto IndexListener::exitCreateIndex(MySQLParser::CreateIndexContext *ctx) -> void {
   db_mysql_IndexRef index = db_mysql_IndexRef::cast_from(_object);
 
   switch (ctx->type->getType()) {
@@ -1565,14 +1565,14 @@ void IndexListener::exitCreateIndex(MySQLParser::CreateIndexContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListener::exitIndexType(MySQLParser::IndexTypeContext *ctx) {
+auto IndexListener::exitIndexType(MySQLParser::IndexTypeContext *ctx) -> void {
   db_mysql_IndexRef index = db_mysql_IndexRef::cast_from(_object);
   index->indexKind(ctx->algorithm->getText());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListener::exitCreateIndexTarget(MySQLParser::CreateIndexTargetContext *ctx) {
+auto IndexListener::exitCreateIndexTarget(MySQLParser::CreateIndexTargetContext *ctx) -> void {
   db_mysql_IndexRef index = db_mysql_IndexRef::cast_from(_object);
 
   IdentifierListener listener(ctx->tableRef());
@@ -1592,7 +1592,7 @@ void IndexListener::exitCreateIndexTarget(MySQLParser::CreateIndexTargetContext 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListener::exitCommonIndexOption(MySQLParser::CommonIndexOptionContext *ctx) {
+auto IndexListener::exitCommonIndexOption(MySQLParser::CommonIndexOptionContext *ctx) -> void {
   db_mysql_IndexRef index = db_mysql_IndexRef::cast_from(_object);
 
   if (ctx->KEY_BLOCK_SIZE_SYMBOL() != nullptr)
@@ -1603,7 +1603,7 @@ void IndexListener::exitCommonIndexOption(MySQLParser::CommonIndexOptionContext 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListener::exitFulltextIndexOption(MySQLParser::FulltextIndexOptionContext *ctx) {
+auto IndexListener::exitFulltextIndexOption(MySQLParser::FulltextIndexOptionContext *ctx) -> void {
   db_mysql_IndexRef index = db_mysql_IndexRef::cast_from(_object);
 
   if (ctx->WITH_SYMBOL() != nullptr)
@@ -1612,7 +1612,7 @@ void IndexListener::exitFulltextIndexOption(MySQLParser::FulltextIndexOptionCont
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListener::exitAlterAlgorithmOption(MySQLParser::AlterAlgorithmOptionContext *ctx) {
+auto IndexListener::exitAlterAlgorithmOption(MySQLParser::AlterAlgorithmOptionContext *ctx) -> void {
   db_mysql_IndexRef index = db_mysql_IndexRef::cast_from(_object);
 
   if (ctx->DEFAULT_SYMBOL() != nullptr)
@@ -1627,7 +1627,7 @@ void IndexListener::exitAlterAlgorithmOption(MySQLParser::AlterAlgorithmOptionCo
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void IndexListener::exitAlterLockOption(MySQLParser::AlterLockOptionContext *ctx) {
+auto IndexListener::exitAlterLockOption(MySQLParser::AlterLockOptionContext *ctx) -> void {
   db_mysql_IndexRef index = db_mysql_IndexRef::cast_from(_object);
 
   if (ctx->DEFAULT_SYMBOL() != nullptr)
@@ -1652,7 +1652,7 @@ TriggerListener::TriggerListener(tree::ParseTree *tree, db_mysql_CatalogRef cata
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TriggerListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) {
+auto TriggerListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) -> void {
   db_mysql_TriggerRef trigger = db_mysql_TriggerRef::cast_from(_object);
 
   trigger->definer(MySQLBaseLexer::sourceTextForContext(ctx->user(), true));
@@ -1660,7 +1660,7 @@ void TriggerListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TriggerListener::exitCreateTrigger(MySQLParser::CreateTriggerContext *ctx) {
+auto TriggerListener::exitCreateTrigger(MySQLParser::CreateTriggerContext *ctx) -> void {
   db_mysql_TriggerRef trigger = db_mysql_TriggerRef::cast_from(_object);
 
   IdentifierListener listener(ctx->triggerName());
@@ -1695,7 +1695,7 @@ void TriggerListener::exitCreateTrigger(MySQLParser::CreateTriggerContext *ctx) 
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TriggerListener::exitTriggerFollowsPrecedesClause(MySQLParser::TriggerFollowsPrecedesClauseContext *ctx) {
+auto TriggerListener::exitTriggerFollowsPrecedesClause(MySQLParser::TriggerFollowsPrecedesClauseContext *ctx) -> void {
   db_mysql_TriggerRef trigger = db_mysql_TriggerRef::cast_from(_object);
 
   trigger->ordering(ctx->ordering->getText());
@@ -1715,7 +1715,7 @@ ViewListener::ViewListener(tree::ParseTree *tree, db_mysql_CatalogRef catalog, d
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ViewListener::exitCreateView(MySQLParser::CreateViewContext *ctx) {
+auto ViewListener::exitCreateView(MySQLParser::CreateViewContext *ctx) -> void {
   db_mysql_ViewRef view = db_mysql_ViewRef::cast_from(_object);
   view->modelOnly(0);
 
@@ -1728,14 +1728,14 @@ void ViewListener::exitCreateView(MySQLParser::CreateViewContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ViewListener::exitViewCheckOption(MySQLParser::ViewCheckOptionContext *ctx) {
+auto ViewListener::exitViewCheckOption(MySQLParser::ViewCheckOptionContext *ctx) -> void {
   db_mysql_ViewRef view = db_mysql_ViewRef::cast_from(_object);
   view->withCheckCondition(true);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ViewListener::exitViewAlgorithm(MySQLParser::ViewAlgorithmContext *ctx) {
+auto ViewListener::exitViewAlgorithm(MySQLParser::ViewAlgorithmContext *ctx) -> void {
   db_mysql_ViewRef view = db_mysql_ViewRef::cast_from(_object);
 
   switch (ctx->algorithm->getType()) {
@@ -1753,7 +1753,7 @@ void ViewListener::exitViewAlgorithm(MySQLParser::ViewAlgorithmContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ViewListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) {
+auto ViewListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) -> void {
   db_mysql_ViewRef view = db_mysql_ViewRef::cast_from(_object);
   view->definer(MySQLBaseLexer::sourceTextForContext(ctx->user(), true));
 }
@@ -1768,7 +1768,7 @@ ServerListener::ServerListener(tree::ParseTree *tree, db_mysql_CatalogRef catalo
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ServerListener::exitCreateServer(MySQLParser::CreateServerContext *ctx) {
+auto ServerListener::exitCreateServer(MySQLParser::CreateServerContext *ctx) -> void {
   db_mysql_ServerLinkRef server = db_mysql_ServerLinkRef::cast_from(_object);
   server->modelOnly(0);
 
@@ -1780,7 +1780,7 @@ void ServerListener::exitCreateServer(MySQLParser::CreateServerContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ServerListener::exitServerOption(MySQLParser::ServerOptionContext *ctx) {
+auto ServerListener::exitServerOption(MySQLParser::ServerOptionContext *ctx) -> void {
   db_mysql_ServerLinkRef server = db_mysql_ServerLinkRef::cast_from(_object);
 
   switch (ctx->option->getType()) {
@@ -1818,7 +1818,7 @@ TablespaceListener::TablespaceListener(tree::ParseTree *tree, db_mysql_CatalogRe
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitCreateTablespace(MySQLParser::CreateTablespaceContext *ctx) {
+auto TablespaceListener::exitCreateTablespace(MySQLParser::CreateTablespaceContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->modelOnly(0);
 
@@ -1828,7 +1828,7 @@ void TablespaceListener::exitCreateTablespace(MySQLParser::CreateTablespaceConte
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitLogfileGroupRef(MySQLParser::LogfileGroupRefContext *ctx) {
+auto TablespaceListener::exitLogfileGroupRef(MySQLParser::LogfileGroupRefContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
 
   db_LogFileGroupRef logfileGroup = find_named_object_in_list(_catalog->logFileGroups(), base::unquote(ctx->getText()));
@@ -1838,42 +1838,42 @@ void TablespaceListener::exitLogfileGroupRef(MySQLParser::LogfileGroupRefContext
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsDataFile(MySQLParser::TsDataFileContext *ctx) {
+auto TablespaceListener::exitTsDataFile(MySQLParser::TsDataFileContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->dataFile(base::unquote(ctx->textLiteral()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionInitialSize(MySQLParser::TsOptionInitialSizeContext *ctx) {
+auto TablespaceListener::exitTsOptionInitialSize(MySQLParser::TsOptionInitialSizeContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->initialSize(numberValue(ctx->sizeNumber()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionAutoextendSize(MySQLParser::TsOptionAutoextendSizeContext *ctx) {
+auto TablespaceListener::exitTsOptionAutoextendSize(MySQLParser::TsOptionAutoextendSizeContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->autoExtendSize(numberValue(ctx->sizeNumber()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionMaxSize(MySQLParser::TsOptionMaxSizeContext *ctx) {
+auto TablespaceListener::exitTsOptionMaxSize(MySQLParser::TsOptionMaxSizeContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->maxSize(numberValue(ctx->sizeNumber()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionExtentSize(MySQLParser::TsOptionExtentSizeContext *ctx) {
+auto TablespaceListener::exitTsOptionExtentSize(MySQLParser::TsOptionExtentSizeContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->extentSize(numberValue(ctx->sizeNumber()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionNodegroup(MySQLParser::TsOptionNodegroupContext *ctx) {
+auto TablespaceListener::exitTsOptionNodegroup(MySQLParser::TsOptionNodegroupContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
 
   // An integer or hex number (no suffix).
@@ -1882,35 +1882,35 @@ void TablespaceListener::exitTsOptionNodegroup(MySQLParser::TsOptionNodegroupCon
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionEngine(MySQLParser::TsOptionEngineContext *ctx) {
+auto TablespaceListener::exitTsOptionEngine(MySQLParser::TsOptionEngineContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->engine(base::unquote(ctx->engineRef()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionWait(MySQLParser::TsOptionWaitContext *ctx) {
+auto TablespaceListener::exitTsOptionWait(MySQLParser::TsOptionWaitContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->wait(ctx->WAIT_SYMBOL() != nullptr);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionComment(MySQLParser::TsOptionCommentContext *ctx) {
+auto TablespaceListener::exitTsOptionComment(MySQLParser::TsOptionCommentContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->comment(base::unquote(ctx->textLiteral()->getText()));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionFileblockSize(MySQLParser::TsOptionFileblockSizeContext *ctx) {
+auto TablespaceListener::exitTsOptionFileblockSize(MySQLParser::TsOptionFileblockSizeContext *ctx) -> void {
   db_mysql_TablespaceRef tablespace = db_mysql_TablespaceRef::cast_from(_object);
   tablespace->fileBlockSize(static_cast<size_t>(std::stoull(ctx->sizeNumber()->getText())));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void TablespaceListener::exitTsOptionEncryption(MySQLParser::TsOptionEncryptionContext *ctx) {
+auto TablespaceListener::exitTsOptionEncryption(MySQLParser::TsOptionEncryptionContext *ctx) -> void {
 
 }
 
@@ -1924,14 +1924,14 @@ EventListener::EventListener(tree::ParseTree *tree, db_mysql_CatalogRef catalog,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void EventListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) {
+auto EventListener::exitDefinerClause(MySQLParser::DefinerClauseContext *ctx) -> void {
   db_mysql_EventRef event = db_mysql_EventRef::cast_from(_object);
   event->definer(MySQLBaseLexer::sourceTextForContext(ctx->user(), true));
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void EventListener::exitCreateEvent(MySQLParser::CreateEventContext *ctx) {
+auto EventListener::exitCreateEvent(MySQLParser::CreateEventContext *ctx) -> void {
   db_mysql_EventRef event = db_mysql_EventRef::cast_from(_object);
 
   ignoreIfExists = ctx->ifNotExists() != nullptr;
@@ -1954,7 +1954,7 @@ void EventListener::exitCreateEvent(MySQLParser::CreateEventContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void EventListener::exitSchedule(MySQLParser::ScheduleContext *ctx) {
+auto EventListener::exitSchedule(MySQLParser::ScheduleContext *ctx) -> void {
   db_mysql_EventRef event = db_mysql_EventRef::cast_from(_object);
 
   event->at(MySQLBaseLexer::sourceTextForContext(ctx->expr(0)));

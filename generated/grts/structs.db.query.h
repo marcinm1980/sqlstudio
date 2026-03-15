@@ -84,7 +84,7 @@ public:
       _type("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.query.LiveDBObject";
   }
 
@@ -95,7 +95,7 @@ public:
    * \par In Python:
    *    value = obj.schemaName
    */
-  grt::StringRef schemaName() const { return _schemaName; }
+  auto schemaName() const -> grt::StringRef { return _schemaName; }
 
   /**
    * Setter for attribute schemaName
@@ -104,7 +104,7 @@ public:
    * \par In Python:
    *   obj.schemaName = value
    */
-  virtual void schemaName(const grt::StringRef &value) {
+  virtual auto schemaName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_schemaName);
     _schemaName = value;
     member_changed("schemaName", ovalue, value);
@@ -117,7 +117,7 @@ public:
    * \par In Python:
    *    value = obj.type
    */
-  grt::StringRef type() const { return _type; }
+  auto type() const -> grt::StringRef { return _type; }
 
   /**
    * Setter for attribute type
@@ -126,7 +126,7 @@ public:
    * \par In Python:
    *   obj.type = value
    */
-  virtual void type(const grt::StringRef &value) {
+  virtual auto type(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_type);
     _type = value;
     member_changed("type", ovalue, value);
@@ -138,12 +138,12 @@ protected:
   grt::StringRef _type;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_query_LiveDBObject());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -171,7 +171,7 @@ public:
       _columnType("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.query.ResultsetColumn";
   }
 
@@ -182,7 +182,7 @@ public:
    * \par In Python:
    *    value = obj.columnType
    */
-  grt::StringRef columnType() const { return _columnType; }
+  auto columnType() const -> grt::StringRef { return _columnType; }
 
   /**
    * Setter for attribute columnType
@@ -191,7 +191,7 @@ public:
    * \par In Python:
    *   obj.columnType = value
    */
-  virtual void columnType(const grt::StringRef &value) {
+  virtual auto columnType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_columnType);
     _columnType = value;
     member_changed("columnType", ovalue, value);
@@ -202,12 +202,12 @@ protected:
   grt::StringRef _columnType;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_query_ResultsetColumn());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -235,7 +235,7 @@ public:
 
   virtual ~db_query_Resultset();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.query.Resultset";
   }
 
@@ -247,11 +247,11 @@ public:
    * \par In Python:
    *    value = obj.columns
    */
-  grt::ListRef<db_query_ResultsetColumn> columns() const { return _columns; }
+  auto columns() const -> grt::ListRef<db_query_ResultsetColumn> { return _columns; }
 
 
 private: // The next attribute is read-only.
-  virtual void columns(const grt::ListRef<db_query_ResultsetColumn> &value) {
+  virtual auto columns(const grt::ListRef<db_query_ResultsetColumn> &value) -> void {
     grt::ValueRef ovalue(_columns);
 
     _columns = value;
@@ -266,7 +266,7 @@ public:
    * \par In Python:
    *    value = obj.currentRow
    */
-  grt::IntegerRef currentRow() const;
+  auto currentRow() const -> grt::IntegerRef;
 
 
 private: // The next attribute is read-only.
@@ -279,7 +279,7 @@ public:
    * \par In Python:
    *    value = obj.rowCount
    */
-  grt::IntegerRef rowCount() const;
+  auto rowCount() const -> grt::IntegerRef;
 
 
 private: // The next attribute is read-only.
@@ -292,7 +292,7 @@ public:
    * \par In Python:
    *    value = obj.sql
    */
-  grt::StringRef sql() const;
+  auto sql() const -> grt::StringRef;
 
 
 private: // The next attribute is read-only.
@@ -303,105 +303,105 @@ public:
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::DoubleRef floatFieldValue(ssize_t column);
+  virtual auto floatFieldValue(ssize_t column) -> grt::DoubleRef;
   /**
    * Method. returns the float contents of the field at the given column name and current row
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::DoubleRef floatFieldValueByName(const std::string &column);
+  virtual auto floatFieldValueByName(const std::string &column) -> grt::DoubleRef;
   /**
    * Method. returns the contents of the field at the given column index and current geometry row as a geoJson string. If the column type is not geometry or it's empty, it will return empty string
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::StringRef geoJsonFieldValue(ssize_t column);
+  virtual auto geoJsonFieldValue(ssize_t column) -> grt::StringRef;
   /**
    * Method. returns the contents of the field at the given column name and current geometry row as a geoJson string. If the column type is not geometry or it's empty, it will return empty string
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::StringRef geoJsonFieldValueByName(const std::string &column);
+  virtual auto geoJsonFieldValueByName(const std::string &column) -> grt::StringRef;
   /**
    * Method. returns the contents of the field at the given column index and current geometry row as a string. If the column type is not geometry or it's empty, it will return empty string
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::StringRef geoStringFieldValue(ssize_t column);
+  virtual auto geoStringFieldValue(ssize_t column) -> grt::StringRef;
   /**
    * Method. returns the contents of the field at the given column name and current geometry row as a string. If the column type is not geometry or it's empty, it will return empty string
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::StringRef geoStringFieldValueByName(const std::string &column);
+  virtual auto geoStringFieldValueByName(const std::string &column) -> grt::StringRef;
   /**
    * Method. sets the current row index to the 1st
    * \return (boolean) 1 on success or 0 if the row number is out of bounds
    */
-  virtual grt::IntegerRef goToFirstRow();
+  virtual auto goToFirstRow() -> grt::IntegerRef;
   /**
    * Method. sets the current row index to the last
    * \return (boolean) 1 on success or 0 if the row number is out of bounds
    */
-  virtual grt::IntegerRef goToLastRow();
+  virtual auto goToLastRow() -> grt::IntegerRef;
   /**
    * Method. sets the current row pointer to the given index
    * \param row 
    * \return (boolean) 1 on success or 0 if the row number is out of bounds
    */
-  virtual grt::IntegerRef goToRow(ssize_t row);
+  virtual auto goToRow(ssize_t row) -> grt::IntegerRef;
   /**
    * Method. returns the integer contents of the field at the given column index and current row
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::IntegerRef intFieldValue(ssize_t column);
+  virtual auto intFieldValue(ssize_t column) -> grt::IntegerRef;
   /**
    * Method. returns the integer contents of the field at the given column name and current row
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::IntegerRef intFieldValueByName(const std::string &column);
+  virtual auto intFieldValueByName(const std::string &column) -> grt::IntegerRef;
   /**
    * Method. moves the current row pointer to the next one
    * \return (boolean) 1 on success or 0 if the new row number is out of bounds
    */
-  virtual grt::IntegerRef nextRow();
+  virtual auto nextRow() -> grt::IntegerRef;
   /**
    * Method. moves the current row pointer to the previous one
    * \return (boolean) 1 on success or 0 if the new row number is out of bounds
    */
-  virtual grt::IntegerRef previousRow();
+  virtual auto previousRow() -> grt::IntegerRef;
   /**
    * Method. refreshes the resultset, re-executing the originator query
    * \return 
    */
-  virtual grt::IntegerRef refresh();
+  virtual auto refresh() -> grt::IntegerRef;
   /**
    * Method. saves the contents of the field at given column and current row to a file
    * \param column 
    * \param file 
    * \return (boolean)
    */
-  virtual grt::IntegerRef saveFieldValueToFile(ssize_t column, const std::string &file);
+  virtual auto saveFieldValueToFile(ssize_t column, const std::string &file) -> grt::IntegerRef;
   /**
    * Method. returns the contents of the field at the given column index and current row as a string. If the column type is not string, it will be converted
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::StringRef stringFieldValue(ssize_t column);
+  virtual auto stringFieldValue(ssize_t column) -> grt::StringRef;
   /**
    * Method. returns the contents of the field at the given column name and current row as a string. If the column type is not string, it will be converted
    * \param column 
    * \return value stored in cell (can be null)
    */
-  virtual grt::StringRef stringFieldValueByName(const std::string &column);
+  virtual auto stringFieldValueByName(const std::string &column) -> grt::StringRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -410,7 +410,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_query_Resultset());
   }
 
@@ -449,7 +449,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_stringFieldValueByName(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<db_query_Resultset*>(self)->stringFieldValueByName(grt::StringRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -498,7 +498,7 @@ public:
 
   virtual ~db_query_EditableResultset();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.query.EditableResultset";
   }
 
@@ -509,7 +509,7 @@ public:
    * \par In Python:
    *    value = obj.schema
    */
-  grt::StringRef schema() const { return _schema; }
+  auto schema() const -> grt::StringRef { return _schema; }
 
   /**
    * Setter for attribute schema
@@ -518,7 +518,7 @@ public:
    * \par In Python:
    *   obj.schema = value
    */
-  virtual void schema(const grt::StringRef &value) {
+  virtual auto schema(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_schema);
     _schema = value;
     member_changed("schema", ovalue, value);
@@ -531,7 +531,7 @@ public:
    * \par In Python:
    *    value = obj.table
    */
-  grt::StringRef table() const { return _table; }
+  auto table() const -> grt::StringRef { return _table; }
 
   /**
    * Setter for attribute table
@@ -540,7 +540,7 @@ public:
    * \par In Python:
    *   obj.table = value
    */
-  virtual void table(const grt::StringRef &value) {
+  virtual auto table(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_table);
     _table = value;
     member_changed("table", ovalue, value);
@@ -550,90 +550,90 @@ public:
    * Method. adds a new empty row to the resultset. The row contents must be set before applying changes
    * \return 
    */
-  virtual grt::IntegerRef addNewRow();
+  virtual auto addNewRow() -> grt::IntegerRef;
   /**
    * Method. generates a SQL script with all pending changes made to the resultset and executes it, once confirmed through a GUI wizard
    * \return 
    */
-  virtual grt::IntegerRef applyChanges();
+  virtual auto applyChanges() -> grt::IntegerRef;
   /**
    * Method. marks a row from the resultset for deletion. The row will only be deleted in the target database when applyChanges() is called
    * \param column 
    * \return 
    */
-  virtual grt::IntegerRef deleteRow(ssize_t column);
+  virtual auto deleteRow(ssize_t column) -> grt::IntegerRef;
   /**
    * Method. loads the contents of an external file into the current row at the given column index
    * \param column 
    * \param file 
    * \return 
    */
-  virtual grt::IntegerRef loadFieldValueFromFile(ssize_t column, const std::string &file);
+  virtual auto loadFieldValueFromFile(ssize_t column, const std::string &file) -> grt::IntegerRef;
   /**
    * Method. discards all changes made to the resultset
    * \return 
    */
-  virtual grt::IntegerRef revertChanges();
+  virtual auto revertChanges() -> grt::IntegerRef;
   /**
    * Method. sets the contents of the current row at the given column index to NULL
    * \param column 
    * \return 
    */
-  virtual grt::IntegerRef setFieldNull(ssize_t column);
+  virtual auto setFieldNull(ssize_t column) -> grt::IntegerRef;
   /**
    * Method. sets the contents of the current row at the given column name to NULL
    * \param column 
    * \return 
    */
-  virtual grt::IntegerRef setFieldNullByName(const std::string &column);
+  virtual auto setFieldNullByName(const std::string &column) -> grt::IntegerRef;
   /**
    * Method. sets the contents of the current row at the given column index
    * \param column 
    * \param value 
    * \return 
    */
-  virtual grt::IntegerRef setFloatFieldValue(ssize_t column, double value);
+  virtual auto setFloatFieldValue(ssize_t column, double value) -> grt::IntegerRef;
   /**
    * Method. sets the contents of the current row at the given column name
    * \param column 
    * \param value 
    * \return 
    */
-  virtual grt::IntegerRef setFloatFieldValueByName(const std::string &column, double value);
+  virtual auto setFloatFieldValueByName(const std::string &column, double value) -> grt::IntegerRef;
   /**
    * Method. sets the contents of the current row at the given integer type column index
    * \param column 
    * \param value 
    * \return 
    */
-  virtual grt::IntegerRef setIntFieldValue(ssize_t column, ssize_t value);
+  virtual auto setIntFieldValue(ssize_t column, ssize_t value) -> grt::IntegerRef;
   /**
    * Method. sets the contents of the current row at the given column name
    * \param column 
    * \param value 
    * \return 
    */
-  virtual grt::IntegerRef setIntFieldValueByName(const std::string &column, ssize_t value);
+  virtual auto setIntFieldValueByName(const std::string &column, ssize_t value) -> grt::IntegerRef;
   /**
    * Method. sets the contents of the current row at the given column index
    * \param column 
    * \param value 
    * \return 
    */
-  virtual grt::IntegerRef setStringFieldValue(ssize_t column, const std::string &value);
+  virtual auto setStringFieldValue(ssize_t column, const std::string &value) -> grt::IntegerRef;
   /**
    * Method. sets the contents of the current row at the given column name
    * \param column 
    * \param value 
    * \return 
    */
-  virtual grt::IntegerRef setStringFieldValueByName(const std::string &column, const std::string &value);
+  virtual auto setStringFieldValueByName(const std::string &column, const std::string &value) -> grt::IntegerRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -643,7 +643,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_query_EditableResultset());
   }
 
@@ -674,7 +674,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_setStringFieldValueByName(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<db_query_EditableResultset*>(self)->setStringFieldValueByName(grt::StringRef::cast_from(args[0]), grt::StringRef::cast_from(args[1])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -716,7 +716,7 @@ public:
     : GrtObject(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.query.ResultPanel";
   }
 
@@ -728,7 +728,7 @@ public:
    * \par In Python:
    *    value = obj.dockingPoint
    */
-  mforms_ObjectReferenceRef dockingPoint() const { return _dockingPoint; }
+  auto dockingPoint() const -> mforms_ObjectReferenceRef { return _dockingPoint; }
 
   /**
    * Setter for attribute dockingPoint
@@ -737,7 +737,7 @@ public:
    * \par In Python:
    *   obj.dockingPoint = value
    */
-  virtual void dockingPoint(const mforms_ObjectReferenceRef &value) {
+  virtual auto dockingPoint(const mforms_ObjectReferenceRef &value) -> void {
     grt::ValueRef ovalue(_dockingPoint);
 
     _dockingPoint = value;
@@ -752,7 +752,7 @@ public:
    * \par In Python:
    *    value = obj.resultset
    */
-  db_query_ResultsetRef resultset() const { return _resultset; }
+  auto resultset() const -> db_query_ResultsetRef { return _resultset; }
 
   /**
    * Setter for attribute resultset
@@ -761,7 +761,7 @@ public:
    * \par In Python:
    *   obj.resultset = value
    */
-  virtual void resultset(const db_query_ResultsetRef &value) {
+  virtual auto resultset(const db_query_ResultsetRef &value) -> void {
     grt::ValueRef ovalue(_resultset);
 
     _resultset = value;
@@ -774,12 +774,12 @@ protected:
   db_query_ResultsetRef _resultset;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_query_ResultPanel());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -811,7 +811,7 @@ public:
 
   virtual ~db_query_QueryBuffer();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.query.QueryBuffer";
   }
 
@@ -822,7 +822,7 @@ public:
    * \par In Python:
    *    value = obj.currentStatement
    */
-  grt::StringRef currentStatement() const;
+  auto currentStatement() const -> grt::StringRef;
 
 
 private: // The next attribute is read-only.
@@ -835,7 +835,7 @@ public:
    * \par In Python:
    *    value = obj.insertionPoint
    */
-  grt::IntegerRef insertionPoint() const;
+  auto insertionPoint() const -> grt::IntegerRef;
 
   /**
    * Setter for attribute insertionPoint
@@ -844,7 +844,7 @@ public:
    * \par In Python:
    *   obj.insertionPoint = value
    */
-  virtual void insertionPoint(const grt::IntegerRef &value);
+  virtual auto insertionPoint(const grt::IntegerRef &value) -> void;
 
   /**
    * Getter for attribute script (read-only)
@@ -853,7 +853,7 @@ public:
    * \par In Python:
    *    value = obj.script
    */
-  grt::StringRef script() const;
+  auto script() const -> grt::StringRef;
 
 
 private: // The next attribute is read-only.
@@ -866,7 +866,7 @@ public:
    * \par In Python:
    *    value = obj.selectedText
    */
-  grt::StringRef selectedText() const;
+  auto selectedText() const -> grt::StringRef;
 
 
 private: // The next attribute is read-only.
@@ -879,7 +879,7 @@ public:
    * \par In Python:
    *    value = obj.selectionEnd
    */
-  grt::IntegerRef selectionEnd() const;
+  auto selectionEnd() const -> grt::IntegerRef;
 
   /**
    * Setter for attribute selectionEnd
@@ -888,7 +888,7 @@ public:
    * \par In Python:
    *   obj.selectionEnd = value
    */
-  virtual void selectionEnd(const grt::IntegerRef &value);
+  virtual auto selectionEnd(const grt::IntegerRef &value) -> void;
 
   /**
    * Getter for attribute selectionStart
@@ -897,7 +897,7 @@ public:
    * \par In Python:
    *    value = obj.selectionStart
    */
-  grt::IntegerRef selectionStart() const;
+  auto selectionStart() const -> grt::IntegerRef;
 
   /**
    * Setter for attribute selectionStart
@@ -906,32 +906,32 @@ public:
    * \par In Python:
    *   obj.selectionStart = value
    */
-  virtual void selectionStart(const grt::IntegerRef &value);
+  virtual auto selectionStart(const grt::IntegerRef &value) -> void;
 
   /**
    * Method. replace the contents of the query buffer with the provided text
    * \param text 
    * \return 
    */
-  virtual grt::IntegerRef replaceContents(const std::string &text);
+  virtual auto replaceContents(const std::string &text) -> grt::IntegerRef;
   /**
    * Method. replace the statement text under the cursor with the provided one, also selecting it
    * \param text 
    * \return 
    */
-  virtual grt::IntegerRef replaceCurrentStatement(const std::string &text);
+  virtual auto replaceCurrentStatement(const std::string &text) -> grt::IntegerRef;
   /**
    * Method. replace the currently selected text with the provided one, also selecting it
    * \param text 
    * \return 
    */
-  virtual grt::IntegerRef replaceSelection(const std::string &text);
+  virtual auto replaceSelection(const std::string &text) -> grt::IntegerRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -939,7 +939,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_query_QueryBuffer());
   }
 
@@ -950,7 +950,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_replaceSelection(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<db_query_QueryBuffer*>(self)->replaceSelection(grt::StringRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -990,7 +990,7 @@ public:
       _resultPanels(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.query.QueryEditor";
   }
 
@@ -1001,7 +1001,7 @@ public:
    * \par In Python:
    *    value = obj.activeResultPanel
    */
-  db_query_ResultPanelRef activeResultPanel() const { return _activeResultPanel; }
+  auto activeResultPanel() const -> db_query_ResultPanelRef { return _activeResultPanel; }
 
   /**
    * Setter for attribute activeResultPanel
@@ -1010,7 +1010,7 @@ public:
    * \par In Python:
    *   obj.activeResultPanel = value
    */
-  virtual void activeResultPanel(const db_query_ResultPanelRef &value) {
+  virtual auto activeResultPanel(const db_query_ResultPanelRef &value) -> void {
     grt::ValueRef ovalue(_activeResultPanel);
     _activeResultPanel = value;
     member_changed("activeResultPanel", ovalue, value);
@@ -1024,7 +1024,7 @@ public:
    * \par In Python:
    *    value = obj.resultDockingPoint
    */
-  mforms_ObjectReferenceRef resultDockingPoint() const { return _resultDockingPoint; }
+  auto resultDockingPoint() const -> mforms_ObjectReferenceRef { return _resultDockingPoint; }
 
   /**
    * Setter for attribute resultDockingPoint
@@ -1033,7 +1033,7 @@ public:
    * \par In Python:
    *   obj.resultDockingPoint = value
    */
-  virtual void resultDockingPoint(const mforms_ObjectReferenceRef &value) {
+  virtual auto resultDockingPoint(const mforms_ObjectReferenceRef &value) -> void {
     grt::ValueRef ovalue(_resultDockingPoint);
 
     _resultDockingPoint = value;
@@ -1048,11 +1048,11 @@ public:
    * \par In Python:
    *    value = obj.resultPanels
    */
-  grt::ListRef<db_query_ResultPanel> resultPanels() const { return _resultPanels; }
+  auto resultPanels() const -> grt::ListRef<db_query_ResultPanel> { return _resultPanels; }
 
 
 private: // The next attribute is read-only.
-  virtual void resultPanels(const grt::ListRef<db_query_ResultPanel> &value) {
+  virtual auto resultPanels(const grt::ListRef<db_query_ResultPanel> &value) -> void {
     grt::ValueRef ovalue(_resultPanels);
 
     _resultPanels = value;
@@ -1067,12 +1067,12 @@ protected:
   grt::ListRef<db_query_ResultPanel> _resultPanels;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_query_QueryEditor());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1111,7 +1111,7 @@ public:
 
   virtual ~db_query_Editor();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.query.Editor";
   }
 
@@ -1122,11 +1122,11 @@ public:
    * \par In Python:
    *    value = obj.activeQueryEditor
    */
-  db_query_QueryEditorRef activeQueryEditor() const;
+  auto activeQueryEditor() const -> db_query_QueryEditorRef;
 
 
 private: // The next attribute is read-only.
-  virtual void activeQueryEditor(const db_query_QueryEditorRef &value) {
+  virtual auto activeQueryEditor(const db_query_QueryEditorRef &value) -> void {
     grt::ValueRef ovalue(_activeQueryEditor);
     _activeQueryEditor = value;
     member_changed("activeQueryEditor", ovalue, value);
@@ -1140,7 +1140,7 @@ public:
    * \par In Python:
    *    value = obj.connection
    */
-  db_mgmt_ConnectionRef connection() const;
+  auto connection() const -> db_mgmt_ConnectionRef;
 
 
 private: // The next attribute is read-only.
@@ -1153,11 +1153,11 @@ public:
    * \par In Python:
    *    value = obj.customData
    */
-  grt::DictRef customData() const { return _customData; }
+  auto customData() const -> grt::DictRef { return _customData; }
 
 
 private: // The next attribute is read-only.
-  virtual void customData(const grt::DictRef &value) {
+  virtual auto customData(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_customData);
     _customData = value;
     member_changed("customData", ovalue, value);
@@ -1171,7 +1171,7 @@ public:
    * \par In Python:
    *    value = obj.defaultSchema
    */
-  grt::StringRef defaultSchema() const;
+  auto defaultSchema() const -> grt::StringRef;
 
   /**
    * Setter for attribute defaultSchema
@@ -1180,7 +1180,7 @@ public:
    * \par In Python:
    *   obj.defaultSchema = value
    */
-  virtual void defaultSchema(const grt::StringRef &value);
+  virtual auto defaultSchema(const grt::StringRef &value) -> void;
 
   /**
    * Getter for attribute dockingPoint
@@ -1189,7 +1189,7 @@ public:
    * \par In Python:
    *    value = obj.dockingPoint
    */
-  mforms_ObjectReferenceRef dockingPoint() const { return _dockingPoint; }
+  auto dockingPoint() const -> mforms_ObjectReferenceRef { return _dockingPoint; }
 
   /**
    * Setter for attribute dockingPoint
@@ -1198,7 +1198,7 @@ public:
    * \par In Python:
    *   obj.dockingPoint = value
    */
-  virtual void dockingPoint(const mforms_ObjectReferenceRef &value) {
+  virtual auto dockingPoint(const mforms_ObjectReferenceRef &value) -> void {
     grt::ValueRef ovalue(_dockingPoint);
     _dockingPoint = value;
     member_changed("dockingPoint", ovalue, value);
@@ -1211,7 +1211,7 @@ public:
    * \par In Python:
    *    value = obj.getSSHTunnelPort
    */
-  grt::IntegerRef getSSHTunnelPort() const;
+  auto getSSHTunnelPort() const -> grt::IntegerRef;
 
 
 private: // The next attribute is read-only.
@@ -1224,7 +1224,7 @@ public:
    * \par In Python:
    *    value = obj.isConnected
    */
-  grt::IntegerRef isConnected() const;
+  auto isConnected() const -> grt::IntegerRef;
 
 
 private: // The next attribute is read-only.
@@ -1238,11 +1238,11 @@ public:
    * \par In Python:
    *    value = obj.queryEditors
    */
-  grt::ListRef<db_query_QueryEditor> queryEditors() const { return _queryEditors; }
+  auto queryEditors() const -> grt::ListRef<db_query_QueryEditor> { return _queryEditors; }
 
 
 private: // The next attribute is read-only.
-  virtual void queryEditors(const grt::ListRef<db_query_QueryEditor> &value) {
+  virtual auto queryEditors(const grt::ListRef<db_query_QueryEditor> &value) -> void {
     grt::ValueRef ovalue(_queryEditors);
 
     _queryEditors = value;
@@ -1257,7 +1257,7 @@ public:
    * \par In Python:
    *    value = obj.schemaTreeSelection
    */
-  grt::ListRef<db_query_LiveDBObject> schemaTreeSelection() const;
+  auto schemaTreeSelection() const -> grt::ListRef<db_query_LiveDBObject>;
 
 
 private: // The next attribute is read-only.
@@ -1270,7 +1270,7 @@ public:
    * \par In Python:
    *    value = obj.serverVersion
    */
-  GrtVersionRef serverVersion() const { return _serverVersion; }
+  auto serverVersion() const -> GrtVersionRef { return _serverVersion; }
 
   /**
    * Setter for attribute serverVersion
@@ -1279,7 +1279,7 @@ public:
    * \par In Python:
    *   obj.serverVersion = value
    */
-  virtual void serverVersion(const GrtVersionRef &value) {
+  virtual auto serverVersion(const GrtVersionRef &value) -> void {
     grt::ValueRef ovalue(_serverVersion);
     _serverVersion = value;
     member_changed("serverVersion", ovalue, value);
@@ -1292,7 +1292,7 @@ public:
    * \par In Python:
    *    value = obj.sidebar
    */
-  mforms_ObjectReferenceRef sidebar() const { return _sidebar; }
+  auto sidebar() const -> mforms_ObjectReferenceRef { return _sidebar; }
 
   /**
    * Setter for attribute sidebar
@@ -1301,7 +1301,7 @@ public:
    * \par In Python:
    *   obj.sidebar = value
    */
-  virtual void sidebar(const mforms_ObjectReferenceRef &value) {
+  virtual auto sidebar(const mforms_ObjectReferenceRef &value) -> void {
     grt::ValueRef ovalue(_sidebar);
     _sidebar = value;
     member_changed("sidebar", ovalue, value);
@@ -1314,7 +1314,7 @@ public:
    * \par In Python:
    *    value = obj.sshConnection
    */
-  db_mgmt_SSHConnectionRef sshConnection() const;
+  auto sshConnection() const -> db_mgmt_SSHConnectionRef;
 
 
 private: // The next attribute is read-only.
@@ -1324,14 +1324,14 @@ public:
    * Method. adds a new query buffer/text editor tab in the UI and return it
    * \return the newly created query buffer proxy object
    */
-  virtual db_query_QueryEditorRef addQueryEditor();
+  virtual auto addQueryEditor() -> db_query_QueryEditorRef;
   /**
    * Method. write a line of text into the SQL Editor output area
    * \param text 
    * \param bringToFront 
    * \return 
    */
-  virtual grt::IntegerRef addToOutput(const std::string &text, ssize_t bringToFront);
+  virtual auto addToOutput(const std::string &text, ssize_t bringToFront) -> grt::IntegerRef;
   /**
    * Method. Opens the object editor for the named DB object
    * \param type 
@@ -1339,7 +1339,7 @@ public:
    * \param objectName 
    * \return 
    */
-  virtual void alterLiveObject(const std::string &type, const std::string &schemaName, const std::string &objectName);
+  virtual auto alterLiveObject(const std::string &type, const std::string &schemaName, const std::string &objectName) -> void;
   /**
    * Method. executes a SELECT statement on the table and returns an editable resultset that can be used to modify its contents
    * \param schema name of the table schema
@@ -1348,14 +1348,14 @@ public:
    * \param showGrid whether the resultset should be displayed as a grid in the UI
    * \return an editable resultset that can be used to modify the table contents
    */
-  virtual db_query_EditableResultsetRef createTableEditResultset(const std::string &schema, const std::string &table, const std::string &where, ssize_t showGrid);
+  virtual auto createTableEditResultset(const std::string &schema, const std::string &table, const std::string &where, ssize_t showGrid) -> db_query_EditableResultsetRef;
   /**
    * Method. Opens the object editor for the given DB object
    * \param object 
    * \param originalCatalog 
    * \return 
    */
-  virtual void editLiveObject(const db_DatabaseObjectRef &object, const db_CatalogRef &originalCatalog);
+  virtual auto editLiveObject(const db_DatabaseObjectRef &object, const db_CatalogRef &originalCatalog) -> void;
   /**
    * Method. Executes a statement on the main connection, optionally logging the query in the action log
    * \param statement 
@@ -1363,46 +1363,46 @@ public:
    * \param background 
    * \return 
    */
-  virtual void executeCommand(const std::string &statement, ssize_t log, ssize_t background);
+  virtual auto executeCommand(const std::string &statement, ssize_t log, ssize_t background) -> void;
   /**
    * Method. Executes a statement on the aux connection, optionally logging the query in the action log
    * \param statement 
    * \param log 
    * \return 
    */
-  virtual void executeManagementCommand(const std::string &statement, ssize_t log);
+  virtual auto executeManagementCommand(const std::string &statement, ssize_t log) -> void;
   /**
    * Method. Executes a query on the aux connection and return a plain resultset, optionally logging the query in the action log
    * \param query 
    * \param log 
    * \return 
    */
-  virtual db_query_ResultsetRef executeManagementQuery(const std::string &query, ssize_t log);
+  virtual auto executeManagementQuery(const std::string &query, ssize_t log) -> db_query_ResultsetRef;
   /**
    * Method. Executes a query on the main connection and return a plain resultset, optionally logging the query in the action log
    * \param query 
    * \param log 
    * \return 
    */
-  virtual db_query_ResultsetRef executeQuery(const std::string &query, ssize_t log);
+  virtual auto executeQuery(const std::string &query, ssize_t log) -> db_query_ResultsetRef;
   /**
    * Method. execute the script passed as argument
    * \param sql 
    * \return the list of resultsets sent back by the server
    */
-  virtual grt::ListRef<db_query_Resultset> executeScript(const std::string &sql);
+  virtual auto executeScript(const std::string &sql) -> grt::ListRef<db_query_Resultset>;
   /**
    * Method. execute the script passed as argument and displays the generated resultsets as grids in the UI
    * \param sql 
    * \return 
    */
-  virtual grt::IntegerRef executeScriptAndOutputToGrid(const std::string &sql);
+  virtual auto executeScriptAndOutputToGrid(const std::string &sql) -> grt::IntegerRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -1416,7 +1416,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_query_Editor());
   }
 
@@ -1443,7 +1443,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_executeScriptAndOutputToGrid(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<db_query_Editor*>(self)->executeScriptAndOutputToGrid(grt::StringRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1504,7 +1504,7 @@ public:
 
 
 
-inline void register_structs_db_query_xml() {
+inline auto register_structs_db_query_xml() -> void {
   grt::internal::ClassRegistry::register_class<db_query_LiveDBObject>();
   grt::internal::ClassRegistry::register_class<db_query_ResultsetColumn>();
   grt::internal::ClassRegistry::register_class<db_query_Resultset>();

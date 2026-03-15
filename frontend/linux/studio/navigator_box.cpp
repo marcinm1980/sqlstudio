@@ -82,7 +82,7 @@ NavigatorBox::NavigatorBox()
   show_all();
 }
 
-void NavigatorBox::set_model(wb::ModelDiagramForm *model) {
+auto NavigatorBox::set_model(wb::ModelDiagramForm *model) -> void {
   _model = model;
 
   _zoom_in.signal_clicked().connect(sigc::mem_fun(_model, &wb::ModelDiagramForm::zoom_in));
@@ -93,18 +93,18 @@ void NavigatorBox::set_model(wb::ModelDiagramForm *model) {
   _model->update_mini_view_size(_canvas.get_width(), _canvas.get_height());
 }
 
-void NavigatorBox::size_change(Gtk::Allocation &alloc) {
+auto NavigatorBox::size_change(Gtk::Allocation &alloc) -> void {
   if (_model)
     _model->update_mini_view_size(_canvas.get_width(), _canvas.get_height());
 }
 
-void NavigatorBox::canvas_realize() {
+auto NavigatorBox::canvas_realize() -> void {
   // we need to add additional reference as gtk3 is releasing it in different order so there's a crash
   if (_canvas.get_canvas())
     cairo_reference(_canvas.get_canvas()->cairoctx()->get_cr());
 }
 
-void NavigatorBox::refresh() {
+auto NavigatorBox::refresh() -> void {
   int value = 100;
 
   //  if (is_realized())
@@ -124,7 +124,7 @@ void NavigatorBox::refresh() {
   _changing_zoom = false;
 }
 
-void NavigatorBox::slider_changed() {
+auto NavigatorBox::slider_changed() -> void {
   if (_model && !_changing_zoom) {
     _changing_zoom = true;
     int value = (int)_slider.get_value();
@@ -134,7 +134,7 @@ void NavigatorBox::slider_changed() {
   }
 }
 
-void NavigatorBox::combo_changed(bool force_update) {
+auto NavigatorBox::combo_changed(bool force_update) -> void {
   if (_model && !_changing_zoom) {
     _changing_zoom = true;
     if (force_update || !_combo.get_entry()->has_focus()) {

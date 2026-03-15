@@ -37,21 +37,21 @@ namespace mdc {
     Box(Layer *layer, Orientation orient = Horizontal, bool homogeneous = false);
     virtual ~Box();
 
-    virtual void add(CanvasItem *item, bool expand, bool fill, bool hiddenspace = false);
-    void insert_after(CanvasItem *after, CanvasItem *item, bool expand, bool fill, bool hiddenspace = false);
-    void insert_before(CanvasItem *before, CanvasItem *item, bool expand, bool fill, bool hiddenspace = false);
-    virtual void remove(CanvasItem *item);
+    virtual auto add(CanvasItem *item, bool expand, bool fill, bool hiddenspace = false) -> void;
+    auto insert_after(CanvasItem *after, CanvasItem *item, bool expand, bool fill, bool hiddenspace = false) -> void;
+    auto insert_before(CanvasItem *before, CanvasItem *item, bool expand, bool fill, bool hiddenspace = false) -> void;
+    virtual auto remove(CanvasItem *item) -> void;
 
-    virtual void render(CairoCtx *cr);
+    virtual auto render(CairoCtx *cr) -> void;
     virtual auto calc_min_size() -> base::Size;
 
-    void set_spacing(float sp);
+    auto set_spacing(float sp) -> void;
 
-    virtual void foreach (const std::function<void(CanvasItem *)> &slot);
+    virtual auto foreach (const std::function<void(CanvasItem *)> &slot) -> void;
 
     virtual auto get_item_at(const base::Point &pos) -> CanvasItem *;
 
-    virtual void resize_to(const base::Size &size);
+    virtual auto resize_to(const base::Size &size) -> void;
 
   protected:
     struct BoxItem {

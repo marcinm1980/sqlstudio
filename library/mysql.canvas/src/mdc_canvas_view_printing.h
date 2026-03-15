@@ -43,37 +43,37 @@ namespace mdc {
   public:
     CanvasViewExtras(CanvasView *view);
 
-    void set_progress_callback(const std::function<void(int, int)> &progress);
+    auto set_progress_callback(const std::function<void(int, int)> &progress) -> void;
 
-    void enable_custom_layout();
-    void set_show_print_guides(bool flag);
+    auto enable_custom_layout() -> void;
+    auto set_show_print_guides(bool flag) -> void;
 
-    void set_paper_size(double width, double height);
-    void get_paper_size(double &width, double &height);
+    auto set_paper_size(double width, double height) -> void;
+    auto get_paper_size(double &width, double &height) -> void;
 
-    void set_page_margins(double top, double left, double bottom, double right);
-    void set_page_counts(Count xpages, Count ypages);
+    auto set_page_margins(double top, double left, double bottom, double right) -> void;
+    auto set_page_counts(Count xpages, Count ypages) -> void;
 
-    void set_orientation(PageOrientation orientation);
+    auto set_orientation(PageOrientation orientation) -> void;
 
-    void set_print_border(bool flag);
-    void set_print_page_numbers(bool flag);
+    auto set_print_border(bool flag) -> void;
+    auto set_print_page_numbers(bool flag) -> void;
 
-    void set_scale(double scale);
-    void set_scale(double xscale, double yscale);
-    void set_scale_to_fit();
+    auto set_scale(double scale) -> void;
+    auto set_scale(double xscale, double yscale) -> void;
+    auto set_scale_to_fit() -> void;
 
-    void set_print_area(const base::Rect &area);
+    auto set_print_area(const base::Rect &area) -> void;
 
-    PDFSurface *create_pdf_surface(base::FileHandle &fh);
-    PSSurface *create_ps_surface(base::FileHandle &fh);
-    int print_to_surface(Surface *surf, const std::string &header_text, const std::string &footer_text, int gpage_start,
-                         int gtotal_pages);
-    int print_to_pdf(const std::string &path);
-    int print_to_ps(const std::string &path);
+    auto create_pdf_surface(base::FileHandle &fh) -> PDFSurface *;
+    auto create_ps_surface(base::FileHandle &fh) -> PSSurface *;
+    auto print_to_surface(Surface *surf, const std::string &header_text, const std::string &footer_text, int gpage_start,
+                         int gtotal_pages) -> int;
+    auto print_to_pdf(const std::string &path) -> int;
+    auto print_to_ps(const std::string &path) -> int;
 
 #ifdef _MSC_VER
-    int print_native(HDC hdc, int width, int height, int page);
+    auto print_native(HDC hdc, int width, int height, int page) -> int;
 #endif
 
     int render_pages(CairoCtx *cr, double render_scale, int page = -1, bool rotate_for_landscape = false,
@@ -81,13 +81,13 @@ namespace mdc {
                      int gtotal_pages = 0);
 
     // final version
-    void render_page(CairoCtx *cr, int x, int y);
+    auto render_page(CairoCtx *cr, int x, int y) -> void;
 
-    void get_page_counts(Count &xpages, Count &ypages);
+    auto get_page_counts(Count &xpages, Count &ypages) -> void;
 
   protected:
-    base::Size get_adjusted_paper_size();
-    base::Rect get_adjusted_printable_area();
+    auto get_adjusted_paper_size() -> base::Size;
+    auto get_adjusted_printable_area() -> base::Rect;
 
     CanvasView *_view;
 

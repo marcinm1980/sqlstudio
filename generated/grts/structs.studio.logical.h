@@ -85,7 +85,7 @@ public:
       _startMany(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.logical.Connection";
   }
 
@@ -96,7 +96,7 @@ public:
    * \par In Python:
    *    value = obj.comment
    */
-  grt::StringRef comment() const { return _comment; }
+  auto comment() const -> grt::StringRef { return _comment; }
 
   /**
    * Setter for attribute comment
@@ -105,7 +105,7 @@ public:
    * \par In Python:
    *   obj.comment = value
    */
-  virtual void comment(const grt::StringRef &value) {
+  virtual auto comment(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_comment);
     _comment = value;
     member_changed("comment", ovalue, value);
@@ -118,7 +118,7 @@ public:
    * \par In Python:
    *    value = obj.endCaption
    */
-  grt::StringRef endCaption() const { return _endCaption; }
+  auto endCaption() const -> grt::StringRef { return _endCaption; }
 
   /**
    * Setter for attribute endCaption
@@ -127,7 +127,7 @@ public:
    * \par In Python:
    *   obj.endCaption = value
    */
-  virtual void endCaption(const grt::StringRef &value) {
+  virtual auto endCaption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_endCaption);
     _endCaption = value;
     member_changed("endCaption", ovalue, value);
@@ -140,7 +140,7 @@ public:
    * \par In Python:
    *    value = obj.endCaptionXOffs
    */
-  grt::DoubleRef endCaptionXOffs() const { return _endCaptionXOffs; }
+  auto endCaptionXOffs() const -> grt::DoubleRef { return _endCaptionXOffs; }
 
   /**
    * Setter for attribute endCaptionXOffs
@@ -149,7 +149,7 @@ public:
    * \par In Python:
    *   obj.endCaptionXOffs = value
    */
-  virtual void endCaptionXOffs(const grt::DoubleRef &value) {
+  virtual auto endCaptionXOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_endCaptionXOffs);
     _endCaptionXOffs = value;
     member_changed("endCaptionXOffs", ovalue, value);
@@ -162,7 +162,7 @@ public:
    * \par In Python:
    *    value = obj.endCaptionYOffs
    */
-  grt::DoubleRef endCaptionYOffs() const { return _endCaptionYOffs; }
+  auto endCaptionYOffs() const -> grt::DoubleRef { return _endCaptionYOffs; }
 
   /**
    * Setter for attribute endCaptionYOffs
@@ -171,7 +171,7 @@ public:
    * \par In Python:
    *   obj.endCaptionYOffs = value
    */
-  virtual void endCaptionYOffs(const grt::DoubleRef &value) {
+  virtual auto endCaptionYOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_endCaptionYOffs);
     _endCaptionYOffs = value;
     member_changed("endCaptionYOffs", ovalue, value);
@@ -200,7 +200,7 @@ public:
    * \par In Python:
    *    value = obj.endMany
    */
-  grt::IntegerRef endMany() const { return _endMany; }
+  auto endMany() const -> grt::IntegerRef { return _endMany; }
 
   /**
    * Setter for attribute endMany
@@ -209,7 +209,7 @@ public:
    * \par In Python:
    *   obj.endMany = value
    */
-  virtual void endMany(const grt::IntegerRef &value) {
+  virtual auto endMany(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_endMany);
     _endMany = value;
     member_changed("endMany", ovalue, value);
@@ -222,7 +222,7 @@ public:
    * \par In Python:
    *    value = obj.startCaption
    */
-  grt::StringRef startCaption() const { return _startCaption; }
+  auto startCaption() const -> grt::StringRef { return _startCaption; }
 
   /**
    * Setter for attribute startCaption
@@ -231,7 +231,7 @@ public:
    * \par In Python:
    *   obj.startCaption = value
    */
-  virtual void startCaption(const grt::StringRef &value) {
+  virtual auto startCaption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_startCaption);
     _startCaption = value;
     member_changed("startCaption", ovalue, value);
@@ -244,7 +244,7 @@ public:
    * \par In Python:
    *    value = obj.startCaptionXOffs
    */
-  grt::DoubleRef startCaptionXOffs() const { return _startCaptionXOffs; }
+  auto startCaptionXOffs() const -> grt::DoubleRef { return _startCaptionXOffs; }
 
   /**
    * Setter for attribute startCaptionXOffs
@@ -253,7 +253,7 @@ public:
    * \par In Python:
    *   obj.startCaptionXOffs = value
    */
-  virtual void startCaptionXOffs(const grt::DoubleRef &value) {
+  virtual auto startCaptionXOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_startCaptionXOffs);
     _startCaptionXOffs = value;
     member_changed("startCaptionXOffs", ovalue, value);
@@ -266,7 +266,7 @@ public:
    * \par In Python:
    *    value = obj.startCaptionYOffs
    */
-  grt::DoubleRef startCaptionYOffs() const { return _startCaptionYOffs; }
+  auto startCaptionYOffs() const -> grt::DoubleRef { return _startCaptionYOffs; }
 
   /**
    * Setter for attribute startCaptionYOffs
@@ -275,7 +275,7 @@ public:
    * \par In Python:
    *   obj.startCaptionYOffs = value
    */
-  virtual void startCaptionYOffs(const grt::DoubleRef &value) {
+  virtual auto startCaptionYOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_startCaptionYOffs);
     _startCaptionYOffs = value;
     member_changed("startCaptionYOffs", ovalue, value);
@@ -304,7 +304,7 @@ public:
    * \par In Python:
    *    value = obj.startMany
    */
-  grt::IntegerRef startMany() const { return _startMany; }
+  auto startMany() const -> grt::IntegerRef { return _startMany; }
 
   /**
    * Setter for attribute startMany
@@ -313,7 +313,7 @@ public:
    * \par In Python:
    *   obj.startMany = value
    */
-  virtual void startMany(const grt::IntegerRef &value) {
+  virtual auto startMany(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_startMany);
     _startMany = value;
     member_changed("startMany", ovalue, value);
@@ -332,12 +332,12 @@ protected:
   grt::IntegerRef _startMany;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_logical_Connection());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -410,7 +410,7 @@ public:
       _attributesExpanded(1) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.logical.Relationship";
   }
 
@@ -421,7 +421,7 @@ public:
    * \par In Python:
    *    value = obj.attributesExpanded
    */
-  grt::IntegerRef attributesExpanded() const { return _attributesExpanded; }
+  auto attributesExpanded() const -> grt::IntegerRef { return _attributesExpanded; }
 
   /**
    * Setter for attribute attributesExpanded
@@ -430,7 +430,7 @@ public:
    * \par In Python:
    *   obj.attributesExpanded = value
    */
-  virtual void attributesExpanded(const grt::IntegerRef &value) {
+  virtual auto attributesExpanded(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_attributesExpanded);
     _attributesExpanded = value;
     member_changed("attributesExpanded", ovalue, value);
@@ -443,7 +443,7 @@ public:
    * \par In Python:
    *    value = obj.relationship
    */
-  eer_RelationshipRef relationship() const { return _relationship; }
+  auto relationship() const -> eer_RelationshipRef { return _relationship; }
 
   /**
    * Setter for attribute relationship
@@ -452,7 +452,7 @@ public:
    * \par In Python:
    *   obj.relationship = value
    */
-  virtual void relationship(const eer_RelationshipRef &value) {
+  virtual auto relationship(const eer_RelationshipRef &value) -> void {
     grt::ValueRef ovalue(_relationship);
     _relationship = value;
     member_changed("relationship", ovalue, value);
@@ -464,12 +464,12 @@ protected:
   eer_RelationshipRef _relationship;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_logical_Relationship());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -497,7 +497,7 @@ public:
       _attributesExpanded(1) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.logical.Entity";
   }
 
@@ -508,7 +508,7 @@ public:
    * \par In Python:
    *    value = obj.attributesExpanded
    */
-  grt::IntegerRef attributesExpanded() const { return _attributesExpanded; }
+  auto attributesExpanded() const -> grt::IntegerRef { return _attributesExpanded; }
 
   /**
    * Setter for attribute attributesExpanded
@@ -517,7 +517,7 @@ public:
    * \par In Python:
    *   obj.attributesExpanded = value
    */
-  virtual void attributesExpanded(const grt::IntegerRef &value) {
+  virtual auto attributesExpanded(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_attributesExpanded);
     _attributesExpanded = value;
     member_changed("attributesExpanded", ovalue, value);
@@ -530,7 +530,7 @@ public:
    * \par In Python:
    *    value = obj.entity
    */
-  eer_EntityRef entity() const { return _entity; }
+  auto entity() const -> eer_EntityRef { return _entity; }
 
   /**
    * Setter for attribute entity
@@ -539,7 +539,7 @@ public:
    * \par In Python:
    *   obj.entity = value
    */
-  virtual void entity(const eer_EntityRef &value) {
+  virtual auto entity(const eer_EntityRef &value) -> void {
     grt::ValueRef ovalue(_entity);
     _entity = value;
     member_changed("entity", ovalue, value);
@@ -551,12 +551,12 @@ protected:
   eer_EntityRef _entity;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_logical_Entity());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -588,7 +588,7 @@ public:
 
   virtual ~studio_logical_Diagram();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.logical.Diagram";
   }
 
@@ -601,13 +601,13 @@ public:
    * \param name 
    * \return 
    */
-  virtual model_LayerRef placeNewLayer(double x, double y, double width, double height, const std::string &name);
+  virtual auto placeNewLayer(double x, double y, double width, double height, const std::string &name) -> model_LayerRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -615,14 +615,14 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_logical_Diagram());
   }
 
   static grt::ValueRef call_placeNewLayer(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<studio_logical_Diagram*>(self)->placeNewLayer(grt::DoubleRef::cast_from(args[0]), grt::DoubleRef::cast_from(args[1]), grt::DoubleRef::cast_from(args[2]), grt::DoubleRef::cast_from(args[3]), grt::StringRef::cast_from(args[4])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -646,7 +646,7 @@ public:
 
   virtual ~studio_logical_Model();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.logical.Model";
   }
 
@@ -658,7 +658,7 @@ public:
    * \par In Python:
    *    value = obj.diagrams
    */
-  grt::ListRef<studio_logical_Diagram> diagrams() const { return grt::ListRef<studio_logical_Diagram>::cast_from(_diagrams); }
+  auto diagrams() const -> grt::ListRef<studio_logical_Diagram> { return grt::ListRef<studio_logical_Diagram>::cast_from(_diagrams); }
 
 
 private: // The next attribute is read-only.
@@ -669,13 +669,13 @@ public:
    * \param deferRealize 
    * \return 
    */
-  virtual model_DiagramRef addNewDiagram(ssize_t deferRealize);
+  virtual auto addNewDiagram(ssize_t deferRealize) -> model_DiagramRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -683,14 +683,14 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_logical_Model());
   }
 
   static grt::ValueRef call_addNewDiagram(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<studio_logical_Model*>(self)->addNewDiagram(grt::IntegerRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -706,7 +706,7 @@ public:
 
 
 
-inline void register_structs_studio_logical_xml() {
+inline auto register_structs_studio_logical_xml() -> void {
   grt::internal::ClassRegistry::register_class<studio_logical_Connection>();
   grt::internal::ClassRegistry::register_class<studio_logical_Relationship>();
   grt::internal::ClassRegistry::register_class<studio_logical_Entity>();

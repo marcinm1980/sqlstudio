@@ -34,7 +34,7 @@
 class MYSQLWBBACKEND_PUBLIC_FUNC DbSqlEditorHistory {
 public:
   using Ref = std::shared_ptr<DbSqlEditorHistory>;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new DbSqlEditorHistory());
   }
   virtual ~DbSqlEditorHistory();
@@ -43,19 +43,19 @@ protected:
   DbSqlEditorHistory();
 
 public:
-  void reset();
-  void add_entry(const std::list<std::string> &statements);
-  int current_entry() {
+  auto reset() -> void;
+  auto add_entry(const std::list<std::string> &statements) -> void;
+  auto current_entry() -> int {
     return _current_entry_index;
   }
-  void current_entry(int index);
-  std::string restore_sql_from_history(int entry_index, std::list<int> &detail_indexes);
+  auto current_entry(int index) -> void;
+  auto restore_sql_from_history(int entry_index, std::list<int> &detail_indexes) -> std::string;
 
 protected:
   int _current_entry_index;
 
 public:
-  void load();
+  auto load() -> void;
 
 public:
   class EntriesModel;
@@ -66,7 +66,7 @@ public:
   public:
     friend class DbSqlEditorHistory;
     using Ref = std::shared_ptr<DetailsModel>;
-    static Ref create() {
+    static auto create() -> Ref {
       return Ref(new DetailsModel());
     }
 
@@ -74,32 +74,32 @@ public:
     DetailsModel();
 
   public:
-    void add_entries(const std::list<std::string> &statements);
-    virtual void refresh() {
+    auto add_entries(const std::list<std::string> &statements) -> void;
+    virtual auto refresh() -> void {
       refresh_ui();
     }
-    mforms::Menu *get_context_menu() {
+    auto get_context_menu() -> mforms::Menu * {
       return &_context_menu;
     }
 
-    virtual void reset();
+    virtual auto reset() -> void;
 
-    void save();
-    void load(const std::string &storage_file_path);
+    auto save() -> void;
+    auto load(const std::string &storage_file_path) -> void;
 
   protected:
     int _last_loaded_row; // required to skip duplication of existing entries when dumping contents
 
   public:
-    std::tm datestamp() const {
+    auto datestamp() const -> std::tm {
       return _datestamp;
     }
-    void datestamp(const std::tm &val) {
+    auto datestamp(const std::tm &val) -> void {
       _datestamp = val;
     }
 
   protected:
-    std::string storage_file_path() const;
+    auto storage_file_path() const -> std::string;
     std::tm _datestamp; // raw datestamp for locale independent storage file name
 
   private:
@@ -117,7 +117,7 @@ public:
     friend class DbSqlEditorHistory;
 
     using Ref = std::shared_ptr<EntriesModel>;
-    static Ref create(DbSqlEditorHistory *owner) {
+    static auto create(DbSqlEditorHistory *owner) -> Ref {
       return Ref(new EntriesModel(owner));
     }
 
@@ -126,37 +126,37 @@ public:
 
     DbSqlEditorHistory *_owner;
 
-    void add_statements(const std::list<std::string> &statements);
+    auto add_statements(const std::list<std::string> &statements) -> void;
 
   public:
-    bool insert_entry(const std::tm &t);
-    void delete_all_entries();
-    void delete_entries(const std::vector<std::size_t> &rows);
-    void set_ui_usage(bool value) {
+    auto insert_entry(const std::tm &t) -> bool;
+    auto delete_all_entries() -> void;
+    auto delete_entries(const std::vector<std::size_t> &rows) -> void;
+    auto set_ui_usage(bool value) -> void {
       _ui_usage = value;
     }
-    bool get_ui_usage() {
+    auto get_ui_usage() -> bool {
       return _ui_usage;
     }
 
-    std::string entry_path(std::size_t index);
-    std::tm entry_date(std::size_t index);
+    auto entry_path(std::size_t index) -> std::string;
+    auto entry_date(std::size_t index) -> std::tm;
 
-    virtual void reset();
-    void load();
+    virtual auto reset() -> void;
+    auto load() -> void;
 
-    virtual bool activate_popup_item_for_nodes(const std::string &action, const std::vector<bec::NodeId> &orig_nodes);
-    virtual bec::MenuItemList get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes);
+    virtual auto activate_popup_item_for_nodes(const std::string &action, const std::vector<bec::NodeId> &orig_nodes) -> bool;
+    virtual auto get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) -> bec::MenuItemList;
   };
 
 public:
-  EntriesModel::Ref entries_model() {
+  auto entries_model() -> EntriesModel::Ref {
     return _entries_model;
   }
-  DetailsModel::Ref details_model() {
+  auto details_model() -> DetailsModel::Ref {
     return _details_model;
   }
-  DetailsModel::Ref write_only_details_model() {
+  auto write_only_details_model() -> DetailsModel::Ref {
     return _write_only_details_model;
   }
 
@@ -165,7 +165,7 @@ protected:
   DetailsModel::Ref _details_model;
   DetailsModel::Ref _write_only_details_model;
 
-  void update_timestamp(std::tm timestamp);
+  auto update_timestamp(std::tm timestamp) -> void;
 };
 
 #endif /* _DB_SQL_EDITOR_HISTORY_BE_H_ */

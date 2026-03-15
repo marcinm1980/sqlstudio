@@ -48,11 +48,11 @@ namespace base {
   class BASELIBRARY_PUBLIC_FUNC trackable {
   public:
     using destroy_func = std::function<void*(void*)>;
-    void remove_destroy_notify_callback(void* data) {
+    auto remove_destroy_notify_callback(void* data) -> void {
       _destroy_functions.erase(data);
     }
 
-    void add_destroy_notify_callback(void* data, const destroy_func& func) {
+    auto add_destroy_notify_callback(void* data, const destroy_func& func) -> void {
       _destroy_functions[data] = func;
     }
 
@@ -62,7 +62,7 @@ namespace base {
         It->second(It->first);
     }
 
-    void disconnect_scoped_connects() {
+    auto disconnect_scoped_connects() -> void {
       _connections.clear();
     }
 
@@ -75,7 +75,7 @@ namespace base {
       _connections.push_back(conn);
     }
 
-    void track_connection(const boost::signals2::connection& conn) {
+    auto track_connection(const boost::signals2::connection& conn) -> void {
       _connections.push_back(
         std::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(conn)));
     }

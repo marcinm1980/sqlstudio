@@ -52,7 +52,7 @@ model_Layer::ImplData::~ImplData() {
   unrealize();
 }
 
-void model_Layer::ImplData::unrealize() {
+auto model_Layer::ImplData::unrealize() -> void {
   if (_area_group) {
     if (is_canvas_view_valid())
       get_canvas_view()->lock();
@@ -78,7 +78,7 @@ void model_Layer::ImplData::unrealize() {
   }
 }
 
-void model_Layer::ImplData::raise_figure(const model_FigureRef &figure) {
+auto model_Layer::ImplData::raise_figure(const model_FigureRef &figure) -> void {
   _area_group->raise_item(figure->get_data()->get_canvas_item());
 
   self()->_figures.reorder(self()->_figures.get_index(figure), 0);
@@ -86,7 +86,7 @@ void model_Layer::ImplData::raise_figure(const model_FigureRef &figure) {
   figure->get_data()->get_canvas_item()->set_needs_render();
 }
 
-void model_Layer::ImplData::lower_figure(const model_FigureRef &figure) {
+auto model_Layer::ImplData::lower_figure(const model_FigureRef &figure) -> void {
   // QQQ amek sure that the stacking for this is correct
   _area_group->lower_item(figure->get_data()->get_canvas_item());
 
@@ -95,7 +95,7 @@ void model_Layer::ImplData::lower_figure(const model_FigureRef &figure) {
   figure->get_data()->get_canvas_item()->set_needs_render();
 }
 
-void model_Layer::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) {
+auto model_Layer::ImplData::member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void {
   if (!_area_group) {
     if (name == "name" && _in_view)
       (*self()->owner()->signal_refreshDisplay())(self());
@@ -160,7 +160,7 @@ void model_Layer::ImplData::member_changed(const std::string &name, const grt::V
 
 //--------------------------------------------------------------------------------------------------
 
-mdc::CanvasView *model_Layer::ImplData::get_canvas_view() const {
+auto model_Layer::ImplData::get_canvas_view() const -> mdc::CanvasView * {
   model_Diagram::ImplData *view = self()->owner()->get_data();
 
   if (view)
@@ -171,7 +171,7 @@ mdc::CanvasView *model_Layer::ImplData::get_canvas_view() const {
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Layer::ImplData::is_canvas_view_valid() {
+auto model_Layer::ImplData::is_canvas_view_valid() -> bool {
   if (self()->owner().is_valid()) {
     model_Diagram::ImplData *view = self()->owner()->get_data();
 
@@ -183,13 +183,13 @@ bool model_Layer::ImplData::is_canvas_view_valid() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Layer::ImplData::is_realizable() {
+auto model_Layer::ImplData::is_realizable() -> bool {
   return _in_view && *self()->_width > 0 && *self()->_height > 0 && is_canvas_view_valid();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool model_Layer::ImplData::realize() {
+auto model_Layer::ImplData::realize() -> bool {
   if (!is_realizable() || _area_group)
     return false;
 
@@ -261,7 +261,7 @@ bool model_Layer::ImplData::realize() {
   return true;
 }
 
-void model_Layer::ImplData::layer_bounds_changed(const Rect &rect) {
+auto model_Layer::ImplData::layer_bounds_changed(const Rect &rect) -> void {
   Rect bounds = _area_group->get_bounds();
   bool moved = false;
   bool resized = false;
@@ -305,7 +305,7 @@ void model_Layer::ImplData::layer_bounds_changed(const Rect &rect) {
   }
 }
 
-void model_Layer::ImplData::interactive_layer_resized(const Rect &rect) {
+auto model_Layer::ImplData::interactive_layer_resized(const Rect &rect) -> void {
   Rect bounds = get_canvas_item()->get_bounds();
 
   model_Model::ImplData *model = self()->owner()->owner()->get_data();
@@ -323,7 +323,7 @@ void model_Layer::ImplData::interactive_layer_resized(const Rect &rect) {
   undo.end(base::strfmt("Resize '%s'", self()->_name.c_str()));
 }
 
-void model_Layer::ImplData::render_mini(mdc::CairoCtx *cr) {
+auto model_Layer::ImplData::render_mini(mdc::CairoCtx *cr) -> void {
   cr->save();
   cr->set_operator(CAIRO_OPERATOR_OVER);
   cr->set_color(Color::parse(*self()->_color), LAYER_ALPHA);

@@ -45,7 +45,7 @@ RolePrivilegeListWrapper::RolePrivilegeListWrapper(::bec::RolePrivilegeListBE *i
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::RolePrivilegeListBE *RolePrivilegeListWrapper::get_unmanaged_object() {
+auto RolePrivilegeListWrapper::get_unmanaged_object() -> ::bec::RolePrivilegeListBE * {
   return static_cast<::bec::RolePrivilegeListBE *>(inner);
 }
 
@@ -56,7 +56,7 @@ RoleObjectListWrapper::RoleObjectListWrapper(::bec::RoleObjectListBE *inn) : MyS
 
 //--------------------------------------------------------------------------------------------------
 
-bec::RoleObjectListBE *RoleObjectListWrapper::get_unmanaged_object() {
+auto RoleObjectListWrapper::get_unmanaged_object() -> bec::RoleObjectListBE * {
   return static_cast<::bec::RoleObjectListBE *>(inner);
 }
 
@@ -85,13 +85,13 @@ RoleEditorBE::~RoleEditorBE() {
 
 //--------------------------------------------------------------------------------------------------
 
-bec::RoleEditorBE *RoleEditorBE::get_unmanaged_object() {
+auto RoleEditorBE::get_unmanaged_object() -> bec::RoleEditorBE * {
   return static_cast<::bec::RoleEditorBE *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ RoleEditorBE::get_name() {
+auto RoleEditorBE::get_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_name());
 }
 
@@ -109,31 +109,31 @@ void RoleEditorBE::set_parent_role(String ^ name) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ RoleEditorBE::get_parent_role() {
+auto RoleEditorBE::get_parent_role() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_parent_role());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-RoleTreeBE ^ RoleEditorBE::get_role_tree() {
+auto RoleEditorBE::get_role_tree() -> RoleTreeBE ^ {
   return gcnew RoleTreeBE(get_unmanaged_object()->get_role_tree());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-List<String ^> ^ RoleEditorBE::get_role_list() {
+auto RoleEditorBE::get_role_list() -> List<String ^> ^ {
   return CppStringListToNative(get_unmanaged_object()->get_role_list());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-RolePrivilegeListWrapper ^ RoleEditorBE::get_privilege_list() {
+auto RoleEditorBE::get_privilege_list() -> RolePrivilegeListWrapper ^ {
   return gcnew RolePrivilegeListWrapper(get_unmanaged_object()->get_privilege_list());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-RoleObjectListWrapper ^ RoleEditorBE::get_object_list() {
+auto RoleEditorBE::get_object_list() -> RoleObjectListWrapper ^ {
   return gcnew RoleObjectListWrapper(get_unmanaged_object()->get_object_list());
 }
 

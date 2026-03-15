@@ -55,8 +55,8 @@ namespace mforms {
     virtual base::Rect getAccessibilityBounds() override;
     virtual Accessible *accessibilityHitTest(ssize_t x, ssize_t y) override;
 
-    void updateColors();
-    void updateIcons();
+    auto updateColors() -> void;
+    auto updateIcons() -> void;
 
   private:
     int _totalHeight = 100; // Arbitrary initial value, til our computation is done.
@@ -136,18 +136,18 @@ namespace mforms {
     ConnectionsWelcomeScreen *_welcomeScreen;
     mforms::Box *_container;
 
-    ConnectionVector const &displayed_connections() const;
+    auto displayed_connections() const -> ConnectionVector const &;
 
     virtual void updateColors() override;
     virtual void updateIcons() override;
 
-    void on_search_text_changed();
-    void on_search_text_action(mforms::TextEntryAction action);
-    ssize_t calculate_index_from_point(int x, int y);
-    std::shared_ptr<ConnectionEntry> entry_from_point(int x, int y) const;
-    std::shared_ptr<ConnectionEntry> entry_from_index(ssize_t index) const;
-    base::Rect bounds_for_entry(size_t index, size_t width);
-    std::string connectionIdFromIndex(ssize_t index);
+    auto on_search_text_changed() -> void;
+    auto on_search_text_action(mforms::TextEntryAction action) -> void;
+    auto calculate_index_from_point(int x, int y) -> ssize_t;
+    auto entry_from_point(int x, int y) const -> std::shared_ptr<ConnectionEntry>;
+    auto entry_from_index(ssize_t index) const -> std::shared_ptr<ConnectionEntry>;
+    auto bounds_for_entry(size_t index, size_t width) -> base::Rect;
+    auto connectionIdFromIndex(ssize_t index) -> std::string;
 
     void repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) override;
 
@@ -158,12 +158,12 @@ namespace mforms {
     virtual bool mouse_leave() override;
     virtual bool mouse_move(mforms::MouseButton button, int x, int y) override;
 
-    void handle_command(const std::string &command);
-    void handle_folder_command(const std::string &command);
+    auto handle_command(const std::string &command) -> void;
+    auto handle_folder_command(const std::string &command) -> void;
 
-    void menu_open();
+    auto menu_open() -> void;
 
-    void change_to_folder(std::shared_ptr<FolderEntry> folder);
+    auto change_to_folder(std::shared_ptr<FolderEntry> folder) -> void;
 
     virtual std::string getAccessibilityTitle() override;
     virtual size_t getAccessibilityChildCount() override;
@@ -171,7 +171,7 @@ namespace mforms {
     virtual Accessible::Role getAccessibilityRole() override;
 
     virtual base::Accessible *accessibilityHitTest(ssize_t x, ssize_t y) override;
-    bool do_tile_drag(ssize_t index, int x, int y);
+    auto do_tile_drag(ssize_t index, int x, int y) -> bool;
 
     mforms::DragOperation drag_over(View *sender, base::Point p, mforms::DragOperation allowedOperations,
                                     const std::vector<std::string> &formats) override;
@@ -194,9 +194,9 @@ namespace mforms {
     ConnectionsSection(HomeScreen *owner);
     ~ConnectionsSection();
 
-    void clear_connections(bool clear_state = true);
-    void focus_search_box();
-    void showWelcomeHeading(bool state = true);
+    auto clear_connections(bool clear_state = true) -> void;
+    auto focus_search_box() -> void;
+    auto showWelcomeHeading(bool state = true) -> void;
 
     virtual base::Size getLayoutSize(base::Size proposedSize) override;
     virtual const char *getTitle() override;
@@ -208,11 +208,11 @@ namespace mforms {
 
     std::function<anyMap(const std::string &)> getConnectionInfoCallback;
 
-    void addConnection(const std::string &connectionId, const std::string &title, const std::string &description,
-                       const std::string &user, const std::string &schema);
+    auto addConnection(const std::string &connectionId, const std::string &title, const std::string &description,
+                       const std::string &user, const std::string &schema) -> void;
 
-    void updateFocusableAreas();
-    bool setFocusOnEntry(ConnectionEntry const *entry);
+    auto updateFocusableAreas() -> void;
+    auto setFocusOnEntry(ConnectionEntry const *entry) -> bool;
 
     virtual mforms::View *getContainer() override;
     virtual mforms::View *get_parent() const override;

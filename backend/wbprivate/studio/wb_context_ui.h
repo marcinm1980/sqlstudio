@@ -79,98 +79,98 @@ namespace wb {
 
   class MYSQLWBBACKEND_PUBLIC_FUNC WBContextUI : public base::trackable {
   public:
-    static std::shared_ptr<WBContextUI> get(); // Singleton.
-    void cleanUp();
-    void reinit();
+    static auto get() -> std::shared_ptr<WBContextUI>; // Singleton.
+    auto cleanUp() -> void;
+    auto reinit() -> void;
     virtual ~WBContextUI();
 
-    bool init(WBFrontendCallbacks *callbacks, WBOptions *options);
+    auto init(WBFrontendCallbacks *callbacks, WBOptions *options) -> bool;
 
     // must be called when the frontend window is already on screen
-    void init_finish(WBOptions *options);
+    auto init_finish(WBOptions *options) -> void;
 
-    void finalize();
+    auto finalize() -> void;
 
-    bool request_quit();
-    void perform_quit();
-    bool is_quitting() {
+    auto request_quit() -> bool;
+    auto perform_quit() -> void;
+    auto is_quitting() -> bool {
       return _quitting;
     };
 
-    void reset();
+    auto reset() -> void;
 
-    WBContext *get_wb() {
+    auto get_wb() -> WBContext * {
       return _wb;
     }
-    CommandUI *get_command_ui() {
+    auto get_command_ui() -> CommandUI * {
       return _command_ui;
     }
 
     // form/panel backends
-    PhysicalOverviewBE *get_physical_overview();
+    auto get_physical_overview() -> PhysicalOverviewBE *;
 
-    bec::ValueInspectorBE *create_inspector_for_selection(bec::UIForm *form, std::vector<std::string> &items);
-    bec::ValueInspectorBE *create_inspector_for_selection(std::vector<std::string> &items);
+    auto create_inspector_for_selection(bec::UIForm *form, std::vector<std::string> &items) -> bec::ValueInspectorBE *;
+    auto create_inspector_for_selection(std::vector<std::string> &items) -> bec::ValueInspectorBE *;
 
-    std::string get_description_for_selection(bec::UIForm *form, grt::ListRef<GrtObject> &activeObjList,
-                                              std::vector<std::string> &items);
-    std::string get_description_for_selection(grt::ListRef<GrtObject> &activeObjList, std::vector<std::string> &items);
-    void set_description_for_selection(const grt::ListRef<GrtObject> &objList, const std::string &val);
+    auto get_description_for_selection(bec::UIForm *form, grt::ListRef<GrtObject> &activeObjList,
+                                              std::vector<std::string> &items) -> std::string;
+    auto get_description_for_selection(grt::ListRef<GrtObject> &activeObjList, std::vector<std::string> &items) -> std::string;
+    auto set_description_for_selection(const grt::ListRef<GrtObject> &objList, const std::string &val) -> void;
 
-    DiagramOptionsBE *create_diagram_options_be(mdc::CanvasView *view);
+    auto create_diagram_options_be(mdc::CanvasView *view) -> DiagramOptionsBE *;
 
-    GRTShellWindow *get_shell_window();
+    auto get_shell_window() -> GRTShellWindow *;
 
-    std::string get_active_diagram_info();
+    auto get_active_diagram_info() -> std::string;
 
-    void activate_figure(const grt::ValueRef &value);
+    auto activate_figure(const grt::ValueRef &value) -> void;
 
     // utility functions for user preferences
-    void get_doc_properties(std::string &caption, std::string &version, std::string &author, std::string &project,
-                            std::string &date_created, std::string &date_changed, std::string &description);
-    void set_doc_properties(const std::string &caption, const std::string &version, const std::string &author,
+    auto get_doc_properties(std::string &caption, std::string &version, std::string &author, std::string &project,
+                            std::string &date_created, std::string &date_changed, std::string &description) -> void;
+    auto set_doc_properties(const std::string &caption, const std::string &version, const std::string &author,
                             const std::string &project, const std::string &date_created,
-                            const std::string &date_changed, const std::string &description);
+                            const std::string &date_changed, const std::string &description) -> void;
 
-    std::list<WBPaperSize> get_paper_sizes(bool descr_in_inches);
-    bool add_paper_size(const std::string &name, double width, double height, bool margins, double margin_top,
-                        double margin_bottom, double margin_left, double margin_right);
+    auto get_paper_sizes(bool descr_in_inches) -> std::list<WBPaperSize>;
+    auto add_paper_size(const std::string &name, double width, double height, bool margins, double margin_top,
+                        double margin_bottom, double margin_left, double margin_right) -> bool;
 
-    std::vector<std::string> get_wb_options_keys(const std::string &model);
+    auto get_wb_options_keys(const std::string &model) -> std::vector<std::string>;
 
-    grt::DictRef get_model_options(const std::string &model_id);
+    auto get_model_options(const std::string &model_id) -> grt::DictRef;
 
-    bool get_wb_options_value(const std::string &model, const std::string &key, std::string &value);
-    void set_wb_options_value(const std::string &model, const std::string &key, const std::string &value,
-                              const grt::Type default_type = grt::AnyType);
+    auto get_wb_options_value(const std::string &model, const std::string &key, std::string &value) -> bool;
+    auto set_wb_options_value(const std::string &model, const std::string &key, const std::string &value,
+                              const grt::Type default_type = grt::AnyType) -> void;
 
-    void discard_wb_model_options(const std::string &model);
+    auto discard_wb_model_options(const std::string &model) -> void;
 
-    app_PageSettingsRef get_page_settings();
+    auto get_page_settings() -> app_PageSettingsRef;
 
     // form management
-    void register_form(bec::UIForm *form);
+    auto register_form(bec::UIForm *form) -> void;
 
-    void set_active_form(bec::UIForm *form);
-    bec::UIForm *get_active_form();
+    auto set_active_form(bec::UIForm *form) -> void;
+    auto get_active_form() -> bec::UIForm *;
 
-    bec::UIForm *get_active_main_form();
+    auto get_active_main_form() -> bec::UIForm *;
 
-    std::string get_active_context(bool main_context = true);
+    auto get_active_context(bool main_context = true) -> std::string;
 
     boost::signals2::signal<void(bec::UIForm *)> *signal_form_change() {
       return &_form_change_signal;
     }
 
     // other functionality for UI
-    std::string get_title();
-    std::string get_document_name();
+    auto get_title() -> std::string;
+    auto get_document_name() -> std::string;
 
-    void refresh_home_connections(bool clear_state = true);
-    void refresh_home_documents();
+    auto refresh_home_connections(bool clear_state = true) -> void;
+    auto refresh_home_documents() -> void;
 
-    bool start_plugin_install(const std::string &path);
-    void start_plugin_net_install(const std::string &url);
+    auto start_plugin_install(const std::string &path) -> bool;
+    auto start_plugin_net_install(const std::string &url) -> void;
 
   private:
     friend class WBContext;
@@ -178,40 +178,40 @@ namespace wb {
     WBContextUI(const WBContextUI &) = delete;
     WBContextUI &operator=(const WBContextUI &) = delete;
 
-    void load_app_options(bool update);
+    auto load_app_options(bool update) -> void;
 
-    void history_changed();
+    auto history_changed() -> void;
 
-    void overview_selection_changed();
+    auto overview_selection_changed() -> void;
     friend class WBContextModel; // for these callbacks, remove once everythign is moved there
 
-    static void *form_destroyed(void *data);
+    static auto form_destroyed(void *data) -> void *;
 
-    void refresh_editor_cb(bec::BaseEditor *editor);
+    auto refresh_editor_cb(bec::BaseEditor *editor) -> void;
 
-    void form_changed();
-    void update_current_diagram(bec::UIForm *form);
+    auto form_changed() -> void;
+    auto update_current_diagram(bec::UIForm *form) -> void;
 
-    void add_backend_builtin_commands();
+    auto add_backend_builtin_commands() -> void;
 
-    void show_about();
-    void show_home_screen();
-    void show_web_page(const std::string &url, bool internal_browser);
-    void show_help_index();
-    void showLicense();
-    void locate_log_file();
-    void show_log_file();
+    auto show_about() -> void;
+    auto show_home_screen() -> void;
+    auto show_web_page(const std::string &url, bool internal_browser) -> void;
+    auto show_help_index() -> void;
+    auto showLicense() -> void;
+    auto locate_log_file() -> void;
+    auto show_log_file() -> void;
 
-    void handle_home_action(mforms::HomeScreenAction action, const base::any &anyObject);
+    auto handle_home_action(mforms::HomeScreenAction action, const base::any &anyObject) -> void;
 
-    void remove_connection(const db_mgmt_ConnectionRef &connection);
-    void handle_home_context_menu(const base::any &object, const std::string &action);
+    auto remove_connection(const db_mgmt_ConnectionRef &connection) -> void;
+    auto handle_home_context_menu(const base::any &object, const std::string &action) -> void;
 
-    void start_plugin(const std::string &title, const std::string &command, const bec::ArgumentPool &defaults,
-                      bool force_external = false);
+    auto start_plugin(const std::string &title, const std::string &command, const bec::ArgumentPool &defaults,
+                      bool force_external = false) -> void;
 
-    db_mgmt_ConnectionRef getConnectionById(const std::string &id);
-    mforms::anyMap connectionToMap(db_mgmt_ConnectionRef connection);
+    auto getConnectionById(const std::string &id) -> db_mgmt_ConnectionRef;
+    auto connectionToMap(db_mgmt_ConnectionRef connection) -> mforms::anyMap;
 
   private:
     WBContext *_wb;

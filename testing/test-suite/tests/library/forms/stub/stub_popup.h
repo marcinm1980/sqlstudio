@@ -36,31 +36,31 @@ namespace mforms {
       PopupImpl(::mforms::WebBrowser *self) : ViewWrapper(self) {
       }
 
-      static bool create(Popup *, PopupStyle) {
+      static auto create(Popup *, PopupStyle) -> bool {
         return true;
       }
 
-      static void set_needs_repaint(Popup *) {
+      static auto set_needs_repaint(Popup *) -> void {
       }
 
-      static void set_size(Popup *, int, int) {
+      static auto set_size(Popup *, int, int) -> void {
       }
 
-      static int show(Popup *, int, int) {
+      static auto show(Popup *, int, int) -> int {
         return 0;
       }
 
-      static base::Rect get_content_rect(Popup *) {
+      static auto get_content_rect(Popup *) -> base::Rect {
         base::Rect ret_val;
 
         return ret_val;
       }
 
-      static void set_modal_result(Popup *, int result) {
+      static auto set_modal_result(Popup *, int result) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_popup_impl.create = &PopupImpl::create;

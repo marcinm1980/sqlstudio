@@ -36,9 +36,9 @@ namespace runtime {
   public:
     loop();
     virtual ~loop();
-    void run();
-    void quit();
-    bool isRunning() const;
+    auto run() -> void;
+    auto quit() -> void;
+    auto isRunning() const -> bool;
   };
 
   class app {
@@ -50,13 +50,13 @@ namespace runtime {
     app &operator=(app &) = delete;
 
   public:
-    static app &get();
+    static auto get() -> app &;
     virtual ~app();
-    void init(const std::string &name, int argc, char **argv);
-    int onCommand(const Glib::RefPtr<Gio::ApplicationCommandLine> &appCmdLine);
-    int run();
-    void quit();
-    bool isMainThread();
+    auto init(const std::string &name, int argc, char **argv) -> void;
+    auto onCommand(const Glib::RefPtr<Gio::ApplicationCommandLine> &appCmdLine) -> int;
+    auto run() -> int;
+    auto quit() -> void;
+    auto isMainThread() -> bool;
 
     std::function<void()> onActivate;
 

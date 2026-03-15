@@ -40,13 +40,13 @@ namespace grtui {
   public:
     TextInputDialog(mforms::Form *owner);
 
-    void set_description(const std::string &text);
-    void set_caption(const std::string &text);
+    auto set_description(const std::string &text) -> void;
+    auto set_caption(const std::string &text) -> void;
 
-    void set_value(const std::string &text);
-    std::string get_value();
+    auto set_value(const std::string &text) -> void;
+    auto get_value() -> std::string;
 
-    bool run();
+    auto run() -> bool;
 
   protected:
     mforms::Table _table;

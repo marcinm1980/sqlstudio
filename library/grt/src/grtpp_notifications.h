@@ -34,7 +34,7 @@ namespace grt {
   class MYSQLGRT_PUBLIC GRTObserver : public base::Observer {
   protected:
     friend class GRTNotificationCenter;
-    virtual void handle_grt_notification(const std::string &name, ObjectRef sender, DictRef info) = 0;
+    virtual auto handle_grt_notification(const std::string &name, ObjectRef sender, DictRef info) -> void = 0;
 
     virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) override;
 
@@ -53,15 +53,15 @@ namespace grt {
     std::list<GRTObserverEntry> _grt_observers;
 
   public:
-    static GRTNotificationCenter *get();
+    static auto get() -> GRTNotificationCenter *;
 
     void add_grt_observer(GRTObserver *observer, const std::string &name = "", ObjectRef object = ObjectRef());
     bool remove_grt_observer(GRTObserver *observer, const std::string &name = "", ObjectRef object = ObjectRef());
 
     // must be called from main thread only
-    void send_grt(const std::string &name, ObjectRef sender, DictRef info);
+    auto send_grt(const std::string &name, ObjectRef sender, DictRef info) -> void;
 
   public:
-    static void setup();
+    static auto setup() -> void;
   };
 };

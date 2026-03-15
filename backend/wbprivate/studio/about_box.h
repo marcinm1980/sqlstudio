@@ -41,16 +41,16 @@ namespace wb {
     std::string _edition;
 
   protected:
-    void repaint(cairo_t *cr, int x, int y, int w, int h);
-    bool mouse_up(mforms::MouseButton button, int x, int y);
+    auto repaint(cairo_t *cr, int x, int y, int w, int h) -> void;
+    auto mouse_up(mforms::MouseButton button, int x, int y) -> bool;
 
-    static void closed();
+    static auto closed() -> void;
 
   public:
     AboutBox(const std::string &edition);
     ~AboutBox();
 
-    static void show_about(const std::string &edition);
+    static auto show_about(const std::string &edition) -> void;
   };
 }
 

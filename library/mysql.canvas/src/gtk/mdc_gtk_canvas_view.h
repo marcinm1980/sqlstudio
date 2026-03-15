@@ -51,37 +51,37 @@ namespace mdc {
     GtkCanvas(CanvasType type);
     virtual ~GtkCanvas();
 
-    CanvasView *get_canvas();
+    auto get_canvas() -> CanvasView *;
 
-    mdc::EventState get_event_state(int event_state);
+    auto get_event_state(int event_state) -> mdc::EventState;
 
-    void create_canvas();
-    void set_vadjustment(const Glib::RefPtr<Gtk::Adjustment> &vadjustment);
-    void set_hadjustment(const Glib::RefPtr<Gtk::Adjustment> &hadjustment);
+    auto create_canvas() -> void;
+    auto set_vadjustment(const Glib::RefPtr<Gtk::Adjustment> &vadjustment) -> void;
+    auto set_hadjustment(const Glib::RefPtr<Gtk::Adjustment> &hadjustment) -> void;
 
   protected:
     bool redraw(::Cairo::RefPtr< ::Cairo::Context> context);
-    virtual void on_realize();
-    virtual void on_unrealize();
-    virtual void on_map();
-    virtual void on_size_allocate(Gtk::Allocation &alloc);
+    virtual auto on_realize() -> void;
+    virtual auto on_unrealize() -> void;
+    virtual auto on_map() -> void;
+    virtual auto on_size_allocate(Gtk::Allocation &alloc) -> void;
 
-    virtual bool on_scroll_event(GdkEventScroll *event);
+    virtual auto on_scroll_event(GdkEventScroll *event) -> bool;
 
-    virtual void on_zoom_in_event();
-    virtual void on_zoom_out_event();
-    virtual bool on_button_press_event(GdkEventButton *event);
-    virtual bool on_button_release_event(GdkEventButton *event);
-    virtual bool on_motion_notify_event(GdkEventMotion *event);
-    virtual bool on_event(GdkEvent *event);
-    virtual bool on_key_press_event(GdkEventKey *event);
-    virtual bool on_key_release_event(GdkEventKey *event);
+    virtual auto on_zoom_in_event() -> void;
+    virtual auto on_zoom_out_event() -> void;
+    virtual auto on_button_press_event(GdkEventButton *event) -> bool;
+    virtual auto on_button_release_event(GdkEventButton *event) -> bool;
+    virtual auto on_motion_notify_event(GdkEventMotion *event) -> bool;
+    virtual auto on_event(GdkEvent *event) -> bool;
+    virtual auto on_key_press_event(GdkEventKey *event) -> bool;
+    virtual auto on_key_release_event(GdkEventKey *event) -> bool;
 
-    void update_scrollers();
-    void scroll_canvas();
+    auto update_scrollers() -> void;
+    auto scroll_canvas() -> void;
 
     void canvas_view_needs_repaint(int, int, int, int);
-    void canvas_view_viewport_changed();
+    auto canvas_view_viewport_changed() -> void;
   };
 };
 #endif /* _MDC_GTK_CANVAS_VIEW_H_ */

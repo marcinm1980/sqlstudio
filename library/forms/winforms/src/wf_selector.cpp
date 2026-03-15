@@ -154,7 +154,7 @@ SelectorWrapper::SelectorWrapper(mforms::Selector *backend) : ViewWrapper(backen
 
 //--------------------------------------------------------------------------------------------------
 
-bool SelectorWrapper::create(mforms::Selector *backend, mforms::SelectorStyle style) {
+auto SelectorWrapper::create(mforms::Selector *backend, mforms::SelectorStyle style) -> bool {
   SelectorWrapper *wrapper = new SelectorWrapper(backend);
   MformsComboBox ^ combobox = SelectorWrapper::Create<MformsComboBox>(backend, wrapper);
 
@@ -176,14 +176,14 @@ bool SelectorWrapper::create(mforms::Selector *backend, mforms::SelectorStyle st
 
 //--------------------------------------------------------------------------------------------------
 
-void SelectorWrapper::clear(mforms::Selector *backend) {
+auto SelectorWrapper::clear(mforms::Selector *backend) -> void {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
   combobox->Items->Clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int SelectorWrapper::add_item(mforms::Selector *backend, const std::string &item) {
+auto SelectorWrapper::add_item(mforms::Selector *backend, const std::string &item) -> int {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
 
   int i;
@@ -222,7 +222,7 @@ int ComputeContentWidth(ComboBox ^ box) {
 
 //------------------------------------------------------------------------------------------------
 
-void SelectorWrapper::add_items(mforms::Selector *backend, const std::list<std::string> &items) {
+auto SelectorWrapper::add_items(mforms::Selector *backend, const std::list<std::string> &items) -> void {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
 
   cli::array<Object ^> ^ strings = gcnew cli::array<Object ^>((int)items.size());
@@ -253,14 +253,14 @@ void SelectorWrapper::add_items(mforms::Selector *backend, const std::list<std::
 
 //--------------------------------------------------------------------------------------------------
 
-std::string SelectorWrapper::get_text(mforms::Selector *backend) {
+auto SelectorWrapper::get_text(mforms::Selector *backend) -> std::string {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
   return NativeToCppStringRaw(combobox->Text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string SelectorWrapper::get_item(mforms::Selector *backend, int index) {
+auto SelectorWrapper::get_item(mforms::Selector *backend, int index) -> std::string {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
   Object ^ comboBoxItem = combobox->Items[index];
 
@@ -271,7 +271,7 @@ std::string SelectorWrapper::get_item(mforms::Selector *backend, int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SelectorWrapper::set_index(mforms::Selector *backend, int index) {
+auto SelectorWrapper::set_index(mforms::Selector *backend, int index) -> void {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
   if (index < combobox->Items->Count)
     combobox->SelectedIndex = index;
@@ -279,28 +279,28 @@ void SelectorWrapper::set_index(mforms::Selector *backend, int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-int SelectorWrapper::get_index(mforms::Selector *backend) {
+auto SelectorWrapper::get_index(mforms::Selector *backend) -> int {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
   return combobox->SelectedIndex;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int SelectorWrapper::get_item_count(mforms::Selector *backend) {
+auto SelectorWrapper::get_item_count(mforms::Selector *backend) -> int {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
   return combobox->Items->Count;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SelectorWrapper::set_value(mforms::Selector *backend, const std::string &value) {
+auto SelectorWrapper::set_value(mforms::Selector *backend, const std::string &value) -> void {
   ComboBox ^ combobox = SelectorWrapper::GetManagedObject<ComboBox>(backend);
   combobox->Text = CppStringToNativeRaw(value);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SelectorWrapper::init() {
+auto SelectorWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_selector_impl.create = &SelectorWrapper::create;

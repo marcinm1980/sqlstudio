@@ -37,11 +37,11 @@ namespace mtemplate {
   //-----------------------------------------------------------------------------------
   //  TemplateOutputString stuff
   //-----------------------------------------------------------------------------------
-  void TemplateOutputString::out(const base::utf8string &str) {
+  auto TemplateOutputString::out(const base::utf8string &str) -> void {
     _buffer += str;
   }
 
-  const base::utf8string &TemplateOutputString::get() {
+  auto TemplateOutputString::get() -> const base::utf8string & {
     return _buffer;
   }
 
@@ -51,7 +51,7 @@ namespace mtemplate {
   TemplateOutputFile::TemplateOutputFile(const base::utf8string &filename) : _file(filename.c_str(), "w+") {
   }
 
-  void TemplateOutputFile::out(const base::utf8string &str) {
+  auto TemplateOutputFile::out(const base::utf8string &str) -> void {
     fwrite(str.data(), 1, str.bytes(), _file.file());
   }
 

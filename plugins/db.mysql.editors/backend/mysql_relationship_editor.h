@@ -42,64 +42,64 @@ public: // editor interface
   enum VisibilityType { Visible = 1, Splitted = 2, Hidden = 3 };
 
   RelationshipEditorBE(const studio_physical_ConnectionRef &relationship);
-  virtual bool should_close_on_delete_of(const std::string &oid);
+  virtual auto should_close_on_delete_of(const std::string &oid) -> bool;
 
-  bool model_only() {
+  auto model_only() -> bool {
     return *get_relationship()->foreignKey()->modelOnly() == 1;
   }
-  void set_model_only(bool flag);
+  auto set_model_only(bool flag) -> void;
 
-  GrtObjectRef get_object() {
+  auto get_object() -> GrtObjectRef {
     return get_relationship();
   }
 
-  studio_physical_ConnectionRef get_relationship() {
+  auto get_relationship() -> studio_physical_ConnectionRef {
     return _relationship;
   }
 
-  virtual std::string get_title();
+  virtual auto get_title() -> std::string;
 
-  void set_caption(const std::string &caption);
-  std::string get_caption();
-  std::string get_caption_long();
+  auto set_caption(const std::string &caption) -> void;
+  auto get_caption() -> std::string;
+  auto get_caption_long() -> std::string;
 
-  void set_extra_caption(const std::string &caption);
-  std::string get_extra_caption();
-  std::string get_extra_caption_long();
+  auto set_extra_caption(const std::string &caption) -> void;
+  auto get_extra_caption() -> std::string;
+  auto get_extra_caption_long() -> std::string;
 
-  void set_left_mandatory(bool flag);
-  bool get_left_mandatory();
+  auto set_left_mandatory(bool flag) -> void;
+  auto get_left_mandatory() -> bool;
 
-  void set_right_mandatory(bool flag);
-  bool get_right_mandatory();
+  auto set_right_mandatory(bool flag) -> void;
+  auto get_right_mandatory() -> bool;
 
-  VisibilityType get_visibility();
-  void set_visibility(VisibilityType type);
+  auto get_visibility() -> VisibilityType;
+  auto set_visibility(VisibilityType type) -> void;
 
-  void open_editor_for_table(const db_TableRef &table);
-  void open_editor_for_left_table();
-  void open_editor_for_right_table();
+  auto open_editor_for_table(const db_TableRef &table) -> void;
+  auto open_editor_for_left_table() -> void;
+  auto open_editor_for_right_table() -> void;
 
-  void set_to_many(bool flag);
-  bool get_to_many();
+  auto set_to_many(bool flag) -> void;
+  auto get_to_many() -> bool;
 
-  bool get_is_identifying();
-  void set_is_identifying(bool flag);
+  auto get_is_identifying() -> bool;
+  auto set_is_identifying(bool flag) -> void;
 
-  void set_comment(const std::string &comment);
-  std::string get_comment();
+  auto set_comment(const std::string &comment) -> void;
+  auto get_comment() -> std::string;
 
-  std::string get_left_table_name();
-  std::string get_right_table_name();
+  auto get_left_table_name() -> std::string;
+  auto get_right_table_name() -> std::string;
 
-  std::string get_left_table_fk();
+  auto get_left_table_fk() -> std::string;
 
-  std::string get_left_table_info();
-  std::string get_right_table_info();
+  auto get_left_table_info() -> std::string;
+  auto get_right_table_info() -> std::string;
 
-  void edit_left_table();
-  void edit_right_table();
-  void invert_relationship();
+  auto edit_left_table() -> void;
+  auto edit_right_table() -> void;
+  auto invert_relationship() -> void;
 };
 
 #endif /* _EDITOR_RELATIONSHIP_H_ */

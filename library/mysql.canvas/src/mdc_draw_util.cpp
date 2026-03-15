@@ -33,7 +33,7 @@ using namespace base;
 
 namespace mdc {
 
-  void draw_shadow(CairoCtx *cr, const Rect &around_rect, const Color &color) {
+  auto draw_shadow(CairoCtx *cr, const Rect &around_rect, const Color &color) -> void {
     cairo_pattern_t *pat;
 
     // right
@@ -117,7 +117,7 @@ namespace mdc {
   /**
    * Draws a rectangular shadow around the given rectangle using OpenGL.
    */
-  void draw_shadow_gl(const Rect &bounds, const Color &color) {
+  auto draw_shadow_gl(const Rect &bounds, const Color &color) -> void {
 #ifndef __APPLE__
     double small_offset = 15;
     double large_offset = 50;
@@ -181,7 +181,7 @@ namespace mdc {
 
   //--------------------------------------------------------------------------------------------------
 
-  void draw_glow(CairoCtx *cr, const Rect &around_rect, const Color &color) {
+  auto draw_glow(CairoCtx *cr, const Rect &around_rect, const Color &color) -> void {
     cr->save();
     cr->set_color(color, 0.6);
     cr->set_line_width(5);
@@ -190,7 +190,7 @@ namespace mdc {
     cr->restore();
   }
 
-  void fill_hollow_rectangle(CairoCtx *cr, const Rect &outer_rect, const Rect &inner_rect) {
+  auto fill_hollow_rectangle(CairoCtx *cr, const Rect &outer_rect, const Rect &inner_rect) -> void {
     cr->rectangle(outer_rect.left(), outer_rect.top(), outer_rect.width(), inner_rect.top() - outer_rect.top());
 
     cr->rectangle(outer_rect.left(), inner_rect.bottom(), outer_rect.width(),
@@ -204,7 +204,7 @@ namespace mdc {
     cr->fill();
   }
 
-  void stroke_rounded_rectangle(CairoCtx *cr, const Rect &rect, CornerMask corners, float corner_radius, float offset) {
+  auto stroke_rounded_rectangle(CairoCtx *cr, const Rect &rect, CornerMask corners, float corner_radius, float offset) -> void {
     Rect bounds = rect;
 
     bounds.pos.x += 0.5 - offset;
@@ -255,7 +255,7 @@ namespace mdc {
   /**
    * Blurs the content of the given surface, e.g. to use it as shadow.
    */
-  void cairo_image_surface_blur(cairo_surface_t *surface, double radius) {
+  auto cairo_image_surface_blur(cairo_surface_t *surface, double radius) -> void {
     // Steve Hanov, 2009
     // Released into the public domain.
 
@@ -326,7 +326,7 @@ namespace mdc {
   /**
    * Draws a rounded rectangle in OpenGL.
    */
-  void stroke_rounded_rectangle_gl(const Rect &rect, CornerMask corners, float corner_radius, float offset) {
+  auto stroke_rounded_rectangle_gl(const Rect &rect, CornerMask corners, float corner_radius, float offset) -> void {
     Rect bounds = rect;
 
     double x = (double)bounds.pos.x + offset;
@@ -393,7 +393,7 @@ namespace mdc {
   /**
    * Convenience function to set an OpenGL color.
    */
-  void gl_setcolor(const Color &color) {
+  auto gl_setcolor(const Color &color) -> void {
     glColor4d(color.red, color.green, color.blue, color.alpha);
   }
 
@@ -402,13 +402,13 @@ namespace mdc {
   /**
    * Overload that allows to override a color's alpha value.
    */
-  void gl_setcolor(const Color &color, double alpha) {
+  auto gl_setcolor(const Color &color, double alpha) -> void {
     glColor4d(color.red, color.green, color.blue, alpha);
   }
 
   //--------------------------------------------------------------------------------------------------
 
-  void gl_rectangle(double x, double y, double w, double h, bool filled) {
+  auto gl_rectangle(double x, double y, double w, double h, bool filled) -> void {
     if (filled)
       glBegin(GL_QUADS);
     else
@@ -422,7 +422,7 @@ namespace mdc {
 
   //--------------------------------------------------------------------------------------------------
 
-  void gl_rectangle(const Rect &rect, bool filled) {
+  auto gl_rectangle(const Rect &rect, bool filled) -> void {
     if (filled)
       glBegin(GL_QUADS);
     else
@@ -436,7 +436,7 @@ namespace mdc {
 
   //--------------------------------------------------------------------------------------------------
 
-  void gl_box(const Rect &rect, Color &border_color, Color &fill_color) {
+  auto gl_box(const Rect &rect, Color &border_color, Color &fill_color) -> void {
     // Interior first.
     gl_setcolor(fill_color);
     gl_rectangle(rect, true);
@@ -455,7 +455,7 @@ namespace mdc {
   /**
    * Draws a polygon from the given vertices, either filled or not.
    */
-  void gl_polygon(const Point vertices[], int size, bool filled) {
+  auto gl_polygon(const Point vertices[], int size, bool filled) -> void {
     if (filled)
       glBegin(GL_POLYGON);
     else
@@ -473,7 +473,7 @@ namespace mdc {
    * Note: due to restrictions in OpenGL the given points must form a convex polygon or the output is wrong.
    *       If we ever need any type of polygons we have to implement polygon splitting (e.g. "ear clipping").
    */
-  void gl_polygon(const Point vertices[], int size, const Color &border_color, const Color &fill_color) {
+  auto gl_polygon(const Point vertices[], int size, const Color &border_color, const Color &fill_color) -> void {
     gl_setcolor(fill_color);
     gl_polygon(vertices, size, true);
 
@@ -488,7 +488,7 @@ namespace mdc {
    * and specify at which angle the arc starts and ends (measured from the positive x axis).
    * The arc is drawn clockwise and optionally filled. A filled arc is implicitly closed.
    */
-  void gl_arc(double x, double y, double radius, double start, double end, bool filled) {
+  auto gl_arc(double x, double y, double radius, double start, double end, bool filled) -> void {
     if (filled)
       glBegin(GL_POLYGON);
     else

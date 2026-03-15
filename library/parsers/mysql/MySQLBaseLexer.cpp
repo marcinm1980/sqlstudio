@@ -44,7 +44,7 @@ MySQLBaseLexer::MySQLBaseLexer(CharStream *input) : Lexer(input) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySQLBaseLexer::reset() {
+auto MySQLBaseLexer::reset() -> void {
   inVersionComment = false;
   Lexer::reset();
 }
@@ -55,7 +55,7 @@ void MySQLBaseLexer::reset() {
  * Returns true if the given token is an identifier. This includes all those keywords that are
  * allowed as identifiers when unquoted (non-reserved keywords).
  */
-bool MySQLBaseLexer::isIdentifier(size_t type) const {
+auto MySQLBaseLexer::isIdentifier(size_t type) const -> bool {
   if (type == MySQLLexer::EOF)
     return false;
 
@@ -75,7 +75,7 @@ bool MySQLBaseLexer::isIdentifier(size_t type) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLBaseLexer::keywordFromText(std::string const& name) {
+auto MySQLBaseLexer::keywordFromText(std::string const& name) -> size_t {
   // (My)SQL only uses ASCII chars for keywords so we can do a simple downcase here for comparison.
   std::string transformed;
   std::transform(name.begin(), name.end(), std::back_inserter(transformed), ::tolower);
@@ -103,7 +103,7 @@ size_t MySQLBaseLexer::keywordFromText(std::string const& name) {
 /**
  *  Helper for the query type determination.
  */
-std::unique_ptr<antlr4::Token> MySQLBaseLexer::nextDefaultChannelToken() {
+auto MySQLBaseLexer::nextDefaultChannelToken() -> std::unique_ptr<antlr4::Token> {
   do {
     std::unique_ptr<Token> token = nextToken();
     if (token->getChannel() == ParserToken::DEFAULT_CHANNEL)
@@ -119,7 +119,7 @@ std::unique_ptr<antlr4::Token> MySQLBaseLexer::nextDefaultChannelToken() {
  *  On entry the DEFINER symbol has been already consumed.
  *  If the syntax is wrong false is returned and the token source state is undetermined.
  */
-bool MySQLBaseLexer::skipDefiner(std::unique_ptr<antlr4::Token> &token) {
+auto MySQLBaseLexer::skipDefiner(std::unique_ptr<antlr4::Token> &token) -> bool {
   token = nextDefaultChannelToken();
   if (token->getType() != MySQLLexer::EQUAL_OPERATOR)
     return false;
@@ -162,7 +162,7 @@ bool MySQLBaseLexer::skipDefiner(std::unique_ptr<antlr4::Token> &token) {
 
 //--------------------------------------------------------------------------------------------------
 
-MySQLQueryType MySQLBaseLexer::determineQueryType() {
+auto MySQLBaseLexer::determineQueryType() -> MySQLQueryType {
   std::unique_ptr<Token> token = nextDefaultChannelToken();
   if (token->getType() == Token::EOF)
     return QtUnknown;
@@ -871,7 +871,7 @@ MySQLQueryType MySQLBaseLexer::determineQueryType() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLBaseLexer::isRelation(size_t type) {
+auto MySQLBaseLexer::isRelation(size_t type) -> bool {
   switch (type) {
     case MySQLLexer::EQUAL_OPERATOR:
     case MySQLLexer::ASSIGN_OPERATOR:
@@ -916,7 +916,7 @@ bool MySQLBaseLexer::isRelation(size_t type) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLBaseLexer::isNumber(size_t type) {
+auto MySQLBaseLexer::isNumber(size_t type) -> bool {
   switch (type) {
     case MySQLLexer::INT_NUMBER:
     case MySQLLexer::LONG_NUMBER:
@@ -934,7 +934,7 @@ bool MySQLBaseLexer::isNumber(size_t type) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLBaseLexer::isOperator(size_t type) {
+auto MySQLBaseLexer::isOperator(size_t type) -> bool {
   switch (type) {
     case MySQLLexer::EQUAL_OPERATOR:
     case MySQLLexer::ASSIGN_OPERATOR:
@@ -981,7 +981,7 @@ bool MySQLBaseLexer::isOperator(size_t type) {
 /**
  * Allow a grammar rule to emit as many tokens as it needs.
  */
-std::unique_ptr<antlr4::Token> MySQLBaseLexer::nextToken() {
+auto MySQLBaseLexer::nextToken() -> std::unique_ptr<antlr4::Token> {
   // First respond with pending tokens to the next token request, if there are any.
   if (!_pendingTokens.empty()) {
     auto pending = std::move(_pendingTokens.front());
@@ -1003,7 +1003,7 @@ std::unique_ptr<antlr4::Token> MySQLBaseLexer::nextToken() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLBaseLexer::checkVersion(const std::string &text) {
+auto MySQLBaseLexer::checkVersion(const std::string &text) -> bool {
   if (text.size() < 8) // Minimum is: /*!12345
     return false;
 
@@ -1018,7 +1018,7 @@ bool MySQLBaseLexer::checkVersion(const std::string &text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLBaseLexer::determineFunction(size_t proposed) {
+auto MySQLBaseLexer::determineFunction(size_t proposed) -> size_t {
   // Skip any whitespace character if the sql mode says they should be ignored,
   // before actually trying to match the open parenthesis.
   if (isSqlModeActive(IgnoreSpace)) {
@@ -1036,7 +1036,7 @@ size_t MySQLBaseLexer::determineFunction(size_t proposed) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLBaseLexer::determineNumericType(const std::string &text) {
+auto MySQLBaseLexer::determineNumericType(const std::string &text) -> size_t {
   static const char *long_str = "2147483647";
   static const unsigned long_len = 10;
   static const char *signed_long_str = "-2147483648";
@@ -1118,7 +1118,7 @@ size_t MySQLBaseLexer::determineNumericType(const std::string &text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-size_t MySQLBaseLexer::checkCharset(const std::string &text) {
+auto MySQLBaseLexer::checkCharset(const std::string &text) -> size_t {
   return charsets.count(text) > 0 ? MySQLLexer::UNDERSCORE_CHARSET : MySQLLexer::IDENTIFIER;
 }
 
@@ -1127,7 +1127,7 @@ size_t MySQLBaseLexer::checkCharset(const std::string &text) {
 /**
  * Puts a DOT token onto the pending token list.
  */
-void MySQLBaseLexer::emitDot() {
+auto MySQLBaseLexer::emitDot() -> void {
   _pendingTokens.emplace_back(_factory->create({this, _input}, MySQLLexer::DOT_SYMBOL, _text, channel,
                                                tokenStartCharIndex, tokenStartCharIndex, tokenStartLine,
                                                tokenStartCharPositionInLine));

@@ -65,7 +65,7 @@ namespace MySQL {
         return get_unmanaged_object()->get_column_enabled(*node->get_unmanaged_object());
       }
 
-      int IndexColumnsListWrapper::get_max_order_index() {
+      auto IndexColumnsListWrapper::get_max_order_index() -> int {
         return (int)get_unmanaged_object()->get_max_order_index();
       }
 
@@ -76,7 +76,7 @@ namespace MySQL {
       IndexListWrapper::IndexListWrapper(bec::IndexListBE *inn) : ListModelWrapper(inn) {
       }
 
-      IndexColumnsListWrapper ^ IndexListWrapper::get_columns() {
+      auto IndexListWrapper::get_columns() -> IndexColumnsListWrapper ^ {
         return gcnew IndexColumnsListWrapper(get_unmanaged_object()->get_columns());
       }
 
@@ -120,19 +120,19 @@ namespace MySQL {
         get_unmanaged_object()->select_fk(*node->get_unmanaged_object());
       }
 
-      FKConstraintColumnsListWrapper ^ FKConstraintListWrapper::get_columns() {
+      auto FKConstraintListWrapper::get_columns() -> FKConstraintColumnsListWrapper ^ {
         return gcnew FKConstraintColumnsListWrapper(get_unmanaged_object()->get_columns());
       }
 
-      IndexListWrapper ^ TableEditorWrapper::get_indexes() {
+      auto TableEditorWrapper::get_indexes() -> IndexListWrapper ^ {
         return gcnew IndexListWrapper(get_unmanaged_object()->get_indexes());
       }
 
-      FKConstraintListWrapper ^ TableEditorWrapper::get_fks() {
+      auto TableEditorWrapper::get_fks() -> FKConstraintListWrapper ^ {
         return gcnew FKConstraintListWrapper(get_unmanaged_object()->get_fks());
       }
 
-      Control ^ TableEditorWrapper::get_inserts_panel() {
+      auto TableEditorWrapper::get_inserts_panel() -> Control ^ {
         mforms::View *view = get_unmanaged_object()->get_inserts_panel();
 
         return dynamic_cast<Control ^>(MySQL::Forms::ObjectMapper::GetManagedComponent(view));
@@ -180,7 +180,7 @@ namespace MySQL {
         return gcnew NodeIdWrapper(&get_unmanaged_object()->add_index_with_columns(node_vec));
       }
 
-      List<String ^> ^ TableEditorWrapper::get_index_types() {
+      auto TableEditorWrapper::get_index_types() -> List<String ^> ^ {
         return CppStringListToNative(static_cast<bec::TableEditorBE *>(inner)->get_index_types());
       }
 

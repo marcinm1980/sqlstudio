@@ -72,13 +72,13 @@ void SqlEditorWrapper::set_result_docking_delegate(ManagedDockDelegate ^ theDele
 
 //--------------------------------------------------------------------------------------------------
 
-Control ^ SqlEditorWrapper::get_editor_container() {
+auto SqlEditorWrapper::get_editor_container() -> Control ^ {
   return dynamic_cast<Control ^>(ObjectMapper::GetManagedComponent(_ref->get_container()));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Control ^ SqlEditorWrapper::get_editor_control() {
+auto SqlEditorWrapper::get_editor_control() -> Control ^ {
   return dynamic_cast<Control ^>(ObjectMapper::GetManagedComponent(_ref->get_editor_control()));
 }
 
@@ -113,7 +113,7 @@ void SqlEditorWrapper::set_language(String ^ language) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorWrapper::focus() {
+auto SqlEditorWrapper::focus() -> void {
   _ref->focus();
 }
 

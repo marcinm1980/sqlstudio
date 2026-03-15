@@ -44,7 +44,7 @@ public:
   };
 
   typedef std::shared_ptr<Recordset_cdbc_storage> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Recordset_cdbc_storage());
   }
   virtual ~Recordset_cdbc_storage();
@@ -53,43 +53,43 @@ protected:
   Recordset_cdbc_storage();
 
 protected:
-  virtual void do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db);
-  virtual void do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
-                                   sqlite::variant_t &blob_value);
+  virtual auto do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void;
+  virtual auto do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid, ColumnId column,
+                                   sqlite::variant_t &blob_value) -> void;
 
 protected:
-  virtual void run_sql_script(const Sql_script &sql_script, bool skip_transaction);
+  virtual auto run_sql_script(const Sql_script &sql_script, bool skip_transaction) -> void;
 
 public:
-  std::string decorated_sql_query(); // adds limit clause if defined by options
+  auto decorated_sql_query() -> std::string; // adds limit clause if defined by options
 
 public:
-  void setAuxConnectionGetter(
-    std::function<base::RecMutexLock(sql::Dbc_connection_handler::Ref &, bool)> getConnection) {
+  auto setAuxConnectionGetter(
+    std::function<base::RecMutexLock(sql::Dbc_connection_handler::Ref &, bool)> getConnection) -> void {
     _getAuxConnection = getConnection;
   };
-  void setUserConnectionGetter(
-    std::function<base::RecMutexLock(sql::Dbc_connection_handler::Ref &, bool)> getConnection) {
+  auto setUserConnectionGetter(
+    std::function<base::RecMutexLock(sql::Dbc_connection_handler::Ref &, bool)> getConnection) -> void {
     _getUserConnection = getConnection;
   };
 
-  void dbc_resultset(std::shared_ptr<sql::ResultSet> &value) {
+  auto dbc_resultset(std::shared_ptr<sql::ResultSet> &value) -> void {
     _dbc_resultset = value;
   }
-  void dbc_statement(std::shared_ptr<sql::Statement> &value) {
+  auto dbc_statement(std::shared_ptr<sql::Statement> &value) -> void {
     _dbc_statement = value;
   }
-  bool reloadable() const {
+  auto reloadable() const -> bool {
     return _reloadable;
   }
-  void reloadable(bool val) {
+  auto reloadable(bool val) -> void {
     _reloadable = val;
   }
 
-  void set_gather_field_info(bool flag) {
+  auto set_gather_field_info(bool flag) -> void {
     _gather_field_info = flag;
   }
-  std::vector<FieldInfo> &field_info() {
+  auto field_info() -> std::vector<FieldInfo> & {
     return _field_info;
   }
 
@@ -103,8 +103,8 @@ private:
   bool _reloadable; // whether can be reloaded using stored sql query
   bool _gather_field_info;
 
-  size_t determine_pkey_columns(Recordset::Column_names &column_names, Recordset::Column_types &column_types,
-                                Recordset::Column_types &real_column_types);
-  size_t determine_pkey_columns_alt(Recordset::Column_names &column_names, Recordset::Column_types &column_types,
-                                    Recordset::Column_types &real_column_types);
+  auto determine_pkey_columns(Recordset::Column_names &column_names, Recordset::Column_types &column_types,
+                                Recordset::Column_types &real_column_types) -> size_t;
+  auto determine_pkey_columns_alt(Recordset::Column_names &column_names, Recordset::Column_types &column_types,
+                                    Recordset::Column_types &real_column_types) -> size_t;
 };

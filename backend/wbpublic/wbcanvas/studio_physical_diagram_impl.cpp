@@ -38,9 +38,9 @@ using namespace base;
 studio_physical_Diagram::ImplData::ImplData(studio_physical_Diagram *owner) : super(owner) {
 }
 
-studio_physical_LayerRef studio_physical_Diagram::ImplData::place_new_layer(double x, double y, double width,
+auto studio_physical_Diagram::ImplData::place_new_layer(double x, double y, double width,
                                                                                   double height,
-                                                                                  const std::string &name) {
+                                                                                  const std::string &name) -> studio_physical_LayerRef {
   studio_physical_LayerRef layer(grt::Initialized);
   bool skip_undo = !self()->is_global();
   grt::AutoUndo undo(skip_undo);
@@ -80,8 +80,8 @@ studio_physical_LayerRef studio_physical_Diagram::ImplData::place_new_layer(doub
   return layer;
 }
 
-studio_physical_TableFigureRef studio_physical_Diagram::ImplData::place_table(const db_TableRef &table, double x,
-                                                                                    double y) {
+auto studio_physical_Diagram::ImplData::place_table(const db_TableRef &table, double x,
+                                                                                    double y) -> studio_physical_TableFigureRef {
   studio_physical_TableFigureRef figure(grt::Initialized);
   bool skip_undo = !self()->is_global();
   grt::AutoUndo undo(skip_undo);
@@ -103,8 +103,8 @@ studio_physical_TableFigureRef studio_physical_Diagram::ImplData::place_table(co
   return figure;
 }
 
-studio_physical_RoutineGroupFigureRef studio_physical_Diagram::ImplData::place_routine_group(
-  const db_RoutineGroupRef &rgroup, double x, double y) {
+auto studio_physical_Diagram::ImplData::place_routine_group(
+  const db_RoutineGroupRef &rgroup, double x, double y) -> studio_physical_RoutineGroupFigureRef {
   studio_physical_RoutineGroupFigureRef figure(grt::Initialized);
   bool skip_undo = !self()->is_global();
   grt::AutoUndo undo(skip_undo);
@@ -124,8 +124,8 @@ studio_physical_RoutineGroupFigureRef studio_physical_Diagram::ImplData::place_r
   return figure;
 }
 
-studio_physical_ViewFigureRef studio_physical_Diagram::ImplData::place_view(const db_ViewRef &view, double x,
-                                                                                  double y) {
+auto studio_physical_Diagram::ImplData::place_view(const db_ViewRef &view, double x,
+                                                                                  double y) -> studio_physical_ViewFigureRef {
   studio_physical_ViewFigureRef figure(grt::Initialized);
   bool skip_undo = !self()->is_global();
   grt::AutoUndo undo(skip_undo);
@@ -145,7 +145,7 @@ studio_physical_ViewFigureRef studio_physical_Diagram::ImplData::place_view(cons
   return figure;
 }
 
-model_FigureRef studio_physical_Diagram::ImplData::get_figure_for_dbobject(const db_DatabaseObjectRef &obj) {
+auto studio_physical_Diagram::ImplData::get_figure_for_dbobject(const db_DatabaseObjectRef &obj) -> model_FigureRef {
   if (obj.is_valid()) {
     std::map<std::string, model_FigureRef>::iterator iter;
 
@@ -157,17 +157,17 @@ model_FigureRef studio_physical_Diagram::ImplData::get_figure_for_dbobject(const
   return model_FigureRef();
 }
 
-void studio_physical_Diagram::ImplData::add_mapping(const db_DatabaseObjectRef &object,
-                                                       const model_FigureRef &figure) {
+auto studio_physical_Diagram::ImplData::add_mapping(const db_DatabaseObjectRef &object,
+                                                       const model_FigureRef &figure) -> void {
   _dbobject_to_figure[object.id()] = figure;
 }
 
-void studio_physical_Diagram::ImplData::remove_mapping(const db_DatabaseObjectRef &object) {
+auto studio_physical_Diagram::ImplData::remove_mapping(const db_DatabaseObjectRef &object) -> void {
   _dbobject_to_figure.erase(object.id());
 }
 
-studio_physical_ConnectionRef studio_physical_Diagram::ImplData::create_connection_for_foreign_key(
-  const db_ForeignKeyRef &fk) {
+auto studio_physical_Diagram::ImplData::create_connection_for_foreign_key(
+  const db_ForeignKeyRef &fk) -> studio_physical_ConnectionRef {
   // check if both tables referenced in fk are in the view
   if (_fk_to_connection.find(fk.id()) == _fk_to_connection.end() &&
       get_figure_for_dbobject(db_DatabaseObjectRef::cast_from(fk->owner())).is_valid() &&
@@ -194,7 +194,7 @@ both referencing and referenced tables are in the view. It will also check if
 the table is referenced by an existing table's foreign key and create connections
 if possible.
  */
-int studio_physical_Diagram::ImplData::create_connections_for_table(const db_TableRef &table) {
+auto studio_physical_Diagram::ImplData::create_connections_for_table(const db_TableRef &table) -> int {
   int c = 0;
 
   if (table.is_valid()) {
@@ -222,7 +222,7 @@ int studio_physical_Diagram::ImplData::create_connections_for_table(const db_Tab
   return c;
 }
 
-void studio_physical_Diagram::ImplData::delete_connections_for_table(const db_TableRef &table) {
+auto studio_physical_Diagram::ImplData::delete_connections_for_table(const db_TableRef &table) -> void {
   if (table.is_valid()) {
     // first delete connections for FKs from the table
     for (grt::ListRef<db_ForeignKey>::const_iterator end = table->foreignKeys().end(),
@@ -248,8 +248,8 @@ void studio_physical_Diagram::ImplData::delete_connections_for_table(const db_Ta
   }
 }
 
-studio_physical_ConnectionRef studio_physical_Diagram::ImplData::get_connection_for_foreign_key(
-  const db_ForeignKeyRef &fk) {
+auto studio_physical_Diagram::ImplData::get_connection_for_foreign_key(
+  const db_ForeignKeyRef &fk) -> studio_physical_ConnectionRef {
   std::map<std::string, studio_physical_ConnectionRef>::iterator iter;
 
   iter = _fk_to_connection.find(fk.id());
@@ -260,21 +260,21 @@ studio_physical_ConnectionRef studio_physical_Diagram::ImplData::get_connection_
   return studio_physical_ConnectionRef();
 }
 
-void studio_physical_Diagram::ImplData::add_fk_mapping(const db_ForeignKeyRef &fk,
-                                                          const studio_physical_ConnectionRef &connection) {
+auto studio_physical_Diagram::ImplData::add_fk_mapping(const db_ForeignKeyRef &fk,
+                                                          const studio_physical_ConnectionRef &connection) -> void {
   _fk_to_connection[fk.id()] = connection;
 }
 
-void studio_physical_Diagram::ImplData::remove_fk_mapping(const db_ForeignKeyRef &fk,
-                                                             const studio_physical_ConnectionRef &connection) {
+auto studio_physical_Diagram::ImplData::remove_fk_mapping(const db_ForeignKeyRef &fk,
+                                                             const studio_physical_ConnectionRef &connection) -> void {
   // check if the fk really is assigned to the connection before removing it
   if (_fk_to_connection.find(fk.id()) != _fk_to_connection.end() && _fk_to_connection[fk.id()] == connection) {
     _fk_to_connection.erase(fk.id());
   }
 }
 
-void studio_physical_Diagram::ImplData::member_list_changed(grt::internal::OwnedList *alist, bool added,
-                                                               const grt::ValueRef &value) {
+auto studio_physical_Diagram::ImplData::member_list_changed(grt::internal::OwnedList *alist, bool added,
+                                                               const grt::ValueRef &value) -> void {
   grt::BaseListRef list(alist);
 
   if (list == self()->_connections) {
@@ -291,7 +291,7 @@ void studio_physical_Diagram::ImplData::member_list_changed(grt::internal::Owned
   model_Diagram::ImplData::member_list_changed(alist, added, value);
 }
 
-void studio_physical_Diagram::ImplData::auto_place_db_objects(const grt::ListRef<db_DatabaseObject> &objects) {
+auto studio_physical_Diagram::ImplData::auto_place_db_objects(const grt::ListRef<db_DatabaseObject> &objects) -> void {
   grt::Module *module = grt::GRT::get()->get_module("WbModel");
 
   grt::BaseListRef args(true);

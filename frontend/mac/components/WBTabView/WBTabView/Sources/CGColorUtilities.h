@@ -23,8 +23,6 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-CF_IMPLICIT_BRIDGING_ENABLED
-
-CGColorRef WB_CGColorCreateCalibratedRGB(CGFloat red, CGFloat green, CGFloat blue, CGFloat alpha);
+auto WB_CGColorCreateCalibratedRGB(CGFloat red, CGFloat green, CGFloat blue, CGFloat alpha) -> CF_IMPLICIT_BRIDGING_ENABLED CGColorRef;
 
 CF_IMPLICIT_BRIDGING_DISABLED

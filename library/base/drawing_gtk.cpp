@@ -38,7 +38,7 @@ using namespace base;
 
 static bool inTesting = false;
 
-std::string OSConstants::defaultFontName() {
+auto OSConstants::defaultFontName() -> std::string {
   auto settings = Gtk::Settings::get_default();
   std::string fontName = settings->property_gtk_font_name().get_value();
   auto pangoFontDescription = pango_font_description_from_string(fontName.c_str());
@@ -47,7 +47,7 @@ std::string OSConstants::defaultFontName() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-float OSConstants::systemFontSize() {
+auto OSConstants::systemFontSize() -> float {
   auto settings = Gtk::Settings::get_default();
   std::string fontName = settings->property_gtk_font_name().get_value();
   auto pangoFontDescription = pango_font_description_from_string(fontName.c_str());
@@ -56,26 +56,26 @@ float OSConstants::systemFontSize() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-float OSConstants::smallSystemFontSize() {
+auto OSConstants::smallSystemFontSize() -> float {
   return OSConstants::systemFontSize() - 2;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-float OSConstants::labelFontSize() {
+auto OSConstants::labelFontSize() -> float {
   return OSConstants::systemFontSize();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static base::Color rgba_color_to_mforms(const Gdk::RGBA& c) {
+static auto rgba_color_to_mforms(const Gdk::RGBA& c) -> base::Color {
   return base::Color(c.get_red(), c.get_green(), c.get_blue(), c.get_alpha());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
 // TODO: implement all the missing SystemColors
-base::Color Color::getSystemColor(base::SystemColor type) {
+auto Color::getSystemColor(base::SystemColor type) -> base::Color {
   typedef std::map<base::SystemColor, base::Color> Colors;
   static Colors colors;
 
@@ -193,6 +193,6 @@ base::Color Color::getSystemColor(base::SystemColor type) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void Color::prepareForTesting() {
+auto Color::prepareForTesting() -> void {
   inTesting = true;
 }

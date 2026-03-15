@@ -38,21 +38,21 @@ namespace grt {
       void save_to_xml(const ValueRef &value, const std::string &path, const std::string &doctype = "",
                        const std::string &docversion = "", bool list_objects_as_links = false);
 
-      xmlDocPtr create_xmldoc_for_value(const ValueRef &value, const std::string &doctype,
-                                        const std::string &docversion, bool list_objects_as_links);
+      auto create_xmldoc_for_value(const ValueRef &value, const std::string &doctype,
+                                        const std::string &docversion, bool list_objects_as_links) -> xmlDocPtr;
 
-      std::string serialize_to_xmldata(const ValueRef &value, const std::string &type, const std::string &version,
-                                       bool list_objects_as_links);
+      auto serialize_to_xmldata(const ValueRef &value, const std::string &type, const std::string &version,
+                                       bool list_objects_as_links) -> std::string;
 
     protected:
       std::set<void *> _cache;
 
-      xmlNodePtr serialize_value(const ValueRef &value, xmlNodePtr parent, bool owned_objects);
-      xmlNodePtr serialize_object(const Ref<Object> &object, xmlNodePtr parent);
+      auto serialize_value(const ValueRef &value, xmlNodePtr parent, bool owned_objects) -> xmlNodePtr;
+      auto serialize_object(const Ref<Object> &object, xmlNodePtr parent) -> xmlNodePtr;
 
-      bool seen(const ValueRef &value);
+      auto seen(const ValueRef &value) -> bool;
 
-      bool serialize_member(const MetaClass::Member *member, const ObjectRef &object, xmlNodePtr node);
+      auto serialize_member(const MetaClass::Member *member, const ObjectRef &object, xmlNodePtr node) -> bool;
     };
   };
 };

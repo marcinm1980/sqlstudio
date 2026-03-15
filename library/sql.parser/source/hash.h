@@ -49,23 +49,23 @@ typedef struct st_hash {
 typedef uint HASH_SEARCH_STATE;
 
 #define hash_init(A,B,C,D,E,F,G,H) _hash_init(A,B,C,D,E,F,G, H CALLER_INFO)
-my_bool _hash_init(HASH *hash, CHARSET_INFO *charset,
+auto _hash_init(HASH *hash, CHARSET_INFO *charset,
 		   uint default_array_elements, uint key_offset,
 		   uint key_length, hash_get_key get_key,
-		   void (*free_element)(void*), uint flags CALLER_INFO_PROTO);
-void hash_free(HASH *tree);
-void my_hash_reset(HASH *hash);
-byte *hash_element(HASH *hash,uint idx);
-gptr hash_search(const HASH *info, const byte *key, uint length);
-gptr hash_first(const HASH *info, const byte *key, uint length,
-                HASH_SEARCH_STATE *state);
-gptr hash_next(const HASH *info, const byte *key, uint length,
-               HASH_SEARCH_STATE *state);
-my_bool my_hash_insert(HASH *info,const byte *data);
-my_bool hash_delete(HASH *hash,byte *record);
-my_bool hash_update(HASH *hash,byte *record,byte *old_key,uint old_key_length);
-void hash_replace(HASH *hash, HASH_SEARCH_STATE *state, byte *new_row);
-my_bool hash_check(HASH *hash);			/* Only in debug library */
+		   void (*free_element)(void*), uint flags CALLER_INFO_PROTO) -> my_bool;
+auto hash_free(HASH *tree) -> void;
+auto my_hash_reset(HASH *hash) -> void;
+auto hash_element(HASH *hash,uint idx) -> byte *;
+auto hash_search(const HASH *info, const byte *key, uint length) -> gptr;
+auto hash_first(const HASH *info, const byte *key, uint length,
+                HASH_SEARCH_STATE *state) -> gptr;
+auto hash_next(const HASH *info, const byte *key, uint length,
+               HASH_SEARCH_STATE *state) -> gptr;
+auto my_hash_insert(HASH *info,const byte *data) -> my_bool;
+auto hash_delete(HASH *hash,byte *record) -> my_bool;
+auto hash_update(HASH *hash,byte *record,byte *old_key,uint old_key_length) -> my_bool;
+auto hash_replace(HASH *hash, HASH_SEARCH_STATE *state, byte *new_row) -> void;
+auto hash_check(HASH *hash) -> my_bool;			/* Only in debug library */
 
 #define hash_clear(H) bzero((char*) (H),sizeof(*(H)))
 #define hash_inited(H) ((H)->array.buffer != 0)

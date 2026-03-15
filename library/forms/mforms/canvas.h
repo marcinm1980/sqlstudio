@@ -49,7 +49,7 @@ namespace mforms {
 
   public:
     Canvas();
-    mdc::CanvasView *canvas();
+    auto canvas() -> mdc::CanvasView *;
   };
 };
 

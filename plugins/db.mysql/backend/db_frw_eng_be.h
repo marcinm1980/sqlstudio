@@ -38,34 +38,34 @@ class WBPLUGINDBMYSQLBE_PUBLIC_FUNC Db_frw_eng : public Db_plugin, public DbMySQ
 public:
   Db_frw_eng();
 
-  void set_option(const std::string &name, bool value) {
+  auto set_option(const std::string &name, bool value) -> void {
     _export.set_option(name, value);
   }
-  void set_option(const std::string &name, const std::string &value) {
+  auto set_option(const std::string &name, const std::string &value) -> void {
     _export.set_option(name, value);
   }
-  void set_up_dboptions() {
+  auto set_up_dboptions() -> void {
     _export.set_db_options(_db_options);
   }
 
-  void start_export() {
+  auto start_export() -> void {
     _export.start_export(false);
   }
-  std::string export_sql_script() {
+  auto export_sql_script() -> std::string {
     return _export.export_sql_script();
   }
-  void start_apply_script_to_db();
+  auto start_apply_script_to_db() -> void;
 
-  void export_task_finish_cb(Task_finish_cb cb) {
+  auto export_task_finish_cb(Task_finish_cb cb) -> void {
     _export.task_finish_cb(cb);
   }
 
-  void setup_grt_string_list_models_from_catalog(
+  auto setup_grt_string_list_models_from_catalog(
     bec::GrtStringListModel **users_model, bec::GrtStringListModel **users_exc_model,
     bec::GrtStringListModel **tables_model, bec::GrtStringListModel **tables_exc_model,
     bec::GrtStringListModel **views_model, bec::GrtStringListModel **views_exc_model,
     bec::GrtStringListModel **routines_model, bec::GrtStringListModel **routines_exc_model,
-    bec::GrtStringListModel **triggers_model, bec::GrtStringListModel **triggers_exc_model);
+    bec::GrtStringListModel **triggers_model, bec::GrtStringListModel **triggers_exc_model) -> void;
 
 private:
   DbMySQLSQLExport _export;

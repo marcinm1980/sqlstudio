@@ -47,7 +47,7 @@ LayerEditorWrapper::~LayerEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-LayerEditorBE *LayerEditorWrapper::get_unmanaged_object() {
+auto LayerEditorWrapper::get_unmanaged_object() -> LayerEditorBE * {
   return static_cast<::LayerEditorBE *>(inner);
 }
 
@@ -59,7 +59,7 @@ void LayerEditorWrapper::set_name(String ^ name) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ LayerEditorWrapper::get_name() {
+auto LayerEditorWrapper::get_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_name());
 }
 
@@ -71,7 +71,7 @@ void LayerEditorWrapper::set_color(String ^ color) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ LayerEditorWrapper::get_color() {
+auto LayerEditorWrapper::get_color() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_color());
 }
 

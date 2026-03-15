@@ -116,7 +116,7 @@ public:
     _generate_attached_scripts.set_active(module->document_int_data("GenerateAttachedScripts", 0) != 0);
   }
 
-  void gather_options(bool advancing) {
+  auto gather_options(bool advancing) -> void {
     values().gset("SkipTriggers", _skip_triggers_check.get_active());
     values().gset("SkipRoutines", _skip_routines_check.get_active());
     values().gset("OmitSchemata", _omit_schema_qualifier_check.get_active());
@@ -131,7 +131,7 @@ public:
     module->set_document_data("SkipRoutineDefiner", _skip_routine_definer_check.get_active());
   }
 
-  virtual bool advance() {
+  virtual auto advance() -> bool {
     _be->set_options(values());
 
     return true;
@@ -164,7 +164,7 @@ public:
     : SchemaMatchingPage(form, name, left_name, right_name), _db_be(be) {
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       // Wee ned this information to set database if user is using for example Windows or Mac.
       if (_db_be && _db_be->db_conn())
@@ -187,7 +187,7 @@ public:
     SchemaMatchingPage::enter(advancing);
   }
 
-  virtual void leave(bool advancing) {
+  virtual auto leave(bool advancing) -> void {
     SchemaMatchingPage::leave(advancing);
     if (advancing) {
       // rename the schemas in the model so we can properly compare schemas with a different name
@@ -221,7 +221,7 @@ namespace DBSynchronize {
     DbMySQLScriptSync _be;
     DbMySQLSync _db_be;
 
-    std::vector<std::string> load_schemas() {
+    auto load_schemas() -> std::vector<std::string> {
       std::vector<std::string> schema_names;
       _db_be.load_schemata(schema_names);
       _be.set_db_options(_db_be.load_db_options());
@@ -235,11 +235,11 @@ namespace DBSynchronize {
       _be.restore_overriden_names();
     }
 
-    DbMySQLScriptSync *get_be() {
+    auto get_be() -> DbMySQLScriptSync * {
       return &_be;
     }
 
-    DbMySQLSync *get_db_be() {
+    auto get_db_be() -> DbMySQLSync * {
       return &_db_be;
     }
   };
@@ -264,19 +264,19 @@ namespace DBSynchronize {
       scoped_connect(signal_leave(), std::bind(&PreviewScriptPage::apply_changes, this, std::placeholders::_1));
     }
 
-    virtual void enter(bool advancing) {
+    virtual auto enter(bool advancing) -> void {
       if (advancing)
         set_text(((WbPluginDbSynchronize *)_form)->get_be()->generate_diff_tree_script());
     }
 
-    virtual bool advance() {
+    virtual auto advance() -> bool {
       // check if there is anything to be DROPPED and warn user
       // TODO XXX
 
       return ViewTextPage::advance();
     }
 
-    void apply_changes(bool advancing) {
+    auto apply_changes(bool advancing) -> void {
       values().gset("UpdateModelOnly", _model_only.get_active() ? 1 : 0);
       ((WbPluginDbSynchronize *)_form)
         ->get_db_be()
@@ -284,7 +284,7 @@ namespace DBSynchronize {
       ((WbPluginDbSynchronize *)_form)->get_db_be()->sql_script(get_text());
     }
 
-    virtual std::string next_button_caption() {
+    virtual auto next_button_caption() -> std::string {
       return execute_caption();
     }
   };
@@ -316,7 +316,7 @@ namespace DBSynchronize {
       set_status_text("");
     }
 
-    virtual void enter(bool advancing) {
+    virtual auto enter(bool advancing) -> void {
       if (values().get_int("UpdateModelOnly")) {
         db_task->set_enabled(false);
         read_back_task->set_enabled(false);
@@ -327,7 +327,7 @@ namespace DBSynchronize {
       WizardProgressPage::enter(advancing);
     }
 
-    bool perform_sync_db() {
+    auto perform_sync_db() -> bool {
       grt::GRT::get()->send_info("Applying synchronization scripts to server...");
 
       execute_grt_task(std::bind(&Db_plugin::apply_script_to_db, ((WbPluginDbSynchronize *)_form)->get_db_be()), false);
@@ -335,17 +335,17 @@ namespace DBSynchronize {
       return true;
     }
 
-    bool back_sync() {
+    auto back_sync() -> bool {
       execute_grt_task(std::bind(&DBSynchronizeProgressPage::back_sync_, this), false);
       return true;
     }
 
-    grt::IntegerRef back_sync_() {
+    auto back_sync_() -> grt::IntegerRef {
       ((WbPluginDbSynchronize *)_form)->get_db_be()->read_back_view_ddl();
       return grt::IntegerRef(0);
     }
 
-    bool perform_sync_model() {
+    auto perform_sync_model() -> bool {
       grt::GRT::get()->send_info("Updating model...");
       if (!_got_error_messages) {
         ((WbPluginDbSynchronize *)_form)->get_be()->save_sync_profile();
@@ -355,14 +355,14 @@ namespace DBSynchronize {
       return true;
     }
 
-    virtual bool allow_back() {
+    virtual auto allow_back() -> bool {
       return false;
     }
-    virtual bool allow_cancel() {
+    virtual auto allow_cancel() -> bool {
       return false;
     }
 
-    virtual bool next_closes_wizard() {
+    virtual auto next_closes_wizard() -> bool {
       return true;
     }
   };
@@ -409,10 +409,10 @@ namespace DBSynchronize {
 
 }; // namespace DBSynchronize
 
-grtui::WizardPlugin *createDbSynchronizeWizard(grt::Module *module, db_CatalogRef catalog) {
+auto createDbSynchronizeWizard(grt::Module *module, db_CatalogRef catalog) -> grtui::WizardPlugin * {
   return new DBSynchronize::WbPluginDbSynchronize(module);
 }
 
-void deleteDbSynchronizeWizard(grtui::WizardPlugin *plugin) {
+auto deleteDbSynchronizeWizard(grtui::WizardPlugin *plugin) -> void {
   delete plugin;
 }

@@ -43,7 +43,7 @@ namespace wb {
 class PluginManagerWindow : public mforms::Form {
 public:
   PluginManagerWindow(wb::WBContext *wb);
-  void run();
+  auto run() -> void;
 
 private:
   wb::WBContext *_wb;
@@ -67,11 +67,11 @@ private:
 
   std::map<std::string, std::list<std::string> > _module_plugins;
 
-  void uninstall();
-  void toggle_enable();
-  void toggle_show_details();
-  void refresh_plugin_list();
-  void list_selection_changed();
+  auto uninstall() -> void;
+  auto toggle_enable() -> void;
+  auto toggle_show_details() -> void;
+  auto refresh_plugin_list() -> void;
+  auto list_selection_changed() -> void;
 };
 
 #endif

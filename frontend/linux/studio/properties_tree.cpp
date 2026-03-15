@@ -52,19 +52,19 @@ PropertyValue::~PropertyValue() {
 }
 
 //------------------------------------------------------------------------------
-void PropertyValue::set_text(const std::string& text) {
+auto PropertyValue::set_text(const std::string& text) -> void {
   _text.set_text(text);
 }
 
 //------------------------------------------------------------------------------
-void PropertyValue::stop_edit() {
+auto PropertyValue::stop_edit() -> void {
   stop_editing();
   remove();
   add(label());
 }
 
 //------------------------------------------------------------------------------
-void PropertyValue::start_edit() {
+auto PropertyValue::start_edit() -> void {
   remove();
   add(editor());
 
@@ -75,7 +75,7 @@ void PropertyValue::start_edit() {
 }
 
 //------------------------------------------------------------------------------
-bool PropertyValue::on_event(GdkEvent* event) {
+auto PropertyValue::on_event(GdkEvent* event) -> bool {
   if (event->type == GDK_BUTTON_PRESS && event->button.button == 1) {
     _owner->handle_click(this);
     return true;
@@ -102,18 +102,18 @@ PropertyString::PropertyString(PropertyInspector* owner, const bec::NodeId& node
 }
 
 //------------------------------------------------------------------------------
-std::string PropertyString::get_new_value() const {
+auto PropertyString::get_new_value() const -> std::string {
   return _entry.get_text();
 }
 
 //------------------------------------------------------------------------------
-void PropertyString::start_editing() {
+auto PropertyString::start_editing() -> void {
   _entry.set_text(get_text());
   _entry.show();
 }
 
 //------------------------------------------------------------------------------
-Gtk::Widget& PropertyString::editor() {
+auto PropertyString::editor() -> Gtk::Widget& {
   return _entry;
 }
 
@@ -129,39 +129,39 @@ PropertyBool::PropertyBool(PropertyInspector* owner, const bec::NodeId& node) : 
 }
 
 //------------------------------------------------------------------------------
-std::string PropertyBool::get_new_value() const {
+auto PropertyBool::get_new_value() const -> std::string {
   return _button.get_active() ? "1" : "0";
 }
 
 //------------------------------------------------------------------------------
-void PropertyBool::set_text(const std::string& text) {
+auto PropertyBool::set_text(const std::string& text) -> void {
   _conn.block();
   _button.set_active(text == "1" ? 1 : 0);
   _conn.unblock();
 }
 
 //------------------------------------------------------------------------------
-std::string PropertyBool::get_text() const {
+auto PropertyBool::get_text() const -> std::string {
   return _button.get_active() ? "1" : "0";
 }
 
 //------------------------------------------------------------------------------
-void PropertyBool::start_editing() {
+auto PropertyBool::start_editing() -> void {
   _button.show();
 }
 
 //------------------------------------------------------------------------------
-Gtk::Widget& PropertyBool::editor() {
+auto PropertyBool::editor() -> Gtk::Widget& {
   return _button;
 }
 
 //------------------------------------------------------------------------------
-Gtk::Widget& PropertyBool::label() {
+auto PropertyBool::label() -> Gtk::Widget& {
   return _button;
 }
 
 //------------------------------------------------------------------------------
-void PropertyBool::on_value_changed() {
+auto PropertyBool::on_value_changed() -> void {
   PropertyValue::set_text(_button.get_active() ? "True" : "False");
   _owner->edit_done(this);
 }
@@ -177,17 +177,17 @@ PropertyColor::PropertyColor(PropertyInspector* owner, const bec::NodeId& node)
 }
 
 //------------------------------------------------------------------------------
-std::string PropertyColor::get_new_value() const {
+auto PropertyColor::get_new_value() const -> std::string {
   return _entry.get_text();
 }
 
 //------------------------------------------------------------------------------
-void PropertyColor::start_editing() {
+auto PropertyColor::start_editing() -> void {
   _entry.set_text(get_text());
 }
 
 //------------------------------------------------------------------------------
-void PropertyColor::show_dlg() {
+auto PropertyColor::show_dlg() -> void {
   _dlg.get_color_selection()->set_current_color(Gdk::Color(get_text()));
   const int resp = _dlg.run();
 
@@ -207,7 +207,7 @@ void PropertyColor::show_dlg() {
 }
 
 //------------------------------------------------------------------------------
-Gtk::Widget& PropertyColor::editor() {
+auto PropertyColor::editor() -> Gtk::Widget& {
   return _hbox;
 }
 
@@ -225,24 +225,24 @@ PropertyText::PropertyText(PropertyInspector* owner, const bec::NodeId& node)
 }
 
 //------------------------------------------------------------------------------
-std::string PropertyText::get_new_value() const {
+auto PropertyText::get_new_value() const -> std::string {
   Gtk::TextView* tv = const_cast<Gtk::TextView*>(&_text);
   return tv->get_buffer()->get_text();
 }
 
 //------------------------------------------------------------------------------
-void PropertyText::start_editing() {
+auto PropertyText::start_editing() -> void {
   _text.get_buffer()->set_text(get_text());
   _wnd.show_all();
 }
 
 //------------------------------------------------------------------------------
-void PropertyText::stop_editing() {
+auto PropertyText::stop_editing() -> void {
   _wnd.hide();
 }
 
 //------------------------------------------------------------------------------
-bool PropertyText::handle_event(GdkEvent* event) {
+auto PropertyText::handle_event(GdkEvent* event) -> bool {
   if (event->type == GDK_KEY_PRESS) {
     const int key = event->key.keyval;
     if (key == GDK_KEY_Control_L || key == GDK_KEY_Control_R)
@@ -275,7 +275,7 @@ PropertyInspector::PropertyInspector() : _edited_property(0), _updating(0) {
 }
 
 //------------------------------------------------------------------------------
-static void remove_child(Gtk::Widget& w) {
+static auto remove_child(Gtk::Widget& w) -> void {
   w.hide();
   delete &w;
 }
@@ -287,7 +287,7 @@ PropertyInspector::~PropertyInspector() {
 }
 
 //------------------------------------------------------------------------------
-void PropertyInspector::clear() {
+auto PropertyInspector::clear() -> void {
   _edited_property = 0;
   _table->foreach (sigc::ptr_fun(&::remove_child));
   _properties.clear();
@@ -303,7 +303,7 @@ void PropertyInspector::clear() {
 }
 
 //------------------------------------------------------------------------------
-void PropertyInspector::populate() {
+auto PropertyInspector::populate() -> void {
   _updating = 1;
   clear();
 
@@ -353,7 +353,7 @@ void PropertyInspector::populate() {
 }
 
 //------------------------------------------------------------------------------
-void PropertyInspector::update() {
+auto PropertyInspector::update() -> void {
   _updating = 1;
   const int count = _properties.size();
 
@@ -368,7 +368,7 @@ void PropertyInspector::update() {
 }
 
 //------------------------------------------------------------------------------
-void PropertyInspector::handle_click(PropertyValue* property) {
+auto PropertyInspector::handle_click(PropertyValue* property) -> void {
   if (!_updating && _edited_property != property) {
     if (_edited_property) {
       edit_done(_edited_property);
@@ -381,7 +381,7 @@ void PropertyInspector::handle_click(PropertyValue* property) {
 }
 
 //------------------------------------------------------------------------------
-void PropertyInspector::edit_done(PropertyValue* property, const bool finish) {
+auto PropertyInspector::edit_done(PropertyValue* property, const bool finish) -> void {
   if (!_updating) {
     _set_value_slot(property->node(), property->get_new_value(), property->type());
     property->set_text(_get_value_slot(property->node(), false));
@@ -391,7 +391,7 @@ void PropertyInspector::edit_done(PropertyValue* property, const bool finish) {
 }
 
 //------------------------------------------------------------------------------
-void PropertyInspector::edit_canceled() {
+auto PropertyInspector::edit_canceled() -> void {
   _edited_property = 0;
 }
 
@@ -411,7 +411,7 @@ PropertiesTree::~PropertiesTree() {
 }
 
 //------------------------------------------------------------------------------
-void PropertiesTree::update() {
+auto PropertiesTree::update() -> void {
   std::vector<std::string> items;
 
   delete _inspector;
@@ -434,25 +434,25 @@ void PropertiesTree::update() {
 }
 
 //------------------------------------------------------------------------------
-void PropertiesTree::refresh() {
+auto PropertiesTree::refresh() -> void {
   if (_inspector)
     _inspector_view.update();
 }
 
 //------------------------------------------------------------------------------
-int PropertiesTree::get_properties_count() const {
+auto PropertiesTree::get_properties_count() const -> int {
   return _inspector ? _inspector->count() : 0;
 }
 
 //------------------------------------------------------------------------------
-std::string PropertiesTree::get_prop_type(const bec::NodeId& node) const {
+auto PropertiesTree::get_prop_type(const bec::NodeId& node) const -> std::string {
   std::string type;
   _inspector->get_field(node, ::bec::ValueInspectorBE::EditMethod, type);
   return type;
 }
 
 //------------------------------------------------------------------------------
-void PropertiesTree::set_value(const bec::NodeId& node, const std::string& value, const grt::Type type) {
+auto PropertiesTree::set_value(const bec::NodeId& node, const std::string& value, const grt::Type type) -> void {
   if (node.is_valid()) {
     try {
       _inspector->set_convert_field(node, ::bec::ValueInspectorBE::Value, value);
@@ -463,7 +463,7 @@ void PropertiesTree::set_value(const bec::NodeId& node, const std::string& value
 }
 
 //------------------------------------------------------------------------------
-std::string PropertiesTree::get_value(const bec::NodeId& node, const bool is_name) const {
+auto PropertiesTree::get_value(const bec::NodeId& node, const bool is_name) const -> std::string {
   if (node.is_valid()) {
     std::string val;
     _inspector->get_field(node, is_name ? bec::ValueInspectorBE::Name : bec::ValueInspectorBE::Value, val);

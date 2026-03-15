@@ -31,7 +31,7 @@
 
 using namespace mforms;
 
-static void embed_find_panel(mforms::CodeEditor *editor, bool show, mforms::Box *container) {
+static auto embed_find_panel(mforms::CodeEditor *editor, bool show, mforms::Box *container) -> void {
   mforms::View *panel = editor->get_find_panel();
   if (show) {
     if (!panel->get_parent())
@@ -75,29 +75,29 @@ GRTCodeEditor::GRTCodeEditor(GRTShellWindow *owner, bool module, const std::stri
 GRTCodeEditor::~GRTCodeEditor() {
 }
 
-void GRTCodeEditor::set_path(const std::string &path) {
+auto GRTCodeEditor::set_path(const std::string &path) -> void {
   _filename = path;
   _owner->set_editor_title(this, get_title());
 }
 
-void GRTCodeEditor::set_text(const std::string &text) {
+auto GRTCodeEditor::set_text(const std::string &text) -> void {
   _text.set_value(text);
 
   // explicitly call text changed callback for dirty marker to get set
   text_changed(0, 0);
 }
 
-std::string GRTCodeEditor::get_text() {
+auto GRTCodeEditor::get_text() -> std::string {
   return _text.get_string_value();
 }
 
-std::string GRTCodeEditor::get_title() {
+auto GRTCodeEditor::get_title() -> std::string {
   if (_filename.empty())
     return "Unnamed";
   return _dirty ? base::strfmt("*%s", base::basename(_filename).c_str()) : base::basename(_filename);
 }
 
-bool GRTCodeEditor::load(const std::string &path) {
+auto GRTCodeEditor::load(const std::string &path) -> bool {
   char *data = NULL;
   gsize length = 0;
   GError *error = NULL;
@@ -116,7 +116,7 @@ bool GRTCodeEditor::load(const std::string &path) {
   return true;
 }
 
-bool GRTCodeEditor::save(bool choose_file) {
+auto GRTCodeEditor::save(bool choose_file) -> bool {
   if (choose_file || _filename.empty()) {
     FileChooser chooser(SaveFile);
 
@@ -145,7 +145,7 @@ bool GRTCodeEditor::save(bool choose_file) {
   return true;
 }
 
-void GRTCodeEditor::execute() {
+auto GRTCodeEditor::execute() -> void {
   {
     std::string script = _text.get_string_value();
 
@@ -158,7 +158,7 @@ void GRTCodeEditor::execute() {
   }
 }
 
-void GRTCodeEditor::text_changed(int line, int linesAdded) {
+auto GRTCodeEditor::text_changed(int line, int linesAdded) -> void {
   if (!_dirty) {
     _dirty = true;
     _owner->set_editor_title(this, get_title());
@@ -167,7 +167,7 @@ void GRTCodeEditor::text_changed(int line, int linesAdded) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool GRTCodeEditor::can_close() {
+auto GRTCodeEditor::can_close() -> bool {
   if (_dirty) {
     int r;
     r = mforms::Utilities::show_message(
@@ -188,7 +188,7 @@ bool GRTCodeEditor::can_close() {
 
 #ifdef _DEBUG
 
-void GRTCodeEditor::test_markup() { /*
+auto GRTCodeEditor::test_markup() -> void { /*
                                      int count = _text.line_count();
 
                                      if (count >= 0)

@@ -75,19 +75,19 @@ namespace mforms {
       _mformsGTK = nullptr;
     }
 
-    void *DrawBoxImpl::on_repaint() {
+    auto DrawBoxImpl::on_repaint() -> void * {
       _darea->queue_draw();
       return 0;
     }
 
-    void DrawBoxImpl::set_size(int width, int height) {
+    auto DrawBoxImpl::set_size(int width, int height) -> void {
       _darea->set_size_request(width, height);
       ViewImpl::set_size(width, height);
 
       _fixed_width = width;
       _fixed_height = height;
     }
-    bool DrawBoxImpl::relayout(::mforms::DrawBox *self) {
+    auto DrawBoxImpl::relayout(::mforms::DrawBox *self) -> bool {
       Glib::RefPtr<Gdk::Window> window = _darea->get_window();
       if (_fixed && window) {
         int ww, wh;
@@ -154,7 +154,7 @@ namespace mforms {
       return false;
     }
 
-    void DrawBoxImpl::on_size_allocate(Gtk::Allocation &alloc, ::mforms::DrawBox *self) {
+    auto DrawBoxImpl::on_size_allocate(Gtk::Allocation &alloc, ::mforms::DrawBox *self) -> void {
       if (!_relayout_pending) {
         _sig_relayout.disconnect();
         _sig_relayout = Glib::signal_idle().connect(sigc::bind(sigc::mem_fun(this, &DrawBoxImpl::relayout), self));
@@ -162,7 +162,7 @@ namespace mforms {
       }
     }
 
-    bool DrawBoxImpl::repaint(const ::Cairo::RefPtr< ::Cairo::Context> &context, ::mforms::DrawBox *self) {
+    auto DrawBoxImpl::repaint(const ::Cairo::RefPtr< ::Cairo::Context> &context, ::mforms::DrawBox *self) -> bool {
       // This vv needs improvment on linux. Maybe setup an event listener which is bound to resize
       Gtk::Requisition minimum, natural;
       _darea->get_preferred_size(minimum, natural);
@@ -187,7 +187,7 @@ namespace mforms {
       return true;
     }
 
-    bool DrawBoxImpl::mouse_button_event(GdkEventButton *event, ::mforms::DrawBox *self) {
+    auto DrawBoxImpl::mouse_button_event(GdkEventButton *event, ::mforms::DrawBox *self) -> bool {
       mforms::MouseButton mbtn;
       switch (event->button) // button number assumptions from starter icon code
       {
@@ -229,23 +229,23 @@ namespace mforms {
       return false;
     }
 
-    bool DrawBoxImpl::mouse_move_event(GdkEventMotion *event, ::mforms::DrawBox *self) {
+    auto DrawBoxImpl::mouse_move_event(GdkEventMotion *event, ::mforms::DrawBox *self) -> bool {
       _mousePos.x = event->x;
       _mousePos.y = event->y;
       return self->mouse_move(_last_btn, (int)event->x, (int)event->y);
     }
 
-    bool DrawBoxImpl::create(::mforms::DrawBox *self) {
+    auto DrawBoxImpl::create(::mforms::DrawBox *self) -> bool {
       return new DrawBoxImpl(self) != 0;
     }
 
-    void DrawBoxImpl::set_needs_repaint(::mforms::DrawBox *self) {
+    auto DrawBoxImpl::set_needs_repaint(::mforms::DrawBox *self) -> void {
       // request a repaint so that this can be called from any thread
       DrawBoxImpl *impl = self->get_data<DrawBoxImpl>();
 
       mforms::Utilities::perform_from_main_thread(std::bind(&DrawBoxImpl::on_repaint, impl), false);
     }
-    void DrawBoxImpl::add(::mforms::View *view, mforms::Alignment alignment) {
+    auto DrawBoxImpl::add(::mforms::View *view, mforms::Alignment alignment) -> void {
       if (!_fixed) {
         _fixed = Gtk::manage(new Gtk::Fixed);
         _darea->add(*_fixed);
@@ -265,7 +265,7 @@ namespace mforms {
       }
     }
     //------------------------------------------------------------------------------
-    void DrawBoxImpl::remove(::mforms::View *view) {
+    auto DrawBoxImpl::remove(::mforms::View *view) -> void {
       if (_fixed) {
         std::map<Gtk::Widget *, AlignControl>::iterator it;
         it = _alignments.find(mforms::widget_for_view(view));
@@ -276,7 +276,7 @@ namespace mforms {
       }
     }
     //------------------------------------------------------------------------------
-    void DrawBoxImpl::move(::mforms::View *view, int x, int y) {
+    auto DrawBoxImpl::move(::mforms::View *view, int x, int y) -> void {
       if (_fixed) {
         std::map<Gtk::Widget *, AlignControl>::iterator it;
         it = _alignments.find(mforms::widget_for_view(view));
@@ -289,21 +289,21 @@ namespace mforms {
       }
     }
     //------------------------------------------------------------------------------
-    void DrawBoxImpl::add(::mforms::DrawBox *self, ::mforms::View *view, mforms::Alignment alignment) {
+    auto DrawBoxImpl::add(::mforms::DrawBox *self, ::mforms::View *view, mforms::Alignment alignment) -> void {
       DrawBoxImpl *impl = self->get_data<DrawBoxImpl>();
       impl->add(view, alignment);
     }
     //------------------------------------------------------------------------------
-    void DrawBoxImpl::remove(::mforms::DrawBox *self, ::mforms::View *view) {
+    auto DrawBoxImpl::remove(::mforms::DrawBox *self, ::mforms::View *view) -> void {
       DrawBoxImpl *impl = self->get_data<DrawBoxImpl>();
       impl->remove(view);
     }
     //------------------------------------------------------------------------------
-    void DrawBoxImpl::move(::mforms::DrawBox *self, ::mforms::View *view, int x, int y) {
+    auto DrawBoxImpl::move(::mforms::DrawBox *self, ::mforms::View *view, int x, int y) -> void {
       DrawBoxImpl *impl = self->get_data<DrawBoxImpl>();
       impl->move(view, x, y);
     }
-    void DrawBoxImpl::set_padding_impl(int left, int top, int right, int bottom) {
+    auto DrawBoxImpl::set_padding_impl(int left, int top, int right, int bottom) -> void {
       _padding._left = left;
       _padding._right = right;
       _padding._top = top;
@@ -312,7 +312,7 @@ namespace mforms {
 
     //------------------------------------------------------------------------------
 
-    void DrawBoxImpl::drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base::Rect r) {
+    auto DrawBoxImpl::drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base::Rect r) -> void {
       auto bounds = r;
       bounds.use_inter_pixel = true;
       cairo_set_source_rgba(cr, 0.0, 0.6, 1.0, 1.0);
@@ -321,7 +321,7 @@ namespace mforms {
       cairo_stroke(cr);
     }
 
-    void DrawBoxImpl::init() {
+    auto DrawBoxImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_drawbox_impl.create = &DrawBoxImpl::create;

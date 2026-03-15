@@ -32,7 +32,7 @@ WizardPlugin::WizardPlugin(grt::Module *module) : GUIPluginBase(module), WizardF
   setInternalName("wizard");
 }
 
-bool WizardPlugin::run_wizard() {
+auto WizardPlugin::run_wizard() -> bool {
   // TODO: shouldn't the result depend on the outcome of the wizard?
   run_modal();
 

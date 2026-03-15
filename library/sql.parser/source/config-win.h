@@ -222,8 +222,7 @@ typedef uint rf_SetTimer;
 #define inline __inline
 #endif /* __cplusplus */
 
-inline double rint(double nr)
-{
+inline auto rint(double nr) -> double {
   double f = floor(nr);
   double c = ceil(nr);
   return (((c-nr) >= (nr-f)) ? f :c);
@@ -234,8 +233,7 @@ inline double rint(double nr)
 #define my_off_t2double(A)  ((double) (my_off_t) (A))
 
 #else
-inline double ulonglong2double(ulonglong value)
-{
+inline auto ulonglong2double(ulonglong value) -> double {
   longlong nr=(longlong) value;
   if (nr >= 0)
     return (double) nr;

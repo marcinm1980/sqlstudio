@@ -29,8 +29,8 @@
 #include "grts/structs.db.h"
 #include "grts/structs.studio.h"
 
-void merge_catalog(grt::Module* module, db_CatalogRef& dest_cat, const db_CatalogRef src_cat);
-void merge_diagrams(grt::ListRef<studio_physical_Diagram>& dest_diagrams,
-                    const grt::ListRef<studio_physical_Diagram>& src_diagrams, const GrtObjectRef& dst_owner);
+auto merge_catalog(grt::Module* module, db_CatalogRef& dest_cat, const db_CatalogRef src_cat) -> void;
+auto merge_diagrams(grt::ListRef<studio_physical_Diagram>& dest_diagrams,
+                    const grt::ListRef<studio_physical_Diagram>& src_diagrams, const GrtObjectRef& dst_owner) -> void;
 
 #endif //#ifndef _MERGE_MODEL_H_

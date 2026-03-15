@@ -42,7 +42,7 @@ using namespace grt;
 
 namespace {
 
-static grt::DictRef get_traits(bool case_sensitive = false) {
+static auto get_traits(bool case_sensitive = false) -> grt::DictRef {
   grt::DictRef traits(true);
   traits.set("CaseSensitive", grt::IntegerRef(case_sensitive));
   traits.set("maxTableCommentLength", grt::IntegerRef(60));

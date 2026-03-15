@@ -44,7 +44,7 @@ namespace sqlide {
     }
     BindSqlCommandVar(sqlite::command *sql_command) : _sql_command(sql_command) {
     }
-    void sql_command(sqlite::command *sql_command) {
+    auto sql_command(sqlite::command *sql_command) -> void {
       _sql_command = sql_command;
     }
 

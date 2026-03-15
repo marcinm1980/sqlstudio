@@ -47,14 +47,14 @@ using namespace wb;
 //--------------------------------------------------------------------------------------------------
 
 // The following helpers are just temporary. They will be replaced by a cairo context class.
-static void delete_surface(cairo_surface_t *surface) {
+static auto delete_surface(cairo_surface_t *surface) -> void {
   if (surface != NULL)
     cairo_surface_destroy(surface);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-static int image_width(cairo_surface_t *image) {
+static auto image_width(cairo_surface_t *image) -> int {
   if (image != NULL)
     return cairo_image_surface_get_width(image);
   return 0;
@@ -62,7 +62,7 @@ static int image_width(cairo_surface_t *image) {
 
 //--------------------------------------------------------------------------------------------------
 
-static int image_height(cairo_surface_t *image) {
+static auto image_height(cairo_surface_t *image) -> int {
   if (image != NULL)
     return cairo_image_surface_get_height(image);
   return 0;
@@ -106,7 +106,7 @@ AboutBox::~AboutBox() {
 #define BUILD_TEXT_OFFSET 107
 #define RELEASE_TYPE_OFFSET 375 // Right border.
 
-void AboutBox::repaint(cairo_t *cr, int x, int y, int w, int h) {
+auto AboutBox::repaint(cairo_t *cr, int x, int y, int w, int h) -> void {
   cairo_scale(cr, 1 / _scale_factor, 1 / _scale_factor);
   cairo_set_source_surface(cr, _back_image, 0, 0);
   cairo_paint(cr);
@@ -133,21 +133,21 @@ void AboutBox::repaint(cairo_t *cr, int x, int y, int w, int h) {
 
 static AboutBox *singleton = NULL;
 
-bool AboutBox::mouse_up(mforms::MouseButton button, int x, int y) {
+auto AboutBox::mouse_up(mforms::MouseButton button, int x, int y) -> bool {
   singleton->set_modal_result(1);
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void AboutBox::closed() {
+auto AboutBox::closed() -> void {
   delete singleton;
   singleton = NULL;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void AboutBox::show_about(const std::string &edition) {
+auto AboutBox::show_about(const std::string &edition) -> void {
   if (singleton != NULL)
     return;
 

@@ -63,7 +63,7 @@ namespace bec {
   auto WBPUBLICBACKEND_PUBLIC_FUNC getModelOption(studio_physical_ModelRef model, const std::string &key, bool forceModel = false) -> grt::ValueRef;
 
   struct WBPUBLICBACKEND_PUBLIC_FUNC CatalogHelper {
-    static void apply_defaults(db_mysql_CatalogRef catalog, std::string default_engine);
+    static auto apply_defaults(db_mysql_CatalogRef catalog, std::string default_engine) -> void;
 
     static auto is_type_valid_for_version(const db_SimpleDatatypeRef &type, const GrtVersionRef &target_version) -> bool;
 
@@ -75,7 +75,7 @@ namespace bec {
     static auto dragdata_to_dbobject(const db_CatalogRef &catalog, const std::string &object) -> db_DatabaseObjectRef;
 
   private:
-    static void apply_defaults(db_mysql_ColumnRef column);
+    static auto apply_defaults(db_mysql_ColumnRef column) -> void;
   };
 
   struct WBPUBLICBACKEND_PUBLIC_FUNC SchemaHelper {
@@ -104,14 +104,14 @@ namespace bec {
     static auto find_index_usable_by_fk(const db_ForeignKeyRef &fk,
                                                const db_IndexRef &other_than = db_IndexRef(),
                                                bool allow_any_order = false) -> db_IndexRef;
-    static void reorder_foreign_key_for_index(const db_ForeignKeyRef &fk, const db_IndexRef &index);
+    static auto reorder_foreign_key_for_index(const db_ForeignKeyRef &fk, const db_IndexRef &index) -> void;
     static auto generate_foreign_key_name() -> std::string;
     static auto create_empty_foreign_key(const db_TableRef &table, const std::string &name) -> db_ForeignKeyRef;
-    static void update_foreign_key_index(const db_ForeignKeyRef &fk);
+    static auto update_foreign_key_index(const db_ForeignKeyRef &fk) -> void;
 
     static auto rename_foreign_key(const db_TableRef &table, db_ForeignKeyRef &fk, const std::string &new_name) -> bool;
 
-    static void update_foreign_keys_from_column_notnull(const db_TableRef &table, const db_ColumnRef &column);
+    static auto update_foreign_keys_from_column_notnull(const db_TableRef &table, const db_ColumnRef &column) -> void;
 
     static auto create_missing_indexes_for_foreign_keys(const db_TableRef &table) -> bool;
 
@@ -144,10 +144,10 @@ namespace bec {
   struct WBPUBLICBACKEND_PUBLIC_FUNC ColumnHelper {
     // static std::string quote_default_if_needed(const db_ColumnRef &column, const std::string &value);
 
-    static void copy_column(const db_ColumnRef &from, db_ColumnRef &to);
+    static auto copy_column(const db_ColumnRef &from, db_ColumnRef &to) -> void;
     static auto compare_column_types(const db_ColumnRef &from, const db_ColumnRef &to) -> ColumnTypeCompareResult;
 
-    static void set_default_value(db_ColumnRef column, const std::string &value);
+    static auto set_default_value(db_ColumnRef column, const std::string &value) -> void;
   };
 
   struct Column_action {
@@ -197,7 +197,7 @@ namespace bec {
     }
   };
 
-  inline void apply_user_datatypes(db_mysql_CatalogRef cat, db_mgmt_RdbmsRef rdbms) {
+  inline auto apply_user_datatypes(db_mysql_CatalogRef cat, db_mgmt_RdbmsRef rdbms) -> void {
     Schema_action sa(cat, rdbms);
     ct::for_each<ct::Schemata>(cat, sa);
   }

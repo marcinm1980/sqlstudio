@@ -33,25 +33,25 @@ namespace mforms {
 
     class CheckBoxWrapper : public ButtonWrapper {
     protected:
-      static bool create(::mforms::CheckBox *self, bool square) {
+      static auto create(::mforms::CheckBox *self, bool square) -> bool {
         return true;
       }
 
-      static void set_active(::mforms::CheckBox *self, bool flag) {
+      static auto set_active(::mforms::CheckBox *self, bool flag) -> void {
       }
 
-      static bool get_active(::mforms::CheckBox *self) {
+      static auto get_active(::mforms::CheckBox *self) -> bool {
         return false;
       }
 
       CheckBoxWrapper(::mforms::CheckBox *self) : ButtonWrapper(self) {
       }
 
-      static void callback(::mforms::CheckBox *self) {
+      static auto callback(::mforms::CheckBox *self) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_checkbox_impl.create = &CheckBoxWrapper::create;

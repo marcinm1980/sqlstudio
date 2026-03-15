@@ -33,15 +33,15 @@ namespace MySQL {
     protected:
       SplitterWrapper(mforms::Splitter *backend);
 
-      static bool create(mforms::Splitter *backend, bool horizontal);
-      static void add(mforms::Splitter *backend, mforms::View *view, int min_size, bool fixed);
-      static void remove(mforms::Splitter *backend, mforms::View *view);
-      static void set_divider_position(mforms::Splitter *backend, int position);
-      static int get_divider_position(mforms::Splitter *backend);
-      static void set_expanded(mforms::Splitter *backend, bool first, bool expand);
+      static auto create(mforms::Splitter *backend, bool horizontal) -> bool;
+      static auto add(mforms::Splitter *backend, mforms::View *view, int min_size, bool fixed) -> void;
+      static auto remove(mforms::Splitter *backend, mforms::View *view) -> void;
+      static auto set_divider_position(mforms::Splitter *backend, int position) -> void;
+      static auto get_divider_position(mforms::Splitter *backend) -> int;
+      static auto set_expanded(mforms::Splitter *backend, bool first, bool expand) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

@@ -37,24 +37,24 @@ class WBPUBLICBACKEND_PUBLIC_FUNC studio_model_NoteFigure::ImplData : public mod
 protected:
   wbfig::Note *_figure;
 
-  virtual bool realize();
+  virtual auto realize() -> bool;
 
 public:
   ImplData(studio_model_NoteFigure *self);
   virtual ~ImplData(){};
 
-  void set_text(const std::string &text);
-  void set_text_color(const std::string &color);
-  void set_font(const std::string &font);
+  auto set_text(const std::string &text) -> void;
+  auto set_text_color(const std::string &color) -> void;
+  auto set_font(const std::string &font) -> void;
 
-  virtual mdc::CanvasItem *get_canvas_item() const {
+  virtual auto get_canvas_item() const -> mdc::CanvasItem * {
     return _figure;
   }
 
-  virtual void unrealize();
+  virtual auto unrealize() -> void;
 
 private:
-  studio_model_NoteFigure *self() const {
+  auto self() const -> studio_model_NoteFigure * {
     return (studio_model_NoteFigure *)_self;
   }
 };

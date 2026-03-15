@@ -107,7 +107,7 @@ DbMySQLEditorPrivPage::~DbMySQLEditorPrivPage() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLEditorPrivPage::refresh() {
+auto DbMySQLEditorPrivPage::refresh() -> void {
   _all_roles_tv->unset_model();
   _roles_tv->unset_model();
 
@@ -119,7 +119,7 @@ void DbMySQLEditorPrivPage::refresh() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLEditorPrivPage::role_selected() {
+auto DbMySQLEditorPrivPage::role_selected() -> void {
   if (_reentrant)
     return;
   _reentrant = true;
@@ -155,7 +155,7 @@ void DbMySQLEditorPrivPage::role_selected() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLEditorPrivPage::assign_privilege(const Gtk::TreeModel::iterator &iter) {
+auto DbMySQLEditorPrivPage::assign_privilege(const Gtk::TreeModel::iterator &iter) -> void {
   ::bec::NodeId node = _all_roles_model->node_for_iter(iter);
   if (node.is_valid()) {
     _object_roles_list_be->add_role_for_privileges(_role_tree_be->get_role_with_id(node));
@@ -163,21 +163,21 @@ void DbMySQLEditorPrivPage::assign_privilege(const Gtk::TreeModel::iterator &ite
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLEditorPrivPage::assign_privilege_handler() {
+auto DbMySQLEditorPrivPage::assign_privilege_handler() -> void {
   Glib::RefPtr<Gtk::TreeSelection> selection = _all_roles_tv->get_selection();
   selection->selected_foreach_iter(sigc::mem_fun(this, &DbMySQLEditorPrivPage::assign_privilege));
   refresh();
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLEditorPrivPage::remove_privilege(const Gtk::TreeModel::Path &path) {
+auto DbMySQLEditorPrivPage::remove_privilege(const Gtk::TreeModel::Path &path) -> void {
   bec::NodeId node(_roles_model->get_node_for_path(path));
   if (node.is_valid())
     _object_roles_list_be->remove_role_from_privileges(_role_tree_be->get_role_with_id(node));
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLEditorPrivPage::remove_privilege_handler() {
+auto DbMySQLEditorPrivPage::remove_privilege_handler() -> void {
   std::for_each(_selected.begin(), _selected.end(), sigc::mem_fun(this, &DbMySQLEditorPrivPage::remove_privilege));
 
   refresh();
@@ -186,7 +186,7 @@ void DbMySQLEditorPrivPage::remove_privilege_handler() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLEditorPrivPage::switch_be(bec::DBObjectEditorBE *be) {
+auto DbMySQLEditorPrivPage::switch_be(bec::DBObjectEditorBE *be) -> void {
   logDebug("Switching BE for table editor privileges page\n");
   _be = be;
 

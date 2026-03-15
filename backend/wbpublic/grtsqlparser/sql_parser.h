@@ -44,8 +44,8 @@ protected:
   }
 
 public:
-  virtual int parse_sql_script(db_CatalogRef catalog, const std::string &sql, grt::DictRef options) = 0;
-  virtual int parse_sql_script_file(db_CatalogRef catalog, const std::string &sql, grt::DictRef options) = 0;
+  virtual auto parse_sql_script(db_CatalogRef catalog, const std::string &sql, grt::DictRef options) -> int = 0;
+  virtual auto parse_sql_script_file(db_CatalogRef catalog, const std::string &sql, grt::DictRef options) -> int = 0;
 };
 
 #endif // _SQL_PARSER_H_

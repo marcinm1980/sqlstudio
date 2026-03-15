@@ -79,10 +79,10 @@ struct wb::ParsedCommand {
       type = command;
   }
 
-  inline bool valid() const {
+  inline auto valid() const -> bool {
     return !type.empty() && !name.empty();
   }
-  inline bool has_args() const {
+  inline auto has_args() const -> bool {
     return !args.empty();
   }
 };
@@ -90,14 +90,14 @@ struct wb::ParsedCommand {
 CommandUI::CommandUI(WBContext *wb) : _wb(wb), _include_se(false) {
 }
 
-void CommandUI::load_data() {
+auto CommandUI::load_data() -> void {
   _include_se = _wb->is_commercial();
 
   _shortcuts = grt::ListRef<app_ShortcutItem>::cast_from(
     grt::GRT::get()->unserialize(base::makePath(_wb->get_datadir(), "data/shortcuts.xml")));
 }
 
-static bool match_context(const std::string &item_context, const std::string &current_context) {
+static auto match_context(const std::string &item_context, const std::string &current_context) -> bool {
   if (item_context == "" || item_context == WB_CONTEXT_GLOBAL)
     return true;
 
@@ -116,7 +116,7 @@ static bool match_context(const std::string &item_context, const std::string &cu
   return false;
 }
 
-static bool filter_context_and_platform(const app_CommandItemRef &item, const std::string &context) {
+static auto filter_context_and_platform(const app_CommandItemRef &item, const std::string &context) -> bool {
   std::vector<std::string> plats(base::split(item->platform(), ","));
 
   if (!plats.empty()) {
@@ -136,8 +136,8 @@ static bool filter_context_and_platform(const app_CommandItemRef &item, const st
   return match_context(item->context(), context);
 }
 
-void CommandUI::update_item_state(const app_CommandItemRef &item, const wb::ParsedCommand &cmd,
-                                  mforms::MenuItem *menu_item) {
+auto CommandUI::update_item_state(const app_CommandItemRef &item, const wb::ParsedCommand &cmd,
+                                  mforms::MenuItem *menu_item) -> void {
   bool state = validate_command_item(item, cmd);
 
   if (state)
@@ -146,8 +146,8 @@ void CommandUI::update_item_state(const app_CommandItemRef &item, const wb::Pars
     menu_item->set_enabled(false);
 }
 
-void CommandUI::update_item_state(const app_ToolbarItemRef &item, const ParsedCommand &cmd,
-                                  mforms::ToolBarItem *tb_item) {
+auto CommandUI::update_item_state(const app_ToolbarItemRef &item, const ParsedCommand &cmd,
+                                  mforms::ToolBarItem *tb_item) -> void {
   bool state = validate_command_item(item, cmd);
 
   if (state)
@@ -156,11 +156,11 @@ void CommandUI::update_item_state(const app_ToolbarItemRef &item, const ParsedCo
     tb_item->set_enabled(false);
 }
 
-static void add_option_value_to_list(WBComponent *comp, const std::string &name, std::list<std::string> *result) {
+static auto add_option_value_to_list(WBComponent *comp, const std::string &name, std::list<std::string> *result) -> void {
   result->push_back(comp->get_command_option_value(name));
 }
 
-bool CommandUI::validate_command_item(const app_CommandItemRef &item, const wb::ParsedCommand &cmd) {
+auto CommandUI::validate_command_item(const app_CommandItemRef &item, const wb::ParsedCommand &cmd) -> bool {
   std::string name(item->name());
 
   if (name == "exit_application")
@@ -205,7 +205,7 @@ bool CommandUI::validate_command_item(const app_CommandItemRef &item, const wb::
 
 //--------------------------------------------------------------------------------------------------
 
-bool CommandUI::validate_plugin_command(app_PluginRef plugin) {
+auto CommandUI::validate_plugin_command(app_PluginRef plugin) -> bool {
   bool result = false;
   if (plugin.is_valid()) {
     if (bec::GRTManager::get()->check_plugin_runnable(plugin, _argpool))
@@ -219,7 +219,7 @@ bool CommandUI::validate_plugin_command(app_PluginRef plugin) {
 
 // Keyboard and Shortcut Handling
 
-static bool parse_key(const std::string &key, mdc::KeyInfo &info) {
+static auto parse_key(const std::string &key, mdc::KeyInfo &info) -> bool {
   static struct {
     mdc::KeyCode code;
     std::string name;
@@ -289,7 +289,7 @@ static bool parse_key(const std::string &key, mdc::KeyInfo &info) {
   return true;
 }
 
-static bool parse_shortcut(const std::string &shortcut, mdc::KeyInfo &key, mdc::EventState &mods) {
+static auto parse_shortcut(const std::string &shortcut, mdc::KeyInfo &key, mdc::EventState &mods) -> bool {
   if (shortcut.empty())
     return false;
 
@@ -325,8 +325,8 @@ static bool parse_shortcut(const std::string &shortcut, mdc::KeyInfo &key, mdc::
   return true;
 }
 
-void CommandUI::append_shortcut_items(const grt::ListRef<app_ShortcutItem> &plist, const std::string &context,
-                                      std::vector<WBShortcut> *items) {
+auto CommandUI::append_shortcut_items(const grt::ListRef<app_ShortcutItem> &plist, const std::string &context,
+                                      std::vector<WBShortcut> *items) -> void {
   std::string platform;
 
   if (!plist.is_valid())
@@ -377,7 +377,7 @@ void CommandUI::append_shortcut_items(const grt::ListRef<app_ShortcutItem> &plis
   }
 }
 
-std::vector<WBShortcut> CommandUI::get_shortcuts_for_context(const std::string &context) {
+auto CommandUI::get_shortcuts_for_context(const std::string &context) -> std::vector<WBShortcut> {
   std::vector<WBShortcut> shortcuts;
 
   append_shortcut_items(_shortcuts, context, &shortcuts);
@@ -397,7 +397,7 @@ std::vector<WBShortcut> CommandUI::get_shortcuts_for_context(const std::string &
 //--------------------------------------------------------------------------------
 // Menu Management
 
-void CommandUI::add_recent_menu(mforms::MenuItem *parent) {
+auto CommandUI::add_recent_menu(mforms::MenuItem *parent) -> void {
   grt::StringListRef strlist(_wb->get_root()->options()->recentFiles());
 
   mforms::MenuItem *item;
@@ -439,7 +439,7 @@ void CommandUI::add_recent_menu(mforms::MenuItem *parent) {
   }
 }
 
-void CommandUI::add_plugins_menu_items(mforms::MenuItem *parent, const std::string &group) {
+auto CommandUI::add_plugins_menu_items(mforms::MenuItem *parent, const std::string &group) -> void {
   std::vector<app_PluginRef> plugins(_wb->get_plugin_manager()->get_plugins_for_group(group));
 
   for (std::vector<app_PluginRef>::const_iterator iter = plugins.begin(); iter != plugins.end(); ++iter) {
@@ -455,7 +455,7 @@ void CommandUI::add_plugins_menu_items(mforms::MenuItem *parent, const std::stri
   }
 }
 
-void CommandUI::add_plugins_menu(mforms::MenuItem *parent, const std::string &context) {
+auto CommandUI::add_plugins_menu(mforms::MenuItem *parent, const std::string &context) -> void {
   // get sub-groups for the plugins menu
 
   grt::ListRef<app_PluginGroup> groups(_wb->get_root()->registry()->pluginGroups());
@@ -496,7 +496,7 @@ void CommandUI::add_plugins_menu(mforms::MenuItem *parent, const std::string &co
   }
 }
 
-void CommandUI::add_scripts_menu(mforms::MenuItem *parent) {
+auto CommandUI::add_scripts_menu(mforms::MenuItem *parent) -> void {
   try {
     parent->add_validator([parent]() {
       return !parent->get_subitems().empty();
@@ -514,8 +514,8 @@ void CommandUI::add_scripts_menu(mforms::MenuItem *parent) {
   }
 }
 
-void CommandUI::add_menu_items_for_context(const std::string &context, mforms::MenuItem *parent,
-                                           const app_MenuItemRef &menu) {
+auto CommandUI::add_menu_items_for_context(const std::string &context, mforms::MenuItem *parent,
+                                           const app_MenuItemRef &menu) -> void {
   // special menu handling
   if (menu->name() == "open_recent")
     add_recent_menu(parent);
@@ -686,15 +686,15 @@ void CommandUI::add_menu_items_for_context(const std::string &context, mforms::M
     add_plugins_menu(parent, context);
 }
 
-static void connect_validate_to_signal(boost::signals2::signal<void()> &validate_edit_menu_items,
-                                       std::vector<mforms::MenuItem *> &items) {
+static auto connect_validate_to_signal(boost::signals2::signal<void()> &validate_edit_menu_items,
+                                       std::vector<mforms::MenuItem *> &items) -> void {
   for (std::vector<mforms::MenuItem *>::iterator i = items.begin(); i != items.end(); ++i) {
     (*i)->scoped_connect(&validate_edit_menu_items, std::bind(&mforms::MenuItem::validate, *i));
     connect_validate_to_signal(validate_edit_menu_items, (*i)->get_subitems());
   }
 }
 
-void CommandUI::menu_will_show(mforms::MenuItem *item) {
+auto CommandUI::menu_will_show(mforms::MenuItem *item) -> void {
   if (item->getInternalName() == "open_recent") {
     item->remove_all();
     add_recent_menu(item);
@@ -702,7 +702,7 @@ void CommandUI::menu_will_show(mforms::MenuItem *item) {
     revalidate_edit_menu_items();
 }
 
-mforms::MenuBar *CommandUI::create_menubar_for_context(const std::string &context) {
+auto CommandUI::create_menubar_for_context(const std::string &context) -> mforms::MenuBar * {
   mforms::MenuBar *menubar = new mforms::MenuBar();
 
   menubar->signal_will_show()->connect(std::bind(&CommandUI::menu_will_show, this, std::placeholders::_1));
@@ -747,12 +747,12 @@ mforms::MenuBar *CommandUI::create_menubar_for_context(const std::string &contex
 //--------------------------------------------------------------------------------
 // Toolbar Management
 
-mforms::ToolBar *CommandUI::create_toolbar(const std::string &toolbar_file) {
+auto CommandUI::create_toolbar(const std::string &toolbar_file) -> mforms::ToolBar * {
   return create_toolbar(toolbar_file, [this](const std::string &str) { activate_command(str); });
 }
 
-mforms::ToolBar *CommandUI::create_toolbar(const std::string &toolbar_file,
-                                           const std::function<void(std::string)> &activate_slot) {
+auto CommandUI::create_toolbar(const std::string &toolbar_file,
+                                           const std::function<void(std::string)> &activate_slot) -> mforms::ToolBar * {
   app_ToolbarRef toolbar(
     app_ToolbarRef::cast_from(grt::GRT::get()->unserialize(bec::GRTManager::get()->get_data_file_path(toolbar_file))));
 
@@ -905,13 +905,13 @@ mforms::ToolBar *CommandUI::create_toolbar(const std::string &toolbar_file,
 //--------------------------------------------------------------------------------
 
 #include "model/wb_model_diagram_form.h"
-static bool has_active_view(WBContext *wb) {
+static auto has_active_view(WBContext *wb) -> bool {
   return (dynamic_cast<ModelDiagramForm *>(wb->get_active_form()) != 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void CommandUI::add_frontend_commands(const std::list<std::string> &commands) {
+auto CommandUI::add_frontend_commands(const std::list<std::string> &commands) -> void {
   for (std::list<std::string>::const_iterator iter = commands.begin(); iter != commands.end(); ++iter) {
     // hack
     if (iter->compare("diagram_size") == 0 || iter->compare("wb.page_setup") == 0)
@@ -927,21 +927,21 @@ void CommandUI::add_frontend_commands(const std::list<std::string> &commands) {
 /**
  * Convenience method to remove registered front end commands.
  */
-void wb::CommandUI::remove_frontend_commands(const std::list<std::string> &commands) {
+auto wb::CommandUI::remove_frontend_commands(const std::list<std::string> &commands) -> void {
   for (std::list<std::string>::const_iterator iter = commands.begin(); iter != commands.end(); ++iter)
     remove_builtin_command(*iter);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void CommandUI::remove_builtin_command(const std::string &name) {
+auto CommandUI::remove_builtin_command(const std::string &name) -> void {
   std::map<std::string, BuiltinCommand>::iterator iter = _builtin_commands.find(name);
   if (iter != _builtin_commands.end())
     _builtin_commands.erase(iter);
 }
 
-void CommandUI::add_builtin_command(const std::string &name, const std::function<void()> &slot,
-                                    const std::function<bool()> &validate) {
+auto CommandUI::add_builtin_command(const std::string &name, const std::function<void()> &slot,
+                                    const std::function<bool()> &validate) -> void {
   BuiltinCommand cmd;
 
   cmd.execute = slot;
@@ -953,7 +953,7 @@ void CommandUI::add_builtin_command(const std::string &name, const std::function
   _builtin_commands[name] = cmd;
 }
 
-bool CommandUI::execute_builtin_command(const std::string &name) {
+auto CommandUI::execute_builtin_command(const std::string &name) -> bool {
   if (_builtin_commands.find(name) != _builtin_commands.end()) {
     _builtin_commands[name].execute();
     return true;
@@ -961,7 +961,7 @@ bool CommandUI::execute_builtin_command(const std::string &name) {
   return false;
 }
 
-bool CommandUI::validate_builtin_command(const std::string &name) {
+auto CommandUI::validate_builtin_command(const std::string &name) -> bool {
   if (_builtin_commands.find(name) != _builtin_commands.end()) {
     if (_builtin_commands[name].validate)
       return _builtin_commands[name].validate();
@@ -972,7 +972,7 @@ bool CommandUI::validate_builtin_command(const std::string &name) {
 
 //--------------------------------------------------------------------------------
 
-bool CommandUI::activate_command(const std::string &command, bec::ArgumentPool argpool) {
+auto CommandUI::activate_command(const std::string &command, bec::ArgumentPool argpool) -> bool {
   try {
     ParsedCommand cmdparts(command);
 
@@ -1000,7 +1000,7 @@ bool CommandUI::activate_command(const std::string &command, bec::ArgumentPool a
 
 static const std::vector<std::string> clipboardCommands = {"builtin:paste", "builtin:copy", "builtin:delete"};
 
-void CommandUI::activate_command(const std::string &command) {
+auto CommandUI::activate_command(const std::string &command) -> void {
   if (command.empty() || !_wb->user_interaction_allowed())
     return;
 
@@ -1050,7 +1050,7 @@ void CommandUI::activate_command(const std::string &command) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CommandUI::revalidate_menu_bar(mforms::MenuBar *menu) {
+auto CommandUI::revalidate_menu_bar(mforms::MenuBar *menu) -> void {
   // XXX: the arg pool can hold a reference to a grt value representing an editor and what not.
   //      So keeping that around can prevent freeing such an editor.
   //      Hence this must be redesigned not to rely on a global argpool.
@@ -1060,7 +1060,7 @@ void CommandUI::revalidate_menu_bar(mforms::MenuBar *menu) {
   menu->validate();
 }
 
-void CommandUI::revalidate_edit_menu_items() {
+auto CommandUI::revalidate_edit_menu_items() -> void {
   _argpool.clear();
   _wb->update_plugin_arguments_pool(_argpool);
   _argpool["app.PluginInputDefinition:string"] = grt::StringRef("");
@@ -1076,6 +1076,6 @@ void CommandUI::revalidate_edit_menu_items() {
   //        Changed to run_once_when_idle to fix this issue
 }
 
-void CommandUI::clearBuildInCommands(){
+auto CommandUI::clearBuildInCommands() -> void {
   _builtin_commands.clear();
 }

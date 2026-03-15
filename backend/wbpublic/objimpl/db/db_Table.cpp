@@ -41,12 +41,12 @@
 //================================================================================
 // db_Table
 // from db_ForeignKey.cpp
-extern grt::ListRef<db_ForeignKey> get_foreign_keys_referencing_table(const db_TableRef &value);
-extern void add_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk);
-extern void delete_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk);
+extern auto get_foreign_keys_referencing_table(const db_TableRef &value) -> grt::ListRef<db_ForeignKey>;
+extern auto add_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk) -> void;
+extern auto delete_foreign_key_mapping(const db_TableRef &table, db_ForeignKey *fk) -> void;
 
-static void table_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
-                               db_Table *table) {
+static auto table_list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value,
+                               db_Table *table) -> void {
   if (table->columns().valueptr() == list) {
     (*table->signal_refreshDisplay())("column");
   } else if (table->indices().valueptr() == list) {
@@ -67,7 +67,7 @@ static void table_list_changed(grt::internal::OwnedList *list, bool added, const
   }
 }
 
-void db_Table::init() {
+auto db_Table::init() -> void {
   // No need in disconnet management since signal it part of object
   _list_changed_signal.connect(
     std::bind(&table_list_changed, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, this));
@@ -76,7 +76,7 @@ void db_Table::init() {
 db_Table::~db_Table() {
 }
 
-grt::StringRef db_Table::inserts() {
+auto db_Table::inserts() -> grt::StringRef {
   Recordset_table_inserts_storage::Ref input_storage = Recordset_table_inserts_storage::create();
   input_storage->table(db_TableRef(this));
 
@@ -95,7 +95,7 @@ grt::StringRef db_Table::inserts() {
   return output_storage->sql_script();
 }
 
-db_query_EditableResultsetRef db_Table::createInsertsEditor() {
+auto db_Table::createInsertsEditor() -> db_query_EditableResultsetRef {
   Recordset_table_inserts_storage::Ref input_storage = Recordset_table_inserts_storage::create();
   input_storage->table(db_TableRef(this));
 
@@ -106,13 +106,13 @@ db_query_EditableResultsetRef db_Table::createInsertsEditor() {
   return grtwrap_editablerecordset(db_TableRef(this), rs);
 }
 
-void db_Table::addColumn(const db_ColumnRef &column) {
+auto db_Table::addColumn(const db_ColumnRef &column) -> void {
   _columns.insert(column);
   if (column->owner().valueptr() != this)
     column->owner(db_TableRef(this));
 }
 
-db_ForeignKeyRef db_Table::createForeignKey(const std::string &name) {
+auto db_Table::createForeignKey(const std::string &name) -> db_ForeignKeyRef {
   db_ForeignKeyRef fk(grt::GRT::get()->create_object<db_ForeignKey>(_foreignKeys->content_type_spec().object_class));
 
   fk->owner(this);
@@ -123,13 +123,13 @@ db_ForeignKeyRef db_Table::createForeignKey(const std::string &name) {
   return fk;
 }
 
-void db_Table::addIndex(const db_IndexRef &index) {
+auto db_Table::addIndex(const db_IndexRef &index) -> void {
   _indices.insert(index);
   if (index->owner().valueptr() != this)
     index->owner(db_TableRef(this));
 }
 
-void db_Table::addPrimaryKeyColumn(const db_ColumnRef &column) {
+auto db_Table::addPrimaryKeyColumn(const db_ColumnRef &column) -> void {
   db_IndexRef pkindex;
 
   if (isPrimaryKeyColumn(column))
@@ -186,7 +186,7 @@ void db_Table::addPrimaryKeyColumn(const db_ColumnRef &column) {
   undo.end(_("Set Primary Key"));
 }
 
-grt::IntegerRef db_Table::isDependantTable() {
+auto db_Table::isDependantTable() -> grt::IntegerRef {
   if (primaryKey().is_valid()) {
     grt::ListRef<db_IndexColumn> columns(primaryKey()->columns());
 
@@ -198,7 +198,7 @@ grt::IntegerRef db_Table::isDependantTable() {
   return 0;
 }
 
-grt::IntegerRef db_Table::isForeignKeyColumn(const db_ColumnRef &column) {
+auto db_Table::isForeignKeyColumn(const db_ColumnRef &column) -> grt::IntegerRef {
   grt::ListRef<db_ForeignKey> fklist(foreignKeys());
 
   for (size_t c = fklist.count(), i = 0; i < c; i++) {
@@ -212,7 +212,7 @@ grt::IntegerRef db_Table::isForeignKeyColumn(const db_ColumnRef &column) {
   return 0;
 }
 
-grt::IntegerRef db_Table::isPrimaryKeyColumn(const db_ColumnRef &column) {
+auto db_Table::isPrimaryKeyColumn(const db_ColumnRef &column) -> grt::IntegerRef {
   db_IndexRef pkindex = primaryKey();
 
   if (!pkindex.is_valid())
@@ -231,7 +231,7 @@ grt::IntegerRef db_Table::isPrimaryKeyColumn(const db_ColumnRef &column) {
   return 0;
 }
 
-void db_Table::removeColumn(const db_ColumnRef &column) {
+auto db_Table::removeColumn(const db_ColumnRef &column) -> void {
   grt::AutoUndo undo(!is_global());
 
   // make sure it's no longer a PK
@@ -297,7 +297,7 @@ void db_Table::removeColumn(const db_ColumnRef &column) {
   undo.end(base::strfmt(_("Remove Column '%s.%s'"), name().c_str(), (*column->name()).c_str()));
 }
 
-void db_Table::removeForeignKey(const db_ForeignKeyRef &fk, ssize_t removeColumns) {
+auto db_Table::removeForeignKey(const db_ForeignKeyRef &fk, ssize_t removeColumns) -> void {
   // remove a fk from table and make sure its index is deleted too
   // if delete_columns is 1, it will also delete the columns that form the FK, except
   // columns used by other FKs
@@ -339,12 +339,12 @@ void db_Table::removeForeignKey(const db_ForeignKeyRef &fk, ssize_t removeColumn
   undo.end(_("Remove Foreign Key"));
 }
 
-void db_Table::removeIndex(const db_IndexRef &index) {
+auto db_Table::removeIndex(const db_IndexRef &index) -> void {
   throw std::logic_error("not implement");
   // QQQ
 }
 
-void db_Table::removePrimaryKeyColumn(const db_ColumnRef &column) {
+auto db_Table::removePrimaryKeyColumn(const db_ColumnRef &column) -> void {
   db_IndexRef pkindex;
 
   if (!isPrimaryKeyColumn(column))

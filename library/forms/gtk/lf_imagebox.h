@@ -41,7 +41,7 @@ namespace mforms {
     protected:
       mutable Gtk::Image _image;
       bool _scale;
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return &_image;
       }
 
@@ -54,7 +54,7 @@ namespace mforms {
         setup();
       }
 
-      void on_realize() {
+      auto on_realize() -> void {
         if (_scale) {
           int w, h;
           int iw, ih;
@@ -78,11 +78,11 @@ namespace mforms {
         }
       }
 
-      static bool create(::mforms::ImageBox *self) {
+      static auto create(::mforms::ImageBox *self) -> bool {
         return new ImageBoxImpl(self) != 0;
       }
 
-      static void set_image(::mforms::ImageBox *self, const std::string &file) {
+      static auto set_image(::mforms::ImageBox *self, const std::string &file) -> void {
         ImageBoxImpl *image = self->get_data<ImageBoxImpl>();
 
         if (image) {
@@ -94,7 +94,7 @@ namespace mforms {
         }
       }
 
-      static void set_image_data(::mforms::ImageBox *self, const char *data, size_t length) {
+      static auto set_image_data(::mforms::ImageBox *self, const char *data, size_t length) -> void {
         ImageBoxImpl *image = self->get_data<ImageBoxImpl>();
         if (image) {
           try {
@@ -109,7 +109,7 @@ namespace mforms {
         }
       }
 
-      static void set_scale_contents(::mforms::ImageBox *self, bool flag) {
+      static auto set_scale_contents(::mforms::ImageBox *self, bool flag) -> void {
         ImageBoxImpl *image = self->get_data<ImageBoxImpl>();
 
         if (image) {
@@ -119,7 +119,7 @@ namespace mforms {
         }
       }
 
-      static void set_image_align(::mforms::ImageBox *self, ::mforms::Alignment alignment) {
+      static auto set_image_align(::mforms::ImageBox *self, ::mforms::Alignment alignment) -> void {
         ImageBoxImpl *image = self->get_data<ImageBoxImpl>();
 
         if (image) {
@@ -158,7 +158,7 @@ namespace mforms {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_imagebox_impl.create = &ImageBoxImpl::create;

@@ -37,7 +37,7 @@ SchemaEditorBE::SchemaEditorBE(const db_SchemaRef& schema) : DBObjectEditorBE(sc
 
 //--------------------------------------------------------------------------------------------------
 
-void SchemaEditorBE::set_name(const std::string& name) {
+auto SchemaEditorBE::set_name(const std::string& name) -> void {
   if (is_editing_live_object() && get_schema()->oldName() != "")
     return;
   DBObjectEditorBE::set_name(name);
@@ -45,7 +45,7 @@ void SchemaEditorBE::set_name(const std::string& name) {
 
 //--------------------------------------------------------------------------------------------------
 
-void SchemaEditorBE::set_schema_option_by_name(const std::string& name, const std::string& value) {
+auto SchemaEditorBE::set_schema_option_by_name(const std::string& name, const std::string& value) -> void {
   if (name.compare("CHARACTER SET - COLLATE") == 0) {
     // Shortcut that sets both CHARACTER SET and COLLATE separated by a dash.
     if (value != get_schema_option_by_name(name)) {
@@ -79,7 +79,7 @@ void SchemaEditorBE::set_schema_option_by_name(const std::string& name, const st
 
 //--------------------------------------------------------------------------------------------------
 
-std::string SchemaEditorBE::get_schema_option_by_name(const std::string& name) {
+auto SchemaEditorBE::get_schema_option_by_name(const std::string& name) -> std::string {
   if (name.compare("CHARACTER SET") == 0)
     return get_schema()->defaultCharacterSetName();
   else if (name.compare("COLLATE") == 0)
@@ -92,7 +92,7 @@ std::string SchemaEditorBE::get_schema_option_by_name(const std::string& name) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string SchemaEditorBE::get_title() {
+auto SchemaEditorBE::get_title() -> std::string {
   return get_name() + " - Schema";
 }
 

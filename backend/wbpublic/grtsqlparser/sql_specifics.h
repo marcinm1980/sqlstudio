@@ -46,15 +46,15 @@ protected:
   Sql_specifics();
 
 public:
-  virtual std::string limit_select_query(const std::string &sql, int *row_count, int *offset);
-  virtual void get_connection_startup_script(std::list<std::string> &sql_script);
-  virtual std::string query_connection_id();
-  virtual std::string query_kill_connection(std::int64_t connection_id);
-  virtual std::string query_kill_query(std::int64_t connection_id);
-  virtual std::string query_variable(const std::string &name);
-  virtual sqlide::QuoteVar::Escape_sql_string escape_sql_string();
-  virtual sqlide::QuoteVar::Blob_to_string blob_to_string();
-  virtual std::string setting_non_std_sql_delimiter();
-  virtual std::string non_std_sql_delimiter();
-  virtual std::string setting_ansi_quotes();
+  virtual auto limit_select_query(const std::string &sql, int *row_count, int *offset) -> std::string;
+  virtual auto get_connection_startup_script(std::list<std::string> &sql_script) -> void;
+  virtual auto query_connection_id() -> std::string;
+  virtual auto query_kill_connection(std::int64_t connection_id) -> std::string;
+  virtual auto query_kill_query(std::int64_t connection_id) -> std::string;
+  virtual auto query_variable(const std::string &name) -> std::string;
+  virtual auto escape_sql_string() -> sqlide::QuoteVar::Escape_sql_string;
+  virtual auto blob_to_string() -> sqlide::QuoteVar::Blob_to_string;
+  virtual auto setting_non_std_sql_delimiter() -> std::string;
+  virtual auto non_std_sql_delimiter() -> std::string;
+  virtual auto setting_ansi_quotes() -> std::string;
 };

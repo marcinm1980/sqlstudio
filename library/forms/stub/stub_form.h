@@ -34,22 +34,22 @@ namespace mforms {
   namespace stub {
 
     class FormWrapper : public ViewWrapper {
-      static bool create(::mforms::Form *self, ::mforms::Form *owner, mforms::FormFlag flag);
-      static void set_title(::mforms::Form *self, const std::string &title);
-      void accept_clicked(bool *status, const bool is_run);
-      void cancel_clicked(bool *status, const bool is_run);
-      static void show_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel);
-      static bool run_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel);
-      static void close(::mforms::Form *self);
-      static void set_content(::mforms::Form *self, ::mforms::View *child);
-      static void flush_events(::mforms::Form *self);
-      static void center(Form *self);
+      static auto create(::mforms::Form *self, ::mforms::Form *owner, mforms::FormFlag flag) -> bool;
+      static auto set_title(::mforms::Form *self, const std::string &title) -> void;
+      auto accept_clicked(bool *status, const bool is_run) -> void;
+      auto cancel_clicked(bool *status, const bool is_run) -> void;
+      static auto show_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) -> void;
+      static auto run_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) -> bool;
+      static auto close(::mforms::Form *self) -> void;
+      static auto set_content(::mforms::Form *self, ::mforms::View *child) -> void;
+      static auto flush_events(::mforms::Form *self) -> void;
+      static auto center(Form *self) -> void;
       FormWrapper(::mforms::Form *form, ::mforms::Form *owner, mforms::FormFlag form_flag);
-      virtual void set_size(int width, int height);
-      static void end_modal(Form *self, bool result);
+      virtual auto set_size(int width, int height) -> void;
+      static auto end_modal(Form *self, bool result) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

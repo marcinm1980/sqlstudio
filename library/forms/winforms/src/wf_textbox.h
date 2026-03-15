@@ -44,19 +44,19 @@ namespace MySQL {
     protected:
       TextBoxWrapper(mforms::TextBox *text);
 
-      static bool create(mforms::TextBox *backend, mforms::ScrollBars scroll_bars);
-      static void set_text(mforms::TextBox *backend, const std::string &text);
-      static void append_text(mforms::TextBox *backend, const std::string &text, bool scroll_to_end);
-      static std::string get_text(mforms::TextBox *backend);
-      static void set_read_only(mforms::TextBox *backend, bool flag);
-      static void set_padding(mforms::TextBox *backend, int pad);
-      static void set_bordered(mforms::TextBox *backend, bool flag);
-      static void set_monospaced(mforms::TextBox *backend, bool flag);
-      static void get_selected_range(mforms::TextBox *backend, int &start, int &end);
-      static void clear(mforms::TextBox *backend);
+      static auto create(mforms::TextBox *backend, mforms::ScrollBars scroll_bars) -> bool;
+      static auto set_text(mforms::TextBox *backend, const std::string &text) -> void;
+      static auto append_text(mforms::TextBox *backend, const std::string &text, bool scroll_to_end) -> void;
+      static auto get_text(mforms::TextBox *backend) -> std::string;
+      static auto set_read_only(mforms::TextBox *backend, bool flag) -> void;
+      static auto set_padding(mforms::TextBox *backend, int pad) -> void;
+      static auto set_bordered(mforms::TextBox *backend, bool flag) -> void;
+      static auto set_monospaced(mforms::TextBox *backend, bool flag) -> void;
+      static auto get_selected_range(mforms::TextBox *backend, int &start, int &end) -> void;
+      static auto clear(mforms::TextBox *backend) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

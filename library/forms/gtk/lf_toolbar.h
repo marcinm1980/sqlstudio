@@ -34,29 +34,29 @@
 
 namespace mforms {
   Gtk::Widget *widget_for_toolbar(mforms::ToolBar *);
-  Gtk::Widget *widget_for_toolbar_item_named(mforms::ToolBar *, const std::string &);
+  auto widget_for_toolbar_item_named(mforms::ToolBar *, const std::string &) -> Gtk::Widget *;
 
   namespace gtk {
 
-    void lf_toolbar_init();
+    auto lf_toolbar_init() -> void;
     struct ToolBarImpl {
-      static bool create_tool_bar(ToolBar *item, ToolBarType type);
-      static void insert_item(ToolBar *toolbar, int index, ToolBarItem *item);
-      static void remove_item(ToolBar *toolbar, ToolBarItem *item);
+      static auto create_tool_bar(ToolBar *item, ToolBarType type) -> bool;
+      static auto insert_item(ToolBar *toolbar, int index, ToolBarItem *item) -> void;
+      static auto remove_item(ToolBar *toolbar, ToolBarItem *item) -> void;
 
-      static bool create_tool_item(ToolBarItem *item, ToolBarItemType type);
-      static void set_item_icon(ToolBarItem *item, const std::string &);
-      static void set_item_alt_icon(ToolBarItem *item, const std::string &);
-      static void set_item_text(ToolBarItem *item, const std::string &);
-      static std::string get_item_text(ToolBarItem *item);
-      static void set_item_name(ToolBarItem *item, const std::string &);
-      static void set_item_enabled(ToolBarItem *item, bool);
-      static bool get_item_enabled(ToolBarItem *item);
-      static void set_item_checked(ToolBarItem *item, bool);
-      static bool get_item_checked(ToolBarItem *item);
-      static void set_item_tooltip(ToolBarItem *item, const std::string &);
+      static auto create_tool_item(ToolBarItem *item, ToolBarItemType type) -> bool;
+      static auto set_item_icon(ToolBarItem *item, const std::string &) -> void;
+      static auto set_item_alt_icon(ToolBarItem *item, const std::string &) -> void;
+      static auto set_item_text(ToolBarItem *item, const std::string &) -> void;
+      static auto get_item_text(ToolBarItem *item) -> std::string;
+      static auto set_item_name(ToolBarItem *item, const std::string &) -> void;
+      static auto set_item_enabled(ToolBarItem *item, bool) -> void;
+      static auto get_item_enabled(ToolBarItem *item) -> bool;
+      static auto set_item_checked(ToolBarItem *item, bool) -> void;
+      static auto get_item_checked(ToolBarItem *item) -> bool;
+      static auto set_item_tooltip(ToolBarItem *item, const std::string &) -> void;
 
-      static void set_selector_items(ToolBarItem *item, const std::vector<std::string> &values);
+      static auto set_selector_items(ToolBarItem *item, const std::vector<std::string> &values) -> void;
     };
 
   } // ns gtk

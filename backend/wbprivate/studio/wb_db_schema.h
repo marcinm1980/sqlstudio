@@ -34,38 +34,38 @@ namespace wb {
   private:
     sql::Dbc_connection_handler::Ref &_connection;
     std::string _schema_name;
-    bool check_table_or_view_exists(const std::string object_name, bool check_view);
-    bool check_function_or_sp_exists(const std::string object_name, bool check_function);
+    auto check_table_or_view_exists(const std::string object_name, bool check_view) -> bool;
+    auto check_function_or_sp_exists(const std::string object_name, bool check_function) -> bool;
 
   public:
     InternalSchema(const std::string &schema_name, sql::Dbc_connection_handler::Ref &conn);
     ~InternalSchema(void);
 
-    std::string schema_name() const {
+    auto schema_name() const -> std::string {
       return _schema_name;
     }
 
-    bool check_schema_exist();
-    bool check_function_exists(const std::string &function_name);
-    bool check_stored_procedure_exists(const std::string &spname);
-    bool check_table_exists(const std::string &table_name);
-    bool check_view_exists(const std::string &view_name);
+    auto check_schema_exist() -> bool;
+    auto check_function_exists(const std::string &function_name) -> bool;
+    auto check_stored_procedure_exists(const std::string &spname) -> bool;
+    auto check_table_exists(const std::string &table_name) -> bool;
+    auto check_view_exists(const std::string &view_name) -> bool;
 
-    bool is_remote_search_deployed();
+    auto is_remote_search_deployed() -> bool;
 
-    bool check_snippets_table_exist();
-    std::string create_snippets_table_exist();
-    int insert_snippet(const std::string &title, const std::string &code);
-    void delete_snippet(int snippet_id);
-    void set_snippet_title(int snippet_id, const std::string &title);
-    void set_snippet_code(int snippet_id, const std::string &code);
+    auto check_snippets_table_exist() -> bool;
+    auto create_snippets_table_exist() -> std::string;
+    auto insert_snippet(const std::string &title, const std::string &code) -> int;
+    auto delete_snippet(int snippet_id) -> void;
+    auto set_snippet_title(int snippet_id, const std::string &title) -> void;
+    auto set_snippet_code(int snippet_id, const std::string &code) -> void;
 
-    std::string create_schema();
-    std::string deploy_remote_search();
-    std::string deploy_get_objects_sp();
-    std::string deploy_get_tables_and_views_sp();
-    std::string deploy_get_routines();
-    std::string execute_sql(const std::string &statement);
+    auto create_schema() -> std::string;
+    auto deploy_remote_search() -> std::string;
+    auto deploy_get_objects_sp() -> std::string;
+    auto deploy_get_tables_and_views_sp() -> std::string;
+    auto deploy_get_routines() -> std::string;
+    auto execute_sql(const std::string &statement) -> std::string;
   };
 };
 

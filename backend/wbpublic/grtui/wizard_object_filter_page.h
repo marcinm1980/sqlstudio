@@ -40,11 +40,11 @@ namespace grtui {
     WizardObjectFilterPage(WizardForm *form, const char *name);
     virtual ~WizardObjectFilterPage();
 
-    grtui::DBObjectFilterFrame *add_filter(const std::string &class_name, const std::string &caption_fmt,
+    auto add_filter(const std::string &class_name, const std::string &caption_fmt,
                                            bec::GrtStringListModel *model, bec::GrtStringListModel *excl_model,
-                                           bool *enabled_flag);
+                                           bool *enabled_flag) -> grtui::DBObjectFilterFrame *;
 
-    void reset();
+    auto reset() -> void;
 
     // void reload_stored_filte_set();
 

@@ -55,7 +55,7 @@ namespace MySQL {
       ManagedApplication(AppCommandDelegate ^ app_command, ManagedDockDelegate ^ docking_delegate);
       ~ManagedApplication();
 
-      std::string CallAppDelegate(AppCommand command, const std::string &str);
+      auto CallAppDelegate(AppCommand command, const std::string &str) -> std::string;
       String ^ CallAppDelegate(AppCommand command, String ^ str);
     };
 
@@ -65,19 +65,19 @@ namespace MySQL {
       gcroot<ManagedApplication ^> application;
 
     protected:
-      static std::string get_resource_path(mforms::App *app, const std::string &file);
-      static void set_status_text(mforms::App *app, const std::string &text);
-      static base::Rect get_application_bounds(mforms::App *app);
-      static int enter_event_loop(mforms::App *app, float max_wait_time);
-      static void exit_event_loop(mforms::App *app, int ret_code);
-      static bool isDarkModeActive(mforms::App *app);
+      static auto get_resource_path(mforms::App *app, const std::string &file) -> std::string;
+      static auto set_status_text(mforms::App *app, const std::string &text) -> void;
+      static auto get_application_bounds(mforms::App *app) -> base::Rect;
+      static auto enter_event_loop(mforms::App *app, float max_wait_time) -> int;
+      static auto exit_event_loop(mforms::App *app, int ret_code) -> void;
+      static auto isDarkModeActive(mforms::App *app) -> bool;
 
     public:
       AppWrapper(ManagedApplication ^ managed);
 
       static String ^ get_image_path(String ^ path);
 
-      static void init();
+      static auto init() -> void;
     };
   };
 };

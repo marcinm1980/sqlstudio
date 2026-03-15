@@ -75,52 +75,52 @@ class WBPLUGINDBMYSQLBE_PUBLIC_FUNC DbMySQLSQLExport : public DbMySQLValidationP
   std::map<std::string, GrtNamedObjectRef> _triggers_map;
   grt::DictRef _db_options;
 
-  std::string get_q_name(const char *part1, const char *part2) {
+  auto get_q_name(const char *part1, const char *part2) -> std::string {
     return std::string(part1).append(".").append(part2);
   }
 
-  db_mysql_CatalogRef filter_catalog();
+  auto filter_catalog() -> db_mysql_CatalogRef;
 
 protected:
-  virtual db_mysql_CatalogRef get_model_catalog();
-  virtual grt::DictRef get_options_as_dict();
+  virtual auto get_model_catalog() -> db_mysql_CatalogRef;
+  virtual auto get_options_as_dict() -> grt::DictRef;
   // bec::MessageListBE messages_list;
 public:
   DbMySQLSQLExport(db_mysql_CatalogRef catalog = db_mysql_CatalogRef());
   virtual ~DbMySQLSQLExport(){};
 
-  db_mysql_CatalogRef get_catalog() const {
+  auto get_catalog() const -> db_mysql_CatalogRef {
     return _catalog;
   }
 
-  std::string get_output_filename() const {
+  auto get_output_filename() const -> std::string {
     return _output_filename;
   }
 
-  void set_option(const std::string &name, bool value);
-  void set_option(const std::string &name, const std::string &value);
-  void set_db_options_for_version(const GrtVersionRef &version);
-  void set_db_options(grt::DictRef &db_options);
+  auto set_option(const std::string &name, bool value) -> void;
+  auto set_option(const std::string &name, const std::string &value) -> void;
+  auto set_db_options_for_version(const GrtVersionRef &version) -> void;
+  auto set_db_options(grt::DictRef &db_options) -> void;
 
-  void start_export(bool wait_finish);
+  auto start_export(bool wait_finish) -> void;
   // void run_validation();
 
-  void export_finished(grt::ValueRef res);
+  auto export_finished(grt::ValueRef res) -> void;
   grt::ValueRef export_task(grt::StringRef);
 
   typedef std::function<int()> Task_finish_cb;
-  void task_finish_cb(Task_finish_cb cb) {
+  auto task_finish_cb(Task_finish_cb cb) -> void {
     _task_finish_cb = cb;
   }
 
-  void setup_grt_string_list_models_from_catalog(
+  auto setup_grt_string_list_models_from_catalog(
     bec::GrtStringListModel **users_model, bec::GrtStringListModel **users_exc_model,
     bec::GrtStringListModel **tables_model, bec::GrtStringListModel **tables_exc_model,
     bec::GrtStringListModel **views_model, bec::GrtStringListModel **views_exc_model,
     bec::GrtStringListModel **routines_model, bec::GrtStringListModel **routines_exc_model,
-    bec::GrtStringListModel **triggers_model, bec::GrtStringListModel **triggers_exc_model);
+    bec::GrtStringListModel **triggers_model, bec::GrtStringListModel **triggers_exc_model) -> void;
 
-  std::string export_sql_script() {
+  auto export_sql_script() -> std::string {
     return _export_sql_script;
   }
 
@@ -131,6 +131,6 @@ private:
   std::string _export_sql_script;
 };
 
-grt::StringListRef convert_string_vector_to_grt_list(const std::vector<std::string> &v);
+auto convert_string_vector_to_grt_list(const std::vector<std::string> &v) -> grt::StringListRef;
 
 #endif // _DB_MYSQL_SQL_EXPORT_H_

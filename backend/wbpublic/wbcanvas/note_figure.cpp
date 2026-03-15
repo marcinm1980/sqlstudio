@@ -49,16 +49,16 @@ Note::Note(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self)
 Note::~Note() {
 }
 
-void Note::set_text(const std::string &text) {
+auto Note::set_text(const std::string &text) -> void {
   _text.set_text(text);
   set_needs_relayout();
 }
 
-void Note::set_text_color(const Color &color) {
+auto Note::set_text_color(const Color &color) -> void {
   _text.set_pen_color(color);
 }
 
-void Note::set_font(const std::string &font) {
+auto Note::set_font(const std::string &font) -> void {
   if (font.empty()) // use default font
     _text.set_font(get_view()->get_default_font());
   else {
@@ -67,14 +67,14 @@ void Note::set_font(const std::string &font) {
   }
 }
 
-void Note::set_content_font(const mdc::FontSpec &font) {
+auto Note::set_content_font(const mdc::FontSpec &font) -> void {
   _text.set_font(font);
   set_needs_relayout();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Note::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button, mdc::EventState state) {
+auto Note::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button, mdc::EventState state) -> bool {
   if (!_hub->figure_click(represented_object(), target, point, button, state))
     return super::on_click(target, point, button, state);
   return false;
@@ -82,8 +82,8 @@ bool Note::on_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButto
 
 //--------------------------------------------------------------------------------------------------
 
-bool Note::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
-                           mdc::EventState state) {
+auto Note::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::MouseButton button,
+                           mdc::EventState state) -> bool {
   if (!_hub->figure_double_click(represented_object(), target, point, button, state))
     return super::on_double_click(target, point, button, state);
   return false;
@@ -91,7 +91,7 @@ bool Note::on_double_click(mdc::CanvasItem *target, const Point &point, mdc::Mou
 
 //--------------------------------------------------------------------------------------------------
 
-void Note::set_allow_manual_resizing(bool flag) {
+auto Note::set_allow_manual_resizing(bool flag) -> void {
   super::set_allow_manual_resizing(flag);
   if (flag) {
     _text.set_auto_sizing(false);

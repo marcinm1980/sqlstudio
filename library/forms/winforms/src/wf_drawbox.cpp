@@ -42,7 +42,7 @@ using namespace System::Drawing;
 /**
  * Converts Windows specific mouse button identifiers to plain numbers for the back end.
  */
-static int convert_mouse_button(MouseButtons button) {
+static auto convert_mouse_button(MouseButtons button) -> int {
   switch (button) {
     case MouseButtons::Left:
       return 0;
@@ -57,7 +57,7 @@ static int convert_mouse_button(MouseButtons button) {
 
 //--------------------------------------------------------------------------------------------------
 
-static System::Windows::Forms::AccessibleRole convert_accessible_role(base::Accessible::Role be_role) {
+static auto convert_accessible_role(base::Accessible::Role be_role) -> System::Windows::Forms::AccessibleRole {
   System::Windows::Forms::AccessibleRole role = System::Windows::Forms::AccessibleRole::None;
 
   switch (be_role) {
@@ -121,49 +121,49 @@ WBControlAccessibleObject::WBControlAccessibleObject(Control ^ owner, base::Acce
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WBControlAccessibleObject::Name::get() {
+auto WBControlAccessibleObject::Name::get() -> String ^ {
   return CppStringToNativeRaw(backend->getAccessibilityDescription());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int WBControlAccessibleObject::GetChildCount() {
+auto WBControlAccessibleObject::GetChildCount() -> int {
   return static_cast<int>(backend->getAccessibilityChildCount());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WBControlAccessibleObject::Description::get() {
+auto WBControlAccessibleObject::Description::get() -> String ^ {
   return CppStringToNative(backend->getAccessibilityDescription());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WBControlAccessibleObject::DefaultAction::get() {
+auto WBControlAccessibleObject::DefaultAction::get() -> String ^ {
   return CppStringToNativeRaw(backend->getAccessibilityDefaultAction());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WBControlAccessibleObject::Value::get() {
+auto WBControlAccessibleObject::Value::get() -> String ^ {
   return CppStringToNative(backend->getAccessibilityValue());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::AccessibleRole WBControlAccessibleObject::Role::get() {
+auto WBControlAccessibleObject::Role::get() -> System::Windows::Forms::AccessibleRole {
   return convert_accessible_role(backend->getAccessibilityRole());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WBControlAccessibleObject::DoDefaultAction() {
+auto WBControlAccessibleObject::DoDefaultAction() -> void {
   return backend->accessibilityDoDefaultAction();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::AccessibleObject ^ WBControlAccessibleObject::GetChild(int index) {
+auto WBControlAccessibleObject::GetChild(int index) -> System::Windows::Forms::AccessibleObject ^ {
   base::Accessible *child = backend->getAccessibilityChild(index);
 
   if (child)
@@ -174,7 +174,7 @@ System::Windows::Forms::AccessibleObject ^ WBControlAccessibleObject::GetChild(i
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::AccessibleObject ^ WBControlAccessibleObject::HitTest(int x, int y) {
+auto WBControlAccessibleObject::HitTest(int x, int y) -> System::Windows::Forms::AccessibleObject ^ {
   Point point = Owner->PointToClient(Point(x, y));
 
   base::Accessible *accessible = backend->accessibilityHitTest(point.X, point.Y);
@@ -196,37 +196,37 @@ WBAccessibleObject::WBAccessibleObject(base::Accessible *backendOwner, WBControl
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WBAccessibleObject::Name::get() {
+auto WBAccessibleObject::Name::get() -> String ^ {
   return CppStringToNativeRaw(backend->getAccessibilityDescription());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WBAccessibleObject::Description::get() {
+auto WBAccessibleObject::Description::get() -> String ^ {
   return CppStringToNative(backend->getAccessibilityDescription());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WBAccessibleObject::DefaultAction::get() {
+auto WBAccessibleObject::DefaultAction::get() -> String ^ {
   return CppStringToNativeRaw(backend->getAccessibilityDefaultAction());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ WBAccessibleObject::Value::get() {
+auto WBAccessibleObject::Value::get() -> String ^ {
   return CppStringToNative(backend->getAccessibilityValue());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::AccessibleRole WBAccessibleObject::Role::get() {
+auto WBAccessibleObject::Role::get() -> System::Windows::Forms::AccessibleRole {
   return convert_accessible_role(backend->getAccessibilityRole());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::Drawing::Rectangle WBAccessibleObject::Bounds::get() {
+auto WBAccessibleObject::Bounds::get() -> System::Drawing::Rectangle {
   base::Rect backend_bounds = backend->getAccessibilityBounds();
   System::Drawing::Rectangle bounds = System::Drawing::Rectangle(
     (int)backend_bounds.left(), (int)backend_bounds.top(), (int)backend_bounds.width(), (int)backend_bounds.height());
@@ -239,19 +239,19 @@ System::Drawing::Rectangle WBAccessibleObject::Bounds::get() {
 
 //--------------------------------------------------------------------------------------------------
 
-int WBAccessibleObject::GetChildCount() {
+auto WBAccessibleObject::GetChildCount() -> int {
   return static_cast<int>(backend->getAccessibilityChildCount());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WBAccessibleObject::DoDefaultAction() {
+auto WBAccessibleObject::DoDefaultAction() -> void {
   return backend->accessibilityDoDefaultAction();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::AccessibleObject ^ WBAccessibleObject::GetChild(int index) {
+auto WBAccessibleObject::GetChild(int index) -> System::Windows::Forms::AccessibleObject ^ {
   base::Accessible *child = backend->getAccessibilityChild(index);
 
   if (child)
@@ -262,7 +262,7 @@ System::Windows::Forms::AccessibleObject ^ WBAccessibleObject::GetChild(int inde
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::AccessibleObject ^ WBAccessibleObject::HitTest(int x, int y) {
+auto WBAccessibleObject::HitTest(int x, int y) -> System::Windows::Forms::AccessibleObject ^ {
   base::Accessible *accessible = backend->accessibilityHitTest(x, y);
 
   if (accessible && accessible != backend)
@@ -285,13 +285,13 @@ CanvasControl::CanvasControl() {
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::AccessibleObject ^ CanvasControl::CreateAccessibilityInstance() {
+auto CanvasControl::CreateAccessibilityInstance() -> System::Windows::Forms::AccessibleObject ^ {
   return gcnew WBControlAccessibleObject(this, backend);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::Windows::Forms::Layout::LayoutEngine ^ CanvasControl::LayoutEngine::get() {
+auto CanvasControl::LayoutEngine::get() -> System::Windows::Forms::Layout::LayoutEngine ^ {
   if (layoutEngine == nullptr)
     layoutEngine = gcnew DrawBoxLayout();
   return layoutEngine;
@@ -299,7 +299,7 @@ System::Windows::Forms::Layout::LayoutEngine ^ CanvasControl::LayoutEngine::get(
 
 //--------------------------------------------------------------------------------------------------
 
-System::Drawing::Size CanvasControl::GetPreferredSize(System::Drawing::Size proposedSize) {
+auto CanvasControl::GetPreferredSize(System::Drawing::Size proposedSize) -> System::Drawing::Size {
   base::Size nativeSize = backend->getLayoutSize(base::Size(proposedSize.Width, proposedSize.Height));
   System::Drawing::Size minSize = MinimumSize;
   if (minSize.Width > nativeSize.width)
@@ -339,13 +339,13 @@ mforms::Alignment CanvasControl::GetAlignment(Control ^ control) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CanvasControl::SetBackend(mforms::DrawBox *backend) {
+auto CanvasControl::SetBackend(mforms::DrawBox *backend) -> void {
   this->backend = backend;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void CanvasControl::DoRepaint() {
+auto CanvasControl::DoRepaint() -> void {
   Invalidate();
 }
 
@@ -444,7 +444,7 @@ DrawBoxWrapper::DrawBoxWrapper(mforms::DrawBox *backend) : ViewWrapper(backend) 
 
 //--------------------------------------------------------------------------------------------------
 
-bool DrawBoxWrapper::create(mforms::DrawBox *backend) {
+auto DrawBoxWrapper::create(mforms::DrawBox *backend) -> bool {
   DrawBoxWrapper *wrapper = new DrawBoxWrapper(backend);
 
   CanvasControl ^ canvas = DrawBoxWrapper::Create<CanvasControl>(backend, wrapper);
@@ -455,35 +455,35 @@ bool DrawBoxWrapper::create(mforms::DrawBox *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBoxWrapper::set_needs_repaint(mforms::DrawBox *backend) {
+auto DrawBoxWrapper::set_needs_repaint(mforms::DrawBox *backend) -> void {
   CanvasControl ^ canvas = DrawBoxWrapper::GetManagedObject<CanvasControl>(backend);
   canvas->Invalidate();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBoxWrapper::add(mforms::DrawBox *backend, mforms::View *view, mforms::Alignment alignment) {
+auto DrawBoxWrapper::add(mforms::DrawBox *backend, mforms::View *view, mforms::Alignment alignment) -> void {
   CanvasControl ^ canvas = DrawBoxWrapper::GetManagedObject<CanvasControl>(backend);
   canvas->Add(DrawBoxWrapper::GetControl(view), alignment);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBoxWrapper::remove(mforms::DrawBox *backend, mforms::View *view) {
+auto DrawBoxWrapper::remove(mforms::DrawBox *backend, mforms::View *view) -> void {
   CanvasControl ^ canvas = DrawBoxWrapper::GetManagedObject<CanvasControl>(backend);
   canvas->Remove(DrawBoxWrapper::GetControl(view));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBoxWrapper::move(mforms::DrawBox *backend, mforms::View *view, int x, int y) {
+auto DrawBoxWrapper::move(mforms::DrawBox *backend, mforms::View *view, int x, int y) -> void {
   CanvasControl ^ canvas = DrawBoxWrapper::GetManagedObject<CanvasControl>(backend);
   canvas->Move(DrawBoxWrapper::GetControl(view), x, y);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBoxWrapper::drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base::Rect r) {
+auto DrawBoxWrapper::drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base::Rect r) -> void {
   auto bounds = r;
   bounds.use_inter_pixel = true;
   cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
@@ -496,7 +496,7 @@ void DrawBoxWrapper::drawFocus(::mforms::DrawBox *self, cairo_t *cr, const base:
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBoxWrapper::init() {
+auto DrawBoxWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_drawbox_impl.create = &DrawBoxWrapper::create;

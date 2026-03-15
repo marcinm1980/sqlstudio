@@ -83,7 +83,7 @@ ImportInputPage::ImportInputPage(WizardPlugin *form) : WizardPage(form, "options
 /**
  * Fills the selector (lookup) for file encodings with useful values.
  */
-void ImportInputPage::fill_encodings_list() {
+auto ImportInputPage::fill_encodings_list() -> void {
   const char *encodings[] = {"ARMSCII8", "ASCII",   "BIG5",   "BINARY", "CP1250", "CP1251",   "CP1256", "CP1257",
                              "CP850",    "CP852",   "CP866",  "CP932",  "DEC8",   "EUCJPMS",  "EUCKR",  "GB2312",
                              "GBK",      "GEOSTD8", "GREEK",  "HEBREW", "HP8",    "KEYBCS2",  "KOI8R",  "KOI8U",
@@ -109,13 +109,13 @@ void ImportInputPage::fill_encodings_list() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ImportInputPage::file_changed() {
+auto ImportInputPage::file_changed() -> void {
   validate();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ImportInputPage::allow_next() {
+auto ImportInputPage::allow_next() -> bool {
   std::string name = _file_selector.get_filename();
   if (name.empty())
     return false;
@@ -128,13 +128,13 @@ bool ImportInputPage::allow_next() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ImportInputPage::next_button_caption() {
+auto ImportInputPage::next_button_caption() -> std::string {
   return execute_caption();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ImportInputPage::gather_options(bool advancing) {
+auto ImportInputPage::gather_options(bool advancing) -> void {
   values().gset("import.filename", _file_selector.get_filename());
   values().gset("import.file_codeset", _file_codeset_sel.get_string_value());
   values().gset("import.place_figures", _autoplaceCheck.get_active());
@@ -180,26 +180,26 @@ ImportProgressPage::ImportProgressPage(WizardForm *form, const std::function<voi
 
 //--------------------------------------------------------------------------------------------------
 
-void ImportProgressPage::import_objects_finished(grt::ValueRef value) {
+auto ImportProgressPage::import_objects_finished(grt::ValueRef value) -> void {
   grt::GRT::get()->send_info(grt::StringRef::cast_from(value));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ImportProgressPage::import_objects() {
+auto ImportProgressPage::import_objects() -> bool {
   execute_grt_task(_import_be.get_task_slot(), false);
   return true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ImportProgressPage::verify_results() {
+auto ImportProgressPage::verify_results() -> bool {
   return true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ImportProgressPage::place_objects() {
+auto ImportProgressPage::place_objects() -> bool {
   if (_auto_place) {
     execute_grt_task(_import_be.get_autoplace_task_slot(), false);
     return true;
@@ -209,13 +209,13 @@ bool ImportProgressPage::place_objects() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ImportProgressPage::allow_back() {
+auto ImportProgressPage::allow_back() -> bool {
   return false;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ImportProgressPage::enter(bool advancing) {
+auto ImportProgressPage::enter(bool advancing) -> void {
   if (advancing) {
     _import_be.sql_script(values().get_string("import.filename"));
     _import_be.encoding(values().get_string("import.file_codeset"));
@@ -235,7 +235,7 @@ void ImportProgressPage::enter(bool advancing) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ImportProgressPage::get_summary() {
+auto ImportProgressPage::get_summary() -> std::string {
   std::string summary;
   int schemas = 0, tables = 0, views = 0, procedures = 0;
 
@@ -266,7 +266,7 @@ std::string ImportProgressPage::get_summary() {
   return summary;
 }
 
-void ImportProgressPage::tasks_finished(bool success) {
+auto ImportProgressPage::tasks_finished(bool success) -> void {
   if (_finished_cb)
     _finished_cb(success, get_summary());
 }
@@ -290,17 +290,17 @@ WbPluginSQLImport::WbPluginSQLImport(grt::Module *module) : WizardPlugin(module)
 
 //--------------------------------------------------------------------------------------------------
 
-void WbPluginSQLImport::update_summary(bool success, const std::string &summary) {
+auto WbPluginSQLImport::update_summary(bool success, const std::string &summary) -> void {
   _finish_page->set_title(success ? _("SQL Import Finished Successfully") : _("SQL Import Failed"));
   _finish_page->set_summary(summary);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-grtui::WizardPlugin *createImportScriptWizard(grt::Module *module, db_CatalogRef catalog) {
+auto createImportScriptWizard(grt::Module *module, db_CatalogRef catalog) -> grtui::WizardPlugin * {
   return new ScriptImport::WbPluginSQLImport(module);
 }
 
-void deleteImportScriptWizard(grtui::WizardPlugin *plugin) {
+auto deleteImportScriptWizard(grtui::WizardPlugin *plugin) -> void {
   delete plugin;
 }

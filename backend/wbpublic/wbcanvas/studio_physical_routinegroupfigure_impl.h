@@ -51,32 +51,32 @@ protected:
   wbfig::RoutineGroup *_figure;
   boost::signals2::scoped_connection _figure_conn;
 
-  virtual bool realize();
+  virtual auto realize() -> bool;
 
-  void sync_routines();
+  auto sync_routines() -> void;
 
-  void contents_changed();
+  auto contents_changed() -> void;
 
-  void member_changed(const std::string &member, const grt::ValueRef &ovalue);
-  void routinegroup_member_changed(const std::string &member, const grt::ValueRef &ovalue);
+  auto member_changed(const std::string &member, const grt::ValueRef &ovalue) -> void;
+  auto routinegroup_member_changed(const std::string &member, const grt::ValueRef &ovalue) -> void;
 
-  virtual void set_in_view(bool flag);
+  virtual auto set_in_view(bool flag) -> void;
 
 public:
   ImplData(studio_physical_RoutineGroupFigure *self);
   virtual ~ImplData(){};
 
-  void set_routine_group(const db_RoutineGroupRef &rgroup);
+  auto set_routine_group(const db_RoutineGroupRef &rgroup) -> void;
 
-  virtual mdc::CanvasItem *get_canvas_item() const {
+  virtual auto get_canvas_item() const -> mdc::CanvasItem * {
     return _figure;
   }
-  virtual bool is_realizable();
+  virtual auto is_realizable() -> bool;
 
-  virtual void unrealize();
+  virtual auto unrealize() -> void;
 
 private:
-  studio_physical_RoutineGroupFigure *self() {
+  auto self() -> studio_physical_RoutineGroupFigure * {
     return (studio_physical_RoutineGroupFigure *)_self;
   }
 };

@@ -54,34 +54,34 @@ namespace ssh {
     ssh_event _event;
     mutable base::Mutex _sessionMutex;
   public:
-    static std::shared_ptr<SSHSession> createSession();
+    static auto createSession() -> std::shared_ptr<SSHSession>;
     virtual ~SSHSession();
-    std::tuple<SSHReturnType, base::any> connect(const SSHConnectionConfig &config,
-                                                 const SSHConnectionCredentials &credentials);
+    auto connect(const SSHConnectionConfig &config,
+                                                 const SSHConnectionCredentials &credentials) -> std::tuple<SSHReturnType, base::any>;
 
-    void pollEvent();
-    void disconnect();
-    bool isConnected() const;
-    SSHConnectionConfig getConfig() const;
-    ssh::Session* getSession() const;
-    std::tuple<std::string, std::string, int> execCmd(std::string command, std::size_t logSize = LOG_SIZE_100MB);
+    auto pollEvent() -> void;
+    auto disconnect() -> void;
+    auto isConnected() const -> bool;
+    auto getConfig() const -> SSHConnectionConfig;
+    auto getSession() const -> ssh::Session*;
+    auto execCmd(std::string command, std::size_t logSize = LOG_SIZE_100MB) -> std::tuple<std::string, std::string, int>;
     std::tuple<std::string, std::string, int> execCmdSudo(std::string command, std::string password,
                                                           std::string passwordQuery = "EnterPasswordHere",
                                                           std::size_t logSize = LOG_SIZE_100MB);
 
-    base::MutexLock lockSession();
-    void reconnect();
+    auto lockSession() -> base::MutexLock;
+    auto reconnect() -> void;
   protected:
     SSHSession();
     SSHSession(const SSHSession& ses) = delete;
     SSHSession(const SSHSession&& ses) = delete;
     SSHSession &operator =(SSHSession&) = delete;
-    int verifyKnownHost(const ssh::SSHConnectionConfig &config, std::string &fingerprint);
-    void authenticateUser(const SSHConnectionCredentials &credentials);
-    void authPassword(const std::string &password);
-    void authAutoPubkey();
-    void handleAuthReturn(int auth);
-    bool openChannel(ssh::Channel *chann);
+    auto verifyKnownHost(const ssh::SSHConnectionConfig &config, std::string &fingerprint) -> int;
+    auto authenticateUser(const SSHConnectionCredentials &credentials) -> void;
+    auto authPassword(const std::string &password) -> void;
+    auto authAutoPubkey() -> void;
+    auto handleAuthReturn(int auth) -> void;
+    auto openChannel(ssh::Channel *chann) -> bool;
   };
 
 } /* namespace ssh */

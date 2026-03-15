@@ -42,7 +42,7 @@ using namespace testing;
 
 namespace {
 
-static grt::DictRef get_traits(bool case_sensitive = false) {
+static auto get_traits(bool case_sensitive = false) -> grt::DictRef {
   grt::DictRef traits(true);
   traits.set("CaseSensitive", grt::IntegerRef(case_sensitive));
   traits.set("maxTableCommentLength", grt::IntegerRef(60));
@@ -61,38 +61,38 @@ struct test_params {
   std::string comment;
 };
 
-void table_name_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
+auto table_name_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) -> void {
   model1.table->name("table1");
   model2.table->name("TABLE1");
 }
 
-void columnNameCase(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
+auto columnNameCase(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) -> void {
   model1.column->name("col");
   model2.column->name("COL");
 }
 
-void index_cloumn_name(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
+auto index_cloumn_name(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) -> void {
   model1.primaryKey->columns().get(0)->name("Iname1");
   model2.primaryKey->columns().get(0)->name("Iname2");
 }
 
-void pack_keys_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
+auto pack_keys_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) -> void {
   model1.table->packKeys("Test keys");
   model2.table->packKeys("Test Keys");
 }
 
-void pack_keys_defaults(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
+auto pack_keys_defaults(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) -> void {
   model1.table->packKeys("");
   model2.table->packKeys("DEFAULT");
 }
 
 // Bug #11889204 60478: CASE CHANGES IN ENUM VALUES ARE NOT RECOGNIZED
-void enum_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) {
+auto enum_case(SyntheticMySQLModel& model1, SyntheticMySQLModel& model2) -> void {
   model1.columnEnum->datatypeExplicitParams("(E1,e2)");
   model2.columnEnum->datatypeExplicitParams("(e1,E2)");
 }
 
-void test_table_collation(std::string src, std::string dst, bool equal = false) {
+auto test_table_collation(std::string src, std::string dst, bool equal = false) -> void {
   grt::DbObjectMatchAlterOmf omf3;
   db_TableRef table1 = db_mysql_TableRef(grt::Initialized);
   table1->set_member("defaultCollationName", grt::StringRef(src.c_str()));

@@ -48,8 +48,8 @@ struct WbUndoOthersData {
 
   #include "wb_undo_helpers.h"
 
-  void checkOverviewObject(const std::string &what, const NodeId &base_node, const std::string &list_path,
-                           size_t initial_count = 0) {
+  auto checkOverviewObject(const std::string &what, const NodeId &base_node, const std::string &list_path,
+                           size_t initial_count = 0) -> void {
     resetUndoAccounting();
 
     // Checks Overview object handling by adding a node, renaming it and then deleting it
@@ -160,7 +160,7 @@ class General_Undo_RedoTest : public ::testing::Test {
 protected:
   static std::unique_ptr<WbUndoOthersData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<WbUndoOthersData>();
     data->tester.reset(new MySqlStudioTester());
     data->tester->createNewDocument();
@@ -189,7 +189,7 @@ protected:
     EXPECT_EQ(data->um->get_undo_stack().size(), 0U) << "undo stack is empty";
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

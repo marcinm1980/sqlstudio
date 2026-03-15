@@ -38,27 +38,27 @@ namespace wb {
     WBComponentLogical(WBContext *wb);
     virtual ~WBComponentLogical(){};
 
-    static std::string name() {
+    static auto name() -> std::string {
       return "logical";
     }
-    virtual std::string get_name() {
+    virtual auto get_name() -> std::string {
       return WBComponentLogical::name();
     }
-    virtual std::string get_diagram_class_name() {
+    virtual auto get_diagram_class_name() -> std::string {
       return studio_logical_Diagram::static_class_name();
     }
 
-    void setup_logical_model(studio_DocumentRef &doc);
+    auto setup_logical_model(studio_DocumentRef &doc) -> void;
 
-    virtual void activate_canvas_object(const model_ObjectRef &object, bool newwindow) {
+    virtual auto activate_canvas_object(const model_ObjectRef &object, bool newwindow) -> void {
     }
-    virtual bool handles_figure(const model_ObjectRef &) {
+    virtual auto handles_figure(const model_ObjectRef &) -> bool {
       return false;
     }
 
-    virtual void setup_canvas_tool(wb::ModelDiagramForm *, const std::string &) {
+    virtual auto setup_canvas_tool(wb::ModelDiagramForm *, const std::string &) -> void {
     }
-    virtual bool delete_model_object(const model_ObjectRef &, bool figure_only) {
+    virtual auto delete_model_object(const model_ObjectRef &, bool figure_only) -> bool {
       return false;
     }
   };

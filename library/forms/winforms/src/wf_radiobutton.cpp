@@ -61,7 +61,7 @@ RadioButtonWrapper::RadioButtonWrapper(mforms::RadioButton *button) : ButtonWrap
 
 //--------------------------------------------------------------------------------------------------
 
-bool RadioButtonWrapper::create(mforms::RadioButton *backend, int) {
+auto RadioButtonWrapper::create(mforms::RadioButton *backend, int) -> bool {
   RadioButtonWrapper *wrapper = new RadioButtonWrapper(backend);
 
   MformsRadioButton ^ button = RadioButtonWrapper::Create<MformsRadioButton>(backend, wrapper);
@@ -71,21 +71,21 @@ bool RadioButtonWrapper::create(mforms::RadioButton *backend, int) {
 
 //--------------------------------------------------------------------------------------------------
 
-void RadioButtonWrapper::set_active(mforms::RadioButton *backend, bool flag) {
+auto RadioButtonWrapper::set_active(mforms::RadioButton *backend, bool flag) -> void {
   RadioButton ^ button = RadioButtonWrapper::GetManagedObject<RadioButton>(backend);
   button->Checked = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool RadioButtonWrapper::get_active(mforms::RadioButton *backend) {
+auto RadioButtonWrapper::get_active(mforms::RadioButton *backend) -> bool {
   RadioButton ^ button = RadioButtonWrapper::GetManagedObject<RadioButton>(backend);
   return button->Checked;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void RadioButtonWrapper::init() {
+auto RadioButtonWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_radio_impl.create = &RadioButtonWrapper::create;

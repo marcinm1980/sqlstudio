@@ -45,8 +45,8 @@ namespace {
 
     std::string dataDir;
 
-    void doForwardEngineering(std::string &modelfile, std::string &expectedFileName,
-                              std::map<std::string, bool> &fwd_opts) {
+    auto doForwardEngineering(std::string &modelfile, std::string &expectedFileName,
+                              std::map<std::string, bool> &fwd_opts) -> void {
       EXPECT_TRUE(base::file_exists(modelfile)) << "Model file not found";
 
       tester->wb->open_document(modelfile);

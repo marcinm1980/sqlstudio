@@ -37,39 +37,39 @@
 class WBPLUGINDBMYSQLBE_PUBLIC_FUNC Sql_import {
 public:
   virtual ~Sql_import(){};
-  void grtm();
+  auto grtm() -> void;
 
   std::function<grt::ValueRef()> get_task_slot();
 
   std::function<grt::ValueRef()> get_autoplace_task_slot();
 
 private:
-  grt::StringRef parse_sql_script(db_CatalogRef catalog, const std::string &sql_script);
-  virtual void parse_sql_script(parsers::MySQLParserServices::Ref sql_parser, parsers::MySQLParserContext::Ref context,
-                                db_CatalogRef &catalog, const std::string &sql_script, grt::DictRef &options);
-  virtual db_CatalogRef target_catalog();
+  auto parse_sql_script(db_CatalogRef catalog, const std::string &sql_script) -> grt::StringRef;
+  virtual auto parse_sql_script(parsers::MySQLParserServices::Ref sql_parser, parsers::MySQLParserContext::Ref context,
+                                db_CatalogRef &catalog, const std::string &sql_script, grt::DictRef &options) -> void;
+  virtual auto target_catalog() -> db_CatalogRef;
 
 public:
-  virtual std::string sql_script() {
+  virtual auto sql_script() -> std::string {
     return _sqlScript;
   }
 
-  virtual void sql_script(const std::string &sql) {
+  virtual auto sql_script(const std::string &sql) -> void {
     _sqlScript = sql;
   }
 
-  virtual void encoding(const std::string &value) {
+  virtual auto encoding(const std::string &value) -> void {
     _encoding = value;
   }
 
-  virtual void sqlMode(const std::string &mode) {
+  virtual auto sqlMode(const std::string &mode) -> void {
     _sqlMode = mode;
   }
 
-  grt::ListRef<GrtObject> get_created_objects();
+  auto get_created_objects() -> grt::ListRef<GrtObject>;
 
 protected:
-  grt::ValueRef autoplace_grt();
+  auto autoplace_grt() -> grt::ValueRef;
 
   grt::DictRef _options;
 

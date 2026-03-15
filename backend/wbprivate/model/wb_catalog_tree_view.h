@@ -62,7 +62,7 @@ namespace wb {
 
     public:
       ObjectNodeData(grt::ObjectRef obj_ref);
-      inline grt::ObjectRef get_object_ref();
+      inline auto get_object_ref() -> grt::ObjectRef;
     };
 
     enum ObjectType { ObjSchema, ObjTable, ObjView, ObjRoutineGrp, ObjNone };
@@ -71,24 +71,24 @@ namespace wb {
     std::list<GrtObjectRef> _dragged_objects;
     bool _initialized;
 
-    void context_menu_will_show(mforms::MenuItem *parent_item);
+    auto context_menu_will_show(mforms::MenuItem *parent_item) -> void;
     std::function<void(grt::ValueRef)> _activate_callback;
 
   protected:
-    virtual bool get_drag_data(mforms::DragDetails &details, void **data, std::string &format);
-    void menu_action(const std::string &name, grt::ValueRef val);
-    mforms::TreeNodeRef create_new_node(const ObjectType &otype, mforms::TreeNodeRef parent, const std::string &name,
-                                        grt::ObjectRef val);
+    virtual auto get_drag_data(mforms::DragDetails &details, void **data, std::string &format) -> bool;
+    auto menu_action(const std::string &name, grt::ValueRef val) -> void;
+    auto create_new_node(const ObjectType &otype, mforms::TreeNodeRef parent, const std::string &name,
+                                        grt::ObjectRef val) -> mforms::TreeNodeRef;
 
   public:
     CatalogTreeView(ModelDiagramForm *owner);
     virtual ~CatalogTreeView();
-    virtual void node_activated(mforms::TreeNodeRef row, int column);
-    void refill(bool force = false);
-    void set_activate_callback(const std::function<void(grt::ValueRef)> &active_callback);
-    void mark_node(grt::ValueRef val, bool mark = true);
-    void add_update_node_caption(grt::ValueRef val);
-    void remove_node(grt::ValueRef val);
+    virtual auto node_activated(mforms::TreeNodeRef row, int column) -> void;
+    auto refill(bool force = false) -> void;
+    auto set_activate_callback(const std::function<void(grt::ValueRef)> &active_callback) -> void;
+    auto mark_node(grt::ValueRef val, bool mark = true) -> void;
+    auto add_update_node_caption(grt::ValueRef val) -> void;
+    auto remove_node(grt::ValueRef val) -> void;
   };
 };
 

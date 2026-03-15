@@ -33,86 +33,86 @@ namespace mforms {
 
 class GridView : public Gtk::TreeView {
 public:
-  static GridView *create(bec::GridModel::Ref model, bool fixed_row_height = true, bool allow_cell_selection = true);
+  static auto create(bec::GridModel::Ref model, bool fixed_row_height = true, bool allow_cell_selection = true) -> GridView *;
   GridView(bec::GridModel::Ref model, bool fixed_row_height = true, bool allow_cell_selection = true);
   ~GridView();
 
-  void set_text_cell_fixed_height(bool val);
+  auto set_text_cell_fixed_height(bool val) -> void;
 
-  bool allow_cell_selection() {
+  auto allow_cell_selection() -> bool {
     return _allow_cell_selection;
   }
 
-  void set_context_menu(mforms::Menu *menu);
-  void set_context_menu_responder(const sigc::slot<void> &slot);
+  auto set_context_menu(mforms::Menu *menu) -> void;
+  auto set_context_menu_responder(const sigc::slot<void> &slot) -> void;
 
-  std::vector<int> get_selected_rows();
+  auto get_selected_rows() -> std::vector<int>;
 
-  void model(bec::GridModel::Ref value);
+  auto model(bec::GridModel::Ref value) -> void;
 
-  int refresh(bool reset_columns);
+  auto refresh(bool reset_columns) -> int;
 
-  void scroll_to(const int whence); // whence == 0 seeks to start, whence == 1 seeks to end
+  auto scroll_to(const int whence) -> void; // whence == 0 seeks to start, whence == 1 seeks to end
 
-  bool selection_is_cell() {
+  auto selection_is_cell() -> bool {
     return _selected_cell;
   }
-  bec::NodeId current_cell(int &row, int &col);
-  int current_row();
-  void select_cell(int row, int col);
-  void select_cell(int row, Gtk::TreeViewColumn &col);
+  auto current_cell(int &row, int &col) -> bec::NodeId;
+  auto current_row() -> int;
+  auto select_cell(int row, int col) -> void;
+  auto select_cell(int row, Gtk::TreeViewColumn &col) -> void;
 
-  void on_column_header_clicked(Gtk::TreeViewColumn *column, int column_index);
-  void sort_by_column(int column_index, int sort_direction, bool retaining);
+  auto on_column_header_clicked(Gtk::TreeViewColumn *column, int column_index) -> void;
+  auto sort_by_column(int column_index, int sort_direction, bool retaining) -> void;
 
-  int row_count() const;
-  void row_numbers_visible(bool value) {
+  auto row_count() const -> int;
+  auto row_numbers_visible(bool value) -> void {
     _view_model->row_numbers_visible(value);
   }
 
-  sigc::signal<void, const Glib::ustring &, const Glib::ustring &> signal_cell_edited() {
+  auto signal_cell_edited() -> sigc::signal<void, const Glib::ustring &, const Glib::ustring &> {
     return _signal_cell_edited;
   }
   // sigc::slot<void, const Glib::ustring&, const Glib::ustring&> slot_cell_edited() { return
   // _signal_cell_edited.make_slot(); }
-  sigc::signal<void> signal_row_count_changed() {
+  auto signal_row_count_changed() -> sigc::signal<void> {
     return _signal_row_count_changed;
   }
   sigc::signal<void, int, int, bool> signal_sort_by_column;
 
-  void on_cell_edited(const Glib::ustring &path_string, const Glib::ustring &new_text);
-  void on_cell_editing_started(Gtk::CellEditable *e, const Glib::ustring &path, Gtk::TreeViewColumn *column);
-  void on_text_insert(unsigned int position, const char *incoming_text, unsigned int character_num);
-  void on_cell_editing_done();
+  auto on_cell_edited(const Glib::ustring &path_string, const Glib::ustring &new_text) -> void;
+  auto on_cell_editing_started(Gtk::CellEditable *e, const Glib::ustring &path, Gtk::TreeViewColumn *column) -> void;
+  auto on_text_insert(unsigned int position, const char *incoming_text, unsigned int character_num) -> void;
+  auto on_cell_editing_done() -> void;
 
-  void set_ellipsize(const int column, const bool on) {
+  auto set_ellipsize(const int column, const bool on) -> void {
     _view_model->set_ellipsize(column, on);
   }
-  GridViewModel::Ref view_model() {
+  auto view_model() -> GridViewModel::Ref {
     return _view_model;
   }
 
-  void sync_row_count();
+  auto sync_row_count() -> void;
 
   std::function<void(std::vector<int>)> _copy_func_ptr;
-  void copy();
+  auto copy() -> void;
 
 protected:
-  virtual bool on_key_press_event(GdkEventKey *event);
-  virtual bool on_button_press_event(GdkEventButton *event);
-  bool on_focus_out(GdkEventFocus *event, Gtk::CellRenderer *cell, Gtk::Entry *e);
-  void on_signal_cursor_changed();
-  void on_signal_button_release_event(GdkEventButton *ev);
-  void reset_sorted_columns();
+  virtual auto on_key_press_event(GdkEventKey *event) -> bool;
+  virtual auto on_button_press_event(GdkEventButton *event) -> bool;
+  auto on_focus_out(GdkEventFocus *event, Gtk::CellRenderer *cell, Gtk::Entry *e) -> bool;
+  auto on_signal_cursor_changed() -> void;
+  auto on_signal_button_release_event(GdkEventButton *ev) -> void;
+  auto reset_sorted_columns() -> void;
 
 private:
-  virtual void init();
+  virtual auto init() -> void;
 
   sigc::signal<void, const Glib::ustring &, const Glib::ustring &> _signal_cell_edited;
   sigc::signal<void> _signal_row_count_changed;
 
-  void activate_popup_menu_item(const std::string &action, const std::vector<int> &rows, int clicked_column);
-  void delete_selected_rows();
+  auto activate_popup_menu_item(const std::string &action, const std::vector<int> &rows, int clicked_column) -> void;
+  auto delete_selected_rows() -> void;
 
   bec::GridModel::Ref _model;
   GridViewModel::Ref _view_model;

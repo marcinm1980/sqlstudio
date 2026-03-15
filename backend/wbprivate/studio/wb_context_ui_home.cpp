@@ -70,7 +70,7 @@ using namespace base;
 /**
  * Helper method to construct a human-readable server description.
  */
-std::string get_server_info(db_mgmt_ServerInstanceRef instance) {
+auto get_server_info(db_mgmt_ServerInstanceRef instance) -> std::string {
   std::string text;
   std::string system = instance->serverInfo().get_string("sys.system");
 
@@ -266,7 +266,7 @@ void move_item_to_group(std::string group, grt::ListRef<T> items, const grt::Val
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::show_about() {
+auto WBContextUI::show_about() -> void {
   AboutBox::show_about(_wb->get_root()->info()->edition());
 }
 
@@ -277,7 +277,7 @@ void WBContextUI::show_about() {
  * the main application window.
  */
 
-void WBContextUI::show_home_screen() {
+auto WBContextUI::show_home_screen() -> void {
   if (_home_screen != nullptr) {
     _home_screen->showSection(0);
     mforms::App::get()->select_view(_home_screen);
@@ -500,7 +500,7 @@ void WBContextUI::show_home_screen() {
 
 //--------------------------------------------------------------------------------------------------
 
-db_mgmt_ConnectionRef WBContextUI::getConnectionById(const std::string &id) {
+auto WBContextUI::getConnectionById(const std::string &id) -> db_mgmt_ConnectionRef {
   grt::ListRef<db_mgmt_Connection> connections(_wb->get_root()->rdbmsMgmt()->storedConns());
   for (std::size_t i = 0; i < connections->count(); ++i) {
     if (connections[i].id() == id)
@@ -512,7 +512,7 @@ db_mgmt_ConnectionRef WBContextUI::getConnectionById(const std::string &id) {
 
 //--------------------------------------------------------------------------------------------------
 
-static bool isSSHConnection(const db_mgmt_ConnectionRef &connection) {
+static auto isSSHConnection(const db_mgmt_ConnectionRef &connection) -> bool {
   if (connection.is_valid()) {
     std::string driver = connection->driver().is_valid() ? connection->driver()->name() : "";
     return (driver == "MysqlNativeSSH");
@@ -525,7 +525,7 @@ static bool isSSHConnection(const db_mgmt_ConnectionRef &connection) {
 /**
  * Determines if the given connection is a local connection (i.e. to the current box).
  */
-static bool isLocalConnection(const db_mgmt_ConnectionRef &connection) {
+static auto isLocalConnection(const db_mgmt_ConnectionRef &connection) -> bool {
   if (connection.is_valid()) {
     std::string hostname = connection->parameterValues().get_string("hostName");
 
@@ -535,7 +535,7 @@ static bool isLocalConnection(const db_mgmt_ConnectionRef &connection) {
   return false;
 }
 
-anyMap WBContextUI::connectionToMap(db_mgmt_ConnectionRef connection) {
+auto WBContextUI::connectionToMap(db_mgmt_ConnectionRef connection) -> anyMap {
   anyMap output;
 
   if (!connection.is_valid())
@@ -577,7 +577,7 @@ anyMap WBContextUI::connectionToMap(db_mgmt_ConnectionRef connection) {
  * Removes a connection from the stored connections list along with all associated data
  * (including its server instance entry).
  */
-void WBContextUI::remove_connection(const db_mgmt_ConnectionRef &connection) {
+auto WBContextUI::remove_connection(const db_mgmt_ConnectionRef &connection) -> void {
   grt::BaseListRef args(true);
   args->insert_unchecked(connection);
 
@@ -586,7 +586,7 @@ void WBContextUI::remove_connection(const db_mgmt_ConnectionRef &connection) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::handle_home_context_menu(const base::any &object, const std::string &action) {
+auto WBContextUI::handle_home_context_menu(const base::any &object, const std::string &action) -> void {
   if (action == "open_connection") {
     handle_home_action(HomeScreenAction::ActionOpenConnectionFromList, object);
   } else if (action == "delete_connection") {
@@ -776,8 +776,8 @@ void WBContextUI::handle_home_context_menu(const base::any &object, const std::s
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::start_plugin(const std::string &title, const std::string &command, const bec::ArgumentPool &defaults,
-                               bool force_external) {
+auto WBContextUI::start_plugin(const std::string &title, const std::string &command, const bec::ArgumentPool &defaults,
+                               bool force_external) -> void {
   try {
     std::string message_title = base::strfmt(_("Starting %s"), title.c_str());
     GUILock lock(_wb, message_title, _("Please stand by while the plugin is started..."));
@@ -796,7 +796,7 @@ void WBContextUI::start_plugin(const std::string &title, const std::string &comm
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::handle_home_action(mforms::HomeScreenAction action, const base::any &anyObject) {
+auto WBContextUI::handle_home_action(mforms::HomeScreenAction action, const base::any &anyObject) -> void {
   switch (action) {
     case HomeScreenAction::ActionNone:
       break;
@@ -1001,7 +1001,7 @@ void WBContextUI::handle_home_action(mforms::HomeScreenAction action, const base
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::refresh_home_connections(bool clear_state) {
+auto WBContextUI::refresh_home_connections(bool clear_state) -> void {
   if (!_home_screen)
     return;
 
@@ -1092,7 +1092,7 @@ void WBContextUI::refresh_home_connections(bool clear_state) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBContextUI::refresh_home_documents() {
+auto WBContextUI::refresh_home_documents() -> void {
   if (!_home_screen)
     return;
 

@@ -92,7 +92,7 @@ public:
       _targetSchemaName("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.SyncProfile";
   }
 
@@ -103,11 +103,11 @@ public:
    * \par In Python:
    *    value = obj.lastKnownDBNames
    */
-  grt::DictRef lastKnownDBNames() const { return _lastKnownDBNames; }
+  auto lastKnownDBNames() const -> grt::DictRef { return _lastKnownDBNames; }
 
 
 private: // The next attribute is read-only.
-  virtual void lastKnownDBNames(const grt::DictRef &value) {
+  virtual auto lastKnownDBNames(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_lastKnownDBNames);
     _lastKnownDBNames = value;
     member_changed("lastKnownDBNames", ovalue, value);
@@ -121,11 +121,11 @@ public:
    * \par In Python:
    *    value = obj.lastKnownViewDefinitions
    */
-  grt::DictRef lastKnownViewDefinitions() const { return _lastKnownViewDefinitions; }
+  auto lastKnownViewDefinitions() const -> grt::DictRef { return _lastKnownViewDefinitions; }
 
 
 private: // The next attribute is read-only.
-  virtual void lastKnownViewDefinitions(const grt::DictRef &value) {
+  virtual auto lastKnownViewDefinitions(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_lastKnownViewDefinitions);
     _lastKnownViewDefinitions = value;
     member_changed("lastKnownViewDefinitions", ovalue, value);
@@ -139,7 +139,7 @@ public:
    * \par In Python:
    *    value = obj.lastSyncDate
    */
-  grt::StringRef lastSyncDate() const { return _lastSyncDate; }
+  auto lastSyncDate() const -> grt::StringRef { return _lastSyncDate; }
 
   /**
    * Setter for attribute lastSyncDate
@@ -148,7 +148,7 @@ public:
    * \par In Python:
    *   obj.lastSyncDate = value
    */
-  virtual void lastSyncDate(const grt::StringRef &value) {
+  virtual auto lastSyncDate(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_lastSyncDate);
     _lastSyncDate = value;
     member_changed("lastSyncDate", ovalue, value);
@@ -161,7 +161,7 @@ public:
    * \par In Python:
    *    value = obj.targetHostIdentifier
    */
-  grt::StringRef targetHostIdentifier() const { return _targetHostIdentifier; }
+  auto targetHostIdentifier() const -> grt::StringRef { return _targetHostIdentifier; }
 
   /**
    * Setter for attribute targetHostIdentifier
@@ -170,7 +170,7 @@ public:
    * \par In Python:
    *   obj.targetHostIdentifier = value
    */
-  virtual void targetHostIdentifier(const grt::StringRef &value) {
+  virtual auto targetHostIdentifier(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_targetHostIdentifier);
     _targetHostIdentifier = value;
     member_changed("targetHostIdentifier", ovalue, value);
@@ -183,7 +183,7 @@ public:
    * \par In Python:
    *    value = obj.targetSchemaName
    */
-  grt::StringRef targetSchemaName() const { return _targetSchemaName; }
+  auto targetSchemaName() const -> grt::StringRef { return _targetSchemaName; }
 
   /**
    * Setter for attribute targetSchemaName
@@ -192,7 +192,7 @@ public:
    * \par In Python:
    *   obj.targetSchemaName = value
    */
-  virtual void targetSchemaName(const grt::StringRef &value) {
+  virtual auto targetSchemaName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_targetSchemaName);
     _targetSchemaName = value;
     member_changed("targetSchemaName", ovalue, value);
@@ -207,12 +207,12 @@ protected:
   grt::StringRef _targetSchemaName;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_SyncProfile());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -256,7 +256,7 @@ public:
       _serverInfo(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.ServerInstance";
   }
 
@@ -267,7 +267,7 @@ public:
    * \par In Python:
    *    value = obj.connection
    */
-  db_mgmt_ConnectionRef connection() const { return _connection; }
+  auto connection() const -> db_mgmt_ConnectionRef { return _connection; }
 
   /**
    * Setter for attribute connection
@@ -276,7 +276,7 @@ public:
    * \par In Python:
    *   obj.connection = value
    */
-  virtual void connection(const db_mgmt_ConnectionRef &value) {
+  virtual auto connection(const db_mgmt_ConnectionRef &value) -> void {
     grt::ValueRef ovalue(_connection);
     _connection = value;
     member_changed("connection", ovalue, value);
@@ -289,11 +289,11 @@ public:
    * \par In Python:
    *    value = obj.loginInfo
    */
-  grt::DictRef loginInfo() const { return _loginInfo; }
+  auto loginInfo() const -> grt::DictRef { return _loginInfo; }
 
 
 private: // The next attribute is read-only.
-  virtual void loginInfo(const grt::DictRef &value) {
+  virtual auto loginInfo(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_loginInfo);
     _loginInfo = value;
     member_changed("loginInfo", ovalue, value);
@@ -307,11 +307,11 @@ public:
    * \par In Python:
    *    value = obj.serverInfo
    */
-  grt::DictRef serverInfo() const { return _serverInfo; }
+  auto serverInfo() const -> grt::DictRef { return _serverInfo; }
 
 
 private: // The next attribute is read-only.
-  virtual void serverInfo(const grt::DictRef &value) {
+  virtual auto serverInfo(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_serverInfo);
     _serverInfo = value;
     member_changed("serverInfo", ovalue, value);
@@ -325,12 +325,12 @@ protected:
   grt::DictRef _serverInfo;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_ServerInstance());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -367,7 +367,7 @@ public:
 
   virtual ~db_mgmt_SSHFile();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.SSHFile";
   }
 
@@ -375,35 +375,35 @@ public:
    * Method. get path for the file
    * \return 
    */
-  virtual grt::StringRef getPath();
+  virtual auto getPath() -> grt::StringRef;
   /**
    * Method. read up to length bytes from this file.
    * \param length 
    * \return 
    */
-  virtual grt::StringRef read(ssize_t length);
+  virtual auto read(ssize_t length) -> grt::StringRef;
   /**
    * Method. read from file until line termination is found '\n'
    * \return 
    */
-  virtual grt::StringRef readline();
+  virtual auto readline() -> grt::StringRef;
   /**
    * Method. reposition the file's current position.
    * \param offset 
    * \return 
    */
-  virtual grt::IntegerRef seek(ssize_t offset);
+  virtual auto seek(ssize_t offset) -> grt::IntegerRef;
   /**
    * Method. return the file's current position.
    * \return 
    */
-  virtual grt::IntegerRef tell();
+  virtual auto tell() -> grt::IntegerRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -411,7 +411,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_SSHFile());
   }
 
@@ -426,7 +426,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_tell(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<db_mgmt_SSHFile*>(self)->tell(); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -453,7 +453,7 @@ public:
 
   virtual ~db_mgmt_SSHConnection();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.SSHConnection";
   }
 
@@ -462,115 +462,115 @@ public:
    * \param directory new location
    * \return indicator whenever change was successfull
    */
-  virtual grt::IntegerRef cd(const std::string &directory);
+  virtual auto cd(const std::string &directory) -> grt::IntegerRef;
   /**
    * Method. make connection to remote server
    * \return 
    */
-  virtual grt::IntegerRef connect();
+  virtual auto connect() -> grt::IntegerRef;
   /**
    * Method. disconnect ssh connection
    * \return 
    */
-  virtual void disconnect();
+  virtual auto disconnect() -> void;
   /**
    * Method. execute command on the remote server
    * \param text the command to be executed on the server
    * \return command output
    */
-  virtual grt::DictRef executeCommand(const std::string &text);
+  virtual auto executeCommand(const std::string &text) -> grt::DictRef;
   /**
    * Method. execute command on the remote server using sudo
    * \param command the command to be executed on the server
    * \param user the user which should execute the command
    * \return command output
    */
-  virtual grt::DictRef executeSudoCommand(const std::string &command, const std::string &user);
+  virtual auto executeSudoCommand(const std::string &command, const std::string &user) -> grt::DictRef;
   /**
    * Method. check if given filename exists
    * \param path path to remote file
    * \return indicator whenever file exists
    */
-  virtual grt::IntegerRef fileExists(const std::string &path);
+  virtual auto fileExists(const std::string &path) -> grt::IntegerRef;
   /**
    * Method. download remote file
    * \param src remote file path
    * \param dest local file path
    * \return 
    */
-  virtual void get(const std::string &src, const std::string &dest);
+  virtual auto get(const std::string &src, const std::string &dest) -> void;
   /**
    * Method. fetch remote file into variable
    * \param src remote file path
    * \return remote file content
    */
-  virtual grt::StringRef getContent(const std::string &src);
+  virtual auto getContent(const std::string &src) -> grt::StringRef;
   /**
    * Method. check if connection is active
    * \return 
    */
-  virtual grt::IntegerRef isConnected();
+  virtual auto isConnected() -> grt::IntegerRef;
   /**
    * Method. list remote directory contents
    * \param path remote location
    * \return 
    */
-  virtual grt::DictListRef ls(const std::string &path);
+  virtual auto ls(const std::string &path) -> grt::DictListRef;
   /**
    * Method. create new directory on remote host
    * \param directory new directory name or absolute path to the new directory
    * \return 
    */
-  virtual void mkdir(const std::string &directory);
+  virtual auto mkdir(const std::string &directory) -> void;
   /**
    * Method. open remote file
    * \param path remote file location
    * \return 
    */
-  virtual db_mgmt_SSHFileRef open(const std::string &path);
+  virtual auto open(const std::string &path) -> db_mgmt_SSHFileRef;
   /**
    * Method. upload file to remote location
    * \param src local file path
    * \param dest remote file path
    * \return 
    */
-  virtual void put(const std::string &src, const std::string &dest);
+  virtual auto put(const std::string &src, const std::string &dest) -> void;
   /**
    * Method. get current working directory
    * \return current working directory
    */
-  virtual grt::StringRef pwd();
+  virtual auto pwd() -> grt::StringRef;
   /**
    * Method. remove remote directory
    * \param directory directory name or absolute path to the directory
    * \return 
    */
-  virtual void rmdir(const std::string &directory);
+  virtual auto rmdir(const std::string &directory) -> void;
   /**
    * Method. create remote file with content
    * \param path remote file path
    * \param content remote file content
    * \return 
    */
-  virtual void setContent(const std::string &path, const std::string &content);
+  virtual auto setContent(const std::string &path, const std::string &content) -> void;
   /**
    * Method. get remote path details
    * \param path path to remote directory or file
    * \return Dict object with file attributes
    */
-  virtual grt::DictRef stat(const std::string &path);
+  virtual auto stat(const std::string &path) -> grt::DictRef;
   /**
    * Method. remove remote file
    * \param file filename or absolute path to the file
    * \return 
    */
-  virtual void unlink(const std::string &file);
+  virtual auto unlink(const std::string &file) -> void;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -578,7 +578,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_SSHConnection());
   }
 
@@ -619,7 +619,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_unlink(grt::internal::Object *self, const grt::BaseListRef &args){ dynamic_cast<db_mgmt_SSHConnection*>(self)->unlink(grt::StringRef::cast_from(args[0])); return grt::ValueRef(); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -658,7 +658,7 @@ public:
       _parameterValues(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.Connection";
   }
 
@@ -669,7 +669,7 @@ public:
    * \par In Python:
    *    value = obj.driver
    */
-  db_mgmt_DriverRef driver() const { return _driver; }
+  auto driver() const -> db_mgmt_DriverRef { return _driver; }
 
   /**
    * Setter for attribute driver
@@ -678,7 +678,7 @@ public:
    * \par In Python:
    *   obj.driver = value
    */
-  virtual void driver(const db_mgmt_DriverRef &value) {
+  virtual auto driver(const db_mgmt_DriverRef &value) -> void {
     grt::ValueRef ovalue(_driver);
     _driver = value;
     member_changed("driver", ovalue, value);
@@ -691,7 +691,7 @@ public:
    * \par In Python:
    *    value = obj.hostIdentifier
    */
-  grt::StringRef hostIdentifier() const { return _hostIdentifier; }
+  auto hostIdentifier() const -> grt::StringRef { return _hostIdentifier; }
 
   /**
    * Setter for attribute hostIdentifier
@@ -700,7 +700,7 @@ public:
    * \par In Python:
    *   obj.hostIdentifier = value
    */
-  virtual void hostIdentifier(const grt::StringRef &value) {
+  virtual auto hostIdentifier(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_hostIdentifier);
     _hostIdentifier = value;
     member_changed("hostIdentifier", ovalue, value);
@@ -713,7 +713,7 @@ public:
    * \par In Python:
    *    value = obj.isDefault
    */
-  grt::IntegerRef isDefault() const { return _isDefault; }
+  auto isDefault() const -> grt::IntegerRef { return _isDefault; }
 
   /**
    * Setter for attribute isDefault
@@ -722,7 +722,7 @@ public:
    * \par In Python:
    *   obj.isDefault = value
    */
-  virtual void isDefault(const grt::IntegerRef &value) {
+  virtual auto isDefault(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isDefault);
     _isDefault = value;
     member_changed("isDefault", ovalue, value);
@@ -735,11 +735,11 @@ public:
    * \par In Python:
    *    value = obj.modules
    */
-  grt::DictRef modules() const { return _modules; }
+  auto modules() const -> grt::DictRef { return _modules; }
 
 
 private: // The next attribute is read-only.
-  virtual void modules(const grt::DictRef &value) {
+  virtual auto modules(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_modules);
     _modules = value;
     member_changed("modules", ovalue, value);
@@ -753,11 +753,11 @@ public:
    * \par In Python:
    *    value = obj.parameterValues
    */
-  grt::DictRef parameterValues() const { return _parameterValues; }
+  auto parameterValues() const -> grt::DictRef { return _parameterValues; }
 
 
 private: // The next attribute is read-only.
-  virtual void parameterValues(const grt::DictRef &value) {
+  virtual auto parameterValues(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_parameterValues);
     _parameterValues = value;
     member_changed("parameterValues", ovalue, value);
@@ -773,12 +773,12 @@ protected:
   grt::DictRef _parameterValues;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_Connection());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -832,7 +832,7 @@ public:
       _required(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.DriverParameter";
   }
 
@@ -843,7 +843,7 @@ public:
    * \par In Python:
    *    value = obj.accessibilityName
    */
-  grt::StringRef accessibilityName() const { return _accessibilityName; }
+  auto accessibilityName() const -> grt::StringRef { return _accessibilityName; }
 
   /**
    * Setter for attribute accessibilityName
@@ -852,7 +852,7 @@ public:
    * \par In Python:
    *   obj.accessibilityName = value
    */
-  virtual void accessibilityName(const grt::StringRef &value) {
+  virtual auto accessibilityName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_accessibilityName);
     _accessibilityName = value;
     member_changed("accessibilityName", ovalue, value);
@@ -865,7 +865,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -874,7 +874,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -887,7 +887,7 @@ public:
    * \par In Python:
    *    value = obj.defaultValue
    */
-  grt::StringRef defaultValue() const { return _defaultValue; }
+  auto defaultValue() const -> grt::StringRef { return _defaultValue; }
 
   /**
    * Setter for attribute defaultValue
@@ -896,7 +896,7 @@ public:
    * \par In Python:
    *   obj.defaultValue = value
    */
-  virtual void defaultValue(const grt::StringRef &value) {
+  virtual auto defaultValue(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultValue);
     _defaultValue = value;
     member_changed("defaultValue", ovalue, value);
@@ -909,7 +909,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -918,7 +918,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -931,7 +931,7 @@ public:
    * \par In Python:
    *    value = obj.layoutAdvanced
    */
-  grt::IntegerRef layoutAdvanced() const { return _layoutAdvanced; }
+  auto layoutAdvanced() const -> grt::IntegerRef { return _layoutAdvanced; }
 
   /**
    * Setter for attribute layoutAdvanced
@@ -940,7 +940,7 @@ public:
    * \par In Python:
    *   obj.layoutAdvanced = value
    */
-  virtual void layoutAdvanced(const grt::IntegerRef &value) {
+  virtual auto layoutAdvanced(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_layoutAdvanced);
     _layoutAdvanced = value;
     member_changed("layoutAdvanced", ovalue, value);
@@ -953,7 +953,7 @@ public:
    * \par In Python:
    *    value = obj.layoutRow
    */
-  grt::IntegerRef layoutRow() const { return _layoutRow; }
+  auto layoutRow() const -> grt::IntegerRef { return _layoutRow; }
 
   /**
    * Setter for attribute layoutRow
@@ -962,7 +962,7 @@ public:
    * \par In Python:
    *   obj.layoutRow = value
    */
-  virtual void layoutRow(const grt::IntegerRef &value) {
+  virtual auto layoutRow(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_layoutRow);
     _layoutRow = value;
     member_changed("layoutRow", ovalue, value);
@@ -975,7 +975,7 @@ public:
    * \par In Python:
    *    value = obj.layoutWidth
    */
-  grt::IntegerRef layoutWidth() const { return _layoutWidth; }
+  auto layoutWidth() const -> grt::IntegerRef { return _layoutWidth; }
 
   /**
    * Setter for attribute layoutWidth
@@ -984,7 +984,7 @@ public:
    * \par In Python:
    *   obj.layoutWidth = value
    */
-  virtual void layoutWidth(const grt::IntegerRef &value) {
+  virtual auto layoutWidth(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_layoutWidth);
     _layoutWidth = value;
     member_changed("layoutWidth", ovalue, value);
@@ -997,7 +997,7 @@ public:
    * \par In Python:
    *    value = obj.lookupValueMethod
    */
-  grt::StringRef lookupValueMethod() const { return _lookupValueMethod; }
+  auto lookupValueMethod() const -> grt::StringRef { return _lookupValueMethod; }
 
   /**
    * Setter for attribute lookupValueMethod
@@ -1006,7 +1006,7 @@ public:
    * \par In Python:
    *   obj.lookupValueMethod = value
    */
-  virtual void lookupValueMethod(const grt::StringRef &value) {
+  virtual auto lookupValueMethod(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_lookupValueMethod);
     _lookupValueMethod = value;
     member_changed("lookupValueMethod", ovalue, value);
@@ -1019,7 +1019,7 @@ public:
    * \par In Python:
    *    value = obj.lookupValueModule
    */
-  grt::StringRef lookupValueModule() const { return _lookupValueModule; }
+  auto lookupValueModule() const -> grt::StringRef { return _lookupValueModule; }
 
   /**
    * Setter for attribute lookupValueModule
@@ -1028,7 +1028,7 @@ public:
    * \par In Python:
    *   obj.lookupValueModule = value
    */
-  virtual void lookupValueModule(const grt::StringRef &value) {
+  virtual auto lookupValueModule(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_lookupValueModule);
     _lookupValueModule = value;
     member_changed("lookupValueModule", ovalue, value);
@@ -1041,7 +1041,7 @@ public:
    * \par In Python:
    *    value = obj.paramType
    */
-  grt::StringRef paramType() const { return _paramType; }
+  auto paramType() const -> grt::StringRef { return _paramType; }
 
   /**
    * Setter for attribute paramType
@@ -1050,7 +1050,7 @@ public:
    * \par In Python:
    *   obj.paramType = value
    */
-  virtual void paramType(const grt::StringRef &value) {
+  virtual auto paramType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_paramType);
     _paramType = value;
     member_changed("paramType", ovalue, value);
@@ -1063,11 +1063,11 @@ public:
    * \par In Python:
    *    value = obj.paramTypeDetails
    */
-  grt::DictRef paramTypeDetails() const { return _paramTypeDetails; }
+  auto paramTypeDetails() const -> grt::DictRef { return _paramTypeDetails; }
 
 
 private: // The next attribute is read-only.
-  virtual void paramTypeDetails(const grt::DictRef &value) {
+  virtual auto paramTypeDetails(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_paramTypeDetails);
     _paramTypeDetails = value;
     member_changed("paramTypeDetails", ovalue, value);
@@ -1081,7 +1081,7 @@ public:
    * \par In Python:
    *    value = obj.required
    */
-  grt::IntegerRef required() const { return _required; }
+  auto required() const -> grt::IntegerRef { return _required; }
 
   /**
    * Setter for attribute required
@@ -1090,7 +1090,7 @@ public:
    * \par In Python:
    *   obj.required = value
    */
-  virtual void required(const grt::IntegerRef &value) {
+  virtual auto required(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_required);
     _required = value;
     member_changed("required", ovalue, value);
@@ -1112,12 +1112,12 @@ protected:
   grt::IntegerRef _required;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_DriverParameter());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1201,7 +1201,7 @@ public:
       _parameters(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.Driver";
   }
 
@@ -1212,7 +1212,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -1221,7 +1221,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -1234,7 +1234,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -1243,7 +1243,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -1256,7 +1256,7 @@ public:
    * \par In Python:
    *    value = obj.driverLibraryName
    */
-  grt::StringRef driverLibraryName() const { return _driverLibraryName; }
+  auto driverLibraryName() const -> grt::StringRef { return _driverLibraryName; }
 
   /**
    * Setter for attribute driverLibraryName
@@ -1265,7 +1265,7 @@ public:
    * \par In Python:
    *   obj.driverLibraryName = value
    */
-  virtual void driverLibraryName(const grt::StringRef &value) {
+  virtual auto driverLibraryName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_driverLibraryName);
     _driverLibraryName = value;
     member_changed("driverLibraryName", ovalue, value);
@@ -1278,11 +1278,11 @@ public:
    * \par In Python:
    *    value = obj.files
    */
-  grt::StringListRef files() const { return _files; }
+  auto files() const -> grt::StringListRef { return _files; }
 
 
 private: // The next attribute is read-only.
-  virtual void files(const grt::StringListRef &value) {
+  virtual auto files(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_files);
     _files = value;
     member_changed("files", ovalue, value);
@@ -1296,7 +1296,7 @@ public:
    * \par In Python:
    *    value = obj.filesTarget
    */
-  grt::StringRef filesTarget() const { return _filesTarget; }
+  auto filesTarget() const -> grt::StringRef { return _filesTarget; }
 
   /**
    * Setter for attribute filesTarget
@@ -1305,7 +1305,7 @@ public:
    * \par In Python:
    *   obj.filesTarget = value
    */
-  virtual void filesTarget(const grt::StringRef &value) {
+  virtual auto filesTarget(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_filesTarget);
     _filesTarget = value;
     member_changed("filesTarget", ovalue, value);
@@ -1318,7 +1318,7 @@ public:
    * \par In Python:
    *    value = obj.hostIdentifierTemplate
    */
-  grt::StringRef hostIdentifierTemplate() const { return _hostIdentifierTemplate; }
+  auto hostIdentifierTemplate() const -> grt::StringRef { return _hostIdentifierTemplate; }
 
   /**
    * Setter for attribute hostIdentifierTemplate
@@ -1327,7 +1327,7 @@ public:
    * \par In Python:
    *   obj.hostIdentifierTemplate = value
    */
-  virtual void hostIdentifierTemplate(const grt::StringRef &value) {
+  virtual auto hostIdentifierTemplate(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_hostIdentifierTemplate);
     _hostIdentifierTemplate = value;
     member_changed("hostIdentifierTemplate", ovalue, value);
@@ -1341,11 +1341,11 @@ public:
    * \par In Python:
    *    value = obj.parameters
    */
-  grt::ListRef<db_mgmt_DriverParameter> parameters() const { return _parameters; }
+  auto parameters() const -> grt::ListRef<db_mgmt_DriverParameter> { return _parameters; }
 
 
 private: // The next attribute is read-only.
-  virtual void parameters(const grt::ListRef<db_mgmt_DriverParameter> &value) {
+  virtual auto parameters(const grt::ListRef<db_mgmt_DriverParameter> &value) -> void {
     grt::ValueRef ovalue(_parameters);
 
     _parameters = value;
@@ -1364,12 +1364,12 @@ protected:
   grt::ListRef<db_mgmt_DriverParameter> _parameters;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_Driver());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1422,7 +1422,7 @@ public:
       _connectionStringTemplate("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.PythonDBAPIDriver";
   }
 
@@ -1433,7 +1433,7 @@ public:
    * \par In Python:
    *    value = obj.connectionStringTemplate
    */
-  grt::StringRef connectionStringTemplate() const { return _connectionStringTemplate; }
+  auto connectionStringTemplate() const -> grt::StringRef { return _connectionStringTemplate; }
 
   /**
    * Setter for attribute connectionStringTemplate
@@ -1442,7 +1442,7 @@ public:
    * \par In Python:
    *   obj.connectionStringTemplate = value
    */
-  virtual void connectionStringTemplate(const grt::StringRef &value) {
+  virtual auto connectionStringTemplate(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_connectionStringTemplate);
     _connectionStringTemplate = value;
     member_changed("connectionStringTemplate", ovalue, value);
@@ -1453,12 +1453,12 @@ protected:
   grt::StringRef _connectionStringTemplate;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_PythonDBAPIDriver());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1482,7 +1482,7 @@ public:
       _structName("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.PrivilegeMapping";
   }
 
@@ -1493,11 +1493,11 @@ public:
    * \par In Python:
    *    value = obj.privileges
    */
-  grt::StringListRef privileges() const { return _privileges; }
+  auto privileges() const -> grt::StringListRef { return _privileges; }
 
 
 private: // The next attribute is read-only.
-  virtual void privileges(const grt::StringListRef &value) {
+  virtual auto privileges(const grt::StringListRef &value) -> void {
     grt::ValueRef ovalue(_privileges);
     _privileges = value;
     member_changed("privileges", ovalue, value);
@@ -1511,7 +1511,7 @@ public:
    * \par In Python:
    *    value = obj.structName
    */
-  grt::StringRef structName() const { return _structName; }
+  auto structName() const -> grt::StringRef { return _structName; }
 
   /**
    * Setter for attribute structName
@@ -1520,7 +1520,7 @@ public:
    * \par In Python:
    *   obj.structName = value
    */
-  virtual void structName(const grt::StringRef &value) {
+  virtual auto structName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_structName);
     _structName = value;
     member_changed("structName", ovalue, value);
@@ -1532,12 +1532,12 @@ protected:
   grt::StringRef _structName;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_PrivilegeMapping());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1572,7 +1572,7 @@ public:
       _simpleDatatypes(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.Rdbms";
   }
 
@@ -1583,7 +1583,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -1592,7 +1592,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -1606,11 +1606,11 @@ public:
    * \par In Python:
    *    value = obj.characterSets
    */
-  grt::ListRef<db_CharacterSet> characterSets() const { return _characterSets; }
+  auto characterSets() const -> grt::ListRef<db_CharacterSet> { return _characterSets; }
 
 
 private: // The next attribute is read-only.
-  virtual void characterSets(const grt::ListRef<db_CharacterSet> &value) {
+  virtual auto characterSets(const grt::ListRef<db_CharacterSet> &value) -> void {
     grt::ValueRef ovalue(_characterSets);
 
     _characterSets = value;
@@ -1625,7 +1625,7 @@ public:
    * \par In Python:
    *    value = obj.databaseObjectPackage
    */
-  grt::StringRef databaseObjectPackage() const { return _databaseObjectPackage; }
+  auto databaseObjectPackage() const -> grt::StringRef { return _databaseObjectPackage; }
 
   /**
    * Setter for attribute databaseObjectPackage
@@ -1634,7 +1634,7 @@ public:
    * \par In Python:
    *   obj.databaseObjectPackage = value
    */
-  virtual void databaseObjectPackage(const grt::StringRef &value) {
+  virtual auto databaseObjectPackage(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_databaseObjectPackage);
     _databaseObjectPackage = value;
     member_changed("databaseObjectPackage", ovalue, value);
@@ -1647,7 +1647,7 @@ public:
    * \par In Python:
    *    value = obj.defaultDriver
    */
-  db_mgmt_DriverRef defaultDriver() const { return _defaultDriver; }
+  auto defaultDriver() const -> db_mgmt_DriverRef { return _defaultDriver; }
 
   /**
    * Setter for attribute defaultDriver
@@ -1656,7 +1656,7 @@ public:
    * \par In Python:
    *   obj.defaultDriver = value
    */
-  virtual void defaultDriver(const db_mgmt_DriverRef &value) {
+  virtual auto defaultDriver(const db_mgmt_DriverRef &value) -> void {
     grt::ValueRef ovalue(_defaultDriver);
     _defaultDriver = value;
     member_changed("defaultDriver", ovalue, value);
@@ -1669,7 +1669,7 @@ public:
    * \par In Python:
    *    value = obj.doesSupportCatalogs
    */
-  grt::IntegerRef doesSupportCatalogs() const { return _doesSupportCatalogs; }
+  auto doesSupportCatalogs() const -> grt::IntegerRef { return _doesSupportCatalogs; }
 
   /**
    * Setter for attribute doesSupportCatalogs
@@ -1678,7 +1678,7 @@ public:
    * \par In Python:
    *   obj.doesSupportCatalogs = value
    */
-  virtual void doesSupportCatalogs(const grt::IntegerRef &value) {
+  virtual auto doesSupportCatalogs(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_doesSupportCatalogs);
     _doesSupportCatalogs = value;
     member_changed("doesSupportCatalogs", ovalue, value);
@@ -1692,11 +1692,11 @@ public:
    * \par In Python:
    *    value = obj.drivers
    */
-  grt::ListRef<db_mgmt_Driver> drivers() const { return _drivers; }
+  auto drivers() const -> grt::ListRef<db_mgmt_Driver> { return _drivers; }
 
 
 private: // The next attribute is read-only.
-  virtual void drivers(const grt::ListRef<db_mgmt_Driver> &value) {
+  virtual auto drivers(const grt::ListRef<db_mgmt_Driver> &value) -> void {
     grt::ValueRef ovalue(_drivers);
 
     _drivers = value;
@@ -1711,7 +1711,7 @@ public:
    * \par In Python:
    *    value = obj.maximumIdentifierLength
    */
-  grt::IntegerRef maximumIdentifierLength() const { return _maximumIdentifierLength; }
+  auto maximumIdentifierLength() const -> grt::IntegerRef { return _maximumIdentifierLength; }
 
   /**
    * Setter for attribute maximumIdentifierLength
@@ -1720,7 +1720,7 @@ public:
    * \par In Python:
    *   obj.maximumIdentifierLength = value
    */
-  virtual void maximumIdentifierLength(const grt::IntegerRef &value) {
+  virtual auto maximumIdentifierLength(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_maximumIdentifierLength);
     _maximumIdentifierLength = value;
     member_changed("maximumIdentifierLength", ovalue, value);
@@ -1734,11 +1734,11 @@ public:
    * \par In Python:
    *    value = obj.privilegeNames
    */
-  grt::ListRef<db_mgmt_PrivilegeMapping> privilegeNames() const { return _privilegeNames; }
+  auto privilegeNames() const -> grt::ListRef<db_mgmt_PrivilegeMapping> { return _privilegeNames; }
 
 
 private: // The next attribute is read-only.
-  virtual void privilegeNames(const grt::ListRef<db_mgmt_PrivilegeMapping> &value) {
+  virtual auto privilegeNames(const grt::ListRef<db_mgmt_PrivilegeMapping> &value) -> void {
     grt::ValueRef ovalue(_privilegeNames);
 
     _privilegeNames = value;
@@ -1754,11 +1754,11 @@ public:
    * \par In Python:
    *    value = obj.simpleDatatypes
    */
-  grt::ListRef<db_SimpleDatatype> simpleDatatypes() const { return _simpleDatatypes; }
+  auto simpleDatatypes() const -> grt::ListRef<db_SimpleDatatype> { return _simpleDatatypes; }
 
 
 private: // The next attribute is read-only.
-  virtual void simpleDatatypes(const grt::ListRef<db_SimpleDatatype> &value) {
+  virtual auto simpleDatatypes(const grt::ListRef<db_SimpleDatatype> &value) -> void {
     grt::ValueRef ovalue(_simpleDatatypes);
 
     _simpleDatatypes = value;
@@ -1774,7 +1774,7 @@ public:
    * \par In Python:
    *    value = obj.version
    */
-  GrtVersionRef version() const { return _version; }
+  auto version() const -> GrtVersionRef { return _version; }
 
   /**
    * Setter for attribute version
@@ -1783,7 +1783,7 @@ public:
    * \par In Python:
    *   obj.version = value
    */
-  virtual void version(const GrtVersionRef &value) {
+  virtual auto version(const GrtVersionRef &value) -> void {
     grt::ValueRef ovalue(_version);
 
     _version = value;
@@ -1804,12 +1804,12 @@ protected:
   GrtVersionRef _version;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_Rdbms());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1881,7 +1881,7 @@ public:
       _storedInstances(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mgmt.Management";
   }
 
@@ -1893,11 +1893,11 @@ public:
    * \par In Python:
    *    value = obj.datatypeGroups
    */
-  grt::ListRef<db_DatatypeGroup> datatypeGroups() const { return _datatypeGroups; }
+  auto datatypeGroups() const -> grt::ListRef<db_DatatypeGroup> { return _datatypeGroups; }
 
 
 private: // The next attribute is read-only.
-  virtual void datatypeGroups(const grt::ListRef<db_DatatypeGroup> &value) {
+  virtual auto datatypeGroups(const grt::ListRef<db_DatatypeGroup> &value) -> void {
     grt::ValueRef ovalue(_datatypeGroups);
 
     _datatypeGroups = value;
@@ -1913,11 +1913,11 @@ public:
    * \par In Python:
    *    value = obj.otherStoredConns
    */
-  grt::ListRef<db_mgmt_Connection> otherStoredConns() const { return _otherStoredConns; }
+  auto otherStoredConns() const -> grt::ListRef<db_mgmt_Connection> { return _otherStoredConns; }
 
 
 private: // The next attribute is read-only.
-  virtual void otherStoredConns(const grt::ListRef<db_mgmt_Connection> &value) {
+  virtual auto otherStoredConns(const grt::ListRef<db_mgmt_Connection> &value) -> void {
     grt::ValueRef ovalue(_otherStoredConns);
 
     _otherStoredConns = value;
@@ -1933,11 +1933,11 @@ public:
    * \par In Python:
    *    value = obj.rdbms
    */
-  grt::ListRef<db_mgmt_Rdbms> rdbms() const { return _rdbms; }
+  auto rdbms() const -> grt::ListRef<db_mgmt_Rdbms> { return _rdbms; }
 
 
 private: // The next attribute is read-only.
-  virtual void rdbms(const grt::ListRef<db_mgmt_Rdbms> &value) {
+  virtual auto rdbms(const grt::ListRef<db_mgmt_Rdbms> &value) -> void {
     grt::ValueRef ovalue(_rdbms);
 
     _rdbms = value;
@@ -1953,11 +1953,11 @@ public:
    * \par In Python:
    *    value = obj.storedConns
    */
-  grt::ListRef<db_mgmt_Connection> storedConns() const { return _storedConns; }
+  auto storedConns() const -> grt::ListRef<db_mgmt_Connection> { return _storedConns; }
 
 
 private: // The next attribute is read-only.
-  virtual void storedConns(const grt::ListRef<db_mgmt_Connection> &value) {
+  virtual auto storedConns(const grt::ListRef<db_mgmt_Connection> &value) -> void {
     grt::ValueRef ovalue(_storedConns);
 
     _storedConns = value;
@@ -1973,11 +1973,11 @@ public:
    * \par In Python:
    *    value = obj.storedInstances
    */
-  grt::ListRef<db_mgmt_ServerInstance> storedInstances() const { return _storedInstances; }
+  auto storedInstances() const -> grt::ListRef<db_mgmt_ServerInstance> { return _storedInstances; }
 
 
 private: // The next attribute is read-only.
-  virtual void storedInstances(const grt::ListRef<db_mgmt_ServerInstance> &value) {
+  virtual auto storedInstances(const grt::ListRef<db_mgmt_ServerInstance> &value) -> void {
     grt::ValueRef ovalue(_storedInstances);
 
     _storedInstances = value;
@@ -1994,12 +1994,12 @@ protected:
   grt::ListRef<db_mgmt_ServerInstance> _storedInstances;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mgmt_Management());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2034,7 +2034,7 @@ public:
 
 
 
-inline void register_structs_db_mgmt_xml() {
+inline auto register_structs_db_mgmt_xml() -> void {
   grt::internal::ClassRegistry::register_class<db_mgmt_SyncProfile>();
   grt::internal::ClassRegistry::register_class<db_mgmt_ServerInstance>();
   grt::internal::ClassRegistry::register_class<db_mgmt_SSHFile>();

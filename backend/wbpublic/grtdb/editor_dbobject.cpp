@@ -104,7 +104,7 @@ DBObjectEditorBE::~DBObjectEditorBE() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info) {
+auto DBObjectEditorBE::handle_grt_notification(const std::string &name, grt::ObjectRef sender, grt::DictRef info) -> void {
   if (info.get_int("saved") == 1) {
     if (name == "GRNPreferencesDidClose") {
       // We want to see changes for the server version.
@@ -117,13 +117,13 @@ void DBObjectEditorBE::handle_grt_notification(const std::string &name, grt::Obj
 
 //--------------------------------------------------------------------------------------------------
 
-bool DBObjectEditorBE::is_editing_live_object() {
+auto DBObjectEditorBE::is_editing_live_object() -> bool {
   return get_dbobject()->customData().get("liveRdbms").is_valid();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::apply_changes_to_live_object() {
+auto DBObjectEditorBE::apply_changes_to_live_object() -> void {
   BaseEditor::apply_changes_to_live_object();
 
   if (on_apply_changes_to_live_object(this, false))
@@ -132,7 +132,7 @@ void DBObjectEditorBE::apply_changes_to_live_object() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::refresh_live_object() {
+auto DBObjectEditorBE::refresh_live_object() -> void {
   BaseEditor::refresh_live_object();
 
   on_refresh_live_object(this);
@@ -140,7 +140,7 @@ void DBObjectEditorBE::refresh_live_object() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DBObjectEditorBE::can_close() {
+auto DBObjectEditorBE::can_close() -> bool {
   // Editing in a model always allows to close the editor. Save checks are done when the model
   // is closed.
   if (!is_editing_live_object())
@@ -173,7 +173,7 @@ bool DBObjectEditorBE::can_close() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DBObjectEditorBE::should_close_on_delete_of(const std::string &oid) {
+auto DBObjectEditorBE::should_close_on_delete_of(const std::string &oid) -> bool {
   if (get_object().id() == oid)
     return true;
 
@@ -186,19 +186,19 @@ bool DBObjectEditorBE::should_close_on_delete_of(const std::string &oid) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::update_change_date() {
+auto DBObjectEditorBE::update_change_date() -> void {
   get_object().set_member("lastChangeDate", grt::StringRef(base::fmttime(0, DATETIME_FMT)));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string DBObjectEditorBE::get_name() {
+auto DBObjectEditorBE::get_name() -> std::string {
   return get_object()->name();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::set_name(const std::string &name) {
+auto DBObjectEditorBE::set_name(const std::string &name) -> void {
   if (get_object()->name() != name) {
     RefreshUI::Blocker refresh_block(*this);
 
@@ -214,13 +214,13 @@ void DBObjectEditorBE::set_name(const std::string &name) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string DBObjectEditorBE::get_comment() {
+auto DBObjectEditorBE::get_comment() -> std::string {
   return get_dbobject()->comment();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::set_comment(const std::string &descr) {
+auto DBObjectEditorBE::set_comment(const std::string &descr) -> void {
   if (get_dbobject()->comment() != descr) {
     RefreshUI::Blocker blocker(*this);
     AutoUndoEdit undo(this, get_dbobject(), "comment");
@@ -234,7 +234,7 @@ void DBObjectEditorBE::set_comment(const std::string &descr) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string DBObjectEditorBE::get_sql() {
+auto DBObjectEditorBE::get_sql() -> std::string {
   if (db_DatabaseDdlObjectRef::can_wrap(get_object())) {
     db_DatabaseDdlObjectRef object = db_DatabaseDdlObjectRef::cast_from(get_object());
     return object->sqlDefinition();
@@ -248,7 +248,7 @@ std::string DBObjectEditorBE::get_sql() {
 /**
  * Called from outside to set new sql text in our editor.
  */
-void DBObjectEditorBE::set_sql(const std::string &sql) {
+auto DBObjectEditorBE::set_sql(const std::string &sql) -> void {
   get_sql_editor()->sql(sql.c_str());
   commit_changes();
   send_refresh();
@@ -256,13 +256,13 @@ void DBObjectEditorBE::set_sql(const std::string &sql) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DBObjectEditorBE::is_sql_commented() {
+auto DBObjectEditorBE::is_sql_commented() -> bool {
   return (*get_dbobject()->commentedOut() != 0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::set_sql_commented(bool flag) {
+auto DBObjectEditorBE::set_sql_commented(bool flag) -> void {
   RefreshUI::Blocker blocker(*this);
 
   AutoUndoEdit undo(this, get_dbobject(), "commentedOut");
@@ -275,13 +275,13 @@ void DBObjectEditorBE::set_sql_commented(bool flag) {
 
 //--------------------------------------------------------------------------------------------------
 
-db_CatalogRef DBObjectEditorBE::get_catalog() {
+auto DBObjectEditorBE::get_catalog() -> db_CatalogRef {
   return _catalog;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-db_SchemaRef DBObjectEditorBE::get_schema() {
+auto DBObjectEditorBE::get_schema() -> db_SchemaRef {
   GrtObjectRef object = get_dbobject();
 
   while (object.is_valid() && !object.is_instance(db_Schema::static_class_name()))
@@ -292,19 +292,19 @@ db_SchemaRef DBObjectEditorBE::get_schema() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string DBObjectEditorBE::get_schema_name() {
+auto DBObjectEditorBE::get_schema_name() -> std::string {
   return get_schema()->name();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-db_SchemaRef DBObjectEditorBE::get_schema_with_name(const std::string &schema_name) {
+auto DBObjectEditorBE::get_schema_with_name(const std::string &schema_name) -> db_SchemaRef {
   return grt::find_named_object_in_list(_catalog->schemata(), schema_name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> DBObjectEditorBE::get_all_schema_names() {
+auto DBObjectEditorBE::get_all_schema_names() -> std::vector<std::string> {
   std::vector<std::string> names;
   if (is_editing_live_object()) {
     names.push_back(get_schema()->name());
@@ -323,7 +323,7 @@ std::vector<std::string> DBObjectEditorBE::get_all_schema_names() {
 /**
  * Collects the FQN for all tables not in our own schema.
  */
-std::vector<std::string> DBObjectEditorBE::get_all_table_names() {
+auto DBObjectEditorBE::get_all_table_names() -> std::vector<std::string> {
   if (is_editing_live_object())
     on_create_live_table_stubs(this);
 
@@ -356,7 +356,7 @@ std::vector<std::string> DBObjectEditorBE::get_all_table_names() {
 /**
  * Collects the FQN for all tables in our schema.
  */
-std::vector<std::string> DBObjectEditorBE::get_schema_table_names() {
+auto DBObjectEditorBE::get_schema_table_names() -> std::vector<std::string> {
   db_SchemaRef schema = get_schema();
   std::vector<std::string> table_list;
   std::string schema_name = schema->name();
@@ -373,7 +373,7 @@ std::vector<std::string> DBObjectEditorBE::get_schema_table_names() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> DBObjectEditorBE::get_table_column_names(const std::string &fq_table_name) {
+auto DBObjectEditorBE::get_table_column_names(const std::string &fq_table_name) -> std::vector<std::string> {
   db_SchemaRef schema;
   std::vector<std::string> columns;
 
@@ -405,7 +405,7 @@ std::vector<std::string> DBObjectEditorBE::get_table_column_names(const std::str
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> DBObjectEditorBE::get_table_column_names(const db_TableRef &table) {
+auto DBObjectEditorBE::get_table_column_names(const db_TableRef &table) -> std::vector<std::string> {
   std::vector<std::string> columns;
 
   if (table.is_valid())
@@ -417,7 +417,7 @@ std::vector<std::string> DBObjectEditorBE::get_table_column_names(const db_Table
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> DBObjectEditorBE::get_charset_list() {
+auto DBObjectEditorBE::get_charset_list() -> std::vector<std::string> {
   std::vector<std::string> result;
   grt::ListRef<db_CharacterSet> charsets = _catalog->characterSets();
 
@@ -436,7 +436,7 @@ std::vector<std::string> DBObjectEditorBE::get_charset_list() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> DBObjectEditorBE::get_charset_collation_list(const std::string &charset) {
+auto DBObjectEditorBE::get_charset_collation_list(const std::string &charset) -> std::vector<std::string> {
   std::vector<std::string> result;
   grt::ListRef<db_CharacterSet> charsets = _catalog->characterSets();
 
@@ -458,7 +458,7 @@ std::vector<std::string> DBObjectEditorBE::get_charset_collation_list(const std:
 }
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> DBObjectEditorBE::get_charset_collation_list() {
+auto DBObjectEditorBE::get_charset_collation_list() -> std::vector<std::string> {
   std::vector<std::string> collation_list;
   grt::ListRef<db_CharacterSet> charsets = _catalog->characterSets();
 
@@ -478,7 +478,7 @@ std::vector<std::string> DBObjectEditorBE::get_charset_collation_list() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string DBObjectEditorBE::format_charset_collation(const std::string &charset, const std::string &collation) {
+auto DBObjectEditorBE::format_charset_collation(const std::string &charset, const std::string &collation) -> std::string {
   if (collation.empty()) {
     if (charset.empty())
       return " - ";
@@ -490,7 +490,7 @@ std::string DBObjectEditorBE::format_charset_collation(const std::string &charse
 
 //--------------------------------------------------------------------------------------------------
 
-bool DBObjectEditorBE::parse_charset_collation(const std::string &str, std::string &charset, std::string &collation) {
+auto DBObjectEditorBE::parse_charset_collation(const std::string &str, std::string &charset, std::string &collation) -> bool {
   std::string::size_type pos;
   if ((pos = str.find(" - ")) != std::string::npos) {
     charset = str.substr(0, pos);
@@ -509,7 +509,7 @@ bool DBObjectEditorBE::parse_charset_collation(const std::string &str, std::stri
 
 //--------------------------------------------------------------------------------------------------
 
-bool DBObjectEditorBE::has_editor() {
+auto DBObjectEditorBE::has_editor() -> bool {
   if (_sql_editor)
     return true;
   return false;
@@ -517,7 +517,7 @@ bool DBObjectEditorBE::has_editor() {
 
 //--------------------------------------------------------------------------------------------------
 
-MySQLEditor::Ref DBObjectEditorBE::get_sql_editor() {
+auto DBObjectEditorBE::get_sql_editor() -> MySQLEditor::Ref {
   if (!_sql_editor) {
     _sql_editor = MySQLEditor::create(_parserContext, _autocompletionContext, { _globalSymbols });
     grt::DictRef obj_options = get_dbobject()->customData();
@@ -529,7 +529,7 @@ MySQLEditor::Ref DBObjectEditorBE::get_sql_editor() {
 
 //--------------------------------------------------------------------------------------------------
 
-void bec::DBObjectEditorBE::reset_editor_undo_stack() {
+auto bec::DBObjectEditorBE::reset_editor_undo_stack() -> void {
   // Don't create an editor control if we don't need one (e.g. for the schema editor).
   if (_sql_editor)
     _sql_editor->get_editor_control()->reset_dirty();
@@ -537,8 +537,8 @@ void bec::DBObjectEditorBE::reset_editor_undo_stack() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::notify_from_validation(const grt::Validator::Tag &tag, const grt::ObjectRef &obj,
-                                              const std::string &msg, const int level) {
+auto DBObjectEditorBE::notify_from_validation(const grt::Validator::Tag &tag, const grt::ObjectRef &obj,
+                                              const std::string &msg, const int level) -> void {
   bool notify_is_for_us = false;
 
   if (obj.is_valid()) {
@@ -573,14 +573,14 @@ void DBObjectEditorBE::notify_from_validation(const grt::Validator::Tag &tag, co
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::send_refresh() {
+auto DBObjectEditorBE::send_refresh() -> void {
   db_DatabaseObjectRef db_object = get_dbobject();
   (*db_object->signal_changed())("", grt::ValueRef());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DBObjectEditorBE::set_sql_mode(const std::string &value) {
+auto DBObjectEditorBE::set_sql_mode(const std::string &value) -> void {
   MySQLEditor::Ref sql_editor = get_sql_editor();
   if (sql_editor)
     sql_editor->set_sql_mode(value);

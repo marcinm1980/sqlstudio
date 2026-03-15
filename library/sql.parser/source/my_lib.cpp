@@ -76,14 +76,13 @@ namespace mysql_parser
 
 #if 0
 
-static int	comp_names(struct fileinfo *a,struct fileinfo *b);
+static auto comp_names(struct fileinfo *a,struct fileinfo *b) -> int;
 
 
 	/* We need this because program don't know with malloc we used */
 
 #if 0
-void my_dirend(MY_DIR *buffer)
-{
+auto my_dirend(MY_DIR *buffer) -> void {
   DBUG_ENTER("my_dirend");
   if (buffer)
   {
@@ -99,16 +98,14 @@ void my_dirend(MY_DIR *buffer)
 
 	/* Compare in sort of filenames */
 
-static int comp_names(struct fileinfo *a, struct fileinfo *b)
-{
+static auto comp_names(struct fileinfo *a, struct fileinfo *b) -> int {
   return (strcmp(a->name,b->name));
 } /* comp_names */
 
 
 #if !defined(MSDOS) && !defined(__WIN__)
 
-MY_DIR	*my_dir(const char *path, myf MyFlags)
-{
+auto my_dir(const char *path, myf MyFlags) -> MY_DIR * {
   char          *buffer;
   MY_DIR        *result= 0;
   FILEINFO      finfo;
@@ -216,8 +213,7 @@ MY_DIR	*my_dir(const char *path, myf MyFlags)
  * Returns pointer to dst;
  */
 
-my_string directory_file_name (my_string dst, const char *src)
-{
+auto directory_file_name (my_string dst, const char *src) -> my_string {
 #ifndef VMS
 
   /* Process as Unix format: just remove test the final slash. */
@@ -362,8 +358,7 @@ my_string directory_file_name (my_string dst, const char *src)
 */
 
 #if 0
-MY_DIR	*my_dir(const char *path, myf MyFlags)
-{
+auto my_dir(const char *path, myf MyFlags) -> MY_DIR * {
   char          *buffer;
   MY_DIR        *result= 0;
   FILEINFO      finfo;
@@ -522,8 +517,7 @@ error:
 ** At MSDOS you always get stat of files, but time is in packed MSDOS-format
 ******************************************************************************/
 
-MY_DIR	*my_dir(const char* path, myf MyFlags)
-{
+auto my_dir(const char* path, myf MyFlags) -> MY_DIR * {
   char          *buffer;
   MY_DIR        *result= 0;
   FILEINFO      finfo;
@@ -624,17 +618,15 @@ error:
 ** Note that MY_STAT is assumed to be same as struct stat
 ****************************************************************************/ 
 
-int my_fstat(int Filedes, MY_STAT *stat_area,
-             myf MyFlags __attribute__((unused)))
-{
+auto my_fstat(int Filedes, MY_STAT *stat_area,
+             myf MyFlags __attribute__((unused))) -> int {
   DBUG_ENTER("my_fstat");
   DBUG_PRINT("my",("fd: %d MyFlags: %d",Filedes,MyFlags));
   DBUG_RETURN(fstat(Filedes, (struct stat *) stat_area));
 }
 #endif
 
-MY_STAT *my_stat(const char *path, MY_STAT *stat_area, myf my_flags)
-{
+auto my_stat(const char *path, MY_STAT *stat_area, myf my_flags) -> MY_STAT * {
   int m_used;
   DBUG_ENTER("my_stat");
   DBUG_PRINT("my", ("path: '%s', stat_area: 0x%lx, MyFlags: %d", path,

@@ -76,8 +76,8 @@
 namespace mforms {
   namespace gtk {
     extern bool force_sys_colors;
-    void init(bool force_sys_colors);
-    void check();
+    auto init(bool force_sys_colors) -> void;
+    auto check() -> void;
   };
 };
 

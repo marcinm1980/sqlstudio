@@ -40,7 +40,7 @@ namespace mforms {
 
     class FileChooserImpl : public ViewImpl {
       Gtk::FileChooserDialog *_dlg;
-      Gtk::Widget *get_outer() const {
+      auto get_outer() const -> Gtk::Widget * {
         return _dlg;
       }
 
@@ -50,7 +50,7 @@ namespace mforms {
       std::map<std::string, std::string> _ext_list;
       std::string _default_extension;
 
-      static std::vector<std::string> split_string(const std::string &s, const std::string &sep) {
+      static auto split_string(const std::string &s, const std::string &sep) -> std::vector<std::string> {
         std::vector<std::string> parts;
         std::string ss = s;
 
@@ -71,18 +71,18 @@ namespace mforms {
         return parts;
       }
 
-      static bool create(::mforms::FileChooser *self, ::mforms::Form *owner, ::mforms::FileChooserType type,
-                         const bool show_hidden) {
+      static auto create(::mforms::FileChooser *self, ::mforms::Form *owner, ::mforms::FileChooserType type,
+                         const bool show_hidden) -> bool {
         return new FileChooserImpl(self, owner, type, show_hidden) != 0;
       }
 
-      static void set_title(::mforms::FileChooser *self, const std::string &title) {
+      static auto set_title(::mforms::FileChooser *self, const std::string &title) -> void {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
         if (dlg)
           dlg->_dlg->set_title(title);
       }
 
-      static bool show_modal(::mforms::FileChooser *self) {
+      static auto show_modal(::mforms::FileChooser *self) -> bool {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
         bool res;
         int dialog_result = dlg->_dlg->run();
@@ -91,14 +91,14 @@ namespace mforms {
         return res;
       }
 
-      static void set_directory(FileChooser *self, const std::string &path) {
+      static auto set_directory(FileChooser *self, const std::string &path) -> void {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
         if (dlg) {
           dlg->_dlg->set_current_folder(path);
         }
       }
 
-      static std::string get_directory(FileChooser *self) {
+      static auto get_directory(FileChooser *self) -> std::string {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
         if (dlg) {
           return dlg->_dlg->get_current_folder();
@@ -106,12 +106,12 @@ namespace mforms {
         return "";
       }
 
-      static std::string get_path(FileChooser *self) {
+      static auto get_path(FileChooser *self) -> std::string {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
         return dlg ? dlg->_dlg->get_filename() : "";
       }
 
-      static void set_path(FileChooser *self, const std::string &path) {
+      static auto set_path(FileChooser *self, const std::string &path) -> void {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
         dlg->_dlg->set_filename(path);
 
@@ -128,8 +128,8 @@ namespace mforms {
         }
       }
 
-      static void add_selector_option(FileChooser *self, const std::string &name, const std::string &label,
-                                      const std::vector<std::pair<std::string, std::string> > &values) {
+      static auto add_selector_option(FileChooser *self, const std::string &name, const std::string &label,
+                                      const std::vector<std::pair<std::string, std::string> > &values) -> void {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
         int row;
         if (!dlg->_options_table) {
@@ -158,7 +158,7 @@ namespace mforms {
         combo->set_active(0);
       }
 
-      static std::string get_selector_option_value(FileChooser *self, const std::string &name) {
+      static auto get_selector_option_value(FileChooser *self, const std::string &name) -> std::string {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
 
         if (name != "format")
@@ -173,8 +173,8 @@ namespace mforms {
         return "";
       }
 
-      static void set_extensions(FileChooser *self, const std::string &extensions, const std::string &default_extension,
-                                 bool allow_all_file_types = true) {
+      static auto set_extensions(FileChooser *self, const std::string &extensions, const std::string &default_extension,
+                                 bool allow_all_file_types = true) -> void {
         FileChooserImpl *dlg = self->get_data<FileChooserImpl>();
         if (dlg) {
           // extensions format:
@@ -259,7 +259,7 @@ namespace mforms {
       }
 
       //  Add the file extension related to the selected file type in the dialog
-      void on_ok_button_clicked() {
+      auto on_ok_button_clicked() -> void {
         FileChooser *chooser = dynamic_cast<FileChooser *>(owner);
 
         //  If the dialog has no file format options, there's nothing to do here...
@@ -307,7 +307,7 @@ namespace mforms {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_filechooser_impl.create = &FileChooserImpl::create;

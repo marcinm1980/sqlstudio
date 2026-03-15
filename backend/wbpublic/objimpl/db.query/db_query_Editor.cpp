@@ -34,7 +34,7 @@ db_query_Editor::ImplData::ImplData() {
 //================================================================================
 // db_query_Editor
 
-void db_query_Editor::init() {
+auto db_query_Editor::init() -> void {
   // _data must be set with set_data() by WBContextSQLIDE
   // if (!_data) _data= new db_query_Editor::ImplData(this);
 }
@@ -43,116 +43,116 @@ db_query_Editor::~db_query_Editor() {
   delete _data;
 }
 
-void db_query_Editor::set_data(ImplData *data) {
+auto db_query_Editor::set_data(ImplData *data) -> void {
   _data = data;
 }
 
-db_mgmt_ConnectionRef db_query_Editor::connection() const {
+auto db_query_Editor::connection() const -> db_mgmt_ConnectionRef {
   if (_data)
     return _data->connection();
   return db_mgmt_ConnectionRef();
 }
 
-grt::IntegerRef db_query_Editor::getSSHTunnelPort() const {
+auto db_query_Editor::getSSHTunnelPort() const -> grt::IntegerRef {
   if (_data)
     return _data->getSSHTunnelPort();
   return -1;
 }
 
-db_mgmt_SSHConnectionRef db_query_Editor::sshConnection() const {
+auto db_query_Editor::sshConnection() const -> db_mgmt_SSHConnectionRef {
   if (_data)
     return _data->sshConnection();
   return db_mgmt_SSHConnectionRef();
 }
 
-grt::IntegerRef db_query_Editor::isConnected() const {
+auto db_query_Editor::isConnected() const -> grt::IntegerRef {
   if (_data)
     return _data->isConnected();
   return grt::IntegerRef(0);
 }
 
-db_query_QueryEditorRef db_query_Editor::activeQueryEditor() const {
+auto db_query_Editor::activeQueryEditor() const -> db_query_QueryEditorRef {
   if (_data)
     return _data->activeQueryEditor();
   return db_query_QueryEditorRef();
 }
 
-grt::ListRef<db_query_LiveDBObject> db_query_Editor::schemaTreeSelection() const {
+auto db_query_Editor::schemaTreeSelection() const -> grt::ListRef<db_query_LiveDBObject> {
   return _data->schemaTreeSelection();
 }
 
-grt::StringRef db_query_Editor::defaultSchema() const {
+auto db_query_Editor::defaultSchema() const -> grt::StringRef {
   if (_data)
     return _data->activeSchema();
   return grt::StringRef();
 }
 
-void db_query_Editor::defaultSchema(const grt::StringRef &value) {
+auto db_query_Editor::defaultSchema(const grt::StringRef &value) -> void {
   if (_data)
     _data->activeSchema(*value);
 }
 
-db_query_QueryEditorRef db_query_Editor::addQueryEditor() {
+auto db_query_Editor::addQueryEditor() -> db_query_QueryEditorRef {
   if (_data)
     return _data->addQueryEditor();
   return db_query_QueryEditorRef();
 }
 
-grt::IntegerRef db_query_Editor::addToOutput(const std::string &text, ssize_t bringToFront) {
+auto db_query_Editor::addToOutput(const std::string &text, ssize_t bringToFront) -> grt::IntegerRef {
   if (_data)
     return _data->addToOutput(text, (long)bringToFront);
   return grt::IntegerRef(0);
 }
 
-db_query_EditableResultsetRef db_query_Editor::createTableEditResultset(const std::string &schema,
+auto db_query_Editor::createTableEditResultset(const std::string &schema,
                                                                         const std::string &table,
-                                                                        const std::string &where, ssize_t showGrid) {
+                                                                        const std::string &where, ssize_t showGrid) -> db_query_EditableResultsetRef {
   if (_data)
     return _data->createTableEditResultset(schema, table, where, showGrid != 0);
   return db_query_EditableResultsetRef();
 }
 
-void db_query_Editor::editLiveObject(const grt::Ref<db_DatabaseObject> &object, const db_CatalogRef &catalog) {
+auto db_query_Editor::editLiveObject(const grt::Ref<db_DatabaseObject> &object, const db_CatalogRef &catalog) -> void {
   if (_data)
     _data->editLiveObject(object, catalog);
 }
 
-void db_query_Editor::alterLiveObject(const std::string &type, const std::string &schemaName,
-                                      const std::string &objectName) {
+auto db_query_Editor::alterLiveObject(const std::string &type, const std::string &schemaName,
+                                      const std::string &objectName) -> void {
   if (_data)
     _data->alterLiveObject(type, schemaName, objectName);
 }
 
-grt::ListRef<db_query_Resultset> db_query_Editor::executeScript(const std::string &sql) {
+auto db_query_Editor::executeScript(const std::string &sql) -> grt::ListRef<db_query_Resultset> {
   if (_data)
     return _data->executeScript(sql);
   return grt::ListRef<db_query_Resultset>();
 }
 
-grt::IntegerRef db_query_Editor::executeScriptAndOutputToGrid(const std::string &sql) {
+auto db_query_Editor::executeScriptAndOutputToGrid(const std::string &sql) -> grt::IntegerRef {
   if (_data)
     return _data->executeScriptAndOutputToGrid(sql);
   return grt::IntegerRef(0);
 }
 
-db_query_ResultsetRef db_query_Editor::executeManagementQuery(const std::string &sql, ssize_t log) {
+auto db_query_Editor::executeManagementQuery(const std::string &sql, ssize_t log) -> db_query_ResultsetRef {
   if (_data)
     return _data->executeManagementQuery(sql, log != 0);
   return db_query_ResultsetRef();
 }
 
-void db_query_Editor::executeManagementCommand(const std::string &sql, ssize_t log) {
+auto db_query_Editor::executeManagementCommand(const std::string &sql, ssize_t log) -> void {
   if (_data)
     _data->executeManagementCommand(sql, log != 0);
 }
 
-db_query_ResultsetRef db_query_Editor::executeQuery(const std::string &sql, ssize_t log) {
+auto db_query_Editor::executeQuery(const std::string &sql, ssize_t log) -> db_query_ResultsetRef {
   if (_data)
     return _data->executeQuery(sql, log != 0);
   return db_query_ResultsetRef();
 }
 
-void db_query_Editor::executeCommand(const std::string &sql, ssize_t log, ssize_t background) {
+auto db_query_Editor::executeCommand(const std::string &sql, ssize_t log, ssize_t background) -> void {
   if (_data)
     _data->executeCommand(sql, log != 0, background != 0);
 }

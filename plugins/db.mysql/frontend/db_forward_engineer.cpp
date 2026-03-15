@@ -60,7 +60,7 @@ namespace DBExport {
   public:
     WbPluginDbExport(grt::Module *module);
 
-    Db_frw_eng *be() {
+    auto be() -> Db_frw_eng * {
       return &_db_frw_eng;
     }
   };
@@ -161,15 +161,15 @@ namespace DBExport {
       _include_user_scripts.set_active(module->document_int_data("GenerateAttachedScripts", 1) != 0);
     }
 
-    void SkipFKToggled() {
+    auto SkipFKToggled() -> void {
       _skip_FK_indexes_check.set_enabled(_skip_foreign_keys_check.get_active());
     }
 
-    void OmitSchemaToggled() {
+    auto OmitSchemaToggled() -> void {
       _generate_use_check.set_enabled(_omit_schema_qualifier_check.get_active());
     }
 
-    void gather_options(bool advancing) {
+    auto gather_options(bool advancing) -> void {
       values().gset("GenerateDrops", _generate_drop_check.get_active());
       values().gset("GenerateSchemaDrops", _generate_drop_schema_check.get_active());
       values().gset("SkipForeignKeys", _skip_foreign_keys_check.get_active());
@@ -245,7 +245,7 @@ namespace DBExport {
     }
 
   protected:
-    virtual void enter(bool advancing) {
+    virtual auto enter(bool advancing) -> void {
       if (advancing)
         setup_filters();
       std::vector<std::string> schemata;
@@ -262,7 +262,7 @@ namespace DBExport {
       WizardObjectFilterPage::enter(advancing);
     }
 
-    void setup_filters() {
+    auto setup_filters() -> void {
       reset();
 
       bec::GrtStringListModel *users_model;
@@ -295,7 +295,7 @@ namespace DBExport {
       _user_filter = add_filter(db_User::static_class_name(), _("Export %s Objects"), users_model, users_imodel, NULL);
     }
 
-    virtual bool advance() {
+    virtual auto advance() -> bool {
       // this is done by _export_be->load_schemata(schemata); in enter()
       //_export_be->set_db_options( _export_be->load_db_options());
       _export_be->set_option("OutputFileName", values().get_string("OutputFileName"));
@@ -325,7 +325,7 @@ namespace DBExport {
       return true;
     }
     
-    virtual bool allow_next() {
+    virtual auto allow_next() -> bool {
       return connected;
     };
 
@@ -359,7 +359,7 @@ namespace DBExport {
       add(&_heading, false, true);
     }
 
-    virtual void enter(bool advancing) {
+    virtual auto enter(bool advancing) -> void {
       if (advancing) {
         set_text(""); // Clear the output area.
         std::string script;
@@ -372,19 +372,19 @@ namespace DBExport {
       }
     }
 
-    int export_task_finished() {
+    auto export_task_finished() -> int {
       set_text(((WbPluginDbExport *)_form)->be()->export_sql_script());
       script_ready = true;
       _form->update_buttons();
       return 0;
     }
 
-    virtual void leave(bool advancing) {
+    virtual auto leave(bool advancing) -> void {
       if (advancing)
         ((WbPluginDbExport *)_form)->be()->sql_script(_text.get_string_value());
     }
 
-    virtual bool allow_next() {
+    virtual auto allow_next() -> bool {
       return script_ready;
     };
 
@@ -408,7 +408,7 @@ namespace DBExport {
     }
     */
 
-    void load_saved_connection() {
+    auto load_saved_connection() -> void {
       if (_dbconn) {
         grt::ListRef<db_mgmt_Connection> list(_dbconn->get_db_mgmt()->storedConns());
         grt::ListRef<db_mgmt_Connection>::const_iterator iter = list.begin();
@@ -424,7 +424,7 @@ namespace DBExport {
       }
     }
 
-    void save_used_connection() {
+    auto save_used_connection() -> void {
       if (_dbconn && _dbconn->get_connection().is_valid()) {
         bec::GRTManager::get()->set_app_option("LastUsedConnectionName",
                                                grt::StringRef(_dbconn->get_connection()->name()));
@@ -463,7 +463,7 @@ namespace DBExport {
       set_status_text("");
     }
 
-    virtual void enter(bool advancing) {
+    virtual auto enter(bool advancing) -> void {
       _finished = false;
 
       if (advancing)
@@ -472,15 +472,15 @@ namespace DBExport {
       WizardProgressPage::enter(advancing);
     }
 
-    virtual bool allow_back() {
+    virtual auto allow_back() -> bool {
       return WizardProgressPage::allow_back() && !_finished;
     }
 
-    virtual bool allow_cancel() {
+    virtual auto allow_cancel() -> bool {
       return WizardProgressPage::allow_cancel() && !_finished;
     }
 
-    bool do_connect() {
+    auto do_connect() -> bool {
       execute_grt_task(
         [this]() {
           ((WbPluginDbExport *)_form)->be()->db_conn()->test_connection();
@@ -490,39 +490,39 @@ namespace DBExport {
       return true;
     }
 
-    bool do_export() {
+    auto do_export() -> bool {
       execute_grt_task(std::bind(&Db_plugin::apply_script_to_db, ((WbPluginDbExport *)_form)->be()), false);
 
       return true;
     }
 
-    bool back_sync() {
+    auto back_sync() -> bool {
       execute_grt_task(std::bind(&ExportProgressPage::back_sync_, this), false);
       return true;
     }
 
-    grt::IntegerRef back_sync_() {
+    auto back_sync_() -> grt::IntegerRef {
       ((WbPluginDbExport *)_form)->be()->read_back_view_ddl();
       return grt::IntegerRef(0);
     }
 
-    bool save_sync_profile() {
+    auto save_sync_profile() -> bool {
       //#warning  TODO
       //    ((WbPluginDbExport*)_form)->be()->save_
       return true;
     }
 
-    void export_finished(const grt::ValueRef &result) {
+    auto export_finished(const grt::ValueRef &result) -> void {
       _finished = true;
       if (_conn_page)
         _conn_page->save_used_connection();
     }
 
-    virtual bool next_closes_wizard() {
+    virtual auto next_closes_wizard() -> bool {
       return true;
     }
 
-    void set_connection_page(MyConnectionPage *page) {
+    auto set_connection_page(MyConnectionPage *page) -> void {
       _conn_page = page;
     }
   };
@@ -554,10 +554,10 @@ namespace DBExport {
   }
 };
 
-grtui::WizardPlugin *createDbExportWizard(grt::Module *module, db_CatalogRef catalog) {
+auto createDbExportWizard(grt::Module *module, db_CatalogRef catalog) -> grtui::WizardPlugin * {
   return new DBExport::WbPluginDbExport(module);
 }
 
-void deleteDbExportWizard(grtui::WizardPlugin *plugin) {
+auto deleteDbExportWizard(grtui::WizardPlugin *plugin) -> void {
   delete plugin;
 }

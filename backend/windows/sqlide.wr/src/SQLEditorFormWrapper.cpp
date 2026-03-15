@@ -79,7 +79,7 @@ SqlEditorFormWrapper::~SqlEditorFormWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorFormWrapper::show_output_area() {
+auto SqlEditorFormWrapper::show_output_area() -> void {
   (*_ref)->show_output_area();
 }
 
@@ -92,7 +92,7 @@ void SqlEditorFormWrapper::output_text_ui_cb(Output_text_ui_cb::ManagedDelegate 
 
 //--------------------------------------------------------------------------------------------------
 
-ContextMenuStrip ^ SqlEditorFormWrapper::get_log_context_menu() {
+auto SqlEditorFormWrapper::get_log_context_menu() -> ContextMenuStrip ^ {
   // TODO: replace this by an own wrapper for the log (not just a generic VarGridModel).
   return dynamic_cast<ContextMenuStrip ^>(ObjectMapper::GetManagedComponent((*_ref)->log()->get_context_menu()));
 }
@@ -117,7 +117,7 @@ void SqlEditorFormWrapper::set_log_selection(List<Int32> ^ selection) {
  * Returns the native control which is behind the task side bar implementation, so the (C#) UI can
  * embed it. The sidebar is created on the way if not yet done.
  */
-Control ^ SqlEditorFormWrapper::get_sidebar_control() {
+auto SqlEditorFormWrapper::get_sidebar_control() -> Control ^ {
   return dynamic_cast<Control ^>(ObjectMapper::GetManagedComponent((*_ref)->get_sidebar()));
 }
 
@@ -126,7 +126,7 @@ Control ^ SqlEditorFormWrapper::get_sidebar_control() {
 /**
  * Managed control for the palette window for docking.
  */
-Control ^ SqlEditorFormWrapper::get_palette_control() {
+auto SqlEditorFormWrapper::get_palette_control() -> Control ^ {
   return dynamic_cast<Control ^>(ObjectMapper::GetManagedComponent((*_ref)->get_side_palette()));
 }
 
@@ -168,6 +168,6 @@ void SqlEditorFormWrapper::set_post_query_cb(Post_query_cb::ManagedDelegate ^ cb
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlEditorFormWrapper::view_switched() {
+auto SqlEditorFormWrapper::view_switched() -> void {
   _docking_point->view_switched();
 }

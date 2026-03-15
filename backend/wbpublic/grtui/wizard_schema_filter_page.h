@@ -38,10 +38,10 @@ namespace grtui {
   public:
     WizardSchemaFilterPage(WizardForm *form, const char *name);
 
-    virtual void enter(bool advancing);
-    virtual void leave(bool advancing);
+    virtual auto enter(bool advancing) -> void;
+    virtual auto leave(bool advancing) -> void;
 
-    virtual bool allow_next();
+    virtual auto allow_next() -> bool;
 
   protected:
     mforms::Box _header;

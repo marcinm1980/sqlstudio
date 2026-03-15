@@ -101,7 +101,7 @@ DbMySQLTableEditorColumnPage::~DbMySQLTableEditorColumnPage() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::switch_be(MySQLTableEditorBE* be) {
+auto DbMySQLTableEditorColumnPage::switch_be(MySQLTableEditorBE* be) -> void {
   _be = be;
 
   refill_columns_tv();
@@ -111,7 +111,7 @@ void DbMySQLTableEditorColumnPage::switch_be(MySQLTableEditorBE* be) {
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::refill_completions() {
+auto DbMySQLTableEditorColumnPage::refill_completions() -> void {
   types_completion()->clear();
   std::vector<std::string> types(_be->get_columns()->get_datatype_names());
 
@@ -138,7 +138,7 @@ const static std::map<std::string, std::string> titleMap = { { "PK", "Primary Ke
                                                   { "UN", "Unsigned" },       { "ZF", "Zero Fill" },
                                                   { "AI", "Auto Increment" }, { "G", "Generated" } };
 
-void DbMySQLTableEditorColumnPage::refill_columns_tv() {
+auto DbMySQLTableEditorColumnPage::refill_columns_tv() -> void {
   std::auto_ptr<Gtk::TreeView> new_tv(new Gtk::TreeView());
 
   // Replace old treeview with  newly created treeview
@@ -225,7 +225,7 @@ void DbMySQLTableEditorColumnPage::refill_columns_tv() {
 }
 
 //--------------------------------------------------------------------------------
-bec::NodeId DbMySQLTableEditorColumnPage::get_selected() {
+auto DbMySQLTableEditorColumnPage::get_selected() -> bec::NodeId {
   Gtk::TreePath path;
   Gtk::TreeViewColumn* column;
   _tv->get_cursor(path, column);
@@ -236,7 +236,7 @@ bec::NodeId DbMySQLTableEditorColumnPage::get_selected() {
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::refresh() {
+auto DbMySQLTableEditorColumnPage::refresh() -> void {
   if (!_editing) {
     Gtk::TreePath first_row, last_row;
 
@@ -265,7 +265,7 @@ void DbMySQLTableEditorColumnPage::refresh() {
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::partial_refresh(const int what) {
+auto DbMySQLTableEditorColumnPage::partial_refresh(const int what) -> void {
   switch (what) {
     case ::bec::TableEditorBE::RefreshColumnCollation:
       update_collation();
@@ -296,7 +296,7 @@ void DbMySQLTableEditorColumnPage::partial_refresh(const int what) {
 }
 
 //------------------------------------------------------------------------------
-std::shared_ptr<AutoCompletable> DbMySQLTableEditorColumnPage::types_completion() {
+auto DbMySQLTableEditorColumnPage::types_completion() -> std::shared_ptr<AutoCompletable> {
   if (_types_completion == NULL) {
     _types_completion = std::shared_ptr<AutoCompletable>(new AutoCompletable);
   }
@@ -304,7 +304,7 @@ std::shared_ptr<AutoCompletable> DbMySQLTableEditorColumnPage::types_completion(
 }
 
 //------------------------------------------------------------------------------
-std::shared_ptr<AutoCompletable> DbMySQLTableEditorColumnPage::names_completion() {
+auto DbMySQLTableEditorColumnPage::names_completion() -> std::shared_ptr<AutoCompletable> {
   if (_names_completion == NULL) {
     _names_completion = std::shared_ptr<AutoCompletable>(new AutoCompletable);
   }
@@ -312,8 +312,8 @@ std::shared_ptr<AutoCompletable> DbMySQLTableEditorColumnPage::names_completion(
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::type_cell_editing_started(GtkCellRenderer* cr, GtkCellEditable* ce, gchar* path,
-                                                             gpointer udata) {
+auto DbMySQLTableEditorColumnPage::type_cell_editing_started(GtkCellRenderer* cr, GtkCellEditable* ce, gchar* path,
+                                                             gpointer udata) -> void {
   // Connect edit_done, so we can trigger refresh
   DbMySQLTableEditorColumnPage* columns_page = reinterpret_cast<DbMySQLTableEditorColumnPage*>(udata);
   columns_page->_editing = true;
@@ -364,7 +364,7 @@ void DbMySQLTableEditorColumnPage::type_cell_editing_started(GtkCellRenderer* cr
 }
 
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::cell_editing_done(GtkCellEditable* ce, gpointer udata) {
+auto DbMySQLTableEditorColumnPage::cell_editing_done(GtkCellEditable* ce, gpointer udata) -> void {
   DbMySQLTableEditorColumnPage* columns_page = reinterpret_cast<DbMySQLTableEditorColumnPage*>(udata);
   columns_page->_editing = false;
 
@@ -418,7 +418,7 @@ void DbMySQLTableEditorColumnPage::cell_editing_done(GtkCellEditable* ce, gpoint
 }
 
 //------------------------------------------------------------------------------
-grt::StringListRef DbMySQLTableEditorColumnPage::get_types_for_table(const db_TableRef table) {
+auto DbMySQLTableEditorColumnPage::get_types_for_table(const db_TableRef table) -> grt::StringListRef {
   grt::StringListRef list(grt::Initialized);
   std::vector<std::string> types(_be->get_columns()->get_datatype_names());
 
@@ -433,7 +433,7 @@ grt::StringListRef DbMySQLTableEditorColumnPage::get_types_for_table(const db_Ta
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::check_resize(Gtk::Allocation& r) {
+auto DbMySQLTableEditorColumnPage::check_resize(Gtk::Allocation& r) -> void {
   //   0       1        2  3  4   5   6   7   8   9    10
   // name    type      PK  NN UQ BIN  UN  ZF  AI  G    Default
   const int step = r.get_width() / 10;
@@ -443,7 +443,7 @@ void DbMySQLTableEditorColumnPage::check_resize(Gtk::Allocation& r) {
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLTableEditorColumnPage::process_event(GdkEvent* event) {
+auto DbMySQLTableEditorColumnPage::process_event(GdkEvent* event) -> bool {
   if (event->type == GDK_KEY_RELEASE) {
     type_column_event(event);
   }
@@ -451,7 +451,7 @@ bool DbMySQLTableEditorColumnPage::process_event(GdkEvent* event) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::type_column_event(GdkEvent* event) {
+auto DbMySQLTableEditorColumnPage::type_column_event(GdkEvent* event) -> void {
   if (event->type == GDK_KEY_RELEASE) {
     const int key = event->key.keyval;
     if (key == GDK_KEY_Tab /* || key == GDK_Return */) {
@@ -491,14 +491,14 @@ void DbMySQLTableEditorColumnPage::type_column_event(GdkEvent* event) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::cursor_changed() {
+auto DbMySQLTableEditorColumnPage::cursor_changed() -> void {
   if (!_editing) {
     update_column_details(get_selected());
   }
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::update_column_details(const ::bec::NodeId& node) {
+auto DbMySQLTableEditorColumnPage::update_column_details(const ::bec::NodeId& node) -> void {
   Gtk::TextView* column_comment;
   _xml->get_widget("column_comment", column_comment);
 
@@ -518,7 +518,7 @@ void DbMySQLTableEditorColumnPage::update_column_details(const ::bec::NodeId& no
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::set_comment(const std::string& comment) {
+auto DbMySQLTableEditorColumnPage::set_comment(const std::string& comment) -> void {
   const bec::NodeId node = get_selected();
   if (node.is_valid()) {
     ::bec::TableColumnsListBE* cols = _be->get_columns();
@@ -527,7 +527,7 @@ void DbMySQLTableEditorColumnPage::set_comment(const std::string& comment) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::set_charset() {
+auto DbMySQLTableEditorColumnPage::set_charset() -> void {
   const bec::NodeId node = get_selected();
   if (node.is_valid()) {
     bec::TableColumnsListBE* columns = _be->get_columns();
@@ -545,7 +545,7 @@ void DbMySQLTableEditorColumnPage::set_charset() {
 
 //------------------------------------------------------------------------------
 
-void DbMySQLTableEditorColumnPage::set_collation() {
+auto DbMySQLTableEditorColumnPage::set_collation() -> void {
   const bec::NodeId node = get_selected();
   if (node.is_valid()) {
     bec::TableColumnsListBE* columns = _be->get_columns();
@@ -559,7 +559,7 @@ void DbMySQLTableEditorColumnPage::set_collation() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::update_collation() {
+auto DbMySQLTableEditorColumnPage::update_collation() -> void {
 //   Gtk::ComboBox* collation_combo;
 //   _xml->get_widget("column_collation_combo", collation_combo);
 
@@ -599,7 +599,7 @@ void DbMySQLTableEditorColumnPage::update_collation() {
   }
 }
 //--------------------------------------------------------------------------------
-void DbMySQLTableEditorColumnPage::update_gc_storage_type() {
+auto DbMySQLTableEditorColumnPage::update_gc_storage_type() -> void {
   const bec::NodeId node = get_selected();
   if (node.is_valid()) {
     std::string has_charset;
@@ -625,7 +625,7 @@ void DbMySQLTableEditorColumnPage::update_gc_storage_type() {
 
 //--------------------------------------------------------------------------------
 
-void DbMySQLTableEditorColumnPage::set_gc_storage_type() {
+auto DbMySQLTableEditorColumnPage::set_gc_storage_type() -> void {
   const bec::NodeId node = get_selected();
   if (node.is_valid()) {
     MySQLTableColumnsListBE* columns = _be->get_columns();
@@ -637,7 +637,7 @@ void DbMySQLTableEditorColumnPage::set_gc_storage_type() {
 }
 
 //--------------------------------------------------------------------------------
-bool DbMySQLTableEditorColumnPage::do_on_visible(GdkEventVisibility*) {
+auto DbMySQLTableEditorColumnPage::do_on_visible(GdkEventVisibility*) -> bool {
   if (!_auto_edit_pending && _be->get_columns()->count() == 1) {
     Glib::signal_idle().connect(
       sigc::bind_return(sigc::mem_fun(this, &DbMySQLTableEditorColumnPage::start_auto_edit), false));
@@ -646,7 +646,7 @@ bool DbMySQLTableEditorColumnPage::do_on_visible(GdkEventVisibility*) {
   return false;
 }
 
-void DbMySQLTableEditorColumnPage::start_auto_edit() {
+auto DbMySQLTableEditorColumnPage::start_auto_edit() -> void {
   MySQLTableColumnsListBE* columns = _be->get_columns();
   ::bec::NodeId node(columns->get_node(0));
   _tv->set_cursor(node2path(node), *(_tv->get_column(0)), true);

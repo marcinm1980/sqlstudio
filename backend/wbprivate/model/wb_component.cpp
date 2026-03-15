@@ -40,8 +40,8 @@ WBComponent::WBComponent(WBContext *context) : _wb(context) {
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef WBComponent::place_object(ModelDiagramForm *form, const Point &pos, const std::string &object_struct,
-                                        const grt::DictRef &args) {
+auto WBComponent::place_object(ModelDiagramForm *form, const Point &pos, const std::string &object_struct,
+                                        const grt::DictRef &args) -> grt::ValueRef {
   model_DiagramRef view(form->get_model_diagram());
   std::string object_type, object_struct_name;
 
@@ -117,7 +117,7 @@ grt::ValueRef WBComponent::place_object(ModelDiagramForm *form, const Point &pos
 
 //--------------------------------------------------------------------------------------------------
 
-std::string WBComponent::get_command_option_value(const std::string &option) {
+auto WBComponent::get_command_option_value(const std::string &option) -> std::string {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
 
   if (form)
@@ -128,7 +128,7 @@ std::string WBComponent::get_command_option_value(const std::string &option) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WBComponent::set_command_option_value(const std::string &option, const std::string &item) {
+auto WBComponent::set_command_option_value(const std::string &option, const std::string &item) -> void {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
 
   if (form)

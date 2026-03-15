@@ -36,13 +36,13 @@
 
 class WBPUBLICBACKEND_PUBLIC_FUNC BridgeBase : public base::trackable {
 protected:
-  void run_later(const std::function<void()> &slot);
+  auto run_later(const std::function<void()> &slot) -> void;
 
-  virtual GrtObject *get_object() = 0;
+  virtual auto get_object() -> GrtObject * = 0;
 
-  bool is_main_thread();
+  auto is_main_thread() -> bool;
 
 public:
-  virtual void unrealize() = 0;
+  virtual auto unrealize() -> void = 0;
   virtual ~BridgeBase(){};
 };

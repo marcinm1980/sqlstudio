@@ -377,27 +377,27 @@ public:
   static void operator delete(void *ptr, MEM_ROOT *mem_root) {}
   st_select_lex_node(): linkage(UNSPECIFIED_TYPE) {}
   virtual ~st_select_lex_node() {}
-  inline st_select_lex_node* get_master() { return master; }
-  virtual void init_query();
-  virtual void init_select();
-  void include_down(st_select_lex_node *upper);
-  void include_neighbour(st_select_lex_node *before);
-  void include_standalone(st_select_lex_node *sel, st_select_lex_node **ref);
-  void include_global(st_select_lex_node **plink);
-  void exclude();
+  inline auto get_master() -> st_select_lex_node* { return master; }
+  virtual auto init_query() -> void;
+  virtual auto init_select() -> void;
+  auto include_down(st_select_lex_node *upper) -> void;
+  auto include_neighbour(st_select_lex_node *before) -> void;
+  auto include_standalone(st_select_lex_node *sel, st_select_lex_node **ref) -> void;
+  auto include_global(st_select_lex_node **plink) -> void;
+  auto exclude() -> void;
 
-  virtual st_select_lex_unit* master_unit()= 0;
-  virtual st_select_lex* outer_select()= 0;
-  virtual st_select_lex* return_after_parsing()= 0;
+  virtual auto master_unit() -> st_select_lex_unit* = 0;
+  virtual auto outer_select() -> st_select_lex* = 0;
+  virtual auto return_after_parsing() -> st_select_lex* = 0;
 
-  virtual bool set_braces(bool value);
-  virtual bool inc_in_sum_expr();
-  virtual uint get_in_sum_expr();
+  virtual auto set_braces(bool value) -> bool;
+  virtual auto inc_in_sum_expr() -> bool;
+  virtual auto get_in_sum_expr() -> uint;
   //virtual TABLE_LIST* get_table_list();
   //virtual List<Item>* get_item_list();
   //virtual List<String>* get_use_index();
   //virtual List<String>* get_ignore_index();
-  virtual ulong get_table_join_options();
+  virtual auto get_table_join_options() -> ulong;
   //virtual TABLE_LIST *add_table_to_list(THD *thd, Table_ident *table,
 		//			LEX_STRING *alias,
 		//			ulong table_options,
@@ -405,14 +405,14 @@ public:
 		//			List<String> *use_index= 0,
 		//			List<String> *ignore_index= 0,
   //                                      LEX_STRING *option= 0);
-  virtual void set_lock_for_tables(thr_lock_type lock_type) {}
+  virtual auto set_lock_for_tables(thr_lock_type lock_type) -> void {}
 
   friend class st_select_lex_unit;
-  friend bool mysql_new_select(struct st_lex *lex, bool move_down);
+  friend auto mysql_new_select(struct st_lex *lex, bool move_down) -> bool;
   //friend bool mysql_make_view(THD *thd, File_parser *parser,
   //                            TABLE_LIST *table);
 private:
-  void fast_exclude();
+  auto fast_exclude() -> void;
 };
 #endif
 
@@ -477,37 +477,35 @@ public:
   bool describe; /* union exec() called for EXPLAIN */
   Procedure *last_procedure;	 /* Pointer to procedure, if such exists */
 
-  void init_query();
-  st_select_lex_unit* master_unit();
-  st_select_lex* outer_select();
-  st_select_lex* first_select()
-  {
+  auto init_query() -> void;
+  auto master_unit() -> st_select_lex_unit*;
+  auto outer_select() -> st_select_lex*;
+  auto first_select() -> st_select_lex* {
     return my_reinterpret_cast(st_select_lex*)(slave);
   }
-  st_select_lex_unit* next_unit()
-  {
+  auto next_unit() -> st_select_lex_unit* {
     return my_reinterpret_cast(st_select_lex_unit*)(next);
   }
-  st_select_lex* return_after_parsing() { return return_to; }
-  void exclude_level();
-  void exclude_tree();
+  auto return_after_parsing() -> st_select_lex* { return return_to; }
+  auto exclude_level() -> void;
+  auto exclude_tree() -> void;
 
   /* UNION methods */
-  bool prepare(THD *thd, select_result *result, ulong additional_options);
-  bool exec();
-  bool cleanup();
-  inline void unclean() { cleaned= 0; }
-  void reinit_exec_mechanism();
+  auto prepare(THD *thd, select_result *result, ulong additional_options) -> bool;
+  auto exec() -> bool;
+  auto cleanup() -> bool;
+  inline auto unclean() -> void { cleaned= 0; }
+  auto reinit_exec_mechanism() -> void;
 
-  void print(String *str);
+  auto print(String *str) -> void;
 
-  void init_prepare_fake_select_lex(THD *thd);
-  inline bool is_prepared() { return prepared; }
+  auto init_prepare_fake_select_lex(THD *thd) -> void;
+  inline auto is_prepared() -> bool { return prepared; }
   //bool change_result(select_subselect *result, select_subselect *old_result);
-  void set_limit(st_select_lex *values);
-  void set_thd(THD *thd_arg) { thd= thd_arg; }
+  auto set_limit(st_select_lex *values) -> void;
+  auto set_thd(THD *thd_arg) -> void { thd= thd_arg; }
 
-  friend void lex_start(LEX *lex, const uchar *buf, uint length);
+  friend auto lex_start(LEX *lex, const uchar *buf, uint length) -> void;
   //friend int subselect_union_engine::exec();
 
   //List<Item> *get_unit_column_types();
@@ -612,33 +610,29 @@ public:
   /* exclude this select from check of unique_table() */
   bool exclude_from_table_unique_test;
 
-  void init_query();
-  void init_select();
-  st_select_lex_unit* master_unit();
-  st_select_lex_unit* first_inner_unit() 
-  { 
+  auto init_query() -> void;
+  auto init_select() -> void;
+  auto master_unit() -> st_select_lex_unit*;
+  auto first_inner_unit() -> st_select_lex_unit* { 
     return (st_select_lex_unit*) slave; 
   }
-  st_select_lex* outer_select();
-  st_select_lex* next_select() { return (st_select_lex*) next; }
-  st_select_lex* next_select_in_list() 
-  {
+  auto outer_select() -> st_select_lex*;
+  auto next_select() -> st_select_lex* { return (st_select_lex*) next; }
+  auto next_select_in_list() -> st_select_lex* {
     return (st_select_lex*) link_next;
   }
-  st_select_lex_node** next_select_in_list_addr()
-  {
+  auto next_select_in_list_addr() -> st_select_lex_node** {
     return &link_next;
   }
-  st_select_lex* return_after_parsing()
-  {
+  auto return_after_parsing() -> st_select_lex* {
     return master_unit()->return_after_parsing();
   }
 
-  void mark_as_dependent(st_select_lex *last);
+  auto mark_as_dependent(st_select_lex *last) -> void;
 
-  bool set_braces(bool value);
-  bool inc_in_sum_expr();
-  uint get_in_sum_expr();
+  auto set_braces(bool value) -> bool;
+  auto inc_in_sum_expr() -> bool;
+  auto get_in_sum_expr() -> uint;
 
   //bool add_item_to_list(THD *thd, Item *item);
   //bool add_group_to_list(THD *thd, Item *item, bool asc);
@@ -674,18 +668,17 @@ public:
     to LEX (LEX::unit & LEX::select, for other purposes there are
     SELECT_LEX_UNIT::exclude_level & SELECT_LEX_UNIT::exclude_tree
   */
-  void cut_subtree() { slave= 0; }
-  bool test_limit();
+  auto cut_subtree() -> void { slave= 0; }
+  auto test_limit() -> bool;
 
-  friend void lex_start(LEX *lex, const uchar *buf, uint length);
+  friend auto lex_start(LEX *lex, const uchar *buf, uint length) -> void;
   st_select_lex() {}
-  void make_empty_select()
-  {
+  auto make_empty_select() -> void {
     init_query();
     init_select();
   }
-  bool setup_ref_array(THD *thd, uint order_group_num);
-  void print(THD *thd, String *str);
+  auto setup_ref_array(THD *thd, uint order_group_num) -> bool;
+  auto print(THD *thd, String *str) -> void;
   //static void print_order(String *str, ORDER *order);
   //void print_limit(THD *thd, String *str);
   //void fix_prepare_information(THD *thd, Item **conds);
@@ -693,12 +686,12 @@ public:
     Destroy the used execution plan (JOIN) of this subtree (this
     SELECT_LEX and all nested SELECT_LEXes and SELECT_LEX_UNITs).
   */
-  bool cleanup();
+  auto cleanup() -> bool;
   /*
     Recursively cleanup the join of this select lex and of all nested
     select lexes.
   */
-  void cleanup_all_joins(bool full);
+  auto cleanup_all_joins(bool full) -> void;
 };
 typedef class st_select_lex SELECT_LEX;
 #endif
@@ -742,8 +735,7 @@ typedef struct st_alter_info
   uint                        no_parts;
 
   st_alter_info(){clear();}
-  void clear()
-  {
+  auto clear() -> void {
     keys_onoff= LEAVE_AS_IS;
     tablespace_op= NO_TABLESPACE_OP;
     no_parts= 0;
@@ -1060,7 +1052,7 @@ typedef struct st_lex
   //}
   //TABLE_LIST *unlink_first_table(bool *link_to_local);
   //void link_first_table_back(TABLE_LIST *first, bool link_to_local);
-  void first_lists_tables_same();
+  auto first_lists_tables_same() -> void;
   //inline void add_to_query_tables(TABLE_LIST *table)
   //{
   //  *(table->prev_global= query_tables_last)= table;
@@ -1068,11 +1060,11 @@ typedef struct st_lex
   //}
   //bool add_time_zone_tables_to_query_tables(THD *thd);
 
-  bool can_be_merged();
-  bool can_use_merged();
-  bool can_not_use_merged();
-  bool only_view_structure();
-  bool need_correct_ident();
+  auto can_be_merged() -> bool;
+  auto can_use_merged() -> bool;
+  auto can_not_use_merged() -> bool;
+  auto only_view_structure() -> bool;
+  auto need_correct_ident() -> bool;
   //uint8 get_effective_with_check(st_table_list *view);
   /*
     Is this update command where 'WHITH CHECK OPTION' clause is important
@@ -1172,11 +1164,11 @@ struct st_lex_local: public st_lex
   { /* Never called */ }
 };
 
-extern void lex_init(void);
-extern void lex_free(void);
-extern void lex_start(LEX *lex, const uchar *buf, uint length);
-extern void lex_end(LEX *lex);
-extern int MYSQLlex(void *arg, void *yythd);
+extern auto lex_init(void) -> void;
+extern auto lex_free(void) -> void;
+extern auto lex_start(LEX *lex, const uchar *buf, uint length) -> void;
+extern auto lex_end(LEX *lex) -> void;
+extern auto MYSQLlex(void *arg, void *yythd) -> int;
 
 extern bool parser_is_stopped;
 

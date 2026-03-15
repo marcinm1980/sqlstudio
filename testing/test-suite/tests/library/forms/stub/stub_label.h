@@ -36,27 +36,27 @@ namespace mforms {
       LabelWrapper(::mforms::Label *self) : ViewWrapper(self) {
       }
 
-      static bool create(::mforms::Label *self) {
+      static auto create(::mforms::Label *self) -> bool {
         return true;
       }
 
-      static void set_style(::mforms::Label *self, ::mforms::LabelStyle style) {
+      static auto set_style(::mforms::Label *self, ::mforms::LabelStyle style) -> void {
       }
 
-      static void set_text(::mforms::Label *self, const std::string &text) {
+      static auto set_text(::mforms::Label *self, const std::string &text) -> void {
       }
 
-      static void set_color(::mforms::Label *self, const std::string &text) {
+      static auto set_color(::mforms::Label *self, const std::string &text) -> void {
       }
 
-      static void set_wrap_text(::mforms::Label *self, bool flag) {
+      static auto set_wrap_text(::mforms::Label *self, bool flag) -> void {
       }
 
-      static void set_text_align(::mforms::Label *self, ::mforms::Alignment align) {
+      static auto set_text_align(::mforms::Label *self, ::mforms::Alignment align) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_label_impl.create = &LabelWrapper::create;

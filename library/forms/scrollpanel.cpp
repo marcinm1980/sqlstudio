@@ -38,36 +38,36 @@ ScrollPanel::~ScrollPanel() {
   _spanel_impl->remove(this);
 }
 
-void ScrollPanel::add(View* child) {
+auto ScrollPanel::add(View* child) -> void {
   cache_view(child);
   _spanel_impl->add(this, child);
   child->show();
 }
 
-void ScrollPanel::remove() {
+auto ScrollPanel::remove() -> void {
   _spanel_impl->remove(this);
   clear_subviews();
 }
 
-void ScrollPanel::set_visible_scrollers(bool vertical, bool horizontal) {
+auto ScrollPanel::set_visible_scrollers(bool vertical, bool horizontal) -> void {
   _spanel_impl->set_visible_scrollers(this, vertical, horizontal);
 }
 
-void ScrollPanel::set_autohide_scrollers(bool flag) {
+auto ScrollPanel::set_autohide_scrollers(bool flag) -> void {
   _spanel_impl->set_autohide_scrollers(this, flag);
 }
 
-void ScrollPanel::scroll_to_view(View* child) {
+auto ScrollPanel::scroll_to_view(View* child) -> void {
   if (_spanel_impl->scroll_to_view)
     return _spanel_impl->scroll_to_view(this, child);
 
   throw std::logic_error("ScrollPanel::scroll_to_view: not implemented");
 }
 
-base::Rect ScrollPanel::get_content_rect() {
+auto ScrollPanel::get_content_rect() -> base::Rect {
   return _spanel_impl->get_content_rect(this);
 }
 
-void ScrollPanel::scroll_to(int x, int y) {
+auto ScrollPanel::scroll_to(int x, int y) -> void {
   _spanel_impl->scroll_to(this, x, y);
 }

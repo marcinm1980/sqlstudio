@@ -36,36 +36,36 @@ namespace mforms {
       TableWrapper(mforms::Table *self) : ViewWrapper(self) {
       }
 
-      static bool create(mforms::Table *self) {
+      static auto create(mforms::Table *self) -> bool {
         return true;
       }
 
-      static void set_row_count(Table *self, int count) {
+      static auto set_row_count(Table *self, int count) -> void {
       }
 
-      static void set_col_count(Table *self, int count) {
+      static auto set_col_count(Table *self, int count) -> void {
       }
 
-      static void add(Table *self, View *child, int left, int right, int top, int bottom, int flags) {
+      static auto add(Table *self, View *child, int left, int right, int top, int bottom, int flags) -> void {
       }
 
-      static void remove(Table *self, View *child) {
+      static auto remove(Table *self, View *child) -> void {
       }
 
-      static void set_row_spacing(Table *self, int space) {
+      static auto set_row_spacing(Table *self, int space) -> void {
       }
 
-      static void set_col_spacing(Table *self, int space) {
+      static auto set_col_spacing(Table *self, int space) -> void {
       }
 
-      static void set_homogeneous(Table *self, bool flag) {
+      static auto set_homogeneous(Table *self, bool flag) -> void {
       }
 
-      static void set_back_color(Table *self, const std::string &) {
+      static auto set_back_color(Table *self, const std::string &) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
         f->_table_impl.create = &TableWrapper::create;

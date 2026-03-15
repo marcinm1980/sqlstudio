@@ -44,7 +44,7 @@ BASELIBRARY_PUBLIC_FUNC auto base_open(const std::string &filename, int open_fla
 BASELIBRARY_PUBLIC_FUNC auto base_remove(const std::string &filename) -> int;
 BASELIBRARY_PUBLIC_FUNC auto base_rename(const char *oldname, const char *newname) -> int;
 #ifdef _MSC_VER
-BASELIBRARY_PUBLIC_FUNC int base_stat(const char *filename, struct _stat *stbuf);
+BASELIBRARY_PUBLIC_FUNC auto base_stat(const char *filename, struct _stat *stbuf) -> int;
 #else
 BASELIBRARY_PUBLIC_FUNC auto base_stat(const char *filename, struct stat *stbuf) -> int;
 #endif

@@ -41,12 +41,12 @@ Mysql_sql_semantic_check::Mysql_sql_semantic_check() {
   NULL_STATE_KEEPER
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_semantic_check::check_sql(const SqlAstNode *tree) {
+auto Mysql_sql_semantic_check::check_sql(const SqlAstNode *tree) -> Mysql_sql_parser_base::Parse_result {
   return pr_processed;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_semantic_check::check_trigger(const SqlAstNode *tree,
-                                                                            const SqlAstNode *trigger_tail) {
+auto Mysql_sql_semantic_check::check_trigger(const SqlAstNode *tree,
+                                                                            const SqlAstNode *trigger_tail) -> Mysql_sql_parser_base::Parse_result {
   if (!_context_table.is_valid())
     return pr_processed;
 
@@ -72,12 +72,12 @@ Mysql_sql_parser_base::Parse_result Mysql_sql_semantic_check::check_trigger(cons
   return pr_processed;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_semantic_check::check_view(const SqlAstNode *tree,
-                                                                         const SqlAstNode *view_tail) {
+auto Mysql_sql_semantic_check::check_view(const SqlAstNode *tree,
+                                                                         const SqlAstNode *view_tail) -> Mysql_sql_parser_base::Parse_result {
   return pr_processed;
 }
 
-Mysql_sql_parser_base::Parse_result Mysql_sql_semantic_check::check_routine(const SqlAstNode *tree,
-                                                                            const SqlAstNode *routine_tail) {
+auto Mysql_sql_semantic_check::check_routine(const SqlAstNode *tree,
+                                                                            const SqlAstNode *routine_tail) -> Mysql_sql_parser_base::Parse_result {
   return pr_processed;
 }

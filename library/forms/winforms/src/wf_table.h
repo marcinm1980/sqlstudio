@@ -35,19 +35,19 @@ namespace MySQL {
     protected:
       TableWrapper(mforms::View *view);
 
-      virtual void set_padding(int left, int top, int right, int bottom);
+      virtual auto set_padding(int left, int top, int right, int bottom) -> void;
 
-      static bool create(mforms::Table *backend);
-      static void add(mforms::Table *backend, mforms::View *child, int left, int right, int top, int bottom, int flags);
-      static void remove(mforms::Table *backend, mforms::View *child);
-      static void set_row_count(mforms::Table *backend, int count);
-      static void set_column_count(mforms::Table *backend, int count);
-      static void set_row_spacing(mforms::Table *backend, int space);
-      static void set_column_spacing(mforms::Table *backend, int space);
-      static void set_homogeneous(mforms::Table *backend, bool value);
+      static auto create(mforms::Table *backend) -> bool;
+      static auto add(mforms::Table *backend, mforms::View *child, int left, int right, int top, int bottom, int flags) -> void;
+      static auto remove(mforms::Table *backend, mforms::View *child) -> void;
+      static auto set_row_count(mforms::Table *backend, int count) -> void;
+      static auto set_column_count(mforms::Table *backend, int count) -> void;
+      static auto set_row_spacing(mforms::Table *backend, int space) -> void;
+      static auto set_column_spacing(mforms::Table *backend, int space) -> void;
+      static auto set_homogeneous(mforms::Table *backend, bool value) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

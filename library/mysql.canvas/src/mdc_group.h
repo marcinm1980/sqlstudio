@@ -37,10 +37,10 @@ namespace mdc {
     Group(Layer *layer);
     virtual ~Group();
 
-    virtual void dissolve();
+    virtual auto dissolve() -> void;
 
-    virtual void add(CanvasItem *item);
-    virtual void remove(CanvasItem *item);
+    virtual auto add(CanvasItem *item) -> void;
+    virtual auto remove(CanvasItem *item) -> void;
 
     auto has_item(CanvasItem *item) -> bool;
     auto get_contents() -> std::list<CanvasItem *> & {
@@ -50,25 +50,25 @@ namespace mdc {
       return _contents.empty();
     };
 
-    virtual void foreach (const std::function<void(CanvasItem *)> &slot);
+    virtual auto foreach (const std::function<void(CanvasItem *)> &slot) -> void;
 
-    void freeze();
-    void thaw();
+    auto freeze() -> void;
+    auto thaw() -> void;
 
     auto get_direct_subitem_at(const base::Point &point) -> CanvasItem *;
     virtual auto get_other_item_at(const base::Point &point, CanvasItem *item) -> CanvasItem *;
     virtual auto get_item_at(const base::Point &point) -> CanvasItem *;
 
-    virtual void move_item(CanvasItem *child_item, const base::Point &pos);
+    virtual auto move_item(CanvasItem *child_item, const base::Point &pos) -> void;
 
-    virtual void raise_item(CanvasItem *item, CanvasItem *above = 0);
-    virtual void lower_item(CanvasItem *item);
+    virtual auto raise_item(CanvasItem *item, CanvasItem *above = 0) -> void;
+    virtual auto lower_item(CanvasItem *item) -> void;
 
-    virtual void move_to(const base::Point &point);
+    virtual auto move_to(const base::Point &point) -> void;
 
-    virtual void set_selected(bool flag);
+    virtual auto set_selected(bool flag) -> void;
 
-    virtual void repaint(const base::Rect &clipArea, bool direct);
+    virtual auto repaint(const base::Rect &clipArea, bool direct) -> void;
 
   protected:
     struct ItemInfo {
@@ -84,11 +84,11 @@ namespace mdc {
     bool _activated;
 #endif
 
-    virtual void update_bounds();
+    virtual auto update_bounds() -> void;
 
-    void focus_changed(bool f, CanvasItem *item);
+    auto focus_changed(bool f, CanvasItem *item) -> void;
 #ifdef no_group_activate
-    void activate_group(bool flag);
+    auto activate_group(bool flag) -> void;
 #endif
   };
 

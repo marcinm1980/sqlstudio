@@ -29,7 +29,7 @@
 #include "custom_renderers.h"
 #include "base/string_utilities.h"
 
-GridViewModel::Ref GridViewModel::create(bec::GridModel::Ref model, GridView *view, const std::string &name) {
+auto GridViewModel::create(bec::GridModel::Ref model, GridView *view, const std::string &name) -> GridViewModel::Ref {
   return Ref(new GridViewModel(model, view, name));
 }
 
@@ -70,7 +70,7 @@ struct ValueTypeTraits<bec::GridModel::FloatType> {
   typedef Glib::ustring RendererValueType;
 };
 
-int GridViewModel::refresh(bool reset_columns) {
+auto GridViewModel::refresh(bool reset_columns) -> int {
   freeze_notify();
   model_changed(bec::NodeId(), -1);
 
@@ -138,7 +138,7 @@ int GridViewModel::refresh(bool reset_columns) {
   return 0;
 }
 
-void GridViewModel::onColumnsResized(const std::vector<Gtk::TreeViewColumn *> &cols) {
+auto GridViewModel::onColumnsResized(const std::vector<Gtk::TreeViewColumn *> &cols) -> void {
   if (_ignore_column_resizes != 0)
     return;
   std::vector<Gtk::TreeViewColumn *>::const_iterator it;
@@ -156,7 +156,7 @@ void GridViewModel::onColumnsResized(const std::vector<Gtk::TreeViewColumn *> &c
     columns_resized(columns);
 }
 
-void GridViewModel::set_column_width(int column, int width) {
+auto GridViewModel::set_column_width(int column, int width) -> void {
   ignore_column_resizes(true);
   Gtk::TreeViewColumn *tc = _view->get_column(column + 1);
   if (tc)
@@ -164,11 +164,11 @@ void GridViewModel::set_column_width(int column, int width) {
   ignore_column_resizes(false);
 }
 
-void GridViewModel::set_text_cell_fixed_height(bool val) {
+auto GridViewModel::set_text_cell_fixed_height(bool val) -> void {
   _text_cell_fixed_height = val;
 }
 
-void GridViewModel::on_column_header_button_press(GdkEventButton *ev, Gtk::TreeViewColumn *column) {
+auto GridViewModel::on_column_header_button_press(GdkEventButton *ev, Gtk::TreeViewColumn *column) -> void {
   if (ev->button == 3) {
     int col = column_index(column);
     column_right_clicked(col, ev->x, ev->y);
@@ -244,7 +244,7 @@ Gtk::TreeViewColumn *GridViewModel::add_column(int index, const std::string &nam
   return treeview_column;
 }
 
-void GridViewModel::set_ellipsize(const int column, const bool on) {
+auto GridViewModel::set_ellipsize(const int column, const bool on) -> void {
   Gtk::TreeViewColumn *col = 0;
   for (std::map<Gtk::TreeViewColumn *, int>::const_iterator end = _col_index_map.end(), it = _col_index_map.begin();
        it != end; ++it) {
@@ -268,12 +268,12 @@ void GridViewModel::set_ellipsize(const int column, const bool on) {
   }
 }
 
-int GridViewModel::column_index(Gtk::TreeViewColumn *col) {
+auto GridViewModel::column_index(Gtk::TreeViewColumn *col) -> int {
   std::map<Gtk::TreeViewColumn *, int>::const_iterator i = _col_index_map.find(col);
   return (_col_index_map.end() == i) ? -1 : i->second;
 }
 
-void GridViewModel::get_cell_value(const iterator &iter, int column, GType type, Glib::ValueBase &value) {
+auto GridViewModel::get_cell_value(const iterator &iter, int column, GType type, Glib::ValueBase &value) -> void {
   bec::NodeId node = node_for_iter(iter);
   if (!node.is_valid())
     return;
@@ -307,14 +307,14 @@ void GridViewModel::get_cell_value(const iterator &iter, int column, GType type,
   }
 }
 
-void GridViewModel::set_cell_value(const iterator &itier, int column, GType type, const Glib::ValueBase &value) {
+auto GridViewModel::set_cell_value(const iterator &itier, int column, GType type, const Glib::ValueBase &value) -> void {
 }
 
-bool GridViewModel::handle_popup_event(GdkEvent *event) {
+auto GridViewModel::handle_popup_event(GdkEvent *event) -> bool {
   return false;
 }
 
-void GridViewModel::get_value_vfunc(const iterator &iter, int column, Glib::ValueBase &value) const {
+auto GridViewModel::get_value_vfunc(const iterator &iter, int column, Glib::ValueBase &value) const -> void {
   ListModelWrapper::get_value_vfunc(iter, column, value);
   before_render(column, &value);
 }

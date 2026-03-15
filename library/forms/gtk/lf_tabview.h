@@ -34,7 +34,7 @@ namespace mforms {
     class TabViewImpl : public ViewImpl {
       Gtk::Notebook *_nb;
       bool _reorderable;
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _nb;
       }
 
@@ -43,23 +43,23 @@ namespace mforms {
       virtual ~TabViewImpl();
 
       void tab_changed(Gtk::Widget *, guint);
-      void tab_reordered(Gtk::Widget *page, guint to);
+      auto tab_reordered(Gtk::Widget *page, guint to) -> void;
 
-      void close_tab_clicked(mforms::View *page);
+      auto close_tab_clicked(mforms::View *page) -> void;
 
-      static bool create(::mforms::TabView *self, mforms::TabViewType tabtype);
-      static void set_active_tab(::mforms::TabView *self, int index);
-      static int get_active_tab(::mforms::TabView *self);
-      static int add_page(::mforms::TabView *self, ::mforms::View *page, const std::string &caption,
-                          bool hasCloseButton);
-      static void remove_page(::mforms::TabView *self, ::mforms::View *page);
-      static void set_tab_title(::mforms::TabView *self, int tab, const std::string &title);
-      static void set_aux_view(mforms::TabView *self, mforms::View *view);
+      static auto create(::mforms::TabView *self, mforms::TabViewType tabtype) -> bool;
+      static auto set_active_tab(::mforms::TabView *self, int index) -> void;
+      static auto get_active_tab(::mforms::TabView *self) -> int;
+      static auto add_page(::mforms::TabView *self, ::mforms::View *page, const std::string &caption,
+                          bool hasCloseButton) -> int;
+      static auto remove_page(::mforms::TabView *self, ::mforms::View *page) -> void;
+      static auto set_tab_title(::mforms::TabView *self, int tab, const std::string &title) -> void;
+      static auto set_aux_view(mforms::TabView *self, mforms::View *view) -> void;
 
-      static void set_allows_reordering(mforms::TabView *self, bool flag);
+      static auto set_allows_reordering(mforms::TabView *self, bool flag) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

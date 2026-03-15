@@ -37,53 +37,53 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool SelectorWrapper::create(::mforms::Selector *self, ::mforms::SelectorStyle style) {
+    auto SelectorWrapper::create(::mforms::Selector *self, ::mforms::SelectorStyle style) -> bool {
       return true;
     }
 
     //------------------------------------------------------------------------------
-    void SelectorWrapper::clear(::mforms::Selector *self) {
+    auto SelectorWrapper::clear(::mforms::Selector *self) -> void {
     }
 
     //------------------------------------------------------------------------------
-    int SelectorWrapper::add_item(::mforms::Selector *self, const std::string &item) {
+    auto SelectorWrapper::add_item(::mforms::Selector *self, const std::string &item) -> int {
       return 0;
     }
 
     //------------------------------------------------------------------------------
-    void SelectorWrapper::add_items(::mforms::Selector *self, const std::list<std::string> &items) {
+    auto SelectorWrapper::add_items(::mforms::Selector *self, const std::list<std::string> &items) -> void {
     }
 
     //------------------------------------------------------------------------------
-    std::string SelectorWrapper::get_item(::mforms::Selector *self, int index) {
+    auto SelectorWrapper::get_item(::mforms::Selector *self, int index) -> std::string {
       return "";
     }
 
     //------------------------------------------------------------------------------
-    std::string SelectorWrapper::get_text(::mforms::Selector *self) {
+    auto SelectorWrapper::get_text(::mforms::Selector *self) -> std::string {
       return "";
     }
 
     //------------------------------------------------------------------------------
-    void SelectorWrapper::set_index(::mforms::Selector *self, int index) {
+    auto SelectorWrapper::set_index(::mforms::Selector *self, int index) -> void {
     }
 
     //------------------------------------------------------------------------------
-    int SelectorWrapper::get_index(::mforms::Selector *self) {
+    auto SelectorWrapper::get_index(::mforms::Selector *self) -> int {
       return -1;
     }
 
     //------------------------------------------------------------------------------
-    int SelectorWrapper::get_item_count(::mforms::Selector *self) {
+    auto SelectorWrapper::get_item_count(::mforms::Selector *self) -> int {
       return -1;
     }
 
     //------------------------------------------------------------------------------
-    void SelectorWrapper::set_value(::mforms::Selector *self, const std::string &) {
+    auto SelectorWrapper::set_value(::mforms::Selector *self, const std::string &) -> void {
     }
 
     //------------------------------------------------------------------------------
-    void SelectorWrapper::init() {
+    auto SelectorWrapper::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_selector_impl.create = &SelectorWrapper::create;

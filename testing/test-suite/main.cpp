@@ -26,10 +26,10 @@
 #include <gtest/gtest.h> 
 #include "base/log.h"
 
-extern void register_all_metaclasses();
+extern auto register_all_metaclasses() -> void;
 
 
-int main(int argc, char** argv) {
+auto main(int argc, char** argv) -> int {
   testing::InitGoogleTest(&argc, argv);
   ::testing::GTEST_FLAG(death_test_style) = "fast";
   return RUN_ALL_TESTS();

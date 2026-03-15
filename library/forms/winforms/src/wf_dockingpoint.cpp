@@ -115,7 +115,7 @@ ManagedDockDelegate::~ManagedDockDelegate() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::DockingPointDelegate *ManagedDockDelegate::get_unmanaged_delegate() {
+auto ManagedDockDelegate::get_unmanaged_delegate() -> mforms::DockingPointDelegate * {
   return wrapper;
 }
 

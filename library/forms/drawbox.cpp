@@ -34,27 +34,27 @@ DrawBox::DrawBox() : _focusedItem(-1), _lastFocusedItem(-1) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::add(View *view, Alignment alignment) {
+auto DrawBox::add(View *view, Alignment alignment) -> void {
   cache_view(view);
   _drawbox_impl->add(this, view, alignment);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::remove(View *view) {
+auto DrawBox::remove(View *view) -> void {
   _drawbox_impl->remove(this, view);
   remove_from_cache(view);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::move(View *view, int x, int y) {
+auto DrawBox::move(View *view, int x, int y) -> void {
   _drawbox_impl->move(this, view, x, y);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::set_layout_dirty(bool value) {
+auto DrawBox::set_layout_dirty(bool value) -> void {
   View::set_layout_dirty(value);
   if (value)
     _drawbox_impl->set_needs_repaint(this);
@@ -62,19 +62,19 @@ void DrawBox::set_layout_dirty(bool value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::set_padding(int left, int top, int right, int bottom) {
+auto DrawBox::set_padding(int left, int top, int right, int bottom) -> void {
   _view_impl->set_padding(this, left, top, right, bottom);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::set_needs_repaint() {
+auto DrawBox::set_needs_repaint() -> void {
   _drawbox_impl->set_needs_repaint(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::set_needs_repaint_area(int x, int y, int w, int h) {
+auto DrawBox::set_needs_repaint_area(int x, int y, int w, int h) -> void {
   _drawbox_impl->set_needs_repaint_area(this, x, y, w, h);
 }
 
@@ -85,13 +85,13 @@ void DrawBox::set_needs_repaint_area(int x, int y, int w, int h) {
  * space the box needs. Overwritten by descendants. Subviews do not automatically add to the content
  * size. If that's needed then additional computations are needed by the host.
  */
-base::Size DrawBox::getLayoutSize(base::Size proposedSize) {
+auto DrawBox::getLayoutSize(base::Size proposedSize) -> base::Size {
   return proposedSize;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::repaint(cairo_t *cr, int x, int y, int w, int h) {
+auto DrawBox::repaint(cairo_t *cr, int x, int y, int w, int h) -> void {
   if (_focusedItem != -1 && _focusedItem < static_cast<int>(_focusableList.size())) {
     drawFocus(cr, _focusableList[_focusedItem].getBounds());
   }
@@ -99,7 +99,7 @@ void DrawBox::repaint(cairo_t *cr, int x, int y, int w, int h) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::drawFocus(cairo_t *cr, const base::Rect r) {
+auto DrawBox::drawFocus(cairo_t *cr, const base::Rect r) -> void {
   if (_drawbox_impl->drawFocus) {
     _drawbox_impl->drawFocus(this, cr, r);
   }
@@ -107,14 +107,14 @@ void DrawBox::drawFocus(cairo_t *cr, const base::Rect r) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::addFocusableArea(FocusableArea fArea) {
+auto DrawBox::addFocusableArea(FocusableArea fArea) -> void {
   if (fArea.getBounds)
   _focusableList.push_back(fArea);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DrawBox::clearFocusableAreas() {
+auto DrawBox::clearFocusableAreas() -> void {
   _focusedItem = -1;
   _lastFocusedItem = -1;
   _focusableList.clear();
@@ -122,7 +122,7 @@ void DrawBox::clearFocusableAreas() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DrawBox::setFocusOnArea(const base::Point p) {
+auto DrawBox::setFocusOnArea(const base::Point p) -> bool {
   auto it = std::find_if(_focusableList.begin(), _focusableList.end(), [&](mforms::FocusableArea const& item) {
     return item.getBounds().contains(p.x, p.y);
   });
@@ -136,7 +136,7 @@ bool DrawBox::setFocusOnArea(const base::Point p) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DrawBox::keyPress(KeyCode code, ModifierKey modifiers) {
+auto DrawBox::keyPress(KeyCode code, ModifierKey modifiers) -> bool {
   int handled = -1;
   if (_focusedItem > -1) {
     if (code == mforms::KeyTab && (modifiers & ModifierShift) == 0) {
@@ -182,7 +182,7 @@ bool DrawBox::keyPress(KeyCode code, ModifierKey modifiers) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DrawBox::focusIn() {
+auto DrawBox::focusIn() -> bool {
   if (!_focusableList.empty() && _focusedItem == -1) {
     _focusedItem = _lastFocusedItem > -1 ? _lastFocusedItem :  0;
     set_needs_repaint();
@@ -192,7 +192,7 @@ bool DrawBox::focusIn() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DrawBox::focusOut() {
+auto DrawBox::focusOut() -> bool {
   if (_focusedItem > -1) {
     _lastFocusedItem = _focusedItem;
     _focusedItem = -1;
@@ -203,7 +203,7 @@ bool DrawBox::focusOut() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DrawBox::mouse_down(mforms::MouseButton button, int x, int y) {
+auto DrawBox::mouse_down(mforms::MouseButton button, int x, int y) -> bool {
   if (button == mforms::MouseButtonLeft) {
 
     auto it = std::find_if(_focusableList.begin(), _focusableList.end(), [&](mforms::FocusableArea const& item) {

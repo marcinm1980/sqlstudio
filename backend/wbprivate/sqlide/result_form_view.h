@@ -48,27 +48,27 @@ private:
   bool _editable;
   boost::signals2::connection _refresh_ui_connection;
 
-  void navigate(mforms::ToolBarItem *item);
-  void update_value(int column, const std::string &value);
-  void open_field_editor(int column, const std::string &type);
+  auto navigate(mforms::ToolBarItem *item) -> void;
+  auto update_value(int column, const std::string &value) -> void;
+  auto open_field_editor(int column, const std::string &type) -> void;
 
-  void geom_type_changed();
+  auto geom_type_changed() -> void;
 
 public:
   ResultFormView(bool editable);
 
-  mforms::ToolBar *get_toolbar() {
+  auto get_toolbar() -> mforms::ToolBar * {
     return &_tbar;
   }
 
   virtual ~ResultFormView();
-  int display_record();
-  int display_record(RowId row_id);
-  std::string get_full_column_type(SqlEditorForm *editor, const std::string &schema, const std::string &table,
-                                   const std::string &column);
+  auto display_record() -> int;
+  auto display_record(RowId row_id) -> int;
+  auto get_full_column_type(SqlEditorForm *editor, const std::string &schema, const std::string &table,
+                                   const std::string &column) -> std::string;
 
-  void init_for_resultset(Recordset::Ptr rset_ptr, SqlEditorForm *editor);
-  void updateColors();
+  auto init_for_resultset(Recordset::Ptr rset_ptr, SqlEditorForm *editor) -> void;
+  auto updateColors() -> void;
 };
 
 #endif

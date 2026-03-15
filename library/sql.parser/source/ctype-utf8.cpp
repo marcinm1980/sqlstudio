@@ -1715,12 +1715,11 @@ MY_UNICASE_INFO *my_unicase_turkish[256]=
 **	 1 if matched with wildcard
 */
 
-int my_wildcmp_unicode(CHARSET_INFO *cs,
+auto my_wildcmp_unicode(CHARSET_INFO *cs,
 		       const char *str,const char *str_end,
 		       const char *wildstr,const char *wildend,
 		       int escape, int w_one, int w_many,
-		       MY_UNICASE_INFO **weights)
-{
+		       MY_UNICASE_INFO **weights) -> int {
   int result= -1;			/* Not found, using wildcards */
   my_wc_t s_wc, w_wc;
   int scan, plane;
@@ -1936,9 +1935,8 @@ static uchar to_upper_utf8[] = {
   240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255
 };
 
-static inline int bincmp(const uchar *s, const uchar *se,
-                         const uchar *t, const uchar *te)
-{
+static inline auto bincmp(const uchar *s, const uchar *se,
+                         const uchar *t, const uchar *te) -> int {
   int slen= (int) (se-s), tlen= (int) (te-t);
   int len=min(slen,tlen);
   int cmp= memcmp(s,t,len);
@@ -1946,9 +1944,8 @@ static inline int bincmp(const uchar *s, const uchar *se,
 }
 
 
-static int my_utf8_uni(CHARSET_INFO *cs __attribute__((unused)),
-                       my_wc_t * pwc, const uchar *s, const uchar *e)
-{
+static auto my_utf8_uni(CHARSET_INFO *cs __attribute__((unused)),
+                       my_wc_t * pwc, const uchar *s, const uchar *e) -> int {
   unsigned char c;
 
   if (s >= e)
@@ -2050,9 +2047,8 @@ static int my_utf8_uni(CHARSET_INFO *cs __attribute__((unused)),
   return MY_CS_ILSEQ;
 }
 
-static int my_uni_utf8 (CHARSET_INFO *cs __attribute__((unused)) ,
-                 my_wc_t wc, uchar *r, uchar *e)
-{
+static auto my_uni_utf8 (CHARSET_INFO *cs __attribute__((unused)) ,
+                 my_wc_t wc, uchar *r, uchar *e) -> int {
   int count;
 
   if (r >= e)
@@ -2096,9 +2092,8 @@ static int my_uni_utf8 (CHARSET_INFO *cs __attribute__((unused)) ,
 }
 
 
-static uint my_caseup_utf8(CHARSET_INFO *cs, char *src, uint srclen,
-                                             char *dst, uint dstlen)
-{
+static auto my_caseup_utf8(CHARSET_INFO *cs, char *src, uint srclen,
+                                             char *dst, uint dstlen) -> uint {
   my_wc_t wc;
   int srcres, dstres;
   char *srcend= src + srclen, *dstend= dst + dstlen, *dst0= dst;
@@ -2118,9 +2113,8 @@ static uint my_caseup_utf8(CHARSET_INFO *cs, char *src, uint srclen,
   return (uint) (dst - dst0);
 }
 
-static void my_hash_sort_utf8(CHARSET_INFO *cs, const uchar *s, uint slen,
-                              ulong *n1, ulong *n2)
-{
+static auto my_hash_sort_utf8(CHARSET_INFO *cs, const uchar *s, uint slen,
+                              ulong *n1, ulong *n2) -> void {
   my_wc_t wc;
   int res;
   const uchar *e=s+slen;
@@ -2146,16 +2140,14 @@ static void my_hash_sort_utf8(CHARSET_INFO *cs, const uchar *s, uint slen,
 }
 
 
-static void my_caseup_str_utf8(CHARSET_INFO * cs, char * s)
-{
+static auto my_caseup_str_utf8(CHARSET_INFO * cs, char * s) -> void {
   uint len= (uint) strlen(s);
   my_caseup_utf8(cs, s, len, s, len);
 }
 
 
-static uint my_casedn_utf8(CHARSET_INFO *cs, char *src, uint srclen,
-                                             char *dst, uint dstlen)
-{
+static auto my_casedn_utf8(CHARSET_INFO *cs, char *src, uint srclen,
+                                             char *dst, uint dstlen) -> uint {
   my_wc_t wc;
   int srcres, dstres;
   char *srcend= src + srclen, *dstend= dst + dstlen, *dst0= dst;
@@ -2175,18 +2167,16 @@ static uint my_casedn_utf8(CHARSET_INFO *cs, char *src, uint srclen,
   return (uint) (dst - dst0);
 }
 
-static void my_casedn_str_utf8(CHARSET_INFO *cs, char * s)
-{
+static auto my_casedn_str_utf8(CHARSET_INFO *cs, char * s) -> void {
   uint len= (uint) strlen(s);
   my_casedn_utf8(cs, s, len, s, len);
 }
 
 
-static int my_strnncoll_utf8(CHARSET_INFO *cs,
+static auto my_strnncoll_utf8(CHARSET_INFO *cs,
                              const uchar *s, uint slen,
                              const uchar *t, uint tlen,
-                             my_bool t_is_prefix)
-{
+                             my_bool t_is_prefix) -> int {
   int s_res,t_res;
   my_wc_t s_wc = 0,t_wc = 0;
   const uchar *se=s+slen;
@@ -2252,11 +2242,10 @@ static int my_strnncoll_utf8(CHARSET_INFO *cs,
     > 0  a > b
 */
 
-static int my_strnncollsp_utf8(CHARSET_INFO *cs,
+static auto my_strnncollsp_utf8(CHARSET_INFO *cs,
                                const uchar *s, uint slen,
                                const uchar *t, uint tlen,
-                               my_bool diff_if_only_endspace_difference)
-{
+                               my_bool diff_if_only_endspace_difference) -> int {
   int s_res, t_res, res;
   my_wc_t s_wc = 0,t_wc = 0;
   const uchar *se= s+slen, *te= t+tlen;
@@ -2346,8 +2335,7 @@ static int my_strnncollsp_utf8(CHARSET_INFO *cs,
 */
 
 static
-int my_strcasecmp_utf8(CHARSET_INFO *cs, const char *s, const char *t)
-{
+auto my_strcasecmp_utf8(CHARSET_INFO *cs, const char *s, const char *t) -> int {
   MY_UNICASE_INFO **uni_plane= cs->caseinfo;
   while (s[0] && t[0])
   {
@@ -2428,11 +2416,10 @@ int my_strcasecmp_utf8(CHARSET_INFO *cs, const char *s, const char *t)
 
 
 static
-int my_wildcmp_utf8(CHARSET_INFO *cs,
+auto my_wildcmp_utf8(CHARSET_INFO *cs,
 		    const char *str,const char *str_end,
 		    const char *wildstr,const char *wildend,
-		    int escape, int w_one, int w_many)
-{
+		    int escape, int w_one, int w_many) -> int {
   MY_UNICASE_INFO **uni_plane= cs->caseinfo;
   return my_wildcmp_unicode(cs,str,str_end,wildstr,wildend,
                             escape,w_one,w_many,uni_plane); 
@@ -2440,15 +2427,13 @@ int my_wildcmp_utf8(CHARSET_INFO *cs,
 
 
 static
-uint my_strnxfrmlen_utf8(CHARSET_INFO *cs __attribute__((unused)), uint len)
-{
+auto my_strnxfrmlen_utf8(CHARSET_INFO *cs __attribute__((unused)), uint len) -> uint {
   return (len * 2 + 2) / 3;
 }
 
-static int my_strnxfrm_utf8(CHARSET_INFO *cs,
+static auto my_strnxfrm_utf8(CHARSET_INFO *cs,
                             uchar *dst, uint dstlen,
-                            const uchar *src, uint srclen)
-{
+                            const uchar *src, uint srclen) -> int {
   my_wc_t wc;
   int res;
   int plane;
@@ -2483,15 +2468,13 @@ static int my_strnxfrm_utf8(CHARSET_INFO *cs,
   return dstlen;
 }
 
-static int my_ismbchar_utf8(CHARSET_INFO *cs,const char *b, const char *e)
-{
+static auto my_ismbchar_utf8(CHARSET_INFO *cs,const char *b, const char *e) -> int {
   my_wc_t wc;
   int  res=my_utf8_uni(cs,&wc, (const uchar*)b, (const uchar*)e);
   return (res>1) ? res : 0;
 }
 
-static int my_mbcharlen_utf8(CHARSET_INFO *cs  __attribute__((unused)) , uint c)
-{
+static auto my_mbcharlen_utf8(CHARSET_INFO *cs  __attribute__((unused)) , uint c) -> int {
   if (c < 0x80)
     return 1;
   else if (c < 0xc2)
@@ -2633,11 +2616,10 @@ CHARSET_INFO my_charset_utf8_bin=
  * variable to what they actually do.
  */
 
-static int my_strnncoll_utf8_cs(CHARSET_INFO *cs, 
+static auto my_strnncoll_utf8_cs(CHARSET_INFO *cs, 
                                 const uchar *s, uint slen,
                                 const uchar *t, uint tlen,
-                                my_bool t_is_prefix)
-{
+                                my_bool t_is_prefix) -> int {
   int s_res,t_res;
   my_wc_t s_wc,t_wc;
   const uchar *se=s+slen;
@@ -2678,10 +2660,9 @@ static int my_strnncoll_utf8_cs(CHARSET_INFO *cs,
   return t_is_prefix ? t-te : ((diff == 0) ? save_diff : diff);
 }
 
-static int my_strnncollsp_utf8_cs(CHARSET_INFO *cs, 
+static auto my_strnncollsp_utf8_cs(CHARSET_INFO *cs, 
                                   const uchar *s, uint slen,
-                                  const uchar *t, uint tlen)
-{
+                                  const uchar *t, uint tlen) -> int {
   int s_res,t_res;
   my_wc_t s_wc,t_wc;
   const uchar *se= s+slen;
@@ -3867,8 +3848,7 @@ static uint16 uni_FF20_FF5F[64]=
    -1 otherwise.
 */
 
-static int hexlo(int x)
-{
+static auto hexlo(int x) -> int {
   static char hex_lo_digit[256]=
   {
     -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, /* ................ */
@@ -3914,10 +3894,8 @@ static char filename_safe_char[128]=
 
 #define MY_FILENAME_ESCAPE '@'
 
-static int
-my_mb_wc_filename(CHARSET_INFO *cs __attribute__((unused)),
-                  my_wc_t *pwc, const uchar *s, const uchar *e)
-{
+static auto my_mb_wc_filename(CHARSET_INFO *cs __attribute__((unused)),
+                  my_wc_t *pwc, const uchar *s, const uchar *e) -> int {
   int byte1, byte2;
   if (s >= e)
     return MY_CS_TOOSMALL;
@@ -3967,10 +3945,8 @@ my_mb_wc_filename(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-static int
-my_wc_mb_filename(CHARSET_INFO *cs __attribute__((unused)),
-                  my_wc_t wc, unsigned char *s, unsigned char *e)
-{
+static auto my_wc_mb_filename(CHARSET_INFO *cs __attribute__((unused)),
+                  my_wc_t wc, unsigned char *s, unsigned char *e) -> int {
   int code;
   char hex[]= "0123456789abcdef";
   if (wc < 128 && filename_safe_char[wc])
@@ -4093,8 +4069,7 @@ CHARSET_INFO my_charset_filename=
 namespace mysql_parser
 {
 
-static void test_mb(CHARSET_INFO *cs, uchar *s)
-{
+static auto test_mb(CHARSET_INFO *cs, uchar *s) -> void {
   while(*s)
   {
     if (my_ismbhead_utf8(cs,*s))
@@ -4115,8 +4090,7 @@ static void test_mb(CHARSET_INFO *cs, uchar *s)
   }
 }
 
-int main()
-{
+auto main() -> int {
   char str[1024]=" utf8 test проба ПЕРА по-РУССКИ";
   CHARSET_INFO *cs;
 

@@ -36,80 +36,80 @@ ListBoxWrapper::ListBoxWrapper(mforms::ListBox *self, bool multi_select) : ViewW
 
 //--------------------------------------------------------------------------------------------------
 
-bool ListBoxWrapper::create(mforms::ListBox *self, bool multi_select) {
+auto ListBoxWrapper::create(mforms::ListBox *self, bool multi_select) -> bool {
   return true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::clear(mforms::ListBox *self) {
+auto ListBoxWrapper::clear(mforms::ListBox *self) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-size_t ListBoxWrapper::add_item(mforms::ListBox *self, const std::string &item) {
+auto ListBoxWrapper::add_item(mforms::ListBox *self, const std::string &item) -> size_t {
   return 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::add_items(mforms::ListBox *self, const std::list<std::string> &items) {
+auto ListBoxWrapper::add_items(mforms::ListBox *self, const std::list<std::string> &items) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::remove_index(mforms::ListBox *self, size_t index) {
+auto ListBoxWrapper::remove_index(mforms::ListBox *self, size_t index) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::remove_indexes(mforms::ListBox *self, const std::vector<size_t> &items) {
+auto ListBoxWrapper::remove_indexes(mforms::ListBox *self, const std::vector<size_t> &items) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ListBoxWrapper::get_text(mforms::ListBox *self) {
+auto ListBoxWrapper::get_text(mforms::ListBox *self) -> std::string {
   return "";
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::set_index(mforms::ListBox *self, ssize_t index) {
+auto ListBoxWrapper::set_index(mforms::ListBox *self, ssize_t index) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-ssize_t ListBoxWrapper::get_index(mforms::ListBox *self) {
+auto ListBoxWrapper::get_index(mforms::ListBox *self) -> ssize_t {
   return -1;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::set_heading(ListBox *self, const std::string &text) {
+auto ListBoxWrapper::set_heading(ListBox *self, const std::string &text) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<size_t> ListBoxWrapper::get_selected_indices(ListBox *self) {
+auto ListBoxWrapper::get_selected_indices(ListBox *self) -> std::vector<size_t> {
   std::vector<size_t> res;
   return res;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-size_t ListBoxWrapper::getCount(ListBox *self) {
+auto ListBoxWrapper::getCount(ListBox *self) -> size_t {
   return 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ListBoxWrapper::getStringValueFromIndex(ListBox *self, size_t index) {
+auto ListBoxWrapper::getStringValueFromIndex(ListBox *self, size_t index) -> std::string {
   return "";
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ListBoxWrapper::init() {
+auto ListBoxWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_listbox_impl.create = &ListBoxWrapper::create;

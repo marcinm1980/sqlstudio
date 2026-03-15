@@ -42,17 +42,17 @@ namespace ssh {
   public:
     SSHTunnelHandler(uint16_t localPort, int localSocket, std::shared_ptr<ssh::SSHSession> session);
     ~SSHTunnelHandler();
-    int getLocalSocket() const;
-    int getLocalPort() const;
-    SSHConnectionConfig getConfig() const;
+    auto getLocalSocket() const -> int;
+    auto getLocalPort() const -> int;
+    auto getConfig() const -> SSHConnectionConfig;
 
-    void handleConnection();
-    void handleNewConnection(int incomingSocket);
-    void transferDataFromClient(int sock, ssh::Channel *chan);
-    void transferDataToClient(int sock, ssh::Channel *chan);
+    auto handleConnection() -> void;
+    auto handleNewConnection(int incomingSocket) -> void;
+    auto transferDataFromClient(int sock, ssh::Channel *chan) -> void;
+    auto transferDataToClient(int sock, ssh::Channel *chan) -> void;
 
-    std::unique_ptr<ssh::Channel> openTunnel();
-    void prepareTunnel(int clientSocket);
+    auto openTunnel() -> std::unique_ptr<ssh::Channel>;
+    auto prepareTunnel(int clientSocket) -> void;
 
   protected:
     virtual void run() override;

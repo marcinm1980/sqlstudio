@@ -37,17 +37,17 @@ namespace bec {
 
     ObjectPrivilegeListBE(ObjectRoleListBE *owner, const db_mgmt_RdbmsRef &rdbms);
 
-    virtual void refresh();
-    virtual size_t count();
+    virtual auto refresh() -> void;
+    virtual auto count() -> size_t;
 
-    virtual bool set_field(const NodeId &node, ColumnId column, ssize_t value);
+    virtual auto set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool;
 
   protected:
     ObjectRoleListBE *_owner;
     db_mgmt_RdbmsRef _rdbms;
     grt::StringListRef _privileges;
 
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC ObjectRoleListBE : public ListModel {
@@ -56,19 +56,19 @@ namespace bec {
 
     ObjectRoleListBE(DBObjectEditorBE *owner, const db_mgmt_RdbmsRef &rdbms);
 
-    virtual size_t count();
-    virtual void refresh();
+    virtual auto count() -> size_t;
+    virtual auto refresh() -> void;
 
-    void select_role(const NodeId &node);
+    auto select_role(const NodeId &node) -> void;
 
-    void add_role_for_privileges(const db_RoleRef &role);
-    void remove_role_from_privileges(const db_RoleRef &role);
+    auto add_role_for_privileges(const db_RoleRef &role) -> void;
+    auto remove_role_from_privileges(const db_RoleRef &role) -> void;
 
-    ObjectPrivilegeListBE *get_privilege_list() {
+    auto get_privilege_list() -> ObjectPrivilegeListBE * {
       return &_privilege_list;
     }
-    db_RolePrivilegeRef get_selected();
-    DBObjectEditorBE *get_owner() {
+    auto get_selected() -> db_RolePrivilegeRef;
+    auto get_owner() -> DBObjectEditorBE * {
       return _owner;
     }
 
@@ -81,6 +81,6 @@ namespace bec {
 
     NodeId _selected_node;
 
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
   };
 };

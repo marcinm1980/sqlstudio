@@ -39,11 +39,11 @@ namespace bec {
 
 namespace testing {
 
-void deepCompareGrtValues(std::string const& major_msg, const grt::ValueRef &actual, const grt::ValueRef &expected,
-                          bool compare_obj_id = false, std::list<std::string> *followed_obj_stack = nullptr);
+auto deepCompareGrtValues(std::string const& major_msg, const grt::ValueRef &actual, const grt::ValueRef &expected,
+                          bool compare_obj_id = false, std::list<std::string> *followed_obj_stack = nullptr) -> void;
 
-void dumpTreeModel(const std::string &path, bec::TreeModel *tree, const std::vector<ssize_t> &columns,
-                   bool dump_type = false);
+auto dumpTreeModel(const std::string &path, bec::TreeModel *tree, const std::vector<ssize_t> &columns,
+                   bool dump_type = false) -> void;
 
 //struct GrtEnvironment : casmine::EnvironmentBase {
 //};

@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-inline void wb_ptrace(void) {
+inline auto wb_ptrace(void) -> void {
   enum { SIZE = 100 };
   void *buffer[100];
 

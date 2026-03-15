@@ -34,7 +34,7 @@
 #include "grt/grt_manager.h"
 #include "mforms/toolbar.h"
 
-bool FormViewBase::close_plugin_tab(PluginEditorBase *editor) {
+auto FormViewBase::close_plugin_tab(PluginEditorBase *editor) -> bool {
   if (editor->can_close()) {
     _close_editor(editor);
     remove_plugin_tab(editor);
@@ -54,11 +54,11 @@ bool FormViewBase::close_plugin_tab(PluginEditorBase *editor) {
   return true;
 }
 
-void FormViewBase::set_close_editor_callback(const sigc::slot<void, PluginEditorBase *> &handler) {
+auto FormViewBase::set_close_editor_callback(const sigc::slot<void, PluginEditorBase *> &handler) -> void {
   _close_editor = handler;
 }
 
-void FormViewBase::add_plugin_tab(PluginEditorBase *plugin) {
+auto FormViewBase::add_plugin_tab(PluginEditorBase *plugin) -> void {
   if (_editor_note) {
     ActiveLabel *label = Gtk::manage(
       new ActiveLabel(plugin->get_title(),
@@ -82,7 +82,7 @@ void FormViewBase::add_plugin_tab(PluginEditorBase *plugin) {
     g_warning("active form doesn't support editor tabs");
 }
 
-void FormViewBase::remove_plugin_tab(PluginEditorBase *plugin) {
+auto FormViewBase::remove_plugin_tab(PluginEditorBase *plugin) -> void {
   if (_editor_note) {
     _editor_note->remove_page(*plugin);
 
@@ -95,7 +95,7 @@ void FormViewBase::remove_plugin_tab(PluginEditorBase *plugin) {
   }
 }
 
-bool FormViewBase::close_editors_for_object(const std::string &id) {
+auto FormViewBase::close_editors_for_object(const std::string &id) -> bool {
   for (int i = _editor_note->get_n_pages() - 1; i >= 0; --i) {
     Gtk::Widget *panel = _editor_note->get_nth_page(i);
     PluginEditorBase *editor;
@@ -108,7 +108,7 @@ bool FormViewBase::close_editors_for_object(const std::string &id) {
   return false;
 }
 
-PluginEditorBase *FormViewBase::get_focused_plugin_tab() {
+auto FormViewBase::get_focused_plugin_tab() -> PluginEditorBase * {
   if (_editor_note) {
     Gtk::Widget *focused = dynamic_cast<Gtk::Window *>(_editor_note->get_toplevel())->get_focus();
 
@@ -128,7 +128,7 @@ PluginEditorBase *FormViewBase::get_focused_plugin_tab() {
   return 0;
 }
 
-bool FormViewBase::close_focused_tab() {
+auto FormViewBase::close_focused_tab() -> bool {
   PluginEditorBase *active = get_focused_plugin_tab();
 
   if (active) {
@@ -139,7 +139,7 @@ bool FormViewBase::close_focused_tab() {
   return false;
 }
 
-void FormViewBase::restore_sidebar_layout(const int firstSidebarDefaultWidth, const int secondSidebarDefaultWidt) {
+auto FormViewBase::restore_sidebar_layout(const int firstSidebarDefaultWidth, const int secondSidebarDefaultWidt) -> void {
   if (_sidebar1_pane) {
     int w = bec::GRTManager::get()->get_app_option_int(_panel_savename + ":SidebarWidth", firstSidebarDefaultWidth);
     _sidebar1_pane->set_position(w);
@@ -167,7 +167,7 @@ void FormViewBase::restore_sidebar_layout(const int firstSidebarDefaultWidth, co
   }
 }
 
-void FormViewBase::toggle_sidebar(bool show) {
+auto FormViewBase::toggle_sidebar(bool show) -> void {
   if (_sidebar1_pane) {
     Gtk::Widget *w = _sidebar1_pane->get_child1();
     if (show)
@@ -177,7 +177,7 @@ void FormViewBase::toggle_sidebar(bool show) {
   }
 }
 
-void FormViewBase::toggle_secondary_sidebar(bool show) {
+auto FormViewBase::toggle_secondary_sidebar(bool show) -> void {
   if (_sidebar2_pane) {
     Gtk::Widget *w = _sidebar2_pane->get_child2();
     if (show)
@@ -187,7 +187,7 @@ void FormViewBase::toggle_secondary_sidebar(bool show) {
   }
 }
 
-void FormViewBase::sidebar_resized(bool primary) {
+auto FormViewBase::sidebar_resized(bool primary) -> void {
   if (primary)
     bec::GRTManager::get()->set_app_option(_panel_savename + ":SidebarWidth",
                                            grt::IntegerRef(_sidebar1_pane->get_position()));
@@ -197,7 +197,7 @@ void FormViewBase::sidebar_resized(bool primary) {
       grt::IntegerRef(_sidebar2_pane->get_width() - _sidebar2_pane->get_position()));
 }
 
-bool FormViewBase::perform_command(const std::string &cmd) {
+auto FormViewBase::perform_command(const std::string &cmd) -> bool {
   if (cmd == "wb.toggleSidebar") {
     bool hidden = !_toolbar->get_item_checked(cmd);
     bec::GRTManager::get()->set_app_option(_panel_savename + ":SidebarHidden", grt::IntegerRef(hidden));

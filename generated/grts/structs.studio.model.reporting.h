@@ -72,7 +72,7 @@ public:
       _styleTagValue("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.model.reporting.TemplateStyleInfo";
   }
 
@@ -83,7 +83,7 @@ public:
    * \par In Python:
    *    value = obj.canUseHTMLMarkup
    */
-  grt::IntegerRef canUseHTMLMarkup() const { return _canUseHTMLMarkup; }
+  auto canUseHTMLMarkup() const -> grt::IntegerRef { return _canUseHTMLMarkup; }
 
   /**
    * Setter for attribute canUseHTMLMarkup
@@ -92,7 +92,7 @@ public:
    * \par In Python:
    *   obj.canUseHTMLMarkup = value
    */
-  virtual void canUseHTMLMarkup(const grt::IntegerRef &value) {
+  virtual auto canUseHTMLMarkup(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_canUseHTMLMarkup);
     _canUseHTMLMarkup = value;
     member_changed("canUseHTMLMarkup", ovalue, value);
@@ -105,7 +105,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -114,7 +114,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -143,7 +143,7 @@ public:
    * \par In Python:
    *    value = obj.previewImageFileName
    */
-  grt::StringRef previewImageFileName() const { return _previewImageFileName; }
+  auto previewImageFileName() const -> grt::StringRef { return _previewImageFileName; }
 
   /**
    * Setter for attribute previewImageFileName
@@ -152,7 +152,7 @@ public:
    * \par In Python:
    *   obj.previewImageFileName = value
    */
-  virtual void previewImageFileName(const grt::StringRef &value) {
+  virtual auto previewImageFileName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_previewImageFileName);
     _previewImageFileName = value;
     member_changed("previewImageFileName", ovalue, value);
@@ -165,7 +165,7 @@ public:
    * \par In Python:
    *    value = obj.styleTagValue
    */
-  grt::StringRef styleTagValue() const { return _styleTagValue; }
+  auto styleTagValue() const -> grt::StringRef { return _styleTagValue; }
 
   /**
    * Setter for attribute styleTagValue
@@ -174,7 +174,7 @@ public:
    * \par In Python:
    *   obj.styleTagValue = value
    */
-  virtual void styleTagValue(const grt::StringRef &value) {
+  virtual auto styleTagValue(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_styleTagValue);
     _styleTagValue = value;
     member_changed("styleTagValue", ovalue, value);
@@ -188,12 +188,12 @@ protected:
   grt::StringRef _styleTagValue;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_model_reporting_TemplateStyleInfo());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -238,7 +238,7 @@ public:
       _styles(this, false) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.model.reporting.TemplateInfo";
   }
 
@@ -249,7 +249,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -258,7 +258,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -271,7 +271,7 @@ public:
    * \par In Python:
    *    value = obj.mainFileName
    */
-  grt::StringRef mainFileName() const { return _mainFileName; }
+  auto mainFileName() const -> grt::StringRef { return _mainFileName; }
 
   /**
    * Setter for attribute mainFileName
@@ -280,7 +280,7 @@ public:
    * \par In Python:
    *   obj.mainFileName = value
    */
-  virtual void mainFileName(const grt::StringRef &value) {
+  virtual auto mainFileName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_mainFileName);
     _mainFileName = value;
     member_changed("mainFileName", ovalue, value);
@@ -310,11 +310,11 @@ public:
    * \par In Python:
    *    value = obj.styles
    */
-  grt::ListRef<studio_model_reporting_TemplateStyleInfo> styles() const { return _styles; }
+  auto styles() const -> grt::ListRef<studio_model_reporting_TemplateStyleInfo> { return _styles; }
 
 
 private: // The next attribute is read-only.
-  virtual void styles(const grt::ListRef<studio_model_reporting_TemplateStyleInfo> &value) {
+  virtual auto styles(const grt::ListRef<studio_model_reporting_TemplateStyleInfo> &value) -> void {
     grt::ValueRef ovalue(_styles);
 
     _styles = value;
@@ -329,12 +329,12 @@ protected:
   grt::ListRef<studio_model_reporting_TemplateStyleInfo> _styles;// owned
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_model_reporting_TemplateInfo());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -364,7 +364,7 @@ public:
 
 
 
-inline void register_structs_studio_model_reporting_xml() {
+inline auto register_structs_studio_model_reporting_xml() -> void {
   grt::internal::ClassRegistry::register_class<studio_model_reporting_TemplateStyleInfo>();
   grt::internal::ClassRegistry::register_class<studio_model_reporting_TemplateInfo>();
 }

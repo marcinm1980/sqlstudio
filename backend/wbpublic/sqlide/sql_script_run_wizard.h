@@ -42,11 +42,11 @@ public:
   virtual ~SqlScriptReviewPage();
 
 protected:
-  virtual void enter(bool advancing);
-  virtual bool advance();
-  virtual std::string next_button_caption();
+  virtual auto enter(bool advancing) -> void;
+  virtual auto advance() -> bool;
+  virtual auto next_button_caption() -> std::string;
 
-  void option_changed();
+  auto option_changed() -> void;
 
 private:
   mforms::Box _box;
@@ -62,22 +62,22 @@ private:
   long _err_count;
   mforms::Button *_abort_btn;
 
-  void abort_exec();
+  auto abort_exec() -> void;
 
-  grt::ValueRef do_execute_sql_script(const std::string &sql_script);
+  auto do_execute_sql_script(const std::string &sql_script) -> grt::ValueRef;
 
 public:
   SqlScriptApplyPage(grtui::WizardForm *form);
-  int on_error(long long err_code, const std::string &err_msg, const std::string &err_sql);
-  int on_exec_progress(float progress);
-  int on_exec_stat(long success_count, long err_count);
+  auto on_error(long long err_code, const std::string &err_msg, const std::string &err_sql) -> int;
+  auto on_exec_progress(float progress) -> int;
+  auto on_exec_stat(long success_count, long err_count) -> int;
   std::function<void(const std::string &)> apply_sql_script;
-  bool execute_sql_script();
-  virtual std::string next_button_caption();
-  virtual bool allow_back();
-  virtual bool allow_next();
-  virtual bool allow_cancel();
-  virtual void enter(bool advancing);
+  auto execute_sql_script() -> bool;
+  virtual auto next_button_caption() -> std::string;
+  virtual auto allow_back() -> bool;
+  virtual auto allow_next() -> bool;
+  virtual auto allow_cancel() -> bool;
+  virtual auto enter(bool advancing) -> void;
 };
 
 class WBPUBLICBACKEND_PUBLIC_FUNC SqlScriptRunWizard : public grtui::WizardForm {
@@ -88,8 +88,8 @@ public:
 public:
   SqlScriptRunWizard(GrtVersionRef version, std::string algorithm, std::string lock);
 
-  bool has_errors();
-  bool applied();
+  auto has_errors() -> bool;
+  auto applied() -> bool;
 
   std::function<void()> abort_apply;
 

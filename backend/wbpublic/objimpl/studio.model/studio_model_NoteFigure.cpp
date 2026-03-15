@@ -33,34 +33,34 @@
 //================================================================================
 // studio_model_NoteFigure
 
-void studio_model_NoteFigure::init() {
+auto studio_model_NoteFigure::init() -> void {
   if (!_data)
     _data = new studio_model_NoteFigure::ImplData(this);
   model_Figure::set_data(_data);
 }
 
-void studio_model_NoteFigure::set_data(ImplData *data) {
+auto studio_model_NoteFigure::set_data(ImplData *data) -> void {
 }
 
 studio_model_NoteFigure::~studio_model_NoteFigure() {
   delete _data;
 }
 
-void studio_model_NoteFigure::text(const grt::StringRef &value) {
+auto studio_model_NoteFigure::text(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_text);
   _text = value;
   _data->set_text(_text);
   member_changed("text", ovalue, value);
 }
 
-void studio_model_NoteFigure::textColor(const grt::StringRef &value) {
+auto studio_model_NoteFigure::textColor(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_textColor);
   _textColor = value;
   _data->set_text_color(_textColor);
   member_changed("textColor", ovalue, value);
 }
 
-void studio_model_NoteFigure::font(const grt::StringRef &value) {
+auto studio_model_NoteFigure::font(const grt::StringRef &value) -> void {
   grt::ValueRef ovalue(_font);
   _font = value;
   _data->set_font(*value);

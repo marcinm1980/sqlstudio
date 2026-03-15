@@ -52,7 +52,7 @@ public:
   }
 
 private:
-  void restore() {
+  auto restore() -> void {
     if (_val_ptr)
       *_val_ptr = _val;
   }
@@ -64,11 +64,11 @@ private:
 std::string unquot(std::string &text, const std::string quot_sym = std::string("\"\'`"));
 std::string quot(std::string &text, char quot_sym = '\'');
 
-db_SimpleDatatypeRef map_datatype(const SqlAstNode *item, DictRef &datatype_cache);
+auto map_datatype(const SqlAstNode *item, DictRef &datatype_cache) -> db_SimpleDatatypeRef;
 
-void concatenate_items(const SqlAstNode *item, StringListRef &list, bool toupper);
+auto concatenate_items(const SqlAstNode *item, StringListRef &list, bool toupper) -> void;
 
-std::string get_str_attr_from_subitem_(const SqlAstNode *item, sql::symbol name, ...);
+auto get_str_attr_from_subitem_(const SqlAstNode *item, sql::symbol name, ...) -> std::string;
 #define get_str_attr_from_subitem(...) get_str_attr_from_subitem_(__VA_ARGS__, NULL)
 
 class Cs_collation_setter {
@@ -86,12 +86,12 @@ private:
   str_mem_getter _parent_charset_mem_getter;
   str_mem_getter _parent_collation_mem_getter;
   bool _explicit_cs;
-  void set_charset_name(std::string cs_name, bool force_explicit_cs = false) {
+  auto set_charset_name(std::string cs_name, bool force_explicit_cs = false) -> void {
     if ((_explicit_cs || force_explicit_cs) && cs_name.empty())
       cs_name = base::tolower(*_parent_charset_mem_getter());
     _charset_mem_setter(cs_name);
   }
-  void set_collation_name(std::string collation_name) {
+  auto set_collation_name(std::string collation_name) -> void {
     _collation_mem_setter(collation_name);
   }
 
@@ -108,7 +108,7 @@ public:
       _parent_collation_mem_getter(parent_collation_mem_getter),
       _explicit_cs(explicit_cs) {
   }
-  void charset_name(std::string cs_name) {
+  auto charset_name(std::string cs_name) -> void {
     cs_name = base::tolower(cs_name);
     if (0 == cs_name.compare("DEFAULT"))
       cs_name = base::tolower(*_parent_charset_mem_getter());
@@ -122,7 +122,7 @@ public:
         set_collation_name("");
     }
   }
-  void collation_name(std::string collation_name) {
+  auto collation_name(std::string collation_name) -> void {
     if (!collation_name.empty()) {
       collation_name = base::tolower(collation_name);
       if (0 == collation_name.compare("DEFAULT"))
@@ -149,15 +149,15 @@ public:
                       boost::bind(&CONTAINER_CLASS::CONTAINER_CS_MEMBER, &CONTAINER),                                 \
                       boost::bind(&CONTAINER_CLASS::CONTRAINER_COLLATION_MEMBER, &CONTAINER), EXPLICIT_CS)
 
-Cs_collation_setter cs_collation_setter(db_SchemaRef obj, db_CatalogRef container, bool explicit_cs);
-Cs_collation_setter cs_collation_setter(db_mysql_TableRef obj, db_SchemaRef container, bool explicit_cs);
-Cs_collation_setter cs_collation_setter(db_ColumnRef obj, db_mysql_TableRef container, bool explicit_cs);
+auto cs_collation_setter(db_SchemaRef obj, db_CatalogRef container, bool explicit_cs) -> Cs_collation_setter;
+auto cs_collation_setter(db_mysql_TableRef obj, db_SchemaRef container, bool explicit_cs) -> Cs_collation_setter;
+auto cs_collation_setter(db_ColumnRef obj, db_mysql_TableRef container, bool explicit_cs) -> Cs_collation_setter;
 
-std::string strip_sql_statement(const std::string &text, bool confirmation);
-std::string cut_sql_statement(std::string text);
-std::string qualify_obj_name(std::string obj_name, std::string schema_name);
-std::string shape_index_type(std::string index_type);
-std::string shape_index_kind(const std::string &index_kind);
+auto strip_sql_statement(const std::string &text, bool confirmation) -> std::string;
+auto cut_sql_statement(std::string text) -> std::string;
+auto qualify_obj_name(std::string obj_name, std::string schema_name) -> std::string;
+auto shape_index_type(std::string index_type) -> std::string;
+auto shape_index_kind(const std::string &index_kind) -> std::string;
 
 /*
   macro for convenient setting attribute value from string

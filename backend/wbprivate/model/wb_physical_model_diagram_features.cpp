@@ -55,43 +55,43 @@ public:
     set_content(&_label);
   }
 
-  void show(int x, int y) {
+  auto show(int x, int y) -> void {
     _visible = true;
     mforms::Popover::show(x, y, mforms::StartRight);
   }
 
-  virtual void close() {
+  virtual auto close() -> void {
     _visible = false;
     mforms::Popover::close();
   }
 
-  bool get_visible() {
+  auto get_visible() -> bool {
     return _visible;
   }
 
-  void set_text(const std::string &text) {
+  auto set_text(const std::string &text) -> void {
     _label.set_text(text);
   }
 };
 
 //--------------------------------------------------------------------------------------------------
 
-void PhysicalModelDiagramFeatures::on_figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *item,
+auto PhysicalModelDiagramFeatures::on_figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *item,
                                                           const Point &pos, mdc::MouseButton button,
-                                                          mdc::EventState state) {
+                                                          mdc::EventState state) -> void {
   if (button == mdc::ButtonLeft)
     activate_item(owner, item, state);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PhysicalModelDiagramFeatures::on_figure_mouse_button(const model_ObjectRef &owner, mdc::CanvasItem *item,
+auto PhysicalModelDiagramFeatures::on_figure_mouse_button(const model_ObjectRef &owner, mdc::CanvasItem *item,
                                                           bool press, const Point &pos, mdc::MouseButton button,
-                                                          mdc::EventState state) {
+                                                          mdc::EventState state) -> void {
 }
 
-void PhysicalModelDiagramFeatures::on_figure_crossed(const model_ObjectRef &owner, mdc::CanvasItem *over, bool enter,
-                                                     const Point &pos) {
+auto PhysicalModelDiagramFeatures::on_figure_crossed(const model_ObjectRef &owner, mdc::CanvasItem *over, bool enter,
+                                                     const Point &pos) -> void {
   if (enter) {
     if (over != _last_over_item) {
       _last_over_item = over;
@@ -125,16 +125,16 @@ void PhysicalModelDiagramFeatures::on_figure_crossed(const model_ObjectRef &owne
   }
 }
 
-void PhysicalModelDiagramFeatures::on_selection_changed() {
+auto PhysicalModelDiagramFeatures::on_selection_changed() -> void {
 }
 
-void PhysicalModelDiagramFeatures::on_figure_will_unrealize(const model_ObjectRef &object) {
+auto PhysicalModelDiagramFeatures::on_figure_will_unrealize(const model_ObjectRef &object) -> void {
   if (object.id() == _highlighted_connection_id)
     highlight_connection(studio_physical_ConnectionRef::cast_from(object), false);
 }
 
-void PhysicalModelDiagramFeatures::activate_item(const model_ObjectRef &owner, mdc::CanvasItem *item,
-                                                 mdc::EventState state) {
+auto PhysicalModelDiagramFeatures::activate_item(const model_ObjectRef &owner, mdc::CanvasItem *item,
+                                                 mdc::EventState state) -> void {
   (*owner->owner()->signal_objectActivated())(owner, (state & mdc::SControlMask) != 0);
 }
 
@@ -172,7 +172,7 @@ PhysicalModelDiagramFeatures::~PhysicalModelDiagramFeatures() {
 
 // Table highlighting
 
-void PhysicalModelDiagramFeatures::highlight_table(const studio_physical_TableFigureRef &table, bool flag) {
+auto PhysicalModelDiagramFeatures::highlight_table(const studio_physical_TableFigureRef &table, bool flag) -> void {
   Color tocolor(0.0, 0.8, 0.0, 0.4);
   Color fromcolor(0.0, 0.6, 1.0, 0.4);
 
@@ -259,8 +259,8 @@ void PhysicalModelDiagramFeatures::highlight_table(const studio_physical_TableFi
 
 // Table Index Highlighting
 
-void PhysicalModelDiagramFeatures::highlight_table_index(const studio_physical_TableFigureRef &table,
-                                                         const db_IndexRef &index, bool entered) {
+auto PhysicalModelDiagramFeatures::highlight_table_index(const studio_physical_TableFigureRef &table,
+                                                         const db_IndexRef &index, bool entered) -> void {
   wbfig::Table *figure = dynamic_cast<wbfig::Table *>(table->get_data()->get_canvas_item());
 
   if (!figure)
@@ -306,7 +306,7 @@ void PhysicalModelDiagramFeatures::highlight_table_index(const studio_physical_T
 
 // Connection Highlighting
 
-void PhysicalModelDiagramFeatures::highlight_connection(const studio_physical_ConnectionRef &conn, bool flag) {
+auto PhysicalModelDiagramFeatures::highlight_connection(const studio_physical_ConnectionRef &conn, bool flag) -> void {
   studio_physical_TableFigure::ImplData *stable =
     !conn->startFigure().is_valid() ? 0 : studio_physical_TableFigureRef::cast_from(conn->startFigure())->get_data();
   studio_physical_TableFigure::ImplData *dtable =
@@ -341,7 +341,7 @@ void PhysicalModelDiagramFeatures::highlight_connection(const studio_physical_Co
   }
 }
 
-void PhysicalModelDiagramFeatures::highlight_all_connections(bool flag) {
+auto PhysicalModelDiagramFeatures::highlight_all_connections(bool flag) -> void {
   model_DiagramRef diagram(_diagram->get_model_diagram());
 
   _highlight_all = flag;
@@ -353,7 +353,7 @@ void PhysicalModelDiagramFeatures::highlight_all_connections(bool flag) {
 
 // Tooltips
 
-void PhysicalModelDiagramFeatures::tooltip_setup(const model_ObjectRef &object) {
+auto PhysicalModelDiagramFeatures::tooltip_setup(const model_ObjectRef &object) -> void {
   if (_tooltip_timer) {
     cancel_timer(_tooltip_timer);
     _tooltip_timer = 0;
@@ -376,7 +376,7 @@ void PhysicalModelDiagramFeatures::tooltip_setup(const model_ObjectRef &object) 
   }
 }
 
-void PhysicalModelDiagramFeatures::tooltip_cancel() {
+auto PhysicalModelDiagramFeatures::tooltip_cancel() -> void {
   if (_tooltip_timer) {
     cancel_timer(_tooltip_timer);
     _tooltip_timer = 0;
@@ -387,7 +387,7 @@ void PhysicalModelDiagramFeatures::tooltip_cancel() {
   }
 }
 
-void PhysicalModelDiagramFeatures::show_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item) {
+auto PhysicalModelDiagramFeatures::show_tooltip(const model_ObjectRef &object, mdc::CanvasItem *item) -> void {
   if (object.is_valid()) {
     if (_tooltip || _tooltip_timer)
       tooltip_cancel();
@@ -414,14 +414,14 @@ void PhysicalModelDiagramFeatures::show_tooltip(const model_ObjectRef &object, m
 
 //
 
-mdc::CanvasView *PhysicalModelDiagramFeatures::get_canvas_view() {
+auto PhysicalModelDiagramFeatures::get_canvas_view() -> mdc::CanvasView * {
   return _diagram->get_view();
 }
 
-bec::GRTManager::Timer *PhysicalModelDiagramFeatures::run_every(const std::function<bool()> &slot, double seconds) {
+auto PhysicalModelDiagramFeatures::run_every(const std::function<bool()> &slot, double seconds) -> bec::GRTManager::Timer * {
   return bec::GRTManager::get()->run_every(slot, seconds);
 }
 
-void PhysicalModelDiagramFeatures::cancel_timer(bec::GRTManager::Timer *timer) {
+auto PhysicalModelDiagramFeatures::cancel_timer(bec::GRTManager::Timer *timer) -> void {
   bec::GRTManager::get()->cancel_timer(timer);
 }

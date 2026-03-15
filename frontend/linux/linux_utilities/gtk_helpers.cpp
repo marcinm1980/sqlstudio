@@ -44,7 +44,7 @@
 // This list_model is used for all functions which operate on GTKListStore
 static TextListColumnsModel _wb_list_model;
 
-Glib::RefPtr<Gtk::ListStore> get_empty_model() {
+auto get_empty_model() -> Glib::RefPtr<Gtk::ListStore> {
   static Glib::RefPtr<Gtk::ListStore> empty_list_store;
   if (!empty_list_store)
     empty_list_store = Gtk::ListStore::create(_wb_list_model);
@@ -53,7 +53,7 @@ Glib::RefPtr<Gtk::ListStore> get_empty_model() {
 }
 
 //------------------------------------------------------------------------------
-Gtk::Box &create_icon_label(const std::string &icon, const std::string &text) {
+auto create_icon_label(const std::string &icon, const std::string &text) -> Gtk::Box & {
   Gtk::Box *hbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 0));
 
   Gtk::Image *image = Gtk::manage(new Gtk::Image(ImageCache::get_instance()->image_from_filename(icon)));
@@ -70,8 +70,8 @@ Gtk::Box &create_icon_label(const std::string &icon, const std::string &text) {
 }
 
 //------------------------------------------------------------------------------
-Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::vector<std::string> &list,
-                                                    TextListColumnsModel *columns) {
+auto model_from_string_list(const std::vector<std::string> &list,
+                                                    TextListColumnsModel *columns) -> Glib::RefPtr<Gtk::ListStore> {
   Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(*columns);
 
   std::vector<std::string>::const_iterator last = list.end();
@@ -83,8 +83,8 @@ Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::vector<std::strin
 }
 
 //------------------------------------------------------------------------------
-Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::vector<std::string> &list,
-                                                    TextListColumnsModel **columns) {
+auto model_from_string_list(const std::vector<std::string> &list,
+                                                    TextListColumnsModel **columns) -> Glib::RefPtr<Gtk::ListStore> {
   if (columns)
     *columns = &_wb_list_model;
 
@@ -92,8 +92,8 @@ Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::vector<std::strin
 }
 
 //------------------------------------------------------------------------------
-Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::list<std::string> &list,
-                                                    TextListColumnsModel **columns) {
+auto model_from_string_list(const std::list<std::string> &list,
+                                                    TextListColumnsModel **columns) -> Glib::RefPtr<Gtk::ListStore> {
   if (columns)
     *columns = &_wb_list_model;
 
@@ -108,7 +108,7 @@ Glib::RefPtr<Gtk::ListStore> model_from_string_list(const std::list<std::string>
 }
 
 //------------------------------------------------------------------------------
-void recreate_model_from_string_list(Glib::RefPtr<Gtk::ListStore> model, const std::vector<std::string> &list) {
+auto recreate_model_from_string_list(Glib::RefPtr<Gtk::ListStore> model, const std::vector<std::string> &list) -> void {
   model->clear();
 
   std::vector<std::string>::const_iterator last = list.end();
@@ -118,14 +118,14 @@ void recreate_model_from_string_list(Glib::RefPtr<Gtk::ListStore> model, const s
 }
 
 //------------------------------------------------------------------------------
-void setup_combo_for_string_list(Gtk::ComboBox *combo) {
+auto setup_combo_for_string_list(Gtk::ComboBox *combo) -> void {
   Gtk::CellRendererText *cell = Gtk::manage(new Gtk::CellRendererText());
   combo->pack_end(*cell, true);
   combo->add_attribute(*cell, "text", 0);
 }
 
 //------------------------------------------------------------------------------
-std::string get_selected_combo_item(Gtk::ComboBox *combo) {
+auto get_selected_combo_item(Gtk::ComboBox *combo) -> std::string {
   Gtk::TreeIter iter = combo->get_active();
   if (iter) {
     Gtk::TreeRow row = *iter;
@@ -138,7 +138,7 @@ std::string get_selected_combo_item(Gtk::ComboBox *combo) {
 
 //------------------------------------------------------------------------------
 
-bool set_selected_combo_item(Gtk::ComboBox *combo, const std::string &value) {
+auto set_selected_combo_item(Gtk::ComboBox *combo, const std::string &value) -> bool {
   Glib::RefPtr<Gtk::TreeModel> store(combo->get_model());
 
   for (Gtk::TreeIter end = store->children().end(), iter = store->children().begin(); iter != end; ++iter) {
@@ -153,7 +153,7 @@ bool set_selected_combo_item(Gtk::ComboBox *combo, const std::string &value) {
 }
 
 //------------------------------------------------------------------------------
-void set_glib_string(Glib::ValueBase &value, const std::string &str, bool escape_nuls) {
+auto set_glib_string(Glib::ValueBase &value, const std::string &str, bool escape_nuls) -> void {
   GValue *gval = value.gobj();
 
   g_value_init(gval, G_TYPE_STRING);
@@ -177,7 +177,7 @@ void set_glib_string(Glib::ValueBase &value, const std::string &str, bool escape
 }
 
 //------------------------------------------------------------------------------
-void set_glib_int(Glib::ValueBase &value, const int i) {
+auto set_glib_int(Glib::ValueBase &value, const int i) -> void {
   GValue *gval = value.gobj();
 
   g_value_init(gval, G_TYPE_INT);
@@ -185,7 +185,7 @@ void set_glib_int(Glib::ValueBase &value, const int i) {
 }
 
 //------------------------------------------------------------------------------
-void set_glib_bool(Glib::ValueBase &value, const bool b) {
+auto set_glib_bool(Glib::ValueBase &value, const bool b) -> void {
   GValue *gval = value.gobj();
 
   g_value_init(gval, G_TYPE_BOOLEAN);
@@ -193,7 +193,7 @@ void set_glib_bool(Glib::ValueBase &value, const bool b) {
 }
 
 //------------------------------------------------------------------------------
-void set_glib_double(Glib::ValueBase &value, const double d) {
+auto set_glib_double(Glib::ValueBase &value, const double d) -> void {
   GValue *gval = value.gobj();
 
   g_value_init(gval, G_TYPE_DOUBLE);
@@ -201,7 +201,7 @@ void set_glib_double(Glib::ValueBase &value, const double d) {
 }
 
 //------------------------------------------------------------------------------
-void fill_combo_from_string_list(Gtk::ComboBox *combo, const std::vector<std::string> &list) {
+auto fill_combo_from_string_list(Gtk::ComboBox *combo, const std::vector<std::string> &list) -> void {
   std::vector<std::string>::const_iterator it = list.begin();
   std::vector<std::string>::const_iterator last = list.end();
 
@@ -221,7 +221,7 @@ void fill_combo_from_string_list(Gtk::ComboBox *combo, const std::vector<std::st
 }
 
 //------------------------------------------------------------------------------
-void fill_combo_from_string_list(Gtk::ComboBoxText *combo, const std::vector<std::string> &list) {
+auto fill_combo_from_string_list(Gtk::ComboBoxText *combo, const std::vector<std::string> &list) -> void {
   std::vector<std::string>::const_iterator it = list.begin();
   std::vector<std::string>::const_iterator last = list.end();
 
@@ -230,7 +230,7 @@ void fill_combo_from_string_list(Gtk::ComboBoxText *combo, const std::vector<std
 }
 
 //------------------------------------------------------------------------------
-static std::string file_chooser_impl(const bool is_for_save, const std::string &filter) {
+static auto file_chooser_impl(const bool is_for_save, const std::string &filter) -> std::string {
   std::string filename;
   Gtk::FileChooserDialog dialog("Please choose a file",
                                 is_for_save ? Gtk::FILE_CHOOSER_ACTION_SAVE : Gtk::FILE_CHOOSER_ACTION_OPEN);
@@ -262,11 +262,11 @@ static std::string file_chooser_impl(const bool is_for_save, const std::string &
 }
 
 //------------------------------------------------------------------------------
-std::string open_file_chooser(const std::string &filter) {
+auto open_file_chooser(const std::string &filter) -> std::string {
   return file_chooser_impl(false, filter); // false - is not for save
 }
 
-std::string save_file_chooser(const std::string &filter) {
+auto save_file_chooser(const std::string &filter) -> std::string {
   return file_chooser_impl(true, filter); // true - is for save
 }
 
@@ -295,8 +295,8 @@ std::string save_file_chooser(const std::string &filter) {
 //  return ret;
 //}
 
-static void populate_popup_menu(const bec::MenuItemList &items, const int time,
-                                const sigc::slot<void, std::string> &activate_slot, Gtk::Menu *popup) {
+static auto populate_popup_menu(const bec::MenuItemList &items, const int time,
+                                const sigc::slot<void, std::string> &activate_slot, Gtk::Menu *popup) -> void {
   popup->foreach (sigc::mem_fun(popup, &Gtk::Container::remove));
 
   bec::MenuItemList::const_iterator cur_item = items.begin();
@@ -353,8 +353,8 @@ static void populate_popup_menu(const bec::MenuItemList &items, const int time,
   popup->show();
 }
 
-void run_popup_menu(const bec::MenuItemList &items, const int time, const sigc::slot<void, std::string> &activate_slot,
-                    Gtk::Menu *popup) {
+auto run_popup_menu(const bec::MenuItemList &items, const int time, const sigc::slot<void, std::string> &activate_slot,
+                    Gtk::Menu *popup) -> void {
   populate_popup_menu(items, time, activate_slot, popup);
 
   popup->popup(3, time);
@@ -387,7 +387,7 @@ Gtk::Widget *create_closeable_tab(const Glib::ustring &title,
 
 //--------------------------------------------------------------------------------
 
-void swap_panned_children(Gtk::Paned *paned, bool fixed_size_1) {
+auto swap_panned_children(Gtk::Paned *paned, bool fixed_size_1) -> void {
   Gtk::Widget *w1 = paned->get_child1();
   Gtk::Widget *w2 = paned->get_child2();
 
@@ -406,16 +406,16 @@ void swap_panned_children(Gtk::Paned *paned, bool fixed_size_1) {
 
 //--------------------------------------------------------------------------------
 
-static bool disallow_select(const Glib::RefPtr<Gtk::TreeModel> &model, const Gtk::TreeModel::Path &path,
-                            bool selected) {
+static auto disallow_select(const Glib::RefPtr<Gtk::TreeModel> &model, const Gtk::TreeModel::Path &path,
+                            bool selected) -> bool {
   return false;
 }
 
-static bool allow_select(const Glib::RefPtr<Gtk::TreeModel> &model, const Gtk::TreeModel::Path &path, bool selected) {
+static auto allow_select(const Glib::RefPtr<Gtk::TreeModel> &model, const Gtk::TreeModel::Path &path, bool selected) -> bool {
   return true;
 }
 
-static void handle_button_press(GdkEventButton *event, Gtk::TreeView *tree) {
+static auto handle_button_press(GdkEventButton *event, Gtk::TreeView *tree) -> void {
   Gtk::TreeModel::Path path;
   Gtk::TreeViewColumn *column;
   int cx, cy;
@@ -427,17 +427,17 @@ static void handle_button_press(GdkEventButton *event, Gtk::TreeView *tree) {
   }
 }
 
-static void handle_button_release(GdkEventButton *event, Gtk::TreeView *tree) {
+static auto handle_button_release(GdkEventButton *event, Gtk::TreeView *tree) -> void {
   tree->get_selection()->set_select_function(sigc::ptr_fun(allow_select));
 }
 
-void fix_broken_gtk_selection_handling(Gtk::TreeView *tree) {
+auto fix_broken_gtk_selection_handling(Gtk::TreeView *tree) -> void {
   tree->signal_button_press_event().connect_notify(sigc::bind(sigc::ptr_fun(handle_button_press), tree));
   tree->signal_button_release_event().connect_notify(sigc::bind(sigc::ptr_fun(handle_button_release), tree));
 }
 
 //------------------------------------------------------------------------------
-void gtk_paned_set_pos_ratio(Gtk::Paned *paned, const float ratio) {
+auto gtk_paned_set_pos_ratio(Gtk::Paned *paned, const float ratio) -> void {
   const int min_pos = paned->property_min_position();
   const int max_pos = paned->property_max_position();
   const int diff = (max_pos - min_pos) * ratio;
@@ -448,14 +448,14 @@ void gtk_paned_set_pos_ratio(Gtk::Paned *paned, const float ratio) {
 }
 
 //------------------------------------------------------------------------------
-float gtk_paned_get_pos_ratio(Gtk::Paned *paned) {
+auto gtk_paned_get_pos_ratio(Gtk::Paned *paned) -> float {
   const float min_pos = paned->property_min_position();
   const float max_pos = paned->property_max_position();
 
   return (paned->get_position() - min_pos) / (max_pos - min_pos);
 }
 //------------------------------------------------------------------------------
-void gtk_reparent_realized(Gtk::Widget *widget, Gtk::Container *new_parent) {
+auto gtk_reparent_realized(Gtk::Widget *widget, Gtk::Container *new_parent) -> void {
   if (!widget || !new_parent)
     return;
   widget->reference();
@@ -464,14 +464,14 @@ void gtk_reparent_realized(Gtk::Widget *widget, Gtk::Container *new_parent) {
   widget->unreference();
 }
 
-Gdk::RGBA color_to_rgba(Gdk::Color c) {
+auto color_to_rgba(Gdk::Color c) -> Gdk::RGBA {
   Gdk::RGBA rgba;
   rgba.set_rgba(c.get_red_p(), c.get_green_p(), c.get_blue_p());
   return rgba;
 }
 
 //------------------------------------------------------------------------------
-void PanedConstrainer::size_alloc(Gtk::Allocation &_alloc) {
+auto PanedConstrainer::size_alloc(Gtk::Allocation &_alloc) -> void {
   if (_reentrant)
     return;
   _reentrant = true;
@@ -521,8 +521,8 @@ PanedConstrainer::PanedConstrainer(Gtk::Paned *pan)
     _size_alloc_sig = _pan->signal_size_allocate().connect(sigc::mem_fun(this, &PanedConstrainer::size_alloc));
   }
 }
-PanedConstrainer *PanedConstrainer::make_constrainer(Gtk::Paned *paned, int top_or_left_limit,
-                                                     int bottom_or_right_limit) {
+auto PanedConstrainer::make_constrainer(Gtk::Paned *paned, int top_or_left_limit,
+                                                     int bottom_or_right_limit) -> PanedConstrainer * {
   if (paned) {
     PanedConstrainer *pc = new PanedConstrainer(paned);
     pc->set_limit(top_or_left_limit, bottom_or_right_limit);
@@ -532,11 +532,11 @@ PanedConstrainer *PanedConstrainer::make_constrainer(Gtk::Paned *paned, int top_
   }
   throw std::logic_error("Gtk::Paned is empty");
 }
-void PanedConstrainer::disable_sticky(bool disable) {
+auto PanedConstrainer::disable_sticky(bool disable) -> void {
   _allow_sticky = !disable;
 }
 
-void PanedConstrainer::set_state_cb(const state_notifier &cb) {
+auto PanedConstrainer::set_state_cb(const state_notifier &cb) -> void {
   _state_notifier_cb = cb;
 }
 
@@ -544,7 +544,7 @@ PanedConstrainer::~PanedConstrainer() {
   _size_alloc_sig.disconnect();
 }
 
-void *PanedConstrainer::destroy(void *data) {
+auto PanedConstrainer::destroy(void *data) -> void * {
   PanedConstrainer *pc = reinterpret_cast<PanedConstrainer *>(data);
   if (pc)
     delete pc;
@@ -552,11 +552,11 @@ void *PanedConstrainer::destroy(void *data) {
   return 0;
 }
 
-void PanedConstrainer::set_limit(int top_or_left, int bottom_or_right) {
+auto PanedConstrainer::set_limit(int top_or_left, int bottom_or_right) -> void {
   _top_or_left_limit = top_or_left;
   _bottom_or_right_limit = bottom_or_right;
 }
 
-Gtk::Paned *PanedConstrainer::get() {
+auto PanedConstrainer::get() -> Gtk::Paned * {
   return _pan;
 }

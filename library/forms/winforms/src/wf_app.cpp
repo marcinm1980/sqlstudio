@@ -65,7 +65,7 @@ ManagedApplication::~ManagedApplication() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string ManagedApplication::CallAppDelegate(AppCommand command, const std::string &str) {
+auto ManagedApplication::CallAppDelegate(AppCommand command, const std::string &str) -> std::string {
   String ^ result = commandDelegate(command, CppStringToNative(str));
   return NativeToCppString(result);
 }
@@ -101,21 +101,21 @@ String ^ AppWrapper::get_image_path(String ^ path) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string AppWrapper::get_resource_path(mforms::App *app, const std::string &file) {
+auto AppWrapper::get_resource_path(mforms::App *app, const std::string &file) -> std::string {
   AppWrapper *wrapper = mforms::App::get()->get_data<AppWrapper>();
   return wrapper->application->CallAppDelegate(AppCommand::AppGetResourcePath, file);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void AppWrapper::set_status_text(mforms::App *app, const std::string &text) {
+auto AppWrapper::set_status_text(mforms::App *app, const std::string &text) -> void {
   AppWrapper *wrapper = mforms::App::get()->get_data<AppWrapper>();
   wrapper->application->CallAppDelegate(AppCommand::AppSetStatusText, text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-base::Rect AppWrapper::get_application_bounds(mforms::App *app) {
+auto AppWrapper::get_application_bounds(mforms::App *app) -> base::Rect {
   System::Windows::Forms::Form ^ form = UtilitiesWrapper::get_mainform();
   Drawing::Rectangle bounds = form->Bounds;
   return base::Rect(bounds.Left, bounds.Top, bounds.Width, bounds.Height);
@@ -123,7 +123,7 @@ base::Rect AppWrapper::get_application_bounds(mforms::App *app) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool AppWrapper::isDarkModeActive(mforms::App *app) {
+auto AppWrapper::isDarkModeActive(mforms::App *app) -> bool {
   return false;
 }
 
@@ -137,7 +137,7 @@ static int message_loop_exit_code = MININT; // Can stay unguarded. We only use i
  * Additionally, if you fail to call exit_event_loop the call will never return and block closing
  * the application.
  */
-int AppWrapper::enter_event_loop(mforms::App *app, float max_wait_time) {
+auto AppWrapper::enter_event_loop(mforms::App *app, float max_wait_time) -> int {
   message_loop_exit_code = -MININT;
   int remaining_milliseconds;
   if (max_wait_time <= 0)
@@ -156,13 +156,13 @@ int AppWrapper::enter_event_loop(mforms::App *app, float max_wait_time) {
 
 //--------------------------------------------------------------------------------------------------
 
-void AppWrapper::exit_event_loop(mforms::App *app, int ret_code) {
+auto AppWrapper::exit_event_loop(mforms::App *app, int ret_code) -> void {
   message_loop_exit_code = ret_code;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void AppWrapper::init() {
+auto AppWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_app_impl.get_resource_path = &get_resource_path;

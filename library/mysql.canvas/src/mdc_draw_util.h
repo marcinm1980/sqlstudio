@@ -46,30 +46,30 @@ namespace mdc {
     return (CornerMask)((int)a | (int)b);
   }
 
-  MYSQLCANVAS_PUBLIC_FUNC void cairo_image_surface_blur(cairo_surface_t *surface, double radius);
+  MYSQLCANVAS_PUBLIC_FUNC auto cairo_image_surface_blur(cairo_surface_t *surface, double radius) -> void;
 
-  MYSQLCANVAS_PUBLIC_FUNC void draw_shadow(CairoCtx *cr, const base::Rect &around_rect, const base::Color &color);
-  MYSQLCANVAS_PUBLIC_FUNC void draw_shadow_gl(const base::Rect &bounds, const base::Color &color);
+  MYSQLCANVAS_PUBLIC_FUNC auto draw_shadow(CairoCtx *cr, const base::Rect &around_rect, const base::Color &color) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto draw_shadow_gl(const base::Rect &bounds, const base::Color &color) -> void;
 
-  MYSQLCANVAS_PUBLIC_FUNC void draw_glow(CairoCtx *cr, const base::Rect &around_rect, const base::Color &color);
+  MYSQLCANVAS_PUBLIC_FUNC auto draw_glow(CairoCtx *cr, const base::Rect &around_rect, const base::Color &color) -> void;
 
-  MYSQLCANVAS_PUBLIC_FUNC void fill_hollow_rectangle(CairoCtx *cr, const base::Rect &outer_rect,
-                                                     const base::Rect &inner_rect);
+  MYSQLCANVAS_PUBLIC_FUNC auto fill_hollow_rectangle(CairoCtx *cr, const base::Rect &outer_rect,
+                                                     const base::Rect &inner_rect) -> void;
 
-  MYSQLCANVAS_PUBLIC_FUNC void stroke_rounded_rectangle(CairoCtx *cr, const base::Rect &bounds, CornerMask corners,
-                                                        float corner_radius, float offset = 0);
-  MYSQLCANVAS_PUBLIC_FUNC void stroke_rounded_rectangle_gl(const base::Rect &rect, CornerMask corners,
-                                                           float corner_radius, float offset);
+  MYSQLCANVAS_PUBLIC_FUNC auto stroke_rounded_rectangle(CairoCtx *cr, const base::Rect &bounds, CornerMask corners,
+                                                        float corner_radius, float offset = 0) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto stroke_rounded_rectangle_gl(const base::Rect &rect, CornerMask corners,
+                                                           float corner_radius, float offset) -> void;
 
-  MYSQLCANVAS_PUBLIC_FUNC void gl_setcolor(const base::Color &color);
-  MYSQLCANVAS_PUBLIC_FUNC void gl_setcolor(const base::Color &color, double alpha);
-  MYSQLCANVAS_PUBLIC_FUNC void gl_rectangle(double x, double y, double w, double h, bool filled);
-  MYSQLCANVAS_PUBLIC_FUNC void gl_rectangle(const base::Rect &rect, bool filled);
-  MYSQLCANVAS_PUBLIC_FUNC void gl_box(const base::Rect &rect, base::Color &border_color, base::Color &fill_color);
-  MYSQLCANVAS_PUBLIC_FUNC void gl_polygon(const base::Point vertices[], int size, bool filled);
-  MYSQLCANVAS_PUBLIC_FUNC void gl_polygon(const base::Point vertices[], int size, const base::Color &border_color,
-                                          const base::Color &fill_color);
-  MYSQLCANVAS_PUBLIC_FUNC void gl_arc(double x, double y, double radius, double start, double end, bool filled);
+  MYSQLCANVAS_PUBLIC_FUNC auto gl_setcolor(const base::Color &color) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto gl_setcolor(const base::Color &color, double alpha) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto gl_rectangle(double x, double y, double w, double h, bool filled) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto gl_rectangle(const base::Rect &rect, bool filled) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto gl_box(const base::Rect &rect, base::Color &border_color, base::Color &fill_color) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto gl_polygon(const base::Point vertices[], int size, bool filled) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto gl_polygon(const base::Point vertices[], int size, const base::Color &border_color,
+                                          const base::Color &fill_color) -> void;
+  MYSQLCANVAS_PUBLIC_FUNC auto gl_arc(double x, double y, double radius, double start, double end, bool filled) -> void;
 };
 
 #endif /* _MDC_DRAW_UTIL_H_ */

@@ -42,7 +42,7 @@ using namespace MySQL::Utilities::SysUtils;
 /**
  * Converts Windows specific mouse button identifiers to plain numbers for the back end.
  */
-static mforms::MouseButton convert_mouse_button(MouseButtons button) {
+static auto convert_mouse_button(MouseButtons button) -> mforms::MouseButton {
   switch (button) {
     case MouseButtons::Left:
       return mforms::MouseButtonLeft;
@@ -126,7 +126,7 @@ public:
 
   //-------------------------------------------------------------------------------------------------
 
-  virtual void DoRepaint() {
+  virtual auto DoRepaint() -> void {
     Invalidate();
   }
 
@@ -136,7 +136,7 @@ public:
    * Shows the popup with its hotspot at the given position. The window is moved accordingly and also
    * considers screen borders.
    */
-  virtual int PopupControl::Show(int x, int y) {
+  virtual auto PopupControl::Show(int x, int y) -> int {
     // In the base class the hot spot is the upper left corner.
     Point newLocation = Point(x, y);
     Screen ^ activeScreen = Screen::FromControl(Form::ActiveForm);
@@ -158,8 +158,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual property base::Rect DisplayRect {
-    base::Rect get() {
+  virtual auto get() -> property base::Rect DisplayRect { base::Rect {
       System::Drawing::Rectangle content_area = ClientRectangle;
       content_area.X += Padding.Left;
       content_area.Y += Padding.Top;
@@ -172,11 +171,10 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual property int ModalResult {
-    int get() {
+  virtual auto get() -> property int ModalResult { int {
       return modalResult;
     }
-    void set(int value) {
+    auto set(int value) -> void {
       modalResult = value;
     }
   }
@@ -211,7 +209,7 @@ public:
   /// Prepares the bitmap used to draw the window. Layered windows (like this one) use a bitmap for their
   /// content, including alpha channel.
   /// </summary>
-  void PrepareBitmap() {
+  auto PrepareBitmap() -> void {
     contentBitmap = gcnew Bitmap(Width, Height);
     Graphics ^ g = Graphics::FromImage(contentBitmap);
     g->SmoothingMode = SmoothingMode::HighQuality;
@@ -324,7 +322,7 @@ public:
    * Runs a local message loop to simulate a modal form. Due to the way the popup is displayed we
    * cannot use ShowDialog.
    */
-  void RunLoop() {
+  auto RunLoop() -> void {
     modalResult = -1;
 
     while (modalResult < 0) // TODO: maybe we need to listen to the application exit event.
@@ -386,7 +384,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void UpdateAndShowPopup(bool doAnimated) {
+  auto UpdateAndShowPopup(bool doAnimated) -> void {
     PrepareBitmap();
 
     // Don't use animations in a terminal session (remote desktop).
@@ -404,7 +402,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void HidePopup() {
+  auto HidePopup() -> void {
     if (animated && !IsDisposed) {
       for (int i = animationSteps; i >= 0; i--)
         ControlUtilities::SetBitmap(this, contentBitmap, (int)(255.0 * i / animationSteps));
@@ -414,8 +412,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  GraphicsPath ^
-    GetPath() {
+  auto GetPath() -> GraphicsPath ^ {
       // Generate the outline of the actual content area. Center it around the origin.
       // It will later get transformed to the final position.
       GraphicsPath ^ result = gcnew GraphicsPath();
@@ -438,7 +435,7 @@ public:
     /// Prepares the bitmap used to draw the window. Layered windows (like this one) use a bitmap for their
     /// content, including alpha channel.
     /// </summary>
-    void PrepareBitmap() {
+    auto PrepareBitmap() -> void {
     contentBitmap = gcnew Bitmap(Width, Height);
 
     GraphicsPath ^ path = GetPath();
@@ -595,7 +592,7 @@ PopupWrapper::PopupWrapper(mforms::Popup *backend) : ObjectWrapper(backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool PopupWrapper::create(mforms::Popup *backend, mforms::PopupStyle style) {
+auto PopupWrapper::create(mforms::Popup *backend, mforms::PopupStyle style) -> bool {
   PopupWrapper *wrapper = new PopupWrapper(backend);
 
   PopupControl ^ popup = nullptr;
@@ -621,26 +618,26 @@ bool PopupWrapper::create(mforms::Popup *backend, mforms::PopupStyle style) {
 
 //--------------------------------------------------------------------------------------------------
 
-void PopupWrapper::destroy(mforms::Popup *backend) {
+auto PopupWrapper::destroy(mforms::Popup *backend) -> void {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PopupWrapper::set_needs_repaint(mforms::Popup *backend) {
+auto PopupWrapper::set_needs_repaint(mforms::Popup *backend) -> void {
   PopupControl ^ control = PopupWrapper::GetManagedObject<PopupControl>(backend);
   control->DoRepaint();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PopupWrapper::set_size(mforms::Popup *backend, int width, int height) {
+auto PopupWrapper::set_size(mforms::Popup *backend, int width, int height) -> void {
   PopupControl ^ control = PopupWrapper::GetManagedObject<PopupControl>(backend);
   control->Size = Size(width, height);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int PopupWrapper::show(mforms::Popup *backend, int spot_x, int spot_y) {
+auto PopupWrapper::show(mforms::Popup *backend, int spot_x, int spot_y) -> int {
   PopupControl ^ control = PopupWrapper::GetManagedObject<PopupControl>(backend);
   control->DoRepaint();
   control->Show(spot_x, spot_y);
@@ -650,21 +647,21 @@ int PopupWrapper::show(mforms::Popup *backend, int spot_x, int spot_y) {
 
 //--------------------------------------------------------------------------------------------------
 
-base::Rect PopupWrapper::get_content_rect(mforms::Popup *backend) {
+auto PopupWrapper::get_content_rect(mforms::Popup *backend) -> base::Rect {
   PopupControl ^ control = PopupWrapper::GetManagedObject<PopupControl>(backend);
   return control->DisplayRect;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PopupWrapper::set_modal_result(mforms::Popup *backend, int result) {
+auto PopupWrapper::set_modal_result(mforms::Popup *backend, int result) -> void {
   PopupControl ^ control = PopupWrapper::GetManagedObject<PopupControl>(backend);
   control->ModalResult = result;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void PopupWrapper::init() {
+auto PopupWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_popup_impl.create = &PopupWrapper::create;

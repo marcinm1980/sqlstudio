@@ -33,15 +33,15 @@ namespace MySQL {
     protected:
       CheckBoxWrapper(mforms::CheckBox *cbox);
 
-      static bool create(mforms::CheckBox *backend, bool square);
+      static auto create(mforms::CheckBox *backend, bool square) -> bool;
       static void click(System::Object ^ sender, System::EventArgs ^ e);
-      static void set_active(mforms::CheckBox *backend, bool flag);
-      static bool get_active(mforms::CheckBox *backend);
+      static auto set_active(mforms::CheckBox *backend, bool flag) -> void;
+      static auto get_active(mforms::CheckBox *backend) -> bool;
 
     public:
-      static void init();
-      virtual int set_text(const std::string &text);
-      virtual void set_font(const std::string &fontDescription);
+      static auto init() -> void;
+      virtual auto set_text(const std::string &text) -> int;
+      virtual auto set_font(const std::string &fontDescription) -> void;
     };
   };
 };

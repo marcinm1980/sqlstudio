@@ -36,83 +36,83 @@ namespace MySQL {
       TreeViewWrapper(mforms::TreeView *backend);
       virtual ~TreeViewWrapper();
 
-      static bool create(mforms::TreeView *backend, mforms::TreeOptions options);
-      static int add_column(mforms::TreeView *backend, mforms::TreeColumnType type, const std::string &name,
-                            int initial_width, bool editable);
-      static void end_columns(mforms::TreeView *backend);
+      static auto create(mforms::TreeView *backend, mforms::TreeOptions options) -> bool;
+      static auto add_column(mforms::TreeView *backend, mforms::TreeColumnType type, const std::string &name,
+                            int initial_width, bool editable) -> int;
+      static auto end_columns(mforms::TreeView *backend) -> void;
 
-      static void clear(mforms::TreeView *backend);
+      static auto clear(mforms::TreeView *backend) -> void;
 
-      static mforms::TreeSelectionMode get_selection_mode(mforms::TreeView *backend);
-      static void set_selection_mode(mforms::TreeView *backend, mforms::TreeSelectionMode mode);
-      static std::list<mforms::TreeNodeRef> get_selection(mforms::TreeView *backend);
-      static mforms::TreeNodeRef get_selected_node(mforms::TreeView *backend);
-      static void clear_selection(mforms::TreeView *backend);
-      static void set_selected(mforms::TreeView *backend, mforms::TreeNodeRef node, bool flag);
-      static void scrollToNode(mforms::TreeView *backend, mforms::TreeNodeRef node);
+      static auto get_selection_mode(mforms::TreeView *backend) -> mforms::TreeSelectionMode;
+      static auto set_selection_mode(mforms::TreeView *backend, mforms::TreeSelectionMode mode) -> void;
+      static auto get_selection(mforms::TreeView *backend) -> std::list<mforms::TreeNodeRef>;
+      static auto get_selected_node(mforms::TreeView *backend) -> mforms::TreeNodeRef;
+      static auto clear_selection(mforms::TreeView *backend) -> void;
+      static auto set_selected(mforms::TreeView *backend, mforms::TreeNodeRef node, bool flag) -> void;
+      static auto scrollToNode(mforms::TreeView *backend, mforms::TreeNodeRef node) -> void;
 
-      static void set_allow_sorting(mforms::TreeView *backend, bool flag);
-      static void set_row_height(mforms::TreeView *backend, int h);
+      static auto set_allow_sorting(mforms::TreeView *backend, bool flag) -> void;
+      static auto set_row_height(mforms::TreeView *backend, int h) -> void;
 
-      static void freeze_refresh(mforms::TreeView *backend, bool flag);
+      static auto freeze_refresh(mforms::TreeView *backend, bool flag) -> void;
 
-      static mforms::TreeNodeRef root_node(mforms::TreeView *backend);
+      static auto root_node(mforms::TreeView *backend) -> mforms::TreeNodeRef;
 
-      static mforms::TreeNodeRef node_at_row(mforms::TreeView *backend, int row);
-      static mforms::TreeNodeRef node_at_position(mforms::TreeView *backend, base::Point position);
-      static int row_for_node(mforms::TreeView *backend, mforms::TreeNodeRef node);
-      static mforms::TreeNodeRef node_with_tag(mforms::TreeView *backend, const std::string &tag);
+      static auto node_at_row(mforms::TreeView *backend, int row) -> mforms::TreeNodeRef;
+      static auto node_at_position(mforms::TreeView *backend, base::Point position) -> mforms::TreeNodeRef;
+      static auto row_for_node(mforms::TreeView *backend, mforms::TreeNodeRef node) -> int;
+      static auto node_with_tag(mforms::TreeView *backend, const std::string &tag) -> mforms::TreeNodeRef;
 
-      static void set_column_title(mforms::TreeView *backend, int column, const std::string &title);
+      static auto set_column_title(mforms::TreeView *backend, int column, const std::string &title) -> void;
 
-      static void set_column_visible(mforms::TreeView *backend, int column, bool flag);
-      static bool get_column_visible(mforms::TreeView *backend, int column);
+      static auto set_column_visible(mforms::TreeView *backend, int column, bool flag) -> void;
+      static auto get_column_visible(mforms::TreeView *backend, int column) -> bool;
 
-      static void set_column_width(mforms::TreeView *backend, int column, int width);
-      static int get_column_width(mforms::TreeView *backend, int column);
+      static auto set_column_width(mforms::TreeView *backend, int column, int width) -> void;
+      static auto get_column_width(mforms::TreeView *backend, int column) -> int;
 
-      static void BeginUpdate(mforms::TreeView *backend);
-      static void EndUpdate(mforms::TreeView *backend);
+      static auto BeginUpdate(mforms::TreeView *backend) -> void;
+      static auto EndUpdate(mforms::TreeView *backend) -> void;
 
-      virtual mforms::DropPosition get_drop_position();
+      virtual auto get_drop_position() -> mforms::DropPosition;
 
     public:
-      void set_row_height(int h);
+      auto set_row_height(int h) -> void;
 
-      mforms::TreeSelectionMode get_selection_mode();
-      void set_selection_mode(mforms::TreeSelectionMode mode);
+      auto get_selection_mode() -> mforms::TreeSelectionMode;
+      auto set_selection_mode(mforms::TreeSelectionMode mode) -> void;
 
-      void clear_selection();
-      std::list<mforms::TreeNodeRef> get_selection();
-      void set_selected(mforms::TreeNodeRef node, bool flag);
-      void scrollToNode(mforms::TreeNodeRef node);
+      auto clear_selection() -> void;
+      auto get_selection() -> std::list<mforms::TreeNodeRef>;
+      auto set_selected(mforms::TreeNodeRef node, bool flag) -> void;
+      auto scrollToNode(mforms::TreeNodeRef node) -> void;
 
-      void allow_column_sorting(bool flag);
+      auto allow_column_sorting(bool flag) -> void;
 
-      void freeze_refresh(bool flag);
+      auto freeze_refresh(bool flag) -> void;
 
-      mforms::TreeNodeRef root_node();
+      auto root_node() -> mforms::TreeNodeRef;
 
-      mforms::TreeNodeRef node_at_row(int row);
-      mforms::TreeNodeRef node_at_position(base::Point position);
-      int row_for_node(mforms::TreeNodeRef node);
+      auto node_at_row(int row) -> mforms::TreeNodeRef;
+      auto node_at_position(base::Point position) -> mforms::TreeNodeRef;
+      auto row_for_node(mforms::TreeNodeRef node) -> int;
 
-      void set_column_title(int column, const std::string &title);
+      auto set_column_title(int column, const std::string &title) -> void;
 
-      void set_column_visible(int column, bool flag);
-      bool is_column_visible(int column);
+      auto set_column_visible(int column, bool flag) -> void;
+      auto is_column_visible(int column) -> bool;
 
-      void set_column_width(int column, int width);
-      int get_column_width(int column);
+      auto set_column_width(int column, int width) -> void;
+      auto get_column_width(int column) -> int;
 
-      void BeginUpdate();
-      void EndUpdate();
+      auto BeginUpdate() -> void;
+      auto EndUpdate() -> void;
 
       // Internal functions.
       void process_mapping(Aga::Controls::Tree::TreeNodeAdv ^ node, const std::string &tag);
-      void node_value_set(int column);
+      auto node_value_set(int column) -> void;
 
-      static void init();
+      static auto init() -> void;
     };
   }
 }

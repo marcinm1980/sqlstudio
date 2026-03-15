@@ -43,21 +43,21 @@ namespace bec {
 
     RolePrivilegeListBE(RoleEditorBE *owner);
 
-    virtual void refresh();
+    virtual auto refresh() -> void;
 
-    virtual size_t count();
+    virtual auto count() -> size_t;
 
-    void add_all();
-    void remove_all();
+    auto add_all() -> void;
+    auto remove_all() -> void;
 
-    virtual bool set_field(const NodeId &node, ColumnId column, ssize_t value);
+    virtual auto set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool;
 
   protected:
     RoleEditorBE *_owner;
     db_RolePrivilegeRef _role_privilege;
     grt::StringListRef _privileges;
 
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
   };
 
   //!
@@ -70,21 +70,21 @@ namespace bec {
 
     RoleObjectListBE(RoleEditorBE *owner);
 
-    void set_selected_node(const NodeId &node);
-    db_RolePrivilegeRef get_selected_object_info();
+    auto set_selected_node(const NodeId &node) -> void;
+    auto get_selected_object_info() -> db_RolePrivilegeRef;
 
-    virtual size_t count();
-    virtual void refresh(){};
+    virtual auto count() -> size_t;
+    virtual auto refresh() -> void {};
 
-    virtual MenuItemList get_popup_items_for_nodes(const std::vector<NodeId> &nodes);
-    virtual bool activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes);
+    virtual auto get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList;
+    virtual auto activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool;
 
   protected:
     RoleEditorBE *_owner;
     NodeId _selection;
 
-    virtual IconId get_field_icon(const NodeId &node, ColumnId column, IconSize size);
-    virtual bool get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value);
+    virtual auto get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId;
+    virtual auto get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool;
   };
 
   //!
@@ -102,38 +102,38 @@ namespace bec {
   public:
     RoleEditorBE(const db_RoleRef &role, const db_mgmt_RdbmsRef &rdbms);
 
-    db_RoleRef get_role() {
+    auto get_role() -> db_RoleRef {
       return _role;
     }
 
-    const db_mgmt_RdbmsRef &get_rdbms() {
+    auto get_rdbms() -> const db_mgmt_RdbmsRef & {
       return _rdbms;
     }
 
-    virtual std::string get_title();
+    virtual auto get_title() -> std::string;
 
-    void set_name(const std::string &name);
-    std::string get_name();
+    auto set_name(const std::string &name) -> void;
+    auto get_name() -> std::string;
 
-    void set_parent_role(const std::string &name);
-    std::string get_parent_role();
-    std::vector<std::string> get_role_list();
+    auto set_parent_role(const std::string &name) -> void;
+    auto get_parent_role() -> std::string;
+    auto get_role_list() -> std::vector<std::string>;
 
-    RoleTreeBE *get_role_tree() {
+    auto get_role_tree() -> RoleTreeBE * {
       return &_tree;
     }
 
-    RolePrivilegeListBE *get_privilege_list() {
+    auto get_privilege_list() -> RolePrivilegeListBE * {
       return &_privilege_list;
     }
-    RoleObjectListBE *get_object_list() {
+    auto get_object_list() -> RoleObjectListBE * {
       return &_object_list;
     }
 
-    bool add_dropped_objectdata(const std::string &data);
-    bool add_object(const std::string &type, const std::string &name);
-    bool add_object(db_DatabaseObjectRef object);
-    void remove_object(const bec::NodeId &object_node_id);
+    auto add_dropped_objectdata(const std::string &data) -> bool;
+    auto add_object(const std::string &type, const std::string &name) -> bool;
+    auto add_object(db_DatabaseObjectRef object) -> bool;
+    auto remove_object(const bec::NodeId &object_node_id) -> void;
   };
 };
 

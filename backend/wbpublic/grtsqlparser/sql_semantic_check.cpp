@@ -28,7 +28,7 @@
 Sql_semantic_check::Sql_semantic_check() {
 }
 
-void Sql_semantic_check::reset_context_objects() {
+auto Sql_semantic_check::reset_context_objects() -> void {
   _context_schema = db_SchemaRef();
   _context_table = db_TableRef();
   _context_trigger = db_TriggerRef();
@@ -37,26 +37,26 @@ void Sql_semantic_check::reset_context_objects() {
   _context_routine_group = db_RoutineGroupRef();
 }
 
-void Sql_semantic_check::context_object(db_SchemaRef obj) {
+auto Sql_semantic_check::context_object(db_SchemaRef obj) -> void {
   _context_schema = obj;
 }
 
-void Sql_semantic_check::context_object(db_TableRef obj) {
+auto Sql_semantic_check::context_object(db_TableRef obj) -> void {
   _context_table = obj;
 }
 
-void Sql_semantic_check::context_object(db_TriggerRef obj) {
+auto Sql_semantic_check::context_object(db_TriggerRef obj) -> void {
   _context_trigger = obj;
 }
 
-void Sql_semantic_check::context_object(db_ViewRef obj) {
+auto Sql_semantic_check::context_object(db_ViewRef obj) -> void {
   _context_view = obj;
 }
 
-void Sql_semantic_check::context_object(db_RoutineRef obj) {
+auto Sql_semantic_check::context_object(db_RoutineRef obj) -> void {
   _context_routine = obj;
 }
 
-void Sql_semantic_check::context_object(db_RoutineGroupRef obj) {
+auto Sql_semantic_check::context_object(db_RoutineGroupRef obj) -> void {
   _context_routine_group = obj;
 }

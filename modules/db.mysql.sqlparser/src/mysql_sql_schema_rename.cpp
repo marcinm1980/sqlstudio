@@ -50,8 +50,8 @@ Mysql_sql_schema_rename::Mysql_sql_schema_rename() {
   NULL_STATE_KEEPER // reset all members to null-values
 }
 
-int Mysql_sql_schema_rename::rename_schema_references(std::string &sql, const std::string &old_schema_name,
-                                                      const std::string &new_schema_name) {
+auto Mysql_sql_schema_rename::rename_schema_references(std::string &sql, const std::string &old_schema_name,
+                                                      const std::string &new_schema_name) -> int {
   NULL_STATE_KEEPER
 
   if (old_schema_name.empty())
@@ -71,8 +71,8 @@ int Mysql_sql_schema_rename::rename_schema_references(std::string &sql, const st
   return pr_processed;
 }
 
-int Mysql_sql_schema_rename::rename_schema_references(db_CatalogRef catalog, const std::string &old_schema_name,
-                                                      const std::string &new_schema_name) {
+auto Mysql_sql_schema_rename::rename_schema_references(db_CatalogRef catalog, const std::string &old_schema_name,
+                                                      const std::string &new_schema_name) -> int {
   NULL_STATE_KEEPER
 
   if (old_schema_name.empty())
@@ -154,7 +154,7 @@ void Mysql_sql_schema_rename::rename_schema_references(grt::ListRef<T> obj_list,
   }
 }
 
-int Mysql_sql_schema_rename::process_sql_statement(const SqlAstNode *tree) {
+auto Mysql_sql_schema_rename::process_sql_statement(const SqlAstNode *tree) -> int {
   // on parsing error log error message
   if (!tree) {
     report_sql_error(_err_tok_lineno, true, _err_tok_line_pos, _err_tok_len, _err_msg, 2);
@@ -166,7 +166,7 @@ int Mysql_sql_schema_rename::process_sql_statement(const SqlAstNode *tree) {
   return 0; // success
 }
 
-void Mysql_sql_schema_rename::process_sql_statement_item(const SqlAstNode *item) {
+auto Mysql_sql_schema_rename::process_sql_statement_item(const SqlAstNode *item) -> void {
   {
     // try all rules with dot notation
 
@@ -216,7 +216,7 @@ void Mysql_sql_schema_rename::process_sql_statement_item(const SqlAstNode *item)
   }
 }
 
-void Mysql_sql_schema_rename::process_schema_reference_candidate(const SqlAstNode *item, int dot_count) {
+auto Mysql_sql_schema_rename::process_schema_reference_candidate(const SqlAstNode *item, int dot_count) -> void {
   const SqlAstNode *subitem = NULL;
   switch (dot_count) {
     case 1:
@@ -231,8 +231,8 @@ void Mysql_sql_schema_rename::process_schema_reference_candidate(const SqlAstNod
     _schema_names_offsets.push_back(_splitter->statement_boffset() + subitem->stmt_boffset());
 }
 
-bool Mysql_sql_schema_rename::rename_schema_references(std::string &sql_text, Mysql_sql_parser_fe &sql_parser_fe,
-                                                       int delim_wrapping) {
+auto Mysql_sql_schema_rename::rename_schema_references(std::string &sql_text, Mysql_sql_parser_fe &sql_parser_fe,
+                                                       int delim_wrapping) -> bool {
   if (sql_text.empty())
     return false;
 
@@ -267,7 +267,7 @@ bool Mysql_sql_schema_rename::rename_schema_references(std::string &sql_text, My
   return true;
 }
 
-bool Mysql_sql_schema_rename::rename_schema_references(std::string &sql_text) {
+auto Mysql_sql_schema_rename::rename_schema_references(std::string &sql_text) -> bool {
   if (_schema_names_offsets.empty())
     return false;
 

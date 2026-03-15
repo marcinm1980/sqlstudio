@@ -224,7 +224,7 @@ public:
   /**
    * Scrolls the control's content to the given position.
    */
-  void ScrollFillPanel::SetOffset(int x, int y) {
+  auto ScrollFillPanel::SetOffset(int x, int y) -> void {
     System::Drawing::Size maxSize(0, 0);
     if (Controls->Count > 0) {
       Control ^ content = Controls[0];
@@ -288,7 +288,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void UpdateHorizontalScrollbar(int newWidth) {
+  auto UpdateHorizontalScrollbar(int newWidth) -> void {
     SCROLLINFO si = {0};
     si.cbSize = sizeof(si);
     si.fMask = SIF_ALL;
@@ -321,7 +321,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void UpdateVerticalScrollbar(int newHeight) {
+  auto UpdateVerticalScrollbar(int newHeight) -> void {
     SCROLLINFO si = {0};
     si.cbSize = sizeof(si);
     si.fMask = SIF_ALL;
@@ -406,11 +406,10 @@ public:
     /**
      * Used to either hide scrollbars completely if they are not needed or show them as disabled.
      */
-    property bool AutoHideScrollbars {
-    bool get() {
+    auto get() -> property bool AutoHideScrollbars { bool {
       return autoHideScrollbars;
     }
-    void set(bool value) {
+    auto set(bool value) -> void {
       if (autoHideScrollbars != value) {
         autoHideScrollbars = value;
         PerformLayout(this, "Padding");
@@ -420,11 +419,10 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  property bool HideHorizontalScrollbar {
-    bool get() {
+  auto get() -> property bool HideHorizontalScrollbar { bool {
       return hideHorizontalScrollbar;
     }
-    void set(bool value) {
+    auto set(bool value) -> void {
       if (hideHorizontalScrollbar != value) {
         hideHorizontalScrollbar = value;
         PerformLayout(this, "Padding");
@@ -434,11 +432,10 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  property bool HideVerticalScrollbar {
-    bool get() {
+  auto get() -> property bool HideVerticalScrollbar { bool {
       return hideVerticalScrollbar;
     }
-    void set(bool value) {
+    auto set(bool value) -> void {
       if (hideVerticalScrollbar != value) {
         hideVerticalScrollbar = value;
         PerformLayout(this, "Padding");
@@ -448,16 +445,14 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  property int HorizontalOffset {
-    int get() {
+  auto get() -> property int HorizontalOffset { int {
       return horizontalOffset;
     };
   }
 
   //------------------------------------------------------------------------------------------------
 
-  property int VerticalOffset {
-    int get() {
+  auto get() -> property int VerticalOffset { int {
       return verticalOffset;
     };
   }
@@ -534,7 +529,7 @@ ScrollPanelWrapper::ScrollPanelWrapper(mforms::ScrollPanel *backend) : ViewWrapp
 
 //--------------------------------------------------------------------------------------------------
 
-bool ScrollPanelWrapper::create(mforms::ScrollPanel *backend, mforms::ScrollPanelFlags flags) {
+auto ScrollPanelWrapper::create(mforms::ScrollPanel *backend, mforms::ScrollPanelFlags flags) -> bool {
   ScrollPanelWrapper *wrapper = new ScrollPanelWrapper(backend);
   if ((flags & mforms::ScrollPanelBordered) != 0) {
     // Have to fake a bordered scrollbox by embedding a panel in a groupbox.
@@ -555,7 +550,7 @@ bool ScrollPanelWrapper::create(mforms::ScrollPanel *backend, mforms::ScrollPane
 
 //--------------------------------------------------------------------------------------------------
 
-void ScrollPanelWrapper::add(mforms::ScrollPanel *backend, mforms::View *view) {
+auto ScrollPanelWrapper::add(mforms::ScrollPanel *backend, mforms::View *view) -> void {
   ScrollPanelWrapper *wrapper = backend->get_data<ScrollPanelWrapper>();
   Control ^ child = ScrollPanelWrapper::GetControl(view);
   wrapper->container->Controls->Add(child);
@@ -565,7 +560,7 @@ void ScrollPanelWrapper::add(mforms::ScrollPanel *backend, mforms::View *view) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ScrollPanelWrapper::scroll_to_view(mforms::ScrollPanel *backend, mforms::View *view) {
+auto ScrollPanelWrapper::scroll_to_view(mforms::ScrollPanel *backend, mforms::View *view) -> void {
   ScrollPanelWrapper *wrapper = backend->get_data<ScrollPanelWrapper>();
   Control ^ child = ScrollPanelWrapper::GetControl(view);
   wrapper->container->ScrollControlIntoView(child);
@@ -573,7 +568,7 @@ void ScrollPanelWrapper::scroll_to_view(mforms::ScrollPanel *backend, mforms::Vi
 
 //--------------------------------------------------------------------------------------------------
 
-void ScrollPanelWrapper::remove(mforms::ScrollPanel *backend) {
+auto ScrollPanelWrapper::remove(mforms::ScrollPanel *backend) -> void {
   ScrollPanelWrapper *wrapper = backend->get_data<ScrollPanelWrapper>();
   wrapper->container->Controls->Clear();
   backend->set_layout_dirty(true);
@@ -581,14 +576,14 @@ void ScrollPanelWrapper::remove(mforms::ScrollPanel *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ScrollPanelWrapper::set_autohide_scrollers(mforms::ScrollPanel *backend, bool flag) {
+auto ScrollPanelWrapper::set_autohide_scrollers(mforms::ScrollPanel *backend, bool flag) -> void {
   ScrollPanelWrapper *wrapper = backend->get_data<ScrollPanelWrapper>();
   wrapper->container->AutoHideScrollbars = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void ScrollPanelWrapper::set_visible_scrollers(mforms::ScrollPanel *backend, bool vertical, bool horizontal) {
+auto ScrollPanelWrapper::set_visible_scrollers(mforms::ScrollPanel *backend, bool vertical, bool horizontal) -> void {
   ScrollPanelWrapper *wrapper = backend->get_data<ScrollPanelWrapper>();
   wrapper->container->HideHorizontalScrollbar = !horizontal;
   wrapper->container->HideVerticalScrollbar = !vertical;
@@ -597,7 +592,7 @@ void ScrollPanelWrapper::set_visible_scrollers(mforms::ScrollPanel *backend, boo
 
 //--------------------------------------------------------------------------------------------------
 
-base::Rect ScrollPanelWrapper::get_content_rect(mforms::ScrollPanel *backend) {
+auto ScrollPanelWrapper::get_content_rect(mforms::ScrollPanel *backend) -> base::Rect {
   ScrollPanelWrapper *wrapper = backend->get_data<ScrollPanelWrapper>();
   Drawing::Rectangle rect = wrapper->container->ClientRectangle;
 
@@ -606,7 +601,7 @@ base::Rect ScrollPanelWrapper::get_content_rect(mforms::ScrollPanel *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ScrollPanelWrapper::scroll_to(mforms::ScrollPanel *backend, int x, int y) {
+auto ScrollPanelWrapper::scroll_to(mforms::ScrollPanel *backend, int x, int y) -> void {
   ScrollPanelWrapper *wrapper = backend->get_data<ScrollPanelWrapper>();
 
   // The backend works with positive offsets while we need negative ones (which is correct
@@ -616,7 +611,7 @@ void ScrollPanelWrapper::scroll_to(mforms::ScrollPanel *backend, int x, int y) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ScrollPanelWrapper::init() {
+auto ScrollPanelWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_spanel_impl.create = &ScrollPanelWrapper::create;

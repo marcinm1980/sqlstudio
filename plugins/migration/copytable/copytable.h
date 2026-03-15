@@ -53,23 +53,23 @@
 
 class QueryBuilder {
 public:
-  void select_columns(const std::string &columns) {
+  auto select_columns(const std::string &columns) -> void {
     _columns = columns;
   };
   void select_from_table(const std::string &table, const std::string &schema = "") {
     _table = table;
     _schema = schema;
   };
-  void add_limit(const std::string &limit) {
+  auto add_limit(const std::string &limit) -> void {
     _limit = limit;
   };
-  void add_orderby(const std::string &orderby) {
+  auto add_orderby(const std::string &orderby) -> void {
     _orderby = orderby;
   };
-  void add_where(const std::string &where) {
+  auto add_where(const std::string &where) -> void {
     _where.push_back(where);
   };
-  std::string build_query();
+  auto build_query() -> std::string;
 
 private:
   std::string _orderby;
@@ -81,7 +81,7 @@ private:
 };
 
 class ConnectionError : public std::runtime_error {
-  static std::string process(SQLRETURN retcode, SQLSMALLINT htype, SQLHANDLE handle);
+  static auto process(SQLRETURN retcode, SQLSMALLINT htype, SQLHANDLE handle) -> std::string;
 
 public:
   ConnectionError(const std::string &what, SQLRETURN ret, SQLSMALLINT htype, SQLHANDLE handle)
@@ -124,23 +124,23 @@ public:
             std::function<void(int, const char *, size_t)> send_blob_data, size_t max_packet_size);
   ~RowBuffer();
 
-  void clear();
+  auto clear() -> void;
 
-  void prepare_add_string(char *&buffer, size_t &buffer_len, unsigned long *&length);
-  void prepare_add_float(char *&buffer, size_t &buffer_len);
-  void prepare_add_double(char *&buffer, size_t &buffer_len);
-  void prepare_add_bigint(char *&buffer, size_t &buffer_len);
-  void prepare_add_long(char *&buffer, size_t &buffer_len);
-  void prepare_add_short(char *&buffer, size_t &buffer_len);
-  void prepare_add_tiny(char *&buffer, size_t &buffer_len);
-  void prepare_add_time(char *&buffer, size_t &buffer_len);
-  void prepare_add_geometry(char *&buffer, size_t &buffer_len, unsigned long *&length);
-  void finish_field(bool was_null);
+  auto prepare_add_string(char *&buffer, size_t &buffer_len, unsigned long *&length) -> void;
+  auto prepare_add_float(char *&buffer, size_t &buffer_len) -> void;
+  auto prepare_add_double(char *&buffer, size_t &buffer_len) -> void;
+  auto prepare_add_bigint(char *&buffer, size_t &buffer_len) -> void;
+  auto prepare_add_long(char *&buffer, size_t &buffer_len) -> void;
+  auto prepare_add_short(char *&buffer, size_t &buffer_len) -> void;
+  auto prepare_add_tiny(char *&buffer, size_t &buffer_len) -> void;
+  auto prepare_add_time(char *&buffer, size_t &buffer_len) -> void;
+  auto prepare_add_geometry(char *&buffer, size_t &buffer_len, unsigned long *&length) -> void;
+  auto finish_field(bool was_null) -> void;
 
   enum enum_field_types target_type(bool &unsig);
 
-  bool check_if_blob();
-  void send_blob_data(const char *data, size_t length);
+  auto check_if_blob() -> bool;
+  auto send_blob_data(const char *data, size_t length) -> void;
 };
 
 enum CopyType { CopyAll, CopyRange, CopyCount, CopyWhere };
@@ -185,34 +185,34 @@ public:
   CopyDataSource();
   virtual ~CopyDataSource(){};
 
-  void set_block_size(int bsize);
-  void set_max_blob_chunk_size(size_t size);
-  void set_max_parameter_size(unsigned long size) {
+  auto set_block_size(int bsize) -> void;
+  auto set_max_blob_chunk_size(size_t size) -> void;
+  auto set_max_parameter_size(unsigned long size) -> void {
     _max_parameter_size = size;
   }
-  void set_abort_on_oversized_blobs(bool value) {
+  auto set_abort_on_oversized_blobs(bool value) -> void {
     _abort_on_oversized_blobs = value;
   }
-  void set_get_field_lengths_from_target(bool value) {
+  auto set_get_field_lengths_from_target(bool value) -> void {
     _get_field_lengths_from_target = value;
   }
-  bool get_get_field_lengths_from_target() {
+  auto get_get_field_lengths_from_target() -> bool {
     return _get_field_lengths_from_target;
   }
-  void set_bulk_inserts(bool value) {
+  auto set_bulk_inserts(bool value) -> void {
     _use_bulk_inserts = value;
   }
-  std::string get_where_condition(const std::vector<std::string> &pk_columns,
-                                  const std::vector<std::string> &last_pkeys);
+  auto get_where_condition(const std::vector<std::string> &pk_columns,
+                                  const std::vector<std::string> &last_pkeys) -> std::string;
 
-  virtual size_t count_rows(const std::string &schema, const std::string &table,
+  virtual auto count_rows(const std::string &schema, const std::string &table,
                             const std::vector<std::string> &pk_columns, const CopySpec &spec,
-                            const std::vector<std::string> &last_pkeys) = 0;
-  virtual std::shared_ptr<std::vector<ColumnInfo> > begin_select_table(
+                            const std::vector<std::string> &last_pkeys) -> size_t = 0;
+  virtual auto begin_select_table(
     const std::string &schema, const std::string &table, const std::vector<std::string> &pk_columns,
-    const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) = 0;
-  virtual void end_select_table() = 0;
-  virtual bool fetch_row(RowBuffer &rowbuffer) = 0;
+    const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) -> std::shared_ptr<std::vector<ColumnInfo> > = 0;
+  virtual auto end_select_table() -> void = 0;
+  virtual auto fetch_row(RowBuffer &rowbuffer) -> bool = 0;
 };
 
 class ODBCCopyDataSource : public CopyDataSource {
@@ -231,7 +231,7 @@ class ODBCCopyDataSource : public CopyDataSource {
 
   SQLSMALLINT odbc_type_to_c_type(SQLSMALLINT type, bool is_unsigned);
 
-  void ucs2_to_utf8(char *inbuf, size_t inbuf_len, char *&utf8buf, size_t &utf8buf_len);
+  auto ucs2_to_utf8(char *inbuf, size_t inbuf_len, char *&utf8buf, size_t &utf8buf_len) -> void;
 
 public:
   ODBCCopyDataSource(SQLHENV env, const std::string &connstring, const std::string &password, bool force_utf8_input,
@@ -244,15 +244,15 @@ public:
   SQLRETURN get_geometry_buffer_data(RowBuffer &rowbuffer, int column);
 
 public:
-  virtual size_t count_rows(const std::string &schema, const std::string &table,
+  virtual auto count_rows(const std::string &schema, const std::string &table,
                             const std::vector<std::string> &pk_columns, const CopySpec &spec,
-                            const std::vector<std::string> &last_pkeys);
-  virtual std::shared_ptr<std::vector<ColumnInfo> > begin_select_table(
+                            const std::vector<std::string> &last_pkeys) -> size_t;
+  virtual auto begin_select_table(
     const std::string &schema, const std::string &table, const std::vector<std::string> &pk_columns,
-    const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys);
+    const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) -> std::shared_ptr<std::vector<ColumnInfo> >;
 
-  virtual void end_select_table();
-  virtual bool fetch_row(RowBuffer &rowbuffer);
+  virtual auto end_select_table() -> void;
+  virtual auto fetch_row(RowBuffer &rowbuffer) -> bool;
 };
 
 class MySQLCopyDataSource : public CopyDataSource {
@@ -265,14 +265,14 @@ public:
                       const std::string &socket, bool use_cleartext_plugin, const unsigned int connection_timeout);
   virtual ~MySQLCopyDataSource();
 
-  virtual size_t count_rows(const std::string &schema, const std::string &table,
+  virtual auto count_rows(const std::string &schema, const std::string &table,
                             const std::vector<std::string> &pk_columns, const CopySpec &spec,
-                            const std::vector<std::string> &last_pkeys);
-  virtual std::shared_ptr<std::vector<ColumnInfo> > begin_select_table(
+                            const std::vector<std::string> &last_pkeys) -> size_t;
+  virtual auto begin_select_table(
     const std::string &schema, const std::string &table, const std::vector<std::string> &pk_columns,
-    const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys);
-  virtual void end_select_table();
-  virtual bool fetch_row(RowBuffer &rowbuffer);
+    const std::string &select_expression, const CopySpec &spec, const std::vector<std::string> &last_pkeys) -> std::shared_ptr<std::vector<ColumnInfo> >;
+  virtual auto end_select_table() -> void;
+  virtual auto fetch_row(RowBuffer &rowbuffer) -> bool;
 };
 
 class MySQLCopyDataTarget {
@@ -291,16 +291,16 @@ class MySQLCopyDataTarget {
       if (buffer)
         free(buffer);
     }
-    void reset(size_t size);
-    void end_insert();
+    auto reset(size_t size) -> void;
+    auto end_insert() -> void;
 
-    bool append(const char *data, size_t length);
-    bool append(const char *data);
-    bool append_escaped(const char *data, size_t length);
-    void set_connection(MYSQL *mysql) {
+    auto append(const char *data, size_t length) -> bool;
+    auto append(const char *data) -> bool;
+    auto append_escaped(const char *data, size_t length) -> bool;
+    auto set_connection(MYSQL *mysql) -> void {
       _mysql = mysql;
     }
-    size_t space_left();
+    auto space_left() -> size_t;
   };
 
   MYSQL _mysql;
@@ -329,21 +329,21 @@ class MySQLCopyDataTarget {
   std::string _source_rdbms_type;
   unsigned int _connection_timeout;
 
-  MYSQL_RES *get_server_value(const std::string &variable);
-  void get_server_value(const std::string &variable, std::string &value);
-  void get_server_value(const std::string &variable, unsigned long &value);
-  bool format_bulk_record();
-  bool append_bulk_column(size_t col_index);
+  auto get_server_value(const std::string &variable) -> MYSQL_RES *;
+  auto get_server_value(const std::string &variable, std::string &value) -> void;
+  auto get_server_value(const std::string &variable, unsigned long &value) -> void;
+  auto format_bulk_record() -> bool;
+  auto append_bulk_column(size_t col_index) -> bool;
 
-  void get_server_version();
-  bool is_mysql_version_at_least(const int _major, const int _minor, const int _build);
-  void send_long_data(int column, const char *data, size_t length);
+  auto get_server_version() -> void;
+  auto is_mysql_version_at_least(const int _major, const int _minor, const int _build) -> bool;
+  auto send_long_data(int column, const char *data, size_t length) -> void;
 
-  void init();
-  std::string ps_query();
+  auto init() -> void;
+  auto ps_query() -> std::string;
   enum enum_field_types field_type_to_ps_param_type(enum enum_field_types ftype);
 
-  void get_generated_columns(const std::string &schema, const std::string &table, std::vector<std::string> &gc);
+  auto get_generated_columns(const std::string &schema, const std::string &table, std::vector<std::string> &gc) -> void;
 
 public:
   MySQLCopyDataTarget(const std::string &hostname, int port, const std::string &username, const std::string &password,
@@ -353,47 +353,47 @@ public:
 
   ~MySQLCopyDataTarget();
 
-  size_t get_max_allowed_packet() {
+  auto get_max_allowed_packet() -> size_t {
     return _max_allowed_packet;
   }
-  size_t get_max_long_data_size() {
+  auto get_max_long_data_size() -> size_t {
     return _max_long_data_size;
   }
 
-  void set_truncate(bool flag);
+  auto set_truncate(bool flag) -> void;
 
-  void set_target_table(const std::string &schema, const std::string &table,
-                        std::shared_ptr<std::vector<ColumnInfo> > columns);
-  long long get_max_value(const std::string &key);
+  auto set_target_table(const std::string &schema, const std::string &table,
+                        std::shared_ptr<std::vector<ColumnInfo> > columns) -> void;
+  auto get_max_value(const std::string &key) -> long long;
 
-  bool bulk_inserts() {
+  auto bulk_inserts() -> bool {
     return _use_bulk_inserts;
   }
-  void set_bulk_insert_batch_size(int value) {
+  auto set_bulk_insert_batch_size(int value) -> void {
     _bulk_insert_batch = value;
   }
 
-  bool get_get_field_lengths_from_target() {
+  auto get_get_field_lengths_from_target() -> bool {
     return _get_field_lengths_from_target;
   }
-  void set_get_field_lengths_from_target(bool value) {
+  auto set_get_field_lengths_from_target(bool value) -> void {
     _get_field_lengths_from_target = value;
   }
 
-  void begin_inserts();
-  int end_inserts(bool flush = true);
-  int do_insert(bool final = false);
+  auto begin_inserts() -> void;
+  auto end_inserts(bool flush = true) -> int;
+  auto do_insert(bool final = false) -> int;
 
-  void restore_triggers(std::set<std::string> &schemas);
-  void backup_triggers(std::set<std::string> &schemas);
-  void backup_triggers_for_schema(const std::string &schema);
-  void get_triggers_for_schema(const std::string &schema, std::map<std::string, std::string> &triggers);
-  bool get_trigger_definitions_for_schema(const std::string &schema, std::map<std::string, std::string> &triggers);
-  void drop_trigger_backups(const std::string &schema);
-  std::vector<std::string> get_last_pkeys(const std::vector<std::string> &pk_columns, const std::string &schema,
-                                          const std::string &table);
+  auto restore_triggers(std::set<std::string> &schemas) -> void;
+  auto backup_triggers(std::set<std::string> &schemas) -> void;
+  auto backup_triggers_for_schema(const std::string &schema) -> void;
+  auto get_triggers_for_schema(const std::string &schema, std::map<std::string, std::string> &triggers) -> void;
+  auto get_trigger_definitions_for_schema(const std::string &schema, std::map<std::string, std::string> &triggers) -> bool;
+  auto drop_trigger_backups(const std::string &schema) -> void;
+  auto get_last_pkeys(const std::vector<std::string> &pk_columns, const std::string &schema,
+                                          const std::string &table) -> std::vector<std::string>;
 
-  RowBuffer &row_buffer();
+  auto row_buffer() -> RowBuffer &;
 };
 
 class TaskQueue {
@@ -403,13 +403,13 @@ private:
 
 public:
   TaskQueue();
-  void add_task(const TableParam &task);
-  bool get_task(TableParam &task);
+  auto add_task(const TableParam &task) -> void;
+  auto get_task(TableParam &task) -> bool;
 
-  size_t size() {
+  auto size() -> size_t {
     return _tasks.size();
   }
-  bool empty() {
+  auto empty() -> bool {
     return _tasks.empty();
   }
 };
@@ -424,17 +424,17 @@ private:
 
   GThread *_thread;
 
-  static gpointer thread_func(gpointer data);
+  static auto thread_func(gpointer data) -> gpointer;
 
-  void copy_table(const TableParam &task);
+  auto copy_table(const TableParam &task) -> void;
 
-  void report_progress(const std::string &schema, const std::string &table, long long current, long long total);
+  auto report_progress(const std::string &schema, const std::string &table, long long current, long long total) -> void;
 
 public:
   CopyDataTask(const std::string name, CopyDataSource *psource, MySQLCopyDataTarget *ptarget, TaskQueue *ptasks,
                bool show_progress);
   ~CopyDataTask();
-  void wait() {
+  auto wait() -> void {
     g_thread_join(_thread);
   }
 };

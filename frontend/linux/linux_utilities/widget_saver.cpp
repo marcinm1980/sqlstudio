@@ -33,7 +33,7 @@
 DEFAULT_LOG_DOMAIN("gtk.utils")
 
 //------------------------------------------------------------------------------
-void utils::gtk::save_settings(Gtk::Paned* paned, const bool right_side) {
+auto utils::gtk::save_settings(Gtk::Paned* paned, const bool right_side) -> void {
   const std::string name = paned->get_name();
   if (!name.empty() && paned->get_data("allow_save")) {
     long pos = paned->get_position();
@@ -44,7 +44,7 @@ void utils::gtk::save_settings(Gtk::Paned* paned, const bool right_side) {
 }
 
 //------------------------------------------------------------------------------
-static bool set_paned_position(Gtk::Paned* paned, const long pos, const bool right, const int min_size) {
+static auto set_paned_position(Gtk::Paned* paned, const long pos, const bool right, const int min_size) -> bool {
   if (right) {
     int size;
     if (paned->get_orientation() == Gtk::ORIENTATION_HORIZONTAL)
@@ -70,8 +70,8 @@ static bool set_paned_position(Gtk::Paned* paned, const long pos, const bool rig
 }
 
 //------------------------------------------------------------------------------
-sigc::connection utils::gtk::load_settings(Gtk::Paned* paned, const sigc::slot<void> defaults_slot,
-                                           const bool right_side, const int min_size) {
+auto utils::gtk::load_settings(Gtk::Paned* paned, const sigc::slot<void> defaults_slot,
+                                           const bool right_side, const int min_size) -> sigc::connection {
   const std::string name = paned->get_name();
   long pos = -1;
   try {

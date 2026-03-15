@@ -41,7 +41,7 @@ namespace base {
   class BASELIBRARY_PUBLIC_FUNC utf8string {
   private:
     std::string _inner_string;
-    int compareNormalized(const utf8string &s) const;
+    auto compareNormalized(const utf8string &s) const -> int;
 
   public:
     class utf8char;
@@ -81,7 +81,7 @@ namespace base {
       bool operator!=(const char *c) const;
       operator uint32_t() const;
       operator const char *() const;
-      size_t length() const;
+      auto length() const -> size_t;
     };
 
     struct bounds;
@@ -122,8 +122,8 @@ namespace base {
       return _inner_string;
     }
 
-    size_t charIndexToByteOffset(const size_t index) const;
-    size_t byteOffsetToCharIndex(const size_t offset) const;
+    auto charIndexToByteOffset(const size_t index) const -> size_t;
+    auto byteOffsetToCharIndex(const size_t offset) const -> size_t;
 
     //  Members
     //     basic_string& operator=( const basic_string& str );
@@ -143,8 +143,8 @@ namespace base {
     //     allocator_type get_allocator() const;
 
     //  Iterators
-    iterator begin() const;
-    iterator end() const;
+    auto begin() const -> iterator;
+    auto end() const -> iterator;
     //     iterator begin();
     //     const_iterator begin() const;
     //     iterator end();
@@ -163,45 +163,45 @@ namespace base {
     //     const_iterator crend() const;
 
     //  Capacity
-    size_t size() const;
-    void resize(size_t n);
-    void resize(size_t n, char c);
-    bool empty() const;
-    size_t capacity() const;
-    size_t max_size();
+    auto size() const -> size_t;
+    auto resize(size_t n) -> void;
+    auto resize(size_t n, char c) -> void;
+    auto empty() const -> bool;
+    auto capacity() const -> size_t;
+    auto max_size() -> size_t;
     /**
      * @brief Function determinate the number of characters in string, the same as size function.
      * @return Return number of characters.
      */
-    size_t length() const;
+    auto length() const -> size_t;
     //     void reserve (size_t n = 0);
     //     void shrink_to_fit();
 
     //  Operations
-    utf8string &erase(size_type index = 0, size_type count = npos);
+    auto erase(size_type index = 0, size_type count = npos) -> utf8string &;
     //     iterator erase( const_iterator position );
     //     iterator erase( const_iterator first, const_iterator last );
     //     basic_string& append( const basic_string& str );
     //     basic_string& append( const CharT* s, size_type count );
-    utf8string &append(size_type count, char ch);
-    utf8string &append(size_type count, utf8char ch);
-    utf8string &append(const char *s);
-    utf8string &append(const utf8string &str);
+    auto append(size_type count, char ch) -> utf8string &;
+    auto append(size_type count, utf8char ch) -> utf8string &;
+    auto append(const char *s) -> utf8string &;
+    auto append(const utf8string &str) -> utf8string &;
     utf8string &operator+=(const utf8string &str);
     utf8string &operator+=(const utf8char &c);
     utf8string &operator+=(const char *s);
     utf8string &operator=(const utf8string &other) = default;
 
-    int compare(size_type pos1, size_type count1, const utf8string &str) const;
-    int compare(const utf8string &s) const;
-    int compare(const char *s) const;
+    auto compare(size_type pos1, size_type count1, const utf8string &str) const -> int;
+    auto compare(const utf8string &s) const -> int;
+    auto compare(const char *s) const -> int;
     /**
      * @brief Function for get sub string from utf8string.
      * @param start Start character (not byte)
      * @param start Count of characters (not bytes)
      * @return Return sub string.
      */
-    utf8string substr(const size_t start, size_t count = std::string::npos) const;
+    auto substr(const size_t start, size_t count = std::string::npos) const -> utf8string;
     //     void clear();
     //     basic_string& insert( size_type index, size_type count, CharT ch );
     //     basic_string& insert( size_type index, const CharT* s );
@@ -247,12 +247,12 @@ namespace base {
     //     void swap( basic_string& other );
 
     //  Search
-    size_type find(const char *s, size_type pos = 0) const;
-    size_type find(const utf8string &s, size_type pos = 0) const;
-    size_type find(char ch, size_type pos = 0) const;
-    size_type find(const utf8char &ch, size_type pos = 0) const;
-    size_type find_first_of(const utf8string &str, size_type pos = 0) const;
-    size_type find_first_not_of(const char *s, size_type pos = 0) const;
+    auto find(const char *s, size_type pos = 0) const -> size_type;
+    auto find(const utf8string &s, size_type pos = 0) const -> size_type;
+    auto find(char ch, size_type pos = 0) const -> size_type;
+    auto find(const utf8char &ch, size_type pos = 0) const -> size_type;
+    auto find_first_of(const utf8string &str, size_type pos = 0) const -> size_type;
+    auto find_first_not_of(const char *s, size_type pos = 0) const -> size_type;
 
     //     size_type find( const basic_string& str, size_type pos = 0 ) const;
     //     size_type find( const CharT* s, size_type pos, size_type count ) const;
@@ -277,9 +277,9 @@ namespace base {
     //     size_type find_last_not_of( CharT ch, size_type pos = npos ) const;
 
     // Element access
-    const char *c_str() const;
-    const char *data() const;
-    const_reference at(size_type pos) const;
+    auto c_str() const -> const char *;
+    auto data() const -> const char *;
+    auto at(size_type pos) const -> const_reference;
     const_reference operator[](size_type pos) const;
     //   reference       at( size_type pos );
     //   const_reference at( size_type pos ) const;
@@ -295,35 +295,35 @@ namespace base {
     static const size_type npos = -1;
 
     //  New functionality
-    utf8string left(size_t s);
-    utf8string right(size_t s);
+    auto left(size_t s) -> utf8string;
+    auto right(size_t s) -> utf8string;
 
     /**
      * @brief Function determinate the number of bytes in string.
      * @return Return number of bytes.
      */
-    size_t bytes() const;
+    auto bytes() const -> size_t;
 
     /**
      * @brief Function convert utf8string to std::string.
      * @return Return utf8string converted to std::string.
      */
-    std::string to_string() const;
+    auto to_string() const -> std::string;
 
     /**
      * @brief Function convert utf8string to std::wstring.
      * @return Return utf8string converted to std::wstring.
      */
-    std::wstring to_wstring() const;
+    auto to_wstring() const -> std::wstring;
 
     /**
      * @brief Check if is valid UTF-8 string.
      */
-    bool validate() const;
-    utf8string normalize() const;
-    utf8string trim_right();
-    utf8string trim_left();
-    utf8string trim();
+    auto validate() const -> bool;
+    auto normalize() const -> utf8string;
+    auto trim_right() -> utf8string;
+    auto trim_left() -> utf8string;
+    auto trim() -> utf8string;
     utf8string &operator=(char c);
     bool operator==(const utf8string &s) const;
     bool operator==(const std::string &s) const;
@@ -333,19 +333,19 @@ namespace base {
     bool operator<(const utf8string &s) const;
     bool operator>=(const utf8string &s) const;
     bool operator<=(const utf8string &s) const;
-    utf8string to_lower() const;
-    utf8string to_upper() const;
+    auto to_lower() const -> utf8string;
+    auto to_upper() const -> utf8string;
 
     /**
      * @brief Converts a string into a form that is independent of case.
      */
-    utf8string to_case_fold() const;
-    static utf8string strfmt(const char *fmt, ...);
-    utf8string truncate(const size_t max_length);
+    auto to_case_fold() const -> utf8string;
+    static auto strfmt(const char *fmt, ...) -> utf8string;
+    auto truncate(const size_t max_length) -> utf8string;
     std::vector<utf8string> split(const utf8string &sep, int count = -1);
-    bool starts_with(const utf8string &s) const;
-    bool ends_with(const utf8string &s) const;
-    bool contains(const utf8string &s, const bool case_sensitive = true) const;
+    auto starts_with(const utf8string &s) const -> bool;
+    auto ends_with(const utf8string &s) const -> bool;
+    auto contains(const utf8string &s, const bool case_sensitive = true) const -> bool;
   };
 
   BASELIBRARY_PUBLIC_FUNC std::ostream &operator<<(std::ostream &o, const utf8string &str);

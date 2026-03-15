@@ -31,134 +31,134 @@ namespace mforms {
     ViewWrapper::ViewWrapper(mforms::View *view) : ObjectWrapper(view) {
     }
 
-    void ViewWrapper::show(mforms::View *self, bool show) {
+    auto ViewWrapper::show(mforms::View *self, bool show) -> void {
     }
 
-    bool ViewWrapper::is_shown(mforms::View *self) {
+    auto ViewWrapper::is_shown(mforms::View *self) -> bool {
       return false;
     }
 
-    void ViewWrapper::set_tooltip(mforms::View *self, const std::string &text) {
+    auto ViewWrapper::set_tooltip(mforms::View *self, const std::string &text) -> void {
     }
 
-    int ViewWrapper::get_width(const mforms::View *self) {
+    auto ViewWrapper::get_width(const mforms::View *self) -> int {
       return 0;
     }
 
-    int ViewWrapper::get_height(const mforms::View *self) {
+    auto ViewWrapper::get_height(const mforms::View *self) -> int {
       return 0;
     }
 
-    int ViewWrapper::get_preferred_width(mforms::View *self) {
+    auto ViewWrapper::get_preferred_width(mforms::View *self) -> int {
       return 0;
     }
 
-    int ViewWrapper::get_preferred_width() {
+    auto ViewWrapper::get_preferred_width() -> int {
       return 0;
     }
 
-    int ViewWrapper::get_preferred_height(mforms::View *self) {
+    auto ViewWrapper::get_preferred_height(mforms::View *self) -> int {
       return 0;
     }
 
-    int ViewWrapper::get_preferred_height() {
+    auto ViewWrapper::get_preferred_height() -> int {
       return 0;
     }
 
-    int ViewWrapper::get_x(const mforms::View *self) {
+    auto ViewWrapper::get_x(const mforms::View *self) -> int {
       return 0;
     }
 
-    int ViewWrapper::get_y(const mforms::View *self) {
+    auto ViewWrapper::get_y(const mforms::View *self) -> int {
       return 0;
     }
 
-    void ViewWrapper::set_size(mforms::View *self, int w, int h) {
+    auto ViewWrapper::set_size(mforms::View *self, int w, int h) -> void {
     }
 
-    void ViewWrapper::set_size(int width, int height) {
+    auto ViewWrapper::set_size(int width, int height) -> void {
     }
 
-    void ViewWrapper::set_min_size(mforms::View *self, int width, int height) {
+    auto ViewWrapper::set_min_size(mforms::View *self, int width, int height) -> void {
     }
 
-    void ViewWrapper::set_position(mforms::View *self, int x, int y) {
+    auto ViewWrapper::set_position(mforms::View *self, int x, int y) -> void {
     }
 
-    void ViewWrapper::set_enabled(mforms::View *self, bool flag) {
+    auto ViewWrapper::set_enabled(mforms::View *self, bool flag) -> void {
     }
 
-    bool ViewWrapper::is_enabled(mforms::View *self) {
+    auto ViewWrapper::is_enabled(mforms::View *self) -> bool {
       return true;
     }
 
-    void ViewWrapper::set_name(mforms::View *view, const std::string &name) {
+    auto ViewWrapper::set_name(mforms::View *view, const std::string &name) -> void {
     }
 
-    void ViewWrapper::set_font(mforms::View *view, const std::string &font) {
+    auto ViewWrapper::set_font(mforms::View *view, const std::string &font) -> void {
     }
 
-    void ViewWrapper::relayout(mforms::View *view) {
+    auto ViewWrapper::relayout(mforms::View *view) -> void {
     }
 
-    void ViewWrapper::set_needs_repaint(mforms::View *view) {
+    auto ViewWrapper::set_needs_repaint(mforms::View *view) -> void {
     }
 
-    void ViewWrapper::size_changed() {
+    auto ViewWrapper::size_changed() -> void {
     }
 
-    void ViewWrapper::suspend_layout(mforms::View *self, bool) {
+    auto ViewWrapper::suspend_layout(mforms::View *self, bool) -> void {
     }
 
-    void ViewWrapper::set_front_color(mforms::View *self, const std::string &color) {
+    auto ViewWrapper::set_front_color(mforms::View *self, const std::string &color) -> void {
     }
 
-    std::string ViewWrapper::get_front_color(mforms::View *self) {
+    auto ViewWrapper::get_front_color(mforms::View *self) -> std::string {
       return "#000000";
     }
 
-    void ViewWrapper::set_back_color(mforms::View *self, const std::string &color) {
+    auto ViewWrapper::set_back_color(mforms::View *self, const std::string &color) -> void {
     }
 
-    std::string ViewWrapper::get_back_color(mforms::View *self) {
+    auto ViewWrapper::get_back_color(mforms::View *self) -> std::string {
       return "#FFFFFF";
     }
 
-    void ViewWrapper::set_back_image(mforms::View *self, const std::string &path, mforms::Alignment layout) {
+    auto ViewWrapper::set_back_image(mforms::View *self, const std::string &path, mforms::Alignment layout) -> void {
     }
 
-    void ViewWrapper::flush_events(mforms::View *self) {
+    auto ViewWrapper::flush_events(mforms::View *self) -> void {
     }
 
-    void ViewWrapper::focus(mforms::View *self) {
+    auto ViewWrapper::focus(mforms::View *self) -> void {
     }
 
-    void ViewWrapper::destroy(mforms::View *self) {
+    auto ViewWrapper::destroy(mforms::View *self) -> void {
     }
 
-    void ViewWrapper::set_padding(mforms::View *self, int left, int top, int right, int bottom) {
+    auto ViewWrapper::set_padding(mforms::View *self, int left, int top, int right, int bottom) -> void {
     }
 
-    std::pair<int, int> ViewWrapper::client_to_screen(mforms::View *self, int x, int y) {
+    auto ViewWrapper::client_to_screen(mforms::View *self, int x, int y) -> std::pair<int, int> {
       return std::make_pair(0, 0);
     }
 
-    std::pair<int, int> ViewWrapper::screen_to_client(mforms::View *self, int x, int y) {
+    auto ViewWrapper::screen_to_client(mforms::View *self, int x, int y) -> std::pair<int, int> {
       return std::make_pair(0, 0);
     }
 
-    void ViewWrapper::register_drop_formats(View *self, DropDelegate *target, const std::vector<std::string> &) {
+    auto ViewWrapper::register_drop_formats(View *self, DropDelegate *target, const std::vector<std::string> &) -> void {
     }
 
-    DragOperation ViewWrapper::drag_text(View *self, DragDetails details, const std::string &text) {
+    auto ViewWrapper::drag_text(View *self, DragDetails details, const std::string &text) -> DragOperation {
       return mforms::DragOperationNone;
     }
 
-    DragOperation ViewWrapper::drag_data(View *self, DragDetails details, void *data, const std::string &format) {
+    auto ViewWrapper::drag_data(View *self, DragDetails details, void *data, const std::string &format) -> DragOperation {
       return mforms::DragOperationNone;
     }
 
-    void ViewWrapper::init() {
+    auto ViewWrapper::init() -> void {
       mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
       f->_view_impl.destroy = &ViewWrapper::destroy;

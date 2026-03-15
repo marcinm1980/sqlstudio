@@ -47,24 +47,24 @@ namespace bec {
   public: // editor interface
     UserEditorBE(const db_UserRef &user);
 
-    virtual std::string get_title();
+    virtual auto get_title() -> std::string;
 
-    virtual db_DatabaseObjectRef get_dbobject() {
+    virtual auto get_dbobject() -> db_DatabaseObjectRef {
       return get_user();
     }
 
-    db_UserRef get_user() {
+    auto get_user() -> db_UserRef {
       return _user;
     }
 
-    RoleTreeBE *get_role_tree();
-    void add_role(const std::string &role_name);
-    void remove_role(const std::string &role_name);
-    std::vector<std::string> get_roles();
+    auto get_role_tree() -> RoleTreeBE *;
+    auto add_role(const std::string &role_name) -> void;
+    auto remove_role(const std::string &role_name) -> void;
+    auto get_roles() -> std::vector<std::string>;
 
-    void set_password(const std::string &pass);
-    std::string get_password();
+    auto set_password(const std::string &pass) -> void;
+    auto get_password() -> std::string;
 
-    virtual bool can_close();
+    virtual auto can_close() -> bool;
   };
 };

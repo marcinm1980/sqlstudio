@@ -40,32 +40,32 @@ namespace mforms {
 
       TextBoxImpl(::mforms::TextBox *self, mforms::ScrollBars scroll_type);
 
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _swin;
       }
-      virtual Gtk::Widget *get_inner() const {
+      virtual auto get_inner() const -> Gtk::Widget * {
         return _text;
       }
 
-      static bool create(::mforms::TextBox *self, mforms::ScrollBars scroll_type);
-      static void set_text(::mforms::TextBox *self, const std::string &text);
-      static void append_text(::mforms::TextBox *self, const std::string &text, bool scroll_to_end);
+      static auto create(::mforms::TextBox *self, mforms::ScrollBars scroll_type) -> bool;
+      static auto set_text(::mforms::TextBox *self, const std::string &text) -> void;
+      static auto append_text(::mforms::TextBox *self, const std::string &text, bool scroll_to_end) -> void;
       // static void append_text_with_attributes(::mforms::TextBox *self, const std::string &text, const
       // ::mforms::TextAttributes &attr, bool scroll_to_end);
-      static std::string get_text(::mforms::TextBox *self);
-      static void set_read_only(::mforms::TextBox *self, bool flag);
-      static void set_padding(::mforms::TextBox *self, int pad);
-      static void set_bordered(::mforms::TextBox *self, bool flag);
-      static void set_monospaced(::mforms::TextBox *self, bool flag);
-      static void get_selected_range(::mforms::TextBox *self, int &start, int &end);
-      static void clear(::mforms::TextBox *self);
+      static auto get_text(::mforms::TextBox *self) -> std::string;
+      static auto set_read_only(::mforms::TextBox *self, bool flag) -> void;
+      static auto set_padding(::mforms::TextBox *self, int pad) -> void;
+      static auto set_bordered(::mforms::TextBox *self, bool flag) -> void;
+      static auto set_monospaced(::mforms::TextBox *self, bool flag) -> void;
+      static auto get_selected_range(::mforms::TextBox *self, int &start, int &end) -> void;
+      static auto clear(::mforms::TextBox *self) -> void;
 
     protected:
-      void set_front_color(const std::string &color);
-      bool on_key_press(GdkEventKey *event, mforms::TextBox *self);
+      auto set_front_color(const std::string &color) -> void;
+      auto on_key_press(GdkEventKey *event, mforms::TextBox *self) -> bool;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

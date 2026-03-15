@@ -64,22 +64,22 @@ namespace mtemplate {
     virtual ~NodeInterface() {
     }
 
-    TemplateObjectType type() const {
+    auto type() const -> TemplateObjectType {
       return _type;
     }
-    const base::utf8string &text() const {
+    auto text() const -> const base::utf8string & {
       return _text;
     }
-    std::size_t length() const {
+    auto length() const -> std::size_t {
       return _length;
     }
 
-    virtual bool expand(TemplateOutput *output, DictionaryInterface *dict) = 0;
-    virtual void dump(int indent) = 0;
-    void hide(bool hidden = true) {
+    virtual auto expand(TemplateOutput *output, DictionaryInterface *dict) -> bool = 0;
+    virtual auto dump(int indent) -> void = 0;
+    auto hide(bool hidden = true) -> void {
       _hidden = hidden;
     }
-    bool isHidden() {
+    auto isHidden() -> bool {
       return _hidden;
     }
   };
@@ -96,10 +96,10 @@ namespace mtemplate {
     }
 
   public:
-    NodeInterface *getAssociation() {
+    auto getAssociation() -> NodeInterface * {
       return _associatedWith;
     }
-    void associateWith(NodeInterface *node) {
+    auto associateWith(NodeInterface *node) -> void {
       _associatedWith = node;
     }
   };
@@ -109,24 +109,24 @@ namespace mtemplate {
     NodeInterface *_associatedWith;
     NodeText(const base::utf8string &text, std::size_t length);
 
-    virtual bool expand(TemplateOutput *output, DictionaryInterface *dict);
-    virtual void dump(int indent);
+    virtual auto expand(TemplateOutput *output, DictionaryInterface *dict) -> bool;
+    virtual auto dump(int indent) -> void;
 
-    bool isBlank() {
+    auto isBlank() -> bool {
       return _isBlank;
     }
 
-    static NodeText *parse(const base::utf8string &template_string, PARSE_TYPE type);
+    static auto parse(const base::utf8string &template_string, PARSE_TYPE type) -> NodeText *;
   };
 
   struct MTEMPLATELIBRARY_PUBLIC_FUNC NodeNewLine : public NodeTextInterface {
     NodeNewLine() : NodeTextInterface(TemplateObject_NewLine, "\n", 1) {
     }
 
-    virtual bool expand(TemplateOutput *output, DictionaryInterface *dict);
-    virtual void dump(int indent);
+    virtual auto expand(TemplateOutput *output, DictionaryInterface *dict) -> bool;
+    virtual auto dump(int indent) -> void;
 
-    static NodeNewLine *parse(const base::utf8string &template_string, PARSE_TYPE type);
+    static auto parse(const base::utf8string &template_string, PARSE_TYPE type) -> NodeNewLine *;
   };
 
   struct MTEMPLATELIBRARY_PUBLIC_FUNC NodeVariable : public NodeTextInterface {
@@ -135,10 +135,10 @@ namespace mtemplate {
       : NodeTextInterface(TemplateObject_Variable, text, length), _modifiers(modifiers) {
     }
 
-    virtual bool expand(TemplateOutput *output, DictionaryInterface *dict);
-    virtual void dump(int indent);
+    virtual auto expand(TemplateOutput *output, DictionaryInterface *dict) -> bool;
+    virtual auto dump(int indent) -> void;
 
-    static NodeVariable *parse(const base::utf8string &template_string, PARSE_TYPE type);
+    static auto parse(const base::utf8string &template_string, PARSE_TYPE type) -> NodeVariable *;
   };
 
   struct MTEMPLATELIBRARY_PUBLIC_FUNC NodeSection : public NodeInterface {
@@ -148,20 +148,20 @@ namespace mtemplate {
 
     NodeSection(const base::utf8string &text, std::size_t length, TemplateDocument &contents);
 
-    void set_is_separator(bool value = true) {
+    auto set_is_separator(bool value = true) -> void {
       _is_separator = value;
     }
-    bool is_separator() {
+    auto is_separator() -> bool {
       return _is_separator;
     }
 
     //  NodeInterface
-    virtual bool expand(TemplateOutput *output, DictionaryInterface *dict);
-    virtual void dump(int indent);
+    virtual auto expand(TemplateOutput *output, DictionaryInterface *dict) -> bool;
+    virtual auto dump(int indent) -> void;
 
-    static NodeSection *parse(const base::utf8string &template_string, PARSE_TYPE type);
+    static auto parse(const base::utf8string &template_string, PARSE_TYPE type) -> NodeSection *;
   };
 
-  MTEMPLATELIBRARY_PUBLIC_FUNC TemplateDocument parseTemplate(const base::utf8string &template_string, PARSE_TYPE type);
+  auto parseTemplate(const base::utf8string &template_string, PARSE_TYPE type) -> MTEMPLATELIBRARY_PUBLIC_FUNC TemplateDocument;
 
 } // namespace mtemplate

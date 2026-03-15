@@ -60,14 +60,14 @@ namespace mforms {
   public:
     FindPanel(CodeEditor *editor);
 
-    CodeEditor *get_editor() {
+    auto get_editor() -> CodeEditor * {
       return _editor;
     }
 
     /** Perform the action and return the number of items affected */
-    size_t perform_action(FindPanelAction action);
+    auto perform_action(FindPanelAction action) -> size_t;
 
-    virtual void focus();
-    void enable_replace(bool flag);
+    virtual auto focus() -> void;
+    auto enable_replace(bool flag) -> void;
   };
 };

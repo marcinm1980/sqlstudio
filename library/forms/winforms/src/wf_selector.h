@@ -33,19 +33,19 @@ namespace MySQL {
     protected:
       SelectorWrapper(mforms::Selector *backend);
 
-      static bool create(mforms::Selector *backend, mforms::SelectorStyle style);
-      static void clear(mforms::Selector *backend);
-      static int add_item(mforms::Selector *backend, const std::string &item);
-      static void add_items(mforms::Selector *backend, const std::list<std::string> &items);
-      static std::string get_text(mforms::Selector *backend);
-      static void set_index(mforms::Selector *backend, int index);
-      static std::string get_item(mforms::Selector *backend, int index);
-      static int get_index(mforms::Selector *backend);
-      static int get_item_count(mforms::Selector *backend);
-      static void set_value(mforms::Selector *backend, const std::string &value);
+      static auto create(mforms::Selector *backend, mforms::SelectorStyle style) -> bool;
+      static auto clear(mforms::Selector *backend) -> void;
+      static auto add_item(mforms::Selector *backend, const std::string &item) -> int;
+      static auto add_items(mforms::Selector *backend, const std::list<std::string> &items) -> void;
+      static auto get_text(mforms::Selector *backend) -> std::string;
+      static auto set_index(mforms::Selector *backend, int index) -> void;
+      static auto get_item(mforms::Selector *backend, int index) -> std::string;
+      static auto get_index(mforms::Selector *backend) -> int;
+      static auto get_item_count(mforms::Selector *backend) -> int;
+      static auto set_value(mforms::Selector *backend, const std::string &value) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

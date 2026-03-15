@@ -87,9 +87,9 @@ namespace mdc {
     auto get_segment_offset(int subline) const -> double {
       return _linfo.subline_offset(subline);
     }
-    void set_segment_offset(int subline, double offset);
+    auto set_segment_offset(int subline, double offset) -> void;
 
-    virtual void update();
+    virtual auto update() -> void;
 
   protected:
     struct LineInfo {
@@ -178,21 +178,21 @@ namespace mdc {
         return _middle_offsets[subline];
       }
 
-      void set_subline_start_point(int subline, const base::Point &p, double angle) {
+      auto set_subline_start_point(int subline, const base::Point &p, double angle) -> void {
         if (subline >= count_sublines())
           throw std::invalid_argument("bad subline");
         _points[subline * 2] = p;
         _point_angles[subline * 2] = angle;
       }
 
-      void set_subline_end_point(int subline, const base::Point &p, double angle) {
+      auto set_subline_end_point(int subline, const base::Point &p, double angle) -> void {
         if (subline >= count_sublines())
           throw std::invalid_argument("bad subline");
         _points[subline * 2 + 1] = p;
         _point_angles[subline * 2 + 1] = angle;
       }
 
-      void set_subline_offset(int subline, double offset) {
+      auto set_subline_offset(int subline, double offset) -> void {
         if (subline >= count_sublines())
           throw std::invalid_argument("bad subline");
         _middle_offsets[subline] = offset;
@@ -205,13 +205,13 @@ namespace mdc {
 
     virtual auto get_points_for_subline(int subline) -> std::vector<base::Point>;
 
-    virtual void connector_changed(Connector *conn);
+    virtual auto connector_changed(Connector *conn) -> void;
 
     virtual auto update_start_point() -> bool;
     virtual auto update_end_point() -> bool;
 
     virtual auto create_handles(Line *line, InteractionLayer *ilayer) -> std::vector<ItemHandle *>;
-    virtual void update_handles(Line *line, std::vector<ItemHandle *> &handles);
+    virtual auto update_handles(Line *line, std::vector<ItemHandle *> &handles) -> void;
 
     virtual auto handle_dragged(Line *line, ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
 

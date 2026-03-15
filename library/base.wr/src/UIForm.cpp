@@ -49,55 +49,55 @@ MenuItem::MenuItem(const ::bec::MenuItem& item)
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MenuItem::get_caption() {
+auto MenuItem::get_caption() -> String ^ {
   return caption;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MenuItem::get_shortcut() {
+auto MenuItem::get_shortcut() -> String ^ {
   return shortcut;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MenuItem::getInternalName() {
+auto MenuItem::getInternalName() -> String ^ {
   return internalName;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-MenuItemType MenuItem::get_type() {
+auto MenuItem::get_type() -> MenuItemType {
   return type;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MenuItem::get_checked() {
+auto MenuItem::get_checked() -> bool {
   return checked;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MenuItem::set_checked(bool value) {
+auto MenuItem::set_checked(bool value) -> void {
   checked = value;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MenuItem::get_enabled() {
+auto MenuItem::get_enabled() -> bool {
   return enabled;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MenuItem::set_enabled(bool value) {
+auto MenuItem::set_enabled(bool value) -> void {
   enabled = value;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-List<MenuItem ^> ^ MenuItem::get_subitems() {
+auto MenuItem::get_subitems() -> List<MenuItem ^> ^ {
   return subitems;
 }
 
@@ -123,7 +123,7 @@ UIForm::~UIForm() {
 /**
  * Returns a fixed pointer to this object that will not be modified by the GC
  */
-System::IntPtr UIForm::GetFixedId() {
+auto UIForm::GetFixedId() -> System::IntPtr {
   if (!m_gch.IsAllocated)
     m_gch = System::Runtime::InteropServices::GCHandle::Alloc(this);
   return System::Runtime::InteropServices::GCHandle::ToIntPtr(m_gch);
@@ -131,14 +131,14 @@ System::IntPtr UIForm::GetFixedId() {
 
 //--------------------------------------------------------------------------------------------------
 
-void UIForm::ReleaseHandle() {
+auto UIForm::ReleaseHandle() -> void {
   if (m_gch.IsAllocated)
     m_gch.Free();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void UIForm::init(bec::UIForm* inn) {
+auto UIForm::init(bec::UIForm* inn) -> void {
   if (inner != NULL) {
     // Don't touch inner here. It's already gone at this point.
     ReleaseHandle();
@@ -158,39 +158,39 @@ void UIForm::init(bec::UIForm* inn) {
 
 //--------------------------------------------------------------------------------------------------
 
-bec::UIForm* UIForm::get_unmanaged_object() {
+auto UIForm::get_unmanaged_object() -> bec::UIForm* {
   return inner;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 // Returns the object based on the fixed pointer retrieved by GetFixedId()
-UIForm ^ UIForm::GetFromFixedId(System::IntPtr ip) {
+auto UIForm::GetFromFixedId(System::IntPtr ip) -> UIForm ^ {
   System::Runtime::InteropServices::GCHandle gcHandle = System::Runtime::InteropServices::GCHandle::FromIntPtr(ip);
   return (UIForm ^)gcHandle.Target;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool UIForm::can_close() {
+auto UIForm::can_close() -> bool {
   return get_unmanaged_object()->can_close();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void UIForm::close() {
+auto UIForm::close() -> void {
   get_unmanaged_object()->close();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::String ^ UIForm::get_title() {
+auto UIForm::get_title() -> System::String ^ {
   return CppStringToNativeRaw(get_unmanaged_object()->get_title());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-System::String ^ UIForm::form_id() {
+auto UIForm::form_id() -> System::String ^ {
   return CppStringToNativeRaw(get_unmanaged_object()->form_id());
 }
 

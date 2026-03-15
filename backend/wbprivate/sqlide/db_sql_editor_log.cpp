@@ -71,7 +71,7 @@ DbSqlEditorLog::DbSqlEditorLog(SqlEditorForm *owner, int max_entry_count)
 
 //--------------------------------------------------------------------------------------------------
 
-std::string DbSqlEditorLog::get_selection_text(bool time, bool query, bool result, bool duration) {
+auto DbSqlEditorLog::get_selection_text(bool time, bool query, bool result, bool duration) -> std::string {
   std::string sql;
   for (std::vector<int>::const_iterator end = _selection.end(), it = _selection.begin(); it != end; ++it) {
     std::string s;
@@ -108,7 +108,7 @@ std::string DbSqlEditorLog::get_selection_text(bool time, bool query, bool resul
 
 //--------------------------------------------------------------------------------------------------
 
-void DbSqlEditorLog::handle_context_menu(const std::string &action) {
+auto DbSqlEditorLog::handle_context_menu(const std::string &action) -> void {
   std::string sql;
   if (action == "copy_row") {
     sql = get_selection_text(true, true, true, true);
@@ -139,7 +139,7 @@ void DbSqlEditorLog::handle_context_menu(const std::string &action) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DbSqlEditorLog::set_selection(const std::vector<int> &selection) {
+auto DbSqlEditorLog::set_selection(const std::vector<int> &selection) -> void {
   _selection = selection;
   bool has_selection = !selection.empty();
   for (int i = 0; i < 8; i++)
@@ -148,7 +148,7 @@ void DbSqlEditorLog::set_selection(const std::vector<int> &selection) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DbSqlEditorLog::reset() {
+auto DbSqlEditorLog::reset() -> void {
   VarGridModel::reset();
 
   {
@@ -174,7 +174,7 @@ void DbSqlEditorLog::reset() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DbSqlEditorLog::refresh() {
+auto DbSqlEditorLog::refresh() -> void {
   refresh_ui();
 }
 
@@ -198,7 +198,7 @@ private:
   IconId _ok_icon;
 
 public:
-  IconId icon(DbSqlEditorLog::MessageType msg_type) {
+  auto icon(DbSqlEditorLog::MessageType msg_type) -> IconId {
     switch (msg_type) {
       case DbSqlEditorLog::BusyMsg:
         return 0;
@@ -218,7 +218,7 @@ public:
 
 //--------------------------------------------------------------------------------------------------
 
-IconId DbSqlEditorLog::get_field_icon(const NodeId &node, ColumnId column, IconSize size) {
+auto DbSqlEditorLog::get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId {
   IconId icon = 0;
 
   static MsgTypeIcons msg_type_icons;
@@ -237,7 +237,7 @@ IconId DbSqlEditorLog::get_field_icon(const NodeId &node, ColumnId column, IconS
 
 //--------------------------------------------------------------------------------------------------
 
-static std::string sanitize_text(const std::string &text) {
+static auto sanitize_text(const std::string &text) -> std::string {
   std::string output;
   for (std::string::const_iterator end = text.end(), ch = text.begin(); ch != end; ++ch) {
     if (*ch == '\n' || *ch == '\r' || *ch == '\t')
@@ -250,7 +250,7 @@ static std::string sanitize_text(const std::string &text) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DbSqlEditorLog::get_field(const bec::NodeId &node, ColumnId column, std::string &value) {
+auto DbSqlEditorLog::get_field(const bec::NodeId &node, ColumnId column, std::string &value) -> bool {
   if (VarGridModel::get_field(node, column, value)) {
     if (column == 3)
       value = sanitize_text(base::truncate_text(value, MAX_LOG_STATEMENT_TEXT));
@@ -263,14 +263,14 @@ bool DbSqlEditorLog::get_field(const bec::NodeId &node, ColumnId column, std::st
 
 //--------------------------------------------------------------------------------------------------
 
-bool DbSqlEditorLog::get_field_description_value(const bec::NodeId &node, ColumnId column, std::string &value) {
+auto DbSqlEditorLog::get_field_description_value(const bec::NodeId &node, ColumnId column, std::string &value) -> bool {
   return VarGridModel::get_field(node, column, value);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-RowId DbSqlEditorLog::add_message(int msg_type, const std::string &context, const std::string &msg,
-                                  const std::string &duration) {
+auto DbSqlEditorLog::add_message(int msg_type, const std::string &context, const std::string &msg,
+                                  const std::string &duration) -> RowId {
   if (msg.empty())
     return -1;
 
@@ -299,8 +299,8 @@ RowId DbSqlEditorLog::add_message(int msg_type, const std::string &context, cons
 
 //--------------------------------------------------------------------------------------------------
 
-void DbSqlEditorLog::set_message(RowId row, int msg_type, const std::string &context, const std::string &msg,
-                                 const std::string &duration) {
+auto DbSqlEditorLog::set_message(RowId row, int msg_type, const std::string &context, const std::string &msg,
+                                 const std::string &duration) -> void {
   std::string time = current_time();
   {
     std::string logFileName = base::joinPath(_logDir.c_str(),
@@ -341,8 +341,8 @@ void DbSqlEditorLog::set_message(RowId row, int msg_type, const std::string &con
  * This function does actually add the message and can also be called be set_message, if the
  * there's no message with a given id anymore.
  */
-void DbSqlEditorLog::add_message_with_id(RowId id, const std::string &time, int msg_type, const std::string &context,
-                                         const std::string &msg, const std::string &duration) {
+auto DbSqlEditorLog::add_message_with_id(RowId id, const std::string &time, int msg_type, const std::string &context,
+                                         const std::string &msg, const std::string &duration) -> void {
   _data.reserve(_data.size() + _column_count);
 
   try {
@@ -363,7 +363,7 @@ void DbSqlEditorLog::add_message_with_id(RowId id, const std::string &time, int 
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::Menu *DbSqlEditorLog::get_context_menu() {
+auto DbSqlEditorLog::get_context_menu() -> mforms::Menu * {
   return &_context_menu;
 }
 

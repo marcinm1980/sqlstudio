@@ -42,7 +42,7 @@
 
 DEFAULT_LOG_DOMAIN("serializer")
 
-static xmlNodePtr new_int_node(xmlNodePtr node, const char *name, int value) {
+static auto new_int_node(xmlNodePtr node, const char *name, int value) -> xmlNodePtr {
   char buffer[32];
 
   g_snprintf(buffer, sizeof(buffer), "%i", value);
@@ -55,8 +55,8 @@ static xmlNodePtr new_int_node(xmlNodePtr node, const char *name, int value) {
 using namespace grt;
 using namespace grt::internal;
 
-xmlDocPtr internal::Serializer::create_xmldoc_for_value(const ValueRef &value, const std::string &doctype,
-                                                        const std::string &docversion, bool list_objects_as_links) {
+auto internal::Serializer::create_xmldoc_for_value(const ValueRef &value, const std::string &doctype,
+                                                        const std::string &docversion, bool list_objects_as_links) -> xmlDocPtr {
   xmlDocPtr doc;
 
   doc = xmlNewDoc((xmlChar *)"1.0");
@@ -77,7 +77,7 @@ xmlDocPtr internal::Serializer::create_xmldoc_for_value(const ValueRef &value, c
 internal::Serializer::Serializer() {
 }
 
-static int base_xmlSaveFile(const char *filename, xmlDocPtr doc) {
+static auto base_xmlSaveFile(const char *filename, xmlDocPtr doc) -> int {
   char *local_filename;
   int result;
   FILE *file;
@@ -122,8 +122,8 @@ static int base_xmlSaveFile(const char *filename, xmlDocPtr doc) {
  * @param version version of document format
  *
  ****************************************************************************/
-void internal::Serializer::save_to_xml(const ValueRef &value, const std::string &path, const std::string &doctype,
-                                       const std::string &docversion, bool list_objects_as_links) {
+auto internal::Serializer::save_to_xml(const ValueRef &value, const std::string &path, const std::string &doctype,
+                                       const std::string &docversion, bool list_objects_as_links) -> void {
   xmlDocPtr doc;
 
   doc = create_xmldoc_for_value(value, doctype, docversion, list_objects_as_links);
@@ -135,7 +135,7 @@ void internal::Serializer::save_to_xml(const ValueRef &value, const std::string 
   xmlFreeDoc(doc);
 }
 
-bool internal::Serializer::seen(const ValueRef &value) {
+auto internal::Serializer::seen(const ValueRef &value) -> bool {
   void *ptr = value.valueptr();
 
   if (_cache.find(ptr) != _cache.end())
@@ -162,7 +162,7 @@ bool internal::Serializer::seen(const ValueRef &value) {
  *
  *****************************************************************************
  */
-xmlNodePtr internal::Serializer::serialize_value(const ValueRef &value, xmlNodePtr parent, bool list_objects_as_links) {
+auto internal::Serializer::serialize_value(const ValueRef &value, xmlNodePtr parent, bool list_objects_as_links) -> xmlNodePtr {
   char buffer[100];
   xmlNodePtr node = NULL;
 
@@ -271,7 +271,7 @@ xmlNodePtr internal::Serializer::serialize_value(const ValueRef &value, xmlNodeP
   return node;
 }
 
-bool internal::Serializer::serialize_member(const MetaClass::Member *member, const ObjectRef &object, xmlNodePtr node) {
+auto internal::Serializer::serialize_member(const MetaClass::Member *member, const ObjectRef &object, xmlNodePtr node) -> bool {
   std::string k = member->name;
   ValueRef v;
 
@@ -303,7 +303,7 @@ bool internal::Serializer::serialize_member(const MetaClass::Member *member, con
   return true;
 }
 
-xmlNodePtr internal::Serializer::serialize_object(const ObjectRef &object, xmlNodePtr parent) {
+auto internal::Serializer::serialize_object(const ObjectRef &object, xmlNodePtr parent) -> xmlNodePtr {
   xmlNodePtr node;
   char checksum[40];
 
@@ -323,8 +323,8 @@ xmlNodePtr internal::Serializer::serialize_object(const ObjectRef &object, xmlNo
   return node;
 }
 
-std::string internal::Serializer::serialize_to_xmldata(const ValueRef &value, const std::string &type,
-                                                       const std::string &version, bool list_objects_as_links) {
+auto internal::Serializer::serialize_to_xmldata(const ValueRef &value, const std::string &type,
+                                                       const std::string &version, bool list_objects_as_links) -> std::string {
   xmlDocPtr doc;
   xmlChar *buffer = NULL;
   int size;

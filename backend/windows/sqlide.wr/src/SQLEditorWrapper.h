@@ -55,22 +55,22 @@ namespace MySQL {
 
         void set_result_docking_delegate(MySQL::Forms::ManagedDockDelegate ^ theDelegate);
 
-        Ref ref() {
+        auto ref() -> Ref {
           return _ref;
         }
-        System::Windows::Forms::Control ^ get_editor_container();
-        System::Windows::Forms::Control ^ get_editor_control();
+        auto get_editor_container() -> System::Windows::Forms::Control ^;
+        auto get_editor_control() -> System::Windows::Forms::Control ^;
 
-        bool is_refresh_enabled() {
+        auto is_refresh_enabled() -> bool {
           return _ref->is_refresh_enabled();
         }
-        void set_refresh_enabled(bool val) {
+        auto set_refresh_enabled(bool val) -> void {
           _ref->set_refresh_enabled(val);
         }
-        bool is_sql_check_enabled() {
+        auto is_sql_check_enabled() -> bool {
           return _ref->is_sql_check_enabled();
         }
-        void set_sql_check_enabled(bool val) {
+        auto set_sql_check_enabled(bool val) -> void {
           _ref->set_sql_check_enabled(val);
         }
 
@@ -78,7 +78,7 @@ namespace MySQL {
 
         void append_text(String ^ text);
         void set_text(String ^ text);
-        void focus();
+        auto focus() -> void;
 
         static SqlEditorWrapper ^ get_sql_editor(MySQL::Grt::BaseEditorWrapper ^ wrapper);
       };

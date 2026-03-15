@@ -37,13 +37,13 @@ namespace mdc {
     Button(Layer *layer, ButtonType type);
     ~Button();
 
-    void set_active(bool flag);
+    auto set_active(bool flag) -> void;
     auto get_active() -> bool;
 
-    void set_image(cairo_surface_t *image);
-    void set_alt_image(cairo_surface_t *image);
+    auto set_image(cairo_surface_t *image) -> void;
+    auto set_alt_image(cairo_surface_t *image) -> void;
 
-    virtual void draw_contents(CairoCtx *cr);
+    virtual auto draw_contents(CairoCtx *cr) -> void;
     virtual auto calc_min_size() -> base::Size;
 
     auto signal_activate() -> boost::signals2::signal<void()> * {

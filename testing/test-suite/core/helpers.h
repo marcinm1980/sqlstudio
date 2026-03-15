@@ -39,22 +39,22 @@ namespace testing {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::vector<std::string> splitBySet(std::string s, std::string const& separators);
+auto splitBySet(std::string s, std::string const& separators) -> std::vector<std::string>;
 
-std::string utf32ToUtf8(std::u32string const& text);
-std::string utf16ToUtf8(std::u16string const& text);
-std::u16string utf8ToUtf16(std::string const& text);
+auto utf32ToUtf8(std::u32string const& text) -> std::string;
+auto utf16ToUtf8(std::u16string const& text) -> std::string;
+auto utf8ToUtf16(std::string const& text) -> std::u16string;
 
-std::string randomString(std::size_t maxLength = 16);
+auto randomString(std::size_t maxLength = 16) -> std::string;
 std::string getEnvVar(std::string const& name, std::string const& defaultValue = "");
 
-std::string expandPath(std::string const& path);
-std::string relativePath(std::string const& basePath, std::string const& pathToMakeRelative);
+auto expandPath(std::string const& path) -> std::string;
+auto relativePath(std::string const& basePath, std::string const& pathToMakeRelative) -> std::string;
 
 //----------------------------------------------------------------------------------------------------------------------
 
 // Compile time string literal length computation.
-static int constexpr length(char const* str) { return *str ? 1 + length(str + 1) : 0; }
+static constexpr auto length(char const* str) -> int { return *str ? 1 + length(str + 1) : 0; }
 
 // Converts the passed type into a human readable (unmangled) string.
 template <class T>

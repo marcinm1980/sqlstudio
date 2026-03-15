@@ -37,19 +37,19 @@ public:
   Grammar_tree_item();
   Grammar_tree_item(const char *text/*, Item_kind item_kind*/);
   virtual ~Grammar_tree_item(void);
-  std::string text() const;
-  std::string text_unquoted() const;
-  void text(const std::string &text);
-  bool empty() const;
-  bool is_terminal() const;
-  bool is_prec_directive() const;
-  bool is_last_non_prec_child(const Grammar_tree_item *item) const;
-  bool non_prec_child_exists() const;
-  bool has_more_then_one_meaningful_child() const;
-  const Item_list * items() const;
-  void add_item_as_last(const Grammar_tree_item *item);
-  void add_item_as_first(const Grammar_tree_item *item);
-  void flush(std::ostream& os) const;
+  auto text() const -> std::string;
+  auto text_unquoted() const -> std::string;
+  auto text(const std::string &text) -> void;
+  auto empty() const -> bool;
+  auto is_terminal() const -> bool;
+  auto is_prec_directive() const -> bool;
+  auto is_last_non_prec_child(const Grammar_tree_item *item) const -> bool;
+  auto non_prec_child_exists() const -> bool;
+  auto has_more_then_one_meaningful_child() const -> bool;
+  auto items() const -> const Item_list *;
+  auto add_item_as_last(const Grammar_tree_item *item) -> void;
+  auto add_item_as_first(const Grammar_tree_item *item) -> void;
+  auto flush(std::ostream& os) const -> void;
 //  inline Item_kind item_kind() const;
 
 private:

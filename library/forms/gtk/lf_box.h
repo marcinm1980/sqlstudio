@@ -35,23 +35,23 @@ namespace mforms {
     protected:
       Gtk::Box *_innerBox;
 
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _innerBox;
       }
 
       BoxImpl(::mforms::Box *self, bool horiz);
-      static bool create(::mforms::Box *self, bool horiz);
-      static void add(Box *self, View *child, bool expand, bool fill);
-      static void add_end(Box *self, View *child, bool expand, bool fill);
-      static void remove(Box *self, View *child);
-      static void set_homogeneous(Box *self, bool flag);
-      static void set_spacing(Box *self, int spc);
+      static auto create(::mforms::Box *self, bool horiz) -> bool;
+      static auto add(Box *self, View *child, bool expand, bool fill) -> void;
+      static auto add_end(Box *self, View *child, bool expand, bool fill) -> void;
+      static auto remove(Box *self, View *child) -> void;
+      static auto set_homogeneous(Box *self, bool flag) -> void;
+      static auto set_spacing(Box *self, int spc) -> void;
       // static void set_padding(Box *self, int pad);
-      virtual void set_padding_impl(int left, int top, int right, int bottom);
-      virtual void set_size(int width, int height);
+      virtual auto set_padding_impl(int left, int top, int right, int bottom) -> void;
+      virtual auto set_size(int width, int height) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
 
       virtual ~BoxImpl();
     };

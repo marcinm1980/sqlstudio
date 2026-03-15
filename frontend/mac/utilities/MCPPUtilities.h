@@ -26,9 +26,9 @@
 #import "NSString_extras.h"
 #import "NSColor_extras.h"
 
-void MShowCPPException(const std::exception &exc);
+auto MShowCPPException(const std::exception &exc) -> void;
 
-void MFillPopupButtonWithStrings(NSPopUpButton *popup, const std::vector<std::string> &items);
+auto MFillPopupButtonWithStrings(NSPopUpButton *popup, const std::vector<std::string> &items) -> void;
 
-NSArray<NSString *> *MArrayFromStringVector(const std::vector<std::string> &items);
-NSArray<NSString *> *MArrayFromStringList(const std::list<std::string> &items);
+auto MArrayFromStringVector(const std::vector<std::string> &items) -> NSArray<NSString *> *;
+auto MArrayFromStringList(const std::list<std::string> &items) -> NSArray<NSString *> *;

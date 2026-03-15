@@ -48,49 +48,49 @@ BaseEditorWrapper::~BaseEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditorWrapper::disable_auto_refresh() {
+auto BaseEditorWrapper::disable_auto_refresh() -> void {
   ((bec::BaseEditor *)inner)->block_auto_refresh();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditorWrapper::enable_auto_refresh() {
+auto BaseEditorWrapper::enable_auto_refresh() -> void {
   ((bec::BaseEditor *)inner)->unblock_auto_refresh();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bec::BaseEditor *BaseEditorWrapper::get_unmanaged_object() {
+auto BaseEditorWrapper::get_unmanaged_object() -> bec::BaseEditor * {
   return static_cast<::bec::BaseEditor *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-GrtValue ^ BaseEditorWrapper::get_object() {
+auto BaseEditorWrapper::get_object() -> GrtValue ^ {
   return gcnew GrtValue(get_unmanaged_object()->get_object());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ BaseEditorWrapper::get_title() {
+auto BaseEditorWrapper::get_title() -> String ^ {
   return CppStringToNativeRaw(get_unmanaged_object()->get_title());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool BaseEditorWrapper::is_editing_live_object() {
+auto BaseEditorWrapper::is_editing_live_object() -> bool {
   return get_unmanaged_object()->is_editing_live_object();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditorWrapper::apply_changes_to_live_object() {
+auto BaseEditorWrapper::apply_changes_to_live_object() -> void {
   get_unmanaged_object()->apply_changes_to_live_object();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditorWrapper::revert_changes_to_live_object() {
+auto BaseEditorWrapper::revert_changes_to_live_object() -> void {
   get_unmanaged_object()->revert_changes_to_live_object();
 }
 
@@ -110,7 +110,7 @@ void BaseEditorWrapper::set_refresh_partial_ui_handler(DelegateSlot1<void, void,
 
 //--------------------------------------------------------------------------------------------------
 
-MySQL::Grt::GRT ^ BaseEditorWrapper::get_grt() {
+auto BaseEditorWrapper::get_grt() -> MySQL::Grt::GRT ^ {
   return gcnew MySQL::Grt::GRT;
 }
 
@@ -136,13 +136,13 @@ bool BaseEditorWrapper::should_close_on_delete_of(String ^ oid) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool BaseEditorWrapper::is_editor_dirty() {
+auto BaseEditorWrapper::is_editor_dirty() -> bool {
   return get_unmanaged_object()->is_editor_dirty();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void BaseEditorWrapper::reset_editor_undo_stack() {
+auto BaseEditorWrapper::reset_editor_undo_stack() -> void {
   get_unmanaged_object()->reset_editor_undo_stack();
 }
 

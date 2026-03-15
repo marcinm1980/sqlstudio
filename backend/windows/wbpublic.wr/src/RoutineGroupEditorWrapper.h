@@ -37,18 +37,18 @@ namespace MySQL {
         RoutineGroupEditorWrapper(::bec::RoutineGroupEditorBE *inn);
 
       public:
-        ::bec::RoutineGroupEditorBE *get_unmanaged_object();
-        String ^ get_sql();
+        auto get_unmanaged_object() -> ::bec::RoutineGroupEditorBE *;
+        auto get_sql() -> String ^;
         String ^ get_routine_sql(MySQL::Grt::GrtValue ^ routine);
         void set_sql(String ^ query);
-        List<String ^> ^ get_routines_names();
+        auto get_routines_names() -> List<String ^> ^;
         void delete_routine_with_name(String ^ name);
         void append_routine_with_id(String ^ id);
-        String ^ get_name();
+        auto get_name() -> String ^;
         void set_name(String ^ query);
-        String ^ get_comment();
+        auto get_comment() -> String ^;
         void set_comment(String ^ query);
-        void open_editor_for_routine_at_index(size_t index);
+        auto open_editor_for_routine_at_index(size_t index) -> void;
       };
 
     } // namespace Db

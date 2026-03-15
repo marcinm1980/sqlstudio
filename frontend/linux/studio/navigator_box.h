@@ -49,18 +49,18 @@ class NavigatorBox : public Gtk::Box {
   Gtk::Button _zoom_out;
   bool _changing_zoom;
 
-  void size_change(Gtk::Allocation &alloc);
-  void canvas_realize();
+  auto size_change(Gtk::Allocation &alloc) -> void;
+  auto canvas_realize() -> void;
 
-  void slider_changed();
-  void combo_changed(bool force_update);
+  auto slider_changed() -> void;
+  auto combo_changed(bool force_update) -> void;
 
 public:
   NavigatorBox();
 
-  void set_model(wb::ModelDiagramForm *model);
+  auto set_model(wb::ModelDiagramForm *model) -> void;
 
-  void refresh();
+  auto refresh() -> void;
 };
 
 #endif /* _NAVIGATOR_BOX_H_ */

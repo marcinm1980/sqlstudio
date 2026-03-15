@@ -48,7 +48,7 @@ using namespace base;
 #endif
 #endif
 
-static void fixup_layer_tree(XMLTraverser &xml, xmlNodePtr layerNode, double xoffs, double yoffs) {
+static auto fixup_layer_tree(XMLTraverser &xml, xmlNodePtr layerNode, double xoffs, double yoffs) -> void {
   xmlNodePtr sublayer_list = xml.get_object_child(layerNode, "subLayers");
   xmlNodePtr sublayer;
 
@@ -65,7 +65,7 @@ static void fixup_layer_tree(XMLTraverser &xml, xmlNodePtr layerNode, double xof
   }
 }
 
-static bool fix_user_datatypes(xmlNodePtr parent, xmlNodePtr node) {
+static auto fix_user_datatypes(xmlNodePtr parent, xmlNodePtr node) -> bool {
   xmlString prop = xmlGetProp(parent, (xmlChar *)"struct-name");
 
   if (prop) {
@@ -89,7 +89,7 @@ static bool fix_user_datatypes(xmlNodePtr parent, xmlNodePtr node) {
 }
 
 // Low-level upgrade by manipulation of XML document
-bool ModelFile::attempt_xml_document_upgrade(xmlDocPtr xmldoc, const std::string &version) {
+auto ModelFile::attempt_xml_document_upgrade(xmlDocPtr xmldoc, const std::string &version) -> bool {
   std::vector<std::string> ver = base::split(version, ".");
   int major, minor, revision;
 
@@ -379,8 +379,8 @@ bool ModelFile::attempt_xml_document_upgrade(xmlDocPtr xmldoc, const std::string
   return true;
 }
 
-static db_IndexRef find_matching_fk_index(std::map<std::string, db_IndexRef> &indexes,
-                                          const grt::ListRef<db_Column> &fk_columns) {
+static auto find_matching_fk_index(std::map<std::string, db_IndexRef> &indexes,
+                                          const grt::ListRef<db_Column> &fk_columns) -> db_IndexRef {
   for (std::map<std::string, db_IndexRef>::iterator idx = indexes.begin(); idx != indexes.end(); ++idx) {
     grt::ListRef<db_IndexColumn> icolumns(idx->second->columns());
 
@@ -403,8 +403,8 @@ static db_IndexRef find_matching_fk_index(std::map<std::string, db_IndexRef> &in
 }
 
 // High-Level Upgrade, by manipulation of GRT objects
-studio_DocumentRef ModelFile::attempt_document_upgrade(const studio_DocumentRef &doc, xmlDocPtr xmldoc,
-                                                          const std::string &version) {
+auto ModelFile::attempt_document_upgrade(const studio_DocumentRef &doc, xmlDocPtr xmldoc,
+                                                          const std::string &version) -> studio_DocumentRef {
   std::vector<std::string> ver = base::split(version, ".");
   int major, minor, revision;
 
@@ -660,13 +660,13 @@ studio_DocumentRef ModelFile::attempt_document_upgrade(const studio_DocumentRef 
   return doc;
 }
 
-void ModelFile::cleanup_upgrade_data() {
+auto ModelFile::cleanup_upgrade_data() -> void {
   table_inserts_sql_scripts = TableInsertsSqlScripts();
 }
 
 // ------------------------- Consistency Checks -----------------------------------------
 
-static void check_figure_layers(studio_physical_DiagramRef view, std::list<std::string> &load_warnings) {
+static auto check_figure_layers(studio_physical_DiagramRef view, std::list<std::string> &load_warnings) -> void {
   std::set<std::string> seen_figures;
 
   // some unedidentified bug is causing figures to have inconsistent figure.layer
@@ -736,7 +736,7 @@ static void check_figure_layers(studio_physical_DiagramRef view, std::list<std::
   }
 }
 
-static void fix_broken_foreign_keys(XMLTraverser &traverser, std::list<std::string> &load_warnings) {
+static auto fix_broken_foreign_keys(XMLTraverser &traverser, std::list<std::string> &load_warnings) -> void {
   std::vector<xmlNodePtr> nodes(traverser.scan_objects_of_type("db.mysql.ForeignKey"));
 
   for (std::vector<xmlNodePtr>::iterator node = nodes.begin(); node != nodes.end(); ++node) {
@@ -791,8 +791,8 @@ static void fix_broken_foreign_keys(XMLTraverser &traverser, std::list<std::stri
   }
 }
 
-static int fix_duplicate_uuid_bug(xmlNodePtr node, std::map<std::string, std::string> &object_types,
-                                  std::map<std::string, std::map<std::string, std::string> > &remapped_ids) {
+static auto fix_duplicate_uuid_bug(xmlNodePtr node, std::map<std::string, std::string> &object_types,
+                                  std::map<std::string, std::map<std::string, std::string> > &remapped_ids) -> int {
   xmlNodePtr n;
   int fixes = 0;
 
@@ -826,8 +826,8 @@ static int fix_duplicate_uuid_bug(xmlNodePtr node, std::map<std::string, std::st
   return fixes;
 }
 
-static void fix_duplicate_uuid_bug_references(
-  xmlNodePtr node, std::map<std::string, std::map<std::string, std::string> > &remapped_ids) {
+static auto fix_duplicate_uuid_bug_references(
+  xmlNodePtr node, std::map<std::string, std::map<std::string, std::string> > &remapped_ids) -> void {
   xmlNodePtr n;
 
   for (n = node->children; n; n = n->next) {
@@ -903,7 +903,7 @@ static void fix_duplicate_uuid_bug_references(
   }
 }
 
-bool ModelFile::check_and_fix_duplicate_uuid_bug(xmlDocPtr xmldoc) {
+auto ModelFile::check_and_fix_duplicate_uuid_bug(xmlDocPtr xmldoc) -> bool {
   if (XMLTraverser::node_prop(xmlDocGetRootElement(xmldoc), "version") == "1.4.1" ||
       XMLTraverser::node_prop(xmlDocGetRootElement(xmldoc), "version") == "1.4.2") {
     // in 5.2.32, the UUID generator was replaced with a boost implementation.
@@ -923,7 +923,7 @@ bool ModelFile::check_and_fix_duplicate_uuid_bug(xmlDocPtr xmldoc) {
   return false;
 }
 
-static void check_schema_objects(db_SchemaRef schema, std::list<std::string> &load_warnings) {
+static auto check_schema_objects(db_SchemaRef schema, std::list<std::string> &load_warnings) -> void {
   // check for indexes that have a null referencedColumn value
 
   GRTLIST_FOREACH(db_Table, schema->tables(), table) {
@@ -960,7 +960,7 @@ static void check_schema_objects(db_SchemaRef schema, std::list<std::string> &lo
   }
 }
 
-void ModelFile::check_and_fix_inconsistencies(xmlDocPtr xmldoc, const std::string &version) {
+auto ModelFile::check_and_fix_inconsistencies(xmlDocPtr xmldoc, const std::string &version) -> void {
   std::vector<std::string> ver = base::split(version, ".");
 
   int major = base::atoi<int>(ver[0], 0);
@@ -973,7 +973,7 @@ void ModelFile::check_and_fix_inconsistencies(xmlDocPtr xmldoc, const std::strin
   }
 }
 
-void ModelFile::check_and_fix_inconsistencies(const studio_DocumentRef &doc, const std::string &version) {
+auto ModelFile::check_and_fix_inconsistencies(const studio_DocumentRef &doc, const std::string &version) -> void {
   grt::ListRef<studio_physical_Model> models(doc->physicalModels());
 
   for (size_t c = models.count(), i = 0; i < c; i++) {

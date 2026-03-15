@@ -57,32 +57,32 @@ private:
   }
 
 public:
-  static Glib::RefPtr<TreeModelWrapper> create(bec::TreeModel* tm, Gtk::TreeView* treeview, const std::string& name,
-                                               const bec::NodeId& root_node = bec::NodeId(), bool as_list = false) {
+  static auto create(bec::TreeModel* tm, Gtk::TreeView* treeview, const std::string& name,
+                                               const bec::NodeId& root_node = bec::NodeId(), bool as_list = false) -> Glib::RefPtr<TreeModelWrapper> {
     bec::NodeId root = root_node.is_valid() ? root_node : tm->get_root();
     return Glib::RefPtr<TreeModelWrapper>(new TreeModelWrapper(tm, treeview, name, root, as_list));
   }
 
-  void set_delay_expanding_nodes(bool flag) {
+  auto set_delay_expanding_nodes(bool flag) -> void {
     _delay_expanding_nodes = flag;
   }
 
-  ExpandedRowsStorage* expanded_rows_storage() const {
+  auto expanded_rows_storage() const -> ExpandedRowsStorage* {
     return _expanded_rows;
   }
-  void set_expanded_rows_storage(ExpandedRowsStorage* s) {
+  auto set_expanded_rows_storage(ExpandedRowsStorage* s) -> void {
     _expanded_rows = s;
   }
 
-  void update_root_node(const bec::NodeId& root_node);
+  auto update_root_node(const bec::NodeId& root_node) -> void;
 
-  virtual Gtk::TreeModelFlags get_flags_vfunc() const;
+  virtual auto get_flags_vfunc() const -> Gtk::TreeModelFlags;
 
-  virtual bec::NodeId get_node_for_path(const Gtk::TreeModel::Path& path) const;
+  virtual auto get_node_for_path(const Gtk::TreeModel::Path& path) const -> bec::NodeId;
 
-  virtual void get_icon_value(const iterator& iter, int column, const bec::NodeId& node, Glib::ValueBase& value) const;
+  virtual auto get_icon_value(const iterator& iter, int column, const bec::NodeId& node, Glib::ValueBase& value) const -> void;
 
-  virtual Gtk::TreeModel::Path get_path_vfunc(const iterator& iter) const;
+  virtual auto get_path_vfunc(const iterator& iter) const -> Gtk::TreeModel::Path;
 
   /**
   Sets @a iter to a valid iterator pointing to @a path
@@ -91,7 +91,7 @@ public:
   @param iter An iterator that will be set to refer to a node to the path, or will be set as invalid.
   @result true if the operation was possible.
   */
-  virtual bool get_iter_vfunc(const Path& path, iterator& iter) const;
+  virtual auto get_iter_vfunc(const Path& path, iterator& iter) const -> bool;
 
   /**
   Sets @a iter to refer to the first child of @a parent. If @a parent has no children,
@@ -101,7 +101,7 @@ public:
   @param iter An iterator that will be set to refer to the firt child node, or will be set as invalid.
   @result true if the operation was possible.
   */
-  virtual bool iter_children_vfunc(const iterator& parent, iterator& iter) const;
+  virtual auto iter_children_vfunc(const iterator& parent, iterator& iter) const -> bool;
 
   /**
   Sets @a iter to be the parent of @a child. If @a child is at the toplevel, and
@@ -112,7 +112,7 @@ public:
   @param iter An iterator that will be set to refer to the parent node, or will be set as invalid.
   @result true if the operation was possible.
   */
-  virtual bool iter_parent_vfunc(const iterator& child, iterator& iter) const;
+  virtual auto iter_parent_vfunc(const iterator& child, iterator& iter) const -> bool;
 
   /**
   Sets @a iter to be the child of @a parent using the given index.  The first
@@ -125,7 +125,7 @@ public:
   @param iter An iterator that will be set to refer to the nth node, or will be set as invalid.
   @result true if the operation was possible.
   */
-  virtual bool iter_nth_child_vfunc(const iterator& parent, int n, iterator& iter) const;
+  virtual auto iter_nth_child_vfunc(const iterator& parent, int n, iterator& iter) const -> bool;
 
   /**
   Sets @a iter to be the child of at the root level using the given index.  The first
@@ -137,7 +137,7 @@ public:
   @param iter An iterator that will be set to refer to the nth node, or will be set as invalid.
   @result true if the operation was possible.
   */
-  virtual bool iter_nth_root_child_vfunc(int n, iterator& iter) const;
+  virtual auto iter_nth_root_child_vfunc(int n, iterator& iter) const -> bool;
 
   /**
   Returns true if @a iter has children, false otherwise.
@@ -145,7 +145,7 @@ public:
   @param iter The iterator to test for children.
   @result true if @a iter has children.
   */
-  virtual bool iter_has_child_vfunc(const iterator& iter) const;
+  virtual auto iter_has_child_vfunc(const iterator& iter) const -> bool;
 
   /**
   Returns the number of children that @a iter has.
@@ -154,7 +154,7 @@ public:
   @param iter The iterator to test for children.
   @result The number of children of @a iter.
   */
-  virtual int iter_n_children_vfunc(const iterator& iter) const;
+  virtual auto iter_n_children_vfunc(const iterator& iter) const -> int;
 
   /**
   Returns the number of toplevel nodes.
@@ -162,18 +162,18 @@ public:
 
   @result The number of children at the root level.
   */
-  virtual int iter_n_root_children_vfunc() const;
+  virtual auto iter_n_root_children_vfunc() const -> int;
 
-  void tree_row_expanded(const iterator& iter, const Path& path);
-  void tree_row_collapsed(const iterator& iter, const Path& path);
+  auto tree_row_expanded(const iterator& iter, const Path& path) -> void;
+  auto tree_row_collapsed(const iterator& iter, const Path& path) -> void;
 
-  void block_expand_collapse_signals();
-  void unblock_expand_collapse_signals();
+  auto block_expand_collapse_signals() -> void;
+  auto unblock_expand_collapse_signals() -> void;
 
-  bool children_count_enabled() {
+  auto children_count_enabled() -> bool {
     return _children_count_enabled;
   }
-  void children_count_enabled(bool value) {
+  auto children_count_enabled(bool value) -> void {
     _children_count_enabled = value;
   }
 
@@ -200,7 +200,7 @@ private:
   bool _children_count_enabled;
   bool _delay_expanding_nodes;
 
-  bec::TreeModel* tm() const {
+  auto tm() const -> bec::TreeModel* {
     return static_cast<bec::TreeModel*>(get_be_model());
   }
 };

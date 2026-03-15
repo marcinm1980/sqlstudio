@@ -57,7 +57,7 @@ TreeViewNode::~TreeViewNode() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewNode::DestroyDataRecursive() {
+auto TreeViewNode::DestroyDataRecursive() -> void {
   for (int i = 0; i < Nodes->Count; ++i)
     dynamic_cast<MySQL::Forms::TreeViewNode ^>(Nodes[i])->DestroyDataRecursive();
   Data = nullptr;
@@ -65,7 +65,7 @@ void TreeViewNode::DestroyDataRecursive() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string TreeViewNode::MyTag::get() {
+auto TreeViewNode::MyTag::get() -> std::string {
   if (myTag != NULL)
     return *myTag;
   return "";
@@ -73,7 +73,7 @@ std::string TreeViewNode::MyTag::get() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewNode::MyTag::set(std::string s) {
+auto TreeViewNode::MyTag::set(std::string s) -> void {
   if (myTag)
     delete myTag;
   myTag = new std::string(s);
@@ -81,13 +81,13 @@ void TreeViewNode::MyTag::set(std::string s) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeData *TreeViewNode::Data::get() {
+auto TreeViewNode::Data::get() -> mforms::TreeNodeData * {
   return data;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewNode::Data::set(mforms::TreeNodeData *d) {
+auto TreeViewNode::Data::set(mforms::TreeNodeData *d) -> void {
   if (data != d) {
     if (data)
       data->release();
@@ -99,7 +99,7 @@ void TreeViewNode::Data::set(mforms::TreeNodeData *d) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ TreeViewNode::Caption::get(int index) {
+auto TreeViewNode::Caption::get(int index) -> String ^ {
   if (index < 0 || index >= captions.Count)
     return "";
   return captions[index] == nullptr ? "" : captions[index];
@@ -124,7 +124,7 @@ void TreeViewNode::Caption::set(int index, String ^ newText) {
 /**
  * Retrieves the caption of all columns in one string (elements are separated by tab).
  */
-String ^ TreeViewNode::FullCaption::get() {
+auto TreeViewNode::FullCaption::get() -> String ^ {
   String ^ result = "";
   for each(String ^ entry in captions) {
       if (result->Length > 0)
@@ -136,7 +136,7 @@ String ^ TreeViewNode::FullCaption::get() {
 
 //--------------------------------------------------------------------------------------------------
 
-Bitmap ^ TreeViewNode::Icon::get(int index) {
+auto TreeViewNode::Icon::get(int index) -> Bitmap ^ {
   if (icons.ContainsKey(index))
     return icons[index];
   return nullptr;
@@ -150,7 +150,7 @@ void TreeViewNode::Icon::set(int index, Bitmap ^ newIcon) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeTextAttributes TreeViewNode::Attributes::get(int index) {
+auto TreeViewNode::Attributes::get(int index) -> mforms::TreeNodeTextAttributes {
   if (index < 0 || index >= (int)attributes->size())
     return mforms::TreeNodeTextAttributes();
   return (*attributes)[index];
@@ -158,7 +158,7 @@ mforms::TreeNodeTextAttributes TreeViewNode::Attributes::get(int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeViewNode::Attributes::set(int index, mforms::TreeNodeTextAttributes newAttributes) {
+auto TreeViewNode::Attributes::set(int index, mforms::TreeNodeTextAttributes newAttributes) -> void {
   while (index >= (int)attributes->size())
     attributes->push_back(mforms::TreeNodeTextAttributes());
 
@@ -188,7 +188,7 @@ TreeNodeWrapper::TreeNodeWrapper(TreeViewWrapper *wrapper) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::release() {
+auto TreeNodeWrapper::release() -> void {
   refCount--;
   if (refCount == 0)
     delete this;
@@ -196,13 +196,13 @@ void TreeNodeWrapper::release() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::retain() {
+auto TreeNodeWrapper::retain() -> void {
   refCount++;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeNodeWrapper::node_index() {
+auto TreeNodeWrapper::node_index() -> int {
   if (isRoot)
     return -1;
 
@@ -211,7 +211,7 @@ int TreeNodeWrapper::node_index() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeNodeWrapper::equals(const mforms::TreeNode &other) {
+auto TreeNodeWrapper::equals(const mforms::TreeNode &other) -> bool {
   const TreeNodeWrapper *oth = dynamic_cast<const TreeNodeWrapper *>(&other);
   if (oth)
     return (Node ^)oth->nativeNode == (Node ^)nativeNode;
@@ -220,19 +220,19 @@ bool TreeNodeWrapper::equals(const mforms::TreeNode &other) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeNodeWrapper::is_valid() const {
+auto TreeNodeWrapper::is_valid() const -> bool {
   return !isRoot;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeNodeWrapper::level() const {
+auto TreeNodeWrapper::level() const -> int {
   return nativeNodeAdv->Level;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_icon_path(int column, const std::string &icon) {
+auto TreeNodeWrapper::set_icon_path(int column, const std::string &icon) -> void {
   if (!isRoot && !icon.empty()) {
     bool invalidate = true;
     String ^ str_icon = CppStringToNative(icon);
@@ -254,13 +254,13 @@ void TreeNodeWrapper::set_icon_path(int column, const std::string &icon) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_selected(bool flag) {
+auto TreeNodeWrapper::set_selected(bool flag) -> void {
   nativeNodeAdv->IsSelected = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::scrollToNode() {
+auto TreeNodeWrapper::scrollToNode() -> void {
   TreeViewAdv ^ view = treeWrapper->GetManagedObject<TreeViewAdv>();
   if (view != nullptr) {
     view->ScrollTo(nativeNodeAdv);
@@ -269,7 +269,7 @@ void TreeNodeWrapper::scrollToNode() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_attributes(int column, const mforms::TreeNodeTextAttributes &attrs) {
+auto TreeNodeWrapper::set_attributes(int column, const mforms::TreeNodeTextAttributes &attrs) -> void {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     node->Attributes[column] = attrs;
@@ -279,7 +279,7 @@ void TreeNodeWrapper::set_attributes(int column, const mforms::TreeNodeTextAttri
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_string(int column, const std::string &value) {
+auto TreeNodeWrapper::set_string(int column, const std::string &value) -> void {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     node->Caption[column] = CppStringToNative(value);
@@ -290,7 +290,7 @@ void TreeNodeWrapper::set_string(int column, const std::string &value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_int(int column, int value) {
+auto TreeNodeWrapper::set_int(int column, int value) -> void {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     node->Caption[column] = Convert::ToString(value);
@@ -301,7 +301,7 @@ void TreeNodeWrapper::set_int(int column, int value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_long(int column, std::int64_t value) {
+auto TreeNodeWrapper::set_long(int column, std::int64_t value) -> void {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     node->Caption[column] = Convert::ToString(value);
@@ -312,7 +312,7 @@ void TreeNodeWrapper::set_long(int column, std::int64_t value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_bool(int column, bool value) {
+auto TreeNodeWrapper::set_bool(int column, bool value) -> void {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     node->Caption[column] = value ? "1" : "0";
@@ -323,7 +323,7 @@ void TreeNodeWrapper::set_bool(int column, bool value) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_float(int column, double value) {
+auto TreeNodeWrapper::set_float(int column, double value) -> void {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     node->Caption[column] = Convert::ToString(value);
@@ -334,7 +334,7 @@ void TreeNodeWrapper::set_float(int column, double value) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string TreeNodeWrapper::get_string(int column) const {
+auto TreeNodeWrapper::get_string(int column) const -> std::string {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     return NativeToCppString(node->Caption[column]);
@@ -345,7 +345,7 @@ std::string TreeNodeWrapper::get_string(int column) const {
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeNodeWrapper::get_int(int column) const {
+auto TreeNodeWrapper::get_int(int column) const -> int {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     return Convert::ToInt32(node->Caption[column]);
@@ -356,7 +356,7 @@ int TreeNodeWrapper::get_int(int column) const {
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeNodeWrapper::get_bool(int column) const {
+auto TreeNodeWrapper::get_bool(int column) const -> bool {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     return (node->Caption[column] == "Checked") || (node->Caption[column] == "1") ? true : false;
@@ -367,7 +367,7 @@ bool TreeNodeWrapper::get_bool(int column) const {
 
 //--------------------------------------------------------------------------------------------------
 
-std::int64_t TreeNodeWrapper::get_long(int column) const {
+auto TreeNodeWrapper::get_long(int column) const -> std::int64_t {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     return Convert::ToInt64(node->Caption[column]);
@@ -378,7 +378,7 @@ std::int64_t TreeNodeWrapper::get_long(int column) const {
 
 //--------------------------------------------------------------------------------------------------
 
-double TreeNodeWrapper::get_float(int column) const {
+auto TreeNodeWrapper::get_float(int column) const -> double {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     return Convert::ToDouble(node->Caption[column]);
@@ -389,13 +389,13 @@ double TreeNodeWrapper::get_float(int column) const {
 
 //--------------------------------------------------------------------------------------------------
 
-int TreeNodeWrapper::count() const {
+auto TreeNodeWrapper::count() const -> int {
   return nativeNodeAdv->Children->Count;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Bitmap ^ TreeNodeWrapper::get_cached_icon(const std::string &icon_id) {
+auto TreeNodeWrapper::get_cached_icon(const std::string &icon_id) -> Bitmap ^ {
   Bitmap ^ icon;
 
   String ^ str_icon = CppStringToNative(icon_id);
@@ -414,8 +414,8 @@ Bitmap ^ TreeNodeWrapper::get_cached_icon(const std::string &icon_id) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<mforms::TreeNodeRef> TreeNodeWrapper::add_node_collection(const mforms::TreeNodeCollectionSkeleton &nodes,
-                                                                      int position) {
+auto TreeNodeWrapper::add_node_collection(const mforms::TreeNodeCollectionSkeleton &nodes,
+                                                                      int position) -> std::vector<mforms::TreeNodeRef> {
   std::vector<mforms::TreeNodeRef> result;
 
   if (!nodes.captions.empty()) {
@@ -459,8 +459,8 @@ std::vector<mforms::TreeNodeRef> TreeNodeWrapper::add_node_collection(const mfor
 /**
  *	Adds the same list of child nodes (as given in the children vector) to each node in the parents vector.
  */
-void TreeNodeWrapper::add_children_from_skeletons(std::vector<TreeNodeWrapper> parents,
-                                                  const std::vector<mforms::TreeNodeSkeleton> &children) {
+auto TreeNodeWrapper::add_children_from_skeletons(std::vector<TreeNodeWrapper> parents,
+                                                  const std::vector<mforms::TreeNodeSkeleton> &children) -> void {
   for (size_t child_index = 0; child_index < children.size(); ++child_index) {
     String ^ caption = CppStringToNative(children[child_index].caption);
     Bitmap ^ icon = get_cached_icon(children[child_index].icon);
@@ -500,7 +500,7 @@ void TreeNodeWrapper::node_changed(TreeNodeAdv ^ new_node) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeNodeWrapper::insert_child(int index) {
+auto TreeNodeWrapper::insert_child(int index) -> mforms::TreeNodeRef {
   // Insert node into the model, which will implicitly create a tree node.
   MySQL::Forms::TreeViewNode ^ child = gcnew MySQL::Forms::TreeViewNode();
   TreeNodeAdv ^ treeNode;
@@ -517,7 +517,7 @@ mforms::TreeNodeRef TreeNodeWrapper::insert_child(int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::insert_child(int index, const mforms::TreeNode &child) {
+auto TreeNodeWrapper::insert_child(int index, const mforms::TreeNode &child) -> void {
   // Inserting an existing node only works if both belong to the same tree.
   TreeNodeWrapper *wrapper = (TreeNodeWrapper *)&child;
   if (treeWrapper != wrapper->treeWrapper)
@@ -537,7 +537,7 @@ void TreeNodeWrapper::insert_child(int index, const mforms::TreeNode &child) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::remove_from_parent() {
+auto TreeNodeWrapper::remove_from_parent() -> void {
   if (!isRoot && nativeNode->Parent != nullptr) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     if (!node->MyTag.empty())
@@ -549,7 +549,7 @@ void TreeNodeWrapper::remove_from_parent() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::remove_children() {
+auto TreeNodeWrapper::remove_children() -> void {
   for each(Node ^ child in nativeNode->Nodes) {
       TreeViewNode ^ node = dynamic_cast<TreeViewNode ^>(child);
       if (node != nullptr && !node->MyTag.empty())
@@ -560,7 +560,7 @@ void TreeNodeWrapper::remove_children() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::move_node(mforms::TreeNodeRef node, bool before) {
+auto TreeNodeWrapper::move_node(mforms::TreeNodeRef node, bool before) -> void {
   // Nodes must belong to the same tree.
   TreeNodeWrapper *wrapper = (TreeNodeWrapper *)node.ptr();
   if (treeWrapper != wrapper->treeWrapper)
@@ -585,7 +585,7 @@ void TreeNodeWrapper::move_node(mforms::TreeNodeRef node, bool before) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeNodeWrapper::get_child(int index) const {
+auto TreeNodeWrapper::get_child(int index) const -> mforms::TreeNodeRef {
   TreeNodeAdv ^ child = nativeNodeAdv->Children[index];
   if (child != nullptr)
     return mforms::TreeNodeRef(new TreeNodeWrapper(treeWrapper, child));
@@ -595,14 +595,14 @@ mforms::TreeNodeRef TreeNodeWrapper::get_child(int index) const {
 
 //--------------------------------------------------------------------------------------------------
 
-int MySQL::Forms::TreeNodeWrapper::get_child_index(mforms::TreeNodeRef node) const {
+auto MySQL::Forms::TreeNodeWrapper::get_child_index(mforms::TreeNodeRef node) const -> int {
   const TreeNodeWrapper *wrapper = dynamic_cast<const TreeNodeWrapper *>(node.ptr());
   return nativeNode->Nodes->IndexOf(wrapper->nativeNode);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeNodeWrapper::get_parent() const {
+auto TreeNodeWrapper::get_parent() const -> mforms::TreeNodeRef {
   if (!isRoot) {
     TreeNodeAdv ^ parent = nativeNodeAdv->Parent;
     if (parent != nullptr && parent->Index > -1) // The hidden root node has an index of -1;
@@ -616,7 +616,7 @@ mforms::TreeNodeRef TreeNodeWrapper::get_parent() const {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeNodeWrapper::previous_sibling() const {
+auto TreeNodeWrapper::previous_sibling() const -> mforms::TreeNodeRef {
   if (isRoot || nativeNodeAdv->Index == 0)
     return mforms::TreeNodeRef();
 
@@ -626,7 +626,7 @@ mforms::TreeNodeRef TreeNodeWrapper::previous_sibling() const {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef TreeNodeWrapper::next_sibling() const {
+auto TreeNodeWrapper::next_sibling() const -> mforms::TreeNodeRef {
   if (isRoot || nativeNodeAdv->Index == nativeNodeAdv->Parent->Children->Count - 1)
     return mforms::TreeNodeRef();
 
@@ -636,7 +636,7 @@ mforms::TreeNodeRef TreeNodeWrapper::next_sibling() const {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::expand() {
+auto TreeNodeWrapper::expand() -> void {
   if (!isRoot)
     get_parent()->expand(); // Recursively expand all parent nodes.
   nativeNodeAdv->Expand();
@@ -644,19 +644,19 @@ void TreeNodeWrapper::expand() {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::collapse() {
+auto TreeNodeWrapper::collapse() -> void {
   nativeNodeAdv->Collapse();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool TreeNodeWrapper::is_expanded() {
+auto TreeNodeWrapper::is_expanded() -> bool {
   return nativeNodeAdv->IsExpanded;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_tag(const std::string &tag) {
+auto TreeNodeWrapper::set_tag(const std::string &tag) -> void {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     if (!node->MyTag.empty())
@@ -668,7 +668,7 @@ void TreeNodeWrapper::set_tag(const std::string &tag) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string TreeNodeWrapper::get_tag() const {
+auto TreeNodeWrapper::get_tag() const -> std::string {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     return node->MyTag;
@@ -679,7 +679,7 @@ std::string TreeNodeWrapper::get_tag() const {
 
 //--------------------------------------------------------------------------------------------------
 
-void TreeNodeWrapper::set_data(mforms::TreeNodeData *data) {
+auto TreeNodeWrapper::set_data(mforms::TreeNodeData *data) -> void {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     node->Data = data;
@@ -688,7 +688,7 @@ void TreeNodeWrapper::set_data(mforms::TreeNodeData *data) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeData *TreeNodeWrapper::get_data() const {
+auto TreeNodeWrapper::get_data() const -> mforms::TreeNodeData * {
   if (!isRoot) {
     TreeViewNode ^ node = (TreeViewNode ^)(Node ^)nativeNode;
     return node->Data;

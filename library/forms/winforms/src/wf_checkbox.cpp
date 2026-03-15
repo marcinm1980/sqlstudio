@@ -55,7 +55,7 @@ public:
 
 //----------------- CheckBoxWrapper ----------------------------------------------------------------
 
-bool CheckBoxWrapper::create(mforms::CheckBox *backend, bool square) {
+auto CheckBoxWrapper::create(mforms::CheckBox *backend, bool square) -> bool {
   CheckBoxWrapper *wrapper = new CheckBoxWrapper(backend);
   MformsCheckBox ^ box = CheckBoxWrapper::Create<MformsCheckBox>(backend, wrapper);
 
@@ -67,14 +67,14 @@ bool CheckBoxWrapper::create(mforms::CheckBox *backend, bool square) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CheckBoxWrapper::set_active(mforms::CheckBox *backend, bool flag) {
+auto CheckBoxWrapper::set_active(mforms::CheckBox *backend, bool flag) -> void {
   CheckBox ^ checkbox = CheckBoxWrapper::GetManagedObject<CheckBox>(backend);
   checkbox->Checked = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool CheckBoxWrapper::get_active(mforms::CheckBox *backend) {
+auto CheckBoxWrapper::get_active(mforms::CheckBox *backend) -> bool {
   CheckBox ^ checkbox = CheckBoxWrapper::GetManagedObject<CheckBox>(backend);
   return checkbox->Checked;
 }
@@ -86,7 +86,7 @@ CheckBoxWrapper::CheckBoxWrapper(mforms::CheckBox *cbox) : ButtonWrapper(cbox) {
 
 //--------------------------------------------------------------------------------------------------
 
-int CheckBoxWrapper::set_text(const std::string &text) {
+auto CheckBoxWrapper::set_text(const std::string &text) -> int {
   int height = __super ::set_text(text);
   MformsCheckBox ^ checkbox = GetManagedObject<MformsCheckBox>();
   assert(checkbox != nullptr);
@@ -98,7 +98,7 @@ int CheckBoxWrapper::set_text(const std::string &text) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CheckBoxWrapper::set_font(const std::string &fontDescription) {
+auto CheckBoxWrapper::set_font(const std::string &fontDescription) -> void {
   __super ::set_font(fontDescription);
   MformsCheckBox ^ checkbox = GetManagedObject<MformsCheckBox>();
   assert(checkbox != nullptr);
@@ -118,7 +118,7 @@ void CheckBoxWrapper::set_font(const std::string &fontDescription) {
 
 //--------------------------------------------------------------------------------------------------
 
-void CheckBoxWrapper::init() {
+auto CheckBoxWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_checkbox_impl.create = &CheckBoxWrapper::create;

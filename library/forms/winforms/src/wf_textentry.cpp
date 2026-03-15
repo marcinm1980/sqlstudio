@@ -154,8 +154,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  String ^
-    GetText() {
+  auto GetText() -> String ^ {
       if (hasRealText)
         return Text;
 
@@ -172,7 +171,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void SetPlaceholderColor(Color color) {
+  auto SetPlaceholderColor(Color color) -> void {
     placeholderColor = color;
     OnLostFocus(gcnew EventArgs());
   }
@@ -182,7 +181,7 @@ public:
 
 //----------------- TextEntryWrapper ---------------------------------------------------------------
 
-bool TextEntryWrapper::create(mforms::TextEntry *backend, mforms::TextEntryType type) {
+auto TextEntryWrapper::create(mforms::TextEntry *backend, mforms::TextEntryType type) -> bool {
   TextEntryWrapper *wrapper = new TextEntryWrapper(backend);
 
   MformsTextBox ^ textbox = TextEntryWrapper::Create<MformsTextBox>(backend, wrapper);
@@ -207,49 +206,49 @@ bool TextEntryWrapper::create(mforms::TextEntry *backend, mforms::TextEntryType 
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::set_text(mforms::TextEntry *backend, const std::string &text) {
+auto TextEntryWrapper::set_text(mforms::TextEntry *backend, const std::string &text) -> void {
   MformsTextBox ^ box = TextEntryWrapper::GetManagedObject<MformsTextBox>(backend);
   box->SetText(CppStringToNative(text));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::set_placeholder_text(mforms::TextEntry *backend, const std::string &text) {
+auto TextEntryWrapper::set_placeholder_text(mforms::TextEntry *backend, const std::string &text) -> void {
   MformsTextBox ^ box = TextEntryWrapper::GetManagedObject<MformsTextBox>(backend);
   box->SetPlaceholderText(CppStringToNative(text));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::set_placeholder_color(mforms::TextEntry *backend, const std::string &color) {
+auto TextEntryWrapper::set_placeholder_color(mforms::TextEntry *backend, const std::string &color) -> void {
   MformsTextBox ^ box = TextEntryWrapper::GetManagedObject<MformsTextBox>(backend);
   box->SetPlaceholderColor(ColorTranslator::FromHtml(CppStringToNativeRaw(color)));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string TextEntryWrapper::get_text(mforms::TextEntry *backend) {
+auto TextEntryWrapper::get_text(mforms::TextEntry *backend) -> std::string {
   MformsTextBox ^ box = TextEntryWrapper::GetManagedObject<MformsTextBox>(backend);
   return NativeToCppString(box->GetText());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::set_max_length(mforms::TextEntry *backend, int length) {
+auto TextEntryWrapper::set_max_length(mforms::TextEntry *backend, int length) -> void {
   TextBox ^ textbox = TextEntryWrapper::GetManagedObject<TextBox>(backend);
   textbox->MaxLength = length;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::set_read_only(mforms::TextEntry *backend, bool flag) {
+auto TextEntryWrapper::set_read_only(mforms::TextEntry *backend, bool flag) -> void {
   TextBox ^ textbox = TextEntryWrapper::GetManagedObject<TextBox>(backend);
   textbox->ReadOnly = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::set_bordered(mforms::TextEntry *backend, bool flag) {
+auto TextEntryWrapper::set_bordered(mforms::TextEntry *backend, bool flag) -> void {
   TextBox ^ textbox = TextEntryWrapper::GetManagedObject<TextBox>(backend);
   textbox->BorderStyle = flag ? BorderStyle::Fixed3D : BorderStyle::None;
 }
@@ -264,35 +263,35 @@ void TextEntryWrapper::set_front_color(String ^ color) {
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::cut(mforms::TextEntry *self) {
+auto TextEntryWrapper::cut(mforms::TextEntry *self) -> void {
   TextBox ^ textbox = TextEntryWrapper::GetManagedObject<TextBox>(self);
   textbox->Cut();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::copy(mforms::TextEntry *self) {
+auto TextEntryWrapper::copy(mforms::TextEntry *self) -> void {
   TextBox ^ textbox = TextEntryWrapper::GetManagedObject<TextBox>(self);
   textbox->Copy();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::paste(mforms::TextEntry *self) {
+auto TextEntryWrapper::paste(mforms::TextEntry *self) -> void {
   TextBox ^ textbox = TextEntryWrapper::GetManagedObject<TextBox>(self);
   textbox->Paste();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::select(mforms::TextEntry *self, const base::Range &range) {
+auto TextEntryWrapper::select(mforms::TextEntry *self, const base::Range &range) -> void {
   TextBox ^ textbox = TextEntryWrapper::GetManagedObject<TextBox>(self);
   textbox->Select((int)range.position, range.size == (size_t)-1 ? textbox->Text->Length : (int)range.size);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-base::Range TextEntryWrapper::get_selection(mforms::TextEntry *self) {
+auto TextEntryWrapper::get_selection(mforms::TextEntry *self) -> base::Range {
   TextBox ^ textbox = TextEntryWrapper::GetManagedObject<TextBox>(self);
   return base::Range(textbox->SelectionStart, textbox->SelectionLength);
 }
@@ -304,7 +303,7 @@ TextEntryWrapper::TextEntryWrapper(mforms::TextEntry *text) : ViewWrapper(text) 
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntryWrapper::init() {
+auto TextEntryWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_textentry_impl.create = &TextEntryWrapper::create;

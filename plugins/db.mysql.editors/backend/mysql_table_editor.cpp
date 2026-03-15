@@ -48,7 +48,7 @@ using namespace parsers;
 MySQLTableColumnsListBE::MySQLTableColumnsListBE(MySQLTableEditorBE *owner) : bec::TableColumnsListBE(owner) {
 }
 
-bool MySQLTableColumnsListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto MySQLTableColumnsListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   db_mysql_ColumnRef col;
 
   if (node.is_valid() && node[0] < real_count()) {
@@ -109,7 +109,7 @@ bool MySQLTableColumnsListBE::set_field(const NodeId &node, ColumnId column, con
   return TableColumnsListBE::set_field(node, column, value);
 }
 
-bool MySQLTableColumnsListBE::set_field(const ::bec::NodeId &node, ColumnId column, ssize_t value) {
+auto MySQLTableColumnsListBE::set_field(const ::bec::NodeId &node, ColumnId column, ssize_t value) -> bool {
   db_mysql_ColumnRef col;
 
   if (node.is_valid() && node[0] < real_count()) {
@@ -193,7 +193,7 @@ bool MySQLTableColumnsListBE::set_field(const ::bec::NodeId &node, ColumnId colu
   return TableColumnsListBE::set_field(node, column, value);
 }
 
-bool MySQLTableColumnsListBE::get_field_grt(const ::bec::NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto MySQLTableColumnsListBE::get_field_grt(const ::bec::NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   db_mysql_ColumnRef col;
 
   if (node.is_valid()) {
@@ -245,7 +245,7 @@ bool MySQLTableColumnsListBE::get_field_grt(const ::bec::NodeId &node, ColumnId 
   return TableColumnsListBE::get_field_grt(node, column, value);
 }
 
-static bool can_be_timestamp(const char *value) {
+static auto can_be_timestamp(const char *value) -> bool {
   if (*value == '\'')
     return true;
 
@@ -256,7 +256,7 @@ static bool can_be_timestamp(const char *value) {
   return true;
 }
 
-bec::MenuItemList MySQLTableColumnsListBE::get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) {
+auto MySQLTableColumnsListBE::get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) -> bec::MenuItemList {
   bec::MenuItemList items = bec::TableColumnsListBE::get_popup_items_for_nodes(nodes);
   bec::MenuItem item;
 
@@ -348,8 +348,8 @@ bec::MenuItemList MySQLTableColumnsListBE::get_popup_items_for_nodes(const std::
   return items;
 }
 
-bool MySQLTableColumnsListBE::activate_popup_item_for_nodes(const std::string &name,
-                                                            const std::vector<bec::NodeId> &orig_nodes) {
+auto MySQLTableColumnsListBE::activate_popup_item_for_nodes(const std::string &name,
+                                                            const std::vector<bec::NodeId> &orig_nodes) -> bool {
   AutoUndoEdit undo(_owner);
   std::string value;
   bool changed = false;
@@ -398,7 +398,7 @@ public:
   TriggerTreeView(mforms::TreeOptions options) : mforms::TreeView(options) {
   }
 
-  virtual bool get_drag_data(mforms::DragDetails &details, void **data, std::string &format) {
+  virtual auto get_drag_data(mforms::DragDetails &details, void **data, std::string &format) -> bool {
     selection = get_selected_node();
     if (selection.is_valid() && selection->get_parent() != root_node()) {
       format = TRIGGER_DRAG_FORMAT;
@@ -533,8 +533,8 @@ public:
    * Moves all triggers from source to target with the given timing and event, maintaining
    * their relative order.
    */
-  void coalesce_triggers(grt::ListRef<db_mysql_Trigger> source, grt::ListRef<db_mysql_Trigger> target,
-                         std::string timing, std::string event) {
+  auto coalesce_triggers(grt::ListRef<db_mysql_Trigger> source, grt::ListRef<db_mysql_Trigger> target,
+                         std::string timing, std::string event) -> void {
     size_t i = 0;
     while (i < source->count()) {
       db_mysql_TriggerRef trigger = source[i];
@@ -548,7 +548,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  std::vector<std::string> overlay_icons_for_node(mforms::TreeNodeRef node) {
+  auto overlay_icons_for_node(mforms::TreeNodeRef node) -> std::vector<std::string> {
     std::vector<std::string> result;
 
     // Add for both group nodes and triggers.
@@ -561,7 +561,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void node_activated(mforms::TreeNodeRef node, int index) {
+  auto node_activated(mforms::TreeNodeRef node, int index) -> void {
     if (!node.is_valid())
       return;
 
@@ -608,7 +608,7 @@ public:
     AttachedTrigger(db_mysql_TriggerRef trigger) : _trigger(trigger){};
   };
 
-  mforms::TreeNodeRef insert_trigger_in_tree(const db_mysql_TriggerRef trigger) {
+  auto insert_trigger_in_tree(const db_mysql_TriggerRef trigger) -> mforms::TreeNodeRef {
     int index = 0;
     std::string event = base::tolower(trigger->event());
     if (event == "update")
@@ -631,7 +631,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void refresh() {
+  auto refresh() -> void {
     _refreshing = true;
     _trigger_list.freeze_refresh();
 
@@ -666,7 +666,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  mforms::TreeNodeRef node_for_trigger(const db_TriggerRef &trigger) {
+  auto node_for_trigger(const db_TriggerRef &trigger) -> mforms::TreeNodeRef {
     // Find the index of the top level node based on timing and event.
     int index = 0;
     std::string event = base::tolower(trigger->event());
@@ -694,7 +694,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  db_mysql_TriggerRef trigger_for_node(mforms::TreeNodeRef node) {
+  auto trigger_for_node(mforms::TreeNodeRef node) -> db_mysql_TriggerRef {
     if (!node.is_valid())
       return db_mysql_TriggerRef();
 
@@ -719,7 +719,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void code_edited() {
+  auto code_edited() -> void {
     if (_selected_trigger.is_valid()) {
       bool need_refresh = false;
 
@@ -838,7 +838,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  bool trigger_name_exists(const std::string &name) {
+  auto trigger_name_exists(const std::string &name) -> bool {
     grt::ListRef<db_Trigger> triggers(_editor->get_table()->triggers());
     for (size_t i = 0; i < triggers->count(); ++i) {
       if (base::same_string(triggers[i]->name(), name))
@@ -899,7 +899,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void delete_trigger(db_TriggerRef trigger) {
+  auto delete_trigger(db_TriggerRef trigger) -> void {
     _editor->freeze_refresh_on_object_change();
     AutoUndoEdit undo(_editor);
 
@@ -924,7 +924,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void selection_changed() {
+  auto selection_changed() -> void {
     if (_refreshing)
       return;
 
@@ -936,7 +936,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void need_refresh(const std::string &member) {
+  auto need_refresh(const std::string &member) -> void {
     // Handle undo/redo changes.
     if (member == "trigger" && !_editor->is_refresh_frozen()) {
       refresh();
@@ -947,7 +947,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void update_ui() {
+  auto update_ui() -> void {
     mforms::TreeNodeRef node = _trigger_list.get_selected_node();
     db_mysql_TriggerRef trigger = trigger_for_node(node);
 
@@ -965,7 +965,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void update_warning() {
+  auto update_warning() -> void {
     // See if there's any timing/event combination with more than one trigger definition.
     bool found_multiple = false;
     bool supports_multiple = bec::is_supported_mysql_version_at_least(
@@ -990,14 +990,14 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void catalog_changed(const std::string &member, const grt::ValueRef &value) {
+  auto catalog_changed(const std::string &member, const grt::ValueRef &value) -> void {
     if (member == "version")
       update_warning();
   }
 
   //------------------------------------------------------------------------------------------------
 
-  void trigger_menu_will_show(mforms::MenuItem *sub_menu_root) {
+  auto trigger_menu_will_show(mforms::MenuItem *sub_menu_root) -> void {
     mforms::TreeNodeRef node = _trigger_list.get_selected_node();
     if (!node.is_valid()) {
       for (int i = 0; i < _trigger_menu.item_count(); ++i)
@@ -1039,7 +1039,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  mforms::TreeNodeRef move_node_to(mforms::TreeNodeRef node, mforms::TreeNodeRef new_parent, int index) {
+  auto move_node_to(mforms::TreeNodeRef node, mforms::TreeNodeRef new_parent, int index) -> mforms::TreeNodeRef {
     mforms::TreeNodeRef new_node = new_parent->insert_child(index);
     new_node->set_string(0, node->get_string(0));
     std::string tag = node->get_tag();
@@ -1051,7 +1051,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void trigger_action(const std::string &action) {
+  auto trigger_action(const std::string &action) -> void {
     mforms::TreeNodeRef node = _trigger_list.get_selected_node();
     mforms::TreeNodeRef group_node = node;
     if (node->get_parent() != _trigger_list.root_node())
@@ -1164,8 +1164,8 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual mforms::DragOperation drag_over(View *sender, base::Point p, mforms::DragOperation allowedOperations,
-                                          const std::vector<std::string> &formats) {
+  virtual auto drag_over(View *sender, base::Point p, mforms::DragOperation allowedOperations,
+                                          const std::vector<std::string> &formats) -> mforms::DragOperation {
     TriggerTreeView *tree = dynamic_cast<TriggerTreeView *>(sender);
 
     // For now accept a drop only from our own trigger list. Might change later if we can show multiple editors at once.
@@ -1202,8 +1202,8 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual mforms::DragOperation data_dropped(View *sender, base::Point p, mforms::DragOperation allowedOperations,
-                                             void *data, const std::string &format) {
+  virtual auto data_dropped(View *sender, base::Point p, mforms::DragOperation allowedOperations,
+                                             void *data, const std::string &format) -> mforms::DragOperation {
     TriggerTreeView *tree = dynamic_cast<TriggerTreeView *>(sender);
     if (allowedOperations != mforms::DragOperationNone && tree == &_trigger_list) {
       mforms::TreeNodeRef target_node = _trigger_list.node_at_position(p);
@@ -1280,7 +1280,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  void change_trigger_timing(db_mysql_TriggerRef trigger, std::string timing, std::string event) {
+  auto change_trigger_timing(db_mysql_TriggerRef trigger, std::string timing, std::string event) -> void {
     bool use_uppercase = (*trigger->timing())[0] >= 'A';
     if (!use_uppercase) {
       timing = base::tolower(timing);
@@ -1373,20 +1373,20 @@ MySQLTableEditorBE::~MySQLTableEditorBE() {
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLTableEditorBE::refresh_live_object() {
+auto MySQLTableEditorBE::refresh_live_object() -> void {
   TableEditorBE::refresh_live_object();
   load_trigger_sql();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLTableEditorBE::commit_changes() {
+auto MySQLTableEditorBE::commit_changes() -> void {
   _trigger_panel->code_edited();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::View *MySQLTableEditorBE::get_trigger_panel() {
+auto MySQLTableEditorBE::get_trigger_panel() -> mforms::View * {
   if (!_trigger_panel)
     _trigger_panel = new MySQLTriggerPanel(this);
   return _trigger_panel;
@@ -1397,14 +1397,14 @@ mforms::View *MySQLTableEditorBE::get_trigger_panel() {
 /**
 * Programmatically add a new trigger (used for testing).
 */
-void MySQLTableEditorBE::add_trigger(const std::string &timing, const std::string &event) {
+auto MySQLTableEditorBE::add_trigger(const std::string &timing, const std::string &event) -> void {
   get_trigger_panel();
   _trigger_panel->add_trigger(timing, event, false);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::vector<std::string> MySQLTableEditorBE::get_index_types() {
+auto MySQLTableEditorBE::get_index_types() -> std::vector<std::string> {
   std::vector<std::string> index_types;
 
   GrtVersionRef version =
@@ -1428,7 +1428,7 @@ std::vector<std::string> MySQLTableEditorBE::get_index_types() {
   return index_types;
 }
 
-std::vector<std::string> MySQLTableEditorBE::get_index_storage_types() {
+auto MySQLTableEditorBE::get_index_storage_types() -> std::vector<std::string> {
   std::vector<std::string> index_types;
 
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
@@ -1441,7 +1441,7 @@ std::vector<std::string> MySQLTableEditorBE::get_index_storage_types() {
   return index_types;
 }
 
-std::vector<std::string> MySQLTableEditorBE::get_fk_action_options() {
+auto MySQLTableEditorBE::get_fk_action_options() -> std::vector<std::string> {
   std::vector<std::string> action_options;
 
   action_options.push_back("RESTRICT");
@@ -1452,7 +1452,7 @@ std::vector<std::string> MySQLTableEditorBE::get_fk_action_options() {
   return action_options;
 }
 
-std::vector<std::string> MySQLTableEditorBE::get_engines_list() {
+auto MySQLTableEditorBE::get_engines_list() -> std::vector<std::string> {
   std::vector<std::string> engines;
 
   DbMySQLImpl *module = grt::GRT::get()->find_native_module<DbMySQLImpl>("DbMySQL");
@@ -1470,7 +1470,7 @@ std::vector<std::string> MySQLTableEditorBE::get_engines_list() {
 /**
  * Determines if the currently set engine supports foreign keys and reports the outcome to the caller.
  */
-bool MySQLTableEditorBE::engine_supports_foreign_keys() {
+auto MySQLTableEditorBE::engine_supports_foreign_keys() -> bool {
   grt::StringRef name = db_mysql_TableRef::cast_from(get_table())->tableEngine();
   if (name == "") // No engine set. Assume db default allows FKs.
     return true;
@@ -1507,7 +1507,7 @@ static struct TableOption {
   {NULL, NULL, false}
 };
 
-void MySQLTableEditorBE::set_table_option_by_name(const std::string &name, const std::string &value) {
+auto MySQLTableEditorBE::set_table_option_by_name(const std::string &name, const std::string &value) -> void {
   bool found = false;
 
   for (size_t i = 0; table_options[i].option_name; i++) {
@@ -1568,7 +1568,7 @@ void MySQLTableEditorBE::set_table_option_by_name(const std::string &name, const
     throw std::invalid_argument("Invalid option " + name);
 }
 
-std::string MySQLTableEditorBE::get_table_option_by_name(const std::string &name) {
+auto MySQLTableEditorBE::get_table_option_by_name(const std::string &name) -> std::string {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   if (name.compare("PACK_KEYS") == 0)
     return table->packKeys();
@@ -1617,7 +1617,7 @@ std::string MySQLTableEditorBE::get_table_option_by_name(const std::string &name
  * Loads the current trigger sql text into the editor control and marks that as not dirty.
  * In addition the trigger UI is refreshed so that the trigger tree contains update trigger references.
  */
-void MySQLTableEditorBE::load_trigger_sql() {
+auto MySQLTableEditorBE::load_trigger_sql() -> void {
   if (_trigger_panel && !_updating_triggers) {
     _updating_triggers = true;
     _trigger_panel->need_refresh("trigger");
@@ -1627,14 +1627,14 @@ void MySQLTableEditorBE::load_trigger_sql() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLTableEditorBE::can_close() {
+auto MySQLTableEditorBE::can_close() -> bool {
   _trigger_panel->code_edited(); // Same handling as for focus-lost. Might not be necessary but better safe than sorry.
   return TableEditorBE::can_close();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLTableEditorBE::set_partition_type(const std::string &type) {
+auto MySQLTableEditorBE::set_partition_type(const std::string &type) -> bool {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   if (!type.empty() && type.compare(*table->partitionType()) != 0) {
     if (type == "RANGE" || type == "LIST") {
@@ -1679,11 +1679,11 @@ bool MySQLTableEditorBE::set_partition_type(const std::string &type) {
   return false;
 }
 
-std::string MySQLTableEditorBE::get_partition_type() {
+auto MySQLTableEditorBE::get_partition_type() -> std::string {
   return *db_mysql_TableRef::cast_from(get_table())->partitionType();
 }
 
-void MySQLTableEditorBE::set_partition_expression(const std::string &expr) {
+auto MySQLTableEditorBE::set_partition_expression(const std::string &expr) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   AutoUndoEdit undo(this, table, "partitionExpression");
 
@@ -1693,11 +1693,11 @@ void MySQLTableEditorBE::set_partition_expression(const std::string &expr) {
   undo.end(strfmt(_("Set Partition Expression for '%s'"), get_name().c_str()));
 }
 
-std::string MySQLTableEditorBE::get_partition_expression() {
+auto MySQLTableEditorBE::get_partition_expression() -> std::string {
   return *db_mysql_TableRef::cast_from(get_table())->partitionExpression();
 }
 
-void MySQLTableEditorBE::set_partition_count(int count) {
+auto MySQLTableEditorBE::set_partition_count(int count) -> void {
   AutoUndoEdit undo(this);
 
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
@@ -1712,16 +1712,16 @@ void MySQLTableEditorBE::set_partition_count(int count) {
   undo.end(strfmt(_("Set Partition Count for '%s'"), get_name().c_str()));
 }
 
-int MySQLTableEditorBE::get_partition_count() {
+auto MySQLTableEditorBE::get_partition_count() -> int {
   return (int)*db_mysql_TableRef::cast_from(get_table())->partitionCount();
 }
 
-bool MySQLTableEditorBE::subpartition_count_allowed() {
+auto MySQLTableEditorBE::subpartition_count_allowed() -> bool {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   return (*table->partitionType() == "RANGE" || *table->partitionType() == "LIST");
 }
 
-bool MySQLTableEditorBE::set_subpartition_type(const std::string &type) {
+auto MySQLTableEditorBE::set_subpartition_type(const std::string &type) -> bool {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   if (*table->partitionType() == "RANGE" || *table->partitionType() == "LIST") {
     AutoUndoEdit undo(this, table, "subpartitionType");
@@ -1735,11 +1735,11 @@ bool MySQLTableEditorBE::set_subpartition_type(const std::string &type) {
   return false;
 }
 
-std::string MySQLTableEditorBE::get_subpartition_type() {
+auto MySQLTableEditorBE::get_subpartition_type() -> std::string {
   return *db_mysql_TableRef::cast_from(get_table())->subpartitionType();
 }
 
-bool MySQLTableEditorBE::set_subpartition_expression(const std::string &expr) {
+auto MySQLTableEditorBE::set_subpartition_expression(const std::string &expr) -> bool {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   if (*table->partitionType() == "RANGE" || *table->partitionType() == "LIST") {
     AutoUndoEdit undo(this, table, "subpartitionExpression");
@@ -1753,11 +1753,11 @@ bool MySQLTableEditorBE::set_subpartition_expression(const std::string &expr) {
   return false;
 }
 
-std::string MySQLTableEditorBE::get_subpartition_expression() {
+auto MySQLTableEditorBE::get_subpartition_expression() -> std::string {
   return *db_mysql_TableRef::cast_from(get_table())->subpartitionExpression();
 }
 
-void MySQLTableEditorBE::set_subpartition_count(int count) {
+auto MySQLTableEditorBE::set_subpartition_count(int count) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   if (*table->partitionType() == "RANGE" || *table->partitionType() == "LIST") {
     AutoUndoEdit undo(this);
@@ -1769,11 +1769,11 @@ void MySQLTableEditorBE::set_subpartition_count(int count) {
   }
 }
 
-int MySQLTableEditorBE::get_subpartition_count() {
+auto MySQLTableEditorBE::get_subpartition_count() -> int {
   return (int)*db_mysql_TableRef::cast_from(get_table())->subpartitionCount();
 }
 
-void MySQLTableEditorBE::set_explicit_partitions(bool flag) {
+auto MySQLTableEditorBE::set_explicit_partitions(bool flag) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   if (flag != get_explicit_partitions()) {
     AutoUndoEdit undo(this);
@@ -1790,7 +1790,7 @@ void MySQLTableEditorBE::set_explicit_partitions(bool flag) {
   }
 }
 
-void MySQLTableEditorBE::set_explicit_subpartitions(bool flag) {
+auto MySQLTableEditorBE::set_explicit_subpartitions(bool flag) -> void {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   if (flag != get_explicit_subpartitions()) {
     if (get_explicit_partitions()) {
@@ -1809,17 +1809,17 @@ void MySQLTableEditorBE::set_explicit_subpartitions(bool flag) {
   }
 }
 
-bool MySQLTableEditorBE::get_explicit_partitions() {
+auto MySQLTableEditorBE::get_explicit_partitions() -> bool {
   return db_mysql_TableRef::cast_from(get_table())->partitionDefinitions().count() > 0;
 }
 
-bool MySQLTableEditorBE::get_explicit_subpartitions() {
+auto MySQLTableEditorBE::get_explicit_subpartitions() -> bool {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(get_table());
   return table->partitionDefinitions().count() > 0 &&
          table->partitionDefinitions().get(0)->subpartitionDefinitions().count() > 0;
 }
 
-void MySQLTableEditorBE::reset_partition_definitions(int parts, int subparts) {
+auto MySQLTableEditorBE::reset_partition_definitions(int parts, int subparts) -> void {
   grt::ListRef<db_mysql_PartitionDefinition> pdefs(db_mysql_TableRef::cast_from(get_table())->partitionDefinitions());
 
   AutoUndoEdit undo(this);
@@ -1856,7 +1856,7 @@ void MySQLTableEditorBE::reset_partition_definitions(int parts, int subparts) {
   undo.end("Reset Partitioning");
 }
 
-db_TableRef MySQLTableEditorBE::create_stub_table(const std::string &schema, const std::string &table) {
+auto MySQLTableEditorBE::create_stub_table(const std::string &schema, const std::string &table) -> db_TableRef {
   db_SchemaRef dbschema = grt::find_named_object_in_list(get_catalog()->schemata(), schema, false);
   db_TableRef dbtable;
 
@@ -1881,7 +1881,7 @@ db_TableRef MySQLTableEditorBE::create_stub_table(const std::string &schema, con
   return dbtable;
 }
 
-static db_SimpleDatatypeRef get_simple_datatype(const db_ColumnRef &column) {
+static auto get_simple_datatype(const db_ColumnRef &column) -> db_SimpleDatatypeRef {
   if (column->simpleType().is_valid())
     return column->simpleType();
   if (column->userType().is_valid())
@@ -1889,7 +1889,7 @@ static db_SimpleDatatypeRef get_simple_datatype(const db_ColumnRef &column) {
   return db_SimpleDatatypeRef();
 }
 
-bool MySQLTableEditorBE::check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) {
+auto MySQLTableEditorBE::check_column_referenceable_by_fk(const db_ColumnRef &column1, const db_ColumnRef &column2) -> bool {
   // from 5.1 manual:
   // - Corresponding columns in the foreign key and the referenced key must have similar internal data types
   // inside InnoDB so that they can be compared without a type conversion.
@@ -1931,7 +1931,7 @@ MySQLTablePartitionTreeBE::MySQLTablePartitionTreeBE(MySQLTableEditorBE *owner) 
   _owner = owner;
 }
 
-bool MySQLTablePartitionTreeBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto MySQLTablePartitionTreeBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   db_mysql_PartitionDefinitionRef pdef(get_definition(node));
 
   if (!pdef.is_valid())
@@ -2019,7 +2019,7 @@ bool MySQLTablePartitionTreeBE::set_field(const NodeId &node, ColumnId column, c
   return false;
 }
 
-bool MySQLTablePartitionTreeBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto MySQLTablePartitionTreeBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   db_mysql_PartitionDefinitionRef pdef(get_definition(node));
 
   if (!pdef.is_valid())
@@ -2058,11 +2058,11 @@ bool MySQLTablePartitionTreeBE::get_field_grt(const NodeId &node, ColumnId colum
   return false;
 }
 
-grt::Type MySQLTablePartitionTreeBE::get_field_type(const NodeId &node, ColumnId column) {
+auto MySQLTablePartitionTreeBE::get_field_type(const NodeId &node, ColumnId column) -> grt::Type {
   return grt::StringType;
 }
 
-db_mysql_PartitionDefinitionRef MySQLTablePartitionTreeBE::get_definition(const NodeId &node) {
+auto MySQLTablePartitionTreeBE::get_definition(const NodeId &node) -> db_mysql_PartitionDefinitionRef {
   db_mysql_TableRef table = db_mysql_TableRef::cast_from(_owner->get_table());
   if (node.depth() == 1) {
     if (node[0] < table->partitionDefinitions().count())
@@ -2078,7 +2078,7 @@ db_mysql_PartitionDefinitionRef MySQLTablePartitionTreeBE::get_definition(const 
   return db_mysql_PartitionDefinitionRef();
 }
 
-size_t MySQLTablePartitionTreeBE::count_children(const NodeId &parent) {
+auto MySQLTablePartitionTreeBE::count_children(const NodeId &parent) -> size_t {
   if (parent.depth() == 1) {
     db_mysql_PartitionDefinitionRef def(get_definition(parent));
 
@@ -2092,7 +2092,7 @@ size_t MySQLTablePartitionTreeBE::count_children(const NodeId &parent) {
   return 0;
 }
 
-NodeId MySQLTablePartitionTreeBE::get_child(const NodeId &parent, size_t index) {
+auto MySQLTablePartitionTreeBE::get_child(const NodeId &parent, size_t index) -> NodeId {
   if (count_children(parent) > index)
     return NodeId(parent).append(index);
 
@@ -2104,7 +2104,7 @@ NodeId MySQLTablePartitionTreeBE::get_child(const NodeId &parent, size_t index) 
 MySQLTableIndexListBE::MySQLTableIndexListBE(MySQLTableEditorBE *owner) : IndexListBE(owner) {
 }
 
-bool MySQLTableIndexListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) {
+auto MySQLTableIndexListBE::set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool {
   if (!index_editable(get_selected_index()))
     return IndexListBE::set_field(node, column, value);
 
@@ -2141,7 +2141,7 @@ bool MySQLTableIndexListBE::set_field(const NodeId &node, ColumnId column, const
   }
 }
 
-bool MySQLTableIndexListBE::set_field(const ::bec::NodeId &node, ColumnId column, ssize_t value) {
+auto MySQLTableIndexListBE::set_field(const ::bec::NodeId &node, ColumnId column, ssize_t value) -> bool {
     if(!node.is_valid() || !index_editable(get_selected_index()))
       return false;
 
@@ -2165,7 +2165,7 @@ bool MySQLTableIndexListBE::set_field(const ::bec::NodeId &node, ColumnId column
     return false;
 }
 
-bool MySQLTableIndexListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto MySQLTableIndexListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   if (node.is_valid()) {
     const bool existing_node = node.end() < real_count();
 

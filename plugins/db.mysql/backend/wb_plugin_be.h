@@ -43,12 +43,12 @@ public:
   }
 
 public:
-  virtual std::string task_desc() = 0;
-  void exec_task(bool sync = false);
+  virtual auto task_desc() -> std::string = 0;
+  auto exec_task(bool sync = false) -> void;
 
 protected:
   typedef std::function<grt::StringRef()> Task_proc_cb;
-  virtual void set_task_proc() = 0;
+  virtual auto set_task_proc() -> void = 0;
   Task_proc_cb _task_proc_cb;
 
 public:
@@ -57,22 +57,22 @@ public:
   typedef std::function<int()> Task_finish_cb;
   typedef std::function<int(const std::string &)> Task_fail_cb;
 
-  void task_msg_cb(Task_msg_cb cb) {
+  auto task_msg_cb(Task_msg_cb cb) -> void {
     _task_msg_cb = cb;
   }
-  void task_progress_cb(Task_progress_cb cb) {
+  auto task_progress_cb(Task_progress_cb cb) -> void {
     _task_progress_cb = cb;
   }
-  void task_finish_cb(Task_finish_cb cb) {
+  auto task_finish_cb(Task_finish_cb cb) -> void {
     _task_finish_cb = cb;
   }
-  void task_fail_cb(Task_fail_cb cb) {
+  auto task_fail_cb(Task_fail_cb cb) -> void {
     _task_fail_cb = cb;
   }
 
-  void process_task_msg(const grt::Message &msgs);
-  void process_task_finish(grt::ValueRef res);
-  void process_task_fail(const std::exception &error);
+  auto process_task_msg(const grt::Message &msgs) -> void;
+  auto process_task_finish(grt::ValueRef res) -> void;
+  auto process_task_fail(const std::exception &error) -> void;
 
 private:
   Task_msg_cb _task_msg_cb;
@@ -81,12 +81,12 @@ private:
   Task_fail_cb _task_fail_cb;
 
 public:
-  void set_option(const std::string &name, int val);
-  void set_option(const std::string &name, const double &val);
-  void set_option(const std::string &name, const std::string &val);
-  int get_int_option(const std::string &name);
-  double get_double_option(const std::string &name);
-  std::string get_string_option(const std::string &name);
+  auto set_option(const std::string &name, int val) -> void;
+  auto set_option(const std::string &name, const double &val) -> void;
+  auto set_option(const std::string &name, const std::string &val) -> void;
+  auto get_int_option(const std::string &name) -> int;
+  auto get_double_option(const std::string &name) -> double;
+  auto get_string_option(const std::string &name) -> std::string;
 
 protected:
   grt::DictRef _options;

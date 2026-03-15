@@ -34,7 +34,7 @@
 //================================================================================
 // studio_physical_Diagram
 
-void studio_physical_Diagram::init() {
+auto studio_physical_Diagram::init() -> void {
   if (!_data)
     _data = new studio_physical_Diagram::ImplData(this);
   model_Diagram::set_data(_data);
@@ -48,7 +48,7 @@ void studio_physical_Diagram::init() {
   _rootLayer->height(height());
 }
 
-void studio_physical_Diagram::set_data(ImplData *data) {
+auto studio_physical_Diagram::set_data(ImplData *data) -> void {
   throw std::logic_error("unexpected");
 }
 
@@ -56,44 +56,44 @@ studio_physical_Diagram::~studio_physical_Diagram() {
   delete _data;
 }
 
-void studio_physical_Diagram::autoPlaceDBObjects(const grt::ListRef<db_DatabaseObject> &objects) {
+auto studio_physical_Diagram::autoPlaceDBObjects(const grt::ListRef<db_DatabaseObject> &objects) -> void {
   get_data()->auto_place_db_objects(objects);
 }
 
-model_FigureRef studio_physical_Diagram::getFigureForDBObject(const db_DatabaseObjectRef &object) {
+auto studio_physical_Diagram::getFigureForDBObject(const db_DatabaseObjectRef &object) -> model_FigureRef {
   return get_data()->get_figure_for_dbobject(object);
 }
 
-model_LayerRef studio_physical_Diagram::placeNewLayer(double x, double y, double width, double height,
-                                                         const std::string &name) {
+auto studio_physical_Diagram::placeNewLayer(double x, double y, double width, double height,
+                                                         const std::string &name) -> model_LayerRef {
   return get_data()->place_new_layer(x, y, width, height, name);
 }
 
-studio_physical_RoutineGroupFigureRef studio_physical_Diagram::placeRoutineGroup(
-  const db_RoutineGroupRef &routineGroup, double x, double y) {
+auto studio_physical_Diagram::placeRoutineGroup(
+  const db_RoutineGroupRef &routineGroup, double x, double y) -> studio_physical_RoutineGroupFigureRef {
   return get_data()->place_routine_group(routineGroup, x, y);
 }
 
-studio_physical_TableFigureRef studio_physical_Diagram::placeTable(const db_TableRef &table, double x, double y) {
+auto studio_physical_Diagram::placeTable(const db_TableRef &table, double x, double y) -> studio_physical_TableFigureRef {
   return get_data()->place_table(table, x, y);
 }
 
-studio_physical_ViewFigureRef studio_physical_Diagram::placeView(const db_ViewRef &view, double x, double y) {
+auto studio_physical_Diagram::placeView(const db_ViewRef &view, double x, double y) -> studio_physical_ViewFigureRef {
   return get_data()->place_view(view, x, y);
 }
 
-studio_physical_ConnectionRef studio_physical_Diagram::createConnectionForForeignKey(const db_ForeignKeyRef &fk) {
+auto studio_physical_Diagram::createConnectionForForeignKey(const db_ForeignKeyRef &fk) -> studio_physical_ConnectionRef {
   return get_data()->create_connection_for_foreign_key(fk);
 }
 
-grt::IntegerRef studio_physical_Diagram::createConnectionsForTable(const db_TableRef &table) {
+auto studio_physical_Diagram::createConnectionsForTable(const db_TableRef &table) -> grt::IntegerRef {
   return get_data()->create_connections_for_table(table);
 }
 
-void studio_physical_Diagram::deleteConnectionsForTable(const db_TableRef &table) {
+auto studio_physical_Diagram::deleteConnectionsForTable(const db_TableRef &table) -> void {
   get_data()->delete_connections_for_table(table);
 }
 
-studio_physical_ConnectionRef studio_physical_Diagram::getConnectionForForeignKey(const db_ForeignKeyRef &fk) {
+auto studio_physical_Diagram::getConnectionForForeignKey(const db_ForeignKeyRef &fk) -> studio_physical_ConnectionRef {
   return get_data()->get_connection_for_foreign_key(fk);
 }

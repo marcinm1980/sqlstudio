@@ -74,7 +74,7 @@ namespace ssh {
     disconnect();
   }
 
-  void SSHSessionWrapper::disconnect() {
+  auto SSHSessionWrapper::disconnect() -> void {
     if (_sessionPoolHandle != 0) {
       if (!ThreadedTimer::remove_task(_sessionPoolHandle)) {
         _canClose.wait();
@@ -88,11 +88,11 @@ namespace ssh {
     _session->disconnect();
   }
 
-  grt::IntegerRef SSHSessionWrapper::isConnected() {
+  auto SSHSessionWrapper::isConnected() -> grt::IntegerRef {
     return _session->isConnected() ? 1 : 0;
   }
 
-  grt::IntegerRef SSHSessionWrapper::connect() {
+  auto SSHSessionWrapper::connect() -> grt::IntegerRef {
     bool resetPassword = false;
     while (true) {
       std::string service = fillupAuthInfo(_config, _credentials, resetPassword);
@@ -158,7 +158,7 @@ namespace ssh {
     }
   }
 
-  grt::DictRef SSHSessionWrapper::executeCommand(const std::string &command) {
+  auto SSHSessionWrapper::executeCommand(const std::string &command) -> grt::DictRef {
     if (!_session->isConnected())
       return "";
 
@@ -171,7 +171,7 @@ namespace ssh {
     return dict;
   }
 
-  grt::DictRef SSHSessionWrapper::executeSudoCommand(const std::string &command, const std::string &user) {
+  auto SSHSessionWrapper::executeSudoCommand(const std::string &command, const std::string &user) -> grt::DictRef {
     if (!_session->isConnected())
       return "";
 
@@ -211,8 +211,8 @@ namespace ssh {
     }
   }
 
-  std::tuple<ssh::SSHConnectionConfig, ssh::SSHConnectionCredentials> SSHSessionWrapper::getConnectionInfo(
-      db_mgmt_ConnectionRef connectionProperties) {
+  auto SSHSessionWrapper::getConnectionInfo(
+      db_mgmt_ConnectionRef connectionProperties) -> std::tuple<ssh::SSHConnectionConfig, ssh::SSHConnectionCredentials> {
     grt::DictRef parameter_values = connectionProperties->parameterValues();
     ssh::SSHConnectionConfig config;
     config.localhost = "127.0.0.1";
@@ -246,8 +246,8 @@ namespace ssh {
     return std::make_tuple(config, credentials);
   }
 //
-  std::tuple<ssh::SSHConnectionConfig, ssh::SSHConnectionCredentials> SSHSessionWrapper::getConnectionInfo(
-              db_mgmt_ServerInstanceRef serverInstanceProperties) {
+  auto SSHSessionWrapper::getConnectionInfo(
+              db_mgmt_ServerInstanceRef serverInstanceProperties) -> std::tuple<ssh::SSHConnectionConfig, ssh::SSHConnectionCredentials> {
     ssh::SSHConnectionConfig config;
     config.localhost = "127.0.0.1";
     config.bufferSize = bec::GRTManager::get()->get_app_option_int("SSH:BufferSize", 10240);
@@ -289,8 +289,8 @@ namespace ssh {
     return std::make_tuple(config, credentials);
   }
 
-  std::string SSHSessionWrapper::fillupAuthInfo(ssh::SSHConnectionConfig &config,
-                                                ssh::SSHConnectionCredentials &credentials, bool resetPassword) {
+  auto SSHSessionWrapper::fillupAuthInfo(ssh::SSHConnectionConfig &config,
+                                                ssh::SSHConnectionCredentials &credentials, bool resetPassword) -> std::string {
 
     std::string service;
     if (credentials.keyfile.empty() && credentials.password.empty()) {
@@ -327,27 +327,27 @@ namespace ssh {
 
 
 
-  grt::IntegerRef SSHSessionWrapper::cd(const std::string &directory) {
+  auto SSHSessionWrapper::cd(const std::string &directory) -> grt::IntegerRef {
     if (_sftp)
       return _sftp->cd(directory);
     throw std::runtime_error("Not connected");
 
   }
 
-  void SSHSessionWrapper::get(const std::string &src, const std::string &dest) {
+  auto SSHSessionWrapper::get(const std::string &src, const std::string &dest) -> void {
     if (_sftp)
       _sftp->get(src, dest);
     else
       throw std::runtime_error("Not connected");
   }
 
-  grt::StringRef SSHSessionWrapper::getContent(const std::string &src) {
+  auto SSHSessionWrapper::getContent(const std::string &src) -> grt::StringRef {
     if (_sftp)
       return _sftp->getContent(src);
     throw std::runtime_error("Not connected");
   }
 
-  static grt::DictRef sftpAttribToDict(const SftpStatAttrib &attrib) {
+  static auto sftpAttribToDict(const SftpStatAttrib &attrib) -> grt::DictRef {
     grt::DictRef ret(true);
     ret.gset("size", static_cast<long int>(attrib.size));
     ret.gset("uid", static_cast<int>(attrib.uid));
@@ -360,7 +360,7 @@ namespace ssh {
     return ret;
   }
 
-  grt::DictListRef SSHSessionWrapper::ls(const std::string &path) {
+  auto SSHSessionWrapper::ls(const std::string &path) -> grt::DictListRef {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
@@ -376,14 +376,14 @@ namespace ssh {
       return grt::DictListRef();
   }
 
-  void SSHSessionWrapper::mkdir(const std::string &directory) {
+  auto SSHSessionWrapper::mkdir(const std::string &directory) -> void {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
     _sftp->mkdir(directory);
   }
 
-  db_mgmt_SSHFileRef SSHSessionWrapper::open(const std::string &path) {
+  auto SSHSessionWrapper::open(const std::string &path) -> db_mgmt_SSHFileRef {
     auto lock = _session->lockSession();
     logDebug2("About to open file: %s\n", path.c_str());
     db_mgmt_SSHFileRef object(grt::Initialized);
@@ -393,61 +393,61 @@ namespace ssh {
     return object;
   }
 
-  void SSHSessionWrapper::put(const std::string &src, const std::string &dest) {
+  auto SSHSessionWrapper::put(const std::string &src, const std::string &dest) -> void {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
     _sftp->put(src, dest);
   }
 
-  grt::StringRef SSHSessionWrapper::pwd() {
+  auto SSHSessionWrapper::pwd() -> grt::StringRef {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
     return _sftp->pwd();
   }
 
-  void SSHSessionWrapper::rmdir(const std::string &directory) {
+  auto SSHSessionWrapper::rmdir(const std::string &directory) -> void {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
     _sftp->rmdir(directory);
   }
 
-  void SSHSessionWrapper::setContent(const std::string &path, const std::string &content) {
+  auto SSHSessionWrapper::setContent(const std::string &path, const std::string &content) -> void {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
     _sftp->setContent(path, content);
   }
 
-  grt::DictRef SSHSessionWrapper::stat(const std::string &path) {
+  auto SSHSessionWrapper::stat(const std::string &path) -> grt::DictRef {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
     return sftpAttribToDict(_sftp->stat(path));
   }
 
-  void SSHSessionWrapper::unlink(const std::string &file) {
+  auto SSHSessionWrapper::unlink(const std::string &file) -> void {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
     _sftp->unlink(file);
   }
 
-  grt::IntegerRef SSHSessionWrapper::fileExists(const std::string &path) {
+  auto SSHSessionWrapper::fileExists(const std::string &path) -> grt::IntegerRef {
     if (!_sftp)
       throw std::runtime_error("Not connected");
 
     return _sftp->fileExists(path) ? 1 : 0;
   }
 
-  base::RecMutexLock SSHSessionWrapper::lockTimeout() {
+  auto SSHSessionWrapper::lockTimeout() -> base::RecMutexLock {
     base::RecMutexLock mutexLock(_timeoutMutex);
     return mutexLock;
   }
 
-  void SSHSessionWrapper::makeSessionPoll() {
+  auto SSHSessionWrapper::makeSessionPoll() -> void {
     auto timeoutLock = lockTimeout();
     if (_sessionPoolHandle != 0) {
       ThreadedTimer::remove_task(_sessionPoolHandle);
@@ -458,7 +458,7 @@ namespace ssh {
                                                  false, std::bind(&SSHSessionWrapper::pollSession, this));
   }
 
-  bool SSHSessionWrapper::pollSession() {
+  auto SSHSessionWrapper::pollSession() -> bool {
     auto timeoutLock = lockTimeout();
     if (_session != nullptr)
       _session->pollEvent();

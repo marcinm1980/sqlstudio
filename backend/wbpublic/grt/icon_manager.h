@@ -63,8 +63,8 @@ namespace bec {
     auto get_icon_file(IconId icon) -> std::string;
     auto get_icon_path(IconId icon) -> std::string;
 
-    void set_basedir(const std::string &basedir);
+    auto set_basedir(const std::string &basedir) -> void;
 
-    void add_search_path(const std::string &path);
+    auto add_search_path(const std::string &path) -> void;
   };
 }; // namespace bec

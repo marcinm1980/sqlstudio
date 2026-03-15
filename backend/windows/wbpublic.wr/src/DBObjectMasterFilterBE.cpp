@@ -41,7 +41,7 @@ namespace MySQL {
         get_unmanaged_object()->add_filter(filter->get_unmanaged_object());
       }
 
-      void DBObjectMasterFilterBE::remove_all_filters() {
+      auto DBObjectMasterFilterBE::remove_all_filters() -> void {
         get_unmanaged_object()->remove_all_filters();
       }
 
@@ -50,7 +50,7 @@ namespace MySQL {
         get_unmanaged_object()->add_stored_filter_set(NativeToCppString(name), stored_filter_set_names_);
       }
 
-      void DBObjectMasterFilterBE::remove_stored_filter_set(int index) {
+      auto DBObjectMasterFilterBE::remove_stored_filter_set(int index) -> void {
         get_unmanaged_object()->remove_stored_filter_set(index);
       }
 

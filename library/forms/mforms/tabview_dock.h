@@ -35,25 +35,25 @@ namespace mforms {
     TabView *_tabview;
     std::string _type;
 
-    void close_page(mforms::AppView *page);
+    auto close_page(mforms::AppView *page) -> void;
 
   public:
     TabViewDockingPoint(TabView *tv, const std::string &type) : _tabview(tv), _type(type) {
     }
 
-    virtual std::string get_type() {
+    virtual auto get_type() -> std::string {
       return _type;
     }
 
-    virtual void set_name(const std::string &name);
-    virtual void dock_view(mforms::AppView *view, const std::string &arg1, int arg2);
-    virtual bool select_view(mforms::AppView *view);
-    virtual void undock_view(mforms::AppView *view);
-    virtual void set_view_title(mforms::AppView *view, const std::string &title);
-    virtual std::pair<int, int> get_size();
+    virtual auto set_name(const std::string &name) -> void;
+    virtual auto dock_view(mforms::AppView *view, const std::string &arg1, int arg2) -> void;
+    virtual auto select_view(mforms::AppView *view) -> bool;
+    virtual auto undock_view(mforms::AppView *view) -> void;
+    virtual auto set_view_title(mforms::AppView *view, const std::string &title) -> void;
+    virtual auto get_size() -> std::pair<int, int>;
 
-    virtual AppView *selected_view();
-    virtual int view_count();
-    virtual AppView *view_at_index(int index);
+    virtual auto selected_view() -> AppView *;
+    virtual auto view_count() -> int;
+    virtual auto view_at_index(int index) -> AppView *;
   };
 };

@@ -37,9 +37,9 @@ class DbMySQLRoutineEditor : public PluginEditorBase {
   MySQLRoutineEditorBE *_be;
   DbMySQLEditorPrivPage *_privs_page;
 
-  virtual bec::BaseEditor *get_be();
+  virtual auto get_be() -> bec::BaseEditor *;
 
-  virtual bool can_close() {
+  virtual auto can_close() -> bool {
     return _be->can_close();
   }
 
@@ -47,11 +47,11 @@ public:
   DbMySQLRoutineEditor(grt::Module *m, const grt::BaseListRef &args);
 
   virtual ~DbMySQLRoutineEditor();
-  virtual void do_refresh_form_data();
+  virtual auto do_refresh_form_data() -> void;
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args);
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool;
 
-  bool comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *view);
+  auto comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *view) -> bool;
 };
 
 DbMySQLRoutineEditor::DbMySQLRoutineEditor(grt::Module *m, const grt::BaseListRef &args)
@@ -103,7 +103,7 @@ DbMySQLRoutineEditor::~DbMySQLRoutineEditor() {
   delete _be;
 }
 
-bool DbMySQLRoutineEditor::comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *view) {
+auto DbMySQLRoutineEditor::comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *view) -> bool {
   if (_be) {
     _be->set_comment(view->get_buffer()->get_text());
   }
@@ -111,7 +111,7 @@ bool DbMySQLRoutineEditor::comment_lost_focus(GdkEventFocus *ev, Gtk::TextView *
 }
 
 //------------------------------------------------------------------------------
-bool DbMySQLRoutineEditor::switch_edited_object(const grt::BaseListRef &args) {
+auto DbMySQLRoutineEditor::switch_edited_object(const grt::BaseListRef &args) -> bool {
   Gtk::Box *ddl_win;
   xml()->get_widget("routine_ddl", ddl_win);
 
@@ -140,12 +140,12 @@ bool DbMySQLRoutineEditor::switch_edited_object(const grt::BaseListRef &args) {
 
 //------------------------------------------------------------------------------
 
-bec::BaseEditor *DbMySQLRoutineEditor::get_be() {
+auto DbMySQLRoutineEditor::get_be() -> bec::BaseEditor * {
   return _be;
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLRoutineEditor::do_refresh_form_data() {
+auto DbMySQLRoutineEditor::do_refresh_form_data() -> void {
   Gtk::Entry *entry(0);
   xml()->get_widget("routine_name", entry);
   if (entry->get_text() != _be->get_name()) {
@@ -162,7 +162,7 @@ void DbMySQLRoutineEditor::do_refresh_form_data() {
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 extern "C" {
-GUIPluginBase *createDbMysqlRoutineEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createDbMysqlRoutineEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new DbMySQLRoutineEditor(m, args));
 }
 };

@@ -64,7 +64,7 @@ private:
   std::list<std::string> fileDialogInput; // paths to use when show_file_dialog is called
 
 public:
-  static void reinitGRT();
+  static auto reinitGRT() -> void;
   
   wb::WBContext *wb;
   std::shared_ptr<wb::WBContextUI> wbui; // Need to reference here to avoid it to be freed prematurely.
@@ -77,40 +77,40 @@ public:
                     const wb::WBFrontendCallbacks &callbacks = wb::WBFrontendCallbacks());
   ~MySqlStudioTester();
 
-  void initializeRuntime();
+  auto initializeRuntime() -> void;
 
-  void executeScript(sql::Statement *stmt, const std::string& script);
-  void createNewDocument();
-  bool closeDocument();
-  bool renewDocument();
+  auto executeScript(sql::Statement *stmt, const std::string& script) -> void;
+  auto createNewDocument() -> void;
+  auto closeDocument() -> bool;
+  auto renewDocument() -> bool;
 
-  void addFileForFileDialog(const std::string &path);
-  void activateOverview();
+  auto addFileForFileDialog(const std::string &path) -> void;
+  auto activateOverview() -> void;
 
-  studio_physical_ModelRef getPmodel();
-  db_mgmt_RdbmsRef getRdbms();
-  studio_physical_DiagramRef getPview();
-  db_CatalogRef getCatalog();
-  db_SchemaRef getSchema();
+  auto getPmodel() -> studio_physical_ModelRef;
+  auto getRdbms() -> db_mgmt_RdbmsRef;
+  auto getPview() -> studio_physical_DiagramRef;
+  auto getCatalog() -> db_CatalogRef;
+  auto getSchema() -> db_SchemaRef;
 
-  void addView();
-  void syncView();
-  db_mysql_TableRef addTableFigure(const std::string &name, int x, int y);
+  auto addView() -> void;
+  auto syncView() -> void;
+  auto addTableFigure(const std::string &name, int x, int y) -> db_mysql_TableRef;
 
-  void openAllDiagrams();
-  void interactivePlaceDbObjects(int x, int y, std::list<db_DatabaseObjectRef> &objects);
-  void flushUntil(float timeout);
-  void flushUntil(float timeout, std::function<bool()> condition);
-  void flushWhile(float timeout, std::function<bool()> condition);
-  void flushUntil(float timeout, std::function<size_t()> condition, size_t value);
+  auto openAllDiagrams() -> void;
+  auto interactivePlaceDbObjects(int x, int y, std::list<db_DatabaseObjectRef> &objects) -> void;
+  auto flushUntil(float timeout) -> void;
+  auto flushUntil(float timeout, std::function<bool()> condition) -> void;
+  auto flushWhile(float timeout, std::function<bool()> condition) -> void;
+  auto flushUntil(float timeout, std::function<size_t()> condition, size_t value) -> void;
 
-  void exportPNG(const std::string &path);
+  auto exportPNG(const std::string &path) -> void;
 
-  db_mysql_CatalogRef reverseEngineerSchemas(const std::list<std::string> &schema_names);
+  auto reverseEngineerSchemas(const std::list<std::string> &schema_names) -> db_mysql_CatalogRef;
 
 private:
   base::Size _pageSize;
   bool _guiLock;
 };
 
-db_mysql_CatalogRef createEmptyCatalog();
+auto createEmptyCatalog() -> db_mysql_CatalogRef;

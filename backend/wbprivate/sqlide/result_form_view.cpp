@@ -75,19 +75,19 @@ public:
   virtual ~FieldView() {
   }
 
-  static ResultFormView::FieldView *create(const Recordset_cdbc_storage::FieldInfo &field, const std::string &full_type,
+  static auto create(const Recordset_cdbc_storage::FieldInfo &field, const std::string &full_type,
                                            bool editable, const std::function<void(const std::string &s)> &callback,
-                                           const std::function<void()> &view_blob_callback);
+                                           const std::function<void()> &view_blob_callback) -> ResultFormView::FieldView *;
 
-  mforms::Label *label() {
+  auto label() -> mforms::Label * {
     return &_label;
   }
-  virtual mforms::View *value() = 0;
-  virtual bool expands() {
+  virtual auto value() -> mforms::View * = 0;
+  virtual auto expands() -> bool {
     return false;
   }
 
-  virtual void set_value(const std::string &value, bool is_null) = 0;
+  virtual auto set_value(const std::string &value, bool is_null) -> void = 0;
 };
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ class StringFieldView : public ResultFormView::FieldView {
   mforms::TextEntry *_entry;
   bool _expands;
 
-  void changed() {
+  auto changed() -> void {
     _change_callback(_entry->get_string_value());
   }
 
@@ -113,7 +113,7 @@ public:
       _entry->set_size(std::max(max_length * 10, 60), -1);
   }
 
-  virtual bool expands() {
+  virtual auto expands() -> bool {
     return _expands;
   }
 
@@ -121,11 +121,11 @@ public:
     _entry->release();
   }
 
-  virtual mforms::View *value() {
+  virtual auto value() -> mforms::View * {
     return _entry;
   }
 
-  virtual void set_value(const std::string &value, bool is_null) {
+  virtual auto set_value(const std::string &value, bool is_null) -> void {
     _entry->set_value(value);
   }
 };
@@ -135,7 +135,7 @@ public:
 class SelectorFieldView : public ResultFormView::FieldView {
   mforms::Selector _selector;
 
-  void changed() {
+  auto changed() -> void {
     _change_callback(_selector.get_string_value());
   }
 
@@ -151,11 +151,11 @@ public:
   virtual ~SelectorFieldView() {
   }
 
-  virtual mforms::View *value() {
+  virtual auto value() -> mforms::View * {
     return &_selector;
   }
 
-  virtual void set_value(const std::string &value, bool is_null) {
+  virtual auto set_value(const std::string &value, bool is_null) -> void {
     _selector.set_value(value);
   }
 };
@@ -163,7 +163,7 @@ public:
 class SetFieldView : public ResultFormView::FieldView {
   mforms::TreeView _tree;
 
-  void changed() {
+  auto changed() -> void {
     std::string value;
 
     for (int c = _tree.count(), i = 0; i < c; i++) {
@@ -197,11 +197,11 @@ public:
     _tree.signal_changed()->connect(std::bind(&SetFieldView::changed, this));
   }
 
-  virtual mforms::View *value() {
+  virtual auto value() -> mforms::View * {
     return &_tree;
   }
 
-  virtual void set_value(const std::string &value, bool is_null) {
+  virtual auto set_value(const std::string &value, bool is_null) -> void {
     std::vector<std::string> l(base::split_token_list(value, ','));
 
     for (int c = _tree.count(), i = 0; i < c; i++) {
@@ -219,7 +219,7 @@ public:
 class TextFieldView : public ResultFormView::FieldView {
   mforms::TextBox *_tbox;
 
-  void changed() {
+  auto changed() -> void {
     _change_callback(_tbox->get_string_value());
   }
 
@@ -233,7 +233,7 @@ public:
     _tbox->set_size(-1, 60);
   }
 
-  virtual bool expands() {
+  virtual auto expands() -> bool {
     return true;
   }
 
@@ -241,11 +241,11 @@ public:
     _tbox->release();
   }
 
-  virtual mforms::View *value() {
+  virtual auto value() -> mforms::View * {
     return _tbox;
   }
 
-  virtual void set_value(const std::string &value, bool is_null) {
+  virtual auto set_value(const std::string &value, bool is_null) -> void {
     _tbox->set_value(value);
   }
 };
@@ -257,7 +257,7 @@ class BlobFieldView : public ResultFormView::FieldView {
   mforms::Label _blob;
   std::string _type_desc;
 
-  void changed() {
+  auto changed() -> void {
   }
 
 public:
@@ -274,11 +274,11 @@ public:
     _box.add(b, false, true);
   }
 
-  virtual mforms::View *value() {
+  virtual auto value() -> mforms::View * {
     return &_box;
   }
 
-  virtual void set_value(const std::string &value, bool is_null) {
+  virtual auto set_value(const std::string &value, bool is_null) -> void {
     _blob.set_text(is_null ? "NULL" : _type_desc);
   }
 };
@@ -294,11 +294,11 @@ class GeomFieldView : public ResultFormView::FieldView {
   std::string _raw_data;
   int _view_type;
 
-  virtual bool expands() {
+  virtual auto expands() -> bool {
     return true;
   }
 
-  void update() {
+  auto update() -> void {
     std::string text;
     spatial::Importer importer;
     importer.import_from_mysql(_raw_data);
@@ -335,11 +335,11 @@ public:
     _box.add(&_text, true, true);
   }
 
-  virtual mforms::View *value() {
+  virtual auto value() -> mforms::View * {
     return &_box;
   }
 
-  virtual void set_value(const std::string &value, bool is_null) {
+  virtual auto set_value(const std::string &value, bool is_null) -> void {
     _image.set_data(value);
     _srid.set_text("SRID: " + std::to_string(_image.getSrid()));
     _text.set_read_only(false);
@@ -348,7 +348,7 @@ public:
     _text.set_read_only(true);
   }
 
-  void set_view_type(const std::string &type) {
+  auto set_view_type(const std::string &type) -> void {
     if (type.find("WKT") != std::string::npos)
       _view_type = 0;
     else if (type.find("JSON") != std::string::npos)
@@ -363,7 +363,7 @@ public:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::list<std::string> parse_enum_definition(const std::string &full_type) {
+static auto parse_enum_definition(const std::string &full_type) -> std::list<std::string> {
   std::list<std::string> l;
   std::string::size_type b, e;
 
@@ -381,7 +381,7 @@ static std::list<std::string> parse_enum_definition(const std::string &full_type
 
 //----------------------------------------------------------------------------------------------------------------------
 
-inline std::string format_label(const std::string &label) {
+inline auto format_label(const std::string &label) -> std::string {
   std::string flabel = label + ":";
 
   if (g_ascii_isalpha(flabel[0]))
@@ -392,10 +392,10 @@ inline std::string format_label(const std::string &label) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-ResultFormView::FieldView *ResultFormView::FieldView::create(const Recordset_cdbc_storage::FieldInfo &field,
+auto ResultFormView::FieldView::create(const Recordset_cdbc_storage::FieldInfo &field,
                                                              const std::string &full_type, bool editable,
                                                              const std::function<void(const std::string &s)> &callback,
-                                                             const std::function<void()> &view_blob_callback) {
+                                                             const std::function<void()> &view_blob_callback) -> ResultFormView::FieldView * {
   if (field.type == "VARCHAR") {
     if (field.display_size > 40) {
       TextFieldView *text = new TextFieldView(format_label(field.field), editable, callback);
@@ -421,7 +421,7 @@ ResultFormView::FieldView *ResultFormView::FieldView::create(const Recordset_cdb
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ResultFormView::navigate(mforms::ToolBarItem *item) {
+auto ResultFormView::navigate(mforms::ToolBarItem *item) -> void {
   std::string name = item->getInternalName();
   Recordset::Ref rset(_rset.lock());
   if (rset) {
@@ -462,7 +462,7 @@ void ResultFormView::navigate(mforms::ToolBarItem *item) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ResultFormView::update_value(int column, const std::string &value) {
+auto ResultFormView::update_value(int column, const std::string &value) -> void {
   Recordset::Ref rset(_rset.lock());
   if (rset) {
     RowId row = rset->edited_field_row();
@@ -473,7 +473,7 @@ void ResultFormView::update_value(int column, const std::string &value) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ResultFormView::open_field_editor(int column, const std::string &type) {
+auto ResultFormView::open_field_editor(int column, const std::string &type) -> void {
   Recordset::Ref rset(_rset.lock());
   if (rset) {
     RowId row = rset->edited_field_row();
@@ -599,7 +599,7 @@ ResultFormView::~ResultFormView() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ResultFormView::geom_type_changed() {
+auto ResultFormView::geom_type_changed() -> void {
   std::string type = _geom_type_item->get_text();
   for (std::vector<FieldView *>::const_iterator i = _fields.begin(); i != _fields.end(); ++i) {
     GeomFieldView *geom = dynamic_cast<GeomFieldView *>(*i);
@@ -611,7 +611,7 @@ void ResultFormView::geom_type_changed() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int ResultFormView::display_record(RowId row_id) {
+auto ResultFormView::display_record(RowId row_id) -> int {
   Recordset::Ref rset(_rset.lock());
   if (rset)
     rset->set_edited_field(row_id, 0);
@@ -620,7 +620,7 @@ int ResultFormView::display_record(RowId row_id) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int ResultFormView::display_record() {
+auto ResultFormView::display_record() -> int {
   Recordset::Ref rset(_rset.lock());
   if (rset) {
     unsigned int c = 0;
@@ -643,8 +643,8 @@ int ResultFormView::display_record() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string ResultFormView::get_full_column_type(SqlEditorForm *editor, const std::string &schema,
-                                                 const std::string &table, const std::string &column) {
+auto ResultFormView::get_full_column_type(SqlEditorForm *editor, const std::string &schema,
+                                                 const std::string &table, const std::string &column) -> std::string {
   // we only support 5.5+ for this feature
   if (bec::is_supported_mysql_version_at_least(editor->rdbms_version(), 5, 5)) {
     std::string q = base::sqlstring(
@@ -671,7 +671,7 @@ std::string ResultFormView::get_full_column_type(SqlEditorForm *editor, const st
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ResultFormView::init_for_resultset(Recordset::Ptr rset_ptr, SqlEditorForm *editor) {
+auto ResultFormView::init_for_resultset(Recordset::Ptr rset_ptr, SqlEditorForm *editor) -> void {
   Recordset::Ref rset(rset_ptr.lock());
   _rset = rset_ptr;
   if (rset) {
@@ -732,7 +732,7 @@ void ResultFormView::init_for_resultset(Recordset::Ptr rset_ptr, SqlEditorForm *
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void ResultFormView::updateColors() {
+auto ResultFormView::updateColors() -> void {
   _spanel.set_back_color(base::Color::getSystemColor(base::TextBackgroundColor).to_html());
 }
 

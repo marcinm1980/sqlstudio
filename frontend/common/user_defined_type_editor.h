@@ -75,20 +75,20 @@ class MYSQLWBBACKEND_PUBLIC_FUNC UserDefinedTypeEditor : public mforms::Form {
 
   std::vector<db_SimpleDatatypeRef> _valid_types;
 
-  bool is_type_used(const db_UserDatatypeRef &type);
+  auto is_type_used(const db_UserDatatypeRef &type) -> bool;
 
-  void add_clicked();
-  void delete_clicked();
-  void ok_clicked();
-  void cancel_clicked();
-  void edit_arguments();
+  auto add_clicked() -> void;
+  auto delete_clicked() -> void;
+  auto ok_clicked() -> void;
+  auto cancel_clicked() -> void;
+  auto edit_arguments() -> void;
 
-  void name_changed();
-  void args_changed();
-  void type_changed();
-  void flag_toggled();
-  void refresh();
-  void selected_row();
+  auto name_changed() -> void;
+  auto args_changed() -> void;
+  auto type_changed() -> void;
+  auto flag_toggled() -> void;
+  auto refresh() -> void;
+  auto selected_row() -> void;
 
 public:
   UserDefinedTypeEditor(const studio_physical_ModelRef &model);

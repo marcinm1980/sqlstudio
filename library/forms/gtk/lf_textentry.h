@@ -40,41 +40,41 @@ namespace mforms {
       TextEntryType _type;
       bool _has_real_text;
       bool _changing_text;
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _entry;
       }
 
       TextEntryImpl(::mforms::TextEntry *self, TextEntryType type);
-      static bool create(::mforms::TextEntry *self, TextEntryType type);
-      static void set_text(::mforms::TextEntry *self, const std::string &text);
-      static void set_placeholder_text(::mforms::TextEntry *self, const std::string &text);
-      static void set_placeholder_color(::mforms::TextEntry *self, const std::string &color);
-      static void set_max_length(::mforms::TextEntry *self, int len);
-      static std::string get_text(::mforms::TextEntry *self);
-      static void set_read_only(::mforms::TextEntry *self, bool flag);
-      static void set_bordered(::mforms::TextEntry *self, bool flag);
-      static void cut(::mforms::TextEntry *self);
-      static void copy(::mforms::TextEntry *self);
-      static void paste(::mforms::TextEntry *self);
-      static void select(::mforms::TextEntry *self, const base::Range &range);
-      static base::Range get_selection(::mforms::TextEntry *self);
+      static auto create(::mforms::TextEntry *self, TextEntryType type) -> bool;
+      static auto set_text(::mforms::TextEntry *self, const std::string &text) -> void;
+      static auto set_placeholder_text(::mforms::TextEntry *self, const std::string &text) -> void;
+      static auto set_placeholder_color(::mforms::TextEntry *self, const std::string &color) -> void;
+      static auto set_max_length(::mforms::TextEntry *self, int len) -> void;
+      static auto get_text(::mforms::TextEntry *self) -> std::string;
+      static auto set_read_only(::mforms::TextEntry *self, bool flag) -> void;
+      static auto set_bordered(::mforms::TextEntry *self, bool flag) -> void;
+      static auto cut(::mforms::TextEntry *self) -> void;
+      static auto copy(::mforms::TextEntry *self) -> void;
+      static auto paste(::mforms::TextEntry *self) -> void;
+      static auto select(::mforms::TextEntry *self, const base::Range &range) -> void;
+      static auto get_selection(::mforms::TextEntry *self) -> base::Range;
 
-      void activated(mforms::TextEntry *self);
-      bool key_press(GdkEventKey *event, mforms::TextEntry *self);
+      auto activated(mforms::TextEntry *self) -> void;
+      auto key_press(GdkEventKey *event, mforms::TextEntry *self) -> bool;
 
-      void icon_pressed(Gtk::EntryIconPosition pos, const GdkEventButton *ev);
-      void set_placeholder_text(const std::string &text);
-      void set_text(const std::string &text);
+      auto icon_pressed(Gtk::EntryIconPosition pos, const GdkEventButton *ev) -> void;
+      auto set_placeholder_text(const std::string &text) -> void;
+      auto set_text(const std::string &text) -> void;
       void focus_in(GdkEventFocus *);
       void focus_out(GdkEventFocus *);
       void changed(mforms::TextEntry *);
 
     protected:
-      void set_front_color(const std::string &color);
-      virtual void set_back_color(const std::string &color);
+      auto set_front_color(const std::string &color) -> void;
+      virtual auto set_back_color(const std::string &color) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

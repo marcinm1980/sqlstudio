@@ -50,7 +50,7 @@ DbMySQLValidationPage::~DbMySQLValidationPage() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DbMySQLValidationPage::run_validation() {
+auto DbMySQLValidationPage::run_validation() -> void {
   bec::GRTTask::Ref task =
     bec::GRTTask::create_task("Catalog validation", bec::GRTManager::get()->get_dispatcher(),
                               std::bind(&DbMySQLSQLExport::validation_task, this, grt::StringRef()));
@@ -63,12 +63,12 @@ void DbMySQLValidationPage::run_validation() {
 
 //--------------------------------------------------------------------------------------------------
 
-void DbMySQLValidationPage::validation_finished(grt::ValueRef res) {
+auto DbMySQLValidationPage::validation_finished(grt::ValueRef res) -> void {
   if (_validation_finished_cb)
     _validation_finished_cb();
 }
 
-void DbMySQLValidationPage::validation_message(const grt::Message& msg) {
+auto DbMySQLValidationPage::validation_message(const grt::Message& msg) -> void {
   switch (msg.type) {
     case grt::ErrorMsg:
     case grt::WarningMsg:
@@ -85,7 +85,7 @@ void DbMySQLValidationPage::validation_message(const grt::Message& msg) {
   }
 }
 
-ValueRef DbMySQLValidationPage::validation_task(grt::StringRef) {
+auto DbMySQLValidationPage::validation_task(grt::StringRef) -> ValueRef {
   try {
     std::vector<WbValidationInterfaceWrapper*> validation_modules =
       grt::GRT::get()->get_implementing_modules<WbValidationInterfaceWrapper>();

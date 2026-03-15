@@ -59,45 +59,45 @@ protected:
 
   ImplData(model_Connection *owner);
 
-  void member_changed(const std::string &name, const grt::ValueRef &ovalue);
+  auto member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void;
 
-  void layout_changed();
+  auto layout_changed() -> void;
 
-  void update_above_caption_pos();
-  void update_below_caption_pos();
+  auto update_above_caption_pos() -> void;
+  auto update_below_caption_pos() -> void;
 
-  void update_start_caption_pos();
-  void update_end_caption_pos();
+  auto update_start_caption_pos() -> void;
+  auto update_end_caption_pos() -> void;
 
-  virtual void caption_bounds_changed(const base::Rect &obounds, mdc::TextFigure *figure);
+  virtual auto caption_bounds_changed(const base::Rect &obounds, mdc::TextFigure *figure) -> void;
 
-  void object_realized(const model_ObjectRef &object);
+  auto object_realized(const model_ObjectRef &object) -> void;
 
-  wbfig::CaptionFigure *create_caption();
-
-public:
-  mdc::CanvasView *get_canvas_view() const;
-  bool is_canvas_view_valid();
-  virtual bool is_realizable();
-  void finish_realize();
-
-  void set_above_caption(const std::string &text);
-  void set_below_caption(const std::string &text);
-
-  void set_start_caption(const std::string &text);
-  void set_end_caption(const std::string &text);
+  auto create_caption() -> wbfig::CaptionFigure *;
 
 public:
-  virtual mdc::CanvasItem *get_canvas_item() const {
+  auto get_canvas_view() const -> mdc::CanvasView *;
+  auto is_canvas_view_valid() -> bool;
+  virtual auto is_realizable() -> bool;
+  auto finish_realize() -> void;
+
+  auto set_above_caption(const std::string &text) -> void;
+  auto set_below_caption(const std::string &text) -> void;
+
+  auto set_start_caption(const std::string &text) -> void;
+  auto set_end_caption(const std::string &text) -> void;
+
+public:
+  virtual auto get_canvas_item() const -> mdc::CanvasItem * {
     return _line;
   }
-  virtual mdc::CanvasItem *get_start_canvas_item();
-  virtual mdc::CanvasItem *get_end_canvas_item();
+  virtual auto get_start_canvas_item() -> mdc::CanvasItem *;
+  virtual auto get_end_canvas_item() -> mdc::CanvasItem *;
 
-  virtual void unrealize();
+  virtual auto unrealize() -> void;
 
 private:
-  model_Connection *self() const {
+  auto self() const -> model_Connection * {
     return (model_Connection *)_self;
   }
 };

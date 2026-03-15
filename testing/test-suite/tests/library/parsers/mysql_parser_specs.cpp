@@ -90,23 +90,23 @@ struct EvalValue {
   EvalValue(ValueType aType, double aNumber) : type(aType), number(aNumber) {
   }
 
-  bool isNullType() {
+  auto isNullType() -> bool {
     return type == Null || type == NotNull;
   }
 
-  static EvalValue fromBool(bool value) {
+  static auto fromBool(bool value) -> EvalValue {
     return EvalValue(Int, value ? 1 : 0);
   };
-  static EvalValue fromNumber(double number) {
+  static auto fromNumber(double number) -> EvalValue {
     return EvalValue(Float, number);
   };
-  static EvalValue fromNumber(long long number) {
+  static auto fromNumber(long long number) -> EvalValue {
     return EvalValue(Int, (double)number);
   };
-  static EvalValue fromNull() {
+  static auto fromNull() -> EvalValue {
     return EvalValue(Null, 0);
   };
-  static EvalValue fromNotNull() {
+  static auto fromNotNull() -> EvalValue {
     return EvalValue(NotNull, 0);
   };
 };
@@ -115,7 +115,7 @@ class EvalParseVisitor : public MySQLParserBaseVisitor {
 public:
   std::vector<EvalValue> results; // One entry for each select item.
 
-  bool asBool(EvalValue in) {
+  auto asBool(EvalValue in) -> bool {
     if (!in.isNullType() && in.number != 0)
       return true;
     return false;
@@ -230,7 +230,7 @@ public:
     return visit(context->bitExpr()[0]);
   }
 
-  static unsigned long long shiftLeftWithOverflow(double l, double r) {
+  static auto shiftLeftWithOverflow(double l, double r) -> unsigned long long {
     // Shift with overflow if r is larger than the data type size of unsigned long long (64)
     // (which would be undefined if using the standard << operator).
     std::bitset<64> bits = (unsigned long long)llround(l);
@@ -324,7 +324,7 @@ public:
  * Determines if the version info in the statement matches the given version (if there's version info at all).
  * The version info is removed from the statement, if any.
  */
-static bool versionMatches(std::string &statement, unsigned long serverVersion) {
+static auto versionMatches(std::string &statement, unsigned long serverVersion) -> bool {
   static std::regex versionPattern("^\\[(<|<=|>|>=|=)(\\d{5})\\]");
   static std::map<std::string, int> relationMap = {
     { "<", 0 }, { "<=", 1 }, { "=", 2 }, { ">=", 3 }, { ">", 4 }
@@ -631,7 +631,7 @@ protected:
   /**
    * Parses the given string and returns the number of errors found.
    */
-  std::pair<std::size_t, std::string> parse(const std::string sql, long version, const std::string &mode) {
+  auto parse(const std::string sql, long version, const std::string &mode) -> std::pair<std::size_t, std::string> {
     parser.serverVersion = version;
     lexer.serverVersion = version;
     parser.sqlModeFromString(mode);
@@ -673,7 +673,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void collectTokenTypes(RuleContext *context, std::vector<size_t> &list) {
+  auto collectTokenTypes(RuleContext *context, std::vector<size_t> &list) -> void {
     for (size_t index = 0; index < context->children.size(); ++index) {
       tree::ParseTree *child = context->children[index];
       if (antlrcpp::is<RuleContext *>(child))
@@ -692,8 +692,8 @@ protected:
   /**
    * Parses the given string and checks the built AST. Returns true if no error occurred, otherwise false.
    */
-  std::pair<bool, std::string> parseAndCompare(const std::string &sql, long version, const std::string &mode,
-                                               std::vector<size_t> expected, size_t expectedErrorCount = 0) {
+  auto parseAndCompare(const std::string &sql, long version, const std::string &mode,
+                                               std::vector<size_t> expected, size_t expectedErrorCount = 0) -> std::pair<bool, std::string> {
     auto result = parse(sql, version, mode);
     if (result.first != expectedErrorCount)
       return { false, result.second };

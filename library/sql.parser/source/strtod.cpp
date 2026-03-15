@@ -56,8 +56,7 @@ static double scaler1[] = {
     value of str as double
 */
 
-double my_strtod(const char *str, char **end_ptr, int *error)
-{
+auto my_strtod(const char *str, char **end_ptr, int *error) -> double {
   double result= 0.0;
   uint negative= 0, ndigits, dec_digits= 0, neg_exp= 0;
   int exp= 0, digits_after_dec_point= 0;
@@ -198,8 +197,7 @@ done:
   return negative ? -result : result;
 }
 
-double my_atof(const char *nptr)
-{
+auto my_atof(const char *nptr) -> double {
   int error;
   const char *end= nptr+65535;                  /* Should be enough */
   return (my_strtod(nptr, (char**) &end, &error));

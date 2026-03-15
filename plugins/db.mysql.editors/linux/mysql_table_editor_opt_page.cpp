@@ -121,13 +121,13 @@ DbMySQLTableEditorOptPage::DbMySQLTableEditorOptPage(DbMySQLTableEditor* owner, 
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorOptPage::switch_be(MySQLTableEditorBE* be) {
+auto DbMySQLTableEditorOptPage::switch_be(MySQLTableEditorBE* be) -> void {
   _be = be;
   refresh();
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorOptPage::refresh() {
+auto DbMySQLTableEditorOptPage::refresh() -> void {
   _refreshing = 1;
 
   Gtk::Entry* entry(0);
@@ -219,12 +219,12 @@ void DbMySQLTableEditorOptPage::refresh() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorOptPage::set_table_option(const std::string& value, const char* option) {
+auto DbMySQLTableEditorOptPage::set_table_option(const std::string& value, const char* option) -> void {
   _be->set_table_option_by_name(option, value);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorOptPage::set_toggled_table_option(const char* option) {
+auto DbMySQLTableEditorOptPage::set_toggled_table_option(const char* option) -> void {
   Gtk::ToggleButton* toggle(0);
 
   if (*option == 'C') // option -> "CHECKSUM"
@@ -236,7 +236,7 @@ void DbMySQLTableEditorOptPage::set_toggled_table_option(const char* option) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorOptPage::set_pack_keys() {
+auto DbMySQLTableEditorOptPage::set_pack_keys() -> void {
   if (_refreshing)
     return;
 
@@ -254,7 +254,7 @@ void DbMySQLTableEditorOptPage::set_pack_keys() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorOptPage::set_row_format() {
+auto DbMySQLTableEditorOptPage::set_row_format() -> void {
   if (_refreshing)
     return;
 
@@ -278,7 +278,7 @@ void DbMySQLTableEditorOptPage::set_row_format() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorOptPage::set_key_block_size() {
+auto DbMySQLTableEditorOptPage::set_key_block_size() -> void {
   if (_refreshing) {
     return;
   }
@@ -292,7 +292,7 @@ void DbMySQLTableEditorOptPage::set_key_block_size() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorOptPage::set_merge_method() {
+auto DbMySQLTableEditorOptPage::set_merge_method() -> void {
   if (_refreshing)
     return;
 

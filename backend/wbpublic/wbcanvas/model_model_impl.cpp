@@ -50,7 +50,7 @@ model_Model::ImplData::ImplData(model_Model *owner) : _owner(owner) {
                                                           std::placeholders::_2, std::placeholders::_3));
 }
 
-void model_Model::ImplData::list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) {
+auto model_Model::ImplData::list_changed(grt::internal::OwnedList *list, bool added, const grt::ValueRef &value) -> void {
   if (list == _owner->_diagrams.valueptr()) {
     if (added) {
       if (grt::GRT::get()->get_undo_manager()->is_redoing()) {
@@ -61,7 +61,7 @@ void model_Model::ImplData::list_changed(grt::internal::OwnedList *list, bool ad
   }
 }
 
-void model_Model::ImplData::option_changed(grt::internal::OwnedDict *dict, bool added, const std::string &option) {
+auto model_Model::ImplData::option_changed(grt::internal::OwnedDict *dict, bool added, const std::string &option) -> void {
   if (!_options_changed_signal.empty())
     _options_changed_signal(option);
   if (!_reset_pending && (base::hasSuffix(option, "Font") || option == "studio.physical.Connection:ShowCaptions" ||
@@ -73,7 +73,7 @@ void model_Model::ImplData::option_changed(grt::internal::OwnedDict *dict, bool 
   }
 }
 
-void model_Model::ImplData::remove_diagram(const model_DiagramRef &view) {
+auto model_Model::ImplData::remove_diagram(const model_DiagramRef &view) -> void {
   view->get_data()->unrealize();
 
   size_t index = _owner->_diagrams.get_index(view);
@@ -81,7 +81,7 @@ void model_Model::ImplData::remove_diagram(const model_DiagramRef &view) {
     _owner->_diagrams.remove(index);
 }
 
-void model_Model::ImplData::unrealize() {
+auto model_Model::ImplData::unrealize() -> void {
   const grt::ListRef<model_Diagram> &views(_owner->_diagrams);
 
   for (size_t c = views.count(), i = 0; i < c; i++) {
@@ -89,7 +89,7 @@ void model_Model::ImplData::unrealize() {
   }
 }
 
-bool model_Model::ImplData::realize() {
+auto model_Model::ImplData::realize() -> bool {
   model_Diagram::ImplData *view;
 
   if (!_options_signal_installed) {
@@ -116,7 +116,7 @@ bool model_Model::ImplData::realize() {
   return true;
 }
 
-void model_Model::ImplData::reset_connections() {
+auto model_Model::ImplData::reset_connections() -> void {
   _reset_pending = false;
   grt::ListRef<model_Diagram> views(_owner->_diagrams);
 
@@ -134,7 +134,7 @@ void model_Model::ImplData::reset_connections() {
   }
 }
 
-void model_Model::ImplData::reset_figures() {
+auto model_Model::ImplData::reset_figures() -> void {
   _reset_pending = false;
   grt::ListRef<model_Diagram> views(_owner->_diagrams);
 
@@ -152,7 +152,7 @@ void model_Model::ImplData::reset_figures() {
   }
 }
 
-void model_Model::ImplData::reset_layers() {
+auto model_Model::ImplData::reset_layers() -> void {
   _reset_pending = false;
   grt::ListRef<model_Diagram> views(_owner->_diagrams);
 
@@ -170,7 +170,7 @@ void model_Model::ImplData::reset_layers() {
   }
 }
 
-app_PageSettingsRef model_Model::ImplData::get_page_settings() {
+auto model_Model::ImplData::get_page_settings() -> app_PageSettingsRef {
   GrtObjectRef object(_owner);
 
   while (object.is_valid() && !object.is_instance<studio_Document>())
@@ -182,7 +182,7 @@ app_PageSettingsRef model_Model::ImplData::get_page_settings() {
   return app_PageSettingsRef();
 }
 
-grt::DictRef model_Model::ImplData::get_app_options_dict() {
+auto model_Model::ImplData::get_app_options_dict() -> grt::DictRef {
   GrtObjectRef object(_owner);
 
   while (object.is_valid() && !object.is_instance<app_Application>())
@@ -194,16 +194,16 @@ grt::DictRef model_Model::ImplData::get_app_options_dict() {
   return grt::DictRef();
 }
 
-std::string model_Model::ImplData::get_string_option(const std::string &name, const std::string &defvalue) {
+auto model_Model::ImplData::get_string_option(const std::string &name, const std::string &defvalue) -> std::string {
   return _owner->_options.get_string(name, get_app_options_dict().get_string(name, defvalue));
 }
 
-int model_Model::ImplData::get_int_option(const std::string &name, int defvalue) {
+auto model_Model::ImplData::get_int_option(const std::string &name, int defvalue) -> int {
   // TODO: we may want to have ssize_t instead of int returned.
   return (int)_owner->_options.get_int(name, get_app_options_dict().get_int(name, defvalue));
 }
 
-std::string model_Model::ImplData::common_color_for_db_object(const grt::ObjectRef &object, const std::string &member) {
+auto model_Model::ImplData::common_color_for_db_object(const grt::ObjectRef &object, const std::string &member) -> std::string {
   for (size_t c = _owner->diagrams().count(), i = 0; i < c; i++) {
     grt::ListRef<model_Figure> figures(_owner->diagrams()[i]->figures());
     for (size_t vc = figures.count(), vi = 0; vi < vc; vi++) {
@@ -216,9 +216,9 @@ std::string model_Model::ImplData::common_color_for_db_object(const grt::ObjectR
   return "";
 }
 
-void model_Model::ImplData::update_object_color_in_all_diagrams(const std::string &color,
+auto model_Model::ImplData::update_object_color_in_all_diagrams(const std::string &color,
                                                                 const std::string &object_member,
-                                                                const std::string &object_id) {
+                                                                const std::string &object_id) -> void {
   // change color of all objects in all diagrams that point to the same object
   for (size_t vc = _owner->diagrams().count(), vi = 0; vi < vc; vi++) {
     grt::ListRef<model_Figure> figures(_owner->diagrams()[vi]->figures());

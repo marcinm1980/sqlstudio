@@ -130,10 +130,10 @@ namespace bec {
 
     virtual auto get_title() -> std::string = 0;
 
-    void set_owner_data(void *data);
+    auto set_owner_data(void *data) -> void;
     auto get_owner_data() -> void *;
 
-    void set_frontend_data(void *data);
+    auto set_frontend_data(void *data) -> void;
     auto get_frontend_data() -> void *;
 
     virtual auto is_main_form() -> bool;
@@ -150,18 +150,18 @@ namespace bec {
     virtual auto can_delete() -> bool;
     virtual auto can_select_all() -> bool;
 
-    virtual void undo();
-    virtual void redo();
-    virtual void cut();
-    virtual void copy();
-    virtual void paste();
-    virtual void delete_selection();
-    virtual void select_all();
+    virtual auto undo() -> void;
+    virtual auto redo() -> void;
+    virtual auto cut() -> void;
+    virtual auto copy() -> void;
+    virtual auto paste() -> void;
+    virtual auto delete_selection() -> void;
+    virtual auto select_all() -> void;
 
     virtual auto can_close() -> bool {
       return true;
     }
-    virtual void close() {
+    virtual auto close() -> void {
     }
 
     // for main forms

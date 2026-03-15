@@ -116,7 +116,7 @@ namespace base {
 
     auto contains(double x, double y) const -> bool;
     auto contains_flipped(double x, double y) const -> bool;
-    void inflate(double horizontal, double vertical);
+    auto inflate(double horizontal, double vertical) -> void;
 
     auto right() const -> double;
     auto bottom() const -> double;
@@ -142,18 +142,18 @@ namespace base {
 
     // Note: these 4 routines do not move the rectangle but only a given side
     //       adjusting the width to keep all other sides constant.
-    inline void set_xmin(double x) {
+    inline auto set_xmin(double x) -> void {
       size.width -= x - pos.x;
       pos.x = x;
     };
-    inline void set_ymin(double y) {
+    inline auto set_ymin(double y) -> void {
       size.height -= y - pos.y;
       pos.y = y;
     };
-    inline void set_xmax(double x) {
+    inline auto set_xmax(double x) -> void {
       size.width = x - pos.x;
     };
-    inline void set_ymax(double y) {
+    inline auto set_ymax(double y) -> void {
       size.height = y - pos.y;
     };
 
@@ -221,8 +221,8 @@ namespace base {
     Padding(int padding);
     Padding(int left, int top, int right, int bottom);
 
-    int horizontal();
-    int vertical();
+    auto horizontal() -> int;
+    auto vertical() -> int;
   };
 
   /** A struct describing a range in a container. */

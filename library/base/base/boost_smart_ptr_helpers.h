@@ -116,11 +116,11 @@ struct IntrusiveRef {
   int _count;
 };
 
-inline void intrusive_ptr_add_ref(IntrusiveRef *r) {
+inline auto intrusive_ptr_add_ref(IntrusiveRef *r) -> void {
   ++r->_count;
 }
 
-inline void intrusive_ptr_release(IntrusiveRef *r) {
+inline auto intrusive_ptr_release(IntrusiveRef *r) -> void {
   if (--r->_count <= 0)
     delete r;
 }

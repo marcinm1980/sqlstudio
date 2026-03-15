@@ -41,14 +41,14 @@ namespace wb {
 
     void handle_redo(grt::UndoAction *);
     void handle_undo(grt::UndoAction *);
-    void handle_change();
+    auto handle_change() -> void;
 
-    void activate_node(mforms::TreeNodeRef node, int column);
+    auto activate_node(mforms::TreeNodeRef node, int column) -> void;
 
   public:
     HistoryTree(grt::UndoManager *undom);
 
-    void refresh();
+    auto refresh() -> void;
   };
 };
 

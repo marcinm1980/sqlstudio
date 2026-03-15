@@ -39,22 +39,22 @@ namespace MySQL {
       AppViewDockContent();
       ~AppViewDockContent();
 
-      void SetBackend(mforms::AppView *backend);
+      auto SetBackend(mforms::AppView *backend) -> void;
 
-      System::String ^ GetAppViewIdentifier();
-      System::String ^ GetContextName();
+      auto GetAppViewIdentifier() -> System::String ^;
+      auto GetContextName() -> System::String ^;
 
-      mforms::AppView *GetBackend();
-      System::Windows::Forms::MenuStrip ^ GetMenuBar();
-      System::Windows::Forms::ToolStrip ^ GetToolBar();
+      auto GetBackend() -> mforms::AppView *;
+      auto GetMenuBar() -> System::Windows::Forms::MenuStrip ^;
+      auto GetToolBar() -> System::Windows::Forms::ToolStrip ^;
 
-      String ^ GetTitle();
+      auto GetTitle() -> String ^;
       void SetTitle(String ^ title);
 
-      bool CanCloseDocument();
-      void CloseDocument();
+      auto CanCloseDocument() -> bool;
+      auto CloseDocument() -> void;
 
-      void UpdateColors();
+      auto UpdateColors() -> void;
     };
 
   public
@@ -67,11 +67,11 @@ namespace MySQL {
       AppViewWrapper(mforms::AppView *backend);
       ~AppViewWrapper();
 
-      static bool create(mforms::AppView *backend, bool horizontal);
+      static auto create(mforms::AppView *backend, bool horizontal) -> bool;
 
     public:
-      AppViewDockContent ^ GetHost();
-      static void init();
+      auto GetHost() -> AppViewDockContent ^;
+      static auto init() -> void;
     };
   };
 };

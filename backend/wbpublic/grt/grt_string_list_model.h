@@ -37,33 +37,33 @@ namespace bec {
     typedef std::vector<size_t> Items_ids;
 
     GrtStringListModel();
-    void icon_id(IconId icon_id);
-    void reset();
-    void reset(const std::list<std::string> &items);
+    auto icon_id(IconId icon_id) -> void;
+    auto reset() -> void;
+    auto reset(const std::list<std::string> &items) -> void;
 
-    virtual size_t count();
-    size_t active_items_count() const;
-    size_t total_items_count() const;
-    virtual void refresh();
-    virtual IconId get_field_icon(const NodeId &node, ColumnId column, IconSize size);
+    virtual auto count() -> size_t;
+    auto active_items_count() const -> size_t;
+    auto total_items_count() const -> size_t;
+    virtual auto refresh() -> void;
+    virtual auto get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId;
 
-    void add_item(const grt::StringRef &item, size_t ident);
-    void remove_item(size_t index);
-    void remove_items(std::vector<size_t> &item_indexes);
-    void copy_items_to_val_masks_list(std::vector<size_t> &item_indexes);
+    auto add_item(const grt::StringRef &item, size_t ident) -> void;
+    auto remove_item(size_t index) -> void;
+    auto remove_items(std::vector<size_t> &item_indexes) -> void;
+    auto copy_items_to_val_masks_list(std::vector<size_t> &item_indexes) -> void;
 
-    void invalidate();
+    auto invalidate() -> void;
 
-    size_t get_item_id(size_t item_index);
-    std::vector<std::string> items() const;
-    Items_ids items_ids() const;
+    auto get_item_id(size_t item_index) -> size_t;
+    auto items() const -> std::vector<std::string>;
+    auto items_ids() const -> Items_ids;
 
-    void items_val_mask(const std::string items_val_mask);
-    const std::string &items_val_mask() const;
-    void items_val_masks(GrtStringListModel *items_val_masks);
-    GrtStringListModel *items_val_masks() const;
+    auto items_val_mask(const std::string items_val_mask) -> void;
+    auto items_val_mask() const -> const std::string &;
+    auto items_val_masks(GrtStringListModel *items_val_masks) -> void;
+    auto items_val_masks() const -> GrtStringListModel *;
 
-    virtual bool get_field(const NodeId &node, ColumnId column, std::string &value);
+    virtual auto get_field(const NodeId &node, ColumnId column, std::string &value) -> bool;
 
   protected:
     struct Item_handler {
@@ -89,8 +89,8 @@ namespace bec {
 
     bool _invalidated;
 
-    void process_mask(const std::string &mask, std::vector<bool> &items, bool match_means_visible) const;
-    std::string terminate_wildcard_symbols(const std::string &str);
+    auto process_mask(const std::string &mask, std::vector<bool> &items, bool match_means_visible) const -> void;
+    auto terminate_wildcard_symbols(const std::string &str) -> std::string;
   };
 };
 

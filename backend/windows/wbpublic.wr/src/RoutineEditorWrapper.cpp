@@ -42,13 +42,13 @@ RoutineEditorWrapper::RoutineEditorWrapper(::bec::RoutineEditorBE *inn) : DBObje
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::RoutineEditorBE *RoutineEditorWrapper::get_unmanaged_object() {
+auto RoutineEditorWrapper::get_unmanaged_object() -> ::bec::RoutineEditorBE * {
   return static_cast<::bec::RoutineEditorBE *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ RoutineEditorWrapper::get_sql() {
+auto RoutineEditorWrapper::get_sql() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_sql());
 }
 
@@ -60,7 +60,7 @@ void RoutineEditorWrapper::set_sql(String ^ query) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ RoutineEditorWrapper::get_name() {
+auto RoutineEditorWrapper::get_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_name());
 }
 
@@ -72,7 +72,7 @@ void RoutineEditorWrapper::set_name(String ^ name) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ RoutineEditorWrapper::get_comment() {
+auto RoutineEditorWrapper::get_comment() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_comment());
 }
 

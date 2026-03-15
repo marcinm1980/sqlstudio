@@ -36,11 +36,11 @@ public:
   DEFINE_INIT_MODULE(Sample_VERSION, "Your Company Name", ModuleImplBase, DECLARE_MODULE_FUNCTION(SampleImpl::add),
                      DECLARE_MODULE_FUNCTION(SampleImpl::sub));
 
-  int add(int op1, int op2) {
+  auto add(int op1, int op2) -> int {
     return op1 + op2;
   }
 
-  int sub(int op1, int op2) {
+  auto sub(int op1, int op2) -> int {
     return op1 - op2;
   }
 };

@@ -35,18 +35,18 @@ namespace mdc {
   public:
     RectangleFigure(Layer *layer);
 
-    virtual void draw_contents(CairoCtx *cr);
-    virtual void stroke_outline(CairoCtx *cr, float offset = 0) const;
-    virtual void stroke_outline_gl(float offset = 0) const;
+    virtual auto draw_contents(CairoCtx *cr) -> void;
+    virtual auto stroke_outline(CairoCtx *cr, float offset = 0) const -> void;
+    virtual auto stroke_outline_gl(float offset = 0) const -> void;
 
-    virtual void draw_contents_gl();
+    virtual auto draw_contents_gl() -> void;
 
     virtual auto can_render_gl() -> bool {
       return true;
     }
 
-    void set_rounded_corners(float radius, CornerMask corners);
-    void set_filled(bool flag);
+    auto set_rounded_corners(float radius, CornerMask corners) -> void;
+    auto set_filled(bool flag) -> void;
 
   protected:
     float _corner_radius;

@@ -31,7 +31,7 @@
 
 using namespace mdc;
 
-std::string mdc::detect_opengl_version() {
+auto mdc::detect_opengl_version() -> std::string {
   int major, minor;
   Display *dpy = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
   if (!glXQueryVersion(dpy, &major, &minor))
@@ -62,11 +62,11 @@ GtkCanvas::~GtkCanvas() {
     delete _canvas;
 }
 
-CanvasView *GtkCanvas::get_canvas() {
+auto GtkCanvas::get_canvas() -> CanvasView * {
   return _canvas;
 }
 
-void GtkCanvas::create_canvas() {
+auto GtkCanvas::create_canvas() -> void {
   if (_canvas != 0)
     return;
 
@@ -90,7 +90,7 @@ void GtkCanvas::create_canvas() {
   _initialized = false;
 }
 
-void GtkCanvas::set_vadjustment(const Glib::RefPtr<Gtk::Adjustment> &vadjustment) {
+auto GtkCanvas::set_vadjustment(const Glib::RefPtr<Gtk::Adjustment> &vadjustment) -> void {
   Scrollable::set_vadjustment(vadjustment);
   get_vadjustment()->set_lower(0);
   get_vadjustment()->signal_value_changed().connect(sigc::mem_fun(*this, &GtkCanvas::scroll_canvas));
@@ -99,7 +99,7 @@ void GtkCanvas::set_vadjustment(const Glib::RefPtr<Gtk::Adjustment> &vadjustment
   g_assert(ret == 1);
 }
 
-void GtkCanvas::set_hadjustment(const Glib::RefPtr<Gtk::Adjustment> &hadjustment) {
+auto GtkCanvas::set_hadjustment(const Glib::RefPtr<Gtk::Adjustment> &hadjustment) -> void {
   Scrollable::set_hadjustment(hadjustment);
   get_hadjustment()->set_lower(0);
   get_hadjustment()->signal_value_changed().connect(sigc::mem_fun(*this, &GtkCanvas::scroll_canvas));
@@ -107,12 +107,12 @@ void GtkCanvas::set_hadjustment(const Glib::RefPtr<Gtk::Adjustment> &hadjustment
   g_assert(ret == 1);
 }
 
-void GtkCanvas::on_realize() {
+auto GtkCanvas::on_realize() -> void {
   super::on_realize();
   this->create_canvas();
 }
 
-void GtkCanvas::on_unrealize() {
+auto GtkCanvas::on_unrealize() -> void {
   if (_canvas != 0) {
     delete _canvas;
     _canvas = 0;
@@ -121,7 +121,7 @@ void GtkCanvas::on_unrealize() {
   super::on_unrealize();
 }
 
-void GtkCanvas::on_map() {
+auto GtkCanvas::on_map() -> void {
   super::on_map();
 
   if (_initialized)
@@ -140,7 +140,7 @@ void GtkCanvas::on_map() {
   _canvas->repaint();
 }
 
-void GtkCanvas::on_size_allocate(Gtk::Allocation &alloc) {
+auto GtkCanvas::on_size_allocate(Gtk::Allocation &alloc) -> void {
   if (_reentrance)
     return;
   _reentrance = true;
@@ -153,7 +153,7 @@ void GtkCanvas::on_size_allocate(Gtk::Allocation &alloc) {
   _reentrance = false;
 }
 
-mdc::EventState GtkCanvas::get_event_state(int event_state) {
+auto GtkCanvas::get_event_state(int event_state) -> mdc::EventState {
   mdc::EventState state = ((mdc::EventState)0);
 
   if (event_state & GDK_CONTROL_MASK)
@@ -173,7 +173,7 @@ mdc::EventState GtkCanvas::get_event_state(int event_state) {
   return state;
 }
 
-bool GtkCanvas::on_button_press_event(GdkEventButton *event) {
+auto GtkCanvas::on_button_press_event(GdkEventButton *event) -> bool {
   MouseButton button = ButtonLeft;
 
   grab_focus();
@@ -198,7 +198,7 @@ bool GtkCanvas::on_button_press_event(GdkEventButton *event) {
   return true;
 }
 
-bool GtkCanvas::on_button_release_event(GdkEventButton *event) {
+auto GtkCanvas::on_button_release_event(GdkEventButton *event) -> bool {
   MouseButton button = ButtonLeft;
 
   switch (event->button) {
@@ -218,13 +218,13 @@ bool GtkCanvas::on_button_release_event(GdkEventButton *event) {
   return true;
 }
 
-bool GtkCanvas::on_motion_notify_event(GdkEventMotion *event) {
+auto GtkCanvas::on_motion_notify_event(GdkEventMotion *event) -> bool {
   _canvas->handle_mouse_move((int)event->x, (int)event->y, get_event_state(event->state));
 
   return true;
 }
 
-bool GtkCanvas::on_event(GdkEvent *event) {
+auto GtkCanvas::on_event(GdkEvent *event) -> bool {
   if (event->type == GDK_ENTER_NOTIFY)
     _canvas->handle_mouse_enter((int)event->motion.x, (int)event->motion.y, get_event_state(event->motion.state));
   else if (event->type == GDK_LEAVE_NOTIFY)
@@ -233,7 +233,7 @@ bool GtkCanvas::on_event(GdkEvent *event) {
   return false;
 }
 
-bool GtkCanvas::on_scroll_event(GdkEventScroll *event) {
+auto GtkCanvas::on_scroll_event(GdkEventScroll *event) -> bool {
   double x, y;
   base::Rect rect;
   rect = _canvas->get_viewport();
@@ -299,21 +299,21 @@ bool GtkCanvas::on_scroll_event(GdkEventScroll *event) {
   return true;
 }
 
-void GtkCanvas::on_zoom_in_event() {
+auto GtkCanvas::on_zoom_in_event() -> void {
 }
 
-void GtkCanvas::on_zoom_out_event() {
+auto GtkCanvas::on_zoom_out_event() -> void {
 }
 
-bool GtkCanvas::on_key_press_event(GdkEventKey *event) {
+auto GtkCanvas::on_key_press_event(GdkEventKey *event) -> bool {
   return false;
 }
 
-bool GtkCanvas::on_key_release_event(GdkEventKey *event) {
+auto GtkCanvas::on_key_release_event(GdkEventKey *event) -> bool {
   return false;
 }
 
-bool GtkCanvas::redraw(::Cairo::RefPtr< ::Cairo::Context> context) {
+auto GtkCanvas::redraw(::Cairo::RefPtr< ::Cairo::Context> context) -> bool {
   if (should_draw_window(context, this->get_bin_window())) {
     struct timeval tv, tv2;
 
@@ -333,15 +333,15 @@ bool GtkCanvas::redraw(::Cairo::RefPtr< ::Cairo::Context> context) {
   return true;
 }
 
-void GtkCanvas::canvas_view_needs_repaint(int, int, int, int) {
+auto GtkCanvas::canvas_view_needs_repaint(int, int, int, int) -> void {
   queue_draw();
 }
 
-void GtkCanvas::canvas_view_viewport_changed() {
+auto GtkCanvas::canvas_view_viewport_changed() -> void {
   update_scrollers();
 }
 
-void GtkCanvas::scroll_canvas() {
+auto GtkCanvas::scroll_canvas() -> void {
   if (_canvas) {
     float xpos = get_hadjustment()->get_value();
     float ypos = get_vadjustment()->get_value();
@@ -350,7 +350,7 @@ void GtkCanvas::scroll_canvas() {
   }
 }
 
-void GtkCanvas::update_scrollers() {
+auto GtkCanvas::update_scrollers() -> void {
   base::Size size = _canvas->get_total_view_size();
   base::Rect vp = _canvas->get_viewport();
   Glib::RefPtr<Gtk::Adjustment> hadjustment = get_hadjustment();

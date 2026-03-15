@@ -115,7 +115,7 @@ public:
       _supportsForeignKeys(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.StorageEngine";
   }
 
@@ -126,7 +126,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -135,7 +135,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -148,7 +148,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -157,7 +157,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -171,11 +171,11 @@ public:
    * \par In Python:
    *    value = obj.options
    */
-  grt::ListRef<db_mysql_StorageEngineOption> options() const { return _options; }
+  auto options() const -> grt::ListRef<db_mysql_StorageEngineOption> { return _options; }
 
 
 private: // The next attribute is read-only.
-  virtual void options(const grt::ListRef<db_mysql_StorageEngineOption> &value) {
+  virtual auto options(const grt::ListRef<db_mysql_StorageEngineOption> &value) -> void {
     grt::ValueRef ovalue(_options);
 
     _options = value;
@@ -190,7 +190,7 @@ public:
    * \par In Python:
    *    value = obj.supportsForeignKeys
    */
-  grt::IntegerRef supportsForeignKeys() const { return _supportsForeignKeys; }
+  auto supportsForeignKeys() const -> grt::IntegerRef { return _supportsForeignKeys; }
 
   /**
    * Setter for attribute supportsForeignKeys
@@ -199,7 +199,7 @@ public:
    * \par In Python:
    *   obj.supportsForeignKeys = value
    */
-  virtual void supportsForeignKeys(const grt::IntegerRef &value) {
+  virtual auto supportsForeignKeys(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_supportsForeignKeys);
     _supportsForeignKeys = value;
     member_changed("supportsForeignKeys", ovalue, value);
@@ -213,12 +213,12 @@ protected:
   grt::IntegerRef _supportsForeignKeys;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_StorageEngine());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -258,7 +258,7 @@ public:
       _type("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.StorageEngineOption";
   }
 
@@ -269,7 +269,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -278,7 +278,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -291,7 +291,7 @@ public:
    * \par In Python:
    *    value = obj.description
    */
-  grt::StringRef description() const { return _description; }
+  auto description() const -> grt::StringRef { return _description; }
 
   /**
    * Setter for attribute description
@@ -300,7 +300,7 @@ public:
    * \par In Python:
    *   obj.description = value
    */
-  virtual void description(const grt::StringRef &value) {
+  virtual auto description(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_description);
     _description = value;
     member_changed("description", ovalue, value);
@@ -313,7 +313,7 @@ public:
    * \par In Python:
    *    value = obj.type
    */
-  grt::StringRef type() const { return _type; }
+  auto type() const -> grt::StringRef { return _type; }
 
   /**
    * Setter for attribute type
@@ -322,7 +322,7 @@ public:
    * \par In Python:
    *   obj.type = value
    */
-  virtual void type(const grt::StringRef &value) {
+  virtual auto type(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_type);
     _type = value;
     member_changed("type", ovalue, value);
@@ -335,12 +335,12 @@ protected:
   grt::StringRef _type;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_StorageEngineOption());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -372,7 +372,7 @@ public:
     : db_Sequence(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Sequence";
   }
 
@@ -380,12 +380,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Sequence());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -402,7 +402,7 @@ public:
     : db_Synonym(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Synonym";
   }
 
@@ -410,12 +410,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Synonym());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -433,7 +433,7 @@ public:
       _paramType("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.RoutineParam";
   }
 
@@ -444,7 +444,7 @@ public:
    * \par In Python:
    *    value = obj.datatype
    */
-  grt::StringRef datatype() const { return _datatype; }
+  auto datatype() const -> grt::StringRef { return _datatype; }
 
   /**
    * Setter for attribute datatype
@@ -453,7 +453,7 @@ public:
    * \par In Python:
    *   obj.datatype = value
    */
-  virtual void datatype(const grt::StringRef &value) {
+  virtual auto datatype(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_datatype);
     _datatype = value;
     member_changed("datatype", ovalue, value);
@@ -466,7 +466,7 @@ public:
    * \par In Python:
    *    value = obj.paramType
    */
-  grt::StringRef paramType() const { return _paramType; }
+  auto paramType() const -> grt::StringRef { return _paramType; }
 
   /**
    * Setter for attribute paramType
@@ -475,7 +475,7 @@ public:
    * \par In Python:
    *   obj.paramType = value
    */
-  virtual void paramType(const grt::StringRef &value) {
+  virtual auto paramType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_paramType);
     _paramType = value;
     member_changed("paramType", ovalue, value);
@@ -487,12 +487,12 @@ protected:
   grt::StringRef _paramType;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_RoutineParam());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -521,7 +521,7 @@ public:
       _security("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Routine";
   }
 
@@ -533,11 +533,11 @@ public:
    * \par In Python:
    *    value = obj.params
    */
-  grt::ListRef<db_mysql_RoutineParam> params() const { return _params; }
+  auto params() const -> grt::ListRef<db_mysql_RoutineParam> { return _params; }
 
 
 private: // The next attribute is read-only.
-  virtual void params(const grt::ListRef<db_mysql_RoutineParam> &value) {
+  virtual auto params(const grt::ListRef<db_mysql_RoutineParam> &value) -> void {
     grt::ValueRef ovalue(_params);
 
     _params = value;
@@ -552,7 +552,7 @@ public:
    * \par In Python:
    *    value = obj.returnDatatype
    */
-  grt::StringRef returnDatatype() const { return _returnDatatype; }
+  auto returnDatatype() const -> grt::StringRef { return _returnDatatype; }
 
   /**
    * Setter for attribute returnDatatype
@@ -561,7 +561,7 @@ public:
    * \par In Python:
    *   obj.returnDatatype = value
    */
-  virtual void returnDatatype(const grt::StringRef &value) {
+  virtual auto returnDatatype(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_returnDatatype);
     _returnDatatype = value;
     member_changed("returnDatatype", ovalue, value);
@@ -574,7 +574,7 @@ public:
    * \par In Python:
    *    value = obj.security
    */
-  grt::StringRef security() const { return _security; }
+  auto security() const -> grt::StringRef { return _security; }
 
   /**
    * Setter for attribute security
@@ -583,7 +583,7 @@ public:
    * \par In Python:
    *   obj.security = value
    */
-  virtual void security(const grt::StringRef &value) {
+  virtual auto security(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_security);
     _security = value;
     member_changed("security", ovalue, value);
@@ -596,12 +596,12 @@ protected:
   grt::StringRef _security;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Routine());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -632,7 +632,7 @@ public:
     : db_RoutineGroup(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.RoutineGroup";
   }
 
@@ -640,12 +640,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_RoutineGroup());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -661,7 +661,7 @@ public:
     : db_View(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.View";
   }
 
@@ -669,12 +669,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_View());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -690,7 +690,7 @@ public:
     : db_Event(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Event";
   }
 
@@ -698,12 +698,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Event());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -719,7 +719,7 @@ public:
     : db_Trigger(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Trigger";
   }
 
@@ -727,12 +727,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Trigger());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -748,7 +748,7 @@ public:
     : db_ForeignKey(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.ForeignKey";
   }
 
@@ -759,7 +759,7 @@ public:
    * \par In Python:
    *    value = obj.referencedTable
    */
-  db_mysql_TableRef referencedTable() const { return db_mysql_TableRef::cast_from(_referencedTable); }
+  auto referencedTable() const -> db_mysql_TableRef { return db_mysql_TableRef::cast_from(_referencedTable); }
 
   /**
    * Setter for attribute referencedTable
@@ -768,18 +768,18 @@ public:
    * \par In Python:
    *   obj.referencedTable = value
    */
-  virtual void referencedTable(const db_mysql_TableRef &value) { super::referencedTable(value); }
+  virtual auto referencedTable(const db_mysql_TableRef &value) -> void { super::referencedTable(value); }
 
 protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_ForeignKey());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -800,7 +800,7 @@ public:
     : db_IndexColumn(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.IndexColumn";
   }
 
@@ -808,12 +808,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_IndexColumn());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -836,7 +836,7 @@ public:
     _columns.content().__retype(grt::ObjectType, "db.mysql.IndexColumn");
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Index";
   }
 
@@ -847,7 +847,7 @@ public:
    * \par In Python:
    *    value = obj.algorithm
    */
-  grt::StringRef algorithm() const { return _algorithm; }
+  auto algorithm() const -> grt::StringRef { return _algorithm; }
 
   /**
    * Setter for attribute algorithm
@@ -856,7 +856,7 @@ public:
    * \par In Python:
    *   obj.algorithm = value
    */
-  virtual void algorithm(const grt::StringRef &value) {
+  virtual auto algorithm(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_algorithm);
     _algorithm = value;
     member_changed("algorithm", ovalue, value);
@@ -870,7 +870,7 @@ public:
    * \par In Python:
    *    value = obj.columns
    */
-  grt::ListRef<db_mysql_IndexColumn> columns() const { return grt::ListRef<db_mysql_IndexColumn>::cast_from(_columns); }
+  auto columns() const -> grt::ListRef<db_mysql_IndexColumn> { return grt::ListRef<db_mysql_IndexColumn>::cast_from(_columns); }
 
 
 private: // The next attribute is read-only.
@@ -883,7 +883,7 @@ public:
    * \par In Python:
    *    value = obj.indexKind
    */
-  grt::StringRef indexKind() const { return _indexKind; }
+  auto indexKind() const -> grt::StringRef { return _indexKind; }
 
   /**
    * Setter for attribute indexKind
@@ -892,7 +892,7 @@ public:
    * \par In Python:
    *   obj.indexKind = value
    */
-  virtual void indexKind(const grt::StringRef &value) {
+  virtual auto indexKind(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_indexKind);
     _indexKind = value;
     member_changed("indexKind", ovalue, value);
@@ -905,7 +905,7 @@ public:
    * \par In Python:
    *    value = obj.keyBlockSize
    */
-  grt::IntegerRef keyBlockSize() const { return _keyBlockSize; }
+  auto keyBlockSize() const -> grt::IntegerRef { return _keyBlockSize; }
 
   /**
    * Setter for attribute keyBlockSize
@@ -914,7 +914,7 @@ public:
    * \par In Python:
    *   obj.keyBlockSize = value
    */
-  virtual void keyBlockSize(const grt::IntegerRef &value) {
+  virtual auto keyBlockSize(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_keyBlockSize);
     _keyBlockSize = value;
     member_changed("keyBlockSize", ovalue, value);
@@ -927,7 +927,7 @@ public:
    * \par In Python:
    *    value = obj.lockOption
    */
-  grt::StringRef lockOption() const { return _lockOption; }
+  auto lockOption() const -> grt::StringRef { return _lockOption; }
 
   /**
    * Setter for attribute lockOption
@@ -936,7 +936,7 @@ public:
    * \par In Python:
    *   obj.lockOption = value
    */
-  virtual void lockOption(const grt::StringRef &value) {
+  virtual auto lockOption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_lockOption);
     _lockOption = value;
     member_changed("lockOption", ovalue, value);
@@ -949,7 +949,7 @@ public:
    * \par In Python:
    *    value = obj.visible
    */
-  grt::IntegerRef visible() const { return _visible; }
+  auto visible() const -> grt::IntegerRef { return _visible; }
 
   /**
    * Setter for attribute visible
@@ -958,7 +958,7 @@ public:
    * \par In Python:
    *   obj.visible = value
    */
-  virtual void visible(const grt::IntegerRef &value) {
+  virtual auto visible(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_visible);
     _visible = value;
     member_changed("visible", ovalue, value);
@@ -971,7 +971,7 @@ public:
    * \par In Python:
    *    value = obj.withParser
    */
-  grt::StringRef withParser() const { return _withParser; }
+  auto withParser() const -> grt::StringRef { return _withParser; }
 
   /**
    * Setter for attribute withParser
@@ -980,7 +980,7 @@ public:
    * \par In Python:
    *   obj.withParser = value
    */
-  virtual void withParser(const grt::StringRef &value) {
+  virtual auto withParser(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_withParser);
     _withParser = value;
     member_changed("withParser", ovalue, value);
@@ -996,12 +996,12 @@ protected:
   grt::StringRef _withParser;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Index());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1052,7 +1052,7 @@ public:
     : db_StructuredDatatype(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.StructuredDatatype";
   }
 
@@ -1060,12 +1060,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_StructuredDatatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1081,7 +1081,7 @@ public:
     : db_SimpleDatatype(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.SimpleDatatype";
   }
 
@@ -1089,12 +1089,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_SimpleDatatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1114,7 +1114,7 @@ public:
       _generatedStorage("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Column";
   }
 
@@ -1125,7 +1125,7 @@ public:
    * \par In Python:
    *    value = obj.autoIncrement
    */
-  grt::IntegerRef autoIncrement() const { return _autoIncrement; }
+  auto autoIncrement() const -> grt::IntegerRef { return _autoIncrement; }
 
   /**
    * Setter for attribute autoIncrement
@@ -1134,7 +1134,7 @@ public:
    * \par In Python:
    *   obj.autoIncrement = value
    */
-  virtual void autoIncrement(const grt::IntegerRef &value) {
+  virtual auto autoIncrement(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_autoIncrement);
     _autoIncrement = value;
     member_changed("autoIncrement", ovalue, value);
@@ -1147,7 +1147,7 @@ public:
    * \par In Python:
    *    value = obj.expression
    */
-  grt::StringRef expression() const { return _expression; }
+  auto expression() const -> grt::StringRef { return _expression; }
 
   /**
    * Setter for attribute expression
@@ -1156,7 +1156,7 @@ public:
    * \par In Python:
    *   obj.expression = value
    */
-  virtual void expression(const grt::StringRef &value) {
+  virtual auto expression(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_expression);
     _expression = value;
     member_changed("expression", ovalue, value);
@@ -1169,7 +1169,7 @@ public:
    * \par In Python:
    *    value = obj.generated
    */
-  grt::IntegerRef generated() const { return _generated; }
+  auto generated() const -> grt::IntegerRef { return _generated; }
 
   /**
    * Setter for attribute generated
@@ -1178,7 +1178,7 @@ public:
    * \par In Python:
    *   obj.generated = value
    */
-  virtual void generated(const grt::IntegerRef &value) {
+  virtual auto generated(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_generated);
     _generated = value;
     member_changed("generated", ovalue, value);
@@ -1191,7 +1191,7 @@ public:
    * \par In Python:
    *    value = obj.generatedStorage
    */
-  grt::StringRef generatedStorage() const { return _generatedStorage; }
+  auto generatedStorage() const -> grt::StringRef { return _generatedStorage; }
 
   /**
    * Setter for attribute generatedStorage
@@ -1200,7 +1200,7 @@ public:
    * \par In Python:
    *   obj.generatedStorage = value
    */
-  virtual void generatedStorage(const grt::StringRef &value) {
+  virtual auto generatedStorage(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_generatedStorage);
     _generatedStorage = value;
     member_changed("generatedStorage", ovalue, value);
@@ -1214,12 +1214,12 @@ protected:
   grt::StringRef _generatedStorage;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Column());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1293,7 +1293,7 @@ public:
     _triggers.content().__retype(grt::ObjectType, "db.mysql.Trigger");
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Table";
   }
 
@@ -1304,7 +1304,7 @@ public:
    * \par In Python:
    *    value = obj.avgRowLength
    */
-  grt::StringRef avgRowLength() const { return _avgRowLength; }
+  auto avgRowLength() const -> grt::StringRef { return _avgRowLength; }
 
   /**
    * Setter for attribute avgRowLength
@@ -1313,7 +1313,7 @@ public:
    * \par In Python:
    *   obj.avgRowLength = value
    */
-  virtual void avgRowLength(const grt::StringRef &value) {
+  virtual auto avgRowLength(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_avgRowLength);
     _avgRowLength = value;
     member_changed("avgRowLength", ovalue, value);
@@ -1326,7 +1326,7 @@ public:
    * \par In Python:
    *    value = obj.checksum
    */
-  grt::IntegerRef checksum() const { return _checksum; }
+  auto checksum() const -> grt::IntegerRef { return _checksum; }
 
   /**
    * Setter for attribute checksum
@@ -1335,7 +1335,7 @@ public:
    * \par In Python:
    *   obj.checksum = value
    */
-  virtual void checksum(const grt::IntegerRef &value) {
+  virtual auto checksum(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_checksum);
     _checksum = value;
     member_changed("checksum", ovalue, value);
@@ -1349,7 +1349,7 @@ public:
    * \par In Python:
    *    value = obj.columns
    */
-  grt::ListRef<db_mysql_Column> columns() const { return grt::ListRef<db_mysql_Column>::cast_from(_columns); }
+  auto columns() const -> grt::ListRef<db_mysql_Column> { return grt::ListRef<db_mysql_Column>::cast_from(_columns); }
 
 
 private: // The next attribute is read-only.
@@ -1363,7 +1363,7 @@ public:
    * \par In Python:
    *    value = obj.connection
    */
-  db_ServerLinkRef connection() const { return _connection; }
+  auto connection() const -> db_ServerLinkRef { return _connection; }
 
   /**
    * Setter for attribute connection
@@ -1372,7 +1372,7 @@ public:
    * \par In Python:
    *   obj.connection = value
    */
-  virtual void connection(const db_ServerLinkRef &value) {
+  virtual auto connection(const db_ServerLinkRef &value) -> void {
     grt::ValueRef ovalue(_connection);
 
     _connection = value;
@@ -1386,7 +1386,7 @@ public:
    * \par In Python:
    *    value = obj.connectionString
    */
-  grt::StringRef connectionString() const { return _connectionString; }
+  auto connectionString() const -> grt::StringRef { return _connectionString; }
 
   /**
    * Setter for attribute connectionString
@@ -1395,7 +1395,7 @@ public:
    * \par In Python:
    *   obj.connectionString = value
    */
-  virtual void connectionString(const grt::StringRef &value) {
+  virtual auto connectionString(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_connectionString);
     _connectionString = value;
     member_changed("connectionString", ovalue, value);
@@ -1408,7 +1408,7 @@ public:
    * \par In Python:
    *    value = obj.defaultCharacterSetName
    */
-  grt::StringRef defaultCharacterSetName() const { return _defaultCharacterSetName; }
+  auto defaultCharacterSetName() const -> grt::StringRef { return _defaultCharacterSetName; }
 
   /**
    * Setter for attribute defaultCharacterSetName
@@ -1417,7 +1417,7 @@ public:
    * \par In Python:
    *   obj.defaultCharacterSetName = value
    */
-  virtual void defaultCharacterSetName(const grt::StringRef &value) {
+  virtual auto defaultCharacterSetName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultCharacterSetName);
     _defaultCharacterSetName = value;
     member_changed("defaultCharacterSetName", ovalue, value);
@@ -1430,7 +1430,7 @@ public:
    * \par In Python:
    *    value = obj.defaultCollationName
    */
-  grt::StringRef defaultCollationName() const { return _defaultCollationName; }
+  auto defaultCollationName() const -> grt::StringRef { return _defaultCollationName; }
 
   /**
    * Setter for attribute defaultCollationName
@@ -1439,7 +1439,7 @@ public:
    * \par In Python:
    *   obj.defaultCollationName = value
    */
-  virtual void defaultCollationName(const grt::StringRef &value) {
+  virtual auto defaultCollationName(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_defaultCollationName);
     _defaultCollationName = value;
     member_changed("defaultCollationName", ovalue, value);
@@ -1452,7 +1452,7 @@ public:
    * \par In Python:
    *    value = obj.delayKeyWrite
    */
-  grt::IntegerRef delayKeyWrite() const { return _delayKeyWrite; }
+  auto delayKeyWrite() const -> grt::IntegerRef { return _delayKeyWrite; }
 
   /**
    * Setter for attribute delayKeyWrite
@@ -1461,7 +1461,7 @@ public:
    * \par In Python:
    *   obj.delayKeyWrite = value
    */
-  virtual void delayKeyWrite(const grt::IntegerRef &value) {
+  virtual auto delayKeyWrite(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_delayKeyWrite);
     _delayKeyWrite = value;
     member_changed("delayKeyWrite", ovalue, value);
@@ -1475,7 +1475,7 @@ public:
    * \par In Python:
    *    value = obj.foreignKeys
    */
-  grt::ListRef<db_mysql_ForeignKey> foreignKeys() const { return grt::ListRef<db_mysql_ForeignKey>::cast_from(_foreignKeys); }
+  auto foreignKeys() const -> grt::ListRef<db_mysql_ForeignKey> { return grt::ListRef<db_mysql_ForeignKey>::cast_from(_foreignKeys); }
 
 
 private: // The next attribute is read-only.
@@ -1489,7 +1489,7 @@ public:
    * \par In Python:
    *    value = obj.indices
    */
-  grt::ListRef<db_mysql_Index> indices() const { return grt::ListRef<db_mysql_Index>::cast_from(_indices); }
+  auto indices() const -> grt::ListRef<db_mysql_Index> { return grt::ListRef<db_mysql_Index>::cast_from(_indices); }
 
 
 private: // The next attribute is read-only.
@@ -1502,7 +1502,7 @@ public:
    * \par In Python:
    *    value = obj.keyBlockSize
    */
-  grt::StringRef keyBlockSize() const { return _keyBlockSize; }
+  auto keyBlockSize() const -> grt::StringRef { return _keyBlockSize; }
 
   /**
    * Setter for attribute keyBlockSize
@@ -1511,7 +1511,7 @@ public:
    * \par In Python:
    *   obj.keyBlockSize = value
    */
-  virtual void keyBlockSize(const grt::StringRef &value) {
+  virtual auto keyBlockSize(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_keyBlockSize);
     _keyBlockSize = value;
     member_changed("keyBlockSize", ovalue, value);
@@ -1524,7 +1524,7 @@ public:
    * \par In Python:
    *    value = obj.maxRows
    */
-  grt::StringRef maxRows() const { return _maxRows; }
+  auto maxRows() const -> grt::StringRef { return _maxRows; }
 
   /**
    * Setter for attribute maxRows
@@ -1533,7 +1533,7 @@ public:
    * \par In Python:
    *   obj.maxRows = value
    */
-  virtual void maxRows(const grt::StringRef &value) {
+  virtual auto maxRows(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_maxRows);
     _maxRows = value;
     member_changed("maxRows", ovalue, value);
@@ -1546,7 +1546,7 @@ public:
    * \par In Python:
    *    value = obj.mergeInsert
    */
-  grt::StringRef mergeInsert() const { return _mergeInsert; }
+  auto mergeInsert() const -> grt::StringRef { return _mergeInsert; }
 
   /**
    * Setter for attribute mergeInsert
@@ -1555,7 +1555,7 @@ public:
    * \par In Python:
    *   obj.mergeInsert = value
    */
-  virtual void mergeInsert(const grt::StringRef &value) {
+  virtual auto mergeInsert(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_mergeInsert);
     _mergeInsert = value;
     member_changed("mergeInsert", ovalue, value);
@@ -1568,7 +1568,7 @@ public:
    * \par In Python:
    *    value = obj.mergeUnion
    */
-  grt::StringRef mergeUnion() const { return _mergeUnion; }
+  auto mergeUnion() const -> grt::StringRef { return _mergeUnion; }
 
   /**
    * Setter for attribute mergeUnion
@@ -1577,7 +1577,7 @@ public:
    * \par In Python:
    *   obj.mergeUnion = value
    */
-  virtual void mergeUnion(const grt::StringRef &value) {
+  virtual auto mergeUnion(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_mergeUnion);
     _mergeUnion = value;
     member_changed("mergeUnion", ovalue, value);
@@ -1590,7 +1590,7 @@ public:
    * \par In Python:
    *    value = obj.minRows
    */
-  grt::StringRef minRows() const { return _minRows; }
+  auto minRows() const -> grt::StringRef { return _minRows; }
 
   /**
    * Setter for attribute minRows
@@ -1599,7 +1599,7 @@ public:
    * \par In Python:
    *   obj.minRows = value
    */
-  virtual void minRows(const grt::StringRef &value) {
+  virtual auto minRows(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_minRows);
     _minRows = value;
     member_changed("minRows", ovalue, value);
@@ -1612,7 +1612,7 @@ public:
    * \par In Python:
    *    value = obj.nextAutoInc
    */
-  grt::StringRef nextAutoInc() const { return _nextAutoInc; }
+  auto nextAutoInc() const -> grt::StringRef { return _nextAutoInc; }
 
   /**
    * Setter for attribute nextAutoInc
@@ -1621,7 +1621,7 @@ public:
    * \par In Python:
    *   obj.nextAutoInc = value
    */
-  virtual void nextAutoInc(const grt::StringRef &value) {
+  virtual auto nextAutoInc(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_nextAutoInc);
     _nextAutoInc = value;
     member_changed("nextAutoInc", ovalue, value);
@@ -1634,7 +1634,7 @@ public:
    * \par In Python:
    *    value = obj.packKeys
    */
-  grt::StringRef packKeys() const { return _packKeys; }
+  auto packKeys() const -> grt::StringRef { return _packKeys; }
 
   /**
    * Setter for attribute packKeys
@@ -1643,7 +1643,7 @@ public:
    * \par In Python:
    *   obj.packKeys = value
    */
-  virtual void packKeys(const grt::StringRef &value) {
+  virtual auto packKeys(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_packKeys);
     _packKeys = value;
     member_changed("packKeys", ovalue, value);
@@ -1656,7 +1656,7 @@ public:
    * \par In Python:
    *    value = obj.partitionCount
    */
-  grt::IntegerRef partitionCount() const { return _partitionCount; }
+  auto partitionCount() const -> grt::IntegerRef { return _partitionCount; }
 
   /**
    * Setter for attribute partitionCount
@@ -1665,7 +1665,7 @@ public:
    * \par In Python:
    *   obj.partitionCount = value
    */
-  virtual void partitionCount(const grt::IntegerRef &value) {
+  virtual auto partitionCount(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_partitionCount);
     _partitionCount = value;
     member_changed("partitionCount", ovalue, value);
@@ -1679,11 +1679,11 @@ public:
    * \par In Python:
    *    value = obj.partitionDefinitions
    */
-  grt::ListRef<db_mysql_PartitionDefinition> partitionDefinitions() const { return _partitionDefinitions; }
+  auto partitionDefinitions() const -> grt::ListRef<db_mysql_PartitionDefinition> { return _partitionDefinitions; }
 
 
 private: // The next attribute is read-only.
-  virtual void partitionDefinitions(const grt::ListRef<db_mysql_PartitionDefinition> &value) {
+  virtual auto partitionDefinitions(const grt::ListRef<db_mysql_PartitionDefinition> &value) -> void {
     grt::ValueRef ovalue(_partitionDefinitions);
 
     _partitionDefinitions = value;
@@ -1698,7 +1698,7 @@ public:
    * \par In Python:
    *    value = obj.partitionExpression
    */
-  grt::StringRef partitionExpression() const { return _partitionExpression; }
+  auto partitionExpression() const -> grt::StringRef { return _partitionExpression; }
 
   /**
    * Setter for attribute partitionExpression
@@ -1707,7 +1707,7 @@ public:
    * \par In Python:
    *   obj.partitionExpression = value
    */
-  virtual void partitionExpression(const grt::StringRef &value) {
+  virtual auto partitionExpression(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_partitionExpression);
     _partitionExpression = value;
     member_changed("partitionExpression", ovalue, value);
@@ -1720,7 +1720,7 @@ public:
    * \par In Python:
    *    value = obj.partitionKeyAlgorithm
    */
-  grt::IntegerRef partitionKeyAlgorithm() const { return _partitionKeyAlgorithm; }
+  auto partitionKeyAlgorithm() const -> grt::IntegerRef { return _partitionKeyAlgorithm; }
 
   /**
    * Setter for attribute partitionKeyAlgorithm
@@ -1729,7 +1729,7 @@ public:
    * \par In Python:
    *   obj.partitionKeyAlgorithm = value
    */
-  virtual void partitionKeyAlgorithm(const grt::IntegerRef &value) {
+  virtual auto partitionKeyAlgorithm(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_partitionKeyAlgorithm);
     _partitionKeyAlgorithm = value;
     member_changed("partitionKeyAlgorithm", ovalue, value);
@@ -1742,7 +1742,7 @@ public:
    * \par In Python:
    *    value = obj.partitionType
    */
-  grt::StringRef partitionType() const { return _partitionType; }
+  auto partitionType() const -> grt::StringRef { return _partitionType; }
 
   /**
    * Setter for attribute partitionType
@@ -1751,7 +1751,7 @@ public:
    * \par In Python:
    *   obj.partitionType = value
    */
-  virtual void partitionType(const grt::StringRef &value) {
+  virtual auto partitionType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_partitionType);
     _partitionType = value;
     member_changed("partitionType", ovalue, value);
@@ -1764,7 +1764,7 @@ public:
    * \par In Python:
    *    value = obj.password
    */
-  grt::StringRef password() const { return _password; }
+  auto password() const -> grt::StringRef { return _password; }
 
   /**
    * Setter for attribute password
@@ -1773,7 +1773,7 @@ public:
    * \par In Python:
    *   obj.password = value
    */
-  virtual void password(const grt::StringRef &value) {
+  virtual auto password(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_password);
     _password = value;
     member_changed("password", ovalue, value);
@@ -1786,7 +1786,7 @@ public:
    * \par In Python:
    *    value = obj.primaryKey
    */
-  db_mysql_IndexRef primaryKey() const { return db_mysql_IndexRef::cast_from(_primaryKey); }
+  auto primaryKey() const -> db_mysql_IndexRef { return db_mysql_IndexRef::cast_from(_primaryKey); }
 
   /**
    * Setter for attribute primaryKey
@@ -1795,7 +1795,7 @@ public:
    * \par In Python:
    *   obj.primaryKey = value
    */
-  virtual void primaryKey(const db_mysql_IndexRef &value) { super::primaryKey(value); }
+  virtual auto primaryKey(const db_mysql_IndexRef &value) -> void { super::primaryKey(value); }
 
   /**
    * Getter for attribute raidChunkSize
@@ -1804,7 +1804,7 @@ public:
    * \par In Python:
    *    value = obj.raidChunkSize
    */
-  grt::StringRef raidChunkSize() const { return _raidChunkSize; }
+  auto raidChunkSize() const -> grt::StringRef { return _raidChunkSize; }
 
   /**
    * Setter for attribute raidChunkSize
@@ -1813,7 +1813,7 @@ public:
    * \par In Python:
    *   obj.raidChunkSize = value
    */
-  virtual void raidChunkSize(const grt::StringRef &value) {
+  virtual auto raidChunkSize(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_raidChunkSize);
     _raidChunkSize = value;
     member_changed("raidChunkSize", ovalue, value);
@@ -1826,7 +1826,7 @@ public:
    * \par In Python:
    *    value = obj.raidChunks
    */
-  grt::StringRef raidChunks() const { return _raidChunks; }
+  auto raidChunks() const -> grt::StringRef { return _raidChunks; }
 
   /**
    * Setter for attribute raidChunks
@@ -1835,7 +1835,7 @@ public:
    * \par In Python:
    *   obj.raidChunks = value
    */
-  virtual void raidChunks(const grt::StringRef &value) {
+  virtual auto raidChunks(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_raidChunks);
     _raidChunks = value;
     member_changed("raidChunks", ovalue, value);
@@ -1848,7 +1848,7 @@ public:
    * \par In Python:
    *    value = obj.raidType
    */
-  grt::StringRef raidType() const { return _raidType; }
+  auto raidType() const -> grt::StringRef { return _raidType; }
 
   /**
    * Setter for attribute raidType
@@ -1857,7 +1857,7 @@ public:
    * \par In Python:
    *   obj.raidType = value
    */
-  virtual void raidType(const grt::StringRef &value) {
+  virtual auto raidType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_raidType);
     _raidType = value;
     member_changed("raidType", ovalue, value);
@@ -1870,7 +1870,7 @@ public:
    * \par In Python:
    *    value = obj.rowFormat
    */
-  grt::StringRef rowFormat() const { return _rowFormat; }
+  auto rowFormat() const -> grt::StringRef { return _rowFormat; }
 
   /**
    * Setter for attribute rowFormat
@@ -1879,7 +1879,7 @@ public:
    * \par In Python:
    *   obj.rowFormat = value
    */
-  virtual void rowFormat(const grt::StringRef &value) {
+  virtual auto rowFormat(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_rowFormat);
     _rowFormat = value;
     member_changed("rowFormat", ovalue, value);
@@ -1892,7 +1892,7 @@ public:
    * \par In Python:
    *    value = obj.statsAutoRecalc
    */
-  grt::StringRef statsAutoRecalc() const { return _statsAutoRecalc; }
+  auto statsAutoRecalc() const -> grt::StringRef { return _statsAutoRecalc; }
 
   /**
    * Setter for attribute statsAutoRecalc
@@ -1901,7 +1901,7 @@ public:
    * \par In Python:
    *   obj.statsAutoRecalc = value
    */
-  virtual void statsAutoRecalc(const grt::StringRef &value) {
+  virtual auto statsAutoRecalc(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_statsAutoRecalc);
     _statsAutoRecalc = value;
     member_changed("statsAutoRecalc", ovalue, value);
@@ -1914,7 +1914,7 @@ public:
    * \par In Python:
    *    value = obj.statsPersistent
    */
-  grt::StringRef statsPersistent() const { return _statsPersistent; }
+  auto statsPersistent() const -> grt::StringRef { return _statsPersistent; }
 
   /**
    * Setter for attribute statsPersistent
@@ -1923,7 +1923,7 @@ public:
    * \par In Python:
    *   obj.statsPersistent = value
    */
-  virtual void statsPersistent(const grt::StringRef &value) {
+  virtual auto statsPersistent(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_statsPersistent);
     _statsPersistent = value;
     member_changed("statsPersistent", ovalue, value);
@@ -1936,7 +1936,7 @@ public:
    * \par In Python:
    *    value = obj.statsSamplePages
    */
-  grt::IntegerRef statsSamplePages() const { return _statsSamplePages; }
+  auto statsSamplePages() const -> grt::IntegerRef { return _statsSamplePages; }
 
   /**
    * Setter for attribute statsSamplePages
@@ -1945,7 +1945,7 @@ public:
    * \par In Python:
    *   obj.statsSamplePages = value
    */
-  virtual void statsSamplePages(const grt::IntegerRef &value) {
+  virtual auto statsSamplePages(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_statsSamplePages);
     _statsSamplePages = value;
     member_changed("statsSamplePages", ovalue, value);
@@ -1958,7 +1958,7 @@ public:
    * \par In Python:
    *    value = obj.subpartitionCount
    */
-  grt::IntegerRef subpartitionCount() const { return _subpartitionCount; }
+  auto subpartitionCount() const -> grt::IntegerRef { return _subpartitionCount; }
 
   /**
    * Setter for attribute subpartitionCount
@@ -1967,7 +1967,7 @@ public:
    * \par In Python:
    *   obj.subpartitionCount = value
    */
-  virtual void subpartitionCount(const grt::IntegerRef &value) {
+  virtual auto subpartitionCount(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_subpartitionCount);
     _subpartitionCount = value;
     member_changed("subpartitionCount", ovalue, value);
@@ -1980,7 +1980,7 @@ public:
    * \par In Python:
    *    value = obj.subpartitionExpression
    */
-  grt::StringRef subpartitionExpression() const { return _subpartitionExpression; }
+  auto subpartitionExpression() const -> grt::StringRef { return _subpartitionExpression; }
 
   /**
    * Setter for attribute subpartitionExpression
@@ -1989,7 +1989,7 @@ public:
    * \par In Python:
    *   obj.subpartitionExpression = value
    */
-  virtual void subpartitionExpression(const grt::StringRef &value) {
+  virtual auto subpartitionExpression(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_subpartitionExpression);
     _subpartitionExpression = value;
     member_changed("subpartitionExpression", ovalue, value);
@@ -2002,7 +2002,7 @@ public:
    * \par In Python:
    *    value = obj.subpartitionKeyAlgorithm
    */
-  grt::IntegerRef subpartitionKeyAlgorithm() const { return _subpartitionKeyAlgorithm; }
+  auto subpartitionKeyAlgorithm() const -> grt::IntegerRef { return _subpartitionKeyAlgorithm; }
 
   /**
    * Setter for attribute subpartitionKeyAlgorithm
@@ -2011,7 +2011,7 @@ public:
    * \par In Python:
    *   obj.subpartitionKeyAlgorithm = value
    */
-  virtual void subpartitionKeyAlgorithm(const grt::IntegerRef &value) {
+  virtual auto subpartitionKeyAlgorithm(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_subpartitionKeyAlgorithm);
     _subpartitionKeyAlgorithm = value;
     member_changed("subpartitionKeyAlgorithm", ovalue, value);
@@ -2024,7 +2024,7 @@ public:
    * \par In Python:
    *    value = obj.subpartitionType
    */
-  grt::StringRef subpartitionType() const { return _subpartitionType; }
+  auto subpartitionType() const -> grt::StringRef { return _subpartitionType; }
 
   /**
    * Setter for attribute subpartitionType
@@ -2033,7 +2033,7 @@ public:
    * \par In Python:
    *   obj.subpartitionType = value
    */
-  virtual void subpartitionType(const grt::StringRef &value) {
+  virtual auto subpartitionType(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_subpartitionType);
     _subpartitionType = value;
     member_changed("subpartitionType", ovalue, value);
@@ -2046,7 +2046,7 @@ public:
    * \par In Python:
    *    value = obj.tableDataDir
    */
-  grt::StringRef tableDataDir() const { return _tableDataDir; }
+  auto tableDataDir() const -> grt::StringRef { return _tableDataDir; }
 
   /**
    * Setter for attribute tableDataDir
@@ -2055,7 +2055,7 @@ public:
    * \par In Python:
    *   obj.tableDataDir = value
    */
-  virtual void tableDataDir(const grt::StringRef &value) {
+  virtual auto tableDataDir(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tableDataDir);
     _tableDataDir = value;
     member_changed("tableDataDir", ovalue, value);
@@ -2068,7 +2068,7 @@ public:
    * \par In Python:
    *    value = obj.tableEngine
    */
-  grt::StringRef tableEngine() const { return _tableEngine; }
+  auto tableEngine() const -> grt::StringRef { return _tableEngine; }
 
   /**
    * Setter for attribute tableEngine
@@ -2077,7 +2077,7 @@ public:
    * \par In Python:
    *   obj.tableEngine = value
    */
-  virtual void tableEngine(const grt::StringRef &value) {
+  virtual auto tableEngine(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tableEngine);
     _tableEngine = value;
     member_changed("tableEngine", ovalue, value);
@@ -2090,7 +2090,7 @@ public:
    * \par In Python:
    *    value = obj.tableIndexDir
    */
-  grt::StringRef tableIndexDir() const { return _tableIndexDir; }
+  auto tableIndexDir() const -> grt::StringRef { return _tableIndexDir; }
 
   /**
    * Setter for attribute tableIndexDir
@@ -2099,7 +2099,7 @@ public:
    * \par In Python:
    *   obj.tableIndexDir = value
    */
-  virtual void tableIndexDir(const grt::StringRef &value) {
+  virtual auto tableIndexDir(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tableIndexDir);
     _tableIndexDir = value;
     member_changed("tableIndexDir", ovalue, value);
@@ -2112,7 +2112,7 @@ public:
    * \par In Python:
    *    value = obj.tableSpace
    */
-  grt::StringRef tableSpace() const { return _tableSpace; }
+  auto tableSpace() const -> grt::StringRef { return _tableSpace; }
 
   /**
    * Setter for attribute tableSpace
@@ -2121,7 +2121,7 @@ public:
    * \par In Python:
    *   obj.tableSpace = value
    */
-  virtual void tableSpace(const grt::StringRef &value) {
+  virtual auto tableSpace(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tableSpace);
     _tableSpace = value;
     member_changed("tableSpace", ovalue, value);
@@ -2135,7 +2135,7 @@ public:
    * \par In Python:
    *    value = obj.triggers
    */
-  grt::ListRef<db_mysql_Trigger> triggers() const { return grt::ListRef<db_mysql_Trigger>::cast_from(_triggers); }
+  auto triggers() const -> grt::ListRef<db_mysql_Trigger> { return grt::ListRef<db_mysql_Trigger>::cast_from(_triggers); }
 
 
 private: // The next attribute is read-only.
@@ -2180,12 +2180,12 @@ protected:
   grt::StringRef _tableSpace;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Table());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2411,7 +2411,7 @@ public:
       _value("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.PartitionDefinition";
   }
 
@@ -2422,7 +2422,7 @@ public:
    * \par In Python:
    *    value = obj.comment
    */
-  grt::StringRef comment() const { return _comment; }
+  auto comment() const -> grt::StringRef { return _comment; }
 
   /**
    * Setter for attribute comment
@@ -2431,7 +2431,7 @@ public:
    * \par In Python:
    *   obj.comment = value
    */
-  virtual void comment(const grt::StringRef &value) {
+  virtual auto comment(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_comment);
     _comment = value;
     member_changed("comment", ovalue, value);
@@ -2444,7 +2444,7 @@ public:
    * \par In Python:
    *    value = obj.dataDirectory
    */
-  grt::StringRef dataDirectory() const { return _dataDirectory; }
+  auto dataDirectory() const -> grt::StringRef { return _dataDirectory; }
 
   /**
    * Setter for attribute dataDirectory
@@ -2453,7 +2453,7 @@ public:
    * \par In Python:
    *   obj.dataDirectory = value
    */
-  virtual void dataDirectory(const grt::StringRef &value) {
+  virtual auto dataDirectory(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_dataDirectory);
     _dataDirectory = value;
     member_changed("dataDirectory", ovalue, value);
@@ -2466,7 +2466,7 @@ public:
    * \par In Python:
    *    value = obj.engine
    */
-  grt::StringRef engine() const { return _engine; }
+  auto engine() const -> grt::StringRef { return _engine; }
 
   /**
    * Setter for attribute engine
@@ -2475,7 +2475,7 @@ public:
    * \par In Python:
    *   obj.engine = value
    */
-  virtual void engine(const grt::StringRef &value) {
+  virtual auto engine(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_engine);
     _engine = value;
     member_changed("engine", ovalue, value);
@@ -2488,7 +2488,7 @@ public:
    * \par In Python:
    *    value = obj.indexDirectory
    */
-  grt::StringRef indexDirectory() const { return _indexDirectory; }
+  auto indexDirectory() const -> grt::StringRef { return _indexDirectory; }
 
   /**
    * Setter for attribute indexDirectory
@@ -2497,7 +2497,7 @@ public:
    * \par In Python:
    *   obj.indexDirectory = value
    */
-  virtual void indexDirectory(const grt::StringRef &value) {
+  virtual auto indexDirectory(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_indexDirectory);
     _indexDirectory = value;
     member_changed("indexDirectory", ovalue, value);
@@ -2510,7 +2510,7 @@ public:
    * \par In Python:
    *    value = obj.maxRows
    */
-  grt::StringRef maxRows() const { return _maxRows; }
+  auto maxRows() const -> grt::StringRef { return _maxRows; }
 
   /**
    * Setter for attribute maxRows
@@ -2519,7 +2519,7 @@ public:
    * \par In Python:
    *   obj.maxRows = value
    */
-  virtual void maxRows(const grt::StringRef &value) {
+  virtual auto maxRows(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_maxRows);
     _maxRows = value;
     member_changed("maxRows", ovalue, value);
@@ -2532,7 +2532,7 @@ public:
    * \par In Python:
    *    value = obj.minRows
    */
-  grt::StringRef minRows() const { return _minRows; }
+  auto minRows() const -> grt::StringRef { return _minRows; }
 
   /**
    * Setter for attribute minRows
@@ -2541,7 +2541,7 @@ public:
    * \par In Python:
    *   obj.minRows = value
    */
-  virtual void minRows(const grt::StringRef &value) {
+  virtual auto minRows(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_minRows);
     _minRows = value;
     member_changed("minRows", ovalue, value);
@@ -2554,7 +2554,7 @@ public:
    * \par In Python:
    *    value = obj.nodeGroupId
    */
-  grt::IntegerRef nodeGroupId() const { return _nodeGroupId; }
+  auto nodeGroupId() const -> grt::IntegerRef { return _nodeGroupId; }
 
   /**
    * Setter for attribute nodeGroupId
@@ -2563,7 +2563,7 @@ public:
    * \par In Python:
    *   obj.nodeGroupId = value
    */
-  virtual void nodeGroupId(const grt::IntegerRef &value) {
+  virtual auto nodeGroupId(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_nodeGroupId);
     _nodeGroupId = value;
     member_changed("nodeGroupId", ovalue, value);
@@ -2577,11 +2577,11 @@ public:
    * \par In Python:
    *    value = obj.subpartitionDefinitions
    */
-  grt::ListRef<db_mysql_PartitionDefinition> subpartitionDefinitions() const { return _subpartitionDefinitions; }
+  auto subpartitionDefinitions() const -> grt::ListRef<db_mysql_PartitionDefinition> { return _subpartitionDefinitions; }
 
 
 private: // The next attribute is read-only.
-  virtual void subpartitionDefinitions(const grt::ListRef<db_mysql_PartitionDefinition> &value) {
+  virtual auto subpartitionDefinitions(const grt::ListRef<db_mysql_PartitionDefinition> &value) -> void {
     grt::ValueRef ovalue(_subpartitionDefinitions);
 
     _subpartitionDefinitions = value;
@@ -2596,7 +2596,7 @@ public:
    * \par In Python:
    *    value = obj.tableSpace
    */
-  grt::StringRef tableSpace() const { return _tableSpace; }
+  auto tableSpace() const -> grt::StringRef { return _tableSpace; }
 
   /**
    * Setter for attribute tableSpace
@@ -2605,7 +2605,7 @@ public:
    * \par In Python:
    *   obj.tableSpace = value
    */
-  virtual void tableSpace(const grt::StringRef &value) {
+  virtual auto tableSpace(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_tableSpace);
     _tableSpace = value;
     member_changed("tableSpace", ovalue, value);
@@ -2618,7 +2618,7 @@ public:
    * \par In Python:
    *    value = obj.value
    */
-  grt::StringRef value() const { return _value; }
+  auto value() const -> grt::StringRef { return _value; }
 
   /**
    * Setter for attribute value
@@ -2627,7 +2627,7 @@ public:
    * \par In Python:
    *   obj.value = value
    */
-  virtual void value(const grt::StringRef &value) {
+  virtual auto value(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_value);
     _value = value;
     member_changed("value", ovalue, value);
@@ -2647,12 +2647,12 @@ protected:
   grt::StringRef _value;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_PartitionDefinition());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2718,7 +2718,7 @@ public:
     : db_ServerLink(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.ServerLink";
   }
 
@@ -2726,12 +2726,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_ServerLink());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2748,7 +2748,7 @@ public:
       _nodeGroupId(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Tablespace";
   }
 
@@ -2775,7 +2775,7 @@ public:
    * \par In Python:
    *    value = obj.nodeGroupId
    */
-  grt::IntegerRef nodeGroupId() const { return _nodeGroupId; }
+  auto nodeGroupId() const -> grt::IntegerRef { return _nodeGroupId; }
 
   /**
    * Setter for attribute nodeGroupId
@@ -2784,7 +2784,7 @@ public:
    * \par In Python:
    *   obj.nodeGroupId = value
    */
-  virtual void nodeGroupId(const grt::IntegerRef &value) {
+  virtual auto nodeGroupId(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_nodeGroupId);
     _nodeGroupId = value;
     member_changed("nodeGroupId", ovalue, value);
@@ -2811,12 +2811,12 @@ protected:
   grt::IntegerRef _nodeGroupId;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Tablespace());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2848,7 +2848,7 @@ public:
       _nodeGroupId(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.LogFileGroup";
   }
 
@@ -2875,7 +2875,7 @@ public:
    * \par In Python:
    *    value = obj.nodeGroupId
    */
-  grt::IntegerRef nodeGroupId() const { return _nodeGroupId; }
+  auto nodeGroupId() const -> grt::IntegerRef { return _nodeGroupId; }
 
   /**
    * Setter for attribute nodeGroupId
@@ -2884,7 +2884,7 @@ public:
    * \par In Python:
    *   obj.nodeGroupId = value
    */
-  virtual void nodeGroupId(const grt::IntegerRef &value) {
+  virtual auto nodeGroupId(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_nodeGroupId);
     _nodeGroupId = value;
     member_changed("nodeGroupId", ovalue, value);
@@ -2911,12 +2911,12 @@ protected:
   grt::IntegerRef _nodeGroupId;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_LogFileGroup());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -2954,7 +2954,7 @@ public:
     _views.content().__retype(grt::ObjectType, "db.mysql.View");
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Schema";
   }
 
@@ -2966,7 +2966,7 @@ public:
    * \par In Python:
    *    value = obj.routineGroups
    */
-  grt::ListRef<db_mysql_RoutineGroup> routineGroups() const { return grt::ListRef<db_mysql_RoutineGroup>::cast_from(_routineGroups); }
+  auto routineGroups() const -> grt::ListRef<db_mysql_RoutineGroup> { return grt::ListRef<db_mysql_RoutineGroup>::cast_from(_routineGroups); }
 
 
 private: // The next attribute is read-only.
@@ -2980,7 +2980,7 @@ public:
    * \par In Python:
    *    value = obj.routines
    */
-  grt::ListRef<db_mysql_Routine> routines() const { return grt::ListRef<db_mysql_Routine>::cast_from(_routines); }
+  auto routines() const -> grt::ListRef<db_mysql_Routine> { return grt::ListRef<db_mysql_Routine>::cast_from(_routines); }
 
 
 private: // The next attribute is read-only.
@@ -2994,7 +2994,7 @@ public:
    * \par In Python:
    *    value = obj.sequences
    */
-  grt::ListRef<db_mysql_Sequence> sequences() const { return grt::ListRef<db_mysql_Sequence>::cast_from(_sequences); }
+  auto sequences() const -> grt::ListRef<db_mysql_Sequence> { return grt::ListRef<db_mysql_Sequence>::cast_from(_sequences); }
 
 
 private: // The next attribute is read-only.
@@ -3008,7 +3008,7 @@ public:
    * \par In Python:
    *    value = obj.structuredTypes
    */
-  grt::ListRef<db_mysql_StructuredDatatype> structuredTypes() const { return grt::ListRef<db_mysql_StructuredDatatype>::cast_from(_structuredTypes); }
+  auto structuredTypes() const -> grt::ListRef<db_mysql_StructuredDatatype> { return grt::ListRef<db_mysql_StructuredDatatype>::cast_from(_structuredTypes); }
 
 
 private: // The next attribute is read-only.
@@ -3022,7 +3022,7 @@ public:
    * \par In Python:
    *    value = obj.synonyms
    */
-  grt::ListRef<db_mysql_Synonym> synonyms() const { return grt::ListRef<db_mysql_Synonym>::cast_from(_synonyms); }
+  auto synonyms() const -> grt::ListRef<db_mysql_Synonym> { return grt::ListRef<db_mysql_Synonym>::cast_from(_synonyms); }
 
 
 private: // The next attribute is read-only.
@@ -3036,7 +3036,7 @@ public:
    * \par In Python:
    *    value = obj.tables
    */
-  grt::ListRef<db_mysql_Table> tables() const { return grt::ListRef<db_mysql_Table>::cast_from(_tables); }
+  auto tables() const -> grt::ListRef<db_mysql_Table> { return grt::ListRef<db_mysql_Table>::cast_from(_tables); }
 
 
 private: // The next attribute is read-only.
@@ -3050,7 +3050,7 @@ public:
    * \par In Python:
    *    value = obj.views
    */
-  grt::ListRef<db_mysql_View> views() const { return grt::ListRef<db_mysql_View>::cast_from(_views); }
+  auto views() const -> grt::ListRef<db_mysql_View> { return grt::ListRef<db_mysql_View>::cast_from(_views); }
 
 
 private: // The next attribute is read-only.
@@ -3060,12 +3060,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Schema());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3120,7 +3120,7 @@ public:
     _tablespaces.content().__retype(grt::ObjectType, "db.mysql.Tablespace");
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.mysql.Catalog";
   }
 
@@ -3132,7 +3132,7 @@ public:
    * \par In Python:
    *    value = obj.logFileGroups
    */
-  grt::ListRef<db_mysql_LogFileGroup> logFileGroups() const { return grt::ListRef<db_mysql_LogFileGroup>::cast_from(_logFileGroups); }
+  auto logFileGroups() const -> grt::ListRef<db_mysql_LogFileGroup> { return grt::ListRef<db_mysql_LogFileGroup>::cast_from(_logFileGroups); }
 
 
 private: // The next attribute is read-only.
@@ -3146,7 +3146,7 @@ public:
    * \par In Python:
    *    value = obj.schemata
    */
-  grt::ListRef<db_mysql_Schema> schemata() const { return grt::ListRef<db_mysql_Schema>::cast_from(_schemata); }
+  auto schemata() const -> grt::ListRef<db_mysql_Schema> { return grt::ListRef<db_mysql_Schema>::cast_from(_schemata); }
 
 
 private: // The next attribute is read-only.
@@ -3160,7 +3160,7 @@ public:
    * \par In Python:
    *    value = obj.serverLinks
    */
-  grt::ListRef<db_mysql_ServerLink> serverLinks() const { return grt::ListRef<db_mysql_ServerLink>::cast_from(_serverLinks); }
+  auto serverLinks() const -> grt::ListRef<db_mysql_ServerLink> { return grt::ListRef<db_mysql_ServerLink>::cast_from(_serverLinks); }
 
 
 private: // The next attribute is read-only.
@@ -3174,7 +3174,7 @@ public:
    * \par In Python:
    *    value = obj.tablespaces
    */
-  grt::ListRef<db_mysql_Tablespace> tablespaces() const { return grt::ListRef<db_mysql_Tablespace>::cast_from(_tablespaces); }
+  auto tablespaces() const -> grt::ListRef<db_mysql_Tablespace> { return grt::ListRef<db_mysql_Tablespace>::cast_from(_tablespaces); }
 
 
 private: // The next attribute is read-only.
@@ -3184,12 +3184,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_mysql_Catalog());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -3219,7 +3219,7 @@ public:
 
 
 
-inline void register_structs_db_mysql_xml() {
+inline auto register_structs_db_mysql_xml() -> void {
   grt::internal::ClassRegistry::register_class<db_mysql_StorageEngine>();
   grt::internal::ClassRegistry::register_class<db_mysql_StorageEngineOption>();
   grt::internal::ClassRegistry::register_class<db_mysql_Sequence>();

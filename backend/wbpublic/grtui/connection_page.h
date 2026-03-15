@@ -46,13 +46,13 @@ public:
       std::bind(&ConnectionPage::connection_validation_changed, this, std::placeholders::_1, std::placeholders::_2));
   }
 
-  void set_db_connection(DbConnection *conn) {
+  auto set_db_connection(DbConnection *conn) -> void {
     _dbconn = conn;
     _connect.init(_dbconn);
   }
 
 protected:
-  virtual bool pre_load() {
+  virtual auto pre_load() -> bool {
     if (!_dbconn)
       throw std::logic_error("must call set_db_connection() 1st");
 
@@ -65,7 +65,7 @@ protected:
     return true;
   }
 
-  virtual bool advance() {
+  virtual auto advance() -> bool {
     if (!_selection_save_name.empty()) {
       db_mgmt_ConnectionRef conn(_connect.get_connection());
       if (conn.is_valid() && conn->name() != "")
@@ -75,7 +75,7 @@ protected:
     return WizardPage::advance();
   }
 
-  void connection_validation_changed(const std::string &error, bool ok) {
+  auto connection_validation_changed(const std::string &error, bool ok) -> void {
     if (!ok)
       _form->set_problem(error);
     else

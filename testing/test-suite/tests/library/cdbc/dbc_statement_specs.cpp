@@ -42,7 +42,7 @@
 
 #define DATABASE_TO_USE "USE test"
 
-static bool populate_test_table(std::unique_ptr<sql::Statement> &stmt) {
+static auto populate_test_table(std::unique_ptr<sql::Statement> &stmt) -> bool {
   stmt->execute(DATABASE_TO_USE);
   stmt->execute("DROP TABLE IF EXISTS test_function");
   if (stmt->execute(
@@ -83,12 +83,12 @@ protected:
     stmt->execute("DROP SCHEMA IF EXISTS test;");
   }
 
-  sql::ConnectionWrapper connection() {
+  auto connection() -> sql::ConnectionWrapper {
     dm->set_testing();
     return dm->getConnection(connectionProperties);
   }
 
-  void removeTestTable() {
+  auto removeTestTable() -> void {
     dm->set_testing();
     auto connection = dm->getConnection(connectionProperties);
     std::unique_ptr<sql::Statement> stmt2(connection->createStatement());

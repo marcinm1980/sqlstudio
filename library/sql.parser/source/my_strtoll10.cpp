@@ -86,8 +86,7 @@ static unsigned long lfactor[9]=
 */
 
 
-longlong my_strtoll10(const char *nptr, char **endptr, int *error)
-{
+auto my_strtoll10(const char *nptr, char **endptr, int *error) -> longlong {
   const char *s, *end, *start, *n_end, *true_end;
   char *dummy;
   unsigned char c;

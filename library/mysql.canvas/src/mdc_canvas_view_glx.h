@@ -36,20 +36,20 @@
 #include <GL/glxext.h>
 
 namespace mdc {
-  std::string detect_opengl_version();
+  auto detect_opengl_version() -> std::string;
 
   class GLXCanvasView : public OpenGLCanvasView {
   public:
     GLXCanvasView(Display *dpy, Window win, Visual *visual, int width, int height);
     virtual ~GLXCanvasView();
 
-    virtual bool initialize();
+    virtual auto initialize() -> bool;
 
-    virtual void make_current();
-    virtual void remove_current();
-    virtual void swap_buffers();
+    virtual auto make_current() -> void;
+    virtual auto remove_current() -> void;
+    virtual auto swap_buffers() -> void;
 
-    virtual void update_view_size(int, int);
+    virtual auto update_view_size(int, int) -> void;
 
   protected:
     GLXContext _glxcontext;

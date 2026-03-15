@@ -45,14 +45,14 @@ namespace mforms {
     public:
       HyperTextImpl(HyperText *self);
 
-      static bool create(HyperText *ht);
-      static void set_markup_text(HyperText *ht, const std::string &text);
-      static void set_background_color(HyperText *ht, const std::string &color);
+      static auto create(HyperText *ht) -> bool;
+      static auto set_markup_text(HyperText *ht, const std::string &text) -> void;
+      static auto set_background_color(HyperText *ht, const std::string &color) -> void;
 
-      static void init();
+      static auto init() -> void;
 
     protected:
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return &_win;
       }
 
@@ -72,11 +72,11 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool HyperTextImpl::create(HyperText *ht) {
+    auto HyperTextImpl::create(HyperText *ht) -> bool {
       return new HyperTextImpl(ht);
     }
 
-    static std::string strip_html(const std::string &input) {
+    static auto strip_html(const std::string &input) -> std::string {
       std::string s(input);
       std::string ret;
 
@@ -130,7 +130,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void HyperTextImpl::set_markup_text(HyperText *self, const std::string &text) {
+    auto HyperTextImpl::set_markup_text(HyperText *self, const std::string &text) -> void {
       HyperTextImpl *impl = self->get_data<HyperTextImpl>();
       if (impl) {
         impl->_text.get_buffer()->set_text(strip_html(text));
@@ -138,7 +138,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void HyperText_init() {
+    auto HyperText_init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_hypertext_impl.create = &HyperTextImpl::create;

@@ -28,49 +28,49 @@
 namespace mforms {
   namespace stub {
 
-    bool FormWrapper::create(::mforms::Form *self, ::mforms::Form *owner, mforms::FormFlag flag) {
+    auto FormWrapper::create(::mforms::Form *self, ::mforms::Form *owner, mforms::FormFlag flag) -> bool {
       return true;
     }
 
-    void FormWrapper::set_title(::mforms::Form *self, const std::string &title) {
+    auto FormWrapper::set_title(::mforms::Form *self, const std::string &title) -> void {
     }
 
-    void FormWrapper::accept_clicked(bool *status, const bool is_run) {
+    auto FormWrapper::accept_clicked(bool *status, const bool is_run) -> void {
     }
 
-    void FormWrapper::cancel_clicked(bool *status, const bool is_run) {
+    auto FormWrapper::cancel_clicked(bool *status, const bool is_run) -> void {
     }
 
-    void FormWrapper::show_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) {
+    auto FormWrapper::show_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) -> void {
     }
 
-    bool FormWrapper::run_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) {
+    auto FormWrapper::run_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) -> bool {
       return false;
     }
 
-    void FormWrapper::close(::mforms::Form *self) {
+    auto FormWrapper::close(::mforms::Form *self) -> void {
     }
 
-    void FormWrapper::set_content(::mforms::Form *self, ::mforms::View *child) {
+    auto FormWrapper::set_content(::mforms::Form *self, ::mforms::View *child) -> void {
     }
 
-    void FormWrapper::flush_events(::mforms::Form *self) {
+    auto FormWrapper::flush_events(::mforms::Form *self) -> void {
     }
 
-    void FormWrapper::center(Form *self) {
+    auto FormWrapper::center(Form *self) -> void {
     }
 
-    void FormWrapper::end_modal(Form *self, bool result) {
+    auto FormWrapper::end_modal(Form *self, bool result) -> void {
     }
 
     FormWrapper::FormWrapper(::mforms::Form *form, ::mforms::Form *owner, mforms::FormFlag form_flag)
       : ViewWrapper(form) {
     }
 
-    void FormWrapper::set_size(int width, int height) {
+    auto FormWrapper::set_size(int width, int height) -> void {
     }
 
-    void FormWrapper::init() {
+    auto FormWrapper::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_form_impl.create = &FormWrapper::create;

@@ -44,7 +44,7 @@
 #include "schema_select_form.h"
 
 struct tolower_pred {
-  std::string tolower(const std::string& arg) {
+  auto tolower(const std::string& arg) -> std::string {
     return base::tolower(arg);
   };
 };
@@ -141,13 +141,13 @@ void merge_schema( // studio_DocumentRef document,
   merge_list(target_schema->routineGroups(), schema->routineGroups(), target_schema);
 }
 
-void update_schema(db_SchemaRef& schema) {
+auto update_schema(db_SchemaRef& schema) -> void {
   update_list(schema->tables());
   update_list(schema->views());
   update_list(schema->routines());
 }
 
-void merge_catalog(grt::Module* module, db_CatalogRef& dest_cat, const db_CatalogRef src_cat) {
+auto merge_catalog(grt::Module* module, db_CatalogRef& dest_cat, const db_CatalogRef src_cat) -> void {
   if (src_cat->schemata().count() == 1) {
     if (dest_cat->schemata().count() == 1) { // Merge to exiting schema regardless of name
       merge_schema(dest_cat->schemata().get(0), src_cat->schemata().get(0));
@@ -182,7 +182,7 @@ void merge_catalog(grt::Module* module, db_CatalogRef& dest_cat, const db_Catalo
   }
 };
 
-void merge_diagrams(grt::ListRef<studio_physical_Diagram>& dest_diagrams,
-                    const grt::ListRef<studio_physical_Diagram>& src_diagrams, const GrtObjectRef& dst_owner) {
+auto merge_diagrams(grt::ListRef<studio_physical_Diagram>& dest_diagrams,
+                    const grt::ListRef<studio_physical_Diagram>& src_diagrams, const GrtObjectRef& dst_owner) -> void {
   merge_list(dest_diagrams, src_diagrams, dst_owner);
 };

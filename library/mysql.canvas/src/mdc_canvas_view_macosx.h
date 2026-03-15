@@ -36,15 +36,15 @@ namespace mdc {
     QuartzCanvasView(int width, int height);
     virtual ~QuartzCanvasView();
 
-    void set_target_context(CGContextRef cgContext);
+    auto set_target_context(CGContextRef cgContext) -> void;
 
-    virtual bool has_gl() const {
+    virtual auto has_gl() const -> bool {
       return false;
     }
-    virtual void begin_repaint(int, int, int, int);
-    virtual void end_repaint();
+    virtual auto begin_repaint(int, int, int, int) -> void;
+    virtual auto end_repaint() -> void;
 
-    virtual void update_view_size(int width, int height);
+    virtual auto update_view_size(int width, int height) -> void;
 
   private:
     CGContextRef _context;

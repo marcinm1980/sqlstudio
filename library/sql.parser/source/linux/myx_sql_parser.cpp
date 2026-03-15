@@ -17528,15 +17528,15 @@ yydestruct (yymsg, yytype, yyvaluep)
 
 #ifdef YYPARSE_PARAM
 #if defined __STDC__ || defined __cplusplus
-int yyparse (void *YYPARSE_PARAM);
+auto yyparse (void *YYPARSE_PARAM) -> int;
 #else
-int yyparse ();
+auto yyparse () -> int;
 #endif
 #else /* ! YYPARSE_PARAM */
 #if defined __STDC__ || defined __cplusplus
-int yyparse (void);
+auto yyparse (void) -> int;
 #else
-int yyparse ();
+auto yyparse () -> int;
 #endif
 #endif /* ! YYPARSE_PARAM */
 

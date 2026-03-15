@@ -49,28 +49,28 @@ protected:
 
   boost::signals2::connection _figure_conn;
 
-  virtual bool realize();
+  virtual auto realize() -> bool;
 
-  void view_member_changed(const std::string &name, const grt::ValueRef &ovalue);
-  void member_changed(const std::string &name, const grt::ValueRef &ovalue);
+  auto view_member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void;
+  auto member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void;
 
-  virtual void set_in_view(bool flag);
+  virtual auto set_in_view(bool flag) -> void;
 
 public:
   ImplData(studio_physical_ViewFigure *owner);
   virtual ~ImplData(){};
 
-  virtual mdc::CanvasItem *get_canvas_item() const {
+  virtual auto get_canvas_item() const -> mdc::CanvasItem * {
     return _figure;
   }
-  virtual bool is_realizable();
+  virtual auto is_realizable() -> bool;
 
-  virtual void unrealize();
+  virtual auto unrealize() -> void;
 
-  void set_view(const db_ViewRef &view);
+  auto set_view(const db_ViewRef &view) -> void;
 
 private:
-  studio_physical_ViewFigure *self() {
+  auto self() -> studio_physical_ViewFigure * {
     return (studio_physical_ViewFigure *)_self;
   }
 };

@@ -58,11 +58,11 @@ public:
     sql_load,
     sql_set
   };
-  virtual Statement_type determine_statement_type(const std::string& sql) = 0;
+  virtual auto determine_statement_type(const std::string& sql) -> Statement_type = 0;
 
 public:
   enum ObjectType { ot_none, ot_trigger, ot_view, ot_routine };
-  void only_object_type_of(ObjectType ot) {
+  auto only_object_type_of(ObjectType ot) -> void {
     _object_type = ot;
   }
 
@@ -70,8 +70,8 @@ protected:
   ObjectType _object_type;
 
 public:
-  virtual int check_sql(const char* sql) = 0;
-  virtual int check_trigger(const char* sql) = 0;
-  virtual int check_view(const char* sql) = 0;
-  virtual int check_routine(const char* sql) = 0;
+  virtual auto check_sql(const char* sql) -> int = 0;
+  virtual auto check_trigger(const char* sql) -> int = 0;
+  virtual auto check_view(const char* sql) -> int = 0;
+  virtual auto check_routine(const char* sql) -> int = 0;
 };

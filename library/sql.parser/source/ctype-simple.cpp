@@ -29,8 +29,7 @@ namespace mysql_parser
 /*
   Returns the number of bytes required for strnxfrm().
 */
-uint my_strnxfrmlen_simple(CHARSET_INFO *cs, uint len)
-{
+auto my_strnxfrmlen_simple(CHARSET_INFO *cs, uint len) -> uint {
   return len * (cs->strxfrm_multiply ? cs->strxfrm_multiply : 1);
 }
 
@@ -75,10 +74,9 @@ uint my_strnxfrmlen_simple(CHARSET_INFO *cs, uint len)
 */
 
 
-int my_strnxfrm_simple(CHARSET_INFO * cs, 
+auto my_strnxfrm_simple(CHARSET_INFO * cs, 
                        uchar *dest, uint len,
-                       const uchar *src, uint srclen)
-{
+                       const uchar *src, uint srclen) -> int {
   uchar *map= cs->sort_order;
   uint dstlen= len;
   set_if_smaller(len, srclen);
@@ -99,10 +97,9 @@ int my_strnxfrm_simple(CHARSET_INFO * cs,
   return dstlen;
 }
 
-int my_strnncoll_simple(CHARSET_INFO * cs, const uchar *s, uint slen, 
+auto my_strnncoll_simple(CHARSET_INFO * cs, const uchar *s, uint slen, 
                         const uchar *t, uint tlen,
-                        my_bool t_is_prefix)
-{
+                        my_bool t_is_prefix) -> int {
   int len = ( slen > tlen ) ? tlen : slen;
   uchar *map= cs->sort_order;
   if (t_is_prefix && slen > tlen)
@@ -146,10 +143,9 @@ int my_strnncoll_simple(CHARSET_INFO * cs, const uchar *s, uint slen,
     > 0	 a > b
 */
 
-int my_strnncollsp_simple(CHARSET_INFO * cs, const uchar *a, uint a_length, 
+auto my_strnncollsp_simple(CHARSET_INFO * cs, const uchar *a, uint a_length, 
 			  const uchar *b, uint b_length,
-                          my_bool diff_if_only_endspace_difference)
-{
+                          my_bool diff_if_only_endspace_difference) -> int {
   const uchar *map= cs->sort_order, *end;
   uint length;
   int res;
@@ -192,24 +188,21 @@ int my_strnncollsp_simple(CHARSET_INFO * cs, const uchar *a, uint a_length,
 }
 
 
-void my_caseup_str_8bit(CHARSET_INFO * cs,char *str)
-{
+auto my_caseup_str_8bit(CHARSET_INFO * cs,char *str) -> void {
   register uchar *map=cs->to_upper;
   while ((*str = (char) map[(uchar) *str]) != 0)
     str++;
 }
 
-void my_casedn_str_8bit(CHARSET_INFO * cs,char *str)
-{
+auto my_casedn_str_8bit(CHARSET_INFO * cs,char *str) -> void {
   register uchar *map=cs->to_lower;
   while ((*str = (char) map[(uchar)*str]) != 0)
     str++;
 }
 
-uint my_caseup_8bit(CHARSET_INFO * cs, char *src, uint srclen,
+auto my_caseup_8bit(CHARSET_INFO * cs, char *src, uint srclen,
                     char *dst __attribute__((unused)),
-                    uint dstlen __attribute__((unused)))
-{
+                    uint dstlen __attribute__((unused))) -> uint {
   uint srclen0= srclen;
   register uchar *map= cs->to_upper;
   DBUG_ASSERT(src == dst && srclen == dstlen);
@@ -218,10 +211,9 @@ uint my_caseup_8bit(CHARSET_INFO * cs, char *src, uint srclen,
   return srclen0;
 }
 
-uint my_casedn_8bit(CHARSET_INFO * cs, char *src, uint srclen,
+auto my_casedn_8bit(CHARSET_INFO * cs, char *src, uint srclen,
                     char *dst __attribute__((unused)),
-                    uint dstlen __attribute__((unused)))
-{
+                    uint dstlen __attribute__((unused))) -> uint {
   uint srclen0= srclen;
   register uchar *map=cs->to_lower;
   DBUG_ASSERT(src == dst && srclen == dstlen);
@@ -230,8 +222,7 @@ uint my_casedn_8bit(CHARSET_INFO * cs, char *src, uint srclen,
   return srclen0;
 }
 
-int my_strcasecmp_8bit(CHARSET_INFO * cs,const char *s, const char *t)
-{
+auto my_strcasecmp_8bit(CHARSET_INFO * cs,const char *s, const char *t) -> int {
   register uchar *map=cs->to_upper;
   while (map[(uchar) *s] == map[(uchar) *t++])
     if (!*s++) return 0;
@@ -239,10 +230,9 @@ int my_strcasecmp_8bit(CHARSET_INFO * cs,const char *s, const char *t)
 }
 
 
-int my_mb_wc_8bit(CHARSET_INFO *cs,my_wc_t *wc,
+auto my_mb_wc_8bit(CHARSET_INFO *cs,my_wc_t *wc,
 		  const unsigned char *str,
-		  const unsigned char *end __attribute__((unused)))
-{
+		  const unsigned char *end __attribute__((unused))) -> int {
   if (str >= end)
     return MY_CS_TOOSMALL;
   
@@ -250,10 +240,9 @@ int my_mb_wc_8bit(CHARSET_INFO *cs,my_wc_t *wc,
   return (!wc[0] && str[0]) ? -1 : 1;
 }
 
-int my_wc_mb_8bit(CHARSET_INFO *cs,my_wc_t wc,
+auto my_wc_mb_8bit(CHARSET_INFO *cs,my_wc_t wc,
 		  unsigned char *str,
-		  unsigned char *end __attribute__((unused)))
-{
+		  unsigned char *end __attribute__((unused))) -> int {
   MY_UNI_IDX *idx;
 
   if (str >= end)
@@ -278,10 +267,9 @@ int my_wc_mb_8bit(CHARSET_INFO *cs,my_wc_t wc,
    end buffer must be checked.
 */
 
-int my_snprintf_8bit(CHARSET_INFO *cs  __attribute__((unused)),
+auto my_snprintf_8bit(CHARSET_INFO *cs  __attribute__((unused)),
 		     char* to, uint n  __attribute__((unused)),
-		     const char* fmt, ...)
-{
+		     const char* fmt, ...) -> int {
   va_list args;
   int result;
   va_start(args,fmt);
@@ -291,10 +279,9 @@ int my_snprintf_8bit(CHARSET_INFO *cs  __attribute__((unused)),
 }
 
 
-void my_hash_sort_simple(CHARSET_INFO *cs,
+auto my_hash_sort_simple(CHARSET_INFO *cs,
 			 const uchar *key, uint len,
-			 ulong *nr1, ulong *nr2)
-{
+			 ulong *nr1, ulong *nr2) -> void {
   register uchar *sort_order=cs->sort_order;
   const uchar *end= key + len;
   
@@ -314,10 +301,9 @@ void my_hash_sort_simple(CHARSET_INFO *cs,
 }
 
 
-long my_strntol_8bit(CHARSET_INFO *cs,
+auto my_strntol_8bit(CHARSET_INFO *cs,
 		     const char *nptr, uint l, int base,
-		     char **endptr, int *err)
-{
+		     char **endptr, int *err) -> long {
   int negative;
   register uint32 cutoff;
   register unsigned int cutlim;
@@ -437,10 +423,9 @@ noconv:
 }
 
 
-ulong my_strntoul_8bit(CHARSET_INFO *cs,
+auto my_strntoul_8bit(CHARSET_INFO *cs,
 		       const char *nptr, uint l, int base,
-		       char **endptr, int *err)
-{
+		       char **endptr, int *err) -> ulong {
   int negative;
   register uint32 cutoff;
   register unsigned int cutlim;
@@ -551,10 +536,9 @@ noconv:
 }
 
 
-longlong my_strntoll_8bit(CHARSET_INFO *cs __attribute__((unused)),
+auto my_strntoll_8bit(CHARSET_INFO *cs __attribute__((unused)),
 			  const char *nptr, uint l, int base,
-			  char **endptr,int *err)
-{
+			  char **endptr,int *err) -> longlong {
   int negative;
   register ulonglong cutoff;
   register unsigned int cutlim;
@@ -674,10 +658,9 @@ noconv:
 }
 
 
-ulonglong my_strntoull_8bit(CHARSET_INFO *cs,
+auto my_strntoull_8bit(CHARSET_INFO *cs,
 			   const char *nptr, uint l, int base,
-			   char **endptr, int *err)
-{
+			   char **endptr, int *err) -> ulonglong {
   int negative;
   register ulonglong cutoff;
   register unsigned int cutlim;
@@ -812,10 +795,9 @@ noconv:
 */
 
 
-double my_strntod_8bit(CHARSET_INFO *cs __attribute__((unused)),
+auto my_strntod_8bit(CHARSET_INFO *cs __attribute__((unused)),
 		       char *str, uint length,
-		       char **end, int *err)
-{
+		       char **end, int *err) -> double {
   if (length == INT_MAX32)
     length= 65535;                          /* Should be big enough */
   *end= str + length;
@@ -829,9 +811,8 @@ double my_strntod_8bit(CHARSET_INFO *cs __attribute__((unused)),
   Assume len >= 1
 */
 
-int my_long10_to_str_8bit(CHARSET_INFO *cs __attribute__((unused)),
-		     char *dst, uint len, int radix, long int val)
-{
+auto my_long10_to_str_8bit(CHARSET_INFO *cs __attribute__((unused)),
+		     char *dst, uint len, int radix, long int val) -> int {
   char buffer[66];
   register char *p, *e;
   long int new_val;
@@ -868,9 +849,8 @@ int my_long10_to_str_8bit(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-int my_longlong10_to_str_8bit(CHARSET_INFO *cs __attribute__((unused)),
-		      char *dst, uint len, int radix, longlong val)
-{
+auto my_longlong10_to_str_8bit(CHARSET_INFO *cs __attribute__((unused)),
+		      char *dst, uint len, int radix, longlong val) -> int {
   char buffer[65];
   register char *p, *e;
   long long_val;
@@ -936,11 +916,10 @@ cnv:
 #define INC_PTR(cs,A,B) (A)++
 
 
-int my_wildcmp_8bit(CHARSET_INFO *cs,
+auto my_wildcmp_8bit(CHARSET_INFO *cs,
 		    const char *str,const char *str_end,
 		    const char *wildstr,const char *wildend,
-		    int escape, int w_one, int w_many)
-{
+		    int escape, int w_one, int w_many) -> int {
   int result= -1;			/* Not found, using wildcards */
 
   while (wildstr != wildend)
@@ -1032,13 +1011,12 @@ int my_wildcmp_8bit(CHARSET_INFO *cs,
 ** optimized !
 */
 
-my_bool my_like_range_simple(CHARSET_INFO *cs,
+auto my_like_range_simple(CHARSET_INFO *cs,
 			     const char *ptr,uint ptr_length,
 			     pbool escape, pbool w_one, pbool w_many,
 			     uint res_length,
 			     char *min_str,char *max_str,
-			     uint *min_length,uint *max_length)
-{
+			     uint *min_length,uint *max_length) -> my_bool {
   const char *end= ptr + ptr_length;
   char *min_org=min_str;
   char *min_end=min_str+res_length;
@@ -1081,8 +1059,7 @@ my_bool my_like_range_simple(CHARSET_INFO *cs,
 }
 
 
-ulong my_scan_8bit(CHARSET_INFO *cs, const char *str, const char *end, int sq)
-{
+auto my_scan_8bit(CHARSET_INFO *cs, const char *str, const char *end, int sq) -> ulong {
   const char *str0= str;
   switch (sq)
   {
@@ -1107,49 +1084,43 @@ ulong my_scan_8bit(CHARSET_INFO *cs, const char *str, const char *end, int sq)
 }
 
 
-void my_fill_8bit(CHARSET_INFO *cs __attribute__((unused)),
-		   char *s, uint l, int fill)
-{
+auto my_fill_8bit(CHARSET_INFO *cs __attribute__((unused)),
+		   char *s, uint l, int fill) -> void {
   bfill(s,l,fill);
 }
 
 
-uint my_numchars_8bit(CHARSET_INFO *cs __attribute__((unused)),
-		      const char *b, const char *e)
-{
+auto my_numchars_8bit(CHARSET_INFO *cs __attribute__((unused)),
+		      const char *b, const char *e) -> uint {
   return (uint) (e - b);
 }
 
 
-uint my_numcells_8bit(CHARSET_INFO *cs __attribute__((unused)),
-		      const char *b, const char *e)
-{
+auto my_numcells_8bit(CHARSET_INFO *cs __attribute__((unused)),
+		      const char *b, const char *e) -> uint {
   return (uint) (e - b);
 }
 
 
-uint my_charpos_8bit(CHARSET_INFO *cs __attribute__((unused)),
+auto my_charpos_8bit(CHARSET_INFO *cs __attribute__((unused)),
 		     const char *b  __attribute__((unused)),
 		     const char *e  __attribute__((unused)),
-		     uint pos)
-{
+		     uint pos) -> uint {
   return pos;
 }
 
 
-uint my_well_formed_len_8bit(CHARSET_INFO *cs __attribute__((unused)),
+auto my_well_formed_len_8bit(CHARSET_INFO *cs __attribute__((unused)),
                              const char *start, const char *end,
-                             uint nchars, int *error)
-{
+                             uint nchars, int *error) -> uint {
   uint nbytes= (uint) (end-start);
   *error= 0;
   return min(nbytes, nchars);
 }
 
 
-uint my_lengthsp_8bit(CHARSET_INFO *cs __attribute__((unused)),
-		      const char *ptr, uint length)
-{
+auto my_lengthsp_8bit(CHARSET_INFO *cs __attribute__((unused)),
+		      const char *ptr, uint length) -> uint {
   const char *end= ptr+length;
   while (end > ptr && end[-1] == ' ')
     end--;
@@ -1157,11 +1128,10 @@ uint my_lengthsp_8bit(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 
-uint my_instr_simple(CHARSET_INFO *cs,
+auto my_instr_simple(CHARSET_INFO *cs,
                     const char *b, uint b_length, 
 		    const char *s, uint s_length,
-		    my_match_t *match, uint nmatch)
-{
+		    my_match_t *match, uint nmatch) -> uint {
   register const uchar *str, *search, *end, *search_end;
   
   if (s_length <= b_length)
@@ -1227,8 +1197,7 @@ typedef struct
 #define PLANE_NUM	0x100
 #define PLANE_NUMBER(x)	(((x)>>8) % PLANE_NUM)
 
-static int pcmp(const void * f, const void * s)
-{
+static auto pcmp(const void * f, const void * s) -> int {
   const uni_idx *F= (const uni_idx*) f;
   const uni_idx *S= (const uni_idx*) s;
   int res;
@@ -1238,8 +1207,7 @@ static int pcmp(const void * f, const void * s)
   return res;
 }
 
-static my_bool create_fromuni(CHARSET_INFO *cs, void *(*alloc)(uint))
-{
+static auto create_fromuni(CHARSET_INFO *cs, void *(*alloc)(uint)) -> my_bool {
   uni_idx	idx[PLANE_NUM];
   int		i,n;
   
@@ -1317,16 +1285,14 @@ static my_bool create_fromuni(CHARSET_INFO *cs, void *(*alloc)(uint))
   return FALSE;
 }
 
-static my_bool my_cset_init_8bit(CHARSET_INFO *cs, void *(*alloc)(uint))
-{
+static auto my_cset_init_8bit(CHARSET_INFO *cs, void *(*alloc)(uint)) -> my_bool {
   cs->caseup_multiply= 1;
   cs->casedn_multiply= 1;
   cs->pad_char= ' ';
   return create_fromuni(cs, alloc);
 }
 
-static void set_max_sort_char(CHARSET_INFO *cs)
-{
+static auto set_max_sort_char(CHARSET_INFO *cs) -> void {
   uchar max_char;
   uint  i;
   
@@ -1344,24 +1310,21 @@ static void set_max_sort_char(CHARSET_INFO *cs)
   }
 }
 
-static my_bool my_coll_init_simple(CHARSET_INFO *cs,
-                                   void *(*alloc)(uint) __attribute__((unused)))
-{
+static auto my_coll_init_simple(CHARSET_INFO *cs,
+                                   void *(*alloc)(uint) __attribute__((unused))) -> my_bool {
   set_max_sort_char(cs);
   return FALSE;
 }
 
 
-longlong my_strtoll10_8bit(CHARSET_INFO *cs __attribute__((unused)),
-                           const char *nptr, char **endptr, int *error)
-{
+auto my_strtoll10_8bit(CHARSET_INFO *cs __attribute__((unused)),
+                           const char *nptr, char **endptr, int *error) -> longlong {
   return my_strtoll10(nptr, endptr, error);
 }
 
 
-int my_mb_ctype_8bit(CHARSET_INFO *cs, int *ctype,
-                   const unsigned char *s, const unsigned char *e)
-{
+auto my_mb_ctype_8bit(CHARSET_INFO *cs, int *ctype,
+                   const unsigned char *s, const unsigned char *e) -> int {
   if (s >= e)
   {
     *ctype= 0;
@@ -1410,18 +1373,16 @@ int my_mb_ctype_8bit(CHARSET_INFO *cs, int *ctype,
 
 
 
-my_bool my_propagate_simple(CHARSET_INFO *cs __attribute__((unused)),
+auto my_propagate_simple(CHARSET_INFO *cs __attribute__((unused)),
                             const uchar *str __attribute__((unused)),
-                            uint length __attribute__((unused)))
-{
+                            uint length __attribute__((unused))) -> my_bool {
   return 1;
 }
 
 
-my_bool my_propagate_complex(CHARSET_INFO *cs __attribute__((unused)),
+auto my_propagate_complex(CHARSET_INFO *cs __attribute__((unused)),
                              const uchar *str __attribute__((unused)),
-                             uint length __attribute__((unused)))
-{
+                             uint length __attribute__((unused))) -> my_bool {
   return 0;
 }
 

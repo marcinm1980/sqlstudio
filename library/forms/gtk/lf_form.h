@@ -44,39 +44,39 @@ namespace mforms {
       Gtk::Window *_window;
       int _in_modal_loop;
       bool _result;
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _window;
       }
       boost::signals2::scoped_connection accept_c;
       boost::signals2::scoped_connection cancel_c;
 
-      static bool create(::mforms::Form *self, ::mforms::Form *owner, mforms::FormFlag flag);
-      static void set_title(::mforms::Form *self, const std::string &title);
-      void accept_clicked(bool *status, const bool is_run);
-      void cancel_clicked(bool *status, const bool is_run);
-      bool on_widget_delete_event(GdkEventAny *event, Button *cancel);
-      bool can_delete_widget(GdkEventAny *event);
-      static void show_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel);
-      static void end_modal(::mforms::Form *self, bool result);
-      bool on_key_release(GdkEventKey *event, bool *status, const bool is_run, ::mforms::Button *accept,
-                          ::mforms::Button *cancel);
-      static bool run_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel);
-      static void close(::mforms::Form *self);
-      static void set_content(::mforms::Form *self, ::mforms::View *child);
-      static void flush_events(::mforms::Form *self);
-      static void center(Form *self);
-      static void set_menubar(mforms::Form *self, mforms::MenuBar *menu);
-      void realized(mforms::Form *owner, Gdk::WMDecoration flags);
-      virtual void set_name(const std::string &name);
-      virtual void show(bool show);
-      bool on_focus_event(GdkEventFocus *ev, ::mforms::Form *form);
+      static auto create(::mforms::Form *self, ::mforms::Form *owner, mforms::FormFlag flag) -> bool;
+      static auto set_title(::mforms::Form *self, const std::string &title) -> void;
+      auto accept_clicked(bool *status, const bool is_run) -> void;
+      auto cancel_clicked(bool *status, const bool is_run) -> void;
+      auto on_widget_delete_event(GdkEventAny *event, Button *cancel) -> bool;
+      auto can_delete_widget(GdkEventAny *event) -> bool;
+      static auto show_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) -> void;
+      static auto end_modal(::mforms::Form *self, bool result) -> void;
+      auto on_key_release(GdkEventKey *event, bool *status, const bool is_run, ::mforms::Button *accept,
+                          ::mforms::Button *cancel) -> bool;
+      static auto run_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) -> bool;
+      static auto close(::mforms::Form *self) -> void;
+      static auto set_content(::mforms::Form *self, ::mforms::View *child) -> void;
+      static auto flush_events(::mforms::Form *self) -> void;
+      static auto center(Form *self) -> void;
+      static auto set_menubar(mforms::Form *self, mforms::MenuBar *menu) -> void;
+      auto realized(mforms::Form *owner, Gdk::WMDecoration flags) -> void;
+      virtual auto set_name(const std::string &name) -> void;
+      virtual auto show(bool show) -> void;
+      auto on_focus_event(GdkEventFocus *ev, ::mforms::Form *form) -> bool;
 
     public:
       FormImpl(::mforms::Form *form, ::mforms::Form *owner, mforms::FormFlag form_flag);
-      virtual void set_title(const std::string &title);
-      static void init();
-      static void init_main_form(Gtk::Window *main);
-      Gtk::Window *get_window() {
+      virtual auto set_title(const std::string &title) -> void;
+      static auto init() -> void;
+      static auto init_main_form(Gtk::Window *main) -> void;
+      auto get_window() -> Gtk::Window * {
         return _window;
       }
     };

@@ -41,65 +41,65 @@ Magnet::~Magnet() {
   remove_all_connectors();
 }
 
-void Magnet::remove_all_connectors() {
+auto Magnet::remove_all_connectors() -> void {
   std::list<Connector *>::iterator iter;
   while ((iter = _connectors.begin()) != _connectors.end()) {
     (*iter)->disconnect();
   }
 }
 
-bool Magnet::add_connector(Connector *conn) {
+auto Magnet::add_connector(Connector *conn) -> bool {
   _connectors.push_back(conn);
 
   return true;
 }
 
-void Magnet::remove_connector(Connector *conn) {
+auto Magnet::remove_connector(Connector *conn) -> void {
   _connectors.remove(conn);
 }
 
-void Magnet::notify_connected() {
+auto Magnet::notify_connected() -> void {
   std::list<Connector *> list(_connectors);
 
   for (std::list<Connector *>::iterator iter = list.begin(); iter != list.end(); ++iter)
     (*iter)->magnet_moved(this);
 }
 
-void Magnet::set_connection_validator(const std::function<bool(Connector *)> &slot) {
+auto Magnet::set_connection_validator(const std::function<bool(Connector *)> &slot) -> void {
   _connection_slot = slot;
 }
 
-void Magnet::set_disconnection_validator(const std::function<bool(Connector *)> &slot) {
+auto Magnet::set_disconnection_validator(const std::function<bool(Connector *)> &slot) -> void {
   _disconnection_slot = slot;
 }
 
-bool Magnet::allows_connection(Connector *conn) const {
+auto Magnet::allows_connection(Connector *conn) const -> bool {
   if (_connection_slot)
     return _connection_slot(conn);
   return true;
 }
 
-bool Magnet::allows_disconnection(Connector *conn) const {
+auto Magnet::allows_disconnection(Connector *conn) const -> bool {
   if (_disconnection_slot)
     return _disconnection_slot(conn);
 
   return true;
 }
 
-base::Point Magnet::get_position_for_connector(Connector *conn, const base::Point &srcpos) const {
+auto Magnet::get_position_for_connector(Connector *conn, const base::Point &srcpos) const -> base::Point {
   return _owner->get_intersection_with_line_to(srcpos);
 }
 
-base::Point Magnet::get_position() const {
+auto Magnet::get_position() const -> base::Point {
   return _owner->get_root_bounds().center();
 }
 
-void Magnet::owner_parent_bounds_changed(CanvasItem *item, const base::Rect &obounds) {
+auto Magnet::owner_parent_bounds_changed(CanvasItem *item, const base::Rect &obounds) -> void {
   if (item->get_bounds() != obounds)
     notify_connected();
 }
 
-void Magnet::owner_bounds_changed(const base::Rect &obounds) {
+auto Magnet::owner_bounds_changed(const base::Rect &obounds) -> void {
   // notify listening connections that we have been moved
   if (obounds != _owner->get_bounds())
     notify_connected();

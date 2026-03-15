@@ -44,7 +44,7 @@ namespace MySQL {
         RoleTreeBE(GrtValue ^ catalog);
         ~RoleTreeBE();
 
-        ::bec::RoleTreeBE *get_unmanaged_object();
+        auto get_unmanaged_object() -> ::bec::RoleTreeBE *;
         MySQL::Grt::GrtValue ^ get_role_with_id(MySQL::Grt::NodeIdWrapper ^ node);
         void erase_node(MySQL::Grt::NodeIdWrapper ^ node);
         void insert_node_before(MySQL::Grt::NodeIdWrapper ^ before, MySQL::Grt::NodeIdWrapper ^ node);

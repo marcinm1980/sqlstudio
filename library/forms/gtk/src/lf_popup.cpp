@@ -81,7 +81,7 @@ namespace mforms {
     //------------------------------------------------------------------------------
 
     //------------------------------------------------------------------------------
-    bool PopupImpl::handle_draw_event(const ::Cairo::RefPtr< ::Cairo::Context> &context) {
+    auto PopupImpl::handle_draw_event(const ::Cairo::RefPtr< ::Cairo::Context> &context) -> bool {
       d("\n");
       mforms::Popup *self = dynamic_cast<mforms::Popup *>(owner);
       if (self) {
@@ -131,7 +131,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool PopupImpl::key_press_event(GdkEventKey *event) {
+    auto PopupImpl::key_press_event(GdkEventKey *event) -> bool {
       if (event->keyval == GDK_KEY_Escape) {
         set_modal_result(dynamic_cast<mforms::Popup *>(owner), 0);
       }
@@ -139,7 +139,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool PopupImpl::mouse_cross_event(GdkEventCrossing *event) {
+    auto PopupImpl::mouse_cross_event(GdkEventCrossing *event) -> bool {
       mforms::Popup *self = dynamic_cast<mforms::Popup *>(owner);
       if (self && _wnd.get_window()->gobj() == event->window) {
         d("\n");
@@ -155,7 +155,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool PopupImpl::mouse_button_event(GdkEventButton *event) {
+    auto PopupImpl::mouse_button_event(GdkEventButton *event) -> bool {
       mforms::Popup *self = dynamic_cast<mforms::Popup *>(owner);
       d("\n");
       if (self && _wnd.get_window()->gobj() == event->window) {
@@ -194,7 +194,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool PopupImpl::mouse_move_event(GdkEventMotion *event) {
+    auto PopupImpl::mouse_move_event(GdkEventMotion *event) -> bool {
       d("\n");
       mforms::Popup *self = dynamic_cast<mforms::Popup *>(owner);
       if (_inside && self && _wnd.get_window()->gobj() == event->window) {
@@ -204,14 +204,14 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool PopupImpl::create(::mforms::Popup *self, ::mforms::PopupStyle style) {
+    auto PopupImpl::create(::mforms::Popup *self, ::mforms::PopupStyle style) -> bool {
       d("\n");
       return new PopupImpl(self, style) != 0;
     }
 
     //------------------------------------------------------------------------------
 
-    void PopupImpl::destroy(::mforms::Popup *self) {
+    auto PopupImpl::destroy(::mforms::Popup *self) -> void {
       d("\n");
       PopupImpl *impl = self->get_data<PopupImpl>();
       self->set_data(NULL, NULL);
@@ -219,7 +219,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void PopupImpl::set_needs_repaint(::mforms::Popup *self) {
+    auto PopupImpl::set_needs_repaint(::mforms::Popup *self) -> void {
       d("\n");
       // request a repaint so that this can be called from any thread
       PopupImpl *impl = self->get_data<PopupImpl>();
@@ -227,7 +227,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void PopupImpl::set_size(::mforms::Popup *self, int w, int h) {
+    auto PopupImpl::set_size(::mforms::Popup *self, int w, int h) -> void {
       PopupImpl *impl = self->get_data<PopupImpl>();
       d("\n");
 
@@ -237,7 +237,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    int PopupImpl::show(::mforms::Popup *self, int x, int y) {
+    auto PopupImpl::show(::mforms::Popup *self, int x, int y) -> int {
       PopupImpl *impl = self->get_data<PopupImpl>();
       d("x=%i, y=%i\n", x, y);
       if (impl->_wnd.is_visible())
@@ -268,7 +268,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    base::Rect PopupImpl::get_content_rect(::mforms::Popup *self) {
+    auto PopupImpl::get_content_rect(::mforms::Popup *self) -> base::Rect {
       d("\n");
       PopupImpl *impl = self->get_data<PopupImpl>();
       if (impl->_style == mforms::PopupBezel)
@@ -278,7 +278,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void PopupImpl::set_modal_result(Popup *self, int result) {
+    auto PopupImpl::set_modal_result(Popup *self, int result) -> void {
       d("\n");
       PopupImpl *impl = self->get_data<PopupImpl>();
       impl->_result = result;
@@ -295,7 +295,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void PopupImpl::init() {
+    auto PopupImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_popup_impl.create = &PopupImpl::create;

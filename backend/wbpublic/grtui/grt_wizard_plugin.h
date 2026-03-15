@@ -34,7 +34,7 @@ namespace grtui {
   public:
     WizardPlugin(grt::Module *module);
 
-    virtual bool run_wizard();
+    virtual auto run_wizard() -> bool;
   };
 }
 

@@ -51,14 +51,14 @@ std::function<void()> mforms::Utilities::_driver_shutdown_cb;
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::beep() {
+auto Utilities::beep() -> void {
   ControlFactory::get_instance()->_utilities_impl.beep();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-static void *_show_dialog(const DialogType type, const std::string &title, const std::string &text,
-                          const std::string &ok, const std::string &cancel, const std::string &other) {
+static auto _show_dialog(const DialogType type, const std::string &title, const std::string &text,
+                          const std::string &ok, const std::string &cancel, const std::string &other) -> void * {
   int *ret = new int;
   switch (type) {
     case DialogMessage:
@@ -77,15 +77,15 @@ static void *_show_dialog(const DialogType type, const std::string &title, const
   return (void *)ret;
 }
 
-static int void_to_int(void *val) {
+static auto void_to_int(void *val) -> int {
   int *ret = (int *)val;
   int ret_val = *ret;
   delete ret;
   return ret_val;
 }
 
-int Utilities::show_message(const std::string &title, const std::string &text, const std::string &ok,
-                            const std::string &cancel, const std::string &other) {
+auto Utilities::show_message(const std::string &title, const std::string &text, const std::string &ok,
+                            const std::string &cancel, const std::string &other) -> int {
   if (Utilities::in_main_thread())
     return void_to_int(_show_dialog(DialogMessage, title, text, ok, cancel, other));
   else
@@ -95,8 +95,8 @@ int Utilities::show_message(const std::string &title, const std::string &text, c
 
 //--------------------------------------------------------------------------------------------------
 
-int Utilities::show_error(const std::string &title, const std::string &text, const std::string &ok,
-                          const std::string &cancel, const std::string &other) {
+auto Utilities::show_error(const std::string &title, const std::string &text, const std::string &ok,
+                          const std::string &cancel, const std::string &other) -> int {
   if (Utilities::in_main_thread())
     return void_to_int(_show_dialog(DialogError, title, text, ok, cancel, other));
   else
@@ -106,8 +106,8 @@ int Utilities::show_error(const std::string &title, const std::string &text, con
 
 //--------------------------------------------------------------------------------------------------
 
-int Utilities::show_warning(const std::string &title, const std::string &text, const std::string &ok,
-                            const std::string &cancel, const std::string &other) {
+auto Utilities::show_warning(const std::string &title, const std::string &text, const std::string &ok,
+                            const std::string &cancel, const std::string &other) -> int {
   if (Utilities::in_main_thread())
     return void_to_int(_show_dialog(DialogWarning, title, text, ok, cancel, other));
   else
@@ -117,9 +117,9 @@ int Utilities::show_warning(const std::string &title, const std::string &text, c
 
 //--------------------------------------------------------------------------------------------------
 
-int Utilities::show_message_and_remember(const std::string &title, const std::string &text, const std::string &ok,
+auto Utilities::show_message_and_remember(const std::string &title, const std::string &text, const std::string &ok,
                                          const std::string &cancel, const std::string &other,
-                                         const std::string &answer_id, const std::string &checkbox_text) {
+                                         const std::string &answer_id, const std::string &checkbox_text) -> int {
   if (remembered_message_answers.find(answer_id) != remembered_message_answers.end())
     return remembered_message_answers[answer_id];
 
@@ -136,7 +136,7 @@ int Utilities::show_message_and_remember(const std::string &title, const std::st
   return rc;
 }
 
-void Utilities::set_message_answers_storage_path(const std::string &path) {
+auto Utilities::set_message_answers_storage_path(const std::string &path) -> void {
   remembered_message_answer_file = path;
 
   FILE *f = base_fopen(remembered_message_answer_file.c_str(), "r");
@@ -154,7 +154,7 @@ void Utilities::set_message_answers_storage_path(const std::string &path) {
   }
 }
 
-void Utilities::save_message_answers() {
+auto Utilities::save_message_answers() -> void {
   if (!remembered_message_answer_file.empty()) {
     FILE *f = base_fopen(remembered_message_answer_file.c_str(), "w+");
 
@@ -165,21 +165,21 @@ void Utilities::save_message_answers() {
   }
 }
 
-void Utilities::forget_message_answers() {
+auto Utilities::forget_message_answers() -> void {
   remembered_message_answers.clear();
   save_message_answers();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::show_wait_message(const std::string &title, const std::string &text) {
+auto Utilities::show_wait_message(const std::string &title, const std::string &text) -> void {
   // The wait message is a special window, so there's no need to hide the splash screen.
   ControlFactory::get_instance()->_utilities_impl.show_wait_message(title, text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Utilities::hide_wait_message() {
+auto Utilities::hide_wait_message() -> bool {
   return ControlFactory::get_instance()->_utilities_impl.hide_wait_message();
 }
 
@@ -203,7 +203,7 @@ public:
 static base::Mutex thread_data_mutex;
 static std::map<void *, CancellableTaskData *> thread_data;
 
-static void *cancellable_task_thread(void *) {
+static auto cancellable_task_thread(void *) -> void * {
   CancellableTaskData *data = NULL;
 
   {
@@ -240,9 +240,9 @@ static void *cancellable_task_thread(void *) {
   return NULL;
 }
 
-bool Utilities::run_cancelable_task(const std::string &title, const std::string &text,
+auto Utilities::run_cancelable_task(const std::string &title, const std::string &text,
                                     const std::function<void *()> &task, const std::function<bool()> &cancel_task,
-                                    void *&task_result) {
+                                    void *&task_result) -> bool {
   std::shared_ptr<void *> result(new void *((void *)-1));
 
   CancellableTaskData *data = NULL;
@@ -315,31 +315,31 @@ retry:
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::set_clipboard_text(const std::string &text) {
+auto Utilities::set_clipboard_text(const std::string &text) -> void {
   ControlFactory::get_instance()->_utilities_impl.set_clipboard_text(text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string Utilities::get_clipboard_text() {
+auto Utilities::get_clipboard_text() -> std::string {
   return ControlFactory::get_instance()->_utilities_impl.get_clipboard_text();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string Utilities::get_special_folder(FolderType type) {
+auto Utilities::get_special_folder(FolderType type) -> std::string {
   return ControlFactory::get_instance()->_utilities_impl.get_special_folder(type);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::open_url(const std::string &url) {
+auto Utilities::open_url(const std::string &url) -> void {
   return ControlFactory::get_instance()->_utilities_impl.open_url(url);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Utilities::move_to_trash(const std::string &path) {
+auto Utilities::move_to_trash(const std::string &path) -> bool {
   if (ControlFactory::get_instance()->_utilities_impl.move_to_trash)
     return ControlFactory::get_instance()->_utilities_impl.move_to_trash(path);
   else {
@@ -355,25 +355,25 @@ bool Utilities::move_to_trash(const std::string &path) {
 }
 
 //--------------------------------------------------------------------------------------------------
-void Utilities::reveal_file(const std::string &path) {
+auto Utilities::reveal_file(const std::string &path) -> void {
   ControlFactory::get_instance()->_utilities_impl.reveal_file(path);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-TimeoutHandle Utilities::add_timeout(float interval, const std::function<bool()> &callback) {
+auto Utilities::add_timeout(float interval, const std::function<bool()> &callback) -> TimeoutHandle {
   return ControlFactory::get_instance()->_utilities_impl.add_timeout(interval, callback);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::cancel_timeout(TimeoutHandle handle) {
+auto Utilities::cancel_timeout(TimeoutHandle handle) -> void {
   ControlFactory::get_instance()->_utilities_impl.cancel_timeout(handle);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::add_end_ok_cancel_buttons(mforms::Box *box, mforms::Button *ok, mforms::Button *cancel) {
+auto Utilities::add_end_ok_cancel_buttons(mforms::Box *box, mforms::Button *ok, mforms::Button *cancel) -> void {
 #ifdef __APPLE__
   box->add_end(ok, false, true);
   box->add_end(cancel, false, true);
@@ -385,15 +385,15 @@ void Utilities::add_end_ok_cancel_buttons(mforms::Box *box, mforms::Button *ok, 
 
 //--------------------------------------------------------------------------------------------------
 
-static void on_request_action(mforms::TextEntryAction action, mforms::Button *btn) {
+static auto on_request_action(mforms::TextEntryAction action, mforms::Button *btn) -> void {
   if (action == mforms::EntryActivate)
     btn->signal_clicked()->operator()();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-static void *_request_input_main(const std::string &title, const std::string &description,
-                                 const std::string &default_value, std::string *ret_value) {
+static auto _request_input_main(const std::string &title, const std::string &description,
+                                 const std::string &default_value, std::string *ret_value) -> void * {
   // In order to avoid trouble with window z-ordering we explicitly ask to hide any wait window
   // that could get in the way. Same for the splash screen.
   Utilities::hide_wait_message();
@@ -448,8 +448,8 @@ static void *_request_input_main(const std::string &title, const std::string &de
 
 //--------------------------------------------------------------------------------------------------
 
-static bool _request_input(const std::string &title, const std::string &description, const std::string &default_value,
-                           std::string &ret_value) {
+static auto _request_input(const std::string &title, const std::string &description, const std::string &default_value,
+                           std::string &ret_value) -> bool {
   if (Utilities::in_main_thread())
     return _request_input_main(title, description, default_value, &ret_value) != nullptr;
   else
@@ -466,7 +466,7 @@ bool Utilities::request_input(const std::string &title, const std::string &descr
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::store_password(const std::string &service, const std::string &account, const std::string &password) {
+auto Utilities::store_password(const std::string &service, const std::string &account, const std::string &password) -> void {
   // in-memory cache
   PasswordCache::get()->add_password(service, account, password.c_str());
 
@@ -477,7 +477,7 @@ void Utilities::store_password(const std::string &service, const std::string &ac
 
 //--------------------------------------------------------------------------------------------------
 
-bool Utilities::find_password(const std::string &service, const std::string &account, std::string &password) {
+auto Utilities::find_password(const std::string &service, const std::string &account, std::string &password) -> bool {
   const bool ret = ControlFactory::get_instance()->_utilities_impl.find_password(service, account, password);
   logDebug("Looking up password for '%s'@'%s' has %s\n", account.c_str(), service.c_str(),
            ret ? "succeeded" : "failed");
@@ -490,20 +490,20 @@ bool Utilities::find_password(const std::string &service, const std::string &acc
 
 //--------------------------------------------------------------------------------------------------
 
-bool Utilities::find_cached_password(const std::string &service, const std::string &account, std::string &password) {
+auto Utilities::find_cached_password(const std::string &service, const std::string &account, std::string &password) -> bool {
   return PasswordCache::get()->get_password(service, account, password);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::forget_cached_password(const std::string &service, const std::string &account) {
+auto Utilities::forget_cached_password(const std::string &service, const std::string &account) -> void {
   logDebug2("Forgetting cached password for '%s'@'%s'\n", account.c_str(), service.c_str());
   PasswordCache::get()->remove_password(service, account);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::forget_password(const std::string &service, const std::string &account) {
+auto Utilities::forget_password(const std::string &service, const std::string &account) -> void {
   Utilities::forget_cached_password(service, account);
 
   logDebug("Forgetting password for '%s'@'%s'\n", account.c_str(), service.c_str());
@@ -512,7 +512,7 @@ void Utilities::forget_password(const std::string &service, const std::string &a
 
 //-------------------------------------------------------------------------------
 
-void *Utilities::perform_from_main_thread(const std::function<void *()> &slot, bool wait_done) {
+auto Utilities::perform_from_main_thread(const std::function<void *()> &slot, bool wait_done) -> void * {
   return ControlFactory::get_instance()->_utilities_impl.perform_from_main_thread(slot, wait_done);
 }
 
@@ -673,8 +673,8 @@ bool Utilities::ask_for_password(const std::string &title, const std::string &se
  *
  * @return True if the user pressed OK, otherwise false.
  */
-bool Utilities::ask_for_password_check_store(const std::string &title, const std::string &service,
-                                             std::string &username, std::string &password, bool &store) {
+auto Utilities::ask_for_password_check_store(const std::string &title, const std::string &service,
+                                             std::string &username, std::string &password, bool &store) -> bool {
   return _ask_for_password(title, service, username, true, password, store);
 }
 
@@ -725,15 +725,15 @@ bool Utilities::credentials_for_service(const std::string &title, const std::str
 
 static int modal_loops = 0;
 
-void Utilities::enter_modal_loop() {
+auto Utilities::enter_modal_loop() -> void {
   modal_loops++;
 }
 
-void Utilities::leave_modal_loop() {
+auto Utilities::leave_modal_loop() -> void {
   modal_loops--;
 }
 
-bool Utilities::in_modal_loop() {
+auto Utilities::in_modal_loop() -> bool {
   return modal_loops > 0;
 }
 
@@ -747,7 +747,7 @@ static cairo_user_data_key_t hidpi_icon_key;
  * Helper function to simplify icon loading. Returns NULL if the icon could not be found or
  * something wrong happened while loading.
  */
-cairo_surface_t *Utilities::load_icon(const std::string &name, bool allow_hidpi) {
+auto Utilities::load_icon(const std::string &name, bool allow_hidpi) -> cairo_surface_t * {
   if (name.empty())
     return NULL;
 
@@ -772,20 +772,20 @@ cairo_surface_t *Utilities::load_icon(const std::string &name, bool allow_hidpi)
 
 //--------------------------------------------------------------------------------------------------
 
-bool Utilities::is_hidpi_icon(cairo_surface_t *s) {
+auto Utilities::is_hidpi_icon(cairo_surface_t *s) -> bool {
   return cairo_surface_get_user_data(s, &hidpi_icon_key) == (void *)1;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Utilities::icon_needs_reload(cairo_surface_t *s) {
+auto Utilities::icon_needs_reload(cairo_surface_t *s) -> bool {
   float scale = s && mforms::Utilities::is_hidpi_icon(s) ? 2.0f : 1.0f;
   return mforms::App::get()->backing_scale_factor() != scale;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Utilities::paint_icon(cairo_t *cr, cairo_surface_t *image, double x, double y, float alpha) {
+auto Utilities::paint_icon(cairo_t *cr, cairo_surface_t *image, double x, double y, float alpha) -> void {
   if (cr == nullptr || image == nullptr)
     return;
 
@@ -825,7 +825,7 @@ void Utilities::paint_icon(cairo_t *cr, cairo_surface_t *image, double x, double
 
 //--------------------------------------------------------------------------------------------------
 
-base::Size Utilities::getImageSize(cairo_surface_t *icon) {
+auto Utilities::getImageSize(cairo_surface_t *icon) -> base::Size {
   base::Size result(cairo_image_surface_get_width(icon), cairo_image_surface_get_height(icon));
   if (mforms::Utilities::is_hidpi_icon(icon)) {
     result.width /= 2;
@@ -841,7 +841,7 @@ base::Size Utilities::getImageSize(cairo_surface_t *icon) {
  * the input is simply returned. Otherwise letters are removed (via binary search) and ellipses
  * are added so that the entire result fits into that width.
  */
-std::string Utilities::shorten_string(cairo_t *cr, const std::string &text, double width) {
+auto Utilities::shorten_string(cairo_t *cr, const std::string &text, double width) -> std::string {
   int ellipsis_width = 0;
   size_t length;
   size_t l, h, n, w;
@@ -895,26 +895,26 @@ std::string Utilities::shorten_string(cairo_t *cr, const std::string &text, doub
 
 //--------------------------------------------------------------------------------------------------
 
-double Utilities::get_text_width(const std::string &text, const std::string &font) {
+auto Utilities::get_text_width(const std::string &text, const std::string &font) -> double {
   return ControlFactory::get_instance()->_utilities_impl.get_text_width(text, font);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Utilities::in_main_thread() {
+auto Utilities::in_main_thread() -> bool {
   return g_thread_self() == _mforms_main_thread;
 }
 
-void Utilities::set_thread_name(const std::string &name) {
+auto Utilities::set_thread_name(const std::string &name) -> void {
   if (ControlFactory::get_instance()->_utilities_impl.set_thread_name)
     ControlFactory::get_instance()->_utilities_impl.set_thread_name(name);
 }
 
-void Utilities::driver_shutdown() {
+auto Utilities::driver_shutdown() -> void {
   if (Utilities::_driver_shutdown_cb)
     Utilities::_driver_shutdown_cb();
 }
 
-void Utilities::add_driver_shutdown_callback(const std::function<void()> &slot) {
+auto Utilities::add_driver_shutdown_callback(const std::function<void()> &slot) -> void {
   Utilities::_driver_shutdown_cb = slot;
 }

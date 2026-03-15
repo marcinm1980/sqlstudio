@@ -36,24 +36,24 @@ namespace mforms {
       ButtonWrapper(::mforms::Button *self, bool concrete = false) : ViewWrapper(self) {
       }
 
-      static void callback(::mforms::Button *self) {
+      static auto callback(::mforms::Button *self) -> void {
       }
 
-      static bool create(::mforms::Button *self, ::mforms::ButtonType) {
+      static auto create(::mforms::Button *self, ::mforms::ButtonType) -> bool {
         return true;
       }
 
-      static void set_text(::mforms::Button *self, const std::string &text) {
+      static auto set_text(::mforms::Button *self, const std::string &text) -> void {
       }
 
-      static void enable_internal_padding(Button *self, bool enabled) {
+      static auto enable_internal_padding(Button *self, bool enabled) -> void {
       }
 
-      static void set_icon(Button *self, const std::string &path) {
+      static auto set_icon(Button *self, const std::string &path) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_button_impl.create = &ButtonWrapper::create;

@@ -41,12 +41,12 @@ namespace mdc {
   public:
     GtkCanvasScroller();
 
-    Glib::RefPtr<Gtk::Adjustment> get_hadjustment();
-    Glib::RefPtr<Gtk::Adjustment> get_vadjustment();
+    auto get_hadjustment() -> Glib::RefPtr<Gtk::Adjustment>;
+    auto get_vadjustment() -> Glib::RefPtr<Gtk::Adjustment>;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverloaded-virtual" // The GtkCanvas is descendant of Gtk::Layout
-    void add(GtkCanvas &canvas);                      //
+    auto add(GtkCanvas &canvas) -> void;                      //
 #pragma GCC diagnostic pop
   };
 };

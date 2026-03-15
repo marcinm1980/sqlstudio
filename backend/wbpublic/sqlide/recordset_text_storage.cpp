@@ -49,13 +49,13 @@ using namespace base;
 typedef std::map<std::string, Recordset_text_storage::TemplateInfo> Templates;
 static Templates _templates; // data format name -> template
 
-static const Recordset_text_storage::TemplateInfo &template_info(const std::string &template_name) {
+static auto template_info(const std::string &template_name) -> const Recordset_text_storage::TemplateInfo & {
   if (_templates.find(template_name) == _templates.end())
     throw std::invalid_argument(strfmt("Unknown template type name %s", template_name.c_str()));
   return _templates[template_name];
 }
 
-static void process_templates(const std::list<std::string> &files) {
+static auto process_templates(const std::list<std::string> &files) -> void {
   for (std::list<std::string>::const_iterator f = files.begin(); f != files.end(); ++f) {
     ConfigurationFile cf(AutoCreateNothing);
     if (cf.load(*f)) {
@@ -83,7 +83,7 @@ static void process_templates(const std::list<std::string> &files) {
   }
 }
 
-static void scan_templates() {
+static auto scan_templates() -> void {
   if (_templates.empty()) {
     std::string template_dir = base::makePath(bec::GRTManager::get()->get_basedir(), "modules/data/sqlide");
     std::list<std::string> files = base::scan_for_files_matching(template_dir + "/*.tpli");
@@ -132,24 +132,24 @@ Recordset_text_storage::Recordset_text_storage() : Recordset_data_storage() {
 Recordset_text_storage::~Recordset_text_storage() {
 }
 
-ColumnId Recordset_text_storage::aux_column_count() {
+auto Recordset_text_storage::aux_column_count() -> ColumnId {
   throw std::runtime_error("Recordset_text_storage::aux_column_count is not implemented");
 }
 
-void Recordset_text_storage::do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db,
-                                              bool skip_commitmig) {
+auto Recordset_text_storage::do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db,
+                                              bool skip_commitmig) -> void {
   throw std::runtime_error("Recordset_text_storage::apply_changes is not implemented");
 }
 
-static std::string escape_sql_string_(const std::string &s) {
+static auto escape_sql_string_(const std::string &s) -> std::string {
   return base::escape_sql_string(s, false);
 }
 
-static std::string escape_json_string_(const std::string &s) {
+static auto escape_json_string_(const std::string &s) -> std::string {
   return base::escape_json_string(s);
 }
 
-void Recordset_text_storage::do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_text_storage::do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   const TemplateInfo &info(template_info(_data_format));
   std::string template_name(info.name);
   bool strings_are_pre_quoted(info.pre_quote_strings);
@@ -373,20 +373,20 @@ void Recordset_text_storage::do_serialize(const Recordset *recordset, sqlite::co
   }
 }
 
-void Recordset_text_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_text_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   throw std::runtime_error("Recordset_text_storage::unserialize is not implemented");
 }
 
-void Recordset_text_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
-                                                 ColumnId column, sqlite::variant_t &blob_value) {
+auto Recordset_text_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db, RowId rowid,
+                                                 ColumnId column, sqlite::variant_t &blob_value) -> void {
 }
 
-std::string Recordset_text_storage::parameter_value(const std::string &name) const {
+auto Recordset_text_storage::parameter_value(const std::string &name) const -> std::string {
   Parameters::const_iterator i = _parameters.find(name);
   return (_parameters.end() != i) ? i->second : std::string();
 }
 
-std::vector<Recordset_storage_info> Recordset_text_storage::storage_types() {
+auto Recordset_text_storage::storage_types() -> std::vector<Recordset_storage_info> {
   scan_templates();
 
   std::vector<Recordset_storage_info> types;

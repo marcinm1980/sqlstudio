@@ -52,21 +52,21 @@ namespace wbfig {
     RoutineGroup(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self);
     virtual ~RoutineGroup();
 
-    Titlebar *get_title() {
+    auto get_title() -> Titlebar * {
       return &_title;
     }
 
-    virtual void set_title_font(const mdc::FontSpec &font);
-    virtual void set_content_font(const mdc::FontSpec &font);
+    virtual auto set_title_font(const mdc::FontSpec &font) -> void;
+    virtual auto set_content_font(const mdc::FontSpec &font) -> void;
 
-    virtual void set_color(const base::Color &color);
-    void set_title(const std::string &title, const std::string &subtitle);
+    virtual auto set_color(const base::Color &color) -> void;
+    auto set_title(const std::string &title, const std::string &subtitle) -> void;
 
-    virtual void toggle(bool flag);
+    virtual auto toggle(bool flag) -> void;
 
-    ItemList::iterator begin_routines_sync();
-    ItemList::iterator sync_next_routine(ItemList::iterator iter, const std::string &id, const std::string &text);
-    void end_routines_sync(ItemList::iterator iter);
+    auto begin_routines_sync() -> ItemList::iterator;
+    auto sync_next_routine(ItemList::iterator iter, const std::string &id, const std::string &text) -> ItemList::iterator;
+    auto end_routines_sync(ItemList::iterator iter) -> void;
   };
 };
 

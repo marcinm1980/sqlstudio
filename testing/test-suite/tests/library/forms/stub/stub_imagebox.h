@@ -36,24 +36,24 @@ namespace mforms {
       ImageBoxWrapper(::mforms::ImageBox *self) : ViewWrapper(self) {
       }
 
-      static bool create(::mforms::ImageBox *self) {
+      static auto create(::mforms::ImageBox *self) -> bool {
         return true;
       }
 
-      static void set_image(::mforms::ImageBox *self, const std::string &file) {
+      static auto set_image(::mforms::ImageBox *self, const std::string &file) -> void {
       }
 
-      static void setImageData(::mforms::ImageBox *, const char *data, size_t length) {
+      static auto setImageData(::mforms::ImageBox *, const char *data, size_t length) -> void {
       }
 
-      static void set_scale_contents(ImageBox *, bool) {
+      static auto set_scale_contents(ImageBox *, bool) -> void {
       }
 
-      static void set_image_align(ImageBox *, Alignment) {
+      static auto set_image_align(ImageBox *, Alignment) -> void {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_imagebox_impl.create = &ImageBoxWrapper::create;

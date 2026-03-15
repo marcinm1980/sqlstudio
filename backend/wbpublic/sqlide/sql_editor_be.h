@@ -83,74 +83,74 @@ public:
   using Ref = std::shared_ptr<MySQLEditor>;
   using Ptr = std::weak_ptr<MySQLEditor>;
 
-  static Ref create(parsers::MySQLParserContext::Ref syntaxCheckContext,
+  static auto create(parsers::MySQLParserContext::Ref syntaxCheckContext,
                     parsers::MySQLParserContext::Ref autocompleteContext,
                     std::vector<parsers::SymbolTable *> const &globalSymbols,
-                    db_query_QueryBufferRef grtobj = db_query_QueryBufferRef());
+                    db_query_QueryBufferRef grtobj = db_query_QueryBufferRef()) -> Ref;
 
   virtual ~MySQLEditor();
 
-  db_query_QueryBufferRef grtobj();
+  auto grtobj() -> db_query_QueryBufferRef;
 
-  void set_base_toolbar(mforms::ToolBar *toolbar);
+  auto set_base_toolbar(mforms::ToolBar *toolbar) -> void;
 
-  mforms::View *get_container();
-  mforms::ToolBar *get_toolbar(bool include_file_actions = true);
-  mforms::CodeEditor *get_editor_control();
-  mforms::FindPanel *get_find_panel();
+  auto get_container() -> mforms::View *;
+  auto get_toolbar(bool include_file_actions = true) -> mforms::ToolBar *;
+  auto get_editor_control() -> mforms::CodeEditor *;
+  auto get_find_panel() -> mforms::FindPanel *;
 
-  void show_special_chars(bool flag);
-  void enable_word_wrap(bool flag);
+  auto show_special_chars(bool flag) -> void;
+  auto enable_word_wrap(bool flag) -> void;
 
-  int int_option(std::string name);
-  std::string string_option(std::string name);
+  auto int_option(std::string name) -> int;
+  auto string_option(std::string name) -> std::string;
 
-  void set_current_schema(const std::string &schema);
-  std::string sql();
-  std::pair<const char *, size_t> text_ptr();
-  void sql(const char *sql);
+  auto set_current_schema(const std::string &schema) -> void;
+  auto sql() -> std::string;
+  auto text_ptr() -> std::pair<const char *, size_t>;
+  auto sql(const char *sql) -> void;
 
-  bool empty();
-  void append_text(const std::string &text);
+  auto empty() -> bool;
+  auto append_text(const std::string &text) -> void;
 
-  std::string current_statement();
-  bool get_current_statement_range(size_t &start, size_t &end, bool strict = false);
+  auto current_statement() -> std::string;
+  auto get_current_statement_range(size_t &start, size_t &end, bool strict = false) -> bool;
 
-  std::size_t cursor_pos();
-  std::pair<std::size_t, std::size_t> cursor_pos_row_column(bool local);
-  void set_cursor_pos(std::size_t position);
+  auto cursor_pos() -> std::size_t;
+  auto cursor_pos_row_column(bool local) -> std::pair<std::size_t, std::size_t>;
+  auto set_cursor_pos(std::size_t position) -> void;
 
-  bool selected_range(std::size_t &start, std::size_t &end);
-  void set_selected_range(std::size_t start, std::size_t end);
+  auto selected_range(std::size_t &start, std::size_t &end) -> bool;
+  auto set_selected_range(std::size_t start, std::size_t end) -> void;
 
-  bool is_refresh_enabled() const;
-  void set_refresh_enabled(bool val);
-  bool is_sql_check_enabled() const;
-  void set_sql_check_enabled(bool val);
+  auto is_refresh_enabled() const -> bool;
+  auto set_refresh_enabled(bool val) -> void;
+  auto is_sql_check_enabled() const -> bool;
+  auto set_sql_check_enabled(bool val) -> void;
 
-  void show_auto_completion(bool auto_choose_single);
+  auto show_auto_completion(bool auto_choose_single) -> void;
   std::vector<std::pair<int, std::string>> update_auto_completion(const std::string &typed_part);
-  void cancel_auto_completion();
+  auto cancel_auto_completion() -> void;
 
-  std::string selected_text();
-  void set_selected_text(const std::string &new_text);
-  void insert_text(const std::string &new_text);
+  auto selected_text() -> std::string;
+  auto set_selected_text(const std::string &new_text) -> void;
+  auto insert_text(const std::string &new_text) -> void;
 
   boost::signals2::signal<void()> *text_change_signal();
 
-  std::string sql_mode();
-  void set_sql_mode(const std::string &value);
-  void setServerVersion(GrtVersionRef version);
+  auto sql_mode() -> std::string;
+  auto set_sql_mode(const std::string &value) -> void;
+  auto setServerVersion(GrtVersionRef version) -> void;
 
-  void restrict_content_to(ContentType type);
+  auto restrict_content_to(ContentType type) -> void;
 
-  bool has_sql_errors() const;
+  auto has_sql_errors() const -> bool;
 
-  void stop_processing();
+  auto stop_processing() -> void;
 
-  void focus();
+  auto focus() -> void;
 
-  void register_file_drop_for(mforms::DropDelegate *target);
+  auto register_file_drop_for(mforms::DropDelegate *target) -> void;
 
 protected:
   MySQLEditor(parsers::MySQLParserContext::Ref syntaxCheckContext,
@@ -160,32 +160,32 @@ private:
   class Private;
   Private *d;
 
-  void set_grtobj(db_query_QueryBufferRef grtobj);
+  auto set_grtobj(db_query_QueryBufferRef grtobj) -> void;
 
-  void setup_auto_completion();
-  void *run_code_completion();
+  auto setup_auto_completion() -> void;
+  auto run_code_completion() -> void *;
 
-  std::string getWrittenPart(size_t position);
+  auto getWrittenPart(size_t position) -> std::string;
 
-  void text_changed(Sci_Position position, Sci_Position length, Sci_Position lines_changed, bool added);
-  void char_added(int char_code);
-  void dwell_event(bool started, size_t position, int x, int y);
+  auto text_changed(Sci_Position position, Sci_Position length, Sci_Position lines_changed, bool added) -> void;
+  auto char_added(int char_code) -> void;
+  auto dwell_event(bool started, size_t position, int x, int y) -> void;
 
-  void setup_editor_menu();
-  void editor_menu_opening();
-  void activate_context_menu_item(const std::string &name);
+  auto setup_editor_menu() -> void;
+  auto editor_menu_opening() -> void;
+  auto activate_context_menu_item(const std::string &name) -> void;
 
-  bool start_sql_processing();
-  bool do_statement_split_and_check(int id); // Run in worker thread.
+  auto start_sql_processing() -> bool;
+  auto do_statement_split_and_check(int id) -> bool; // Run in worker thread.
 
-  int on_report_sql_statement_border(int begin_lineno, int begin_line_pos, int end_lineno, int end_line_pos, int tag);
-  int on_sql_error(int lineno, int tok_line_pos, int tok_len, const std::string &msg, int tag);
-  int on_sql_check_progress(float progress, const std::string &msg, int tag);
+  auto on_report_sql_statement_border(int begin_lineno, int begin_line_pos, int end_lineno, int end_line_pos, int tag) -> int;
+  auto on_sql_error(int lineno, int tok_line_pos, int tok_len, const std::string &msg, int tag) -> int;
+  auto on_sql_check_progress(float progress, const std::string &msg, int tag) -> int;
 
-  void *splitting_done();
-  void *update_error_markers();
+  auto splitting_done() -> void *;
+  auto update_error_markers() -> void *;
 
-  bool code_completion_enabled();
-  bool auto_start_code_completion();
-  bool make_keywords_uppercase();
+  auto code_completion_enabled() -> bool;
+  auto auto_start_code_completion() -> bool;
+  auto make_keywords_uppercase() -> bool;
 };

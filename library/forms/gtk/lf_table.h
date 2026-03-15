@@ -42,33 +42,33 @@ namespace mforms {
       // we're not trying to add to many elements
       int _rowCount;
       int _colCount;
-      virtual Gtk::Widget *get_outer() const;
-      virtual Gtk::Widget *get_inner() const;
+      virtual auto get_outer() const -> Gtk::Widget *;
+      virtual auto get_inner() const -> Gtk::Widget *;
 
       TableImpl(::mforms::Table *self);
 
       virtual ~TableImpl();
 
-      static bool create(::mforms::Table *self);
+      static auto create(::mforms::Table *self) -> bool;
 
-      static void set_row_count(Table *self, int count);
+      static auto set_row_count(Table *self, int count) -> void;
 
-      static void set_col_count(Table *self, int count);
+      static auto set_col_count(Table *self, int count) -> void;
 
-      static void add(Table *self, View *child, int left, int right, int top, int bottom, int flags);
+      static auto add(Table *self, View *child, int left, int right, int top, int bottom, int flags) -> void;
 
-      static void remove(Table *self, View *child);
+      static auto remove(Table *self, View *child) -> void;
 
-      static void set_row_spacing(Table *self, int space);
+      static auto set_row_spacing(Table *self, int space) -> void;
 
-      static void set_col_spacing(Table *self, int space);
+      static auto set_col_spacing(Table *self, int space) -> void;
 
-      static void set_homogeneous(Table *self, bool flag);
+      static auto set_homogeneous(Table *self, bool flag) -> void;
 
-      virtual void set_padding_impl(int left, int top, int right, int bottom);
+      virtual auto set_padding_impl(int left, int top, int right, int bottom) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   }
 }

@@ -43,32 +43,32 @@ DockingPoint::~DockingPoint() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string DockingPoint::get_type() {
+auto DockingPoint::get_type() -> std::string {
   return _delegate->get_type();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DockingPoint::set_name(const std::string &name) {
+auto DockingPoint::set_name(const std::string &name) -> void {
   return _delegate->set_name(name);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DockingPoint::dock_view(AppView *view, const std::string &arg1, int arg2) {
+auto DockingPoint::dock_view(AppView *view, const std::string &arg1, int arg2) -> void {
   view->set_containing_docking_point(this);
   _delegate->dock_view(view, arg1, arg2);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool DockingPoint::select_view(AppView *view) {
+auto DockingPoint::select_view(AppView *view) -> bool {
   return _delegate->select_view(view);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DockingPoint::undock_view(AppView *view) {
+auto DockingPoint::undock_view(AppView *view) -> void {
   view->retain();
   _delegate->undock_view(view);
   view->set_containing_docking_point(NULL);
@@ -78,19 +78,19 @@ void DockingPoint::undock_view(AppView *view) {
 
 //--------------------------------------------------------------------------------------------------
 
-void DockingPoint::set_view_title(AppView *view, const std::string &title) {
+auto DockingPoint::set_view_title(AppView *view, const std::string &title) -> void {
   _delegate->set_view_title(view, title);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::pair<int, int> DockingPoint::get_size() {
+auto DockingPoint::get_size() -> std::pair<int, int> {
   return _delegate->get_size();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DockingPoint::close_view_at_index(int index) {
+auto DockingPoint::close_view_at_index(int index) -> void {
   AppView *view = _delegate->view_at_index(index);
   if (view != NULL)
     view->close();
@@ -98,7 +98,7 @@ void DockingPoint::close_view_at_index(int index) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool DockingPoint::close_all_views() {
+auto DockingPoint::close_all_views() -> bool {
   // Two loops here. First determine if all views accept to close before you actually close any.
   // Otherwise we might end up with some views closed and some not if one refuses to close.
   for (int i = view_count() - 1; i >= 0; --i) {
@@ -121,25 +121,25 @@ bool DockingPoint::close_all_views() {
 
 //--------------------------------------------------------------------------------------------------
 
-AppView *DockingPoint::selected_view() {
+auto DockingPoint::selected_view() -> AppView * {
   return _delegate->selected_view();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int DockingPoint::view_count() {
+auto DockingPoint::view_count() -> int {
   return _delegate->view_count();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-AppView *DockingPoint::view_at_index(int index) {
+auto DockingPoint::view_at_index(int index) -> AppView * {
   return _delegate->view_at_index(index);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void DockingPoint::view_switched() {
+auto DockingPoint::view_switched() -> void {
   _view_switched();
 }
 

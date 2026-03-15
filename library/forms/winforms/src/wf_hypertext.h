@@ -33,11 +33,11 @@ namespace MySQL {
     protected:
       HyperTextWrapper(mforms::HyperText *backend);
 
-      static bool create(mforms::HyperText *backend);
-      static void set_markup_text(mforms::HyperText *backend, const std::string &text);
+      static auto create(mforms::HyperText *backend) -> bool;
+      static auto set_markup_text(mforms::HyperText *backend, const std::string &text) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

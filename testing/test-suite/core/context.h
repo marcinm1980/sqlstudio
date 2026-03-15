@@ -40,7 +40,7 @@ namespace testing {
     virtual ~Context();
 
     // Returns the single global instance (thread-safe since C++11).
-    static Context& get();
+    static auto get() -> Context&;
 
     // Non-copyable / non-movable to enforce singleton semantics.
     Context(Context const&) = delete;
@@ -49,21 +49,21 @@ namespace testing {
     Context& operator=(Context&&) = delete;
     //void addInitializer(DescribeInit* initializer);
 
-    std::string baseDir() {
+    auto baseDir() -> std::string {
       return _baseDir;
     };
 
-    std::string outputDir() {
+    auto outputDir() -> std::string {
       return _baseDir + "/output";
     }
-    std::string tmpDataDir() {
+    auto tmpDataDir() -> std::string {
       return _baseDir + "/data";
     }
 
     std::string getConfigurationStringValue(std::string const& path, std::string const& defaultValue = "") const;
-    int getConfigurationIntValue(std::string const& path, int defaultValue = 0) const;
-    double getConfigurationDoubleValue(std::string const& path, double defaultValue = 0.0) const;
-    bool getConfigurationBoolValue(std::string const& path, bool defaultValue = false) const;
+    auto getConfigurationIntValue(std::string const& path, int defaultValue = 0) const -> int;
+    auto getConfigurationDoubleValue(std::string const& path, double defaultValue = 0.0) const -> double;
+    auto getConfigurationBoolValue(std::string const& path, bool defaultValue = false) const -> bool;
 
   protected:
     Context();

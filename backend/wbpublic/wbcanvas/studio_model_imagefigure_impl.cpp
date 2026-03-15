@@ -40,7 +40,7 @@ studio_model_ImageFigure::ImplData::ImplData(studio_model_ImageFigure *self)
   _last_click = 0;
 }
 
-std::string studio_model_ImageFigure::ImplData::set_filename(const std::string &fn) {
+auto studio_model_ImageFigure::ImplData::set_filename(const std::string &fn) -> std::string {
   if (fn != *self()->_filename) {
     std::string internal_name;
     if (fn != "") {
@@ -79,7 +79,7 @@ std::string studio_model_ImageFigure::ImplData::set_filename(const std::string &
     return self()->_filename;
 }
 
-void studio_model_ImageFigure::ImplData::set_keep_aspect_ratio(bool flag) {
+auto studio_model_ImageFigure::ImplData::set_keep_aspect_ratio(bool flag) -> void {
   self()->_keepAspectRatio = flag ? 1 : 0;
 
   if (_figure)
@@ -109,7 +109,7 @@ void studio_model_ImageFigure::ImplData::set_keep_aspect_ratio(bool flag) {
     _figure->set_fixed_size(Size(__width, __height));
   }*/
 
-void studio_model_ImageFigure::ImplData::unrealize() {
+auto studio_model_ImageFigure::ImplData::unrealize() -> void {
   notify_will_unrealize();
 
   super::unrealize();
@@ -122,7 +122,7 @@ void studio_model_ImageFigure::ImplData::unrealize() {
   _thumbnail = 0;
 }
 
-bool studio_model_ImageFigure::ImplData::shrink_if_needed() {
+auto studio_model_ImageFigure::ImplData::shrink_if_needed() -> bool {
   Size size(_figure->calc_min_size());
   Size max_size(get_canvas_view()->get_total_view_size());
   bool resized = false;
@@ -148,7 +148,7 @@ bool studio_model_ImageFigure::ImplData::shrink_if_needed() {
   return resized;
 }
 
-bool studio_model_ImageFigure::ImplData::realize() {
+auto studio_model_ImageFigure::ImplData::realize() -> bool {
   if (_figure)
     return true;
   if (!is_realizable())
@@ -201,7 +201,7 @@ bool studio_model_ImageFigure::ImplData::realize() {
   return true;
 }
 
-void studio_model_ImageFigure::ImplData::render_mini(mdc::CairoCtx *cr) {
+auto studio_model_ImageFigure::ImplData::render_mini(mdc::CairoCtx *cr) -> void {
   if (!_thumbnail && _figure && _figure->get_image()) {
     Size image_size = _figure->get_size();
 

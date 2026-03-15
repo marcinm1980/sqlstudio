@@ -45,8 +45,8 @@
 using namespace mforms;
 
 class NewPluginDialog : public Form {
-  Label *newLabel(const std::string &text);
-  Label *newDescr(const std::string &text);
+  auto newLabel(const std::string &text) -> Label *;
+  auto newDescr(const std::string &text) -> Label *;
 
 public:
   struct PluginTemplate {
@@ -60,8 +60,8 @@ public:
 
   NewPluginDialog(Form *owner, const std::string &template_dir);
 
-  virtual bool advance();
-  bool run(std::string &filename, std::string &code, bool &is_script, std::string &language);
+  virtual auto advance() -> bool;
+  auto run(std::string &filename, std::string &code, bool &is_script, std::string &language) -> bool;
 
 private:
   std::vector<PluginTemplate> _plugin_template_list;
@@ -87,12 +87,12 @@ private:
   Button _ok;
   Button _cancel;
 
-  void changed_type();
-  inline bool is_valid_id(const std::string &s);
-  inline bool is_valid_filename(const std::string &file, const std::string &ext);
-  void validate();
-  void name_changed(TextEntry *entry);
-  void load_plugin_templates(const std::string &template_dir);
+  auto changed_type() -> void;
+  inline auto is_valid_id(const std::string &s) -> bool;
+  inline auto is_valid_filename(const std::string &file, const std::string &ext) -> bool;
+  auto validate() -> void;
+  auto name_changed(TextEntry *entry) -> void;
+  auto load_plugin_templates(const std::string &template_dir) -> void;
 };
 
 #endif

@@ -34,49 +34,49 @@ namespace mforms {
     class UtilitiesWrapper {
       static std::function<void(std::string)> open_url_slot;
       static std::function<mforms::DialogResult(void)> message_callback;
-      static std::map<const std::string, std::string> &passwords();
+      static auto passwords() -> std::map<const std::string, std::string> &;
 
-      static int show_message(const std::string &title, const std::string &text, const std::string &ok,
-                              const std::string &cancel, const std::string &other);
-      static int show_error(const std::string &title, const std::string &text, const std::string &ok,
-                            const std::string &cancel, const std::string &other);
-      static int show_warning(const std::string &title, const std::string &text, const std::string &ok,
-                              const std::string &cancel, const std::string &other);
+      static auto show_message(const std::string &title, const std::string &text, const std::string &ok,
+                              const std::string &cancel, const std::string &other) -> int;
+      static auto show_error(const std::string &title, const std::string &text, const std::string &ok,
+                            const std::string &cancel, const std::string &other) -> int;
+      static auto show_warning(const std::string &title, const std::string &text, const std::string &ok,
+                              const std::string &cancel, const std::string &other) -> int;
       static int show_message_with_checkbox(
         const std::string &title, const std::string &text, const std::string &ok, const std::string &cancel,
         const std::string &other,
         const std::string &checkbox_text, // empty text = default "Don't show this message again" text
         bool &remember_checked);
 
-      static void show_wait_message(const std::string &title, const std::string &text);
-      static bool hide_wait_message();
-      static bool run_cancelable_wait_message(const std::string &title, const std::string &text,
+      static auto show_wait_message(const std::string &title, const std::string &text) -> void;
+      static auto hide_wait_message() -> bool;
+      static auto run_cancelable_wait_message(const std::string &title, const std::string &text,
                                               const std::function<void()> &start_task,
-                                              const std::function<bool()> &cancel_task);
-      static void stop_cancelable_wait_message();
+                                              const std::function<bool()> &cancel_task) -> bool;
+      static auto stop_cancelable_wait_message() -> void;
 
-      static void set_clipboard_text(const std::string &text);
-      static std::string get_clipboard_text();
+      static auto set_clipboard_text(const std::string &text) -> void;
+      static auto get_clipboard_text() -> std::string;
 
-      static std::string get_special_folder(mforms::FolderType type);
+      static auto get_special_folder(mforms::FolderType type) -> std::string;
 
-      static void open_url(const std::string &url);
-      static mforms::TimeoutHandle add_timeout(float interval, const std::function<bool()> &slot);
-      static void cancel_timeout(mforms::TimeoutHandle);
+      static auto open_url(const std::string &url) -> void;
+      static auto add_timeout(float interval, const std::function<bool()> &slot) -> mforms::TimeoutHandle;
+      static auto cancel_timeout(mforms::TimeoutHandle) -> void;
 
-      static void store_password(const std::string &service, const std::string &account, const std::string &password);
-      static bool find_password(const std::string &service, const std::string &account, std::string &password);
-      static void forget_password(const std::string &service, const std::string &account);
-      static void *perform_from_main_thread(const std::function<void *()> &slot, bool wait);
-      static void beep();
-      static void revealFile(const std::string &url);
-      static bool moveToTrash(const std::string &path);
-      static void setThreadName(const std::string &name);
-      static double getTextWidth(const std::string &text, const std::string &font);
+      static auto store_password(const std::string &service, const std::string &account, const std::string &password) -> void;
+      static auto find_password(const std::string &service, const std::string &account, std::string &password) -> bool;
+      static auto forget_password(const std::string &service, const std::string &account) -> void;
+      static auto perform_from_main_thread(const std::function<void *()> &slot, bool wait) -> void *;
+      static auto beep() -> void;
+      static auto revealFile(const std::string &url) -> void;
+      static auto moveToTrash(const std::string &path) -> bool;
+      static auto setThreadName(const std::string &name) -> void;
+      static auto getTextWidth(const std::string &text, const std::string &font) -> double;
 
     public:
-      static void init();
-      static void set_message_callback(std::function<mforms::DialogResult(void)> callback);
+      static auto init() -> void;
+      static auto set_message_callback(std::function<mforms::DialogResult(void)> callback) -> void;
     };
   };
 };

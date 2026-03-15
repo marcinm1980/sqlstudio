@@ -147,7 +147,7 @@ static FILE *stdOutFile = NULL, originalStdOutFile;
  * Note: since this works with static vars it is essentially a one-timer. Don't call this
  *       function more than once!
  */
-bool Win32Api::RedirectConsole() {
+auto Win32Api::RedirectConsole() -> bool {
   AttachConsole(ATTACH_PARENT_PROCESS);
 
   stdOutIndex = _open_osfhandle((INT_PTR)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT);
@@ -168,7 +168,7 @@ bool Win32Api::RedirectConsole() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Win32Api::ReleaseConsole() {
+auto Win32Api::ReleaseConsole() -> void {
   FreeConsole();
   if (stdOutFile != NULL)
     fclose(stdOutFile);

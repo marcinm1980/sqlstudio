@@ -103,13 +103,13 @@ void VarGridModelWrapper::set_rows_changed(DelegateSlot0<void, void>::ManagedDel
 
 //--------------------------------------------------------------------------------------------------
 
-int VarGridModelWrapper::edited_field_row() {
+auto VarGridModelWrapper::edited_field_row() -> int {
   return (int)_ref->edited_field_row();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int VarGridModelWrapper::edited_field_column() {
+auto VarGridModelWrapper::edited_field_column() -> int {
   return (int)_ref->edited_field_column();
 }
 

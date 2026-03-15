@@ -136,14 +136,14 @@ SqlScriptReviewPage::~SqlScriptReviewPage() {
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlScriptReviewPage::enter(bool advancing) {
+auto SqlScriptReviewPage::enter(bool advancing) -> void {
   _sql_editor->set_value(values().get_string("sql_script"));
   grtui::WizardPage::enter(advancing);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool SqlScriptReviewPage::advance() {
+auto SqlScriptReviewPage::advance() -> bool {
   std::string sql = base::trim(_sql_editor->get_text(false));
 
   if (sql.empty())
@@ -156,13 +156,13 @@ bool SqlScriptReviewPage::advance() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string SqlScriptReviewPage::next_button_caption() {
+auto SqlScriptReviewPage::next_button_caption() -> std::string {
   return _("Apply");
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SqlScriptReviewPage::option_changed() {
+auto SqlScriptReviewPage::option_changed() -> void {
   SqlScriptRunWizard *wizard = dynamic_cast<SqlScriptRunWizard *>(_form);
   if (wizard != NULL && wizard->regenerate_script) {
     static std::string algorithms[] = {"DEFAULT", "INPLACE", "COPY"};
@@ -197,11 +197,11 @@ SqlScriptApplyPage::SqlScriptApplyPage(grtui::WizardForm *form)
   set_status_text("");
 }
 
-void SqlScriptApplyPage::abort_exec() {
+auto SqlScriptApplyPage::abort_exec() -> void {
   dynamic_cast<SqlScriptRunWizard *>(_form)->abort_apply();
 }
 
-int SqlScriptApplyPage::on_error(long long err_code, const std::string &err_msg, const std::string &err_sql) {
+auto SqlScriptApplyPage::on_error(long long err_code, const std::string &err_msg, const std::string &err_sql) -> int {
   std::string sql = base::strip_text(err_sql, true, true);
   _log += "ERROR";
   if (err_code >= 0)
@@ -213,17 +213,17 @@ int SqlScriptApplyPage::on_error(long long err_code, const std::string &err_msg,
   return 0;
 }
 
-int SqlScriptApplyPage::on_exec_progress(float progress) {
+auto SqlScriptApplyPage::on_exec_progress(float progress) -> int {
   update_progress(progress, "");
   return 0;
 }
 
-int SqlScriptApplyPage::on_exec_stat(long success_count, long err_count) {
+auto SqlScriptApplyPage::on_exec_stat(long success_count, long err_count) -> int {
   _err_count = err_count;
   return 0;
 }
 
-grt::ValueRef SqlScriptApplyPage::do_execute_sql_script(const std::string &sql_script) {
+auto SqlScriptApplyPage::do_execute_sql_script(const std::string &sql_script) -> grt::ValueRef {
   bec::GRTManager::get()->run_once_when_idle(
     this, std::bind(&SqlScriptApplyPage::add_log_text, this, "Executing:\n" + sql_script + "\n"));
 
@@ -242,7 +242,7 @@ grt::ValueRef SqlScriptApplyPage::do_execute_sql_script(const std::string &sql_s
   return grt::ValueRef();
 }
 
-bool SqlScriptApplyPage::execute_sql_script() {
+auto SqlScriptApplyPage::execute_sql_script() -> bool {
   values().gset("applied", 1);
   values().gset("has_errors", 0);
   std::string sql_script = values().get_string("sql_script");
@@ -254,23 +254,23 @@ bool SqlScriptApplyPage::execute_sql_script() {
   return true;
 }
 
-std::string SqlScriptApplyPage::next_button_caption() {
+auto SqlScriptApplyPage::next_button_caption() -> std::string {
   return finish_button_caption();
 }
 
-bool SqlScriptApplyPage::allow_back() {
+auto SqlScriptApplyPage::allow_back() -> bool {
   return !_busy && !_done;
 }
 
-bool SqlScriptApplyPage::allow_next() {
+auto SqlScriptApplyPage::allow_next() -> bool {
   return !_busy && values().get_int("has_errors") == 0;
 }
 
-bool SqlScriptApplyPage::allow_cancel() {
+auto SqlScriptApplyPage::allow_cancel() -> bool {
   return values().get_int("has_errors") != 0;
 }
 
-void SqlScriptApplyPage::enter(bool advancing) {
+auto SqlScriptApplyPage::enter(bool advancing) -> void {
   if (dynamic_cast<SqlScriptRunWizard *>(_form)->abort_apply)
     _abort_btn->show(true);
   else
@@ -299,10 +299,10 @@ SqlScriptRunWizard::SqlScriptRunWizard(GrtVersionRef version, std::string algori
   values().gset("applied", 0);
 }
 
-bool SqlScriptRunWizard::has_errors() {
+auto SqlScriptRunWizard::has_errors() -> bool {
   return values().get_int("has_errors") != 0;
 }
 
-bool SqlScriptRunWizard::applied() {
+auto SqlScriptRunWizard::applied() -> bool {
   return values().get_int("applied") != 0;
 }

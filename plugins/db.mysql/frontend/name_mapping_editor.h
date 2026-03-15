@@ -120,7 +120,7 @@ public:
     update_name_tree();
   }
 
-  void apply_changes(std::list<db_TableRef> &changed_Tables) {
+  auto apply_changes(std::list<db_TableRef> &changed_Tables) -> void {
     for (int c = _tree.count(), i = 0; i < c; i++) {
       mforms::TreeNodeRef child = _tree.node_at_row(i);
       NodeData *data = dynamic_cast<NodeData *>(child->get_data());
@@ -134,7 +134,7 @@ public:
     }
   }
 
-  bool run(std::list<db_TableRef> &changed_Tables) {
+  auto run(std::list<db_TableRef> &changed_Tables) -> bool {
     if (run_modal(&_ok_button, &_cancel_button)) {
       apply_changes(changed_Tables);
       return true;
@@ -142,11 +142,11 @@ public:
     return false;
   }
 
-  void list_selection_changed() {
+  auto list_selection_changed() -> void {
     update_remap_selector();
   }
 
-  void update_action(mforms::TreeNodeRef node) {
+  auto update_action(mforms::TreeNodeRef node) -> void {
     NodeData *data = dynamic_cast<NodeData *>(node->get_data());
     if (!data->left.is_valid()) {
       // new Table
@@ -174,7 +174,7 @@ public:
     }
   }
 
-  void remap_selected() {
+  auto remap_selected() -> void {
     mforms::TreeNodeRef node = _tree.get_selected_node();
     if (node) {
       int i = _remap_selector.get_selected_index();
@@ -196,7 +196,7 @@ public:
     }
   }
 
-  void update_remap_selector() {
+  auto update_remap_selector() -> void {
     _remap_selector.clear();
     _model_name.set_text("");
     _original_name.set_text("");
@@ -240,7 +240,7 @@ public:
     _panel->set_enabled(enabled);
   }
 
-  void update_name_tree() {
+  auto update_name_tree() -> void {
     _tree.clear();
     if (_left_schema.is_valid()) {
       std::map<std::string, db_TableRef> right_tables;
@@ -377,7 +377,7 @@ public:
     update_name_tree();
   }
 
-  void apply_changes(std::list<db_ColumnRef> &changed_columns) {
+  auto apply_changes(std::list<db_ColumnRef> &changed_columns) -> void {
     for (int c = _tree.count(), i = 0; i < c; i++) {
       mforms::TreeNodeRef child = _tree.node_at_row(i);
       NodeData *data = dynamic_cast<NodeData *>(child->get_data());
@@ -391,7 +391,7 @@ public:
     }
   }
 
-  bool run(std::list<db_ColumnRef> &changed_columns) {
+  auto run(std::list<db_ColumnRef> &changed_columns) -> bool {
     if (run_modal(&_ok_button, &_cancel_button)) {
       apply_changes(changed_columns);
       return true;
@@ -399,11 +399,11 @@ public:
     return false;
   }
 
-  void list_selection_changed() {
+  auto list_selection_changed() -> void {
     update_remap_selector();
   }
 
-  void update_action(mforms::TreeNodeRef node) {
+  auto update_action(mforms::TreeNodeRef node) -> void {
     NodeData *data = dynamic_cast<NodeData *>(node->get_data());
     if (!data->left.is_valid()) {
       // new column
@@ -423,7 +423,7 @@ public:
     }
   }
 
-  void remap_selected() {
+  auto remap_selected() -> void {
     mforms::TreeNodeRef node = _tree.get_selected_node();
     if (node) {
       int i = _remap_selector.get_selected_index();
@@ -444,7 +444,7 @@ public:
     }
   }
 
-  void update_remap_selector() {
+  auto update_remap_selector() -> void {
     _remap_selector.clear();
     _model_name.set_text("");
     _original_name.set_text("");
@@ -488,7 +488,7 @@ public:
     _panel->set_enabled(enabled);
   }
 
-  void update_name_tree() {
+  auto update_name_tree() -> void {
     _tree.clear();
     if (_left_table.is_valid()) {
       std::map<std::string, db_ColumnRef> right_columns;

@@ -50,12 +50,12 @@ class DB_MySQL_gen_grantTest : public ::testing::Test {
 protected:
   static std::unique_ptr<DbMysqlGenGrantData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<DbMysqlGenGrantData>();
     data->tester.reset(new MySqlStudioTester()); 
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
 
     data.reset();
   }

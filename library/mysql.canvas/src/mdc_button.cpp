@@ -45,18 +45,18 @@ Button::~Button() {
     cairo_surface_destroy(_alt_image);
 }
 
-void Button::set_active(bool flag) {
+auto Button::set_active(bool flag) -> void {
   if (_active != flag) {
     _active = flag;
     set_needs_render();
   }
 }
 
-bool Button::get_active() {
+auto Button::get_active() -> bool {
   return _active;
 }
 
-void Button::set_image(cairo_surface_t *image) {
+auto Button::set_image(cairo_surface_t *image) -> void {
   if (_image != image) {
     if (_image)
       cairo_surface_destroy(_image);
@@ -67,7 +67,7 @@ void Button::set_image(cairo_surface_t *image) {
   }
 }
 
-void Button::set_alt_image(cairo_surface_t *image) {
+auto Button::set_alt_image(cairo_surface_t *image) -> void {
   if (_alt_image != image) {
     if (_alt_image)
       cairo_surface_destroy(_alt_image);
@@ -78,14 +78,14 @@ void Button::set_alt_image(cairo_surface_t *image) {
   }
 }
 
-Size Button::calc_min_size() {
+auto Button::calc_min_size() -> Size {
   if (_button_type == ExpanderButton)
     return Size(10, 10);
   else
     return IconTextFigure::calc_min_size();
 }
 
-void Button::draw_contents(CairoCtx *cr) {
+auto Button::draw_contents(CairoCtx *cr) -> void {
   Point pos = get_position();
 
   if (_button_type == ExpanderButton) {
@@ -117,7 +117,7 @@ void Button::draw_contents(CairoCtx *cr) {
   }
 }
 
-bool Button::on_button_press(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto Button::on_button_press(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   if (button == ButtonLeft) {
     _pressed = true;
     if (_alt_image)
@@ -128,7 +128,7 @@ bool Button::on_button_press(CanvasItem *target, const Point &point, MouseButton
   return false;
 }
 
-bool Button::on_button_release(CanvasItem *target, const Point &point, MouseButton button, EventState state) {
+auto Button::on_button_release(CanvasItem *target, const Point &point, MouseButton button, EventState state) -> bool {
   if (button == ButtonLeft) {
     bool activate = false;
 
@@ -148,7 +148,7 @@ bool Button::on_button_release(CanvasItem *target, const Point &point, MouseButt
   return false;
 }
 
-bool Button::on_enter(CanvasItem *target, const Point &point) {
+auto Button::on_enter(CanvasItem *target, const Point &point) -> bool {
   _inside = true;
   if (_pressed) {
     if (_image)
@@ -159,7 +159,7 @@ bool Button::on_enter(CanvasItem *target, const Point &point) {
   return Figure::on_enter(target, point);
 }
 
-bool Button::on_leave(CanvasItem *target, const Point &point) {
+auto Button::on_leave(CanvasItem *target, const Point &point) -> bool {
   _inside = false;
   if (_pressed) {
     if (_alt_image)
@@ -170,7 +170,7 @@ bool Button::on_leave(CanvasItem *target, const Point &point) {
   return Figure::on_leave(target, point);
 }
 
-bool Button::on_drag(CanvasItem *target, const Point &point, EventState active) {
+auto Button::on_drag(CanvasItem *target, const Point &point, EventState active) -> bool {
   // ignore and don't allow drag
   return true;
 }

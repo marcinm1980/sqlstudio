@@ -28,7 +28,7 @@
 #include "rapidjson/document.h"
 
 // Helper: load a JSON file if present.
-void load_json_config(const std::string& path, rapidjson::Document& doc) {
+auto load_json_config(const std::string& path, rapidjson::Document& doc) -> void {
   std::ifstream in(path);
   if (!in.is_open())
     return; // Silently ignore missing config.
@@ -52,7 +52,7 @@ namespace testing {
   }
 
   // Walks a dotted path like "a.b.c" into the configuration document.
-  static const rapidjson::Value* lookupPath(const rapidjson::Document* doc, const std::string& path) {
+  static auto lookupPath(const rapidjson::Document* doc, const std::string& path) -> const rapidjson::Value* {
     if (!doc || !doc->IsObject())
       return nullptr;
     const rapidjson::Value* node = doc;
@@ -70,7 +70,7 @@ namespace testing {
     return node;
   }
 
-  std::string Context::getConfigurationStringValue(std::string const& path, std::string const& defaultValue) const {
+  auto Context::getConfigurationStringValue(std::string const& path, std::string const& defaultValue) const -> std::string {
     auto doc = static_cast<const rapidjson::Document*>(_configuration_impl);
     if (auto v = lookupPath(doc, path)) {
       if (v->IsString())
@@ -82,7 +82,7 @@ namespace testing {
     return defaultValue;
   }
 
-  int Context::getConfigurationIntValue(std::string const& path, int defaultValue) const {
+  auto Context::getConfigurationIntValue(std::string const& path, int defaultValue) const -> int {
     auto doc = static_cast<const rapidjson::Document*>(_configuration_impl);
     if (auto v = lookupPath(doc, path)) {
       if (v->IsInt())
@@ -102,7 +102,7 @@ namespace testing {
     return defaultValue;
   }
 
-  double Context::getConfigurationDoubleValue(std::string const& path, double defaultValue) const {
+  auto Context::getConfigurationDoubleValue(std::string const& path, double defaultValue) const -> double {
     auto doc = static_cast<const rapidjson::Document*>(_configuration_impl);
     if (auto v = lookupPath(doc, path)) {
       if (v->IsDouble())
@@ -122,7 +122,7 @@ namespace testing {
     return defaultValue;
   }
 
-  bool Context::getConfigurationBoolValue(std::string const& path, bool defaultValue) const {
+  auto Context::getConfigurationBoolValue(std::string const& path, bool defaultValue) const -> bool {
     auto doc = static_cast<const rapidjson::Document*>(_configuration_impl);
     if (auto v = lookupPath(doc, path)) {
       if (v->IsBool())
@@ -147,7 +147,7 @@ namespace testing {
     delete static_cast<rapidjson::Document*>(_configuration_impl);
   }
 
-  Context& Context::get() {
+  auto Context::get() -> Context& {
     static Context instance; // Thread-safe in C++11 and later.
     return instance;
   }

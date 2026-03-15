@@ -44,7 +44,7 @@ MySQLRoutineGroupEditorBE::MySQLRoutineGroupEditorBE(const db_mysql_RoutineGroup
 /**
  * Loads the current routines sql text into the editor control and marks that as not dirty.
  */
-void MySQLRoutineGroupEditorBE::load_routines_sql() {
+auto MySQLRoutineGroupEditorBE::load_routines_sql() -> void {
   mforms::CodeEditor* editor = get_sql_editor()->get_editor_control();
   std::string sql = get_sql();
   editor->set_text_keeping_state(sql.c_str());
@@ -53,7 +53,7 @@ void MySQLRoutineGroupEditorBE::load_routines_sql() {
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLRoutineGroupEditorBE::commit_changes() {
+auto MySQLRoutineGroupEditorBE::commit_changes() -> void {
   mforms::CodeEditor* editor = get_sql_editor()->get_editor_control();
   if (editor->is_dirty()) {
     const std::string sql = editor->get_text(false);
@@ -77,7 +77,7 @@ void MySQLRoutineGroupEditorBE::commit_changes() {
  * processing. It pretends there was new sql set in the associated editor and parses this text
  * now into the routine group being edited by this editor.
  */
-void MySQLRoutineGroupEditorBE::use_sql(const std::string& sql) {
+auto MySQLRoutineGroupEditorBE::use_sql(const std::string& sql) -> void {
   AutoUndoEdit undo(this, _routine_group, "sql");
 
   freeze_refresh_on_object_change();

@@ -72,70 +72,70 @@ public:
                                          std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6);
   }
 
-  void set_target(const SqlEditorForm::Ref &sql_editor) {
+  auto set_target(const SqlEditorForm::Ref &sql_editor) -> void {
     _form = sql_editor;
   }
 
-  void fetch_column_data(const std::string &schema_name, const std::string &obj_name, wb::LiveSchemaTree::ObjectType object_type) {
+  auto fetch_column_data(const std::string &schema_name, const std::string &obj_name, wb::LiveSchemaTree::ObjectType object_type) -> void {
     _form->get_live_tree()->fetch_column_data(schema_name, obj_name, object_type, updaterSlot);
   }
 
-  void fetch_index_data(const std::string &schema_name, const std::string &obj_name, wb::LiveSchemaTree::ObjectType object_type) {
+  auto fetch_index_data(const std::string &schema_name, const std::string &obj_name, wb::LiveSchemaTree::ObjectType object_type) -> void {
     _form->get_live_tree()->fetch_index_data(schema_name, obj_name, object_type, updaterSlot);
   }
 
-  void fetch_trigger_data(const std::string &schema_name, const std::string &obj_name, wb::LiveSchemaTree::ObjectType object_type) {
+  auto fetch_trigger_data(const std::string &schema_name, const std::string &obj_name, wb::LiveSchemaTree::ObjectType object_type) -> void {
     _form->get_live_tree()->fetch_trigger_data(schema_name, obj_name, object_type, updaterSlot);
   }
 
-  void fetch_foreign_key_data(const std::string &schema_name, const std::string &obj_name, wb::LiveSchemaTree::ObjectType object_type) {
+  auto fetch_foreign_key_data(const std::string &schema_name, const std::string &obj_name, wb::LiveSchemaTree::ObjectType object_type) -> void {
     _form->get_live_tree()->fetch_foreign_key_data(schema_name, obj_name, object_type, updaterSlot);
   }
 
-  void fetch_schema_contents(const std::string &schema_name) {
+  auto fetch_schema_contents(const std::string &schema_name) -> void {
     _form->get_live_tree()->fetch_schema_contents(schema_name, schemaContentArrivedSlot);
     std::this_thread::sleep_for(std::chrono::seconds(1));
     perform_idle_tasks();
   }
 
-  void perform_idle_tasks() {
+  auto perform_idle_tasks() -> void {
     bec::GRTManager::get()->perform_idle_tasks();
   }
 
-  std::vector<std::string> fetch_schema_list() {
+  auto fetch_schema_list() -> std::vector<std::string> {
     return _form->get_live_tree()->fetch_schema_list();
   }
 
-  void load_schema_list() {
+  auto load_schema_list() -> void {
     return _form->get_live_tree()->tree_refresh();
   }
 
-  void load_schema_data(const std::string &schema) {
+  auto load_schema_data(const std::string &schema) -> void {
     mforms::TreeNodeRef schema_node = _form->get_live_tree()->_schema_tree->get_node_for_object(schema, wb::LiveSchemaTree::Schema, "");
     _form->get_live_tree()->_schema_tree->expand_toggled(schema_node, true);
     std::this_thread::sleep_for(std::chrono::seconds(1));
     perform_idle_tasks();
   }
 
-  void exec_sql(std::string &sql) {
+  auto exec_sql(std::string &sql) -> void {
     _form->exec_sql_returning_results(sql, false);
   }
 
   /* mock function that will simulate the schema list loading using this thread */
-  void tree_refresh() {
+  auto tree_refresh() -> void {
     std::vector<std::string> sl = _form->get_live_tree()->fetch_schema_list();
     base::StringListPtr schema_list(new std::list<std::string>());
     schema_list->assign(sl.begin(), sl.end());
     _form->get_live_tree()->_schema_tree->update_schemata(schema_list);
   }
 
-  void set_lst_model_view(mforms::TreeView *pmodel_view) {
+  auto set_lst_model_view(mforms::TreeView *pmodel_view) -> void {
     _form->get_live_tree()->_schema_tree->set_model_view(pmodel_view);
     _form->get_live_tree()->_schema_tree->enable_events(true);
   }
 
-  bool mock_update_node_children(mforms::TreeNodeRef parent, base::StringListPtr children, wb::LiveSchemaTree::ObjectType type, bool sorted = false,
-                                 bool just_append = false) {
+  auto mock_update_node_children(mforms::TreeNodeRef parent, base::StringListPtr children, wb::LiveSchemaTree::ObjectType type, bool sorted = false,
+                                 bool just_append = false) -> bool {
     EXPECT_TRUE(_expectUpdateNodeChildren) << _checkId + " : Unexpected call to update_node_children";
     _expectUpdateNodeChildren = false;
 
@@ -146,8 +146,8 @@ public:
     return false;
   }
 
-  void mock_schema_content_arrived(const std::string &schema_name, base::StringListPtr tables, base::StringListPtr views,
-    base::StringListPtr procedures, base::StringListPtr functions, bool just_append) {
+  auto mock_schema_content_arrived(const std::string &schema_name, base::StringListPtr tables, base::StringListPtr views,
+    base::StringListPtr procedures, base::StringListPtr functions, bool just_append) -> void {
     EXPECT_TRUE(_expectSchemaContentArrived) << _checkId + " : Unexpected call to schema_content_arrived";
     _expectSchemaContentArrived = false;
 
@@ -196,7 +196,7 @@ public:
     }
   }
 
-  void clean_and_reset() {
+  auto clean_and_reset() -> void {
     EXPECT_FALSE(_expectSchemaContentArrived) << _checkId + " : Missing call to schema_content_arrived";
 
     _expectSchemaContentArrived = false;
@@ -241,7 +241,7 @@ class SQL_Editor_FormTest : public ::testing::Test {
 protected:
   static std::unique_ptr<WbSqlEditorFormData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<WbSqlEditorFormData>();
     bec::GRTManager::get(); // Ensure the GRT instance exists.
 
@@ -418,7 +418,7 @@ protected:
     data->formTester->perform_idle_tasks();
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     // cleanup
     std::string sql = "DROP DATABASE wb_sql_editor_form_test";
     data->formTester->exec_sql(sql);

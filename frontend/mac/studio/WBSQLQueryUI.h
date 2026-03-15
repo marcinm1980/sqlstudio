@@ -26,4 +26,4 @@
 @class WBMainController;
 @class MainWindowController;
 
-void setupSQLQueryUI(WBMainController *main, MainWindowController *controller);
+auto setupSQLQueryUI(WBMainController *main, MainWindowController *controller) -> void;

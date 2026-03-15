@@ -31,7 +31,7 @@
 //================================================================================
 // ui_ObjectEditor
 
-void ui_ObjectEditor::init() {
+auto ui_ObjectEditor::init() -> void {
   if (!_data)
     _data = new ui_ObjectEditor::ImplData(this);
 }
@@ -40,6 +40,6 @@ ui_ObjectEditor::~ui_ObjectEditor() {
   delete _data;
 }
 
-void ui_ObjectEditor::set_data(ImplData *data) {
+auto ui_ObjectEditor::set_data(ImplData *data) -> void {
   _data = data;
 }

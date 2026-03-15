@@ -63,7 +63,7 @@ MenuWrapper::MenuWrapper(mforms::Menu *backend) : ObjectWrapper(backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool MenuWrapper::create(mforms::Menu *backend) {
+auto MenuWrapper::create(mforms::Menu *backend) -> bool {
   MenuWrapper *wrapper = new MenuWrapper(backend);
   MformsMenuStrip ^ menuStrip = MenuWrapper::Create<MformsMenuStrip>(backend, wrapper);
   menuStrip->backend = backend;
@@ -87,14 +87,14 @@ bool MenuWrapper::create(mforms::Menu *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void MenuWrapper::remove_item(mforms::Menu *backend, int i) {
+auto MenuWrapper::remove_item(mforms::Menu *backend, int i) -> void {
   ContextMenuStrip ^ menu = MenuWrapper::GetManagedObject<ContextMenuStrip>(backend);
   menu->Items->RemoveAt(i);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MenuWrapper::add_item(mforms::Menu *backend, const std::string &caption, const std::string &action) {
+auto MenuWrapper::add_item(mforms::Menu *backend, const std::string &caption, const std::string &action) -> int {
   MformsMenuStrip ^ menu = MenuWrapper::GetManagedObject<MformsMenuStrip>(backend);
   ToolStripItem ^ item = menu->Items->Add(CppStringToNative(caption));
   item->Click += gcnew System::EventHandler(menu, &MformsMenuStrip::ItemClick);
@@ -105,7 +105,7 @@ int MenuWrapper::add_item(mforms::Menu *backend, const std::string &caption, con
 
 //--------------------------------------------------------------------------------------------------
 
-int MenuWrapper::add_separator(mforms::Menu *backend) {
+auto MenuWrapper::add_separator(mforms::Menu *backend) -> int {
   ContextMenuStrip ^ menu = MenuWrapper::GetManagedObject<ContextMenuStrip>(backend);
   menu->Items->Add(gcnew ToolStripSeparator());
   return menu->Items->Count - 1;
@@ -113,7 +113,7 @@ int MenuWrapper::add_separator(mforms::Menu *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-int MenuWrapper::add_submenu(mforms::Menu *backend, const std::string &caption, mforms::Menu *submenu) {
+auto MenuWrapper::add_submenu(mforms::Menu *backend, const std::string &caption, mforms::Menu *submenu) -> int {
   ContextMenuStrip ^ menu = MenuWrapper::GetManagedObject<ContextMenuStrip>(backend);
   ContextMenuStrip ^ child_menu = MenuWrapper::GetManagedObject<ContextMenuStrip>(submenu);
 
@@ -126,14 +126,14 @@ int MenuWrapper::add_submenu(mforms::Menu *backend, const std::string &caption, 
 
 //--------------------------------------------------------------------------------------------------
 
-void MenuWrapper::set_item_enabled(mforms::Menu *backend, int i, bool flag) {
+auto MenuWrapper::set_item_enabled(mforms::Menu *backend, int i, bool flag) -> void {
   ContextMenuStrip ^ menu = MenuWrapper::GetManagedObject<ContextMenuStrip>(backend);
   menu->Items[i]->Enabled = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MenuWrapper::popup_at(mforms::Menu *backend, mforms::Object *control, int x, int y) {
+auto MenuWrapper::popup_at(mforms::Menu *backend, mforms::Object *control, int x, int y) -> void {
   // We need the the .NET control for which to show the context menu.
   Control ^ controller = nullptr;
   if (control != NULL)
@@ -158,14 +158,14 @@ void MenuWrapper::popup_at(mforms::Menu *backend, mforms::Object *control, int x
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQL::Forms::MenuWrapper::clear(mforms::Menu *backend) {
+auto MySQL::Forms::MenuWrapper::clear(mforms::Menu *backend) -> void {
   ContextMenuStrip ^ menu = MenuWrapper::GetManagedObject<ContextMenuStrip>(backend);
   menu->Items->Clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MenuWrapper::init() {
+auto MenuWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_menu_impl.create = &MenuWrapper::create;

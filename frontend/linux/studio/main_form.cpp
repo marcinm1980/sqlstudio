@@ -68,7 +68,7 @@
 
 using base::strfmt;
 
-static void set_window_icons(Gtk::Window *window) {
+static auto set_window_icons(Gtk::Window *window) -> void {
   std::vector<Glib::RefPtr<Gdk::Pixbuf> > icons;
 
   icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-16.png", false));
@@ -155,18 +155,18 @@ MainForm::~MainForm() {
 
 //------------------------------------------------------------------------------
 
-void MainForm::register_form_view_factory(const std::string &name, FormViewFactory factory) {
+auto MainForm::register_form_view_factory(const std::string &name, FormViewFactory factory) -> void {
   _form_view_factories[name] = factory;
 }
 
 //------------------------------------------------------------------------------
 
-static void close_plugin(PluginEditorBase *editor, wb::WBContext *wb) {
+static auto close_plugin(PluginEditorBase *editor, wb::WBContext *wb) -> void {
   wb->close_gui_plugin(dynamic_cast<GUIPluginBase *>(editor));
 }
 
 //------------------------------------------------------------------------------
-bool MainForm::close_window(GdkEventAny *ev) { /*
+auto MainForm::close_window(GdkEventAny *ev) -> bool { /*
                                                 if (_wbui_context->request_quit())
                                                 {
                                                   get_mainwindow()->hide();
@@ -176,7 +176,7 @@ bool MainForm::close_window(GdkEventAny *ev) { /*
   return true; // true means stop processing the event
 }
 //------------------------------------------------------------------------------
-void MainForm::is_active_changed() {
+auto MainForm::is_active_changed() -> void {
   static bool reentrancy_preventer = false;
   if (!reentrancy_preventer && get_mainwindow()->property_is_active()) {
     // We sent notification on each focus_in of the main window,
@@ -189,7 +189,7 @@ void MainForm::is_active_changed() {
   }
 }
 //------------------------------------------------------------------------------
-void MainForm::on_focus_widget(Gtk::Widget *w) {
+auto MainForm::on_focus_widget(Gtk::Widget *w) -> void {
   if (_ui) {
     void *data = 0;
     bec::UIForm *form = 0;
@@ -212,7 +212,7 @@ void MainForm::on_focus_widget(Gtk::Widget *w) {
 
 //------------------------------------------------------------------------------
 
-void MainForm::on_configure_window(GdkEventConfigure *conf) {
+auto MainForm::on_configure_window(GdkEventConfigure *conf) -> void {
   if (get_mainwindow()->is_visible()) {
     int x, y;
     get_mainwindow()->get_position(x, y);
@@ -223,7 +223,7 @@ void MainForm::on_configure_window(GdkEventConfigure *conf) {
 
 //------------------------------------------------------------------------------
 
-void MainForm::on_window_state(GdkEventWindowState *conf) {
+auto MainForm::on_window_state(GdkEventWindowState *conf) -> void {
   if (get_mainwindow()->is_visible() && (conf->changed_mask & GDK_WINDOW_STATE_MAXIMIZED)) {
     if (conf->new_window_state & GDK_WINDOW_STATE_MAXIMIZED)
       wb::WBContextUI::get()->get_wb()->save_state("MainWindow", "geometry", std::string("maximized"));
@@ -239,7 +239,7 @@ void MainForm::on_window_state(GdkEventWindowState *conf) {
 
 //------------------------------------------------------------------------------
 
-void MainForm::setup_ui() {
+auto MainForm::setup_ui() -> void {
   set_window_icons(get_mainwindow());
 
   register_commands();
@@ -250,7 +250,7 @@ void MainForm::setup_ui() {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::show() {
+auto MainForm::show() -> void {
   Gtk::Window *window = get_mainwindow();
   // restore saved size/pos
   std::string geom = wb::WBContextUI::get()->get_wb()->read_state("MainWindow", "geometry", std::string());
@@ -267,27 +267,27 @@ void MainForm::show() {
 }
 
 //------------------------------------------------------------------------------
-Gtk::Window *MainForm::get_mainwindow() const {
+auto MainForm::get_mainwindow() const -> Gtk::Window * {
   Gtk::Window *win = 0;
   _ui->get_widget("wb_main_window", win);
 
   return win;
 }
 
-Gtk::Notebook *MainForm::get_upper_note() const {
+auto MainForm::get_upper_note() const -> Gtk::Notebook * {
   Gtk::Notebook *note = 0;
   _ui->get_widget("model_tabs", note);
   return note;
 }
 
 //------------------------------------------------------------------------------
-static bool change_status(Gtk::Statusbar *status, const std::string &text) {
+static auto change_status(Gtk::Statusbar *status, const std::string &text) -> bool {
   status->pop();
   status->push(text);
   return false;
 }
 
-void MainForm::show_status_text_becb(const std::string &text) {
+auto MainForm::show_status_text_becb(const std::string &text) -> void {
   Gtk::Statusbar *status = 0;
 
   _ui->get_widget("statusbar1", status);
@@ -301,7 +301,7 @@ void MainForm::show_status_text_becb(const std::string &text) {
 }
 
 //------------------------------------------------------------------------------
-bool MainForm::quit_app_becb() {
+auto MainForm::quit_app_becb() -> bool {
   // close the model 1st
   if (wb::WBContextUI::get()->get_wb()->can_close_document())
     wb::WBContextUI::get()->get_wb()->close_document();
@@ -324,7 +324,7 @@ bool MainForm::quit_app_becb() {
 }
 
 //------------------------------------------------------------------------------
-bool MainForm::show_progress_becb(const std::string &title, const std::string &status, float pct) {
+auto MainForm::show_progress_becb(const std::string &title, const std::string &status, float pct) -> bool {
   if (pct < 0.0)
     pct = 0.0;
 
@@ -335,9 +335,9 @@ bool MainForm::show_progress_becb(const std::string &title, const std::string &s
 }
 
 //------------------------------------------------------------------------------
-NativeHandle MainForm::open_plugin_becb(grt::Module *grtmodule, const std::string &shlib,
+auto MainForm::open_plugin_becb(grt::Module *grtmodule, const std::string &shlib,
                                         const std::string &editor_class, grt::BaseListRef args,
-                                        bec::GUIPluginFlags flags) {
+                                        bec::GUIPluginFlags flags) -> NativeHandle {
   GUIPluginCreateFunction create_function = 0;
   std::string path = grtmodule->path();
   std::string full_path = path.substr(0, path.rfind('/') + 1) + shlib;
@@ -406,7 +406,7 @@ NativeHandle MainForm::open_plugin_becb(grt::Module *grtmodule, const std::strin
 }
 
 //------------------------------------------------------------------------------
-void MainForm::show_plugin_becb(NativeHandle handle) {
+auto MainForm::show_plugin_becb(NativeHandle handle) -> void {
   GUIPluginBase *plugin = reinterpret_cast<GUIPluginBase *>(handle);
 
   PluginEditorBase *editor = dynamic_cast<PluginEditorBase *>(plugin);
@@ -418,18 +418,18 @@ void MainForm::show_plugin_becb(NativeHandle handle) {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::hide_plugin_becb(NativeHandle handle) {
+auto MainForm::hide_plugin_becb(NativeHandle handle) -> void {
   //  reinterpret_cast<GUIPluginBase*>(handle)->hide_plugin();
 }
 
-static mforms::CodeEditor *get_focused_code_editor(Gtk::Window *w) {
+static auto get_focused_code_editor(Gtk::Window *w) -> mforms::CodeEditor * {
   Gtk::Widget *focused = w->get_focus();
   if (focused)
     return dynamic_cast<mforms::CodeEditor *>(reinterpret_cast<mforms::View *>(focused->get_data("mforms")));
   return NULL;
 }
 
-void MainForm::call_find() {
+auto MainForm::call_find() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor) {
     // generic handling for Scintilla editors
@@ -455,7 +455,7 @@ void MainForm::call_find() {
   }
 }
 
-void MainForm::call_find_replace() {
+auto MainForm::call_find_replace() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor) {
     // generic handling for Scintilla editors
@@ -468,7 +468,7 @@ void MainForm::call_find_replace() {
   //     return;
 }
 
-void MainForm::call_undo() {
+auto MainForm::call_undo() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor) {
     editor->undo();
@@ -480,7 +480,7 @@ void MainForm::call_undo() {
     wbui->get_active_main_form()->undo();
 }
 
-void MainForm::call_redo() {
+auto MainForm::call_redo() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor) {
     editor->redo();
@@ -492,7 +492,7 @@ void MainForm::call_redo() {
     wbui->get_active_main_form()->redo();
 }
 
-void MainForm::call_copy() {
+auto MainForm::call_copy() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   Gtk::Widget *focused = get_mainwindow()->get_focus();
 
@@ -511,7 +511,7 @@ void MainForm::call_copy() {
     gv->copy();
 }
 
-void MainForm::call_cut() {
+auto MainForm::call_cut() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   Gtk::Widget *focused = get_mainwindow()->get_focus();
 
@@ -526,7 +526,7 @@ void MainForm::call_cut() {
     wb::WBContextUI::get()->get_active_form()->cut();
 }
 
-void MainForm::call_paste() {
+auto MainForm::call_paste() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   Gtk::Widget *focused = get_mainwindow()->get_focus();
 
@@ -541,7 +541,7 @@ void MainForm::call_paste() {
     wb::WBContextUI::get()->get_active_form()->paste();
 }
 
-void MainForm::call_delete() {
+auto MainForm::call_delete() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   Gtk::Widget *focused = get_mainwindow()->get_focus();
 
@@ -556,7 +556,7 @@ void MainForm::call_delete() {
     wb::WBContextUI::get()->get_active_form()->delete_selection();
 }
 
-void MainForm::call_select_all() {
+auto MainForm::call_select_all() -> void {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   Gtk::Widget *focused = get_mainwindow()->get_focus();
   if (editor) {
@@ -567,7 +567,7 @@ void MainForm::call_select_all() {
     wb::WBContextUI::get()->get_active_form()->select_all();
 }
 
-bool MainForm::validate_find() {
+auto MainForm::validate_find() -> bool {
   std::string context = wb::WBContextUI::get()->get_active_context();
 
   if (context == WB_CONTEXT_MODEL || context == WB_CONTEXT_QUERY || context == WB_CONTEXT_PHYSICAL_OVERVIEW)
@@ -575,7 +575,7 @@ bool MainForm::validate_find() {
   return validate_find_replace();
 }
 
-bool MainForm::validate_undo() {
+auto MainForm::validate_undo() -> bool {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor)
     return editor->can_undo();
@@ -587,7 +587,7 @@ bool MainForm::validate_undo() {
   return false;
 }
 
-bool MainForm::validate_redo() {
+auto MainForm::validate_redo() -> bool {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor)
     return editor->can_redo();
@@ -599,7 +599,7 @@ bool MainForm::validate_redo() {
   return false;
 }
 
-bool MainForm::validate_copy() {
+auto MainForm::validate_copy() -> bool {
   bool ret = false;
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor)
@@ -622,7 +622,7 @@ bool MainForm::validate_copy() {
   return ret;
 }
 
-bool MainForm::validate_cut() {
+auto MainForm::validate_cut() -> bool {
   bool ret = false;
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor)
@@ -639,7 +639,7 @@ bool MainForm::validate_cut() {
   return ret;
 }
 
-bool MainForm::validate_paste() {
+auto MainForm::validate_paste() -> bool {
   bool ret = false;
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor)
@@ -656,7 +656,7 @@ bool MainForm::validate_paste() {
   return ret;
 }
 
-bool MainForm::validate_delete() {
+auto MainForm::validate_delete() -> bool {
   bool ret = false;
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
   if (editor)
@@ -673,7 +673,7 @@ bool MainForm::validate_delete() {
   return ret;
 }
 
-bool MainForm::validate_select_all() {
+auto MainForm::validate_select_all() -> bool {
   bool ret = false;
   Gtk::Widget *focused = get_mainwindow()->get_focus();
 
@@ -694,7 +694,7 @@ bool MainForm::validate_select_all() {
   return ret;
 }
 
-bool MainForm::validate_find_replace() {
+auto MainForm::validate_find_replace() -> bool {
   mforms::CodeEditor *editor = get_focused_code_editor(get_mainwindow());
 
   if (editor)
@@ -703,7 +703,7 @@ bool MainForm::validate_find_replace() {
   return false;
 }
 
-void MainForm::register_commands() {
+auto MainForm::register_commands() -> void {
   std::list<std::string> commands;
 
   commands.push_back("diagram_size");
@@ -757,7 +757,7 @@ void MainForm::register_commands() {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::perform_command_becb(const std::string &command) {
+auto MainForm::perform_command_becb(const std::string &command) -> void {
   if (command == "reset_layout")
     reset_layout();
   else if (command == "diagram_size")
@@ -800,7 +800,7 @@ void MainForm::perform_command_becb(const std::string &command) {
 }
 
 //------------------------------------------------------------------------------
-mdc::CanvasView *MainForm::create_view_becb(const model_DiagramRef &diagram) {
+auto MainForm::create_view_becb(const model_DiagramRef &diagram) -> mdc::CanvasView * {
   ModelDiagramPanel *model_panel = Gtk::manage(ModelDiagramPanel::create());
 
   model_panel->set_close_editor_callback(sigc::bind(sigc::ptr_fun(close_plugin), wb::WBContextUI::get()->get_wb()));
@@ -837,7 +837,7 @@ mdc::CanvasView *MainForm::create_view_becb(const model_DiagramRef &diagram) {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::destroy_view_becb(mdc::CanvasView *view) {
+auto MainForm::destroy_view_becb(mdc::CanvasView *view) -> void {
   Gtk::Notebook *note = get_upper_note();
 
   if (!bec::GRTManager::get()->in_main_thread())
@@ -864,7 +864,7 @@ void MainForm::destroy_view_becb(mdc::CanvasView *view) {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::switched_view_becb(mdc::CanvasView *view) {
+auto MainForm::switched_view_becb(mdc::CanvasView *view) -> void {
   Gtk::Notebook *note = get_upper_note();
 
   bec::UIForm *view_form = wb::WBContextUI::get()->get_wb()->get_model_context()->get_diagram_form(view);
@@ -880,7 +880,7 @@ void MainForm::switched_view_becb(mdc::CanvasView *view) {
 
 //------------------------------------------------------------------------------
 
-void MainForm::create_main_form_view_becb(const std::string &name, std::shared_ptr<bec::UIForm> form) {
+auto MainForm::create_main_form_view_becb(const std::string &name, std::shared_ptr<bec::UIForm> form) -> void {
   FormViewBase *view;
 
   if (_form_view_factories.find(name) != _form_view_factories.end()) {
@@ -894,11 +894,11 @@ void MainForm::create_main_form_view_becb(const std::string &name, std::shared_p
 
 //------------------------------------------------------------------------------
 
-void MainForm::destroy_main_form_view_becb(bec::UIForm *form) {
+auto MainForm::destroy_main_form_view_becb(bec::UIForm *form) -> void {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::tool_changed_becb(mdc::CanvasView *view) {
+auto MainForm::tool_changed_becb(mdc::CanvasView *view) -> void {
   ModelDiagramPanel *panel = get_panel_for_view(view);
   if (panel) {
     // update cursor in canvas
@@ -907,7 +907,7 @@ void MainForm::tool_changed_becb(mdc::CanvasView *view) {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) {
+auto MainForm::handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void {
   if (name == "GNFormTitleDidChange") {
     std::string form_id = info["form"];
     Gtk::Notebook *note = get_upper_note();
@@ -942,7 +942,7 @@ const char *RefreshTypeStr[] = {"RefreshNeeded",
 
 //------------------------------------------------------------------------------
 
-void MainForm::refresh_gui_becb(wb::RefreshType type, const std::string &arg_id, NativeHandle arg_ptr) {
+auto MainForm::refresh_gui_becb(wb::RefreshType type, const std::string &arg_id, NativeHandle arg_ptr) -> void {
   if (_exiting)
     return;
 
@@ -1070,7 +1070,7 @@ void MainForm::refresh_gui_becb(wb::RefreshType type, const std::string &arg_id,
 
 //------------------------------------------------------------------------------
 
-void MainForm::handle_model_created() {
+auto MainForm::handle_model_created() -> void {
   wb::OverviewBE *overview_be = wb::WBContextUI::get()->get_physical_overview();
   // Create the model overview panel
   _model_panel = ModelPanel::create(overview_be);
@@ -1091,7 +1091,7 @@ void MainForm::handle_model_created() {
   _model_panel->get_overview()->rebuild_all();
 }
 //------------------------------------------------------------------------------
-void MainForm::handle_model_closed() {
+auto MainForm::handle_model_closed() -> void {
   if (_model_panel != nullptr) {
     get_upper_note()->remove_page(*_model_panel);
     delete _model_panel;
@@ -1100,12 +1100,12 @@ void MainForm::handle_model_closed() {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::lock_gui_becb(bool lock) {
+auto MainForm::lock_gui_becb(bool lock) -> void {
   _gui_locked = lock;
 }
 
 //------------------------------------------------------------------------------
-void MainForm::switch_page(Gtk::Widget *, guint pagenum) {
+auto MainForm::switch_page(Gtk::Widget *, guint pagenum) -> void {
   Gtk::Notebook *note = get_upper_note();
   Gtk::Widget *page = note->get_nth_page(pagenum);
   if (page) {
@@ -1122,7 +1122,7 @@ void MainForm::switch_page(Gtk::Widget *, guint pagenum) {
 }
 
 //==============================================================================
-ModelDiagramPanel *MainForm::get_panel_for_view(mdc::CanvasView *view) {
+auto MainForm::get_panel_for_view(mdc::CanvasView *view) -> ModelDiagramPanel * {
   bec::UIForm *form;
   if ((form = wb::WBContextUI::get()->get_wb()->get_model_context()->get_diagram_form(view)))
     return dynamic_cast<ModelDiagramPanel *>(static_cast<FormViewBase *>(form->get_frontend_data()));
@@ -1130,7 +1130,7 @@ ModelDiagramPanel *MainForm::get_panel_for_view(mdc::CanvasView *view) {
   return 0;
 }
 
-void MainForm::add_plugin_pane(PluginEditorBase *pane) {
+auto MainForm::add_plugin_pane(PluginEditorBase *pane) -> void {
   // locate the active main tab
   Gtk::Notebook *note = get_upper_note();
   int pagenum = note->get_current_page();
@@ -1153,7 +1153,7 @@ void MainForm::add_plugin_pane(PluginEditorBase *pane) {
   }
 }
 
-void MainForm::bring_plugin_pane(PluginEditorBase *pane) {
+auto MainForm::bring_plugin_pane(PluginEditorBase *pane) -> void {
   // locate the active main tab
   Gtk::Notebook *note = get_upper_note();
   int pagenum = note->get_current_page();
@@ -1182,13 +1182,13 @@ void MainForm::bring_plugin_pane(PluginEditorBase *pane) {
   }
 }
 
-static bool close_plugin_form(GdkEventAny *ev, PluginEditorBase *frame) {
+static auto close_plugin_form(GdkEventAny *ev, PluginEditorBase *frame) -> bool {
   // wnd window is deleted inside closE_live_object_editor
   frame->close_live_object_editor();
   return true;
 }
 
-void MainForm::add_plugin_form(PluginEditorBase *frame) {
+auto MainForm::add_plugin_form(PluginEditorBase *frame) -> void {
   Gtk::Window *window = new Gtk::Window();
   window->add(*frame);
   window->set_title(frame->get_title());
@@ -1200,7 +1200,7 @@ void MainForm::add_plugin_form(PluginEditorBase *frame) {
   window->show_all();
 }
 
-void MainForm::close_main_tab() {
+auto MainForm::close_main_tab() -> void {
   Gtk::Widget *focused = get_mainwindow()->get_focus();
   Gtk::Notebook *upper = get_upper_note();
 
@@ -1221,7 +1221,7 @@ void MainForm::close_main_tab() {
   }
 }
 
-void MainForm::close_inner_tab() {
+auto MainForm::close_inner_tab() -> void {
   Gtk::Widget *focused = get_mainwindow()->get_focus();
   Gtk::Notebook *upper = get_upper_note();
 
@@ -1244,7 +1244,7 @@ void MainForm::close_inner_tab() {
   }
 }
 
-void MainForm::close_active_tab() {
+auto MainForm::close_active_tab() -> void {
   Gtk::Widget *focused = get_mainwindow()->get_focus();
   Gtk::Notebook *upper = get_upper_note();
 
@@ -1270,14 +1270,14 @@ void MainForm::close_active_tab() {
   }
 }
 
-static bool note_contains_page(Gtk::Notebook *note, Gtk::Widget *page) {
+static auto note_contains_page(Gtk::Notebook *note, Gtk::Widget *page) -> bool {
   for (int i = note->get_n_pages() - 1; i >= 0; --i)
     if (note->get_nth_page(i) == page)
       return true;
   return false;
 }
 
-bool MainForm::close_tab(Gtk::Notebook *note, Gtk::Widget *page) {
+auto MainForm::close_tab(Gtk::Notebook *note, Gtk::Widget *page) -> bool {
   // on_close should return true if the form should be closed/removed
   mforms::AppView *app_view = reinterpret_cast<mforms::AppView *>(page->get_data("AppView"));
   FormViewBase *form = reinterpret_cast<FormViewBase *>(page->get_data("FormViewBase"));
@@ -1324,8 +1324,8 @@ bool MainForm::close_tab(Gtk::Notebook *note, Gtk::Widget *page) {
   return true;
 }
 
-void MainForm::append_tab_page(Gtk::Notebook *note, Gtk::Widget *widget, const std::string &title,
-                               TabStateInfo tabState, ActiveLabel **title_label_ret) {
+auto MainForm::append_tab_page(Gtk::Notebook *note, Gtk::Widget *widget, const std::string &title,
+                               TabStateInfo tabState, ActiveLabel **title_label_ret) -> void {
   // Make a lookup of existing page with the same content
   bool already_have_page = false;
   for (int i = note->get_n_pages() - 1; i >= 0; --i) {
@@ -1361,7 +1361,7 @@ void MainForm::append_tab_page(Gtk::Notebook *note, Gtk::Widget *widget, const s
 }
 
 //------------------------------------------------------------------------------
-mforms::Menu *MainForm::init_tab_menu(Gtk::Widget *widget) {
+auto MainForm::init_tab_menu(Gtk::Widget *widget) -> mforms::Menu * {
   {
     mforms::Menu *m = new mforms::Menu();
     m->add_item("Close Tab", "close tab");
@@ -1372,8 +1372,8 @@ mforms::Menu *MainForm::init_tab_menu(Gtk::Widget *widget) {
 }
 
 //------------------------------------------------------------------------------
-void MainForm::tab_menu_handler(const std::string &action, ActiveLabel *label, Gtk::Widget *widget,
-                                Gtk::Notebook *note) {
+auto MainForm::tab_menu_handler(const std::string &action, ActiveLabel *label, Gtk::Widget *widget,
+                                Gtk::Notebook *note) -> void {
   bec::UIForm *uiform = (bec::UIForm *)widget->get_data("uiform");
   if (uiform) {
     if (action == "close tab") {
@@ -1404,7 +1404,7 @@ void MainForm::tab_menu_handler(const std::string &action, ActiveLabel *label, G
   }
 }
 
-FormViewBase *MainForm::get_active_pane() {
+auto MainForm::get_active_pane() -> FormViewBase * {
   int p = get_upper_note()->get_current_page();
   if (p >= 0) {
     Gtk::Widget *page = get_upper_note()->get_nth_page(p);
@@ -1414,7 +1414,7 @@ FormViewBase *MainForm::get_active_pane() {
   return 0;
 }
 
-void MainForm::add_form_pane(FormViewBase *panel, TabStateInfo tabState) {
+auto MainForm::add_form_pane(FormViewBase *panel, TabStateInfo tabState) -> void {
   panel->get_panel()->set_data("FormViewBase", panel);
   panel->get_panel()->set_data("uiform", dynamic_cast<bec::UIForm *>(panel->get_form()));
 
@@ -1434,7 +1434,7 @@ void MainForm::add_form_pane(FormViewBase *panel, TabStateInfo tabState) {
   panel->reset_layout();
 }
 
-void MainForm::prepare_close_document() {
+auto MainForm::prepare_close_document() -> void {
   // close all diagram tabs so they stop receiving events (which can lead to a crash)
   Gtk::Notebook *note = get_upper_note();
 
@@ -1449,14 +1449,14 @@ void MainForm::prepare_close_document() {
     _model_panel->get_overview()->reset();
 }
 
-bool MainForm::fire_timer() {
+auto MainForm::fire_timer() -> bool {
   bec::GRTManager::get()->flush_timers();
 
   update_timer();
   return false;
 }
 
-void MainForm::update_timer() {
+auto MainForm::update_timer() -> void {
   int delay_ms = (int)(1000 * bec::GRTManager::get()->delay_for_next_timeout());
 
   if (delay_ms >= 0)
@@ -1467,11 +1467,11 @@ void MainForm::update_timer() {
 // Here go command handlers
 //
 //------------------------------------------------------------------------------
-void MainForm::reset_layout() {
+auto MainForm::reset_layout() -> void {
   ///
 }
 
-void MainForm::show_diagram_options() {
+auto MainForm::show_diagram_options() -> void {
   DiagramSizeForm *form = DiagramSizeForm::create();
 
   form->run();
@@ -1480,14 +1480,14 @@ void MainForm::show_diagram_options() {
   delete form;
 }
 
-void MainForm::show_page_setup() {
+auto MainForm::show_page_setup() -> void {
   wb::WBContextUI::get()->get_wb()->execute_plugin("wb.print.setup");
 }
 
 #include "mforms/mforms.h"
 #include "gtk/lf_view.h"
 
-static std::string get_resource_path(mforms::App *app, const std::string &file) {
+static auto get_resource_path(mforms::App *app, const std::string &file) -> std::string {
   if (file.empty())
     return bec::GRTManager::get()->get_data_file_path("");
   if (file[0] == '/')
@@ -1508,7 +1508,7 @@ static std::string get_resource_path(mforms::App *app, const std::string &file) 
   return bec::GRTManager::get()->get_data_file_path(file);
 }
 
-static std::string get_executable_path(mforms::App *app, const std::string &file) {
+static auto get_executable_path(mforms::App *app, const std::string &file) -> std::string {
   std::string path = bec::GRTManager::get()->get_data_file_path(file);
   if (!path.empty() && base::file_exists(path))
     return path;
@@ -1541,7 +1541,7 @@ static std::string get_executable_path(mforms::App *app, const std::string &file
   return "";
 }
 
-static base::Rect get_main_window_bounds(mforms::App *app) {
+static auto get_main_window_bounds(mforms::App *app) -> base::Rect {
   Gtk::Window *w = get_mainwindow();
   int x, y;
 
@@ -1550,7 +1550,7 @@ static base::Rect get_main_window_bounds(mforms::App *app) {
   return base::Rect(x, y, w->get_width(), w->get_height());
 }
 
-void MainForm::set_status_text(mforms::App *app, const std::string &text) {
+auto MainForm::set_status_text(mforms::App *app, const std::string &text) -> void {
   MainForm *self = reinterpret_cast<MainForm *>(app->get_data_ptr());
 
   self->show_status_text_becb(text);
@@ -1565,7 +1565,7 @@ struct EventLoopFrame {
 
 static std::list<EventLoopFrame *> event_loop_exit_codes;
 
-static bool event_loop_timeout() {
+static auto event_loop_timeout() -> bool {
   if (!event_loop_exit_codes.empty()) {
     EventLoopFrame *frame = event_loop_exit_codes.back();
     if (!frame->timedout && !frame->ended) {
@@ -1576,7 +1576,7 @@ static bool event_loop_timeout() {
   return false;
 }
 
-static int begin_event_loop(mforms::App *, float timeout) {
+static auto begin_event_loop(mforms::App *, float timeout) -> int {
   EventLoopFrame frame;
 
   frame.exit_code = -1;
@@ -1607,7 +1607,7 @@ static int begin_event_loop(mforms::App *, float timeout) {
   }
 }
 
-static void end_event_loop(mforms::App *, int rc) {
+static auto end_event_loop(mforms::App *, int rc) -> void {
   if (event_loop_exit_codes.empty()) {
     g_warning("Attempt to exit unexisting event loop");
     return;
@@ -1620,19 +1620,19 @@ static void end_event_loop(mforms::App *, int rc) {
   }
 }
 
-static bool isDarkModeActive(mforms::App *) {
+static auto isDarkModeActive(mforms::App *) -> bool {
 	// On Linux we can't just say if theme is dark or light
 	return false;
 }
 
-static float backing_scale_factor(mforms::App *) {
+static auto backing_scale_factor(mforms::App *) -> float {
 	auto window = get_mainwindow();
     double dpi = Gdk::Screen::get_default()->get_resolution();
 	int scaleFactor = Gdk::Screen::get_default()->get_monitor_scale_factor(Gdk::Screen::get_default()->get_monitor_at_window(window->get_window()));
 	return dpi > 0 ? scaleFactor * dpi / defaultDpi : dpi;
 }
 
-void MainForm::setup_mforms_app() {
+auto MainForm::setup_mforms_app() -> void {
   mforms::ControlFactory *cf = mforms::ControlFactory::get_instance();
   g_assert(cf);
 
@@ -1649,7 +1649,7 @@ void MainForm::setup_mforms_app() {
   cf->_app_impl.isDarkModeActive = &isDarkModeActive;
 }
 
-Gtk::Widget *MainForm::decorate_widget(Gtk::Widget *panel, bec::UIForm *form) {
+auto MainForm::decorate_widget(Gtk::Widget *panel, bec::UIForm *form) -> Gtk::Widget * {
   mforms::MenuBar *menu = form->get_menubar();
   mforms::ToolBar *toolbar = form->get_toolbar();
 
@@ -1675,7 +1675,7 @@ Gtk::Widget *MainForm::decorate_widget(Gtk::Widget *panel, bec::UIForm *form) {
   return top_box;
 }
 
-static gpointer delete_appview(mforms::AppView *appview) {
+static auto delete_appview(mforms::AppView *appview) -> gpointer {
   if (appview->is_managed())
     appview->release();
   else
@@ -1683,14 +1683,14 @@ static gpointer delete_appview(mforms::AppView *appview) {
   return 0;
 }
 
-std::pair<int, int> MainForm::get_size() {
+auto MainForm::get_size() -> std::pair<int, int> {
   Gtk::Widget *note = get_upper_note();
   int w = note->get_width();
   int h = note->get_height();
   return std::pair<int, int>(w, h);
 }
 
-void MainForm::set_name(const std::string &name) {
+auto MainForm::set_name(const std::string &name) -> void {
   if (get_upper_note()) {
    Glib::RefPtr<Atk::Object> acc = get_upper_note()->get_accessible();
    if (acc)
@@ -1698,7 +1698,7 @@ void MainForm::set_name(const std::string &name) {
   }
 }
 
-void MainForm::dock_view(mforms::AppView *view, const std::string &position, int) {
+auto MainForm::dock_view(mforms::AppView *view, const std::string &position, int) -> void {
   g_return_if_fail(view != NULL);
   Gtk::Widget *w = mforms::widget_for_view(view);
   g_return_if_fail(w != NULL);
@@ -1754,7 +1754,7 @@ void MainForm::dock_view(mforms::AppView *view, const std::string &position, int
   }
 }
 
-bool MainForm::select_view(mforms::AppView *view) {
+auto MainForm::select_view(mforms::AppView *view) -> bool {
   Gtk::Notebook *upper_note = get_upper_note();
   for (int i = 0; i < upper_note->get_n_pages(); i++) {
     Gtk::Widget *page = upper_note->get_nth_page(i);
@@ -1766,7 +1766,7 @@ bool MainForm::select_view(mforms::AppView *view) {
   return false;
 }
 
-void MainForm::undock_view(mforms::AppView *view) {
+auto MainForm::undock_view(mforms::AppView *view) -> void {
   g_return_if_fail(view != NULL);
   Gtk::Widget *w = mforms::widget_for_view(view);
   g_return_if_fail(w != NULL);
@@ -1779,7 +1779,7 @@ void MainForm::undock_view(mforms::AppView *view) {
   view->release();
 }
 
-void MainForm::set_view_title(mforms::AppView *view, const std::string &title) {
+auto MainForm::set_view_title(mforms::AppView *view, const std::string &title) -> void {
   g_return_if_fail(view != NULL);
   Gtk::Widget *w = mforms::widget_for_view(view);
   g_return_if_fail(w != NULL);
@@ -1789,18 +1789,18 @@ void MainForm::set_view_title(mforms::AppView *view, const std::string &title) {
     label->set_text(title);
 }
 
-mforms::AppView *MainForm::selected_view() {
+auto MainForm::selected_view() -> mforms::AppView * {
   int i = get_upper_note()->get_current_page();
   if (i >= 0)
     return view_at_index(i);
   return NULL;
 }
 
-int MainForm::view_count() {
+auto MainForm::view_count() -> int {
   return get_upper_note()->get_n_pages();
 }
 
-mforms::AppView *MainForm::view_at_index(int index) {
+auto MainForm::view_at_index(int index) -> mforms::AppView * {
   Gtk::Widget *page = get_upper_note()->get_nth_page(index);
   if (page)
     return reinterpret_cast<mforms::AppView *>(page->get_data("AppView"));

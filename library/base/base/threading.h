@@ -36,12 +36,12 @@ namespace base {
   // Launches one of the tools of WB, which are command line applications which resided side by side
   // to the WB executable or even as part of the application bundle (on OSX).
   // The caller is responsible for providing the full path, no searching is done here.
-  BASELIBRARY_PUBLIC_FUNC void launchTool(const std::string &path, const std::vector<std::string> &params);
+  BASELIBRARY_PUBLIC_FUNC auto launchTool(const std::string &path, const std::vector<std::string> &params) -> void;
 
   // Launches a separate application which can sit anywhere, especially outside of the application bundle (on OSX).
   // The function uses a platform specific search strategy if no path is given (usually the current application
   // or bundle folder, then the typical location for apps on that platform).
-  BASELIBRARY_PUBLIC_FUNC void launchApplication(const std::string &name, const std::vector<std::string> &params);
+  BASELIBRARY_PUBLIC_FUNC auto launchApplication(const std::string &name, const std::vector<std::string> &params) -> void;
 
   using refcount_t = gint;
 
@@ -82,8 +82,8 @@ namespace base {
 
     auto operator=(Mutex &o) -> Mutex & = delete;
 
-    void lock();
-    void unlock();
+    auto lock() -> void;
+    auto unlock() -> void;
     auto tryLock() -> bool;
 
   private:
@@ -116,8 +116,8 @@ namespace base {
 
     auto operator=(RecMutex &o) -> RecMutex & = delete;
 
-    void lock();
-    void unlock();
+    auto lock() -> void;
+    auto unlock() -> void;
     auto tryLock() -> bool;
 
   private:
@@ -148,8 +148,8 @@ namespace base {
     ~Semaphore();
     auto operator=(const Semaphore &other) -> Semaphore & = delete;
 
-    void post();
-    void wait();
+    auto post() -> void;
+    auto wait() -> void;
 
   private:
     class Private;

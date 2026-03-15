@@ -33,22 +33,22 @@ static GThread *_main_thread = 0;
 namespace mforms {
   namespace gtk {
 
-    bool FormImpl::create(::mforms::Form *self, ::mforms::Form *owner, mforms::FormFlag flag) {
+    auto FormImpl::create(::mforms::Form *self, ::mforms::Form *owner, mforms::FormFlag flag) -> bool {
       return new FormImpl(self, owner, flag) != 0;
     }
 
-    void FormImpl::set_title(::mforms::Form *self, const std::string &title) {
+    auto FormImpl::set_title(::mforms::Form *self, const std::string &title) -> void {
       FormImpl *form = self->get_data<FormImpl>();
       if (form) {
         form->set_title(title);
       }
     }
 
-    void FormImpl::set_title(const std::string &title) {
+    auto FormImpl::set_title(const std::string &title) -> void {
       _window->set_title(title);
     }
 
-    void FormImpl::accept_clicked(bool *status, const bool is_run) {
+    auto FormImpl::accept_clicked(bool *status, const bool is_run) -> void {
       *status = true;
       if (is_run)
         _loop.quit();
@@ -59,7 +59,7 @@ namespace mforms {
       cancel_c.disconnect();
     }
 
-    void FormImpl::cancel_clicked(bool *status, const bool is_run) {
+    auto FormImpl::cancel_clicked(bool *status, const bool is_run) -> void {
       *status = false;
       if (is_run)
         _loop.quit();
@@ -70,7 +70,7 @@ namespace mforms {
       cancel_c.disconnect();
     }
 
-    bool FormImpl::on_widget_delete_event(GdkEventAny *event, Button *cancel) {
+    auto FormImpl::on_widget_delete_event(GdkEventAny *event, Button *cancel) -> bool {
       mforms::Form *form = dynamic_cast<mforms::Form *>(owner); // ObjectImpl::owner
       if (form) {
         form->end_modal(false);
@@ -81,7 +81,7 @@ namespace mforms {
       return false;
     }
 
-    void FormImpl::end_modal(::mforms::Form *self, bool result) {
+    auto FormImpl::end_modal(::mforms::Form *self, bool result) -> void {
       FormImpl *form = self->get_data<FormImpl>();
       if (form) {
         form->_result = result;
@@ -92,7 +92,7 @@ namespace mforms {
       }
     }
 
-    void FormImpl::show_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) {
+    auto FormImpl::show_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) -> void {
       FormImpl *form = self->get_data<FormImpl>();
       if (form) {
         form->_window->signal_delete_event().connect(
@@ -117,8 +117,8 @@ namespace mforms {
       }
     }
 
-    bool FormImpl::on_key_release(GdkEventKey *event, bool *status, const bool is_run, ::mforms::Button *accept,
-                                  ::mforms::Button *cancel) {
+    auto FormImpl::on_key_release(GdkEventKey *event, bool *status, const bool is_run, ::mforms::Button *accept,
+                                  ::mforms::Button *cancel) -> bool {
       if (event->keyval == GDK_KEY_Escape) {
         *status = false;
         cancel_clicked(status, is_run);
@@ -128,7 +128,7 @@ namespace mforms {
       return false;
     }
 
-    bool FormImpl::run_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) {
+    auto FormImpl::run_modal(::mforms::Form *self, ::mforms::Button *accept, ::mforms::Button *cancel) -> bool {
       if (g_thread_self() != _main_thread)
         g_warning("mforms::Form::run_modal() called in non-main thread, which is invalid");
 
@@ -167,7 +167,7 @@ namespace mforms {
       return false;
     }
 
-    void FormImpl::close(::mforms::Form *self) {
+    auto FormImpl::close(::mforms::Form *self) -> void {
       FormImpl *form = self->get_data<FormImpl>();
       if (form) {
         form->_window->hide();
@@ -178,7 +178,7 @@ namespace mforms {
       }
     }
 
-    void FormImpl::set_content(::mforms::Form *self, ::mforms::View *child) {
+    auto FormImpl::set_content(::mforms::Form *self, ::mforms::View *child) -> void {
       FormImpl *form = self->get_data<FormImpl>();
       if (form) {
         form->_window->add(*child->get_data<ViewImpl>()->get_outer());
@@ -186,17 +186,17 @@ namespace mforms {
       }
     }
 
-    void FormImpl::flush_events(::mforms::Form *self) {
+    auto FormImpl::flush_events(::mforms::Form *self) -> void {
       while (Gtk::Main::events_pending())
         Gtk::Main::iteration();
     }
 
-    void FormImpl::center(Form *self) {
+    auto FormImpl::center(Form *self) -> void {
       FormImpl *form = self->get_data<FormImpl>();
       form->_window->set_position(Gtk::WIN_POS_CENTER);
     }
 
-    void FormImpl::set_menubar(mforms::Form *self, mforms::MenuBar *menu) {
+    auto FormImpl::set_menubar(mforms::Form *self, mforms::MenuBar *menu) -> void {
       FormImpl *form = self->get_data<FormImpl>();
       Gtk::MenuBar *mbar = widget_for_menubar(menu);
       if (form && mbar) {
@@ -251,7 +251,7 @@ namespace mforms {
       _window->signal_delete_event().connect(sigc::mem_fun(this, &FormImpl::can_delete_widget), false);
     }
 
-    bool FormImpl::can_delete_widget(GdkEventAny *event) {
+    auto FormImpl::can_delete_widget(GdkEventAny *event) -> bool {
       mforms::Form *form = dynamic_cast<mforms::Form *>(owner);
       if (form)
         return !form->can_close();
@@ -259,7 +259,7 @@ namespace mforms {
       return false;
     }
 
-    bool FormImpl::on_focus_event(GdkEventFocus *ev, ::mforms::Form *form) {
+    auto FormImpl::on_focus_event(GdkEventFocus *ev, ::mforms::Form *form) -> bool {
       if (ev->in)
         form->activated();
       else
@@ -267,16 +267,16 @@ namespace mforms {
       return false;
     }
 
-    void FormImpl::realized(mforms::Form *owner, Gdk::WMDecoration flags) {
+    auto FormImpl::realized(mforms::Form *owner, Gdk::WMDecoration flags) -> void {
       owner->relayout();
       _window->get_window()->set_decorations(flags);
     }
 
-    void FormImpl::set_name(const std::string &name) {
+    auto FormImpl::set_name(const std::string &name) -> void {
       _window->set_role(name);
     }
 
-    void FormImpl::show(bool show) {
+    auto FormImpl::show(bool show) -> void {
       if (show) {
         _window->signal_delete_event().connect(
           sigc::bind(sigc::mem_fun(this, &FormImpl::on_widget_delete_event), nullptr));
@@ -285,7 +285,7 @@ namespace mforms {
         _window->hide();
     }
 
-    void FormImpl::init_main_form(Gtk::Window *main) {
+    auto FormImpl::init_main_form(Gtk::Window *main) -> void {
       mforms::Form *the_main_form = mforms::Form::main_form();
       if (the_main_form) {
         static FormImpl *form = new FormImpl(the_main_form, (mforms::Form *)0, mforms::FormNone);
@@ -293,7 +293,7 @@ namespace mforms {
       }
     }
 
-    void FormImpl::init() {
+    auto FormImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       _main_thread = g_thread_self();

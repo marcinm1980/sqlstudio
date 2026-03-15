@@ -51,7 +51,7 @@ DEFAULT_LOG_DOMAIN("GRTManager");
 
 static GThread *main_thread = nullptr;
 
-static void init_all() {
+static auto init_all() -> void {
   if (main_thread == nullptr) {
     main_thread = g_thread_self();
   }
@@ -77,17 +77,17 @@ GRTManager::GRTManager(bool threaded) : _has_unsaved_changes(false), _threaded(t
   _messages_list = new MessageListStorage(this);
 }
 
-GRTManager::Ref GRTManager::get() {
+auto GRTManager::get() -> GRTManager::Ref {
   static GRTManager::Ref instance(new GRTManager(true));
   return instance;
 }
 
-void GRTManager::setVerbose(bool verbose) {
+auto GRTManager::setVerbose(bool verbose) -> void {
   _verbose = verbose;
   _grt->set_verbose(_verbose);
 }
 
-bool GRTManager::try_soft_lock_globals_tree() {
+auto GRTManager::try_soft_lock_globals_tree() -> bool {
 // returns true if lock count was 0 and then lock it
 #if GLIB_CHECK_VERSION(2, 32, 0)
   if (g_atomic_int_add(&_globals_tree_soft_lock_count, 1) == 0)
@@ -101,19 +101,19 @@ bool GRTManager::try_soft_lock_globals_tree() {
   return false;
 }
 
-void GRTManager::soft_lock_globals_tree() {
+auto GRTManager::soft_lock_globals_tree() -> void {
   g_atomic_int_add(&_globals_tree_soft_lock_count, 1);
 }
 
-void GRTManager::soft_unlock_globals_tree() {
+auto GRTManager::soft_unlock_globals_tree() -> void {
   g_atomic_int_add(&_globals_tree_soft_lock_count, -1);
 }
 
-bool GRTManager::is_globals_tree_locked() {
+auto GRTManager::is_globals_tree_locked() -> bool {
   return g_atomic_int_get(&_globals_tree_soft_lock_count) != 0;
 }
 
-void GRTManager::set_basedir(const std::string &path) {
+auto GRTManager::set_basedir(const std::string &path) -> void {
   if (!g_path_is_absolute(path.c_str())) {
     gchar *dir = g_get_current_dir();
     _basedir = base::makePath(dir, path);
@@ -122,7 +122,7 @@ void GRTManager::set_basedir(const std::string &path) {
     _basedir = path;
 }
 
-void GRTManager::set_datadir(const std::string &path) {
+auto GRTManager::set_datadir(const std::string &path) -> void {
   if (!g_path_is_absolute(path.c_str())) {
     gchar *dir = g_get_current_dir();
     _datadir = base::makePath(dir, path);
@@ -131,11 +131,11 @@ void GRTManager::set_datadir(const std::string &path) {
     _datadir = path;
 }
 
-std::string GRTManager::get_data_file_path(const std::string &file) {
+auto GRTManager::get_data_file_path(const std::string &file) -> std::string {
   return base::makePath(_datadir, file);
 }
 
-void GRTManager::set_user_datadir(const std::string &path) {
+auto GRTManager::set_user_datadir(const std::string &path) -> void {
   if (!g_path_is_absolute(path.c_str())) {
     gchar *dir = g_get_current_dir();
     _user_datadir = base::makePath(dir, path);
@@ -144,15 +144,15 @@ void GRTManager::set_user_datadir(const std::string &path) {
     _user_datadir = path;
 }
 
-void GRTManager::set_module_extensions(const std::list<std::string> &extensions) {
+auto GRTManager::set_module_extensions(const std::list<std::string> &extensions) -> void {
   _module_extensions = extensions;
 }
 
-void GRTManager::set_clipboard(Clipboard *clipb) {
+auto GRTManager::set_clipboard(Clipboard *clipb) -> void {
   _clipboard = clipb;
 }
 
-bool GRTManager::in_main_thread() {
+auto GRTManager::in_main_thread() -> bool {
   if (main_thread == g_thread_self())
     return true;
   return false;
@@ -171,15 +171,15 @@ GRTManager::~GRTManager() {
     delete *iter;
 }
 
-void GRTManager::set_search_paths(const std::string &module_sp, const std::string &struct_sp,
-                                  const std::string &libraries_sp) {
+auto GRTManager::set_search_paths(const std::string &module_sp, const std::string &struct_sp,
+                                  const std::string &libraries_sp) -> void {
   _module_pathlist = module_sp;
   _struct_pathlist = struct_sp;
   _libraries_pathlist = libraries_sp;
 }
 
-void GRTManager::set_user_extension_paths(const std::string &user_module_path, const std::string &user_library_path,
-                                          const std::string &user_script_path) {
+auto GRTManager::set_user_extension_paths(const std::string &user_module_path, const std::string &user_library_path,
+                                          const std::string &user_script_path) -> void {
   _user_module_path = user_module_path;
   _user_library_path = user_library_path;
   _user_script_path = user_script_path;
@@ -188,20 +188,20 @@ void GRTManager::set_user_extension_paths(const std::string &user_module_path, c
   _libraries_pathlist = base::pathlistPrepend(_libraries_pathlist, user_library_path);
 }
 
-ShellBE *GRTManager::get_shell() {
+auto GRTManager::get_shell() -> ShellBE * {
   return _shell;
 }
 
-MessageListStorage *GRTManager::get_messages_list() {
+auto GRTManager::get_messages_list() -> MessageListStorage * {
   return _messages_list;
 }
 
-void GRTManager::task_error_cb(const std::exception &error, const std::string &title) {
+auto GRTManager::task_error_cb(const std::exception &error, const std::string &title) -> void {
   mforms::Utilities::show_error(title, error.what(), _("Close"));
 }
 
-void GRTManager::execute_grt_task(const std::string &title, const std::function<grt::ValueRef()> &function,
-                                  const std::function<void(grt::ValueRef)> &finished_cb) {
+auto GRTManager::execute_grt_task(const std::string &title, const std::function<grt::ValueRef()> &function,
+                                  const std::function<void(grt::ValueRef)> &finished_cb) -> void {
   GRTTask::Ref task = GRTTask::create_task(title, _dispatcher, function);
 
   // connect finished_cb provided by caller (after ours)
@@ -212,20 +212,20 @@ void GRTManager::execute_grt_task(const std::string &title, const std::function<
   _dispatcher->add_task(task);
 }
 
-void GRTManager::add_dispatcher(const GRTDispatcher::Ref dispatcher) {
+auto GRTManager::add_dispatcher(const GRTDispatcher::Ref dispatcher) -> void {
   if (_dispatcher != dispatcher) {
     MutexLock disp_map_mutex(_disp_map_mutex);
     _disp_map[dispatcher];
   }
 }
 
-void GRTManager::remove_dispatcher(const GRTDispatcher::Ref dispatcher) {
+auto GRTManager::remove_dispatcher(const GRTDispatcher::Ref dispatcher) -> void {
   MutexLock disp_map_mutex(_disp_map_mutex);
   if (_disp_map.find(dispatcher) != _disp_map.end())
     _disp_map.erase(dispatcher);
 }
 
-void GRTManager::show_error(const std::string &message, const std::string &detail, bool important) {
+auto GRTManager::show_error(const std::string &message, const std::string &detail, bool important) -> void {
   // If we're being called from the GRT thread, then raise a runtime error.
   if (main_thread == _dispatcher->get_thread())
     throw grt_runtime_error(message, detail);
@@ -238,7 +238,7 @@ void GRTManager::show_error(const std::string &message, const std::string &detai
     mforms::Utilities::show_error(message, detail, _("Close"));
 }
 
-void GRTManager::show_warning(const std::string &title, const std::string &message, bool important) {
+auto GRTManager::show_warning(const std::string &title, const std::string &message, bool important) -> void {
   _shell->write_line("WARNING: " + title);
   _shell->write_line("    " + message);
   // XXX redo
@@ -246,14 +246,14 @@ void GRTManager::show_warning(const std::string &title, const std::string &messa
   //    _warning_cb(title, message);
 }
 
-void GRTManager::show_message(const std::string &title, const std::string &message, bool important) {
+auto GRTManager::show_message(const std::string &title, const std::string &message, bool important) -> void {
   _shell->write_line(title + ": " + message);
   // XXX redo
   // if (important)
   //  _message_cb(2, title, message);
 }
 
-void GRTManager::cleanUpAndReinitialize() {
+auto GRTManager::cleanUpAndReinitialize() -> void {
   _dispatcher->shutdown();
   _dispatcher.reset();
 
@@ -279,7 +279,7 @@ void GRTManager::cleanUpAndReinitialize() {
   _messages_list = new MessageListStorage(this);
 }
 
-void GRTManager::initialize(bool init_python, const std::string &loader_module_path) {
+auto GRTManager::initialize(bool init_python, const std::string &loader_module_path) -> void {
   _dispatcher->start();
 
   load_structs();
@@ -305,7 +305,7 @@ void GRTManager::initialize(bool init_python, const std::string &loader_module_p
   load_modules();
 }
 
-bool GRTManager::initialize_shell(const std::string &shell_type) {
+auto GRTManager::initialize_shell(const std::string &shell_type) -> bool {
   if (!_shell->setup(shell_type.empty() ? grt::LanguagePython : shell_type)) {
     logWarning("Could not initialize GRT shell of type '%s'\n", shell_type.c_str());
     return false;
@@ -319,7 +319,7 @@ bool GRTManager::initialize_shell(const std::string &shell_type) {
  * Returns true if the task could be completed, false if the manager is currently in in idle execution.
  * Warning: canceling idle tasks unconditionally might lead to other problems, so use with extreme care.
  */
-bool GRTManager::cancel_idle_tasks() {
+auto GRTManager::cancel_idle_tasks() -> bool {
   //   { TODO
   //     MutexLock disp_map_mutex(_disp_map_mutex);
   //     for (DispatcherMap::iterator i = _disp_map.begin(), i_end = _disp_map.end(); i != i_end; ++i)
@@ -340,10 +340,10 @@ bool GRTManager::cancel_idle_tasks() {
   return true;
 }
 
-static void nothing() {
+static auto nothing() -> void {
 }
 
-void GRTManager::perform_idle_tasks() {
+auto GRTManager::perform_idle_tasks() -> void {
   // flush the dispatcher callback queue
   {
     DispatcherMap copy;
@@ -402,7 +402,7 @@ void GRTManager::perform_idle_tasks() {
   }
 }
 
-boost::signals2::connection GRTManager::run_once_when_idle(const std::function<void()> &slot) {
+auto GRTManager::run_once_when_idle(const std::function<void()> &slot) -> boost::signals2::connection {
   if (!slot)
     throw std::invalid_argument("Adding null slot for idle");
 
@@ -410,7 +410,7 @@ boost::signals2::connection GRTManager::run_once_when_idle(const std::function<v
   return _idle_signals[_current_idle_signal].connect(slot);
 }
 
-boost::signals2::connection GRTManager::run_once_when_idle(base::trackable *owner, const std::function<void()> &slot) {
+auto GRTManager::run_once_when_idle(base::trackable *owner, const std::function<void()> &slot) -> boost::signals2::connection {
   if (!slot)
     throw std::invalid_argument("Adding null slot for idle");
   MutexLock lock(_idle_mutex);
@@ -419,11 +419,11 @@ boost::signals2::connection GRTManager::run_once_when_idle(base::trackable *owne
   return tmp;
 }
 
-void GRTManager::block_idle_tasks() {
+auto GRTManager::block_idle_tasks() -> void {
   _idle_blocked++;
 }
 
-void GRTManager::unblock_idle_tasks() {
+auto GRTManager::unblock_idle_tasks() -> void {
   _idle_blocked--;
 }
 
@@ -434,7 +434,7 @@ GRTManager::Timer::Timer(const std::function<bool()> &slot, double interval) {
   next_trigger_us = g_get_real_time() + static_cast<gint64>(interval * G_USEC_PER_SEC);
 }
 
-bool GRTManager::Timer::trigger() {
+auto GRTManager::Timer::trigger() -> bool {
   bool flag = slot ? slot() : false;
 
   next_trigger_us = g_get_real_time() + static_cast<gint64>(interval * G_USEC_PER_SEC);
@@ -442,11 +442,11 @@ bool GRTManager::Timer::trigger() {
   return flag;
 }
 
-double GRTManager::Timer::delay_for_next_trigger(gint64 now_us) {
+auto GRTManager::Timer::delay_for_next_trigger(gint64 now_us) -> double {
   return static_cast<double>(next_trigger_us - now_us) / G_USEC_PER_SEC;
 }
 
-GRTManager::Timer *GRTManager::run_every(const std::function<bool()> &slot, double seconds) {
+auto GRTManager::run_every(const std::function<bool()> &slot, double seconds) -> GRTManager::Timer * {
   Timer *timer = new Timer(slot, seconds);
   gint64 now = g_get_real_time();
 
@@ -472,7 +472,7 @@ GRTManager::Timer *GRTManager::run_every(const std::function<bool()> &slot, doub
   return timer;
 }
 
-void GRTManager::cancel_timer(GRTManager::Timer *timer) {
+auto GRTManager::cancel_timer(GRTManager::Timer *timer) -> void {
   base::MutexLock lock(_timer_mutex);
   std::list<Timer *>::iterator it = std::find(_timers.begin(), _timers.end(), timer);
   if (it != _timers.end()) {
@@ -484,7 +484,7 @@ void GRTManager::cancel_timer(GRTManager::Timer *timer) {
   // so add it to a list of timers so it doesn't get readded to the timers list
 }
 
-void GRTManager::flush_timers() {
+auto GRTManager::flush_timers() -> void {
   gint64 now = g_get_real_time();
 
   std::list<Timer *> triggered;
@@ -546,7 +546,7 @@ void GRTManager::flush_timers() {
   _cancelled_timers.clear();
 }
 
-double GRTManager::delay_for_next_timeout() {
+auto GRTManager::delay_for_next_timeout() -> double {
   double delay = -1;
 
   base::MutexLock lock(_timer_mutex);
@@ -560,11 +560,11 @@ double GRTManager::delay_for_next_timeout() {
   return delay;
 }
 
-void GRTManager::set_timeout_request_slot(const std::function<void()> &slot) {
+auto GRTManager::set_timeout_request_slot(const std::function<void()> &slot) -> void {
   _timeout_request = slot;
 }
 
-bool GRTManager::load_structs() {
+auto GRTManager::load_structs() -> bool {
   if (_verbose)
     _shell->write_line(_("Loading struct definitions..."));
 
@@ -595,7 +595,7 @@ bool GRTManager::load_structs() {
   return false;
 }
 
-bool GRTManager::init_module_loaders(const std::string &loader_module_path, bool init_python) {
+auto GRTManager::init_module_loaders(const std::string &loader_module_path, bool init_python) -> bool {
   if (_verbose)
     _shell->write_line(_("Initializing Loaders..."));
   if (!init_loaders(loader_module_path, init_python))
@@ -604,7 +604,7 @@ bool GRTManager::init_module_loaders(const std::string &loader_module_path, bool
   return true;
 }
 
-bool GRTManager::load_libraries() {
+auto GRTManager::load_libraries() -> bool {
   gchar **paths = g_strsplit(_libraries_pathlist.c_str(), G_SEARCHPATH_SEPARATOR_S, 0);
   for (size_t i = 0; paths[i]; i++) {
     GDir *dir = g_dir_open(paths[i], 0, NULL);
@@ -634,7 +634,7 @@ bool GRTManager::load_libraries() {
   return true;
 }
 
-bool GRTManager::load_modules() {
+auto GRTManager::load_modules() -> bool {
   if (_verbose)
     _shell->write_line(_("Loading modules..."));
   scan_modules_grt(_module_extensions, false);
@@ -642,11 +642,11 @@ bool GRTManager::load_modules() {
   return true;
 }
 
-void GRTManager::rescan_modules() {
+auto GRTManager::rescan_modules() -> void {
   load_modules();
 }
 
-bool GRTManager::init_loaders(const std::string &loader_module_path, bool init_python) {
+auto GRTManager::init_loaders(const std::string &loader_module_path, bool init_python) -> bool {
   if (init_python) {
     try {
       if (grt::init_python_support(loader_module_path)) {
@@ -661,7 +661,7 @@ bool GRTManager::init_loaders(const std::string &loader_module_path, bool init_p
   return true;
 }
 
-int GRTManager::do_scan_modules(const std::string &path, const std::list<std::string> &extensions, bool refresh) {
+auto GRTManager::do_scan_modules(const std::string &path, const std::list<std::string> &extensions, bool refresh) -> int {
   int c;
 
   if (!g_file_test(path.c_str(), G_FILE_TEST_IS_DIR))
@@ -684,7 +684,7 @@ int GRTManager::do_scan_modules(const std::string &path, const std::list<std::st
   return c;
 }
 
-void GRTManager::scan_modules_grt(const std::list<std::string> &extensions, bool refresh) {
+auto GRTManager::scan_modules_grt(const std::list<std::string> &extensions, bool refresh) -> void {
   int c, count = 0;
   gchar **paths = g_strsplit(_module_pathlist.c_str(), G_SEARCHPATH_SEPARATOR_S, 0);
 
@@ -701,38 +701,38 @@ void GRTManager::scan_modules_grt(const std::list<std::string> &extensions, bool
   g_strfreev(paths);
 }
 
-void GRTManager::set_app_option_slots(const std::function<grt::ValueRef(std::string)> &slot,
-                                      const std::function<void(std::string, grt::ValueRef)> &set_slot) {
+auto GRTManager::set_app_option_slots(const std::function<grt::ValueRef(std::string)> &slot,
+                                      const std::function<void(std::string, grt::ValueRef)> &set_slot) -> void {
   _get_app_option_slot = slot;
   _set_app_option_slot = set_slot;
 }
 
-void GRTManager::set_app_option(const std::string &name, const grt::ValueRef &value) {
+auto GRTManager::set_app_option(const std::string &name, const grt::ValueRef &value) -> void {
   if (_set_app_option_slot)
     _set_app_option_slot(name, value);
 }
 
-grt::ValueRef GRTManager::get_app_option(const std::string &name) {
+auto GRTManager::get_app_option(const std::string &name) -> grt::ValueRef {
   if (_get_app_option_slot)
     return _get_app_option_slot(name);
   return grt::ValueRef();
 }
 
-std::string GRTManager::get_app_option_string(const std::string &name, std::string default_) {
+auto GRTManager::get_app_option_string(const std::string &name, std::string default_) -> std::string {
   grt::ValueRef value(get_app_option(name));
   if (value.is_valid() && grt::StringRef::can_wrap(value))
     return *grt::StringRef::cast_from(value);
   return default_;
 }
 
-long GRTManager::get_app_option_int(const std::string &name, long default_) {
+auto GRTManager::get_app_option_int(const std::string &name, long default_) -> long {
   grt::ValueRef value(get_app_option(name));
   if (value.is_valid() && grt::IntegerRef::can_wrap(value))
     return (long)*grt::IntegerRef::cast_from(value);
   return default_;
 }
 
-std::string GRTManager::get_tmp_dir() {
+auto GRTManager::get_tmp_dir() -> std::string {
   // Add the current process ID to the path to make this unique.
   std::string res = g_get_tmp_dir();
   if (base::hasSuffix(res, "/") || base::hasSuffix(res, "\\"))
@@ -747,7 +747,7 @@ std::string GRTManager::get_tmp_dir() {
   return res;
 }
 
-std::string GRTManager::get_unique_tmp_subdir() {
+auto GRTManager::get_unique_tmp_subdir() -> std::string {
   for (;;) {
     std::string unique_name = get_guid();
     // get_guid returns upper-lower case combined string (base64), which could potentially lead
@@ -760,24 +760,24 @@ std::string GRTManager::get_unique_tmp_subdir() {
   return "";
 }
 
-void GRTManager::cleanup_tmp_dir() {
+auto GRTManager::cleanup_tmp_dir() -> void {
   (void)base_rmdir_recursively(get_tmp_dir().c_str());
 }
 
-void GRTManager::push_status_text(const std::string &message) {
+auto GRTManager::push_status_text(const std::string &message) -> void {
   _status_text_slot(message);
 }
 
-void GRTManager::replace_status_text(const std::string &message) {
+auto GRTManager::replace_status_text(const std::string &message) -> void {
   // pop_status_text();
   push_status_text(message);
 }
 
-void GRTManager::pop_status_text() {
+auto GRTManager::pop_status_text() -> void {
   _status_text_slot("");
 }
 
-void GRTManager::set_status_slot(const std::function<void(std::string)> &slot) {
+auto GRTManager::set_status_slot(const std::function<void(std::string)> &slot) -> void {
   _status_text_slot = slot;
 }
 
@@ -789,8 +789,8 @@ struct sortpluginbyrating {
   }
 };
 
-bec::MenuItemList GRTManager::get_plugin_context_menu_items(const std::list<std::string> &groups,
-                                                            const bec::ArgumentPool &argument_pool) {
+auto GRTManager::get_plugin_context_menu_items(const std::list<std::string> &groups,
+                                                            const bec::ArgumentPool &argument_pool) -> bec::MenuItemList {
   // get all plugins in wanted groups
   std::vector<app_PluginRef> plugins;
 
@@ -827,8 +827,8 @@ bec::MenuItemList GRTManager::get_plugin_context_menu_items(const std::list<std:
 }
 
 //--------------------------------------------------------------------------------------------------
-bool GRTManager::check_plugin_runnable(const app_PluginRef &plugin, const bec::ArgumentPool &argpool,
-                                       bool debug_output) {
+auto GRTManager::check_plugin_runnable(const app_PluginRef &plugin, const bec::ArgumentPool &argpool,
+                                       bool debug_output) -> bool {
   bool debug_args = strstr(plugin->name().c_str(), "-debugargs-") != 0 || debug_output;
 
   for (size_t c = plugin->inputValues().count(), i = 0; i < c; i++) {
@@ -851,7 +851,7 @@ bool GRTManager::check_plugin_runnable(const app_PluginRef &plugin, const bec::A
 
 //--------------------------------------------------------------------------------------------------
 
-void GRTManager::open_object_editor(const GrtObjectRef &object, bec::GUIPluginFlags flags) {
+auto GRTManager::open_object_editor(const GrtObjectRef &object, bec::GUIPluginFlags flags) -> void {
   try {
     grt::BaseListRef args(AnyType);
     args.ginsert(object);

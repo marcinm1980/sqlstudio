@@ -151,12 +151,12 @@ PluginManagerWindow::PluginManagerWindow(wb::WBContext *wb)
   set_size(650, 400);
 }
 
-void PluginManagerWindow::run() {
+auto PluginManagerWindow::run() -> void {
   refresh_plugin_list();
   run_modal(&plugin_close, 0);
 }
 
-void PluginManagerWindow::refresh_plugin_list() {
+auto PluginManagerWindow::refresh_plugin_list() -> void {
   std::string user_plugin_dir = bec::GRTManager::get()->get_user_module_path();
   ListRef<app_Plugin> plugins(ListRef<app_Plugin>::cast_from(grt::GRT::get()->get("/wb/registry/plugins")));
 
@@ -186,7 +186,7 @@ void PluginManagerWindow::refresh_plugin_list() {
   }
 }
 
-void PluginManagerWindow::list_selection_changed() {
+auto PluginManagerWindow::list_selection_changed() -> void {
   TreeNodeRef node = plugin_list.get_selected_node();
   app_PluginRef plugin;
   if (node) {
@@ -238,11 +238,11 @@ void PluginManagerWindow::list_selection_changed() {
     plugin_info_box.show(false);
 }
 
-void PluginManagerWindow::toggle_show_details() {
+auto PluginManagerWindow::toggle_show_details() -> void {
   plugin_details_box.show(plugin_show_details.get_active());
 }
 
-void PluginManagerWindow::uninstall() {
+auto PluginManagerWindow::uninstall() -> void {
   TreeNodeRef node = plugin_list.get_selected_node();
   app_PluginRef plugin;
   if (node) {
@@ -292,7 +292,7 @@ void PluginManagerWindow::uninstall() {
   }
 }
 
-void PluginManagerWindow::toggle_enable() {
+auto PluginManagerWindow::toggle_enable() -> void {
   TreeNodeRef node = plugin_list.get_selected_node();
   if (node) {
     std::string plugin_name;

@@ -92,7 +92,7 @@ public:
 #define SNIPPET_ICON_SPACING 8 // Horizontal distance between icon and text.
 #define SNIPPET_TEXT_SPACING 8 // Vertical distance between title and description.
 
-  void layout(cairo_t* cr) {
+  auto layout(cairo_t* cr) -> void {
     // Re-compute shortened title and its position.
     cairo_select_font_face(cr, DEFAULT_FONT_FAMILY, CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
     cairo_set_font_size(cr, SNIPPET_NORMAL_FONT_SIZE);
@@ -148,7 +148,7 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  virtual void paint(cairo_t* cr, base::Rect bounds, bool selected) {
+  virtual auto paint(cairo_t* cr, base::Rect bounds, bool selected) -> void {
     _bounds = bounds;
     cairo_save(cr);
 
@@ -222,44 +222,44 @@ public:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  bool contains(double x, double y) {
+  auto contains(double x, double y) -> bool {
     return _bounds.contains(x, y);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  bool enabled() {
+  auto enabled() -> bool {
     return _enabled;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  base::Rect bounds() {
+  auto bounds() -> base::Rect {
     return _bounds;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::string title() {
+  auto title() -> std::string {
     return _title;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void title(const std::string& text) {
+  auto title(const std::string& text) -> void {
     _title = text;
     _last_text_width = 0;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::string description() {
+  auto description() -> std::string {
     return _description;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void description(const std::string& text) {
+  auto description(const std::string& text) -> void {
     _description = text;
     _last_text_width = 0;
   }
@@ -299,7 +299,7 @@ public:
 
 //----------------- SnippetList --------------------------------------------------------------------
 
-int BaseSnippetList::find_selected_index() {
+auto BaseSnippetList::find_selected_index() -> int {
   // Rather unlikely the selected link is not in the vector (since we got it from there) but...
   std::vector<Snippet*>::iterator location = std::find(_snippets.begin(), _snippets.end(), _selected_snippet);
   return (location == _snippets.end()) ? -1 : (int)(location - _snippets.begin());
@@ -332,7 +332,7 @@ BaseSnippetList::~BaseSnippetList() {
 
 //------------------------------------------------------------------------------------------------
 
-void BaseSnippetList::clear() {
+auto BaseSnippetList::clear() -> void {
   _selected_snippet = 0;
   _selected_index = -1;
   for (std::vector<Snippet*>::iterator iterator = _snippets.begin(); iterator != _snippets.end(); iterator++)
@@ -345,7 +345,7 @@ void BaseSnippetList::clear() {
 
 //------------------------------------------------------------------------------------------------
 
-void BaseSnippetList::refresh_snippets() {
+auto BaseSnippetList::refresh_snippets() -> void {
   clear();
   for (size_t i = 0; i < _model->count(); i++) {
     std::string caption;
@@ -368,7 +368,7 @@ void BaseSnippetList::refresh_snippets() {
 #define SNIPPET_HEIGHT 50
 #define SNIPPET_SPACING 0
 
-void BaseSnippetList::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) {
+auto BaseSnippetList::repaint(cairo_t* cr, int areax, int areay, int areaw, int areah) -> void {
   layout();
 
   double width = get_width();
@@ -383,7 +383,7 @@ void BaseSnippetList::repaint(cairo_t* cr, int areax, int areay, int areaw, int 
 
 //------------------------------------------------------------------------------------------------
 
-void BaseSnippetList::layout() {
+auto BaseSnippetList::layout() -> void {
   if (is_layout_dirty() || (_last_width != get_width())) {
     _last_width = get_width();
     set_layout_dirty(false);
@@ -408,7 +408,7 @@ void BaseSnippetList::layout() {
 
 //------------------------------------------------------------------------------------------------
 
-base::Size BaseSnippetList::getLayoutSize(base::Size proposedSize) {
+auto BaseSnippetList::getLayoutSize(base::Size proposedSize) -> base::Size {
   layout();
 
   return base::Size(_layout_width, _layout_height);
@@ -416,13 +416,13 @@ base::Size BaseSnippetList::getLayoutSize(base::Size proposedSize) {
 
 //------------------------------------------------------------------------------------------------
 
-Snippet* BaseSnippetList::selected() {
+auto BaseSnippetList::selected() -> Snippet* {
   return _selected_snippet;
 }
 
 //------------------------------------------------------------------------------------------------
 
-bool BaseSnippetList::mouse_leave() {
+auto BaseSnippetList::mouse_leave() -> bool {
   if (DrawBox::mouse_leave())
     return true;
 
@@ -431,7 +431,7 @@ bool BaseSnippetList::mouse_leave() {
 
 //------------------------------------------------------------------------------------------------
 
-bool BaseSnippetList::mouse_move(mforms::MouseButton button, int x, int y) {
+auto BaseSnippetList::mouse_move(mforms::MouseButton button, int x, int y) -> bool {
   if (DrawBox::mouse_move(button, x, y))
     return true;
 
@@ -440,7 +440,7 @@ bool BaseSnippetList::mouse_move(mforms::MouseButton button, int x, int y) {
 
 //------------------------------------------------------------------------------------------------
 
-bool BaseSnippetList::mouse_down(mforms::MouseButton button, int x, int y) {
+auto BaseSnippetList::mouse_down(mforms::MouseButton button, int x, int y) -> bool {
   if (DrawBox::mouse_down(button, x, y))
     return true;
 
@@ -454,7 +454,7 @@ bool BaseSnippetList::mouse_down(mforms::MouseButton button, int x, int y) {
 
 //------------------------------------------------------------------------------------------------
 
-bool BaseSnippetList::mouse_double_click(mforms::MouseButton button, int x, int y) {
+auto BaseSnippetList::mouse_double_click(mforms::MouseButton button, int x, int y) -> bool {
   if (DrawBox::mouse_double_click(button, x, y))
     return true;
 
@@ -473,7 +473,7 @@ bool BaseSnippetList::mouse_double_click(mforms::MouseButton button, int x, int 
 
 //------------------------------------------------------------------------------------------------
 
-bool BaseSnippetList::mouse_click(mforms::MouseButton button, int x, int y) {
+auto BaseSnippetList::mouse_click(mforms::MouseButton button, int x, int y) -> bool {
   if (DrawBox::mouse_click(button, x, y))
     return true;
 
@@ -490,13 +490,13 @@ bool BaseSnippetList::mouse_click(mforms::MouseButton button, int x, int y) {
 
 //------------------------------------------------------------------------------------------------
 
-int BaseSnippetList::selected_index() {
+auto BaseSnippetList::selected_index() -> int {
   return _selected_index;
 }
 
 //------------------------------------------------------------------------------------------------
 
-void BaseSnippetList::set_selected(Snippet* snippet) {
+auto BaseSnippetList::set_selected(Snippet* snippet) -> void {
   if (_selected_snippet != snippet) {
     _selected_snippet = snippet;
     _selected_index = find_selected_index();
@@ -507,7 +507,7 @@ void BaseSnippetList::set_selected(Snippet* snippet) {
 
 //------------------------------------------------------------------------------------------------
 
-Snippet* BaseSnippetList::snippet_from_point(double x, double y) {
+auto BaseSnippetList::snippet_from_point(double x, double y) -> Snippet* {
   if (x >= 0 && x < get_width() && y >= 0 && y <= get_height()) {
     for (std::vector<Snippet*>::const_iterator iterator = _snippets.begin(); iterator != _snippets.end(); iterator++) {
       if ((*iterator)->contains(x, y) && (*iterator)->enabled())
@@ -519,7 +519,7 @@ Snippet* BaseSnippetList::snippet_from_point(double x, double y) {
 
 //------------------------------------------------------------------------------------------------
 
-void BaseSnippetList::set_snippet_info(Snippet* snippet, const std::string& title, const std::string& subtitle) {
+auto BaseSnippetList::set_snippet_info(Snippet* snippet, const std::string& title, const std::string& subtitle) -> void {
   if (snippet) {
     snippet->title(title);
     snippet->description(subtitle);
@@ -528,7 +528,7 @@ void BaseSnippetList::set_snippet_info(Snippet* snippet, const std::string& titl
 
 //------------------------------------------------------------------------------------------------
 
-void BaseSnippetList::get_snippet_info(Snippet* snippet, std::string& title, std::string& subtitle) {
+auto BaseSnippetList::get_snippet_info(Snippet* snippet, std::string& title, std::string& subtitle) -> void {
   if (snippet) {
     title = snippet->title();
     subtitle = snippet->description();
@@ -537,19 +537,19 @@ void BaseSnippetList::get_snippet_info(Snippet* snippet, std::string& title, std
 
 //------------------------------------------------------------------------------------------------
 
-base::Rect BaseSnippetList::snippet_bounds(Snippet* snippet) {
+auto BaseSnippetList::snippet_bounds(Snippet* snippet) -> base::Rect {
   return snippet->bounds();
 }
 
 //------------------------------------------------------------------------------------------------
 
-size_t BaseSnippetList::getAccessibilityChildCount() {
+auto BaseSnippetList::getAccessibilityChildCount() -> size_t {
   return (int)_snippets.size();
 }
 
 //------------------------------------------------------------------------------------------------
 
-Accessible* BaseSnippetList::getAccessibilityChild(size_t index) {
+auto BaseSnippetList::getAccessibilityChild(size_t index) -> Accessible* {
   base::Accessible* accessible = NULL;
 
   if ((size_t)index < _snippets.size())
@@ -560,6 +560,6 @@ Accessible* BaseSnippetList::getAccessibilityChild(size_t index) {
 
 //------------------------------------------------------------------------------------------------
 
-base::Accessible* BaseSnippetList::accessibilityHitTest(ssize_t x, ssize_t y) {
+auto BaseSnippetList::accessibilityHitTest(ssize_t x, ssize_t y) -> base::Accessible* {
   return snippet_from_point(static_cast<double>(x), static_cast<double>(y));
 }

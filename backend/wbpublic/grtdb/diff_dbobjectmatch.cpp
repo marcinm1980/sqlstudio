@@ -42,13 +42,13 @@
 
 using namespace grt;
 
-std::string get_qualified_schema_object_name(GrtNamedObjectRef object, const bool case_sensitive) {
+auto get_qualified_schema_object_name(GrtNamedObjectRef object, const bool case_sensitive) -> std::string {
   std::string s("`");
   s.append(object->owner()->name().c_str()).append("`.`").append(object->name().c_str()).append("`");
   return case_sensitive ? s : base::toupper(s);
 }
 
-std::string get_qualified_schema_object_old_name(GrtNamedObjectRef object, const bool case_sensitive) {
+auto get_qualified_schema_object_old_name(GrtNamedObjectRef object, const bool case_sensitive) -> std::string {
   const char* parent_name = NULL;
   if (db_mysql_SchemaRef::can_wrap(object->owner())) {
     parent_name = db_mysql_SchemaRef::cast_from(object->owner())->name().c_str();
@@ -70,7 +70,7 @@ std::string get_qualified_schema_object_old_name(GrtNamedObjectRef object, const
 // Alter OMF
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-bool grt::DbObjectMatchAlterOmf::less(const grt::ValueRef& l, const grt::ValueRef& r) const {
+auto grt::DbObjectMatchAlterOmf::less(const grt::ValueRef& l, const grt::ValueRef& r) const -> bool {
   if (l.type() == r.type() && l.type() == ObjectType) {
     if (db_IndexColumnRef::can_wrap(l) && db_IndexColumnRef::can_wrap(r)) {
       db_IndexColumnRef lc = db_IndexColumnRef::cast_from(l);
@@ -135,7 +135,7 @@ bool grt::DbObjectMatchAlterOmf::less(const grt::ValueRef& l, const grt::ValueRe
   return std::less<grt::ValueRef>()(l, r);
 }
 
-bool grt::DbObjectMatchAlterOmf::equal(const ValueRef& l, const ValueRef& r) const {
+auto grt::DbObjectMatchAlterOmf::equal(const ValueRef& l, const ValueRef& r) const -> bool {
   if (l.type() == r.type() && l.type() == ObjectType) {
     if (db_IndexColumnRef::can_wrap(l) && db_IndexColumnRef::can_wrap(r)) {
       db_IndexColumnRef lc = db_IndexColumnRef::cast_from(l);
@@ -207,7 +207,7 @@ bool grt::DbObjectMatchAlterOmf::equal(const ValueRef& l, const ValueRef& r) con
 
 //--------------------------------------------------------------------------------------------------
 
-bool sqlCompare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto sqlCompare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   // views are compared by sqlDefinition
   if (!db_ViewRef::can_wrap(obj1)) {
     std::string sql1 = ObjectRef::cast_from(obj1).get_string_member(name);
@@ -229,8 +229,8 @@ bool sqlCompare(const ValueRef obj1, const ValueRef obj2, const std::string& nam
 
 //--------------------------------------------------------------------------------------------------
 
-bool caseless_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name,
-                      const std::string& default_name) {
+auto caseless_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name,
+                      const std::string& default_name) -> bool {
   std::string str1 = base::toupper(ObjectRef::cast_from(obj1).get_string_member(name));
   std::string str2 = base::toupper(ObjectRef::cast_from(obj2).get_string_member(name));
   if (str1 == default_name)
@@ -240,8 +240,8 @@ bool caseless_compare(const ValueRef obj1, const ValueRef obj2, const std::strin
   return str1 == str2;
 }
 
-bool caseless_compare_arr(const ValueRef obj1, const ValueRef obj2, const std::string& name,
-                          const std::vector<std::string>& default_names) {
+auto caseless_compare_arr(const ValueRef obj1, const ValueRef obj2, const std::string& name,
+                          const std::vector<std::string>& default_names) -> bool {
   std::string str1 = base::toupper(ObjectRef::cast_from(obj1).get_string_member(name));
   std::string str2 = base::toupper(ObjectRef::cast_from(obj2).get_string_member(name));
   if (std::find(default_names.begin(), default_names.end(), str1) != default_names.end())
@@ -251,7 +251,7 @@ bool caseless_compare_arr(const ValueRef obj1, const ValueRef obj2, const std::s
   return str1 == str2;
 }
 
-bool charset_collation_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto charset_collation_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   std::string sql1 = ObjectRef::cast_from(obj1).get_string_member(name);
   std::string sql2 = ObjectRef::cast_from(obj2).get_string_member(name);
 
@@ -337,7 +337,7 @@ bool charset_collation_compare(const ValueRef obj1, const ValueRef obj2, const s
   return sql1 == sql2;
 }
 
-bool fk_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto fk_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   // Here we do not compare the ability for engines to support foreign keys but
   // check if at both engines does not. This can be used to optimize further FK handling
   // (no need to check all the FKs then).
@@ -356,7 +356,7 @@ bool fk_compare(const ValueRef obj1, const ValueRef obj2, const std::string& nam
   return false;
 }
 
-bool formatted_type_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto formatted_type_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   std::string sql1 = ObjectRef::cast_from(obj1).get_string_member(name);
   std::string sql2 = ObjectRef::cast_from(obj2).get_string_member(name);
   SqlFacade* parser = SqlFacade::instance_for_rdbms_name("Mysql");
@@ -371,7 +371,7 @@ bool formatted_type_compare(const ValueRef obj1, const ValueRef obj2, const std:
   return sql1 == sql2;
 }
 
-bool sql_definition_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto sql_definition_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   if (db_ViewRef::can_wrap(obj1)) {
     // for views, we can't directly compare the model definition with the server one, because they will almost never
     // match (the server modifies the view code)
@@ -407,7 +407,7 @@ bool sql_definition_compare(const ValueRef obj1, const ValueRef obj2, const std:
 
 //--------------------------------------------------------------------------------------------------
 
-bool ignore_index_col_name(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto ignore_index_col_name(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   if (ObjectRef::cast_from(obj1).is_instance("db.IndexColumn") &&
       ObjectRef::cast_from(obj2).is_instance("db.IndexColumn") &&
       StringRef::can_wrap(ObjectRef::cast_from(obj1).get_member(name)) &&
@@ -416,7 +416,7 @@ bool ignore_index_col_name(const ValueRef obj1, const ValueRef obj2, const std::
   return false;
 }
 
-std::string trim_zeros(const std::string& str) {
+auto trim_zeros(const std::string& str) -> std::string {
   if (str.empty())
     return str;
   size_t pos = str.find_first_not_of("0");
@@ -430,7 +430,7 @@ std::string trim_zeros(const std::string& str) {
   return str.substr(pos);
 }
 
-std::string fixDefalutString(const std::string& str) {
+auto fixDefalutString(const std::string& str) -> std::string {
   if (str.empty())
     return str;
   if (str == std::string("0000-00-00 00:00:00"))
@@ -459,7 +459,7 @@ std::string fixDefalutString(const std::string& str) {
   return trim_zeros(str);
 };
 // if(name1 == "defaultValue")
-bool default_value_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto default_value_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   std::string s1 = ObjectRef::cast_from(obj1).get_string_member(name);
   std::string s2 = ObjectRef::cast_from(obj2).get_string_member(name);
   s1.erase(std::remove_if(s1.begin(), s1.end(), std::bind(std::equal_to<std::string::value_type>(), 
@@ -471,7 +471,7 @@ bool default_value_compare(const ValueRef obj1, const ValueRef obj2, const std::
   return s1 == s2;
 }
 
-bool name_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto name_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   // db_ColumnRef name and old name should be always compared with case!
   if (db_ColumnRef::can_wrap(obj1))
     return false;
@@ -489,7 +489,7 @@ bool name_compare(const ValueRef obj1, const ValueRef obj2, const std::string& n
   return str1 == str2;
 }
 
-bool ref_table_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto ref_table_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   std::string str1 = db_mysql_ForeignKeyRef::cast_from(obj1)->referencedTable().is_valid()
                        ? base::toupper(db_mysql_ForeignKeyRef::cast_from(obj1)->referencedTable()->name())
                        : "";
@@ -519,7 +519,7 @@ grt::NormalizedComparer::NormalizedComparer(const grt::DictRef options) {
   load_rules();
 };
 
-bool grt::NormalizedComparer::comment_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) const {
+auto grt::NormalizedComparer::comment_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) const -> bool {
   std::string str1 = ObjectRef::cast_from(obj1).get_string_member(name);
   std::string str2 = ObjectRef::cast_from(obj2).get_string_member(name);
   int comment_len = 60;
@@ -537,7 +537,7 @@ bool grt::NormalizedComparer::comment_compare(const ValueRef obj1, const ValueRe
   return str1 == str2;
 }
 
-bool supports_autoincement(const db_ColumnRef& column) {
+auto supports_autoincement(const db_ColumnRef& column) -> bool {
   db_SimpleDatatypeRef columnType;
 
   // Determine actually used column type first.
@@ -549,7 +549,7 @@ bool supports_autoincement(const db_ColumnRef& column) {
   return (columnType.is_valid() && columnType->group().is_valid() &&
           !strcmp(columnType->group()->name().c_str(), "numeric"));
 }
-bool autoincrement_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto autoincrement_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   if (db_ColumnRef::can_wrap(obj1)) {
     db_ColumnRef col1 = db_ColumnRef::cast_from(obj1);
     db_ColumnRef col2 = db_ColumnRef::cast_from(obj2);
@@ -558,13 +558,13 @@ bool autoincrement_compare(const ValueRef obj1, const ValueRef obj2, const std::
   return false;
 }
 
-bool default_int_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto default_int_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   ssize_t i1 = ObjectRef::cast_from(obj1).get_integer_member(name);
   ssize_t i2 = ObjectRef::cast_from(obj2).get_integer_member(name);
   return (i1 == -1) || (i2 == -1);
 }
 
-bool returnDatatype_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto returnDatatype_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   if (!db_mysql_RoutineRef::can_wrap(obj1) || !db_mysql_RoutineRef::can_wrap(obj2))
     return false;
   db_mysql_RoutineRef r1 = db_mysql_RoutineRef::cast_from(obj1);
@@ -632,7 +632,7 @@ bool returnDatatype_compare(const ValueRef obj1, const ValueRef obj2, const std:
          (length1 = length2) && (datatypeExplicitParams1 == datatypeExplicitParams2);
 }
 
-bool datatypeExplicitParams_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+auto datatypeExplicitParams_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   db_ColumnRef col1 = db_ColumnRef::cast_from(obj1);
   db_ColumnRef col2 = db_ColumnRef::cast_from(obj2);
 
@@ -662,24 +662,24 @@ bool datatypeExplicitParams_compare(const ValueRef obj1, const ValueRef obj2, co
   return false;
 }
 
-inline std::vector<std::string> from_stringlist(const grt::StringListRef& slist) {
+inline auto from_stringlist(const grt::StringListRef& slist) -> std::vector<std::string> {
   std::vector<std::string> s;
   for (size_t i = 0; i < slist.count(); i++)
     s.push_back(*slist[i]);
   return s;
 }
 
-static bool has_item(std::vector<std::string>& l, const std::string& s) {
+static auto has_item(std::vector<std::string>& l, const std::string& s) -> bool {
   return std::find(l.begin(), l.end(), s) != l.end();
 }
 
-static void remove_item(std::vector<std::string>& l, const std::string& s) {
+static auto remove_item(std::vector<std::string>& l, const std::string& s) -> void {
   std::vector<std::string>::iterator it = std::find(l.begin(), l.end(), s);
   if (it != l.end())
     l.erase(it);
 }
 
-static bool column_flags_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+static auto column_flags_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   if (db_ColumnRef::can_wrap(obj1)) {
     db_ColumnRef col1 = db_ColumnRef::cast_from(obj1);
     db_ColumnRef col2 = db_ColumnRef::cast_from(obj2);
@@ -722,7 +722,7 @@ static bool column_flags_compare(const ValueRef obj1, const ValueRef obj2, const
   return false;
 }
 
-static bool table_name_list_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) {
+static auto table_name_list_compare(const ValueRef obj1, const ValueRef obj2, const std::string& name) -> bool {
   db_TableRef table1(db_TableRef::cast_from(obj1));
   db_TableRef table2(db_TableRef::cast_from(obj2));
 
@@ -732,7 +732,7 @@ static bool table_name_list_compare(const ValueRef obj1, const ValueRef obj2, co
   return false;
 }
 
-void grt::NormalizedComparer::load_rules() {
+auto grt::NormalizedComparer::load_rules() -> void {
   static const std::vector<std::string> rules_defaults = {"RESTRICT"};
   rules.clear();
   rules["owner"].push_back(std::bind([]() { return true; }));
@@ -801,7 +801,7 @@ void grt::NormalizedComparer::load_rules() {
     std::bind(&column_flags_compare, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 };
 
-bool grt::NormalizedComparer::normalizedComparison(const ValueRef obj1, const ValueRef obj2, const std::string name) {
+auto grt::NormalizedComparer::normalizedComparison(const ValueRef obj1, const ValueRef obj2, const std::string name) -> bool {
   std::list<comparison_rule>& rul_list = rules[name];
   for (std::list<comparison_rule>::iterator It = rul_list.begin(); It != rul_list.end(); ++It)
     if ((*It)(obj1, obj2, name))
@@ -809,7 +809,7 @@ bool grt::NormalizedComparer::normalizedComparison(const ValueRef obj1, const Va
   return false;
 };
 
-void grt::NormalizedComparer::init_omf(Omf* omf) {
+auto grt::NormalizedComparer::init_omf(Omf* omf) -> void {
   omf->case_sensitive = _case_sensitive;
   omf->skip_routine_definer = _skip_routine_definer;
   omf->normalizer = std::bind(&NormalizedComparer::normalizedComparison, this, std::placeholders::_1,
@@ -817,7 +817,7 @@ void grt::NormalizedComparer::init_omf(Omf* omf) {
 };
 
 // TODO: This shouldn't be here but rather in DBPlugin, but QE doesn't use that
-void grt::NormalizedComparer::load_db_options(sql::DatabaseMetaData* dbc_meta) {
+auto grt::NormalizedComparer::load_db_options(sql::DatabaseMetaData* dbc_meta) -> void {
   _case_sensitive = dbc_meta->storesMixedCaseIdentifiers();
   const unsigned int major = dbc_meta->getDatabaseMajorVersion();
   const unsigned int minor = dbc_meta->getDatabaseMinorVersion();
@@ -834,7 +834,7 @@ void grt::NormalizedComparer::load_db_options(sql::DatabaseMetaData* dbc_meta) {
   load_rules();
 };
 
-grt::DictRef grt::NormalizedComparer::get_options_dict() const {
+auto grt::NormalizedComparer::get_options_dict() const -> grt::DictRef {
   grt::DictRef result(true);
   result.set("CaseSensitive", grt::IntegerRef(_case_sensitive));
   result.set("SkipRoutineDefiner", grt::IntegerRef(_skip_routine_definer));

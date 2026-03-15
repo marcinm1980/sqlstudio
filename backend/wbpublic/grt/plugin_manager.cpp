@@ -37,7 +37,7 @@ DEFAULT_LOG_DOMAIN("plugins")
 using namespace bec;
 using namespace grt;
 
-static std::string get_args_hash(const grt::BaseListRef &list) {
+static auto get_args_hash(const grt::BaseListRef &list) -> std::string {
   std::string hash;
 
   for (size_t c = list.count(), i = 0; i < c; i++) {
@@ -69,12 +69,12 @@ PluginManagerImpl::PluginManagerImpl(grt::CPPModuleLoader *loader) : superclass(
  * @param groups_path
  ****************************************************************************
  */
-void PluginManagerImpl::set_registry_paths(const std::string &plugins_path, const std::string &groups_path) {
+auto PluginManagerImpl::set_registry_paths(const std::string &plugins_path, const std::string &groups_path) -> void {
   _registry_path = plugins_path;
   _group_registry_path = groups_path;
 }
 
-bool PluginManagerImpl::check_plugin_validity(const app_PluginRef &plugin, grt::Module *module) {
+auto PluginManagerImpl::check_plugin_validity(const app_PluginRef &plugin, grt::Module *module) -> bool {
   if (plugin->pluginType() == GUI_PLUGIN_TYPE) {
     // not much that can be tested here, maybe check if the dll actually exists
     return true;
@@ -108,7 +108,7 @@ bool PluginManagerImpl::check_plugin_validity(const app_PluginRef &plugin, grt::
   return false;
 }
 
-void PluginManagerImpl::set_plugin_enabled(const app_PluginRef &plugin, bool flag) {
+auto PluginManagerImpl::set_plugin_enabled(const app_PluginRef &plugin, bool flag) -> void {
   grt::StringListRef disabled_list(get_disabled_plugin_names());
   size_t idx = disabled_list.get_index(plugin->name());
 
@@ -129,14 +129,14 @@ void PluginManagerImpl::set_plugin_enabled(const app_PluginRef &plugin, bool fla
   }
 }
 
-bool PluginManagerImpl::plugin_enabled(const std::string &plugin_name) {
+auto PluginManagerImpl::plugin_enabled(const std::string &plugin_name) -> bool {
   grt::StringListRef names(get_disabled_plugin_names());
   if (names.get_index(plugin_name) == grt::BaseListRef::npos)
     return true;
   return false;
 }
 
-grt::StringListRef PluginManagerImpl::get_disabled_plugin_names() {
+auto PluginManagerImpl::get_disabled_plugin_names() -> grt::StringListRef {
   std::string disabled_path(_registry_path);
   base::pop_path_back(disabled_path);
   base::pop_path_back(disabled_path);
@@ -154,7 +154,7 @@ grt::StringListRef PluginManagerImpl::get_disabled_plugin_names() {
  *
  ****************************************************************************
  */
-void PluginManagerImpl::rescan_plugins() {
+auto PluginManagerImpl::rescan_plugins() -> void {
   grt::ListRef<app_Plugin> plugin_list = get_plugin_list();
   std::set<std::string> disabled_plugins;
 
@@ -254,7 +254,7 @@ void PluginManagerImpl::rescan_plugins() {
 
 //--------------------------------------------------------------------------------------------------
 
-app_PluginGroupRef PluginManagerImpl::get_group(const std::string &group_name) {
+auto PluginManagerImpl::get_group(const std::string &group_name) -> app_PluginGroupRef {
   grt::ListRef<app_PluginGroup> groups;
   app_PluginGroupRef group;
 
@@ -270,7 +270,7 @@ app_PluginGroupRef PluginManagerImpl::get_group(const std::string &group_name) {
   return group;
 }
 
-void PluginManagerImpl::add_plugin_to_group(const app_PluginRef &plugin, const std::string &group_name) {
+auto PluginManagerImpl::add_plugin_to_group(const app_PluginRef &plugin, const std::string &group_name) -> void {
   app_PluginGroupRef group = get_group(group_name);
 
   if (group.is_valid())
@@ -287,8 +287,8 @@ void PluginManagerImpl::add_plugin_to_group(const app_PluginRef &plugin, const s
  *
  ****************************************************************************
  */
-void PluginManagerImpl::set_gui_plugin_callbacks(const OpenGUIPluginSlot &open, const ShowGUIPluginSlot &show,
-                                                 const CloseGUIPluginSlot &close) {
+auto PluginManagerImpl::set_gui_plugin_callbacks(const OpenGUIPluginSlot &open, const ShowGUIPluginSlot &show,
+                                                 const CloseGUIPluginSlot &close) -> void {
   _open_gui_plugin_slot = open;
   _show_gui_plugin_slot = show;
   _close_gui_plugin_slot = close;
@@ -302,7 +302,7 @@ void PluginManagerImpl::set_gui_plugin_callbacks(const OpenGUIPluginSlot &open, 
  *
  ****************************************************************************
  */
-void PluginManagerImpl::register_plugins(grt::ListRef<app_Plugin> plugins) {
+auto PluginManagerImpl::register_plugins(grt::ListRef<app_Plugin> plugins) -> void {
   grt::ListRef<app_Plugin> list = get_plugin_list();
 
   for (size_t c = plugins.count(), i = 0; i < c; i++)
@@ -316,7 +316,7 @@ void PluginManagerImpl::register_plugins(grt::ListRef<app_Plugin> plugins) {
  * @return List of plugin groups
  ****************************************************************************
  */
-grt::ListRef<app_PluginGroup> PluginManagerImpl::get_plugin_groups() {
+auto PluginManagerImpl::get_plugin_groups() -> grt::ListRef<app_PluginGroup> {
   return grt::ListRef<app_PluginGroup>::cast_from(grt::GRT::get()->get(_group_registry_path));
 }
 
@@ -332,7 +332,7 @@ grt::ListRef<app_PluginGroup> PluginManagerImpl::get_plugin_groups() {
  * @return List of plugins.
  ****************************************************************************
  */
-grt::ListRef<app_Plugin> PluginManagerImpl::get_plugin_list(const std::string &group) {
+auto PluginManagerImpl::get_plugin_list(const std::string &group) -> grt::ListRef<app_Plugin> {
   if (group.empty())
     return grt::ListRef<app_Plugin>::cast_from(grt::GRT::get()->get(_registry_path));
   else {
@@ -385,7 +385,7 @@ grt::ListRef<app_Plugin> PluginManagerImpl::get_plugin_list(const std::string &g
   }
 }
 
-bool PluginManagerImpl::check_plugin_input(const app_PluginInputDefinitionRef &def, const grt::ValueRef &value) {
+auto PluginManagerImpl::check_plugin_input(const app_PluginInputDefinitionRef &def, const grt::ValueRef &value) -> bool {
   if (def.is_instance(app_PluginFileInput::static_class_name())) {
     if (value.is_valid() && value.type() != StringType)
       return false;
@@ -440,7 +440,7 @@ bool PluginManagerImpl::check_plugin_input(const app_PluginInputDefinitionRef &d
   return true;
 }
 
-bool PluginManagerImpl::check_input_for_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args) {
+auto PluginManagerImpl::check_input_for_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args) -> bool {
   if (args.count() != plugin->inputValues().count())
     return false;
 
@@ -451,7 +451,7 @@ bool PluginManagerImpl::check_input_for_plugin(const app_PluginRef &plugin, cons
   return true;
 }
 
-app_PluginRef PluginManagerImpl::select_plugin_for_input(const std::string &group, const grt::BaseListRef &args) {
+auto PluginManagerImpl::select_plugin_for_input(const std::string &group, const grt::BaseListRef &args) -> app_PluginRef {
   ListRef<app_Plugin> plugins = get_plugin_list(group);
   app_PluginRef best_match;
   ssize_t rating = -1;
@@ -480,8 +480,8 @@ app_PluginRef PluginManagerImpl::select_plugin_for_input(const std::string &grou
  ****************************************************************************
  */
 // TODO: delete?
-std::vector<app_PluginRef> PluginManagerImpl::get_plugins_for_objects(const grt::ObjectListRef &objects,
-                                                                      const std::string &group) {
+auto PluginManagerImpl::get_plugins_for_objects(const grt::ObjectListRef &objects,
+                                                                      const std::string &group) -> std::vector<app_PluginRef> {
   std::vector<app_PluginRef> plist;
   grt::ListRef<app_Plugin> plugins;
 
@@ -565,7 +565,7 @@ std::vector<app_PluginRef> PluginManagerImpl::get_plugins_for_objects(const grt:
  *
  ****************************************************************************
  */
-std::vector<app_PluginRef> PluginManagerImpl::get_plugins_for_group(const std::string &group) {
+auto PluginManagerImpl::get_plugins_for_group(const std::string &group) -> std::vector<app_PluginRef> {
   std::vector<app_PluginRef> rlist;
   grt::ListRef<app_Plugin> list = get_plugin_list(group);
 
@@ -584,7 +584,7 @@ std::vector<app_PluginRef> PluginManagerImpl::get_plugins_for_group(const std::s
  * @return plugin
  ****************************************************************************
  */
-app_PluginRef PluginManagerImpl::get_plugin(const std::string &name) {
+auto PluginManagerImpl::get_plugin(const std::string &name) -> app_PluginRef {
   grt::ListRef<app_Plugin> plugins = get_plugin_list();
 
   for (size_t c = plugins.count(), i = 0; i < c; i++) {
@@ -594,15 +594,15 @@ app_PluginRef PluginManagerImpl::get_plugin(const std::string &name) {
   return app_PluginRef();
 }
 
-static std::string make_open_plugin_id(const grt::Module *module, const std::string &class_name,
-                                       const grt::BaseListRef &args) {
+static auto make_open_plugin_id(const grt::Module *module, const std::string &class_name,
+                                       const grt::BaseListRef &args) -> std::string {
   std::string argshash = get_args_hash(args);
 
   return module->name() + "/" + class_name + "//" + argshash;
 }
 
-std::vector<NativeHandle> PluginManagerImpl::get_similar_open_plugins(grt::Module *module,
-                                                                      const std::string &class_name, grt::BaseListRef) {
+auto PluginManagerImpl::get_similar_open_plugins(grt::Module *module,
+                                                                      const std::string &class_name, grt::BaseListRef) -> std::vector<NativeHandle> {
   std::vector<NativeHandle> handles;
 
   std::string prefix = module->name() + "/" + class_name + "//";
@@ -618,8 +618,8 @@ std::vector<NativeHandle> PluginManagerImpl::get_similar_open_plugins(grt::Modul
 
 //--------------------------------------------------------------------------------------------------
 
-std::string PluginManagerImpl::open_gui_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args,
-                                               GUIPluginFlags flags) {
+auto PluginManagerImpl::open_gui_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args,
+                                               GUIPluginFlags flags) -> std::string {
   if (!plugin.is_valid())
     throw std::invalid_argument("Attempt to open an invalid plugin");
 
@@ -692,11 +692,11 @@ std::string PluginManagerImpl::open_gui_plugin(const app_PluginRef &plugin, cons
  * or "" for other types of plugins.
  ****************************************************************************
  */
-std::string PluginManagerImpl::open_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args) {
+auto PluginManagerImpl::open_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args) -> std::string {
   return open_gui_plugin(plugin, args, NoFlags);
 }
 
-grt::ValueRef PluginManagerImpl::execute_plugin_function(const app_PluginRef &plugin, const grt::BaseListRef &args) {
+auto PluginManagerImpl::execute_plugin_function(const app_PluginRef &plugin, const grt::BaseListRef &args) -> grt::ValueRef {
   grt::Module *module = grt::GRT::get()->get_module(plugin->moduleName());
 
   if (!module)
@@ -706,7 +706,7 @@ grt::ValueRef PluginManagerImpl::execute_plugin_function(const app_PluginRef &pl
   return module->call_function(*plugin->moduleFunctionName(), args);
 }
 
-grt::ValueRef PluginManagerImpl::open_normal_plugin_grt(const app_PluginRef &plugin, const grt::BaseListRef &args) {
+auto PluginManagerImpl::open_normal_plugin_grt(const app_PluginRef &plugin, const grt::BaseListRef &args) -> grt::ValueRef {
   grt::Module *module = grt::GRT::get()->get_module(plugin->moduleName());
 
   if (!module)
@@ -716,7 +716,7 @@ grt::ValueRef PluginManagerImpl::open_normal_plugin_grt(const app_PluginRef &plu
   return module->call_function(*plugin->moduleFunctionName(), args);
 }
 
-void PluginManagerImpl::open_standalone_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args) {
+auto PluginManagerImpl::open_standalone_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args) -> void {
   grt::Module *module = grt::GRT::get()->get_module(plugin->moduleName());
 
   if (!module)
@@ -726,8 +726,8 @@ void PluginManagerImpl::open_standalone_plugin_main(const app_PluginRef &plugin,
   module->call_function(*plugin->moduleFunctionName(), args);
 }
 
-std::string PluginManagerImpl::open_gui_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args,
-                                                    GUIPluginFlags flags) {
+auto PluginManagerImpl::open_gui_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args,
+                                                    GUIPluginFlags flags) -> std::string {
   NativeHandle handle;
   grt::Module *module = grt::GRT::get()->get_module(_plugin_source_module[plugin->name()]);
   std::string open_plugin_id = make_open_plugin_id(module, plugin->moduleFunctionName(), args);
@@ -759,7 +759,7 @@ std::string PluginManagerImpl::open_gui_plugin_main(const app_PluginRef &plugin,
  * @return always 0 at the moment
  ****************************************************************************
  */
-int PluginManagerImpl::show_plugin(const std::string &handle) {
+auto PluginManagerImpl::show_plugin(const std::string &handle) -> int {
   if (bec::GRTManager::get()->in_main_thread())
     return show_gui_plugin_main(handle);
   else {
@@ -775,7 +775,7 @@ int PluginManagerImpl::show_plugin(const std::string &handle) {
   }
 }
 
-int PluginManagerImpl::show_gui_plugin_main(const std::string &handle) {
+auto PluginManagerImpl::show_gui_plugin_main(const std::string &handle) -> int {
   if (_open_gui_plugins.find(handle) != _open_gui_plugins.end()) {
     NativeHandle hdl = _open_gui_plugins[handle];
     _show_gui_plugin_slot(hdl);
@@ -793,7 +793,7 @@ int PluginManagerImpl::show_gui_plugin_main(const std::string &handle) {
  * @return always 0 at the moment
  ****************************************************************************
  */
-int PluginManagerImpl::close_plugin(const std::string &handle) {
+auto PluginManagerImpl::close_plugin(const std::string &handle) -> int {
   if (bec::GRTManager::get()->in_main_thread())
     return close_gui_plugin_main(handle);
   else {
@@ -811,7 +811,7 @@ int PluginManagerImpl::close_plugin(const std::string &handle) {
 
 //--------------------------------------------------------------------------------------------------
 
-int PluginManagerImpl::close_gui_plugin_main(const std::string &handle) {
+auto PluginManagerImpl::close_gui_plugin_main(const std::string &handle) -> int {
   if (_open_gui_plugins.find(handle) != _open_gui_plugins.end()) {
     NativeHandle hdl = _open_gui_plugins[handle];
     _close_gui_plugin_slot(hdl);
@@ -822,7 +822,7 @@ int PluginManagerImpl::close_gui_plugin_main(const std::string &handle) {
 
 //--------------------------------------------------------------------------------------------------
 
-void PluginManagerImpl::forget_gui_plugin_handle(NativeHandle handle) {
+auto PluginManagerImpl::forget_gui_plugin_handle(NativeHandle handle) -> void {
   for (std::map<std::string, NativeHandle>::iterator iter = _open_gui_plugins.begin(); iter != _open_gui_plugins.end();
        ++iter) {
     if (iter->second == handle) {
@@ -834,7 +834,7 @@ void PluginManagerImpl::forget_gui_plugin_handle(NativeHandle handle) {
 
 //--------------------------------------------------------------------------------------------------
 
-void PluginManagerImpl::close_and_forget_gui_plugin(NativeHandle handle) {
+auto PluginManagerImpl::close_and_forget_gui_plugin(NativeHandle handle) -> void {
   for (std::map<std::string, NativeHandle>::iterator iter = _open_gui_plugins.begin(); iter != _open_gui_plugins.end();
        ++iter) {
     if (iter->second == handle) {
@@ -847,8 +847,8 @@ void PluginManagerImpl::close_and_forget_gui_plugin(NativeHandle handle) {
 
 //--------------------------------------------------------------------------------------------------
 
-grt::ValueRef ArgumentPool::find_match(const app_PluginInputDefinitionRef &pdef, std::string &searched_key_name_ret,
-                                       bool strict) const {
+auto ArgumentPool::find_match(const app_PluginInputDefinitionRef &pdef, std::string &searched_key_name_ret,
+                                       bool strict) const -> grt::ValueRef {
   std::string key = pdef.class_name();
 
   if (pdef.class_name() == app_PluginSelectionInput::static_class_name()) {
@@ -930,7 +930,7 @@ grt::ValueRef ArgumentPool::find_match(const app_PluginInputDefinitionRef &pdef,
   return grt::ValueRef();
 }
 
-void ArgumentPool::dump_keys(const std::function<void(std::string)> &dump_function) const {
+auto ArgumentPool::dump_keys(const std::function<void(std::string)> &dump_function) const -> void {
   for (ArgumentPool::const_iterator i = begin(); i != end(); ++i) {
     if (dump_function)
       dump_function(i->first + "\n");
@@ -939,20 +939,20 @@ void ArgumentPool::dump_keys(const std::function<void(std::string)> &dump_functi
   }
 }
 
-void ArgumentPool::add_simple_value(const std::string &name, const grt::ValueRef &value) {
+auto ArgumentPool::add_simple_value(const std::string &name, const grt::ValueRef &value) -> void {
   std::string prefix = "app.PluginInputDefinition:" + name;
 
   (*this)[prefix] = value;
 }
 
-void ArgumentPool::add_list_for_selection(const std::string &source_name, const grt::ObjectListRef &list) {
+auto ArgumentPool::add_list_for_selection(const std::string &source_name, const grt::ObjectListRef &list) -> void {
   std::string prefix = "app.PluginSelectionInput:" + source_name + ":";
 
   (*this)[prefix] = list;
 }
 
-void ArgumentPool::add_entries_for_object(const std::string &name, const grt::ObjectRef &object,
-                                          const std::string &topmost_class_name) {
+auto ArgumentPool::add_entries_for_object(const std::string &name, const grt::ObjectRef &object,
+                                          const std::string &topmost_class_name) -> void {
   if (object.is_valid()) {
     std::string prefix = "app.PluginObjectInput:" + name + ":";
     std::string class_name = object.class_name();
@@ -970,7 +970,7 @@ void ArgumentPool::add_entries_for_object(const std::string &name, const grt::Ob
   }
 }
 
-bool ArgumentPool::needs_simple_input(const app_PluginRef &plugin, const std::string &name) {
+auto ArgumentPool::needs_simple_input(const app_PluginRef &plugin, const std::string &name) -> bool {
   const size_t c = plugin->inputValues().count();
   for (size_t i = 0; i < c; i++) {
     app_PluginInputDefinitionRef pdef(plugin->inputValues().get(i));
@@ -983,7 +983,7 @@ bool ArgumentPool::needs_simple_input(const app_PluginRef &plugin, const std::st
   return false;
 }
 
-app_PluginFileInputRef ArgumentPool::needs_file_input(const app_PluginRef &plugin) {
+auto ArgumentPool::needs_file_input(const app_PluginRef &plugin) -> app_PluginFileInputRef {
   const size_t c = plugin->inputValues().count();
   for (size_t i = 0; i < c; i++) {
     app_PluginInputDefinitionRef pdef(plugin->inputValues().get(i));
@@ -994,14 +994,14 @@ app_PluginFileInputRef ArgumentPool::needs_file_input(const app_PluginRef &plugi
   return app_PluginFileInputRef();
 }
 
-void ArgumentPool::add_file_input(const app_PluginFileInputRef &pdef, const std::string &value) {
+auto ArgumentPool::add_file_input(const app_PluginFileInputRef &pdef, const std::string &value) -> void {
   std::string key = app_PluginFileInput::static_class_name();
   key.append(":").append(*pdef->name()).append(":").append(pdef->dialogType());
 
   (*this)[key] = grt::StringRef(value);
 }
 
-grt::BaseListRef ArgumentPool::build_argument_list(const app_PluginRef &plugin) {
+auto ArgumentPool::build_argument_list(const app_PluginRef &plugin) -> grt::BaseListRef {
   // build the argument list
   grt::BaseListRef fargs(true);
   const size_t c = plugin->inputValues().count();

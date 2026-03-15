@@ -132,8 +132,8 @@ public:
   // Ultimately, the grt wrapper version uses the direct access version.
   virtual parsers::MySQLParserContext::Ref createParserContext(GrtCharacterSetsRef charsets, GrtVersionRef version,
                                                                const std::string &sqlMode, bool caseSensitive) override;
-  parser_ContextReferenceRef createNewParserContext(GrtCharacterSetsRef charsets, GrtVersionRef version,
-                                                    const std::string &sqlMode, int case_sensitive);
+  auto createNewParserContext(GrtCharacterSetsRef charsets, GrtVersionRef version,
+                                                    const std::string &sqlMode, int case_sensitive) -> parser_ContextReferenceRef;
 
   virtual size_t tokenFromString(parsers::MySQLParserContext::Ref context, const std::string &token) override;
   virtual MySQLQueryType determineQueryType(parsers::MySQLParserContext::Ref context, const std::string &text) override;
@@ -142,20 +142,20 @@ public:
   virtual size_t parseTable(parsers::MySQLParserContext::Ref context, db_mysql_TableRef table,
                             const std::string &sql) override;
 
-  size_t parseTriggerSql(parser_ContextReferenceRef context_ref, db_mysql_TriggerRef trigger, const std::string &sql);
+  auto parseTriggerSql(parser_ContextReferenceRef context_ref, db_mysql_TriggerRef trigger, const std::string &sql) -> size_t;
   virtual size_t parseTrigger(parsers::MySQLParserContext::Ref context, db_mysql_TriggerRef trigger,
                               const std::string &sql) override;
 
-  size_t parseViewSql(parser_ContextReferenceRef context_ref, db_mysql_ViewRef view, const std::string &sql);
+  auto parseViewSql(parser_ContextReferenceRef context_ref, db_mysql_ViewRef view, const std::string &sql) -> size_t;
   virtual size_t parseView(parsers::MySQLParserContext::Ref context, db_mysql_ViewRef view,
                            const std::string &sql) override;
 
-  size_t parseRoutineSql(parser_ContextReferenceRef context_ref, db_mysql_RoutineRef routine, const std::string &sql);
+  auto parseRoutineSql(parser_ContextReferenceRef context_ref, db_mysql_RoutineRef routine, const std::string &sql) -> size_t;
   virtual size_t parseRoutine(parsers::MySQLParserContext::Ref context, db_mysql_RoutineRef routine,
                               const std::string &sql) override;
 
-  size_t parseRoutinesSql(parser_ContextReferenceRef context_ref, db_mysql_RoutineGroupRef group,
-                          const std::string &sql);
+  auto parseRoutinesSql(parser_ContextReferenceRef context_ref, db_mysql_RoutineGroupRef group,
+                          const std::string &sql) -> size_t;
   virtual size_t parseRoutines(parsers::MySQLParserContext::Ref context, db_mysql_RoutineGroupRef group,
                                const std::string &sql) override;
 
@@ -172,25 +172,25 @@ public:
   virtual size_t parseTablespace(parsers::MySQLParserContext::Ref context, db_mysql_TablespaceRef tablespace,
                                  const std::string &sql) override;
 
-  size_t parseSQLIntoCatalogSql(parser_ContextReferenceRef context_ref, db_mysql_CatalogRef catalog,
-                                const std::string &sql, grt::DictRef options);
+  auto parseSQLIntoCatalogSql(parser_ContextReferenceRef context_ref, db_mysql_CatalogRef catalog,
+                                const std::string &sql, grt::DictRef options) -> size_t;
   virtual size_t parseSQLIntoCatalog(parsers::MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
                                      const std::string &sql, grt::DictRef options) override;
 
-  size_t doSyntaxCheck(parser_ContextReferenceRef context_ref, const std::string &sql, const std::string &type);
+  auto doSyntaxCheck(parser_ContextReferenceRef context_ref, const std::string &sql, const std::string &type) -> size_t;
   virtual size_t checkSqlSyntax(parsers::MySQLParserContext::Ref context, const char *sql, size_t length,
                                 MySQLParseUnit type) override;
 
-  size_t doSchemaRefRename(parser_ContextReferenceRef context_ref, db_mysql_CatalogRef catalog,
-                           const std::string old_name, const std::string new_name);
+  auto doSchemaRefRename(parser_ContextReferenceRef context_ref, db_mysql_CatalogRef catalog,
+                           const std::string old_name, const std::string new_name) -> size_t;
   virtual size_t renameSchemaReferences(parsers::MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
                                         const std::string old_name, const std::string new_name) override;
 
-  grt::BaseListRef getSqlStatementRanges(const std::string &sql);
+  auto getSqlStatementRanges(const std::string &sql) -> grt::BaseListRef;
   virtual size_t determineStatementRanges(const char *sql, size_t length, const std::string &initialDelimiter,
     std::vector<parsers::StatementRange> &ranges, const std::string &lineBreak = "\n") override;
 
-  grt::DictRef parseStatementDetails(parser_ContextReferenceRef context_ref, const std::string &sql);
+  auto parseStatementDetails(parser_ContextReferenceRef context_ref, const std::string &sql) -> grt::DictRef;
   virtual grt::DictRef parseStatement(parsers::MySQLParserContext::Ref context, const std::string &sql) override;
 
   // Data types.

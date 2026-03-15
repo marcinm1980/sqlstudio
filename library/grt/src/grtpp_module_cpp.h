@@ -134,70 +134,70 @@ namespace grt {
 
   template <class T>
   struct grt_class_name_if_object {
-    static std::string get() {
+    static auto get() -> std::string {
       return T::static_class_name();
     }
   };
 
   template <>
   struct grt_class_name_if_object<IntegerRef> {
-    static std::string get() {
+    static auto get() -> std::string {
       return "";
     }
   };
 
   template <>
   struct grt_class_name_if_object<DoubleRef> {
-    static std::string get() {
+    static auto get() -> std::string {
       return "";
     }
   };
 
   template <>
   struct grt_class_name_if_object<StringRef> {
-    static std::string get() {
+    static auto get() -> std::string {
       return "";
     }
   };
 
   template <>
   struct grt_class_name_if_object<DictRef> {
-    static std::string get() {
+    static auto get() -> std::string {
       return "";
     }
   };
 
   template <class T>
   struct grt_class_name_if_object<ListRef<T> > {
-    static std::string get() {
+    static auto get() -> std::string {
       return "";
     }
   };
 
   template <class T, bool B>
   struct grt_content_struct_name {
-    static std::string get() {
+    static auto get() -> std::string {
       return "";
     }
   };
 
   template <class T>
   struct grt_content_struct_name<T, true> {
-    static std::string get() {
+    static auto get() -> std::string {
       return T::static_class_name();
     }
   };
 
   template <class T>
   struct grt_content_struct_name<Ref<T>, true> {
-    static std::string get() {
+    static auto get() -> std::string {
       return T::static_class_name();
     }
   };
 
   template <class T>
   struct grt_content_struct_name<ListRef<T>, true> {
-    static std::string get() {
+    static auto get() -> std::string {
       return T::static_class_name();
     }
   };
@@ -207,15 +207,15 @@ namespace grt {
   // is available during compile time and can be used with other templates
   template <class A, class B>
   class Is_super_subclass {
-    static B *makeB();
+    static auto makeB() -> B *;
     struct CharSized {
       char c;
     };
     struct Char2Sized {
       char c, d;
     };
-    static CharSized selector(...);
-    static Char2Sized selector(A *);
+    static auto selector(...) -> CharSized;
+    static auto selector(A *) -> Char2Sized;
 
   public:
     static const bool value = (sizeof(selector(makeB())) == sizeof(Char2Sized));
@@ -252,9 +252,9 @@ namespace grt {
 
   class MYSQLGRT_PUBLIC Interface : public Module {
   public:
-    static Interface *create(const char *name, ...);
+    static auto create(const char *name, ...) -> Interface *;
 
-    bool check_conformance(const Module *module) const;
+    auto check_conformance(const Module *module) const -> bool;
 
   private:
     Interface(CPPModuleLoader *loader);
@@ -267,11 +267,11 @@ namespace grt {
     using Loader = CPPModuleLoader;
     virtual ~CPPModule();
 
-    virtual std::string get_module_datadir();
+    virtual auto get_module_datadir() -> std::string;
 
-    std::string get_resource_file_path(const std::string &file);
+    auto get_resource_file_path(const std::string &file) -> std::string;
 
-    void set_name(const std::string &name);
+    auto set_name(const std::string &name) -> void;
 
   protected:
     CPPModule(CPPModuleLoader *loader);
@@ -279,10 +279,10 @@ namespace grt {
     GModule *_gmodule;
     std::list<ModuleFunctorBase *> _functors;
 
-    virtual void init_module() = 0;
-    virtual void initialization_done() {};
+    virtual auto init_module() -> void = 0;
+    virtual auto initialization_done() -> void {};
 
-    void register_functions(ModuleFunctorBase *first, ...);
+    auto register_functions(ModuleFunctorBase *first, ...) -> void;
 
     virtual void closeModule() noexcept override;
     virtual GModule *getModule() const override;
@@ -295,23 +295,23 @@ namespace grt {
     CPPModuleLoader();
     virtual ~CPPModuleLoader();
 
-    virtual bool load_library(const std::string &path) {
+    virtual auto load_library(const std::string &path) -> bool {
       return false;
     }
-    virtual bool run_script_file(const std::string &path) {
+    virtual auto run_script_file(const std::string &path) -> bool {
       return false;
     }
-    virtual bool run_script(const std::string &script) {
+    virtual auto run_script(const std::string &script) -> bool {
       return false;
     }
-    virtual bool check_file_extension(const std::string &path);
+    virtual auto check_file_extension(const std::string &path) -> bool;
 
-    virtual std::string get_loader_name() {
+    virtual auto get_loader_name() -> std::string {
       return "cpp";
     }
 
-    virtual Module *init_module(const std::string &path);
-    virtual void refresh();
+    virtual auto init_module(const std::string &path) -> Module *;
+    virtual auto refresh() -> void;
   };
 
 //--------------------------------------------------------------------------------
@@ -430,20 +430,20 @@ namespace grt {
     }
     virtual ~ModuleFunctorBase() {};
 
-    const char *get_name() const {
+    auto get_name() const -> const char * {
       return _name;
     }
-    const char *get_doc() const {
+    auto get_doc() const -> const char * {
       return _doc;
     }
-    const Function_param_list &get_signature() const {
+    auto get_signature() const -> const Function_param_list & {
       return _signature;
     }
-    const TypeSpec &get_return_type() const {
+    auto get_return_type() const -> const TypeSpec & {
       return _return_type;
     }
 
-    virtual ValueRef perform_call(const BaseListRef &arglist) = 0;
+    virtual auto perform_call(const BaseListRef &arglist) -> ValueRef = 0;
 
     /*QQQ
     MYX_GRT_ERROR call(const BaseListRef &arglist, ValueRef &result)
@@ -487,43 +487,43 @@ namespace grt {
     return t;
   }
 
-  inline ValueRef grt_value_for_type(bool t) {
+  inline auto grt_value_for_type(bool t) -> ValueRef {
     return IntegerRef(t);
   }
 
 #ifdef DEFINE_INT_FUNCTIONS
-  inline ValueRef grt_value_for_type(int t) {
+  inline auto grt_value_for_type(int t) -> ValueRef {
     return IntegerRef(t);
   }
 #endif
 
 #ifndef DEFINE_INT_FUNCTIONS
-  inline ValueRef grt_value_for_type(long int t) {
+  inline auto grt_value_for_type(long int t) -> ValueRef {
     return IntegerRef(t);
   }
 #endif
 
 #ifdef DEFINE_UINT64_T_FUNCTIONS
-  inline ValueRef grt_value_for_type(uint64_t t) {
+  inline auto grt_value_for_type(uint64_t t) -> ValueRef {
     return IntegerRef((size_t)t);
   }
 #endif
 
-  inline ValueRef grt_value_for_type(size_t t) {
+  inline auto grt_value_for_type(size_t t) -> ValueRef {
     return IntegerRef(t);
   }
 
 #ifdef DEFINE_SSIZE_T_FUNCTIONS
-  inline ValueRef grt_value_for_type(ssize_t t) {
+  inline auto grt_value_for_type(ssize_t t) -> ValueRef {
     return IntegerRef(t);
   }
 #endif
 
-  inline ValueRef grt_value_for_type(double t) {
+  inline auto grt_value_for_type(double t) -> ValueRef {
     return DoubleRef(t);
   }
 
-  inline ValueRef grt_value_for_type(const std::string &t) {
+  inline auto grt_value_for_type(const std::string &t) -> ValueRef {
     return StringRef(t);
   }
 
@@ -542,21 +542,21 @@ namespace grt {
 
   template <>
   struct native_value_for_grt_type<IntegerRef> {
-    static ssize_t convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> ssize_t {
       return IntegerRef::cast_from(t).operator IntegerRef::storage_type();
     }
   };
 
   template <>
   struct native_value_for_grt_type<int> {
-    static int convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> int {
       return (int)IntegerRef::cast_from(t).operator IntegerRef::storage_type();
     }
   };
 
   template <>
   struct native_value_for_grt_type<bool> {
-    static bool convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> bool {
       return IntegerRef::cast_from(t).operator IntegerRef::storage_type() != 0;
     }
   };
@@ -564,7 +564,7 @@ namespace grt {
 #ifdef _WIN64
   template <>
   struct native_value_for_grt_type<ssize_t> {
-    static ssize_t convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> ssize_t {
       return IntegerRef::cast_from(t).operator IntegerRef::storage_type();
     }
   };
@@ -572,28 +572,28 @@ namespace grt {
 
   template <>
   struct native_value_for_grt_type<size_t> {
-    static size_t convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> size_t {
       return IntegerRef::cast_from(t).operator IntegerRef::storage_type();
     }
   };
 
   template <>
   struct native_value_for_grt_type<DoubleRef> {
-    static double convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> double {
       return DoubleRef::cast_from(t).operator double();
     }
   };
 
   template <>
   struct native_value_for_grt_type<double> {
-    static double convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> double {
       return DoubleRef::cast_from(t).operator double();
     }
   };
 
   template <>
   struct native_value_for_grt_type<StringRef> {
-    static std::string convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> std::string {
       if (t.is_valid())
         return StringRef::cast_from(t).operator std::string();
       throw std::invalid_argument("invalid null argument");
@@ -603,7 +603,7 @@ namespace grt {
 
   template <>
   struct native_value_for_grt_type<std::string> {
-    static std::string convert(const ValueRef &t) {
+    static auto convert(const ValueRef &t) -> std::string {
       if (t.is_valid())
         return StringRef::cast_from(t).operator std::string();
       throw std::invalid_argument("invalid null argument");
@@ -618,7 +618,7 @@ namespace grt {
     T_obj *_obj;
 
   protected:
-    virtual ValueRef perform_call(const BaseListRef &arglist) {
+    virtual auto perform_call(const BaseListRef &arglist) -> ValueRef {
       return grt_value_for_type((_obj->*_funcptr)());
     }
 
@@ -636,7 +636,7 @@ namespace grt {
     T_obj *_obj;
 
   protected:
-    virtual ValueRef perform_call(const BaseListRef &args) {
+    virtual auto perform_call(const BaseListRef &args) -> ValueRef {
       //    BaseListRef args(arglist);
       T_arg1 arg1 = native_value_for_grt_type<typename traits<T_arg1>::Type>::convert(args[0]);
       return grt_value_for_type((_obj->*_funcptr)(arg1));
@@ -657,7 +657,7 @@ namespace grt {
     T_obj *_obj;
 
   protected:
-    virtual ValueRef perform_call(const BaseListRef &args) {
+    virtual auto perform_call(const BaseListRef &args) -> ValueRef {
       //    BaseListRef args(arglist);
       T_arg1 arg1 = native_value_for_grt_type<typename traits<T_arg1>::Type>::convert(args[0]);
       T_arg2 arg2 = native_value_for_grt_type<typename traits<T_arg2>::Type>::convert(args[1]);
@@ -680,7 +680,7 @@ namespace grt {
     T_obj *_obj;
 
   protected:
-    virtual ValueRef perform_call(const BaseListRef &args) {
+    virtual auto perform_call(const BaseListRef &args) -> ValueRef {
       //    BaseListRef args(arglist);
       T_arg1 arg1 = native_value_for_grt_type<typename traits<T_arg1>::Type>::convert(args[0]);
       T_arg2 arg2 = native_value_for_grt_type<typename traits<T_arg2>::Type>::convert(args[1]);
@@ -705,7 +705,7 @@ namespace grt {
     T_obj *_obj;
 
   protected:
-    virtual ValueRef perform_call(const BaseListRef &args) {
+    virtual auto perform_call(const BaseListRef &args) -> ValueRef {
       //    BaseListRef args(arglist);
       T_arg1 arg1 = native_value_for_grt_type<typename traits<T_arg1>::Type>::convert(args[0]);
       T_arg2 arg2 = native_value_for_grt_type<typename traits<T_arg2>::Type>::convert(args[1]);
@@ -732,7 +732,7 @@ namespace grt {
     T_obj *_obj;
 
   protected:
-    virtual ValueRef perform_call(const BaseListRef &args) {
+    virtual auto perform_call(const BaseListRef &args) -> ValueRef {
       //    BaseListRef args(arglist);
       T_arg1 arg1 = native_value_for_grt_type<typename traits<T_arg1>::Type>::convert(args[0]);
       T_arg2 arg2 = native_value_for_grt_type<typename traits<T_arg2>::Type>::convert(args[1]);
@@ -762,7 +762,7 @@ namespace grt {
     T_obj *_obj;
 
   protected:
-    virtual ValueRef perform_call(const BaseListRef &args) {
+    virtual auto perform_call(const BaseListRef &args) -> ValueRef {
       //    BaseListRef args(arglist);
       T_arg1 arg1 = native_value_for_grt_type<typename traits<T_arg1>::Type>::convert(args[0]);
       T_arg2 arg2 = native_value_for_grt_type<typename traits<T_arg2>::Type>::convert(args[1]);
@@ -794,7 +794,7 @@ namespace grt {
     T_obj *_obj;
 
   protected:
-    virtual ValueRef perform_call(const BaseListRef &args) {
+    virtual auto perform_call(const BaseListRef &args) -> ValueRef {
       //    BaseListRef args(arglist);
       T_arg1 arg1 = native_value_for_grt_type<typename traits<T_arg1>::Type>::convert(args[0]);
       T_arg2 arg2 = native_value_for_grt_type<typename traits<T_arg2>::Type>::convert(args[1]);
@@ -919,15 +919,15 @@ namespace grt {
 
   template <class T_ret, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5,
             class T_arg6>
-  ModuleFunctor6<T_ret, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6> *interface_fun(
-    T_ret (T_obj::*func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6), const char *name) {
+  auto interface_fun(
+    T_ret (T_obj::*func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6), const char *name) -> ModuleFunctor6<T_ret, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6> * {
     return new ModuleFunctor6<T_ret, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(name, NULL, func);
   }
 
   template <class T_ret, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5,
             class T_arg6, class T_arg7>
-  ModuleFunctor7<T_ret, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7> *interface_fun(
-    T_ret (T_obj::*func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7), const char *name) {
+  auto interface_fun(
+    T_ret (T_obj::*func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7), const char *name) -> ModuleFunctor7<T_ret, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7> * {
     return new ModuleFunctor7<T_ret, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(name, NULL, func);
   }
 

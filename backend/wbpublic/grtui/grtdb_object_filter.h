@@ -47,11 +47,11 @@ namespace grtui {
   public:
     DBObjectFilterFrame();
 
-    void set_object_class(const std::string &oclass, const std::string &caption_format);
-    void set_models(bec::GrtStringListModel *model, bec::GrtStringListModel *excl_model, bool *enabled_flag);
+    auto set_object_class(const std::string &oclass, const std::string &caption_format) -> void;
+    auto set_models(bec::GrtStringListModel *model, bec::GrtStringListModel *excl_model, bool *enabled_flag) -> void;
 
-    void set_active(bool flag);
-    bool get_active();
+    auto set_active(bool flag) -> void;
+    auto get_active() -> bool;
 
   protected:
     bec::DBObjectFilterBE _filter_be;
@@ -91,16 +91,16 @@ namespace grtui {
     mforms::Button _del2_button;
     mforms::Button _mask_button;
 
-    void toggle_enabled();
-    void toggle_detailed();
+    auto toggle_enabled() -> void;
+    auto toggle_detailed() -> void;
 
-    void update_button_enabled();
+    auto update_button_enabled() -> void;
 
-    void refresh(ssize_t object_list_selection, ssize_t mask_list_selection);
+    auto refresh(ssize_t object_list_selection, ssize_t mask_list_selection) -> void;
 
-    void add_mask();
-    void add_clicked(bool all);
-    void del_clicked(bool all);
+    auto add_mask() -> void;
+    auto add_clicked(bool all) -> void;
+    auto del_clicked(bool all) -> void;
   };
 };
 

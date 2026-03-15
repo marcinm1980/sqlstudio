@@ -43,7 +43,7 @@ DbMySQLTableEditorTriggerPage::~DbMySQLTableEditorTriggerPage() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorTriggerPage::switch_be(MySQLTableEditorBE* be) {
+auto DbMySQLTableEditorTriggerPage::switch_be(MySQLTableEditorBE* be) -> void {
   Gtk::Box* trigger_code_win;
   _xml->get_widget("trigger_code_holder", trigger_code_win);
 
@@ -55,7 +55,7 @@ void DbMySQLTableEditorTriggerPage::switch_be(MySQLTableEditorBE* be) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorTriggerPage::refresh() {
+auto DbMySQLTableEditorTriggerPage::refresh() -> void {
   if (_be)
     _be->load_trigger_sql();
 }

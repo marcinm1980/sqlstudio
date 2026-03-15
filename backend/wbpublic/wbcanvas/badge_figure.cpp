@@ -45,16 +45,16 @@ BadgeFigure::~BadgeFigure() {
   cairo_pattern_destroy(_gradient);
 }
 
-void BadgeFigure::set_badge_id(const std::string &bid) {
+auto BadgeFigure::set_badge_id(const std::string &bid) -> void {
   _badge_id = bid;
 }
 
-void BadgeFigure::set_text(const std::string &text) {
+auto BadgeFigure::set_text(const std::string &text) -> void {
   _text = text;
   set_needs_relayout();
 }
 
-void BadgeFigure::set_gradient_from_color(const Color &color) {
+auto BadgeFigure::set_gradient_from_color(const Color &color) -> void {
   HSVColor hsv(color);
 
   hsv.v /= 1.4;
@@ -64,18 +64,18 @@ void BadgeFigure::set_gradient_from_color(const Color &color) {
   set_needs_render();
 }
 
-void BadgeFigure::set_fill_color2(const Color &color) {
+auto BadgeFigure::set_fill_color2(const Color &color) -> void {
   _fill_color2 = color;
   if (_gradient)
     cairo_pattern_destroy(_gradient);
   _gradient = 0;
 }
 
-void BadgeFigure::set_text_color(const Color &color) {
+auto BadgeFigure::set_text_color(const Color &color) -> void {
   _text_color = color;
 }
 
-Size BadgeFigure::calc_min_size() {
+auto BadgeFigure::calc_min_size() -> Size {
   Size size;
   cairo_text_extents_t extents;
 
@@ -90,7 +90,7 @@ Size BadgeFigure::calc_min_size() {
   return size;
 }
 
-void BadgeFigure::draw_contents(mdc::CairoCtx *cr) {
+auto BadgeFigure::draw_contents(mdc::CairoCtx *cr) -> void {
   if (!_gradient) {
     _gradient = cairo_pattern_create_linear(0.0, 0.0, 0.0, get_size().height);
     cairo_pattern_add_color_stop_rgba(_gradient, 1, _fill_color.red, _fill_color.green, _fill_color.blue,

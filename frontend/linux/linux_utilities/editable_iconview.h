@@ -47,19 +47,19 @@ class EditableIconView : public Gtk::IconView {
 public:
   EditableIconView();
 
-  void set_model(const Glib::RefPtr<ListModelWrapper>& model) {
+  auto set_model(const Glib::RefPtr<ListModelWrapper>& model) -> void {
     Gtk::IconView::set_model(model);
     _model = model;
   }
 
 protected:
-  virtual bool on_button_press_event(GdkEventButton* event);
+  virtual auto on_button_press_event(GdkEventButton* event) -> bool;
 
 private:
   EditableIconView(const Glib::RefPtr<Gtk::TreeModel>& model);
 
-  void edit_started(Gtk::CellEditable* editable, const Glib::ustring& path);
-  void edit_done(Gtk::CellEditable* editable);
+  auto edit_started(Gtk::CellEditable* editable, const Glib::ustring& path) -> void;
+  auto edit_done(Gtk::CellEditable* editable) -> void;
 
   Gtk::TreeModel::Path _selected_path;   //!< To detect that the click was on already selected item
   sigc::connection _start_conn;          //!< To free signal/slot

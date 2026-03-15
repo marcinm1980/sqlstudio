@@ -42,13 +42,13 @@ RoutineGroupEditorWrapper::RoutineGroupEditorWrapper(::bec::RoutineGroupEditorBE
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::RoutineGroupEditorBE *RoutineGroupEditorWrapper::get_unmanaged_object() {
+auto RoutineGroupEditorWrapper::get_unmanaged_object() -> ::bec::RoutineGroupEditorBE * {
   return static_cast<::bec::RoutineGroupEditorBE *>(inner);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ RoutineGroupEditorWrapper::get_sql() {
+auto RoutineGroupEditorWrapper::get_sql() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_sql());
 }
 
@@ -67,7 +67,7 @@ void RoutineGroupEditorWrapper::set_sql(String ^ query) {
 
 //--------------------------------------------------------------------------------------------------
 
-List<String ^> ^ RoutineGroupEditorWrapper::get_routines_names() {
+auto RoutineGroupEditorWrapper::get_routines_names() -> List<String ^> ^ {
   return CppStringListToNative(get_unmanaged_object()->get_routines_names());
 }
 
@@ -85,7 +85,7 @@ void RoutineGroupEditorWrapper::append_routine_with_id(String ^ id) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ RoutineGroupEditorWrapper::get_name() {
+auto RoutineGroupEditorWrapper::get_name() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_name());
 }
 
@@ -97,7 +97,7 @@ void RoutineGroupEditorWrapper::set_name(String ^ query) {
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ RoutineGroupEditorWrapper::get_comment() {
+auto RoutineGroupEditorWrapper::get_comment() -> String ^ {
   return CppStringToNative(get_unmanaged_object()->get_comment());
 }
 
@@ -109,7 +109,7 @@ void RoutineGroupEditorWrapper::set_comment(String ^ query) {
 
 //--------------------------------------------------------------------------------------------------
 
-void RoutineGroupEditorWrapper::open_editor_for_routine_at_index(size_t index) {
+auto RoutineGroupEditorWrapper::open_editor_for_routine_at_index(size_t index) -> void {
   get_unmanaged_object()->open_editor_for_routine_at_index(index);
 }
 

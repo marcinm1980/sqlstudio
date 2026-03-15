@@ -263,7 +263,7 @@ struct ParseDatatypesData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::vector<std::string> getVariationsForSequence(const GrammarSequence &sequence) {
+  auto getVariationsForSequence(const GrammarSequence &sequence) -> std::vector<std::string> {
     std::vector<std::string> result;
     result.push_back(""); // Start with an empty entry to get the code rolling.
 
@@ -320,7 +320,7 @@ struct ParseDatatypesData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  std::vector<std::string> getVariationsForRule(std::string rule_name) {
+  auto getVariationsForRule(std::string rule_name) -> std::vector<std::string> {
     std::vector<std::string> result;
 
     std::map<std::string, RuleAlternatives>::iterator rule = rules.find(rule_name);
@@ -342,7 +342,7 @@ struct ParseDatatypesData {
    * Checks the values for precision and scale, as well as character and octet length against the given
    * values depending on the actual type.
    */
-  void checkTypeCardinalities(size_t testNo, db_SimpleDatatypeRef type, db_ColumnRef column, int precision, int scale) {
+  auto checkTypeCardinalities(size_t testNo, db_SimpleDatatypeRef type, db_ColumnRef column, int precision, int scale) -> void {
     std::string numberString = " (" + std::to_string(testNo) + ")";
 
     // Check special cases first (blob, text + date(time) types).
@@ -376,14 +376,14 @@ class Data_type_parsingTest : public ::testing::Test {
 protected:
   static std::unique_ptr<ParseDatatypesData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<ParseDatatypesData>();
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
     data->tester->createNewDocument();
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

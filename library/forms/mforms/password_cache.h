@@ -37,17 +37,17 @@ namespace mforms {
     PasswordCache();
     static PasswordCache instance;
 
-    const char *find_password(const std::string &service, const std::string &account);
-    size_t find_block(const std::string &service, const std::string &account);
+    auto find_password(const std::string &service, const std::string &account) -> const char *;
+    auto find_block(const std::string &service, const std::string &account) -> size_t;
 
   public:
-    static PasswordCache *get();
+    static auto get() -> PasswordCache *;
 
     ~PasswordCache();
 
-    void add_password(const std::string &service, const std::string &account, const char *password);
-    void remove_password(const std::string &service, const std::string &account);
+    auto add_password(const std::string &service, const std::string &account, const char *password) -> void;
+    auto remove_password(const std::string &service, const std::string &account) -> void;
 
-    bool get_password(const std::string &service, const std::string &account, std::string &ret_password);
+    auto get_password(const std::string &service, const std::string &account, std::string &ret_password) -> bool;
   };
 };

@@ -37,16 +37,16 @@ namespace MySQL {
     protected:
       ScrollPanelWrapper(mforms::ScrollPanel *backend);
 
-      static bool create(mforms::ScrollPanel *backend, mforms::ScrollPanelFlags flags);
-      static void add(mforms::ScrollPanel *backend, mforms::View *view);
-      static void remove(mforms::ScrollPanel *backend);
-      static void set_autohide_scrollers(mforms::ScrollPanel *backend, bool);
-      static void set_visible_scrollers(mforms::ScrollPanel *backend, bool, bool);
-      static void scroll_to_view(mforms::ScrollPanel *backend, mforms::View *view);
-      static base::Rect get_content_rect(mforms::ScrollPanel *backend);
-      static void scroll_to(mforms::ScrollPanel *backend, int x, int y);
+      static auto create(mforms::ScrollPanel *backend, mforms::ScrollPanelFlags flags) -> bool;
+      static auto add(mforms::ScrollPanel *backend, mforms::View *view) -> void;
+      static auto remove(mforms::ScrollPanel *backend) -> void;
+      static auto set_autohide_scrollers(mforms::ScrollPanel *backend, bool) -> void;
+      static auto set_visible_scrollers(mforms::ScrollPanel *backend, bool, bool) -> void;
+      static auto scroll_to_view(mforms::ScrollPanel *backend, mforms::View *view) -> void;
+      static auto get_content_rect(mforms::ScrollPanel *backend) -> base::Rect;
+      static auto scroll_to(mforms::ScrollPanel *backend, int x, int y) -> void;
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

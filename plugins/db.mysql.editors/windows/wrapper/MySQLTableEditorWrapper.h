@@ -69,7 +69,7 @@ namespace MySQL {
 
         MySQLTableColumnsListWrapper(::MySQLTableColumnsListBE *inn);
 
-        inline ::MySQLTableColumnsListBE *get_unmanaged_object() {
+        inline auto get_unmanaged_object() -> ::MySQLTableColumnsListBE * {
           return static_cast<::MySQLTableColumnsListBE *>(inner);
         }
 
@@ -138,26 +138,23 @@ namespace MySQL {
         MySQLTableEditorWrapper(GrtValue ^ arglist);
         virtual ~MySQLTableEditorWrapper();
 
-        ::MySQLTableEditorBE *get_unmanaged_object() {
+        auto get_unmanaged_object() -> ::MySQLTableEditorBE * {
           return static_cast<::MySQLTableEditorBE *>(inner);
         }
 
-        virtual MySQLTableColumnsListWrapper ^ get_columns();
+        virtual auto get_columns() -> MySQLTableColumnsListWrapper ^;
 
         void set_table_option_by_name(System::String ^ name, System::String ^ value) {
           get_unmanaged_object()->set_table_option_by_name(NativeToCppString(name), NativeToCppString(value));
         }
 
-        List<String ^> ^
-          get_engines_list() { return CppStringListToNative(get_unmanaged_object()->get_engines_list()); }
+        auto get_engines_list() -> List<String ^> ^ { return CppStringListToNative(get_unmanaged_object()->get_engines_list()); }
 
-          List<String ^> ^
-          get_index_storage_types() { return CppStringListToNative(get_unmanaged_object()->get_index_storage_types()); }
+          auto get_index_storage_types() -> List<String ^> ^ { return CppStringListToNative(get_unmanaged_object()->get_index_storage_types()); }
 
-          List<String ^> ^
-          get_fk_action_options() { return CppStringListToNative(get_unmanaged_object()->get_fk_action_options()); }
+          auto get_fk_action_options() -> List<String ^> ^ { return CppStringListToNative(get_unmanaged_object()->get_fk_action_options()); }
 
-          bool engine_supports_foreign_keys() {
+          auto engine_supports_foreign_keys() -> bool {
           return get_unmanaged_object()->engine_supports_foreign_keys();
         }
 
@@ -169,8 +166,8 @@ namespace MySQL {
           get_unmanaged_object()->set_sql(NativeToCppString(sql));
         }
 
-        Control ^ get_trigger_panel();
-        void commit_changes();
+        auto get_trigger_panel() -> Control ^;
+        auto commit_changes() -> void;
 
         bool set_partition_type(String ^ type) {
           return get_unmanaged_object()->set_partition_type(NativeToCppString(type));
@@ -182,14 +179,13 @@ namespace MySQL {
           get_unmanaged_object()->set_partition_expression(NativeToCppString(expr));
         }
 
-        String ^
-          get_partition_expression() { return CppStringToNative(get_unmanaged_object()->get_partition_expression()); }
+        auto get_partition_expression() -> String ^ { return CppStringToNative(get_unmanaged_object()->get_partition_expression()); }
 
-          void set_partition_count(int count) {
+          auto set_partition_count(int count) -> void {
           get_unmanaged_object()->set_partition_count(count);
         }
 
-        int get_partition_count() {
+        auto get_partition_count() -> int {
           return get_unmanaged_object()->get_partition_count();
         }
 
@@ -203,41 +199,40 @@ namespace MySQL {
           return get_unmanaged_object()->set_subpartition_expression(NativeToCppString(expr));
         }
 
-        String ^
-          get_subpartition_expression() {
+        auto get_subpartition_expression() -> String ^ {
             return CppStringToNative(get_unmanaged_object()->get_subpartition_expression());
           }
 
-          void set_subpartition_count(int count) {
+          auto set_subpartition_count(int count) -> void {
           get_unmanaged_object()->set_subpartition_count(count);
         }
 
-        int get_subpartition_count() {
+        auto get_subpartition_count() -> int {
           return get_unmanaged_object()->get_subpartition_count();
         }
 
-        MySQLTablePartitionTreeWrapper ^ get_partitions();
+        auto get_partitions() -> MySQLTablePartitionTreeWrapper ^;
 
         // Whether partitions and sub partitions will be defined by the user or not .
         // If false, only count is needed otherwise the partitions list must be defined.
-        void set_explicit_partitions(bool flag) {
+        auto set_explicit_partitions(bool flag) -> void {
           get_unmanaged_object()->set_explicit_partitions(flag);
         }
 
-        void set_explicit_subpartitions(bool flag) {
+        auto set_explicit_subpartitions(bool flag) -> void {
           get_unmanaged_object()->set_explicit_subpartitions(flag);
         }
 
-        bool get_explicit_partitions() {
+        auto get_explicit_partitions() -> bool {
           return get_unmanaged_object()->get_explicit_partitions();
         }
 
-        bool get_explicit_subpartitions() {
+        auto get_explicit_subpartitions() -> bool {
           return get_unmanaged_object()->get_explicit_subpartitions();
         }
 
-        bool is_server_version_at_least(int major, int minor, int release);
-        void load_trigger_sql();
+        auto is_server_version_at_least(int major, int minor, int release) -> bool;
+        auto load_trigger_sql() -> void;
       };
 
     }; // namespace Db

@@ -38,13 +38,13 @@ extern FILE *yyin;
 extern YYSTYPE yy_result;
 extern int yy_lineno;
 
-int yyinit(FILE *input_file);
-int yyfreeres();
-int yylex();
-int yyparse();
+auto yyinit(FILE *input_file) -> int;
+auto yyfreeres() -> int;
+auto yylex() -> int;
+auto yyparse() -> int;
 
-void yyerror(const char *msg);
-int error(const char *msg);
-int warning(const char *msg);
+auto yyerror(const char *msg) -> void;
+auto error(const char *msg) -> int;
+auto warning(const char *msg) -> int;
 
-int generate_grammar_file(const Grammar_tree_item* tree, const char *filename);
+auto generate_grammar_file(const Grammar_tree_item* tree, const char *filename) -> int;

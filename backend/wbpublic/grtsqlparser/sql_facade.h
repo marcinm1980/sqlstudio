@@ -54,59 +54,59 @@ public:
   typedef std::list<std::pair<std::string, std::string> > String_tuple_list;
 
 public:
-  static SqlFacade::Ref instance_for_rdbms(db_mgmt_RdbmsRef rdbms);
-  static SqlFacade::Ref instance_for_rdbms_name(const std::string &name);
+  static auto instance_for_rdbms(db_mgmt_RdbmsRef rdbms) -> SqlFacade::Ref;
+  static auto instance_for_rdbms_name(const std::string &name) -> SqlFacade::Ref;
 
-  virtual int splitSqlScript(const std::string &sql, std::list<std::string> &statements) = 0;
+  virtual auto splitSqlScript(const std::string &sql, std::list<std::string> &statements) -> int = 0;
   virtual int splitSqlScript(const char *sql, size_t length, const std::string &intial_delimiter,
                              std::vector<std::pair<size_t, size_t> > &borders,
                              const std::string &line_break = "\n") = 0;
 
-  virtual Sql_parser::Ref sqlParser() = 0;
-  virtual int parseSqlScriptString(grt::Ref<db_Catalog> catalog, const std::string sql) = 0;
-  virtual int parseSqlScriptStringEx(grt::Ref<db_Catalog> catalog, const std::string sql,
-                                     const grt::DictRef options) = 0;
-  virtual int parseSqlScriptFile(grt::Ref<db_Catalog> catalog, const std::string filename) = 0;
-  virtual int parseSqlScriptFileEx(grt::Ref<db_Catalog> catalog, const std::string filename,
-                                   const grt::DictRef options) = 0;
+  virtual auto sqlParser() -> Sql_parser::Ref = 0;
+  virtual auto parseSqlScriptString(grt::Ref<db_Catalog> catalog, const std::string sql) -> int = 0;
+  virtual auto parseSqlScriptStringEx(grt::Ref<db_Catalog> catalog, const std::string sql,
+                                     const grt::DictRef options) -> int = 0;
+  virtual auto parseSqlScriptFile(grt::Ref<db_Catalog> catalog, const std::string filename) -> int = 0;
+  virtual auto parseSqlScriptFileEx(grt::Ref<db_Catalog> catalog, const std::string filename,
+                                   const grt::DictRef options) -> int = 0;
 
-  virtual Invalid_sql_parser::Ref invalidSqlParser() = 0;
-  virtual int parseInserts(db_TableRef table, const std::string &sql) = 0;
+  virtual auto invalidSqlParser() -> Invalid_sql_parser::Ref = 0;
+  virtual auto parseInserts(db_TableRef table, const std::string &sql) -> int = 0;
   /* done */ virtual int parseTrigger(db_TriggerRef trigger, const std::string &sql) = 0;
   /* done */ virtual int parseRoutine(db_RoutineRef routine, const std::string &sql) = 0;
   /* done */ virtual int parseRoutines(db_RoutineGroupRef routineGroup, const std::string &sql) = 0;
   /* done */ virtual int parseView(db_ViewRef view, const std::string &sql) = 0;
 
-  virtual Sql_syntax_check::Ref sqlSyntaxCheck() = 0;
-  virtual int checkSqlSyntax(const std::string &sql) = 0;
-  virtual int checkTriggerSyntax(const std::string &sql) = 0;
-  virtual int checkViewSyntax(const std::string &sql) = 0;
-  virtual int checkRoutineSyntax(const std::string &sql) = 0;
+  virtual auto sqlSyntaxCheck() -> Sql_syntax_check::Ref = 0;
+  virtual auto checkSqlSyntax(const std::string &sql) -> int = 0;
+  virtual auto checkTriggerSyntax(const std::string &sql) -> int = 0;
+  virtual auto checkViewSyntax(const std::string &sql) -> int = 0;
+  virtual auto checkRoutineSyntax(const std::string &sql) -> int = 0;
 
-  virtual Sql_semantic_check::Ref sqlSemanticCheck() = 0;
+  virtual auto sqlSemanticCheck() -> Sql_semantic_check::Ref = 0;
 
-  virtual Sql_specifics::Ref sqlSpecifics() = 0;
+  virtual auto sqlSpecifics() -> Sql_specifics::Ref = 0;
 
-  virtual Sql_normalizer::Ref sqlNormalizer() = 0;
-  virtual std::string normalizeSqlStatement(const std::string sql, const std::string schema_name) = 0;
-  virtual std::string removeInterTokenSpaces(const std::string sql) = 0;
+  virtual auto sqlNormalizer() -> Sql_normalizer::Ref = 0;
+  virtual auto normalizeSqlStatement(const std::string sql, const std::string schema_name) -> std::string = 0;
+  virtual auto removeInterTokenSpaces(const std::string sql) -> std::string = 0;
 
-  virtual Sql_inserts_loader::Ref sqlInsertsLoader() = 0;
+  virtual auto sqlInsertsLoader() -> Sql_inserts_loader::Ref = 0;
 
-  virtual Sql_schema_rename::Ref sqlSchemaRenamer() = 0;
+  virtual auto sqlSchemaRenamer() -> Sql_schema_rename::Ref = 0;
   /* done */ virtual int renameSchemaReferences(grt::Ref<db_Catalog> catalog, const std::string old_schema_name,
                                                 const std::string new_schema_name) = 0;
 
-  virtual Sql_statement_decomposer::Ref sqlStatementDecomposer(grt::DictRef db_opts = grt::DictRef()) = 0;
+  virtual auto sqlStatementDecomposer(grt::DictRef db_opts = grt::DictRef()) -> Sql_statement_decomposer::Ref = 0;
 
-  virtual bool parseRoutineDetails(const std::string &sql, std::string &type, std::string &name,
-                                   String_tuple_list &parameters, std::string &return_value, std::string &comments) = 0;
-  virtual bool parseSelectStatementForEdit(const std::string &sql, std::string &schema_name, std::string &table_name,
-                                           String_tuple_list &column_names) = 0;
-  virtual bool parseDropStatement(const std::string &sql, std::string &object_type,
-                                  std::vector<std::pair<std::string, std::string> > &object_names) = 0;
+  virtual auto parseRoutineDetails(const std::string &sql, std::string &type, std::string &name,
+                                   String_tuple_list &parameters, std::string &return_value, std::string &comments) -> bool = 0;
+  virtual auto parseSelectStatementForEdit(const std::string &sql, std::string &schema_name, std::string &table_name,
+                                           String_tuple_list &column_names) -> bool = 0;
+  virtual auto parseDropStatement(const std::string &sql, std::string &object_type,
+                                  std::vector<std::pair<std::string, std::string> > &object_names) -> bool = 0;
 
-  virtual void stop_processing() = 0;
+  virtual auto stop_processing() -> void = 0;
 };
 
 #endif /* _SQL_FACADE_H_ */

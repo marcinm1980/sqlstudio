@@ -36,20 +36,20 @@ using namespace MySQL::MySqlStudio;
 
 //--------------------------------------------------------------------------------------------------
 
-base::Color Conversions::NativeToColor(Color color) {
+auto Conversions::NativeToColor(Color color) -> base::Color {
   return base::Color(color.R / 255.0, color.G / 255.0, color.B / 255.0, color.A / 255.0);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Color Conversions::ColorToNative(base::Color color) {
+auto Conversions::ColorToNative(base::Color color) -> Color {
   return Color::FromArgb((int)(color.alpha * 255), (int)(color.red * 255), (int)(color.green * 255),
                          (int)(color.blue * 255));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Color Conversions::GetApplicationColor(ApplicationColor color, bool foreground) {
+auto Conversions::GetApplicationColor(ApplicationColor color, bool foreground) -> Color {
   base::Color baseColor = base::Color::getApplicationColor((base::ApplicationColor)color, foreground);
   if (!baseColor.is_valid())
     return Color::Black;
@@ -58,7 +58,7 @@ Color Conversions::GetApplicationColor(ApplicationColor color, bool foreground) 
 
 //--------------------------------------------------------------------------------------------------
 
-bool Conversions::UseWin8Drawing() {
+auto Conversions::UseWin8Drawing() -> bool {
   switch (base::Color::get_active_scheme()) {
     case base::ColorSchemeStandardWin8:
     case base::ColorSchemeStandardWin8Alternate:
@@ -71,13 +71,13 @@ bool Conversions::UseWin8Drawing() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool Conversions::InHighContrastMode() {
+auto Conversions::InHighContrastMode() -> bool {
   return base::Color::is_high_contrast_scheme();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Conversions::SetColorScheme(ColorScheme newScheme) {
+auto Conversions::SetColorScheme(ColorScheme newScheme) -> void {
   base::Color::set_active_scheme((base::ColorScheme)newScheme);
   ManagedNotificationCenter::Send("GNColorsChanged", IntPtr::Zero);
 }

@@ -114,12 +114,12 @@ namespace base {
   };
 
   // Here we define most usable scope ptrs
-  inline void FreeCharArray(char* p) {
+  inline auto FreeCharArray(char* p) -> void {
     delete[] p;
   }
   using AutoCharArray = scope_ptr<char, FreeCharArray>;
 
-  inline void scope_fclose(FILE* fp) {
+  inline auto scope_fclose(FILE* fp) -> void {
     if (fp)
       fclose(fp);
   }

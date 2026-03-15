@@ -208,7 +208,7 @@ namespace MySQL {
       !ManagedRef() {
         reset();
       }
-      void reset() {
+      auto reset() -> void {
         delete _inner;
         _inner = NULL;
       }

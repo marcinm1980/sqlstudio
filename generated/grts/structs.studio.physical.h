@@ -83,7 +83,7 @@ public:
     : model_Layer(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.physical.Layer";
   }
 
@@ -91,12 +91,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_physical_Layer());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -130,7 +130,7 @@ public:
 
   virtual ~studio_physical_Connection();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.physical.Connection";
   }
 
@@ -141,7 +141,7 @@ public:
    * \par In Python:
    *    value = obj.caption
    */
-  grt::StringRef caption() const { return _caption; }
+  auto caption() const -> grt::StringRef { return _caption; }
 
   /**
    * Setter for attribute caption
@@ -150,7 +150,7 @@ public:
    * \par In Python:
    *   obj.caption = value
    */
-  virtual void caption(const grt::StringRef &value) {
+  virtual auto caption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_caption);
     _caption = value;
     member_changed("caption", ovalue, value);
@@ -163,7 +163,7 @@ public:
    * \par In Python:
    *    value = obj.captionXOffs
    */
-  grt::DoubleRef captionXOffs() const { return _captionXOffs; }
+  auto captionXOffs() const -> grt::DoubleRef { return _captionXOffs; }
 
   /**
    * Setter for attribute captionXOffs
@@ -172,7 +172,7 @@ public:
    * \par In Python:
    *   obj.captionXOffs = value
    */
-  virtual void captionXOffs(const grt::DoubleRef &value) {
+  virtual auto captionXOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_captionXOffs);
     _captionXOffs = value;
     member_changed("captionXOffs", ovalue, value);
@@ -185,7 +185,7 @@ public:
    * \par In Python:
    *    value = obj.captionYOffs
    */
-  grt::DoubleRef captionYOffs() const { return _captionYOffs; }
+  auto captionYOffs() const -> grt::DoubleRef { return _captionYOffs; }
 
   /**
    * Setter for attribute captionYOffs
@@ -194,7 +194,7 @@ public:
    * \par In Python:
    *   obj.captionYOffs = value
    */
-  virtual void captionYOffs(const grt::DoubleRef &value) {
+  virtual auto captionYOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_captionYOffs);
     _captionYOffs = value;
     member_changed("captionYOffs", ovalue, value);
@@ -207,7 +207,7 @@ public:
    * \par In Python:
    *    value = obj.comment
    */
-  grt::StringRef comment() const { return _comment; }
+  auto comment() const -> grt::StringRef { return _comment; }
 
   /**
    * Setter for attribute comment
@@ -216,7 +216,7 @@ public:
    * \par In Python:
    *   obj.comment = value
    */
-  virtual void comment(const grt::StringRef &value) {
+  virtual auto comment(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_comment);
     _comment = value;
     member_changed("comment", ovalue, value);
@@ -229,7 +229,7 @@ public:
    * \par In Python:
    *    value = obj.endCaptionXOffs
    */
-  grt::DoubleRef endCaptionXOffs() const { return _endCaptionXOffs; }
+  auto endCaptionXOffs() const -> grt::DoubleRef { return _endCaptionXOffs; }
 
   /**
    * Setter for attribute endCaptionXOffs
@@ -238,7 +238,7 @@ public:
    * \par In Python:
    *   obj.endCaptionXOffs = value
    */
-  virtual void endCaptionXOffs(const grt::DoubleRef &value) {
+  virtual auto endCaptionXOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_endCaptionXOffs);
     _endCaptionXOffs = value;
     member_changed("endCaptionXOffs", ovalue, value);
@@ -251,7 +251,7 @@ public:
    * \par In Python:
    *    value = obj.endCaptionYOffs
    */
-  grt::DoubleRef endCaptionYOffs() const { return _endCaptionYOffs; }
+  auto endCaptionYOffs() const -> grt::DoubleRef { return _endCaptionYOffs; }
 
   /**
    * Setter for attribute endCaptionYOffs
@@ -260,7 +260,7 @@ public:
    * \par In Python:
    *   obj.endCaptionYOffs = value
    */
-  virtual void endCaptionYOffs(const grt::DoubleRef &value) {
+  virtual auto endCaptionYOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_endCaptionYOffs);
     _endCaptionYOffs = value;
     member_changed("endCaptionYOffs", ovalue, value);
@@ -273,7 +273,7 @@ public:
    * \par In Python:
    *    value = obj.extraCaption
    */
-  grt::StringRef extraCaption() const { return _extraCaption; }
+  auto extraCaption() const -> grt::StringRef { return _extraCaption; }
 
   /**
    * Setter for attribute extraCaption
@@ -282,7 +282,7 @@ public:
    * \par In Python:
    *   obj.extraCaption = value
    */
-  virtual void extraCaption(const grt::StringRef &value) {
+  virtual auto extraCaption(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_extraCaption);
     _extraCaption = value;
     member_changed("extraCaption", ovalue, value);
@@ -295,7 +295,7 @@ public:
    * \par In Python:
    *    value = obj.extraCaptionXOffs
    */
-  grt::DoubleRef extraCaptionXOffs() const { return _extraCaptionXOffs; }
+  auto extraCaptionXOffs() const -> grt::DoubleRef { return _extraCaptionXOffs; }
 
   /**
    * Setter for attribute extraCaptionXOffs
@@ -304,7 +304,7 @@ public:
    * \par In Python:
    *   obj.extraCaptionXOffs = value
    */
-  virtual void extraCaptionXOffs(const grt::DoubleRef &value) {
+  virtual auto extraCaptionXOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_extraCaptionXOffs);
     _extraCaptionXOffs = value;
     member_changed("extraCaptionXOffs", ovalue, value);
@@ -317,7 +317,7 @@ public:
    * \par In Python:
    *    value = obj.extraCaptionYOffs
    */
-  grt::DoubleRef extraCaptionYOffs() const { return _extraCaptionYOffs; }
+  auto extraCaptionYOffs() const -> grt::DoubleRef { return _extraCaptionYOffs; }
 
   /**
    * Setter for attribute extraCaptionYOffs
@@ -326,7 +326,7 @@ public:
    * \par In Python:
    *   obj.extraCaptionYOffs = value
    */
-  virtual void extraCaptionYOffs(const grt::DoubleRef &value) {
+  virtual auto extraCaptionYOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_extraCaptionYOffs);
     _extraCaptionYOffs = value;
     member_changed("extraCaptionYOffs", ovalue, value);
@@ -339,7 +339,7 @@ public:
    * \par In Python:
    *    value = obj.foreignKey
    */
-  db_ForeignKeyRef foreignKey() const { return _foreignKey; }
+  auto foreignKey() const -> db_ForeignKeyRef { return _foreignKey; }
 
   /**
    * Setter for attribute foreignKey
@@ -348,7 +348,7 @@ public:
    * \par In Python:
    *   obj.foreignKey = value
    */
-  virtual void foreignKey(const db_ForeignKeyRef &value);
+  virtual auto foreignKey(const db_ForeignKeyRef &value) -> void;
 
   /**
    * Getter for attribute middleSegmentOffset
@@ -357,7 +357,7 @@ public:
    * \par In Python:
    *    value = obj.middleSegmentOffset
    */
-  grt::DoubleRef middleSegmentOffset() const { return _middleSegmentOffset; }
+  auto middleSegmentOffset() const -> grt::DoubleRef { return _middleSegmentOffset; }
 
   /**
    * Setter for attribute middleSegmentOffset
@@ -366,7 +366,7 @@ public:
    * \par In Python:
    *   obj.middleSegmentOffset = value
    */
-  virtual void middleSegmentOffset(const grt::DoubleRef &value) {
+  virtual auto middleSegmentOffset(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_middleSegmentOffset);
     _middleSegmentOffset = value;
     member_changed("middleSegmentOffset", ovalue, value);
@@ -379,7 +379,7 @@ public:
    * \par In Python:
    *    value = obj.startCaptionXOffs
    */
-  grt::DoubleRef startCaptionXOffs() const { return _startCaptionXOffs; }
+  auto startCaptionXOffs() const -> grt::DoubleRef { return _startCaptionXOffs; }
 
   /**
    * Setter for attribute startCaptionXOffs
@@ -388,7 +388,7 @@ public:
    * \par In Python:
    *   obj.startCaptionXOffs = value
    */
-  virtual void startCaptionXOffs(const grt::DoubleRef &value) {
+  virtual auto startCaptionXOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_startCaptionXOffs);
     _startCaptionXOffs = value;
     member_changed("startCaptionXOffs", ovalue, value);
@@ -401,7 +401,7 @@ public:
    * \par In Python:
    *    value = obj.startCaptionYOffs
    */
-  grt::DoubleRef startCaptionYOffs() const { return _startCaptionYOffs; }
+  auto startCaptionYOffs() const -> grt::DoubleRef { return _startCaptionYOffs; }
 
   /**
    * Setter for attribute startCaptionYOffs
@@ -410,18 +410,18 @@ public:
    * \par In Python:
    *   obj.startCaptionYOffs = value
    */
-  virtual void startCaptionYOffs(const grt::DoubleRef &value) {
+  virtual auto startCaptionYOffs(const grt::DoubleRef &value) -> void {
     grt::ValueRef ovalue(_startCaptionYOffs);
     _startCaptionYOffs = value;
     member_changed("startCaptionYOffs", ovalue, value);
   }
 
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -442,12 +442,12 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_physical_Connection());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -534,7 +534,7 @@ public:
 
   virtual ~studio_physical_RoutineGroupFigure();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.physical.RoutineGroupFigure";
   }
 
@@ -545,7 +545,7 @@ public:
    * \par In Python:
    *    value = obj.routineGroup
    */
-  db_RoutineGroupRef routineGroup() const { return _routineGroup; }
+  auto routineGroup() const -> db_RoutineGroupRef { return _routineGroup; }
 
   /**
    * Setter for attribute routineGroup
@@ -554,14 +554,14 @@ public:
    * \par In Python:
    *   obj.routineGroup = value
    */
-  virtual void routineGroup(const db_RoutineGroupRef &value);
+  virtual auto routineGroup(const db_RoutineGroupRef &value) -> void;
 
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -570,12 +570,12 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_physical_RoutineGroupFigure());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -602,7 +602,7 @@ public:
 
   virtual ~studio_physical_ViewFigure();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.physical.ViewFigure";
   }
 
@@ -613,7 +613,7 @@ public:
    * \par In Python:
    *    value = obj.view
    */
-  db_ViewRef view() const { return _view; }
+  auto view() const -> db_ViewRef { return _view; }
 
   /**
    * Setter for attribute view
@@ -622,14 +622,14 @@ public:
    * \par In Python:
    *   obj.view = value
    */
-  virtual void view(const db_ViewRef &value);
+  virtual auto view(const db_ViewRef &value) -> void;
 
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -638,12 +638,12 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_physical_ViewFigure());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -675,7 +675,7 @@ public:
 
   virtual ~studio_physical_TableFigure();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.physical.TableFigure";
   }
 
@@ -686,7 +686,7 @@ public:
    * \par In Python:
    *    value = obj.columnsExpanded
    */
-  grt::IntegerRef columnsExpanded() const { return _columnsExpanded; }
+  auto columnsExpanded() const -> grt::IntegerRef { return _columnsExpanded; }
 
   /**
    * Setter for attribute columnsExpanded
@@ -695,7 +695,7 @@ public:
    * \par In Python:
    *   obj.columnsExpanded = value
    */
-  virtual void columnsExpanded(const grt::IntegerRef &value) {
+  virtual auto columnsExpanded(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_columnsExpanded);
     _columnsExpanded = value;
     member_changed("columnsExpanded", ovalue, value);
@@ -708,7 +708,7 @@ public:
    * \par In Python:
    *    value = obj.foreignKeysExpanded
    */
-  grt::IntegerRef foreignKeysExpanded() const { return _foreignKeysExpanded; }
+  auto foreignKeysExpanded() const -> grt::IntegerRef { return _foreignKeysExpanded; }
 
   /**
    * Setter for attribute foreignKeysExpanded
@@ -717,7 +717,7 @@ public:
    * \par In Python:
    *   obj.foreignKeysExpanded = value
    */
-  virtual void foreignKeysExpanded(const grt::IntegerRef &value) {
+  virtual auto foreignKeysExpanded(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_foreignKeysExpanded);
     _foreignKeysExpanded = value;
     member_changed("foreignKeysExpanded", ovalue, value);
@@ -730,7 +730,7 @@ public:
    * \par In Python:
    *    value = obj.indicesExpanded
    */
-  grt::IntegerRef indicesExpanded() const { return _indicesExpanded; }
+  auto indicesExpanded() const -> grt::IntegerRef { return _indicesExpanded; }
 
   /**
    * Setter for attribute indicesExpanded
@@ -739,7 +739,7 @@ public:
    * \par In Python:
    *   obj.indicesExpanded = value
    */
-  virtual void indicesExpanded(const grt::IntegerRef &value) {
+  virtual auto indicesExpanded(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_indicesExpanded);
     _indicesExpanded = value;
     member_changed("indicesExpanded", ovalue, value);
@@ -752,7 +752,7 @@ public:
    * \par In Python:
    *    value = obj.summarizeDisplay
    */
-  grt::IntegerRef summarizeDisplay() const { return _summarizeDisplay; }
+  auto summarizeDisplay() const -> grt::IntegerRef { return _summarizeDisplay; }
 
   /**
    * Setter for attribute summarizeDisplay
@@ -761,7 +761,7 @@ public:
    * \par In Python:
    *   obj.summarizeDisplay = value
    */
-  virtual void summarizeDisplay(const grt::IntegerRef &value) {
+  virtual auto summarizeDisplay(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_summarizeDisplay);
     _summarizeDisplay = value;
     member_changed("summarizeDisplay", ovalue, value);
@@ -774,7 +774,7 @@ public:
    * \par In Python:
    *    value = obj.table
    */
-  db_TableRef table() const { return _table; }
+  auto table() const -> db_TableRef { return _table; }
 
   /**
    * Setter for attribute table
@@ -783,7 +783,7 @@ public:
    * \par In Python:
    *   obj.table = value
    */
-  virtual void table(const db_TableRef &value);
+  virtual auto table(const db_TableRef &value) -> void;
 
   /**
    * Getter for attribute triggersExpanded
@@ -792,7 +792,7 @@ public:
    * \par In Python:
    *    value = obj.triggersExpanded
    */
-  grt::IntegerRef triggersExpanded() const { return _triggersExpanded; }
+  auto triggersExpanded() const -> grt::IntegerRef { return _triggersExpanded; }
 
   /**
    * Setter for attribute triggersExpanded
@@ -801,18 +801,18 @@ public:
    * \par In Python:
    *   obj.triggersExpanded = value
    */
-  virtual void triggersExpanded(const grt::IntegerRef &value) {
+  virtual auto triggersExpanded(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_triggersExpanded);
     _triggersExpanded = value;
     member_changed("triggersExpanded", ovalue, value);
   }
 
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -826,12 +826,12 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_physical_TableFigure());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -883,7 +883,7 @@ public:
 
   virtual ~studio_physical_Diagram();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.physical.Diagram";
   }
 
@@ -892,37 +892,37 @@ public:
    * \param objects 
    * \return 
    */
-  virtual void autoPlaceDBObjects(const grt::ListRef<db_DatabaseObject> &objects);
+  virtual auto autoPlaceDBObjects(const grt::ListRef<db_DatabaseObject> &objects) -> void;
   /**
    * Method. 
    * \param fk 
    * \return 
    */
-  virtual studio_physical_ConnectionRef createConnectionForForeignKey(const db_ForeignKeyRef &fk);
+  virtual auto createConnectionForForeignKey(const db_ForeignKeyRef &fk) -> studio_physical_ConnectionRef;
   /**
    * Method. 
    * \param table 
    * \return 
    */
-  virtual grt::IntegerRef createConnectionsForTable(const db_TableRef &table);
+  virtual auto createConnectionsForTable(const db_TableRef &table) -> grt::IntegerRef;
   /**
    * Method. 
    * \param table 
    * \return 
    */
-  virtual void deleteConnectionsForTable(const db_TableRef &table);
+  virtual auto deleteConnectionsForTable(const db_TableRef &table) -> void;
   /**
    * Method. 
    * \param fk 
    * \return 
    */
-  virtual studio_physical_ConnectionRef getConnectionForForeignKey(const db_ForeignKeyRef &fk);
+  virtual auto getConnectionForForeignKey(const db_ForeignKeyRef &fk) -> studio_physical_ConnectionRef;
   /**
    * Method. 
    * \param object 
    * \return 
    */
-  virtual model_FigureRef getFigureForDBObject(const db_DatabaseObjectRef &object);
+  virtual auto getFigureForDBObject(const db_DatabaseObjectRef &object) -> model_FigureRef;
   /**
    * Method. 
    * \param x 
@@ -932,7 +932,7 @@ public:
    * \param name 
    * \return 
    */
-  virtual model_LayerRef placeNewLayer(double x, double y, double width, double height, const std::string &name);
+  virtual auto placeNewLayer(double x, double y, double width, double height, const std::string &name) -> model_LayerRef;
   /**
    * Method. 
    * \param routineGroup 
@@ -940,7 +940,7 @@ public:
    * \param y 
    * \return 
    */
-  virtual studio_physical_RoutineGroupFigureRef placeRoutineGroup(const db_RoutineGroupRef &routineGroup, double x, double y);
+  virtual auto placeRoutineGroup(const db_RoutineGroupRef &routineGroup, double x, double y) -> studio_physical_RoutineGroupFigureRef;
   /**
    * Method. 
    * \param table 
@@ -948,7 +948,7 @@ public:
    * \param y 
    * \return 
    */
-  virtual studio_physical_TableFigureRef placeTable(const db_TableRef &table, double x, double y);
+  virtual auto placeTable(const db_TableRef &table, double x, double y) -> studio_physical_TableFigureRef;
   /**
    * Method. 
    * \param view 
@@ -956,13 +956,13 @@ public:
    * \param y 
    * \return 
    */
-  virtual studio_physical_ViewFigureRef placeView(const db_ViewRef &view, double x, double y);
+  virtual auto placeView(const db_ViewRef &view, double x, double y) -> studio_physical_ViewFigureRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -970,7 +970,7 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_physical_Diagram());
   }
 
@@ -995,7 +995,7 @@ private: // Wrapper methods for use by the grt.
   static grt::ValueRef call_placeView(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<studio_physical_Diagram*>(self)->placeView(db_ViewRef::cast_from(args[0]), grt::DoubleRef::cast_from(args[1]), grt::DoubleRef::cast_from(args[2])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1036,7 +1036,7 @@ public:
 
   virtual ~studio_physical_Model();
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "studio.physical.Model";
   }
 
@@ -1048,7 +1048,7 @@ public:
    * \par In Python:
    *    value = obj.catalog
    */
-  db_CatalogRef catalog() const { return _catalog; }
+  auto catalog() const -> db_CatalogRef { return _catalog; }
 
   /**
    * Setter for attribute catalog
@@ -1057,7 +1057,7 @@ public:
    * \par In Python:
    *   obj.catalog = value
    */
-  virtual void catalog(const db_CatalogRef &value) {
+  virtual auto catalog(const db_CatalogRef &value) -> void {
     grt::ValueRef ovalue(_catalog);
 
     _catalog = value;
@@ -1071,7 +1071,7 @@ public:
    * \par In Python:
    *    value = obj.connectionNotation
    */
-  grt::StringRef connectionNotation() const { return _connectionNotation; }
+  auto connectionNotation() const -> grt::StringRef { return _connectionNotation; }
 
   /**
    * Setter for attribute connectionNotation
@@ -1080,7 +1080,7 @@ public:
    * \par In Python:
    *   obj.connectionNotation = value
    */
-  virtual void connectionNotation(const grt::StringRef &value) {
+  virtual auto connectionNotation(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_connectionNotation);
     _connectionNotation = value;
     member_changed("connectionNotation", ovalue, value);
@@ -1094,11 +1094,11 @@ public:
    * \par In Python:
    *    value = obj.connections
    */
-  grt::ListRef<db_mgmt_Connection> connections() const { return _connections; }
+  auto connections() const -> grt::ListRef<db_mgmt_Connection> { return _connections; }
 
 
 private: // The next attribute is read-only.
-  virtual void connections(const grt::ListRef<db_mgmt_Connection> &value) {
+  virtual auto connections(const grt::ListRef<db_mgmt_Connection> &value) -> void {
     grt::ValueRef ovalue(_connections);
 
     _connections = value;
@@ -1113,7 +1113,7 @@ public:
    * \par In Python:
    *    value = obj.currentConnection
    */
-  db_mgmt_ConnectionRef currentConnection() const { return _currentConnection; }
+  auto currentConnection() const -> db_mgmt_ConnectionRef { return _currentConnection; }
 
   /**
    * Setter for attribute currentConnection
@@ -1122,7 +1122,7 @@ public:
    * \par In Python:
    *   obj.currentConnection = value
    */
-  virtual void currentConnection(const db_mgmt_ConnectionRef &value) {
+  virtual auto currentConnection(const db_mgmt_ConnectionRef &value) -> void {
     grt::ValueRef ovalue(_currentConnection);
     _currentConnection = value;
     member_changed("currentConnection", ovalue, value);
@@ -1136,7 +1136,7 @@ public:
    * \par In Python:
    *    value = obj.diagrams
    */
-  grt::ListRef<studio_physical_Diagram> diagrams() const { return grt::ListRef<studio_physical_Diagram>::cast_from(_diagrams); }
+  auto diagrams() const -> grt::ListRef<studio_physical_Diagram> { return grt::ListRef<studio_physical_Diagram>::cast_from(_diagrams); }
 
 
 private: // The next attribute is read-only.
@@ -1149,7 +1149,7 @@ public:
    * \par In Python:
    *    value = obj.figureNotation
    */
-  grt::StringRef figureNotation() const { return _figureNotation; }
+  auto figureNotation() const -> grt::StringRef { return _figureNotation; }
 
   /**
    * Setter for attribute figureNotation
@@ -1158,7 +1158,7 @@ public:
    * \par In Python:
    *   obj.figureNotation = value
    */
-  virtual void figureNotation(const grt::StringRef &value) {
+  virtual auto figureNotation(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_figureNotation);
     _figureNotation = value;
     member_changed("figureNotation", ovalue, value);
@@ -1172,11 +1172,11 @@ public:
    * \par In Python:
    *    value = obj.notes
    */
-  grt::ListRef<GrtStoredNote> notes() const { return _notes; }
+  auto notes() const -> grt::ListRef<GrtStoredNote> { return _notes; }
 
 
 private: // The next attribute is read-only.
-  virtual void notes(const grt::ListRef<GrtStoredNote> &value) {
+  virtual auto notes(const grt::ListRef<GrtStoredNote> &value) -> void {
     grt::ValueRef ovalue(_notes);
 
     _notes = value;
@@ -1191,7 +1191,7 @@ public:
    * \par In Python:
    *    value = obj.rdbms
    */
-  db_mgmt_RdbmsRef rdbms() const { return _rdbms; }
+  auto rdbms() const -> db_mgmt_RdbmsRef { return _rdbms; }
 
   /**
    * Setter for attribute rdbms
@@ -1200,7 +1200,7 @@ public:
    * \par In Python:
    *   obj.rdbms = value
    */
-  virtual void rdbms(const db_mgmt_RdbmsRef &value) {
+  virtual auto rdbms(const db_mgmt_RdbmsRef &value) -> void {
     grt::ValueRef ovalue(_rdbms);
     _rdbms = value;
     member_changed("rdbms", ovalue, value);
@@ -1214,11 +1214,11 @@ public:
    * \par In Python:
    *    value = obj.scripts
    */
-  grt::ListRef<db_Script> scripts() const { return _scripts; }
+  auto scripts() const -> grt::ListRef<db_Script> { return _scripts; }
 
 
 private: // The next attribute is read-only.
-  virtual void scripts(const grt::ListRef<db_Script> &value) {
+  virtual auto scripts(const grt::ListRef<db_Script> &value) -> void {
     grt::ValueRef ovalue(_scripts);
 
     _scripts = value;
@@ -1233,11 +1233,11 @@ public:
    * \par In Python:
    *    value = obj.syncProfiles
    */
-  grt::DictRef syncProfiles() const { return _syncProfiles; }
+  auto syncProfiles() const -> grt::DictRef { return _syncProfiles; }
 
 
 private: // The next attribute is read-only.
-  virtual void syncProfiles(const grt::DictRef &value) {
+  virtual auto syncProfiles(const grt::DictRef &value) -> void {
     grt::ValueRef ovalue(_syncProfiles);
     _syncProfiles = value;
     member_changed("syncProfiles", ovalue, value);
@@ -1252,11 +1252,11 @@ public:
    * \par In Python:
    *    value = obj.tagCategories
    */
-  grt::ListRef<GrtObject> tagCategories() const { return _tagCategories; }
+  auto tagCategories() const -> grt::ListRef<GrtObject> { return _tagCategories; }
 
 
 private: // The next attribute is read-only.
-  virtual void tagCategories(const grt::ListRef<GrtObject> &value) {
+  virtual auto tagCategories(const grt::ListRef<GrtObject> &value) -> void {
     grt::ValueRef ovalue(_tagCategories);
 
     _tagCategories = value;
@@ -1272,11 +1272,11 @@ public:
    * \par In Python:
    *    value = obj.tags
    */
-  grt::ListRef<meta_Tag> tags() const { return _tags; }
+  auto tags() const -> grt::ListRef<meta_Tag> { return _tags; }
 
 
 private: // The next attribute is read-only.
-  virtual void tags(const grt::ListRef<meta_Tag> &value) {
+  virtual auto tags(const grt::ListRef<meta_Tag> &value) -> void {
     grt::ValueRef ovalue(_tags);
 
     _tags = value;
@@ -1289,13 +1289,13 @@ public:
    * \param deferRealize 
    * \return 
    */
-  virtual model_DiagramRef addNewDiagram(ssize_t deferRealize);
+  virtual auto addNewDiagram(ssize_t deferRealize) -> model_DiagramRef;
 
-  ImplData *get_data() const { return _data; }
+  auto get_data() const -> ImplData * { return _data; }
 
-  void set_data(ImplData *data);
+  auto set_data(ImplData *data) -> void;
   // default initialization function. auto-called by ObjectRef constructor
-  virtual void init();
+  virtual auto init() -> void;
 
 protected:
 
@@ -1314,14 +1314,14 @@ protected:
 private: // Wrapper methods for use by the grt.
   ImplData *_data;
 
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new studio_physical_Model());
   }
 
   static grt::ValueRef call_addNewDiagram(grt::internal::Object *self, const grt::BaseListRef &args){ return dynamic_cast<studio_physical_Model*>(self)->addNewDiagram(grt::IntegerRef::cast_from(args[0])); }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1392,7 +1392,7 @@ public:
 
 
 
-inline void register_structs_studio_physical_xml() {
+inline auto register_structs_studio_physical_xml() -> void {
   grt::internal::ClassRegistry::register_class<studio_physical_Layer>();
   grt::internal::ClassRegistry::register_class<studio_physical_Connection>();
   grt::internal::ClassRegistry::register_class<studio_physical_RoutineGroupFigure>();

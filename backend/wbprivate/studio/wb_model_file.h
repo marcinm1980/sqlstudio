@@ -51,61 +51,61 @@ namespace wb {
     ModelFile(const std::string &tmpdir);
     ~ModelFile();
 
-    void create();
-    void open(const std::string &path);
+    auto create() -> void;
+    auto open(const std::string &path) -> void;
 
-    static std::string read_comment(const std::string &path);
+    static auto read_comment(const std::string &path) -> std::string;
 
-    void cleanup();
+    auto cleanup() -> void;
 
     bool save_to(const std::string &path, const std::string &comment = "");
 
-    bool has_unsaved_changes() {
+    auto has_unsaved_changes() -> bool {
       return _dirty;
     }
 
-    studio_DocumentRef retrieve_document();
+    auto retrieve_document() -> studio_DocumentRef;
 
-    std::list<std::string> get_load_warnings() const {
+    auto get_load_warnings() const -> std::list<std::string> {
       return _load_warnings;
     }
 
-    void store_document(const studio_DocumentRef &doc);
-    void store_document_autosave(const studio_DocumentRef &doc);
+    auto store_document(const studio_DocumentRef &doc) -> void;
+    auto store_document_autosave(const studio_DocumentRef &doc) -> void;
 
     std::list<std::string> get_file_list(const std::string &prefixdir = "");
-    bool has_file(const std::string &name);
+    auto has_file(const std::string &name) -> bool;
 
-    std::string get_rel_db_file_path();
-    std::string get_db_file_dir_path();
-    std::string get_db_file_path();
-    void add_db_file(const std::string &content_dir);
+    auto get_rel_db_file_path() -> std::string;
+    auto get_db_file_dir_path() -> std::string;
+    auto get_db_file_path() -> std::string;
+    auto add_db_file(const std::string &content_dir) -> void;
 
-    std::string add_image_file(const std::string &path);
-    std::string add_script_file(const std::string &path);
-    std::string add_note_file(const std::string &path);
-    void delete_file(const std::string &path);
-    bool undelete_file(const std::string &path);
+    auto add_image_file(const std::string &path) -> std::string;
+    auto add_script_file(const std::string &path) -> std::string;
+    auto add_note_file(const std::string &path) -> std::string;
+    auto delete_file(const std::string &path) -> void;
+    auto undelete_file(const std::string &path) -> bool;
 
-    void set_file_contents(const std::string &path, const std::string &data);
-    void set_file_contents(const std::string &path, const char *data, size_t size);
-    std::string get_file_contents(const std::string &path);
+    auto set_file_contents(const std::string &path, const std::string &data) -> void;
+    auto set_file_contents(const std::string &path, const char *data, size_t size) -> void;
+    auto get_file_contents(const std::string &path) -> std::string;
 
-    std::string get_path_for(const std::string &file);
-    std::string get_tempdir_path() {
+    auto get_path_for(const std::string &file) -> std::string;
+    auto get_tempdir_path() -> std::string {
       return _content_dir;
     }
 
-    static void copy_file(const std::string &path, const std::string &dest);
+    static auto copy_file(const std::string &path, const std::string &dest) -> void;
 
-    void copy_file_to(const std::string &file, const std::string &dest);
+    auto copy_file_to(const std::string &file, const std::string &dest) -> void;
 
-    std::string in_disk_document_version() const {
+    auto in_disk_document_version() const -> std::string {
       return _loaded_version;
     }
 
     // image management
-    cairo_surface_t *get_image(const std::string &path);
+    auto get_image(const std::string &path) -> cairo_surface_t *;
 
     boost::signals2::signal<void()> *signal_changed() {
       return &_changed_signal;
@@ -131,30 +131,30 @@ namespace wb {
 
     boost::signals2::signal<void()> _changed_signal;
 
-    studio_DocumentRef unserialize_document(xmlDocPtr xmldoc, const std::string &path);
+    auto unserialize_document(xmlDocPtr xmldoc, const std::string &path) -> studio_DocumentRef;
 
   private:
-    bool attempt_xml_document_upgrade(xmlDocPtr xmldoc, const std::string &version);
-    studio_DocumentRef attempt_document_upgrade(const studio_DocumentRef &doc, xmlDocPtr xmldoc,
-                                                const std::string &version);
-    void cleanup_upgrade_data();
+    auto attempt_xml_document_upgrade(xmlDocPtr xmldoc, const std::string &version) -> bool;
+    auto attempt_document_upgrade(const studio_DocumentRef &doc, xmlDocPtr xmldoc,
+                                                const std::string &version) -> studio_DocumentRef;
+    auto cleanup_upgrade_data() -> void;
 
-    void check_and_fix_data_file_bug();
-    bool check_and_fix_duplicate_uuid_bug(xmlDocPtr xmldoc);
+    auto check_and_fix_data_file_bug() -> void;
+    auto check_and_fix_duplicate_uuid_bug(xmlDocPtr xmldoc) -> bool;
 
-    void check_and_fix_inconsistencies(xmlDocPtr xmldoc, const std::string &version);
+    auto check_and_fix_inconsistencies(xmlDocPtr xmldoc, const std::string &version) -> void;
 
-    void check_and_fix_inconsistencies(const studio_DocumentRef &doc, const std::string &version);
+    auto check_and_fix_inconsistencies(const studio_DocumentRef &doc, const std::string &version) -> void;
 
   public:
-    static std::list<std::string> unpack_zip(const std::string &zipfile, const std::string &destdir);
+    static auto unpack_zip(const std::string &zipfile, const std::string &destdir) -> std::list<std::string>;
     void pack_zip(const std::string &zipfile, const std::string &destdir, const std::string &comment = "");
 
   private:
-    static std::string add_attachment_file(const std::string &destdir, const std::string &path);
+    static auto add_attachment_file(const std::string &destdir, const std::string &path) -> std::string;
 
   private:
-    std::string create_document_dir(const std::string &dir, const std::string &prefix);
-    bool semantic_check(studio_DocumentRef doc);
+    auto create_document_dir(const std::string &dir, const std::string &prefix) -> std::string;
+    auto semantic_check(studio_DocumentRef doc) -> bool;
   };
 }; // namespace wb

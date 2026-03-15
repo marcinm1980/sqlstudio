@@ -192,7 +192,7 @@ public:
    *                       (when doing a relayout) or not (when computing the preferred size).
    * @return The resulting size of the table.
    */
-  System::Drawing::Size ComputeLayout(System::Drawing::Size proposedSize, bool resizeChildren) {
+  auto ComputeLayout(System::Drawing::Size proposedSize, bool resizeChildren) -> System::Drawing::Size {
     // Layouting the grid goes like this:
     // * Compute all row heights + column widths.
     // * Apply the resulting cell sizes to all attached children.
@@ -587,12 +587,11 @@ public:
 
     //--------------------------------------------------------------------------------------------------
 
-    property bool Homogeneous {
-    bool get() {
+    auto get() -> property bool Homogeneous { bool {
       return homogeneous;
     }
 
-    void set(bool value) {
+    auto set(bool value) -> void {
       if (homogeneous != value) {
         ViewWrapper::set_layout_dirty(this, true);
         homogeneous = value;
@@ -603,12 +602,11 @@ public:
 
   //--------------------------------------------------------------------------------------------------
 
-  property int RowSpacing {
-    int get() {
+  auto get() -> property int RowSpacing { int {
       return rowSpacing;
     }
 
-    void set(int value) {
+    auto set(int value) -> void {
       if (rowSpacing != value) {
         ViewWrapper::set_layout_dirty(this, true);
         rowSpacing = value;
@@ -619,12 +617,11 @@ public:
 
   //--------------------------------------------------------------------------------------------------
 
-  property int ColumnSpacing {
-    int get() {
+  auto get() -> property int ColumnSpacing { int {
       return columnSpacing;
     }
 
-    void set(int value) {
+    auto set(int value) -> void {
       if (columnSpacing != value) {
         ViewWrapper::set_layout_dirty(this, true);
         columnSpacing = value;
@@ -635,12 +632,11 @@ public:
 
   //--------------------------------------------------------------------------------------------------
 
-  property int RowCount {
-    int get() {
+  auto get() -> property int RowCount { int {
       return rowCount;
     }
 
-    void set(int value) {
+    auto set(int value) -> void {
       if (rowCount != value) {
         ViewWrapper::set_layout_dirty(this, true);
         rowCount = value;
@@ -651,12 +647,11 @@ public:
 
   //--------------------------------------------------------------------------------------------------
 
-  property int ColumnCount {
-    int get() {
+  auto get() -> property int ColumnCount { int {
       return columnCount;
     }
 
-    void set(int value) {
+    auto set(int value) -> void {
       if (columnCount != value) {
         ViewWrapper::set_layout_dirty(this, true);
         columnCount = value;
@@ -708,7 +703,7 @@ TableWrapper::TableWrapper(mforms::View *view) : ViewWrapper(view) {
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::set_padding(int left, int top, int right, int bottom) {
+auto TableWrapper::set_padding(int left, int top, int right, int bottom) -> void {
   // Depending on what is specified as padding we apply a dynamic padding (centering so the content).
   Table ^ table = GetManagedObject<Table>();
   table->HorizontalCenter = (left < 0 || right < 0);
@@ -719,7 +714,7 @@ void TableWrapper::set_padding(int left, int top, int right, int bottom) {
 
 //-------------------------------------------------------------------------------------------------
 
-bool TableWrapper::create(mforms::Table *backend) {
+auto TableWrapper::create(mforms::Table *backend) -> bool {
   TableWrapper *wrapper = new TableWrapper(backend);
   TableWrapper::Create<Table>(backend, wrapper);
   return true;
@@ -727,8 +722,8 @@ bool TableWrapper::create(mforms::Table *backend) {
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::add(mforms::Table *backend, mforms::View *child, int left, int right, int top, int bottom,
-                       int flags) {
+auto TableWrapper::add(mforms::Table *backend, mforms::View *child, int left, int right, int top, int bottom,
+                       int flags) -> void {
   Table ^ table = TableWrapper::GetManagedObject<Table>(backend);
   table->Add(TableWrapper::GetControl(child), left, right, top, bottom, flags);
   backend->set_layout_dirty(true);
@@ -736,7 +731,7 @@ void TableWrapper::add(mforms::Table *backend, mforms::View *child, int left, in
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::remove(mforms::Table *backend, mforms::View *child) {
+auto TableWrapper::remove(mforms::Table *backend, mforms::View *child) -> void {
   Table ^ table = TableWrapper::GetManagedObject<Table>(backend);
   table->Remove(TableWrapper::GetControl(child));
   backend->set_layout_dirty(true);
@@ -744,42 +739,42 @@ void TableWrapper::remove(mforms::Table *backend, mforms::View *child) {
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::set_row_count(mforms::Table *backend, int count) {
+auto TableWrapper::set_row_count(mforms::Table *backend, int count) -> void {
   TableWrapper::GetManagedObject<Table>(backend)->RowCount = count;
   backend->set_layout_dirty(true);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::set_column_count(mforms::Table *backend, int count) {
+auto TableWrapper::set_column_count(mforms::Table *backend, int count) -> void {
   TableWrapper::GetManagedObject<Table>(backend)->ColumnCount = count;
   backend->set_layout_dirty(true);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::set_row_spacing(mforms::Table *backend, int space) {
+auto TableWrapper::set_row_spacing(mforms::Table *backend, int space) -> void {
   TableWrapper::GetManagedObject<Table>(backend)->RowSpacing = space;
   backend->set_layout_dirty(true);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::set_column_spacing(mforms::Table *backend, int space) {
+auto TableWrapper::set_column_spacing(mforms::Table *backend, int space) -> void {
   TableWrapper::GetManagedObject<Table>(backend)->ColumnSpacing = space;
   backend->set_layout_dirty(true);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::set_homogeneous(mforms::Table *backend, bool value) {
+auto TableWrapper::set_homogeneous(mforms::Table *backend, bool value) -> void {
   TableWrapper::GetManagedObject<Table>(backend)->Homogeneous = value;
   backend->set_layout_dirty(true);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void TableWrapper::init() {
+auto TableWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_table_impl.create = &TableWrapper::create;

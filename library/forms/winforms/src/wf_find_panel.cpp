@@ -45,7 +45,7 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  size_t DoFindReplace(mforms::FindPanelAction action) {
+  auto DoFindReplace(mforms::FindPanelAction action) -> size_t {
     mforms::CodeEditor *editor = panel->get_editor();
 
     if (editor == NULL) // Should never happen.
@@ -84,13 +84,13 @@ public:
 
   //------------------------------------------------------------------------------------------------
 
-  virtual void Close() {
+  virtual auto Close() -> void {
     panel->get_editor()->hide_find_panel();
   }
 
   //------------------------------------------------------------------------------------------------
 
-  virtual int FindReplaceAction(MySQL::Utilities::FindPanelAction action) {
+  virtual auto FindReplaceAction(MySQL::Utilities::FindPanelAction action) -> int {
     return (int)DoFindReplace((mforms::FindPanelAction)action);
   }
 
@@ -104,7 +104,7 @@ FindPanelWrapper::FindPanelWrapper(mforms::FindPanel *backend) : ViewWrapper(bac
 
 //--------------------------------------------------------------------------------------------------
 
-bool FindPanelWrapper::create(mforms::FindPanel *backend) {
+auto FindPanelWrapper::create(mforms::FindPanel *backend) -> bool {
   FindPanelWrapper *wrapper = new FindPanelWrapper(backend);
   MformsFindPanel ^ findPanel = FindPanelWrapper::Create<MformsFindPanel>(backend, wrapper);
   findPanel->Backend = findPanel; // One way to inject functionality across managed boundaries.
@@ -115,28 +115,28 @@ bool FindPanelWrapper::create(mforms::FindPanel *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t FindPanelWrapper::perform_action(mforms::FindPanel *backend, mforms::FindPanelAction action) {
+auto FindPanelWrapper::perform_action(mforms::FindPanel *backend, mforms::FindPanelAction action) -> size_t {
   MformsFindPanel ^ findPanel = FindPanelWrapper::GetManagedObject<MformsFindPanel>(backend);
   return findPanel->DoFindReplace(action);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void FindPanelWrapper::focus(mforms::FindPanel *backend) {
+auto FindPanelWrapper::focus(mforms::FindPanel *backend) -> void {
   MformsFindPanel ^ findPanel = FindPanelWrapper::GetManagedObject<MformsFindPanel>(backend);
   findPanel->FocusSearchField();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void FindPanelWrapper::enable_replace(mforms::FindPanel *backend, bool flag) {
+auto FindPanelWrapper::enable_replace(mforms::FindPanel *backend, bool flag) -> void {
   MformsFindPanel ^ findPanel = FindPanelWrapper::GetManagedObject<MformsFindPanel>(backend);
   findPanel->ShowReplace = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void FindPanelWrapper::init() {
+auto FindPanelWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_findpanel_impl.create = &FindPanelWrapper::create;

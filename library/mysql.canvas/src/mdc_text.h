@@ -74,21 +74,21 @@ namespace mdc {
     base::Size _fixed_size;
     bool _needs_relayout;
 
-    void break_paragraphs();
-    void layout_paragraph(CairoCtx *cr, Paragraph &para);
+    auto break_paragraphs() -> void;
+    auto layout_paragraph(CairoCtx *cr, Paragraph &para) -> void;
 
   public:
     TextLayout();
     ~TextLayout();
 
-    void relayout(CairoCtx *cr);
-    void render(CairoCtx *cr, const base::Point &pos, const base::Size &size, TextAlignment align);
+    auto relayout(CairoCtx *cr) -> void;
+    auto render(CairoCtx *cr, const base::Point &pos, const base::Size &size, TextAlignment align) -> void;
 
-    void set_text(const std::string &text);
+    auto set_text(const std::string &text) -> void;
 
-    void set_font(const FontSpec &font);
+    auto set_font(const FontSpec &font) -> void;
 
-    void set_size(const base::Size &s);
+    auto set_size(const base::Size &s) -> void;
 
     auto get_size() -> base::Size;
   };
@@ -104,31 +104,31 @@ namespace mdc {
 
     virtual auto calc_min_size() -> base::Size;
 
-    void set_text(const std::string &text);
+    auto set_text(const std::string &text) -> void;
     auto get_text() const -> const std::string & {
       return _text;
     }
 
-    void set_fill_background(bool flag);
-    void set_draw_outline(bool flag);
-    void set_highlight_through_text(bool flag) {
+    auto set_fill_background(bool flag) -> void;
+    auto set_draw_outline(bool flag) -> void;
+    auto set_highlight_through_text(bool flag) -> void {
       _highlight_through_text = flag;
     }
 
-    void set_font(const FontSpec &font);
+    auto set_font(const FontSpec &font) -> void;
     auto get_font() -> const FontSpec & {
       return _font;
     }
 
-    void set_text_alignment(TextAlignment align);
+    auto set_text_alignment(TextAlignment align) -> void;
 
-    void set_multi_line(bool flag);
-    void set_allow_shrinking(bool flag);
-    void set_allow_wrapping(bool flag);
+    auto set_multi_line(bool flag) -> void;
+    auto set_allow_shrinking(bool flag) -> void;
+    auto set_allow_wrapping(bool flag) -> void;
 
-    virtual void draw_contents(CairoCtx *cr);
+    virtual auto draw_contents(CairoCtx *cr) -> void;
 
-    void auto_size();
+    auto auto_size() -> void;
 
   protected:
     FontSpec _font;
@@ -148,9 +148,9 @@ namespace mdc {
 
     auto get_text_size() -> base::Size;
 
-    void reset_shrinked_text();
+    auto reset_shrinked_text() -> void;
 
-    void draw_contents(CairoCtx *cr, const base::Rect &bounds);
+    auto draw_contents(CairoCtx *cr, const base::Rect &bounds) -> void;
   };
 
 } // end of mdc namespace

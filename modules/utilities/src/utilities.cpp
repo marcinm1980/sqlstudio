@@ -48,7 +48,7 @@ public:
                                                  "path the path to file that contains SRS WKT."),
                      NULL);
 
-  db_mgmt_RdbmsRef loadRdbmsInfo(db_mgmt_ManagementRef owner, const std::string &path) {
+  auto loadRdbmsInfo(db_mgmt_ManagementRef owner, const std::string &path) -> db_mgmt_RdbmsRef {
     db_mgmt_RdbmsRef rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->unserialize(path));
 
     rdbms->owner(owner);
@@ -56,11 +56,11 @@ public:
     return rdbms;
   }
 
-  std::string fetchAuthorityCodeFromWKT(const std::string &wkt) {
+  auto fetchAuthorityCodeFromWKT(const std::string &wkt) -> std::string {
     return spatial::fetchAuthorityCode(wkt);
   }
 
-  std::string fetchAuthorityCodeFromFile(const std::string &path) {
+  auto fetchAuthorityCodeFromFile(const std::string &path) -> std::string {
     gchar *data;
     gsize length;
     std::string epsg;

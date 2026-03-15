@@ -48,7 +48,7 @@ DbMySQLTableEditorPartPage::DbMySQLTableEditorPartPage(DbMySQLTableEditor *owner
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::switch_be(MySQLTableEditorBE *be) {
+auto DbMySQLTableEditorPartPage::switch_be(MySQLTableEditorBE *be) -> void {
   _be = be;
 
   _part_tv->remove_all_columns();
@@ -68,7 +68,7 @@ void DbMySQLTableEditorPartPage::switch_be(MySQLTableEditorBE *be) {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::refresh() {
+auto DbMySQLTableEditorPartPage::refresh() -> void {
   _refreshing = true;
 
   const std::string part_type = _be->get_partition_type();
@@ -113,7 +113,7 @@ void DbMySQLTableEditorPartPage::refresh() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::init_widgets() {
+auto DbMySQLTableEditorPartPage::init_widgets() -> void {
   // Init subpart combo
   _xml->get_widget("subpart_by_combo", _subpart_by_combo);
   std::vector<std::string> list;
@@ -186,7 +186,7 @@ void DbMySQLTableEditorPartPage::init_widgets() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::enabled_checkbutton_toggled() {
+auto DbMySQLTableEditorPartPage::enabled_checkbutton_toggled() -> void {
   if (!_refreshing) {
     Gtk::ToggleButton *btn;
     _xml->get_widget("enable_part_checkbutton", btn);
@@ -224,7 +224,7 @@ void DbMySQLTableEditorPartPage::enabled_checkbutton_toggled() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::part_function_changed() {
+auto DbMySQLTableEditorPartPage::part_function_changed() -> void {
   if (!_refreshing) {
     const std::string part_function = get_selected_combo_item(_part_by_combo);
 
@@ -255,7 +255,7 @@ void DbMySQLTableEditorPartPage::part_function_changed() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::subpart_function_changed() {
+auto DbMySQLTableEditorPartPage::subpart_function_changed() -> void {
   if (!_refreshing) {
     const std::string subpart_function = get_selected_combo_item(_subpart_by_combo);
 
@@ -268,17 +268,17 @@ void DbMySQLTableEditorPartPage::subpart_function_changed() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::set_part_params_to_be(const std::string &value) {
+auto DbMySQLTableEditorPartPage::set_part_params_to_be(const std::string &value) -> void {
   _be->set_partition_expression(value);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::set_subpart_params_to_be(const std::string &value) {
+auto DbMySQLTableEditorPartPage::set_subpart_params_to_be(const std::string &value) -> void {
   _be->set_subpartition_expression(value);
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::part_count_changed() {
+auto DbMySQLTableEditorPartPage::part_count_changed() -> void {
   const std::string count = _part_count_entry->get_text();
   if (!count.empty()) {
     _be->set_partition_count(base::atoi<int>(count, 0));
@@ -286,7 +286,7 @@ void DbMySQLTableEditorPartPage::part_count_changed() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::subpart_count_changed() {
+auto DbMySQLTableEditorPartPage::subpart_count_changed() -> void {
   const std::string &count = _subpart_count_entry->get_text();
   if (!count.empty()) {
     _be->set_subpartition_count(base::atoi<int>(count, 0));
@@ -294,7 +294,7 @@ void DbMySQLTableEditorPartPage::subpart_count_changed() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::part_manual_toggled() {
+auto DbMySQLTableEditorPartPage::part_manual_toggled() -> void {
   _be->set_explicit_partitions(_part_manual_checkbtn->get_active());
   char buf[32];
   snprintf(buf, sizeof(buf) / sizeof(*buf), "%i", _be->get_partition_count());
@@ -303,7 +303,7 @@ void DbMySQLTableEditorPartPage::part_manual_toggled() {
 }
 
 //------------------------------------------------------------------------------
-void DbMySQLTableEditorPartPage::subpart_manual_toggled() {
+auto DbMySQLTableEditorPartPage::subpart_manual_toggled() -> void {
   _be->set_explicit_subpartitions(_subpart_manual_checkbtn->get_active());
   char buf[32];
   snprintf(buf, sizeof(buf) / sizeof(*buf), "%i", _be->get_subpartition_count());

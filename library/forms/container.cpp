@@ -29,7 +29,7 @@ using namespace mforms;
 
 //--------------------------------------------------------------------------------------------------
 
-void Container::set_padding(int left, int top, int right, int bottom) {
+auto Container::set_padding(int left, int top, int right, int bottom) -> void {
   set_layout_dirty(true);
   if (_view_impl->set_padding)
     (*_view_impl->set_padding)(this, left, top, right, bottom);
@@ -37,7 +37,7 @@ void Container::set_padding(int left, int top, int right, int bottom) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Container::set_padding(int padding) {
+auto Container::set_padding(int padding) -> void {
   set_layout_dirty(true);
   if (_view_impl->set_padding)
     (*_view_impl->set_padding)(this, padding, padding, padding, padding);

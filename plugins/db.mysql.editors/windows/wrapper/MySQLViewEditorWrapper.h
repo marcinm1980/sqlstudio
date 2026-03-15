@@ -37,9 +37,9 @@ namespace MySQL {
         MySQLViewEditorWrapper(MySQL::Grt::GrtValue ^ arglist);
         ~MySQLViewEditorWrapper();
 
-        MySQLViewEditorBE *get_unmanaged_object();
-        void load_view_sql();
-        void commit_changes();
+        auto get_unmanaged_object() -> MySQLViewEditorBE *;
+        auto load_view_sql() -> void;
+        auto commit_changes() -> void;
       };
 
     } // namespace Db

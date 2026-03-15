@@ -27,7 +27,7 @@
 
 static std::map<int, Gtk::RadioButton *> groups;
 
-Gtk::Widget *mforms::gtk::RadioButtonImpl::get_outer() const {
+auto mforms::gtk::RadioButtonImpl::get_outer() const -> Gtk::Widget * {
   return _radio;
 }
 
@@ -51,7 +51,7 @@ mforms::gtk::RadioButtonImpl::RadioButtonImpl(::mforms::RadioButton *self, int g
   _radio->show();
 }
 
-void *mforms::gtk::RadioButtonImpl::unregister_group(void *data) {
+auto mforms::gtk::RadioButtonImpl::unregister_group(void *data) -> void * {
   int group_id = reinterpret_cast<intptr_t>(data);
 
   std::map<int, Gtk::RadioButton *>::iterator iter;
@@ -61,16 +61,16 @@ void *mforms::gtk::RadioButtonImpl::unregister_group(void *data) {
   return NULL;
 }
 
-void mforms::gtk::RadioButtonImpl::toggled(::mforms::RadioButton *self) {
+auto mforms::gtk::RadioButtonImpl::toggled(::mforms::RadioButton *self) -> void {
   if (!self->is_updating() && self->get_data<RadioButtonImpl>()->_radio->get_active())
     self->callback();
 }
 
-bool mforms::gtk::RadioButtonImpl::create(::mforms::RadioButton *self, int group_id) {
+auto mforms::gtk::RadioButtonImpl::create(::mforms::RadioButton *self, int group_id) -> bool {
   return new RadioButtonImpl(self, group_id);
 }
 
-bool mforms::gtk::RadioButtonImpl::get_active(::mforms::RadioButton *self) {
+auto mforms::gtk::RadioButtonImpl::get_active(::mforms::RadioButton *self) -> bool {
   RadioButtonImpl *button = self->get_data<RadioButtonImpl>();
 
   if (button) {
@@ -79,7 +79,7 @@ bool mforms::gtk::RadioButtonImpl::get_active(::mforms::RadioButton *self) {
   return false;
 }
 
-void mforms::gtk::RadioButtonImpl::set_active(::mforms::RadioButton *self, bool flag) {
+auto mforms::gtk::RadioButtonImpl::set_active(::mforms::RadioButton *self, bool flag) -> void {
   RadioButtonImpl *button = self->get_data<RadioButtonImpl>();
 
   if (button) {
@@ -87,14 +87,14 @@ void mforms::gtk::RadioButtonImpl::set_active(::mforms::RadioButton *self, bool 
   }
 }
 
-void mforms::gtk::RadioButtonImpl::set_text(const std::string &text) {
+auto mforms::gtk::RadioButtonImpl::set_text(const std::string &text) -> void {
   if (_label)
     _label->set_label(text);
   else
     _button->set_label(text);
 }
 
-void mforms::gtk::RadioButtonImpl::init() {
+auto mforms::gtk::RadioButtonImpl::init() -> void {
   ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
   f->_radio_impl.create = &RadioButtonImpl::create;

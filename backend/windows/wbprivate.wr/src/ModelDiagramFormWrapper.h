@@ -40,7 +40,7 @@ namespace MySQL {
       ModelDiagramFormWrapper(wb::ModelDiagramForm* inn);
       ~ModelDiagramFormWrapper();
 
-      wb::ModelDiagramForm* get_unmanaged_object();
+      auto get_unmanaged_object() -> wb::ModelDiagramForm*;
 
       void OnMouseMove(System::Windows::Forms::MouseEventArgs ^ e, int X, int Y, System::Windows::Forms::Keys keystate,
                        System::Windows::Forms::MouseButtons buttons);
@@ -53,28 +53,28 @@ namespace MySQL {
       void OnKeyDown(System::Windows::Forms::KeyEventArgs ^ e, System::Windows::Forms::Keys keystate);
       void OnKeyUp(System::Windows::Forms::KeyEventArgs ^ e, System::Windows::Forms::Keys keystate);
 
-      String ^ get_tool_cursor();
+      auto get_tool_cursor() -> String ^;
 
       bool accepts_drop(int x, int y, System::Windows::Forms::IDataObject ^ data);
       bool accepts_drop(int x, int y, String ^ type, String ^ text);
       bool perform_drop(int x, int y, System::Windows::Forms::IDataObject ^ data);
       bool perform_drop(int x, int y, String ^ type, String ^ text);
 
-      void set_closed(bool flag);
-      bool is_closed();
-      void close();
+      auto set_closed(bool flag) -> void;
+      auto is_closed() -> bool;
+      auto close() -> void;
       void setup_mini_view(MySQL::GUI::Mdc::BaseWindowsCanvasView ^ view);
-      void update_mini_view_size(int w, int h);
-      void update_options_toolbar();
+      auto update_mini_view_size(int w, int h) -> void;
+      auto update_options_toolbar() -> void;
 
-      double get_zoom();
-      void set_zoom(double zoom);
+      auto get_zoom() -> double;
+      auto set_zoom(double zoom) -> void;
 
-      String ^ get_title();
-      System::Windows::Forms::ToolStrip ^ get_tools_toolbar();
-      System::Windows::Forms::ToolStrip ^ get_options_toolbar();
-      Aga::Controls::Tree::TreeViewAdv ^ get_layer_tree();
-      Aga::Controls::Tree::TreeViewAdv ^ get_catalog_tree();
+      auto get_title() -> String ^;
+      auto get_tools_toolbar() -> System::Windows::Forms::ToolStrip ^;
+      auto get_options_toolbar() -> System::Windows::Forms::ToolStrip ^;
+      auto get_layer_tree() -> Aga::Controls::Tree::TreeViewAdv ^;
+      auto get_catalog_tree() -> Aga::Controls::Tree::TreeViewAdv ^;
     };
 
   } // namespace MySqlStudio

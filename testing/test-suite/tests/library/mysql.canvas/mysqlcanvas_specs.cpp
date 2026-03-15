@@ -80,7 +80,7 @@ struct CairoSurface {
     return true;
   }
 
-  std::string toString() const {
+  auto toString() const -> std::string {
     return base::strfmt("{ width: %f, height: %f, stride: %d }", size.width, size.height, stride);
   }
 };
@@ -149,7 +149,7 @@ public:
     add_column("email varchar(80)", column_icon);
   }
 
-  void add_column(const std::string &text, cairo_surface_t *icon) {
+  auto add_column(const std::string &text, cairo_surface_t *icon) -> void {
     mdc::IconTextFigure *tf;
 
     tf = new mdc::IconTextFigure(_layer);

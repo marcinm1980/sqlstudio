@@ -33,80 +33,80 @@ TextEntry::TextEntry(TextEntryType type) : _updating(false) {
   _textentry_impl->create(this, type);
 }
 
-void TextEntry::set_value(const std::string &text) {
+auto TextEntry::set_value(const std::string &text) -> void {
   _updating = true;
   _textentry_impl->set_text(this, text);
   _updating = false;
 }
 
-void TextEntry::set_max_length(int len) {
+auto TextEntry::set_max_length(int len) -> void {
   _textentry_impl->set_max_length(this, len);
 }
 
-std::string TextEntry::get_string_value() {
+auto TextEntry::get_string_value() -> std::string {
   return _textentry_impl->get_text(this);
 }
 
-void TextEntry::callback() {
+auto TextEntry::callback() -> void {
   if (!_updating)
     _signal_changed();
 }
 
-void TextEntry::action(TextEntryAction action) {
+auto TextEntry::action(TextEntryAction action) -> void {
   _signal_action(action);
 }
 
-void TextEntry::set_read_only(bool flag) {
+auto TextEntry::set_read_only(bool flag) -> void {
   _textentry_impl->set_read_only(this, flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntry::set_placeholder_text(const std::string &text) {
+auto TextEntry::set_placeholder_text(const std::string &text) -> void {
   if (_textentry_impl->set_placeholder_text)
     _textentry_impl->set_placeholder_text(this, text);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntry::set_placeholder_color(const std::string &color) {
+auto TextEntry::set_placeholder_color(const std::string &color) -> void {
   if (_textentry_impl->set_placeholder_color)
     _textentry_impl->set_placeholder_color(this, color);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntry::set_bordered(bool flag) {
+auto TextEntry::set_bordered(bool flag) -> void {
   if (_textentry_impl->set_bordered)
     _textentry_impl->set_bordered(this, flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntry::cut() {
+auto TextEntry::cut() -> void {
   _textentry_impl->cut(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntry::copy() {
+auto TextEntry::copy() -> void {
   _textentry_impl->copy(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntry::paste() {
+auto TextEntry::paste() -> void {
   _textentry_impl->paste(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void TextEntry::select(const base::Range &range) {
+auto TextEntry::select(const base::Range &range) -> void {
   _textentry_impl->select(this, range);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-base::Range TextEntry::get_selection() {
+auto TextEntry::get_selection() -> base::Range {
   return _textentry_impl->get_selection(this);
 }

@@ -73,7 +73,7 @@ public:
   };
 
 private:
-  static ParamType decode_param_type(std::string type_name, std::string real_type);
+  static auto decode_param_type(std::string type_name, std::string real_type) -> ParamType;
 
   db_mgmt_DriverParameterRef _inner;
   ParamType _type;
@@ -84,29 +84,29 @@ private:
   DbDriverParam(const db_mgmt_DriverParameterRef &driver_param, const db_mgmt_ConnectionRef &stored_conn);
   DbDriverParam(const db_mgmt_DriverParameterRef &driver_param, const grt::ValueRef &value);
 
-  ControlType get_control_type() const;
+  auto get_control_type() const -> ControlType;
 
   friend class DbDriverParams;
 
 public:
-  const db_mgmt_DriverParameterRef &object() const {
+  auto object() const -> const db_mgmt_DriverParameterRef & {
     return _inner;
   }
 
-  ParamType get_type() const {
+  auto get_type() const -> ParamType {
     return _type;
   }
-  grt::StringRef get_control_name() const;
-  grt::StringRef get_accessibility_name() const;
-  const grt::ValueRef &get_value() const {
+  auto get_control_name() const -> grt::StringRef;
+  auto get_accessibility_name() const -> grt::StringRef;
+  auto get_value() const -> const grt::ValueRef & {
     return _value;
   }
-  const grt::StringRef get_value_repr() const {
+  auto get_value_repr() const -> const grt::StringRef {
     return _value.toString();
   }
-  void set_value(const grt::ValueRef &value);
-  std::vector<std::pair<std::string, std::string> > get_enum_options();
-  grt::StringRef getValue();
+  auto set_value(const grt::ValueRef &value) -> void;
+  auto get_enum_options() -> std::vector<std::pair<std::string, std::string> >;
+  auto getValue() -> grt::StringRef;
 };
 
 class WBPUBLICBACKEND_PUBLIC_FUNC DbDriverParams {
@@ -120,9 +120,9 @@ private:
 
   DbDriverParams(const DbDriverParams &) {
   }
-  void free_dyn_mem();
+  auto free_dyn_mem() -> void;
 
-  bool parameter_not_valid(const db_mgmt_DriverRef &driver, const std::string &param);
+  auto parameter_not_valid(const db_mgmt_DriverRef &driver, const std::string &param) -> bool;
 
 public:
   DbDriverParams() {
@@ -131,19 +131,19 @@ public:
     free_dyn_mem();
   }
 
-  void init(const db_mgmt_DriverRef &driver, const db_mgmt_ConnectionRef &stored_conn,
+  auto init(const db_mgmt_DriverRef &driver, const db_mgmt_ConnectionRef &stored_conn,
             const std::function<void(bool)> &suspend_layout, const std::function<void()> &begin_layout,
             const std::function<void(DbDriverParam *, ControlType, const base::ControlBounds &, const std::string &)>
               &create_control,
             const std::function<void()> &end_layout, bool skip_schema = false, int first_row_label_width = 100,
-            int hmargin = 10, int vmargin = 10);
-  grt::DictRef get_params() const;
-  std::string validate() const;
+            int hmargin = 10, int vmargin = 10) -> void;
+  auto get_params() const -> grt::DictRef;
+  auto validate() const -> std::string;
 
-  size_t count() const {
+  auto count() const -> size_t {
     return _collection.size();
   }
-  DbDriverParam *get(std::string control_name);
+  auto get(std::string control_name) -> DbDriverParam *;
 };
 
 class WBPUBLICBACKEND_PUBLIC_FUNC DbConnection {
@@ -159,39 +159,39 @@ private:
   std::function<void(bool)> _suspend_layout;
   std::function<void(DbDriverParam *, ControlType, const base::ControlBounds &, const std::string &)> _create_control;
 
-  void init_dbc_connection(sql::Connection *dbc_conn, const db_mgmt_ConnectionRef &connectionProperties);
+  auto init_dbc_connection(sql::Connection *dbc_conn, const db_mgmt_ConnectionRef &connectionProperties) -> void;
 
 public:
   DbConnection(const db_mgmt_ManagementRef &mgmt, const db_mgmt_DriverRef &driver, bool skip_schema);
 
   ~DbConnection();
 
-  void set_control_callbacks(const std::function<void(bool)> &suspend_layout, const std::function<void()> &begin_layout,
+  auto set_control_callbacks(const std::function<void(bool)> &suspend_layout, const std::function<void()> &begin_layout,
                              const std::function<void(DbDriverParam *, ControlType, const base::ControlBounds &,
                                                       const std::string &)> &create_control,
-                             const std::function<void()> &end_layout);
+                             const std::function<void()> &end_layout) -> void;
 
-  DbDriverParams *get_db_driver_param_handles() {
+  auto get_db_driver_param_handles() -> DbDriverParams * {
     return &_db_driver_param_handles;
   }
 
-  void update();
-  void set_connection_and_update(const db_mgmt_ConnectionRef &connection);
-  void set_connection_keeping_parameters(const db_mgmt_ConnectionRef &connection);
-  db_mgmt_ConnectionRef get_connection();
+  auto update() -> void;
+  auto set_connection_and_update(const db_mgmt_ConnectionRef &connection) -> void;
+  auto set_connection_keeping_parameters(const db_mgmt_ConnectionRef &connection) -> void;
+  auto get_connection() -> db_mgmt_ConnectionRef;
 
-  void save_changes();
+  auto save_changes() -> void;
 
-  sql::ConnectionWrapper get_dbc_connection();
-  db_mgmt_ManagementRef get_db_mgmt() {
+  auto get_dbc_connection() -> sql::ConnectionWrapper;
+  auto get_db_mgmt() -> db_mgmt_ManagementRef {
     return _mgmt;
   }
-  db_mgmt_DriverRef driver() {
+  auto driver() -> db_mgmt_DriverRef {
     return _active_driver;
   }
 
   void set_driver_and_update(db_mgmt_DriverRef);
 
-  bool test_connection();
-  std::string validate_driver_params() const;
+  auto test_connection() -> bool;
+  auto validate_driver_params() const -> std::string;
 };

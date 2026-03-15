@@ -38,8 +38,8 @@ MenuBase::~MenuBase() {
   _items.clear();
 }
 
-MenuItem *MenuBase::add_item_with_title(const std::string &title, std::function<void()> action,
-                                        const std::string &name, const std::string &internalName) {
+auto MenuBase::add_item_with_title(const std::string &title, std::function<void()> action,
+                                        const std::string &name, const std::string &internalName) -> MenuItem * {
   MenuItem *item = manage(new MenuItem(title));
   item->signal_clicked()->connect(action);
   add_item(item);
@@ -48,8 +48,8 @@ MenuItem *MenuBase::add_item_with_title(const std::string &title, std::function<
   return item;
 }
 
-MenuItem *MenuBase::add_check_item_with_title(const std::string &title, std::function<void()> action,
-                                              const std::string &name, const std::string &internalName) {
+auto MenuBase::add_check_item_with_title(const std::string &title, std::function<void()> action,
+                                              const std::string &name, const std::string &internalName) -> MenuItem * {
   MenuItem *item = manage(new MenuItem(title, CheckedMenuItem));
   item->signal_clicked()->connect(action);
   add_item(item);
@@ -58,17 +58,17 @@ MenuItem *MenuBase::add_check_item_with_title(const std::string &title, std::fun
   return item;
 }
 
-MenuItem *MenuBase::add_separator() {
+auto MenuBase::add_separator() -> MenuItem * {
   MenuItem *item = manage(new MenuItem("", SeparatorMenuItem));
   add_item(item);
   return item;
 }
 
-void MenuBase::add_item(MenuItem *item) {
+auto MenuBase::add_item(MenuItem *item) -> void {
   insert_item(-1, item);
 }
 
-void MenuBase::insert_item(int index, MenuItem *item) {
+auto MenuBase::insert_item(int index, MenuItem *item) -> void {
   if (index < 0 || index > (int)_items.size())
     index = (int)_items.size();
 
@@ -80,7 +80,7 @@ void MenuBase::insert_item(int index, MenuItem *item) {
   // item->retain();
 }
 
-void MenuBase::remove_all() {
+auto MenuBase::remove_all() -> void {
   _impl->remove_item(this, NULL); // null means remove all
   std::vector<MenuItem *>::iterator iter;
   for (iter = _items.begin(); iter != _items.end(); ++iter) {
@@ -90,7 +90,7 @@ void MenuBase::remove_all() {
   _items.clear();
 }
 
-void MenuBase::remove_item(MenuItem *item) {
+auto MenuBase::remove_item(MenuItem *item) -> void {
   std::vector<MenuItem *>::iterator iter = std::find(_items.begin(), _items.end(), item);
   if (iter != _items.end()) {
     (*iter)->_parent = 0;
@@ -100,15 +100,15 @@ void MenuBase::remove_item(MenuItem *item) {
   }
 }
 
-void MenuBase::set_enabled(bool flag) {
+auto MenuBase::set_enabled(bool flag) -> void {
   _impl->set_enabled(this, flag);
 }
 
-bool MenuBase::get_enabled() {
+auto MenuBase::get_enabled() -> bool {
   return _impl->get_enabled(this);
 }
 
-MenuItem *MenuBase::find_item(const std::string &name) {
+auto MenuBase::find_item(const std::string &name) -> MenuItem * {
   for (std::vector<MenuItem *>::const_iterator iter = _items.begin(); iter != _items.end(); ++iter) {
     if ((*iter)->getInternalName() == name)
       return *iter;
@@ -119,29 +119,29 @@ MenuItem *MenuBase::find_item(const std::string &name) {
   return 0;
 }
 
-MenuItem *MenuBase::get_item(int i) {
+auto MenuBase::get_item(int i) -> MenuItem * {
   if (i < 0 || i >= (int)_items.size())
     return NULL;
   return _items[i];
 }
 
-int MenuBase::get_item_index(MenuItem *item) {
+auto MenuBase::get_item_index(MenuItem *item) -> int {
   std::vector<MenuItem *>::const_iterator it = std::find(_items.begin(), _items.end(), item);
   if (it == _items.end())
     return -1;
   return (int)(it - _items.begin());
 }
 
-int MenuBase::item_count() {
+auto MenuBase::item_count() -> int {
   return (int)_items.size();
 }
 
-void MenuBase::validate() {
+auto MenuBase::validate() -> void {
   for (std::vector<MenuItem *>::const_iterator iter = _items.begin(); iter != _items.end(); ++iter)
     (*iter)->validate();
 }
 
-MenuBase *MenuBase::get_top_menu() {
+auto MenuBase::get_top_menu() -> MenuBase * {
   if (dynamic_cast<MenuBar *>(this) != NULL)
     return dynamic_cast<MenuBar *>(this);
 
@@ -159,33 +159,33 @@ MenuItem::MenuItem(const std::string &title, const MenuItemType type) : MenuBase
   _impl->create_menu_item(this, title, type); // ! Warning there will be no checked menu with this!
 }
 
-void MenuItem::set_title(const std::string &title) {
+auto MenuItem::set_title(const std::string &title) -> void {
   _impl->set_title(this, title);
 }
 
-std::string MenuItem::get_title() {
+auto MenuItem::get_title() -> std::string {
   return _impl->get_title(this);
 }
 
 
-void MenuItem::set_name(const std::string &name) {
+auto MenuItem::set_name(const std::string &name) -> void {
   _impl->set_name(this, name);
 }
 
-void MenuItem::set_shortcut(const std::string &shortcut) {
+auto MenuItem::set_shortcut(const std::string &shortcut) -> void {
   _shortcut = shortcut;
   _impl->set_shortcut(this, shortcut);
 }
 
-void MenuItem::set_checked(bool flag) {
+auto MenuItem::set_checked(bool flag) -> void {
   _impl->set_checked(this, flag);
 }
 
-bool MenuItem::get_checked() {
+auto MenuItem::get_checked() -> bool {
   return _impl->get_checked(this);
 }
 
-void MenuItem::callback() {
+auto MenuItem::callback() -> void {
 #if defined(_MSC_VER) || defined(__APPLE__)
   // toggle the state of checkbox items, so that the behaviour works the same as in linux
   if (_type == CheckedMenuItem)
@@ -194,7 +194,7 @@ void MenuItem::callback() {
   _clicked_signal();
 }
 
-void MenuItem::validate() {
+auto MenuItem::validate() -> void {
   bool result = true;
   for (validator_function val : _validators) {
     if (!val())
@@ -207,11 +207,11 @@ void MenuItem::validate() {
     MenuBase::validate();
 }
 
-void MenuItem::add_validator(const validator_function &slot) {
+auto MenuItem::add_validator(const validator_function &slot) -> void {
   _validators.push_back(slot);
 }
 
-void MenuItem::clear_validators() {
+auto MenuItem::clear_validators() -> void {
   _validators.clear();
 }
 
@@ -219,17 +219,17 @@ MenuBar::MenuBar() : MenuBase() {
   _impl->create_menu_bar(this);
 }
 
-void MenuBar::will_show_submenu_from(MenuItem *item) {
+auto MenuBar::will_show_submenu_from(MenuItem *item) -> void {
   _signal_will_show(item);
 }
 
-void MenuBar::set_item_enabled(const std::string &item_name, bool flag) {
+auto MenuBar::set_item_enabled(const std::string &item_name, bool flag) -> void {
   MenuItem *item = find_item(item_name);
   if (item)
     item->set_enabled(flag);
 }
 
-void MenuBar::set_item_checked(const std::string &item_name, bool flag) {
+auto MenuBar::set_item_checked(const std::string &item_name, bool flag) -> void {
   MenuItem *item = find_item(item_name);
   if (item)
     item->set_checked(flag);
@@ -239,26 +239,26 @@ ContextMenu::ContextMenu() : MenuBase() {
   _impl->create_context_menu(this);
 }
 
-void ContextMenu::set_item_enabled(const std::string &item_name, bool flag) {
+auto ContextMenu::set_item_enabled(const std::string &item_name, bool flag) -> void {
   MenuItem *item = find_item(item_name);
   if (item)
     item->set_enabled(flag);
 }
 
-void ContextMenu::set_item_checked(const std::string &item_name, bool flag) {
+auto ContextMenu::set_item_checked(const std::string &item_name, bool flag) -> void {
   MenuItem *item = find_item(item_name);
   if (item)
     item->set_checked(flag);
 }
 
-void ContextMenu::will_show() {
+auto ContextMenu::will_show() -> void {
   will_show_submenu_from(0);
 }
 
-void ContextMenu::will_show_submenu_from(MenuItem *item) {
+auto ContextMenu::will_show_submenu_from(MenuItem *item) -> void {
   _signal_will_show(item);
 }
 
-void ContextMenu::popup_at(View *owner, base::Point location) {
+auto ContextMenu::popup_at(View *owner, base::Point location) -> void {
   _impl->popup_at(this, owner, location);
 }

@@ -41,11 +41,11 @@ namespace mforms {
       mdc::GtkCanvas *_canvas;
 
     protected:
-      virtual Gtk::Widget *get_outer() const {
+      virtual auto get_outer() const -> Gtk::Widget * {
         return _scroller;
       }
 
-      virtual Gtk::Widget *get_inner() const {
+      virtual auto get_inner() const -> Gtk::Widget * {
         return _canvas;
       }
 
@@ -56,11 +56,11 @@ namespace mforms {
         _scroller->show_all();
       }
 
-      static bool create(::mforms::Canvas *self) {
+      static auto create(::mforms::Canvas *self) -> bool {
         return new CanvasImpl(self) != 0;
       }
 
-      static mdc::CanvasView *canvas(::mforms::Canvas *self) {
+      static auto canvas(::mforms::Canvas *self) -> mdc::CanvasView * {
         CanvasImpl *impl = self->get_data<CanvasImpl>();
         if (impl)
           return impl->_canvas->get_canvas();
@@ -68,7 +68,7 @@ namespace mforms {
       }
 
     public:
-      static void init() {
+      static auto init() -> void {
         ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
         f->_canvas_impl.create = &CanvasImpl::create;

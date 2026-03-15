@@ -61,43 +61,43 @@ public:
   PluginEditorBase(grt::Module *module, const grt::BaseListRef &args, const char *glade_xml = 0);
   virtual ~PluginEditorBase();
 
-  std::string get_title();
+  auto get_title() -> std::string;
 
-  Gtk::Notebook *editor_notebook() {
+  auto editor_notebook() -> Gtk::Notebook * {
     return _editor_notebook;
   }
 
-  void focus_widget_when_idle(Gtk::Widget *w);
+  auto focus_widget_when_idle(Gtk::Widget *w) -> void;
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args) {
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool {
     return false;
   }
 
-  void load_glade(const char *glade_xml_filename);
+  auto load_glade(const char *glade_xml_filename) -> void;
 
-  bool is_editing_live_object();
-  bool should_close_on_delete_of(const std::string &oid);
-  void refresh_form_data();
-  void commit_text_changes();
-  void close_live_object_editor();
+  auto is_editing_live_object() -> bool;
+  auto should_close_on_delete_of(const std::string &oid) -> bool;
+  auto refresh_form_data() -> void;
+  auto commit_text_changes() -> void;
+  auto close_live_object_editor() -> void;
 
-  virtual void show() {
+  virtual auto show() -> void {
     Gtk::Frame::show();
   }
-  virtual void hide() {
+  virtual auto hide() -> void {
     Gtk::Frame::hide();
   }
 
-  virtual bool can_close() {
+  virtual auto can_close() -> bool {
     return true;
   }
 
-  sigc::signal<void, std::string> signal_title_changed() {
+  auto signal_title_changed() -> sigc::signal<void, std::string> {
     return _signal_title_changed;
   }
 
-  virtual sigc::connection add_entry_change_timer(Gtk::Entry *entry, const sigc::slot<void, std::string> &setter);
-  virtual sigc::connection add_text_change_timer(Gtk::TextView *text, const sigc::slot<void, std::string> &setter);
+  virtual auto add_entry_change_timer(Gtk::Entry *entry, const sigc::slot<void, std::string> &setter) -> sigc::connection;
+  virtual auto add_text_change_timer(Gtk::TextView *text, const sigc::slot<void, std::string> &setter) -> sigc::connection;
 
   // Warning! before using these functions make sure that _xml field was created in ctor by passign xml file name
   // service functions
@@ -115,7 +115,7 @@ public:
     return entry ? add_text_change_timer(entry, sigc::mem_fun(be, setter)) : sigc::connection();
   }
 
-  void embed_code_editor(mforms::View *container, Gtk::Box *vbox, bool commit_on_focus_out = true);
+  auto embed_code_editor(mforms::View *container, Gtk::Box *vbox, bool commit_on_focus_out = true) -> void;
 
 protected:
   struct TextChangeTimer {
@@ -129,23 +129,23 @@ protected:
 
   bool _refreshing;
 
-  virtual void add_option_combo_change_handler(Gtk::ComboBox *combo, const std::string &option,
-                                               const sigc::slot<void, std::string, std::string> &setter);
+  virtual auto add_option_combo_change_handler(Gtk::ComboBox *combo, const std::string &option,
+                                               const sigc::slot<void, std::string, std::string> &setter) -> void;
 
-  virtual void do_refresh_form_data() {
+  virtual auto do_refresh_form_data() -> void {
   }
 
-  virtual bec::BaseEditor *get_be() = 0;
+  virtual auto get_be() -> bec::BaseEditor * = 0;
 
-  Glib::RefPtr<Gtk::Builder> xml() const {
+  auto xml() const -> Glib::RefPtr<Gtk::Builder> {
     return _xml;
   }
-  Gtk::Box *decorator_control() {
+  auto decorator_control() -> Gtk::Box * {
     return _live_object_editor_decorator_control;
   }
 
   Gtk::Notebook *_editor_notebook;
-  virtual void decorate_object_editor();
+  virtual auto decorate_object_editor() -> void;
 
 private:
   Glib::RefPtr<Gtk::Builder> _xml;
@@ -155,21 +155,21 @@ private:
   Gtk::Container *_live_editor_placeholder;
   Gtk::Widget *_old_embedded_editor, *_old_embedded_find;
 
-  void apply_changes_to_live_object();
-  void revert_changes_to_live_object();
+  auto apply_changes_to_live_object() -> void;
+  auto revert_changes_to_live_object() -> void;
 
-  virtual void execute() {
+  virtual auto execute() -> void {
   } // doesn't do anything, just need to implement this from GUIPluginBase
 
-  bool entry_timeout(Gtk::Entry *entry);
-  bool text_timeout(Gtk::TextView *text);
+  auto entry_timeout(Gtk::Entry *entry) -> bool;
+  auto text_timeout(Gtk::TextView *text) -> bool;
 
-  void entry_changed(Gtk::Entry *entry);
-  void text_changed(Gtk::TextView *text);
+  auto entry_changed(Gtk::Entry *entry) -> void;
+  auto text_changed(Gtk::TextView *text) -> void;
 
   // TODO: Remove this code
-  void combo_changed(Gtk::ComboBox *combo, const std::string &option,
-                     const sigc::slot<void, std::string, std::string> &setter);
+  auto combo_changed(Gtk::ComboBox *combo, const std::string &option,
+                     const sigc::slot<void, std::string, std::string> &setter) -> void;
 };
 
 #endif /* _PLUGIN_EDITOR_BASE_H_ */

@@ -34,19 +34,19 @@ namespace mdc {
   public:
     Figure(Layer *layer);
 
-    virtual void render(CairoCtx *cr);
-    virtual void render_gl(mdc::CairoCtx *cr);
+    virtual auto render(CairoCtx *cr) -> void;
+    virtual auto render_gl(mdc::CairoCtx *cr) -> void;
     virtual auto get_intersection_with_line_to(const base::Point &p) -> base::Point;
 
-    void set_pen_color(const base::Color &color);
-    void set_fill_color(const base::Color &color);
-    void set_line_width(float width);
+    auto set_pen_color(const base::Color &color) -> void;
+    auto set_fill_color(const base::Color &color) -> void;
+    auto set_line_width(float width) -> void;
 
-    virtual void draw_contents(CairoCtx *cr) = 0;
-    virtual void draw_contents_gl();
+    virtual auto draw_contents(CairoCtx *cr) -> void = 0;
+    virtual auto draw_contents_gl() -> void;
 
-    virtual void stroke_outline(CairoCtx *cr, float offset) const;
-    virtual void stroke_outline_gl(float offset) const;
+    virtual auto stroke_outline(CairoCtx *cr, float offset) const -> void;
+    virtual auto stroke_outline_gl(float offset) const -> void;
 
   protected:
     base::Color _pen_color;

@@ -73,7 +73,7 @@ namespace testing {
     SyntheticMySQLModel();
     SyntheticMySQLModel(MySqlStudioTester *wbt);
 
-    void fillDocumentWithData();
+    auto fillDocumentWithData() -> void;
   };
 
   template <class X, class Model>
@@ -101,8 +101,8 @@ namespace testing {
   typedef xWrap<db_RoleRef> xRole;
   typedef xWrap<db_UserRef> xUser;
 
-  void addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, db_DatabaseObjectRef obj, const char *priv);
-  void addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, const char *objectType, const char *objectName,
-                    const char *priv);
-  void assignRole(db_UserRef user, db_RoleRef role);
+  auto addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, db_DatabaseObjectRef obj, const char *priv) -> void;
+  auto addPrivilege(SyntheticMySQLModel &model, db_RoleRef &role, const char *objectType, const char *objectName,
+                    const char *priv) -> void;
+  auto assignRole(db_UserRef user, db_RoleRef role) -> void;
 }

@@ -50,18 +50,18 @@ private:
   int _item_count;
   Result _result;
 
-  void discard_clicked();
+  auto discard_clicked() -> void;
 
 public:
   ConfirmSaveDialog(mforms::Form *owner, const std::string &window_title, const std::string &caption);
 
-  void add_item(const std::string &group, const std::string &name);
-  void add_item(const std::string &name);
+  auto add_item(const std::string &group, const std::string &name) -> void;
+  auto add_item(const std::string &name) -> void;
 
-  int change_count() {
+  auto change_count() -> int {
     return _item_count;
   }
-  Result run();
+  auto run() -> Result;
 };
 
 #endif

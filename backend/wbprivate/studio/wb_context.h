@@ -190,7 +190,7 @@ namespace wb {
     bool logLevelSet;
     WBOptions(const std::string &appBinaryName);
     ~WBOptions();
-    void analyzeCommandLineArguments();
+    auto analyzeCommandLineArguments() -> void;
     dataTypes::OptionsList *programOptions;
   };
 
@@ -206,83 +206,83 @@ namespace wb {
     WBContext(bool verbose = false);
     virtual ~WBContext();
 
-    bool software_rendering_enforced();
-    bool opengl_rendering_enforced();
+    auto software_rendering_enforced() -> bool;
+    auto opengl_rendering_enforced() -> bool;
 
-    bool init_(WBFrontendCallbacks *callbacks, WBOptions *options);
-    void init_finish_(WBOptions *options);
-    void finalize();
+    auto init_(WBFrontendCallbacks *callbacks, WBOptions *options) -> bool;
+    auto init_finish_(WBOptions *options) -> void;
+    auto finalize() -> void;
 
-    bool is_commercial();
+    auto is_commercial() -> bool;
 
-    bec::UIForm *get_active_form();
-    bec::UIForm *get_active_main_form();
+    auto get_active_form() -> bec::UIForm *;
+    auto get_active_main_form() -> bec::UIForm *;
 
-    WBContextModel *get_model_context() {
+    auto get_model_context() -> WBContextModel * {
       return _model_context;
     }
-    WBContextSQLIDE *get_sqlide_context() {
+    auto get_sqlide_context() -> WBContextSQLIDE * {
       return _sqlide_context;
     }
 
     // Document handling.
-    void new_document();
-    bool can_close_document(); // returns false for cancelled
-    bool close_document();
+    auto new_document() -> void;
+    auto can_close_document() -> bool; // returns false for cancelled
+    auto close_document() -> bool;
 
-    void close_document_finish();
-    void new_model_finish();
+    auto close_document_finish() -> void;
+    auto new_model_finish() -> void;
 
     // save document
 
-    bool save_as(const std::string &path);
+    auto save_as(const std::string &path) -> bool;
 
-    std::string get_filename() const;
+    auto get_filename() const -> std::string;
 
-    void report_bug(const std::string &errorInfo);
+    auto report_bug(const std::string &errorInfo) -> void;
 
     // plugins
-    void execute_plugin(const std::string &plugin_name, const bec::ArgumentPool &argpool = bec::ArgumentPool());
+    auto execute_plugin(const std::string &plugin_name, const bec::ArgumentPool &argpool = bec::ArgumentPool()) -> void;
 
-    void update_plugin_arguments_pool(bec::ArgumentPool &args);
+    auto update_plugin_arguments_pool(bec::ArgumentPool &args) -> void;
 
     // DB Querying
-    std::shared_ptr<SqlEditorForm> add_new_query_window(const db_mgmt_ConnectionRef &target,
-                                                        bool restore_session = true);
-    std::shared_ptr<SqlEditorForm> add_new_query_window();
+    auto add_new_query_window(const db_mgmt_ConnectionRef &target,
+                                                        bool restore_session = true) -> std::shared_ptr<SqlEditorForm>;
+    auto add_new_query_window() -> std::shared_ptr<SqlEditorForm>;
 
     // Admin
-    void add_new_admin_window(const db_mgmt_ConnectionRef &target);
+    auto add_new_admin_window(const db_mgmt_ConnectionRef &target) -> void;
 
     // Generic plugin tabs
-    void add_new_plugin_window(const std::string &plugin_id, const std::string &caption);
+    auto add_new_plugin_window(const std::string &plugin_id, const std::string &caption) -> void;
 
     // GUI Plugin
-    void register_builtin_plugins(grt::ListRef<app_Plugin> plugins);
+    auto register_builtin_plugins(grt::ListRef<app_Plugin> plugins) -> void;
 
-    void close_gui_plugin(NativeHandle handle);
+    auto close_gui_plugin(NativeHandle handle) -> void;
 
     //
-    void request_refresh(RefreshType type, const std::string &str, NativeHandle ptr = (NativeHandle)0);
+    auto request_refresh(RefreshType type, const std::string &str, NativeHandle ptr = (NativeHandle)0) -> void;
 
-    const std::string &get_user_datadir() const {
+    auto get_user_datadir() const -> const std::string & {
       return _user_datadir;
     }
     // TODO: Temporary solution need to make ModelFile grt class
-    studio_DocumentRef openModelFile(const std::string &file);
-    std::string getTempDir();
-    int closeModelFile();
-    std::string getDbFilePath();
+    auto openModelFile(const std::string &file) -> studio_DocumentRef;
+    auto getTempDir() -> std::string;
+    auto closeModelFile() -> int;
+    auto getDbFilePath() -> std::string;
 
-    bool open_document(const std::string &file);
-    void open_script_file(const std::string &file);
-    void open_recent_document(int index);
-    bool has_unsaved_changes();
-    bool save_changes();
+    auto open_document(const std::string &file) -> bool;
+    auto open_script_file(const std::string &file) -> void;
+    auto open_recent_document(int index) -> void;
+    auto has_unsaved_changes() -> bool;
+    auto save_changes() -> bool;
 
-    bool open_file_by_extension(const std::string &path, bool interactive);
+    auto open_file_by_extension(const std::string &path, bool interactive) -> bool;
 
-    bec::PluginManager *get_plugin_manager() {
+    auto get_plugin_manager() -> bec::PluginManager * {
       return _plugin_manager;
     }
     template <class C>
@@ -290,72 +290,72 @@ namespace wb {
       return dynamic_cast<C *>(get_component_named(C::name()));
     }
 
-    WBComponent *get_component_named(const std::string &name);
+    auto get_component_named(const std::string &name) -> WBComponent *;
 
-    WBComponent *get_component_handling(const model_ObjectRef &object);
+    auto get_component_handling(const model_ObjectRef &object) -> WBComponent *;
 
-    void foreach_component(const std::function<void(WBComponent *)> &slot);
+    auto foreach_component(const std::function<void(WBComponent *)> &slot) -> void;
 
-    MySqlStudioImpl *get_studio() {
+    auto get_studio() -> MySqlStudioImpl * {
       return _studio;
     };
 
-    bec::Clipboard *get_clipboard() const {
+    auto get_clipboard() const -> bec::Clipboard * {
       return _clipboard;
     }
 
-    studio_MySqlStudioRef get_root();
-    studio_DocumentRef get_document();
-    grt::DictRef get_wb_options();
+    auto get_root() -> studio_MySqlStudioRef;
+    auto get_document() -> studio_DocumentRef;
+    auto get_wb_options() -> grt::DictRef;
 
-    std::string get_datadir() const {
+    auto get_datadir() const -> std::string {
       return _datadir;
     }
 
-    bool cancel_idle_tasks();
-    void flush_idle_tasks(bool force);
+    auto cancel_idle_tasks() -> bool;
+    auto flush_idle_tasks(bool force) -> void;
 
     // utilities for error reporting
-    void show_exception(const std::string &operation, const std::exception &exc);
-    void show_exception(const std::string &operation, const grt::grt_runtime_error &exc);
+    auto show_exception(const std::string &operation, const std::exception &exc) -> void;
+    auto show_exception(const std::string &operation, const grt::grt_runtime_error &exc) -> void;
 
     template <class R>
     R execute_in_main_thread(const std::string &name, const std::function<R()> &function) {
       return bec::GRTManager::get()->get_dispatcher()->call_from_main_thread /*<R>*/ (function, true, false);
     }
-    void execute_in_main_thread(const std::string &name, const std::function<void()> &function, bool wait);
+    auto execute_in_main_thread(const std::string &name, const std::function<void()> &function, bool wait) -> void;
 
-    grt::ValueRef execute_in_grt_thread(const std::string &name, const std::function<grt::ValueRef()> &function);
+    auto execute_in_grt_thread(const std::string &name, const std::function<grt::ValueRef()> &function) -> grt::ValueRef;
 
-    void execute_async_in_grt_thread(const std::string &name, const std::function<grt::ValueRef()> &function);
+    auto execute_async_in_grt_thread(const std::string &name, const std::function<grt::ValueRef()> &function) -> void;
 
-    bool activate_live_object(const GrtObjectRef &object);
+    auto activate_live_object(const GrtObjectRef &object) -> bool;
 
-    std::string create_attached_file(const std::string &group, const std::string &tmpl);
-    void save_attached_file_contents(const std::string &name, const char *data, size_t size);
-    std::string get_attached_file_contents(const std::string &name);
-    std::string get_attached_file_tmp_path(const std::string &name);
-    void delete_attached_file(const std::string &name);
-    std::string recreate_attached_file(const std::string &name, const std::string &data);
-    int export_attached_file_contents(const std::string &name, const std::string &export_to);
+    auto create_attached_file(const std::string &group, const std::string &tmpl) -> std::string;
+    auto save_attached_file_contents(const std::string &name, const char *data, size_t size) -> void;
+    auto get_attached_file_contents(const std::string &name) -> std::string;
+    auto get_attached_file_tmp_path(const std::string &name) -> std::string;
+    auto delete_attached_file(const std::string &name) -> void;
+    auto recreate_attached_file(const std::string &name, const std::string &data) -> std::string;
+    auto export_attached_file_contents(const std::string &name, const std::string &export_to) -> int;
 
-    void block_user_interaction(bool flag);
-    bool user_interaction_allowed() {
+    auto block_user_interaction(bool flag) -> void;
+    auto user_interaction_allowed() -> bool {
       return _user_interaction_blocked == 0;
     }
 
     // State handling.
-    std::string read_state(const std::string &name, const std::string &domain, const std::string &default_value);
-    int read_state(const std::string &name, const std::string &domain, const int &default_value);
-    double read_state(const std::string &name, const std::string &domain, const double &default_value);
-    bool read_state(const std::string &name, const std::string &domain, const bool &default_value);
-    grt::ValueRef read_state(const std::string &name, const std::string &domain);
+    auto read_state(const std::string &name, const std::string &domain, const std::string &default_value) -> std::string;
+    auto read_state(const std::string &name, const std::string &domain, const int &default_value) -> int;
+    auto read_state(const std::string &name, const std::string &domain, const double &default_value) -> double;
+    auto read_state(const std::string &name, const std::string &domain, const bool &default_value) -> bool;
+    auto read_state(const std::string &name, const std::string &domain) -> grt::ValueRef;
 
-    void save_state(const std::string &name, const std::string &domain, const std::string &value);
-    void save_state(const std::string &name, const std::string &domain, const int &value);
-    void save_state(const std::string &name, const std::string &domain, const double &value);
-    void save_state(const std::string &name, const std::string &domain, const bool &value);
-    void save_state(const std::string &name, const std::string &domain, grt::ValueRef value);
+    auto save_state(const std::string &name, const std::string &domain, const std::string &value) -> void;
+    auto save_state(const std::string &name, const std::string &domain, const int &value) -> void;
+    auto save_state(const std::string &name, const std::string &domain, const double &value) -> void;
+    auto save_state(const std::string &name, const std::string &domain, const bool &value) -> void;
+    auto save_state(const std::string &name, const std::string &domain, grt::ValueRef value) -> void;
 
   protected:
     friend class WBContextModel; // to access _components
@@ -413,89 +413,89 @@ namespace wb {
     bool _force_sw_rendering;     // Command line switch.
     bool _force_opengl_rendering; // Command line switch.
 
-    grt::ListRef<app_PaperType> get_paper_types(std::shared_ptr<grt::internal::Unserializer> unserializer);
+    auto get_paper_types(std::shared_ptr<grt::internal::Unserializer> unserializer) -> grt::ListRef<app_PaperType>;
 
     std::vector<grt::SlotHolder*> _messageHandlerList;
 
-    void pushMessageHandler(grt::SlotHolder *slot);
+    auto pushMessageHandler(grt::SlotHolder *slot) -> void;
 
     bool _other_connections_loaded;
     // setup
-    void init_templates();
-    void init_grt_tree(WBOptions *options, std::shared_ptr<grt::internal::Unserializer> unserializer);
-    void init_plugins_grt(WBOptions *options);
-    void init_plugin_groups_grt(WBOptions *options);
-    void init_object_listeners_grt();
-    void init_properties_grt(studio_DocumentRef &doc);
-    void init_rdbms_modules();
+    auto init_templates() -> void;
+    auto init_grt_tree(WBOptions *options, std::shared_ptr<grt::internal::Unserializer> unserializer) -> void;
+    auto init_plugins_grt(WBOptions *options) -> void;
+    auto init_plugin_groups_grt(WBOptions *options) -> void;
+    auto init_object_listeners_grt() -> void;
+    auto init_properties_grt(studio_DocumentRef &doc) -> void;
+    auto init_rdbms_modules() -> void;
 
-    void do_close_document(bool destroying);
+    auto do_close_document(bool destroying) -> void;
 
-    grt::ValueRef setup_context_grt(WBOptions *options);
+    auto setup_context_grt(WBOptions *options) -> grt::ValueRef;
 
-    void set_default_options(grt::DictRef options);
+    auto set_default_options(grt::DictRef options) -> void;
 
-    void load_app_options(bool update);
+    auto load_app_options(bool update) -> void;
 
-    bool auto_save_document();
-    std::string get_auto_save_dir();
+    auto auto_save_document() -> bool;
+    auto get_auto_save_dir() -> std::string;
 
-    void cleanup_options();
+    auto cleanup_options() -> void;
 
   public:
-    void save_app_options();
-    void save_connections();
-    void save_instances();
+    auto save_app_options() -> void;
+    auto save_connections() -> void;
+    auto save_instances() -> void;
 
   protected:
-    void add_recent_file(const std::string &file);
+    auto add_recent_file(const std::string &file) -> void;
 
-    void load_app_state(std::shared_ptr<grt::internal::Unserializer> unserializer);
-    void save_app_state();
+    auto load_app_state(std::shared_ptr<grt::internal::Unserializer> unserializer) -> void;
+    auto save_app_state() -> void;
 
-    grt::ValueRef save_grt();
+    auto save_grt() -> grt::ValueRef;
 
-    grt::ValueRef execute_plugin_grt(const app_PluginRef &plugin, const grt::BaseListRef &args);
-    void plugin_finished(const grt::ValueRef &result, const app_PluginRef &plugin);
+    auto execute_plugin_grt(const app_PluginRef &plugin, const grt::BaseListRef &args) -> grt::ValueRef;
+    auto plugin_finished(const grt::ValueRef &result, const app_PluginRef &plugin) -> void;
 
-    bool handle_message(const grt::Message &msg);
+    auto handle_message(const grt::Message &msg) -> bool;
 
-    void reset_document();
-    void reset_listeners();
+    auto reset_document() -> void;
+    auto reset_listeners() -> void;
 
     void option_dict_changed(grt::internal::OwnedDict *dict = 0, bool added = false, const std::string &key = "");
 
   private:
     // for base::Observer
-    virtual void handle_notification(const std::string &name, void *sender, std::map<std::string, std::string> &info);
+    virtual auto handle_notification(const std::string &name, void *sender, std::map<std::string, std::string> &info) -> void;
 
   public:
-    ModelFile *get_file() {
+    auto get_file() -> ModelFile * {
       return _file;
     }
 
-    bool install_module_file(const std::string &path);
-    bool uninstall_module(grt::Module *module);
-    void run_script_file(const std::string &path);
+    auto install_module_file(const std::string &path) -> bool;
+    auto uninstall_module(grt::Module *module) -> bool;
+    auto run_script_file(const std::string &path) -> void;
 
   private:
-    bool find_connection_password(const db_mgmt_ConnectionRef &conn, std::string &password);
+    auto find_connection_password(const db_mgmt_ConnectionRef &conn, std::string &password) -> bool;
 
-    void *do_request_password(const std::string &title, const std::string &service, bool reset_password,
-                              std::string *account, std::string *ret_password);
-    void *do_find_connection_password(const std::string &hostId, const std::string &username,
-                                      std::string *ret_password);
+    auto do_request_password(const std::string &title, const std::string &service, bool reset_password,
+                              std::string *account, std::string *ret_password) -> void *;
+    auto do_find_connection_password(const std::string &hostId, const std::string &username,
+                                      std::string *ret_password) -> void *;
 
-    void load_other_connections();
+    auto load_other_connections() -> void;
 
-    void attempt_options_upgrade(xmlDocPtr xmldoc, const std::string &version);
+    auto attempt_options_upgrade(xmlDocPtr xmldoc, const std::string &version) -> void;
 
-    bool show_error(const std::string &title, const std::string &message);
+    auto show_error(const std::string &title, const std::string &message) -> bool;
 
-    void setLogLevelFromGuiPreferences(const grt::DictRef &dict);
+    auto setLogLevelFromGuiPreferences(const grt::DictRef &dict) -> void;
 
   public:
-    std::string request_connection_password(const db_mgmt_ConnectionRef &conn, bool force_asking);
+    auto request_connection_password(const db_mgmt_ConnectionRef &conn, bool force_asking) -> std::string;
 
   public: // front end callbacks
     WBFrontendCallbacks *_frontendCallbacks;
@@ -504,7 +504,7 @@ namespace wb {
     std::function<void(std::string, void *)> show_gui_plugin;
 
   private:
-    void warnIfRunningOnUnsupportedOS();
+    auto warnIfRunningOnUnsupportedOS() -> void;
   };
 
   struct GUILock {

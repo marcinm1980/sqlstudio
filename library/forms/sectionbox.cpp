@@ -49,7 +49,7 @@ HeaderBox::HeaderBox(SectionBox* owner, bool header_mode) : DrawBox(), _caption_
 
 //--------------------------------------------------------------------------------------------------
 
-void HeaderBox::draw_background(cairo_t* cr, int width, int height) {
+auto HeaderBox::draw_background(cairo_t* cr, int width, int height) -> void {
 #ifndef _MSC_VER
   cairo_set_source_rgb(cr, 235 / 255.0, 235 / 255.0, 235 / 255.0);
   cairo_paint(cr);
@@ -112,7 +112,7 @@ void HeaderBox::draw_background(cairo_t* cr, int width, int height) {
 
 //--------------------------------------------------------------------------------------------------
 
-void HeaderBox::repaint(cairo_t* cr, int x, int y, int w, int h) {
+auto HeaderBox::repaint(cairo_t* cr, int x, int y, int w, int h) -> void {
   int height = get_height();
   int width = get_width();
 
@@ -194,7 +194,7 @@ void HeaderBox::repaint(cairo_t* cr, int x, int y, int w, int h) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool HeaderBox::mouse_down(mforms::MouseButton button, int x, int y) {
+auto HeaderBox::mouse_down(mforms::MouseButton button, int x, int y) -> bool {
   // Check if the mouse position is on the icon and toggle the section box if that is the case.
   if (_owner->_expandable && x >= _icon_left && x <= _icon_right && y >= _icon_top && y <= _icon_bottom)
     _owner->toggle();
@@ -232,7 +232,7 @@ SectionBox::~SectionBox() {
 /**
  * Set what is to be displayed in the box as content (it can still be hidden).
  */
-void SectionBox::set_content(View* content) {
+auto SectionBox::set_content(View* content) -> void {
   if (_content != content) {
     if (_content != NULL)
       remove(_content);
@@ -246,13 +246,13 @@ void SectionBox::set_content(View* content) {
 /**
  * Toggles the expand state of the box.
  */
-void SectionBox::toggle() {
+auto SectionBox::toggle() -> void {
   set_expanded(!_expanded);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void SectionBox::set_expanded(bool expanded) {
+auto SectionBox::set_expanded(bool expanded) -> void {
   if (_expanded != expanded) {
     _expanded = expanded;
 

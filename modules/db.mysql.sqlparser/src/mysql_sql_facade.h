@@ -165,20 +165,20 @@ public:
   virtual int renameSchemaReferences(db_CatalogRef catalog, const std::string old_schema_name,
                                      const std::string new_schema_name) override;
 
-  grt::StringListRef splitSqlStatements(const std::string &sql);
-  grt::BaseListRef getSqlStatementRanges(const std::string &sql);
+  auto splitSqlStatements(const std::string &sql) -> grt::StringListRef;
+  auto getSqlStatementRanges(const std::string &sql) -> grt::BaseListRef;
 
   // AST is returned as a list of tree of lists in the format [[symbol-name, value, [child-nodes], base_offset,
   // begin_offs, end_offs], ...],
   // one list item per statement in the script. If there is a syntax error in the statement, a string with the error
   // message will be there instead of the AST
-  grt::BaseListRef parseAstFromSqlScript(const std::string &sql);
+  auto parseAstFromSqlScript(const std::string &sql) -> grt::BaseListRef;
 
   virtual Sql_statement_decomposer::Ref sqlStatementDecomposer(grt::DictRef db_opts = grt::DictRef()) override;
 
-  virtual grt::BaseListRef getItemFromPath(const std::string &path, const grt::BaseListRef source);
-  std::string getTypeDescription(grt::BaseListRef type_node,
-                                 std::vector<std::string> *additional_type_data_paths = NULL);
+  virtual auto getItemFromPath(const std::string &path, const grt::BaseListRef source) -> grt::BaseListRef;
+  auto getTypeDescription(grt::BaseListRef type_node,
+                                 std::vector<std::string> *additional_type_data_paths = NULL) -> std::string;
   virtual bool parseSelectStatementForEdit(const std::string &sql, std::string &schema_name, std::string &table_name,
                                            String_tuple_list &column_names) override;
   virtual bool parseRoutineDetails(const std::string &sql, std::string &type, std::string &name,

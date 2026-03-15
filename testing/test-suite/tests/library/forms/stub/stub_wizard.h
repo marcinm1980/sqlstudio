@@ -32,32 +32,32 @@ namespace mforms {
   namespace stub {
 
     class WizardWrapper : public ObjectWrapper {
-      void refresh_step_list(const std::vector<std::string> &steps);
+      auto refresh_step_list(const std::vector<std::string> &steps) -> void;
 
-      static void cancel(::mforms::Wizard *wiz);
+      static auto cancel(::mforms::Wizard *wiz) -> void;
 
     protected:
       WizardWrapper(::mforms::Wizard *wiz);
 
-      static bool create(::mforms::Wizard *self, Form *owner);
-      static void set_title(::mforms::Wizard *self, const std::string &title);
-      static void run_modal(::mforms::Wizard *self);
-      static void close(::mforms::Wizard *self);
-      static void flush_events(::mforms::Wizard *self);
-      static void set_content(::mforms::Wizard *self, View *view);
-      static void set_heading(::mforms::Wizard *self, const std::string &);
-      static void set_step_list(::mforms::Wizard *self, const std::vector<std::string> &);
-      static void set_allow_cancel(::mforms::Wizard *self, bool flag);
-      static void set_allow_back(::mforms::Wizard *self, bool flag);
-      static void set_allow_next(::mforms::Wizard *self, bool flag);
-      static void set_show_extra(::mforms::Wizard *self, bool flag);
-      static void set_extra_caption(::mforms::Wizard *self, const std::string &);
-      static void set_next_caption(::mforms::Wizard *self, const std::string &);
+      static auto create(::mforms::Wizard *self, Form *owner) -> bool;
+      static auto set_title(::mforms::Wizard *self, const std::string &title) -> void;
+      static auto run_modal(::mforms::Wizard *self) -> void;
+      static auto close(::mforms::Wizard *self) -> void;
+      static auto flush_events(::mforms::Wizard *self) -> void;
+      static auto set_content(::mforms::Wizard *self, View *view) -> void;
+      static auto set_heading(::mforms::Wizard *self, const std::string &) -> void;
+      static auto set_step_list(::mforms::Wizard *self, const std::vector<std::string> &) -> void;
+      static auto set_allow_cancel(::mforms::Wizard *self, bool flag) -> void;
+      static auto set_allow_back(::mforms::Wizard *self, bool flag) -> void;
+      static auto set_allow_next(::mforms::Wizard *self, bool flag) -> void;
+      static auto set_show_extra(::mforms::Wizard *self, bool flag) -> void;
+      static auto set_extra_caption(::mforms::Wizard *self, const std::string &) -> void;
+      static auto set_next_caption(::mforms::Wizard *self, const std::string &) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
 
-      static void set_icon_path(const std::string &path);
+      static auto set_icon_path(const std::string &path) -> void;
     };
 
   } // end of stub namespace

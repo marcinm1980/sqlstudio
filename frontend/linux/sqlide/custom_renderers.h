@@ -48,47 +48,47 @@ public:
   //  int* width, int* height) const
   //  { Renderer::get_size_vfunc (widget, cell_area, x_offset, y_offset, width, height); }
 
-  virtual Gtk::SizeRequestMode get_request_mode_vfunc() const {
+  virtual auto get_request_mode_vfunc() const -> Gtk::SizeRequestMode {
     return Renderer::get_request_mode_vfunc();
   }
 
-  virtual void get_preferred_width_vfunc(Gtk::Widget& widget, int& minimum_width, int& natural_width) const {
+  virtual auto get_preferred_width_vfunc(Gtk::Widget& widget, int& minimum_width, int& natural_width) const -> void {
     Renderer::get_preferred_width_vfunc(widget, minimum_width, natural_width);
   }
 
-  virtual void get_preferred_height_for_width_vfunc(Gtk::Widget& widget, int width, int& minimum_height,
-                                                    int& natural_height) const {
+  virtual auto get_preferred_height_for_width_vfunc(Gtk::Widget& widget, int width, int& minimum_height,
+                                                    int& natural_height) const -> void {
     Renderer::get_preferred_height_for_width_vfunc(widget, width, minimum_height, natural_height);
   }
 
-  virtual void get_preferred_height_vfunc(Gtk::Widget& widget, int& minimum_height, int& natural_height) const {
+  virtual auto get_preferred_height_vfunc(Gtk::Widget& widget, int& minimum_height, int& natural_height) const -> void {
     Renderer::get_preferred_height_vfunc(widget, minimum_height, natural_height);
   }
 
-  virtual void get_preferred_width_for_height_vfunc(Gtk::Widget& widget, int height, int& minimum_width,
-                                                    int& natural_width) const {
+  virtual auto get_preferred_width_for_height_vfunc(Gtk::Widget& widget, int height, int& minimum_width,
+                                                    int& natural_width) const -> void {
     Renderer::get_preferred_width_for_height_vfunc(widget, height, minimum_width, natural_width);
   }
 
-  virtual void render_vfunc(const ::Cairo::RefPtr< ::Cairo::Context>& cr, Gtk::Widget& widget,
+  virtual auto render_vfunc(const ::Cairo::RefPtr< ::Cairo::Context>& cr, Gtk::Widget& widget,
                             const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area,
-                            Gtk::CellRendererState flags) {
+                            Gtk::CellRendererState flags) -> void {
     Renderer::render_vfunc(cr, widget, background_area, cell_area, flags);
   }
 
-  virtual bool activate_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path,
+  virtual auto activate_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path,
                               const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area,
-                              Gtk::CellRendererState flags) {
+                              Gtk::CellRendererState flags) -> bool {
     return Renderer::activate_vfunc(event, widget, path, background_area, cell_area, flags);
   }
 
-  virtual Gtk::CellEditable* start_editing_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path,
+  virtual auto start_editing_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path,
                                                  const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area,
-                                                 Gtk::CellRendererState flags) {
+                                                 Gtk::CellRendererState flags) -> Gtk::CellEditable* {
     return Renderer::start_editing_vfunc(event, widget, path, background_area, cell_area, flags);
   }
 
-  virtual void on_editing_canceled() {
+  virtual auto on_editing_canceled() -> void {
     Renderer::on_editing_canceled();
   }
 };
@@ -96,7 +96,7 @@ public:
 class CustomRendererOps {
 public:
   virtual ~CustomRendererOps(){};
-  virtual Gtk::CellRenderer* data_renderer() {
+  virtual auto data_renderer() -> Gtk::CellRenderer* {
     return 0;
   }
 };
@@ -108,7 +108,7 @@ public:
   CustomRenderer();
   virtual ~CustomRenderer() {}
 
-  virtual Glib::PropertyProxy_Base _property_renderable() {
+  virtual auto _property_renderable() -> Glib::PropertyProxy_Base {
     return property_data_;
   }
 
@@ -118,21 +118,21 @@ public:
   RealRenderer _data_renderer;
   CellRendererProxy<Gtk::CellRendererPixbuf> _pixbuf_renderer;
 
-  Glib::PropertyProxy<bool> property_editable() {
+  auto property_editable() -> Glib::PropertyProxy<bool> {
     return property_editable_;
   }
 
-  Glib::SignalProxy2<void, const RendererValueType&, const RendererValueType&> signal_edited() {
+  auto signal_edited() -> Glib::SignalProxy2<void, const RendererValueType&, const RendererValueType&> {
     return _data_renderer.signal_edited();
   }
 
-  Gtk::TreeViewColumn* bind_columns(GridView* treeview, const std::string& name, int index,
+  auto bind_columns(GridView* treeview, const std::string& name, int index,
                                     Gtk::TreeModelColumn<ModelValueType>* model_data_column,
-                                    Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >* model_pixbuf_column);
+                                    Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >* model_pixbuf_column) -> Gtk::TreeViewColumn*;
 
   sigc::slot<void, int> set_edit_state;
-  void floating_point_visible_scale(int val);
-  virtual Gtk::CellRenderer* data_renderer() {
+  auto floating_point_visible_scale(int val) -> void;
+  virtual auto data_renderer() -> Gtk::CellRenderer* {
     return &_data_renderer;
   }
 
@@ -155,35 +155,35 @@ protected:
   //  virtual void get_size_vfunc (Gtk::Widget& widget, const Gdk::Rectangle* cell_area, int* x_offset, int* y_offset,
   //  int* width, int* height) const;
 
-  virtual Gtk::SizeRequestMode get_request_mode_vfunc() const;
-  virtual void get_preferred_width_vfunc(Gtk::Widget& widget, int& minimum_width, int& natural_width) const;
-  virtual void get_preferred_height_for_width_vfunc(Gtk::Widget& widget, int width, int& minimum_height,
-                                                    int& natural_height) const;
-  virtual void get_preferred_height_vfunc(Gtk::Widget& widget, int& minimum_height, int& natural_height) const;
-  virtual void get_preferred_width_for_height_vfunc(Gtk::Widget& widget, int height, int& minimum_width,
-                                                    int& natural_width) const;
-  virtual bool activate_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path,
+  virtual auto get_request_mode_vfunc() const -> Gtk::SizeRequestMode;
+  virtual auto get_preferred_width_vfunc(Gtk::Widget& widget, int& minimum_width, int& natural_width) const -> void;
+  virtual auto get_preferred_height_for_width_vfunc(Gtk::Widget& widget, int width, int& minimum_height,
+                                                    int& natural_height) const -> void;
+  virtual auto get_preferred_height_vfunc(Gtk::Widget& widget, int& minimum_height, int& natural_height) const -> void;
+  virtual auto get_preferred_width_for_height_vfunc(Gtk::Widget& widget, int height, int& minimum_width,
+                                                    int& natural_width) const -> void;
+  virtual auto activate_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path,
                               const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area,
-                              Gtk::CellRendererState flags);
-  virtual void render_vfunc(const ::Cairo::RefPtr< ::Cairo::Context>& cr, Gtk::Widget& widget,
+                              Gtk::CellRendererState flags) -> bool;
+  virtual auto render_vfunc(const ::Cairo::RefPtr< ::Cairo::Context>& cr, Gtk::Widget& widget,
                             const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area,
-                            Gtk::CellRendererState flags);
-  virtual Gtk::CellEditable* start_editing_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path,
+                            Gtk::CellRendererState flags) -> void;
+  virtual auto start_editing_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path,
                                                  const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area,
-                                                 Gtk::CellRendererState flags);
-  virtual void on_editing_canceled();
-  void on_editing_done(Gtk::CellEditable* editable);
+                                                 Gtk::CellRendererState flags) -> Gtk::CellEditable*;
+  virtual auto on_editing_canceled() -> void;
+  auto on_editing_done(Gtk::CellEditable* editable) -> void;
 
-  virtual void on_data_changed();
-  virtual void on_pixbuf_changed();
-  virtual void on_editable_changed();
-  virtual void on_cell_background_set_changed();
-  virtual void on_cell_background_changed();
-  virtual void on_cell_background_gdk_changed();
+  virtual auto on_data_changed() -> void;
+  virtual auto on_pixbuf_changed() -> void;
+  virtual auto on_editable_changed() -> void;
+  virtual auto on_cell_background_set_changed() -> void;
+  virtual auto on_cell_background_changed() -> void;
+  virtual auto on_cell_background_gdk_changed() -> void;
 
 private:
 
-  void on_cell_data(Gtk::CellRenderer*, const Gtk::TreeModel::iterator&, Gtk::TreeView* tree);
+  auto on_cell_data(Gtk::CellRenderer*, const Gtk::TreeModel::iterator&, Gtk::TreeView* tree) -> void;
 
   Gtk::TreeModelColumn<ModelValueType>* _model_data_column;
   Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >* _model_pixbuf_column;

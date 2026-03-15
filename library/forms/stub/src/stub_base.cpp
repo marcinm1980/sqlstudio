@@ -44,6 +44,6 @@ ObjectWrapper::~ObjectWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-ObjectWrapper *ObjectWrapper::getData(mforms::Object *backend) {
+auto ObjectWrapper::getData(mforms::Object *backend) -> ObjectWrapper * {
   return backend->get_data<ObjectWrapper>();
 }

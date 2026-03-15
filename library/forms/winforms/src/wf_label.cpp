@@ -42,7 +42,7 @@ DEFAULT_LOG_DOMAIN(DOMAIN_MFORMS_WRAPPER)
 /**
  * Converts an mform alignment value into a Windows::Forms alignment value.
  */
-ContentAlignment get_alignment(mforms::Alignment align) {
+auto get_alignment(mforms::Alignment align) -> ContentAlignment {
   switch (align) {
     case mforms::BottomLeft:
       return ContentAlignment::BottomLeft;
@@ -93,7 +93,7 @@ void WrapControlLabel::Font::set(Drawing::Font ^ value) {
 /**
  * Returns the preferred size of the label depending on its auto-wrapping mode.
  */
-Drawing::Size WrapControlLabel::GetPreferredSize(Drawing::Size proposedSize) {
+auto WrapControlLabel::GetPreferredSize(Drawing::Size proposedSize) -> Drawing::Size {
   System::Drawing::Size result;
   if (!autoWrapping) {
     // Default behavior, just let the control itself determine what it needs.
@@ -140,7 +140,7 @@ LabelWrapper::LabelWrapper(mforms::Label *backend) : ViewWrapper(backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-bool LabelWrapper::create(mforms::Label *backend) {
+auto LabelWrapper::create(mforms::Label *backend) -> bool {
   LabelWrapper *wrapper = new LabelWrapper(backend);
   WrapControlLabel ^ label = Create<WrapControlLabel>(backend, wrapper);
   label->TextAlign = ContentAlignment::MiddleLeft;
@@ -151,7 +151,7 @@ bool LabelWrapper::create(mforms::Label *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-void LabelWrapper::set_style(mforms::Label *backend, mforms::LabelStyle style) {
+auto LabelWrapper::set_style(mforms::Label *backend, mforms::LabelStyle style) -> void {
   WrapControlLabel ^ label = LabelWrapper::GetManagedObject<WrapControlLabel>(backend);
   try {
     switch (style) {
@@ -206,7 +206,7 @@ void LabelWrapper::set_style(mforms::Label *backend, mforms::LabelStyle style) {
 
 //--------------------------------------------------------------------------------------------------
 
-void LabelWrapper::set_text(mforms::Label *backend, const std::string &text) {
+auto LabelWrapper::set_text(mforms::Label *backend, const std::string &text) -> void {
   WrapControlLabel ^ label = LabelWrapper::GetManagedObject<WrapControlLabel>(backend);
 
   String ^ new_text;
@@ -230,7 +230,7 @@ void LabelWrapper::set_text(mforms::Label *backend, const std::string &text) {
 
 //--------------------------------------------------------------------------------------------------
 
-void LabelWrapper::set_text_align(mforms::Label *backend, mforms::Alignment align) {
+auto LabelWrapper::set_text_align(mforms::Label *backend, mforms::Alignment align) -> void {
   WrapControlLabel ^ label = LabelWrapper::GetManagedObject<WrapControlLabel>(backend);
   label->TextAlign = get_alignment(align);
   backend->set_layout_dirty(true);
@@ -238,14 +238,14 @@ void LabelWrapper::set_text_align(mforms::Label *backend, mforms::Alignment alig
 
 //--------------------------------------------------------------------------------------------------
 
-void LabelWrapper::set_color(mforms::Label *backend, const std::string &color) {
+auto LabelWrapper::set_color(mforms::Label *backend, const std::string &color) -> void {
   WrapControlLabel ^ label = LabelWrapper::GetManagedObject<WrapControlLabel>(backend);
   label->ForeColor = ColorTranslator::FromHtml(CppStringToNative(color));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void LabelWrapper::set_wrap_text(mforms::Label *backend, bool flag) {
+auto LabelWrapper::set_wrap_text(mforms::Label *backend, bool flag) -> void {
   WrapControlLabel ^ label = LabelWrapper::GetManagedObject<WrapControlLabel>(backend);
   label->AutoWrapping = flag;
   backend->set_layout_dirty(true);
@@ -253,7 +253,7 @@ void LabelWrapper::set_wrap_text(mforms::Label *backend, bool flag) {
 
 //--------------------------------------------------------------------------------------------------
 
-void LabelWrapper::init() {
+auto LabelWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_label_impl.create = &LabelWrapper::create;

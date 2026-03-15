@@ -70,7 +70,7 @@ WbFrontendCallbacks::~WbFrontendCallbacks() {
 
 //--------------------------------------------------------------------------------------------------
 
-::wb::WBFrontendCallbacks* WbFrontendCallbacks::get_callbacks() {
+auto WbFrontendCallbacks::get_callbacks() -> ::wb::WBFrontendCallbacks* {
   return _callbacks;
 }
 
@@ -213,33 +213,33 @@ void WbFrontendCallbacks::set_quit_application(BoolDelegate ^ dt) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string WbFrontendCallbacks::show_file_dialog_wrapper(const std::string& str1, const std::string& str2,
-                                                          const std::string& str3) {
+auto WbFrontendCallbacks::show_file_dialog_wrapper(const std::string& str1, const std::string& str2,
+                                                          const std::string& str3) -> std::string {
   return NativeToCppString(
     show_file_dialog_delegate(CppStringToNative(str1), CppStringToNative(str2), CppStringToNative(str3)));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::show_status_text_wrapper(const std::string& str1) {
+auto WbFrontendCallbacks::show_status_text_wrapper(const std::string& str1) -> void {
   show_status_text_delegate(CppStringToNative(str1));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool WbFrontendCallbacks::show_progress_wrapper(const std::string& str1, const std::string& str2, float f3) {
+auto WbFrontendCallbacks::show_progress_wrapper(const std::string& str1, const std::string& str2, float f3) -> bool {
   return show_progress_delegate(CppStringToNative(str1), CppStringToNative(str2), f3);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::shell_output_wrapper(const std::string& str1) {
+auto WbFrontendCallbacks::shell_output_wrapper(const std::string& str1) -> void {
   shell_output_delegate(CppStringToNative(str1));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-::mdc::CanvasView* WbFrontendCallbacks::create_diagram_wrapper(const model_DiagramRef& model) {
+auto WbFrontendCallbacks::create_diagram_wrapper(const model_DiagramRef& model) -> ::mdc::CanvasView* {
   BaseWindowsCanvasView ^ cv = create_diagram_delegate(CppStringToNative(model->id()),
                                                        CppStringToNative(model->name()) /*, IntPtr(&model.content())*/);
   return cv->get_unmanaged_object();
@@ -247,30 +247,30 @@ void WbFrontendCallbacks::shell_output_wrapper(const std::string& str1) {
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::destroy_view_wrapper(::mdc::CanvasView* canvas_view) {
+auto WbFrontendCallbacks::destroy_view_wrapper(::mdc::CanvasView* canvas_view) -> void {
   BaseWindowsCanvasView ^ wcv = BaseWindowsCanvasView::GetFromFixedId((IntPtr)canvas_view->get_user_data());
   destroy_view_delegate(wcv);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::switched_view_wrapper(::mdc::CanvasView* canvas_view) {
+auto WbFrontendCallbacks::switched_view_wrapper(::mdc::CanvasView* canvas_view) -> void {
   BaseWindowsCanvasView ^ wcv = BaseWindowsCanvasView::GetFromFixedId((IntPtr)canvas_view->get_user_data());
   switched_view_delegate(wcv);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::tool_changed_wrapper(::mdc::CanvasView* canvas_view) {
+auto WbFrontendCallbacks::tool_changed_wrapper(::mdc::CanvasView* canvas_view) -> void {
   BaseWindowsCanvasView ^ wcv = BaseWindowsCanvasView::GetFromFixedId((IntPtr)canvas_view->get_user_data());
   tool_changed_delegate(wcv);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-uintptr_t WbFrontendCallbacks::open_editor_wrapper(grt::Module* module, const std::string& str2,
+auto WbFrontendCallbacks::open_editor_wrapper(grt::Module* module, const std::string& str2,
                                                    const std::string& str3, const grt::BaseListRef& grt_list,
-                                                   bec::GUIPluginFlags flags) {
+                                                   bec::GUIPluginFlags flags) -> uintptr_t {
   return (uintptr_t)open_editor_delegate(gcnew GrtManager(), gcnew GrtModule(module), CppStringToNative(str2),
                                          CppStringToNative(str3), gcnew GrtValue(grt_list), (GUIPluginFlags)flags)
     .ToPointer();
@@ -278,36 +278,36 @@ uintptr_t WbFrontendCallbacks::open_editor_wrapper(grt::Module* module, const st
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::show_editor_wrapper(uintptr_t native_handle) {
+auto WbFrontendCallbacks::show_editor_wrapper(uintptr_t native_handle) -> void {
   show_editor_delegate(IntPtr((void*)native_handle));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::hide_editor_wrapper(uintptr_t native_handle) {
+auto WbFrontendCallbacks::hide_editor_wrapper(uintptr_t native_handle) -> void {
   hide_editor_delegate(IntPtr((void*)native_handle));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::refresh_gui_wrapper(::wb::RefreshType refresh, const std::string& str, uintptr_t ptr) {
+auto WbFrontendCallbacks::refresh_gui_wrapper(::wb::RefreshType refresh, const std::string& str, uintptr_t ptr) -> void {
   refresh_gui_delegate((RefreshType)refresh, CppStringToNative(str), IntPtr((void*)ptr));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::perform_command_wrapper(const std::string& command) {
+auto WbFrontendCallbacks::perform_command_wrapper(const std::string& command) -> void {
   perform_command_delegate(CppStringToNative(command));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::lock_gui_wrapper(bool flag) {
+auto WbFrontendCallbacks::lock_gui_wrapper(bool flag) -> void {
   lock_gui_delegate(flag);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void WbFrontendCallbacks::quit_application_wrapper() {
+auto WbFrontendCallbacks::quit_application_wrapper() -> void {
   quit_application_delegate();
 }

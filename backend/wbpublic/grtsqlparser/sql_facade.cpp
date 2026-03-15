@@ -51,13 +51,13 @@ SqlFacade::Ref SqlFacade::instance_for_db_obj(db_DatabaseObjectRef db_obj)
 */
 //--------------------------------------------------------------------------------------------------
 
-SqlFacade::Ref SqlFacade::instance_for_rdbms(db_mgmt_RdbmsRef rdbms) {
+auto SqlFacade::instance_for_rdbms(db_mgmt_RdbmsRef rdbms) -> SqlFacade::Ref {
   return instance_for_rdbms_name(rdbms->name());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-SqlFacade::Ref SqlFacade::instance_for_rdbms_name(const std::string &name) {
+auto SqlFacade::instance_for_rdbms_name(const std::string &name) -> SqlFacade::Ref {
   const char *def_module_name = "SqlFacade";
   std::string module_name = name + def_module_name;
   SqlFacade::Ref module = dynamic_cast<SqlFacade::Ref>(grt::GRT::get()->get_module(module_name));

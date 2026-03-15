@@ -33,58 +33,58 @@ Selector::Selector(SelectorStyle style) : _updating(false), _editable(style == S
   _selector_impl->create(this, style);
 }
 
-void Selector::clear() {
+auto Selector::clear() -> void {
   _selector_impl->clear(this);
 }
 
-int Selector::add_item(const std::string &item) {
+auto Selector::add_item(const std::string &item) -> int {
   _updating = true;
   int r = _selector_impl->add_item(this, item);
   _updating = false;
   return r;
 }
 
-void Selector::add_items(const std::list<std::string> &items) {
+auto Selector::add_items(const std::list<std::string> &items) -> void {
   _updating = true;
   _selector_impl->add_items(this, items);
   _updating = false;
 }
 
-void Selector::set_selected(int index) {
+auto Selector::set_selected(int index) -> void {
   _updating = true;
   _selector_impl->set_index(this, index);
   _updating = false;
 }
 
-std::string Selector::get_item_title(int index) {
+auto Selector::get_item_title(int index) -> std::string {
   return _selector_impl->get_item(this, index);
 }
 
-std::string Selector::get_string_value() {
+auto Selector::get_string_value() -> std::string {
   return _selector_impl->get_text(this);
 }
 
-int Selector::index_of_item_with_title(const std::string &title) {
+auto Selector::index_of_item_with_title(const std::string &title) -> int {
   for (int i = 0; i < get_item_count(); i++)
     if (get_item_title(i) == title)
       return i;
   return -1;
 }
 
-int Selector::get_selected_index() {
+auto Selector::get_selected_index() -> int {
   return _selector_impl->get_index(this);
 }
 
-int Selector::get_item_count() {
+auto Selector::get_item_count() -> int {
   return _selector_impl->get_item_count(this);
 }
 
-void Selector::callback() {
+auto Selector::callback() -> void {
   if (!_updating)
     _signal_changed();
 }
 
-void Selector::set_value(const std::string &value) {
+auto Selector::set_value(const std::string &value) -> void {
   // Try to set text from the list
   // Otherwise force text to be set (only for SelectorCombo)
   const int i = index_of_item_with_title(value);

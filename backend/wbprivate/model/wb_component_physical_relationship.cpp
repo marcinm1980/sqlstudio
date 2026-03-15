@@ -66,7 +66,7 @@ WBComponentPhysical::RelationshipToolContext::RelationshipToolContext(WBComponen
   owner->get_wb()->_frontendCallbacks->show_status_text(last_message);
 }
 
-void WBComponentPhysical::RelationshipToolContext::cancel() {
+auto WBComponentPhysical::RelationshipToolContext::cancel() -> void {
   if (itable.is_valid()) {
     itable->get_data()->unhighlight();
     itable->get_data()->set_column_unhighlighted(db_ColumnRef());
@@ -89,7 +89,7 @@ void WBComponentPhysical::RelationshipToolContext::cancel() {
     owner->get_wb()->_frontendCallbacks->show_status_text(_("Cancelled."));
 }
 
-bool WBComponentPhysical::RelationshipToolContext::pick_table(const studio_physical_TableFigureRef &table) {
+auto WBComponentPhysical::RelationshipToolContext::pick_table(const studio_physical_TableFigureRef &table) -> bool {
   studio_physical_TableFigure::ImplData *tfig = table->get_data();
 
   if (type == RelationshipnmId && !table->table()->primaryKey().is_valid()) {
@@ -110,7 +110,7 @@ bool WBComponentPhysical::RelationshipToolContext::pick_table(const studio_physi
   return true;
 }
 
-bool WBComponentPhysical::RelationshipToolContext::pick_reftable(const studio_physical_TableFigureRef &table) {
+auto WBComponentPhysical::RelationshipToolContext::pick_reftable(const studio_physical_TableFigureRef &table) -> bool {
   if (!table->table()->primaryKey().is_valid()) {
     last_message =
       strfmt(_("'%s' has no Primary Key. Please add a PK or select another Table."), table->table()->name().c_str());
@@ -134,7 +134,7 @@ bool WBComponentPhysical::RelationshipToolContext::pick_reftable(const studio_ph
  *       added
  ****************************************************************************
  */
-bool WBComponentPhysical::RelationshipToolContext::add_column(const db_ColumnRef &column) {
+auto WBComponentPhysical::RelationshipToolContext::add_column(const db_ColumnRef &column) -> bool {
   for (std::vector<db_ColumnRef>::iterator iter = columns.begin(); iter != columns.end(); ++iter) {
     if (*iter == column)
       return false;
@@ -154,8 +154,8 @@ bool WBComponentPhysical::RelationshipToolContext::add_column(const db_ColumnRef
   return true;
 }
 
-bool WBComponentPhysical::RelationshipToolContext::pick_column(const studio_physical_TableFigureRef &table,
-                                                               const db_ColumnRef &column) {
+auto WBComponentPhysical::RelationshipToolContext::pick_column(const studio_physical_TableFigureRef &table,
+                                                               const db_ColumnRef &column) -> bool {
   if (column.is_valid()) {
     // if so, then make sure that all columns belong to the same table and
     // add it to the list of source columns
@@ -204,7 +204,7 @@ bool WBComponentPhysical::RelationshipToolContext::pick_column(const studio_phys
  *    match the expected type
  ****************************************************************************
  */
-bool WBComponentPhysical::RelationshipToolContext::add_refcolumn(const db_ColumnRef &column) {
+auto WBComponentPhysical::RelationshipToolContext::add_refcolumn(const db_ColumnRef &column) -> bool {
   if (columns.size() <= refcolumns.size())
     return false; // no more columns to add
 
@@ -217,8 +217,8 @@ bool WBComponentPhysical::RelationshipToolContext::add_refcolumn(const db_Column
   return true;
 }
 
-bool WBComponentPhysical::RelationshipToolContext::pick_refcolumn(const studio_physical_TableFigureRef &table,
-                                                                  const db_ColumnRef &column) {
+auto WBComponentPhysical::RelationshipToolContext::pick_refcolumn(const studio_physical_TableFigureRef &table,
+                                                                  const db_ColumnRef &column) -> bool {
   if (column.is_valid()) {
     // if so, then make sure that all columns belong to the same table and
     // add it to the list of source columns
@@ -258,7 +258,7 @@ bool WBComponentPhysical::RelationshipToolContext::pick_refcolumn(const studio_p
   }
 }
 
-bool WBComponentPhysical::RelationshipToolContext::finish() {
+auto WBComponentPhysical::RelationshipToolContext::finish() -> bool {
   bool flag;
   if (columns.empty())
     flag = finish_for_tables();
@@ -267,7 +267,7 @@ bool WBComponentPhysical::RelationshipToolContext::finish() {
   return flag;
 }
 
-bool WBComponentPhysical::RelationshipToolContext::finish_for_columns() {
+auto WBComponentPhysical::RelationshipToolContext::finish_for_columns() -> bool {
   bool imany = false, fmany = false;
   bool imand = true, fmand = true;
   // bool identifying= false;
@@ -344,7 +344,7 @@ bool WBComponentPhysical::RelationshipToolContext::finish_for_columns() {
   return true;
 }
 
-bool WBComponentPhysical::RelationshipToolContext::finish_for_tables() {
+auto WBComponentPhysical::RelationshipToolContext::finish_for_tables() -> bool {
   bool imany = false, fmany = false;
   bool imand = true, fmand = true;
   bool identifying = false;
@@ -433,9 +433,9 @@ bool WBComponentPhysical::RelationshipToolContext::finish_for_tables() {
   return true;
 }
 
-void WBComponentPhysical::RelationshipToolContext::on_figure_crossed(const model_ObjectRef &owner,
+auto WBComponentPhysical::RelationshipToolContext::on_figure_crossed(const model_ObjectRef &owner,
                                                                      mdc::CanvasItem *item, bool enter,
-                                                                     const Point &pos) {
+                                                                     const Point &pos) -> void {
   if (owner.is_instance<studio_physical_TableFigure>()) {
     if (enter)
       enter_table(studio_physical_TableFigureRef::cast_from(owner));
@@ -444,7 +444,7 @@ void WBComponentPhysical::RelationshipToolContext::on_figure_crossed(const model
   }
 }
 
-void WBComponentPhysical::RelationshipToolContext::enter_table(const studio_physical_TableFigureRef &table) {
+auto WBComponentPhysical::RelationshipToolContext::enter_table(const studio_physical_TableFigureRef &table) -> void {
   bool hover_columns = false;
 
   if (state == RPickingEnd) {
@@ -472,7 +472,7 @@ void WBComponentPhysical::RelationshipToolContext::enter_table(const studio_phys
   }
 }
 
-void WBComponentPhysical::RelationshipToolContext::leave_table(const studio_physical_TableFigureRef &table) {
+auto WBComponentPhysical::RelationshipToolContext::leave_table(const studio_physical_TableFigureRef &table) -> void {
   wbfig::Table *tfig = dynamic_cast<wbfig::Table *>(table->get_data()->get_canvas_item());
   if (tfig) {
     wbfig::Table::ItemList *columns = tfig->get_columns();
@@ -483,7 +483,7 @@ void WBComponentPhysical::RelationshipToolContext::leave_table(const studio_phys
   hovering = studio_physical_TableFigureRef();
 }
 
-bool WBComponentPhysical::RelationshipToolContext::button_press(ModelDiagramForm *view, const Point &pos) {
+auto WBComponentPhysical::RelationshipToolContext::button_press(ModelDiagramForm *view, const Point &pos) -> bool {
   std::string result;
 
   switch (state) {
@@ -566,7 +566,7 @@ bool WBComponentPhysical::RelationshipToolContext::button_press(ModelDiagramForm
   return false;
 }
 
-void WBComponentPhysical::RelationshipToolContext::source_picking_done() {
+auto WBComponentPhysical::RelationshipToolContext::source_picking_done() -> void {
   if (columns.size() > 0) {
     floater->setup_pick_target();
 

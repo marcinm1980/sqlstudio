@@ -43,10 +43,10 @@ namespace mtemplate {
     Template(TemplateDocument document);
     ~Template();
 
-    void expand(DictionaryInterface *dict, TemplateOutput *output);
-    void dump(int indent = 0);
+    auto expand(DictionaryInterface *dict, TemplateOutput *output) -> void;
+    auto dump(int indent = 0) -> void;
   };
 
-  MTEMPLATELIBRARY_PUBLIC_FUNC Template *GetTemplate(const base::utf8string &path, PARSE_TYPE type = DO_NOT_STRIP);
+  auto GetTemplate(const base::utf8string &path, PARSE_TYPE type = DO_NOT_STRIP) -> MTEMPLATELIBRARY_PUBLIC_FUNC Template *;
 
 } //  namespace mtemplate

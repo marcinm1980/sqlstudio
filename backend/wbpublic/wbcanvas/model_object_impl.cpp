@@ -28,12 +28,12 @@
 
 using namespace base;
 
-void model_Object::ImplData::notify_realized() {
+auto model_Object::ImplData::notify_realized() -> void {
   _notified_unrealize = false;
   model_DiagramRef::cast_from(_self->owner())->get_data()->notify_object_realize(_self);
 }
 
-void model_Object::ImplData::notify_will_unrealize() {
+auto model_Object::ImplData::notify_will_unrealize() -> void {
   if (!_notified_unrealize) {
     model_DiagramRef owner(model_DiagramRef::cast_from(_self->owner()));
     if (owner.is_valid() && owner->get_data()) {
@@ -43,7 +43,7 @@ void model_Object::ImplData::notify_will_unrealize() {
   }
 }
 
-void model_Object::ImplData::set_in_view(bool flag) {
+auto model_Object::ImplData::set_in_view(bool flag) -> void {
   _in_view = flag;
   if (flag)
     try_realize();
@@ -51,7 +51,7 @@ void model_Object::ImplData::set_in_view(bool flag) {
     unrealize();
 }
 
-bool model_Object::ImplData::try_realize() {
+auto model_Object::ImplData::try_realize() -> bool {
   if (is_realizable()) {
     realize();
     return true;
@@ -59,14 +59,14 @@ bool model_Object::ImplData::try_realize() {
   return false;
 }
 
-void model_Object::ImplData::highlight(const Color *color) {
+auto model_Object::ImplData::highlight(const Color *color) -> void {
   if (get_canvas_item()) {
     get_canvas_item()->set_highlight_color(color);
     get_canvas_item()->set_highlighted(true);
   }
 }
 
-void model_Object::ImplData::unhighlight() {
+auto model_Object::ImplData::unhighlight() -> void {
   if (get_canvas_item())
     get_canvas_item()->set_highlighted(false);
 }

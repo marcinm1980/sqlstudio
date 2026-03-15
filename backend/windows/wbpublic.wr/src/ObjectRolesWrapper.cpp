@@ -46,7 +46,7 @@ ObjectRoleListWrapper::ObjectRoleListWrapper(DBObjectEditorWrapper ^ editor)
 
 //--------------------------------------------------------------------------------------------------
 
-ObjectPrivilegeListBE ^ ObjectRoleListWrapper::get_privilege_list() {
+auto ObjectRoleListWrapper::get_privilege_list() -> ObjectPrivilegeListBE ^ {
   return gcnew ObjectPrivilegeListBE(get_unmanaged_object()->get_privilege_list());
 }
 
@@ -58,7 +58,7 @@ ObjectRoleListWrapper::~ObjectRoleListWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::ObjectRoleListBE *ObjectRoleListWrapper::get_unmanaged_object() {
+auto ObjectRoleListWrapper::get_unmanaged_object() -> ::bec::ObjectRoleListBE * {
   return static_cast<::bec::ObjectRoleListBE *>(inner);
 }
 
@@ -87,7 +87,7 @@ ObjectPrivilegeListBE::ObjectPrivilegeListBE(::bec::ObjectPrivilegeListBE *inn) 
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::ObjectPrivilegeListBE *ObjectPrivilegeListBE::get_unmanaged_object() {
+auto ObjectPrivilegeListBE::get_unmanaged_object() -> ::bec::ObjectPrivilegeListBE * {
   return static_cast<::bec::ObjectPrivilegeListBE *>(inner);
 }
 

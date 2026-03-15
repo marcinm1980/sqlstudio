@@ -73,27 +73,27 @@ namespace wb {
                  boost::signals2::signal<void(const std::string&)>* callback);
     virtual ~SidebarEntry();
 
-    void set_title(const std::string& title);
-    void set_icon(const std::string& icon);
-    void set_enabled(bool flag);
+    auto set_title(const std::string& title) -> void;
+    auto set_icon(const std::string& icon) -> void;
+    auto set_enabled(bool flag) -> void;
 
-    void paint(cairo_t* cr, base::Rect bounds, bool hot, bool active, const base::Color& selection_color);
-    bool contains(double x, double y);
+    auto paint(cairo_t* cr, base::Rect bounds, bool hot, bool active, const base::Color& selection_color) -> void;
+    auto contains(double x, double y) -> bool;
 
-    std::string title() {
+    auto title() -> std::string {
       return _title;
     }
-    std::string name() {
+    auto name() -> std::string {
       return _name;
     }
-    mforms::TaskEntryType type() {
+    auto type() -> mforms::TaskEntryType {
       return _type;
     }
-    bool enabled() const {
+    auto enabled() const -> bool {
       return _enabled;
     }
 
-    void execute() {
+    auto execute() -> void {
       (*_callback)(_name);
     }
 
@@ -139,21 +139,21 @@ namespace wb {
       Button(std::string const& name, std::string const& icon, std::string const& alt_icon);
       virtual ~Button();
 
-      void draw(cairo_t* cr);
-      void move(int x, int y);
+      auto draw(cairo_t* cr) -> void;
+      auto move(int x, int y) -> void;
 
-      bool check_hit(ssize_t x, ssize_t y);
+      auto check_hit(ssize_t x, ssize_t y) -> bool;
 
       // ------ Accesibility Methods -----
-      virtual std::string getAccessibilityDescription() {
+      virtual auto getAccessibilityDescription() -> std::string {
         return _name;
       }
 
-      virtual base::Accessible::Role getAccessibilityRole() {
+      virtual auto getAccessibilityRole() -> base::Accessible::Role {
         return base::Accessible::PushButton;
       }
 
-      virtual base::Rect getAccessibilityBounds() {
+      virtual auto getAccessibilityBounds() -> base::Rect {
         return base::Rect(x, y, bounds_width, bounds_height);
       }
     };
@@ -183,40 +183,40 @@ namespace wb {
     SimpleSidebar* _owner;
 
   protected:
-    void set_selected(SidebarEntry* entry);
-    void create_context_for_layout();
-    void layout(cairo_t* cr);
-    SidebarEntry* entry_from_point(double x, double y);
+    auto set_selected(SidebarEntry* entry) -> void;
+    auto create_context_for_layout() -> void;
+    auto layout(cairo_t* cr) -> void;
+    auto entry_from_point(double x, double y) -> SidebarEntry*;
 
   public:
     SidebarSection(SimpleSidebar* owner, const std::string& title, mforms::TaskSectionFlags flags);
     ~SidebarSection();
 
-    int find_entry(const std::string& name);
+    auto find_entry(const std::string& name) -> int;
 
-    int add_entry(const std::string& name, const std::string& accessibilityName, const std::string& title,
-                  const std::string& icon, mforms::TaskEntryType type);
-    void set_entry_text(int index, const std::string& title);
-    void set_entry_icon(int index, const std::string& icon);
-    void set_entry_enabled(int index, bool enabled);
-    void mark_busy(bool busy);
-    void remove_entry(const std::string& entry);
-    int entry_count() {
+    auto add_entry(const std::string& name, const std::string& accessibilityName, const std::string& title,
+                  const std::string& icon, mforms::TaskEntryType type) -> int;
+    auto set_entry_text(int index, const std::string& title) -> void;
+    auto set_entry_icon(int index, const std::string& icon) -> void;
+    auto set_entry_enabled(int index, bool enabled) -> void;
+    auto mark_busy(bool busy) -> void;
+    auto remove_entry(const std::string& entry) -> void;
+    auto entry_count() -> int {
       return (int)_entries.size();
     }
 
-    void clear();
-    bool select(const std::string& title);
+    auto clear() -> void;
+    auto select(const std::string& title) -> bool;
 
-    SidebarEntry* selected() {
+    auto selected() -> SidebarEntry* {
       return _selected_entry;
     }
-    bool expanded() {
+    auto expanded() -> bool {
       return _expanded;
     }
-    void toggle_expand();
+    auto toggle_expand() -> void;
 
-    std::string title() {
+    auto title() -> std::string {
       return _title;
     }
 
@@ -240,7 +240,7 @@ namespace wb {
     virtual Accessible* getAccessibilityChild(size_t index) override;
     virtual base::Accessible* accessibilityHitTest(ssize_t x, ssize_t y) override;
 
-    void clear_selection();
+    auto clear_selection() -> void;
 
     boost::signals2::signal<void(SidebarSection*)>* expanded_changed() {
       return &_expanded_changed;
@@ -258,14 +258,14 @@ namespace wb {
     base::Color _inactiveTextColor;
     base::Color _selection_color;
 
-    static mforms::TaskSidebar* create_instance();
+    static auto create_instance() -> mforms::TaskSidebar*;
     SimpleSidebar(); // Create the sidebar via its mforms alter ego TaskSidebar::create()
 
-    virtual void updateColors();
+    virtual auto updateColors() -> void;
 
-    int find_section(const std::string& title);
+    auto find_section(const std::string& title) -> int;
     void handle_notification(const std::string& name, void* sender, base::NotificationInfo& info) override;
-    void add_items_from_list(mforms::MenuBase& menu, const bec::MenuItemList& items);
+    auto add_items_from_list(mforms::MenuBase& menu, const bec::MenuItemList& items) -> void;
 
   public:
     ~SimpleSidebar();
@@ -289,7 +289,7 @@ namespace wb {
     virtual void clear_section(const std::string& section_name) override;
     virtual void set_selection_color(const std::string& color) override;
     virtual void set_selection_color(const base::SystemColor color) override;
-    const base::Color& selection_color() const {
+    auto selection_color() const -> const base::Color& {
       return _selection_color;
     }
 
@@ -299,7 +299,7 @@ namespace wb {
 
   private:
     static bool __init;
-    static bool init_factory_method();
+    static auto init_factory_method() -> bool;
   };
 
   class AdvancedSidebar : public SimpleSidebar {
@@ -328,17 +328,17 @@ namespace wb {
 
     AdvancedSidebar(); // Create the sidebar via its mforms alter ego TaskSidebar::create()
   protected:
-    static mforms::TaskSidebar* create_instance();
+    static auto create_instance() -> mforms::TaskSidebar*;
 
-    void setup_schema_tree();
+    auto setup_schema_tree() -> void;
     virtual void updateColors() override;
-    void on_show_menu(mforms::MenuItem* parent_item);
-    void add_items_from_list(mforms::MenuBase& menu, const bec::MenuItemList& items);
-    void handle_menu_command(const std::string& command);
-    void on_search_text_changed_prepare();
-    bool on_search_text_changed();
-    void on_remote_search_clicked();
-    void on_tree_node_selected();
+    auto on_show_menu(mforms::MenuItem* parent_item) -> void;
+    auto add_items_from_list(mforms::MenuBase& menu, const bec::MenuItemList& items) -> void;
+    auto handle_menu_command(const std::string& command) -> void;
+    auto on_search_text_changed_prepare() -> void;
+    auto on_search_text_changed() -> bool;
+    auto on_remote_search_clicked() -> void;
+    auto on_tree_node_selected() -> void;
 
   public:
     virtual ~AdvancedSidebar();
@@ -351,7 +351,7 @@ namespace wb {
     virtual mforms::TextEntry* get_filter_entry() override {
       return &_schema_search_text;
     }
-    void tool_action_clicked(const std::string& action);
+    auto tool_action_clicked(const std::string& action) -> void;
     virtual void set_schema_model(wb::LiveSchemaTree* model) override;
     virtual void set_filtered_schema_model(wb::LiveSchemaTree* model) override;
     virtual void enable_server_search(bool enabled) override {
@@ -373,7 +373,7 @@ namespace wb {
 
   private:
     static bool __init;
-    static bool init_factory_method();
+    static auto init_factory_method() -> bool;
   };
 
 } // namespace wb

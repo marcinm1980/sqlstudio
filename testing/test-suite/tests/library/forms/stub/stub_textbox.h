@@ -34,19 +34,19 @@ namespace mforms {
     class TextBoxWrapper : public ViewWrapper {
       TextBoxWrapper(::mforms::TextBox *self, mforms::ScrollBars scroll_type);
 
-      static bool create(::mforms::TextBox *self, mforms::ScrollBars scroll_type);
-      static void set_text(::mforms::TextBox *self, const std::string &text);
-      static void append_text(::mforms::TextBox *self, const std::string &text, bool scroll_to_end);
-      static std::string get_text(::mforms::TextBox *self);
-      static void set_read_only(::mforms::TextBox *self, bool flag);
-      static void set_padding(::mforms::TextBox *self, int pad);
-      static void set_bordered(::mforms::TextBox *self, bool flag);
-      static void clear(::mforms::TextBox *self);
-      static void set_monospaced(::mforms::TextBox *self, bool flag);
-      static void get_selected_range(TextBox *self, int &start, int &end);
+      static auto create(::mforms::TextBox *self, mforms::ScrollBars scroll_type) -> bool;
+      static auto set_text(::mforms::TextBox *self, const std::string &text) -> void;
+      static auto append_text(::mforms::TextBox *self, const std::string &text, bool scroll_to_end) -> void;
+      static auto get_text(::mforms::TextBox *self) -> std::string;
+      static auto set_read_only(::mforms::TextBox *self, bool flag) -> void;
+      static auto set_padding(::mforms::TextBox *self, int pad) -> void;
+      static auto set_bordered(::mforms::TextBox *self, bool flag) -> void;
+      static auto clear(::mforms::TextBox *self) -> void;
+      static auto set_monospaced(::mforms::TextBox *self, bool flag) -> void;
+      static auto get_selected_range(TextBox *self, int &start, int &end) -> void;
 
     public:
-      static void init();
+      static auto init() -> void;
     };
   };
 };

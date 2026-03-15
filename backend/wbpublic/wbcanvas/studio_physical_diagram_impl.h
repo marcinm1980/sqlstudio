@@ -38,36 +38,36 @@ protected:
   std::map<std::string, model_FigureRef> _dbobject_to_figure;
   std::map<std::string, studio_physical_ConnectionRef> _fk_to_connection;
 
-  virtual void member_list_changed(grt::internal::OwnedList *alist, bool added, const grt::ValueRef &value);
+  virtual auto member_list_changed(grt::internal::OwnedList *alist, bool added, const grt::ValueRef &value) -> void;
 
 public:
   ImplData(studio_physical_Diagram *owner);
 
-  studio_physical_LayerRef place_new_layer(double x, double y, double width, double height, const std::string &name);
+  auto place_new_layer(double x, double y, double width, double height, const std::string &name) -> studio_physical_LayerRef;
 
-  studio_physical_TableFigureRef place_table(const db_TableRef &table, double x, double y);
-  studio_physical_RoutineGroupFigureRef place_routine_group(const db_RoutineGroupRef &rgroup, double x, double y);
-  studio_physical_ViewFigureRef place_view(const db_ViewRef &view, double x, double y);
+  auto place_table(const db_TableRef &table, double x, double y) -> studio_physical_TableFigureRef;
+  auto place_routine_group(const db_RoutineGroupRef &rgroup, double x, double y) -> studio_physical_RoutineGroupFigureRef;
+  auto place_view(const db_ViewRef &view, double x, double y) -> studio_physical_ViewFigureRef;
 
-  studio_physical_ConnectionRef create_connection_for_foreign_key(const db_ForeignKeyRef &fk);
-  int create_connections_for_table(const db_TableRef &table);
-  void delete_connections_for_table(const db_TableRef &table);
+  auto create_connection_for_foreign_key(const db_ForeignKeyRef &fk) -> studio_physical_ConnectionRef;
+  auto create_connections_for_table(const db_TableRef &table) -> int;
+  auto delete_connections_for_table(const db_TableRef &table) -> void;
 
-  model_FigureRef get_figure_for_dbobject(const db_DatabaseObjectRef &figure);
+  auto get_figure_for_dbobject(const db_DatabaseObjectRef &figure) -> model_FigureRef;
 
-  void add_mapping(const db_DatabaseObjectRef &object, const model_FigureRef &figure);
-  void remove_mapping(const db_DatabaseObjectRef &object);
+  auto add_mapping(const db_DatabaseObjectRef &object, const model_FigureRef &figure) -> void;
+  auto remove_mapping(const db_DatabaseObjectRef &object) -> void;
 
-  studio_physical_ConnectionRef get_connection_for_foreign_key(const db_ForeignKeyRef &fk);
+  auto get_connection_for_foreign_key(const db_ForeignKeyRef &fk) -> studio_physical_ConnectionRef;
 
-  void add_fk_mapping(const db_ForeignKeyRef &fk, const studio_physical_ConnectionRef &connection);
-  void remove_fk_mapping(const db_ForeignKeyRef &fk,
-                         const studio_physical_ConnectionRef &connection = studio_physical_ConnectionRef());
+  auto add_fk_mapping(const db_ForeignKeyRef &fk, const studio_physical_ConnectionRef &connection) -> void;
+  auto remove_fk_mapping(const db_ForeignKeyRef &fk,
+                         const studio_physical_ConnectionRef &connection = studio_physical_ConnectionRef()) -> void;
 
-  void auto_place_db_objects(const grt::ListRef<db_DatabaseObject> &objects);
+  auto auto_place_db_objects(const grt::ListRef<db_DatabaseObject> &objects) -> void;
 
 private:
-  studio_physical_Diagram *self() const {
+  auto self() const -> studio_physical_Diagram * {
     return (studio_physical_Diagram *)_self;
   }
 };

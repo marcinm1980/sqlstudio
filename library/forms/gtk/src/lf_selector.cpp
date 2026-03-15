@@ -45,16 +45,16 @@ namespace mforms {
     public:
       virtual ~Impl(){};
 
-      virtual Gtk::Widget *widget() = 0;
-      virtual void clear() = 0;
-      virtual int add_item(const std::string &item) = 0;
-      virtual void add_items(const std::list<std::string> &items) = 0;
-      virtual std::string get_item(const int index) const = 0;
-      virtual std::string get_text() const = 0;
-      virtual void set_index(const int index) = 0;
-      virtual int get_index() const = 0;
-      virtual int get_item_count() const = 0;
-      virtual void set_value(const std::string &){}; // It is only defined for editable combobox
+      virtual auto widget() -> Gtk::Widget * = 0;
+      virtual auto clear() -> void = 0;
+      virtual auto add_item(const std::string &item) -> int = 0;
+      virtual auto add_items(const std::list<std::string> &items) -> void = 0;
+      virtual auto get_item(const int index) const -> std::string = 0;
+      virtual auto get_text() const -> std::string = 0;
+      virtual auto set_index(const int index) -> void = 0;
+      virtual auto get_index() const -> int = 0;
+      virtual auto get_item_count() const -> int = 0;
+      virtual auto set_value(const std::string &) -> void {}; // It is only defined for editable combobox
     };
 
     //==============================================================================
@@ -70,25 +70,25 @@ namespace mforms {
         _list.set_row_separator_func(sigc::mem_fun(*this, &SelectorPopupImpl::is_separator));
       }
 
-      Gtk::Widget *widget() {
+      auto widget() -> Gtk::Widget * {
         return &_list;
       }
 
-      virtual void clear() {
+      virtual auto clear() -> void {
         do_not_call_callback = true;
         _items.clear();
         _list.remove_all();
         do_not_call_callback = false;
       }
 
-      bool is_separator(const Glib::RefPtr<Gtk::TreeModel> &model, const Gtk::TreeModel::iterator &iter) {
+      auto is_separator(const Glib::RefPtr<Gtk::TreeModel> &model, const Gtk::TreeModel::iterator &iter) -> bool {
         Gtk::TreeRow row = *iter;
         Glib::ustring value;
         row.get_value(0, value);
         return value == "-";
       }
 
-      virtual int add_item(const std::string &item) {
+      virtual auto add_item(const std::string &item) -> int {
         _list.append(item);
         _items.push_back(item);
         if (_items.size() == 1)
@@ -96,7 +96,7 @@ namespace mforms {
         return _items.size();
       }
 
-      virtual void add_items(const std::list<std::string> &items) {
+      virtual auto add_items(const std::list<std::string> &items) -> void {
         std::list<std::string>::const_iterator it = items.begin();
         const std::list<std::string>::const_iterator last = items.end();
         for (; it != last; ++it) {
@@ -107,25 +107,25 @@ namespace mforms {
           _list.set_active(0);
       }
 
-      virtual std::string get_item(const int index) const {
+      virtual auto get_item(const int index) const -> std::string {
         if (index < 0 || index >= (int)_items.size())
           return "";
         return _items[index];
       }
 
-      virtual std::string get_text() const {
+      virtual auto get_text() const -> std::string {
         return _list.get_active_text();
       }
 
-      virtual void set_index(const int index) {
+      virtual auto set_index(const int index) -> void {
         _list.set_active(index);
       }
 
-      virtual int get_index() const {
+      virtual auto get_index() const -> int {
         return _list.get_active_row_number();
       }
 
-      virtual int get_item_count() const {
+      virtual auto get_item_count() const -> int {
         return _items.size();
       }
 
@@ -135,7 +135,7 @@ namespace mforms {
       mforms::Selector *_self;
       bool do_not_call_callback;
 
-      virtual void wrap_callback_call() {
+      virtual auto wrap_callback_call() -> void {
         if (do_not_call_callback)
           return;
         else
@@ -154,22 +154,22 @@ namespace mforms {
           sigc::hide(sigc::mem_fun(self, &mforms::Selector::callback)));
       }
 
-      Gtk::Widget *widget() {
+      auto widget() -> Gtk::Widget * {
         return &_list;
       }
 
-      virtual void clear() {
+      virtual auto clear() -> void {
         _items.clear();
         _list.remove_all();
       }
 
-      virtual int add_item(const std::string &item) {
+      virtual auto add_item(const std::string &item) -> int {
         _items.push_back(item);
         _list.append(item);
         return _items.size();
       }
 
-      virtual void add_items(const std::list<std::string> &items) {
+      virtual auto add_items(const std::list<std::string> &items) -> void {
         std::list<std::string>::const_iterator it = items.begin();
         const std::list<std::string>::const_iterator last = items.end();
         for (; it != last; ++it) {
@@ -178,29 +178,29 @@ namespace mforms {
         }
       }
 
-      virtual std::string get_item(const int index) const {
+      virtual auto get_item(const int index) const -> std::string {
         if (index < 0 || index >= (int)_items.size())
           return "";
         return _items[index];
       }
 
-      virtual std::string get_text() const {
+      virtual auto get_text() const -> std::string {
         return _list.get_entry()->get_text();
       }
 
-      virtual void set_index(const int index) {
+      virtual auto set_index(const int index) -> void {
         _list.set_active(index);
       }
 
-      virtual int get_index() const {
+      virtual auto get_index() const -> int {
         return _list.get_active_row_number();
       }
 
-      virtual int get_item_count() const {
+      virtual auto get_item_count() const -> int {
         return _items.size();
       }
 
-      virtual void set_value(const std::string &value) {
+      virtual auto set_value(const std::string &value) -> void {
         _list.get_entry()->set_text(value);
       }
 
@@ -232,19 +232,19 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    bool SelectorImpl::create(::mforms::Selector *self, ::mforms::SelectorStyle style) {
+    auto SelectorImpl::create(::mforms::Selector *self, ::mforms::SelectorStyle style) -> bool {
       return new SelectorImpl(self, style) != 0;
     }
 
     //------------------------------------------------------------------------------
-    void SelectorImpl::clear(::mforms::Selector *self) {
+    auto SelectorImpl::clear(::mforms::Selector *self) -> void {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
 
       sel->_pimpl->clear();
     }
 
     //------------------------------------------------------------------------------
-    int SelectorImpl::add_item(::mforms::Selector *self, const std::string &item) {
+    auto SelectorImpl::add_item(::mforms::Selector *self, const std::string &item) -> int {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
 
       int ret = 0;
@@ -259,7 +259,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void SelectorImpl::add_items(::mforms::Selector *self, const std::list<std::string> &items) {
+    auto SelectorImpl::add_items(::mforms::Selector *self, const std::list<std::string> &items) -> void {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
 
       if (sel)
@@ -267,7 +267,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    std::string SelectorImpl::get_item(::mforms::Selector *self, int index) {
+    auto SelectorImpl::get_item(::mforms::Selector *self, int index) -> std::string {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
       if (sel) {
         std::string value = sel->_pimpl->get_item(index);
@@ -277,7 +277,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    std::string SelectorImpl::get_text(::mforms::Selector *self) {
+    auto SelectorImpl::get_text(::mforms::Selector *self) -> std::string {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
       if (sel) {
         std::string value = sel->_pimpl->get_text();
@@ -287,7 +287,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void SelectorImpl::set_index(::mforms::Selector *self, int index) {
+    auto SelectorImpl::set_index(::mforms::Selector *self, int index) -> void {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
 
       if (sel)
@@ -295,7 +295,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    int SelectorImpl::get_index(::mforms::Selector *self) {
+    auto SelectorImpl::get_index(::mforms::Selector *self) -> int {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
       int ret = -1;
 
@@ -306,7 +306,7 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    int SelectorImpl::get_item_count(::mforms::Selector *self) {
+    auto SelectorImpl::get_item_count(::mforms::Selector *self) -> int {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
 
       int ret = -1;
@@ -317,22 +317,22 @@ namespace mforms {
     }
 
     //------------------------------------------------------------------------------
-    void SelectorImpl::set_value(::mforms::Selector *self, const std::string &value) {
+    auto SelectorImpl::set_value(::mforms::Selector *self, const std::string &value) -> void {
       SelectorImpl *sel = self->get_data<SelectorImpl>();
 
       if (sel)
         sel->_pimpl->set_value(value);
     }
 
-    Gtk::Widget *SelectorImpl::get_outer() const {
+    auto SelectorImpl::get_outer() const -> Gtk::Widget * {
       return _outerBox;
     }
-    Gtk::Widget *SelectorImpl::get_inner() const {
+    auto SelectorImpl::get_inner() const -> Gtk::Widget * {
       return _pimpl->widget();
     }
 
     //------------------------------------------------------------------------------
-    void SelectorImpl::init() {
+    auto SelectorImpl::init() -> void {
       ::mforms::ControlFactory *f = ::mforms::ControlFactory::get_instance();
 
       f->_selector_impl.create = &SelectorImpl::create;

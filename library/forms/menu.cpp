@@ -33,11 +33,11 @@ Menu::Menu() {
   _menu_impl->create(this);
 }
 
-bool Menu::empty() const {
+auto Menu::empty() const -> bool {
   return _item_map.size() == 0;
 }
 
-void Menu::remove_item(int i) {
+auto Menu::remove_item(int i) -> void {
   _menu_impl->remove_item(this, i);
 
   std::string to_remove;
@@ -53,7 +53,7 @@ void Menu::remove_item(int i) {
     _item_map.erase(to_remove);
 }
 
-int Menu::add_item(const std::string &caption, const std::string &action) {
+auto Menu::add_item(const std::string &caption, const std::string &action) -> int {
   int item_index = _menu_impl->add_item(this, caption, action);
 
   _item_map[action] = item_index;
@@ -61,11 +61,11 @@ int Menu::add_item(const std::string &caption, const std::string &action) {
   return item_index;
 }
 
-int Menu::add_separator() {
+auto Menu::add_separator() -> int {
   return _menu_impl->add_separator(this);
 }
 
-int Menu::add_submenu(const std::string &caption, Menu *submenu) {
+auto Menu::add_submenu(const std::string &caption, Menu *submenu) -> int {
   // Connect our action handler to the sub menu so all commands can be triggered via the top
   // menu in the hierarchy.
   submenu->signal_on_action()->connect(std::bind(&Menu::handle_action, this, std::placeholders::_1));
@@ -77,7 +77,7 @@ int Menu::add_submenu(const std::string &caption, Menu *submenu) {
 /**
  * Adds menu entries for all the items in the given list.
  */
-void Menu::add_items_from_list(const bec::MenuItemList &list) {
+auto Menu::add_items_from_list(const bec::MenuItemList &list) -> void {
   for (bec::MenuItemList::const_iterator item = list.begin(); item != list.end(); ++item) {
     if (item->type == bec::MenuAction) {
       int i = add_item(item->caption, item->internalName);
@@ -95,22 +95,22 @@ void Menu::add_items_from_list(const bec::MenuItemList &list) {
 
 //--------------------------------------------------------------------------------------------------
 
-void Menu::set_item_enabled(int i, bool flag) {
+auto Menu::set_item_enabled(int i, bool flag) -> void {
   _menu_impl->set_item_enabled(this, i, flag);
 }
 
-void Menu::set_item_enabled(const std::string &action, bool flag) {
+auto Menu::set_item_enabled(const std::string &action, bool flag) -> void {
   int i = get_item_index(action);
   if (i < 0)
     throw std::invalid_argument("invalid menu action " + action);
   _menu_impl->set_item_enabled(this, i, flag);
 }
 
-void Menu::set_handler(const std::function<void(const std::string &)> &action_handler) {
+auto Menu::set_handler(const std::function<void(const std::string &)> &action_handler) -> void {
   _action_handler = action_handler;
 }
 
-void Menu::popup_at(Object *control, int x, int y) {
+auto Menu::popup_at(Object *control, int x, int y) -> void {
 #ifndef _MSC_VER
   _on_will_show(); // Popping up the menu will trigger the on_show event on Win.
 #endif
@@ -118,7 +118,7 @@ void Menu::popup_at(Object *control, int x, int y) {
   _menu_impl->popup_at(this, control, x, y);
 }
 
-void Menu::popup() {
+auto Menu::popup() -> void {
 #ifndef _MSC_VER
   _on_will_show(); // Popping up the menu will trigger the on_show event on Win.
 #endif
@@ -128,7 +128,7 @@ void Menu::popup() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Menu::handle_action(const std::string &action) {
+auto Menu::handle_action(const std::string &action) -> void {
   if (_action_handler)
     _action_handler(action);
   _on_action(action);
@@ -136,14 +136,14 @@ void Menu::handle_action(const std::string &action) {
 
 //--------------------------------------------------------------------------------------------------
 
-void mforms::Menu::clear() {
+auto mforms::Menu::clear() -> void {
   _menu_impl->clear(this);
   _item_map.clear();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int mforms::Menu::get_item_index(const std::string &action) {
+auto mforms::Menu::get_item_index(const std::string &action) -> int {
   int item_index = -1;
   std::map<const std::string, int>::iterator location = _item_map.find(action);
 

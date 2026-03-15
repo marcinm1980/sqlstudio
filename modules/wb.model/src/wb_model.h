@@ -59,16 +59,16 @@ public:
 
   virtual grt::ListRef<app_Plugin> getPluginInfo() override;
 
-  int center(model_DiagramRef view);
-  int autolayout(model_DiagramRef view);
+  auto center(model_DiagramRef view) -> int;
+  auto autolayout(model_DiagramRef view) -> int;
 
-  int createDiagramWithCatalog(studio_physical_ModelRef model, db_CatalogRef catalog);
-  int createDiagramWithObjects(studio_physical_ModelRef model, grt::ListRef<GrtObject> objects);
+  auto createDiagramWithCatalog(studio_physical_ModelRef model, db_CatalogRef catalog) -> int;
+  auto createDiagramWithObjects(studio_physical_ModelRef model, grt::ListRef<GrtObject> objects) -> int;
 
-  int fitObjectsToContents(const grt::ListRef<model_Object> &figures);
+  auto fitObjectsToContents(const grt::ListRef<model_Object> &figures) -> int;
 
-  int expandAllObjects(model_DiagramRef view);
-  int collapseAllObjects(model_DiagramRef view);
+  auto expandAllObjects(model_DiagramRef view) -> int;
+  auto collapseAllObjects(model_DiagramRef view) -> int;
 
   // Model Reporting
   virtual ssize_t getAvailableReportingTemplates(grt::StringListRef templates) override;
@@ -80,22 +80,22 @@ public:
   virtual ssize_t generateReport(studio_physical_ModelRef model, const grt::DictRef &options) override;
 
 private:
-  void initializeReporting();
-  void begin_undo_group();
-  void end_undo_group(const std::string &action_desc);
-  studio_physical_DiagramRef add_model_view(const db_CatalogRef &catalog, int xpages, int ypages);
+  auto initializeReporting() -> void;
+  auto begin_undo_group() -> void;
+  auto end_undo_group(const std::string &action_desc) -> void;
+  auto add_model_view(const db_CatalogRef &catalog, int xpages, int ypages) -> studio_physical_DiagramRef;
 
   grt::ListRef<GrtObject> _selected_objects;
   bool _use_objects_from_catalog;
 
-  int do_autolayout(const model_LayerRef &layer, grt::ListRef<model_Object> &selection);
-  int do_autoplace_any_list(const model_DiagramRef &view, grt::ListRef<GrtObject> &obj_list);
-  int autoplace_relations(const model_DiagramRef &view, const grt::ListRef<db_Table> &tables);
-  void handle_fklist_change(const model_DiagramRef &view, const db_TableRef &table, const db_ForeignKeyRef &fk,
-                            bool added);
+  auto do_autolayout(const model_LayerRef &layer, grt::ListRef<model_Object> &selection) -> int;
+  auto do_autoplace_any_list(const model_DiagramRef &view, grt::ListRef<GrtObject> &obj_list) -> int;
+  auto autoplace_relations(const model_DiagramRef &view, const grt::ListRef<db_Table> &tables) -> int;
+  auto handle_fklist_change(const model_DiagramRef &view, const db_TableRef &table, const db_ForeignKeyRef &fk,
+                            bool added) -> void;
 
-  studio_model_reporting_TemplateStyleInfoRef get_template_style_from_name(std::string template_name,
-                                                                              std::string template_style_name);
+  auto get_template_style_from_name(std::string template_name,
+                                                                              std::string template_style_name) -> studio_model_reporting_TemplateStyleInfoRef;
 
   grt::UndoManager *_undo_man;
 };

@@ -35,7 +35,7 @@
 class MYSQL_SQL_PARSER_PUBLIC_FUNC Mysql_sql_specifics : public Sql_specifics {
 public:
   typedef std::shared_ptr<Mysql_sql_specifics> Ref;
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new Mysql_sql_specifics());
   }
   virtual ~Mysql_sql_specifics() {
@@ -45,15 +45,15 @@ protected:
   Mysql_sql_specifics();
 
 public:
-  std::string limit_select_query(const std::string &sql, int *row_count, int *offset);
-  void get_connection_startup_script(std::list<std::string> &sql_script);
-  std::string query_connection_id();
-  std::string query_kill_connection(std::int64_t connection_id);
-  std::string query_kill_query(std::int64_t connection_id);
-  std::string query_variable(const std::string &name);
-  sqlide::QuoteVar::Escape_sql_string escape_sql_string();
-  sqlide::QuoteVar::Blob_to_string blob_to_string();
-  std::string setting_non_std_sql_delimiter();
-  std::string non_std_sql_delimiter();
-  std::string setting_ansi_quotes();
+  auto limit_select_query(const std::string &sql, int *row_count, int *offset) -> std::string;
+  auto get_connection_startup_script(std::list<std::string> &sql_script) -> void;
+  auto query_connection_id() -> std::string;
+  auto query_kill_connection(std::int64_t connection_id) -> std::string;
+  auto query_kill_query(std::int64_t connection_id) -> std::string;
+  auto query_variable(const std::string &name) -> std::string;
+  auto escape_sql_string() -> sqlide::QuoteVar::Escape_sql_string;
+  auto blob_to_string() -> sqlide::QuoteVar::Blob_to_string;
+  auto setting_non_std_sql_delimiter() -> std::string;
+  auto non_std_sql_delimiter() -> std::string;
+  auto setting_ansi_quotes() -> std::string;
 };

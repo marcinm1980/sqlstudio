@@ -35,7 +35,7 @@ class GrtObjectListEditor : public grtui::StringListEditor {
   grt::ListRef<GrtObject> _list;
   std::list<std::string> _deleted_objects;
 
-  virtual void del() {
+  virtual auto del() -> void {
     int row = _tree.get_selected();
     if (row >= 0) {
       std::string tag = _tree.get_row_tag(row);
@@ -57,7 +57,7 @@ public:
     }
   }
 
-  bool update_list(const sigc::slot<bool, GrtObjectRef> &check_if_deletable) {
+  auto update_list(const sigc::slot<bool, GrtObjectRef> &check_if_deletable) -> bool {
     bool changed = false;
 
     for (std::list<std::string>::const_iterator iter = _deleted_objects.begin(); iter != _deleted_objects.end();
@@ -99,11 +99,11 @@ public:
 TagObjectListBE::TagObjectListBE(const db_CatalogRef &catalog) : _catalog(catalog) {
 }
 
-void TagObjectListBE::set_tag(const meta_TagRef &tag) {
+auto TagObjectListBE::set_tag(const meta_TagRef &tag) -> void {
   _tag = tag;
 }
 
-bool TagObjectListBE::get_field(const bec::NodeId &node, int column, std::string &value) {
+auto TagObjectListBE::get_field(const bec::NodeId &node, int column, std::string &value) -> bool {
   if (_tag.is_valid()) {
     switch (column) {
       case Name:
@@ -117,7 +117,7 @@ bool TagObjectListBE::get_field(const bec::NodeId &node, int column, std::string
   return true;
 }
 
-bool TagObjectListBE::set_field(const bec::NodeId &node, int column, const std::string &value) {
+auto TagObjectListBE::set_field(const bec::NodeId &node, int column, const std::string &value) -> bool {
   if (_tag.is_valid()) {
     if (column == Documentation) {
       _content[node[0]].doc = value;
@@ -127,13 +127,13 @@ bool TagObjectListBE::set_field(const bec::NodeId &node, int column, const std::
   return false;
 }
 
-bec::IconId TagObjectListBE::get_field_icon(const bec::NodeId &node, int column, bec::IconSize size) {
+auto TagObjectListBE::get_field_icon(const bec::NodeId &node, int column, bec::IconSize size) -> bec::IconId {
   if (_tag.is_valid())
     return bec::IconManager::get_instance()->get_icon_id(_content[node[0]].object, size);
   return 0;
 }
 
-void TagObjectListBE::refresh() {
+auto TagObjectListBE::refresh() -> void {
   _content.clear();
   if (_tag.is_valid()) {
     for (grt::ListRef<meta_TaggedObject>::const_iterator end = _tag->objects().end(), iter = _tag->objects().begin();
@@ -148,7 +148,7 @@ void TagObjectListBE::refresh() {
   }
 }
 
-static bool is_item_deleted(const grt::ObjectRef &object, const std::vector<TagObjectListBE::Node> &list) {
+static auto is_item_deleted(const grt::ObjectRef &object, const std::vector<TagObjectListBE::Node> &list) -> bool {
   for (std::vector<TagObjectListBE::Node>::const_iterator end = list.end(), iter = list.begin(); iter != end; ++iter) {
     if ((*iter).object == meta_TaggedObjectRef::cast_from(object)->object())
       return false;
@@ -156,7 +156,7 @@ static bool is_item_deleted(const grt::ObjectRef &object, const std::vector<TagO
   return true;
 }
 
-bool TagObjectListBE::commit() {
+auto TagObjectListBE::commit() -> bool {
   bool changed = false;
 
   if (_tag.is_valid()) {
@@ -190,13 +190,13 @@ bool TagObjectListBE::commit() {
   return changed;
 }
 
-int TagObjectListBE::count() {
+auto TagObjectListBE::count() -> int {
   if (_tag.is_valid())
     return (int)_content.size();
   return 0;
 }
 
-bool TagObjectListBE::add_dropped_objectdata(const std::string &data) {
+auto TagObjectListBE::add_dropped_objectdata(const std::string &data) -> bool {
   if (_tag.is_valid()) {
     db_DatabaseObjectRef object;
 
@@ -223,11 +223,11 @@ TagEditorBE::TagEditorBE(const studio_physical_ModelRef &model) : _model(model),
   _selected_category = 0;
 }
 
-void TagEditorBE::set_selected_category(int category) {
+auto TagEditorBE::set_selected_category(int category) -> void {
   _selected_category = category;
 }
 
-std::vector<std::string> TagEditorBE::get_categories() const {
+auto TagEditorBE::get_categories() const -> std::vector<std::string> {
   std::vector<std::string> categories;
 
   for (grt::ListRef<GrtObject>::const_iterator end = _model->tagCategories().end(),
@@ -239,7 +239,7 @@ std::vector<std::string> TagEditorBE::get_categories() const {
   return categories;
 }
 
-std::vector<std::string> TagEditorBE::get_tags() const {
+auto TagEditorBE::get_tags() const -> std::vector<std::string> {
   std::vector<std::string> tags;
 
   GrtObjectRef category;
@@ -256,8 +256,8 @@ std::vector<std::string> TagEditorBE::get_tags() const {
   return tags;
 }
 
-static bool check_if_category_unused(const GrtObjectRef &category, const grt::ListRef<meta_Tag> &tags,
-                                     int *deny_count) {
+static auto check_if_category_unused(const GrtObjectRef &category, const grt::ListRef<meta_Tag> &tags,
+                                     int *deny_count) -> bool {
   GRTLIST_FOREACH(meta_Tag, tags, iter) {
     if ((*iter)->category() == category) {
       (*deny_count)++;
@@ -267,7 +267,7 @@ static bool check_if_category_unused(const GrtObjectRef &category, const grt::Li
   return true;
 }
 
-void TagEditorBE::edit_categories() {
+auto TagEditorBE::edit_categories() -> void {
   GrtObjectListEditor editor(_model.get_grt(), _model, _model->tagCategories());
 
   if (editor.run()) {
@@ -286,7 +286,7 @@ void TagEditorBE::edit_categories() {
   }
 }
 
-void TagEditorBE::add_tag() {
+auto TagEditorBE::add_tag() -> void {
   meta_TagRef tag(_model.get_grt());
 
   tag->owner(_model);
@@ -303,7 +303,7 @@ void TagEditorBE::add_tag() {
   undo.end(_("Add New Tag"));
 }
 
-bool TagEditorBE::delete_tag() {
+auto TagEditorBE::delete_tag() -> bool {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count()) {
     grt::AutoUndo undo(_model.get_grt());
 
@@ -319,7 +319,7 @@ bool TagEditorBE::delete_tag() {
   return false;
 }
 
-void TagEditorBE::set_selected_tag(int index) {
+auto TagEditorBE::set_selected_tag(int index) -> void {
   if (index >= 0 && index < (int)_model->tags().count()) {
     _object_list.set_tag(_model->tags()[index]);
   } else {
@@ -330,7 +330,7 @@ void TagEditorBE::set_selected_tag(int index) {
   _object_list.refresh();
 }
 
-void TagEditorBE::set_tag_name(const std::string &name) {
+auto TagEditorBE::set_tag_name(const std::string &name) -> void {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count()) {
     if (name != *_model->tags()[_selected_tag]->name()) {
       _changed = true;
@@ -339,7 +339,7 @@ void TagEditorBE::set_tag_name(const std::string &name) {
   }
 }
 
-void TagEditorBE::set_tag_label(const std::string &label) {
+auto TagEditorBE::set_tag_label(const std::string &label) -> void {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count()) {
     if (label != *_model->tags()[_selected_tag]->label()) {
       _changed = true;
@@ -348,7 +348,7 @@ void TagEditorBE::set_tag_label(const std::string &label) {
   }
 }
 
-void TagEditorBE::set_tag_color(const std::string &color) {
+auto TagEditorBE::set_tag_color(const std::string &color) -> void {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count()) {
     if (color != *_model->tags()[_selected_tag]->color()) {
       _changed = true;
@@ -357,7 +357,7 @@ void TagEditorBE::set_tag_color(const std::string &color) {
   }
 }
 
-void TagEditorBE::set_tag_comment(const std::string &comment) {
+auto TagEditorBE::set_tag_comment(const std::string &comment) -> void {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count()) {
     if (comment != *_model->tags()[_selected_tag]->description()) {
       _changed = true;
@@ -366,36 +366,36 @@ void TagEditorBE::set_tag_comment(const std::string &comment) {
   }
 }
 
-std::string TagEditorBE::get_tag_name() {
+auto TagEditorBE::get_tag_name() -> std::string {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count())
     return _model->tags()[_selected_tag]->name();
   return "";
 }
 
-std::string TagEditorBE::get_tag_label() {
+auto TagEditorBE::get_tag_label() -> std::string {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count())
     return _model->tags()[_selected_tag]->label();
   return "";
 }
 
-std::string TagEditorBE::get_tag_color() {
+auto TagEditorBE::get_tag_color() -> std::string {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count())
     return _model->tags()[_selected_tag]->color();
   return "";
 }
 
-std::string TagEditorBE::get_tag_comment() {
+auto TagEditorBE::get_tag_comment() -> std::string {
   if (_selected_tag >= 0 && _selected_tag < _model->tags().count())
     return _model->tags()[_selected_tag]->description();
   return "";
 }
 
-void TagEditorBE::begin_save() {
+auto TagEditorBE::begin_save() -> void {
   _changed = false;
   _model.get_grt()->begin_undoable_action();
 }
 
-void TagEditorBE::end_save() {
+auto TagEditorBE::end_save() -> void {
   _changed |= _object_list.commit();
 
   if (_changed)

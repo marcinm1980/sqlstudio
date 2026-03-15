@@ -41,15 +41,15 @@ DBObjectMasterFilterBE::DBObjectMasterFilterBE() {
     _stored_master_filter_sets = grt::DictRef(true);
 }
 
-void DBObjectMasterFilterBE::add_filter(DBObjectFilterBE *filter) {
+auto DBObjectMasterFilterBE::add_filter(DBObjectFilterBE *filter) -> void {
   _filters.push_back(filter);
 }
 
-void DBObjectMasterFilterBE::remove_all_filters() {
+auto DBObjectMasterFilterBE::remove_all_filters() -> void {
   _filters.clear();
 }
 
-void DBObjectMasterFilterBE::add_stored_filter_set(const std::string &name, std::list<std::string> &names) {
+auto DBObjectMasterFilterBE::add_stored_filter_set(const std::string &name, std::list<std::string> &names) -> void {
   if (_filters.empty())
     return;
 
@@ -68,7 +68,7 @@ void DBObjectMasterFilterBE::add_stored_filter_set(const std::string &name, std:
   grt::GRT::get()->serialize(_stored_master_filter_sets, _stored_master_filter_sets_filepath);
 }
 
-void DBObjectMasterFilterBE::remove_stored_filter_set(int index) {
+auto DBObjectMasterFilterBE::remove_stored_filter_set(int index) -> void {
   /*QQQ
   std::string key;
   grt::DictRef filter_set_names;
@@ -81,7 +81,7 @@ void DBObjectMasterFilterBE::remove_stored_filter_set(int index) {
   throw std::logic_error("needs update");
 }
 
-void DBObjectMasterFilterBE::load_stored_filter_set(int index, std::list<int> &indexes) {
+auto DBObjectMasterFilterBE::load_stored_filter_set(int index, std::list<int> &indexes) -> void {
   throw std::logic_error("needs update");
   /*QQQ
   if (_filters.empty())
@@ -106,7 +106,7 @@ void DBObjectMasterFilterBE::load_stored_filter_set(int index, std::list<int> &i
   */
 }
 
-void DBObjectMasterFilterBE::load_stored_filter_set_list(std::list<std::string> &names) {
+auto DBObjectMasterFilterBE::load_stored_filter_set_list(std::list<std::string> &names) -> void {
   ///*QQQ
   std::string key;
   grt::DictRef stored_filter_sets;

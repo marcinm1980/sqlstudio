@@ -115,7 +115,7 @@ const std::string INVALID_VERSION_TOOLTIP =
   _("This is not valid version of MySQL.\nSpecify default target MySQL version in format MAJOR.MINOR or "
     "MAJOR.MINOR.RELEASE");
 
-static mforms::Label *new_label(const std::string &text, const std::string &name, bool right_align = false, bool help = false) {
+static auto new_label(const std::string &text, const std::string &name, bool right_align = false, bool help = false) -> mforms::Label * {
   mforms::Label *label = mforms::manage(new mforms::Label());
   label->set_text(text);
   label->set_name(name);
@@ -152,7 +152,7 @@ public:
     _table.set_column_count(_help_column ? 3 : 2);
   }
 
-  void add_option(mforms::View *control, const std::string &caption, const std::string &name, const std::string &help) {
+  auto add_option(mforms::View *control, const std::string &caption, const std::string &name, const std::string &help) -> void {
     _table.set_row_count(++_rows);
 
 #ifdef _MSC_VER
@@ -171,8 +171,8 @@ public:
     _table.add(label, 2, 3, _rows - 1, _rows, mforms::VFillFlag | mforms::HFillFlag | mforms::HExpandFlag);
   }
 
-  mforms::TextEntry *add_entry_option(const std::string &option, const std::string &caption,
-                                      const std::string &name, const std::string &tooltip) {
+  auto add_entry_option(const std::string &option, const std::string &caption,
+                                      const std::string &name, const std::string &tooltip) -> mforms::TextEntry * {
     _table.set_row_count(++_rows);
 
     mforms::TextEntry *entry = _owner->new_entry_option(option, false);
@@ -198,8 +198,8 @@ public:
     return entry;
   }
 
-  mforms::CheckBox *add_checkbox_option(const std::string &option, const std::string &caption,
-                                        const std::string &name, const std::string &tooltip) {
+  auto add_checkbox_option(const std::string &option, const std::string &caption,
+                                        const std::string &name, const std::string &tooltip) -> mforms::CheckBox * {
     _table.set_row_count(++_rows);
 
     mforms::CheckBox *cb = _owner->new_checkbox_option(option);
@@ -215,8 +215,8 @@ public:
 
 // ------------------------------------------------------------------------------------------------
 
-static void force_checkbox_on_toggle(mforms::CheckBox *value, mforms::CheckBox *target, bool same_value,
-                                     bool disable_on_active) {
+static auto force_checkbox_on_toggle(mforms::CheckBox *value, mforms::CheckBox *target, bool same_value,
+                                     bool disable_on_active) -> void {
   if (value->get_active()) {
     target->set_active(!same_value);
     target->set_enabled(!disable_on_active);
@@ -361,8 +361,8 @@ PreferencesForm::~PreferencesForm() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::TreeNodeRef PreferencesForm::add_page(mforms::TreeNodeRef parent, const std::string &title,
-                                              mforms::View *view) {
+auto PreferencesForm::add_page(mforms::TreeNodeRef parent, const std::string &title,
+                                              mforms::View *view) -> mforms::TreeNodeRef {
   mforms::TreeNodeRef node = parent ? parent->add_child() : _switcher.add_node();
   node->set_string(0, title);
 
@@ -377,7 +377,7 @@ mforms::TreeNodeRef PreferencesForm::add_page(mforms::TreeNodeRef parent, const 
 
 //--------------------------------------------------------------------------------------------------
 
-bool PreferencesForm::versionIsValid(const std::string &text) {
+auto PreferencesForm::versionIsValid(const std::string &text) -> bool {
   size_t dots_count = 0;
   for (size_t i = 0; i < text.size(); i++) {
     if (!(isdigit(text[i]) || text[i] == '.'))
@@ -396,7 +396,7 @@ bool PreferencesForm::versionIsValid(const std::string &text) {
   return true;
 }
 
-void PreferencesForm::version_changed(mforms::TextEntry *entry) {
+auto PreferencesForm::version_changed(mforms::TextEntry *entry) -> void {
   if (versionIsValid(entry->get_string_value())) {
     entry->set_back_color("#FFFFFF");
     entry->set_tooltip(VALID_VERSION_TOOLTIP);
@@ -408,7 +408,7 @@ void PreferencesForm::version_changed(mforms::TextEntry *entry) {
 
 //--------------------------------------------------------------------------------------------------
 
-void PreferencesForm::switch_page() {
+auto PreferencesForm::switch_page() -> void {
   int row = _switcher.get_selected_row();
   if (row >= 0)
     _tabview.set_active_tab(row);
@@ -416,7 +416,7 @@ void PreferencesForm::switch_page() {
 
 //--------------------------------------------------------------------------------------------------
 
-void PreferencesForm::show() {
+auto PreferencesForm::show() -> void {
   grt::DictRef info(true);
   if (!_model.is_valid())
     info.set("options", wb::WBContextUI::get()->get_wb()->get_wb_options());
@@ -434,7 +434,7 @@ void PreferencesForm::show() {
   grt::GRTNotificationCenter::get()->send_grt("GRNPreferencesDidClose", grt::ObjectRef(), info);
 }
 
-void PreferencesForm::show_values() {
+auto PreferencesForm::show_values() -> void {
   for (std::list<Option *>::const_iterator iter = _options.begin(); iter != _options.end(); ++iter)
     (*iter)->show_value();
 
@@ -452,7 +452,7 @@ void PreferencesForm::show_values() {
   }
 }
 
-void PreferencesForm::update_values() {
+auto PreferencesForm::update_values() -> void {
   grt::AutoUndo undo(!_model.is_valid());
 
   if (_model.is_valid()) {
@@ -471,21 +471,21 @@ void PreferencesForm::update_values() {
   undo.end(_("Change Options"));
 }
 
-grt::DictRef PreferencesForm::get_options(bool global) {
+auto PreferencesForm::get_options(bool global) -> grt::DictRef {
   if (!_model.is_valid() || global)
     return wb::WBContextUI::get()->get_wb()->get_wb_options();
   else
     return wb::WBContextUI::get()->get_model_options(_model.id());
 }
 
-void PreferencesForm::show_entry_option(const std::string &option_name, mforms::TextEntry *entry, bool numeric) {
+auto PreferencesForm::show_entry_option(const std::string &option_name, mforms::TextEntry *entry, bool numeric) -> void {
   std::string value;
 
   wb::WBContextUI::get()->get_wb_options_value(_model.is_valid() ? _model.id() : "", option_name, value);
   entry->set_value(value);
 }
 
-void PreferencesForm::update_entry_option(const std::string &option_name, mforms::TextEntry *entry, bool numeric) {
+auto PreferencesForm::update_entry_option(const std::string &option_name, mforms::TextEntry *entry, bool numeric) -> void {
   if (numeric)
     wb::WBContextUI::get()->set_wb_options_value(_model.is_valid() ? _model.id() : "", option_name,
                                                  entry->get_string_value(), grt::IntegerType);
@@ -494,20 +494,20 @@ void PreferencesForm::update_entry_option(const std::string &option_name, mforms
                                                  entry->get_string_value(), grt::StringType);
 }
 
-void PreferencesForm::show_path_option(const std::string &option_name, mforms::FsObjectSelector *entry) {
+auto PreferencesForm::show_path_option(const std::string &option_name, mforms::FsObjectSelector *entry) -> void {
   std::string value;
 
   wb::WBContextUI::get()->get_wb_options_value(_model.is_valid() ? _model.id() : "", option_name, value);
   entry->set_filename(value);
 }
 
-void PreferencesForm::update_path_option(const std::string &option_name, mforms::FsObjectSelector *entry) {
+auto PreferencesForm::update_path_option(const std::string &option_name, mforms::FsObjectSelector *entry) -> void {
   wb::WBContextUI::get()->set_wb_options_value(_model.is_valid() ? _model.id() : "", option_name, entry->get_filename(),
                                                grt::StringType);
 }
 
-void PreferencesForm::update_entry_option_numeric(const std::string &option_name, mforms::TextEntry *entry,
-                                                  int minrange, int maxrange) {
+auto PreferencesForm::update_entry_option_numeric(const std::string &option_name, mforms::TextEntry *entry,
+                                                  int minrange, int maxrange) -> void {
   long value = base::atoi<long>(entry->get_string_value(), 0l);
   if (value < minrange)
     value = minrange;
@@ -518,7 +518,7 @@ void PreferencesForm::update_entry_option_numeric(const std::string &option_name
                                                strfmt("%li", (long)value));
 }
 
-void PreferencesForm::show_checkbox_option(const std::string &option_name, mforms::CheckBox *checkbox) {
+auto PreferencesForm::show_checkbox_option(const std::string &option_name, mforms::CheckBox *checkbox) -> void {
   std::string value;
 
   wb::WBContextUI::get()->get_wb_options_value(_model.is_valid() ? _model.id() : "", option_name, value);
@@ -526,7 +526,7 @@ void PreferencesForm::show_checkbox_option(const std::string &option_name, mform
   checkbox->set_active(base::atoi<int>(value, 0) != 0);
 }
 
-void PreferencesForm::update_checkbox_option(const std::string &option_name, mforms::CheckBox *checkbox) {
+auto PreferencesForm::update_checkbox_option(const std::string &option_name, mforms::CheckBox *checkbox) -> void {
   std::string value = checkbox->get_active() ? "1" : "0";
   wb::WBContextUI::get()->set_wb_options_value(_model.is_valid() ? _model.id() : "", option_name, value,
                                                grt::IntegerType);
@@ -539,16 +539,16 @@ void PreferencesForm::update_checkbox_option(const std::string &option_name, mfo
 #endif
 }
 
-void PreferencesForm::show_selector_option(const std::string &option_name, mforms::Selector *selector,
-                                           const std::vector<std::string> &choices) {
+auto PreferencesForm::show_selector_option(const std::string &option_name, mforms::Selector *selector,
+                                           const std::vector<std::string> &choices) -> void {
   std::string value;
   wb::WBContextUI::get()->get_wb_options_value(_model.is_valid() ? _model.id() : "", option_name, value);
   selector->set_selected((int)(std::find(choices.begin(), choices.end(), value) - choices.begin()));
 }
 
-void PreferencesForm::update_selector_option(const std::string &option_name, mforms::Selector *selector,
+auto PreferencesForm::update_selector_option(const std::string &option_name, mforms::Selector *selector,
                                              const std::vector<std::string> &choices, const std::string &default_value,
-                                             bool as_number) {
+                                             bool as_number) -> void {
   if (as_number) {
     if (selector->get_selected_index() < 0)
       wb::WBContextUI::get()->set_wb_options_value(_model.is_valid() ? _model.id() : "", option_name, default_value,
@@ -570,7 +570,7 @@ void PreferencesForm::update_selector_option(const std::string &option_name, mfo
   }
 }
 
-mforms::TextEntry *PreferencesForm::new_entry_option(const std::string &option_name, bool numeric) {
+auto PreferencesForm::new_entry_option(const std::string &option_name, bool numeric) -> mforms::TextEntry * {
   Option *option = new Option();
   mforms::TextEntry *entry = new mforms::TextEntry();
 
@@ -582,7 +582,7 @@ mforms::TextEntry *PreferencesForm::new_entry_option(const std::string &option_n
   return entry;
 }
 
-mforms::FsObjectSelector *PreferencesForm::new_path_option(const std::string &option_name, bool file) {
+auto PreferencesForm::new_path_option(const std::string &option_name, bool file) -> mforms::FsObjectSelector * {
   Option *option = new Option();
   mforms::FsObjectSelector *entry = new mforms::FsObjectSelector();
 
@@ -596,8 +596,8 @@ mforms::FsObjectSelector *PreferencesForm::new_path_option(const std::string &op
   return entry;
 }
 
-mforms::TextEntry *PreferencesForm::new_numeric_entry_option(const std::string &option_name, int minrange,
-                                                             int maxrange) {
+auto PreferencesForm::new_numeric_entry_option(const std::string &option_name, int minrange,
+                                                             int maxrange) -> mforms::TextEntry * {
   Option *option = new Option();
   mforms::TextEntry *entry = new mforms::TextEntry();
 
@@ -610,7 +610,7 @@ mforms::TextEntry *PreferencesForm::new_numeric_entry_option(const std::string &
   return entry;
 }
 
-mforms::CheckBox *PreferencesForm::new_checkbox_option(const std::string &option_name) {
+auto PreferencesForm::new_checkbox_option(const std::string &option_name) -> mforms::CheckBox * {
   Option *option = new Option();
   mforms::CheckBox *checkbox = new mforms::CheckBox();
 
@@ -622,8 +622,8 @@ mforms::CheckBox *PreferencesForm::new_checkbox_option(const std::string &option
   return checkbox;
 }
 
-mforms::Selector *PreferencesForm::new_selector_option(const std::string &option_name, std::string choices_string,
-                                                       bool as_number) {
+auto PreferencesForm::new_selector_option(const std::string &option_name, std::string choices_string,
+                                                       bool as_number) -> mforms::Selector * {
   Option *option = new Option();
   mforms::Selector *selector = new mforms::Selector();
 
@@ -655,7 +655,7 @@ mforms::Selector *PreferencesForm::new_selector_option(const std::string &option
 
 //--------------------------------------------------------------------------------------------------
 
-void PreferencesForm::ok_clicked() {
+auto PreferencesForm::ok_clicked() -> void {
   update_values();
 
   mforms::Form::show(false);
@@ -663,13 +663,13 @@ void PreferencesForm::ok_clicked() {
 
 //--------------------------------------------------------------------------------------------------
 
-void PreferencesForm::cancel_clicked() {
+auto PreferencesForm::cancel_clicked() -> void {
   mforms::Form::show(false);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::View *PreferencesForm::create_admin_page() {
+auto PreferencesForm::create_admin_page() -> mforms::View * {
   mforms::Box *box = mforms::manage(new mforms::Box(false));
   box->set_spacing(8);
   box->set_name("Administration");
@@ -731,7 +731,7 @@ mforms::View *PreferencesForm::create_admin_page() {
   return box;
 }
 
-mforms::View *PreferencesForm::create_sqlide_page() {
+auto PreferencesForm::create_sqlide_page() -> mforms::View * {
   // General options for the SQL Editor
 
   mforms::Box *box = mforms::manage(new mforms::Box(false));
@@ -861,7 +861,7 @@ mforms::View *PreferencesForm::create_sqlide_page() {
   return box;
 }
 
-mforms::View *PreferencesForm::create_general_editor_page() {
+auto PreferencesForm::create_general_editor_page() -> mforms::View * {
   mforms::Box *box = mforms::manage(new mforms::Box(false));
   box->set_name("General Editor");
   box->set_spacing(8);
@@ -939,7 +939,7 @@ mforms::View *PreferencesForm::create_general_editor_page() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::View *PreferencesForm::create_editor_page() {
+auto PreferencesForm::create_editor_page() -> mforms::View * {
   mforms::Box *box = mforms::manage(new mforms::Box(false));
   box->set_spacing(8);
   box->set_name("Editor");
@@ -1053,7 +1053,7 @@ mforms::View *PreferencesForm::create_editor_page() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::View *PreferencesForm::create_object_editor_page() {
+auto PreferencesForm::create_object_editor_page() -> mforms::View * {
   mforms::Box *box = mforms::manage(new mforms::Box(false));
   box->set_spacing(8);
   box->set_name("Object Editor");
@@ -1129,7 +1129,7 @@ mforms::View *PreferencesForm::create_object_editor_page() {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::View *PreferencesForm::create_query_page() {
+auto PreferencesForm::create_query_page() -> mforms::View * {
   // Options specific for the query/script execution aspect of the SQL Editor
 
   mforms::Box *box = mforms::manage(new mforms::Box(false));
@@ -1287,13 +1287,13 @@ mforms::View *PreferencesForm::create_query_page() {
  * Triggered when the user switches the code completion enabled state. We use this to adjust the enabled
  * state for dependent sub options.
  */
-void PreferencesForm::code_completion_changed(mforms::CheckBox *cc_box, mforms::Box *subsettings_box) {
+auto PreferencesForm::code_completion_changed(mforms::CheckBox *cc_box, mforms::Box *subsettings_box) -> void {
   subsettings_box->set_enabled(cc_box->get_active());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::View *PreferencesForm::create_model_page() {
+auto PreferencesForm::create_model_page() -> mforms::View * {
   mforms::Box *top_box = mforms::manage(new mforms::Box(false));
   top_box->set_spacing(8);
   top_box->set_name("Model");
@@ -1336,8 +1336,7 @@ mforms::View *PreferencesForm::create_model_page() {
   return top_box;
 }
 
-mforms::View* PreferencesForm::createSSHPage()
-{
+auto PreferencesForm::createSSHPage() -> mforms::View* {
     Box* content = manage(new Box(false));
     content->set_spacing(8);
     content->set_name("SSH");
@@ -1462,8 +1461,7 @@ mforms::View* PreferencesForm::createSSHPage()
     return content;
 }
 
-mforms::View *PreferencesForm::create_others_page()
-{
+auto PreferencesForm::create_others_page() -> mforms::View * {
   Box* content = manage(new Box(false));
   content->set_spacing(8);
   content->set_name("Others");
@@ -1537,7 +1535,7 @@ mforms::View *PreferencesForm::create_others_page()
 }
 
 
-void PreferencesForm::createLogLevelSelectionPulldown(mforms::Box *content) {
+auto PreferencesForm::createLogLevelSelectionPulldown(mforms::Box *content) -> void {
   OptionTable *logTable = mforms::manage(new OptionTable(this, _("Logs"), true));
   content->add(logTable, false, true);
 
@@ -1576,7 +1574,7 @@ void PreferencesForm::createLogLevelSelectionPulldown(mforms::Box *content) {
   });
 }
 
-mforms::View *PreferencesForm::create_model_defaults_page() {
+auto PreferencesForm::create_model_defaults_page() -> mforms::View * {
   mforms::Box *box = mforms::manage(new mforms::Box(false));
   box->set_spacing(8);
   box->set_name("Model Defaults");
@@ -1689,7 +1687,7 @@ mforms::View *PreferencesForm::create_model_defaults_page() {
   return box;
 }
 
-static void show_target_version(const studio_physical_ModelRef &model, mforms::TextEntry *entry) {
+static auto show_target_version(const studio_physical_ModelRef &model, mforms::TextEntry *entry) -> void {
   if (*model->catalog()->version()->releaseNumber() < 0)
     entry->set_value(base::strfmt("%li.%li", (long)*model->catalog()->version()->majorNumber(),
                                   (long)*model->catalog()->version()->minorNumber()));
@@ -1699,13 +1697,13 @@ static void show_target_version(const studio_physical_ModelRef &model, mforms::T
                                   (long)*model->catalog()->version()->releaseNumber()));
 }
 
-static void update_target_version(studio_physical_ModelRef model, mforms::TextEntry *entry) {
+static auto update_target_version(studio_physical_ModelRef model, mforms::TextEntry *entry) -> void {
   GrtVersionRef version = bec::parse_version(entry->get_string_value());
   model->catalog()->version(version);
   version->owner(model);
 }
 
-mforms::View *PreferencesForm::create_mysql_page() {
+auto PreferencesForm::create_mysql_page() -> mforms::View * {
   mforms::Box *box = mforms::manage(new mforms::Box(false));
   box->set_spacing(8);
   box->set_name("MySQL");
@@ -1782,7 +1780,7 @@ mforms::View *PreferencesForm::create_mysql_page() {
   return box;
 }
 
-mforms::View *PreferencesForm::create_diagram_page() {
+auto PreferencesForm::create_diagram_page() -> mforms::View * {
   mforms::Box *box = mforms::manage(new mforms::Box(false));
   box->set_spacing(8);
   box->set_name("Diagram");
@@ -1943,15 +1941,15 @@ mforms::View *PreferencesForm::create_diagram_page() {
   return box;
 }
 
-static void show_text_option(grt::DictRef options, const std::string &option_name, mforms::TextBox *text) {
+static auto show_text_option(grt::DictRef options, const std::string &option_name, mforms::TextBox *text) -> void {
   text->set_value(options.get_string(option_name));
 }
 
-static void update_text_option(grt::DictRef options, const std::string &option_name, mforms::TextBox *text) {
+static auto update_text_option(grt::DictRef options, const std::string &option_name, mforms::TextBox *text) -> void {
   options.gset(option_name, text->get_string_value());
 }
 
-void PreferencesForm::change_font_option(const std::string &option, const std::string &value) {
+auto PreferencesForm::change_font_option(const std::string &option, const std::string &value) -> void {
   std::vector<std::string>::const_iterator it;
   if ((it = std::find(_font_options.begin(), _font_options.end(), option)) != _font_options.end()) {
     int i = (int)(it - _font_options.begin());
@@ -1959,7 +1957,7 @@ void PreferencesForm::change_font_option(const std::string &option, const std::s
   }
 }
 
-void PreferencesForm::font_preset_changed() {
+auto PreferencesForm::font_preset_changed() -> void {
   int i = _font_preset.get_selected_index();
 
   if (i >= 0) {
@@ -1978,7 +1976,7 @@ void PreferencesForm::font_preset_changed() {
   }
 }
 
-mforms::View *PreferencesForm::create_appearance_page() {
+auto PreferencesForm::create_appearance_page() -> mforms::View * {
   mforms::Box *box = mforms::manage(new mforms::Box(false));
   box->set_spacing(8);
   box->set_name("Appearance");
@@ -2072,7 +2070,7 @@ mforms::View *PreferencesForm::create_appearance_page() {
 /**
  * Theming and colors page.
  */
-mforms::View *PreferencesForm::create_fonts_and_colors_page() {
+auto PreferencesForm::create_fonts_and_colors_page() -> mforms::View * {
   Box *content = manage(new Box(false));
   content->set_spacing(8);
   content->set_name("Fonts and Colors");
@@ -2117,7 +2115,7 @@ mforms::View *PreferencesForm::create_fonts_and_colors_page() {
   return content;
 }
 
-static std::string separate_camel_word(const std::string &word) {
+static auto separate_camel_word(const std::string &word) -> std::string {
   std::string result;
 
   for (std::string::const_iterator c = word.begin(); c != word.end(); ++c) {
@@ -2129,7 +2127,7 @@ static std::string separate_camel_word(const std::string &word) {
   return result;
 }
 
-void PreferencesForm::show_colors_and_fonts() {
+auto PreferencesForm::show_colors_and_fonts() -> void {
   std::vector<std::string> options = wb::WBContextUI::get()->get_wb_options_keys("");
 
   _font_options.clear();
@@ -2171,7 +2169,7 @@ void PreferencesForm::show_colors_and_fonts() {
 
 //--------------------------------------------------------------------------------------------------
 
-void PreferencesForm::updateColorsAndFonts() {
+auto PreferencesForm::updateColorsAndFonts() -> void {
   for (int c = _font_list.count(), i = 0; i < c; i++) {
     std::string value = _font_list.root_node()->get_child(i)->get_string(1);
 
@@ -2181,7 +2179,7 @@ void PreferencesForm::updateColorsAndFonts() {
 
 //--------------------------------------------------------------------------------------------------
 
-void PreferencesForm::toggle_use_global() {
+auto PreferencesForm::toggle_use_global() -> void {
   _tabview.set_enabled(!_use_global.get_active());
 }
 

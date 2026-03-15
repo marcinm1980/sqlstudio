@@ -38,13 +38,13 @@ MySQLBaseRecognizer::MySQLBaseRecognizer(TokenStream *input) : Parser(input) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void MySQLBaseRecognizer::reset() {
+auto MySQLBaseRecognizer::reset() -> void {
   Parser::reset();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string MySQLBaseRecognizer::getText(RuleContext *context, bool convertEscapes) {
+auto MySQLBaseRecognizer::getText(RuleContext *context, bool convertEscapes) -> std::string {
   if (antlrcpp::is<MySQLParser::TextLiteralContext *>(context)) {
     // TODO: take the optional repertoire prefix into account.
     std::string result;
@@ -130,13 +130,13 @@ std::string MySQLBaseRecognizer::getText(RuleContext *context, bool convertEscap
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLBaseRecognizer::look(ssize_t position, size_t expected) {
+auto MySQLBaseRecognizer::look(ssize_t position, size_t expected) -> bool {
   return _input->LA(position) == expected;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool MySQLBaseRecognizer::containsLinebreak(const std::string &text) const {
+auto MySQLBaseRecognizer::containsLinebreak(const std::string &text) const -> bool {
   return text.find_first_of("\r\n") != std::string::npos;
 }
 

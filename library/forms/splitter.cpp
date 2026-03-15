@@ -37,28 +37,28 @@ Splitter::Splitter(bool horiz, bool thin) {
 #endif
 }
 
-void Splitter::add(View *subview, int minsize, bool fixed) {
+auto Splitter::add(View *subview, int minsize, bool fixed) -> void {
   cache_view(subview);
   _splitter_impl->add(this, subview, minsize, fixed);
 }
 
-void Splitter::remove(View *subview) {
+auto Splitter::remove(View *subview) -> void {
   _splitter_impl->remove(this, subview);
   remove_from_cache(subview);
 }
 
-void Splitter::set_divider_position(int pos) {
+auto Splitter::set_divider_position(int pos) -> void {
   _splitter_impl->set_divider_position(this, pos);
 }
 
-int Splitter::get_divider_position() {
+auto Splitter::get_divider_position() -> int {
   return _splitter_impl->get_divider_position(this);
 }
 
-void Splitter::set_expanded(bool first, bool expand) {
+auto Splitter::set_expanded(bool first, bool expand) -> void {
   _splitter_impl->set_expanded(this, first, expand);
 }
 
-void Splitter::position_changed() {
+auto Splitter::position_changed() -> void {
   _position_changed_signal();
 }

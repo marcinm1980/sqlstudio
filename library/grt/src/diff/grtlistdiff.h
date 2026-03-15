@@ -36,7 +36,7 @@ namespace grt {
 
   class GrtListDiff {
   public:
-    static std::shared_ptr<MultiChange> diff(const BaseListRef &source, const BaseListRef &target, const Omf *omf);
+    static auto diff(const BaseListRef &source, const BaseListRef &target, const Omf *omf) -> std::shared_ptr<MultiChange>;
   };
 }
 

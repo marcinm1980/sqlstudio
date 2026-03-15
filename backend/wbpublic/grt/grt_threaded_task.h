@@ -34,28 +34,28 @@ public:
   using Ref = std::shared_ptr<GrtThreadedTask>;
 
 public:
-  static Ref create() {
+  static auto create() -> Ref {
     return Ref(new GrtThreadedTask());
   }
-  static Ref create(const GrtThreadedTask::Ref parent_task) {
+  static auto create(const GrtThreadedTask::Ref parent_task) -> Ref {
     return Ref(new GrtThreadedTask(parent_task));
   }
 
 public:
   virtual ~GrtThreadedTask();
-  void disconnect_callbacks();
+  auto disconnect_callbacks() -> void;
 
 protected:
   GrtThreadedTask();
   GrtThreadedTask(const GrtThreadedTask::Ref parent_task);
 
 public:
-  bool is_busy() {
+  auto is_busy() -> bool {
     return _dispatcher && _dispatcher->get_busy();
   }
 
 private:
-  const bec::GRTDispatcher::Ref &dispatcher();
+  auto dispatcher() -> const bec::GRTDispatcher::Ref &;
 
 private:
   bec::GRTDispatcher::Ref _dispatcher;
@@ -65,21 +65,21 @@ private:
   GrtThreadedTask::Ref _parent_task;
 
 public:
-  const GrtThreadedTask::Ref parent_task() const {
+  auto parent_task() const -> const GrtThreadedTask::Ref {
     return _parent_task;
   }
-  void parent_task(const GrtThreadedTask::Ref val);
+  auto parent_task(const GrtThreadedTask::Ref val) -> void;
 
-  const bec::GRTTask::Ref task(); // Returns the underlying grt task.
+  auto task() -> const bec::GRTTask::Ref; // Returns the underlying grt task.
 
 private:
-  void on_starting(const bec::GRTTaskBase::Ref task);
+  auto on_starting(const bec::GRTTaskBase::Ref task) -> void;
 
 public:
-  std::string desc() {
+  auto desc() -> std::string {
     return _desc;
   }
-  void desc(const std::string &desc) {
+  auto desc(const std::string &desc) -> void {
     _desc = desc;
   }
 
@@ -87,7 +87,7 @@ private:
   std::string _desc;
 
 public:
-  void send_task_res_msg(bool value) {
+  auto send_task_res_msg(bool value) -> void {
     _send_task_res_msg = value;
   }
 
@@ -102,37 +102,37 @@ public:
   using Fail_cb = std::function<void(const std::string &)>;
 
 public:
-  void exec(bool sync = false, Proc_cb proc_cb = Proc_cb());
+  auto exec(bool sync = false, Proc_cb proc_cb = Proc_cb()) -> void;
   void send_msg(int msg_type, const std::string &msg, const std::string &detail = "");
   void send_progress(float percentage, const std::string &msg, const std::string &detail = "");
 
 public:
-  void msg_cb(Msg_cb cb) {
+  auto msg_cb(Msg_cb cb) -> void {
     _msg_cb = cb;
   }
-  const Msg_cb &msg_cb() {
+  auto msg_cb() -> const Msg_cb & {
     return _msg_cb;
   }
 
-  void progress_cb(Progress_cb cb) {
+  auto progress_cb(Progress_cb cb) -> void {
     _progress_cb = cb;
   }
-  void finish_cb(Finish_cb cb, bool onetime = false) {
+  auto finish_cb(Finish_cb cb, bool onetime = false) -> void {
     _finish_cb = cb;
     _onetime_finish_cb = onetime;
   }
-  void fail_cb(Fail_cb cb, bool onetime = false) {
+  auto fail_cb(Fail_cb cb, bool onetime = false) -> void {
     _fail_cb = cb;
     _onetime_fail_cb = onetime;
   }
-  void proc_cb(Proc_cb cb) {
+  auto proc_cb(Proc_cb cb) -> void {
     _proc_cb = cb;
   }
 
 private:
-  void process_msg(const grt::Message &msgs);
-  void process_finish(grt::ValueRef res);
-  void process_fail(const std::exception &error);
+  auto process_msg(const grt::Message &msgs) -> void;
+  auto process_finish(grt::ValueRef res) -> void;
+  auto process_fail(const std::exception &error) -> void;
 
 private:
   Proc_cb _proc_cb;
@@ -144,5 +144,5 @@ private:
   bool _onetime_fail_cb;
 
 public:
-  void execute_in_main_thread(const std::function<void()> &function, bool wait, bool force_queue);
+  auto execute_in_main_thread(const std::function<void()> &function, bool wait, bool force_queue) -> void;
 };

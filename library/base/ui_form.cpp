@@ -48,75 +48,75 @@ UIForm::~UIForm() {
   ui_form_instances.erase(ui_form_instances.find(form_id()));
 }
 
-bec::UIForm *UIForm::form_with_id(const std::string &id) {
+auto UIForm::form_with_id(const std::string &id) -> bec::UIForm * {
   if (ui_form_instances.find(id) != ui_form_instances.end())
     return ui_form_instances[id];
   return 0;
 }
 
-std::string UIForm::form_id() {
+auto UIForm::form_id() -> std::string {
   return base::strfmt("<UIForm %p>", this);
 }
 
-void UIForm::set_frontend_data(void *data) {
+auto UIForm::set_frontend_data(void *data) -> void {
   _frontend_data = data;
 }
 
-void *UIForm::get_frontend_data() {
+auto UIForm::get_frontend_data() -> void * {
   return _frontend_data;
 }
 
-void UIForm::set_owner_data(void *data) {
+auto UIForm::set_owner_data(void *data) -> void {
   _owner_data = data;
 }
-void *UIForm::get_owner_data() {
+auto UIForm::get_owner_data() -> void * {
   return _owner_data;
 }
 
-bool UIForm::is_main_form() {
+auto UIForm::is_main_form() -> bool {
   return false;
 }
 
 // Target description for cut/copy/delete menu items and for paste, after a copy is made.
-std::string UIForm::get_edit_target_name() {
+auto UIForm::get_edit_target_name() -> std::string {
   return "";
 }
 
-bool UIForm::can_undo() {
+auto UIForm::can_undo() -> bool {
   return false;
 }
-bool UIForm::can_redo() {
+auto UIForm::can_redo() -> bool {
   return false;
 }
-bool UIForm::can_cut() {
+auto UIForm::can_cut() -> bool {
   return can_copy() && can_delete();
 }
-bool UIForm::can_copy() {
+auto UIForm::can_copy() -> bool {
   return false;
 }
-bool UIForm::can_paste() {
+auto UIForm::can_paste() -> bool {
   return false;
 }
-bool UIForm::can_delete() {
+auto UIForm::can_delete() -> bool {
   return false;
 }
-bool UIForm::can_select_all() {
+auto UIForm::can_select_all() -> bool {
   return false;
 }
 
-void UIForm::undo() {
+auto UIForm::undo() -> void {
 }
-void UIForm::redo() {
+auto UIForm::redo() -> void {
 }
-void UIForm::cut() {
+auto UIForm::cut() -> void {
 }
-void UIForm::copy() {
+auto UIForm::copy() -> void {
 }
-void UIForm::paste() {
+auto UIForm::paste() -> void {
 }
-void UIForm::delete_selection() {
+auto UIForm::delete_selection() -> void {
 }
-void UIForm::select_all() {
+auto UIForm::select_all() -> void {
 }
 
 //--------------------------------------------------------------------------------------------------

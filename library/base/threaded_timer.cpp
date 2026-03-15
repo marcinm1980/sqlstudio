@@ -46,7 +46,7 @@ G_LOCK_DEFINE(_timer);
 /**
  * Returns the singleton instance of the timer.
  */
-ThreadedTimer *ThreadedTimer::get() {
+auto ThreadedTimer::get() -> ThreadedTimer * {
   G_LOCK(_timer);
   if (_timer == NULL) {
     _timer = new ThreadedTimer(BASE_FREQUENCY);
@@ -61,7 +61,7 @@ ThreadedTimer *ThreadedTimer::get() {
  * Called from the main framework when the application goes down. So we can stop all threads
  * gracefully.
  */
-void ThreadedTimer::stop() {
+auto ThreadedTimer::stop() -> void {
   delete _timer;
   _timer = NULL;
 }
@@ -79,7 +79,7 @@ void ThreadedTimer::stop() {
  * @param callback_ What to call when a timer event fires.
  * @result The id of the new task (can be used in the callback) or -1 if the task could not be added.
  */
-int ThreadedTimer::add_task(TimerUnit unit, double value, bool single_shot, TimerFunction callback) {
+auto ThreadedTimer::add_task(TimerUnit unit, double value, bool single_shot, TimerFunction callback) -> int {
   TimerTask task = {0, 0.0, 0.0, callback, false, single_shot, false};
 
   if (value <= 0)
@@ -127,7 +127,7 @@ int ThreadedTimer::add_task(TimerUnit unit, double value, bool single_shot, Time
  *
  * @param task_id The id of the task to remove. If it does not exist nothing happens.
  */
-bool ThreadedTimer::remove_task(int task_id) {
+auto ThreadedTimer::remove_task(int task_id) -> bool {
   ThreadedTimer *timer = ThreadedTimer::get();
   return timer->remove(task_id);
 }
@@ -167,7 +167,7 @@ ThreadedTimer::~ThreadedTimer() {
 /**
  * Main entry point for the timer thread.
  */
-gpointer ThreadedTimer::start(gpointer data) {
+auto ThreadedTimer::start(gpointer data) -> gpointer {
   ThreadedTimer *thread = static_cast<ThreadedTimer *>(data);
   thread->main_loop();
   return NULL;
@@ -178,7 +178,7 @@ gpointer ThreadedTimer::start(gpointer data) {
 /**
  * Entry point for all pool (worker) threads.
  */
-void ThreadedTimer::pool_function(gpointer data, gpointer user_data) {
+auto ThreadedTimer::pool_function(gpointer data, gpointer user_data) -> void {
   ThreadedTimer *timer = static_cast<ThreadedTimer *>(user_data);
   TimerTask *task = static_cast<TimerTask *>(data);
 
@@ -216,7 +216,7 @@ public:
 
 //--------------------------------------------------------------------------------------------------
 
-void ThreadedTimer::main_loop() {
+auto ThreadedTimer::main_loop() -> void {
   // Provides a high-quality clock which is used to compute execution times of tasks.
   GTimer *clock = g_timer_new();
   g_timer_start(clock);
@@ -265,7 +265,7 @@ void ThreadedTimer::main_loop() {
  * @returns true, if the task could be removed, otherwise false.
  * If the task is already scheduled for execution it cannot be removed anymore.
  */
-bool ThreadedTimer::remove(int task_id) {
+auto ThreadedTimer::remove(int task_id) -> bool {
   base::MutexLock lock(_timer_lock);
   for (std::list<TimerTask>::iterator iterator = _tasks.begin(); iterator != _tasks.end(); iterator++) {
     if (iterator->task_id == task_id) {

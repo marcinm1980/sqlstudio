@@ -94,13 +94,13 @@ LexerDocument::~LexerDocument() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // IDocument implementation.
-int LexerDocument::Version() const {
+auto LexerDocument::Version() const -> int {
   return 0; // Indicates old style lexer document.
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LexerDocument::SetErrorStatus(int status) {
+auto LexerDocument::SetErrorStatus(int status) -> void {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                            .append(__FUNCTION__)
                            .append(" in LexerDocument (")
@@ -110,25 +110,25 @@ void LexerDocument::SetErrorStatus(int status) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Sci_Position LexerDocument::Length() const {
+auto LexerDocument::Length() const -> Sci_Position {
   return static_cast<Sci_Position>(_text.size());
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LexerDocument::GetCharRange(char *buffer, Sci_Position position, Sci_Position lengthRetrieve) const {
+auto LexerDocument::GetCharRange(char *buffer, Sci_Position position, Sci_Position lengthRetrieve) const -> void {
   _text.copy(buffer, lengthRetrieve, position);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-char LexerDocument::StyleAt(Sci_Position position) const {
+auto LexerDocument::StyleAt(Sci_Position position) const -> char {
   return _style_buffer[position];
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Sci_Position LexerDocument::LineFromPosition(Sci_Position position) const {
+auto LexerDocument::LineFromPosition(Sci_Position position) const -> Sci_Position {
   std::size_t i = 0;
   while (i < _lines.size()) {
     if ((std::size_t)position < _lines[i].first + _lines[i].second)
@@ -143,7 +143,7 @@ Sci_Position LexerDocument::LineFromPosition(Sci_Position position) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Sci_Position LexerDocument::LineStart(Sci_Position line) const {
+auto LexerDocument::LineStart(Sci_Position line) const -> Sci_Position {
   if (_lines.empty())
     return 1;
 
@@ -155,7 +155,7 @@ Sci_Position LexerDocument::LineStart(Sci_Position line) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int LexerDocument::GetLevel(Sci_Position line) const {
+auto LexerDocument::GetLevel(Sci_Position line) const -> int {
   if (line < 0 || line >= (int)_level_cache.size())
     return SC_FOLDLEVELBASE;
   return _level_cache[line];
@@ -163,7 +163,7 @@ int LexerDocument::GetLevel(Sci_Position line) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int LexerDocument::SetLevel(Sci_Position line, int level) {
+auto LexerDocument::SetLevel(Sci_Position line, int level) -> int {
   if (line >= 0) {
     // Check if we need to make more room in our cache.
     if (line >= (int)_level_cache.size()) {
@@ -182,7 +182,7 @@ int LexerDocument::SetLevel(Sci_Position line, int level) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int LexerDocument::GetLineState(Sci_Position line) const {
+auto LexerDocument::GetLineState(Sci_Position line) const -> int {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                            .append(__FUNCTION__)
                            .append(" in LexerDocument (")
@@ -192,7 +192,7 @@ int LexerDocument::GetLineState(Sci_Position line) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int LexerDocument::SetLineState(Sci_Position line, int state) {
+auto LexerDocument::SetLineState(Sci_Position line, int state) -> int {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                            .append(__FUNCTION__)
                            .append(" in LexerDocument (")
@@ -202,13 +202,13 @@ int LexerDocument::SetLineState(Sci_Position line, int state) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LexerDocument::StartStyling(Sci_Position position) {
+auto LexerDocument::StartStyling(Sci_Position position) -> void {
   _style_position = position;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool LexerDocument::SetStyleFor(Sci_Position length, char style) {
+auto LexerDocument::SetStyleFor(Sci_Position length, char style) -> bool {
   // Style buffer and text have the same length so we can use the text to get the size (which is faster).
   if (_style_position + length >= (int)_text.size())
     return false;
@@ -224,7 +224,7 @@ bool LexerDocument::SetStyleFor(Sci_Position length, char style) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool LexerDocument::SetStyles(Sci_Position length, const char *styles) {
+auto LexerDocument::SetStyles(Sci_Position length, const char *styles) -> bool {
   if (_style_position + length > (int)_text.size())
     return false;
 
@@ -238,7 +238,7 @@ bool LexerDocument::SetStyles(Sci_Position length, const char *styles) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LexerDocument::DecorationSetCurrentIndicator(int indicator) {
+auto LexerDocument::DecorationSetCurrentIndicator(int indicator) -> void {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                            .append(__FUNCTION__)
                            .append(" in LexerDocument (")
@@ -248,7 +248,7 @@ void LexerDocument::DecorationSetCurrentIndicator(int indicator) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LexerDocument::DecorationFillRange(Sci_Position position, int value, Sci_Position fillLength) {
+auto LexerDocument::DecorationFillRange(Sci_Position position, int value, Sci_Position fillLength) -> void {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                            .append(__FUNCTION__)
                            .append(" in LexerDocument (")
@@ -258,7 +258,7 @@ void LexerDocument::DecorationFillRange(Sci_Position position, int value, Sci_Po
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void LexerDocument::ChangeLexerState(Sci_Position start, Sci_Position end) {
+auto LexerDocument::ChangeLexerState(Sci_Position start, Sci_Position end) -> void {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                            .append(__FUNCTION__)
                            .append(" in LexerDocument (")
@@ -268,19 +268,19 @@ void LexerDocument::ChangeLexerState(Sci_Position start, Sci_Position end) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int LexerDocument::CodePage() const {
+auto LexerDocument::CodePage() const -> int {
   return SC_CP_UTF8;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-bool LexerDocument::IsDBCSLeadByte(char ch) const {
+auto LexerDocument::IsDBCSLeadByte(char ch) const -> bool {
   return false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-const char *LexerDocument::BufferPointer() {
+auto LexerDocument::BufferPointer() -> const char * {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                            .append(__FUNCTION__)
                            .append(" in LexerDocument (")
@@ -290,7 +290,7 @@ const char *LexerDocument::BufferPointer() {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int LexerDocument::GetLineIndentation(Sci_Position line) {
+auto LexerDocument::GetLineIndentation(Sci_Position line) -> int {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                            .append(__FUNCTION__)
                            .append(" in LexerDocument (")
@@ -300,7 +300,7 @@ int LexerDocument::GetLineIndentation(Sci_Position line) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Sci_Position LexerDocument::LineEnd(Sci_Position line) const {
+auto LexerDocument::LineEnd(Sci_Position line) const -> Sci_Position {
   throw std::logic_error(std::string("Internal error. Unexpected use of unimplemented function ")
                          .append(__FUNCTION__)
                          .append(" in LexerDocument (")
@@ -310,7 +310,7 @@ Sci_Position LexerDocument::LineEnd(Sci_Position line) const {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-Sci_Position LexerDocument::GetRelativePosition(Sci_Position positionStart, Sci_Position characterOffset) const {
+auto LexerDocument::GetRelativePosition(Sci_Position positionStart, Sci_Position characterOffset) const -> Sci_Position {
   Sci_Position pos = positionStart;
   pos = positionStart + characterOffset;
   if ((pos < 0) || (pos > Length()))
@@ -321,7 +321,7 @@ Sci_Position LexerDocument::GetRelativePosition(Sci_Position positionStart, Sci_
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int LexerDocument::GetCharacterAndWidth(Sci_Position position, Sci_Position *pWidth) const {
+auto LexerDocument::GetCharacterAndWidth(Sci_Position position, Sci_Position *pWidth) const -> int {
   int character;
   const unsigned char leadByte = _text[position];
   if (UTF8IsAscii(leadByte)) {
@@ -350,7 +350,7 @@ int LexerDocument::GetCharacterAndWidth(Sci_Position position, Sci_Position *pWi
  * reports for them if something is wrong and also can reload them if they have been changed while
  * the application is running.
  */
-void WbModelImpl::initializeReporting() {
+auto WbModelImpl::initializeReporting() -> void {
   // Enumerate reporting folder for all stored report types.
 }
 
@@ -363,7 +363,7 @@ void WbModelImpl::initializeReporting() {
  * @param templates - a GRT List the available templates will be added to
  * @return 1 on success, 0 on error
  */
-ssize_t WbModelImpl::getAvailableReportingTemplates(grt::StringListRef templates) {
+auto WbModelImpl::getAvailableReportingTemplates(grt::StringListRef templates) -> ssize_t {
   // get pointer to the GRT
   std::string basedir = bec::GRTManager::get()->get_basedir();
   std::string template_base_dir = base::makePath(basedir, "modules/data/wb_model_reporting");
@@ -409,7 +409,7 @@ ssize_t WbModelImpl::getAvailableReportingTemplates(grt::StringListRef templates
  * @param template_name - the name of the template
  * @return the template info object
  */
-studio_model_reporting_TemplateInfoRef WbModelImpl::getReportingTemplateInfo(const std::string &template_name) {
+auto WbModelImpl::getReportingTemplateInfo(const std::string &template_name) -> studio_model_reporting_TemplateInfoRef {
   std::string template_dir = getTemplateDirFromName(template_name);
 
   std::string template_info_path = base::makePath(template_dir, "info.xml");
@@ -421,8 +421,8 @@ studio_model_reporting_TemplateInfoRef WbModelImpl::getReportingTemplateInfo(con
 
 //----------------------------------------------------------------------------------------------------------------------
 
-studio_model_reporting_TemplateStyleInfoRef WbModelImpl::get_template_style_from_name(std::string template_name,
-  std::string template_style_name) {
+auto WbModelImpl::get_template_style_from_name(std::string template_name,
+  std::string template_style_name) -> studio_model_reporting_TemplateStyleInfoRef {
   if (template_style_name == "")
     return studio_model_reporting_TemplateStyleInfoRef();
 
@@ -446,14 +446,14 @@ studio_model_reporting_TemplateStyleInfoRef WbModelImpl::get_template_style_from
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void read_option(bool &var, const char *field, const grt::DictRef &dict) {
+auto read_option(bool &var, const char *field, const grt::DictRef &dict) -> void {
   if (dict.has_key(field))
     var = dict.get_int(field) != 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void read_option(std::string &var, const char *field, const grt::DictRef &dict) {
+auto read_option(std::string &var, const char *field, const grt::DictRef &dict) -> void {
   if (dict.has_key(field))
     var = dict.get_string(field);
 }
@@ -463,7 +463,7 @@ void read_option(std::string &var, const char *field, const grt::DictRef &dict) 
 /**
  * Assigns the given value to the dictionary if it is not empty. Otherwise the text "n/a" is added.
  **/
-void assignValueOrNA(mtemplate::DictionaryInterface *dict, const char *key, const std::string &value) {
+auto assignValueOrNA(mtemplate::DictionaryInterface *dict, const char *key, const std::string &value) -> void {
   if (value.size() == 0)
     dict->setValue(key, "<span class=\"report_na_entry\">n/a</span>");
   else
@@ -472,7 +472,7 @@ void assignValueOrNA(mtemplate::DictionaryInterface *dict, const char *key, cons
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void fillTablePropertyDict(const db_mysql_TableRef &table, mtemplate::DictionaryInterface *table_dict) {
+auto fillTablePropertyDict(const db_mysql_TableRef &table, mtemplate::DictionaryInterface *table_dict) -> void {
   assignValueOrNA(table_dict, REPORT_TABLE_AVG_ROW_LENGTH, *table->avgRowLength());
   table_dict->setValue(REPORT_TABLE_USE_CHECKSUM, (table->checksum() == 1) ? "yes" : "no");
   assignValueOrNA(table_dict, REPORT_TABLE_CONNECTION_STRING, *table->connectionString());
@@ -537,8 +537,8 @@ void fillTablePropertyDict(const db_mysql_TableRef &table, mtemplate::Dictionary
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void fillColumnDict(const db_mysql_ColumnRef &col, const db_mysql_TableRef &table,
-                    mtemplate::DictionaryInterface *col_dict, bool detailed) {
+auto fillColumnDict(const db_mysql_ColumnRef &col, const db_mysql_TableRef &table,
+                    mtemplate::DictionaryInterface *col_dict, bool detailed) -> void {
   if (*table->isPrimaryKeyColumn(col)) {
     if (*table->isForeignKeyColumn(col))
       col_dict->setValue(REPORT_COLUMN_KEY, "FK");
@@ -584,8 +584,8 @@ void fillColumnDict(const db_mysql_ColumnRef &col, const db_mysql_TableRef &tabl
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void fillIndexDict(const db_mysql_IndexRef &idx, const db_mysql_TableRef &table,
-                   mtemplate::DictionaryInterface *idx_dict, bool detailed) {
+auto fillIndexDict(const db_mysql_IndexRef &idx, const db_mysql_TableRef &table,
+                   mtemplate::DictionaryInterface *idx_dict, bool detailed) -> void {
   idx_dict->setValue(REPORT_INDEX_NAME, *idx->name());
 
   idx_dict->setValue(REPORT_INDEX_PRIMARY, (idx->isPrimary() == 1) ? "Yes" : "No");
@@ -614,8 +614,8 @@ void fillIndexDict(const db_mysql_IndexRef &idx, const db_mysql_TableRef &table,
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void fillForeignKeyDict(const db_mysql_ForeignKeyRef &fk, const db_mysql_TableRef &table,
-                        mtemplate::DictionaryInterface *fk_dict, bool detailed) {
+auto fillForeignKeyDict(const db_mysql_ForeignKeyRef &fk, const db_mysql_TableRef &table,
+                        mtemplate::DictionaryInterface *fk_dict, bool detailed) -> void {
   fk_dict->setValue(REPORT_REL_NAME, *fk->name());
   fk_dict->setValue(REPORT_REL_TYPE,
                     bec::TableHelper::is_identifying_foreign_key(table, fk) ? "Identifying" : "Non-Identifying");
@@ -634,8 +634,8 @@ void fillForeignKeyDict(const db_mysql_ForeignKeyRef &fk, const db_mysql_TableRe
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void fillTriggerDict(const db_mysql_TriggerRef &trigger, const db_mysql_TableRef &table,
-                     mtemplate::DictionaryInterface *trigger_dict) {
+auto fillTriggerDict(const db_mysql_TriggerRef &trigger, const db_mysql_TableRef &table,
+                     mtemplate::DictionaryInterface *trigger_dict) -> void {
   trigger_dict->setValue(REPORT_TRIGGER_NAME, *trigger->name());
   trigger_dict->setValue(REPORT_TRIGGER_TIMING, *trigger->timing());
   trigger_dict->setValue(REPORT_TRIGGER_ENABLED, (trigger->enabled() == 1) ? "yes" : "no");
@@ -650,7 +650,7 @@ void fillTriggerDict(const db_mysql_TriggerRef &trigger, const db_mysql_TableRef
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void fillViewDict(const db_mysql_ViewRef &view, mtemplate::DictionaryInterface *view_dict) {
+auto fillViewDict(const db_mysql_ViewRef &view, mtemplate::DictionaryInterface *view_dict) -> void {
   view_dict->setValue(REPORT_VIEW_NAME, *view->name());
   view_dict->setValueAndShowSection(REPORT_VIEW_COMMENT, *view->comment(), REPORT_VIEW_COMMENT_LISTING);
 
@@ -669,7 +669,7 @@ void fillViewDict(const db_mysql_ViewRef &view, mtemplate::DictionaryInterface *
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void fillRoutineDict(const db_mysql_RoutineRef &routine, mtemplate::DictionaryInterface *routine_dict) {
+auto fillRoutineDict(const db_mysql_RoutineRef &routine, mtemplate::DictionaryInterface *routine_dict) -> void {
   std::string value;
 
   routine_dict->setValue(REPORT_ROUTINE_NAME, *routine->name());
@@ -697,7 +697,7 @@ static Scintilla::WordList *keywordLists[KEYWORDSET_MAX + 2];
 /**
  * Initialization of the syntax highlighter classes that are used to colorize SQL code in HTML reports.
  */
-const Scintilla::LexerModule *setup_syntax_highlighter(db_mgmt_RdbmsRef rdbms) {
+auto setup_syntax_highlighter(db_mgmt_RdbmsRef rdbms) -> const Scintilla::LexerModule * {
   const Scintilla::LexerModule *result = SCI_WRAPPER_NS Catalogue::Find("mysql");
 
   if (result != NULL) {
@@ -741,7 +741,7 @@ const Scintilla::LexerModule *setup_syntax_highlighter(db_mgmt_RdbmsRef rdbms) {
 /**
  * Cleanup after we are done with report creation.
  */
-void cleanup_syntax_highlighter() {
+auto cleanup_syntax_highlighter() -> void {
   for (int i = 0; i <= KEYWORDSET_MAX; i++)
     delete (SCI_WRAPPER_NS WordList *)keywordLists[i];
 }
@@ -751,7 +751,7 @@ void cleanup_syntax_highlighter() {
 /**
  * Returns the HTML markup for the given style.
  */
-const std::string markupFromStyle(int style) {
+auto markupFromStyle(int style) -> const std::string {
   switch (style) {
     case SCE_MYSQL_DEFAULT:
       return "<span class=\"syntax_default\">%s</span>";
@@ -826,8 +826,8 @@ const std::string markupFromStyle(int style) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void set_ddl(mtemplate::DictionaryInterface *target, SQLGeneratorInterfaceImpl *sqlgenModule,
-             const GrtNamedObjectRef &object, const Scintilla::LexerModule *lexer, bool ddl_enabled) {
+auto set_ddl(mtemplate::DictionaryInterface *target, SQLGeneratorInterfaceImpl *sqlgenModule,
+             const GrtNamedObjectRef &object, const Scintilla::LexerModule *lexer, bool ddl_enabled) -> void {
   if (ddl_enabled && sqlgenModule != NULL) {
     std::string sql = sqlgenModule->makeCreateScriptForObject(object);
 
@@ -868,7 +868,7 @@ void set_ddl(mtemplate::DictionaryInterface *target, SQLGeneratorInterfaceImpl *
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static int count_template_files(const std::string template_dir) {
+static auto count_template_files(const std::string template_dir) -> int {
   // loop over all files in the template dir
   const char *entry;
   int count = 0;
@@ -900,7 +900,7 @@ static int count_template_files(const std::string template_dir) {
  * @param options - various options that customize the output, including output template, output path etc.
  * @return 1 on success, 0 on error
  */
-ssize_t WbModelImpl::generateReport(studio_physical_ModelRef model, const grt::DictRef &options) {
+auto WbModelImpl::generateReport(studio_physical_ModelRef model, const grt::DictRef &options) -> ssize_t {
   // get pointer to the GRT
   std::string basedir = bec::GRTManager::get()->get_basedir();
   std::string template_base_dir = base::makePath(basedir, "modules/data/wb_model_reporting");

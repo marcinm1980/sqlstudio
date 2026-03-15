@@ -38,11 +38,11 @@
 using namespace mforms;
 using namespace base;
 
-size_t TableTemplateList::count() {
+auto TableTemplateList::count() -> size_t {
   return (int)grt::BaseListRef::cast_from(grt::GRT::get()->get("/wb/options/options/TableTemplates")).count();
 }
 
-bool TableTemplateList::get_field(const bec::NodeId &node, ColumnId column, std::string &value) {
+auto TableTemplateList::get_field(const bec::NodeId &node, ColumnId column, std::string &value) -> bool {
   grt::BaseListRef templates(grt::BaseListRef::cast_from(grt::GRT::get()->get("/wb/options/options/TableTemplates")));
   if (node[0] < templates.count()) {
     db_TableRef table = db_TableRef::cast_from(templates[node[0]]);
@@ -64,10 +64,10 @@ bool TableTemplateList::get_field(const bec::NodeId &node, ColumnId column, std:
   return false;
 }
 
-void TableTemplateList::refresh() {
+auto TableTemplateList::refresh() -> void {
 }
 
-std::string TableTemplateList::get_selected_template() {
+auto TableTemplateList::get_selected_template() -> std::string {
   std::string name;
   get_field(selected_index(), 0, name);
   return name;
@@ -75,7 +75,7 @@ std::string TableTemplateList::get_selected_template() {
 
 //------------------------------------------------------------------------------------------------
 
-void TableTemplateList::prepare_context_menu() {
+auto TableTemplateList::prepare_context_menu() -> void {
   _context_menu = manage(new Menu());
   _context_menu->set_handler(std::bind(&TableTemplatePanel::on_action, _owner, std::placeholders::_1));
   _context_menu->signal_will_show()->connect(std::bind(&TableTemplateList::menu_will_show, this));
@@ -87,7 +87,7 @@ void TableTemplateList::prepare_context_menu() {
 
 //------------------------------------------------------------------------------------------------
 
-void TableTemplateList::menu_will_show() {
+auto TableTemplateList::menu_will_show() -> void {
 }
 
 //------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ TableTemplateList::~TableTemplateList() {
 
 //------------------------------------------------------------------------------------------------
 
-bool TableTemplateList::mouse_double_click(mforms::MouseButton button, int x, int y) {
+auto TableTemplateList::mouse_double_click(mforms::MouseButton button, int x, int y) -> bool {
   BaseSnippetList::mouse_double_click(button, x, y);
 
   if (button == MouseButtonLeft) {
@@ -178,7 +178,7 @@ TableTemplatePanel::TableTemplatePanel(wb::WBContextModel *cmodel)
   add(_scroll_panel, true, true);
 }
 
-void TableTemplatePanel::on_action(const std::string &action) {
+auto TableTemplatePanel::on_action(const std::string &action) -> void {
   if (action == "edit_templates") {
     grt::BaseListRef args(true);
     args.ginsert(grt::StringRef(_templates.get_selected_template()));
@@ -207,6 +207,6 @@ void TableTemplatePanel::on_action(const std::string &action) {
   }
 }
 
-void TableTemplatePanel::toolbar_item_activated(mforms::ToolBarItem *item) {
+auto TableTemplatePanel::toolbar_item_activated(mforms::ToolBarItem *item) -> void {
   on_action(item->getInternalName());
 }

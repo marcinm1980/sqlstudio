@@ -42,7 +42,7 @@ class MySQL_invalid_sql_parser_test_suite_yaccTest : public ::testing::Test {
 protected:
   static std::unique_ptr<MysqlInvalidSqlParserData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<MysqlInvalidSqlParserData>();
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
@@ -56,7 +56,7 @@ protected:
       data->userDelimiter = ";;";
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

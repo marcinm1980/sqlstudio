@@ -38,7 +38,7 @@ EditableIconView::EditableIconView() : Gtk::IconView() {
 }
 
 //------------------------------------------------------------------------------
-bool EditableIconView::on_button_press_event(GdkEventButton* event) {
+auto EditableIconView::on_button_press_event(GdkEventButton* event) -> bool {
   // Handle Gtk::IconView event first so it can do its logic before we are in
   const bool ret = Gtk::IconView::on_button_press_event(event);
 
@@ -86,7 +86,7 @@ bool EditableIconView::on_button_press_event(GdkEventButton* event) {
 }
 
 //------------------------------------------------------------------------------
-void EditableIconView::edit_started(Gtk::CellEditable* editable, const Glib::ustring& path) {
+auto EditableIconView::edit_started(Gtk::CellEditable* editable, const Glib::ustring& path) -> void {
   _start_conn.disconnect();
   if (editable)
     _done_conn =
@@ -94,7 +94,7 @@ void EditableIconView::edit_started(Gtk::CellEditable* editable, const Glib::ust
 }
 
 //------------------------------------------------------------------------------
-void EditableIconView::edit_done(Gtk::CellEditable* editable) {
+auto EditableIconView::edit_done(Gtk::CellEditable* editable) -> void {
   Gtk::Entry* entry = static_cast<Gtk::Entry*>(editable);
   if (entry) {
     Gtk::TreeModel::iterator iter = _model->get_iter(_selected_path);

@@ -43,12 +43,12 @@ namespace {
 class DbMySQLScriptSyncTest : public DbMySQLScriptSync {
 protected:
   db_mysql_CatalogRef model_catalog;
-  virtual db_mysql_CatalogRef get_model_catalog() {
+  virtual auto get_model_catalog() -> db_mysql_CatalogRef {
     return model_catalog;
   }
 
 public:
-  void set_model_catalog(const db_mysql_CatalogRef& catalog) {
+  auto set_model_catalog(const db_mysql_CatalogRef& catalog) -> void {
     model_catalog = catalog;
   }
   DbMySQLScriptSyncTest() : DbMySQLScriptSync() {
@@ -60,10 +60,10 @@ protected:
   db_mysql_CatalogRef model_catalog;
   grt::DictRef options;
 
-  virtual db_mysql_CatalogRef get_model_catalog() {
+  virtual auto get_model_catalog() -> db_mysql_CatalogRef {
     return model_catalog;
   }
-  virtual grt::DictRef get_options_as_dict() {
+  virtual auto get_options_as_dict() -> grt::DictRef {
     return options;
   }
 
@@ -72,10 +72,10 @@ public:
     set_model_catalog(cat);
   }
 
-  void set_model_catalog(db_mysql_CatalogRef catalog) {
+  auto set_model_catalog(db_mysql_CatalogRef catalog) -> void {
     model_catalog = catalog;
   }
-  void set_options_as_dict(grt::DictRef options_dict) {
+  auto set_options_as_dict(grt::DictRef options_dict) -> void {
     options = options_dict;
   }
 };
@@ -148,7 +148,7 @@ struct AllObjectsSQL {
   procedure_sql(create_procedure),
   view_sql(create_view) {
   }
-  std::string get_sql() {
+  auto get_sql() -> std::string {
     return schema_sql.append(table1_sql)
     .append(table2_sql)
     .append(create_table1_trigger_delim)
@@ -169,13 +169,13 @@ class ValidateProperty {
 public:
   ValidateProperty(const bool enabled_flag = true) : enabled(enabled_flag){};
   virtual ~ValidateProperty(){};
-  void enable() {
+  auto enable() -> void {
     enabled = true;
   };
-  void disable() {
+  auto disable() -> void {
     enabled = false;
   };
-  virtual void validate(const AllObjectsMWB& objects) = 0;
+  virtual auto validate(const AllObjectsMWB& objects) -> void = 0;
   void operator()(const AllObjectsMWB& objects) {
     if (enabled)
       validate(objects);
@@ -184,7 +184,7 @@ public:
 
 class Table1Validator : public ValidateProperty {
 public:
-  virtual void validate(const AllObjectsMWB& objects) {
+  virtual auto validate(const AllObjectsMWB& objects) -> void {
     EXPECT_TRUE(objects.t1.is_valid()) << "t1 is invalid";
     EXPECT_EQ(objects.t1->columns().count(), 3U) << "unexpected column count for t1";
   };
@@ -192,7 +192,7 @@ public:
 
 class Table2Validator : public ValidateProperty {
 public:
-  virtual void validate(const AllObjectsMWB& objects) {
+  virtual auto validate(const AllObjectsMWB& objects) -> void {
     EXPECT_TRUE(objects.t2.is_valid()) << "t2 is invalid";
     EXPECT_EQ(objects.t2->columns().count(), 1U) << "unexpected column count for t2";
   };
@@ -200,7 +200,7 @@ public:
 
 class ForeignKeyValidator : public ValidateProperty {
 public:
-  virtual void validate(const AllObjectsMWB& objects) {
+  virtual auto validate(const AllObjectsMWB& objects) -> void {
     EXPECT_TRUE(objects.FK.is_valid()) << "FK is invalid";
     EXPECT_EQ(objects.FK->referencedColumns().count(), 1U) << "Wrong referenced column count";
 
@@ -212,7 +212,7 @@ public:
 
 class ViewValidator : public ValidateProperty {
 public:
-  virtual void validate(const AllObjectsMWB& objects) {
+  virtual auto validate(const AllObjectsMWB& objects) -> void {
     EXPECT_TRUE(objects.view.is_valid()) << "View is invalid";
 
     std::string viewdef = objects.view->sqlDefinition();
@@ -222,7 +222,7 @@ public:
 
 class RoutineValidator : public ValidateProperty {
 public:
-  virtual void validate(const AllObjectsMWB& objects) {
+  virtual auto validate(const AllObjectsMWB& objects) -> void {
     EXPECT_TRUE(objects.routine.is_valid()) << "Routine is invalid";
     std::string sqldef = objects.routine->sqlDefinition();
     if (sqldef.find("\n\n") == 0)
@@ -234,7 +234,7 @@ public:
 
 class TriggerValidator : public ValidateProperty {
 public:
-  virtual void validate(const AllObjectsMWB& objects) {
+  virtual auto validate(const AllObjectsMWB& objects) -> void {
     EXPECT_TRUE(objects.trigger.is_valid()) << "Trigger is invalid";
     std::string sqldef = objects.trigger->sqlDefinition();
     if (sqldef.find("\n\n") == 0)
@@ -251,7 +251,7 @@ struct AllObjectsMWBValidator {
   ViewValidator validate_view;
   RoutineValidator validate_routine;
   TriggerValidator validate_trigger;
-  void validate(const AllObjectsMWB& objects) {
+  auto validate(const AllObjectsMWB& objects) -> void {
     validate_t1(objects);
     validate_t2(objects);
     validate_FK(objects);
@@ -273,7 +273,7 @@ struct ModelDiffApplyData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  db_mysql_CatalogRef createCatalogFromScript(const std::string& sql) {
+  auto createCatalogFromScript(const std::string& sql) -> db_mysql_CatalogRef {
     db_mysql_CatalogRef cat= createEmptyCatalog();
     sqlParser->parseSqlScriptString(cat, sql);
     return cat;
@@ -281,7 +281,7 @@ struct ModelDiffApplyData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void applyToModel(const std::vector<std::string>& schemata, db_mysql_CatalogRef org_cat, db_mysql_CatalogRef mod_cat) {
+  auto applyToModel(const std::vector<std::string>& schemata, db_mysql_CatalogRef org_cat, db_mysql_CatalogRef mod_cat) -> void {
     syncPlugin.reset(new DbMySQLScriptSyncTest());
     static_cast<DbMySQLScriptSyncTest*>(syncPlugin.get())->set_model_catalog(mod_cat);
     syncPlugin->init_diff_tree(std::vector<std::string>(), mod_cat, org_cat, grt::StringListRef());
@@ -290,7 +290,7 @@ struct ModelDiffApplyData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  void applySqlToModel(const std::string& sql) {
+  auto applySqlToModel(const std::string& sql) -> void {
     db_mysql_CatalogRef org_cat = createCatalogFromScript(sql);
 
     std::vector<std::string> schemata;
@@ -322,7 +322,7 @@ struct ModelDiffApplyData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  AllObjectsMWB getModelObjects() {
+  auto getModelObjects() -> AllObjectsMWB {
     AllObjectsMWB objects;
     if (tester->getCatalog()->schemata().count() == 0)
       return objects;
@@ -350,7 +350,7 @@ class db_mysql_pluginTest : public ::testing::Test {
 protected:
   static std::unique_ptr<ModelDiffApplyData> data;
 
-  static void SetUpTestSuite() {
+  static auto SetUpTestSuite() -> void {
     data = std::make_unique<ModelDiffApplyData>();
     data->dataDir = testing::Context::get().tmpDataDir();
 
@@ -364,7 +364,7 @@ protected:
     EXPECT_NE(data->sqlParser, nullptr);
   }
 
-  static void TearDownTestSuite() {
+  static auto TearDownTestSuite() -> void {
     data.reset();
   }
 

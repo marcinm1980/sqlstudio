@@ -30,14 +30,14 @@ using namespace mforms;
 
 //--------------------------------------------------------------------------------------------------
 
-Object* Object::retain() {
+auto Object::retain() -> Object* {
   g_atomic_int_inc(&_refcount);
   return this;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Object::release() {
+auto Object::release() -> void {
   if (g_atomic_int_dec_and_test(&_refcount) && _managed) {
     _destroying = true;
     delete this;
@@ -46,37 +46,37 @@ void Object::release() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Object::set_managed() {
+auto Object::set_managed() -> void {
   _managed = true;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Object::set_release_on_add(bool flag) {
+auto Object::set_release_on_add(bool flag) -> void {
   _release_on_add = flag;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Object::is_managed() {
+auto Object::is_managed() -> bool {
   return _managed;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool Object::release_on_add() {
+auto Object::release_on_add() -> bool {
   return _release_on_add;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void Object::set_destroying() {
+auto Object::set_destroying() -> void {
   _destroying = true;
 };
 
 //--------------------------------------------------------------------------------------------------
 
-bool Object::is_destroying() {
+auto Object::is_destroying() -> bool {
   return _destroying;
 };
 
@@ -90,13 +90,13 @@ Object::Object() : _data(nil), _refcount(1), _managed(false), _release_on_add(fa
 
 //--------------------------------------------------------------------------------------------------
 
-void Object::set_data(id data) {
+auto Object::set_data(id data) -> void {
   _data = data;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-id Object::get_data() const {
+auto Object::get_data() const -> id {
   return _data;
 }
 
@@ -122,14 +122,14 @@ Object::~Object() {
 
 //--------------------------------------------------------------------------------------------------
 
-void Object::set_data(void* data, FreeDataFn free_fn) {
+auto Object::set_data(void* data, FreeDataFn free_fn) -> void {
   _data = data;
   _data_free_fn = free_fn;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void* Object::get_data_ptr() const {
+auto Object::get_data_ptr() const -> void* {
   return _data;
 }
 

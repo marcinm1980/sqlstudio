@@ -38,7 +38,7 @@ Mysql_sql_normalizer::Mysql_sql_normalizer() : _cut_sym_count(0) {
   NULL_STATE_KEEPER
 }
 
-std::string Mysql_sql_normalizer::normalize(const std::string &sql, const std::string &schema_name) {
+auto Mysql_sql_normalizer::normalize(const std::string &sql, const std::string &schema_name) -> std::string {
   NULL_STATE_KEEPER
 
   _schema_name = schema_name;
@@ -53,7 +53,7 @@ std::string Mysql_sql_normalizer::normalize(const std::string &sql, const std::s
   return _norm_script;
 }
 
-int Mysql_sql_normalizer::process_sql_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_sql_statement(const SqlAstNode *tree) -> int {
   _cut_sym_count = 0;
 
   if (tree) {
@@ -68,7 +68,7 @@ int Mysql_sql_normalizer::process_sql_statement(const SqlAstNode *tree) {
   return 0; // error count
 }
 
-void Mysql_sql_normalizer::append_stmt_to_script(const std::string &stmt) {
+auto Mysql_sql_normalizer::append_stmt_to_script(const std::string &stmt) -> void {
   if (stmt.empty())
     return;
   if (!_norm_script.empty())
@@ -76,7 +76,7 @@ void Mysql_sql_normalizer::append_stmt_to_script(const std::string &stmt) {
   _norm_script += stmt;
 }
 
-void Mysql_sql_normalizer::qualify_obj_ident(const SqlAstNode *sp_name) {
+auto Mysql_sql_normalizer::qualify_obj_ident(const SqlAstNode *sp_name) -> void {
   if (sp_name) {
     const SqlAstNode *schema_ident = NULL;
     const SqlAstNode *obj_ident = NULL;
@@ -114,7 +114,7 @@ void Mysql_sql_normalizer::qualify_obj_ident(const SqlAstNode *sp_name) {
   }
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   typedef Parse_result (Mysql_sql_normalizer::*statement_processor)(const SqlAstNode *);
   static statement_processor proc_arr[] = {
     &Mysql_sql_normalizer::process_create_table_statement,
@@ -138,7 +138,7 @@ Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_statemen
   return pr_irrelevant;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_table_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_table_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   const SqlAstNode *create2_item = tree->subitem(sql::_create2);
 
   // check if statement is relevant
@@ -148,7 +148,7 @@ Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_table_st
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_view_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_view_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   const SqlAstNode *view_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -168,7 +168,7 @@ Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_view_sta
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_routine_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_routine_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   const SqlAstNode *routine_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -195,36 +195,36 @@ Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_routine_
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_index_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_index_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   // check if statement is relevant
   if (!tree->find_subseq(sql::_INDEX_SYM, sql::_ident))
     return pr_irrelevant;
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_logfile_group_statement(
-  const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_logfile_group_statement(
+  const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_CREATE, sql::_LOGFILE_SYM, sql::_GROUP_SYM))
     return pr_irrelevant;
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_tablespace_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_tablespace_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_CREATE, sql::_TABLESPACE))
     return pr_irrelevant;
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_server_link_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_server_link_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_CREATE, sql::_server_def))
     return pr_irrelevant;
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_trigger_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_trigger_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   const SqlAstNode *trigger_tail = NULL;
   {
     static sql::symbol path1[] = {sql::_view_or_trigger_or_sp_or_event, sql::_definer_tail, sql::_};
@@ -267,14 +267,14 @@ Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_trigger_
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_create_schema_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_create_schema_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   // check if statement is relevant
   if (!tree->subseq(sql::_CREATE, sql::_DATABASE))
     return pr_irrelevant;
   return pr_processed;
 }
 
-Mysql_sql_normalizer::Parse_result Mysql_sql_normalizer::process_insert_statement(const SqlAstNode *tree) {
+auto Mysql_sql_normalizer::process_insert_statement(const SqlAstNode *tree) -> Mysql_sql_normalizer::Parse_result {
   _norm_stmt.clear();
   _common_sql = "INSERT INTO ";
 

@@ -47,18 +47,18 @@ public:
     set_status_text("");
   }
 
-  bool perform_fetch() {
+  auto perform_fetch() -> bool {
     execute_grt_task(std::bind(&FetchSchemaContentsProgressPage::do_fetch, this), false);
     return true;
   }
 
-  bool perform_check() {
+  auto perform_check() -> bool {
     _finished = true;
 
     return true;
   }
 
-  grt::ValueRef do_fetch() {
+  auto do_fetch() -> grt::ValueRef {
     grt::StringListRef selection(grt::StringListRef::cast_from(values().get("selectedSchemata")));
     std::vector<std::string> names;
 
@@ -78,7 +78,7 @@ public:
     return grt::ValueRef();
   }
 
-  virtual void enter(bool advancing) {
+  virtual auto enter(bool advancing) -> void {
     if (advancing) {
       _finished = false;
       reset_tasks();
@@ -86,11 +86,11 @@ public:
     WizardProgressPage::enter(advancing);
   }
 
-  virtual bool allow_next() {
+  virtual auto allow_next() -> bool {
     return _finished;
   }
 
-  void set_db_plugin(Db_plugin *dbplugin) {
+  auto set_db_plugin(Db_plugin *dbplugin) -> void {
     _dbplugin = dbplugin;
   }
 

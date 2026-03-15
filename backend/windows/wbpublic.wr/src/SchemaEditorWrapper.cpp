@@ -41,7 +41,7 @@ SchemaEditorWrapper::SchemaEditorWrapper(::bec::SchemaEditorBE *inn) : DBObjectE
 
 //--------------------------------------------------------------------------------------------------
 
-::bec::SchemaEditorBE *SchemaEditorWrapper::get_unmanaged_object() {
+auto SchemaEditorWrapper::get_unmanaged_object() -> ::bec::SchemaEditorBE * {
   return static_cast<::bec::SchemaEditorBE *>(inner);
 }
 

@@ -30,16 +30,16 @@
 
 DEFAULT_LOG_DOMAIN("GeomDrawBox");
 
-void GeomDrawBox::draw_ring(cairo_t *cr, OGRRawPoint *points, int num_points, double scale, double x, double y,
-                            double height) {
+auto GeomDrawBox::draw_ring(cairo_t *cr, OGRRawPoint *points, int num_points, double scale, double x, double y,
+                            double height) -> void {
   cairo_move_to(cr, (points[0].x - x) * scale, height - (points[0].y - y) * scale);
   for (int i = 1; i < num_points; i++) {
     cairo_line_to(cr, (points[i].x - x) * scale, height - (points[i].y - y) * scale);
   }
 }
 
-void GeomDrawBox::draw_ring_vertices(cairo_t *cr, OGRRawPoint *points, int num_points, double scale, double x, double y,
-                                     double height) {
+auto GeomDrawBox::draw_ring_vertices(cairo_t *cr, OGRRawPoint *points, int num_points, double scale, double x, double y,
+                                     double height) -> void {
   cairo_arc(cr, (points[0].x - x) * scale, height - (points[0].y - y) * scale, 2, 0, 2 * M_PI);
   cairo_fill(cr);
   for (int i = 1; i < num_points; i++) {
@@ -48,7 +48,7 @@ void GeomDrawBox::draw_ring_vertices(cairo_t *cr, OGRRawPoint *points, int num_p
   }
 }
 
-void GeomDrawBox::draw_polygon(cairo_t *cr, OGRPolygon *poly, double scale, double x, double y, double height) {
+auto GeomDrawBox::draw_polygon(cairo_t *cr, OGRPolygon *poly, double scale, double x, double y, double height) -> void {
   const OGRLinearRing *ring = poly->getExteriorRing();
   if (ring->getNumPoints() > 0) {
     OGRRawPoint *points = new OGRRawPoint[ring->getNumPoints()];
@@ -68,7 +68,7 @@ void GeomDrawBox::draw_polygon(cairo_t *cr, OGRPolygon *poly, double scale, doub
   }
 }
 
-void GeomDrawBox::set_data(const std::string &text) {
+auto GeomDrawBox::set_data(const std::string &text) -> void {
   spatial::Importer importer;
   importer.import_from_mysql(text);
   _srid = importer.getSrid();
@@ -76,11 +76,11 @@ void GeomDrawBox::set_data(const std::string &text) {
   set_needs_repaint();
 }
 
-int GeomDrawBox::getSrid() const {
+auto GeomDrawBox::getSrid() const -> int {
   return _srid;
 }
 
-void GeomDrawBox::draw_geometry(cairo_t *cr, OGRGeometry *geom, double scale, double x, double y, double height) {
+auto GeomDrawBox::draw_geometry(cairo_t *cr, OGRGeometry *geom, double scale, double x, double y, double height) -> void {
   switch (geom->getGeometryType()) {
     case wkbPolygon:
       draw_polygon(cr, dynamic_cast<OGRPolygon *>(geom), scale, x, y, height);
@@ -96,7 +96,7 @@ void GeomDrawBox::draw_geometry(cairo_t *cr, OGRGeometry *geom, double scale, do
   }
 }
 
-void GeomDrawBox::repaint(cairo_t *cr, int x, int y, int w, int h) {
+auto GeomDrawBox::repaint(cairo_t *cr, int x, int y, int w, int h) -> void {
   if (_geom) {
     OGREnvelope env;
     _geom->getEnvelope(&env);

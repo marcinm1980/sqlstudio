@@ -43,20 +43,20 @@ App::App(DockingPointDelegate *delegate, bool delete_on_destroy)
 
 //--------------------------------------------------------------------------------------------------
 
-void App::instantiate(DockingPointDelegate *delegate, bool delete_on_destroy) {
+auto App::instantiate(DockingPointDelegate *delegate, bool delete_on_destroy) -> void {
   singleton = new App(delegate, delete_on_destroy);
   singleton->_app_impl = &ControlFactory::get_instance()->_app_impl;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-App *App::get() {
+auto App::get() -> App * {
   return singleton;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string App::get_resource_path(const std::string &file) {
+auto App::get_resource_path(const std::string &file) -> std::string {
   std::string ret;
   if (_app_impl->get_resource_path)
     ret = _app_impl->get_resource_path(this, file);
@@ -67,7 +67,7 @@ std::string App::get_resource_path(const std::string &file) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string App::get_executable_path(const std::string &file) {
+auto App::get_executable_path(const std::string &file) -> std::string {
   std::string ret;
   if (_app_impl->get_executable_path)
     ret = _app_impl->get_executable_path(this, file);
@@ -78,7 +78,7 @@ std::string App::get_executable_path(const std::string &file) {
 
 //--------------------------------------------------------------------------------------------------
 
-void App::set_status_text(const std::string &text) {
+auto App::set_status_text(const std::string &text) -> void {
   if (_app_impl->set_status_text)
     _app_impl->set_status_text(this, text);
 }
@@ -88,25 +88,25 @@ void App::set_status_text(const std::string &text) {
 /**
  * Returns the bounds of the main application window.
  */
-base::Rect App::get_application_bounds() {
+auto App::get_application_bounds() -> base::Rect {
   return _app_impl->get_application_bounds(this);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int App::enter_event_loop(float timeout) {
+auto App::enter_event_loop(float timeout) -> int {
   return _app_impl->enter_event_loop(this, timeout);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void App::exit_event_loop(int retcode) {
+auto App::exit_event_loop(int retcode) -> void {
   _app_impl->exit_event_loop(this, retcode);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-float App::backing_scale_factor() {
+auto App::backing_scale_factor() -> float {
   if (_app_impl->backing_scale_factor != nullptr)
     return _app_impl->backing_scale_factor(this);
   return 1.0;
@@ -114,7 +114,7 @@ float App::backing_scale_factor() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool App::isDarkModeActive() {
+auto App::isDarkModeActive() -> bool {
   if (_app_impl->isDarkModeActive != nullptr)
     return _app_impl->isDarkModeActive(this);
 

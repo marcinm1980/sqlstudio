@@ -62,54 +62,54 @@ class PythonDebugger : public base::trackable {
   bool _pause_clicked;
   bool _program_stopped;
 
-  void show_stack();
+  auto show_stack() -> void;
 
-  bool ensure_code_saved();
+  auto ensure_code_saved() -> bool;
 
-  void edit_breakpoint(mforms::TreeNodeRef node, int column, std::string value);
-  void line_gutter_clicked(int margin, int line, mforms::ModifierKey mods, GRTCodeEditor *editor);
-  void editor_text_changed(int line, int linesAdded, GRTCodeEditor *editor);
-  void stack_selected();
+  auto edit_breakpoint(mforms::TreeNodeRef node, int column, std::string value) -> void;
+  auto line_gutter_clicked(int margin, int line, mforms::ModifierKey mods, GRTCodeEditor *editor) -> void;
+  auto editor_text_changed(int line, int linesAdded, GRTCodeEditor *editor) -> void;
+  auto stack_selected() -> void;
 
-  bool heartbeat_timeout();
+  auto heartbeat_timeout() -> bool;
 
 private:
-  bool toggle_breakpoint(const char *file, int line);
+  auto toggle_breakpoint(const char *file, int line) -> bool;
 
 public:
-  static PythonDebugger *from_cobject(PyObject *cobj);
-  PyObject *as_cobject();
+  static auto from_cobject(PyObject *cobj) -> PythonDebugger *;
+  auto as_cobject() -> PyObject *;
 
-  void debug_print(const std::string &s);
-  void ui_clear_breakpoints();
-  void ui_add_breakpoint(const char *file, int line, const char *condition);
-  const char *ui_program_stopped(const char *file, int line, int reason);
-  void ui_clear_stack();
-  void ui_add_stack(const char *location, const char *file, int line);
+  auto debug_print(const std::string &s) -> void;
+  auto ui_clear_breakpoints() -> void;
+  auto ui_add_breakpoint(const char *file, int line, const char *condition) -> void;
+  auto ui_program_stopped(const char *file, int line, int reason) -> const char *;
+  auto ui_clear_stack() -> void;
+  auto ui_add_stack(const char *location, const char *file, int line) -> void;
 
-  void ui_clear_variables();
-  void ui_add_variable(const char *varname, const char *value);
+  auto ui_clear_variables() -> void;
+  auto ui_add_variable(const char *varname, const char *value) -> void;
 
 public:
   PythonDebugger(GRTShellWindow *shell, mforms::TabView *tabview);
-  void init_pdb();
+  auto init_pdb() -> void;
 
-  bool program_stopped() {
+  auto program_stopped() -> bool {
     return _program_stopped;
   }
 
-  void editor_added(GRTCodeEditor *editor);
-  void editor_closed(GRTCodeEditor *editor);
+  auto editor_added(GRTCodeEditor *editor) -> void;
+  auto editor_closed(GRTCodeEditor *editor) -> void;
 
-  void refresh_file(const std::string &file);
+  auto refresh_file(const std::string &file) -> void;
 
-  void run(GRTCodeEditor *editor, bool stepping = false);
-  void stop();
-  void pause();
-  void step_into();
-  void step();
-  void step_out();
-  void continue_();
+  auto run(GRTCodeEditor *editor, bool stepping = false) -> void;
+  auto stop() -> void;
+  auto pause() -> void;
+  auto step_into() -> void;
+  auto step() -> void;
+  auto step_out() -> void;
+  auto continue_() -> void;
 };
 
 #endif

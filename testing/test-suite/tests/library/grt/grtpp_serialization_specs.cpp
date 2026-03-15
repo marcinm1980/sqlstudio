@@ -35,7 +35,7 @@
 
 using namespace grt;
 //
-extern void register_all_metaclasses();
+extern auto register_all_metaclasses() -> void;
 
 //-----------------------------------------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ protected:
     MySqlStudioTester::reinitGRT();
   }
 
-  void runSerialization(const ValueRef& val) {
+  auto runSerialization(const ValueRef& val) -> void {
     static const std::string filename(outputDir + "/serialization_test.xml");
     GRT::get()->serialize(val, filename);
     ValueRef res_val(GRT::get()->unserialize(filename));

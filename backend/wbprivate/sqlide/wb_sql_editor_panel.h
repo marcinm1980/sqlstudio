@@ -91,37 +91,37 @@ class MYSQLWBBACKEND_PUBLIC_FUNC SqlEditorPanel : public mforms::AppView {
   bool _was_empty;
   bool _is_scratch;
 
-  mforms::ToolBar *setup_editor_toolbar();
-  void update_title();
+  auto setup_editor_toolbar() -> mforms::ToolBar *;
+  auto update_title() -> void;
 
-  void dock_result_panel(SqlEditorResult *result);
-  void show_find_panel(mforms::CodeEditor *editor, bool show);
+  auto dock_result_panel(SqlEditorResult *result) -> void;
+  auto show_find_panel(mforms::CodeEditor *editor, bool show) -> void;
 
-  void dispose_recordset(Recordset::Ptr rs_ptr);
-  bool on_close_by_user();
-  void on_recordset_context_menu_show(Recordset::Ptr rs_ptr);
+  auto dispose_recordset(Recordset::Ptr rs_ptr) -> void;
+  auto on_close_by_user() -> bool;
+  auto on_recordset_context_menu_show(Recordset::Ptr rs_ptr) -> void;
 
-  void lower_tab_switched();
-  bool lower_tab_closing(int tab);
-  void lower_tab_closed(mforms::View *page, int tab);
+  auto lower_tab_switched() -> void;
+  auto lower_tab_closing(int tab) -> bool;
+  auto lower_tab_closed(mforms::View *page, int tab) -> void;
   void lower_tab_reordered(mforms::View *, int, int);
 
-  void result_removed();
+  auto result_removed() -> void;
 
-  void apply_clicked();
-  void revert_clicked();
+  auto apply_clicked() -> void;
+  auto revert_clicked() -> void;
 
-  void resultset_edited();
-  void splitter_resized();
+  auto resultset_edited() -> void;
+  auto splitter_resized() -> void;
 
-  void tab_menu_will_show();
-  void rename_tab_clicked();
-  void pin_tab_clicked();
-  void close_tab_clicked();
-  void close_other_tabs_clicked();
+  auto tab_menu_will_show() -> void;
+  auto rename_tab_clicked() -> void;
+  auto pin_tab_clicked() -> void;
+  auto close_tab_clicked() -> void;
+  auto close_other_tabs_clicked() -> void;
 
-  bool is_pinned(int tab);
-  void tab_pinned(int tab, bool flag);
+  auto is_pinned(int tab) -> bool;
+  auto tab_pinned(int tab, bool flag) -> void;
 
   void limit_rows(mforms::ToolBarItem *);
 
@@ -130,21 +130,21 @@ public:
   SqlEditorPanel(SqlEditorForm *owner, bool is_scratch, bool start_collapsed);
   ~SqlEditorPanel();
 
-  std::shared_ptr<MySQLEditor> editor_be() {
+  auto editor_be() -> std::shared_ptr<MySQLEditor> {
     return _editor;
   }
-  db_query_QueryEditorRef grtobj();
+  auto grtobj() -> db_query_QueryEditorRef;
 
-  mforms::ToolBar *get_toolbar();
-  virtual void set_title(const std::string &title);
+  auto get_toolbar() -> mforms::ToolBar *;
+  virtual auto set_title(const std::string &title) -> void;
 
-  void update_limit_rows();
+  auto update_limit_rows() -> void;
 
-  SqlEditorForm *owner() {
+  auto owner() -> SqlEditorForm * {
     return _form;
   }
 
-  bool is_scratch() {
+  auto is_scratch() -> bool {
     return _is_scratch;
   }
 
@@ -163,56 +163,56 @@ public:
     }
     AutoSaveInfo(const std::string &info_file);
 
-    static AutoSaveInfo old_scratch(const std::string &scratch_file);
-    static AutoSaveInfo old_autosave(const std::string &autosave_file);
+    static auto old_scratch(const std::string &scratch_file) -> AutoSaveInfo;
+    static auto old_autosave(const std::string &autosave_file) -> AutoSaveInfo;
   };
 
   enum LoadResult { Cancelled, Loaded, RunInstead };
 
   LoadResult load_from(const std::string &file, const std::string &encoding = "", bool keep_dirty = false);
-  bool load_autosave(const AutoSaveInfo &info, const std::string &text_file);
+  auto load_autosave(const AutoSaveInfo &info, const std::string &text_file) -> bool;
 
-  virtual bool can_close();
-  virtual void close();
+  virtual auto can_close() -> bool;
+  virtual auto close() -> void;
 
-  bool save();
-  bool save_as(const std::string &file);
-  void revert_to_saved();
+  auto save() -> bool;
+  auto save_as(const std::string &file) -> bool;
+  auto revert_to_saved() -> void;
 
-  void auto_save(const std::string &directory);
-  void delete_auto_save(const std::string &directory);
-  std::string autosave_file_suffix();
+  auto auto_save(const std::string &directory) -> void;
+  auto delete_auto_save(const std::string &directory) -> void;
+  auto autosave_file_suffix() -> std::string;
 
-  void set_filename(const std::string &f);
-  std::string filename() const {
+  auto set_filename(const std::string &f) -> void;
+  auto filename() const -> std::string {
     return _filename;
   }
 
-  bool is_dirty() const;
-  void check_external_file_changes();
+  auto is_dirty() const -> bool;
+  auto check_external_file_changes() -> void;
 
-  std::pair<const char *, std::size_t> text_data() const;
+  auto text_data() const -> std::pair<const char *, std::size_t>;
 
-  void list_members();
-  void jump_to_placeholder();
+  auto list_members() -> void;
+  auto jump_to_placeholder() -> void;
 
 public:
-  void query_started(bool retain_old_recordsets);
-  void query_finished();
-  void query_failed(const std::string &message);
+  auto query_started(bool retain_old_recordsets) -> void;
+  auto query_finished() -> void;
+  auto query_failed(const std::string &message) -> void;
 
   // recordset management
-  SqlEditorResult *active_result_panel();
+  auto active_result_panel() -> SqlEditorResult *;
 
-  SqlEditorResult *result_panel(int i);
+  auto result_panel(int i) -> SqlEditorResult *;
 
-  size_t result_panel_count();
-  size_t resultset_count();
+  auto result_panel_count() -> size_t;
+  auto resultset_count() -> size_t;
 
-  SqlEditorResult *add_panel_for_recordset(Recordset::Ref rset);
-  void add_panel_for_recordset_from_main(Recordset::Ref rset);
+  auto add_panel_for_recordset(Recordset::Ref rset) -> SqlEditorResult *;
+  auto add_panel_for_recordset_from_main(Recordset::Ref rset) -> void;
 
-  std::list<SqlEditorResult *> dirty_result_panels();
+  auto dirty_result_panels() -> std::list<SqlEditorResult *>;
 };
 
 #endif /* defined(__MySQLMySqlStudio__wb_sql_editor_panel__) */

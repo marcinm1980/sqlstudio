@@ -37,10 +37,10 @@ namespace MySQL {
         typedef ManagedRef<::Recordset> ^ Ref;
         RecordsetWrapper(Ref ref);
         RecordsetWrapper(IntPtr nref_ptr);
-        Ref ref() {
+        auto ref() -> Ref {
           return _ref;
         }
-        IntPtr ref_intptr() {
+        auto ref_intptr() -> IntPtr {
           return ~_ref;
         }
 
@@ -50,18 +50,18 @@ namespace MySQL {
 
       public:
         MySQL::Grt::ActionList ^ action_list;
-        void register_edit_actions();
+        auto register_edit_actions() -> void;
 
-        long long key() {
+        auto key() -> long long {
           return _ref->key();
         }
         String ^ caption() { return CppStringToNative(_ref->caption()); } void caption(String ^ value) {
           _ref->caption(NativeToCppString(value));
         }
-        bool can_close() {
+        auto can_close() -> bool {
           return _ref->can_close();
         }
-        bool close() {
+        auto close() -> bool {
           if ((void*)~_ref != NULL)
             return _ref->close();
           return true;
@@ -69,90 +69,90 @@ namespace MySQL {
 
         String ^ status_text() { return CppStringToNative(_ref->status_text()); }
 
-          int row_count() {
+          auto row_count() -> int {
           return (int)_ref->row_count();
         }
 
         void pending_changes(int % upd_count, int % ins_count, int % del_count);
-        bool has_pending_changes() {
+        auto has_pending_changes() -> bool {
           return _ref->has_pending_changes();
         }
-        void apply_changes() {
+        auto apply_changes() -> void {
           _ref->apply_changes();
         }
-        void rollback() {
+        auto rollback() -> void {
           _ref->rollback();
         }
 
-        void limit_rows(bool value) {
+        auto limit_rows(bool value) -> void {
           _ref->limit_rows(value);
         }
-        bool limit_rows() {
+        auto limit_rows() -> bool {
           return _ref->limit_rows();
         }
-        bool limit_rows_applicable() {
+        auto limit_rows_applicable() -> bool {
           return _ref->limit_rows_applicable();
         }
-        int limit_rows_count() {
+        auto limit_rows_count() -> int {
           return _ref->limit_rows_count();
         }
 
-        int real_row_count() {
+        auto real_row_count() -> int {
           return (int)_ref->real_row_count();
         }
 
-        void sort_by(int column, int direction, bool retaining) {
+        auto sort_by(int column, int direction, bool retaining) -> void {
           _ref->sort_by((::ColumnId)column, direction, retaining);
         }
 
         bool delete_nodes(List<NodeIdWrapper ^> ^ nodes);
 
-        bool has_column_filters() {
+        auto has_column_filters() -> bool {
           return _ref->has_column_filters();
         }
-        bool has_column_filter(int column) {
+        auto has_column_filter(int column) -> bool {
           return _ref->has_column_filter((::ColumnId)column);
         }
-        String ^ get_column_filter_expr(int column) {
+        auto get_column_filter_expr(int column) -> String ^ {
           return CppStringToNative(_ref->get_column_filter_expr((::ColumnId)column));
         } void set_column_filter(int column, System::String ^ filter_expr) {
           _ref->set_column_filter((::ColumnId)column, NativeToCppString(filter_expr));
         }
-        void reset_column_filter(int column) {
+        auto reset_column_filter(int column) -> void {
           _ref->reset_column_filter((::ColumnId)column);
         }
-        void reset_column_filters() {
+        auto reset_column_filters() -> void {
           _ref->reset_column_filters();
         }
-        int column_filter_icon_id() {
+        auto column_filter_icon_id() -> int {
           return (int)_ref->column_filter_icon_id();
         }
 
-        String ^ data_search_string() {
+        auto data_search_string() -> String ^ {
           return CppStringToNative(_ref->data_search_string());
         } void set_data_search_string(String ^ value) {
           _ref->set_data_search_string(NativeToCppString(value));
         }
-        void reset_data_search_string() {
+        auto reset_data_search_string() -> void {
           _ref->reset_data_search_string();
         }
 
         void copy_rows_to_clipboard(List<int> ^ indeces);
-        void copy_field_to_clipboard(int row, int column) {
+        auto copy_field_to_clipboard(int row, int column) -> void {
           _ref->copy_field_to_clipboard(row, column);
         }
 
         void set_flush_ui_changes_cb(DelegateSlot0<void, void>::ManagedDelegate ^ apply);
 
-        bool inserts_editor() {
+        auto inserts_editor() -> bool {
           return _ref->inserts_editor();
         }
 
-        String^ getFont() {
+        auto getFont() -> String^ {
           return CppStringToNative(_ref->getFont());
         }
 
-        float getFontSize() {
+        auto getFontSize() -> float {
           return _ref->getFontSize();
         }
 

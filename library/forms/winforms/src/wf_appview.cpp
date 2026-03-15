@@ -52,7 +52,7 @@ AppViewDockContent::~AppViewDockContent() {
 
 //--------------------------------------------------------------------------------------------------
 
-void AppViewDockContent::SetBackend(mforms::AppView *backend) {
+auto AppViewDockContent::SetBackend(mforms::AppView *backend) -> void {
   appview = backend;
   // Don't hold a reference, the wrapper should be deleted when the backend object is deleted,
   // not the other way around.. this would cause a circular reference and leak
@@ -61,25 +61,25 @@ void AppViewDockContent::SetBackend(mforms::AppView *backend) {
 
 //--------------------------------------------------------------------------------------------------
 
-mforms::AppView *AppViewDockContent::GetBackend() {
+auto AppViewDockContent::GetBackend() -> mforms::AppView * {
   return appview;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ AppViewDockContent::GetAppViewIdentifier() {
+auto AppViewDockContent::GetAppViewIdentifier() -> String ^ {
   return CppStringToNative(appview->identifier());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ MySQL::Forms::AppViewDockContent::GetContextName() {
+auto MySQL::Forms::AppViewDockContent::GetContextName() -> String ^ {
   return CppStringToNative(appview->get_form_context_name());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-MenuStrip ^ AppViewDockContent::GetMenuBar() {
+auto AppViewDockContent::GetMenuBar() -> MenuStrip ^ {
   mforms::MenuBar *menu = appview->get_menubar();
   if (menu == NULL)
     return nullptr;
@@ -89,7 +89,7 @@ MenuStrip ^ AppViewDockContent::GetMenuBar() {
 
 //--------------------------------------------------------------------------------------------------
 
-ToolStrip ^ AppViewDockContent::GetToolBar() {
+auto AppViewDockContent::GetToolBar() -> ToolStrip ^ {
   mforms::ToolBar *toolbar = appview->get_toolbar();
   if (toolbar == NULL)
     return nullptr;
@@ -99,19 +99,19 @@ ToolStrip ^ AppViewDockContent::GetToolBar() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool AppViewDockContent::CanCloseDocument() {
+auto AppViewDockContent::CanCloseDocument() -> bool {
   return appview->on_close();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void AppViewDockContent::CloseDocument() {
+auto AppViewDockContent::CloseDocument() -> void {
   appview->close();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-String ^ AppViewDockContent::GetTitle() {
+auto AppViewDockContent::GetTitle() -> String ^ {
   return CppStringToNativeRaw(appview->get_title());
 }
 
@@ -123,7 +123,7 @@ void AppViewDockContent::SetTitle(String ^ title) {
 
 //--------------------------------------------------------------------------------------------------
 
-void AppViewDockContent::UpdateColors() {
+auto AppViewDockContent::UpdateColors() -> void {
   // Change our own background or that of only child, if our content was embedded into a DrawablePanel
   // to implement a design with embedded menu/toolbar)
   if (Controls->Count > 0 && is<DrawablePanel>(Controls[0]))
@@ -155,7 +155,7 @@ AppViewWrapper::AppViewWrapper(mforms::AppView *app) : BoxWrapper(app), appview(
 
 //--------------------------------------------------------------------------------------------------
 
-bool AppViewWrapper::create(mforms::AppView *backend, bool horizontal) {
+auto AppViewWrapper::create(mforms::AppView *backend, bool horizontal) -> bool {
   AppViewWrapper *wrapper = new AppViewWrapper(backend);
   wrapper->set_resize_mode(AutoResizeMode::ResizeNone);
 
@@ -180,13 +180,13 @@ bool AppViewWrapper::create(mforms::AppView *backend, bool horizontal) {
  * Called when this app view is about to be docked in a host container. Create the frontend
  * tab document if not yet done and return it to the caller.
  */
-AppViewDockContent ^ AppViewWrapper::GetHost() {
+auto AppViewWrapper::GetHost() -> AppViewDockContent ^ {
   return host;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void AppViewWrapper::init() {
+auto AppViewWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
   f->_app_view_impl.create = &AppViewWrapper::create;
 }

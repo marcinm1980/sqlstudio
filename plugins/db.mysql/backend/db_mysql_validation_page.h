@@ -56,21 +56,21 @@ public:
   DbMySQLValidationPage();
   ~DbMySQLValidationPage();
 
-  void run_validation();
+  auto run_validation() -> void;
 
-  void validation_finished(grt::ValueRef res);
+  auto validation_finished(grt::ValueRef res) -> void;
   grt::ValueRef validation_task(grt::StringRef);
 
-  void validation_message(const grt::Message &);
-  void validation_finished_cb(Validation_finished_cb cb) {
+  auto validation_message(const grt::Message &) -> void;
+  auto validation_finished_cb(Validation_finished_cb cb) -> void {
     _validation_finished_cb = cb;
   }
 
-  void validation_step_finished_cb(Validation_step_finished_cb cb) {
+  auto validation_step_finished_cb(Validation_step_finished_cb cb) -> void {
     _validation_step_finished_cb = cb;
   }
 
-  bec::MessageListBE *get_messages_list() {
+  auto get_messages_list() -> bec::MessageListBE * {
     return messages_list;
   }
 };

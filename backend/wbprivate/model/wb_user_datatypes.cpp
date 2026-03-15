@@ -47,12 +47,12 @@ UserDatatypeList::~UserDatatypeList() {
   delete _menu;
 }
 
-void UserDatatypeList::handle_menu_action(const std::string &action) {
+auto UserDatatypeList::handle_menu_action(const std::string &action) -> void {
   if (action == "edit")
     _wb->get_model_context()->show_user_type_editor(studio_physical_ModelRef::cast_from(_catalog->owner()));
 }
 
-void UserDatatypeList::set_catalog(const db_CatalogRef &catalog) {
+auto UserDatatypeList::set_catalog(const db_CatalogRef &catalog) -> void {
   _catalog = catalog;
 }
 
@@ -70,7 +70,7 @@ static struct TypeIcon {
                   {"structured", "db.DatatypeGroup.userdefined.16x16.png"},
                   {NULL, NULL}};
 
-void UserDatatypeList::refresh() {
+auto UserDatatypeList::refresh() -> void {
   clear();
 
   std::string deficon = bec::IconManager::get_instance()->get_icon_path("db.DatatypeGroup.userdefined.16x16.png");

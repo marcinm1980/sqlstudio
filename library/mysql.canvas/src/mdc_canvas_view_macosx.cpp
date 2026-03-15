@@ -27,7 +27,7 @@
 #include "mdc_canvas_view_macosx.h"
 
 namespace mdc {
-  std::string detect_opengl_version() {
+  auto detect_opengl_version() -> std::string {
     return "2.0"; // XXX
   }
 };
@@ -69,13 +69,13 @@ QuartzCanvasView::~QuartzCanvasView() {
  * As the base class does not allow to pass it in the repaint() function an additional call is needed
  * to set the context for the next paint cycle.
  */
-void QuartzCanvasView::set_target_context(CGContextRef cgContext) {
+auto QuartzCanvasView::set_target_context(CGContextRef cgContext) -> void {
   _context = cgContext;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void QuartzCanvasView::update_view_size(int width, int height) {
+auto QuartzCanvasView::update_view_size(int width, int height) -> void {
   if (_view_width != width || _view_height != height) {
     _view_width = width;
     _view_height = height;
@@ -89,14 +89,14 @@ void QuartzCanvasView::update_view_size(int width, int height) {
 
 //--------------------------------------------------------------------------------------------------
 
-void QuartzCanvasView::begin_repaint(int, int, int, int) {
+auto QuartzCanvasView::begin_repaint(int, int, int, int) -> void {
   _crsurface = cairo_quartz_surface_create_for_cg_context(_context, _view_width, _view_height);
   _cairo->update_cairo_backend(_crsurface);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void QuartzCanvasView::end_repaint() {
+auto QuartzCanvasView::end_repaint() -> void {
   _context = NULL;
 
   cairo_surface_destroy(_crsurface);

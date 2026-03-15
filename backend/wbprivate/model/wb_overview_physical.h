@@ -41,17 +41,17 @@ namespace wb {
     class PhysicalSchemaNode;
 
     class PhysicalSchemataNode : public OverviewBE::ContainerNode {
-      virtual OverviewBE::Node *create_child_node(db_SchemaRef schema);
+      virtual auto create_child_node(db_SchemaRef schema) -> OverviewBE::Node *;
 
       studio_physical_ModelRef model;
 
-      virtual bool add_object(WBContext *wb);
-      virtual void delete_object(WBContext *wb);
-      virtual void refresh_children();
+      virtual auto add_object(WBContext *wb) -> bool;
+      virtual auto delete_object(WBContext *wb) -> void;
+      virtual auto refresh_children() -> void;
 
     public:
       PhysicalSchemataNode(studio_physical_ModelRef model);
-      virtual void init();
+      virtual auto init() -> void;
     };
 
     class SQLScriptsNode : public OverviewBE::ContainerNode {
@@ -60,15 +60,15 @@ namespace wb {
       std::string id;
       studio_physical_ModelRef _model;
 
-      bool add_new(WBContext *wb);
+      auto add_new(WBContext *wb) -> bool;
 
     public:
       SQLScriptsNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner);
 
-      virtual void refresh_children();
+      virtual auto refresh_children() -> void;
 
-      virtual int get_popup_menu_items(WBContext *wb, bec::MenuItemList &items);
-      virtual std::string get_unique_id() {
+      virtual auto get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int;
+      virtual auto get_unique_id() -> std::string {
         return id;
       }
     };
@@ -79,15 +79,15 @@ namespace wb {
       std::string id;
       studio_physical_ModelRef _model;
 
-      bool add_new(WBContext *wb);
+      auto add_new(WBContext *wb) -> bool;
 
     public:
       NotesNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner);
 
-      virtual void refresh_children();
+      virtual auto refresh_children() -> void;
 
-      virtual int get_popup_menu_items(WBContext *wb, bec::MenuItemList &items);
-      virtual std::string get_unique_id() {
+      virtual auto get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int;
+      virtual auto get_unique_id() -> std::string {
         return id;
       }
     };
@@ -124,59 +124,59 @@ namespace wb {
   class MYSQLWBBACKEND_PUBLIC_FUNC PhysicalOverviewBE : public OverviewBE, public base::Observer {
     studio_physical_ModelRef _model;
 
-    virtual OverviewBE::ContainerNode *create_root_node(studio_physical_ModelRef model, PhysicalOverviewBE *owner);
+    virtual auto create_root_node(studio_physical_ModelRef model, PhysicalOverviewBE *owner) -> OverviewBE::ContainerNode *;
 
   protected:
     mforms::MenuBar *_menu;
     mforms::ToolBar *_toolbar;
     int _schemata_node_index;
 
-    void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
-    void update_toolbar_icons();
+    auto handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) -> void;
+    auto update_toolbar_icons() -> void;
 
   public: // backend internal
-    virtual std::string identifier() const;
-    virtual std::string get_title();
+    virtual auto identifier() const -> std::string;
+    virtual auto get_title() -> std::string;
 
-    virtual std::string get_form_context_name() const;
+    virtual auto get_form_context_name() const -> std::string;
 
-    virtual void send_refresh_diagram(const model_DiagramRef &view);
-    void send_refresh_users();
-    void send_refresh_roles();
-    void send_refresh_scripts();
-    void send_refresh_notes();
-    void send_refresh_schema_list();
-    void send_refresh_for_schema(const db_SchemaRef &schema, bool refresh_object_itself);
-    void send_refresh_for_schema_object(const GrtObjectRef &object, bool refresh_object_itself);
+    virtual auto send_refresh_diagram(const model_DiagramRef &view) -> void;
+    auto send_refresh_users() -> void;
+    auto send_refresh_roles() -> void;
+    auto send_refresh_scripts() -> void;
+    auto send_refresh_notes() -> void;
+    auto send_refresh_schema_list() -> void;
+    auto send_refresh_for_schema(const db_SchemaRef &schema, bool refresh_object_itself) -> void;
+    auto send_refresh_for_schema_object(const GrtObjectRef &object, bool refresh_object_itself) -> void;
 
-    void set_model(studio_physical_ModelRef model);
+    auto set_model(studio_physical_ModelRef model) -> void;
 
-    virtual mforms::ToolBar *get_toolbar();
-    virtual mforms::MenuBar *get_menubar();
+    virtual auto get_toolbar() -> mforms::ToolBar *;
+    virtual auto get_menubar() -> mforms::MenuBar *;
 
   public:
     PhysicalOverviewBE(WBContext *wb);
     virtual ~PhysicalOverviewBE();
 
-    virtual bool can_undo();
-    virtual bool can_redo();
-    virtual void undo();
-    virtual void redo();
+    virtual auto can_undo() -> bool;
+    virtual auto can_redo() -> bool;
+    virtual auto undo() -> void;
+    virtual auto redo() -> void;
 
-    virtual bool can_close();
-    virtual void close();
+    virtual auto can_close() -> bool;
+    virtual auto close() -> void;
 
-    virtual model_ModelRef get_model();
-    internal::PhysicalSchemaNode *get_active_schema_node();
+    virtual auto get_model() -> model_ModelRef;
+    auto get_active_schema_node() -> internal::PhysicalSchemaNode *;
 
-    virtual int get_default_tab_page_index();
+    virtual auto get_default_tab_page_index() -> int;
 
-    virtual std::string get_node_drag_type(const bec::NodeId &node);
-    virtual bool should_accept_file_drop_to_node(const bec::NodeId &node, const std::string &path);
-    virtual void add_file_to_node(const bec::NodeId &node, const std::string &path);
-    virtual bool get_file_data_for_node(const bec::NodeId &node, char *&data, size_t &length);
-    virtual std::string get_file_for_node(const bec::NodeId &node);
+    virtual auto get_node_drag_type(const bec::NodeId &node) -> std::string;
+    virtual auto should_accept_file_drop_to_node(const bec::NodeId &node, const std::string &path) -> bool;
+    virtual auto add_file_to_node(const bec::NodeId &node, const std::string &path) -> void;
+    virtual auto get_file_data_for_node(const bec::NodeId &node, char *&data, size_t &length) -> bool;
+    virtual auto get_file_for_node(const bec::NodeId &node) -> std::string;
 
-    virtual void refresh_node(const bec::NodeId &node, bool children);
+    virtual auto refresh_node(const bec::NodeId &node, bool children) -> void;
   };
 };

@@ -45,12 +45,12 @@ protected:
   }
 
 public:
-  virtual int parse_inserts(db_TableRef table, const std::string &sql) = 0;
-  virtual int parse_triggers(db_TableRef table, const std::string &sql) = 0;
-  virtual int parse_trigger(db_TriggerRef trigger, const std::string &sql) = 0;
-  virtual int parse_routines(db_RoutineGroupRef routine_group, const std::string &sql) = 0;
-  virtual int parse_routine(db_RoutineRef routine, const std::string &sql) = 0;
-  virtual int parse_view(db_ViewRef view, const std::string &sql) = 0;
+  virtual auto parse_inserts(db_TableRef table, const std::string &sql) -> int = 0;
+  virtual auto parse_triggers(db_TableRef table, const std::string &sql) -> int = 0;
+  virtual auto parse_trigger(db_TriggerRef trigger, const std::string &sql) -> int = 0;
+  virtual auto parse_routines(db_RoutineGroupRef routine_group, const std::string &sql) -> int = 0;
+  virtual auto parse_routine(db_RoutineRef routine, const std::string &sql) -> int = 0;
+  virtual auto parse_view(db_ViewRef view, const std::string &sql) -> int = 0;
 };
 
 #endif // _INVALID_SQL_PARSER_H_

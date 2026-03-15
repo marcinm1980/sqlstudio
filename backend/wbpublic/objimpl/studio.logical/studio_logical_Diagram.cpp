@@ -32,19 +32,19 @@
 
 class studio_logical_Diagram::ImplData {};
 
-void studio_logical_Diagram::init() {
+auto studio_logical_Diagram::init() -> void {
   // if (!_data) _data= new studio_logical_Diagram::ImplData();
 }
 
-void studio_logical_Diagram::set_data(ImplData *data) {
+auto studio_logical_Diagram::set_data(ImplData *data) -> void {
 }
 
 studio_logical_Diagram::~studio_logical_Diagram() {
   delete _data;
 }
 
-model_LayerRef studio_logical_Diagram::placeNewLayer(double x, double y, double width, double height,
-                                                        const std::string &name) {
+auto studio_logical_Diagram::placeNewLayer(double x, double y, double width, double height,
+                                                        const std::string &name) -> model_LayerRef {
   // add code here
   return model_LayerRef();
 }

@@ -33,22 +33,22 @@
 
 class WBPLUGINDBMYSQLBE_PUBLIC_FUNC Db_rev_eng : public Db_plugin, public Sql_import {
 private:
-  std::string task_desc();
-  void parse_sql_script(parsers::MySQLParserServices::Ref sql_parser, parsers::MySQLParserContext::Ref context,
-                        db_CatalogRef &catalog, const std::string &sql_scrtipt, grt::DictRef &options);
-  db_CatalogRef target_catalog();
+  auto task_desc() -> std::string;
+  auto parse_sql_script(parsers::MySQLParserServices::Ref sql_parser, parsers::MySQLParserContext::Ref context,
+                        db_CatalogRef &catalog, const std::string &sql_scrtipt, grt::DictRef &options) -> void;
+  auto target_catalog() -> db_CatalogRef;
 
 public:
-  std::string sql_script();
-  void sql_script(const std::string &sql_script) {
+  auto sql_script() -> std::string;
+  auto sql_script(const std::string &sql_script) -> void {
     Db_plugin::sql_script(sql_script);
   }
 
 public:
   Db_rev_eng() : Db_plugin(), Sql_import() {
   }
-  void grtm();
-  GrtVersionRef getVersion();
+  auto grtm() -> void;
+  auto getVersion() -> GrtVersionRef;
 };
 
 #endif /* _DB_REV_ENG_BE_H_ */

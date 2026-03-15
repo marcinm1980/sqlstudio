@@ -45,7 +45,7 @@ DEFAULT_LOG_DOMAIN("wmi")
  * Converts the given variant to an UTF-8 encoded standard string. The variant content is converted to
  * a string if it is not already one.
  */
-std::string variant2string(VARIANT& value) {
+auto variant2string(VARIANT& value) -> std::string {
   if (value.vt == VT_NULL)
     return "NULL";
 
@@ -60,7 +60,7 @@ std::string variant2string(VARIANT& value) {
  * Converts the given string (which must be UTF-8 encoded) to a BSTR, encapsulated by CComBSTR
  * which frees us from taking care to deallocate the result.
  */
-CComBSTR string2Bstr(const std::string& value) {
+auto string2Bstr(const std::string& value) -> CComBSTR {
   CComBSTR result = CA2W(value.c_str(), CP_UTF8);
   return result;
 }
@@ -69,7 +69,7 @@ CComBSTR string2Bstr(const std::string& value) {
 
 #ifdef _DEBUG
 
-void dumpObject(IWbemClassObject* object) {
+auto dumpObject(IWbemClassObject* object) -> void {
   if (object != NULL) {
     BSTR objectText;
     object->GetObjectText(0, &objectText);
@@ -83,7 +83,7 @@ void dumpObject(IWbemClassObject* object) {
 
 #endif
 
-std::string wmiResultToString(HRESULT wmiResult) {
+auto wmiResultToString(HRESULT wmiResult) -> std::string {
   std::string result;
   IWbemStatusCodeText* status = NULL;
 
@@ -112,7 +112,7 @@ std::string wmiResultToString(HRESULT wmiResult) {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string serviceResultToString(unsigned int result) {
+auto serviceResultToString(unsigned int result) -> std::string {
   // Error codes according to http://msdn.microsoft.com/en-us/library/aa393660%28VS.85%29.aspx.
   static std::string code2String[] = {"Success",
                                       "Not Supported",
@@ -209,7 +209,7 @@ WmiMonitor::~WmiMonitor() {
 
 //--------------------------------------------------------------------------------------------------
 
-std::string WmiMonitor::readValue() {
+auto WmiMonitor::readValue() -> std::string {
   logDebug("Reading next monitoring value\n");
 
   // Refresh the enumerator so we actually get values.
@@ -376,7 +376,7 @@ WmiServices::~WmiServices() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WmiServices::allocate_locator() {
+auto WmiServices::allocate_locator() -> void {
   logDebug("Allocating wbem locator\n");
 
   base::MutexLock lock(_locator_mutex);
@@ -396,7 +396,7 @@ void WmiServices::allocate_locator() {
 
 //--------------------------------------------------------------------------------------------------
 
-void WmiServices::deallocate_locator() {
+auto WmiServices::deallocate_locator() -> void {
   logDebug("Deallocating wbem locator\n");
 
   base::MutexLock lock(_locator_mutex);
@@ -422,7 +422,7 @@ void WmiServices::deallocate_locator() {
  * @return A list of dictionaries containing an entry for each object returned by the query, with
  *         name/value pairs of object properties.
  */
-grt::DictListRef WmiServices::query(const std::string& query) {
+auto WmiServices::query(const std::string& query) -> grt::DictListRef {
   logDebug3("Running wmi query: %s\n", query.c_str());
 
   // Making this function explicitly thread-safe might be unnecessary as we don't have
@@ -512,7 +512,7 @@ grt::DictListRef WmiServices::query(const std::string& query) {
  *   - for start: either completed, already-running, already-starting, stopping, error
  *   - for stop: either completed, already-stopped, already-stopping, starting, error
  */
-std::string WmiServices::serviceControl(const std::string& service, const std::string& action) {
+auto WmiServices::serviceControl(const std::string& service, const std::string& action) -> std::string {
   logDebug3("Running wmi service control query for service: %s (action: %s)\n", service.c_str(), action.c_str());
 
   base::MutexLock lock(_locator_mutex);
@@ -691,7 +691,7 @@ std::string WmiServices::serviceControl(const std::string& service, const std::s
  * @param what Specifies which value to query and return. Supported are all properties which belong
  * to the Win32_OperatingSystem class (see http://msdn.microsoft.com/en-us/library/aa394239%28VS.85%29.aspx).
  */
-std::string WmiServices::systemStat(const std::string& what) {
+auto WmiServices::systemStat(const std::string& what) -> std::string {
   logDebug3("Running wmi system stat call (what: %s)\n", what.c_str());
 
   base::MutexLock lock(_locator_mutex);
@@ -737,13 +737,13 @@ std::string WmiServices::systemStat(const std::string& what) {
 
 //--------------------------------------------------------------------------------------------------
 
-WmiMonitor* WmiServices::startMonitoring(const std::string& parameter) {
+auto WmiServices::startMonitoring(const std::string& parameter) -> WmiMonitor* {
   return new WmiMonitor(_services, parameter);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void wmi::WmiServices::stopMonitoring(WmiMonitor* monitor) {
+auto wmi::WmiServices::stopMonitoring(WmiMonitor* monitor) -> void {
   delete monitor;
 }
 

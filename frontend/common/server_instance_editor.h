@@ -113,51 +113,51 @@ class MYSQLWBBACKEND_PUBLIC_FUNC ServerInstanceEditor : public mforms::Form {
 
   std::map<std::string, std::vector<std::pair<std::string, grt::DictRef> > > _presets;
 
-  db_mgmt_ConnectionRef selected_connection();
-  db_mgmt_ServerInstanceRef selected_instance();
+  auto selected_connection() -> db_mgmt_ConnectionRef;
+  auto selected_instance() -> db_mgmt_ServerInstanceRef;
 
-  void autodetect_system();
-  void test_settings();
+  auto autodetect_system() -> void;
+  auto test_settings() -> void;
 
-  void toggle_administration();
+  auto toggle_administration() -> void;
 
-  grt::DictRef get_preset(const std::string &system, const std::string &preset_name);
+  auto get_preset(const std::string &system, const std::string &preset_name) -> grt::DictRef;
 
-  void entry_changed(mforms::TextEntry *sender);
-  void check_changed(mforms::CheckBox *check);
+  auto entry_changed(mforms::TextEntry *sender) -> void;
+  auto check_changed(mforms::CheckBox *check) -> void;
 
   //  void button_clicked(mforms::Button *button);
-  void browse_file();
-  void show_connection();
-  void show_instance_info(db_mgmt_ConnectionRef connection, db_mgmt_ServerInstanceRef instance);
-  void add_instance();
-  void delete_instance();
-  void duplicate_instance();
-  void reorder_instance(bool up);
+  auto browse_file() -> void;
+  auto show_connection() -> void;
+  auto show_instance_info(db_mgmt_ConnectionRef connection, db_mgmt_ServerInstanceRef instance) -> void;
+  auto add_instance() -> void;
+  auto delete_instance() -> void;
+  auto duplicate_instance() -> void;
+  auto reorder_instance(bool up) -> void;
 
-  void system_type_changed();
-  void profile_changed();
+  auto system_type_changed() -> void;
+  auto profile_changed() -> void;
 
-  void refresh_profile_list();
-  void refresh_connection_list();
+  auto refresh_profile_list() -> void;
+  auto refresh_connection_list() -> void;
 
-  void tab_changed();
+  auto tab_changed() -> void;
 
-  void driver_changed_cb(const db_mgmt_DriverRef &driver);
+  auto driver_changed_cb(const db_mgmt_DriverRef &driver) -> void;
 
-  void set_password(bool clear);
+  auto set_password(bool clear) -> void;
 
-  void run_filechooser(mforms::TextEntry *entry);
-  void run_filechooser_wrapper(mforms::TextEntry *entry); // Allows to run local or remote file selector
+  auto run_filechooser(mforms::TextEntry *entry) -> void;
+  auto run_filechooser_wrapper(mforms::TextEntry *entry) -> void; // Allows to run local or remote file selector
 
-  void reset_setup_pending();
+  auto reset_setup_pending() -> void;
 
 public:
   ServerInstanceEditor(const db_mgmt_ManagementRef &mgmt);
   virtual ~ServerInstanceEditor();
 
-  db_mgmt_ServerInstanceRef run(db_mgmt_ConnectionRef select_connection = db_mgmt_ConnectionRef(),
-                                bool select_admin = false);
+  auto run(db_mgmt_ConnectionRef select_connection = db_mgmt_ConnectionRef(),
+                                bool select_admin = false) -> db_mgmt_ServerInstanceRef;
 };
 
 #endif /* _SERVER_INSTANCE_EDITOR_H_ */

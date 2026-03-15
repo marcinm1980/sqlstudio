@@ -156,7 +156,7 @@ UserDefinedTypeEditor::UserDefinedTypeEditor(const studio_physical_ModelRef &mod
   selected_row();
 }
 
-void UserDefinedTypeEditor::refresh() {
+auto UserDefinedTypeEditor::refresh() -> void {
   grt::ListRef<db_UserDatatype> udts(_model->catalog()->userDatatypes());
 
   _user_types.clear();
@@ -178,7 +178,7 @@ void UserDefinedTypeEditor::refresh() {
   }
 }
 
-void UserDefinedTypeEditor::selected_row() {
+auto UserDefinedTypeEditor::selected_row() -> void {
   mforms::TreeNodeRef node = _type_list.get_selected_node();
   if (!node) {
     for (std::vector<mforms::CheckBox *>::iterator iter = _flags.begin(); iter != _flags.end(); ++iter) {
@@ -252,7 +252,7 @@ void UserDefinedTypeEditor::selected_row() {
   }
 }
 
-void UserDefinedTypeEditor::flag_toggled() {
+auto UserDefinedTypeEditor::flag_toggled() -> void {
   int i = 0;
   std::string flags;
   for (std::vector<mforms::CheckBox *>::iterator iter = _flags.begin(); iter != _flags.end(); ++iter, ++i) {
@@ -268,7 +268,7 @@ void UserDefinedTypeEditor::flag_toggled() {
     node->set_string(2, flags);
 }
 
-void UserDefinedTypeEditor::type_changed() {
+auto UserDefinedTypeEditor::type_changed() -> void {
   if (_type.get_selected_index() >= 0) {
     db_SimpleDatatypeRef simpleType(_valid_types[_type.get_selected_index()]);
     // check the type definition if it has args
@@ -309,7 +309,7 @@ void UserDefinedTypeEditor::type_changed() {
   }
 }
 
-void UserDefinedTypeEditor::add_clicked() {
+auto UserDefinedTypeEditor::add_clicked() -> void {
   mforms::TreeNodeRef node = _type_list.add_node();
   node->set_string(0, "usertype");
   node->set_string(1, "INT(11)");
@@ -325,7 +325,7 @@ void UserDefinedTypeEditor::add_clicked() {
  * Checks all currently defined tables in the model to see if the given column is used in any of them.
  * Returns true if so, otherwise false.
  */
-bool UserDefinedTypeEditor::is_type_used(const db_UserDatatypeRef &type) {
+auto UserDefinedTypeEditor::is_type_used(const db_UserDatatypeRef &type) -> bool {
   grt::ListRef<db_Schema> schemata(_model->catalog()->schemata());
   for (grt::ListRef<db_Schema>::const_iterator sche = schemata.begin(); sche != schemata.end(); ++sche) {
     grt::ListRef<db_Table> tables((*sche)->tables());
@@ -343,7 +343,7 @@ bool UserDefinedTypeEditor::is_type_used(const db_UserDatatypeRef &type) {
 
 //--------------------------------------------------------------------------------------------------
 
-void UserDefinedTypeEditor::delete_clicked() {
+auto UserDefinedTypeEditor::delete_clicked() -> void {
   mforms::TreeNodeRef node = _type_list.get_selected_node();
   if (node) {
     int row = _type_list.get_selected_row();
@@ -363,7 +363,7 @@ void UserDefinedTypeEditor::delete_clicked() {
 
 //--------------------------------------------------------------------------------------------------
 
-static bool is_missing(const grt::ObjectRef &item, const std::vector<db_UserDatatypeRef> &types) {
+static auto is_missing(const grt::ObjectRef &item, const std::vector<db_UserDatatypeRef> &types) -> bool {
   for (std::vector<db_UserDatatypeRef>::const_iterator iter = types.begin(); iter != types.end(); ++iter) {
     if ((*iter).is_valid() && (*iter).id() == item.id())
       return false;
@@ -373,7 +373,7 @@ static bool is_missing(const grt::ObjectRef &item, const std::vector<db_UserData
 
 //--------------------------------------------------------------------------------------------------
 
-void UserDefinedTypeEditor::ok_clicked() {
+auto UserDefinedTypeEditor::ok_clicked() -> void {
   // Check if everything is ok and then commit.
 
   std::set<std::string> names;
@@ -467,17 +467,17 @@ void UserDefinedTypeEditor::ok_clicked() {
   close();
 }
 
-void UserDefinedTypeEditor::cancel_clicked() {
+auto UserDefinedTypeEditor::cancel_clicked() -> void {
   close();
 }
 
-void UserDefinedTypeEditor::name_changed() {
+auto UserDefinedTypeEditor::name_changed() -> void {
   mforms::TreeNodeRef node = _type_list.get_selected_node();
   if (node)
     node->set_string(0, _name.get_string_value());
 }
 
-void UserDefinedTypeEditor::args_changed() {
+auto UserDefinedTypeEditor::args_changed() -> void {
   std::string typespec = _type.get_string_value();
   std::string args = _args.get_string_value();
   mforms::TreeNodeRef node = _type_list.get_selected_node();
@@ -490,7 +490,7 @@ void UserDefinedTypeEditor::args_changed() {
   }
 }
 
-void UserDefinedTypeEditor::edit_arguments() {
+auto UserDefinedTypeEditor::edit_arguments() -> void {
   grtui::StringListEditor editor(this, true);
   editor.set_title(_("Edit Type Arguments"));
 

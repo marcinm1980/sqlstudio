@@ -44,17 +44,17 @@ class DiagramSizeForm : public Gtk::Dialog, public base::trackable {
   mdc::GtkCanvas *_canvas;
   wb::DiagramOptionsBE *_be;
 
-  void realize_be();
-  void init();
-  void spin_changed();
-  void changed();
-  void ok_clicked();
+  auto realize_be() -> void;
+  auto init() -> void;
+  auto spin_changed() -> void;
+  auto changed() -> void;
+  auto ok_clicked() -> void;
 
 public:
   DiagramSizeForm(GtkDialog *gobj, Glib::RefPtr<Gtk::Builder> xml);
   virtual ~DiagramSizeForm();
 
-  static DiagramSizeForm *create();
+  static auto create() -> DiagramSizeForm *;
 };
 
 #endif /* _DIAGRAM_SIZE_FORM_H_ */

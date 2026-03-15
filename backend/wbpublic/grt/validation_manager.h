@@ -48,18 +48,18 @@ namespace bec {
 
     ValidationMessagesBE();
 
-    void clear();
-    virtual bool get_field(const NodeId& node, ColumnId column, std::string& value);
-    virtual IconId get_field_icon(const NodeId& node, ColumnId column, IconSize size);
-    virtual void refresh() {
+    auto clear() -> void;
+    virtual auto get_field(const NodeId& node, ColumnId column, std::string& value) -> bool;
+    virtual auto get_field_icon(const NodeId& node, ColumnId column, IconSize size) -> IconId;
+    virtual auto refresh() -> void {
     }
-    virtual size_t count();
+    virtual auto count() -> size_t;
 
-    virtual int get_node_popup_items(const NodeId& node, MenuItemList& menu);
-    virtual void activate_node_popup_item(const NodeId& node, const std::string& name);
+    virtual auto get_node_popup_items(const NodeId& node, MenuItemList& menu) -> int;
+    virtual auto activate_node_popup_item(const NodeId& node, const std::string& name) -> void;
 
   private:
-    void validation_message(const grt::Validator::Tag& tag, const grt::ObjectRef&, const std::string&, const int level);
+    auto validation_message(const grt::Validator::Tag& tag, const grt::ObjectRef&, const std::string&, const int level) -> void;
 
     IconId _error_icon;
     IconId _warning_icon;
@@ -80,8 +80,8 @@ namespace bec {
     MessageList _errors;
     MessageList _warnings;
 
-    static bool match_message(const Message& m, const grt::ObjectRef& obj, const grt::Validator::Tag& tag);
-    void remove_messages(MessageList* ml, const grt::ObjectRef& obj, const grt::Validator::Tag& tag);
+    static auto match_message(const Message& m, const grt::ObjectRef& obj, const grt::Validator::Tag& tag) -> bool;
+    auto remove_messages(MessageList* ml, const grt::ObjectRef& obj, const grt::Validator::Tag& tag) -> void;
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC ValidationManager {
@@ -90,23 +90,23 @@ namespace bec {
     using MessageSignal =
       boost::signals2::signal<void(const grt::Validator::Tag&, const grt::ObjectRef&, const std::string&, const int)>;
 
-    static void scan();
-    static void register_validator(const std::string& type, grt::Validator* v);
-    static bool validate_instance(const grt::ObjectRef& obj, const grt::Validator::Tag& tag);
+    static auto scan() -> void;
+    static auto register_validator(const std::string& type, grt::Validator* v) -> void;
+    static auto validate_instance(const grt::ObjectRef& obj, const grt::Validator::Tag& tag) -> bool;
 
-    static MessageSignal* signal_notify();
-    static void message(const grt::Validator::Tag&, const grt::ObjectRef&, const std::string&,
-                        const int level); // level is grt::MessageType
-    static void clear();
+    static auto signal_notify() -> MessageSignal*;
+    static auto message(const grt::Validator::Tag&, const grt::ObjectRef&, const std::string&,
+                        const int level) -> void; // level is grt::MessageType
+    static auto clear() -> void;
 
   private:
-    static bool is_validation_plugin(const app_PluginRef& plugin);
+    static auto is_validation_plugin(const app_PluginRef& plugin) -> bool;
 
     static MessageSignal* _signal_notify;
   };
 
   //------------------------------------------------------------------------------
-  inline bec::ValidationManager::MessageSignal* bec::ValidationManager::signal_notify() {
+  inline auto bec::ValidationManager::signal_notify() -> bec::ValidationManager::MessageSignal* {
     if (!_signal_notify)
       _signal_notify = new ValidationManager::MessageSignal;
 

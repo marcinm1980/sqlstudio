@@ -40,7 +40,7 @@ ObjectRoleListBE::ObjectRoleListBE(DBObjectEditorBE *owner, const db_mgmt_RdbmsR
 
 //--------------------------------------------------------------------------------------------------
 
-void ObjectRoleListBE::refresh() {
+auto ObjectRoleListBE::refresh() -> void {
   _role_privs.clear();
 
   db_DatabaseObjectRef object(_owner->get_dbobject());
@@ -58,13 +58,13 @@ void ObjectRoleListBE::refresh() {
 
 //--------------------------------------------------------------------------------------------------
 
-size_t ObjectRoleListBE::count() {
+auto ObjectRoleListBE::count() -> size_t {
   return _role_privs.size();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ObjectRoleListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto ObjectRoleListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   switch ((Columns)column) {
     case Name: {
       db_RolePrivilegeRef role_privs(_role_privs[node[0]]);
@@ -106,7 +106,7 @@ bool ObjectRoleListBE::get_field_grt(const NodeId &node, ColumnId column, grt::V
 
 //--------------------------------------------------------------------------------------------------
 
-void ObjectRoleListBE::add_role_for_privileges(const db_RoleRef &role) {
+auto ObjectRoleListBE::add_role_for_privileges(const db_RoleRef &role) -> void {
   grt::ListRef<db_RolePrivilege> role_privs(role->privileges());
   db_DatabaseObjectRef object(_owner->get_dbobject());
 
@@ -131,7 +131,7 @@ void ObjectRoleListBE::add_role_for_privileges(const db_RoleRef &role) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ObjectRoleListBE::remove_role_from_privileges(const db_RoleRef &role) {
+auto ObjectRoleListBE::remove_role_from_privileges(const db_RoleRef &role) -> void {
   grt::ListRef<db_RolePrivilege> role_privs(role->privileges());
   db_DatabaseObjectRef object(_owner->get_dbobject());
 
@@ -150,7 +150,7 @@ void ObjectRoleListBE::remove_role_from_privileges(const db_RoleRef &role) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ObjectRoleListBE::select_role(const NodeId &node) {
+auto ObjectRoleListBE::select_role(const NodeId &node) -> void {
   _selected_node = node;
 
   _privilege_list.refresh();
@@ -158,7 +158,7 @@ void ObjectRoleListBE::select_role(const NodeId &node) {
 
 //--------------------------------------------------------------------------------------------------
 
-db_RolePrivilegeRef ObjectRoleListBE::get_selected() {
+auto ObjectRoleListBE::get_selected() -> db_RolePrivilegeRef {
   if (_selected_node.is_valid()) {
     if (_selected_node[0] < count())
       return _role_privs[_selected_node[0]];
@@ -174,7 +174,7 @@ ObjectPrivilegeListBE::ObjectPrivilegeListBE(ObjectRoleListBE *owner, const db_m
 
 //--------------------------------------------------------------------------------------------------
 
-size_t ObjectPrivilegeListBE::count() {
+auto ObjectPrivilegeListBE::count() -> size_t {
   if (_privileges.is_valid())
     return _privileges.count();
   return 0;
@@ -182,7 +182,7 @@ size_t ObjectPrivilegeListBE::count() {
 
 //--------------------------------------------------------------------------------------------------
 
-void ObjectPrivilegeListBE::refresh() {
+auto ObjectPrivilegeListBE::refresh() -> void {
   db_RolePrivilegeRef role_privilege(_owner->get_selected());
 
   _privileges.clear();
@@ -201,7 +201,7 @@ void ObjectPrivilegeListBE::refresh() {
 
 //--------------------------------------------------------------------------------------------------
 
-bool ObjectPrivilegeListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) {
+auto ObjectPrivilegeListBE::get_field_grt(const NodeId &node, ColumnId column, grt::ValueRef &value) -> bool {
   if (node[0] >= count())
     return false;
 
@@ -226,7 +226,7 @@ bool ObjectPrivilegeListBE::get_field_grt(const NodeId &node, ColumnId column, g
 
 //--------------------------------------------------------------------------------------------------
 
-bool ObjectPrivilegeListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) {
+auto ObjectPrivilegeListBE::set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool {
   db_RolePrivilegeRef role_privilege(_owner->get_selected());
   size_t index;
 

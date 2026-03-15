@@ -43,46 +43,46 @@ namespace wbfig {
     WBTable(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self);
     virtual ~WBTable();
 
-    virtual void set_color(const base::Color &color);
-    virtual void set_dependant(bool flag);
+    virtual auto set_color(const base::Color &color) -> void;
+    virtual auto set_dependant(bool flag) -> void;
 
-    virtual void set_allow_manual_resizing(bool flag);
+    virtual auto set_allow_manual_resizing(bool flag) -> void;
 
-    virtual ItemList::iterator begin_columns_sync();
-    virtual ItemList::iterator sync_next_column(ItemList::iterator iter, const std::string &id, ColumnFlags type,
-                                                const std::string &text);
-    virtual void end_columns_sync(ItemList::iterator iter);
+    virtual auto begin_columns_sync() -> ItemList::iterator;
+    virtual auto sync_next_column(ItemList::iterator iter, const std::string &id, ColumnFlags type,
+                                                const std::string &text) -> ItemList::iterator;
+    virtual auto end_columns_sync(ItemList::iterator iter) -> void;
 
-    virtual ItemList::iterator begin_indexes_sync();
-    virtual ItemList::iterator sync_next_index(ItemList::iterator iter, const std::string &id, const std::string &text);
-    virtual void end_indexes_sync(ItemList::iterator iter);
+    virtual auto begin_indexes_sync() -> ItemList::iterator;
+    virtual auto sync_next_index(ItemList::iterator iter, const std::string &id, const std::string &text) -> ItemList::iterator;
+    virtual auto end_indexes_sync(ItemList::iterator iter) -> void;
 
-    virtual ItemList::iterator begin_triggers_sync();
-    virtual ItemList::iterator sync_next_trigger(ItemList::iterator iter, const std::string &id,
-                                                 const std::string &text);
-    virtual void end_triggers_sync(ItemList::iterator iter);
+    virtual auto begin_triggers_sync() -> ItemList::iterator;
+    virtual auto sync_next_trigger(ItemList::iterator iter, const std::string &id,
+                                                 const std::string &text) -> ItemList::iterator;
+    virtual auto end_triggers_sync(ItemList::iterator iter) -> void;
 
-    virtual Titlebar *get_index_title() {
+    virtual auto get_index_title() -> Titlebar * {
       return &_index_title;
     }
-    virtual Titlebar *get_trigger_title() {
+    virtual auto get_trigger_title() -> Titlebar * {
       return &_trigger_title;
     }
 
-    void hide_indices();
-    void hide_triggers();
+    auto hide_indices() -> void;
+    auto hide_triggers() -> void;
 
-    void hide_columns();
-    virtual ItemList *get_columns() {
+    auto hide_columns() -> void;
+    virtual auto get_columns() -> ItemList * {
       return &_columns;
     }
-    virtual ItemList *get_indexes() {
+    virtual auto get_indexes() -> ItemList * {
       return &_indexes;
     }
 
-    virtual void set_max_columns_shown(int count);
+    virtual auto set_max_columns_shown(int count) -> void;
 
-    virtual void set_content_font(const mdc::FontSpec &font);
+    virtual auto set_content_font(const mdc::FontSpec &font) -> void;
 
   protected:
     mdc::Box _content_box;
@@ -100,15 +100,15 @@ namespace wbfig {
 
     Titlebar _footer;
 
-    virtual bool get_expanded();
-    virtual void toggle(bool flag);
+    virtual auto get_expanded() -> bool;
+    virtual auto toggle(bool flag) -> void;
 
-    virtual bool get_indexes_expanded();
-    virtual bool get_triggers_expanded();
-    virtual void toggle_indexes(bool flag);
-    virtual void toggle_triggers(bool flag);
+    virtual auto get_indexes_expanded() -> bool;
+    virtual auto get_triggers_expanded() -> bool;
+    virtual auto toggle_indexes(bool flag) -> void;
+    virtual auto toggle_triggers(bool flag) -> void;
 
-    wbfig::FigureItem *create_truncated_item(mdc::Layer *layer, wbfig::FigureEventHub *hub);
+    auto create_truncated_item(mdc::Layer *layer, wbfig::FigureEventHub *hub) -> wbfig::FigureItem *;
   };
 };
 

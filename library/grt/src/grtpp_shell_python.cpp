@@ -32,7 +32,7 @@ using namespace base;
 PythonShell::PythonShell() : _loader(0) {
 }
 
-void PythonShell::init() {
+auto PythonShell::init() -> void {
   _loader = dynamic_cast<PythonModuleLoader *>(grt::GRT::get()->get_module_loader(LanguagePython));
   if (!_loader)
     throw std::runtime_error("Python module loader not initialized");
@@ -42,7 +42,7 @@ void PythonShell::init() {
   pycontext->refresh();
 }
 
-void PythonShell::print_welcome() {
+auto PythonShell::print_welcome() -> void {
   print(strfmt("MySQL Generic Runtime Environment %s\n", GRT_VERSION));
 
   if (_disable_quit)
@@ -52,7 +52,7 @@ void PythonShell::print_welcome() {
   print("Python Shell initialized.\n");
 }
 
-std::string PythonShell::get_prompt() {
+auto PythonShell::get_prompt() -> std::string {
   std::string cwd = _loader->get_python_context()->get_cwd();
 
   if (_current_line.empty())
@@ -61,15 +61,15 @@ std::string PythonShell::get_prompt() {
     return cwd + "...";
 }
 
-int PythonShell::execute_line(const std::string &linebuf) {
+auto PythonShell::execute_line(const std::string &linebuf) -> int {
   return _loader->get_python_context()->run_buffer(linebuf, &_current_line);
 }
 
-int PythonShell::run_file(const std::string &file_name, bool interactive) {
+auto PythonShell::run_file(const std::string &file_name, bool interactive) -> int {
   return _loader->get_python_context()->run_file(file_name, interactive);
 }
 
-std::vector<std::string> PythonShell::complete_line(const std::string &line, std::string &completed) {
+auto PythonShell::complete_line(const std::string &line, std::string &completed) -> std::vector<std::string> {
   std::vector<std::string> tokens = get_tokens_for_prefix(line);
   if (tokens.size() == 1) {
     completed = tokens[0];
@@ -91,7 +91,7 @@ static void add_matching_tokens_from_list(std::vector<std::string> &tokens, PyOb
   }
 }
 
-std::vector<std::string> PythonShell::get_tokens_for_prefix(const std::string &prefix) {
+auto PythonShell::get_tokens_for_prefix(const std::string &prefix) -> std::vector<std::string> {
   std::vector<std::string> tokens;
   std::string::size_type dot = prefix.rfind('.');
 
@@ -149,7 +149,7 @@ std::vector<std::string> PythonShell::get_tokens_for_prefix(const std::string &p
   return tokens;
 }
 
-ValueRef PythonShell::get_global_var(const std::string &var_name) {
+auto PythonShell::get_global_var(const std::string &var_name) -> ValueRef {
   ValueRef value;
 
   throw std::logic_error("not implemented");
@@ -157,13 +157,13 @@ ValueRef PythonShell::get_global_var(const std::string &var_name) {
   return value;
 }
 
-int PythonShell::set_global_var(const std::string &var_name, const ValueRef &value) {
+auto PythonShell::set_global_var(const std::string &var_name, const ValueRef &value) -> int {
   throw std::logic_error("not implemented");
   return 1;
 }
 
-extern void grt_shell_show_python_help(const char *command);
+extern auto grt_shell_show_python_help(const char *command) -> void;
 
-void PythonShell::show_help(const std::string &keyword) {
+auto PythonShell::show_help(const std::string &keyword) -> void {
   grt_shell_show_python_help(keyword.c_str());
 }

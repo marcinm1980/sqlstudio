@@ -96,7 +96,7 @@ namespace sqlide {
     };
     friend class StateKeeper;
     mutable std::stringstream _ss;
-    inline void reset() {
+    inline auto reset() -> void {
       _ss.str("");
     }
   };
@@ -280,7 +280,7 @@ namespace sqlide {
       return escaped;
     }
 
-    static std::string blob_to_hex_string(const unsigned char *data, size_t size) {
+    static auto blob_to_hex_string(const unsigned char *data, size_t size) -> std::string {
       static const char hex_dig[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
       std::string out(size * 2 + 2, ' ');
       std::string::iterator p = out.begin();
@@ -367,18 +367,18 @@ namespace sqlide {
     }
   };
 
-  WBPUBLICBACKEND_PUBLIC_FUNC bool is_var_null(const sqlite::variant_t &value);
-  WBPUBLICBACKEND_PUBLIC_FUNC bool is_var_unknown(const sqlite::variant_t &value);
-  WBPUBLICBACKEND_PUBLIC_FUNC bool is_var_blob(const sqlite::variant_t &value);
+  WBPUBLICBACKEND_PUBLIC_FUNC auto is_var_null(const sqlite::variant_t &value) -> bool;
+  WBPUBLICBACKEND_PUBLIC_FUNC auto is_var_unknown(const sqlite::variant_t &value) -> bool;
+  WBPUBLICBACKEND_PUBLIC_FUNC auto is_var_blob(const sqlite::variant_t &value) -> bool;
 
-  WBPUBLICBACKEND_PUBLIC_FUNC void optimize_sqlite_connection_for_speed(sqlite::connection *conn);
+  WBPUBLICBACKEND_PUBLIC_FUNC auto optimize_sqlite_connection_for_speed(sqlite::connection *conn) -> void;
 
   class WBPUBLICBACKEND_PUBLIC_FUNC Sqlite_transaction_guarder {
   public:
     Sqlite_transaction_guarder(sqlite::connection *conn, bool use_immediate = true);
     ~Sqlite_transaction_guarder();
-    void commit();
-    void commit_and_start_new_transaction();
+    auto commit() -> void;
+    auto commit_and_start_new_transaction() -> void;
 
   private:
     sqlite::connection *_conn;
@@ -412,7 +412,7 @@ private:
 };
 
 // double WBPUBLICBACKEND_PUBLIC_FUNC timestamp();
-std::tm WBPUBLICBACKEND_PUBLIC_FUNC local_timestamp();
+auto local_timestamp() -> std::tm WBPUBLICBACKEND_PUBLIC_FUNC;
 std::string WBPUBLICBACKEND_PUBLIC_FUNC format_time(const std::tm &t, const char *format = "%H:%M:%S");
 std::string WBPUBLICBACKEND_PUBLIC_FUNC current_time(const char *format = "%H:%M:%S");
 

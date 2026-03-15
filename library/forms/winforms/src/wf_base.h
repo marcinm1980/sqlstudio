@@ -49,7 +49,7 @@ namespace MySQL {
         _data = data;
       }
 
-      void *GetData() {
+      auto GetData() -> void * {
         return _data;
       };
     };
@@ -60,9 +60,9 @@ namespace MySQL {
       gcroot<System::ComponentModel::Component ^> component;
 
     protected:
-      System::IntPtr ^ GetBackendReference();
+      auto GetBackendReference() -> System::IntPtr ^;
 
-      virtual void Initialize(){};
+      virtual auto Initialize() -> void {};
 
     public:
       ObjectWrapper(mforms::Object *object);
@@ -95,8 +95,7 @@ namespace MySQL {
 
         // A GetManagedObject variant without template for use by other assemblies.
         // Only for Controls, however.
-        System::Windows::Forms::Control
-        ^ GetControl() { return GetManagedObject<System::Windows::Forms::Control>(); }
+        auto GetControl() -> System::Windows::Forms::Control ^ { return GetManagedObject<System::Windows::Forms::Control>(); }
 
         // Returns the managed control/dialog etc. for the given backend.
         template <class T>
@@ -108,8 +107,7 @@ namespace MySQL {
         }
 
         // A convenience wrapper for the parametrized GetManagedObject function.
-        static System::Windows::Forms::Control
-        ^ GetControl(mforms::Object *backend) { return GetManagedObject<System::Windows::Forms::Control>(backend); }
+        static auto GetControl(mforms::Object *backend) -> System::Windows::Forms::Control ^ { return GetManagedObject<System::Windows::Forms::Control>(backend); }
 
         template <class T>
         static T *GetWrapper(System::Object ^ object) {
@@ -144,7 +142,7 @@ namespace MySQL {
   public
     ref class ObjectMapper {
     public:
-      static System::ComponentModel::Component ^ GetManagedComponent(mforms::Object *backend);
+      static auto GetManagedComponent(mforms::Object *backend) -> System::ComponentModel::Component ^;
       static mforms::Object *GetUnmanagedControl(System::Windows::Forms::Control ^ control);
       static void *ManagedToNativeDragData(System::Windows::Forms::IDataObject ^ dataObject, System::String ^ format);
     };

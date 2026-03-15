@@ -69,46 +69,46 @@ protected:
 
   std::vector<int> _list_listeners;
 
-  virtual bool realize();
+  virtual auto realize() -> bool;
 
-  virtual void update_options(const std::string &key);
+  virtual auto update_options(const std::string &key) -> void;
 
-  void sync_columns();
-  void sync_indexes();
-  void sync_triggers();
+  auto sync_columns() -> void;
+  auto sync_indexes() -> void;
+  auto sync_triggers() -> void;
 
-  void toggle_title(bool expanded, wbfig::Titlebar *sender);
+  auto toggle_title(bool expanded, wbfig::Titlebar *sender) -> void;
 
-  void member_changed(const std::string &name, const grt::ValueRef &ovalue);
-  void table_member_changed(const std::string &name, const grt::ValueRef &ovalue);
+  auto member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void;
+  auto table_member_changed(const std::string &name, const grt::ValueRef &ovalue) -> void;
 
-  void content_changed(const std::string &where);
+  auto content_changed(const std::string &where) -> void;
 
-  void fk_changed(const db_ForeignKeyRef &fk);
+  auto fk_changed(const db_ForeignKeyRef &fk) -> void;
 
-  virtual void set_in_view(bool flag);
+  virtual auto set_in_view(bool flag) -> void;
 
 public:
   ImplData(studio_physical_TableFigure *self);
   virtual ~ImplData(){};
 
-  void set_table(const db_TableRef &table);
+  auto set_table(const db_TableRef &table) -> void;
 
-  db_ColumnRef get_column_at(mdc::CanvasItem *item);
-  db_IndexRef get_index_at(mdc::CanvasItem *item);
+  auto get_column_at(mdc::CanvasItem *item) -> db_ColumnRef;
+  auto get_index_at(mdc::CanvasItem *item) -> db_IndexRef;
 
-  void set_column_highlighted(const db_ColumnRef &column, const base::Color *color = 0);
-  void set_column_unhighlighted(const db_ColumnRef &column);
+  auto set_column_highlighted(const db_ColumnRef &column, const base::Color *color = 0) -> void;
+  auto set_column_unhighlighted(const db_ColumnRef &column) -> void;
 
-  virtual mdc::CanvasItem *get_canvas_item() const {
+  virtual auto get_canvas_item() const -> mdc::CanvasItem * {
     return _figure;
   }
-  virtual bool is_realizable();
+  virtual auto is_realizable() -> bool;
 
-  virtual void unrealize();
+  virtual auto unrealize() -> void;
 
 private:
-  studio_physical_TableFigure *self() const {
+  auto self() const -> studio_physical_TableFigure * {
     return (studio_physical_TableFigure *)_self;
   }
 };

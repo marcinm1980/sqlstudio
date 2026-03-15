@@ -47,7 +47,7 @@ HistoryTree::HistoryTree(UndoManager *undom)
                  std::bind(&HistoryTree::activate_node, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void HistoryTree::refresh() {
+auto HistoryTree::refresh() -> void {
   _undom->lock();
   std::deque<UndoAction *> undostack(_undom->get_undo_stack());
   std::deque<UndoAction *> redostack(_undom->get_redo_stack());
@@ -77,7 +77,7 @@ void HistoryTree::refresh() {
   _undom->unlock();
 }
 
-void HistoryTree::activate_node(mforms::TreeNodeRef node, int column) {
+auto HistoryTree::activate_node(mforms::TreeNodeRef node, int column) -> void {
   std::deque<UndoAction *> &undostack(_undom->get_undo_stack());
   std::deque<UndoAction *> &redostack(_undom->get_redo_stack());
   if (!node)
@@ -96,15 +96,15 @@ void HistoryTree::activate_node(mforms::TreeNodeRef node, int column) {
   }
 }
 
-void HistoryTree::handle_redo(grt::UndoAction *action) {
+auto HistoryTree::handle_redo(grt::UndoAction *action) -> void {
   refresh();
 }
 
-void HistoryTree::handle_undo(grt::UndoAction *action) {
+auto HistoryTree::handle_undo(grt::UndoAction *action) -> void {
   refresh();
 }
 
-void HistoryTree::handle_change() {
+auto HistoryTree::handle_change() -> void {
   if (!_refresh_pending) {
     _refresh_pending = true;
     bec::GRTManager::get()->run_once_when_idle(this, std::bind(&HistoryTree::refresh, this));

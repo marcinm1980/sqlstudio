@@ -33,14 +33,14 @@ namespace bec {
   public:
     SchemaEditorBE(const db_SchemaRef& schema);
 
-    virtual std::string get_title();
+    virtual auto get_title() -> std::string;
 
-    virtual db_SchemaRef get_schema() = 0;
+    virtual auto get_schema() -> db_SchemaRef = 0;
 
-    virtual void set_name(const std::string& name);
+    virtual auto set_name(const std::string& name) -> void;
 
     // table options
-    virtual void set_schema_option_by_name(const std::string& name, const std::string& value);
-    virtual std::string get_schema_option_by_name(const std::string& name);
+    virtual auto set_schema_option_by_name(const std::string& name, const std::string& value) -> void;
+    virtual auto get_schema_option_by_name(const std::string& name) -> std::string;
   };
 };

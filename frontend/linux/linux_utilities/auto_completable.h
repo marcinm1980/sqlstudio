@@ -49,10 +49,10 @@ namespace Gtk {
 class AutoCompletable {
 public:
   AutoCompletable(Gtk::Entry* entry = 0);
-  void add_completion_text(const std::string& s);
-  void add_to_entry(Gtk::Entry* entry);
-  void set_popup_enabled(const bool enabled);
-  void clear();
+  auto add_completion_text(const std::string& s) -> void;
+  auto add_to_entry(Gtk::Entry* entry) -> void;
+  auto set_popup_enabled(const bool enabled) -> void;
+  auto clear() -> void;
 
 private:
   TextListColumnsModel _completion_columns;

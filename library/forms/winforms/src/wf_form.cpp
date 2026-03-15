@@ -59,7 +59,7 @@ public:
    *                      (when doing a relayout) or not (when computing the preferred size).
    * @return The resulting size of the table.
    */
-  System::Drawing::Size FillForm::ComputeLayout(System::Drawing::Size proposedSize, bool resizeChildren) {
+  auto FillForm::ComputeLayout(System::Drawing::Size proposedSize, bool resizeChildren) -> System::Drawing::Size {
     // This layout is actually very simple. Resize the first (and only) child control so that
     // it fills the entire client area of the container. If enabled resize the container to fit the
     // (preferred) size of the content.
@@ -235,7 +235,7 @@ FormWrapper::FormWrapper(mforms::Form *form, mforms::Form *aOwner, mforms::FormF
 
 //--------------------------------------------------------------------------------------------------
 
-bool FormWrapper::create(mforms::Form *backend, mforms::Form *aOwner, mforms::FormFlag flag) {
+auto FormWrapper::create(mforms::Form *backend, mforms::Form *aOwner, mforms::FormFlag flag) -> bool {
   FormWrapper *wrapper = new FormWrapper(backend, aOwner, flag);
   FillForm ^ form = FormWrapper::Create<FillForm>(backend, wrapper);
   form->wrapper = wrapper;
@@ -276,13 +276,13 @@ bool FormWrapper::create(mforms::Form *backend, mforms::Form *aOwner, mforms::Fo
 
 //--------------------------------------------------------------------------------------------------
 
-void FormWrapper::set_title(mforms::Form *backend, const std::string &title) {
+auto FormWrapper::set_title(mforms::Form *backend, const std::string &title) -> void {
   FormWrapper::GetControl(backend)->Text = CppStringToNativeRaw(title.c_str());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void FormWrapper::show_modal(mforms::Form *backend, mforms::Button *accept, mforms::Button *cancel) {
+auto FormWrapper::show_modal(mforms::Form *backend, mforms::Button *accept, mforms::Button *cancel) -> void {
   FillForm ^ form = FormWrapper::GetManagedObject<FillForm>(backend);
 
   if (accept != NULL) {
@@ -309,7 +309,7 @@ void FormWrapper::show_modal(mforms::Form *backend, mforms::Button *accept, mfor
 
 //--------------------------------------------------------------------------------------------------
 
-bool FormWrapper::run_modal(mforms::Form *backend, mforms::Button *accept, mforms::Button *cancel) {
+auto FormWrapper::run_modal(mforms::Form *backend, mforms::Button *accept, mforms::Button *cancel) -> bool {
   FormWrapper *wrapper = backend->get_data<FormWrapper>();
   FillForm ^ form = wrapper->GetManagedObject<FillForm>();
 
@@ -358,7 +358,7 @@ bool FormWrapper::run_modal(mforms::Form *backend, mforms::Button *accept, mform
 
 //--------------------------------------------------------------------------------------------------
 
-void FormWrapper::end_modal(mforms::Form *backend, bool result) {
+auto FormWrapper::end_modal(mforms::Form *backend, bool result) -> void {
   FormWrapper::GetManagedObject<Form>(backend)->DialogResult =
     result ? System::Windows::Forms::DialogResult::OK : System::Windows::Forms::DialogResult::Cancel;
 }
@@ -368,13 +368,13 @@ void FormWrapper::end_modal(mforms::Form *backend, bool result) {
 /**
  * Called by the backend when a form is closed from the application side.
  */
-void FormWrapper::close(mforms::Form *backend) {
+auto FormWrapper::close(mforms::Form *backend) -> void {
   FormWrapper::GetManagedObject<Form>(backend)->Close();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void FormWrapper::set_content(mforms::Form *backend, mforms::View *view) {
+auto FormWrapper::set_content(mforms::Form *backend, mforms::View *view) -> void {
   Control ^ child = FormWrapper::GetControl(view);
   FormWrapper::GetControl(backend)->Controls->Add(child);
 }
@@ -385,25 +385,25 @@ void FormWrapper::set_content(mforms::Form *backend, mforms::View *view) {
  * Sets the startup position of the form so that it is centered over its parent when displayed.
  * If the form has no parent the desktop is used. This is also the default setting.
  */
-void FormWrapper::center(mforms::Form *backend) {
+auto FormWrapper::center(mforms::Form *backend) -> void {
   FormWrapper::GetManagedObject<Form>(backend)->StartPosition = FormStartPosition::CenterParent;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void FormWrapper::flush_events(mforms::Form *backend) {
+auto FormWrapper::flush_events(mforms::Form *backend) -> void {
   Application::DoEvents();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool FormWrapper::hide_on_close() {
+auto FormWrapper::hide_on_close() -> bool {
   return hideOnClose;
 }
 
 //--------------------------------------------------------------------------------------------------\
 
-void FormWrapper::set_menubar(mforms::Form *backend, mforms::MenuBar *menubar) {
+auto FormWrapper::set_menubar(mforms::Form *backend, mforms::MenuBar *menubar) -> void {
   mforms::Box *content = dynamic_cast<mforms::Box *>(backend->get_content());
   if (!content)
     throw std::invalid_argument(
@@ -435,7 +435,7 @@ void FormWrapper::set_menubar(mforms::Form *backend, mforms::MenuBar *menubar) {
 
 //--------------------------------------------------------------------------------------------------
 
-void FormWrapper::init() {
+auto FormWrapper::init() -> void {
   mforms::ControlFactory *f = mforms::ControlFactory::get_instance();
 
   f->_form_impl.create = &FormWrapper::create;

@@ -42,34 +42,28 @@ namespace MySQL {
 
       TreeViewNode();
       virtual ~TreeViewNode();
-      void DestroyDataRecursive();
+      auto DestroyDataRecursive() -> void;
 
-      property std::string MyTag {
-        std::string get();
-        void set(std::string s);
+      auto get() -> property std::string MyTag { std::string;
+        auto set(std::string s) -> void;
       }
 
-      property mforms::TreeNodeData *Data {
-        mforms::TreeNodeData *get();
-        void set(mforms::TreeNodeData * d);
+      auto get() -> property mforms::TreeNodeData *Data { mforms::TreeNodeData *;
+        auto set(mforms::TreeNodeData * d) -> void;
       }
 
-      property String ^ Caption[int] {
-        String ^ get(int index);
+      auto get(int index) -> property String ^ Caption[int] { String ^;
         void set(int index, String ^ newText);
       }
 
-      property String ^ FullCaption { String ^ get(); }
+      auto get() -> property String ^ FullCaption { String ^; }
 
-        property Drawing::Bitmap ^
-        Icon[int] {
-        Drawing::Bitmap ^ get(int index);
+        auto get(int index) -> property Drawing::Bitmap ^ Icon[int] { Drawing::Bitmap ^;
         void set(int index, Drawing::Bitmap ^ newIcon);
       }
 
-      property mforms::TreeNodeTextAttributes Attributes[int] {
-        mforms::TreeNodeTextAttributes get(int index);
-        void set(int index, mforms::TreeNodeTextAttributes newAttributes);
+      auto get(int index) -> property mforms::TreeNodeTextAttributes Attributes[int] { mforms::TreeNodeTextAttributes;
+        auto set(int index, mforms::TreeNodeTextAttributes newAttributes) -> void;
       }
     };
 
@@ -86,65 +80,65 @@ namespace MySQL {
       int refCount;
 
     protected:
-      virtual void add_children_from_skeletons(std::vector<TreeNodeWrapper> parents,
-                                               const std::vector<mforms::TreeNodeSkeleton> &children);
+      virtual auto add_children_from_skeletons(std::vector<TreeNodeWrapper> parents,
+                                               const std::vector<mforms::TreeNodeSkeleton> &children) -> void;
       void node_changed(Aga::Controls::Tree::TreeNodeAdv ^ new_node);
 
     public:
       TreeNodeWrapper(TreeViewWrapper *wrapper, Aga::Controls::Tree::TreeNodeAdv ^ node);
       TreeNodeWrapper(TreeViewWrapper *wrapper);
 
-      int node_index();
+      auto node_index() -> int;
 
-      virtual void release();
-      virtual void retain();
+      virtual auto release() -> void;
+      virtual auto retain() -> void;
 
-      virtual bool equals(const mforms::TreeNode &other);
-      virtual bool is_valid() const;
-      virtual int level() const;
+      virtual auto equals(const mforms::TreeNode &other) -> bool;
+      virtual auto is_valid() const -> bool;
+      virtual auto level() const -> int;
 
-      virtual void set_icon_path(int column, const std::string &icon);
-      virtual void set_selected(bool flag);
-      virtual void scrollToNode();
+      virtual auto set_icon_path(int column, const std::string &icon) -> void;
+      virtual auto set_selected(bool flag) -> void;
+      virtual auto scrollToNode() -> void;
 
-      virtual void set_attributes(int column, const mforms::TreeNodeTextAttributes &attrs);
-      virtual void set_string(int column, const std::string &value);
-      virtual void set_int(int column, int value);
-      virtual void set_long(int column, std::int64_t value);
-      virtual void set_bool(int column, bool value);
-      virtual void set_float(int column, double value);
+      virtual auto set_attributes(int column, const mforms::TreeNodeTextAttributes &attrs) -> void;
+      virtual auto set_string(int column, const std::string &value) -> void;
+      virtual auto set_int(int column, int value) -> void;
+      virtual auto set_long(int column, std::int64_t value) -> void;
+      virtual auto set_bool(int column, bool value) -> void;
+      virtual auto set_float(int column, double value) -> void;
 
-      virtual std::string get_string(int column) const;
-      virtual int get_int(int column) const;
-      virtual std::int64_t get_long(int column) const;
-      virtual bool get_bool(int column) const;
-      virtual double get_float(int column) const;
+      virtual auto get_string(int column) const -> std::string;
+      virtual auto get_int(int column) const -> int;
+      virtual auto get_long(int column) const -> std::int64_t;
+      virtual auto get_bool(int column) const -> bool;
+      virtual auto get_float(int column) const -> double;
 
-      virtual int count() const;
-      virtual mforms::TreeNodeRef insert_child(int index);
-      virtual void insert_child(int index, const mforms::TreeNode &child);
-      virtual void remove_from_parent();
-      virtual mforms::TreeNodeRef get_child(int index) const;
-      virtual int get_child_index(mforms::TreeNodeRef node) const;
-      virtual mforms::TreeNodeRef get_parent() const;
-      virtual mforms::TreeNodeRef previous_sibling() const;
-      virtual mforms::TreeNodeRef next_sibling() const;
-      virtual void remove_children();
-      virtual void move_node(mforms::TreeNodeRef node, bool before);
+      virtual auto count() const -> int;
+      virtual auto insert_child(int index) -> mforms::TreeNodeRef;
+      virtual auto insert_child(int index, const mforms::TreeNode &child) -> void;
+      virtual auto remove_from_parent() -> void;
+      virtual auto get_child(int index) const -> mforms::TreeNodeRef;
+      virtual auto get_child_index(mforms::TreeNodeRef node) const -> int;
+      virtual auto get_parent() const -> mforms::TreeNodeRef;
+      virtual auto previous_sibling() const -> mforms::TreeNodeRef;
+      virtual auto next_sibling() const -> mforms::TreeNodeRef;
+      virtual auto remove_children() -> void;
+      virtual auto move_node(mforms::TreeNodeRef node, bool before) -> void;
 
-      Drawing::Bitmap ^ get_cached_icon(const std::string &icon_id);
+      auto get_cached_icon(const std::string &icon_id) -> Drawing::Bitmap ^;
       virtual std::vector<mforms::TreeNodeRef> add_node_collection(const mforms::TreeNodeCollectionSkeleton &nodes,
                                                                    int position = -1);
 
-      virtual void expand();
-      virtual void collapse();
-      virtual bool is_expanded();
+      virtual auto expand() -> void;
+      virtual auto collapse() -> void;
+      virtual auto is_expanded() -> bool;
 
-      virtual void set_tag(const std::string &tag);
-      virtual std::string get_tag() const;
+      virtual auto set_tag(const std::string &tag) -> void;
+      virtual auto get_tag() const -> std::string;
 
-      virtual void set_data(mforms::TreeNodeData *data);
-      virtual mforms::TreeNodeData *get_data() const;
+      virtual auto set_data(mforms::TreeNodeData *data) -> void;
+      virtual auto get_data() const -> mforms::TreeNodeData *;
     };
   }
 }

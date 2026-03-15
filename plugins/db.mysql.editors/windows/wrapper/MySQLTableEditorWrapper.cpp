@@ -54,38 +54,38 @@ MySQLTableEditorWrapper::~MySQLTableEditorWrapper() {
 
 //--------------------------------------------------------------------------------------------------
 
-MySQLTableColumnsListWrapper ^ MySQLTableEditorWrapper::get_columns() {
+auto MySQLTableEditorWrapper::get_columns() -> MySQLTableColumnsListWrapper ^ {
   return gcnew MySQLTableColumnsListWrapper(get_unmanaged_object()->get_columns());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-MySQLTablePartitionTreeWrapper ^ MySQLTableEditorWrapper::get_partitions() {
+auto MySQLTableEditorWrapper::get_partitions() -> MySQLTablePartitionTreeWrapper ^ {
   return gcnew MySQLTablePartitionTreeWrapper(get_unmanaged_object()->get_partitions());
 }
 
 //--------------------------------------------------------------------------------------------------
 
-Control ^ MySQLTableEditorWrapper::get_trigger_panel() {
+auto MySQLTableEditorWrapper::get_trigger_panel() -> Control ^ {
   return dynamic_cast<Control ^>(ObjectMapper::GetManagedComponent(get_unmanaged_object()->get_trigger_panel()));
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLTableEditorWrapper::commit_changes() {
+auto MySQLTableEditorWrapper::commit_changes() -> void {
   get_unmanaged_object()->commit_changes();
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool MySQLTableEditorWrapper::is_server_version_at_least(int major, int minor, int release) {
+auto MySQLTableEditorWrapper::is_server_version_at_least(int major, int minor, int release) -> bool {
   db_CatalogRef catalog = get_unmanaged_object()->get_catalog();
   return bec::is_supported_mysql_version_at_least(catalog->version(), major, minor, release);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySQLTableEditorWrapper::load_trigger_sql() {
+auto MySQLTableEditorWrapper::load_trigger_sql() -> void {
   get_unmanaged_object()->load_trigger_sql();
 }
 

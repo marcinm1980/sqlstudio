@@ -41,7 +41,7 @@ class AddOnDownloadWindow : public mforms::Form {
 public:
   AddOnDownloadWindow(wb::WBContextUI *wbui);
 
-  void install_addon_from_url(const std::string &url);
+  auto install_addon_from_url(const std::string &url) -> void;
 
 private:
   mforms::Box _box;
@@ -51,8 +51,8 @@ private:
   wb::WBContextUI *_wbui;
   std::string _final_path;
 
-  void download_finished(const std::string &path, DownloadItem *item);
-  void download_failed(DownloadItem *item);
+  auto download_finished(const std::string &path, DownloadItem *item) -> void;
+  auto download_failed(DownloadItem *item) -> void;
 };
 
 class PluginInstallWindow : public mforms::Form {
@@ -63,7 +63,7 @@ class PluginInstallWindow : public mforms::Form {
 public:
   PluginInstallWindow(wb::WBContextUI *wbui);
 
-  bool install_plugin(const std::string &path);
+  auto install_plugin(const std::string &path) -> bool;
 
 private:
   mforms::Box _box;

@@ -32,7 +32,7 @@
 
 #define MODULE_VERSION "1.0.0"
 
-static grt::ListRef<app_Plugin> get_mysql_plugins_info();
+static auto get_mysql_plugins_info() -> grt::ListRef<app_Plugin>;
 
 class MySQLDbDiffReportingModuleImpl : public grt::ModuleImplBase, public PluginInterfaceImpl {
 public:
@@ -43,8 +43,8 @@ public:
                      DECLARE_MODULE_FUNCTION(MySQLDbDiffReportingModuleImpl::getPluginInfo),
                      DECLARE_MODULE_FUNCTION(MySQLDbDiffReportingModuleImpl::runWizard), NULL);
 
-  int runWizard() {
-    extern grtui::WizardPlugin *createWbPluginDiffReport(grt::Module * module);
+  auto runWizard() -> int {
+    extern auto createWbPluginDiffReport(grt::Module * module) -> grtui::WizardPlugin *;
 
     grtui::WizardPlugin *wizard = createWbPluginDiffReport(this);
     int rc = wizard->run_wizard();
@@ -58,7 +58,7 @@ public:
   }
 };
 
-static grt::ListRef<app_Plugin> get_mysql_plugins_info() {
+static auto get_mysql_plugins_info() -> grt::ListRef<app_Plugin> {
   grt::ListRef<app_Plugin> plugins(true);
   app_PluginRef diff_sql_generator(grt::Initialized);
 

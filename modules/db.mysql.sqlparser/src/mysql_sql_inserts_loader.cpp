@@ -39,7 +39,7 @@ Mysql_sql_inserts_loader::Mysql_sql_inserts_loader() {
   NULL_STATE_KEEPER
 }
 
-void Mysql_sql_inserts_loader::load(const std::string &sql, const std::string &schema_name) {
+auto Mysql_sql_inserts_loader::load(const std::string &sql, const std::string &schema_name) -> void {
   NULL_STATE_KEEPER
 
   _schema_name = schema_name;
@@ -50,7 +50,7 @@ void Mysql_sql_inserts_loader::load(const std::string &sql, const std::string &s
   Mysql_sql_parser_base::parse_sql_script(sql_parser_fe, sql.c_str());
 }
 
-int Mysql_sql_inserts_loader::process_sql_statement(const SqlAstNode *tree) {
+auto Mysql_sql_inserts_loader::process_sql_statement(const SqlAstNode *tree) -> int {
   if (tree) {
     if (const SqlAstNode *item = tree->subitem(sql::_statement, sql::_insert))
       process_insert_statement(item);
@@ -59,7 +59,7 @@ int Mysql_sql_inserts_loader::process_sql_statement(const SqlAstNode *tree) {
   return 0; // error count
 }
 
-Mysql_sql_inserts_loader::Parse_result Mysql_sql_inserts_loader::process_insert_statement(const SqlAstNode *tree) {
+auto Mysql_sql_inserts_loader::process_insert_statement(const SqlAstNode *tree) -> Mysql_sql_inserts_loader::Parse_result {
   std::string schema_name = _schema_name;
   std::string table_name;
   Strings fields_names;

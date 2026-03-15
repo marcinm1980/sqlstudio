@@ -45,7 +45,7 @@ Recordset_table_inserts_storage::Recordset_table_inserts_storage(const std::stri
 Recordset_table_inserts_storage::~Recordset_table_inserts_storage() {
 }
 
-void Recordset_table_inserts_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_table_inserts_storage::do_unserialize(Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   Recordset::Column_names &column_names = get_column_names(recordset);
   Recordset::Column_types &column_types = get_column_types(recordset);
   Recordset::Column_types &real_column_types = get_real_column_types(recordset);
@@ -87,7 +87,7 @@ void Recordset_table_inserts_storage::do_unserialize(Recordset *recordset, sqlit
       known_real_typegroups["com.mysql.rdbms.common.typegroup.numeric"] = ld;
     }
 
-    inline sqlite::variant_t map_simple_datatype(db_SimpleDatatypeRef simple_datatype, bool real_type) {
+    inline auto map_simple_datatype(db_SimpleDatatypeRef simple_datatype, bool real_type) -> sqlite::variant_t {
       sqlite::variant_t mapped_type;
       std::string datatype_group_name;
       if (simple_datatype.is_valid()) {
@@ -221,7 +221,7 @@ void Recordset_table_inserts_storage::do_unserialize(Recordset *recordset, sqlit
   std::copy(_mapped_colnames.begin() + column_names.size(), _mapped_colnames.end(), std::back_inserter(column_names));
 }
 
-void Recordset_table_inserts_storage::do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) {
+auto Recordset_table_inserts_storage::do_serialize(const Recordset *recordset, sqlite::connection *data_swap_db) -> void {
   AutoSwap<std::string> table_name_mapper(_table_name, _mapped_table_name);
 
   Recordset::Column_names *colnames = const_cast<Recordset::Column_names *>(recordset->column_names());
@@ -231,8 +231,8 @@ void Recordset_table_inserts_storage::do_serialize(const Recordset *recordset, s
   Recordset_sqlite_storage::do_serialize(recordset, data_swap_db);
 }
 
-void Recordset_table_inserts_storage::generate_sql_script(const Recordset *recordset, sqlite::connection *data_swap_db,
-                                                          Sql_script &sql_script, bool is_update_script, bool binaryAsString) {
+auto Recordset_table_inserts_storage::generate_sql_script(const Recordset *recordset, sqlite::connection *data_swap_db,
+                                                          Sql_script &sql_script, bool is_update_script, bool binaryAsString) -> void {
   AutoSwap<std::string> table_name_mapper(_table_name, _mapped_table_name);
 
   Recordset::Column_names *colnames = const_cast<Recordset::Column_names *>(recordset->column_names());
@@ -241,14 +241,14 @@ void Recordset_table_inserts_storage::generate_sql_script(const Recordset *recor
   Recordset_sqlite_storage::generate_sql_script(recordset, data_swap_db, sql_script, is_update_script, true);
 }
 
-void Recordset_table_inserts_storage::do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db,
-                                                       bool skip_commit) {
+auto Recordset_table_inserts_storage::do_apply_changes(const Recordset *recordset, sqlite::connection *data_swap_db,
+                                                       bool skip_commit) -> void {
   Recordset_sqlite_storage::do_apply_changes(recordset, data_swap_db, skip_commit);
   bec::GRTManager::get()->has_unsaved_changes(true);
 }
 
-void Recordset_table_inserts_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db,
-                                                          RowId rowid, ColumnId column, sqlite::variant_t &blob_value) {
+auto Recordset_table_inserts_storage::do_fetch_blob_value(Recordset *recordset, sqlite::connection *data_swap_db,
+                                                          RowId rowid, ColumnId column, sqlite::variant_t &blob_value) -> void {
   AutoSwap<std::string> table_name_mapper(_table_name, _mapped_table_name);
 
   Recordset::Column_names *colnames = const_cast<Recordset::Column_names *>(recordset->column_names());

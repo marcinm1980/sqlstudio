@@ -63,7 +63,7 @@ namespace MySQL {
 
   public
     ref class UnknownBackendException : public BackendException {
-      std::string itoa(int i) {
+      auto itoa(int i) -> std::string {
         std::stringstream ss;
         ss << i;
         std::string res = ss.str().c_str();

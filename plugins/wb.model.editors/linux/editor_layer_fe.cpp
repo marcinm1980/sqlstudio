@@ -36,7 +36,7 @@
 class LayerEditor : public PluginEditorBase {
   LayerEditorBE *_be;
 
-  virtual bec::BaseEditor *get_be() {
+  virtual auto get_be() -> bec::BaseEditor * {
     return _be;
   }
 
@@ -59,7 +59,7 @@ public:
     delete _be;
   }
 
-  virtual void do_refresh_form_data() {
+  virtual auto do_refresh_form_data() -> void {
     Gtk::Entry *entry(0);
     xml()->get_widget("layer_name", entry);
     entry->set_text(_be->get_name());
@@ -76,7 +76,7 @@ public:
     }
   }
 
-  virtual bool switch_edited_object(const grt::BaseListRef &args) {
+  virtual auto switch_edited_object(const grt::BaseListRef &args) -> bool {
     LayerEditorBE *old_be = _be;
     _be = new LayerEditorBE(studio_physical_LayerRef::cast_from(args[0]));
     delete old_be;
@@ -90,13 +90,13 @@ public:
     return true;
   }
 
-  void set_name(const std::string &name) {
+  auto set_name(const std::string &name) -> void {
     _be->set_name(name);
     _signal_title_changed.emit(_be->get_title());
   }
 
 private:
-  void color_set() {
+  auto color_set() -> void {
     Gtk::Button *button(0);
     xml()->get_widget("layer_color_btn", button);
 
@@ -114,7 +114,7 @@ private:
 };
 
 extern "C" {
-GUIPluginBase *createPhysicalLayerEditor(grt::Module *m, const grt::BaseListRef &args) {
+auto createPhysicalLayerEditor(grt::Module *m, const grt::BaseListRef &args) -> GUIPluginBase * {
   return Gtk::manage(new LayerEditor(m, args));
 }
 };

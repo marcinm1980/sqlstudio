@@ -96,7 +96,7 @@ public:
     : db_Sequence(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Sequence";
   }
 
@@ -104,12 +104,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Sequence());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -126,7 +126,7 @@ public:
     : db_Synonym(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Synonym";
   }
 
@@ -134,12 +134,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Synonym());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -156,7 +156,7 @@ public:
     : db_Routine(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Routine";
   }
 
@@ -164,12 +164,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Routine());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -186,7 +186,7 @@ public:
     : db_RoutineGroup(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.RoutineGroup";
   }
 
@@ -194,12 +194,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_RoutineGroup());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -216,7 +216,7 @@ public:
     : db_View(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.View";
   }
 
@@ -224,12 +224,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_View());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -245,7 +245,7 @@ public:
     : db_Trigger(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Trigger";
   }
 
@@ -253,12 +253,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Trigger());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -274,7 +274,7 @@ public:
     : db_ForeignKey(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.ForeignKey";
   }
 
@@ -282,12 +282,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_ForeignKey());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -303,7 +303,7 @@ public:
     : db_IndexColumn(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.IndexColumn";
   }
 
@@ -311,12 +311,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_IndexColumn());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -336,7 +336,7 @@ public:
       _ignoreDuplicateRows(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Index";
   }
 
@@ -347,7 +347,7 @@ public:
    * \par In Python:
    *    value = obj.clustered
    */
-  grt::IntegerRef clustered() const { return _clustered; }
+  auto clustered() const -> grt::IntegerRef { return _clustered; }
 
   /**
    * Setter for attribute clustered
@@ -356,7 +356,7 @@ public:
    * \par In Python:
    *   obj.clustered = value
    */
-  virtual void clustered(const grt::IntegerRef &value) {
+  virtual auto clustered(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_clustered);
     _clustered = value;
     member_changed("clustered", ovalue, value);
@@ -369,7 +369,7 @@ public:
    * \par In Python:
    *    value = obj.filterDefinition
    */
-  grt::StringRef filterDefinition() const { return _filterDefinition; }
+  auto filterDefinition() const -> grt::StringRef { return _filterDefinition; }
 
   /**
    * Setter for attribute filterDefinition
@@ -378,7 +378,7 @@ public:
    * \par In Python:
    *   obj.filterDefinition = value
    */
-  virtual void filterDefinition(const grt::StringRef &value) {
+  virtual auto filterDefinition(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_filterDefinition);
     _filterDefinition = value;
     member_changed("filterDefinition", ovalue, value);
@@ -391,7 +391,7 @@ public:
    * \par In Python:
    *    value = obj.hasFilter
    */
-  grt::IntegerRef hasFilter() const { return _hasFilter; }
+  auto hasFilter() const -> grt::IntegerRef { return _hasFilter; }
 
   /**
    * Setter for attribute hasFilter
@@ -400,7 +400,7 @@ public:
    * \par In Python:
    *   obj.hasFilter = value
    */
-  virtual void hasFilter(const grt::IntegerRef &value) {
+  virtual auto hasFilter(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_hasFilter);
     _hasFilter = value;
     member_changed("hasFilter", ovalue, value);
@@ -413,7 +413,7 @@ public:
    * \par In Python:
    *    value = obj.ignoreDuplicateRows
    */
-  grt::IntegerRef ignoreDuplicateRows() const { return _ignoreDuplicateRows; }
+  auto ignoreDuplicateRows() const -> grt::IntegerRef { return _ignoreDuplicateRows; }
 
   /**
    * Setter for attribute ignoreDuplicateRows
@@ -422,7 +422,7 @@ public:
    * \par In Python:
    *   obj.ignoreDuplicateRows = value
    */
-  virtual void ignoreDuplicateRows(const grt::IntegerRef &value) {
+  virtual auto ignoreDuplicateRows(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_ignoreDuplicateRows);
     _ignoreDuplicateRows = value;
     member_changed("ignoreDuplicateRows", ovalue, value);
@@ -436,12 +436,12 @@ protected:
   grt::IntegerRef _ignoreDuplicateRows;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Index());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -481,7 +481,7 @@ public:
       _numericScale(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.UserDatatype";
   }
 
@@ -492,7 +492,7 @@ public:
    * \par In Python:
    *    value = obj.characterMaximumLength
    */
-  grt::IntegerRef characterMaximumLength() const { return _characterMaximumLength; }
+  auto characterMaximumLength() const -> grt::IntegerRef { return _characterMaximumLength; }
 
   /**
    * Setter for attribute characterMaximumLength
@@ -501,7 +501,7 @@ public:
    * \par In Python:
    *   obj.characterMaximumLength = value
    */
-  virtual void characterMaximumLength(const grt::IntegerRef &value) {
+  virtual auto characterMaximumLength(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_characterMaximumLength);
     _characterMaximumLength = value;
     member_changed("characterMaximumLength", ovalue, value);
@@ -514,7 +514,7 @@ public:
    * \par In Python:
    *    value = obj.isNullable
    */
-  grt::IntegerRef isNullable() const { return _isNullable; }
+  auto isNullable() const -> grt::IntegerRef { return _isNullable; }
 
   /**
    * Setter for attribute isNullable
@@ -523,7 +523,7 @@ public:
    * \par In Python:
    *   obj.isNullable = value
    */
-  virtual void isNullable(const grt::IntegerRef &value) {
+  virtual auto isNullable(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_isNullable);
     _isNullable = value;
     member_changed("isNullable", ovalue, value);
@@ -536,7 +536,7 @@ public:
    * \par In Python:
    *    value = obj.numericPrecision
    */
-  grt::IntegerRef numericPrecision() const { return _numericPrecision; }
+  auto numericPrecision() const -> grt::IntegerRef { return _numericPrecision; }
 
   /**
    * Setter for attribute numericPrecision
@@ -545,7 +545,7 @@ public:
    * \par In Python:
    *   obj.numericPrecision = value
    */
-  virtual void numericPrecision(const grt::IntegerRef &value) {
+  virtual auto numericPrecision(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_numericPrecision);
     _numericPrecision = value;
     member_changed("numericPrecision", ovalue, value);
@@ -558,7 +558,7 @@ public:
    * \par In Python:
    *    value = obj.numericScale
    */
-  grt::IntegerRef numericScale() const { return _numericScale; }
+  auto numericScale() const -> grt::IntegerRef { return _numericScale; }
 
   /**
    * Setter for attribute numericScale
@@ -567,7 +567,7 @@ public:
    * \par In Python:
    *   obj.numericScale = value
    */
-  virtual void numericScale(const grt::IntegerRef &value) {
+  virtual auto numericScale(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_numericScale);
     _numericScale = value;
     member_changed("numericScale", ovalue, value);
@@ -581,12 +581,12 @@ protected:
   grt::IntegerRef _numericScale;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_UserDatatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -623,7 +623,7 @@ public:
     : db_StructuredDatatype(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.StructuredDatatype";
   }
 
@@ -631,12 +631,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_StructuredDatatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -652,7 +652,7 @@ public:
     : db_SimpleDatatype(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.SimpleDatatype";
   }
 
@@ -660,12 +660,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_SimpleDatatype());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -683,7 +683,7 @@ public:
       _identity(0) {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Column";
   }
 
@@ -694,7 +694,7 @@ public:
    * \par In Python:
    *    value = obj.computed
    */
-  grt::IntegerRef computed() const { return _computed; }
+  auto computed() const -> grt::IntegerRef { return _computed; }
 
   /**
    * Setter for attribute computed
@@ -703,7 +703,7 @@ public:
    * \par In Python:
    *   obj.computed = value
    */
-  virtual void computed(const grt::IntegerRef &value) {
+  virtual auto computed(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_computed);
     _computed = value;
     member_changed("computed", ovalue, value);
@@ -716,7 +716,7 @@ public:
    * \par In Python:
    *    value = obj.identity
    */
-  grt::IntegerRef identity() const { return _identity; }
+  auto identity() const -> grt::IntegerRef { return _identity; }
 
   /**
    * Setter for attribute identity
@@ -725,7 +725,7 @@ public:
    * \par In Python:
    *   obj.identity = value
    */
-  virtual void identity(const grt::IntegerRef &value) {
+  virtual auto identity(const grt::IntegerRef &value) -> void {
     grt::ValueRef ovalue(_identity);
     _identity = value;
     member_changed("identity", ovalue, value);
@@ -737,12 +737,12 @@ protected:
   grt::IntegerRef _identity;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Column());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -770,7 +770,7 @@ public:
       _createdDatetime("") {
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Table";
   }
 
@@ -781,7 +781,7 @@ public:
    * \par In Python:
    *    value = obj.createdDatetime
    */
-  grt::StringRef createdDatetime() const { return _createdDatetime; }
+  auto createdDatetime() const -> grt::StringRef { return _createdDatetime; }
 
   /**
    * Setter for attribute createdDatetime
@@ -790,7 +790,7 @@ public:
    * \par In Python:
    *   obj.createdDatetime = value
    */
-  virtual void createdDatetime(const grt::StringRef &value) {
+  virtual auto createdDatetime(const grt::StringRef &value) -> void {
     grt::ValueRef ovalue(_createdDatetime);
     _createdDatetime = value;
     member_changed("createdDatetime", ovalue, value);
@@ -801,12 +801,12 @@ protected:
   grt::StringRef _createdDatetime;
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Table());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -834,7 +834,7 @@ public:
     _views.content().__retype(grt::ObjectType, "db.sybase.View");
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Schema";
   }
 
@@ -846,7 +846,7 @@ public:
    * \par In Python:
    *    value = obj.routineGroups
    */
-  grt::ListRef<db_sybase_RoutineGroup> routineGroups() const { return grt::ListRef<db_sybase_RoutineGroup>::cast_from(_routineGroups); }
+  auto routineGroups() const -> grt::ListRef<db_sybase_RoutineGroup> { return grt::ListRef<db_sybase_RoutineGroup>::cast_from(_routineGroups); }
 
 
 private: // The next attribute is read-only.
@@ -860,7 +860,7 @@ public:
    * \par In Python:
    *    value = obj.routines
    */
-  grt::ListRef<db_sybase_Routine> routines() const { return grt::ListRef<db_sybase_Routine>::cast_from(_routines); }
+  auto routines() const -> grt::ListRef<db_sybase_Routine> { return grt::ListRef<db_sybase_Routine>::cast_from(_routines); }
 
 
 private: // The next attribute is read-only.
@@ -874,7 +874,7 @@ public:
    * \par In Python:
    *    value = obj.sequences
    */
-  grt::ListRef<db_sybase_Sequence> sequences() const { return grt::ListRef<db_sybase_Sequence>::cast_from(_sequences); }
+  auto sequences() const -> grt::ListRef<db_sybase_Sequence> { return grt::ListRef<db_sybase_Sequence>::cast_from(_sequences); }
 
 
 private: // The next attribute is read-only.
@@ -888,7 +888,7 @@ public:
    * \par In Python:
    *    value = obj.structuredTypes
    */
-  grt::ListRef<db_sybase_StructuredDatatype> structuredTypes() const { return grt::ListRef<db_sybase_StructuredDatatype>::cast_from(_structuredTypes); }
+  auto structuredTypes() const -> grt::ListRef<db_sybase_StructuredDatatype> { return grt::ListRef<db_sybase_StructuredDatatype>::cast_from(_structuredTypes); }
 
 
 private: // The next attribute is read-only.
@@ -902,7 +902,7 @@ public:
    * \par In Python:
    *    value = obj.synonyms
    */
-  grt::ListRef<db_sybase_Synonym> synonyms() const { return grt::ListRef<db_sybase_Synonym>::cast_from(_synonyms); }
+  auto synonyms() const -> grt::ListRef<db_sybase_Synonym> { return grt::ListRef<db_sybase_Synonym>::cast_from(_synonyms); }
 
 
 private: // The next attribute is read-only.
@@ -916,7 +916,7 @@ public:
    * \par In Python:
    *    value = obj.tables
    */
-  grt::ListRef<db_sybase_Table> tables() const { return grt::ListRef<db_sybase_Table>::cast_from(_tables); }
+  auto tables() const -> grt::ListRef<db_sybase_Table> { return grt::ListRef<db_sybase_Table>::cast_from(_tables); }
 
 
 private: // The next attribute is read-only.
@@ -930,7 +930,7 @@ public:
    * \par In Python:
    *    value = obj.views
    */
-  grt::ListRef<db_sybase_View> views() const { return grt::ListRef<db_sybase_View>::cast_from(_views); }
+  auto views() const -> grt::ListRef<db_sybase_View> { return grt::ListRef<db_sybase_View>::cast_from(_views); }
 
 
 private: // The next attribute is read-only.
@@ -940,12 +940,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Schema());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -997,7 +997,7 @@ public:
     _schemata.content().__retype(grt::ObjectType, "db.sybase.Schema");
   }
 
-  static std::string static_class_name() {
+  static auto static_class_name() -> std::string {
     return "db.sybase.Catalog";
   }
 
@@ -1009,7 +1009,7 @@ public:
    * \par In Python:
    *    value = obj.schemata
    */
-  grt::ListRef<db_sybase_Schema> schemata() const { return grt::ListRef<db_sybase_Schema>::cast_from(_schemata); }
+  auto schemata() const -> grt::ListRef<db_sybase_Schema> { return grt::ListRef<db_sybase_Schema>::cast_from(_schemata); }
 
 
 private: // The next attribute is read-only.
@@ -1019,12 +1019,12 @@ protected:
 
 
 private: // Wrapper methods for use by the grt.
-  static grt::ObjectRef create() {
+  static auto create() -> grt::ObjectRef {
     return grt::ObjectRef(new db_sybase_Catalog());
   }
 
 public:
-  static void grt_register() {
+  static auto grt_register() -> void {
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
@@ -1039,7 +1039,7 @@ public:
 
 
 
-inline void register_structs_db_sybase_xml() {
+inline auto register_structs_db_sybase_xml() -> void {
   grt::internal::ClassRegistry::register_class<db_sybase_Sequence>();
   grt::internal::ClassRegistry::register_class<db_sybase_Synonym>();
   grt::internal::ClassRegistry::register_class<db_sybase_Routine>();

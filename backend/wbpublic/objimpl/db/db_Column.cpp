@@ -39,14 +39,14 @@ using namespace base;
 //================================================================================
 // db_Column
 
-static void notify_visible_member_change(const std::string &member, const grt::ValueRef &ovalue, db_Column *ref) {
+static auto notify_visible_member_change(const std::string &member, const grt::ValueRef &ovalue, db_Column *ref) -> void {
   if (member == "name" || member == "simpleType" || member == "userType") {
     if (ovalue != ref->get_member(member) && ref->owner().is_valid())
       (*db_TableRef::cast_from(ref->owner())->signal_refreshDisplay())("column");
   }
 }
 
-void db_Column::init() {
+auto db_Column::init() -> void {
   // No need to disconnect management since the signal is part of the object.
   _changed_signal.connect(std::bind(notify_visible_member_change, std::placeholders::_1, std::placeholders::_2, this));
 }
@@ -70,7 +70,7 @@ public:
   }
 };
 
-grt::StringRef db_Column::formattedRawType() const {
+auto db_Column::formattedRawType() const -> grt::StringRef {
   if (userType().is_valid()) {
     std::string arguments;
 
@@ -94,7 +94,7 @@ grt::StringRef db_Column::formattedRawType() const {
     return formattedType();
 }
 
-grt::StringRef db_Column::formattedType() const {
+auto db_Column::formattedType() const -> grt::StringRef {
   db_SimpleDatatypeRef simpleType(this->simpleType());
   db_StructuredDatatypeRef structuredType(this->structuredType());
   std::string caption;
@@ -157,7 +157,7 @@ grt::StringRef db_Column::formattedType() const {
   return caption;
 }
 
-void db_Column::formattedType(const grt::StringRef &value) {
+auto db_Column::formattedType(const grt::StringRef &value) -> void {
   if (formattedType() == value.c_str())
     return;
 }
@@ -168,7 +168,7 @@ void db_Column::formattedType(const grt::StringRef &value) {
  *
  * @return 1 on success or 0 on parse error or invalid type/invalid params
  */
-grt::IntegerRef db_Column::setParseType(const std::string &type, const grt::ListRef<db_SimpleDatatype> &typeList) {
+auto db_Column::setParseType(const std::string &type, const grt::ListRef<db_SimpleDatatype> &typeList) -> grt::IntegerRef {
   grt::ListRef<db_UserDatatype> user_types;
   grt::ListRef<db_SimpleDatatype> default_type_list;
   GrtVersionRef targetVersion(grt::Initialized);

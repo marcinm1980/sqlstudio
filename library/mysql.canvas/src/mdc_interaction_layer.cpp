@@ -39,7 +39,7 @@ InteractionLayer::InteractionLayer(CanvasView *view) : Layer(view) {
   _dragging_rectangle = false;
 }
 
-void InteractionLayer::draw_selection(const Rect &clip) {
+auto InteractionLayer::draw_selection(const Rect &clip) -> void {
   CairoCtx *cr = _owner->cairoctx();
   Point p1 = _selection_start.round();
   Point p2 = _selection_end.round();
@@ -66,7 +66,7 @@ void InteractionLayer::draw_selection(const Rect &clip) {
   }
 }
 
-void InteractionLayer::draw_dragging_rectangle() {
+auto InteractionLayer::draw_dragging_rectangle() -> void {
   CairoCtx *cr = _owner->cairoctx();
   Point p1 = _dragging_rectangle_start;
   Point p2 = _dragging_rectangle_end;
@@ -90,7 +90,7 @@ void InteractionLayer::draw_dragging_rectangle() {
   }
 }
 
-void InteractionLayer::repaint(const Rect &bounds) {
+auto InteractionLayer::repaint(const Rect &bounds) -> void {
   if (_selection_started)
     draw_selection(bounds);
 
@@ -118,15 +118,15 @@ void InteractionLayer::repaint(const Rect &bounds) {
   Layer::repaint(bounds);
 }
 
-void InteractionLayer::add_handle(ItemHandle *handle) {
+auto InteractionLayer::add_handle(ItemHandle *handle) -> void {
   _handles.push_back(handle);
 }
 
-void InteractionLayer::remove_handle(ItemHandle *handle) {
+auto InteractionLayer::remove_handle(ItemHandle *handle) -> void {
   _handles.remove(handle);
 }
 
-ItemHandle *InteractionLayer::get_handle_at(const Point &pos) {
+auto InteractionLayer::get_handle_at(const Point &pos) -> ItemHandle * {
   for (std::list<ItemHandle *>::iterator iter = _handles.begin(); iter != _handles.end(); ++iter) {
     if (bounds_contain_point((*iter)->get_bounds(), pos.x, pos.y))
       return *iter;
@@ -134,7 +134,7 @@ ItemHandle *InteractionLayer::get_handle_at(const Point &pos) {
   return 0;
 }
 
-bool InteractionLayer::handle_mouse_move(const Point &pos_, EventState state) {
+auto InteractionLayer::handle_mouse_move(const Point &pos_, EventState state) -> bool {
   Point pos = pos_;
   // make sure pos is inside the canvas area
   Size view_size = _owner->get_total_view_size();
@@ -166,7 +166,7 @@ bool InteractionLayer::handle_mouse_move(const Point &pos_, EventState state) {
   return false;
 }
 
-bool InteractionLayer::handle_mouse_button_top(MouseButton button, bool press, const Point &pos_, EventState state) {
+auto InteractionLayer::handle_mouse_button_top(MouseButton button, bool press, const Point &pos_, EventState state) -> bool {
   Point pos = pos_;
   ItemHandle *handle;
 
@@ -219,7 +219,7 @@ bool InteractionLayer::handle_mouse_button_top(MouseButton button, bool press, c
   return false;
 }
 
-bool InteractionLayer::handle_mouse_button_bottom(MouseButton button, bool press, const Point &pos, EventState state) {
+auto InteractionLayer::handle_mouse_button_bottom(MouseButton button, bool press, const Point &pos, EventState state) -> bool {
   if (button == ButtonLeft) {
     if (press) {
       // check if the point is inside the canvas area
@@ -233,7 +233,7 @@ bool InteractionLayer::handle_mouse_button_bottom(MouseButton button, bool press
   return false;
 }
 
-void InteractionLayer::start_selection_rectangle(const Point &pos, EventState state) {
+auto InteractionLayer::start_selection_rectangle(const Point &pos, EventState state) -> void {
   _owner->get_selection()->begin_multi_selection();
 
   _selection_started = true;
@@ -242,13 +242,13 @@ void InteractionLayer::start_selection_rectangle(const Point &pos, EventState st
   update_selection_rectangle(pos, state);
 }
 
-void InteractionLayer::end_selection_rectangle(const Point &pos, EventState state) {
+auto InteractionLayer::end_selection_rectangle(const Point &pos, EventState state) -> void {
   _selection_started = false;
   update_selection_rectangle(pos, state);
   _owner->get_selection()->end_multi_selection();
 }
 
-void InteractionLayer::update_selection_rectangle(const Point &end, EventState state) {
+auto InteractionLayer::update_selection_rectangle(const Point &end, EventState state) -> void {
   Point p1, p2;
   Group *group = 0;
   CanvasItem *item;
@@ -281,22 +281,22 @@ void InteractionLayer::update_selection_rectangle(const Point &end, EventState s
   }
 }
 
-void InteractionLayer::set_active_area(const Rect &rect) {
+auto InteractionLayer::set_active_area(const Rect &rect) -> void {
   _active_area = rect;
   _owner->queue_repaint();
 }
 
-void InteractionLayer::reset_active_area() {
+auto InteractionLayer::reset_active_area() -> void {
   _active_area = Rect(Point(0, 0), Size(0, 0));
 }
 
-void InteractionLayer::start_dragging_rectangle(const Point &pos) {
+auto InteractionLayer::start_dragging_rectangle(const Point &pos) -> void {
   _dragging_rectangle = true;
   _dragging_rectangle_start = _owner->snap_to_grid(pos);
   _dragging_rectangle_end = _owner->snap_to_grid(pos);
 }
 
-void InteractionLayer::update_dragging_rectangle(const Point &pos) {
+auto InteractionLayer::update_dragging_rectangle(const Point &pos) -> void {
   Point old_start(_dragging_rectangle_start);
   Point old_end(_dragging_rectangle_end);
 
@@ -311,7 +311,7 @@ void InteractionLayer::update_dragging_rectangle(const Point &pos) {
   // _owner->set_needs_repaint();
 }
 
-Rect InteractionLayer::finish_dragging_rectangle() {
+auto InteractionLayer::finish_dragging_rectangle() -> Rect {
   points_reorder(_dragging_rectangle_start, _dragging_rectangle_end);
   Rect rect = Rect(_dragging_rectangle_start, _dragging_rectangle_end);
 
