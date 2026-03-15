@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef SPATIAL_HANDLER_H_
@@ -86,8 +86,15 @@ namespace spatial {
   enum ProjectionType { ProjMercator = 1, ProjEquirectangular = 2, ProjRobinson = 3, ProjBonne = 4, ProjGeodetic = 5 };
 
   enum ShapeType {
-    ShapeUnknown, ShapePoint, ShapeLineString, ShapeLinearRing, ShapePolygon, ShapeMultiPoint,
-    ShapeMultiLineString, ShapeMultiPolygon, ShapeGeometryCollection
+    ShapeUnknown,
+    ShapePoint,
+    ShapeLineString,
+    ShapeLinearRing,
+    ShapePolygon,
+    ShapeMultiPoint,
+    ShapeMultiLineString,
+    ShapeMultiPolygon,
+    ShapeGeometryCollection
   };
 
   std::string shape_description(ShapeType shp);
@@ -211,7 +218,7 @@ namespace spatial {
     double distance(const base::Point &p, const double &allowed_distance = 4.0);
   };
 
-  typedef int LayerId;
+  using LayerId = int;
   WBPUBLICBACKEND_PUBLIC_FUNC LayerId new_layer_id();
 
   class WBPUBLICBACKEND_PUBLIC_FUNC Layer {
@@ -262,5 +269,5 @@ namespace spatial {
     float query_render_progress();
     spatial::Envelope get_envelope();
   };
-};
+}; // namespace spatial
 #endif /* SPATIAL_HANDLER_H_ */

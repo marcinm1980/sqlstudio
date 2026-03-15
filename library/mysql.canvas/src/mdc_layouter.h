@@ -39,7 +39,7 @@ namespace mdc {
     Layouter(Layer *layer);
     virtual ~Layouter();
 
-    virtual CanvasItem *get_item_at(const base::Point &pos) = 0;
+    virtual auto get_item_at(const base::Point &pos) -> CanvasItem * = 0;
     virtual void remove(CanvasItem *item) = 0;
     virtual void remove_all();
 
@@ -48,7 +48,7 @@ namespace mdc {
     virtual void render(CairoCtx *cr);
     virtual void render_gl(mdc::CairoCtx *cr);
 
-    virtual CanvasItem *find_item_with_tag(const std::string &tag);
+    virtual auto find_item_with_tag(const std::string &tag) -> CanvasItem *;
 
     void set_draw_background(bool flag);
     void set_background_corners(mdc::CornerMask mask, float radius);

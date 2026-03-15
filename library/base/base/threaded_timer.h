@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -36,7 +36,7 @@
 // The callback type used for timer events. It gets the id of the task returned from add_task
 // and must return a boolean value which tells us if the task should continue to run or
 // immediately be stopped. For one-shot tasks the return value has no meaning.
-typedef std::function<bool(int)> TimerFunction;
+using TimerFunction = std::function<bool(int)>;
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4251) // We don't want to DLL export TimerTask, and we don't need a warning for that.
@@ -52,7 +52,7 @@ struct TimerTask {
   bool scheduled;         // True if the task has been scheduled currently (it is waiting in the pool to get executed).
 };
 
-typedef std::list<TimerTask> TaskList;
+using TaskList = std::list<TimerTask>;
 
 // The unit type of the timer value given to ThreadedTimer::add_task.
 enum TimerUnit { TimerFrequency, TimerTimeSpan };

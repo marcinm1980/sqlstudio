@@ -41,7 +41,7 @@ namespace mdc {
 
     virtual void draw_contents_gl();
 
-    virtual bool can_render_gl() {
+    virtual auto can_render_gl() -> bool {
       return true;
     }
 

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _BOOST_SMART_PTR_HELPERS_H_
@@ -35,24 +35,24 @@ namespace BoostHelper {
   class Container {
   public:
     shrPtr ptr;
-    Container(){};
-    Container(const Container &incoming) : ptr(incoming.ptr){};
-    Container(const shrPtr &incoming) : ptr(incoming){};
-    Container(Container &&incoming) : ptr(std::move(incoming.ptr)){};
+    Container() {};
+    Container(const Container &incoming) : ptr(incoming.ptr) {};
+    Container(const shrPtr &incoming) : ptr(incoming) {};
+    Container(Container &&incoming) : ptr(std::move(incoming.ptr)) {};
     void operator()(...) {
       ptr.reset();
     }
   };
   template <class C>
   static std::shared_ptr<C> convertPointer(const boost::shared_ptr<C> &ptr) {
-    typedef Container<std::shared_ptr<C>> ContainerType;
+    using ContainerType = Container<std::shared_ptr<C>>;
     ContainerType *c = boost::get_deleter<ContainerType, C>(ptr);
     if (c == NULL)
       return std::shared_ptr<C>(ptr.get(), Container<boost::shared_ptr<C>>(ptr));
     else
       return c->ptr;
   }
-}
+} // namespace BoostHelper
 
 template <class T>
 std::shared_ptr<T> shared_ptr_from(T *raw_ptr) {
@@ -112,7 +112,7 @@ inline std::weak_ptr<T> weak_ptr_from(T *raw_ptr) {
 struct IntrusiveRef {
   IntrusiveRef() : _count(0) {
   }
-  virtual ~IntrusiveRef(){};
+  virtual ~IntrusiveRef() {};
   int _count;
 };
 

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _MDC_CANVAS_VIEW_H_
@@ -51,7 +51,7 @@ namespace mdc {
     friend class CanvasViewExtras;
 
   public:
-    typedef std::list<Layer *> LayerList;
+    using LayerList = std::list<Layer *>;
 
     virtual ~CanvasView();
 
@@ -69,19 +69,19 @@ namespace mdc {
     inline void set_user_data(void *data) {
       _user_data = data;
     }
-    void *get_user_data() {
+    auto get_user_data() -> void * {
       return _user_data;
     }
 
     void set_tag(const std::string &tag);
-    std::string get_tag() const {
+    auto get_tag() const -> std::string {
       return _tag;
     }
 
-    mdc::CanvasItem *find_item_with_tag(const std::string &tag);
+    auto find_item_with_tag(const std::string &tag) -> mdc::CanvasItem *;
 
     void set_printout_mode(bool flag);
-    bool is_printout() {
+    auto is_printout() -> bool {
       return _printout_mode;
     }
 
@@ -91,12 +91,12 @@ namespace mdc {
     virtual void scroll_to(const base::Point &offs);
 
     void set_zoom(float zoom);
-    float get_zoom() const {
+    auto get_zoom() const -> float {
       return _zoom;
     };
 
     void set_page_size(const base::Size &size);
-    base::Size get_page_size() const {
+    auto get_page_size() const -> base::Size {
       return _page_size;
     };
     void set_page_layout(Count xpages, Count ypages);
@@ -106,7 +106,7 @@ namespace mdc {
     }
 
     // logical view size
-    base::Size get_total_view_size() const;
+    auto get_total_view_size() const -> base::Size;
 
     // physical view size
     inline void get_view_size(int &w, int &h) const {
@@ -114,61 +114,62 @@ namespace mdc {
       h = _view_height;
     }
 
-    base::Size get_viewable_size() const;
+    auto get_viewable_size() const -> base::Size;
 
-    base::Rect get_viewport() const;
+    auto get_viewport() const -> base::Rect;
 
-    base::Rect get_viewport_range() const;
+    auto get_viewport_range() const -> base::Rect;
 
-    base::Rect get_content_bounds() const;
+    auto get_content_bounds() const -> base::Rect;
 
-    virtual base::Point window_to_canvas(int x, int y) const;
-    virtual base::Rect window_to_canvas(int x, int y, int w, int h) const;
+    virtual auto window_to_canvas(int x, int y) const -> base::Point;
+    virtual auto window_to_canvas(int x, int y, int w, int h) const -> base::Rect;
     virtual void canvas_to_window(const base::Point &pt, int &x, int &y) const;
     virtual void canvas_to_window(const base::Rect &rect, int &x, int &y, int &w, int &h) const;
 
     void show_grid();
     void hide_grid();
-    bool get_grid_shown();
+    auto get_grid_shown() -> bool;
 
     void set_grid_snapping(bool flag);
-    bool get_grid_snapping();
+    auto get_grid_snapping() -> bool;
 
-    base::Point snap_to_grid(const base::Point &pos);
-    base::Size snap_to_grid(const base::Size &size);
+    auto snap_to_grid(const base::Point &pos) -> base::Point;
+    auto snap_to_grid(const base::Size &size) -> base::Size;
 
     void set_draws_line_hops(bool flag);
 
-    Layer *new_layer(const std::string &name);
+    auto new_layer(const std::string &name) -> Layer *;
     void set_current_layer(Layer *layer);
-    Layer *get_current_layer() const {
+    auto get_current_layer() const -> Layer * {
       return _current_layer;
     }
-    Layer *get_layer(const std::string &name);
-    BackLayer *get_background_layer() const {
+    auto get_layer(const std::string &name) -> Layer *;
+    auto get_background_layer() const -> BackLayer * {
       return _blayer;
     }
-    InteractionLayer *get_interaction_layer() const {
+    auto get_interaction_layer() const -> InteractionLayer * {
       return _ilayer;
     }
 
     void add_layer(Layer *layer);
     void remove_layer(Layer *layer);
-    virtual LayerList &get_layers();
+    virtual auto get_layers() -> LayerList &;
 
     void remove_item(mdc::CanvasItem *item);
 
     virtual void raise_layer(Layer *layer, Layer *above = 0);
     virtual void lower_layer(Layer *layer);
 
-    CanvasItem *get_item_at(int x, int y);
-    CanvasItem *get_item_at(const base::Point &point);
+    auto get_item_at(int x, int y) -> CanvasItem *;
+    auto get_item_at(const base::Point &point) -> CanvasItem *;
 
-    CanvasItem *get_leaf_item_at(int x, int y);
-    CanvasItem *get_leaf_item_at(const base::Point &point);
+    auto get_leaf_item_at(int x, int y) -> CanvasItem *;
+    auto get_leaf_item_at(const base::Point &point) -> CanvasItem *;
 
-    typedef std::function<bool(CanvasItem *)> ItemCheckFunc;
-    std::list<CanvasItem *> get_items_bounded_by(const base::Rect &rect, const ItemCheckFunc &pred = ItemCheckFunc());
+    using ItemCheckFunc = std::function<bool(CanvasItem *)>;
+    auto get_items_bounded_by(const base::Rect &rect, const ItemCheckFunc &pred = ItemCheckFunc())
+      -> std::list<CanvasItem *>;
 
     void repaint();
     void repaint(int x, int y, int width, int height);
@@ -184,44 +185,44 @@ namespace mdc {
     virtual void handle_mouse_enter(int x, int y, EventState state);
     virtual void handle_mouse_leave(int x, int y, EventState state);
 
-    bool handle_key(const KeyInfo &key, bool press, EventState state);
+    auto handle_key(const KeyInfo &key, bool press, EventState state) -> bool;
 
     void start_dragging_rectangle(const base::Point &pos);
-    base::Rect finish_dragging_rectangle();
+    auto finish_dragging_rectangle() -> base::Rect;
 
-    bool focus_item(CanvasItem *item);
-    CanvasItem *get_focused_item();
+    auto focus_item(CanvasItem *item) -> bool;
+    auto get_focused_item() -> CanvasItem *;
 
     void select_items_inside(const base::Rect &rect, SelectType type, Group *group = 0);
 
-    Selection *get_selection() const {
+    auto get_selection() const -> Selection * {
       return _selection;
     };
-    Selection::ContentType get_selected_items();
+    auto get_selected_items() -> Selection::ContentType;
 
     void update_line_crossings(Line *line);
 
-    virtual bool initialize();
+    virtual auto initialize() -> bool;
 
-    const FontSpec &get_default_font();
-    base::Color get_selection_color() const {
+    auto get_default_font() -> const FontSpec &;
+    auto get_selection_color() const -> base::Color {
       return base::Color(0.6, 0.85, 0.95, 1.0);
     }
-    base::Color get_highlight_color() const {
+    auto get_highlight_color() const -> base::Color {
       return base::Color(1, 0.6, 0.0, 0.8);
     }
-    base::Color get_hover_color() const {
+    auto get_hover_color() const -> base::Color {
       return base::Color(0.85, 0.5, 0.5, 0.8);
     }
 
-    void setBackgroundColor(base::Color const& color);
+    void setBackgroundColor(base::Color const &color);
 
-    inline CairoCtx *cairoctx() const {
+    inline auto cairoctx() const -> CairoCtx * {
       return _cairo;
     }
-    virtual bool has_gl() const = 0;
+    virtual auto has_gl() const -> bool = 0;
 
-    virtual Surface *create_temp_surface(const base::Size &size) const;
+    virtual auto create_temp_surface(const base::Size &size) const -> Surface *;
 
     void export_png(const std::string &filename, bool crop = false);
     void export_pdf(const std::string &filename, const base::Size &size_in_pt);
@@ -233,27 +234,27 @@ namespace mdc {
       const std::function<bool(CanvasView *, base::Point, EventState)> &motion_handler,
       const std::function<bool(CanvasView *, KeyInfo, EventState, bool)> &key_handler);
 
-    boost::signals2::signal<void()> *signal_resized() {
+    auto signal_resized() -> boost::signals2::signal<void()> * {
       return &_resized_signal;
     }
-    boost::signals2::signal<void(int, int, int, int)> *signal_repaint() {
+    auto signal_repaint() -> boost::signals2::signal<void(int, int, int, int)> * {
       return &_need_repaint_signal;
     }
-    boost::signals2::signal<void()> *signal_viewport_changed() {
+    auto signal_viewport_changed() -> boost::signals2::signal<void()> * {
       return &_viewport_changed_signal;
     }
-    boost::signals2::signal<void()> *signal_zoom_changed() {
+    auto signal_zoom_changed() -> boost::signals2::signal<void()> * {
       return &_zoom_changed_signal;
     }
 
     void enable_debug(bool flag) {
       _debug = flag;
     }
-    inline bool debug_enabled() {
+    inline auto debug_enabled() -> bool {
       return _debug;
     }
 
-    double get_fps() {
+    auto get_fps() -> double {
       return _fps;
     }
     inline void bookkeep_cache_mem(int amount) {
@@ -329,7 +330,7 @@ namespace mdc {
     void reset_transformations_gl();
     void apply_transformations_for_conversion(cairo_matrix_t *matrix) const;
 
-    bool perform_auto_scroll(const base::Point &mouse_pos);
+    auto perform_auto_scroll(const base::Point &mouse_pos) -> bool;
 
     void render_for_export(const base::Rect &bounds, CairoCtx *cr);
 
@@ -346,11 +347,11 @@ namespace mdc {
 
     base::RecMutex _lock;
 
-    static void *canvas_item_destroyed(void *data);
+    static auto canvas_item_destroyed(void *data) -> void *;
     void set_last_click_item(CanvasItem *item);
     void set_last_over_item(CanvasItem *item);
   };
 
-} // end of mdc namespace
+} // namespace mdc
 
 #endif /* _MDC_CANVAS_VIEW_H_ */

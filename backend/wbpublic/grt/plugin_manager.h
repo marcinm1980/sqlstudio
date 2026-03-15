@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -36,7 +36,7 @@
 typedef uintptr_t NativeHandle;
 #else
 // Don't make this "id" on OSX or we risk a strong reference cycle.
-typedef void *NativeHandle;
+using NativeHandle = void *;
 #endif
 
 // GUI plugins with native code that are loaded and managed by the MySqlStudio process
@@ -57,17 +57,17 @@ namespace bec {
   class BaseEditor;
   class GRTManager;
 
-  typedef enum { NoFlags = 0, ForceNewWindowFlag = (1 << 0), StandaloneWindowFlag = (1 << 1) } GUIPluginFlags;
+  enum GUIPluginFlags { NoFlags = 0, ForceNewWindowFlag = (1 << 0), StandaloneWindowFlag = (1 << 1) };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC ArgumentPool : public std::map<std::string, grt::ValueRef> {
   public:
-    grt::BaseListRef build_argument_list(const app_PluginRef &plugin);
+    auto build_argument_list(const app_PluginRef &plugin) -> grt::BaseListRef;
 
-    static app_PluginFileInputRef needs_file_input(const app_PluginRef &plugin);
-    static bool needs_simple_input(const app_PluginRef &plugin, const std::string &name);
+    static auto needs_file_input(const app_PluginRef &plugin) -> app_PluginFileInputRef;
+    static auto needs_simple_input(const app_PluginRef &plugin, const std::string &name) -> bool;
 
-    grt::ValueRef find_match(const app_PluginInputDefinitionRef &pdef, std::string &searched_key_name_ret,
-                             bool strict = true) const;
+    auto find_match(const app_PluginInputDefinitionRef &pdef, std::string &searched_key_name_ret,
+                    bool strict = true) const -> grt::ValueRef;
 
     void dump_keys(const std::function<void(std::string)> &dump_function) const;
 
@@ -82,13 +82,13 @@ namespace bec {
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC PluginManagerImpl : public grt::CPPModule {
-    typedef grt::CPPModule superclass;
+    using superclass = grt::CPPModule;
 
   public:
-    typedef std::function<NativeHandle(grt::Module *, std::string, std::string, grt::BaseListRef, GUIPluginFlags)>
-      OpenGUIPluginSlot;
-    typedef std::function<void(NativeHandle)> ShowGUIPluginSlot;
-    typedef std::function<void(NativeHandle)> CloseGUIPluginSlot;
+    using OpenGUIPluginSlot =
+      std::function<NativeHandle(grt::Module *, std::string, std::string, grt::BaseListRef, GUIPluginFlags)>;
+    using ShowGUIPluginSlot = std::function<void(NativeHandle)>;
+    using CloseGUIPluginSlot = std::function<void(NativeHandle)>;
 
   public:
     // NOTE: not to be directly instantiated
@@ -112,26 +112,27 @@ namespace bec {
 
     std::vector<app_PluginRef> get_plugins_for_group(const std::string &group);
 
-    app_PluginRef get_plugin(const std::string &name);
+    auto get_plugin(const std::string &name) -> app_PluginRef;
 
-    std::string open_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args);
-    std::string open_gui_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args, GUIPluginFlags flags);
+    auto open_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args) -> std::string;
+    auto open_gui_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args, GUIPluginFlags flags)
+      -> std::string;
 
-    std::string open_plugin_with_object(const app_PluginRef &plugin, GrtObjectRef object);
-    std::string open_plugin_with_selection(const app_PluginRef &plugin, const grt::ObjectListRef &selection);
-    std::string open_plugin_with_file(const app_PluginRef &plugin, const std::string &filename);
+    auto open_plugin_with_object(const app_PluginRef &plugin, GrtObjectRef object) -> std::string;
+    auto open_plugin_with_selection(const app_PluginRef &plugin, const grt::ObjectListRef &selection) -> std::string;
+    auto open_plugin_with_file(const app_PluginRef &plugin, const std::string &filename) -> std::string;
 
-    grt::ValueRef execute_plugin_function(const app_PluginRef &plugin, const grt::BaseListRef &args);
+    auto execute_plugin_function(const app_PluginRef &plugin, const grt::BaseListRef &args) -> grt::ValueRef;
 
-    int show_plugin(const std::string &handle);
-    int close_plugin(const std::string &handle);
+    auto show_plugin(const std::string &handle) -> int;
+    auto close_plugin(const std::string &handle) -> int;
 
-    app_PluginRef select_plugin_for_input(const std::string &group, const grt::BaseListRef &args);
+    auto select_plugin_for_input(const std::string &group, const grt::BaseListRef &args) -> app_PluginRef;
 
-    bool check_plugin_input(const app_PluginInputDefinitionRef &def, const grt::ValueRef &value);
+    auto check_plugin_input(const app_PluginInputDefinitionRef &def, const grt::ValueRef &value) -> bool;
 
     void set_plugin_enabled(const app_PluginRef &plugin, bool flag);
-    bool plugin_enabled(const std::string &plugin_name);
+    auto plugin_enabled(const std::string &plugin_name) -> bool;
 
   public: // for frontends
     void register_plugins(grt::ListRef<app_Plugin> plugins);
@@ -144,7 +145,7 @@ namespace bec {
 
     std::vector<NativeHandle> get_similar_open_plugins(grt::Module *, const std::string &class_name, grt::BaseListRef);
 
-    grt::ListRef<app_Plugin> get_plugin_list(const std::string &group = "");
+    auto get_plugin_list(const std::string &group = "") -> grt::ListRef<app_Plugin>;
 
   protected:
     std::string _registry_path;
@@ -161,25 +162,26 @@ namespace bec {
     std::map<std::string, std::string> _plugin_source_module;
 
   private:
-    grt::ListRef<app_PluginGroup> get_plugin_groups();
+    auto get_plugin_groups() -> grt::ListRef<app_PluginGroup>;
 
-    bool check_input_for_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args);
+    auto check_input_for_plugin(const app_PluginRef &plugin, const grt::BaseListRef &args) -> bool;
 
-    grt::ValueRef open_normal_plugin_grt(const app_PluginRef &plugin, const grt::BaseListRef &args);
+    auto open_normal_plugin_grt(const app_PluginRef &plugin, const grt::BaseListRef &args) -> grt::ValueRef;
 
-    std::string open_gui_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args, GUIPluginFlags flags);
-    int show_gui_plugin_main(const std::string &handle);
-    int close_gui_plugin_main(const std::string &handle);
+    auto open_gui_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args, GUIPluginFlags flags)
+      -> std::string;
+    auto show_gui_plugin_main(const std::string &handle) -> int;
+    auto close_gui_plugin_main(const std::string &handle) -> int;
 
     void open_standalone_plugin_main(const app_PluginRef &plugin, const grt::BaseListRef &args);
 
-    app_PluginGroupRef get_group(const std::string &path);
+    auto get_group(const std::string &path) -> app_PluginGroupRef;
     void add_plugin_to_group(const app_PluginRef &plugin, const std::string &path);
 
-    bool check_plugin_validity(const app_PluginRef &plugin, grt::Module *module);
+    auto check_plugin_validity(const app_PluginRef &plugin, grt::Module *module) -> bool;
 
-    grt::StringListRef get_disabled_plugin_names();
+    auto get_disabled_plugin_names() -> grt::StringListRef;
   };
 
-  typedef ::bec::PluginManagerImpl PluginManager;
-};
+  using PluginManager = ::bec::PluginManagerImpl;
+}; // namespace bec

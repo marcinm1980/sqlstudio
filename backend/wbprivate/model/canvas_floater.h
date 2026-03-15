@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _CANVAS_FLOATER_H_
@@ -42,7 +42,7 @@ namespace wb {
   };
 
   class Floater : public mdc::Box {
-    typedef mdc::Box super;
+    using super = mdc::Box;
 
   public:
     Floater(mdc::Layer *layer, const std::string &title);
@@ -66,6 +66,6 @@ namespace wb {
                                    mdc::EventState state);
     virtual bool on_drag(mdc::CanvasItem *target, const base::Point &point, mdc::EventState state);
   };
-};
+}; // namespace wb
 
 #endif

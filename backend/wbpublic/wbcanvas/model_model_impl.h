@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -36,7 +36,7 @@
 
 class WBPUBLICBACKEND_PUBLIC_FUNC ModelBridgeDelegate {
 public:
-  virtual ~ModelBridgeDelegate(){};
+  virtual ~ModelBridgeDelegate() {};
   virtual mdc::CanvasView *create_diagram(const model_DiagramRef &mview) = 0;
   virtual void free_canvas_view(mdc::CanvasView *view) = 0;
 
@@ -46,7 +46,7 @@ public:
 };
 
 class WBPUBLICBACKEND_PUBLIC_FUNC model_Model::ImplData : public BridgeBase {
-  typedef BridgeBase super;
+  using super = BridgeBase;
 
 protected:
   model_Model *_owner;

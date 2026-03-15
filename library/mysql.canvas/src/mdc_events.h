@@ -102,28 +102,28 @@ namespace mdc {
     KeyCode keycode;
     std::string string;
 
-    bool operator==(const KeyInfo& other) const {
+    auto operator==(const KeyInfo& other) const -> bool {
       if (keycode != 0 && keycode == other.keycode)
         return true;
       return string == other.string;
     }
   };
 
-  inline EventState operator&(EventState s1, EventState s2) {
+  inline auto operator&(EventState s1, EventState s2) -> EventState {
     return (EventState)((int)s1 & (int)s2);
   }
 
-  inline EventState operator|(EventState s1, EventState s2) {
+  inline auto operator|(EventState s1, EventState s2) -> EventState {
     return (EventState)((int)s1 | (int)s2);
   }
 
   enum MouseButton { ButtonLeft = 0, ButtonMiddle = 1, ButtonRight = 2 };
 
-  inline EventState operator-(EventState s, MouseButton b) {
+  inline auto operator-(EventState s, MouseButton b) -> EventState {
     return (EventState)((int)s & ~(1 << (int)b));
   }
 
-  inline EventState operator+(EventState s, MouseButton b) {
+  inline auto operator+(EventState s, MouseButton b) -> EventState {
     return (EventState)((int)s | (1 << (int)b));
   }
 };

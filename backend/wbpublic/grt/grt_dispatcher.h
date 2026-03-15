@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -53,7 +53,7 @@ namespace bec {
     DispatcherCallbackBase();
 
   public:
-    typedef std::shared_ptr<DispatcherCallbackBase> Ref;
+    using Ref = std::shared_ptr<DispatcherCallbackBase>;
 
     virtual ~DispatcherCallbackBase();
     virtual void execute() = 0;
@@ -66,10 +66,10 @@ namespace bec {
   template <class R>
   class DispatcherCallback : public DispatcherCallbackBase {
   public:
-    typedef std::function<R()> slot_type;
-    typedef std::shared_ptr<DispatcherCallback<R> > Ref;
+    using slot_type = std::function<R()>;
+    using Ref = std::shared_ptr<DispatcherCallback<R>>;
 
-    static Ref create_callback(const slot_type &slot) {
+    static auto create_callback(const slot_type &slot) -> Ref {
       return Ref(new DispatcherCallback<R>(slot));
     }
 
@@ -78,7 +78,7 @@ namespace bec {
         _return_value = _slot();
     }
 
-    R get_result() {
+    auto get_result() -> R {
       return _return_value;
     }
 
@@ -86,16 +86,16 @@ namespace bec {
     slot_type _slot;
     R _return_value;
 
-    DispatcherCallback(const slot_type &slot) : DispatcherCallbackBase(), _slot(slot){};
+    DispatcherCallback(const slot_type &slot) : DispatcherCallbackBase(), _slot(slot) {};
   };
 
   template <>
   class DispatcherCallback<void> : public DispatcherCallbackBase {
   public:
-    typedef std::function<void()> slot_type;
-    typedef std::shared_ptr<DispatcherCallback<void> > Ref;
+    using slot_type = std::function<void()>;
+    using Ref = std::shared_ptr<DispatcherCallback<void>>;
 
-    static Ref create_callback(const slot_type &slot = slot_type()) {
+    static auto create_callback(const slot_type &slot = slot_type()) -> Ref {
       return Ref(new DispatcherCallback<void>(slot));
     }
 
@@ -107,32 +107,32 @@ namespace bec {
   private:
     slot_type _slot;
 
-    DispatcherCallback(const slot_type &slot) : DispatcherCallbackBase(), _slot(slot){};
+    DispatcherCallback(const slot_type &slot) : DispatcherCallbackBase(), _slot(slot) {};
   };
 
   //------------------------------------------------------------------------------------------------
 
   class WBPUBLICBACKEND_PUBLIC_FUNC GRTTaskBase {
   public:
-    typedef std::shared_ptr<GRTTaskBase> Ref;
+    using Ref = std::shared_ptr<GRTTaskBase>;
 
     virtual ~GRTTaskBase();
 
-    inline bool is_finished() {
+    inline auto is_finished() -> bool {
       return _finished;
     }
 
-    virtual grt::ValueRef execute() = 0;
+    virtual auto execute() -> grt::ValueRef = 0;
 
     void cancel();
-    inline bool is_cancelled() {
+    inline auto is_cancelled() -> bool {
       return _cancelled;
     }
 
-    std::string name() {
+    auto name() -> std::string {
       return _name;
     }
-    grt::ValueRef result() {
+    auto result() -> grt::ValueRef {
       return _result;
     };
 
@@ -153,21 +153,21 @@ namespace bec {
     virtual void failed(const std::exception &exc);
     virtual void failed_m(const std::exception &exc);
 
-    virtual bool process_message(const grt::Message &msg);
+    virtual auto process_message(const grt::Message &msg) -> bool;
     virtual void process_message_m(const grt::Message &msg);
 
-    grt::grt_runtime_error *get_error() {
+    auto get_error() -> grt::grt_runtime_error * {
       return _exception;
     };
 
     // Signals.
-    typedef boost::signals2::signal<void()> StartingTaskSignal;
+    using StartingTaskSignal = boost::signals2::signal<void()>;
     StartingTaskSignal signal_starting_task;
 
-    typedef boost::signals2::signal<void()> FinishingTaskSignal;
+    using FinishingTaskSignal = boost::signals2::signal<void()>;
     FinishingTaskSignal signal_finishing_task;
 
-    typedef boost::signals2::signal<void()> FailingTaskSignal;
+    using FailingTaskSignal = boost::signals2::signal<void()>;
     FailingTaskSignal signal_failing_task;
 
   protected:
@@ -194,34 +194,34 @@ namespace bec {
 
     // Should never be defined and called.
     GRTTaskBase(GRTTaskBase &);
-    GRTTaskBase &operator=(GRTTaskBase &);
+    auto operator=(GRTTaskBase &) -> GRTTaskBase &;
   };
 
   //------------------------------------------------------------------------------------------------
 
   class WBPUBLICBACKEND_PUBLIC_FUNC GRTTask : public GRTTaskBase {
-    typedef boost::signals2::signal<void()> StartedSignal;
-    typedef boost::signals2::signal<void(grt::ValueRef)> FinishedSignal;
-    typedef boost::signals2::signal<void(const std::exception &)> FailedSignal;
-    typedef boost::signals2::signal<void(const grt::Message &)> ProcessMessageSignal;
+    using StartedSignal = boost::signals2::signal<void()>;
+    using FinishedSignal = boost::signals2::signal<void(grt::ValueRef)>;
+    using FailedSignal = boost::signals2::signal<void(const std::exception &)>;
+    using ProcessMessageSignal = boost::signals2::signal<void(const grt::Message &)>;
 
   public:
-    typedef std::shared_ptr<GRTTask> Ref;
+    using Ref = std::shared_ptr<GRTTask>;
 
-    static Ref create_task(const std::string &name, const std::shared_ptr<GRTDispatcher> dispatcher,
-                           const std::function<grt::ValueRef()> &function);
+    static auto create_task(const std::string &name, const std::shared_ptr<GRTDispatcher> dispatcher,
+                            const std::function<grt::ValueRef()> &function) -> Ref;
 
     // XXX replace with direct slots?
-    StartedSignal *signal_started() {
+    auto signal_started() -> StartedSignal * {
       return &_sigStarted;
     }
-    FinishedSignal *signal_finished() {
+    auto signal_finished() -> FinishedSignal * {
       return &_sigFinished;
     }
-    FailedSignal *signal_failed() {
+    auto signal_failed() -> FailedSignal * {
       return &_sigFailed;
     }
-    ProcessMessageSignal *signal_message() {
+    auto signal_message() -> ProcessMessageSignal * {
       return &_message;
     }
 
@@ -233,7 +233,7 @@ namespace bec {
     FailedSignal _sigFailed;
     ProcessMessageSignal _message;
 
-    virtual grt::ValueRef execute();
+    virtual auto execute() -> grt::ValueRef;
 
     GRTTask(const std::string &name, const std::shared_ptr<GRTDispatcher> dispatcher,
             const std::function<grt::ValueRef()> &function);
@@ -241,43 +241,43 @@ namespace bec {
     virtual void finished_m(const grt::ValueRef &result);
     virtual void failed_m(const std::exception &error);
 
-    virtual bool process_message(const grt::Message &msg);
+    virtual auto process_message(const grt::Message &msg) -> bool;
     virtual void process_message_m(const grt::Message &msg);
   };
 
   //------------------------------------------------------------------------------------------------
 
   class GRTShellTask : public GRTTaskBase {
-    typedef boost::signals2::signal<void(grt::ShellCommand, std::string)> FinishedSignal;
-    typedef boost::signals2::signal<void(const grt::Message &)> ProcessMessageSignal;
+    using FinishedSignal = boost::signals2::signal<void(grt::ShellCommand, std::string)>;
+    using ProcessMessageSignal = boost::signals2::signal<void(const grt::Message &)>;
 
   public:
-    typedef std::shared_ptr<GRTShellTask> Ref;
+    using Ref = std::shared_ptr<GRTShellTask>;
 
-    static Ref create_task(const std::string &name, const std::shared_ptr<GRTDispatcher> dispatcher,
-                           const std::string &command);
+    static auto create_task(const std::string &name, const std::shared_ptr<GRTDispatcher> dispatcher,
+                            const std::string &command) -> Ref;
 
-    FinishedSignal &signal_finished() {
+    auto signal_finished() -> FinishedSignal & {
       return _finished_signal;
     }
-    ProcessMessageSignal &signal_message() {
+    auto signal_message() -> ProcessMessageSignal & {
       return _message;
     }
 
-    inline std::string get_prompt() const {
+    inline auto get_prompt() const -> std::string {
       return _prompt;
     }
-    inline grt::ShellCommand get_result() const {
+    inline auto get_result() const -> grt::ShellCommand {
       return _result;
     }
 
   protected:
     GRTShellTask(const std::string &name, const std::shared_ptr<GRTDispatcher> dispatcher, const std::string &command);
 
-    virtual grt::ValueRef execute();
+    virtual auto execute() -> grt::ValueRef;
     virtual void finished_m(const grt::ValueRef &result);
 
-    virtual bool process_message(const grt::Message &msg);
+    virtual auto process_message(const grt::Message &msg) -> bool;
     virtual void process_message_m(const grt::Message &msg);
 
     FinishedSignal _finished_signal;
@@ -293,8 +293,8 @@ namespace bec {
 
   class WBPUBLICBACKEND_PUBLIC_FUNC GRTDispatcher : public std::enable_shared_from_this<GRTDispatcher> {
   public:
-    typedef void (*FlushAndWaitCallback)();
-    typedef std::shared_ptr<GRTDispatcher> Ref;
+    using FlushAndWaitCallback = void (*)();
+    using Ref = std::shared_ptr<GRTDispatcher>;
 
   private:
     GAsyncQueue *_task_queue;
@@ -313,7 +313,7 @@ namespace bec {
     GAsyncQueue *_callback_queue;
     GThread *_thread;
 
-    static gpointer worker_thread(gpointer data);
+    static auto worker_thread(gpointer data) -> gpointer;
 
     GRTTaskBase::Ref _current_task;
 
@@ -328,26 +328,27 @@ namespace bec {
 
     void restore_callbacks(const GRTTaskBase::Ref task);
 
-    bool message_callback(const grt::Message &msg, void *sender);
+    auto message_callback(const grt::Message &msg, void *sender) -> bool;
 
   public:
-    static Ref create_dispatcher(bool threaded, bool is_main_dispatcher);
+    static auto create_dispatcher(bool threaded, bool is_main_dispatcher) -> Ref;
 
     virtual ~GRTDispatcher();
 
     void execute_now(const GRTTaskBase::Ref task);
 
     void add_task(const GRTTaskBase::Ref task);
-    grt::ValueRef add_task_and_wait(const GRTTaskBase::Ref task);
+    auto add_task_and_wait(const GRTTaskBase::Ref task) -> grt::ValueRef;
 
-    grt::ValueRef execute_sync_function(const std::string &name, const std::function<grt::ValueRef()> &function);
+    auto execute_sync_function(const std::string &name, const std::function<grt::ValueRef()> &function)
+      -> grt::ValueRef;
 
     void execute_async_function(const std::string &name, const std::function<grt::ValueRef()> &function);
 
     void wait_task(const GRTTaskBase::Ref task);
 
     template <class R>
-    R call_from_main_thread(const std::function<R()> &callback, bool wait, bool force_queue) {
+    auto call_from_main_thread(const std::function<R()> &callback, bool wait, bool force_queue) -> R {
       typename DispatcherCallback<R>::Ref cb = DispatcherCallback<R>::create_callback(callback);
       call_from_main_thread(cb, wait, force_queue);
       return cb->get_result();
@@ -363,13 +364,13 @@ namespace bec {
     void start();
     void shutdown();
 
-    bool get_busy();
+    auto get_busy() -> bool;
 
     void cancel_task(const GRTTaskBase::Ref task);
 
     void flush_pending_callbacks();
 
-    GThread *get_thread() const {
+    auto get_thread() const -> GThread * {
       return _thread;
     }
   };
@@ -380,4 +381,4 @@ namespace bec {
     DispatcherCallback<void>::Ref cb = DispatcherCallback<void>::create_callback(callback);
     call_from_main_thread(cb, wait, force_queue);
   }
-};
+}; // namespace bec

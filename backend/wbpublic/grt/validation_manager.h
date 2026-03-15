@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -76,7 +76,7 @@ namespace bec {
       grt::Validator::Tag tag;
     };
 
-    typedef std::deque<Message> MessageList;
+    using MessageList = std::deque<Message>;
     MessageList _errors;
     MessageList _warnings;
 
@@ -87,9 +87,8 @@ namespace bec {
   class WBPUBLICBACKEND_PUBLIC_FUNC ValidationManager {
   public:
     // const int parameter in MessageSignal is a grt::MessageType
-    typedef boost::signals2::signal<void(const grt::Validator::Tag&, const grt::ObjectRef&, const std::string&,
-                                         const int)>
-      MessageSignal;
+    using MessageSignal =
+      boost::signals2::signal<void(const grt::Validator::Tag&, const grt::ObjectRef&, const std::string&, const int)>;
 
     static void scan();
     static void register_validator(const std::string& type, grt::Validator* v);
@@ -113,4 +112,4 @@ namespace bec {
 
     return _signal_notify;
   }
-}
+} // namespace bec

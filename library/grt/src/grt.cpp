@@ -88,13 +88,13 @@ std::map<std::string, base::any> grt::convert(const grt::DictRef dict) {
     if (val.is_valid()) {
       switch (val.type()) {
         case grt::IntegerType:
-          item = {it->first, grt::IntegerRef::extract_from(val)};
+          item = { it->first, grt::IntegerRef::extract_from(val) };
           break;
         case grt::DoubleType:
-          item = {it->first, grt::DoubleRef::extract_from(val)};
+          item = { it->first, grt::DoubleRef::extract_from(val) };
           break;
         case grt::StringType:
-          item = {it->first, grt::StringRef::extract_from(val)};
+          item = { it->first, grt::StringRef::extract_from(val) };
           break;
         case grt::ListType: {
           auto list = grt::BaseListRef::cast_from(val);
@@ -104,16 +104,16 @@ std::map<std::string, base::any> grt::convert(const grt::DictRef dict) {
           break;
         }
         case grt::DictType:
-          item = {it->first, convert(grt::DictRef::cast_from(val))};
+          item = { it->first, convert(grt::DictRef::cast_from(val)) };
           break;
         case grt::ObjectType:
-          item = {it->first, grt::ObjectRef::cast_from(val)};
+          item = { it->first, grt::ObjectRef::cast_from(val) };
           break;
         default:
-          item = {it->first, val};
+          item = { it->first, val };
       }
     } else
-      item = {it->first, nullptr};
+      item = { it->first, nullptr };
 
     result.insert(item);
   }
@@ -212,7 +212,7 @@ db_error::db_error(const sql::SQLException &exc) : std::runtime_error(exc.what()
 
 //----------------- Value ----------------------------------------------------------------------------------------------
 
-internal::Value* internal::Value::retain() {
+internal::Value *internal::Value::retain() {
   g_atomic_int_inc(&_refcount);
   return this;
 }
@@ -275,11 +275,10 @@ GRT::GRT() : _check_serialized_crc(false), _verbose(false), _testing(false) {
 }
 
 GRT::~GRT() {
-
-  for (auto &it: _messageSlotStack) {
+  for (auto &it : _messageSlotStack) {
     delete it;
   }
-   _messageSlotStack.clear();
+  _messageSlotStack.clear();
 
   delete _shell;
   _shell = nullptr;
@@ -287,8 +286,7 @@ GRT::~GRT() {
   delete _default_undo_manager;
   _default_undo_manager = nullptr;
 
-
-  for (const auto it: _modules) {
+  for (const auto it : _modules) {
     auto module = it->getModule();
     delete it;
     if (module) {
@@ -309,17 +307,16 @@ GRT::~GRT() {
   for (std::map<std::string, MetaClass *>::iterator iter = _metaclasses.begin(); iter != _metaclasses.end(); ++iter)
     delete iter->second;
   _metaclasses.clear();
-  
+
   // We need to first release PythonLoader so we don't end up Python calling some WB modules
-  auto iter = std::remove_if(_loaders.begin(), _loaders.end(), 
-                  [&](auto module) { return module->get_loader_name() == grt::LanguagePython; });
+  auto iter = std::remove_if(_loaders.begin(), _loaders.end(),
+                             [&](auto module) { return module->get_loader_name() == grt::LanguagePython; });
 
   for (; iter != _loaders.end(); ++iter) {
     delete *iter;
   }
-  
-  _loaders.erase(iter, _loaders.end());
 
+  _loaders.erase(iter, _loaders.end());
 }
 
 void GRT::push_undo_manager(UndoManager *um) {
@@ -436,7 +433,7 @@ void GRT::reinitialiseForTests() {
     }
   }
 
-  for (const auto &it: _modules) {
+  for (const auto &it : _modules) {
     auto module = it->getModule();
     delete it;
     if (module) {
@@ -471,7 +468,7 @@ void GRT::reinitialiseForTests() {
   _tracking_changes = 0;
 
   if (getenv("GRT_VERBOSE"))
-  _verbose = true;
+    _verbose = true;
 
   GRTNotificationCenter::setup();
 
@@ -543,7 +540,7 @@ static std::list<MetaClass *> sort_metaclasses(const std::list<MetaClass *> &lis
   std::list<MetaClass *> sorted;
   std::set<MetaClass *> visited;
   std::multimap<MetaClass *, MetaClass *> adjacents;
-  typedef std::pair<MetaClass *, MetaClass *> pair;
+  using pair = std::pair<MetaClass *, MetaClass *>;
 
   for (std::list<MetaClass *>::const_iterator iter = list.begin(); iter != list.end(); ++iter) {
     if ((*iter)->parent())
@@ -582,7 +579,8 @@ void GRT::end_loading_metaclasses(bool check_class_binding) {
     // check if there are any metaclasses with unbound members
     for (std::map<std::string, MetaClass *>::iterator iter = _metaclasses.begin(); iter != _metaclasses.end(); ++iter) {
       if (!iter->second->is_bound())
-        logWarning("Allocation function of '%s' is unbound, which probably means the implementing C++ class was not"
+        logWarning(
+          "Allocation function of '%s' is unbound, which probably means the implementing C++ class was not"
           "registered\n",
           iter->second->name().c_str());
     }

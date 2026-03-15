@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _CONNECTION_FIGURE_H_
@@ -33,7 +33,7 @@ namespace wbfig {
   class FigureEventHub;
 
   class ConnectionLineLayouter : public mdc::OrthogonalLineLayouter {
-    typedef mdc::OrthogonalLineLayouter super;
+    using super = mdc::OrthogonalLineLayouter;
 
     virtual std::vector<mdc::ItemHandle *> create_handles(mdc::Line *line, mdc::InteractionLayer *ilayer);
 
@@ -60,7 +60,7 @@ namespace wbfig {
   };
 
   class Connection : public mdc::Line {
-    typedef mdc::Line super;
+    using super = mdc::Line;
 
   public:
     enum DiamondType { None, Filled, LeftEmpty, RightEmpty, Empty };
@@ -137,6 +137,6 @@ namespace wbfig {
 
     virtual void mark_crossings(mdc::Line *line);
   };
-};
+}; // namespace wbfig
 
 #endif

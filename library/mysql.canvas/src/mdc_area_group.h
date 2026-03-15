@@ -41,7 +41,7 @@ namespace mdc {
 
     virtual void move_item(CanvasItem *item, const base::Point &pos);
 
-    virtual bool can_render_gl() {
+    virtual auto can_render_gl() -> bool {
       return true;
     }
 
@@ -54,12 +54,12 @@ namespace mdc {
     bool _drag_selects_contents;
 
     virtual void update_bounds();
-    base::Rect constrain_rect_to_bounds(const base::Rect &rect);
+    auto constrain_rect_to_bounds(const base::Rect &rect) -> base::Rect;
 
-    virtual bool on_click(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
-    virtual bool on_button_press(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
-    virtual bool on_button_release(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
-    virtual bool on_drag(CanvasItem *target, const base::Point &point, EventState state);
+    virtual auto on_click(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
+    virtual auto on_button_press(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
+    virtual auto on_button_release(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
+    virtual auto on_drag(CanvasItem *target, const base::Point &point, EventState state) -> bool;
   };
 
 } // end of mdc namespace

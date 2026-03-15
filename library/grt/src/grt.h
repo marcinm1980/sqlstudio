@@ -167,7 +167,7 @@ namespace grt {
     db_error(const std::string &exc, int error) : std::runtime_error(exc), _error(error) {
     }
 
-    int error() const {
+    auto error() const -> int {
       return _error;
     };
   };
@@ -189,7 +189,7 @@ namespace grt {
     db_access_denied(const std::string &exc) : std::runtime_error(exc) {
     }
   };
-};
+}; // namespace grt
 
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -208,7 +208,7 @@ namespace grt {
   namespace internal {
     class Serializer;
     class Unserializer;
-  };
+  }; // namespace internal
 
   //------------------------------------------------------------------------------------------------
 
@@ -256,24 +256,24 @@ namespace grt {
       _value = 0;
     }
 
-    inline bool is_valid() const {
+    inline auto is_valid() const -> bool {
       return _value != 0;
     }
-    inline bool is_same(const ValueRef &value) const {
+    inline auto is_same(const ValueRef &value) const -> bool {
       return valueptr() == value.valueptr();
     }
 
-    inline Type type() const {
+    inline auto type() const -> Type {
       return _value ? _value->get_type() : UnknownType;
     }
 
-    ValueRef &operator=(const ValueRef &other) {
+    auto operator=(const ValueRef &other) -> ValueRef & {
       swap(other._value);
       return *this;
     }
 
     // for non-simple types will only check if its the same object
-    inline bool operator==(const ValueRef &other) const {
+    inline auto operator==(const ValueRef &other) const -> bool {
       if (_value == other._value)
         return true;
       if (!_value || !other._value)
@@ -284,13 +284,13 @@ namespace grt {
       return _value->equals(other._value);
     }
 
-    inline bool operator!=(const ValueRef &other) const {
+    inline auto operator!=(const ValueRef &other) const -> bool {
       return !(operator==(other));
     }
 
     // for non-simple types will check order of the pointer of the object
     // (ie gives an arbitrary order)
-    inline bool operator<(const ValueRef &other) const {
+    inline auto operator<(const ValueRef &other) const -> bool {
       if (!_value || !other._value)
         return _value < other._value;
       if (type() != other.type())
@@ -299,18 +299,18 @@ namespace grt {
       return _value->less_than(other._value);
     }
 
-    std::string debugDescription(const std::string &indentation = "") const {
+    auto debugDescription(const std::string &indentation = "") const -> std::string {
       return _value ? _value->debugDescription(indentation) : "NULL";
     }
-    std::string toString() const {
+    auto toString() const -> std::string {
       return _value ? _value->toString() : "NULL";
     }
 
-    inline internal::Value *valueptr() const {
+    inline auto valueptr() const -> internal::Value * {
       return _value;
     }
 
-    int refcount() const {
+    auto refcount() const -> int {
       return _value->refcount();
     }
     void retain() {
@@ -351,7 +351,7 @@ namespace grt {
   template <class C>
   class Ref;
 
-  typedef Ref<internal::Object> ObjectRef;
+  using ObjectRef = Ref<internal::Object>;
 
   /** Holds a reference to a GRT object.
    *
@@ -373,11 +373,11 @@ namespace grt {
    * @ingroup GRT
    */
 
-  typedef enum { Initialized = true } CreateMode;
+  enum CreateMode { Initialized = true };
   template <class Class>
   class Ref : public ValueRef {
   public:
-    typedef Class RefType;
+    using RefType = Class;
 
     Ref() {
     }
@@ -391,10 +391,10 @@ namespace grt {
 
     Ref(const Ref<Class> &ref) : ValueRef(ref) {
 #if defined(WB_DEBUG)
-  #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2) // this causes errors in mac, with gcc 4.2
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2) // this causes errors in mac, with gcc 4.2
       // just to give an error if Class is not an object
       Class::static_class_name();
-  #endif
+#endif
 #endif
     }
 
@@ -408,11 +408,11 @@ namespace grt {
       retain();
     }
 
-    static inline bool can_wrap(const ValueRef &value) {
+    static inline auto can_wrap(const ValueRef &value) -> bool {
       return (value.type() == ObjectType) && (!value.is_valid() || dynamic_cast<Class *>(value.valueptr()));
     }
 
-    static inline Ref<Class> cast_from(const ValueRef &ov) {
+    static inline auto cast_from(const ValueRef &ov) -> Ref<Class> {
       if (ov.is_valid()) {
         Class *obj = dynamic_cast<Class *>(ov.valueptr());
         if (!obj) {
@@ -427,52 +427,52 @@ namespace grt {
       return Ref<Class>();
     }
 
-    const std::string &id() const {
+    auto id() const -> const std::string & {
       return content().id();
     }
-    const std::string &class_name() const {
+    auto class_name() const -> const std::string & {
       return content().class_name();
     }
-    MetaClass *get_metaclass() const {
+    auto get_metaclass() const -> MetaClass * {
       return content().get_metaclass();
     }
 
-    bool is_instance(MetaClass *mc) const {
+    auto is_instance(MetaClass *mc) const -> bool {
       return content().is_instance(mc);
     }
-    bool is_instance(const std::string &klass) const {
+    auto is_instance(const std::string &klass) const -> bool {
       return content().is_instance(klass);
     }
     template <class C>
-    bool is_instance() const {
+    auto is_instance() const -> bool {
       return C::static_class_name().empty() ? true : content().is_instance(C::static_class_name());
     }
 
-    Ref<Class> &operator=(const Ref<Class> &other) {
+    auto operator=(const Ref<Class> &other) -> Ref<Class> & {
       Ref<Class> tmp(other);
 #ifdef __linux__
-      #pragma GCC diagnostic push
-      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
       swap(tmp._value);
 #ifdef __linux__
-      #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 #endif
       return *this;
     }
 
-    bool operator==(const ValueRef &other) const {
+    auto operator==(const ValueRef &other) const -> bool {
       return _value == other.valueptr() || (_value && content().equals(other.valueptr()));
     }
-    bool operator!=(const ValueRef &other) const {
+    auto operator!=(const ValueRef &other) const -> bool {
       return !(operator==(other));
     }
 
-    Class *operator->() const {
+    auto operator->() const -> Class * {
       return static_cast<Class *>(_value);
     }
 
-    ValueRef get_member(const std::string &m) const {
+    auto get_member(const std::string &m) const -> ValueRef {
       return content().get_member(m);
     }
 
@@ -480,26 +480,26 @@ namespace grt {
       content().set_member(m, new_value);
     }
 
-    std::string get_string_member(const std::string &member) const {
+    auto get_string_member(const std::string &member) const -> std::string {
       return content().get_string_member(member);
     }
-    internal::Double::storage_type get_double_member(const std::string &member) const {
+    auto get_double_member(const std::string &member) const -> internal::Double::storage_type {
       return content().get_double_member(member);
     }
-    internal::Integer::storage_type get_integer_member(const std::string &member) const {
+    auto get_integer_member(const std::string &member) const -> internal::Integer::storage_type {
       return content().get_integer_member(member);
     }
-    bool has_member(const std::string &member) const {
+    auto has_member(const std::string &member) const -> bool {
       return content().has_member(member);
     }
 
-    bool has_method(const std::string &method) const {
+    auto has_method(const std::string &method) const -> bool {
       return content().has_method(method);
     }
     //    Class *operator*() const { return static_cast<Class*>(_value); }
 
   public:
-    Class &content() const {
+    auto content() const -> Class & {
       return *static_cast<Class *>(_value);
     }
   };
@@ -612,7 +612,7 @@ namespace grt {
   //----------------------------------------------------------------------
   // IntegerRef
 
-  typedef Ref<internal::Integer> IntegerRef;
+  using IntegerRef = Ref<internal::Integer>;
 
   /** Reference object class for integer GRT values (32 or 64bit, depending on compiler architecture).
    *
@@ -634,22 +634,22 @@ namespace grt {
   template <>
   class Ref<internal::Integer> : public ValueRef {
   public:
-    typedef internal::Integer RefType;
-    typedef internal::Integer::storage_type storage_type;
+    using RefType = internal::Integer;
+    using storage_type = internal::Integer::storage_type;
 
-    static inline Ref<internal::Integer> cast_from(const ValueRef &svalue) {
+    static inline auto cast_from(const ValueRef &svalue) -> Ref<internal::Integer> {
       if (svalue.is_valid() && svalue.type() != IntegerType)
         throw type_error(IntegerType, svalue.type());
       return Ref<internal::Integer>(svalue);
     }
 
-    static inline storage_type extract_from(const ValueRef &svalue) {
+    static inline auto extract_from(const ValueRef &svalue) -> storage_type {
       if (!svalue.is_valid() || svalue.type() != IntegerType)
         throw type_error(IntegerType, svalue.type());
       return *static_cast<internal::Integer *>(svalue.valueptr());
     }
 
-    static inline bool can_wrap(const ValueRef &value) {
+    static inline auto can_wrap(const ValueRef &value) -> bool {
       return (value.type() == internal::Integer::static_type());
     }
 
@@ -683,20 +683,20 @@ namespace grt {
     inline operator storage_type() const {
       return *content();
     }
-    inline storage_type operator*() const {
+    inline auto operator*() const -> storage_type {
       return *content();
     }
 
-    Ref<internal::Integer> &operator=(const Ref<internal::Integer> &other) {
+    auto operator=(const Ref<internal::Integer> &other) -> Ref<internal::Integer> & {
       swap(other._value);
       return *this;
     }
 
-    inline bool operator==(const IntegerRef &o) const {
+    inline auto operator==(const IntegerRef &o) const -> bool {
       return _value == o._value || (_value && o._value && *content() == *o);
     }
 #ifdef DEFINE_INT_FUNCTIONS
-    inline bool operator==(int v) const {
+    inline auto operator==(int v) const -> bool {
       return _value && (*content() == v);
     }
 #endif
@@ -708,16 +708,16 @@ namespace grt {
 #endif
 
 #ifdef DEFINE_SSIZE_T_FUNCTIONS
-    inline bool operator==(ssize_t v) const {
+    inline auto operator==(ssize_t v) const -> bool {
       return _value && (*content() == v);
     }
 #endif
 
-    inline bool operator!=(const IntegerRef &o) const {
+    inline auto operator!=(const IntegerRef &o) const -> bool {
       return !(operator==(o));
     }
 #ifdef DEFINE_INT_FUNCTIONS
-    inline bool operator!=(int v) const {
+    inline auto operator!=(int v) const -> bool {
       return _value && (*content() != v);
     }
 #endif
@@ -729,7 +729,7 @@ namespace grt {
 #endif
 
 #ifdef DEFINE_SSIZE_T_FUNCTIONS
-    inline bool operator!=(ssize_t v) const {
+    inline auto operator!=(ssize_t v) const -> bool {
       return _value && (*content() != v);
     }
 #endif
@@ -743,7 +743,7 @@ namespace grt {
         _value->retain();
     }
 
-    internal::Integer &content() const {
+    auto content() const -> internal::Integer & {
       return *static_cast<internal::Integer *>(_value);
     }
   };
@@ -751,7 +751,7 @@ namespace grt {
   //----------------------------------------------------------------------
   // DoubleRef
 
-  typedef Ref<internal::Double> DoubleRef;
+  using DoubleRef = Ref<internal::Double>;
 
   /** Reference object class for double GRT values.
    *
@@ -773,22 +773,22 @@ namespace grt {
   template <>
   class Ref<internal::Double> : public ValueRef {
   public:
-    typedef internal::Double RefType;
-    typedef internal::Double::storage_type storage_type;
+    using RefType = internal::Double;
+    using storage_type = internal::Double::storage_type;
 
-    static inline Ref<internal::Double> cast_from(const ValueRef &svalue) {
+    static inline auto cast_from(const ValueRef &svalue) -> Ref<internal::Double> {
       if (svalue.is_valid() && svalue.type() != DoubleType)
         throw type_error(DoubleType, svalue.type());
       return Ref<internal::Double>(svalue);
     }
 
-    static inline storage_type extract_from(const ValueRef &svalue) {
+    static inline auto extract_from(const ValueRef &svalue) -> storage_type {
       if (!svalue.is_valid() || svalue.type() != DoubleType)
         throw type_error(DoubleType, svalue.type());
       return *static_cast<internal::Double *>(svalue.valueptr());
     }
 
-    static inline bool can_wrap(const ValueRef &value) {
+    static inline auto can_wrap(const ValueRef &value) -> bool {
       return (value.type() == internal::Double::static_type());
     }
 
@@ -807,28 +807,28 @@ namespace grt {
     inline operator storage_type() const {
       return *content();
     }
-    inline storage_type operator*() const {
+    inline auto operator*() const -> storage_type {
       return *content();
     }
 
-    Ref<internal::Double> &operator=(const Ref<internal::Double> &other) {
+    auto operator=(const Ref<internal::Double> &other) -> Ref<internal::Double> & {
       swap(other._value);
       return *this;
     }
 
-    inline bool operator==(const DoubleRef &o) const {
+    inline auto operator==(const DoubleRef &o) const -> bool {
       return _value == o._value || (_value && o._value && (*content() == *o));
     }
 
-    inline bool operator==(storage_type v) const {
+    inline auto operator==(storage_type v) const -> bool {
       return _value && (*content() == v);
     }
 
-    inline bool operator!=(storage_type v) const {
+    inline auto operator!=(storage_type v) const -> bool {
       return _value && (*content() != v);
     }
 
-    inline bool operator!=(const DoubleRef &o) const {
+    inline auto operator!=(const DoubleRef &o) const -> bool {
       return !(operator==(o));
     }
 
@@ -841,7 +841,7 @@ namespace grt {
         _value->retain();
     }
 
-    internal::Double &content() const {
+    auto content() const -> internal::Double & {
       return *static_cast<internal::Double *>(_value);
     }
   };
@@ -849,7 +849,7 @@ namespace grt {
   //----------------------------------------------------------------------
   // StringRef
 
-  typedef Ref<internal::String> StringRef;
+  using StringRef = Ref<internal::String>;
 
   /** Reference object class for string GRT values.
    *
@@ -871,26 +871,26 @@ namespace grt {
   template <>
   class MYSQLGRT_PUBLIC Ref<internal::String> : public ValueRef {
   public:
-    typedef internal::String RefType;
-    typedef internal::String::storage_type storage_type;
+    using RefType = internal::String;
+    using storage_type = internal::String::storage_type;
 
-    static inline Ref<internal::String> cast_from(const ValueRef &svalue) {
+    static inline auto cast_from(const ValueRef &svalue) -> Ref<internal::String> {
       if (svalue.is_valid() && svalue.type() != StringType)
         throw type_error(StringType, svalue.type());
       return Ref<internal::String>(svalue);
     }
 
-    static inline std::string extract_from(const ValueRef &svalue) {
+    static inline auto extract_from(const ValueRef &svalue) -> std::string {
       if (!svalue.is_valid() || svalue.type() != StringType)
         throw type_error(StringType, svalue.type());
       return *static_cast<internal::String *>(svalue.valueptr());
     }
 
-    static inline bool can_wrap(const ValueRef &value) {
+    static inline auto can_wrap(const ValueRef &value) -> bool {
       return (value.type() == internal::String::static_type());
     }
 
-    static Ref format(const char *format, ...);
+    static auto format(const char *format, ...) -> Ref;
 
     Ref() {
     }
@@ -910,43 +910,43 @@ namespace grt {
     inline operator storage_type() const {
       return *content();
     }
-    inline storage_type operator*() const {
+    inline auto operator*() const -> storage_type {
       return *content();
     }
 
-    const char *c_str() const {
+    auto c_str() const -> const char * {
       return content().c_str();
     }
-    bool empty() const {
+    auto empty() const -> bool {
       return content().empty();
     }
 
-    Ref<internal::String> &operator=(const Ref<internal::String> &other) {
+    auto operator=(const Ref<internal::String> &other) -> Ref<internal::String> & {
       swap(other._value);
       return *this;
     }
 
-    inline bool operator==(const StringRef &v) const {
+    inline auto operator==(const StringRef &v) const -> bool {
       return _value == v._value || (_value && v._value && (*content() == *v));
     }
 
-    inline bool operator==(const storage_type &v) const {
+    inline auto operator==(const storage_type &v) const -> bool {
       return _value && (*content() == v);
     }
 
-    inline bool operator==(const char *v) const {
+    inline auto operator==(const char *v) const -> bool {
       return _value && (strcmp(content().c_str(), v) == 0);
     }
 
-    inline bool operator!=(const StringRef &v) const {
+    inline auto operator!=(const StringRef &v) const -> bool {
       return !operator==(v);
     }
 
-    inline bool operator!=(const storage_type &v) const {
+    inline auto operator!=(const storage_type &v) const -> bool {
       return !operator==(v);
     }
 
-    inline bool operator!=(const char *v) const {
+    inline auto operator!=(const char *v) const -> bool {
       return !operator==(v);
     }
 
@@ -959,7 +959,7 @@ namespace grt {
         _value->retain();
     }
 
-    internal::String &content() const {
+    auto content() const -> internal::String & {
       return *static_cast<internal::String *>(_value);
     }
   };
@@ -969,12 +969,12 @@ namespace grt {
 
   template <class C>
   struct TypedListConstIterator {
-    typedef std::random_access_iterator_tag iterator_category;
-    typedef C value_type;
-    typedef int difference_type;
-    typedef C *pointer;
-    typedef C &reference;
-    typedef internal::List::raw_const_iterator IterType;
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = C;
+    using difference_type = int;
+    using pointer = C *;
+    using reference = C &;
+    using IterType = internal::List::raw_const_iterator;
 
     IterType iter;
 
@@ -986,46 +986,46 @@ namespace grt {
     TypedListConstIterator(const IterType &content) : iter(content) {
     }
 
-    inline bool operator<(const TypedListConstIterator &o) const {
+    inline auto operator<(const TypedListConstIterator &o) const -> bool {
       return iter < o.iter;
     }
 
-    inline Ref<C> operator*() const {
+    inline auto operator*() const -> Ref<C> {
       return Ref<C>((C *)iter->valueptr());
     }
 
-    inline bool operator==(const TypedListConstIterator &o) const {
+    inline auto operator==(const TypedListConstIterator &o) const -> bool {
       return iter == o.iter;
     }
 
-    inline bool operator!=(const TypedListConstIterator &o) const {
+    inline auto operator!=(const TypedListConstIterator &o) const -> bool {
       return iter != o.iter;
     }
 
-    inline TypedListConstIterator &operator++() {
+    inline auto operator++() -> TypedListConstIterator & {
       ++iter;
       return *this;
     }
 
-    inline TypedListConstIterator operator++(int) {
+    inline auto operator++(int) -> TypedListConstIterator {
       TypedListConstIterator temp(*this);
       ++iter;
       return temp;
     }
 
-    inline size_t operator-(const TypedListConstIterator &other) const {
+    inline auto operator-(const TypedListConstIterator &other) const -> size_t {
       return iter - other.iter;
     }
   };
 
   template <class C>
   struct TypedListConstReverseIterator {
-    typedef std::random_access_iterator_tag iterator_category;
-    typedef C value_type;
-    typedef int difference_type;
-    typedef C *pointer;
-    typedef C &reference;
-    typedef internal::List::raw_const_reverse_iterator IterType;
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = C;
+    using difference_type = int;
+    using pointer = C *;
+    using reference = C &;
+    using IterType = internal::List::raw_const_reverse_iterator;
 
     IterType iter;
 
@@ -1038,28 +1038,28 @@ namespace grt {
     TypedListConstReverseIterator(const IterType &content) : iter(content) {
     }
 
-    inline bool operator<(const TypedListConstReverseIterator &o) const {
+    inline auto operator<(const TypedListConstReverseIterator &o) const -> bool {
       return iter < o.iter;
     }
 
-    inline Ref<C> operator*() const {
+    inline auto operator*() const -> Ref<C> {
       return Ref<C>((C *)iter->valueptr());
     }
 
-    inline bool operator==(const TypedListConstReverseIterator &o) const {
+    inline auto operator==(const TypedListConstReverseIterator &o) const -> bool {
       return iter == o.iter;
     }
 
-    inline bool operator!=(const TypedListConstReverseIterator &o) const {
+    inline auto operator!=(const TypedListConstReverseIterator &o) const -> bool {
       return iter != o.iter;
     }
 
-    inline TypedListConstReverseIterator &operator++() {
+    inline auto operator++() -> TypedListConstReverseIterator & {
       ++iter;
       return *this;
     }
 
-    inline TypedListConstReverseIterator operator++(int) {
+    inline auto operator++(int) -> TypedListConstReverseIterator {
       TypedListConstReverseIterator temp(*this);
       ++iter;
       return temp;
@@ -1072,9 +1072,9 @@ namespace grt {
    */
   class MYSQLGRT_PUBLIC BaseListRef : public ValueRef {
   public:
-    typedef internal::List RefType;
-    typedef internal::List::raw_const_iterator raw_const_iterator;
-    typedef internal::List::raw_const_reverse_iterator raw_const_reverse_iterator;
+    using RefType = internal::List;
+    using raw_const_iterator = internal::List::raw_const_iterator;
+    using raw_const_reverse_iterator = internal::List::raw_const_reverse_iterator;
 
     enum { npos = internal::List::npos };
 
@@ -1095,20 +1095,20 @@ namespace grt {
                        : new internal::List(type, class_name, allow_null)) {
     }
 
-    BaseListRef &operator=(const BaseListRef &other) = default;
+    auto operator=(const BaseListRef &other) -> BaseListRef & = default;
 
-    inline Type content_type() const {
+    inline auto content_type() const -> Type {
       return content().content_type();
     };
-    inline std::string content_class_name() const {
+    inline auto content_class_name() const -> std::string {
       return content().content_class_name();
     }
 
-    static bool can_wrap(const ValueRef &value) {
+    static auto can_wrap(const ValueRef &value) -> bool {
       return value.type() == ListType;
     }
 
-    static BaseListRef cast_from(const ValueRef &value) {
+    static auto cast_from(const ValueRef &value) -> BaseListRef {
       return BaseListRef(value);
     }
 
@@ -1121,28 +1121,28 @@ namespace grt {
         content().remove(0);
     }
 
-    inline size_t count() const {
+    inline auto count() const -> size_t {
       return is_valid() ? content().count() : 0;
     }
 
-    inline const ValueRef &operator[](size_t index) const {
+    inline auto operator[](size_t index) const -> const ValueRef & {
       return content().get(index);
     }
 
-    inline const ValueRef &get(size_t index) const {
+    inline auto get(size_t index) const -> const ValueRef & {
       return content().get(index);
     }
 
-    inline raw_const_iterator begin() const {
+    inline auto begin() const -> raw_const_iterator {
       return content().raw_begin();
     }
 
-    inline raw_const_iterator end() const {
+    inline auto end() const -> raw_const_iterator {
       return content().raw_end();
     }
 
     template <typename TPred>
-    bool foreach (TPred pred) const {
+    auto foreach (TPred pred) const -> bool {
       for (internal::List::raw_const_iterator end = content().raw_end(), iter = content().raw_begin(); iter != end;
            ++iter) {
         if (!pred(*iter))
@@ -1151,7 +1151,7 @@ namespace grt {
       return true;
     }
 
-    inline size_t get_index(const ValueRef &value) const {
+    inline auto get_index(const ValueRef &value) const -> size_t {
       return content().get_index(value);
     }
 
@@ -1181,12 +1181,12 @@ namespace grt {
     }
 
   public:
-    inline internal::List &content() const {
+    inline auto content() const -> internal::List & {
       return *static_cast<internal::List *>(_value);
     }
 
     // For consistency with other Ref<> templates use -> operator as shortcut for content().
-    inline internal::List *operator->() const {
+    inline auto operator->() const -> internal::List * {
       return static_cast<internal::List *>(_value);
     }
 
@@ -1211,15 +1211,14 @@ namespace grt {
   template <class O>
   class ListRef : public BaseListRef {
   public:
-    typedef TypedListConstIterator<O> const_iterator;
-    typedef TypedListConstReverseIterator<O> const_reverse_iterator;
-    typedef Ref<O> value_type;
+    using const_iterator = TypedListConstIterator<O>;
+    using const_reverse_iterator = TypedListConstReverseIterator<O>;
+    using value_type = Ref<O>;
 
     ListRef() {
     }
 
-    ListRef(bool allow_null)
-      : BaseListRef(ObjectType, O::static_class_name(), 0, allow_null) {
+    ListRef(bool allow_null) : BaseListRef(ObjectType, O::static_class_name(), 0, allow_null) {
     }
 
     ListRef(internal::Object *owner, bool allow_null = true)
@@ -1236,7 +1235,7 @@ namespace grt {
       O *tmp WB_UNUSED = x; // Hack so that we get a compile error if Subclass is not a subclass of O.
     }
 
-    static ListRef<O> cast_from(const ValueRef &value) {
+    static auto cast_from(const ValueRef &value) -> ListRef<O> {
       // check if a list
       if (!value.is_valid() || can_wrap(value))
         return ListRef<O>(value);
@@ -1266,11 +1265,11 @@ namespace grt {
     }
 
     // Return const Ref<> so that list[i]= newvalue; won't be attempted (that wouldnt work as expected)
-    inline const Ref<O> operator[](size_t index) const {
+    inline auto operator[](size_t index) const -> const Ref<O> {
       return get(index);
     }
 
-    inline Ref<O> get(size_t index) const {
+    inline auto get(size_t index) const -> Ref<O> {
       return Ref<O>::cast_from(content().get(index));
     }
 
@@ -1278,24 +1277,24 @@ namespace grt {
       content().set_unchecked(index, value);
     }
 
-    inline const_iterator begin() const {
+    inline auto begin() const -> const_iterator {
       return const_iterator(content().raw_begin());
     }
 
-    inline const_iterator end() const {
+    inline auto end() const -> const_iterator {
       return const_iterator(content().raw_end());
     }
 
-    inline const_reverse_iterator rbegin() const {
+    inline auto rbegin() const -> const_reverse_iterator {
       return const_reverse_iterator(content().raw_rbegin());
     }
 
-    inline const_reverse_iterator rend() const {
+    inline auto rend() const -> const_reverse_iterator {
       return const_reverse_iterator(content().raw_rend());
     }
 
     template <typename TPred>
-    bool foreach (TPred pred) const {
+    auto foreach (TPred pred) const -> bool {
       for (internal::List::raw_const_iterator end = content().raw_end(), iter = content().raw_begin(); iter != end;
            ++iter) {
         Ref<O> tmp((O *)iter->valueptr());
@@ -1312,12 +1311,12 @@ namespace grt {
     }
   };
 
-  typedef ListRef<internal::Object> ObjectListRef;
+  using ObjectListRef = ListRef<internal::Object>;
 
   //----------------------------------------------------------------------
   // ListRef<Integer>
 
-  typedef ListRef<internal::Integer> IntegerListRef;
+  using IntegerListRef = ListRef<internal::Integer>;
 
   /** GRT integer list reference class.
    *
@@ -1331,19 +1330,17 @@ namespace grt {
     ListRef() {
     }
 
-    ListRef(bool allow_null)
-      : BaseListRef(IntegerType, "", 0, allow_null) {
+    ListRef(bool allow_null) : BaseListRef(IntegerType, "", 0, allow_null) {
     }
 
-    ListRef(internal::Object *owner, bool allow_null = true)
-      : BaseListRef(IntegerType, "", owner, allow_null) {
+    ListRef(internal::Object *owner, bool allow_null = true) : BaseListRef(IntegerType, "", owner, allow_null) {
     }
 
     ListRef(CreateMode mode, internal::Object *owner = nullptr, bool allow_null = true)
       : BaseListRef(IntegerType, "", owner, allow_null) {
     }
 
-    static inline bool can_wrap(const ValueRef &value) {
+    static inline auto can_wrap(const ValueRef &value) -> bool {
       if (value.type() != ListType)
         return false;
       if (static_cast<internal::List *>(value.valueptr())->content_type() != IntegerType)
@@ -1351,7 +1348,7 @@ namespace grt {
       return true;
     }
 
-    static ListRef<internal::Integer> cast_from(const ValueRef &value) {
+    static auto cast_from(const ValueRef &value) -> ListRef<internal::Integer> {
       return ListRef<internal::Integer>(value);
     }
 
@@ -1359,11 +1356,11 @@ namespace grt {
       content().insert_unchecked(value, index);
     }
 
-    inline IntegerRef operator[](size_t index) const {
+    inline auto operator[](size_t index) const -> IntegerRef {
       return get(index);
     }
 
-    inline IntegerRef get(size_t index) const {
+    inline auto get(size_t index) const -> IntegerRef {
       return IntegerRef::cast_from(content().get(index));
     }
 
@@ -1372,7 +1369,7 @@ namespace grt {
     }
 
     template <typename TPred>
-    bool foreach (TPred pred) const {
+    auto foreach (TPred pred) const -> bool {
       for (internal::List::raw_const_iterator end = content().raw_end(), iter = content().raw_begin(); iter != end;
            ++iter) {
         if (!pred(*(internal::Integer *)iter->valueptr()))
@@ -1395,7 +1392,7 @@ namespace grt {
   //----------------------------------------------------------------------
   // ListRef<Double>
 
-  typedef ListRef<internal::Double> DoubleListRef;
+  using DoubleListRef = ListRef<internal::Double>;
 
   /** GRT double number list reference class.
    *
@@ -1409,19 +1406,17 @@ namespace grt {
     ListRef() {
     }
 
-    ListRef(bool allow_null)
-      : BaseListRef(DoubleType, "", 0, allow_null) {
+    ListRef(bool allow_null) : BaseListRef(DoubleType, "", 0, allow_null) {
     }
 
-    ListRef(internal::Object *owner, bool allow_null = true)
-      : BaseListRef(DoubleType, "", owner, allow_null) {
+    ListRef(internal::Object *owner, bool allow_null = true) : BaseListRef(DoubleType, "", owner, allow_null) {
     }
 
     ListRef(CreateMode mode, internal::Object *owner = nullptr, bool allow_null = true)
       : BaseListRef(DoubleType, "", owner, allow_null) {
     }
 
-    static inline bool can_wrap(const ValueRef &value) {
+    static inline auto can_wrap(const ValueRef &value) -> bool {
       if (value.type() != ListType)
         return false;
       if (static_cast<internal::List *>(value.valueptr())->content_type() != DoubleType)
@@ -1429,7 +1424,7 @@ namespace grt {
       return true;
     }
 
-    static ListRef<internal::Double> cast_from(const ValueRef &value) {
+    static auto cast_from(const ValueRef &value) -> ListRef<internal::Double> {
       return ListRef<internal::Double>(value);
     }
 
@@ -1437,11 +1432,11 @@ namespace grt {
       content().insert_unchecked(value, index);
     }
 
-    inline DoubleRef operator[](size_t index) const {
+    inline auto operator[](size_t index) const -> DoubleRef {
       return get(index);
     }
 
-    inline DoubleRef get(size_t index) const {
+    inline auto get(size_t index) const -> DoubleRef {
       return DoubleRef::cast_from(content().get(index));
     }
 
@@ -1450,7 +1445,7 @@ namespace grt {
     }
 
     template <typename TPred>
-    bool foreach (TPred pred) const {
+    auto foreach (TPred pred) const -> bool {
       for (internal::List::raw_const_iterator end = content().raw_end(), iter = content().raw_begin(); iter != end;
            ++iter) {
         if (!pred(*(internal::Double *)iter->valueptr()))
@@ -1473,7 +1468,7 @@ namespace grt {
   //----------------------------------------------------------------------
   // ListRef<internal::String>
 
-  typedef ListRef<internal::String> StringListRef;
+  using StringListRef = ListRef<internal::String>;
 
   /** GRT string list reference class.
    *
@@ -1484,25 +1479,23 @@ namespace grt {
   template <>
   class MYSQLGRT_PUBLIC ListRef<internal::String> : public BaseListRef {
   public:
-    typedef TypedListConstIterator<internal::String> const_iterator;
-    typedef TypedListConstReverseIterator<internal::String> const_reverse_iterator;
+    using const_iterator = TypedListConstIterator<internal::String>;
+    using const_reverse_iterator = TypedListConstReverseIterator<internal::String>;
 
     ListRef() {
     }
 
-    ListRef(bool allow_null)
-      : BaseListRef(StringType, "", 0, allow_null) {
+    ListRef(bool allow_null) : BaseListRef(StringType, "", 0, allow_null) {
     }
 
-    ListRef(internal::Object *owner, bool allow_null = true)
-      : BaseListRef(StringType, "", owner, allow_null) {
+    ListRef(internal::Object *owner, bool allow_null = true) : BaseListRef(StringType, "", owner, allow_null) {
     }
 
     ListRef(CreateMode mode, internal::Object *owner = nullptr, bool allow_null = true)
       : BaseListRef(StringType, "", owner, allow_null) {
     }
 
-    static inline bool can_wrap(const ValueRef &value) {
+    static inline auto can_wrap(const ValueRef &value) -> bool {
       if (value.type() != ListType)
         return false;
       if (static_cast<internal::List *>(value.valueptr())->content_type() != StringType)
@@ -1510,7 +1503,7 @@ namespace grt {
       return true;
     }
 
-    static ListRef<internal::String> cast_from(const ValueRef &value) {
+    static auto cast_from(const ValueRef &value) -> ListRef<internal::String> {
       return ListRef<internal::String>(value);
     }
 
@@ -1518,11 +1511,11 @@ namespace grt {
       content().insert_unchecked(value, index);
     }
 
-    inline StringRef operator[](size_t index) const {
+    inline auto operator[](size_t index) const -> StringRef {
       return get(index);
     }
 
-    inline StringRef get(size_t index) const {
+    inline auto get(size_t index) const -> StringRef {
       return StringRef::cast_from(content().get(index));
     }
 
@@ -1530,24 +1523,24 @@ namespace grt {
       content().set_unchecked(index, value);
     }
 
-    inline const_iterator begin() const {
+    inline auto begin() const -> const_iterator {
       return const_iterator(content().raw_begin());
     }
 
-    inline const_iterator end() const {
+    inline auto end() const -> const_iterator {
       return const_iterator(content().raw_end());
     }
 
-    inline const_reverse_iterator rbegin() const {
+    inline auto rbegin() const -> const_reverse_iterator {
       return const_reverse_iterator(content().raw_rbegin());
     }
 
-    inline const_reverse_iterator rend() const {
+    inline auto rend() const -> const_reverse_iterator {
       return const_reverse_iterator(content().raw_rend());
     }
 
     template <typename TPred>
-    bool foreach (TPred pred) const {
+    auto foreach (TPred pred) const -> bool {
       for (internal::List::raw_const_iterator end = content().raw_end(), iter = content().raw_begin(); iter != end;
            ++iter) {
         if (!pred(*(internal::String *)iter->valueptr()))
@@ -1560,7 +1553,7 @@ namespace grt {
       content().remove(value);
     }
 
-    inline size_t get_index(const std::string &str) {
+    inline auto get_index(const std::string &str) -> size_t {
       return BaseListRef::get_index(StringRef(str));
     }
 
@@ -1580,8 +1573,8 @@ namespace grt {
    */
   class MYSQLGRT_PUBLIC DictRef : public ValueRef {
   public:
-    typedef internal::Dict RefType;
-    typedef internal::Dict::const_iterator const_iterator;
+    using RefType = internal::Dict;
+    using const_iterator = internal::Dict::const_iterator;
 
     DictRef() {
     }
@@ -1606,32 +1599,32 @@ namespace grt {
 
     DictRef(const DictRef &d) = default;
 
-    static DictRef cast_from(const ValueRef &ivalue) {
+    static auto cast_from(const ValueRef &ivalue) -> DictRef {
       if (ivalue.is_valid() && ivalue.type() != DictType)
         throw type_error(DictType, ivalue.type());
       return DictRef(ivalue);
     }
 
-    static bool can_wrap(const ValueRef &ivalue) {
+    static auto can_wrap(const ValueRef &ivalue) -> bool {
       return ivalue.type() == DictType;
     }
 
-    inline Type content_type() const {
+    inline auto content_type() const -> Type {
       return content().content_type();
     };
-    inline std::string content_class_name() const {
+    inline auto content_class_name() const -> std::string {
       return content().content_class_name();
     }
 
-    const_iterator begin() const {
+    auto begin() const -> const_iterator {
       return content().begin();
     }
-    const_iterator end() const {
+    auto end() const -> const_iterator {
       return content().end();
     }
 
     template <typename TPred>
-    bool foreach (TPred pred) const {
+    auto foreach (TPred pred) const -> bool {
       for (const_iterator end = content().end(), iter = content().begin(); iter != end; ++iter) {
         if (!pred(iter->first, iter->second))
           return false;
@@ -1639,15 +1632,15 @@ namespace grt {
       return true;
     }
 
-    inline bool has_key(const std::string &k) const {
+    inline auto has_key(const std::string &k) const -> bool {
       return content().has_key(k);
     }
 
-    inline ValueRef operator[](const std::string &k) const {
+    inline auto operator[](const std::string &k) const -> ValueRef {
       return get(k);
     }
 
-    inline DictRef &operator=(const DictRef &o) {
+    inline auto operator=(const DictRef &o) -> DictRef & {
       DictRef tmp(o);
       swap(o.valueptr());
       return *this;
@@ -1661,11 +1654,11 @@ namespace grt {
           return Reference(this, k);
         }
       */
-    inline size_t count() const {
+    inline auto count() const -> size_t {
       return content().count();
     }
 
-    inline std::vector<std::string> keys() const {
+    inline auto keys() const -> std::vector<std::string> {
       return content().keys();
     }
 
@@ -1677,11 +1670,11 @@ namespace grt {
       content().reset_entries();
     }
 
-    inline ValueRef get(const std::string &k) const {
+    inline auto get(const std::string &k) const -> ValueRef {
       return ValueRef(content().get(k));
     }
 
-    inline ValueRef get(const std::string &k, const ValueRef &defvalue) const {
+    inline auto get(const std::string &k, const ValueRef &defvalue) const -> ValueRef {
       // No need to check here if the key exists.
       // If it does not then an invalid ValueRef will be returned.
       ValueRef tmp = content().get(k);
@@ -1690,22 +1683,23 @@ namespace grt {
       return tmp;
     }
 
-    std::string get_string(const std::string &k, const std::string &defvalue = "") const {
+    auto get_string(const std::string &k, const std::string &defvalue = "") const -> std::string {
       ValueRef value = get(k);
       if (value.is_valid())
         return StringRef::extract_from(value);
       return defvalue;
     }
 
-    internal::Integer::storage_type get_int(const std::string &k, internal::Integer::storage_type defvalue = 0) const {
+    auto get_int(const std::string &k, internal::Integer::storage_type defvalue = 0) const
+      -> internal::Integer::storage_type {
       ValueRef value = get(k);
       if (value.is_valid())
         return IntegerRef::extract_from(value);
       return defvalue;
     }
 
-    internal::Double::storage_type get_double(const std::string &k,
-                                              internal::Double::storage_type defvalue = 0.0) const {
+    auto get_double(const std::string &k, internal::Double::storage_type defvalue = 0.0) const
+      -> internal::Double::storage_type {
       ValueRef value = get(k);
       if (value.is_valid())
         return DoubleRef::extract_from(value);
@@ -1732,7 +1726,7 @@ namespace grt {
       content().set(k, DoubleRef(value));
     }
 
-    inline internal::Dict &content() const {
+    inline auto content() const -> internal::Dict & {
       return *static_cast<internal::Dict *>(_value);
     }
 
@@ -1745,7 +1739,7 @@ namespace grt {
 
   //--------------------------------------------------------------------------------------------------
 
-  typedef ListRef<internal::Dict> DictListRef;
+  using DictListRef = ListRef<internal::Dict>;
 
   /** GRT Dict list reference class.
    *
@@ -1759,19 +1753,17 @@ namespace grt {
     ListRef() {
     }
 
-    ListRef(bool allow_null)
-      : BaseListRef(DictType, "", 0, allow_null) {
+    ListRef(bool allow_null) : BaseListRef(DictType, "", 0, allow_null) {
     }
 
-    ListRef(internal::Object *owner, bool allow_null = true)
-      : BaseListRef(DictType, "", owner, allow_null) {
+    ListRef(internal::Object *owner, bool allow_null = true) : BaseListRef(DictType, "", owner, allow_null) {
     }
 
     ListRef(CreateMode mode, internal::Object *owner = nullptr, bool allow_null = true)
       : BaseListRef(DictType, "", owner, allow_null) {
     }
 
-    static inline bool can_wrap(const ValueRef &value) {
+    static inline auto can_wrap(const ValueRef &value) -> bool {
       if (value.type() != ListType)
         return false;
       if (static_cast<internal::List *>(value.valueptr())->content_type() != DictType)
@@ -1779,7 +1771,7 @@ namespace grt {
       return true;
     }
 
-    static ListRef<internal::Dict> cast_from(const ValueRef &value) {
+    static auto cast_from(const ValueRef &value) -> ListRef<internal::Dict> {
       return ListRef<internal::Dict>(value);
     }
 
@@ -1787,11 +1779,11 @@ namespace grt {
       content().insert_unchecked(value, index);
     }
 
-    inline DictRef operator[](size_t index) const {
+    inline auto operator[](size_t index) const -> DictRef {
       return get(index);
     }
 
-    inline DictRef get(size_t index) const {
+    inline auto get(size_t index) const -> DictRef {
       return DictRef::cast_from(content().get(index));
     }
 
@@ -1800,7 +1792,7 @@ namespace grt {
     }
 
     template <typename TPred>
-    bool foreach (TPred pred) const {
+    auto foreach (TPred pred) const -> bool {
       for (internal::List::raw_const_iterator end = content().raw_end(), iter = content().raw_begin(); iter != end;
            ++iter) {
         if (!pred(*(internal::Dict *)iter->valueptr()))
@@ -1827,16 +1819,16 @@ namespace grt {
     std::string doc;
     TypeSpec type;
   };
-  typedef std::vector<ArgSpec> ArgSpecList;
+  using ArgSpecList = std::vector<ArgSpec>;
 
   class PropertyBase {
   public:
-    virtual ~PropertyBase(){};
+    virtual ~PropertyBase() {};
 
-    virtual bool has_setter() const = 0;
+    virtual auto has_setter() const -> bool = 0;
 
     virtual void set(internal::Object *obj, const grt::ValueRef &value) = 0;
-    virtual grt::ValueRef get(const internal::Object *obj) const = 0;
+    virtual auto get(const internal::Object *obj) const -> grt::ValueRef = 0;
   };
 
   /** Describes a GRT object member variable.
@@ -1869,7 +1861,7 @@ namespace grt {
    * with the GRT.
    */
   struct MYSQLGRT_PUBLIC ClassMethod {
-    typedef ValueRef (*Function)(internal::Object *self, const BaseListRef &args);
+    using Function = ValueRef (*)(internal::Object *, const BaseListRef &);
 
     std::string name;
     // for stuff to be re-routed to methods
@@ -1887,12 +1879,12 @@ namespace grt {
 
   class Validator {
   public:
-    typedef std::function<void(const ObjectRef &, const std::string &, const int)> MessageSlot;
+    using MessageSlot = std::function<void(const ObjectRef &, const std::string &, const int)>;
 
-    typedef std::string Tag;
+    using Tag = std::string;
 
-    virtual ~Validator(){};
-    virtual int validate(const Tag &what, const ObjectRef &obj) = 0;
+    virtual ~Validator() {};
+    virtual auto validate(const Tag &what, const ObjectRef &obj) -> int = 0;
   };
 
   /** GRT Class descriptor, formerly known as "struct".
@@ -1921,7 +1913,7 @@ namespace grt {
       virtual ~Property() {
       }
 
-      virtual bool has_setter() const {
+      virtual auto has_setter() const -> bool {
         return setter != 0;
       }
 
@@ -1929,15 +1921,15 @@ namespace grt {
         (((C *)obj)->*setter)(T::cast_from(value));
       }
 
-      virtual grt::ValueRef get(const internal::Object *obj) const {
+      virtual auto get(const internal::Object *obj) const -> grt::ValueRef {
         return (((C *)obj)->*getter)();
       }
     };
 
-    typedef ObjectRef (*Allocator)();
+    using Allocator = ObjectRef (*)();
 
-    typedef ClassMember Member;
-    typedef ClassMethod Method;
+    using Member = ClassMember;
+    using Method = ClassMethod;
 
     enum SignalArgType { BoolSArg, IntSArg, DoubleSArg, StringSArg, ObjectSArg };
 
@@ -1956,36 +1948,36 @@ namespace grt {
       std::vector<SignalArg> arg_types;
     };
 
-    typedef std::map<std::string, Member> MemberList;
-    typedef std::map<std::string, Method> MethodList;
-    typedef std::list<Signal> SignalList;
-    typedef std::vector<Validator *> ValidatorList;
+    using MemberList = std::map<std::string, Member>;
+    using MethodList = std::map<std::string, Method>;
+    using SignalList = std::list<Signal>;
+    using ValidatorList = std::vector<Validator *>;
 
   public:
-    const std::string &name() const {
+    auto name() const -> const std::string & {
       return _name;
     }
-    MetaClass *parent() const {
+    auto parent() const -> MetaClass * {
       return _parent;
     }
 
-    unsigned int crc32() const {
+    auto crc32() const -> unsigned int {
       return _crc32;
     }
 
     /** Calls slot iterating through all members of the metaclass.
-    *
-    * The slot will be called for each member of the metaclass,
-    * including inherited ones. If a member is overridden,
-    * it will be called only once, for the "topmost" one.
-    * The slot must return true as long as the iteration is
-    * to be continued. Returning false will stop it.
-    *
-    * @return true if iteration was completed and false if it
-    * was cancelled by the slot before completion.
-    */
+     *
+     * The slot will be called for each member of the metaclass,
+     * including inherited ones. If a member is overridden,
+     * it will be called only once, for the "topmost" one.
+     * The slot must return true as long as the iteration is
+     * to be continued. Returning false will stop it.
+     *
+     * @return true if iteration was completed and false if it
+     * was cancelled by the slot before completion.
+     */
     template <typename TPred>
-    bool foreach_member(TPred pred) {
+    auto foreach_member(TPred pred) -> bool {
       // set of already seen members (only overridden ones)
       std::set<std::string> seen;
       MetaClass *mc = this;
@@ -2006,19 +1998,19 @@ namespace grt {
     }
 
     /** Calls slot iterating through all methods of the metaclass.
-    *
-    * The slot will be called for each method of the metaclass,
-    * including inherited ones. If a method is overridden,
-    * it will be called only once, for the "topmost" one.
-    * The slot must return true as long as the iteration is
-    * to be continued. Returning false will stop it.
-    *
-    * @return true if iteration was completed and false if it
-    * was cancelled by the slot before completion.
-    */
+     *
+     * The slot will be called for each method of the metaclass,
+     * including inherited ones. If a method is overridden,
+     * it will be called only once, for the "topmost" one.
+     * The slot must return true as long as the iteration is
+     * to be continued. Returning false will stop it.
+     *
+     * @return true if iteration was completed and false if it
+     * was cancelled by the slot before completion.
+     */
 
     template <typename TPred>
-    bool foreach_method(TPred pred) {
+    auto foreach_method(TPred pred) -> bool {
       // set of already seen methods (only overridden ones)
       std::set<std::string> seen;
       MetaClass *mc = this;
@@ -2039,17 +2031,17 @@ namespace grt {
     }
 
     /** Calls slot iterating through all signals of the metaclass.
-    *
-    * The slot will be called for each signal of the metaclass,
-    * including inherited ones.
-    * The slot must return true as long as the iteration is
-    * to be continued. Returning false will stop it.
-    *
-    * @return true if iteration was completed and false if it
-    * was cancelled by the slot before completion.
-    */
+     *
+     * The slot will be called for each signal of the metaclass,
+     * including inherited ones.
+     * The slot must return true as long as the iteration is
+     * to be continued. Returning false will stop it.
+     *
+     * @return true if iteration was completed and false if it
+     * was cancelled by the slot before completion.
+     */
     template <typename TPred>
-    bool foreach_signal(TPred pred) {
+    auto foreach_signal(TPred pred) -> bool {
       // set of already seen methods (only overridden ones)
       std::set<std::string> seen;
       MetaClass *mc = this;
@@ -2073,68 +2065,69 @@ namespace grt {
      *
      * @return true upon success and false if any validator has failed
      */
-    bool foreach_validator(const ObjectRef &obj, const Validator::Tag &tag);
+    auto foreach_validator(const ObjectRef &obj, const Validator::Tag &tag) -> bool;
 
-    inline const MemberList &get_members_partial() {
+    inline auto get_members_partial() -> const MemberList & {
       return _members;
     }
-    inline const MethodList &get_methods_partial() {
+    inline auto get_methods_partial() -> const MethodList & {
       return _methods;
     }
-    inline const SignalList &get_signals_partial() {
+    inline auto get_signals_partial() -> const SignalList & {
       return _signals;
     }
 
-    bool is_a(const std::string &name) const;
-    bool is_a(MetaClass *struc) const;
+    auto is_a(const std::string &name) const -> bool;
+    auto is_a(MetaClass *struc) const -> bool;
 
-    bool has_member(const std::string &member) const;
-    bool has_method(const std::string &method) const;
+    auto has_member(const std::string &member) const -> bool;
+    auto has_method(const std::string &method) const -> bool;
 
-    const Member *get_member_info(const std::string &member) const;
-    const Method *get_method_info(const std::string &method) const;
+    auto get_member_info(const std::string &member) const -> const Member *;
+    auto get_method_info(const std::string &method) const -> const Method *;
 
-    TypeSpec get_member_type(const std::string &member) const;
+    auto get_member_type(const std::string &member) const -> TypeSpec;
 
-    std::string get_attribute(const std::string &attr, bool search_parents = true);
-    std::string get_member_attribute(const std::string &member, const std::string &attr, bool search_parents = true);
+    auto get_attribute(const std::string &attr, bool search_parents = true) -> std::string;
+    auto get_member_attribute(const std::string &member, const std::string &attr, bool search_parents = true)
+      -> std::string;
 
-    bool is_abstract() const;
+    auto is_abstract() const -> bool;
 
     void set_member_value(internal::Object *object, const std::string &name, const ValueRef &value);
-    ValueRef get_member_value(const internal::Object *object, const std::string &name);
-    ValueRef get_member_value(const internal::Object *object, const Member *member);
+    auto get_member_value(const internal::Object *object, const std::string &name) -> ValueRef;
+    auto get_member_value(const internal::Object *object, const Member *member) -> ValueRef;
 
-    ValueRef call_method(internal::Object *object, const std::string &name, const BaseListRef &args);
-    ValueRef call_method(internal::Object *object, const Method *method, const BaseListRef &args);
+    auto call_method(internal::Object *object, const std::string &name, const BaseListRef &args) -> ValueRef;
+    auto call_method(internal::Object *object, const Method *method, const BaseListRef &args) -> ValueRef;
 
-    ObjectRef allocate();
+    auto allocate() -> ObjectRef;
 
   public:
     // for use by GRT only
     ~MetaClass();
 
-    static MetaClass *create_base_class();
-    static MetaClass *from_xml(const std::string &source, xmlNodePtr node);
-    bool placeholder() const {
+    static auto create_base_class() -> MetaClass *;
+    static auto from_xml(const std::string &source, xmlNodePtr node) -> MetaClass *;
+    auto placeholder() const -> bool {
       return _placeholder;
     }
-    bool validate();
-    bool is_bound() const;
-    std::string source() {
+    auto validate() -> bool;
+    auto is_bound() const -> bool;
+    auto source() -> std::string {
       return _source;
     }
 
-    bool force_impl() const {
+    auto force_impl() const -> bool {
       return _force_impl;
     }
-    bool watch_lists() const {
+    auto watch_lists() const -> bool {
       return _watch_lists;
     }
-    bool watch_dicts() const {
+    auto watch_dicts() const -> bool {
       return _watch_dicts;
     }
-    bool impl_data() const {
+    auto impl_data() const -> bool {
       return _impl_data;
     }
 
@@ -2202,16 +2195,16 @@ namespace grt {
     virtual ~ModuleLoader() {
     }
 
-    virtual std::string get_loader_name() = 0;
+    virtual auto get_loader_name() -> std::string = 0;
 
-    virtual Module *init_module(const std::string &path) = 0;
+    virtual auto init_module(const std::string &path) -> Module * = 0;
 
     virtual void refresh() = 0;
 
-    virtual bool load_library(const std::string &path) = 0;
-    virtual bool run_script_file(const std::string &path) = 0;
-    virtual bool run_script(const std::string &script) = 0;
-    virtual bool check_file_extension(const std::string &path) = 0;
+    virtual auto load_library(const std::string &path) -> bool = 0;
+    virtual auto run_script_file(const std::string &path) -> bool = 0;
+    virtual auto run_script(const std::string &script) -> bool = 0;
+    virtual auto check_file_extension(const std::string &path) -> bool = 0;
   };
 
   /** A GRT module class.
@@ -2234,8 +2227,8 @@ namespace grt {
       std::function<ValueRef(const grt::BaseListRef &)> call;
     };
 
-    bool has_function(const std::string &name) const;
-    virtual ValueRef call_function(const std::string &name, const grt::BaseListRef &args);
+    auto has_function(const std::string &name) const -> bool;
+    virtual auto call_function(const std::string &name, const grt::BaseListRef &args) -> ValueRef;
 
     Module(ModuleLoader *loader);
     virtual ~Module() {
@@ -2244,47 +2237,49 @@ namespace grt {
     virtual void closeModule() noexcept {
     }
 
-    virtual GModule* getModule() const { return nullptr; };
+    virtual auto getModule() const -> GModule * {
+      return nullptr;
+    };
 
-    std::string name() const {
+    auto name() const -> std::string {
       return _name;
     }
-    std::string version() const {
+    auto version() const -> std::string {
       return _meta_version;
     }
-    std::string author() const {
+    auto author() const -> std::string {
       return _meta_author;
     }
-    std::string description() const {
+    auto description() const -> std::string {
       return _meta_description;
     }
-    std::string extends() const {
+    auto extends() const -> std::string {
       return _extends;
     }
-    std::string path() const {
+    auto path() const -> std::string {
       return _path;
     }
-    std::string bundle_path() const;
-    std::string default_icon_path() const;
+    auto bundle_path() const -> std::string;
+    auto default_icon_path() const -> std::string;
 
-    bool is_bundle() const {
+    auto is_bundle() const -> bool {
       return _is_bundle;
     }
 
-    const std::vector<Function> &get_functions() const {
+    auto get_functions() const -> const std::vector<Function> & {
       return _functions;
     }
 
-    const Function *get_function(const std::string &name) const;
+    auto get_function(const std::string &name) const -> const Function *;
 
-    typedef std::vector<std::string> Interfaces;
+    using Interfaces = std::vector<std::string>;
 
     //! Returns list of the interfaces which Module implements
-    const Interfaces &get_interfaces() const {
+    auto get_interfaces() const -> const Interfaces & {
       return _interfaces;
     }
 
-    ModuleLoader *get_loader() const {
+    auto get_loader() const -> ModuleLoader * {
       return _loader;
     }
 
@@ -2292,13 +2287,13 @@ namespace grt {
 
     void set_global_data(const std::string &key, const std::string &value);
     void set_global_data(const std::string &key, int value);
-    int global_int_data(const std::string &key, int default_value = 0);
-    std::string global_string_data(const std::string &key, const std::string &default_value = "");
+    auto global_int_data(const std::string &key, int default_value = 0) -> int;
+    auto global_string_data(const std::string &key, const std::string &default_value = "") -> std::string;
 
     void set_document_data(const std::string &key, const std::string &value);
     void set_document_data(const std::string &key, int value);
-    int document_int_data(const std::string &key, int default_value = 0);
-    std::string document_string_data(const std::string &key, const std::string &default_value = "");
+    auto document_int_data(const std::string &key, int default_value = 0) -> int;
+    auto document_string_data(const std::string &key, const std::string &default_value = "") -> std::string;
 
   protected:
     /** Parse a String defined module function specification.
@@ -2316,8 +2311,9 @@ namespace grt {
      * Ex.:
      *  doSomething:s:i count,l<i> poslist,o<db.mysql.Table> table,d args
      */
-    virtual bool add_parse_function_spec(
-      const std::string &spec, const std::function<ValueRef(BaseListRef, Module *, Module::Function)> &caller);
+    virtual auto add_parse_function_spec(const std::string &spec,
+                                         const std::function<ValueRef(BaseListRef, Module *, Module::Function)> &caller)
+      -> bool;
 
     void add_function(const Function &func);
 
@@ -2345,7 +2341,7 @@ namespace grt {
    * These wrapper classes expose GRT modules written in any language as a C++ object.
    *
    * @ingroup GRT
-  */
+   */
   class MYSQLGRT_PUBLIC ModuleWrapper {
   public:
     ModuleWrapper(Module *module) : _module(module) {
@@ -2353,7 +2349,7 @@ namespace grt {
     virtual ~ModuleWrapper() {
     }
 
-    Module *get_module() const {
+    auto get_module() const -> Module * {
       return _module;
     }
 
@@ -2364,7 +2360,7 @@ namespace grt {
   //------------------------------------------------------------------------------------------------
   //------------------------------------------------------------------------------------------------
 
-  typedef enum {
+  enum MessageType {
     ErrorMsg,
     WarningMsg,
     InfoMsg,
@@ -2375,7 +2371,7 @@ namespace grt {
     ControlMsg = 1000,
     NoErrorMsg = 0x1000 //!< NoErrorMsg is used for live validation. ValidationManager uses this message type to
                         //!< inform listeners that certain UI (list of errors, etc..) should be cleared
-  } MessageType;
+  };
 
   struct MYSQLGRT_PUBLIC Message {
     MessageType type;
@@ -2384,12 +2380,11 @@ namespace grt {
     std::string detail;
     float progress;
 
-    std::string format(bool withtype = false) const;
+    auto format(bool withtype = false) const -> std::string;
   };
 
-
-  typedef std::function<bool(const Message &, void *)> MessageSlot;
-  typedef std::function<bool()> StatusQuerySlot;
+  using MessageSlot = std::function<bool(const Message &, void *)>;
+  using StatusQuerySlot = std::function<bool()>;
 
   struct SlotHolder {
     MessageSlot slot;
@@ -2400,7 +2395,7 @@ namespace grt {
 
   // gcc and msc produce different output for typeid(arg).name()
   // this function is a platform independent wrapper for typeid(arg).name()
-  inline std::string get_full_type_name(const std::type_info &ti) {
+  inline auto get_full_type_name(const std::type_info &ti) -> std::string {
 #ifdef __GNUC__
     int s;
     char *tmp = __cxxabiv1::__cxa_demangle(ti.name(), NULL, NULL, &s);
@@ -2420,7 +2415,7 @@ namespace grt {
 #endif
   }
 
-  inline std::string get_type_name(const std::type_info &ti) {
+  inline auto get_type_name(const std::type_info &ti) -> std::string {
     std::string name = get_full_type_name(ti);
 
     // strip namespace::
@@ -2449,7 +2444,7 @@ namespace grt {
   class MYSQLGRT_PUBLIC GRT //
   {
   public:
-    static std::shared_ptr<GRT> get();
+    static auto get() -> std::shared_ptr<GRT>;
     ~GRT();
 
     /**
@@ -2459,20 +2454,24 @@ namespace grt {
      * @return
      */
     void set_verbose(bool flag);
-    bool verbose() const {
+    auto verbose() const -> bool {
       return _verbose;
     }
 
     // Set to true when we are running unit tests.
-    void setTesting(bool flag) { _testing = flag; };
-    bool testing() { return _testing; };
+    void setTesting(bool flag) {
+      _testing = flag;
+    };
+    auto testing() -> bool {
+      return _testing;
+    };
 
     // metaclasss
 
     /**
      * Indicate whenever metaclasses should be registered.
      */
-    bool metaclassesNeedRegister();
+    auto metaclassesNeedRegister() -> bool;
 
     /** Load metaclasses defined in a XML file.
      *
@@ -2481,7 +2480,7 @@ namespace grt {
      *
      * @param requires list of other XML files required by the loaded one
      */
-    void load_metaclasses(const std::string &file, std::list<std::string> * requiresList = 0);
+    void load_metaclasses(const std::string &file, std::list<std::string> *requiresList = 0);
 
     /**
      * This one should not be used during normal studio run,
@@ -2503,7 +2502,7 @@ namespace grt {
      * @param requires optional pointer to a multimap where required XML files for each loaded
      * files is stored
      */
-    int scan_metaclasses_in(const std::string &dir, std::multimap<std::string, std::string> *requiresMap = 0);
+    auto scan_metaclasses_in(const std::string &dir, std::multimap<std::string, std::string> *requiresMap = 0) -> int;
     /** End loading of metaclass definition files.
      * Finishes up loading of metaclass definition XMLs files. This will
      * check that all metaclasses referred by something were loaded. It will
@@ -2512,14 +2511,14 @@ namespace grt {
      */
     void end_loading_metaclasses(bool check_class_binding = true);
 
-    const std::list<MetaClass *> &get_metaclasses() const {
+    auto get_metaclasses() const -> const std::list<MetaClass *> & {
       return _metaclasses_list;
     }
 
-    MetaClass *get_metaclass(const std::string &name) const;
+    auto get_metaclass(const std::string &name) const -> MetaClass *;
 
     template <class C>
-    Ref<C> create_object(const std::string &class_name) const {
+    auto create_object(const std::string &class_name) const -> Ref<C> {
       MetaClass *mc = get_metaclass(class_name);
       if (!mc)
         throw bad_class(class_name);
@@ -2529,30 +2528,30 @@ namespace grt {
     // serialization
     void serialize(const ValueRef &value, const std::string &path, const std::string &doctype = "",
                    const std::string &version = "", bool list_objects_as_links = false);
-    ValueRef unserialize(const std::string &path, std::shared_ptr<grt::internal::Unserializer> unserializer =
-                                                    std::shared_ptr<grt::internal::Unserializer>());
-    ValueRef unserialize(const std::string &path, std::string &doctype_ret, std::string &version_ret);
-    std::shared_ptr<grt::internal::Unserializer> get_unserializer();
+    auto unserialize(const std::string &path, std::shared_ptr<grt::internal::Unserializer> unserializer =
+                                                std::shared_ptr<grt::internal::Unserializer>()) -> ValueRef;
+    auto unserialize(const std::string &path, std::string &doctype_ret, std::string &version_ret) -> ValueRef;
+    auto get_unserializer() -> std::shared_ptr<grt::internal::Unserializer>;
 
-    xmlDocPtr load_xml(const std::string &path);
+    auto load_xml(const std::string &path) -> xmlDocPtr;
     void get_xml_metainfo(xmlDocPtr doc, std::string &doctype_ret, std::string &version_ret);
-    ValueRef unserialize_xml(xmlDocPtr doc, const std::string &source_path);
+    auto unserialize_xml(xmlDocPtr doc, const std::string &source_path) -> ValueRef;
 
-    std::string serialize_xml_data(const ValueRef &value, const std::string &doctype = "",
-                                   const std::string &version = "", bool list_objects_as_links = false);
-    ValueRef unserialize_xml_data(const std::string &data);
+    auto serialize_xml_data(const ValueRef &value, const std::string &doctype = "", const std::string &version = "",
+                            bool list_objects_as_links = false) -> std::string;
+    auto unserialize_xml_data(const std::string &data) -> ValueRef;
 
     // globals
 
-    inline ValueRef root() const {
+    inline auto root() const -> ValueRef {
       return _root;
     }
     void set_root(const ValueRef &root);
 
-    ValueRef get(const std::string &path) const;
+    auto get(const std::string &path) const -> ValueRef;
     void set(const std::string &path, const ValueRef &value);
 
-    ObjectRef find_object_by_id(const std::string &id, const std::string &subpath);
+    auto find_object_by_id(const std::string &id, const std::string &subpath) -> ObjectRef;
 
     // modules
 
@@ -2560,23 +2559,23 @@ namespace grt {
     void set_global_module_data_path(const std::string &path) {
       _global_module_options_path = path;
     }
-    std::string global_module_data_path() {
+    auto global_module_data_path() -> std::string {
       return _global_module_options_path;
     }
 
     void set_document_module_data_path(const std::string &path) {
       _document_module_options_path = path;
     }
-    std::string document_module_data_path() {
+    auto document_module_data_path() -> std::string {
       return _document_module_options_path;
     }
 
     void add_module_loader(ModuleLoader *loader);
-    bool load_module(const std::string &path, const std::string &basePath, bool refresh);
+    auto load_module(const std::string &path, const std::string &basePath, bool refresh) -> bool;
     void end_loading_modules();
 
-    ModuleLoader *get_module_loader(const std::string &name);
-    ModuleLoader *get_module_loader_for_file(const std::string &path);
+    auto get_module_loader(const std::string &name) -> ModuleLoader *;
+    auto get_module_loader_for_file(const std::string &path) -> ModuleLoader *;
     void refresh_loaders();
 
     void register_new_module(Module *module);
@@ -2584,28 +2583,28 @@ namespace grt {
     void unregister_module(Module *module);
 
     void register_new_interface(Interface *iface);
-    const std::map<std::string, Interface *> &get_interfaces() const {
+    auto get_interfaces() const -> const std::map<std::string, Interface *> & {
       return _interfaces;
     }
-    const Interface *get_interface(const std::string &name);
+    auto get_interface(const std::string &name) -> const Interface *;
 
-    int scan_modules_in(const std::string &path, const std::string &basePath, const std::list<std::string> &exts,
-                        bool reload);
+    auto scan_modules_in(const std::string &path, const std::string &basePath, const std::list<std::string> &exts,
+                         bool reload) -> int;
 
-    const std::vector<Module *> &get_modules() const {
+    auto get_modules() const -> const std::vector<Module *> & {
       return _modules;
     }
 
-    grt::ValueRef call_module_function(const std::string &module, const std::string &function,
-                                       const grt::BaseListRef &args);
+    auto call_module_function(const std::string &module, const std::string &function, const grt::BaseListRef &args)
+      -> grt::ValueRef;
 
-    Module *get_module(const std::string &name);
+    auto get_module(const std::string &name) -> Module *;
 
     // create an instance of the given native module and registers it with the GRT.
     // this should not be used for accessing modules, use the
     // wrapper class for the module you want, instead (with get_module())
     template <class ModuleImplClass>
-    ModuleImplClass *get_native_module() {
+    auto get_native_module() -> ModuleImplClass * {
       std::string mname = get_type_name(typeid(ModuleImplClass));
       Module *module;
 
@@ -2630,16 +2629,17 @@ namespace grt {
 
     // locate an instance of a module. suitable for direct access to modules
     template <class ModuleImplClass>
-    ModuleImplClass *find_native_module(const char *name) {
+    auto find_native_module(const char *name) -> ModuleImplClass * {
       Module *module = get_module(name);
 
       return static_cast<ModuleImplClass *>(module);
     }
 
-    std::vector<Module *> find_modules_matching(const std::string &interface_name, const std::string &name_pattern);
+    auto find_modules_matching(const std::string &interface_name, const std::string &name_pattern)
+      -> std::vector<Module *>;
 
     template <class InterfaceWrapperClass>
-    std::vector<InterfaceWrapperClass *> get_implementing_modules() {
+    auto get_implementing_modules() -> std::vector<InterfaceWrapperClass *> {
       std::vector<Module *> modules;
       std::vector<InterfaceWrapperClass *> mlist;
 
@@ -2654,7 +2654,7 @@ namespace grt {
 
     // create an instance of a wrapper for the given module
     template <class ModuleWrapperClass>
-    ModuleWrapperClass *get_module_wrapper(Module *amodule) {
+    auto get_module_wrapper(Module *amodule) -> ModuleWrapperClass * {
       ModuleWrapper *bmodule =
         _cached_module_wrapper[std::string(ModuleWrapperClass::static_get_name()).append("/").append(amodule->name())];
       ModuleWrapperClass *wrapper = dynamic_cast<ModuleWrapperClass *>(bmodule);
@@ -2668,7 +2668,7 @@ namespace grt {
     }
 
     template <class ModuleWrapperClass>
-    ModuleWrapperClass *get_module_wrapper(const std::string &module) {
+    auto get_module_wrapper(const std::string &module) -> ModuleWrapperClass * {
       ModuleWrapper *bmodule =
         _cached_module_wrapper[std::string(ModuleWrapperClass::static_get_name()).append("/").append(module)];
       ModuleWrapperClass *wrapper = dynamic_cast<ModuleWrapperClass *>(bmodule);
@@ -2688,33 +2688,33 @@ namespace grt {
 
     void set_context_data(const std::string &key, void *value, void (*free_value)(void *) = 0);
     void unset_context_data(const std::string &key);
-    void *get_context_data(const std::string &key);
+    auto get_context_data(const std::string &key) -> void *;
 
     // shell
-    bool init_shell(const std::string &shell_type);
-    Shell *get_shell();
-    std::string shell_type();
+    auto init_shell(const std::string &shell_type) -> bool;
+    auto get_shell() -> Shell *;
+    auto shell_type() -> std::string;
 
     // undo tracking
     void push_undo_manager(UndoManager *um);
-    UndoManager *pop_undo_manager();
+    auto pop_undo_manager() -> UndoManager *;
 
-    UndoManager *get_undo_manager() const;
+    auto get_undo_manager() const -> UndoManager *;
     void start_tracking_changes();
     void stop_tracking_changes();
-    bool tracking_changes() const {
+    auto tracking_changes() const -> bool {
       return _tracking_changes > 0;
     }
 
     /** Starts tracking undo changes and opens an undo group.
      * Use the AutoUndo class for auto-trackign.
      */
-    UndoGroup *begin_undoable_action(UndoGroup *group = 0);
+    auto begin_undoable_action(UndoGroup *group = 0) -> UndoGroup *;
     void end_undoable_action(const std::string &group_description);
     void cancel_undoable_action();
 
     // grt logging/messaging
-    int messageHandlerCount() {
+    auto messageHandlerCount() -> int {
       return (int)_messageSlotStack.size();
     }
     void pushMessageHandler(SlotHolder *slot);
@@ -2723,7 +2723,7 @@ namespace grt {
 
     void push_status_query_handler(const StatusQuerySlot &slot);
     void pop_status_query_handler();
-    bool query_status();
+    auto query_status() -> bool;
 
     void send_error(const std::string &message, const std::string &details = "", void *sender = NULL);
     void send_warning(const std::string &message, const std::string &details = "", void *sender = NULL);
@@ -2754,7 +2754,7 @@ namespace grt {
 
     std::map<std::string, ObjectRef> _objects_cache;
 
-    std::vector<SlotHolder*> _messageSlotStack;
+    std::vector<SlotHolder *> _messageSlotStack;
     std::vector<StatusQuerySlot> _status_query_slot_stack;
 
     std::vector<std::pair<float, float> > _progress_step_stack;
@@ -2771,9 +2771,9 @@ namespace grt {
     Shell *_shell;
 
     void add_metaclass(MetaClass *stru);
-    std::string module_path_in_bundle(const std::string &path);
+    auto module_path_in_bundle(const std::string &path) -> std::string;
 
-    bool handle_message(const Message &msg, void *sender);
+    auto handle_message(const Message &msg, void *sender) -> bool;
 
     std::map<std::string, MetaClass *> _metaclasses;
     std::list<MetaClass *> _metaclasses_list;
@@ -2792,7 +2792,7 @@ namespace grt {
   private:
     GRT();
     GRT(const GRT &) = delete;
-    GRT &operator=(GRT &) = delete;
+    auto operator=(GRT &) -> GRT & = delete;
   };
 
   //------------------------------------------------------------------------------------------------
@@ -2829,4 +2829,4 @@ namespace grt {
       return false;
     return candidate_class->is_a(content_class);
   }
-};
+}; // namespace grt

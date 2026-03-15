@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _MDC_ORTHOGONAL_LINE_LAYOUTER_H_
@@ -64,27 +64,27 @@ namespace mdc {
 
   */
   class MYSQLCANVAS_PUBLIC_FUNC OrthogonalLineLayouter : public LineLayouter {
-    typedef LineLayouter super;
+    using super = LineLayouter;
 
   public:
     OrthogonalLineLayouter(Connector *sconn, Connector *econn);
     virtual ~OrthogonalLineLayouter();
 
-    virtual Connector *get_start_connector() const {
+    virtual auto get_start_connector() const -> Connector * {
       return _linfo.start_connector();
     }
-    virtual Connector *get_end_connector() const {
+    virtual auto get_end_connector() const -> Connector * {
       return _linfo.end_connector();
     }
 
-    virtual std::vector<base::Point> get_points();
-    virtual base::Point get_start_point();
-    virtual base::Point get_end_point();
+    virtual auto get_points() -> std::vector<base::Point>;
+    virtual auto get_start_point() -> base::Point;
+    virtual auto get_end_point() -> base::Point;
 
-    int count_sublines() const {
+    auto count_sublines() const -> int {
       return _linfo.count_sublines();
     }
-    double get_segment_offset(int subline) const {
+    auto get_segment_offset(int subline) const -> double {
       return _linfo.subline_offset(subline);
     }
     void set_segment_offset(int subline, double offset);
@@ -115,63 +115,63 @@ namespace mdc {
         _middle_offsets.push_back(0.0);
       }
 
-      int count_sublines() const {
+      auto count_sublines() const -> int {
         return (int)_points.size() - 1;
       }
 
-      Connector *start_connector() const {
+      auto start_connector() const -> Connector * {
         return _start_connector;
       }
 
-      Connector *end_connector() const {
+      auto end_connector() const -> Connector * {
         return _end_connector;
       }
 
-      int start_subline() const {
+      auto start_subline() const -> int {
         return 0;
       }
 
-      int end_subline() const {
+      auto end_subline() const -> int {
         return (int)_points.size() / 2 - 1;
       }
 
-      base::Point subline_start_point(int subline) const {
+      auto subline_start_point(int subline) const -> base::Point {
         if (subline >= count_sublines())
           throw std::invalid_argument("bad subline");
         return _points[subline * 2];
       }
 
-      base::Point subline_end_point(int subline) const {
+      auto subline_end_point(int subline) const -> base::Point {
         if (subline >= count_sublines())
           throw std::invalid_argument("bad subline");
         return _points[subline * 2 + 1];
       }
 
-      double subline_start_angle(int subline) const {
+      auto subline_start_angle(int subline) const -> double {
         if (subline >= count_sublines())
           throw std::invalid_argument("bad subline");
         return _point_angles[subline * 2];
       }
 
-      double subline_end_angle(int subline) const {
+      auto subline_end_angle(int subline) const -> double {
         if (subline >= count_sublines())
           throw std::invalid_argument("bad subline");
         return _point_angles[subline * 2 + 1];
       }
 
-      bool angle_is_vertical(double angle) const {
+      auto angle_is_vertical(double angle) const -> bool {
         if (angle == 90 || angle == 270)
           return true;
         return false;
       }
 
-      bool subline_is_perpendicular(int subline) const {
+      auto subline_is_perpendicular(int subline) const -> bool {
         if (angle_is_vertical(subline_start_angle(subline)) != angle_is_vertical(subline_end_angle(subline)))
           return true;
         return false;
       }
 
-      double subline_offset(int subline) const {
+      auto subline_offset(int subline) const -> double {
         if (subline >= count_sublines())
           throw std::invalid_argument("bad subline");
 
@@ -203,21 +203,21 @@ namespace mdc {
     bool _change_pending;
     bool _updating;
 
-    virtual std::vector<base::Point> get_points_for_subline(int subline);
+    virtual auto get_points_for_subline(int subline) -> std::vector<base::Point>;
 
     virtual void connector_changed(Connector *conn);
 
-    virtual bool update_start_point();
-    virtual bool update_end_point();
+    virtual auto update_start_point() -> bool;
+    virtual auto update_end_point() -> bool;
 
-    virtual std::vector<ItemHandle *> create_handles(Line *line, InteractionLayer *ilayer);
+    virtual auto create_handles(Line *line, InteractionLayer *ilayer) -> std::vector<ItemHandle *>;
     virtual void update_handles(Line *line, std::vector<ItemHandle *> &handles);
 
-    virtual bool handle_dragged(Line *line, ItemHandle *handle, const base::Point &pos, bool dragging);
+    virtual auto handle_dragged(Line *line, ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
 
-    double angle_of_intersection_with_rect(const base::Rect &rect, const base::Point &p);
+    auto angle_of_intersection_with_rect(const base::Rect &rect, const base::Point &p) -> double;
   };
 
-} // end of mdc namespace
+} // namespace mdc
 
 #endif /* _MDC_ORTHOGONAL_LINE_LAYOUTER_H_ */

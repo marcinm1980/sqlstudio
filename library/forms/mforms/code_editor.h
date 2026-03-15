@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -78,12 +78,12 @@ namespace mforms {
 
   // A collection of markup, attached to the original line and going to be removed
   // or moved to a new line.
-  typedef struct {
+  struct LineMarkupChangeEntry {
     int original_line;
     int new_line;
     LineMarkup markup;
-  } LineMarkupChangeEntry;
-  typedef std::vector<LineMarkupChangeEntry> LineMarkupChangeset;
+  };
+  using LineMarkupChangeset = std::vector<LineMarkupChangeEntry>;
 
 #ifndef SWIG
   inline LineMarkup operator|(LineMarkup a, LineMarkup b) {
@@ -162,7 +162,7 @@ namespace mforms {
     std::map<std::string, std::string> _keywords;
     std::map<std::string, std::string> _properties;
     std::map<std::string, std::string> _settings;
-    std::map<int, std::map<std::string, std::string> > _styles;
+    std::map<int, std::map<std::string, std::string>> _styles;
 
     xmlDocPtr _xmlDocument;
     xmlNodePtr _xmlLanguageElement;
@@ -193,8 +193,8 @@ namespace mforms {
     std::map<std::string, std::string> get_settings() {
       return _settings;
     };
-    
-    std::map<int, std::map<std::string, std::string> > get_styles() {
+
+    std::map<int, std::map<std::string, std::string>> get_styles() {
       return _styles;
     };
   };
@@ -410,7 +410,7 @@ namespace mforms {
      *                 first with auto_completion_register_images. Use -1 as id when no image is needed.
      *                 The list should be sorted to make matching working properly.
      */
-    void auto_completion_show(size_t chars_entered, const std::vector<std::pair<int, std::string> >& entries);
+    void auto_completion_show(size_t chars_entered, const std::vector<std::pair<int, std::string>>& entries);
     void auto_completion_show(size_t chars_entered, const std::vector<std::string>& entries);
 
     /** Can be used to cancel auto completion while it is in progress (i.e. during handling an
@@ -444,7 +444,7 @@ namespace mforms {
      *
      *  @param images A list of image file names that get loaded.
      */
-    void auto_completion_register_images(const std::vector<std::pair<int, std::string> >& images);
+    void auto_completion_register_images(const std::vector<std::pair<int, std::string>>& images);
 
     /** Returns true if auto completion is currently active (i.e. the list is visible). */
     bool auto_completion_active();
@@ -578,7 +578,8 @@ namespace mforms {
     Menu* _context_menu;
     FindPanel* _find_panel;
 
-    std::map<int, std::map<std::string, std::string>> _currentStyles; // Loaded styles for the currently configured langugage.
+    std::map<int, std::map<std::string, std::string>>
+      _currentStyles; // Loaded styles for the currently configured langugage.
 
     void* _host;
     bool _scroll_on_resize;
@@ -594,7 +595,7 @@ namespace mforms {
     bool ensureImage(std::string const& name);
 
     void loadConfiguration(SyntaxHighlighterLanguage language);
-    virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info) override;
+    virtual void handle_notification(const std::string& name, void* sender, base::NotificationInfo& info) override;
 
     boost::signals2::signal<void(Sci_Position, Sci_Position, Sci_Position, bool)> _change_event;
     boost::signals2::signal<void(size_t, size_t, mforms::ModifierKey)> _gutter_clicked_event;
@@ -608,4 +609,4 @@ namespace mforms {
 
     std::function<void(CodeEditor*, bool)> _show_find_panel;
   };
-};
+}; // namespace mforms

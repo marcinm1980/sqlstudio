@@ -35,7 +35,7 @@ namespace mdc {
     BoxHandle(InteractionLayer *ilayer, CanvasItem *item, const base::Point &pos);
     virtual ~BoxHandle();
 
-    virtual base::Rect get_bounds() const;
+    virtual auto get_bounds() const -> base::Rect;
   };
 
 } // end of mdc namespace

@@ -57,17 +57,17 @@ namespace mdc {
 
   //----------------------------------------------------------------------------------------------------------------------
 
-  bool MYSQLCANVAS_PUBLIC_FUNC intersect_lines(const base::Point &s1, const base::Point &e1, const base::Point &s2,
-                                               const base::Point &e2, base::Point &intersection_ret);
+  auto MYSQLCANVAS_PUBLIC_FUNC intersect_lines(const base::Point &s1, const base::Point &e1, const base::Point &s2,
+                                               const base::Point &e2, base::Point &intersection_ret) -> bool;
 
-  bool MYSQLCANVAS_PUBLIC_FUNC intersect_hv_lines(const base::Point &s1, const base::Point &e1, const base::Point &s2,
-                                                  const base::Point &e2, base::Point &intersection_ret);
+  auto MYSQLCANVAS_PUBLIC_FUNC intersect_hv_lines(const base::Point &s1, const base::Point &e1, const base::Point &s2,
+                                                  const base::Point &e2, base::Point &intersection_ret) -> bool;
 
-  bool MYSQLCANVAS_PUBLIC_FUNC intersect_rect_to_line(const base::Rect &rect, const base::Point &s,
+  auto MYSQLCANVAS_PUBLIC_FUNC intersect_rect_to_line(const base::Rect &rect, const base::Point &s,
                                                       const base::Point &e, base::Point &intersection1_ret,
-                                                      base::Point &intersection2_ret);
+                                                      base::Point &intersection2_ret) -> bool;
 
-  inline double angle_of_line(const base::Point &p1, const base::Point &p2) {
+  inline auto angle_of_line(const base::Point &p1, const base::Point &p2) -> double {
     double angle;
     // figure out the angle of the line in degrees
     if (p1 == p2)
@@ -93,7 +93,7 @@ namespace mdc {
    * @return True if both bounds overlap each other, otherwise false.
    * @note Bounds must be sorted.
    */
-  inline bool bounds_intersect(const base::Rect &bounds1, const base::Rect &bounds2) {
+  inline auto bounds_intersect(const base::Rect &bounds1, const base::Rect &bounds2) -> bool {
     return (bounds1.right() >= bounds2.left()) && (bounds1.left() <= bounds2.right()) &&
            (bounds1.bottom() >= bounds2.top()) && (bounds1.top() <= bounds2.bottom());
   }
@@ -108,7 +108,7 @@ namespace mdc {
    * @return True if the second bounds are completely within the first bounds, otherwise false.
    * @note Bounds must be sorted.
    */
-  inline bool bounds_contain_bounds(const base::Rect &bounds1, const base::Rect &bounds2) {
+  inline auto bounds_contain_bounds(const base::Rect &bounds1, const base::Rect &bounds2) -> bool {
     return (bounds1.left() <= bounds2.left()) && (bounds2.right() <= bounds1.right()) &&
            (bounds1.top() <= bounds2.top()) && (bounds2.bottom() <= bounds1.bottom());
   }
@@ -124,7 +124,7 @@ namespace mdc {
    * @return True if the point is within the bounds, otherwise false.
    * @note Bounds must be sorted.
    */
-  inline bool bounds_contain_point(const base::Rect &bounds, double x, double y) {
+  inline auto bounds_contain_point(const base::Rect &bounds, double x, double y) -> bool {
     return (bounds.right() >= x) && (bounds.pos.x <= x) && (bounds.bottom() >= y) && (bounds.pos.y <= y);
   }
 
@@ -136,13 +136,13 @@ namespace mdc {
    * @param bounds The bounds to examine.
    * @return True if the bounds are empty, false otherwise.
    */
-  inline bool bounds_are_empty(const base::Rect &bounds) {
+  inline auto bounds_are_empty(const base::Rect &bounds) -> bool {
     return (bounds.size.width == 0) && (bounds.size.height == 0);
   }
 
   //----------------------------------------------------------------------------------------------------------------------
 
-  inline base::Rect clip_bound(const base::Rect &bounds, const base::Rect &clip) {
+  inline auto clip_bound(const base::Rect &bounds, const base::Rect &clip) -> base::Rect {
     double x1 = bounds.left();
     double x2 = bounds.right();
     double y1 = bounds.top();
@@ -162,13 +162,13 @@ namespace mdc {
 
   //----------------------------------------------------------------------------------------------------------------------
 
-  inline base::Point bounds_center(const base::Rect &bounds) {
+  inline auto bounds_center(const base::Rect &bounds) -> base::Point {
     return base::Point(bounds.left() + bounds.width() / 2, bounds.top() + bounds.height() / 2);
   }
 
   //----------------------------------------------------------------------------------------------------------------------
 
-  inline base::Rect expand_bound(const base::Rect &bounds, double dx, double dy) {
+  inline auto expand_bound(const base::Rect &bounds, double dx, double dy) -> base::Rect {
     base::Rect r = bounds;
 
     r.pos.x -= dx;
@@ -180,12 +180,12 @@ namespace mdc {
 
   //----------------------------------------------------------------------------------------------------------------------
 
-  inline double points_distance(const base::Point &p1, const base::Point &p2) {
+  inline auto points_distance(const base::Point &p1, const base::Point &p2) -> double {
     return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
   }
 
-  double MYSQLCANVAS_PUBLIC_FUNC point_line_distance(const base::Point &p1, const base::Point &p2,
-                                                     const base::Point &p);
+  auto MYSQLCANVAS_PUBLIC_FUNC point_line_distance(const base::Point &p1, const base::Point &p2,
+                                                     const base::Point &p) -> double;
 
   //----------------------------------------------------------------------------------------------------------------------
 

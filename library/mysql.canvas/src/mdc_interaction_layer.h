@@ -40,14 +40,14 @@ namespace mdc {
 
     void add_handle(ItemHandle *handle);
     void remove_handle(ItemHandle *handle);
-    ItemHandle *get_handle_at(const base::Point &pos);
+    auto get_handle_at(const base::Point &pos) -> ItemHandle *;
 
     void set_active_area(const base::Rect &rect);
     void reset_active_area();
 
-    bool handle_mouse_move(const base::Point &pos, EventState state);
-    bool handle_mouse_button_top(MouseButton button, bool press, const base::Point &pos, EventState state);
-    bool handle_mouse_button_bottom(MouseButton button, bool press, const base::Point &pos, EventState state);
+    auto handle_mouse_move(const base::Point &pos, EventState state) -> bool;
+    auto handle_mouse_button_top(MouseButton button, bool press, const base::Point &pos, EventState state) -> bool;
+    auto handle_mouse_button_bottom(MouseButton button, bool press, const base::Point &pos, EventState state) -> bool;
 
     void start_selection_rectangle(const base::Point &pos, EventState state);
     void update_selection_rectangle(const base::Point &end, EventState state);
@@ -56,9 +56,9 @@ namespace mdc {
     void start_dragging_rectangle(const base::Point &pos);
     void update_dragging_rectangle(const base::Point &pos);
     void draw_dragging_rectangle();
-    base::Rect finish_dragging_rectangle();
+    auto finish_dragging_rectangle() -> base::Rect;
 
-    boost::signals2::signal<void(CairoCtx *)> *signal_custom_repaint() {
+    auto signal_custom_repaint() -> boost::signals2::signal<void(CairoCtx *)> * {
       return &_custom_repaint;
     }
 

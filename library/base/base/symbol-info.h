@@ -43,13 +43,13 @@ enum class MySQLVersion {
 
 class BASELIBRARY_PUBLIC_FUNC MySQLSymbolInfo {
 public:
-  static std::set<std::string> const& systemFunctionsForVersion(MySQLVersion version);
-  static std::set<std::string> const& keywordsForVersion(MySQLVersion version);
+  static auto systemFunctionsForVersion(MySQLVersion version) -> std::set<std::string> const&;
+  static auto keywordsForVersion(MySQLVersion version) -> std::set<std::string> const&;
 
-  static bool isReservedKeyword(std::string const& identifier, MySQLVersion version);
-  static bool isKeyword(std::string const& identifier, MySQLVersion version);
+  static auto isReservedKeyword(std::string const& identifier, MySQLVersion version) -> bool;
+  static auto isKeyword(std::string const& identifier, MySQLVersion version) -> bool;
 
-  static MySQLVersion numberToVersion(long version);
+  static auto numberToVersion(long version) -> MySQLVersion;
 };
 
 }

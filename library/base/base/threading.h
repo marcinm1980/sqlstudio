@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -43,7 +43,7 @@ namespace base {
   // or bundle folder, then the typical location for apps on that platform).
   BASELIBRARY_PUBLIC_FUNC void launchApplication(const std::string &name, const std::vector<std::string> &params);
 
-  typedef gint refcount_t;
+  using refcount_t = gint;
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -60,7 +60,8 @@ namespace base {
 #pragma warning(pop)
 #endif
 
-  inline GThread *create_thread(GThreadFunc func, gpointer data, GError **error = NULL, std::string name = "") {
+  inline auto create_thread(GThreadFunc func, gpointer data, GError **error = NULL, std::string name = "")
+    -> GThread * {
 #if GLIB_CHECK_VERSION(2, 32, 0)
     return g_thread_try_new(name.c_str(), func, data, error);
 #else
@@ -79,11 +80,11 @@ namespace base {
     Mutex(Mutex &&o) = delete;
     ~Mutex();
 
-    Mutex &operator = (Mutex &o) = delete;
+    auto operator=(Mutex &o) -> Mutex & = delete;
 
     void lock();
     void unlock();
-    bool tryLock();
+    auto tryLock() -> bool;
 
   private:
     class Private;
@@ -95,7 +96,7 @@ namespace base {
     MutexLock(Mutex const &mutex);
     MutexLock(MutexLock &&o);
     MutexLock(MutexLock const &o) = delete;
-    MutexLock &operator=(MutexLock &o) = delete;
+    auto operator=(MutexLock &o) -> MutexLock & = delete;
 
     ~MutexLock();
 
@@ -113,11 +114,11 @@ namespace base {
     RecMutex(RecMutex &&o) = delete;
     ~RecMutex();
 
-    RecMutex &operator = (RecMutex &o) = delete;
+    auto operator=(RecMutex &o) -> RecMutex & = delete;
 
     void lock();
     void unlock();
-    bool tryLock();
+    auto tryLock() -> bool;
 
   private:
     class Private;
@@ -129,7 +130,7 @@ namespace base {
     RecMutexLock(RecMutex &mutex, bool throwOnBlock = false);
     RecMutexLock(RecMutexLock &&o);
     RecMutexLock(RecMutexLock const &o) = delete;
-    RecMutexLock &operator=(RecMutexLock &o) = delete;
+    auto operator=(RecMutexLock &o) -> RecMutexLock & = delete;
 
     ~RecMutexLock();
 
@@ -145,7 +146,7 @@ namespace base {
     Semaphore();
     Semaphore(int initialCount);
     ~Semaphore();
-    Semaphore& operator=(const Semaphore& other) = delete;
+    auto operator=(const Semaphore &other) -> Semaphore & = delete;
 
     void post();
     void wait();

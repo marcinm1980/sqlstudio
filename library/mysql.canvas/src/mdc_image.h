@@ -37,20 +37,20 @@ namespace mdc {
 
     virtual void draw_contents(CairoCtx *cr);
 
-    bool set_image(cairo_surface_t *surface);
-    bool set_image(const std::string &path);
-    base::Size get_image_size() const;
+    auto set_image(cairo_surface_t *surface) -> bool;
+    auto set_image(const std::string &path) -> bool;
+    auto get_image_size() const -> base::Size;
 
-    cairo_surface_t *get_image() {
+    auto get_image() -> cairo_surface_t * {
       return _image;
     }
 
   protected:
     cairo_surface_t *_image;
 
-    virtual base::Size calc_min_size();
+    virtual auto calc_min_size() -> base::Size;
   };
 
-  MYSQLCANVAS_PUBLIC_FUNC cairo_surface_t *surface_from_png_image(const std::string &file_name);
+  MYSQLCANVAS_PUBLIC_FUNC auto surface_from_png_image(const std::string &file_name) -> cairo_surface_t *;
 
 } // end of mdc namespace

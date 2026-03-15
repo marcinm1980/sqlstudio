@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef __REFRESH_UI_H__
@@ -41,8 +41,8 @@ namespace bec {
     virtual ~RefreshUI() {
     }
 
-    typedef std::function<void()> RefreshSlot;
-    typedef std::function<void(const int)> PartialRefreshSlot;
+    using RefreshSlot = std::function<void()>;
+    using PartialRefreshSlot = std::function<void(const int)>;
 
     void set_refresh_ui_slot(const RefreshSlot &slot);
 
@@ -76,6 +76,6 @@ namespace bec {
     RefreshSlot _refresh_ui;
     PartialRefreshSlot _partial_refresh_ui;
   };
-}
+} // namespace bec
 
 #endif

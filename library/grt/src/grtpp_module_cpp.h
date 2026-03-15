@@ -39,15 +39,15 @@ namespace grt {
 
   template <class C>
   struct traits {
-    typedef C Type;
+    using Type = C;
   };
   template <class C>
   struct traits<const C &> {
-    typedef C Type;
+    using Type = C;
   };
   template <class C>
   struct traits<C &> {
-    typedef C Type;
+    using Type = C;
   };
 
   template <class T>
@@ -73,26 +73,26 @@ namespace grt {
 
   template <class T>
   struct grt_content_class_name {
-    typedef T value;
+    using value = T;
   };
   template <class T>
   struct grt_content_class_name<Ref<T> > {
-    typedef T value;
+    using value = T;
   };
   template <class T>
   struct grt_content_class_name<ListRef<T> > {
-    typedef T value;
+    using value = T;
   };
 
   template <class T>
   struct grt_type_for_native {
-    typedef T Type;
+    using Type = T;
   };
 
 #ifdef DEFINE_INT_FUNCTIONS
   template <>
   struct grt_type_for_native<int> {
-    typedef IntegerRef Type;
+    using Type = IntegerRef;
   };
 #endif
 
@@ -111,25 +111,25 @@ namespace grt {
 #endif
   template <>
   struct grt_type_for_native<size_t> {
-    typedef IntegerRef Type;
+    using Type = IntegerRef;
   };
 #ifdef DEFINE_SSIZE_T_FUNCTIONS
   template <>
   struct grt_type_for_native<ssize_t> {
-    typedef IntegerRef Type;
+    using Type = IntegerRef;
   };
 #endif
   template <>
   struct grt_type_for_native<double> {
-    typedef DoubleRef Type;
+    using Type = DoubleRef;
   };
   template <>
   struct grt_type_for_native<const std::string &> {
-    typedef StringRef Type;
+    using Type = StringRef;
   };
   template <>
   struct grt_type_for_native<std::string> {
-    typedef StringRef Type;
+    using Type = StringRef;
   };
 
   template <class T>
@@ -225,7 +225,7 @@ namespace grt {
 
   //----------------------------------------------------------------------
   // Basic definitions for modules and interfaces
-  typedef std::vector<std::string> InterfaceList;
+  using InterfaceList = std::vector<std::string>;
   class ModuleFunctorBase;
 
   // this base class is only used by InterfaceImplBase and ModuleImplBase
@@ -234,7 +234,7 @@ namespace grt {
   public:
     InterfaceList _implemented_interfaces;
 
-    virtual ~InterfaceData(){};
+    virtual ~InterfaceData() {};
   };
 
   class InterfaceImplBase : virtual public InterfaceData {
@@ -244,7 +244,7 @@ namespace grt {
       InterfaceClass::register_interface();
     }
 
-    virtual ~InterfaceImplBase(){};
+    virtual ~InterfaceImplBase() {};
   };
 
   class ModuleFunctorBase;
@@ -264,7 +264,7 @@ namespace grt {
     friend class CPPModuleLoader;
 
   public:
-    typedef CPPModuleLoader Loader;
+    using Loader = CPPModuleLoader;
     virtual ~CPPModule();
 
     virtual std::string get_module_datadir();
@@ -273,7 +273,6 @@ namespace grt {
 
     void set_name(const std::string &name);
 
-
   protected:
     CPPModule(CPPModuleLoader *loader);
 
@@ -281,15 +280,15 @@ namespace grt {
     std::list<ModuleFunctorBase *> _functors;
 
     virtual void init_module() = 0;
-    virtual void initialization_done(){};
+    virtual void initialization_done() {};
 
     void register_functions(ModuleFunctorBase *first, ...);
 
     virtual void closeModule() noexcept override;
-    virtual GModule* getModule() const override;
+    virtual GModule *getModule() const override;
   };
 
-  typedef CPPModule ModuleImplBase;
+  using ModuleImplBase = CPPModule;
 
   class MYSQLGRT_PUBLIC CPPModuleLoader : public ModuleLoader {
   public:
@@ -330,28 +329,29 @@ namespace grt {
   }
 
 // this must be put in the public section of the modules class
-#define DEFINE_INIT_MODULE(VERSION, AUTHOR, parent_class, first_function, ...)\
-  virtual void init_module() override \
-  {\
-    set_name(grt::get_type_name(typeid(*this)));\
-    _meta_version= VERSION; _meta_author= AUTHOR;\
-    _extends= typeid(parent_class) == typeid(grt::CPPModule) ? "" : grt::get_type_name(typeid(parent_class));\
-    if (g_str_has_suffix(_extends.c_str(), "Impl"))\
-      _extends= _extends.substr(0, _extends.length()-4);\
-    register_functions(first_function, __VA_ARGS__, NULL);\
-    initialization_done();\
+#define DEFINE_INIT_MODULE(VERSION, AUTHOR, parent_class, first_function, ...)                                 \
+  virtual void init_module() override {                                                                        \
+    set_name(grt::get_type_name(typeid(*this)));                                                               \
+    _meta_version = VERSION;                                                                                   \
+    _meta_author = AUTHOR;                                                                                     \
+    _extends = typeid(parent_class) == typeid(grt::CPPModule) ? "" : grt::get_type_name(typeid(parent_class)); \
+    if (g_str_has_suffix(_extends.c_str(), "Impl"))                                                            \
+      _extends = _extends.substr(0, _extends.length() - 4);                                                    \
+    register_functions(first_function, __VA_ARGS__, NULL);                                                     \
+    initialization_done();                                                                                     \
   }
 
-#define DEFINE_INIT_MODULE_DOC(VERSION, AUTHOR, DOC, parent_class, first_function, ...)\
-  virtual void init_module() override \
-  {\
-    set_name(grt::get_type_name(typeid(*this)));\
-    _meta_version= VERSION; _meta_author= AUTHOR; _meta_description= DOC;\
-    _extends= typeid(parent_class) == typeid(grt::CPPModule) ? "" : grt::get_type_name(typeid(parent_class));\
-    if (g_str_has_suffix(_extends.c_str(), "Impl"))\
-      _extends= _extends.substr(0, _extends.length()-4);\
-    register_functions(first_function, __VA_ARGS__, NULL);\
-    initialization_done();\
+#define DEFINE_INIT_MODULE_DOC(VERSION, AUTHOR, DOC, parent_class, first_function, ...)                        \
+  virtual void init_module() override {                                                                        \
+    set_name(grt::get_type_name(typeid(*this)));                                                               \
+    _meta_version = VERSION;                                                                                   \
+    _meta_author = AUTHOR;                                                                                     \
+    _meta_description = DOC;                                                                                   \
+    _extends = typeid(parent_class) == typeid(grt::CPPModule) ? "" : grt::get_type_name(typeid(parent_class)); \
+    if (g_str_has_suffix(_extends.c_str(), "Impl"))                                                            \
+      _extends = _extends.substr(0, _extends.length() - 4);                                                    \
+    register_functions(first_function, __VA_ARGS__, NULL);                                                     \
+    initialization_done();                                                                                     \
   }
 
   template <class T_arg>
@@ -386,17 +386,17 @@ namespace grt {
     if (p.type.base.type == ObjectType) {
       if (typeid(T_arg) != typeid(internal::Object)) {
         const bool castable_to_object_value =
-        Is_super_subclass<internal::Object, typename grt_content_class_name<T_arg>::value>::value;
+          Is_super_subclass<internal::Object, typename grt_content_class_name<T_arg>::value>::value;
         p.type.base.object_class =
-        grt_content_struct_name<typename grt_content_class_name<T_arg>::value, castable_to_object_value>::get();
+          grt_content_struct_name<typename grt_content_class_name<T_arg>::value, castable_to_object_value>::get();
       }
     } else if (p.type.base.type == ListType) {
       p.type.content.type = grt_content_type<T_arg>::id;
       if (p.type.content.type == ObjectType) {
         const bool castable_to_object_value =
-        Is_super_subclass<internal::Object, typename grt_content_class_name<T_arg>::value>::value;
+          Is_super_subclass<internal::Object, typename grt_content_class_name<T_arg>::value>::value;
         p.type.content.object_class =
-        grt_content_struct_name<typename grt_content_class_name<T_arg>::value, castable_to_object_value>::get();
+          grt_content_struct_name<typename grt_content_class_name<T_arg>::value, castable_to_object_value>::get();
       }
     } else if (p.type.base.type == DictType) {
       p.type.content.type = AnyType;
@@ -410,7 +410,7 @@ namespace grt {
     TypeSpec _return_type;
 
   public:
-    typedef std::vector<ArgSpec> Function_param_list;
+    using Function_param_list = std::vector<ArgSpec>;
 
   protected:
     const char *_name;
@@ -428,7 +428,7 @@ namespace grt {
         c++;
       _name = c;
     }
-    virtual ~ModuleFunctorBase(){};
+    virtual ~ModuleFunctorBase() {};
 
     const char *get_name() const {
       return _name;
@@ -613,7 +613,7 @@ namespace grt {
 
   template <class T_ret, class T_obj>
   class ModuleFunctor0 : public ModuleFunctorBase {
-    typedef T_ret (T_obj::*function_type)();
+    using function_type = T_ret (T_obj::*)();
     function_type _funcptr;
     T_obj *_obj;
 
@@ -631,7 +631,7 @@ namespace grt {
 
   template <class T_ret, class T_obj, class T_arg1>
   class ModuleFunctor1 : public ModuleFunctorBase {
-    typedef T_ret (T_obj::*function_type)(T_arg1);
+    using function_type = T_ret (T_obj::*)(T_arg1);
     function_type _funcptr;
     T_obj *_obj;
 
@@ -652,7 +652,7 @@ namespace grt {
 
   template <class T_ret, class T_obj, class T_arg1, class T_arg2>
   class ModuleFunctor2 : public ModuleFunctorBase {
-    typedef T_ret (T_obj::*function_type)(T_arg1, T_arg2);
+    using function_type = T_ret (T_obj::*)(T_arg1, T_arg2);
     function_type _funcptr;
     T_obj *_obj;
 
@@ -675,7 +675,7 @@ namespace grt {
 
   template <class T_ret, class T_obj, class T_arg1, class T_arg2, class T_arg3>
   class ModuleFunctor3 : public ModuleFunctorBase {
-    typedef T_ret (T_obj::*function_type)(T_arg1, T_arg2, T_arg3);
+    using function_type = T_ret (T_obj::*)(T_arg1, T_arg2, T_arg3);
     function_type _funcptr;
     T_obj *_obj;
 
@@ -700,7 +700,7 @@ namespace grt {
 
   template <class T_ret, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   class ModuleFunctor4 : public ModuleFunctorBase {
-    typedef T_ret (T_obj::*function_type)(T_arg1, T_arg2, T_arg3, T_arg4);
+    using function_type = T_ret (T_obj::*)(T_arg1, T_arg2, T_arg3, T_arg4);
     function_type _funcptr;
     T_obj *_obj;
 
@@ -727,7 +727,7 @@ namespace grt {
 
   template <class T_ret, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   class ModuleFunctor5 : public ModuleFunctorBase {
-    typedef T_ret (T_obj::*function_type)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5);
+    using function_type = T_ret (T_obj::*)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5);
     function_type _funcptr;
     T_obj *_obj;
 
@@ -757,7 +757,7 @@ namespace grt {
   template <class T_ret, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5,
             class T_arg6>
   class ModuleFunctor6 : public ModuleFunctorBase {
-    typedef T_ret (T_obj::*function_type)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6);
+    using function_type = T_ret (T_obj::*)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6);
     function_type _funcptr;
     T_obj *_obj;
 
@@ -789,7 +789,7 @@ namespace grt {
   template <class T_ret, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5,
             class T_arg6, class T_arg7>
   class ModuleFunctor7 : public ModuleFunctorBase {
-    typedef T_ret (T_obj::*function_type)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7);
+    using function_type = T_ret (T_obj::*)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7);
     function_type _funcptr;
     T_obj *_obj;
 
@@ -959,4 +959,4 @@ namespace grt {
   }                                                                                                                   \
   }
 #endif
-};
+}; // namespace grt

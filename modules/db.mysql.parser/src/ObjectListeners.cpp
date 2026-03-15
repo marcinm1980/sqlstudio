@@ -43,7 +43,7 @@ using namespace antlr4;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::string getIdentifierList(MySQLParser::IdentifierListContext *ctx) {
+static auto getIdentifierList(MySQLParser::IdentifierListContext *ctx) -> std::string {
   std::string result;
   for (auto &identifier : ctx->identifier()) {
     if (!result.empty())
@@ -56,7 +56,7 @@ static std::string getIdentifierList(MySQLParser::IdentifierListContext *ctx) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static size_t numberValue(std::string value) {
+static auto numberValue(std::string value) -> size_t {
   // Value can have a suffix. And it can be a hex number.
   size_t factor = 1;
   switch (::tolower(value[value.size() - 1])) {
@@ -78,8 +78,8 @@ static size_t numberValue(std::string value) {
 /**
  * The next 2 functions take a charset or collation and retrieve the associated charset/collation pair.
  */
-static std::pair<std::string, std::string> detailsForCharset(const std::string &charset, const std::string &collation,
-                                                             const std::string &defaultCharset) {
+static auto detailsForCharset(const std::string &charset, const std::string &collation,
+                                                             const std::string &defaultCharset) -> std::pair<std::string, std::string> {
   std::pair<std::string, std::string> result;
   if (!charset.empty()) {
     result.first = base::tolower(charset);
@@ -101,8 +101,8 @@ static std::pair<std::string, std::string> detailsForCharset(const std::string &
 
 //----------------------------------------------------------------------------------------------------------------------
 
-static std::pair<std::string, std::string> detailsForCollation(const std::string &collation,
-                                                               const std::string &defaultCollation) {
+static auto detailsForCollation(const std::string &collation,
+                                                               const std::string &defaultCollation) -> std::pair<std::string, std::string> {
   std::pair<std::string, std::string> result;
   if (!collation.empty()) {
     result.second = base::tolower(collation);
@@ -223,7 +223,7 @@ static void parseKeyList(ParserRuleContext *ctx, db_mysql_TableRef table, db_mys
 /**
  *	Helper to bring the index type string into a commonly used form.
  */
-static std::string formatIndexType(std::string indexType) {
+static auto formatIndexType(std::string indexType) -> std::string {
   indexType = indexType.substr(0, indexType.find(' ')); // Only first word is meaningful.
   indexType = base::toupper(indexType);
   if (indexType == "KEY")
@@ -636,14 +636,14 @@ ObjectListener::ObjectListener(db_mysql_CatalogRef catalog, db_DatabaseObjectRef
 /**
  *	Returns the schema with the given name. If it doesn't exist it will be created.
  */
-db_mysql_SchemaRef ObjectListener::ensureSchemaExists(const std::string &name) {
+auto ObjectListener::ensureSchemaExists(const std::string &name) -> db_mysql_SchemaRef {
   return ensureSchemaExists(_catalog, name, _caseSensitive);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-db_mysql_SchemaRef ObjectListener::ensureSchemaExists(db_CatalogRef catalog, const std::string &name,
-                                                      bool caseSensitive) {
+auto ObjectListener::ensureSchemaExists(db_CatalogRef catalog, const std::string &name,
+                                                      bool caseSensitive) -> db_mysql_SchemaRef {
   db_SchemaRef result = find_named_object_in_list(catalog->schemata(), name, caseSensitive);
   if (!result.is_valid()) {
     result = db_mysql_SchemaRef(grt::Initialized);

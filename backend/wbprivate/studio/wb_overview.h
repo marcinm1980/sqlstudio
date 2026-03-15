@@ -70,31 +70,31 @@ namespace wb {
     OverviewBE(WBContext *wb);
     virtual ~OverviewBE();
 
-    WBContext *get_wb() {
+    auto get_wb() -> WBContext * {
       return _wb;
     }
 
-    virtual std::string get_title();
-    virtual std::string identifier() const = 0;
+    virtual auto get_title() -> std::string;
+    virtual auto identifier() const -> std::string = 0;
 
-    virtual bool is_main_form() {
+    virtual auto is_main_form() -> bool {
       return true;
     }
 
-    virtual bec::NodeId get_child(const bec::NodeId &parent, size_t index);
-    virtual size_t count_children(const bec::NodeId &parent);
+    virtual auto get_child(const bec::NodeId &parent, size_t index) -> bec::NodeId;
+    virtual auto count_children(const bec::NodeId &parent) -> size_t;
 
-    virtual grt::ValueRef get_grt_value(const bec::NodeId &node, ColumnId column);
-    virtual bool get_field(const bec::NodeId &node, ColumnId column, std::string &value);
-    virtual bool get_field(const bec::NodeId &node, ColumnId column, ssize_t &value);
+    virtual auto get_grt_value(const bec::NodeId &node, ColumnId column) -> grt::ValueRef;
+    virtual auto get_field(const bec::NodeId &node, ColumnId column, std::string &value) -> bool;
+    virtual auto get_field(const bec::NodeId &node, ColumnId column, ssize_t &value) -> bool;
 
-    int get_details_field_count(const bec::NodeId &node);
+    auto get_details_field_count(const bec::NodeId &node) -> int;
 
-    std::string get_field_name(const bec::NodeId &node, ColumnId column);
-    virtual std::string get_field_description(const bec::NodeId &node, ColumnId column);
-    virtual bec::IconId get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size);
+    auto get_field_name(const bec::NodeId &node, ColumnId column) -> std::string;
+    virtual auto get_field_description(const bec::NodeId &node, ColumnId column) -> std::string;
+    virtual auto get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size) -> bec::IconId;
 
-    virtual bool set_field(const bec::NodeId &node, ColumnId column, const std::string &value);
+    virtual auto set_field(const bec::NodeId &node, ColumnId column, const std::string &value) -> bool;
 
     // only leaf nodes can be selected (for now)
     void begin_selection_marking();
@@ -102,46 +102,46 @@ namespace wb {
     void unselect_all(const bec::NodeId &node);
     void select_node(const bec::NodeId &node);
 
-    boost::signals2::signal<void()> *signal_selection_changed() {
+    auto signal_selection_changed() -> boost::signals2::signal<void()> * {
       return &_selection_change_signal;
     }
-    grt::ListRef<GrtObject> get_selection();
+    auto get_selection() -> grt::ListRef<GrtObject>;
 
     std::list<int> get_selected_children(const bec::NodeId &node);
 
     // only 1 node can be focused in each container node
     void focus_node(const bec::NodeId &node);
-    bec::NodeId get_focused_child(const bec::NodeId &node);
+    auto get_focused_child(const bec::NodeId &node) -> bec::NodeId;
 
-    bec::NodeId get_node_child_for_object(const bec::NodeId &node, const grt::ObjectRef &object);
+    auto get_node_child_for_object(const bec::NodeId &node, const grt::ObjectRef &object) -> bec::NodeId;
 
-    virtual bool is_expansion_disabled() {
+    virtual auto is_expansion_disabled() -> bool {
       return false;
     }
-    virtual int get_default_tab_page_index() {
+    virtual auto get_default_tab_page_index() -> int {
       return -1;
     }
 
-    bec::NodeId search_child_item_node_matching(const bec::NodeId &node, const bec::NodeId &starting_node,
-                                                const std::string &text);
+    auto search_child_item_node_matching(const bec::NodeId &node, const bec::NodeId &starting_node,
+                                                const std::string &text) -> bec::NodeId;
 
-    virtual bool activate_node(const bec::NodeId &node);
-    std::string get_node_unique_id(const bec::NodeId &node);
+    virtual auto activate_node(const bec::NodeId &node) -> bool;
+    auto get_node_unique_id(const bec::NodeId &node) -> std::string;
 
-    virtual bool is_editable(const bec::NodeId &node) const;
-    virtual bool is_deletable(const bec::NodeId &node) const;
-    virtual bool is_copyable(const bec::NodeId &node) const;
-    bool request_add_object(const bec::NodeId &node);
-    int request_delete_selected();
-    bool request_delete_object(const bec::NodeId &node);
+    virtual auto is_editable(const bec::NodeId &node) const -> bool;
+    virtual auto is_deletable(const bec::NodeId &node) const -> bool;
+    virtual auto is_copyable(const bec::NodeId &node) const -> bool;
+    auto request_add_object(const bec::NodeId &node) -> bool;
+    auto request_delete_selected() -> int;
+    auto request_delete_object(const bec::NodeId &node) -> bool;
 
-    virtual model_ModelRef get_model() = 0;
+    virtual auto get_model() -> model_ModelRef = 0;
 
-    virtual bec::MenuItemList get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes);
-    virtual bool activate_popup_item_for_nodes(const std::string &name, const std::vector<bec::NodeId> &nodes);
+    virtual auto get_popup_items_for_nodes(const std::vector<bec::NodeId> &nodes) -> bec::MenuItemList;
+    virtual auto activate_popup_item_for_nodes(const std::string &name, const std::vector<bec::NodeId> &nodes) -> bool;
 
-    virtual bec::ToolbarItemList get_toolbar_items(const bec::NodeId &node);
-    virtual bool activate_toolbar_item(const bec::NodeId &node, const std::string &name);
+    virtual auto get_toolbar_items(const bec::NodeId &node) -> bec::ToolbarItemList;
+    virtual auto activate_toolbar_item(const bec::NodeId &node, const std::string &name) -> bool;
 
     // for use by backend
     void send_refresh_node(const bec::NodeId &node);
@@ -160,13 +160,13 @@ namespace wb {
 #pragma GCC diagnostic pop
 #endif
 
-    virtual std::string get_edit_target_name();
-    std::string get_target_name_for_nodes(const std::vector<bec::NodeId> &nodes);
+    virtual auto get_edit_target_name() -> std::string;
+    auto get_target_name_for_nodes(const std::vector<bec::NodeId> &nodes) -> std::string;
 
-    virtual bool can_cut();
-    virtual bool can_copy();
-    virtual bool can_paste();
-    virtual bool can_delete();
+    virtual auto can_cut() -> bool;
+    virtual auto can_copy() -> bool;
+    virtual auto can_paste() -> bool;
+    virtual auto can_delete() -> bool;
 
     virtual void cut();
     virtual void copy();
@@ -174,11 +174,11 @@ namespace wb {
     virtual void delete_selection();
 
     // external drag & drop
-    virtual std::string get_node_drag_type(const bec::NodeId &node) {
+    virtual auto get_node_drag_type(const bec::NodeId &node) -> std::string {
       return "";
     }
 
-    virtual bool should_accept_file_drop_to_node(const bec::NodeId &node, const std::string &path) {
+    virtual auto should_accept_file_drop_to_node(const bec::NodeId &node, const std::string &path) -> bool {
       return false;
     }
 
@@ -186,10 +186,10 @@ namespace wb {
     }
     virtual void add_file_data_to_node(const bec::NodeId &node, const char *data, size_t length) {
     }
-    virtual std::string get_file_for_node(const bec::NodeId &node) {
+    virtual auto get_file_for_node(const bec::NodeId &node) -> std::string {
       return "";
     }
-    virtual bool get_file_data_for_node(const bec::NodeId &node, char *&data, size_t &length) {
+    virtual auto get_file_data_for_node(const bec::NodeId &node, char *&data, size_t &length) -> bool {
       return true;
     }
 
@@ -205,10 +205,10 @@ namespace wb {
       bool expanded;
       bool selected;
 
-      virtual Node *get_child(size_t i) {
+      virtual auto get_child(size_t i) -> Node * {
         return 0;
       }
-      virtual size_t count_children() {
+      virtual auto count_children() -> size_t {
         return 0;
       }
       virtual void refresh() {
@@ -216,46 +216,46 @@ namespace wb {
 
       virtual void focus(OverviewBE *sender) {
       }
-      virtual bool activate(WBContext *wb) {
+      virtual auto activate(WBContext *wb) -> bool {
         return false;
       }
-      virtual bool add_object(WBContext *wb) {
+      virtual auto add_object(WBContext *wb) -> bool {
         return false;
       }
       virtual void delete_object(WBContext *wb) {
       }
-      virtual bool is_deletable() {
+      virtual auto is_deletable() -> bool {
         return false;
       }
       virtual void copy_object(WBContext *wb, bec::Clipboard *clip) {
       }
-      virtual bool is_copyable() {
+      virtual auto is_copyable() -> bool {
         return false;
       }
       virtual void paste_object(WBContext *wb, bec::Clipboard *clip) {
       }
-      virtual bool is_pasteable(bec::Clipboard *clip) {
+      virtual auto is_pasteable(bec::Clipboard *clip) -> bool {
         return false;
       }
 
-      virtual bool rename(WBContext *wb, const std::string &name) {
+      virtual auto rename(WBContext *wb, const std::string &name) -> bool {
         return false;
       }
-      virtual bool is_renameable() {
+      virtual auto is_renameable() -> bool {
         return false;
       }
 
-      virtual std::string get_unique_id() {
+      virtual auto get_unique_id() -> std::string {
         return object.is_valid() ? object.id() : "";
       }
 
-      virtual std::string get_detail(int field) {
+      virtual auto get_detail(int field) -> std::string {
         return "";
       }
 
-      virtual int get_popup_menu_items(WBContext *wb, bec::MenuItemList &items);
+      virtual auto get_popup_menu_items(WBContext *wb, bec::MenuItemList &items) -> int;
 
-      virtual studio_OverviewPanelRef get_state() {
+      virtual auto get_state() -> studio_OverviewPanelRef {
         studio_OverviewPanelRef panel = studio_OverviewPanelRef(grt::Initialized);
 
         panel->expandedHeight(0);
@@ -297,8 +297,8 @@ namespace wb {
         type = OverviewBE::OItem;
       }
 
-      virtual bool activate(WBContext *wb);
-      virtual bool rename(WBContext *wb, const std::string &name);
+      virtual auto activate(WBContext *wb) -> bool;
+      virtual auto rename(WBContext *wb, const std::string &name) -> bool;
 
       virtual void refresh() {
         label = object->name();
@@ -313,7 +313,7 @@ namespace wb {
         type = OverviewBE::OItem;
       }
 
-      virtual bool activate(WBContext *wb) {
+      virtual auto activate(WBContext *wb) -> bool {
         return _add_slot(wb);
       }
     };
@@ -334,7 +334,7 @@ namespace wb {
         : Node(node), children(node.children), focused(node.focused), child_type(node.child_type) {
       }
 
-      virtual studio_OverviewPanelRef get_state() {
+      virtual auto get_state() -> studio_OverviewPanelRef {
         studio_OverviewPanelRef panel = Node::get_state();
 
         // XXXfor (std::list<int>::const_iterator i= selection.begin(); i != selection.end(); ++i)
@@ -355,13 +355,13 @@ namespace wb {
         clear_children();
       }
 
-      virtual Node *get_child(size_t i) {
+      virtual auto get_child(size_t i) -> Node * {
         if (i >= children.size())
           return 0;
         return children[i];
       }
 
-      virtual size_t count_children() {
+      virtual auto count_children() -> size_t {
         return children.size();
       }
 
@@ -371,14 +371,14 @@ namespace wb {
         children.clear();
       }
 
-      virtual int count_detail_fields() {
+      virtual auto count_detail_fields() -> int {
         return 0;
       }
-      virtual std::string get_detail_name(int field) {
+      virtual auto get_detail_name(int field) -> std::string {
         return "";
       }
 
-      int get_focused_index() {
+      auto get_focused_index() -> int {
         int i = 0;
         for (std::vector<Node *>::iterator iter = children.begin(); iter != children.end(); ++iter) {
           if ((*iter) == focused)
@@ -398,12 +398,12 @@ namespace wb {
 
     ContainerNode *_root_node;
 
-    Node *get_node_by_id(const bec::NodeId &node) const {
+    auto get_node_by_id(const bec::NodeId &node) const -> Node * {
       return do_get_node(node);
     }
-    virtual Node *do_get_node(const bec::NodeId &node) const;
+    virtual auto do_get_node(const bec::NodeId &node) const -> Node *;
 
-    Node *get_deepest_focused();
+    auto get_deepest_focused() -> Node *;
 
     void store_node_states(Node *node);
     void store_state();

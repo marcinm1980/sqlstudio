@@ -41,7 +41,7 @@ namespace bec {
     ShellBE(const GRTDispatcher::Ref dispatcher);
     ~ShellBE();
 
-    bool setup(const std::string &lang);
+    auto setup(const std::string &lang) -> bool;
 
     void set_save_directory(const std::string &path);
     void start();
@@ -49,10 +49,10 @@ namespace bec {
     void process_line_async(const std::string &line);
 
     void run_script_file(const std::string &path);
-    bool run_script(const std::string &script, const std::string &language);
+    auto run_script(const std::string &script, const std::string &language) -> bool;
 
-    bool previous_history_line(const std::string &current_line, std::string &line);
-    bool next_history_line(std::string &line);
+    auto previous_history_line(const std::string &current_line, std::string &line) -> bool;
+    auto next_history_line(std::string &line) -> bool;
     void reset_history_position();
 
     std::vector<std::string> get_grt_tree_bookmarks();
@@ -72,12 +72,12 @@ namespace bec {
 
     std::vector<std::string> complete_line(const std::string &line, std::string &nprefix);
 
-    grt::ValueRef get_shell_variable(const std::string &varname);
+    auto get_shell_variable(const std::string &varname) -> grt::ValueRef;
 
     void clear_history();
     void save_history_line(const std::string &line);
 
-    std::string get_snippet_data();
+    auto get_snippet_data() -> std::string;
     void set_snippet_data(const std::string &data);
 
     void store_state();

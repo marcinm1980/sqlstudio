@@ -20,13 +20,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
 
 #include "wb_backend_public_interface.h"
 
+#include <map>
 #include <string>
 #include "grt.h"
 #include "base/file_utilities.h"
@@ -124,7 +125,7 @@ namespace wb {
 
     bool _dirty;
 
-    typedef std::map<std::string, std::string> TableInsertsSqlScripts; // table guid -> sql script (inserts)
+    using TableInsertsSqlScripts = std::map<std::string, std::string>; // table guid -> sql script (inserts)
     TableInsertsSqlScripts
       table_inserts_sql_scripts; // for model upgrade only: move insert sql scripts from xml to sqlite db
 
@@ -135,7 +136,7 @@ namespace wb {
   private:
     bool attempt_xml_document_upgrade(xmlDocPtr xmldoc, const std::string &version);
     studio_DocumentRef attempt_document_upgrade(const studio_DocumentRef &doc, xmlDocPtr xmldoc,
-                                                   const std::string &version);
+                                                const std::string &version);
     void cleanup_upgrade_data();
 
     void check_and_fix_data_file_bug();
@@ -156,4 +157,4 @@ namespace wb {
     std::string create_document_dir(const std::string &dir, const std::string &prefix);
     bool semantic_check(studio_DocumentRef doc);
   };
-};
+}; // namespace wb

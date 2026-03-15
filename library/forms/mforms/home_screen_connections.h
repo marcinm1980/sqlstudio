@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -45,15 +45,15 @@ namespace mforms {
     virtual ~ConnectionsWelcomeScreen();
 
     virtual base::Size getLayoutSize(base::Size proposedSize) override;
-    
+
     virtual base::Accessible::Role getAccessibilityRole() override;
     virtual std::string getAccessibilityTitle() override;
     virtual std::string getAccessibilityDescription() override;
     virtual std::string getAccessibilityValue() override;
     virtual size_t getAccessibilityChildCount() override;
-    virtual Accessible* getAccessibilityChild(size_t index) override;
+    virtual Accessible *getAccessibilityChild(size_t index) override;
     virtual base::Rect getAccessibilityBounds() override;
-    virtual Accessible* accessibilityHitTest(ssize_t x, ssize_t y) override;
+    virtual Accessible *accessibilityHitTest(ssize_t x, ssize_t y) override;
 
     void updateColors();
     void updateIcons();
@@ -73,7 +73,7 @@ namespace mforms {
 
     std::string _heading;
     std::vector<std::string> _content;
-    
+
     virtual void repaint(cairo_t *cr, int areax, int areay, int areaw, int areah) override;
     virtual bool mouse_click(mforms::MouseButton button, int x, int y) override;
   };
@@ -105,8 +105,8 @@ namespace mforms {
     std::shared_ptr<FolderEntry> _active_folder; // The folder entry that is currently active.
     std::string _active_folder_title_before_refresh_start;
 
-    typedef std::vector<std::shared_ptr<ConnectionEntry> > ConnectionVector;
-    typedef ConnectionVector::iterator ConnectionIterator;
+    using ConnectionVector = std::vector<std::shared_ptr<ConnectionEntry>>;
+    using ConnectionIterator = ConnectionVector::iterator;
     ConnectionVector _connections;
     ConnectionVector _filtered_connections;
     bool _filtered;
@@ -136,7 +136,7 @@ namespace mforms {
     ConnectionsWelcomeScreen *_welcomeScreen;
     mforms::Box *_container;
 
-    ConnectionVector const& displayed_connections() const;
+    ConnectionVector const &displayed_connections() const;
 
     virtual void updateColors() override;
     virtual void updateIcons() override;
@@ -167,10 +167,10 @@ namespace mforms {
 
     virtual std::string getAccessibilityTitle() override;
     virtual size_t getAccessibilityChildCount() override;
-    virtual Accessible* getAccessibilityChild(size_t index) override;
+    virtual Accessible *getAccessibilityChild(size_t index) override;
     virtual Accessible::Role getAccessibilityRole() override;
 
-    virtual base::Accessible* accessibilityHitTest(ssize_t x, ssize_t y) override;
+    virtual base::Accessible *accessibilityHitTest(ssize_t x, ssize_t y) override;
     bool do_tile_drag(ssize_t index, int x, int y);
 
     mforms::DragOperation drag_over(View *sender, base::Point p, mforms::DragOperation allowedOperations,
@@ -199,7 +199,7 @@ namespace mforms {
     void showWelcomeHeading(bool state = true);
 
     virtual base::Size getLayoutSize(base::Size proposedSize) override;
-    virtual const char* getTitle() override;
+    virtual const char *getTitle() override;
     virtual void cancelOperation() override;
     virtual void setFocus() override;
     virtual bool canHandle(HomeScreenMenuType type) override;
@@ -212,9 +212,9 @@ namespace mforms {
                        const std::string &user, const std::string &schema);
 
     void updateFocusableAreas();
-    bool setFocusOnEntry(ConnectionEntry const* entry);
+    bool setFocusOnEntry(ConnectionEntry const *entry);
 
     virtual mforms::View *getContainer() override;
     virtual mforms::View *get_parent() const override;
   };
-}
+} // namespace mforms

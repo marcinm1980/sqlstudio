@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _RECORDSET_SQL_STORAGE_BE_H_
@@ -34,9 +34,9 @@
 
 class WBPUBLICBACKEND_PUBLIC_FUNC Sql_script {
 public:
-  typedef std::list<std::string> Statements;
-  typedef std::list<sqlite::variant_t> Statement_bindings;
-  typedef std::list<Statement_bindings> Statements_bindings;
+  using Statements = std::list<std::string>;
+  using Statement_bindings = std::list<sqlite::variant_t>;
+  using Statements_bindings = std::list<Statement_bindings>;
   Statements statements;
   Statements_bindings statements_bindings;
   void reset() {
@@ -47,7 +47,7 @@ public:
 
 class WBPUBLICBACKEND_PUBLIC_FUNC Recordset_sql_storage : public Recordset_data_storage {
 public:
-  typedef std::shared_ptr<Recordset_sql_storage> Ref;
+  using Ref = std::shared_ptr<Recordset_sql_storage>;
   static Ref create() {
     return Ref(new Recordset_sql_storage());
   }
@@ -167,7 +167,7 @@ private:
   bool _omit_schema_qualifier;
 
 private:
-  typedef std::map<std::string, int> Fields_order;
+  using Fields_order = std::map<std::string, int>;
   Fields_order _fields_order;
 
   void load_insert_statement(const std::string &sql, const std::pair<std::string, std::string> &schema_table,
@@ -187,9 +187,9 @@ protected:
   db_mgmt_RdbmsRef _rdbms;
 
 public:
-  typedef boost::signals2::signal<int(long long, const std::string &, const std::string &)> Error_cb;
-  typedef boost::signals2::signal<int(float)> Batch_exec_progress_cb;
-  typedef boost::signals2::signal<int(long, long)> Batch_exec_stat_cb;
+  using Error_cb = boost::signals2::signal<int(long long, const std::string &, const std::string &)>;
+  using Batch_exec_progress_cb = boost::signals2::signal<int(float)>;
+  using Batch_exec_stat_cb = boost::signals2::signal<int(long, long)>;
   Error_cb on_sql_script_run_error;
   Batch_exec_progress_cb on_sql_script_run_progress;
   Batch_exec_stat_cb on_sql_script_run_statistics;

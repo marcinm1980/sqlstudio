@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include "base/boost_smart_ptr_helpers.h"
@@ -198,15 +198,13 @@ public:
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-
 };
 
 //----------------------------------------------------------------------------------------------------------------------
 
 MySQLEditor::Ref MySQLEditor::create(MySQLParserContext::Ref syntax_check_context,
                                      MySQLParserContext::Ref autocompleteContext,
-                                     std::vector<SymbolTable *> const &globalSymbols,
-                                     db_query_QueryBufferRef grtobj) {
+                                     std::vector<SymbolTable *> const &globalSymbols, db_query_QueryBufferRef grtobj) {
   Ref editor = MySQLEditor::Ref(new MySQLEditor(syntax_check_context, autocompleteContext));
 
   editor->d->symbolTable.addDependencies(globalSymbols);
@@ -238,7 +236,7 @@ MySQLEditor::MySQLEditor(MySQLParserContext::Ref syntax_check_context, MySQLPars
   d->codeEditor->send_editor(SCI_SETTABWIDTH, bec::GRTManager::get()->get_app_option_int("Editor:TabWidth", 4), 0);
   d->codeEditor->send_editor(SCI_SETINDENT, bec::GRTManager::get()->get_app_option_int("Editor:IndentWidth", 4), 0);
   d->codeEditor->send_editor(SCI_SETUSETABS, !bec::GRTManager::get()->get_app_option_int("Editor:TabIndentSpaces", 0),
-                            0);
+                             0);
 
   scoped_connect(d->codeEditor->signal_changed(),
                  std::bind(&MySQLEditor::text_changed, this, std::placeholders::_1, std::placeholders::_2,
@@ -368,8 +366,8 @@ static void save_file(MySQLEditor *sql_editor) {
     std::pair<const char *, size_t> data = code_editor->get_text_ptr();
 
     if (!g_file_set_contents(file.c_str(), data.first, (gssize)data.second, &error) && error) {
-      mforms::Utilities::show_error("Save File", base::strfmt("Could not save to file %s:\n%s", file.c_str(),
-        error->message), "OK");
+      mforms::Utilities::show_error("Save File",
+                                    base::strfmt("Could not save to file %s:\n%s", file.c_str(), error->message), "OK");
       g_error_free(error);
     }
   }
@@ -726,7 +724,7 @@ void MySQLEditor::text_changed(Sci_Position position, Sci_Position length, Sci_P
       bec::GRTManager::get()->run_every(std::bind(&MySQLEditor::start_sql_processing, this), 0.001);
   else
     d->textChangeSignal(); // If there is no timer set up then trigger
-                              // change signals directly.
+                           // change signals directly.
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -806,7 +804,8 @@ bool MySQLEditor::do_statement_split_and_check(int id) {
     if (d->stopProcessing)
       return false;
 
-    if (d->services->checkSqlSyntax(d->parserContext, d->textInfo.first + range.start, range.length, d->parseUnit) > 0) {
+    if (d->services->checkSqlSyntax(d->parserContext, d->textInfo.first + range.start, range.length, d->parseUnit) >
+        0) {
       std::vector<ParserErrorInfo> errors = d->parserContext->errorsWithOffset(range.start);
       d->recognitionErrors.insert(d->recognitionErrors.end(), errors.begin(), errors.end());
     }
@@ -873,12 +872,12 @@ void *MySQLEditor::update_error_markers() {
     if (d->recognitionErrors.size() == 1)
       d->codeEditor->set_status_text(_("1 error found"));
     else
-      d->codeEditor->set_status_text(base::strfmt(_("%lu errors found"),
-        static_cast<unsigned long>(d->recognitionErrors.size())));
+      d->codeEditor->set_status_text(
+        base::strfmt(_("%lu errors found"), static_cast<unsigned long>(d->recognitionErrors.size())));
 
     for (size_t i = 0; i < d->recognitionErrors.size(); ++i) {
       d->codeEditor->show_indicator(mforms::RangeIndicatorError, d->recognitionErrors[i].charOffset,
-                                   d->recognitionErrors[i].length);
+                                    d->recognitionErrors[i].length);
       lines.insert(d->codeEditor->line_from_position(d->recognitionErrors[i].charOffset));
     }
   } else
@@ -1098,26 +1097,25 @@ void MySQLEditor::set_sql_check_enabled(bool flag) {
 void MySQLEditor::setup_auto_completion() {
   d->codeEditor->auto_completion_max_size(80, 15);
 
-  static std::vector<std::pair<int, std::string>> ccImages = {
-    {AC_KEYWORD_IMAGE, "ac_keyword.png"},
-    {AC_SCHEMA_IMAGE, "ac_schema.png"},
-    {AC_TABLE_IMAGE, "ac_table.png"},
-    {AC_ROUTINE_IMAGE, "ac_routine.png"},
-    {AC_FUNCTION_IMAGE, "ac_function.png"},
-    {AC_VIEW_IMAGE, "ac_view.png"},
-    {AC_COLUMN_IMAGE, "ac_column.png"},
-    {AC_OPERATOR_IMAGE, "ac_operator.png"},
-    {AC_ENGINE_IMAGE, "ac_engine.png"},
-    {AC_TRIGGER_IMAGE, "ac_trigger.png"},
-    {AC_LOGFILE_GROUP_IMAGE, "ac_logfilegroup.png"},
-    {AC_USER_VAR_IMAGE, "ac_uservar.png"},
-    {AC_SYSTEM_VAR_IMAGE, "ac_sysvar.png"},
-    {AC_TABLESPACE_IMAGE, "ac_tablespace.png"},
-    {AC_EVENT_IMAGE, "ac_event.png"},
-    {AC_INDEX_IMAGE, "ac_index.png"},
-    {AC_USER_IMAGE, "ac_user.png"},
-    {AC_CHARSET_IMAGE, "ac_charset.png"},
-    {AC_COLLATION_IMAGE, "ac_collation.png"}};
+  static std::vector<std::pair<int, std::string>> ccImages = { { AC_KEYWORD_IMAGE, "ac_keyword.png" },
+                                                               { AC_SCHEMA_IMAGE, "ac_schema.png" },
+                                                               { AC_TABLE_IMAGE, "ac_table.png" },
+                                                               { AC_ROUTINE_IMAGE, "ac_routine.png" },
+                                                               { AC_FUNCTION_IMAGE, "ac_function.png" },
+                                                               { AC_VIEW_IMAGE, "ac_view.png" },
+                                                               { AC_COLUMN_IMAGE, "ac_column.png" },
+                                                               { AC_OPERATOR_IMAGE, "ac_operator.png" },
+                                                               { AC_ENGINE_IMAGE, "ac_engine.png" },
+                                                               { AC_TRIGGER_IMAGE, "ac_trigger.png" },
+                                                               { AC_LOGFILE_GROUP_IMAGE, "ac_logfilegroup.png" },
+                                                               { AC_USER_VAR_IMAGE, "ac_uservar.png" },
+                                                               { AC_SYSTEM_VAR_IMAGE, "ac_sysvar.png" },
+                                                               { AC_TABLESPACE_IMAGE, "ac_tablespace.png" },
+                                                               { AC_EVENT_IMAGE, "ac_event.png" },
+                                                               { AC_INDEX_IMAGE, "ac_index.png" },
+                                                               { AC_USER_IMAGE, "ac_user.png" },
+                                                               { AC_CHARSET_IMAGE, "ac_charset.png" },
+                                                               { AC_COLLATION_IMAGE, "ac_collation.png" } };
 
   d->codeEditor->auto_completion_register_images(ccImages);
   d->codeEditor->auto_completion_stops("\t,.*;) "); // Will close ac even if we are in an identifier.
@@ -1229,9 +1227,9 @@ void MySQLEditor::show_auto_completion(bool auto_choose_single) {
     caretOffset = g_utf8_pointer_to_offset(line_text.c_str(), line_text.c_str() + caretOffset);
   }
 
-  d->codeCompletionCandidates = d->services->getCodeCompletionCandidates(
-    d->autocompletionContext, { caretOffset, caretLine }, statement, d->currentSchema, make_keywords_uppercase(),
-    d->symbolTable);
+  d->codeCompletionCandidates =
+    d->services->getCodeCompletionCandidates(d->autocompletionContext, { caretOffset, caretLine }, statement,
+                                             d->currentSchema, make_keywords_uppercase(), d->symbolTable);
 
   update_auto_completion(getWrittenPart(caretPosition));
 }
@@ -1349,7 +1347,7 @@ bool MySQLEditor::get_current_statement_range(size_t &start, size_t &end, bool s
   if (d->statementRanges.empty())
     return false;
 
-  typedef std::vector<StatementRange>::iterator RangeIterator;
+  using RangeIterator = std::vector<StatementRange>::iterator;
 
   size_t caret_position = d->codeEditor->get_caret_pos();
   RangeIterator low = d->statementRanges.begin();

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _GRT_MESSAGE_LIST_H_
@@ -47,15 +47,15 @@ namespace bec {
       std::string detail;
     };
 
-    typedef std::shared_ptr<MessageEntry> MessageEntryRef;
+    using MessageEntryRef = std::shared_ptr<MessageEntry>;
 
     MessageListStorage(GRTManager *grtm);
 
-    boost::signals2::signal<void(MessageEntryRef)> *signal_new_message() {
+    auto signal_new_message() -> boost::signals2::signal<void(MessageEntryRef)> * {
       return &_new_message;
     }
 
-    MessageListBE *create_list(const std::string &filter_to_source = "");
+    auto create_list(const std::string &filter_to_source = "") -> MessageListBE *;
 
     void clear_all();
 
@@ -84,25 +84,25 @@ namespace bec {
     enum Column { Time, Message, Detail };
 
     void clear();
-    virtual size_t count_children(const NodeId &parent);
-    virtual bool get_field(const NodeId &node, ColumnId column, std::string &value);
+    virtual auto count_children(const NodeId &parent) -> size_t;
+    virtual auto get_field(const NodeId &node, ColumnId column, std::string &value) -> bool;
     virtual void refresh() {
     }
-    virtual IconId get_field_icon(const NodeId &node, ColumnId column, IconSize size);
-    virtual grt::MessageType get_message_type(const NodeId &node);
-    virtual size_t count();
-    virtual MenuItemList get_popup_items_for_nodes(const std::vector<NodeId> &nodes);
-    virtual bool activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes);
+    virtual auto get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId;
+    virtual auto get_message_type(const NodeId &node) -> grt::MessageType;
+    virtual auto count() -> size_t;
+    virtual auto get_popup_items_for_nodes(const std::vector<NodeId> &nodes) -> MenuItemList;
+    virtual auto activate_popup_item_for_nodes(const std::string &name, const std::vector<NodeId> &nodes) -> bool;
 
     void add_source(const std::string &source);
     void remove_source(const std::string &source);
 
     void add_message(MessageListStorage::MessageEntryRef message);
 
-    boost::signals2::signal<void()> *signal_show() {
+    auto signal_show() -> boost::signals2::signal<void()> * {
       return &_list_show;
     }
-    boost::signals2::signal<void()> *signal_row_added() {
+    auto signal_row_added() -> boost::signals2::signal<void()> * {
       return &_list_changed;
     }
 
@@ -122,6 +122,6 @@ namespace bec {
 
     bool _notified;
   };
-};
+}; // namespace bec
 
 #endif

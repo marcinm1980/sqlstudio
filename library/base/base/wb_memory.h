@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef __BASE_MEMORY_H__
@@ -65,20 +65,20 @@ namespace base {
         FreeRoutine(_ptr);
     };
 
-    scope_ptr() : _ptr(0){};
+    scope_ptr() : _ptr(0) {};
 
-    scope_ptr(T* r) : _ptr(r){};
+    scope_ptr(T* r) : _ptr(r) {};
 
     scope_ptr(const scope_ptr& r) {
       _ptr = r._ptr;
       const_cast<scope_ptr&>(r)._ptr = 0;
     }
 
-    T* get() {
+    auto get() -> T* {
       return _ptr;
     }
 
-    scope_ptr& operator=(const scope_ptr& r) {
+    auto operator=(const scope_ptr& r) -> scope_ptr& {
       if (_ptr)
         FreeRoutine(_ptr);
       _ptr = r._ptr;
@@ -86,11 +86,11 @@ namespace base {
       return *this;
     }
 
-    T& operator*() const throw() {
+    auto operator*() const throw() -> T& {
       return *_ptr;
     }
 
-    T* operator->() const throw() {
+    auto operator->() const throw() -> T* {
       return _ptr;
     }
 
@@ -117,13 +117,13 @@ namespace base {
   inline void FreeCharArray(char* p) {
     delete[] p;
   }
-  typedef scope_ptr<char, FreeCharArray> AutoCharArray;
+  using AutoCharArray = scope_ptr<char, FreeCharArray>;
 
   inline void scope_fclose(FILE* fp) {
     if (fp)
       fclose(fp);
   }
-  typedef scope_ptr<FILE, scope_fclose> FILE_scope_ptr;
-}
+  using FILE_scope_ptr = scope_ptr<FILE, scope_fclose>;
+} // namespace base
 
 #endif

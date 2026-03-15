@@ -46,34 +46,34 @@ namespace parsers {
 
     virtual void reset() override;
 
-    bool isIdentifier(size_t type) const;
-    size_t keywordFromText(std::string const& name);
+    auto isIdentifier(size_t type) const -> bool;
+    auto keywordFromText(std::string const& name) -> size_t;
 
     // Scans from the current token position to find out which query type we are dealing with in the input.
-    MySQLQueryType determineQueryType();
+    auto determineQueryType() -> MySQLQueryType;
 
-    static bool isRelation(size_t type);
-    static bool isNumber(size_t type);
-    static bool isOperator(size_t type);
+    static auto isRelation(size_t type) -> bool;
+    static auto isNumber(size_t type) -> bool;
+    static auto isOperator(size_t type) -> bool;
 
-    virtual std::unique_ptr<antlr4::Token> nextToken() override;
+    virtual auto nextToken() -> std::unique_ptr<antlr4::Token> override;
 
   protected:
     // Checks if the version number, given by the token, is less than or equal to the current server version.
     // Returns true if so, otherwise false.
-    bool checkVersion(const std::string &text);
+    auto checkVersion(const std::string &text) -> bool;
 
     // Called when a keyword was consumed that represents an internal MySQL function and checks if that
     // keyword is followed by an open parenthesis. If not then it is not considered a keyword but
     // treated like a normal identifier.
-    size_t determineFunction(size_t proposed);
+    auto determineFunction(size_t proposed) -> size_t;
 
     // Checks the given text and determines the smallest number type from it. Code has been taken from sql_lex.cc.
-    size_t determineNumericType(const std::string &text);
+    auto determineNumericType(const std::string &text) -> size_t;
 
     // Checks if the given text corresponds to a charset defined in the server (text is preceded by an underscore).
     // Returns UNDERSCORE_CHARSET if so, otherwise IDENTIFIER.
-    size_t checkCharset(const std::string &text);
+    auto checkCharset(const std::string &text) -> size_t;
 
     void emitDot();
 
@@ -81,8 +81,8 @@ namespace parsers {
     std::list<std::unique_ptr<antlr4::Token>> _pendingTokens;
     std::map<std::string, size_t> _symbols; // A list of all defined symbols for lookup.
 
-    std::unique_ptr<antlr4::Token> nextDefaultChannelToken();
-    bool skipDefiner(std::unique_ptr<antlr4::Token> &token);
+    auto nextDefaultChannelToken() -> std::unique_ptr<antlr4::Token>;
+    auto skipDefiner(std::unique_ptr<antlr4::Token> &token) -> bool;
   };
 
 } // namespace parsers

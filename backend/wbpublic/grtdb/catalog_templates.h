@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _CATALOG_TEMPLATES_
@@ -92,99 +92,99 @@ namespace ct {
 
   template <typename T>
   struct Subc<T, ct::Schemata> {
-    typedef T ParentRef;
-    typedef db_mysql_Schema Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_mysql_Schema;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->schemata();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::Tables> {
-    typedef T ParentRef;
-    typedef db_mysql_Table Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_mysql_Table;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->tables();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::Views> {
-    typedef T ParentRef;
-    typedef db_mysql_View Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_mysql_View;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->views();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::Routines> {
-    typedef T ParentRef;
-    typedef db_mysql_Routine Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_mysql_Routine;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->routines();
     }
   };
 
   template <>
   struct Subc<db_mysql_IndexRef, ct::Columns> {
-    typedef db_mysql_IndexRef ParentRef;
-    typedef db_mysql_IndexColumn Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = db_mysql_IndexRef;
+    using Type = db_mysql_IndexColumn;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->columns();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::Columns> {
-    typedef T ParentRef;
-    typedef db_mysql_Column Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_mysql_Column;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->columns();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::Indices> {
-    typedef T ParentRef;
-    typedef db_mysql_Index Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_mysql_Index;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->indices();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::Triggers> {
-    typedef T ParentRef;
-    typedef db_mysql_Trigger Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_mysql_Trigger;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->triggers();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::ForeignKeys> {
-    typedef T ParentRef;
-    typedef db_mysql_ForeignKey Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_mysql_ForeignKey;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->foreignKeys();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::ReferedColumns> {
-    typedef T ParentRef;
-    typedef db_Column Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_Column;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->referencedColumns();
     }
   };
 
   template <typename T>
   struct Subc<T, ct::Users> {
-    typedef T ParentRef;
-    typedef db_User Type;
-    static grt::ListRef<Type> get(ParentRef p) {
+    using ParentRef = T;
+    using Type = db_User;
+    static auto get(ParentRef p) -> grt::ListRef<Type> {
       return p->users();
     }
   };
@@ -193,9 +193,9 @@ namespace ct {
   //! For example see \ref foreachusage "ct::for_each usage example"
   template <int _Selector, typename _Parent, typename _Pred>
   void for_each(_Parent parent, _Pred& pred) {
-    typedef ct::Subc<_Parent, _Selector> Container;
-    typedef typename Container::Type Type;
-    typedef grt::ListRef<Type> ListType;
+    using Container = ct::Subc<_Parent, _Selector>;
+    using Type = typename Container::Type;
+    using ListType = grt::ListRef<Type>;
 
     ListType list = Container::get(parent);
     for (size_t i = 0, count = list.count(); i < count; i++) {
@@ -204,10 +204,10 @@ namespace ct {
     }
   }
 
-  typedef std::vector<std::string> StringList;
+  using StringList = std::vector<std::string>;
   //-----------------------------------------------------------------------------
   template <typename T>
-  std::vector<std::string> findDupIds(const grt::ListRef<T>& list) {
+  auto findDupIds(const grt::ListRef<T>& list) -> std::vector<std::string> {
     const int count = list.count();
     std::vector<std::string> dup_ids;
 
@@ -228,67 +228,67 @@ namespace ct {
 
   template <typename T>
   struct TraitsBase {
-    typedef T Type;
+    using Type = T;
   };
 
   template <>
   struct Traits<db_mysql_Schema> : public TraitsBase<db_mysql_Schema> {
-    typedef db_mysql_Catalog ParentType;
+    using ParentType = db_mysql_Catalog;
   };
 
   template <>
   struct Traits<db_mysql_Table> : public TraitsBase<db_mysql_Table> {
-    typedef db_mysql_Schema ParentType;
+    using ParentType = db_mysql_Schema;
   };
 
   template <>
   struct Traits<db_User> : public TraitsBase<db_User> {
-    typedef db_mysql_Schema ParentType;
+    using ParentType = db_mysql_Schema;
   };
 
   template <>
   struct Traits<db_Column> : public TraitsBase<db_Column> {
-    typedef db_mysql_Table ParentType;
+    using ParentType = db_mysql_Table;
   };
 
   template <>
   struct Traits<db_mysql_Column> : public TraitsBase<db_mysql_Column> {
-    typedef db_mysql_Table ParentType;
+    using ParentType = db_mysql_Table;
   };
 
   template <>
   struct Traits<db_mysql_Index> : public TraitsBase<db_mysql_Index> {
-    typedef db_mysql_Table ParentType;
+    using ParentType = db_mysql_Table;
   };
 
   template <>
   struct Traits<db_mysql_ForeignKey> : public TraitsBase<db_mysql_ForeignKey> {
-    typedef db_mysql_Table ParentType;
+    using ParentType = db_mysql_Table;
   };
 
   template <>
   struct Traits<db_mysql_View> : public TraitsBase<db_mysql_View> {
-    typedef db_mysql_Schema ParentType;
+    using ParentType = db_mysql_Schema;
   };
 
   template <>
   struct Traits<db_mysql_Routine> : public TraitsBase<db_mysql_Routine> {
-    typedef db_mysql_Schema ParentType;
+    using ParentType = db_mysql_Schema;
   };
 
   template <>
   struct Traits<db_mysql_Trigger> : public TraitsBase<db_mysql_Trigger> {
-    typedef db_mysql_Table ParentType;
+    using ParentType = db_mysql_Table;
   };
 
-// ct_foreach usage:
-// ct_foreach(db_mysql_SchemaRef schema, catalog->schemata())
-//   print(schema->name());
-// or
-// ct_foreach(db_mysql_TableRef table, schema->tables())
-// {
-//    print(table->name())
-// }
+  // ct_foreach usage:
+  // ct_foreach(db_mysql_SchemaRef schema, catalog->schemata())
+  //   print(schema->name());
+  // or
+  // ct_foreach(db_mysql_TableRef table, schema->tables())
+  // {
+  //    print(table->name())
+  // }
 
 #define ct_foreach(value, container)                                                         \
   for (int ct_foreach_index = 0, ct_foreach_inner = 1, ct_foreach_count = container.count(); \

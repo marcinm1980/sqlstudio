@@ -52,13 +52,13 @@
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 namespace mforms {
 
-  template<typename T>
+  template <typename T>
   T setReleaseOnAdd(T obj, bool releaseOnAdd = true) {
     obj->set_release_on_add(releaseOnAdd);
     return obj;
   }
 
-  template<typename T>
+  template <typename T>
   void retainIfNeeded(T obj) {
     if (obj != nullptr) {
       if (!obj->release_on_add())
@@ -88,9 +88,9 @@ namespace mforms {
 
 #ifndef SWIG
 
-// Note: set_data and get_data should be used exclusively by the implementation code
-// for each platform. Platform dependent code must stay in the header. Otherwise we cannot
-// make the mforms stub to work for unit and integration tests.
+    // Note: set_data and get_data should be used exclusively by the implementation code
+    // for each platform. Platform dependent code must stay in the header. Otherwise we cannot
+    // make the mforms stub to work for unit and integration tests.
 
 #if defined(__APPLE__)
   public:
@@ -107,7 +107,7 @@ namespace mforms {
     Object();
     virtual ~Object();
 
-    typedef void (*FreeDataFn)(void*);
+    using FreeDataFn = void (*)(void*);
     void set_data(void* data, FreeDataFn free_fn = 0);
 
     template <class C>
@@ -153,6 +153,6 @@ namespace mforms {
       obj->set_release_on_add();
     return obj;
   }
-};
+}; // namespace mforms
 
 #endif // !DOXYGEN_SHOULD_SKIP_THIS

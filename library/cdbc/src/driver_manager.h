@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _DRIVER_MANAGER_H_
@@ -41,7 +41,7 @@ namespace wb {
 }
 
 namespace sql {
-  typedef std::shared_ptr<Connection> ConnectionPtr;
+  using ConnectionPtr = std::shared_ptr<Connection>;
 
   class ConnectionWrapper {
     ConnectionPtr _conn;
@@ -77,7 +77,7 @@ namespace sql {
     Authentication(const db_mgmt_ConnectionRef &props, const std::string &service = "");
 
   public:
-    typedef std::shared_ptr<Authentication> Ref;
+    using Ref = std::shared_ptr<Authentication>;
 
     static Ref create(const db_mgmt_ConnectionRef &props, const std::string &service = "");
     ~Authentication();
@@ -100,7 +100,7 @@ namespace sql {
     std::string uri(bool withPassword = false);
   };
 
-  typedef std::set<Authentication::Ref> AuthenticationSet;
+  using AuthenticationSet = std::set<Authentication::Ref>;
 
   class CPPDBC_PUBLIC_FUNC AuthenticationError : public grt::db_login_error {
     Authentication::Ref _authobj;
@@ -136,7 +136,7 @@ namespace sql {
     void set_driver_dir(const std::string &path);
 
     // Callback to initialize connection with DBMS specific startup script
-    typedef std::function<void(Connection *, const db_mgmt_ConnectionRef &)> ConnectionInitSlot;
+    using ConnectionInitSlot = std::function<void(Connection *, const db_mgmt_ConnectionRef &)>;
 
     // Returns a Connection object for the give connection params
     ConnectionWrapper getConnection(const db_mgmt_ConnectionRef &connectionProperties,
@@ -155,9 +155,9 @@ namespace sql {
     std::list<Driver *> getDrivers();
 
   public:
-    typedef std::function<std::shared_ptr<wb::SSHTunnel>(const db_mgmt_ConnectionRef &)> TunnelFactoryFunction;
-    typedef std::function<bool(const db_mgmt_ConnectionRef &, std::string &)> PasswordFindFunction;
-    typedef std::function<std::string(const db_mgmt_ConnectionRef &, bool)> PasswordRequestFunction;
+    using TunnelFactoryFunction = std::function<std::shared_ptr<wb::SSHTunnel>(const db_mgmt_ConnectionRef &)>;
+    using PasswordFindFunction = std::function<bool(const db_mgmt_ConnectionRef &, std::string &)>;
+    using PasswordRequestFunction = std::function<std::string(const db_mgmt_ConnectionRef &, bool)>;
 
     void setTunnelFactoryFunction(TunnelFactoryFunction function);
     void setPasswordFindFunction(PasswordFindFunction function);
@@ -191,8 +191,8 @@ namespace sql {
   public:
     Dbc_connection_handler() : id(-1), autocommit_mode(true), is_stop_query_requested(false) {
     }
-    typedef std::shared_ptr<Dbc_connection_handler> Ref;
-    typedef ConnectionWrapper ConnectionRef;
+    using Ref = std::shared_ptr<Dbc_connection_handler>;
+    using ConnectionRef = ConnectionWrapper;
     ConnectionRef ref;
     std::string name;
     std::int64_t id;

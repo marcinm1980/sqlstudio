@@ -60,7 +60,6 @@ struct GrtDispatcherHelper {
 //----------------- DispatcherCallback -------------------------------------------------------------
 
 DispatcherCallbackBase::DispatcherCallbackBase() : _semaphore(0) {
-
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -178,7 +177,7 @@ public:
 
 class GRTSimpleTask : public GRTTaskBase {
 public:
-  typedef std::shared_ptr<GRTSimpleTask> Ref;
+  using Ref = std::shared_ptr<GRTSimpleTask>;
 
   static Ref create_task(const std::string &name, const GRTDispatcher::Ref dispatcher,
                          const std::function<grt::ValueRef()> &function) {
@@ -396,8 +395,8 @@ void GRTDispatcher::start() {
   _grtm.lock()->add_dispatcher(shared_from_this());
 
   if (_is_main_dispatcher)
-    grt::GRT::get()->pushMessageHandler(
-      new grt::SlotHolder(std::bind(&GRTDispatcher::message_callback, this, std::placeholders::_1, std::placeholders::_2)));
+    grt::GRT::get()->pushMessageHandler(new grt::SlotHolder(
+      std::bind(&GRTDispatcher::message_callback, this, std::placeholders::_1, std::placeholders::_2)));
 
   _started = true;
 }
@@ -454,7 +453,7 @@ gpointer GRTDispatcher::worker_thread(gpointer data) {
 
     self->worker_thread_iteration();
 
-// pop next task pushed to queue by the main thread
+    // pop next task pushed to queue by the main thread
 
 #if GLIB_CHECK_VERSION(2, 32, 0)
     GRTTaskHelper *helper = static_cast<GRTTaskHelper *>(g_async_queue_timeout_pop(task_queue, 1000000));

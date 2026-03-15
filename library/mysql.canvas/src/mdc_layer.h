@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _MDC_LAYER_H_
@@ -45,7 +45,7 @@ namespace mdc {
     void set_root_area(AreaGroup *group);
 
     void set_name(const std::string &name);
-    std::string get_name() const {
+    auto get_name() const -> std::string {
       return _name;
     }
 
@@ -53,7 +53,7 @@ namespace mdc {
     virtual void remove_item(CanvasItem *item);
 
     virtual void set_visible(bool flag);
-    bool visible() const {
+    auto visible() const -> bool {
       return _visible;
     };
 
@@ -61,7 +61,7 @@ namespace mdc {
     virtual void repaint(const base::Rect &aBounds);
     void repaint_for_export(const base::Rect &aBounds);
 
-    inline CanvasView *get_view() const {
+    inline auto get_view() const -> CanvasView * {
       return _owner;
     };
 
@@ -73,26 +73,26 @@ namespace mdc {
     void queue_repaint();
     void queue_repaint(const base::Rect &bounds);
 
-    CanvasItem *get_other_item_at(const base::Point &point, CanvasItem *item);
+    auto get_other_item_at(const base::Point &point, CanvasItem *item) -> CanvasItem *;
 
-    CanvasItem *get_item_at(const base::Point &point);
-    CanvasItem *get_top_item_at(const base::Point &point);
+    auto get_item_at(const base::Point &point) -> CanvasItem *;
+    auto get_top_item_at(const base::Point &point) -> CanvasItem *;
 
-    AreaGroup *get_root_area_group() const {
+    auto get_root_area_group() const -> AreaGroup * {
       return _root_area;
     }
 
-    typedef std::function<bool(CanvasItem *)> ItemCheckFunc;
+    using ItemCheckFunc = std::function<bool(CanvasItem *)>;
 
-    std::list<CanvasItem *> get_items_bounded_by(const base::Rect &rect, const ItemCheckFunc &pred = ItemCheckFunc(),
-                                                 mdc::Group *inside_group = 0);
+    auto get_items_bounded_by(const base::Rect &rect, const ItemCheckFunc &pred = ItemCheckFunc(),
+                              mdc::Group *inside_group = 0) -> std::list<CanvasItem *>;
 
-    Group *create_group_with(const std::list<CanvasItem *> &contents);
+    auto create_group_with(const std::list<CanvasItem *> &contents) -> Group *;
     void dissolve_group(Group *group);
 
-    AreaGroup *create_area_group_with(const std::list<CanvasItem *> &contents);
+    auto create_area_group_with(const std::list<CanvasItem *> &contents) -> AreaGroup *;
 
-    base::Rect get_bounds_of_item_list(const std::list<CanvasItem *> &items);
+    auto get_bounds_of_item_list(const std::list<CanvasItem *> &items) -> base::Rect;
 
   protected:
     CanvasView *_owner;
@@ -106,12 +106,12 @@ namespace mdc {
 
     bool _needs_repaint;
 
-    Layer *get_layer_under_this();
+    auto get_layer_under_this() -> Layer *;
 
   private:
     void view_resized();
   };
 
-} // end of mdc namespace
+} // namespace mdc
 
 #endif /* _MDC_LAYER_H_ */

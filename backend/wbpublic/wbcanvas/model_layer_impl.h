@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -37,7 +37,7 @@
 #include "model_object_impl.h"
 
 class WBPUBLICBACKEND_PUBLIC_FUNC model_Layer::ImplData : public model_Object::ImplData {
-  typedef model_Object::ImplData super;
+  using super = model_Object::ImplData;
 
   friend class ViewBase;
 

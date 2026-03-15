@@ -42,7 +42,7 @@ namespace mdc {
 
   class MYSQLCANVAS_PUBLIC_FUNC Selection {
   public:
-    typedef std::set<CanvasItem *> ContentType;
+    using ContentType = std::set<CanvasItem *>;
 
     Selection(CanvasView *view);
     ~Selection();
@@ -65,22 +65,22 @@ namespace mdc {
     void begin_moving(const base::Point &mouse_pos);
     void update_move(const base::Point &mouse_pos);
     void end_moving();
-    bool is_moving();
+    auto is_moving() -> bool;
 
-    ContentType get_contents() {
+    auto get_contents() -> ContentType {
       return _items;
     };
-    bool empty() const {
+    auto empty() const -> bool {
       return _items.empty();
     };
 
-    boost::signals2::signal<void(bool, mdc::CanvasItem *)> *signal_changed() {
+    auto signal_changed() -> boost::signals2::signal<void(bool, mdc::CanvasItem *)> * {
       return &_signal_changed;
     }
-    boost::signals2::signal<void()> *signal_begin_dragging() {
+    auto signal_begin_dragging() -> boost::signals2::signal<void()> * {
       return &_signal_begin_drag;
     }
-    boost::signals2::signal<void()> *signal_end_dragging() {
+    auto signal_end_dragging() -> boost::signals2::signal<void()> * {
       return &_signal_end_drag;
     }
 
@@ -94,9 +94,10 @@ namespace mdc {
       // DragData(const DragData &other) : offset(other.offset), image(other.image ? new
       // Surface(other.image->get_surface()) : 0) {}
       //~DragData() { delete image; }
-      DragData() {}
+      DragData() {
+      }
       DragData(const DragData &other) = default;
-      DragData &operator=(const DragData &other) {
+      auto operator=(const DragData &other) -> DragData & {
         offset = other.offset;
         position = other.position;
         // image= 0;
@@ -127,6 +128,6 @@ namespace mdc {
     int _block_signals;
   };
 
-} // end of mdc namespace
+} // namespace mdc
 
 #endif

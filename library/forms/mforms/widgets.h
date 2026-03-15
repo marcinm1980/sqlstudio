@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
@@ -48,7 +48,7 @@
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 namespace mforms {
 
-  typedef std::list<double> ThresholdList;
+  using ThresholdList = std::list<double>;
 
   class MFORMS_EXPORT BaseWidget : public DrawBox {
   public:
@@ -231,6 +231,6 @@ namespace mforms {
     void end_sleeping(double timestamp);
     bool feedback_step();
   };
-}
+} // namespace mforms
 
 #endif // !DOXYGEN_SHOULD_SKIP_THIS

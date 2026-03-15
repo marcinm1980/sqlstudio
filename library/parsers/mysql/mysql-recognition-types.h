@@ -97,7 +97,7 @@ enum MySQLQueryType {
   QtLoadXML,
   QtReplace,
   QtSelect,
-  QtTable, // Explicit table statement.
+  QtTable,  // Explicit table statement.
   QtValues, // Table value constructor.
   QtUpdate,
 
@@ -214,10 +214,10 @@ enum MySQLQueryType {
 };
 
 namespace parsers {
-  typedef std::pair<std::string, std::string> Identifier;
-  typedef struct {
+  using Identifier = std::pair<std::string, std::string>;
+  using ColumnIdentifier = struct {
     std::string schema;
     std::string table;
     std::string column;
-  } ColumnIdentifier;
-}
+  };
+} // namespace parsers

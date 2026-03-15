@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -325,7 +325,7 @@ namespace wb {
 
     class MYSQLWBBACKEND_PUBLIC_FUNC SchemaData : public LSTData {
     public:
-      SchemaData() : LSTData(), fetched(false), fetching(false){};
+      SchemaData() : LSTData(), fetched(false), fetching(false) {};
       bool fetched;
       bool fetching;
 
@@ -338,14 +338,12 @@ namespace wb {
       }
     };
 
-    typedef std::function<void(const std::string& schema_name, base::StringListPtr tables, base::StringListPtr views,
-                               base::StringListPtr procedures, base::StringListPtr functions, bool just_append)>
-      NewSchemaContentArrivedSlot;
-    typedef std::function<void(const std::string& schema_name, const std::string& object_name, ObjectType obj_type,
-                               ObjectType child_type, const std::map<std::string, LSTData*>& children)>
-      NewObjectDetailsArrivedSlot;
-    typedef std::function<bool(mforms::TreeNodeRef, base::StringListPtr, ObjectType, bool sorted, bool just_append)>
-      NodeChildrenUpdaterSlot;
+    using NewSchemaContentArrivedSlot = std::function<void(const std::string&, base::StringListPtr, base::StringListPtr,
+                                                           base::StringListPtr, base::StringListPtr, bool)>;
+    using NewObjectDetailsArrivedSlot = std::function<void(const std::string&, const std::string&, ObjectType,
+                                                           ObjectType, const std::map<std::string, LSTData*>&)>;
+    using NodeChildrenUpdaterSlot =
+      std::function<bool(mforms::TreeNodeRef, base::StringListPtr, ObjectType, bool, bool)>;
 
     struct FetchDelegate {
       virtual std::vector<std::string> fetch_schema_list() = 0;
@@ -364,7 +362,7 @@ namespace wb {
       virtual void tree_activate_objects(const std::string&, const std::vector<ChangeRecord>&) = 0;
     };
 
-    typedef boost::signals2::signal<int(const std::string&)> SqlEditorTextInsertSignal;
+    using SqlEditorTextInsertSignal = boost::signals2::signal<int(const std::string&)>;
 
     SqlEditorTextInsertSignal sql_editor_text_insert_signal;
 
@@ -413,7 +411,9 @@ namespace wb {
                             int fetch_mask);
 
     void set_filter(std::string filter);
-    std::string getFilter() const { return _filter; }
+    std::string getFilter() const {
+      return _filter;
+    }
 
     void filter_data();
     void load_data_for_filter(const std::string& schema_filter, const std::string& object_filter);
@@ -452,7 +452,9 @@ namespace wb {
       _base = base;
     }
 
-    LiveSchemaTree* getBase() { return _base; }
+    LiveSchemaTree* getBase() {
+      return _base;
+    }
 
     bool update_node_children(mforms::TreeNodeRef parent, base::StringListPtr children, ObjectType type,
                               bool sorted = false, bool just_append = false);
@@ -481,17 +483,19 @@ namespace wb {
       _enabled_events = enable;
     }
 
-    bool getEnabledEvents() { return _enabled_events; }
+    bool getEnabledEvents() {
+      return _enabled_events;
+    }
 
   private:
     bool _is_schema_contents_enabled;
     bool _enabled_events;
     base::MySQLVersion _version;
 
-    LiveSchemaTree *_base = nullptr;
+    LiveSchemaTree* _base = nullptr;
     std::string _filter;
     ObjectType _filter_type;
-    LSTData *notify_on_reload_data = nullptr;
+    LSTData* notify_on_reload_data = nullptr;
 
     static const char* _schema_tokens[16];
 
@@ -503,4 +507,4 @@ namespace wb {
     std::string get_node_icon_path(ObjectType type);
     bec::IconId get_node_icon(ObjectType type);
   };
-};
+}; // namespace wb

@@ -39,25 +39,25 @@ namespace mdc {
     Magnet(CanvasItem *owner);
     virtual ~Magnet();
 
-    virtual bool allows_connection(Connector *conn) const;
-    virtual bool allows_disconnection(Connector *conn) const;
+    virtual auto allows_connection(Connector *conn) const -> bool;
+    virtual auto allows_disconnection(Connector *conn) const -> bool;
 
     void remove_all_connectors();
 
-    virtual bool add_connector(Connector *conn);
+    virtual auto add_connector(Connector *conn) -> bool;
     virtual void remove_connector(Connector *conn);
 
-    virtual base::Point get_position_for_connector(Connector *conn, const base::Point &srcpos) const;
-    virtual base::Point get_position() const;
+    virtual auto get_position_for_connector(Connector *conn, const base::Point &srcpos) const -> base::Point;
+    virtual auto get_position() const -> base::Point;
 
-    virtual double constrain_angle(double angle) const {
+    virtual auto constrain_angle(double angle) const -> double {
       return angle;
     }
 
     void set_connection_validator(const std::function<bool(Connector *)> &slot);
     void set_disconnection_validator(const std::function<bool(Connector *)> &slot);
 
-    CanvasItem *get_owner() const {
+    auto get_owner() const -> CanvasItem * {
       return _owner;
     }
 

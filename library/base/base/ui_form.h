@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -39,7 +39,7 @@
 namespace mforms {
   class MenuBar;
   class ToolBar;
-};
+}; // namespace mforms
 
 namespace bec {
 
@@ -48,7 +48,7 @@ namespace bec {
 
   // XXX deprecated
   struct MenuItem;
-  typedef BASELIBRARY_PUBLIC_FUNC std::vector<MenuItem> MenuItemList;
+  using MenuItemList = std::vector<MenuItem>;
   struct BASELIBRARY_PUBLIC_FUNC MenuItem {
     std::string oid;
     std::string caption;
@@ -107,7 +107,7 @@ namespace bec {
   };
 
   // XXX deprecated
-  typedef std::vector<ToolbarItem> ToolbarItemList;
+  using ToolbarItemList = std::vector<ToolbarItem>;
 
 #define GNUIFormCreated "GNUIFormCreated"
 #define GNUIFormDestroyed "GNUIFormDestroyed"
@@ -126,29 +126,29 @@ namespace bec {
     virtual ~UIForm();
 
     // unique identifier for the form
-    std::string form_id();
+    auto form_id() -> std::string;
 
-    virtual std::string get_title() = 0;
+    virtual auto get_title() -> std::string = 0;
 
     void set_owner_data(void *data);
-    void *get_owner_data();
+    auto get_owner_data() -> void *;
 
     void set_frontend_data(void *data);
-    void *get_frontend_data();
+    auto get_frontend_data() -> void *;
 
-    virtual bool is_main_form();
-    virtual std::string get_form_context_name() const = 0;
+    virtual auto is_main_form() -> bool;
+    virtual auto get_form_context_name() const -> std::string = 0;
 
     // Target description for cut/copy/delete menu items and for paste, after a copy is made.
-    virtual std::string get_edit_target_name();
+    virtual auto get_edit_target_name() -> std::string;
 
-    virtual bool can_undo();
-    virtual bool can_redo();
-    virtual bool can_cut();
-    virtual bool can_copy();
-    virtual bool can_paste();
-    virtual bool can_delete();
-    virtual bool can_select_all();
+    virtual auto can_undo() -> bool;
+    virtual auto can_redo() -> bool;
+    virtual auto can_cut() -> bool;
+    virtual auto can_copy() -> bool;
+    virtual auto can_paste() -> bool;
+    virtual auto can_delete() -> bool;
+    virtual auto can_select_all() -> bool;
 
     virtual void undo();
     virtual void redo();
@@ -158,16 +158,17 @@ namespace bec {
     virtual void delete_selection();
     virtual void select_all();
 
-    virtual bool can_close() {
+    virtual auto can_close() -> bool {
       return true;
     }
-    virtual void close(){}
+    virtual void close() {
+    }
 
     // for main forms
-    virtual mforms::MenuBar *get_menubar() {
+    virtual auto get_menubar() -> mforms::MenuBar * {
       return 0;
     }
-    virtual mforms::ToolBar *get_toolbar() {
+    virtual auto get_toolbar() -> mforms::ToolBar * {
       return 0;
     }
 
@@ -176,6 +177,6 @@ namespace bec {
     void *_frontend_data; // No strong reference for OSX!
 
   public:
-    static bec::UIForm *form_with_id(const std::string &id);
+    static auto form_with_id(const std::string &id) -> bec::UIForm *;
   };
-}
+} // namespace bec

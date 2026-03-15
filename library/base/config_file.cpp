@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
@@ -50,25 +50,25 @@ using namespace base;
 // What character separates key and value.
 const std::string EqualIndicators = "=:";
 
-typedef struct {
+using ConfigEntry = struct {
   std::string key;
   std::string value;
   std::string pre_comment;  // A comment before the entry (separate line(s)).
   std::string post_comment; // A comment after the entry (same line).
-} ConfigEntry;
+};
 
-typedef std::vector<ConfigEntry> EntryList; // Must be a vector instead of a map to preserve order and
+using EntryList = std::vector<ConfigEntry>; // Must be a vector instead of a map to preserve order and
                                             // allow multiple values with the same key (includes).
-typedef EntryList::iterator EntryListIterator;
+using EntryListIterator = EntryList::iterator;
 
-typedef struct {
+using ConfigSection = struct {
   std::string name;
   std::string comment; // A comment placed before a section start.
   EntryList keys;
-} ConfigSection;
+};
 
-typedef std::vector<ConfigSection> SectionList;
-typedef SectionList::iterator SectionListIterator;
+using SectionList = std::vector<ConfigSection>;
+using SectionListIterator = SectionList::iterator;
 
 /**
  * Extracts the next key from the next key/value pair in the line and returns it.

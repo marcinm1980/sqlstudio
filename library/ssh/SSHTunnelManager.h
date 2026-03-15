@@ -36,10 +36,10 @@
 #include "base/any.h"
 
 namespace ssh {
-  typedef struct {
+  using sockInfo = struct {
     uint16_t port;
     int socketHandle;
-  } sockInfo;
+  };
 
   class WBSSHLIBRARY_PUBLIC_FUNC SSHTunnelManager : public SSHThread {
   public:
@@ -65,7 +65,6 @@ namespace ssh {
     uint16_t _wakeupSocketPort;
     int _wakeupSocket;
     std::map<int, std::unique_ptr<SSHTunnelHandler>> _socketList;
-
   };
 
 } /* namespace ssh */

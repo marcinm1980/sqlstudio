@@ -40,7 +40,7 @@ namespace base {
     AutoCreateKeys = 2      // Create a key if written to but does not exist yet.
   };
 
-  inline ConfigFileFlags operator|(ConfigFileFlags a, ConfigFileFlags b) {
+  inline auto operator|(ConfigFileFlags a, ConfigFileFlags b) -> ConfigFileFlags {
     return ConfigFileFlags((int)a | (int)b);
   }
 
@@ -50,41 +50,41 @@ namespace base {
     ConfigurationFile(std::string file_name, ConfigFileFlags flags);
     virtual ~ConfigurationFile();
 
-    bool load(const std::string &file_name);
-    bool save(const std::string &file_name);
+    auto load(const std::string &file_name) -> bool;
+    auto save(const std::string &file_name) -> bool;
 
     void clear_includes(const std::string &section_name);
     void add_include(const std::string &section_name, const std::string &include);
     void add_include_dir(const std::string &section_name, const std::string &include);
-    std::vector<std::string> get_includes(const std::string &section_name);
+    auto get_includes(const std::string &section_name) -> std::vector<std::string>;
 
-    std::string get_value(std::string key, std::string section = "");
-    double get_float(std::string key, std::string section = "");
-    int get_int(std::string key, std::string section = "");
-    bool get_bool(std::string key, std::string section = "");
+    auto get_value(std::string key, std::string section = "") -> std::string;
+    auto get_float(std::string key, std::string section = "") -> double;
+    auto get_int(std::string key, std::string section = "") -> int;
+    auto get_bool(std::string key, std::string section = "") -> bool;
 
-    bool set_value(std::string key, std::string value, std::string section = "");
-    bool set_float(std::string key, float fValue, std::string section = "");
-    bool set_int(std::string key, int nValue, std::string section = "");
-    bool set_bool(std::string key, bool bValue, std::string section = "");
-    bool set_key_pre_comment(std::string key, std::string comment, std::string section = "");
-    bool set_key_post_comment(std::string key, std::string comment, std::string section = "");
-    bool set_section_comment(std::string section, std::string comment);
+    auto set_value(std::string key, std::string value, std::string section = "") -> bool;
+    auto set_float(std::string key, float fValue, std::string section = "") -> bool;
+    auto set_int(std::string key, int nValue, std::string section = "") -> bool;
+    auto set_bool(std::string key, bool bValue, std::string section = "") -> bool;
+    auto set_key_pre_comment(std::string key, std::string comment, std::string section = "") -> bool;
+    auto set_key_post_comment(std::string key, std::string comment, std::string section = "") -> bool;
+    auto set_section_comment(std::string section, std::string comment) -> bool;
 
-    bool delete_key(std::string key, std::string from_section = "");
-    bool delete_section(std::string section);
+    auto delete_key(std::string key, std::string from_section = "") -> bool;
+    auto delete_section(std::string section) -> bool;
 
-    bool create_key(std::string key, std::string value, std::string pre_comment = "", std::string post_comment = "",
-                    std::string section = "");
-    bool create_section(std::string section_name, std::string comment = "");
+    auto create_key(std::string key, std::string value, std::string pre_comment = "", std::string post_comment = "",
+                    std::string section = "") -> bool;
+    auto create_section(std::string section_name, std::string comment = "") -> bool;
 
-    int section_count();
-    int key_count();
-    int key_count_for_secton(const std::string &section_name);
+    auto section_count() -> int;
+    auto key_count() -> int;
+    auto key_count_for_secton(const std::string &section_name) -> int;
     void clear();
-    bool is_dirty();
-    bool has_key(const std::string &key, const std::string &section);
-    bool has_section(const std::string &section_name);
+    auto is_dirty() -> bool;
+    auto has_key(const std::string &key, const std::string &section) -> bool;
+    auto has_section(const std::string &section_name) -> bool;
 
   private:
     class Private;

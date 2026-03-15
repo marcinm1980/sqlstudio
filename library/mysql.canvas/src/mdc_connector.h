@@ -41,34 +41,34 @@ namespace mdc {
 
     void set_update_handler(const std::function<void(Connector *)> &update_handler);
 
-    virtual bool try_connect(Magnet *magnet);
-    virtual bool try_disconnect();
+    virtual auto try_connect(Magnet *magnet) -> bool;
+    virtual auto try_disconnect() -> bool;
 
     virtual void connect(Magnet *magnet);
     virtual void disconnect();
 
     void set_draggable(bool flag);
-    bool is_draggable() {
+    auto is_draggable() -> bool {
       return _draggable;
     }
 
     void set_tag(int tag) {
       _tag = tag;
     }
-    int get_tag() {
+    auto get_tag() -> int {
       return _tag;
     }
 
-    Magnet *get_connected_magnet() {
+    auto get_connected_magnet() -> Magnet * {
       return _magnet;
     }
-    CanvasItem *get_connected_item();
-    CanvasItem *get_owner() {
+    auto get_connected_item() -> CanvasItem *;
+    auto get_owner() -> CanvasItem * {
       return _owner;
     }
 
-    base::Point get_position(const base::Point &srcpos);
-    base::Point get_position();
+    auto get_position(const base::Point &srcpos) -> base::Point;
+    auto get_position() -> base::Point;
 
     // callback for Magnet
     virtual void magnet_moved(Magnet *magnet);

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -31,7 +31,7 @@
 #include <unordered_map>
 
 namespace bec {
-  typedef ssize_t IconId;
+  using IconId = ssize_t;
 
   enum IconSize { Icon11 = 11, Icon12 = 12, Icon16 = 16, Icon24 = 24, Icon32 = 32, Icon48 = 48, Icon64 = 64 };
 
@@ -48,20 +48,23 @@ namespace bec {
     IconManager();
 
   public:
-    static IconManager *get_instance();
+    static auto get_instance() -> IconManager *;
 
-    std::string get_icon_path(const std::string &file);
+    auto get_icon_path(const std::string &file) -> std::string;
 
-    IconId get_icon_id(const std::string &icon_file, IconSize size = Icon16, const std::string &extra_qualifier = "");
+    auto get_icon_id(const std::string &icon_file, IconSize size = Icon16, const std::string &extra_qualifier = "")
+      -> IconId;
 
-    IconId get_icon_id(const grt::ObjectRef &object, IconSize size = Icon16, const std::string &extra_qualifier = "");
-    IconId get_icon_id(grt::MetaClass *metaclass, IconSize size = Icon16, const std::string &extra_qualifier = "");
+    auto get_icon_id(const grt::ObjectRef &object, IconSize size = Icon16, const std::string &extra_qualifier = "")
+      -> IconId;
+    auto get_icon_id(grt::MetaClass *metaclass, IconSize size = Icon16, const std::string &extra_qualifier = "")
+      -> IconId;
 
-    std::string get_icon_file(IconId icon);
-    std::string get_icon_path(IconId icon);
+    auto get_icon_file(IconId icon) -> std::string;
+    auto get_icon_path(IconId icon) -> std::string;
 
     void set_basedir(const std::string &basedir);
 
     void add_search_path(const std::string &path);
   };
-};
+}; // namespace bec

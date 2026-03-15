@@ -38,16 +38,16 @@ namespace mdc {
     StraightLineLayouter(Connector *sconn, Connector *econn);
     virtual ~StraightLineLayouter();
 
-    virtual Connector *get_start_connector() const {
+    virtual auto get_start_connector() const -> Connector * {
       return _start_conn;
     }
-    virtual Connector *get_end_connector() const {
+    virtual auto get_end_connector() const -> Connector * {
       return _end_conn;
     }
 
-    virtual std::vector<base::Point> get_points();
-    virtual base::Point get_start_point();
-    virtual base::Point get_end_point();
+    virtual auto get_points() -> std::vector<base::Point>;
+    virtual auto get_start_point() -> base::Point;
+    virtual auto get_end_point() -> base::Point;
 
     virtual void update();
 

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _SQL_INSERTS_LOADER_H_
@@ -41,7 +41,7 @@
  */
 class WBPUBLICBACKEND_PUBLIC_FUNC Sql_inserts_loader {
 public:
-  typedef std::shared_ptr<Sql_inserts_loader> Ref;
+  using Ref = std::shared_ptr<Sql_inserts_loader>;
 
 public:
   Sql_inserts_loader() {
@@ -51,10 +51,10 @@ public:
 
   virtual void load(const std::string &sql, const std::string &schema_name) = 0;
 
-  typedef std::vector<std::string> Strings;
-  typedef std::function<void(const std::string &, const std::pair<std::string, std::string> &, const Strings &,
-                             const Strings &, const std::vector<bool> &)>
-    Process_insert; // sql, schema_name, table_name, fields_names, fields_values
+  using Strings = std::vector<std::string>;
+  using Process_insert = std::function<void(
+    const std::string &, const std::pair<std::string, std::string> &, const Strings &, const Strings &,
+    const std::vector<bool> &)>; // sql, schema_name, table_name, fields_names, fields_values
   void process_insert_cb(Process_insert cb) {
     _process_insert = cb;
   }

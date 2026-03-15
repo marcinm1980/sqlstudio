@@ -72,16 +72,16 @@ namespace wb {
     bec::ArgumentPool _argpool;
     bool _include_se;
 
-    bool validate_command_item(const app_CommandItemRef &item, const ParsedCommand &cmd);
+    auto validate_command_item(const app_CommandItemRef &item, const ParsedCommand &cmd) -> bool;
     void update_item_state(const app_ToolbarItemRef &item, const ParsedCommand &cmd, mforms::ToolBarItem *tb_item);
     void update_item_state(const app_CommandItemRef &item, const ParsedCommand &cmd, mforms::MenuItem *menu_item);
 
     void append_shortcut_items(const grt::ListRef<app_ShortcutItem> &plist, const std::string &context,
                                std::vector<WBShortcut> *items);
 
-    bool execute_builtin_command(const std::string &name);
-    bool validate_builtin_command(const std::string &name);
-    bool validate_plugin_command(app_PluginRef plugin);
+    auto execute_builtin_command(const std::string &name) -> bool;
+    auto validate_builtin_command(const std::string &name) -> bool;
+    auto validate_plugin_command(app_PluginRef plugin) -> bool;
 
   private:
     void add_recent_menu(mforms::MenuItem *parent);
@@ -93,7 +93,7 @@ namespace wb {
     void menu_will_show(mforms::MenuItem *parent);
 
   public:
-    mforms::MenuBar *create_menubar_for_context(const std::string &context);
+    auto create_menubar_for_context(const std::string &context) -> mforms::MenuBar *;
 
     void revalidate_menu_bar(mforms::MenuBar *menu);
     void revalidate_edit_menu_items();
@@ -103,14 +103,14 @@ namespace wb {
 
     void clearBuildInCommands();
 
-    mforms::ToolBar *create_toolbar(const std::string &toolbar_file);
-    mforms::ToolBar *create_toolbar(const std::string &toolbar_file,
-                                    const std::function<void(std::string)> &activate_slot);
+    auto create_toolbar(const std::string &toolbar_file) -> mforms::ToolBar *;
+    auto create_toolbar(const std::string &toolbar_file,
+                                    const std::function<void(std::string)> &activate_slot) -> mforms::ToolBar *;
 
     void load_data();
 
     void activate_command(const std::string &command);
-    bool activate_command(const std::string &command, bec::ArgumentPool argpool);
+    auto activate_command(const std::string &command, bec::ArgumentPool argpool) -> bool;
 
     std::vector<WBShortcut> get_shortcuts_for_context(const std::string &context);
 

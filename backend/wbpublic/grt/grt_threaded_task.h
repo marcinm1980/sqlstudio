@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -31,7 +31,7 @@
 
 class WBPUBLICBACKEND_PUBLIC_FUNC GrtThreadedTask : public base::trackable {
 public:
-  typedef std::shared_ptr<GrtThreadedTask> Ref;
+  using Ref = std::shared_ptr<GrtThreadedTask>;
 
 public:
   static Ref create() {
@@ -95,11 +95,11 @@ private:
   bool _send_task_res_msg;
 
 public:
-  typedef std::function<grt::StringRef()> Proc_cb;
-  typedef std::function<int(int, const std::string &, const std::string &)> Msg_cb;
-  typedef std::function<int(float, const std::string &)> Progress_cb;
-  typedef std::function<void()> Finish_cb;
-  typedef std::function<void(const std::string &)> Fail_cb;
+  using Proc_cb = std::function<grt::StringRef()>;
+  using Msg_cb = std::function<int(int, const std::string &, const std::string &)>;
+  using Progress_cb = std::function<int(float, const std::string &)>;
+  using Finish_cb = std::function<void()>;
+  using Fail_cb = std::function<void(const std::string &)>;
 
 public:
   void exec(bool sync = false, Proc_cb proc_cb = Proc_cb());

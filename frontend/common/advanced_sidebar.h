@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -51,9 +51,9 @@ namespace wb {
   class SidebarSection;
 
   /**
-    * The SidebarEntry class is a lean wrapper for an icon/label combination which can be used
-    * to trigger an action. It needs a container to be useful (here the class SidebarSection).
-    */
+   * The SidebarEntry class is a lean wrapper for an icon/label combination which can be used
+   * to trigger an action. It needs a container to be useful (here the class SidebarSection).
+   */
   class SidebarEntry : public base::Accessible {
   private:
     std::string _name;
@@ -63,14 +63,14 @@ namespace wb {
     mforms::TaskEntryType _type;
     base::Rect _bounds;
     bool _enabled;
-    boost::signals2::signal<void (const std::string &)> *_callback;
+    boost::signals2::signal<void(const std::string&)>* _callback;
 
-    SidebarSection *_owner;
+    SidebarSection* _owner;
 
   public:
-    SidebarEntry(SidebarSection *owner, const std::string& name, const std::string& title,
+    SidebarEntry(SidebarSection* owner, const std::string& name, const std::string& title,
                  const std::string& accessibilityName, const std::string& icon, mforms::TaskEntryType type,
-                 boost::signals2::signal<void (const std::string &)> *callback);
+                 boost::signals2::signal<void(const std::string&)>* callback);
     virtual ~SidebarEntry();
 
     void set_title(const std::string& title);
@@ -94,7 +94,7 @@ namespace wb {
     }
 
     void execute() {
-        (*_callback)(_name);
+      (*_callback)(_name);
     }
 
     // ------ Accesibility Methods -----
@@ -111,18 +111,17 @@ namespace wb {
     }
 
     virtual std::string getAccessibilityDefaultAction() override {
-        return "click";
+      return "click";
     }
 
     virtual void accessibilityDoDefaultAction() override {
-        execute();
+      execute();
     }
-
   };
 
   class SidebarSection : public mforms::DrawBox {
     friend class SidebarEntry;
-    
+
   private:
     struct Button : public base::Accessible {
       std::string _name;
@@ -181,7 +180,7 @@ namespace wb {
     cairo_surface_t* _layout_surface;
     double _last_width;
 
-    SimpleSidebar *_owner;
+    SimpleSidebar* _owner;
 
   protected:
     void set_selected(SidebarEntry* entry);
@@ -251,7 +250,7 @@ namespace wb {
   class SimpleSidebar : public mforms::TaskSidebar, public base::Observer {
     friend class SidebarSection;
     friend class SidebarEntry;
-    
+
   protected:
     std::vector<SidebarSection*> _sections;
 
@@ -263,7 +262,7 @@ namespace wb {
     SimpleSidebar(); // Create the sidebar via its mforms alter ego TaskSidebar::create()
 
     virtual void updateColors();
-    
+
     int find_section(const std::string& title);
     void handle_notification(const std::string& name, void* sender, base::NotificationInfo& info) override;
     void add_items_from_list(mforms::MenuBase& menu, const bec::MenuItemList& items);
@@ -274,8 +273,9 @@ namespace wb {
     virtual int add_section(const std::string& name, const std::string& accessibilityName, const std::string& title,
                             mforms::TaskSectionFlags flags = mforms::TaskSectionPlain) override;
     virtual void remove_section(const std::string& name) override;
-    virtual int add_section_entry(const std::string& section_name, const std::string& name, const std::string& accessibilityName,
-                                  const std::string& title, const std::string& icon, mforms::TaskEntryType type) override;
+    virtual int add_section_entry(const std::string& section_name, const std::string& name,
+                                  const std::string& accessibilityName, const std::string& title,
+                                  const std::string& icon, mforms::TaskEntryType type) override;
     virtual void set_section_entry_text(const std::string& entry_name, const std::string& title) override;
     virtual void set_section_entry_icon(const std::string& entry_name, const std::string& icon) override;
     virtual void set_section_entry_enabled(const std::string& entry_name, bool flag) override;
@@ -304,8 +304,8 @@ namespace wb {
 
   class AdvancedSidebar : public SimpleSidebar {
   private:
-    typedef boost::signals2::signal<void(const std::string&)> SearchBoxChangedSignal;
-    typedef boost::signals2::signal<void(void)> TreeNodeSelected;
+    using SearchBoxChangedSignal = boost::signals2::signal<void(const std::string&)>;
+    using TreeNodeSelected = boost::signals2::signal<void(void)>;
     mforms::TreeView _new_schema_tree;
     mforms::TreeView _filtered_schema_tree;
     mforms::ContextMenu _tree_context_menu;

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -88,9 +88,10 @@ namespace mforms {
     int item_count();
 
 #ifndef SWIG
-    MenuItem *add_item_with_title(const std::string &title, std::function<void()> action, const std::string &name, const std::string &internalName);
-    MenuItem *add_check_item_with_title(const std::string &title, std::function<void()> action,
-                                        const std::string &name, const std::string &internalName);
+    MenuItem *add_item_with_title(const std::string &title, std::function<void()> action, const std::string &name,
+                                  const std::string &internalName);
+    MenuItem *add_check_item_with_title(const std::string &title, std::function<void()> action, const std::string &name,
+                                        const std::string &internalName);
 #endif
     MenuItem *add_separator();
 
@@ -117,7 +118,7 @@ namespace mforms {
    */
   class MFORMS_EXPORT MenuItem : public MenuBase {
   public:
-    typedef std::function<bool()> validator_function;
+    using validator_function = std::function<bool()>;
 
     /** Constructor
 
@@ -144,7 +145,7 @@ namespace mforms {
     }
 #endif
     void setInternalName(const std::string &name) {
-        _internalName = name;
+      _internalName = name;
     }
     std::string getInternalName() {
       return _internalName;
@@ -211,4 +212,4 @@ namespace mforms {
   private:
     boost::signals2::signal<void(MenuItem *)> _signal_will_show;
   };
-};
+}; // namespace mforms

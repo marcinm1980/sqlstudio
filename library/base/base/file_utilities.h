@@ -43,12 +43,12 @@ namespace base {
   public:
     file_error(const std::string &text, int err);
 
-    error_code code();
-    int sys_code();
+    auto code() -> error_code;
+    auto sys_code() -> int;
   };
 
-  BASELIBRARY_PUBLIC_FUNC std::list<std::string> scan_for_files_matching(const std::string &pattern,
-                                                                         bool recursive = false);
+  BASELIBRARY_PUBLIC_FUNC auto scan_for_files_matching(const std::string &pattern,
+                                                                         bool recursive = false) -> std::list<std::string>;
 
   class BASELIBRARY_PUBLIC_FUNC file_locked_error : public std::runtime_error {
   public:
@@ -75,7 +75,7 @@ namespace base {
     LockFile(const std::string &path);
     ~LockFile();
 #undef check // there's a #define check in osx
-    static LockStatus check(const std::string &path);
+    static auto check(const std::string &path) -> LockStatus;
   };
 
   class BASELIBRARY_PUBLIC_FUNC FileHandle {
@@ -96,63 +96,63 @@ namespace base {
       dispose();
     }
 
-    std::string getPath() const;
+    auto getPath() const -> std::string;
     void swap(FileHandle &fh);
     operator bool() const {
       return (!_file);
     }
-    FileHandle &operator=(FileHandle &fh); // will pass ownership of FILE from assigned obj to this
-    FileHandle &operator=(FileHandle &&fh);
+    auto operator=(FileHandle &fh) -> FileHandle &; // will pass ownership of FILE from assigned obj to this
+    auto operator=(FileHandle &&fh) -> FileHandle &;
     //  NOTE: Never close this handle, because it's managed by the FileHandle class.
-    FILE *file() {
+    auto file() -> FILE * {
       return _file;
     }
     void dispose();
   };
 
   // creates the directory, returns false if the directory exists.. throws exception on error
-  BASELIBRARY_PUBLIC_FUNC bool create_directory(const std::string &path, int mode, bool with_parents = false);
-  BASELIBRARY_PUBLIC_FUNC bool copyDirectoryRecursive(const std::string &src, const std::string &dest,
-                                                      bool includeFiles = true); // Obsolete with C++17
+  BASELIBRARY_PUBLIC_FUNC auto create_directory(const std::string &path, int mode, bool with_parents = false) -> bool;
+  BASELIBRARY_PUBLIC_FUNC auto copyDirectoryRecursive(const std::string &src, const std::string &dest,
+                                                      bool includeFiles = true) -> bool; // Obsolete with C++17
 
-  BASELIBRARY_PUBLIC_FUNC std::wifstream openTextInputStream(const std::string &fileName);
-  BASELIBRARY_PUBLIC_FUNC std::wofstream openTextOutputStream(const std::string &fileName);
+  BASELIBRARY_PUBLIC_FUNC auto openTextInputStream(const std::string &fileName) -> std::wifstream;
+  BASELIBRARY_PUBLIC_FUNC auto openTextOutputStream(const std::string &fileName) -> std::wofstream;
 
-  BASELIBRARY_PUBLIC_FUNC std::ifstream openBinaryInputStream(const std::string &fileName);
-  BASELIBRARY_PUBLIC_FUNC std::ofstream openBinaryOutputStream(const std::string &fileName);
+  BASELIBRARY_PUBLIC_FUNC auto openBinaryInputStream(const std::string &fileName) -> std::ifstream;
+  BASELIBRARY_PUBLIC_FUNC auto openBinaryOutputStream(const std::string &fileName) -> std::ofstream;
 
-  BASELIBRARY_PUBLIC_FUNC bool copyFile(const std::string &src, const std::string &dest); // Obsolete with C++17
+  BASELIBRARY_PUBLIC_FUNC auto copyFile(const std::string &src, const std::string &dest) -> bool; // Obsolete with C++17
 
-  BASELIBRARY_PUBLIC_FUNC bool remove(const std::string &path);
-  BASELIBRARY_PUBLIC_FUNC bool tryRemove(const std::string &path);
+  BASELIBRARY_PUBLIC_FUNC auto remove(const std::string &path) -> bool;
+  BASELIBRARY_PUBLIC_FUNC auto tryRemove(const std::string &path) -> bool;
 
-  BASELIBRARY_PUBLIC_FUNC bool remove_recursive(const std::string &path);
+  BASELIBRARY_PUBLIC_FUNC auto remove_recursive(const std::string &path) -> bool;
 
   BASELIBRARY_PUBLIC_FUNC void rename(const std::string &from, const std::string &to);
 
-  BASELIBRARY_PUBLIC_FUNC bool file_exists(const std::string &path);
-  BASELIBRARY_PUBLIC_FUNC bool is_directory(const std::string &path);
+  BASELIBRARY_PUBLIC_FUNC auto file_exists(const std::string &path) -> bool;
+  BASELIBRARY_PUBLIC_FUNC auto is_directory(const std::string &path) -> bool;
 
   // file.ext -> .ext
-  BASELIBRARY_PUBLIC_FUNC std::string extension(const std::string &path);
+  BASELIBRARY_PUBLIC_FUNC auto extension(const std::string &path) -> std::string;
   // returns path.ext (if path has no ext, it will add it)
-  BASELIBRARY_PUBLIC_FUNC std::string appendExtensionIfNeeded(const std::string &path, const std::string &ext);
+  BASELIBRARY_PUBLIC_FUNC auto appendExtensionIfNeeded(const std::string &path, const std::string &ext) -> std::string;
   // returns . if no dirname in path
-  BASELIBRARY_PUBLIC_FUNC std::string dirname(const std::string &path);
+  BASELIBRARY_PUBLIC_FUNC auto dirname(const std::string &path) -> std::string;
   // returns . if no filename in path
-  BASELIBRARY_PUBLIC_FUNC std::string basename(const std::string &path);
+  BASELIBRARY_PUBLIC_FUNC auto basename(const std::string &path) -> std::string;
 
   // file.ext -> file
-  BASELIBRARY_PUBLIC_FUNC std::string strip_extension(const std::string &path);
-  BASELIBRARY_PUBLIC_FUNC bool file_mtime(const std::string &path, time_t &mtime);
+  BASELIBRARY_PUBLIC_FUNC auto strip_extension(const std::string &path) -> std::string;
+  BASELIBRARY_PUBLIC_FUNC auto file_mtime(const std::string &path, time_t &mtime) -> bool;
 
-  BASELIBRARY_PUBLIC_FUNC std::string joinPath(const char *prefix, ...);
-  BASELIBRARY_PUBLIC_FUNC std::string makePath(const std::string &prefix, const std::string &file);
-  BASELIBRARY_PUBLIC_FUNC std::string relativePath(const std::string &basePath, const std::string &pathToMakeRelative);
-  BASELIBRARY_PUBLIC_FUNC FileHandle makeTmpFile(const std::string &prefix);
+  BASELIBRARY_PUBLIC_FUNC auto joinPath(const char *prefix, ...) -> std::string;
+  BASELIBRARY_PUBLIC_FUNC auto makePath(const std::string &prefix, const std::string &file) -> std::string;
+  BASELIBRARY_PUBLIC_FUNC auto relativePath(const std::string &basePath, const std::string &pathToMakeRelative) -> std::string;
+  BASELIBRARY_PUBLIC_FUNC auto makeTmpFile(const std::string &prefix) -> FileHandle;
 
-  BASELIBRARY_PUBLIC_FUNC std::string pathlistAppend(const std::string &l, const std::string &s);
-  BASELIBRARY_PUBLIC_FUNC std::string pathlistPrepend(const std::string &l, const std::string &s);
+  BASELIBRARY_PUBLIC_FUNC auto pathlistAppend(const std::string &l, const std::string &s) -> std::string;
+  BASELIBRARY_PUBLIC_FUNC auto pathlistPrepend(const std::string &l, const std::string &s) -> std::string;
 
-  BASELIBRARY_PUBLIC_FUNC std::string cwd();
+  BASELIBRARY_PUBLIC_FUNC auto cwd() -> std::string;
 };

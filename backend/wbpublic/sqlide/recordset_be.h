@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -41,7 +41,7 @@ namespace mforms {
   class ContextMenu;
   class ToolBar;
   class ToolBarItem;
-};
+}; // namespace mforms
 
 struct WBPUBLICBACKEND_PUBLIC_FUNC Recordset_storage_info {
   std::string name;
@@ -53,8 +53,8 @@ struct WBPUBLICBACKEND_PUBLIC_FUNC Recordset_storage_info {
 
 class WBPUBLICBACKEND_PUBLIC_FUNC Recordset : public VarGridModel {
 public:
-  typedef std::shared_ptr<Recordset> Ref;
-  typedef std::weak_ptr<Recordset> Ptr;
+  using Ref = std::shared_ptr<Recordset>;
+  using Ptr = std::weak_ptr<Recordset>;
   static Ref create();
   static Ref create(GrtThreadedTask::Ref parent_task);
   virtual ~Recordset();
@@ -70,8 +70,8 @@ public:
   boost::signals2::signal<void(Ptr)> on_close;
 
 public:
-  typedef std::shared_ptr<Recordset_data_storage> Recordset_data_storage_Ref;
-  typedef std::weak_ptr<Recordset_data_storage> Recordset_data_storage_Ptr;
+  using Recordset_data_storage_Ref = std::shared_ptr<Recordset_data_storage>;
+  using Recordset_data_storage_Ptr = std::weak_ptr<Recordset_data_storage>;
   friend class Recordset_data_storage;
 
 public:
@@ -218,7 +218,7 @@ public:
 
 protected:
   Recordset_data_storage_Ref _data_storage_for_export;
-  typedef std::map<std::string, std::string> Data_storages_for_export;
+  using Data_storages_for_export = std::map<std::string, std::string>;
   Data_storages_for_export _data_storages_for_export;
 
   void load_from_file(const bec::NodeId &node, ColumnId column);
@@ -249,7 +249,7 @@ public:
   size_t column_filter_icon_id() const;
 
 private:
-  typedef std::map<ColumnId, std::string> Column_filter_expr_map;
+  using Column_filter_expr_map = std::map<ColumnId, std::string>;
   Column_filter_expr_map _column_filter_expr_map; // column:filter_expr
 
   void search_activated(mforms::ToolBarItem *item);
@@ -326,9 +326,16 @@ protected:
   void set_field_raw_data(RowId row, ColumnId column, const char *data, size_t data_length, bool isJson = false);
 
 public:
-  const std::string &getFont() const { return _font; }
-  float getFontSize() const { return _size; }
-  void setFont(const std::string &font, float size) { _font = font; _size = size; }
+  const std::string &getFont() const {
+    return _font;
+  }
+  float getFontSize() const {
+    return _size;
+  }
+  void setFont(const std::string &font, float size) {
+    _font = font;
+    _size = size;
+  }
 
 private:
   std::string _font;

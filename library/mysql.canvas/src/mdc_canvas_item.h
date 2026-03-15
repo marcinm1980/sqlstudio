@@ -83,11 +83,11 @@ namespace mdc {
 
     // geometry
 
-    virtual base::Rect get_bounds() const;
-    virtual base::Rect get_root_bounds() const;
-    virtual base::Rect get_padded_root_bounds() const;
-    virtual bool intersects(const base::Rect &bounds) const;
-    virtual bool contains_point(const base::Point &point) const;
+    virtual auto get_bounds() const -> base::Rect;
+    virtual auto get_root_bounds() const -> base::Rect;
+    virtual auto get_padded_root_bounds() const -> base::Rect;
+    virtual auto intersects(const base::Rect &bounds) const -> bool;
+    virtual auto contains_point(const base::Point &point) const -> bool;
 
     virtual void resize_to(const base::Size &size);
     virtual void move_to(const base::Point &pos);
@@ -95,57 +95,57 @@ namespace mdc {
     void set_size(const base::Size &size);
     void set_bounds(const base::Rect &rect);
 
-    base::Point get_root_position() const;
-    inline base::Point get_position() const {
+    auto get_root_position() const -> base::Point;
+    inline auto get_position() const -> base::Point {
       return _pos;
     };
 
     virtual void set_fixed_min_size(const base::Size &size);
-    base::Size get_min_size();
-    virtual base::Size calc_min_size();
-    inline base::Size get_size() const {
+    auto get_min_size() -> base::Size;
+    virtual auto calc_min_size() -> base::Size;
+    inline auto get_size() const -> base::Size {
       return _size;
     }
-    inline base::Size get_fixed_size() const {
+    inline auto get_fixed_size() const -> base::Size {
       return _fixed_size;
     }
     virtual void set_fixed_size(const base::Size &size);
     virtual void set_auto_sizing(bool flag);
-    bool auto_sizing() const {
+    auto auto_sizing() const -> bool {
       return _auto_sizing;
     }
 
     virtual void set_padding(double xpad, double ypad);
 
-    base::Point convert_point_from(const base::Point &pt, CanvasItem *item) const;
-    base::Point convert_point_to(const base::Point &pt, CanvasItem *item) const;
+    auto convert_point_from(const base::Point &pt, CanvasItem *item) const -> base::Point;
+    auto convert_point_to(const base::Point &pt, CanvasItem *item) const -> base::Point;
 
-    virtual base::Point get_intersection_with_line_to(const base::Point &p);
+    virtual auto get_intersection_with_line_to(const base::Point &p) -> base::Point;
 
     // structure
 
-    Layer *get_layer() const {
+    auto get_layer() const -> Layer * {
       return _layer;
     };
     virtual void set_parent(CanvasItem *parent);
     void remove_from_parent();
 
-    CanvasView *get_view() const;
+    auto get_view() const -> CanvasView *;
 
-    CanvasItem *get_parent() const {
+    auto get_parent() const -> CanvasItem * {
       return _parent;
     };
-    CanvasItem *get_common_ancestor(CanvasItem *item) const;
+    auto get_common_ancestor(CanvasItem *item) const -> CanvasItem *;
 
-    bool is_toplevel() const;
-    CanvasItem *get_toplevel() const;
+    auto is_toplevel() const -> bool;
+    auto get_toplevel() const -> CanvasItem *;
 
     // rendering
-    bool get_visible() const {
+    auto get_visible() const -> bool {
       return _visible;
     };
     void set_visible(bool flag);
-    bool get_parents_visible() const;
+    auto get_parents_visible() const -> bool;
 
     void set_cache_toplevel_contents(bool flag);
     void invalidate_cache();
@@ -160,7 +160,7 @@ namespace mdc {
     virtual void render_gl(mdc::CairoCtx *cr);
     void render_to_surface(cairo_surface_t *surf, bool use_padding = true);
 
-    virtual bool can_render_gl() {
+    virtual auto can_render_gl() -> bool {
       return false;
     }
 
@@ -169,7 +169,7 @@ namespace mdc {
     virtual void draw_outline_ring(CairoCtx *cr, const base::Color &color);
     virtual void draw_outline_ring_gl(const base::Color &color);
 
-    State get_state();
+    auto get_state() -> State;
     virtual void stroke_outline(CairoCtx *, float offset = 0) const {
     }
     virtual void stroke_outline_gl(float offset = 0) const {
@@ -184,11 +184,11 @@ namespace mdc {
     virtual void set_selected(bool flag = true);
     virtual void set_focused(bool flag = true);
     void set_accepts_selection(bool flag = true);
-    bool accepts_selection() const {
+    auto accepts_selection() const -> bool {
       return _accepts_selection;
     };
     void set_accepts_focus(bool flag = true);
-    bool accepts_focus() const {
+    auto accepts_focus() const -> bool {
       return _accepts_focus;
     };
     void set_draws_hover(bool flag = true);
@@ -196,24 +196,24 @@ namespace mdc {
     void set_highlight_color(const base::Color *color); // NULL unsets the color
 
     void set_draggable(bool flag);
-    bool is_draggable() {
+    auto is_draggable() -> bool {
       return _draggable;
     }
     void set_allowed_resizing(bool horizontal, bool vertical);
 
-    bool is_dragging() {
+    auto is_dragging() -> bool {
       return _dragging;
     }
 
-    bool get_focused() const {
+    auto get_focused() const -> bool {
       return _focused;
     };
-    bool get_selected() const {
+    auto get_selected() const -> bool {
       return _selected;
     };
 
     virtual void set_state_drawing(bool flag);
-    bool get_state_drawing() {
+    auto get_state_drawing() -> bool {
       return !_disable_state_drawing;
     }
 
@@ -225,25 +225,25 @@ namespace mdc {
     void magnetize_bounds();
     void add_magnet(Magnet *magnet);
 
-    BoundsMagnet *get_bounds_magnet();
-    Magnet *get_closest_magnet(const base::Point &point);
+    auto get_bounds_magnet() -> BoundsMagnet *;
+    auto get_closest_magnet(const base::Point &point) -> Magnet *;
 
     void set_drag_handle_constrainer(const std::function<void(ItemHandle *, base::Size &)> &slot);
 
     // signals
 
-    boost::signals2::signal<void(const base::Rect &)> *signal_bounds_changed() {
+    auto signal_bounds_changed() -> boost::signals2::signal<void(const base::Rect &)> * {
       return &_bounds_changed_signal;
     }
-    boost::signals2::signal<void(CanvasItem *, const base::Rect &)> *signal_parent_bounds_changed() {
+    auto signal_parent_bounds_changed() -> boost::signals2::signal<void(CanvasItem *, const base::Rect &)> * {
       return &_parent_bounds_changed_signal;
     }
 
-    boost::signals2::signal<void()> *signal_reparent() {
+    auto signal_reparent() -> boost::signals2::signal<void()> * {
       return &_reparent_signal;
     }
 
-    boost::signals2::signal<void(bool)> *signal_focus_change() {
+    auto signal_focus_change() -> boost::signals2::signal<void(bool)> * {
       return &_focus_changed_signal;
     }
 
@@ -251,11 +251,11 @@ namespace mdc {
     void set_tag(const std::string &tag) {
       _tag = tag;
     }
-    std::string get_tag() const {
+    auto get_tag() const -> std::string {
       return _tag;
     }
 
-    virtual CanvasItem *find_item_with_tag(const std::string &tag);
+    virtual auto find_item_with_tag(const std::string &tag) -> CanvasItem *;
 
   private:
     base::Point _pos;
@@ -268,7 +268,7 @@ namespace mdc {
     void parent_bounds_changed(const base::Rect &obounds, CanvasItem *item);
     void grand_parent_bounds_changed(CanvasItem *item, const base::Rect &obounds);
 
-    static void *parent_destroyed(void *data);
+    static auto parent_destroyed(void *data) -> void *;
 
   protected:
     Layer *_layer;
@@ -326,7 +326,7 @@ namespace mdc {
     unsigned int _dragged : 1;
     unsigned int _disable_state_drawing : 1;
 
-    base::Size get_texture_size(base::Size size);
+    auto get_texture_size(base::Size size) -> base::Size;
     void repaint_direct();
     void repaint_cached();
     void regenerate_cache(base::Size size);
@@ -334,18 +334,18 @@ namespace mdc {
     // virtual bool can_drag_handle_to(const base::Point &pos);
     // virtual void end_drag_handle_to(const base::Point &pos);
 
-    virtual bool on_button_press(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
-    virtual bool on_button_release(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
+    virtual auto on_button_press(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
+    virtual auto on_button_release(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
     // drag event is received when the item is dragged with ButtonLeft pressed
-    virtual bool on_drag(CanvasItem *target, const base::Point &point, EventState state);
+    virtual auto on_drag(CanvasItem *target, const base::Point &point, EventState state) -> bool;
 
-    virtual bool on_enter(CanvasItem *target, const base::Point &point);
-    virtual bool on_leave(CanvasItem *target, const base::Point &point);
+    virtual auto on_enter(CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_leave(CanvasItem *target, const base::Point &point) -> bool;
 
-    virtual bool on_click(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
-    virtual bool on_double_click(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
+    virtual auto on_click(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
+    virtual auto on_double_click(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
 
-    virtual bool on_drag_handle(ItemHandle *handle, const base::Point &pos, bool dragging);
+    virtual auto on_drag_handle(ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
   };
 
 } // end of mdc namespace

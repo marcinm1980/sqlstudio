@@ -29,5 +29,5 @@
 
 #include "wbpublic_public_interface.h"
 
-WBPUBLICBACKEND_PUBLIC_FUNC std::string defaultCollationForCharset(const std::string &charsetName);
-WBPUBLICBACKEND_PUBLIC_FUNC std::string charsetForCollation(const std::string &collationName);
+WBPUBLICBACKEND_PUBLIC_FUNC auto defaultCollationForCharset(const std::string &charsetName) -> std::string;
+WBPUBLICBACKEND_PUBLIC_FUNC auto charsetForCollation(const std::string &collationName) -> std::string;

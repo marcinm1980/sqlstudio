@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _WB_MODEL_DIAGRAM_FORM_H_
@@ -41,7 +41,7 @@
 namespace mforms {
   class ToolBarItem;
   class TreeView;
-};
+}; // namespace mforms
 
 namespace wb {
   class Floater;
@@ -50,7 +50,7 @@ namespace wb {
 
   enum EditFinishReason { EditCancelled, EditReturnPressed, EditTabPressed, EditShiftTabPressed };
 
-  typedef boost::signals2::signal<void(const std::string &, const grt::ValueRef &)> ChangeSignal;
+  using ChangeSignal = boost::signals2::signal<void(const std::string &, const grt::ValueRef &)>;
 
   class ModelDiagramForm;
   class PhysicalModelDiagramFeatures;
@@ -182,7 +182,7 @@ namespace wb {
 
     void setup_mini_view(mdc::CanvasView *view);
     void update_mini_view_size(int w, int h);
-    void setBackgroundColor(base::Color const& color);
+    void setBackgroundColor(base::Color const &color);
 
     // events
     void handle_mouse_move(int x, int y, mdc::EventState state);
@@ -334,6 +334,6 @@ namespace wb {
       ~UpdateLock();
     };
   };
-};
+}; // namespace wb
 
 #endif

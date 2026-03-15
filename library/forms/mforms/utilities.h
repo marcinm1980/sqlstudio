@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -45,14 +45,14 @@ namespace mforms {
     WinProgramFilesX86, //!<< Windows only, 32 bit applications.
 
     ApplicationSettings //!<< Full path to App specific folder inside ApplicationData where config files and others are
-                        //!kept
+                        //! kept
   };
 
   enum MFORMS_EXPORT PasswordStoreScheme { SessionStorePasswordScheme = 1, PersistentStorePasswordScheme = 2 };
 
   /**
-  * Code which abstracts special keys for each platform, to be used in the key event.
-  */
+   * Code which abstracts special keys for each platform, to be used in the key event.
+   */
   enum MFORMS_EXPORT KeyCode {
     KeyNone,
     KeyChar,         //!< No special char. The key event has the entered character(s) in the text field.
@@ -113,7 +113,7 @@ namespace mforms {
   class Box;
   class Button;
 
-  typedef int TimeoutHandle;
+  using TimeoutHandle = int;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #ifndef SWIG
@@ -377,4 +377,4 @@ namespace mforms {
 
     static void save_message_answers();
   };
-};
+}; // namespace mforms

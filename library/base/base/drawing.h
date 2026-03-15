@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -36,28 +36,28 @@
 #include <map>
 
 #ifdef _MSC_VER
-  #define DEFAULT_FONT_FAMILY "Tahoma"
-  #define DEFAULT_FONT_SIZE 11
+#define DEFAULT_FONT_FAMILY "Tahoma"
+#define DEFAULT_FONT_SIZE 11
 
-  #define DEFAULT_SMALL_FONT "Modern"
-  #define DEFAULT_MONOSPACE_FONT_FAMILY "Consolas"
-  #define DEFAULT_MONOSPACE_FONT_FAMILY_ALT "Lucida Console"
+#define DEFAULT_SMALL_FONT "Modern"
+#define DEFAULT_MONOSPACE_FONT_FAMILY "Consolas"
+#define DEFAULT_MONOSPACE_FONT_FAMILY_ALT "Lucida Console"
 
-  #define DETAILS_FONT_FAMILIY "Arial"
+#define DETAILS_FONT_FAMILIY "Arial"
 #elif defined(__APPLE__)
-  #define DEFAULT_FONT_FAMILY "Helvetica"
-  #define DEFAULT_FONT_SIZE 11
-  #define DEFAULT_SMALL_FONT "Helvetica"
-  #define DEFAULT_MONOSPACE_FONT_FAMILY "Menlo"
+#define DEFAULT_FONT_FAMILY "Helvetica"
+#define DEFAULT_FONT_SIZE 11
+#define DEFAULT_SMALL_FONT "Helvetica"
+#define DEFAULT_MONOSPACE_FONT_FAMILY "Menlo"
 
-  #define DETAILS_FONT_FAMILIY "Lucida Grande"
+#define DETAILS_FONT_FAMILIY "Lucida Grande"
 #else
-  #define DEFAULT_FONT_FAMILY "Helvetica"
-  #define DEFAULT_FONT_SIZE 11
-  #define DEFAULT_SMALL_FONT "Sans"
-  #define DEFAULT_MONOSPACE_FONT_FAMILY "Bitstream Vera Sans Mono"
+#define DEFAULT_FONT_FAMILY "Helvetica"
+#define DEFAULT_FONT_SIZE 11
+#define DEFAULT_SMALL_FONT "Sans"
+#define DEFAULT_MONOSPACE_FONT_FAMILY "Bitstream Vera Sans Mono"
 
-  #define DETAILS_FONT_FAMILIY "Helvetica"
+#define DETAILS_FONT_FAMILIY "Helvetica"
 #endif
 
 namespace base {
@@ -101,20 +101,21 @@ namespace base {
     SelectedControlTextColor,      // Text on selected controls
     DisabledControlTextColor,      // Text on disabled controls
 
-    TextColor,                     // Document text
-    TextBackgroundColor,           // Document text background
-    LabelColor,                    // Foreground color for static text and related elements
-    SecondaryLabelColor,           // Foreground color for secondary static text and related elements
-    TertiaryLabelColor,            // Foreground color for disabled static text and related elements
-    QuaternaryLabelColor,          // Foreground color for large secondary or disabled static text, separators, large glyphs/icons, etc
-    SelectedTextColor,             // Selected document text
-    SelectedTextBackgroundColor,   // Selected document text background
-    GridColor,                     // Grids in controls
+    TextColor,                   // Document text
+    TextBackgroundColor,         // Document text background
+    LabelColor,                  // Foreground color for static text and related elements
+    SecondaryLabelColor,         // Foreground color for secondary static text and related elements
+    TertiaryLabelColor,          // Foreground color for disabled static text and related elements
+    QuaternaryLabelColor,        // Foreground color for large secondary or disabled static text, separators, large
+                                 // glyphs/icons, etc
+    SelectedTextColor,           // Selected document text
+    SelectedTextBackgroundColor, // Selected document text background
+    GridColor,                   // Grids in controls
 
-    WindowBackgroundColor,         // Background fill for window contents
-    WindowFrameColor,              // Window frames
-    WindowFrameTextColor,          // Text on window frames
-    SecondaryBackgroundColor,      // Sidebars and similar.
+    WindowBackgroundColor,    // Background fill for window contents
+    WindowFrameColor,         // Window frames
+    WindowFrameTextColor,     // Text on window frames
+    SecondaryBackgroundColor, // Sidebars and similar.
 
     SelectedMenuItemColor,     // Highlight color for menus
     SelectedMenuItemTextColor, // Highlight color for menu text
@@ -140,36 +141,36 @@ namespace base {
     Color(const HSVColor &hsv);
     Color(const std::string &color);
 
-    bool operator != (const Color &other);
-    std::string to_html() const;
-    long toRGB() const;
-    long toBGR() const;
-    bool is_valid() const;
-    Color invert() const;
-    double brightness() const;
-    Color brighten(float fraction) const;
-    Color darken(float fraction) const;
+    auto operator!=(const Color &other) -> bool;
+    auto to_html() const -> std::string;
+    auto toRGB() const -> long;
+    auto toBGR() const -> long;
+    auto is_valid() const -> bool;
+    auto invert() const -> Color;
+    auto brightness() const -> double;
+    auto brighten(float fraction) const -> Color;
+    auto darken(float fraction) const -> Color;
 
-    static Color parse(const std::string &color);
+    static auto parse(const std::string &color) -> Color;
 
-    static inline Color black() {
+    static inline auto black() -> Color {
       return Color(0, 0, 0);
     }
-    static inline Color white() {
+    static inline auto white() -> Color {
       return Color(1, 1, 1);
     }
-    static inline Color invalid() {
+    static inline auto invalid() -> Color {
       return Color(-1, -1, -1);
     }
 
-    static Color getApplicationColor(ApplicationColor color, bool foreground);
-    static std::string getApplicationColorAsString(ApplicationColor color, bool foreground);
+    static auto getApplicationColor(ApplicationColor color, bool foreground) -> Color;
+    static auto getApplicationColorAsString(ApplicationColor color, bool foreground) -> std::string;
 
-    static Color getSystemColor(SystemColor colorType);
+    static auto getSystemColor(SystemColor colorType) -> Color;
 
     static void set_active_scheme(ColorScheme scheme);
-    static ColorScheme get_active_scheme();
-    static bool is_high_contrast_scheme();
+    static auto get_active_scheme() -> ColorScheme;
+    static auto is_high_contrast_scheme() -> bool;
     static void prepareForTesting();
 
     // Persistence support. Also called when colors were changed in preferences.
@@ -181,18 +182,18 @@ namespace base {
     int h;          // 0 ~ 360
     double s, v, a; // 0 ~ 1.0
 
-    HSVColor() : h(0), s(0), v(0), a(1){};
-    HSVColor(int ah, double as, double av, double aa = 1.0) : h(ah), s(as), v(av), a(aa){};
+    HSVColor() : h(0), s(0), v(0), a(1) {};
+    HSVColor(int ah, double as, double av, double aa = 1.0) : h(ah), s(as), v(av), a(aa) {};
     HSVColor(const Color &rgb);
   };
 
   class BASELIBRARY_PUBLIC_FUNC OSConstants {
   public:
-    static std::string defaultFontName();
+    static auto defaultFontName() -> std::string;
 
-    static float systemFontSize();
-    static float smallSystemFontSize();
-    static float labelFontSize();
+    static auto systemFontSize() -> float;
+    static auto smallSystemFontSize() -> float;
+    static auto labelFontSize() -> float;
   };
 
 } // namespace base

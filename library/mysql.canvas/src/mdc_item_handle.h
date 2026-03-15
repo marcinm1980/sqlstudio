@@ -39,27 +39,27 @@ namespace mdc {
     virtual ~ItemHandle();
 
     virtual void repaint(CairoCtx *cr);
-    virtual base::Rect get_bounds() const = 0;
+    virtual auto get_bounds() const -> base::Rect = 0;
 
     void move(const base::Point &point);
-    base::Point get_position() const {
+    auto get_position() const -> base::Point {
       return _pos;
     };
 
-    CanvasItem *get_item() const {
+    auto get_item() const -> CanvasItem * {
       return _item;
     };
 
     void set_highlighted(bool flag);
     void set_draggable(bool flag);
-    bool is_draggable() {
+    auto is_draggable() -> bool {
       return _draggable;
     }
 
     void set_tag(int tag) {
       _tag = tag;
     };
-    inline int get_tag() {
+    inline auto get_tag() -> int {
       return _tag;
     };
 

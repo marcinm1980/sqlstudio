@@ -42,9 +42,9 @@ namespace mdc {
 
     void set_compare_slot(const std::function<bool(Connector *, Connector *, Side)> &compare);
 
-    virtual double constrain_angle(double angle) const;
+    virtual auto constrain_angle(double angle) const -> double;
 
-    virtual base::Point get_position_for_connector(Connector *conn, const base::Point &srcpos) const;
+    virtual auto get_position_for_connector(Connector *conn, const base::Point &srcpos) const -> base::Point;
 
     void set_connector_side(Connector *conn, Side side);
 
@@ -61,7 +61,7 @@ namespace mdc {
       CompareConnectors(BoxSideMagnet *magnet) : _magnet(magnet) {
       }
 
-      bool operator()(Connector *a, Connector *b) {
+      auto operator()(Connector *a, Connector *b) -> bool {
         BoxSideMagnet::Side aside = _magnet->get_connector_side(a);
         BoxSideMagnet::Side bside = _magnet->get_connector_side(b);
 
@@ -77,8 +77,8 @@ namespace mdc {
     std::function<bool(Connector *, Connector *, Side)> _compare;
     short _counts[5];
 
-    Side get_connector_side(Connector *conn) const;
-    double connector_position(Side side, Connector *conn, double length) const;
+    auto get_connector_side(Connector *conn) const -> Side;
+    auto connector_position(Side side, Connector *conn, double length) const -> double;
 
     void notify_connectors(Side side);
 

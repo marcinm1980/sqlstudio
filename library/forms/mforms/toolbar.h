@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -90,7 +90,7 @@ namespace mforms {
     ToolBarType _type;
 
   public:
-    typedef std::shared_ptr<ToolBar> Ptr;
+    using Ptr = std::shared_ptr<ToolBar>;
     ToolBar(ToolBarType type = MainToolBar);
     virtual ~ToolBar();
 
@@ -153,7 +153,7 @@ namespace mforms {
     }
 
     void setInternalName(const std::string &name) {
-        _internalName = name;
+      _internalName = name;
     }
     std::string getInternalName() const {
       return _internalName;
@@ -181,4 +181,4 @@ namespace mforms {
     std::function<bool()> _validate;
     std::function<void(const std::string &)> _search;
   };
-}
+} // namespace mforms

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _MYSQLSTUDIO_PHYSICAL_MODEL_IMPL_H_
@@ -56,8 +56,8 @@ enum PhysicalFigureNotation {
 };
 
 class WBPUBLICBACKEND_PUBLIC_FUNC studio_physical_Model::ImplData : public model_Model::ImplData,
-                                                                       public grt::GRTObserver {
-  typedef model_Model::ImplData super;
+                                                                    public grt::GRTObserver {
+  using super = model_Model::ImplData;
 
 private:
   PhysicalRelationshipNotation _relationship_notation;

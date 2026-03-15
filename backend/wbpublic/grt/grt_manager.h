@@ -47,7 +47,7 @@ namespace bec {
   // Manages a GRT context and other associated objects useful for a GRT shell and other apps.
   class WBPUBLICBACKEND_PUBLIC_FUNC GRTManager : public base::trackable {
   public:
-    typedef std::shared_ptr<GRTManager> Ref;
+    using Ref = std::shared_ptr<GRTManager>;
 
     struct Timer {
       std::function<bool()> slot;
@@ -56,48 +56,48 @@ namespace bec {
 
       Timer(const std::function<bool()> &slot, double interval);
 
-      bool trigger();
+      auto trigger() -> bool;
 
-      double delay_for_next_trigger(gint64 now_us);
+      auto delay_for_next_trigger(gint64 now_us) -> double;
     };
 
   protected: // Set those c-tors to protected as we need to have different GRTManager in TUT.
     GRTManager(bool threaded);
     GRTManager(const GRTManager &) = delete;
-    GRTManager &operator=(GRTManager &) = delete;
+    auto operator=(GRTManager &) -> GRTManager & = delete;
 
   public:
-    static GRTManager::Ref get();
+    static auto get() -> GRTManager::Ref;
     virtual ~GRTManager();
 
     void setVerbose(bool verbose);
 
     void set_basedir(const std::string &path);
-    std::string get_basedir() {
+    auto get_basedir() -> std::string {
       return _basedir;
     }
 
     void set_datadir(const std::string &path);
-    std::string get_data_file_path(const std::string &file);
+    auto get_data_file_path(const std::string &file) -> std::string;
 
     void set_user_datadir(const std::string &path);
-    std::string get_user_datadir() {
+    auto get_user_datadir() -> std::string {
       return _user_datadir;
     }
 
-    std::string get_tmp_dir();
-    std::string get_unique_tmp_subdir();
+    auto get_tmp_dir() -> std::string;
+    auto get_unique_tmp_subdir() -> std::string;
     void cleanup_tmp_dir();
 
     void set_module_extensions(const std::list<std::string> &extensions);
 
     void rescan_modules();
-    int do_scan_modules(const std::string &path, const std::list<std::string> &exts, bool refresh);
+    auto do_scan_modules(const std::string &path, const std::list<std::string> &exts, bool refresh) -> int;
     void scan_modules_grt(const std::list<std::string> &extensions, bool refresh);
 
     void set_clipboard(Clipboard *clipb);
 
-    Clipboard *get_clipboard() {
+    auto get_clipboard() -> Clipboard * {
       return _clipboard;
     }
 
@@ -106,13 +106,13 @@ namespace bec {
     void set_user_extension_paths(const std::string &user_module_path, const std::string &user_library_path,
                                   const std::string &user_script_path);
 
-    std::string get_user_module_path() const {
+    auto get_user_module_path() const -> std::string {
       return _user_module_path;
     }
-    std::string get_user_library_path() const {
+    auto get_user_library_path() const -> std::string {
       return _user_library_path;
     }
-    std::string get_user_script_path() const {
+    auto get_user_script_path() const -> std::string {
       return _user_script_path;
     }
 
@@ -123,29 +123,29 @@ namespace bec {
     void set_status_slot(const std::function<void(std::string)> &slot);
 
   public:
-    GRTDispatcher::Ref get_dispatcher() const {
+    auto get_dispatcher() const -> GRTDispatcher::Ref {
       return _dispatcher;
     };
 
     void cleanUpAndReinitialize();
 
     void initialize(bool init_python, const std::string &loader_module_path = "");
-    bool initialize_shell(const std::string &shell_type);
+    auto initialize_shell(const std::string &shell_type) -> bool;
 
-    bool cancel_idle_tasks();
+    auto cancel_idle_tasks() -> bool;
     void perform_idle_tasks();
 
-    PluginManager *get_plugin_manager() const {
+    auto get_plugin_manager() const -> PluginManager * {
       return _plugin_manager;
     }
 
-    bool is_threaded() {
+    auto is_threaded() -> bool {
       return _threaded;
     }
-    bool in_main_thread();
+    auto in_main_thread() -> bool;
 
     // shell
-    ShellBE *get_shell();
+    auto get_shell() -> ShellBE *;
 
     void execute_grt_task(const std::string &title, const std::function<grt::ValueRef()> &function,
                           const std::function<void(grt::ValueRef)> &finished_cb);
@@ -155,25 +155,25 @@ namespace bec {
     void show_warning(const std::string &title, const std::string &message, bool important = false);
     void show_message(const std::string &title, const std::string &message, bool important = false);
 
-    MessageListStorage *get_messages_list();
+    auto get_messages_list() -> MessageListStorage *;
 
     //
     void set_app_option_slots(const std::function<grt::ValueRef(std::string)> &slot,
                               const std::function<void(std::string, grt::ValueRef)> &set_slot);
-    grt::ValueRef get_app_option(const std::string &name);
-    std::string get_app_option_string(const std::string &name, std::string default_ = "");
-    long get_app_option_int(const std::string &name, long default_ = 0);
+    auto get_app_option(const std::string &name) -> grt::ValueRef;
+    auto get_app_option_string(const std::string &name, std::string default_ = "") -> std::string;
+    auto get_app_option_int(const std::string &name, long default_ = 0) -> long;
     void set_app_option(const std::string &name, const grt::ValueRef &value);
 
-    boost::signals2::connection run_once_when_idle(const std::function<void()> &func);
-    boost::signals2::connection run_once_when_idle(base::trackable *owner, const std::function<void()> &func);
+    auto run_once_when_idle(const std::function<void()> &func) -> boost::signals2::connection;
+    auto run_once_when_idle(base::trackable *owner, const std::function<void()> &func) -> boost::signals2::connection;
 
     void block_idle_tasks();
     void unblock_idle_tasks();
 
-    Timer *run_every(const std::function<bool()> &slot, double seconds);
+    auto run_every(const std::function<bool()> &slot, double seconds) -> Timer *;
     void cancel_timer(Timer *timer);
-    double delay_for_next_timeout();
+    auto delay_for_next_timeout() -> double;
 
     void set_timeout_request_slot(const std::function<void()> &slot);
 
@@ -182,7 +182,7 @@ namespace bec {
     void terminate() {
       _terminated = true;
     };
-    bool terminated() {
+    auto terminated() -> bool {
       return _terminated;
     };
     void reset_termination() {
@@ -192,11 +192,11 @@ namespace bec {
     void set_db_file_path(const std::string &db_file_path) {
       _db_file_path = db_file_path;
     }
-    std::string get_db_file_path() {
+    auto get_db_file_path() -> std::string {
       return _db_file_path;
     }
 
-    bool has_unsaved_changes() {
+    auto has_unsaved_changes() -> bool {
       return _has_unsaved_changes;
     }
     void has_unsaved_changes(bool has_unsaved_changes) {
@@ -205,18 +205,18 @@ namespace bec {
 
     // use for advisory locks on grt globals tree
     // ex: UI should not refresh layer and catalog trees while a plugin is running
-    bool try_soft_lock_globals_tree();
+    auto try_soft_lock_globals_tree() -> bool;
     void soft_lock_globals_tree();
     void soft_unlock_globals_tree();
-    bool is_globals_tree_locked();
+    auto is_globals_tree_locked() -> bool;
 
   public:
     std::function<void(bec::ArgumentPool &)> update_plugin_arguments_pool; // set by WBContext
 
-    bec::MenuItemList get_plugin_context_menu_items(const std::list<std::string> &groups,
-                                                    const bec::ArgumentPool &argument_pool);
-    bool check_plugin_runnable(const app_PluginRef &plugin, const bec::ArgumentPool &argpool,
-                               bool debug_output = false);
+    auto get_plugin_context_menu_items(const std::list<std::string> &groups, const bec::ArgumentPool &argument_pool)
+      -> bec::MenuItemList;
+    auto check_plugin_runnable(const app_PluginRef &plugin, const bec::ArgumentPool &argpool, bool debug_output = false)
+      -> bool;
 
     void open_object_editor(const GrtObjectRef &object, bec::GUIPluginFlags flags = bec::NoFlags);
 
@@ -232,7 +232,7 @@ namespace bec {
     void remove_dispatcher(const bec::GRTDispatcher::Ref disp);
 
   protected:
-    typedef std::map<GRTDispatcher::Ref, void *> DispatcherMap;
+    using DispatcherMap = std::map<GRTDispatcher::Ref, void *>;
     DispatcherMap _disp_map;
     base::Mutex _disp_map_mutex;
 
@@ -278,22 +278,22 @@ namespace bec {
 
     int _globals_tree_soft_lock_count;
 
-    virtual bool load_structs();
-    virtual bool load_modules();
-    virtual bool load_libraries();
-    virtual bool init_module_loaders(const std::string &loader_module_path, bool init_python);
+    virtual auto load_structs() -> bool;
+    virtual auto load_modules() -> bool;
+    virtual auto load_libraries() -> bool;
+    virtual auto init_module_loaders(const std::string &loader_module_path, bool init_python) -> bool;
 
-    bool init_loaders(const std::string &loader_module_path, bool init_python);
+    auto init_loaders(const std::string &loader_module_path, bool init_python) -> bool;
 
     void flush_shell_output();
 
   private:
-    bool _terminated;               // true if application termination was requested by the BE or a plugin.
+    bool _terminated; // true if application termination was requested by the BE or a plugin.
 
     std::shared_ptr<grt::GRT> _grt;
 
-    grt::ValueRef setup_grt();
+    auto setup_grt() -> grt::ValueRef;
     void shell_write(const std::string &text);
     void task_error_cb(const std::exception &error, const std::string &title);
   };
-};
+}; // namespace bec

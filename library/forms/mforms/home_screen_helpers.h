@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -33,7 +33,7 @@
 #include "base/any.h"
 
 namespace mforms {
-  typedef std::map<std::string, base::any> anyMap;
+  using anyMap = std::map<std::string, base::any>;
 
   // Use this variation to get a base::any. Use type cast directly only if you know the key exists in the map and
   // the item (base::any) does not contain a nullptr value
@@ -78,7 +78,7 @@ namespace mforms {
     ActionOpenForum,
 
     CloseWelcomeMessage,
-    
+
     RescanLocalServers
   };
 
@@ -134,7 +134,7 @@ namespace mforms {
     std::string title;
     std::string description;
     base::Rect bounds;
-    std::function<void (void)> defaultHandler;
+    std::function<void(void)> defaultHandler;
 
     // ------ Accesibility Customized Methods -----
 
@@ -154,9 +154,9 @@ namespace mforms {
     std::string _iconName;
 
   public:
-    HomeScreenSection(const std::string &icon) : _iconName(icon) {
+    HomeScreenSection(const std::string& icon) : _iconName(icon) {
     }
-    
+
     virtual ~HomeScreenSection() {
     }
 
@@ -168,7 +168,7 @@ namespace mforms {
       return this;
     }
 
-    virtual View *get_parent() const {
+    virtual View* get_parent() const {
       return _parent;
     }
 
@@ -194,4 +194,4 @@ namespace mforms {
   int imageHeight(cairo_surface_t* image);
   void textWithDecoration(cairo_t* cr, double x, double y, const char* text, bool hot, double width);
 
-} /* namespace wb */
+} // namespace mforms

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _VAR_GRID_MODEL_BE_H_
@@ -38,12 +38,12 @@ class Recordset_data_storage;
 namespace sqlite {
   struct query;
   struct result;
-}
+} // namespace sqlite
 
 class WBPUBLICBACKEND_PUBLIC_FUNC VarGridModel : public bec::GridModel,
                                                  public std::enable_shared_from_this<VarGridModel> {
 public:
-  typedef std::shared_ptr<VarGridModel> Ref;
+  using Ref = std::shared_ptr<VarGridModel>;
   virtual ~VarGridModel();
 
 protected:
@@ -74,7 +74,9 @@ public:
   virtual std::string get_column_caption(ColumnId index);
   virtual ColumnType get_column_type(ColumnId column);
   virtual ColumnType get_real_column_type(ColumnId column);
-  virtual int get_column_width_hint(int column) { return 0; /* 0 - no hint */ }
+  virtual int get_column_width_hint(int column) {
+    return 0; /* 0 - no hint */
+  }
   virtual bool isGeometry(ColumnId);
 
 public:
@@ -92,14 +94,14 @@ protected:
 public:
   enum ColumnFlags { NeedsQuoteFlag = 1, NotNullFlag = 2 };
 
-  typedef std::vector<std::string> Column_names;
-  typedef std::vector<std::string> DBColumn_types;
-  typedef std::vector<sqlite::variant_t> Column_types;
-  typedef Data::const_iterator Cell_const;
-  typedef std::vector<int> Column_flags;
+  using Column_names = std::vector<std::string>;
+  using DBColumn_types = std::vector<std::string>;
+  using Column_types = std::vector<sqlite::variant_t>;
+  using Cell_const = Data::const_iterator;
+  using Column_flags = std::vector<int>;
 
 protected:
-  typedef Data::iterator Cell;
+  using Cell = Data::iterator;
 
 public:
   virtual bec::IconId get_field_icon(const bec::NodeId &node, ColumnId column, bec::IconSize size);

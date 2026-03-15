@@ -44,7 +44,7 @@ using namespace wb;
 
 namespace sql {
 
-  typedef std::map<std::string, std::string> Param_types;
+  using Param_types = std::map<std::string, std::string>;
 
   static bool conv_to_dbc_value(const std::string &key, const grt::ValueRef value, ConnectOptionsMap &properties,
                                 Param_types &param_types) {
@@ -334,7 +334,7 @@ namespace sql {
         properties["pluginDir"] = base::dirname(mforms::App::get()->get_executable_path("mysql_native_password.so"));
       }
 #endif
-      //properties["OPT_AUTHENTICATION_KERBEROS_CLIENT_MODE"] = "";
+      // properties["OPT_AUTHENTICATION_KERBEROS_CLIENT_MODE"] = "";
       std::string krb5 = parameter_values.get_string("krb5");
       std::string krb5cache = parameter_values.get_string("krb5cache");
       std::vector<char> env;
@@ -342,7 +342,7 @@ namespace sql {
         auto tmp = std::string("KRB5_CONFIG=" + krb5);
         env = std::vector<char>(tmp.begin(), tmp.end());
         putenv(&env[0]);
-      } 
+      }
       /*else {
         auto tmp = std::string("KRB5_CONFIG=");
         env = std::vector<char>(tmp.begin(), tmp.end());
@@ -450,7 +450,8 @@ namespace sql {
         properties["pluginDir"] = base::dirname(mforms::App::get()->get_executable_path(libName));
       }
 
-      properties["OPT_AUTHENTICATION_KERBEROS_CLIENT_MODE"] = parameter_values.get_int("kerberosMode", 0) == 1 ? "SSPI": "GSSAPI";
+      properties["OPT_AUTHENTICATION_KERBEROS_CLIENT_MODE"] =
+        parameter_values.get_int("kerberosMode", 0) == 1 ? "SSPI" : "GSSAPI";
     } else if (drv->name() == "MysqlNativeLDAP") {
       properties["OPT_ENABLE_CLEARTEXT_PLUGIN"] = true;
     }
@@ -569,10 +570,9 @@ namespace sql {
       if (exc.getErrorCode() == 0 && getClientLibVersionNumeric(driver) >= 80019) {
         throw sql::SQLException(exc.what(), exc.getSQLStateCStr(),
                                 2003); //  Convert to to error 2003 as the previous connector
-      } else if (exc.getErrorCode() == 1045 
-                || exc.getErrorCode() == 1044 
-                || exc.getErrorCode() == 1968 // ER_ACCESS_DENIED_NO_PASSWORD_ERROR
-                || (exc.getErrorCode() == 2000 && drv->name() == "MysqlNativeKerberos")) {
+      } else if (exc.getErrorCode() == 1045 || exc.getErrorCode() == 1044 ||
+                 exc.getErrorCode() == 1968 // ER_ACCESS_DENIED_NO_PASSWORD_ERROR
+                 || (exc.getErrorCode() == 2000 && drv->name() == "MysqlNativeKerberos")) {
         if (!force_ask_password) {
           if (authref) {
             authref->invalidate();

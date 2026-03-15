@@ -36,7 +36,7 @@ namespace mdc {
 
     virtual void render(CairoCtx *cr);
     virtual void render_gl(mdc::CairoCtx *cr);
-    virtual base::Point get_intersection_with_line_to(const base::Point &p);
+    virtual auto get_intersection_with_line_to(const base::Point &p) -> base::Point;
 
     void set_pen_color(const base::Color &color);
     void set_fill_color(const base::Color &color);

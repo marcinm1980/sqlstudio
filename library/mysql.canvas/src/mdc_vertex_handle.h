@@ -35,7 +35,7 @@ namespace mdc {
     VertexHandle(InteractionLayer *ilayer, CanvasItem *item, const base::Point &pos, bool connectable);
     virtual ~VertexHandle();
 
-    virtual base::Rect get_bounds() const;
+    virtual auto get_bounds() const -> base::Rect;
     virtual void repaint(CairoCtx *cr);
 
     void set_connected(bool flag);

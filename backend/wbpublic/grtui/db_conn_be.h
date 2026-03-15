@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -111,8 +111,8 @@ public:
 
 class WBPUBLICBACKEND_PUBLIC_FUNC DbDriverParams {
 private:
-  typedef std::vector<DbDriverParam *> Collection;
-  typedef std::map<std::string, DbDriverParam *> String_index;
+  using Collection = std::vector<DbDriverParam *>;
+  using String_index = std::map<std::string, DbDriverParam *>;
 
   Collection _collection;
   String_index _control_name_index;

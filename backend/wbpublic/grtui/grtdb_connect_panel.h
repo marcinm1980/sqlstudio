@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _GRTDBCONNECTPANEL_H_
@@ -46,7 +46,7 @@ namespace grtui {
     DbConnectPanelDontSetDefaultConnection = (1 << 4),
     DbConnectPanelDefaults = (DbConnectPanelShowConnectionCombo | DbConnectPanelShowManageConnections)
   };
-  typedef int DbConnectPanelFlags;
+  using DbConnectPanelFlags = int;
 
   class WBPUBLICBACKEND_PUBLIC_FUNC DbConnectPanel : public mforms::Box {
   public:
@@ -198,6 +198,6 @@ namespace grtui {
 
     std::function<void(const db_mgmt_DriverRef &)> _driver_changed_cb;
   };
-};
+}; // namespace grtui
 
 #endif /* _GRTDBCONNECTFORM_H_ */

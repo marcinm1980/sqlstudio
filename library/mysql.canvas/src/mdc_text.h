@@ -90,7 +90,7 @@ namespace mdc {
 
     void set_size(const base::Size &s);
 
-    base::Size get_size();
+    auto get_size() -> base::Size;
   };
 
   /**
@@ -102,10 +102,10 @@ namespace mdc {
     TextFigure(Layer *layer);
     virtual ~TextFigure();
 
-    virtual base::Size calc_min_size();
+    virtual auto calc_min_size() -> base::Size;
 
     void set_text(const std::string &text);
-    const std::string &get_text() const {
+    auto get_text() const -> const std::string & {
       return _text;
     }
 
@@ -116,7 +116,7 @@ namespace mdc {
     }
 
     void set_font(const FontSpec &font);
-    const FontSpec &get_font() {
+    auto get_font() -> const FontSpec & {
       return _font;
     }
 
@@ -146,7 +146,7 @@ namespace mdc {
     bool _draw_outline;
     bool _highlight_through_text;
 
-    base::Size get_text_size();
+    auto get_text_size() -> base::Size;
 
     void reset_shrinked_text();
 

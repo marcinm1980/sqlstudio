@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 //! This is a generic algorithm for incrementally building any kind of list
@@ -42,9 +42,9 @@ namespace bec {
   template <class DestIterator, class DestRef, class SourceIterator>
   class IncrementalListUpdater {
   public:
-    typedef DestIterator dest_iterator;
-    typedef DestRef dest_ref;
-    typedef SourceIterator source_iterator;
+    using dest_iterator = DestIterator;
+    using dest_ref = DestRef;
+    using source_iterator = SourceIterator;
 
     virtual ~IncrementalListUpdater() {
     }
@@ -110,6 +110,6 @@ namespace bec {
       return source_mapping[item];
     }
   };
-};
+}; // namespace bec
 
 #endif

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _DB_SQL_EDITOR_HISTORY_BE_H_
@@ -33,7 +33,7 @@
 
 class MYSQLWBBACKEND_PUBLIC_FUNC DbSqlEditorHistory {
 public:
-  typedef std::shared_ptr<DbSqlEditorHistory> Ref;
+  using Ref = std::shared_ptr<DbSqlEditorHistory>;
   static Ref create() {
     return Ref(new DbSqlEditorHistory());
   }
@@ -65,7 +65,7 @@ public:
   class DetailsModel : public VarGridModel {
   public:
     friend class DbSqlEditorHistory;
-    typedef std::shared_ptr<DetailsModel> Ref;
+    using Ref = std::shared_ptr<DetailsModel>;
     static Ref create() {
       return Ref(new DetailsModel());
     }
@@ -116,7 +116,7 @@ public:
   public:
     friend class DbSqlEditorHistory;
 
-    typedef std::shared_ptr<EntriesModel> Ref;
+    using Ref = std::shared_ptr<EntriesModel>;
     static Ref create(DbSqlEditorHistory *owner) {
       return Ref(new EntriesModel(owner));
     }

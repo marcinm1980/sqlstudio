@@ -42,7 +42,7 @@ namespace mdc {
     CAll = (CTop | CBottom)
   };
 
-  inline CornerMask operator|(CornerMask a, CornerMask b) {
+  inline auto operator|(CornerMask a, CornerMask b) -> CornerMask {
     return (CornerMask)((int)a | (int)b);
   }
 

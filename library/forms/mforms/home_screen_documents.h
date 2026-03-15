@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -88,13 +88,14 @@ namespace mforms {
     cairo_surface_t *_action_icon = nullptr;
 
     base::Color _textColor;
-    
+
     ssize_t _entries_per_row = 0;
 
-    bool _show_selection_message = false; // Additional info to let the user select a connection (when opening a script).
+    bool _show_selection_message =
+      false; // Additional info to let the user select a connection (when opening a script).
     base::Rect _message_close_button_rect;
 
-    typedef std::vector<DocumentEntry>::iterator DocumentIterator;
+    using DocumentIterator = std::vector<DocumentEntry>::iterator;
     std::vector<DocumentEntry> _documents;
     std::vector<DocumentEntry> _filtered_documents;
 
@@ -153,7 +154,7 @@ namespace mforms {
     void update_filtered_documents();
     void draw_selection_message(cairo_t *cr);
     void layout(cairo_t *cr);
-    virtual const char* getTitle() override;
+    virtual const char *getTitle() override;
     virtual void cancelOperation() override;
     virtual void setFocus() override;
     virtual bool canHandle(HomeScreenMenuType type) override;
@@ -177,9 +178,9 @@ namespace mforms {
     void hide_connection_select_message();
 
     virtual size_t getAccessibilityChildCount() override;
-    virtual Accessible* getAccessibilityChild(size_t index) override;
+    virtual Accessible *getAccessibilityChild(size_t index) override;
     virtual Accessible::Role getAccessibilityRole() override;
-    virtual base::Accessible* accessibilityHitTest(ssize_t x, ssize_t y) override;
+    virtual base::Accessible *accessibilityHitTest(ssize_t x, ssize_t y) override;
   };
 
-} /* namespace wb */
+} // namespace mforms

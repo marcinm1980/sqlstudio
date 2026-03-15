@@ -42,7 +42,7 @@ namespace testing {
 /**
   * Splits a string into parts based on a set of separators.
   */
-std::vector<std::string> splitBySet(std::string s, std::string const& separators) {
+auto splitBySet(std::string s, std::string const& separators) -> std::vector<std::string> {
   std::vector<std::string> parts;
   std::string::size_type p;
 
@@ -88,7 +88,7 @@ std::u16string utf8ToUtf16(std::string const& s) {
 
 // Manual UTF conversion — std::wstring_convert/codecvt removed in GCC 15.
 
-std::string utf32ToUtf8(std::u32string const& text) {
+auto utf32ToUtf8(std::u32string const& text) -> std::string {
   std::string result;
   result.reserve(text.size() * 2);
   for (char32_t cp32 : text) {
@@ -114,7 +114,7 @@ std::string utf32ToUtf8(std::u32string const& text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string utf16ToUtf8(std::u16string const& text) {
+auto utf16ToUtf8(std::u16string const& text) -> std::string {
   // Decode UTF-16 (handle surrogate pairs) then encode to UTF-8.
   std::string result;
   result.reserve(text.size() * 2);
@@ -156,7 +156,7 @@ std::string utf16ToUtf8(std::u16string const& text) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::u16string utf8ToUtf16(std::string const& s) {
+auto utf8ToUtf16(std::string const& s) -> std::u16string {
   std::u16string result;
   result.reserve(s.size());
   size_t i = 0;
@@ -202,7 +202,7 @@ std::u16string utf8ToUtf16(std::string const& s) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string randomString(std::size_t maxLength) {
+auto randomString(std::size_t maxLength) -> std::string {
   std::string str("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890");
   std::random_device r;
   std::ranlux24 gen(r());
@@ -212,7 +212,7 @@ std::string randomString(std::size_t maxLength) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-std::string getEnvVar(std::string const& name, std::string const& defaultValue) {
+auto getEnvVar(std::string const& name, std::string const& defaultValue) -> std::string {
   const char *value = getenv(name.c_str());
   if (value == nullptr)
     return defaultValue;
@@ -224,7 +224,7 @@ std::string getEnvVar(std::string const& name, std::string const& defaultValue) 
 /**
   * Resolve the given path by replacing environment variables and special chars like ~.
   */
-std::string expandPath(std::string const &path) {
+auto expandPath(std::string const &path) -> std::string {
 #ifdef _MSC_VER
   TCHAR outPath[_MAX_PATH] = { 0 };
   std::u16string temp = utf8ToUtf16(path);
@@ -257,7 +257,7 @@ std::string expandPath(std::string const &path) {
   * Simple string comparison, based on binary code points and hence not culturally correct.
   * TODO: use ICU for this.
   */
-static bool sameString(std::string const& lhs, std::string const& rhs, bool caseSensitive) {
+static auto sameString(std::string const& lhs, std::string const& rhs, bool caseSensitive) -> bool {
   if (!caseSensitive) {
     std::string lhsTransformed;
     std::string rhsTransformed;
@@ -277,7 +277,7 @@ static bool sameString(std::string const& lhs, std::string const& rhs, bool case
   * Paths can contain both forward and backward slash separators. The result only uses backslashes.
   * Folder names are compared case insensitively on Windows, otherwise case matters.
   */
-std::string relativePath(std::string const& basePath, std::string const& pathToMakeRelative) {
+auto relativePath(std::string const& basePath, std::string const& pathToMakeRelative) -> std::string {
   std::vector<std::string> basePathList = splitBySet(basePath, "/\\");
   std::vector<std::string> otherPathList = splitBySet(pathToMakeRelative, "/\\");
 

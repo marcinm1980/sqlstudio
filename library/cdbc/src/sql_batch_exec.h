@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _SQL_BATCH_EXEC_H_
@@ -46,9 +46,9 @@ namespace sql {
     void exec_sql_script(sql::Statement *stmt, std::list<std::string> &statements, long &batch_exec_err_count);
 
   public:
-    typedef std::function<int(long long, const std::string &, const std::string &)> Error_cb;
-    typedef std::function<int(float)> Batch_exec_progress_cb;
-    typedef std::function<int(long, long)> Batch_exec_stat_cb;
+    using Error_cb = std::function<int(long long, const std::string &, const std::string &)>;
+    using Batch_exec_progress_cb = std::function<int(float)>;
+    using Batch_exec_stat_cb = std::function<int(long, long)>;
 
     Error_cb _error_cb;
     Batch_exec_progress_cb _batch_exec_progress_cb;

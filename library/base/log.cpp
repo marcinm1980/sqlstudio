@@ -20,14 +20,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <string>
-#include <stdio.h>
-#include <stdarg.h>
-#include <time.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdarg>
+#include <ctime>
+#include <cstring>
 #include <vector>
 
 #include <glib/gstdio.h>
@@ -42,31 +42,31 @@
 
 using namespace base;
 
-static const char* LevelText[] = {"", "ERR", "WRN", "INF", "DB1", "DB2", "DB3"};
-/*static*/ const std::string Logger::_logLevelNames[] = {"none",   "error",  "warning", "info",
-                                                         "debug1", "debug2", "debug3"};
+static const char* LevelText[] = { "", "ERR", "WRN", "INF", "DB1", "DB2", "DB3" };
+/*static*/ const std::string Logger::_logLevelNames[] = { "none",   "error",  "warning", "info",
+                                                          "debug1", "debug2", "debug3" };
 /*static*/ bool Logger::_logLevelSpecifiedByUser = false;
 
 //--------------------------------------------------------------------------------------------------
 
 struct Logger::LoggerImpl {
   LoggerImpl() {
-  // Default values for all available log levels.
-  _levels[enumIndex(Logger::LogLevel::Disabled)] = false; // Disable None level.
-  _levels[enumIndex(Logger::LogLevel::Error)] = true;
-  _levels[enumIndex(Logger::LogLevel::Warning)] = true;
-  _levels[enumIndex(Logger::LogLevel::Info)] = true; //  Includes all g_message calls.
+    // Default values for all available log levels.
+    _levels[enumIndex(Logger::LogLevel::Disabled)] = false; // Disable None level.
+    _levels[enumIndex(Logger::LogLevel::Error)] = true;
+    _levels[enumIndex(Logger::LogLevel::Warning)] = true;
+    _levels[enumIndex(Logger::LogLevel::Info)] = true; //  Includes all g_message calls.
 #if !defined(DEBUG) && !defined(_DEBUG)
-  _levels[enumIndex(Logger::LogLevel::Debug)] = false;  // General debug messages.
-  _levels[enumIndex(Logger::LogLevel::Debug2)] = false; // Verbose debug messages.
+    _levels[enumIndex(Logger::LogLevel::Debug)] = false;  // General debug messages.
+    _levels[enumIndex(Logger::LogLevel::Debug2)] = false; // Verbose debug messages.
 #else
-  _levels[enumIndex(Logger::LogLevel::Debug)] = true;
-  _levels[enumIndex(Logger::LogLevel::Debug2)] = true;
+    _levels[enumIndex(Logger::LogLevel::Debug)] = true;
+    _levels[enumIndex(Logger::LogLevel::Debug2)] = true;
 #endif
-  _levels[enumIndex(Logger::LogLevel::Debug3)] = false; // Really chatty, should be switched on only on demand.
-}
+    _levels[enumIndex(Logger::LogLevel::Debug3)] = false; // Really chatty, should be switched on only on demand.
+  }
 
-  bool level_is_enabled(const Logger::LogLevel level) const {
+  auto level_is_enabled(const Logger::LogLevel level) const -> bool {
     return _levels[enumIndex(level)];
   }
 
@@ -82,13 +82,13 @@ Logger::LoggerImpl* Logger::_impl = nullptr;
 
 //--------------------------------------------------------------------------------------------------
 
-std::string Logger::log_filename() {
+auto Logger::log_filename() -> std::string {
   return _impl ? _impl->_filename : "";
 }
 
 //--------------------------------------------------------------------------------------------------
 
-std::string Logger::log_dir() {
+auto Logger::log_dir() -> std::string {
   return _impl ? _impl->_dir : "";
 }
 
@@ -296,7 +296,7 @@ void Logger::log_throw(const LogLevel level, const char* const domain, const cha
 
 //--------------------------------------------------------------------------------------------------
 
-std::string Logger::get_state() {
+auto Logger::get_state() -> std::string {
   std::string state = "";
   if (_impl) {
     for (std::size_t i = 0; i < logLevelCount; ++i) {
@@ -326,7 +326,7 @@ void Logger::set_state(const std::string& state) {
 /**
  * Returns the most chatty log level which is currently active.
  */
-std::string Logger::active_level() {
+auto Logger::active_level() -> std::string {
   if (_impl == NULL)
     return "none";
 
@@ -361,7 +361,7 @@ std::string Logger::active_level() {
  * Used to set a log level, which implicitly enables all less-chatty levels too.
  * E.g. setting "info" not only enables info, but also warning and error etc.
  */
-bool Logger::active_level(const std::string& value) {
+auto Logger::active_level(const std::string& value) -> bool {
   if (_impl == NULL)
     return false;
 

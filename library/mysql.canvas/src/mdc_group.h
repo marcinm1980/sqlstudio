@@ -42,11 +42,11 @@ namespace mdc {
     virtual void add(CanvasItem *item);
     virtual void remove(CanvasItem *item);
 
-    bool has_item(CanvasItem *item);
-    std::list<CanvasItem *> &get_contents() {
+    auto has_item(CanvasItem *item) -> bool;
+    auto get_contents() -> std::list<CanvasItem *> & {
       return _contents;
     };
-    bool empty() const {
+    auto empty() const -> bool {
       return _contents.empty();
     };
 
@@ -55,9 +55,9 @@ namespace mdc {
     void freeze();
     void thaw();
 
-    CanvasItem *get_direct_subitem_at(const base::Point &point);
-    virtual CanvasItem *get_other_item_at(const base::Point &point, CanvasItem *item);
-    virtual CanvasItem *get_item_at(const base::Point &point);
+    auto get_direct_subitem_at(const base::Point &point) -> CanvasItem *;
+    virtual auto get_other_item_at(const base::Point &point, CanvasItem *item) -> CanvasItem *;
+    virtual auto get_item_at(const base::Point &point) -> CanvasItem *;
 
     virtual void move_item(CanvasItem *child_item, const base::Point &pos);
 

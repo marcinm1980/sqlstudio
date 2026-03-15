@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _MDC_BOX_H_
@@ -43,13 +43,13 @@ namespace mdc {
     virtual void remove(CanvasItem *item);
 
     virtual void render(CairoCtx *cr);
-    virtual base::Size calc_min_size();
+    virtual auto calc_min_size() -> base::Size;
 
     void set_spacing(float sp);
 
     virtual void foreach (const std::function<void(CanvasItem *)> &slot);
 
-    virtual CanvasItem *get_item_at(const base::Point &pos);
+    virtual auto get_item_at(const base::Point &pos) -> CanvasItem *;
 
     virtual void resize_to(const base::Size &size);
 
@@ -61,7 +61,7 @@ namespace mdc {
       bool hiddenspace; // use for spacing calculation even when hidden
     };
 
-    typedef std::list<BoxItem> ItemList;
+    using ItemList = std::list<BoxItem>;
 
     Orientation _orientation;
     ItemList _children;
@@ -70,6 +70,6 @@ namespace mdc {
     bool _homogeneous;
   };
 
-} // end of mdc namespace
+} // namespace mdc
 
 #endif /* _MDC_BOX_H_ */

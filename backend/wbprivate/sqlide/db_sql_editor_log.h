@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _DB_SQL_EDITOR_LOG_BE_H_
@@ -36,7 +36,7 @@ class MYSQLWBBACKEND_PUBLIC_FUNC DbSqlEditorLog : public VarGridModel {
 public:
   enum MessageType { ErrorMsg, WarningMsg, NoteMsg, OKMsg, BusyMsg };
 
-  typedef std::shared_ptr<DbSqlEditorLog> Ref;
+  using Ref = std::shared_ptr<DbSqlEditorLog>;
 
   virtual ~DbSqlEditorLog() {
   }
@@ -75,7 +75,7 @@ private:
   SqlEditorForm *_owner;
   mforms::Menu _context_menu;
   std::vector<int> _selection;
-  int _max_entry_count;       // For the internal list which is used in the UI.
+  int _max_entry_count; // For the internal list which is used in the UI.
   std::string _logDir;
   unsigned _next_id;
 

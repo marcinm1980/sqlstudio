@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -38,7 +38,7 @@
 #include "connection_figure.h"
 
 class WBPUBLICBACKEND_PUBLIC_FUNC model_Connection::ImplData : public model_Object::ImplData {
-  typedef model_Object::ImplData super;
+  using super = model_Object::ImplData;
 
 protected:
   wbfig::Connection *_line;

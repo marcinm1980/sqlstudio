@@ -64,24 +64,24 @@ namespace parsers {
     SqlMode sqlMode; // A collection of flags indicating which of relevant SQL modes are active.
 
     // Returns true if the given mode (one of the enums above) is set.
-    bool isSqlModeActive(size_t mode);
+    auto isSqlModeActive(size_t mode) -> bool;
     void sqlModeFromString(std::string modes);
 
-    static std::string dumpTree(antlr4::RuleContext *context, const antlr4::dfa::Vocabulary &vocabulary);
-    static std::string sourceTextForContext(antlr4::ParserRuleContext *ctx, bool keepQuotes = false);
-    static std::string sourceTextForRange(antlr4::Token *start, antlr4::Token *stop, bool keepQuotes = false);
-    static std::string sourceTextForRange(antlr4::tree::ParseTree *start, antlr4::tree::ParseTree *stop,
-                                          bool keepQuotes = false);
+    static auto dumpTree(antlr4::RuleContext *context, const antlr4::dfa::Vocabulary &vocabulary) -> std::string;
+    static auto sourceTextForContext(antlr4::ParserRuleContext *ctx, bool keepQuotes = false) -> std::string;
+    static auto sourceTextForRange(antlr4::Token *start, antlr4::Token *stop, bool keepQuotes = false) -> std::string;
+    static auto sourceTextForRange(antlr4::tree::ParseTree *start, antlr4::tree::ParseTree *stop,
+                                          bool keepQuotes = false) -> std::string;
 
-    static antlr4::tree::ParseTree* getPrevious(antlr4::tree::ParseTree *tree);
-    static antlr4::tree::ParseTree* getNext(antlr4::tree::ParseTree *tree);
-    static antlr4::tree::ParseTree* terminalFromPosition(antlr4::tree::ParseTree *root,
-                                                        std::pair<size_t, size_t> position);
-    static antlr4::tree::ParseTree* contextFromPosition(antlr4::tree::ParseTree *root, size_t position);
+    static auto getPrevious(antlr4::tree::ParseTree *tree) -> antlr4::tree::ParseTree*;
+    static auto getNext(antlr4::tree::ParseTree *tree) -> antlr4::tree::ParseTree*;
+    static auto terminalFromPosition(antlr4::tree::ParseTree *root,
+                                                        std::pair<size_t, size_t> position) -> antlr4::tree::ParseTree*;
+    static auto contextFromPosition(antlr4::tree::ParseTree *root, size_t position) -> antlr4::tree::ParseTree*;
   };
 
   class SymbolTable;
 
   // Returns a symbol table for all predefined system functions in MySQL.
-  PARSERS_PUBLIC_TYPE SymbolTable* functionSymbolsForVersion(base::MySQLVersion version);
+  PARSERS_PUBLIC_TYPE auto functionSymbolsForVersion(base::MySQLVersion version) -> SymbolTable*;
 }

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -54,7 +54,7 @@ namespace mforms {
   class View;
   class MenuItem;
   class DockingPoint;
-};
+}; // namespace mforms
 
 namespace bec {
   class DBObjectEditorBE;
@@ -73,16 +73,15 @@ namespace wb {
   class SSHTunnel;
 }
 
-typedef std::vector<Recordset::Ref> Recordsets;
-typedef std::shared_ptr<Recordsets> RecordsetsRef;
+using Recordsets = std::vector<Recordset::Ref>;
+using RecordsetsRef = std::shared_ptr<Recordsets>;
 
 db_mgmt_ServerInstanceRef getServerInstance(const db_mgmt_ConnectionRef &connection);
 
-class MYSQLWBBACKEND_PUBLIC_FUNC SqlEditorForm :
-  public bec::UIForm,
-  grt::GRTObserver,
-  public std::enable_shared_from_this<SqlEditorForm>,
-  mforms::DropDelegate {
+class MYSQLWBBACKEND_PUBLIC_FUNC SqlEditorForm : public bec::UIForm,
+                                                 grt::GRTObserver,
+                                                 public std::enable_shared_from_this<SqlEditorForm>,
+                                                 mforms::DropDelegate {
 public:
 #if defined(ENABLE_TESTING)
   friend class EditorFormTester;
@@ -114,8 +113,8 @@ public:
   };
 
 public:
-  typedef std::shared_ptr<SqlEditorForm> Ref;
-  typedef std::weak_ptr<SqlEditorForm> Ptr;
+  using Ref = std::shared_ptr<SqlEditorForm>;
+  using Ptr = std::weak_ptr<SqlEditorForm>;
   static SqlEditorForm::Ref create(wb::WBContextSQLIDE *wbsql, const db_mgmt_ConnectionRef &conn);
   static void report_connection_failure(const std::string &error, const db_mgmt_ConnectionRef &target);
   static void report_connection_failure(const grt::server_denied &info, const db_mgmt_ConnectionRef &target);
@@ -126,7 +125,9 @@ public:
    * all */
   std::function<void(int)> set_busy_tab;
 
-  parsers::SymbolTable *databaseSymbols() { return &_databaseSymbols; }
+  parsers::SymbolTable *databaseSymbols() {
+    return &_databaseSymbols;
+  }
 
 protected:
   SqlEditorForm(wb::WBContextSQLIDE *wbsql);
@@ -306,8 +307,8 @@ private:
 
 private:
   void create_connection(sql::Dbc_connection_handler::Ref &dbc_conn, db_mgmt_ConnectionRef db_mgmt_conn,
-                         std::shared_ptr<wb::SSHTunnel> tunnel, sql::Authentication::Ref auth,
-                         bool autocommit_mode, bool user_connection);
+                         std::shared_ptr<wb::SSHTunnel> tunnel, sql::Authentication::Ref auth, bool autocommit_mode,
+                         bool user_connection);
   void init_connection(sql::Connection *dbc_conn_ref, const db_mgmt_ConnectionRef &connectionProperties,
                        sql::Dbc_connection_handler::Ref &dbc_conn, bool user_connection);
   void close_connection(sql::Dbc_connection_handler::Ref &dbc_conn);
@@ -387,11 +388,10 @@ public:
   void continue_on_error(bool val);
 
 private:
-  typedef boost::signals2::signal<int(long long, const std::string &, const std::string &),
-                                  boost::signals2::last_value<int>>
-    Error_cb;
-  typedef boost::signals2::signal<int(float), boost::signals2::last_value<int>> Batch_exec_progress_cb;
-  typedef boost::signals2::signal<int(long, long), boost::signals2::last_value<int>> Batch_exec_stat_cb;
+  using Error_cb =
+    boost::signals2::signal<int(long long, const std::string &, const std::string &), boost::signals2::last_value<int>>;
+  using Batch_exec_progress_cb = boost::signals2::signal<int(float), boost::signals2::last_value<int>>;
+  using Batch_exec_stat_cb = boost::signals2::signal<int(long, long), boost::signals2::last_value<int>>;
 
 public:
   Error_cb on_sql_script_run_error;
@@ -568,7 +568,7 @@ private:
   ColumnWidthCache *_column_width_cache = nullptr;
 
   parsers::SymbolTable _staticServerSymbols; // Charsets, collations, engines.
-  parsers::SymbolTable _databaseSymbols; // All available db objects reachable via the current connection.
+  parsers::SymbolTable _databaseSymbols;     // All available db objects reachable via the current connection.
 
   void activate_command(const std::string &command);
   void readStaticServerSymbols();

@@ -21,7 +21,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -56,7 +56,7 @@ namespace mforms {
   class CodeEditorConfig;
   class ToolBar;
   class DropDelegate;
-};
+}; // namespace mforms
 
 class MySQLRecognizer;
 
@@ -80,8 +80,8 @@ public:
     ContentTypeEvent,
   };
 
-  typedef std::shared_ptr<MySQLEditor> Ref;
-  typedef std::weak_ptr<MySQLEditor> Ptr;
+  using Ref = std::shared_ptr<MySQLEditor>;
+  using Ptr = std::weak_ptr<MySQLEditor>;
 
   static Ref create(parsers::MySQLParserContext::Ref syntaxCheckContext,
                     parsers::MySQLParserContext::Ref autocompleteContext,

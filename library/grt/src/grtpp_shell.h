@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -29,7 +29,7 @@
 
 namespace grt {
 
-  typedef enum {
+  enum ShellCommand {
     ShellCommandUnknown = -1,
     ShellCommandExit = 0,
     ShellCommandAll,
@@ -39,7 +39,7 @@ namespace grt {
     ShellCommandLs,
     ShellCommandCd,
     ShellCommandRun
-  } ShellCommand;
+  };
 
 #define MYX_SHELL_CURNODE "current"
 
@@ -73,4 +73,4 @@ namespace grt {
   protected:
     bool _disable_quit;
   };
-};
+}; // namespace grt

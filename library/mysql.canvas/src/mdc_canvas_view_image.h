@@ -41,9 +41,9 @@ namespace mdc {
 
     void save_to(const std::string &path);
 
-    const unsigned char *get_image_data(size_t &size);
+    auto get_image_data(size_t &size) -> const unsigned char *;
 
-    virtual bool has_gl() const {
+    virtual auto has_gl() const -> bool {
       return false;
     }
 

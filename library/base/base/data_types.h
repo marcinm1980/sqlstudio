@@ -112,7 +112,7 @@ namespace dataTypes {
     std::string argName;
     std::string description;
     mixType value;
-    typedef std::function<bool(const OptionEntry &, int *retval)> optionCb;
+    using optionCb = std::function<bool(const OptionEntry &, int *)>;
     optionCb callback;
     OptionEntry(OptionArgumentType argType, const std::string &l, const std::string &d, optionCb cb = nullptr,
                 const std::string &a = "")
@@ -153,7 +153,7 @@ namespace dataTypes {
     const char *ptr;
 
   public:
-    ArgumentParser(const std::string &line) : ptr(line.data()){};
+    ArgumentParser(const std::string &line) : ptr(line.data()) {};
 
     std::string getArgName() {
       if (std::strncmp(ptr, "--", sizeof("--") - 1) != 0) {
@@ -189,10 +189,10 @@ namespace dataTypes {
 
   class BASELIBRARY_PUBLIC_FUNC OptionsList {
   public:
-    typedef std::map<std::string, OptionEntry> entryList;
-    OptionsList(){};
+    using entryList = std::map<std::string, OptionEntry>;
+    OptionsList() {};
     void addEntry(const OptionEntry &entry) {
-      _list.insert({entry.longName, entry});
+      _list.insert({ entry.longName, entry });
     }
 
     entryList *getEntries() {
@@ -313,10 +313,10 @@ namespace dataTypes {
     ssize_t port;
     std::string userName;
     std::string userPassword;
-    BaseConnection() : port(0){};
-    BaseConnection(ssize_t p) : port(p){};
+    BaseConnection() : port(0) {};
+    BaseConnection(ssize_t p) : port(p) {};
     BaseConnection(const rapidjson::Value &value);
-    virtual ~BaseConnection(){};
+    virtual ~BaseConnection() {};
 
     bool isValid() const {
       return (!hostName.empty() && !userName.empty());
@@ -338,7 +338,7 @@ namespace dataTypes {
     SSHConnection() : BaseConnection(22) {
     }
     SSHConnection(const rapidjson::Value &value);
-    virtual ~SSHConnection(){};
+    virtual ~SSHConnection() {};
     virtual rapidjson::Value toJson() const;
     virtual void fromJson(const rapidjson::Value &value, const std::string &cName = "");
   };
@@ -371,9 +371,9 @@ namespace dataTypes {
     bool isValid() const {
       return !name.empty() && connection.isValid();
     };
-    XProject() : placeholder(false){};
+    XProject() : placeholder(false) {};
     XProject(const rapidjson::Value &value);
-    virtual ~XProject(){};
+    virtual ~XProject() {};
     rapidjson::Value toJson() const;
     void fromJson(const rapidjson::Value &value);
   };
@@ -388,9 +388,9 @@ namespace dataTypes {
     bool isRoot;
     std::vector<ProjectHolder> children;
     XProject project;
-    ProjectHolder() : isGroup(false), isRoot(false){};
+    ProjectHolder() : isGroup(false), isRoot(false) {};
     ProjectHolder(const rapidjson::Value &value);
-    virtual ~ProjectHolder(){};
+    virtual ~ProjectHolder() {};
     rapidjson::Value toJson() const;
     void fromJson(const rapidjson::Value &value);
   };

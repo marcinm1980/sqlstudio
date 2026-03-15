@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -35,7 +35,7 @@ namespace base {
   using StorageType = typename std::decay<T>::type;
 
   struct any {
-    bool isNull() const {
+    auto isNull() const -> bool {
       return !ptr;
     }
 
@@ -45,16 +45,16 @@ namespace base {
     }
 
     template <class U>
-    bool is() const {
-      typedef StorageType<U> T;
+    auto is() const -> bool {
+      using T = StorageType<U>;
 
       auto derived = dynamic_cast<Derived<T>*>(ptr);
       return derived != nullptr;
     }
 
     template <class U>
-    StorageType<U>& as() {
-      typedef StorageType<U> T;
+    auto as() -> StorageType<U>& {
+      using T = StorageType<U>;
 
       auto derived = dynamic_cast<Derived<T>*>(ptr);
 
@@ -65,8 +65,8 @@ namespace base {
     }
 
     template <class U>
-    StorageType<U>& as() const {
-      typedef StorageType<U> T;
+    auto as() const -> StorageType<U>& {
+      using T = StorageType<U>;
 
       auto derived = dynamic_cast<Derived<T>*>(ptr);
 
@@ -96,7 +96,7 @@ namespace base {
     any(const any& that) : ptr(that.clone()) {
     }
 
-    any& operator=(const any& a) {
+    auto operator=(const any& a) -> any& {
       if (ptr == a.ptr)
         return *this;
 
@@ -109,7 +109,7 @@ namespace base {
       return *this;
     }
 
-    any& operator=(any&& a) {
+    auto operator=(any&& a) -> any& {
       if (ptr == a.ptr)
         return *this;
 
@@ -127,7 +127,7 @@ namespace base {
       virtual ~Base() {
       }
 
-      virtual Base* clone() const = 0;
+      virtual auto clone() const -> Base* = 0;
     };
 
     template <typename T>
@@ -138,12 +138,12 @@ namespace base {
 
       T value;
 
-      Base* clone() const {
+      auto clone() const -> Base* {
         return new Derived<T>(value);
       }
     };
 
-    Base* clone() const {
+    auto clone() const -> Base* {
       if (ptr)
         return ptr->clone();
       else

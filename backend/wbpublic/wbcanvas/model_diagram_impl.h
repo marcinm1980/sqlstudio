@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -37,7 +37,7 @@
 #include "figure_common.h"
 
 class WBPUBLICBACKEND_PUBLIC_FUNC model_Diagram::ImplData : public BridgeBase, public wbfig::FigureEventHub {
-  typedef BridgeBase super;
+  using super = BridgeBase;
 
 protected:
   model_Diagram *_self;
@@ -139,17 +139,17 @@ public:
   boost::signals2::signal<void(model_ObjectRef, mdc::CanvasItem *, bool, base::Point)> *signal_item_crossed() {
     return &_item_crossed_signal;
   }
-  boost::signals2::signal<void(model_ObjectRef, mdc::CanvasItem *, base::Point, mdc::MouseButton, mdc::EventState)>
-    *signal_item_click() {
+  boost::signals2::signal<void(model_ObjectRef, mdc::CanvasItem *, base::Point, mdc::MouseButton, mdc::EventState)> *
+  signal_item_click() {
     return &_item_click_signal;
   }
-  boost::signals2::signal<void(model_ObjectRef, mdc::CanvasItem *, base::Point, mdc::MouseButton, mdc::EventState)>
-    *signal_item_double_click() {
+  boost::signals2::signal<void(model_ObjectRef, mdc::CanvasItem *, base::Point, mdc::MouseButton, mdc::EventState)> *
+  signal_item_double_click() {
     return &_item_double_click_signal;
   }
   boost::signals2::signal<void(model_ObjectRef, mdc::CanvasItem *, bool, base::Point, mdc::MouseButton,
-                               mdc::EventState)>
-    *signal_item_mouse_button() {
+                               mdc::EventState)> *
+  signal_item_mouse_button() {
     return &_item_mouse_button_signal;
   }
 

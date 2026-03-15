@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -32,31 +32,33 @@
 #include "grts/structs.db.mgmt.h"
 #include <string>
 
-typedef grt::ListRef<db_CharacterSet> GrtCharacterSetsRef;
-typedef grt::ListRef<db_SimpleDatatype> SimpleDatatypeListRef;
-typedef grt::ListRef<db_UserDatatype> UserDatatypeListRef;
+using GrtCharacterSetsRef = grt::ListRef<db_CharacterSet>;
+using SimpleDatatypeListRef = grt::ListRef<db_SimpleDatatype>;
+using UserDatatypeListRef = grt::ListRef<db_UserDatatype>;
 
 namespace bec {
-  std::string WBPUBLICBACKEND_PUBLIC_FUNC get_host_identifier_for_connection(const db_mgmt_ConnectionRef &connection);
-  std::string WBPUBLICBACKEND_PUBLIC_FUNC get_description_for_connection(const db_mgmt_ConnectionRef &conn);
+  auto WBPUBLICBACKEND_PUBLIC_FUNC get_host_identifier_for_connection(const db_mgmt_ConnectionRef &connection)
+    -> std::string;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC get_description_for_connection(const db_mgmt_ConnectionRef &conn) -> std::string;
 
-  std::string WBPUBLICBACKEND_PUBLIC_FUNC sanitize_server_version_number(const std::string &version);
+  auto WBPUBLICBACKEND_PUBLIC_FUNC sanitize_server_version_number(const std::string &version) -> std::string;
 
-  GrtVersionRef WBPUBLICBACKEND_PUBLIC_FUNC parse_version(const std::string &version);
-  int WBPUBLICBACKEND_PUBLIC_FUNC version_to_int(const GrtVersionRef &version);
-  base::MySQLVersion WBPUBLICBACKEND_PUBLIC_FUNC versionToEnum(const GrtVersionRef &version);
-  GrtVersionRef WBPUBLICBACKEND_PUBLIC_FUNC intToVersion(int version);
-  bool WBPUBLICBACKEND_PUBLIC_FUNC version_equal(GrtVersionRef a, GrtVersionRef b);
-  bool WBPUBLICBACKEND_PUBLIC_FUNC version_greater(GrtVersionRef a, GrtVersionRef b);
+  auto WBPUBLICBACKEND_PUBLIC_FUNC parse_version(const std::string &version) -> GrtVersionRef;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC version_to_int(const GrtVersionRef &version) -> int;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC versionToEnum(const GrtVersionRef &version) -> base::MySQLVersion;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC intToVersion(int version) -> GrtVersionRef;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC version_equal(GrtVersionRef a, GrtVersionRef b) -> bool;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC version_greater(GrtVersionRef a, GrtVersionRef b) -> bool;
 
-  bool WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version_at_least(const std::string &mysql_version, int major,
-                                                                       int minor, int release = -1);
-  bool WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version_at_least(int mysql_major, int mysql_minor,
+  auto WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version_at_least(const std::string &mysql_version, int major,
+                                                                       int minor, int release = -1) -> bool;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version_at_least(int mysql_major, int mysql_minor,
                                                                        int mysql_release, int major, int minor,
-                                                                       int release = -1);
-  bool WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version_at_least(const GrtVersionRef &mysql_version, int major,
-                                                                       int minor, int release = -1);
+                                                                       int release = -1) -> bool;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version_at_least(const GrtVersionRef &mysql_version, int major,
+                                                                       int minor, int release = -1) -> bool;
 
-  bool WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version(int mysql_major, int mysql_minor, int mysql_release);
-  bool WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version(const std::string &mysql_version);
-};
+  auto WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version(int mysql_major, int mysql_minor, int mysql_release)
+    -> bool;
+  auto WBPUBLICBACKEND_PUBLIC_FUNC is_supported_mysql_version(const std::string &mysql_version) -> bool;
+}; // namespace bec

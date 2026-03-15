@@ -37,15 +37,15 @@ namespace mdc {
 
     ImageManager();
 
-    cairo_surface_t *find_file(const std::string &name);
+    auto find_file(const std::string &name) -> cairo_surface_t *;
 
   public:
-    static ImageManager *get_instance();
+    static auto get_instance() -> ImageManager *;
 
-    cairo_surface_t *get_image(const std::string &name);
-    bool release_image(const std::string &name);
+    auto get_image(const std::string &name) -> cairo_surface_t *;
+    auto release_image(const std::string &name) -> bool;
 
-    cairo_surface_t *get_image_nocache(const std::string &name);
+    auto get_image_nocache(const std::string &name) -> cairo_surface_t *;
 
     void add_search_path(const std::string &directory);
   };

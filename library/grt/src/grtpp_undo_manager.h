@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -39,7 +39,7 @@ namespace grt {
     std::string _description;
 
   public:
-    virtual ~UndoAction(){};
+    virtual ~UndoAction() {};
 
     virtual void set_description(const std::string &description);
 
@@ -57,7 +57,7 @@ namespace grt {
     std::function<void()> _undo_slot;
 
   public:
-    SimpleUndoAction(const std::function<void()> &undoslot) : _undo_slot(undoslot){};
+    SimpleUndoAction(const std::function<void()> &undoslot) : _undo_slot(undoslot) {};
 
     virtual void dump(std::ostream &out, int indent = 0) const;
 
@@ -203,8 +203,8 @@ namespace grt {
 
   class MYSQLGRT_PUBLIC UndoManager {
   public:
-    typedef boost::signals2::signal<void(UndoAction *)> UndoSignal;
-    typedef boost::signals2::signal<void(UndoAction *)> RedoSignal;
+    using UndoSignal = boost::signals2::signal<void(UndoAction *)>;
+    using RedoSignal = boost::signals2::signal<void(UndoAction *)>;
 
     UndoManager();
     virtual ~UndoManager();
@@ -316,4 +316,4 @@ namespace grt {
   private:
     bool _valid;
   };
-};
+}; // namespace grt

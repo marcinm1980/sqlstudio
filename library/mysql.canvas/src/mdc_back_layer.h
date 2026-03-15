@@ -40,10 +40,10 @@ namespace mdc {
     void set_grid_visible(bool flag);
     void set_paper_visible(bool flag);
 
-    bool get_grid_visible() {
+    auto get_grid_visible() -> bool {
       return _grid_visible;
     }
-    bool get_paper_visible() {
+    auto get_paper_visible() -> bool {
       return _paper_visible;
     }
 

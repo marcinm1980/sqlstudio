@@ -214,9 +214,15 @@ add_definitions(-DGTK_DISABLE_DEPRECATED)
 set(BUILD_SHARED_LIBS ON)  # By default all libs will be built as shared libs
 # SET(GCOV OFF CACHE BOOL "Add gcov flags")
 
-# Determine std c++ version
+# Require at least C++17 for all targets in this project.
+# If a lower standard is injected from cache/tooling, bump it to 17.
+if(DEFINED CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD LESS 17)
+  message(WARNING "CMAKE_CXX_STANDARD was ${CMAKE_CXX_STANDARD}; forcing 17")
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(WB_CXXFLAGS -Wall -Wextra -Wno-unused-parameter -Wno-deprecated -Wno-deprecated-copy -Wno-deprecated-declarations -Wno-overloaded-virtual)
 set(WB_CFLAGS   -Wall -Wextra -Wno-unused-parameter -Wno-deprecated -Wno-deprecated-copy -Wno-deprecated-declarations -Wno-overloaded-virtual)

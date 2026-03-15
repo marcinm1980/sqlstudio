@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -37,9 +37,9 @@
 #define TableEditorBE_VERSION 2
 
 class Recordset;
-typedef std::shared_ptr<Recordset> RecordsetRef;
+using RecordsetRef = std::shared_ptr<Recordset>;
 class Recordset_table_inserts_storage;
-typedef std::shared_ptr<Recordset_table_inserts_storage> RecordsetTableInsertsStorageRef;
+using RecordsetTableInsertsStorageRef = std::shared_ptr<Recordset_table_inserts_storage>;
 
 namespace mforms {
   class Form;
@@ -47,7 +47,7 @@ namespace mforms {
   class Box;
   class ContextMenu;
   class GridView;
-}
+} // namespace mforms
 
 namespace bec {
 
@@ -57,7 +57,7 @@ namespace bec {
 
   // ColumnNamesSet sets alias for type which is used to return a set of all column
   // names from all tables in the schema. This type is used by TableColumnsListBE
-  typedef std::set<std::string> ColumnNamesSet;
+  using ColumnNamesSet = std::set<std::string>;
 
   class WBPUBLICBACKEND_PUBLIC_FUNC TableColumnsListBE : public ListModel {
   public:
@@ -381,4 +381,4 @@ namespace bec {
     void update_selection_for_menu_extra(mforms::ContextMenu *menu, const std::vector<int> &rows, int column);
     void open_field_editor(int row, int column);
   };
-};
+}; // namespace bec

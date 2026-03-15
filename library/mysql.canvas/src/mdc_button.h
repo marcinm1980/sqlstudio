@@ -38,15 +38,15 @@ namespace mdc {
     ~Button();
 
     void set_active(bool flag);
-    bool get_active();
+    auto get_active() -> bool;
 
     void set_image(cairo_surface_t *image);
     void set_alt_image(cairo_surface_t *image);
 
     virtual void draw_contents(CairoCtx *cr);
-    virtual base::Size calc_min_size();
+    virtual auto calc_min_size() -> base::Size;
 
-    boost::signals2::signal<void()> *signal_activate() {
+    auto signal_activate() -> boost::signals2::signal<void()> * {
       return &_action_signal;
     }
 
@@ -61,11 +61,11 @@ namespace mdc {
 
     boost::signals2::signal<void()> _action_signal;
 
-    virtual bool on_button_press(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
-    virtual bool on_button_release(CanvasItem *target, const base::Point &point, MouseButton button, EventState state);
-    virtual bool on_enter(CanvasItem *target, const base::Point &point);
-    virtual bool on_leave(CanvasItem *target, const base::Point &point);
-    virtual bool on_drag(CanvasItem *target, const base::Point &point, EventState state);
+    virtual auto on_button_press(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
+    virtual auto on_button_release(CanvasItem *target, const base::Point &point, MouseButton button, EventState state) -> bool;
+    virtual auto on_enter(CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_leave(CanvasItem *target, const base::Point &point) -> bool;
+    virtual auto on_drag(CanvasItem *target, const base::Point &point, EventState state) -> bool;
   };
 
 } // end of mdc namespace

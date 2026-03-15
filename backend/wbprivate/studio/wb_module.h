@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _WB_MODULE_H_
@@ -41,7 +41,7 @@
 namespace wb {
 
   class MySqlStudioImpl : public grt::ModuleImplBase, public PluginInterfaceImpl {
-    typedef grt::ModuleImplBase super;
+    using super = grt::ModuleImplBase;
 
   public:
     MySqlStudioImpl(grt::CPPModuleLoader *);
@@ -321,6 +321,6 @@ namespace wb {
     int deleteConnection(const db_mgmt_ConnectionRef &connection);
     int deleteConnectionGroup(const std::string &group);
   };
-};
+}; // namespace wb
 
 #endif

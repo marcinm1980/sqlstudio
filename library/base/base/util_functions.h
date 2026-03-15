@@ -63,10 +63,10 @@
 /*
  * Functions
  */
-BASELIBRARY_PUBLIC_FUNC char *auto_line_break(const char *txt, unsigned int width, char sep);
+BASELIBRARY_PUBLIC_FUNC auto auto_line_break(const char *txt, unsigned int width, char sep) -> char *;
 
-BASELIBRARY_PUBLIC_FUNC char *str_toupper(char *str);
-BASELIBRARY_PUBLIC_FUNC int str_is_numeric(const char *str);
+BASELIBRARY_PUBLIC_FUNC auto str_toupper(char *str) -> char *;
+BASELIBRARY_PUBLIC_FUNC auto str_is_numeric(const char *str) -> int;
 
 #if defined(_MSC_VER)
 BASELIBRARY_PUBLIC_FUNC int get_value_from_registry(HKEY root_key, const char *sub_key, const char *key,
@@ -79,39 +79,39 @@ BASELIBRARY_PUBLIC_FUNC void set_os_specific_password_functions(
   char *(*store_func)(const char *host, const char *username, const char *password),
   char *(*retrieve_func)(const char *host, const char *username, const char *password_data));
 
-BASELIBRARY_PUBLIC_FUNC std::string get_local_os_name(void);
-BASELIBRARY_PUBLIC_FUNC std::string get_local_hardware_info(void);
+BASELIBRARY_PUBLIC_FUNC auto get_local_os_name(void) -> std::string;
+BASELIBRARY_PUBLIC_FUNC auto get_local_hardware_info(void) -> std::string;
 
-BASELIBRARY_PUBLIC_FUNC std::int64_t get_physical_memory_size(void);
+BASELIBRARY_PUBLIC_FUNC auto get_physical_memory_size(void) -> std::int64_t;
 
-BASELIBRARY_PUBLIC_FUNC std::int64_t get_file_size(const char *filename);
+BASELIBRARY_PUBLIC_FUNC auto get_file_size(const char *filename) -> std::int64_t;
 
-BASELIBRARY_PUBLIC_FUNC char *strcasestr_len(const char *haystack, int haystack_len, const char *needle);
+BASELIBRARY_PUBLIC_FUNC auto strcasestr_len(const char *haystack, int haystack_len, const char *needle) -> char *;
 
-BASELIBRARY_PUBLIC_FUNC const char *strfindword(const char *str, const char *word);
+BASELIBRARY_PUBLIC_FUNC auto strfindword(const char *str, const char *word) -> const char *;
 
-BASELIBRARY_PUBLIC_FUNC int base_mkdir(const char *filename, int mode, int *error_no);
-BASELIBRARY_PUBLIC_FUNC int base_chdir(const char *path);
+BASELIBRARY_PUBLIC_FUNC auto base_mkdir(const char *filename, int mode, int *error_no) -> int;
+BASELIBRARY_PUBLIC_FUNC auto base_chdir(const char *path) -> int;
 
-BASELIBRARY_PUBLIC_FUNC int copy_folder(const char *source_folder, const char *target_folder);
+BASELIBRARY_PUBLIC_FUNC auto copy_folder(const char *source_folder, const char *target_folder) -> int;
 
 #include <vector>
 #include <algorithm>
 
 namespace base {
-  BASELIBRARY_PUBLIC_FUNC double timestamp();
+  BASELIBRARY_PUBLIC_FUNC auto timestamp() -> double;
 
-  BASELIBRARY_PUBLIC_FUNC std::string fmttime(time_t t = 0, const char *fmt = "%b %d, %Y");
+  BASELIBRARY_PUBLIC_FUNC auto fmttime(time_t t = 0, const char *fmt = "%b %d, %Y") -> std::string;
 
   //-----------------------------------------------------------------------------
   // Return value is a reference to vector which was passed as the first argument
   template <typename T>
-  inline std::vector<T> &vector_remove(std::vector<T> &v, const T &k) {
+  inline auto vector_remove(std::vector<T> &v, const T &k) -> std::vector<T> & {
     const typename std::vector<T>::iterator it = std::remove(v.begin(), v.end(), k);
     v.erase(it, v.end());
     return v;
   }
   
-  BASELIBRARY_PUBLIC_FUNC std::string getVersion(void);
+  BASELIBRARY_PUBLIC_FUNC auto getVersion(void) -> std::string;
 
 } // namespace base

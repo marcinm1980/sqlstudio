@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -34,8 +34,8 @@ namespace sqlite {
 
 class WBPUBLICBACKEND_PUBLIC_FUNC Recordset_data_storage {
 public:
-  typedef std::shared_ptr<Recordset_data_storage> Ref;
-  typedef std::weak_ptr<Recordset_data_storage> Ptr;
+  using Ref = std::shared_ptr<Recordset_data_storage>;
+  using Ptr = std::weak_ptr<Recordset_data_storage>;
   virtual ~Recordset_data_storage();
 
 protected:
@@ -44,8 +44,8 @@ protected:
   friend class Recordset;
 
 public:
-  typedef std::list<sqlite::variant_t> Var_list;
-  typedef std::vector<sqlite::variant_t> Var_vector;
+  using Var_list = std::list<sqlite::variant_t>;
+  using Var_vector = std::vector<sqlite::variant_t>;
 
 protected:
   std::shared_ptr<sqlite::connection> data_swap_db(const Recordset::Ref &recordset);
@@ -117,7 +117,7 @@ protected:
     return recordset->_column_flags;
   }
   static Recordset::DBColumn_types &getDbColumnTypes(Recordset *recordset) {
-    return recordset->_dbColumnTypes; 
+    return recordset->_dbColumnTypes;
   }
   static const Recordset::Column_names &get_column_names(const Recordset *recordset) {
     return recordset->_column_names;

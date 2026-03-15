@@ -49,11 +49,11 @@ namespace bec {
 
   enum FindType { FindPrefix, FindFull };
 
-  WBPUBLICBACKEND_PUBLIC_FUNC bool validate_tree_structure(const grt::ObjectRef &object);
+  WBPUBLICBACKEND_PUBLIC_FUNC auto validate_tree_structure(const grt::ObjectRef &object) -> bool;
 
   template <class T>
-  size_t find_list_ref_item_position(grt::ListRef<T> &item_data, std::string &name, MatchType match = MatchAny,
-                                     grt::Ref<T> *reference = NULL, FindType find_mode = FindPrefix) {
+  auto find_list_ref_item_position(grt::ListRef<T> &item_data, std::string &name, MatchType match = MatchAny,
+                                     grt::Ref<T> *reference = NULL, FindType find_mode = FindPrefix) -> size_t {
     if ((match == MatchBefore || match == MatchAfter) && !reference)
       throw std::invalid_argument("A reference must be specified for MatchBefore and MatchAfter");
 

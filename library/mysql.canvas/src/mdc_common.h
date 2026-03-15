@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -74,8 +74,8 @@
 
 namespace mdc {
 
-  typedef unsigned int Count;
-  typedef double Timestamp;
+  using Count = unsigned int;
+  using Timestamp = double;
 
   enum FontSlant {
     SNormal = CAIRO_FONT_SLANT_NORMAL,
@@ -91,7 +91,7 @@ namespace mdc {
     FontWeight weight;
     float size;
 
-    inline FontSpec &operator=(const FontSpec &font) {
+    inline auto operator=(const FontSpec &font) -> FontSpec & {
       family = font.family;
       slant = font.slant;
       weight = font.weight;
@@ -100,11 +100,11 @@ namespace mdc {
       return *this;
     }
 
-    inline bool operator!=(const FontSpec &font) const {
+    inline auto operator!=(const FontSpec &font) const -> bool {
       return (family != font.family || slant != font.slant || weight != font.weight) || size != font.size;
     }
 
-    inline bool operator==(const FontSpec &font) const {
+    inline auto operator==(const FontSpec &font) const -> bool {
       return (family == font.family && slant == font.slant && weight == font.weight && size == font.size);
     }
 
@@ -125,7 +125,7 @@ namespace mdc {
       slant = flag ? SItalic : SNormal;
     }
 
-    static FontSpec from_string(const std::string &spec) {
+    static auto from_string(const std::string &spec) -> FontSpec {
       std::string font;
       float size;
       bool bold;
@@ -139,7 +139,7 @@ namespace mdc {
 
   class canvas_error : public std::runtime_error {
   public:
-    canvas_error(const std::string &msg) : std::runtime_error(msg){};
+    canvas_error(const std::string &msg) : std::runtime_error(msg) {};
   };
 
   class MYSQLCANVAS_PUBLIC_FUNC Surface {
@@ -155,7 +155,7 @@ namespace mdc {
 
     virtual ~Surface();
 
-    Surface &operator=(const Surface &s) {
+    auto operator=(const Surface &s) -> Surface & {
       if (this != &s) {
         if (surface != NULL)
           cairo_surface_destroy(surface);
@@ -165,7 +165,7 @@ namespace mdc {
       return *this;
     }
 
-    cairo_surface_t *get_surface() const {
+    auto get_surface() const -> cairo_surface_t * {
       return surface;
     }
   };
@@ -217,7 +217,7 @@ namespace mdc {
     void check_state() const;
 
     void update_cairo_backend(cairo_surface_t *surface);
-    inline cairo_t *get_cr() {
+    inline auto get_cr() -> cairo_t * {
       return cr;
     }
 
@@ -289,7 +289,7 @@ namespace mdc {
     void set_font(const FontSpec &font) const;
     void get_text_extents(const FontSpec &font, const std::string &text, cairo_text_extents_t &extents);
     void get_text_extents(const FontSpec &font, const char *text, cairo_text_extents_t &extents);
-    bool get_font_extents(const FontSpec &font, cairo_font_extents_t &extents);
+    auto get_font_extents(const FontSpec &font, cairo_font_extents_t &extents) -> bool;
 
     inline void set_source_surface(cairo_surface_t *srf, double x, double y) {
       cairo_set_source_surface(cr, srf, x, y);
@@ -373,8 +373,8 @@ namespace mdc {
 
 #define DOUBLE_CLICK_DELAY 0.400
 
-  MYSQLCANVAS_PUBLIC_FUNC Timestamp get_time();
+  MYSQLCANVAS_PUBLIC_FUNC auto get_time() -> Timestamp;
 
-  cairo_status_t write_to_surface(void *closure, const unsigned char *data, unsigned int length);
+  auto write_to_surface(void *closure, const unsigned char *data, unsigned int length) -> cairo_status_t;
 
-} // End of mdc namespace
+} // namespace mdc

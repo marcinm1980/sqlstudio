@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -47,22 +47,22 @@ namespace parsers {
   };
 
   struct WBPUBLICBACKEND_PUBLIC_FUNC MySQLParserContext {
-    typedef std::shared_ptr<MySQLParserContext> Ref;
+    using Ref = std::shared_ptr<MySQLParserContext>;
 
     virtual ~MySQLParserContext() {};
 
-    virtual bool isCaseSensitive() = 0;
+    virtual auto isCaseSensitive() -> bool = 0;
     virtual void updateServerVersion(GrtVersionRef newVersion) = 0;
     virtual void updateSqlMode(const std::string &mode) = 0;
 
-    virtual GrtVersionRef serverVersion() const = 0;
-    virtual std::string sqlMode() const = 0;
-    virtual std::vector<ParserErrorInfo> errorsWithOffset(size_t offset) const = 0;
+    virtual auto serverVersion() const -> GrtVersionRef = 0;
+    virtual auto sqlMode() const -> std::string = 0;
+    virtual auto errorsWithOffset(size_t offset) const -> std::vector<ParserErrorInfo> = 0;
 
-    virtual Scanner createScanner() = 0;
+    virtual auto createScanner() -> Scanner = 0;
 
     // Identifier determination depends on e.g the sql mode, hence we need extra handling.
-    virtual bool isIdentifier(size_t type) const = 0;
+    virtual auto isIdentifier(size_t type) const -> bool = 0;
   };
 
   /**
@@ -73,64 +73,69 @@ namespace parsers {
   class WBPUBLICBACKEND_PUBLIC_FUNC MySQLParserServices {
   public:
     virtual ~MySQLParserServices() {};
-    typedef MySQLParserServices *Ref; // We only have a singleton, so define Ref only to keep the pattern.
+    using Ref = MySQLParserServices *; // We only have a singleton, so define Ref only to keep the pattern.
 
-    static MySQLParserServices::Ref get();
-    virtual MySQLParserContext::Ref createParserContext(GrtCharacterSetsRef charsets, GrtVersionRef version,
-                                                        const std::string &sqlMode, bool caseSensitive) = 0;
+    static auto get() -> MySQLParserServices::Ref;
+    virtual auto createParserContext(GrtCharacterSetsRef charsets, GrtVersionRef version, const std::string &sqlMode,
+                                     bool caseSensitive) -> MySQLParserContext::Ref = 0;
 
     // Info services.
-    virtual size_t tokenFromString(MySQLParserContext::Ref context, const std::string &token) = 0;
-    virtual MySQLQueryType determineQueryType(MySQLParserContext::Ref context, const std::string &text) = 0;
+    virtual auto tokenFromString(MySQLParserContext::Ref context, const std::string &token) -> size_t = 0;
+    virtual auto determineQueryType(MySQLParserContext::Ref context, const std::string &text) -> MySQLQueryType = 0;
 
     // DB objects.
-    virtual size_t parseTable(MySQLParserContext::Ref context, db_mysql_TableRef table, const std::string &sql) = 0;
-    virtual size_t parseRoutine(MySQLParserContext::Ref context, db_mysql_RoutineRef routine,
-                                const std::string &sql) = 0;
-    virtual size_t parseRoutines(MySQLParserContext::Ref context, db_mysql_RoutineGroupRef group,
-                                 const std::string &sql) = 0;
-    virtual size_t parseTrigger(MySQLParserContext::Ref context, db_mysql_TriggerRef trigger,
-                                const std::string &sql) = 0;
-    virtual size_t parseView(MySQLParserContext::Ref context, db_mysql_ViewRef view, const std::string &sql) = 0;
-    virtual size_t parseSchema(MySQLParserContext::Ref context, db_mysql_SchemaRef schema, const std::string &sql) = 0;
-    virtual size_t parseIndex(MySQLParserContext::Ref context, db_mysql_IndexRef index, const std::string &sql) = 0;
-    virtual size_t parseEvent(MySQLParserContext::Ref context, db_mysql_EventRef event, const std::string &sql) = 0;
-    virtual size_t parseLogfileGroup(MySQLParserContext::Ref context, db_mysql_LogFileGroupRef group,
-                                     const std::string &sql) = 0;
-    virtual size_t parseServer(MySQLParserContext::Ref context, db_mysql_ServerLinkRef server,
-                               const std::string &sql) = 0;
-    virtual size_t parseTablespace(MySQLParserContext::Ref context, db_mysql_TablespaceRef tablespace,
-                                   const std::string &sql) = 0;
+    virtual auto parseTable(MySQLParserContext::Ref context, db_mysql_TableRef table, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseRoutine(MySQLParserContext::Ref context, db_mysql_RoutineRef routine, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseRoutines(MySQLParserContext::Ref context, db_mysql_RoutineGroupRef group, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseTrigger(MySQLParserContext::Ref context, db_mysql_TriggerRef trigger, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseView(MySQLParserContext::Ref context, db_mysql_ViewRef view, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseSchema(MySQLParserContext::Ref context, db_mysql_SchemaRef schema, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseIndex(MySQLParserContext::Ref context, db_mysql_IndexRef index, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseEvent(MySQLParserContext::Ref context, db_mysql_EventRef event, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseLogfileGroup(MySQLParserContext::Ref context, db_mysql_LogFileGroupRef group,
+                                   const std::string &sql) -> size_t = 0;
+    virtual auto parseServer(MySQLParserContext::Ref context, db_mysql_ServerLinkRef server, const std::string &sql)
+      -> size_t = 0;
+    virtual auto parseTablespace(MySQLParserContext::Ref context, db_mysql_TablespaceRef tablespace,
+                                 const std::string &sql) -> size_t = 0;
 
-    virtual size_t parseSQLIntoCatalog(MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
-                                       const std::string &sql, grt::DictRef options) = 0;
+    virtual auto parseSQLIntoCatalog(MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
+                                     const std::string &sql, grt::DictRef options) -> size_t = 0;
 
-    virtual size_t checkSqlSyntax(MySQLParserContext::Ref context, const char *sql, size_t length,
-                                  MySQLParseUnit unitType) = 0;
-    virtual size_t renameSchemaReferences(MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
-                                          const std::string old_name, const std::string new_name) = 0;
+    virtual auto checkSqlSyntax(MySQLParserContext::Ref context, const char *sql, size_t length,
+                                MySQLParseUnit unitType) -> size_t = 0;
+    virtual auto renameSchemaReferences(MySQLParserContext::Ref context, db_mysql_CatalogRef catalog,
+                                        const std::string old_name, const std::string new_name) -> size_t = 0;
 
-    virtual size_t determineStatementRanges(const char *sql, size_t length,
-                                            const std::string &initialDelimiter,
-                                            std::vector<StatementRange> &ranges,
-                                            const std::string &lineBreak = "\n") = 0;
+    virtual auto determineStatementRanges(const char *sql, size_t length, const std::string &initialDelimiter,
+                                          std::vector<StatementRange> &ranges, const std::string &lineBreak = "\n")
+      -> size_t = 0;
 
-    virtual grt::DictRef parseStatement(MySQLParserContext::Ref context, const std::string &sql) = 0;
+    virtual auto parseStatement(MySQLParserContext::Ref context, const std::string &sql) -> grt::DictRef = 0;
 
     // Data types.
-    static db_SimpleDatatypeRef findDataType(SimpleDatatypeListRef types, GrtVersionRef version,
-                                             const std::string &name);
+    static auto findDataType(SimpleDatatypeListRef types, GrtVersionRef version, const std::string &name)
+      -> db_SimpleDatatypeRef;
 
-    virtual bool parseTypeDefinition(const std::string &typeDefinition, GrtVersionRef targetVersion,
+    virtual auto parseTypeDefinition(const std::string &typeDefinition, GrtVersionRef targetVersion,
                                      SimpleDatatypeListRef typeList, UserDatatypeListRef userTypes,
                                      SimpleDatatypeListRef defaultTypeList, db_SimpleDatatypeRef &simpleType,
                                      db_UserDatatypeRef &userType, int &precision, int &scale, int &length,
-                                     std::string &datatypeExplicitParams) = 0;
+                                     std::string &datatypeExplicitParams) -> bool = 0;
 
     // Others.
-    virtual std::vector<std::pair<int, std::string>> getCodeCompletionCandidates(
-      MySQLParserContext::Ref context, std::pair<size_t, size_t> caret, std::string const &sql,
-      std::string const &defaultSchema, bool uppercaseKeywords, parsers::SymbolTable &symbolTable) = 0;
+    virtual auto getCodeCompletionCandidates(MySQLParserContext::Ref context, std::pair<size_t, size_t> caret,
+                                             std::string const &sql, std::string const &defaultSchema,
+                                             bool uppercaseKeywords, parsers::SymbolTable &symbolTable)
+      -> std::vector<std::pair<int, std::string>> = 0;
   };
 
 } // namespace parsers

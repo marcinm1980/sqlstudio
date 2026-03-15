@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -40,40 +40,41 @@
        ++iter)
 
 namespace grt {
-  std::map<std::string, base::any> MYSQLGRT_PUBLIC convert(const grt::DictRef dict);
+  auto MYSQLGRT_PUBLIC convert(const grt::DictRef dict) -> std::map<std::string, base::any>;
 
-  std::string MYSQLGRT_PUBLIC type_to_str(Type type);
-  Type MYSQLGRT_PUBLIC str_to_type(const std::string &str);
+  auto MYSQLGRT_PUBLIC type_to_str(Type type) -> std::string;
+  auto MYSQLGRT_PUBLIC str_to_type(const std::string &str) -> Type;
 
-  std::string MYSQLGRT_PUBLIC fmt_simple_type_spec(const SimpleTypeSpec &type);
-  std::string MYSQLGRT_PUBLIC fmt_type_spec(const TypeSpec &type);
-  std::string MYSQLGRT_PUBLIC fmt_arg_spec_list(const ArgSpecList &args);
+  auto MYSQLGRT_PUBLIC fmt_simple_type_spec(const SimpleTypeSpec &type) -> std::string;
+  auto MYSQLGRT_PUBLIC fmt_type_spec(const TypeSpec &type) -> std::string;
+  auto MYSQLGRT_PUBLIC fmt_arg_spec_list(const ArgSpecList &args) -> std::string;
 
-  ValueRef MYSQLGRT_PUBLIC get_value_by_path(const ValueRef &root, const std::string &path);
-  bool MYSQLGRT_PUBLIC set_value_by_path(const ValueRef &value, const std::string &path, const ValueRef &new_value);
+  auto MYSQLGRT_PUBLIC get_value_by_path(const ValueRef &root, const std::string &path) -> ValueRef;
+  auto MYSQLGRT_PUBLIC set_value_by_path(const ValueRef &value, const std::string &path, const ValueRef &new_value)
+    -> bool;
 
-  inline bool is_container_type(Type type) {
+  inline auto is_container_type(Type type) -> bool {
     if (type == ListType || type == DictType || type == ObjectType)
       return true;
     return false;
   }
 
-  inline bool is_simple_type(Type type) {
+  inline auto is_simple_type(Type type) -> bool {
     if (type == IntegerType || type == DoubleType || type == StringType)
       return true;
     return false;
   }
 
-  std::string MYSQLGRT_PUBLIC get_guid();
+  auto MYSQLGRT_PUBLIC get_guid() -> std::string;
 
-  inline std::string path_base(const std::string &path) {
+  inline auto path_base(const std::string &path) -> std::string {
     std::string::size_type p = path.rfind('/');
     if (p != std::string::npos)
       return path.substr(0, p);
     return "";
   }
 
-  inline std::string path_last(const std::string &path) {
+  inline auto path_last(const std::string &path) -> std::string {
     std::string::size_type p = path.rfind('/');
     if (p != std::string::npos)
       return path.substr(p);
@@ -81,8 +82,8 @@ namespace grt {
   }
 
   template <class O>
-  inline Ref<O> find_named_object_in_list(const ListRef<O> &list, const std::string &value, bool case_sensitive = true,
-                                          const std::string &name = "name") {
+  inline auto find_named_object_in_list(const ListRef<O> &list, const std::string &value, bool case_sensitive = true,
+                                        const std::string &name = "name") -> Ref<O> {
     for (size_t i = 0; i < list.count(); i++) {
       Ref<O> tmp = list[i];
 
@@ -93,7 +94,7 @@ namespace grt {
   }
 
   template <class O>
-  inline Ref<O> find_object_in_list(const ListRef<O> &list, const std::string &id) {
+  inline auto find_object_in_list(const ListRef<O> &list, const std::string &id) -> Ref<O> {
     size_t i, c = list.count();
     for (i = 0; i < c; i++) {
       Ref<O> value = list[i];
@@ -105,7 +106,7 @@ namespace grt {
   }
 
   template <class O>
-  inline size_t find_object_index_in_list(ListRef<O> list, const std::string &id) {
+  inline auto find_object_index_in_list(ListRef<O> list, const std::string &id) -> size_t {
     size_t i, c = list.count();
     for (i = 0; i < c; i++) {
       Ref<O> value = list.get(i);
@@ -117,7 +118,8 @@ namespace grt {
   }
 
   template <typename TPredicate>
-  std::string get_name_suggestion(TPredicate duplicate_found_pred, const std::string &prefix, const bool serial) {
+  auto get_name_suggestion(TPredicate duplicate_found_pred, const std::string &prefix, const bool serial)
+    -> std::string {
     char buffer[30] = "";
     int x = 1;
     std::string name;
@@ -132,12 +134,15 @@ namespace grt {
     return name;
   }
 
-  MYSQLGRT_PUBLIC std::string get_name_suggestion_for_list_object(const BaseListRef &objlist, const std::string &prefix,
-                                                                  bool serial = true);
+  MYSQLGRT_PUBLIC auto get_name_suggestion_for_list_object(const BaseListRef &objlist, const std::string &prefix,
+                                                           bool serial = true) -> std::string;
 
-  MYSQLGRT_PUBLIC ObjectRef find_child_object(const DictRef &dict, const std::string &id, bool recursive = true);
-  MYSQLGRT_PUBLIC ObjectRef find_child_object(const BaseListRef &list, const std::string &id, bool recursive = true);
-  MYSQLGRT_PUBLIC ObjectRef find_child_object(const ObjectRef &object, const std::string &id, bool recursive = true);
+  MYSQLGRT_PUBLIC auto find_child_object(const DictRef &dict, const std::string &id, bool recursive = true)
+    -> ObjectRef;
+  MYSQLGRT_PUBLIC auto find_child_object(const BaseListRef &list, const std::string &id, bool recursive = true)
+    -> ObjectRef;
+  MYSQLGRT_PUBLIC auto find_child_object(const ObjectRef &object, const std::string &id, bool recursive = true)
+    -> ObjectRef;
 
   MYSQLGRT_PUBLIC void update_ids(ObjectRef object,
                                   const std::set<std::string> &skip_members = std::set<std::string>());
@@ -151,15 +156,15 @@ namespace grt {
   MYSQLGRT_PUBLIC void merge_contents(DictRef target, DictRef source, bool overwrite);
   MYSQLGRT_PUBLIC void merge_contents(ObjectRef target, ObjectRef source);
 
-  MYSQLGRT_PUBLIC bool compare_list_contents(const ObjectListRef &list1, const ObjectListRef &list2);
+  MYSQLGRT_PUBLIC auto compare_list_contents(const ObjectListRef &list1, const ObjectListRef &list2) -> bool;
 
-  MYSQLGRT_PUBLIC std::string join_string_list(const StringListRef &list, const std::string &separator);
+  MYSQLGRT_PUBLIC auto join_string_list(const StringListRef &list, const std::string &separator) -> std::string;
 
   MYSQLGRT_PUBLIC void remove_list_items_matching(ObjectListRef list,
                                                   const std::function<bool(grt::ObjectRef)> &matcher);
 
   // XXX don't use this for objects, use CopyContext::copy() instead
-  MYSQLGRT_PUBLIC ValueRef copy_value(ValueRef value, bool deep);
+  MYSQLGRT_PUBLIC auto copy_value(ValueRef value, bool deep) -> ValueRef;
 
   struct MYSQLGRT_PUBLIC CopyContext {
     std::map<std::string, ValueRef> object_copies;
@@ -168,23 +173,23 @@ namespace grt {
     CopyContext() {
     }
 
-    ObjectRef copy(const ObjectRef &object, std::set<std::string> skip_members = std::set<std::string>());
-    ObjectRef shallow_copy(const ObjectRef &object);
+    auto copy(const ObjectRef &object, std::set<std::string> skip_members = std::set<std::string>()) -> ObjectRef;
+    auto shallow_copy(const ObjectRef &object) -> ObjectRef;
     void finish() {
       update_references();
     }
     void update_references();
 
-    ValueRef copy_for_object(ValueRef object);
+    auto copy_for_object(ValueRef object) -> ValueRef;
 
   private:
-    ObjectRef duplicate_object(ObjectRef object, std::set<std::string> skip_members, bool dontfollow);
+    auto duplicate_object(ObjectRef object, std::set<std::string> skip_members, bool dontfollow) -> ObjectRef;
     void copy_list(BaseListRef &list, const BaseListRef &source, bool dontfollow);
     void copy_dict(DictRef &dict, const DictRef &source, bool dontfollow);
   };
 
   template <typename OType>
-  OType copy_object(const OType &object, std::set<std::string> skip_members = std::set<std::string>()) {
+  auto copy_object(const OType &object, std::set<std::string> skip_members = std::set<std::string>()) -> OType {
     CopyContext copier;
     OType copy;
 
@@ -195,7 +200,7 @@ namespace grt {
   }
 
   template <typename OType>
-  OType shallow_copy_object(const OType &object) {
+  auto shallow_copy_object(const OType &object) -> OType {
     CopyContext copier;
     OType copy;
 
@@ -210,13 +215,13 @@ namespace grt {
   MYSQLGRT_PUBLIC void dump_value(const grt::ValueRef &value);
 
   // temporary code
-  MYSQLGRT_PUBLIC bool init_python_support(const std::string &python_module_path);
+  MYSQLGRT_PUBLIC auto init_python_support(const std::string &python_module_path) -> bool;
   MYSQLGRT_PUBLIC void add_python_module_dir(const std::string &python_module_path);
 
   // diffing
 
   class DiffChange;
-  typedef std::function<bool(ValueRef, ValueRef, std::string)> TSlotNormalizerSlot;
+  using TSlotNormalizerSlot = std::function<bool(ValueRef, ValueRef, std::string)>;
 
   struct MYSQLGRT_PUBLIC Omf {
     TSlotNormalizerSlot normalizer;
@@ -226,14 +231,14 @@ namespace grt {
     //_dontdiff_mask will hold mask to allow selective bypass of ceratin fields
     // 1 always diff, 2 diff only vs db, 4 diff only vs live object
     unsigned int dontdiff_mask;
-    Omf() : case_sensitive(true), skip_routine_definer(false), dontdiff_mask(1){};
-    virtual ~Omf(){};
-    virtual bool less(const ValueRef &, const ValueRef &) const = 0;
-    virtual bool equal(const ValueRef &, const ValueRef &) const = 0;
+    Omf() : case_sensitive(true), skip_routine_definer(false), dontdiff_mask(1) {};
+    virtual ~Omf() {};
+    virtual auto less(const ValueRef &, const ValueRef &) const -> bool = 0;
+    virtual auto equal(const ValueRef &, const ValueRef &) const -> bool = 0;
   };
 
   struct default_omf : public Omf {
-    bool peq(const ValueRef &l, const ValueRef &r) const {
+    auto peq(const ValueRef &l, const ValueRef &r) const -> bool {
       if ((l.type() == r.type() && l.type() == ObjectType) && ObjectRef::can_wrap(l) && ObjectRef::can_wrap(r)) {
         ObjectRef left = ObjectRef::cast_from(l);
         ObjectRef right = ObjectRef::cast_from(r);
@@ -243,7 +248,7 @@ namespace grt {
       return l == r;
     }
 
-    bool pless(const ValueRef &l, const ValueRef &r) const {
+    auto pless(const ValueRef &l, const ValueRef &r) const -> bool {
       if ((l.type() == r.type() && l.type() == ObjectType) && ObjectRef::can_wrap(l) && ObjectRef::can_wrap(r)) {
         ObjectRef left = ObjectRef::cast_from(l);
         ObjectRef right = ObjectRef::cast_from(r);
@@ -253,15 +258,15 @@ namespace grt {
       return l < r;
     }
 
-    virtual bool less(const ValueRef &l, const ValueRef &r) const {
+    virtual auto less(const ValueRef &l, const ValueRef &r) const -> bool {
       return pless(l, r);
     };
-    virtual bool equal(const ValueRef &l, const ValueRef &r) const {
+    virtual auto equal(const ValueRef &l, const ValueRef &r) const -> bool {
       return peq(l, r);
     };
   };
 
   MYSQLGRT_PUBLIC
-  std::shared_ptr<DiffChange> diff_make(const ValueRef &source, const ValueRef &target, const Omf *omf,
-                                        bool dont_clone_values = false);
-};
+  auto diff_make(const ValueRef &source, const ValueRef &target, const Omf *omf, bool dont_clone_values = false)
+    -> std::shared_ptr<DiffChange>;
+}; // namespace grt

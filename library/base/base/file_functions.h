@@ -39,15 +39,15 @@
 #endif
 
 // TODO: These function should probably be merged with file_utilities.
-BASELIBRARY_PUBLIC_FUNC FILE *base_fopen(const char *filename, const char *mode);
-BASELIBRARY_PUBLIC_FUNC int base_open(const std::string &filename, int open_flag, int permissions);
-BASELIBRARY_PUBLIC_FUNC int base_remove(const std::string &filename);
-BASELIBRARY_PUBLIC_FUNC int base_rename(const char *oldname, const char *newname);
+BASELIBRARY_PUBLIC_FUNC auto base_fopen(const char *filename, const char *mode) -> FILE *;
+BASELIBRARY_PUBLIC_FUNC auto base_open(const std::string &filename, int open_flag, int permissions) -> int;
+BASELIBRARY_PUBLIC_FUNC auto base_remove(const std::string &filename) -> int;
+BASELIBRARY_PUBLIC_FUNC auto base_rename(const char *oldname, const char *newname) -> int;
 #ifdef _MSC_VER
 BASELIBRARY_PUBLIC_FUNC int base_stat(const char *filename, struct _stat *stbuf);
 #else
-BASELIBRARY_PUBLIC_FUNC int base_stat(const char *filename, struct stat *stbuf);
+BASELIBRARY_PUBLIC_FUNC auto base_stat(const char *filename, struct stat *stbuf) -> int;
 #endif
 
-BASELIBRARY_PUBLIC_FUNC int base_rmdir_recursively(const char *dirname);
-BASELIBRARY_PUBLIC_FUNC long base_get_file_size(const char *filename);
+BASELIBRARY_PUBLIC_FUNC auto base_rmdir_recursively(const char *dirname) -> int;
+BASELIBRARY_PUBLIC_FUNC auto base_get_file_size(const char *filename) -> long;

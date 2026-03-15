@@ -44,31 +44,31 @@ namespace bec {
       EditMethod   // only for objects, defined with attr:editas in the struct xml
     };
 
-    static ValueInspectorBE *create(const grt::ValueRef &value, bool grouped, bool process_editas_flag);
+    static auto create(const grt::ValueRef &value, bool grouped, bool process_editas_flag) -> ValueInspectorBE *;
 
-    static ValueInspectorBE *create(const std::vector<grt::ObjectRef> &objects);
+    static auto create(const std::vector<grt::ObjectRef> &objects) -> ValueInspectorBE *;
 
-    virtual bool add_item(NodeId &new_node) = 0;
-    virtual bool delete_item(const NodeId &node) = 0;
+    virtual auto add_item(NodeId &new_node) -> bool = 0;
+    virtual auto delete_item(const NodeId &node) -> bool = 0;
 
     // virtual MYX_GRT_VALUE_TYPE get_field_type(const NodeId &node, ColumnId column)= 0;
 
-    virtual grt::ValueRef get_grt_value(const NodeId &node, ColumnId column);
+    virtual auto get_grt_value(const NodeId &node, ColumnId column) -> grt::ValueRef;
 
-    virtual bool set_convert_field(const NodeId &node, ColumnId column, const std::string &value);
-    virtual bool set_field(const NodeId &node, ColumnId column, const std::string &value);
-    virtual bool set_field(const NodeId &node, ColumnId column, double value);
-    virtual bool set_field(const NodeId &node, ColumnId column, ssize_t value);
+    virtual auto set_convert_field(const NodeId &node, ColumnId column, const std::string &value) -> bool;
+    virtual auto set_field(const NodeId &node, ColumnId column, const std::string &value) -> bool;
+    virtual auto set_field(const NodeId &node, ColumnId column, double value) -> bool;
+    virtual auto set_field(const NodeId &node, ColumnId column, ssize_t value) -> bool;
 
-    virtual IconId get_field_icon(const NodeId &node, ColumnId column, IconSize size);
+    virtual auto get_field_icon(const NodeId &node, ColumnId column, IconSize size) -> IconId;
 
   public: // Responder methods
   protected:
     ValueInspectorBE();
 
-    virtual grt::Type get_canonical_type(const NodeId &node) = 0;
+    virtual auto get_canonical_type(const NodeId &node) -> grt::Type = 0;
 
-    virtual bool set_value(const NodeId &node, const grt::ValueRef &value) = 0;
+    virtual auto set_value(const NodeId &node, const grt::ValueRef &value) -> bool = 0;
 
     void monitor_object_changes(const grt::ObjectRef &obj);
 

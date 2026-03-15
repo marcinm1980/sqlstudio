@@ -26,11 +26,11 @@
 #pragma once
 
 #ifdef _MSC_VER
-  #ifdef _WIN64
-    typedef __int64 ssize_t;
-  #else
-    typedef int ssize_t;
-  #endif
+#ifdef _WIN64
+typedef __int64 ssize_t;
+#else
+typedef int ssize_t;
+#endif
 #endif
 
 #include <boost/signals2.hpp>
@@ -43,7 +43,7 @@ namespace grt {
   namespace internal {
     class Serializer;
     class Unserializer;
-  };
+  }; // namespace internal
 
   //------------------------------------------------------------------------------------------------
 
@@ -59,17 +59,17 @@ namespace grt {
     SimpleTypeSpec(const SimpleTypeSpec &o) : type(o.type), object_class(o.object_class) {
     }
 
-    inline SimpleTypeSpec &operator=(const SimpleTypeSpec &o) {
+    inline auto operator=(const SimpleTypeSpec &o) -> SimpleTypeSpec & {
       type = o.type;
       object_class = o.object_class;
       return *this;
     }
 
-    inline bool operator==(const SimpleTypeSpec &o) const {
+    inline auto operator==(const SimpleTypeSpec &o) const -> bool {
       return o.type == type && o.object_class == object_class;
     }
 
-    inline bool operator!=(const SimpleTypeSpec &o) const {
+    inline auto operator!=(const SimpleTypeSpec &o) const -> bool {
       return o.type != type || o.object_class != object_class;
     }
   };
@@ -82,7 +82,7 @@ namespace grt {
   struct MYSQLGRT_PUBLIC TypeSpec {
     SimpleTypeSpec base;    //!< Type of the object itself
     SimpleTypeSpec content; //!< Type of the stored items in case when object is of type of ListRef<T> or Dict
-    bool operator==(const TypeSpec &t) const {
+    auto operator==(const TypeSpec &t) const -> bool {
       return (base == t.base && content == t.content);
     }
   };
@@ -100,44 +100,51 @@ namespace grt {
     type_error(const std::string &expected, const std::string &actual);
     type_error(const std::string &expected, const std::string &actual, Type container);
     type_error(const std::string &expected, Type actual);
-    type_error(const std::string &msg) : std::logic_error(msg) {}
+    type_error(const std::string &msg) : std::logic_error(msg) {
+    }
   };
 
-//------------------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------------
 
-namespace internal {
+  namespace internal {
 
     class Object;
 
     class MYSQLGRT_PUBLIC Value {
     public:
-      virtual ~Value() {}
+      virtual ~Value() {
+      }
 
-      virtual Type get_type() const = 0;
+      virtual auto get_type() const -> Type = 0;
 
-      Value *retain();
+      auto retain() -> Value *;
       void release();
 
-      virtual std::string debugDescription(const std::string &indentation = "") const = 0;
-      virtual std::string toString() const = 0;
+      virtual auto debugDescription(const std::string &indentation = "") const -> std::string = 0;
+      virtual auto toString() const -> std::string = 0;
 
-      base::refcount_t refcount() const;
+      auto refcount() const -> base::refcount_t;
 
-      virtual void mark_global() const {}
-      virtual void unmark_global() const {}
+      virtual void mark_global() const {
+      }
+      virtual void unmark_global() const {
+      }
 
-      virtual bool equals(const Value *) const = 0;
-      virtual bool less_than(const Value *) const = 0;
+      virtual auto equals(const Value *) const -> bool = 0;
+      virtual auto less_than(const Value *) const -> bool = 0;
 
       // This method helps to free memory allocated by Value.
       // It is overridden in Object, List and Dict.
-      virtual void reset_references() {}
+      virtual void reset_references() {
+      }
 
     protected:
-      Value() : _refcount(0) {}
+      Value() : _refcount(0) {
+      }
 
     private:
-      Value(const Value &) {}
+      Value(const Value &) {
+      }
 
       volatile mutable base::refcount_t _refcount;
     };
@@ -145,30 +152,30 @@ namespace internal {
     // 32 bit or 64 bit integer type.
     class MYSQLGRT_PUBLIC Integer : public Value {
     public:
-      typedef ssize_t storage_type;
+      using storage_type = ssize_t;
 
     public:
       Integer(storage_type value);
-      static Integer *get(storage_type value);
+      static auto get(storage_type value) -> Integer *;
 
-      static Type static_type() {
+      static auto static_type() -> Type {
         return IntegerType;
       }
-      virtual Type get_type() const {
+      virtual auto get_type() const -> Type {
         return IntegerType;
       }
-      virtual std::string debugDescription(const std::string &indentation = "") const;
-      virtual std::string toString() const;
+      virtual auto debugDescription(const std::string &indentation = "") const -> std::string;
+      virtual auto toString() const -> std::string;
 
       inline operator storage_type() const {
         return _value;
       }
-      inline storage_type operator*() const {
+      inline auto operator*() const -> storage_type {
         return _value;
       }
 
-      virtual bool equals(const Value *) const;
-      virtual bool less_than(const Value *) const;
+      virtual auto equals(const Value *) const -> bool;
+      virtual auto less_than(const Value *) const -> bool;
 
     protected:
       storage_type _value;
@@ -178,30 +185,30 @@ namespace internal {
 
     class MYSQLGRT_PUBLIC Double : public Value {
     public:
-      typedef double storage_type;
+      using storage_type = double;
 
     public:
       Double(storage_type value);
-      static Double *get(storage_type value);
+      static auto get(storage_type value) -> Double *;
 
-      static Type static_type() {
+      static auto static_type() -> Type {
         return DoubleType;
       }
-      virtual Type get_type() const {
+      virtual auto get_type() const -> Type {
         return DoubleType;
       }
-      virtual std::string debugDescription(const std::string &indentation = "") const;
-      virtual std::string toString() const;
+      virtual auto debugDescription(const std::string &indentation = "") const -> std::string;
+      virtual auto toString() const -> std::string;
 
       inline operator storage_type() const {
         return _value;
       }
-      inline storage_type operator*() const {
+      inline auto operator*() const -> storage_type {
         return _value;
       }
 
-      virtual bool equals(const Value *) const;
-      virtual bool less_than(const Value *) const;
+      virtual auto equals(const Value *) const -> bool;
+      virtual auto less_than(const Value *) const -> bool;
 
     protected:
       storage_type _value;
@@ -211,36 +218,36 @@ namespace internal {
 
     class MYSQLGRT_PUBLIC String : public Value {
     public:
-      typedef std::string storage_type;
+      using storage_type = std::string;
 
     public:
       String(const storage_type &value);
-      static String *get(const storage_type &value);
+      static auto get(const storage_type &value) -> String *;
 
-      static Type static_type() {
+      static auto static_type() -> Type {
         return StringType;
       }
-      virtual Type get_type() const {
+      virtual auto get_type() const -> Type {
         return StringType;
       }
-      virtual std::string debugDescription(const std::string &indentation = "") const;
-      virtual std::string toString() const;
+      virtual auto debugDescription(const std::string &indentation = "") const -> std::string;
+      virtual auto toString() const -> std::string;
 
       inline operator storage_type() const {
         return _value;
       }
-      inline const storage_type &operator*() const {
+      inline auto operator*() const -> const storage_type & {
         return _value;
       }
-      inline const char *c_str() const {
+      inline auto c_str() const -> const char * {
         return _value.c_str();
       }
-      inline bool empty() const {
+      inline auto empty() const -> bool {
         return _value.empty();
       }
 
-      virtual bool equals(const Value *) const;
-      virtual bool less_than(const Value *) const;
+      virtual auto equals(const Value *) const -> bool;
+      virtual auto less_than(const Value *) const -> bool;
 
     protected:
       storage_type _value;
@@ -250,36 +257,36 @@ namespace internal {
 
     class MYSQLGRT_PUBLIC List : public Value {
     public:
-      typedef std::vector<ValueRef> storage_type;
+      using storage_type = std::vector<ValueRef>;
       enum { npos = 0xffffffff };
 
-      typedef std::vector<ValueRef>::const_iterator raw_const_iterator;
-      typedef std::vector<ValueRef>::const_reverse_iterator raw_const_reverse_iterator;
-      typedef std::vector<ValueRef>::iterator raw_iterator;
+      using raw_const_iterator = std::vector<ValueRef>::const_iterator;
+      using raw_const_reverse_iterator = std::vector<ValueRef>::const_reverse_iterator;
+      using raw_iterator = std::vector<ValueRef>::iterator;
 
     public:
       List(bool allow_null);
       List(Type type, const std::string &content_class, bool allow_null);
 
-      static Type static_type() {
+      static auto static_type() -> Type {
         return ListType;
       }
-      virtual Type get_type() const {
+      virtual auto get_type() const -> Type {
         return ListType;
       }
-      inline const SimpleTypeSpec &content_type_spec() const {
+      inline auto content_type_spec() const -> const SimpleTypeSpec & {
         return _content_type;
       }
-      inline Type content_type() const {
+      inline auto content_type() const -> Type {
         return _content_type.type;
       }
-      inline const std::string &content_class_name() const {
+      inline auto content_class_name() const -> const std::string & {
         return _content_type.object_class;
       }
-      virtual std::string debugDescription(const std::string &indentation = "") const;
-      virtual std::string toString() const;
+      virtual auto debugDescription(const std::string &indentation = "") const -> std::string;
+      virtual auto toString() const -> std::string;
 
-      inline const ValueRef &get(size_t index) const {
+      inline auto get(size_t index) const -> const ValueRef & {
         if (index >= count())
           throw bad_item(index, count());
         return _content[index];
@@ -291,12 +298,12 @@ namespace internal {
       void set_checked(size_t index, const ValueRef &value);
       void insert_checked(const ValueRef &value, size_t index = npos);
 
-      bool check_assignable(const ValueRef &value) const;
-      bool null_allowed() const {
+      auto check_assignable(const ValueRef &value) const -> bool;
+      auto null_allowed() const -> bool {
         return _allow_null;
       }
 
-      inline size_t count() const {
+      inline auto count() const -> size_t {
         return _content.size();
       }
 
@@ -304,33 +311,33 @@ namespace internal {
       virtual void remove(size_t index);
       void reorder(size_t oi, size_t ni);
 
-      size_t get_index(const ValueRef &value);
+      auto get_index(const ValueRef &value) -> size_t;
 
-      inline const ValueRef &operator[](size_t i) const {
+      inline auto operator[](size_t i) const -> const ValueRef & {
         return get(i);
       }
 
-      virtual bool equals(const Value *) const;
-      virtual bool less_than(const Value *) const;
+      virtual auto equals(const Value *) const -> bool;
+      virtual auto less_than(const Value *) const -> bool;
 
-      raw_const_iterator raw_begin() const {
+      auto raw_begin() const -> raw_const_iterator {
         return _content.begin();
       }
-      raw_const_iterator raw_end() const {
+      auto raw_end() const -> raw_const_iterator {
         return _content.end();
       }
 
-      raw_const_reverse_iterator raw_rbegin() const {
+      auto raw_rbegin() const -> raw_const_reverse_iterator {
         return _content.rbegin();
       }
-      raw_const_reverse_iterator raw_rend() const {
+      auto raw_rend() const -> raw_const_reverse_iterator {
         return _content.rend();
       }
 
-      raw_iterator raw_begin() {
+      auto raw_begin() -> raw_iterator {
         return _content.begin();
       }
-      raw_iterator raw_end() {
+      auto raw_end() -> raw_iterator {
         return _content.end();
       }
 
@@ -366,7 +373,7 @@ namespace internal {
       virtual void remove(const ValueRef &value);
       virtual void remove(size_t index);
 
-      Object *owner_of_owned_list() const {
+      auto owner_of_owned_list() const -> Object * {
         return _owner;
       }
 
@@ -378,48 +385,48 @@ namespace internal {
 
     class MYSQLGRT_PUBLIC Dict : public Value {
     public:
-      typedef std::map<std::string, ValueRef> storage_type;
-      typedef storage_type::const_iterator const_iterator;
-      typedef storage_type::const_iterator iterator;
+      using storage_type = std::map<std::string, ValueRef>;
+      using const_iterator = storage_type::const_iterator;
+      using iterator = storage_type::const_iterator;
 
     public:
       Dict(bool allow_null);
       Dict(Type type, const std::string &content_class, bool allow_null);
 
-      static Type static_type() {
+      static auto static_type() -> Type {
         return DictType;
       }
-      virtual Type get_type() const {
+      virtual auto get_type() const -> Type {
         return DictType;
       }
-      virtual std::string debugDescription(const std::string &indentation = "") const;
-      virtual std::string toString() const;
+      virtual auto debugDescription(const std::string &indentation = "") const -> std::string;
+      virtual auto toString() const -> std::string;
 
-      Type content_type() const {
+      auto content_type() const -> Type {
         return _content_type.type;
       }
-      const std::string &content_class_name() const {
+      auto content_class_name() const -> const std::string & {
         return _content_type.object_class;
       }
 
-      ValueRef operator[](const std::string &key) const;
+      auto operator[](const std::string &key) const -> ValueRef;
 
-      const_iterator begin() const;
-      const_iterator end() const;
+      auto begin() const -> const_iterator;
+      auto end() const -> const_iterator;
 
-      bool has_key(const std::string &key) const;
-      ValueRef get(const std::string &key) const;
+      auto has_key(const std::string &key) const -> bool;
+      auto get(const std::string &key) const -> ValueRef;
       virtual void set(const std::string &key, const ValueRef &value);
       virtual void remove(const std::string &key);
       virtual void reset_entries();
-      size_t count() const {
+      auto count() const -> size_t {
         return _content.size();
       }
 
-      std::vector<std::string> keys() const;
+      auto keys() const -> std::vector<std::string>;
 
-      virtual bool equals(const Value *) const;
-      virtual bool less_than(const Value *) const;
+      virtual auto equals(const Value *) const -> bool;
+      virtual auto less_than(const Value *) const -> bool;
 
       virtual void mark_global() const;
       virtual void unmark_global() const;
@@ -444,7 +451,7 @@ namespace internal {
       virtual void remove(const std::string &key);
       virtual void reset_entries();
 
-      Object *owner_of_owned_dict() const {
+      auto owner_of_owned_dict() const -> Object * {
         return _owner;
       }
 
@@ -462,53 +469,53 @@ namespace internal {
      */
     class MYSQLGRT_PUBLIC Object : public Value {
     public:
-      static std::string static_class_name() {
+      static auto static_class_name() -> std::string {
         return "Object";
       }
 
       virtual ~Object();
 
-      const std::string &id() const;
-      MetaClass *get_metaclass() const;
-      const std::string &class_name() const;
+      auto id() const -> const std::string &;
+      auto get_metaclass() const -> MetaClass *;
+      auto class_name() const -> const std::string &;
 
-      static Type static_type() {
+      static auto static_type() -> Type {
         return ObjectType;
       }
-      virtual Type get_type() const {
+      virtual auto get_type() const -> Type {
         return ObjectType;
       }
-      virtual std::string debugDescription(const std::string &indentation = "") const;
-      virtual std::string toString() const;
+      virtual auto debugDescription(const std::string &indentation = "") const -> std::string;
+      virtual auto toString() const -> std::string;
 
-      bool is_instance(MetaClass *gclass) const;
-      bool is_instance(const std::string &name) const;
+      auto is_instance(MetaClass *gclass) const -> bool;
+      auto is_instance(const std::string &name) const -> bool;
 
       void set_member(const std::string &member, const ValueRef &value);
-      ValueRef get_member(const std::string &member) const;
-      std::string get_string_member(const std::string &member) const;
-      Double::storage_type get_double_member(const std::string &member) const;
-      Integer::storage_type get_integer_member(const std::string &member) const;
-      bool has_member(const std::string &member) const;
+      auto get_member(const std::string &member) const -> ValueRef;
+      auto get_string_member(const std::string &member) const -> std::string;
+      auto get_double_member(const std::string &member) const -> Double::storage_type;
+      auto get_integer_member(const std::string &member) const -> Integer::storage_type;
+      auto has_member(const std::string &member) const -> bool;
 
-      bool has_method(const std::string &method) const;
+      auto has_method(const std::string &method) const -> bool;
 
-      virtual bool equals(const Value *) const;
-      virtual bool less_than(const Value *) const;
+      virtual auto equals(const Value *) const -> bool;
+      virtual auto less_than(const Value *) const -> bool;
 
-      virtual ValueRef call(const std::string &method, const BaseListRef &args);
+      virtual auto call(const std::string &method, const BaseListRef &args) -> ValueRef;
 
-      bool is_global() const {
+      auto is_global() const -> bool {
         return _is_global != 0;
       }
 
-      boost::signals2::signal<void(const std::string &, const ValueRef &)> *signal_changed() {
+      auto signal_changed() -> boost::signals2::signal<void(const std::string &, const ValueRef &)> * {
         return &_changed_signal;
       }
-      boost::signals2::signal<void(OwnedList *, bool, const grt::ValueRef &)> *signal_list_changed() {
+      auto signal_list_changed() -> boost::signals2::signal<void(OwnedList *, bool, const grt::ValueRef &)> * {
         return &_list_changed_signal;
       }
-      boost::signals2::signal<void(OwnedDict *, bool, const std::string &)> *signal_dict_changed() {
+      auto signal_dict_changed() -> boost::signals2::signal<void(OwnedDict *, bool, const std::string &)> * {
         return &_dict_changed_signal;
       }
 
@@ -566,7 +573,7 @@ namespace internal {
      *
      * @ingroup GRTInternal
      */
-    typedef void (*ClassRegistrationFunction)();
+    using ClassRegistrationFunction = void (*)();
 
     struct MYSQLGRT_PUBLIC ClassRegistry {
     private:
@@ -585,10 +592,10 @@ namespace internal {
        */
       void cleanUp();
 
+      static auto get_instance() -> ClassRegistry *;
 
-      static ClassRegistry *get_instance();
+      auto isEmpty() -> bool;
 
-      bool isEmpty();
     public:
       /** Template function to globally register a GRT class.
        */
@@ -598,5 +605,5 @@ namespace internal {
       }
     };
 
-  }; // internal
-};   // grt
+  }; // namespace internal
+}; // namespace grt

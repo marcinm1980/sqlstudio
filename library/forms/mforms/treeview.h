@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -67,7 +67,7 @@ namespace mforms {
     TreeSizeSmall = 1 << 12,       // Small text.
     TreeIndexOnTag = 1 << 13,      // Keep a node index on the tags (use with node_with_tag).
 
-    TreeCanBeDragSource = 1 << 14, //!< allow the tree to be a drag source, data used depends on actual tree
+    TreeCanBeDragSource = 1 << 14,   //!< allow the tree to be a drag source, data used depends on actual tree
     TreeColumnsAutoResize = 1 << 15, //!< used only on OSX enable column autoresize
   };
 
@@ -82,13 +82,13 @@ namespace mforms {
     TreeSelectMultiple // 0+ items selection
   };
 
-  typedef struct TextAttributes TreeNodeTextAttributes;
+  using TreeNodeTextAttributes = struct TextAttributes;
 
   // This struct represents the data comprising a node
   // including a collection of child nodes.
   struct MFORMS_EXPORT TreeNodeSkeleton {
   public:
-    TreeNodeSkeleton(){};
+    TreeNodeSkeleton() {};
     TreeNodeSkeleton(const std::string &caption, const std::string &icon, const std::string &tag);
     std::string caption;
     std::string icon;
@@ -99,7 +99,7 @@ namespace mforms {
   // This struct represents a collection of nodes sharing tag, icon and structure
   struct MFORMS_EXPORT TreeNodeCollectionSkeleton {
   public:
-    TreeNodeCollectionSkeleton(){};
+    TreeNodeCollectionSkeleton() {};
     TreeNodeCollectionSkeleton(const std::string &icon);
     std::string icon;
     std::vector<TreeNodeSkeleton> children;
@@ -169,7 +169,7 @@ namespace mforms {
     virtual void retain() = 0;
 
   public:
-    virtual ~TreeNode(){};
+    virtual ~TreeNode() {};
 
     virtual bool equals(const TreeNode &other) = 0;
 #ifndef SWIG
@@ -518,4 +518,4 @@ namespace mforms {
     bool _index_on_tag;
     bool _end_column_called;
   };
-}
+} // namespace mforms

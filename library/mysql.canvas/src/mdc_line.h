@@ -71,21 +71,21 @@ namespace mdc {
     LineLayouter();
     virtual ~LineLayouter();
 
-    boost::signals2::signal<void()> *signal_changed() {
+    auto signal_changed() -> boost::signals2::signal<void()> * {
       return &_changed;
     }
 
-    virtual Connector *get_start_connector() const = 0;
-    virtual Connector *get_end_connector() const = 0;
+    virtual auto get_start_connector() const -> Connector * = 0;
+    virtual auto get_end_connector() const -> Connector * = 0;
 
-    virtual std::vector<base::Point> get_points() = 0;
-    virtual base::Point get_start_point() = 0;
-    virtual base::Point get_end_point() = 0;
+    virtual auto get_points() -> std::vector<base::Point> = 0;
+    virtual auto get_start_point() -> base::Point = 0;
+    virtual auto get_end_point() -> base::Point = 0;
 
-    virtual std::vector<ItemHandle *> create_handles(Line *line, InteractionLayer *ilayer);
+    virtual auto create_handles(Line *line, InteractionLayer *ilayer) -> std::vector<ItemHandle *>;
     virtual void update_handles(Line *line, std::vector<ItemHandle *> &handles);
 
-    virtual bool handle_dragged(Line *line, ItemHandle *handle, const base::Point &pos, bool dragging);
+    virtual auto handle_dragged(Line *line, ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
 
     virtual void update() = 0;
 
@@ -104,14 +104,14 @@ namespace mdc {
     virtual ~Line();
 
     void set_layouter(LineLayouter *layouter);
-    LineLayouter *get_layouter() {
+    auto get_layouter() -> LineLayouter * {
       return _layouter;
     }
 
     virtual void resize_to(const base::Size &size);
     virtual void move_to(const base::Point &pos);
 
-    virtual bool contains_point(const base::Point &point) const;
+    virtual auto contains_point(const base::Point &point) const -> bool;
 
     virtual void draw_contents(CairoCtx *cr);
     virtual void stroke_outline(CairoCtx *cr, float offset = 0) const;
@@ -120,10 +120,10 @@ namespace mdc {
     void set_vertices(const std::vector<base::Point> &points);
     void add_vertex(const base::Point &pos);
     void set_vertex(size_t vertex, const base::Point &pos);
-    inline base::Point get_vertex(size_t vertex) {
+    inline auto get_vertex(size_t vertex) -> base::Point {
       return _vertices[vertex];
     }
-    size_t count_vertices() {
+    auto count_vertices() -> size_t {
       return _vertices.size();
     }
 
@@ -131,7 +131,7 @@ namespace mdc {
     void set_line_pattern(LinePatternType pattern);
 
     void set_hops_crossings(bool flag);
-    bool get_hops_crossings() const {
+    auto get_hops_crossings() const -> bool {
       return _hop_crossings;
     }
 
@@ -140,7 +140,7 @@ namespace mdc {
     virtual void create_handles(InteractionLayer *ilayer);
     virtual void update_handles();
 
-    boost::signals2::signal<void()> *signal_layout_changed() {
+    auto signal_layout_changed() -> boost::signals2::signal<void()> * {
       return &_layout_changed;
     }
 
@@ -152,10 +152,10 @@ namespace mdc {
     struct SegmentPoint {
       base::Point pos;
       Line *hop;
-      inline bool operator==(const SegmentPoint &sp) const {
+      inline auto operator==(const SegmentPoint &sp) const -> bool {
         return sp.pos == pos && sp.hop == hop;
       };
-      inline bool operator!=(const SegmentPoint &sp) const {
+      inline auto operator!=(const SegmentPoint &sp) const -> bool {
         return sp.pos != pos || sp.hop != hop;
       };
       SegmentPoint(const base::Point &p, Line *l) : pos(p), hop(l) {
@@ -178,10 +178,10 @@ namespace mdc {
     void update_layout();
 
     void set_line_pattern(CairoCtx *cr, LinePatternType pattern);
-    GLushort get_gl_pattern(LinePatternType pattern);
+    auto get_gl_pattern(LinePatternType pattern) -> GLushort;
 
-    double get_line_start_angle();
-    double get_line_end_angle();
+    auto get_line_start_angle() -> double;
+    auto get_line_end_angle() -> double;
 
     void draw_line_ends(CairoCtx *cr);
     void draw_line_ends_gl();
@@ -189,7 +189,7 @@ namespace mdc {
     virtual void draw_outline_ring_gl(const base::Color &color);
 
   private:
-    virtual bool on_drag_handle(ItemHandle *handle, const base::Point &pos, bool dragging);
+    virtual auto on_drag_handle(ItemHandle *handle, const base::Point &pos, bool dragging) -> bool;
   };
 
 } // end of mdc namespace

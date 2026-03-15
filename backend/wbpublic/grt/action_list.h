@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _ACTION_LIST_H_
@@ -36,46 +36,46 @@ public:
 
   /* actions that doesn't require context node(s) */
 public:
-  typedef std::function<void()> ActionSlot;
+  using ActionSlot = std::function<void()>;
   void register_action(const std::string &name, const ActionSlot &slot);
   void unregister_action(const std::string &name);
   bool trigger_action(const std::string &name);
 
 private:
-  typedef std::map<std::string, ActionSlot> ActionSlots;
+  using ActionSlots = std::map<std::string, ActionSlot>;
   ActionSlots _actions;
 
   /* actions for single node */
 public:
-  typedef std::function<void(const bec::NodeId &)> NodeActionSlot;
+  using NodeActionSlot = std::function<void(const bec::NodeId &)>;
   void register_node_action(const std::string &name, const NodeActionSlot &slot);
   void unregister_node_action(const std::string &name);
   bool trigger_action(const std::string &name, const bec::NodeId &node);
 
 private:
-  typedef std::map<std::string, NodeActionSlot> NodeActionSlots;
+  using NodeActionSlots = std::map<std::string, NodeActionSlot>;
   NodeActionSlots _node_actions;
 
   /* actions for multiple nodes */
 public:
-  typedef std::function<void(const std::vector<bec::NodeId> &)> NodesActionSlot;
+  using NodesActionSlot = std::function<void(const std::vector<bec::NodeId> &)>;
   void register_nodes_action(const std::string &name, const NodesActionSlot &slot);
   void unregister_nodes_action(const std::string &name);
   bool trigger_action(const std::string &name, const std::vector<bec::NodeId> &nodes);
 
 private:
-  typedef std::map<std::string, NodesActionSlot> NodesActionSlots;
+  using NodesActionSlots = std::map<std::string, NodesActionSlot>;
   NodesActionSlots _nodes_actions;
 
   /* actions for multiple row indexes plus column index */
 public:
-  typedef std::function<void(const std::vector<int> &, int)> RowsColActionSlot;
+  using RowsColActionSlot = std::function<void(const std::vector<int> &, int)>;
   void register_rows_col_action(const std::string &name, const RowsColActionSlot &slot);
   void unregister_rows_col_action(const std::string &name);
   bool trigger_action(const std::string &name, const std::vector<int> &rows, int column);
 
 private:
-  typedef std::map<std::string, RowsColActionSlot> RowsColActionSlots;
+  using RowsColActionSlots = std::map<std::string, RowsColActionSlot>;
   RowsColActionSlots _rows_col_actions;
 
   /* aux templates */

@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef __TABLE_FIGURE_H__
@@ -34,7 +34,7 @@ namespace wbbridge {
   namespace physical {
     class TableFigure;
   };
-};
+}; // namespace wbbridge
 
 namespace wbfig {
 
@@ -78,7 +78,7 @@ namespace wbfig {
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC Table : public BaseFigure {
-    typedef BaseFigure super;
+    using super = BaseFigure;
 
   public:
     Table(mdc::Layer *layer, FigureEventHub *hub, const model_ObjectRef &self, bool collapsible);
@@ -193,6 +193,6 @@ namespace wbfig {
       return true;
     }
   };
-};
+}; // namespace wbfig
 
 #endif

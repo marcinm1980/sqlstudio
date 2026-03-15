@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _TRACKABLE_H
@@ -35,19 +35,19 @@ namespace base {
 
   namespace trackable_checks {
     template <typename T>
-    inline std::string is_valid_slot(const T&) {
+    inline auto is_valid_slot(const T&) -> std::string {
       return std::string();
     }
 
     template <class R, class... Args>
-    inline std::string is_valid_slot(const std::function<R(Args...)>& f) {
+    inline auto is_valid_slot(const std::function<R(Args...)>& f) -> std::string {
       return !f ? "Attempted to connect empty std::func" : std::string();
     }
-  }
+  } // namespace trackable_checks
 
   class BASELIBRARY_PUBLIC_FUNC trackable {
   public:
-    typedef std::function<void*(void*)> destroy_func;
+    using destroy_func = std::function<void*(void*)>;
     void remove_destroy_notify_callback(void* data) {
       _destroy_functions.erase(data);
     }
@@ -86,15 +86,15 @@ namespace base {
   };
 
   template <typename TRetval>
-  TRetval run_and_return_value(const std::function<void()>& f) {
+  auto run_and_return_value(const std::function<void()>& f) -> TRetval {
     f();
     return TRetval();
   }
 
   template <bool ret>
-  bool run_and_return_value(const std::function<void()>& f) {
+  auto run_and_return_value(const std::function<void()>& f) -> bool {
     f();
     return ret;
   }
-}
+} // namespace base
 #endif // #ifndef _TRACKABLE_H

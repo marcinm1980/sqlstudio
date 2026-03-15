@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include "wb_overview_diagram.h"
@@ -162,7 +162,7 @@ class SchemaListUpdater
   std::vector<OverviewBE::Node *> &_nodes;
   std::set<OverviewBE::Node *> _reused_items;
   grt::ListRef<db_Schema> _schemata;
-  typedef std::function<OverviewBE::Node *(db_SchemaRef)> SchemaNodeInstantiationSlot;
+  using SchemaNodeInstantiationSlot = std::function<OverviewBE::Node *(db_SchemaRef)>;
   SchemaNodeInstantiationSlot _schema_node_instantiation_slot;
 
 public:
@@ -387,8 +387,7 @@ void NotesNode::refresh_children() {
 
 class PhysicalRootNode : public OverviewBE::ContainerNode {
 public:
-  PhysicalRootNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner)
-    : ContainerNode(OverviewBE::ODivision) {
+  PhysicalRootNode(studio_physical_ModelRef model, PhysicalOverviewBE *owner) : ContainerNode(OverviewBE::ODivision) {
     type = OverviewBE::ORoot;
     if (model->rdbms().is_valid())
       label = strfmt("%s Model", model->rdbms()->caption().c_str());
@@ -536,42 +535,40 @@ mforms::MenuBar *PhysicalOverviewBE::get_menubar() {
   if (!_menu) {
     _menu = wb::WBContextUI::get()->get_command_ui()->create_menubar_for_context(WB_CONTEXT_PHYSICAL_OVERVIEW);
 
-    static const char *diagram_only_items[] = {
-        "diagram_size",
-        "fnotation",
-        "rnotation",
-        "wb.edit.goToNextSelected",
-        "wb.edit.goToPreviousSelected",
-        "wb.edit.selectSimilar",
-        "wb.edit.selectConnected",
-        "wb.edit.toggleGridAlign",
-        "wb.edit.toggleGrid",
-        "wb.edit.togglePageGrid",
-        "wb.view.zoomDefault",
-        "wb.view.zoomIn",
-        "wb.view.zoomOut",
-        "wb.view.setFigureNotation",
-        "wb.view.setRelationshipNotation",
-        "wb.view.setMarker:1",
-        "wb.view.setMarker:2",
-        "wb.view.setMarker:3",
-        "wb.view.setMarker:4",
-        "wb.view.setMarker:5",
-        "wb.view.setMarker:6",
-        "wb.view.setMarker:7",
-        "wb.view.setMarker:8",
-        "wb.view.setMarker:9",
-        "wb.view.goToMarker:1",
-        "wb.view.goToMarker:2",
-        "wb.view.goToMarker:3",
-        "wb.view.goToMarker:4",
-        "wb.view.goToMarker:5",
-        "wb.view.goToMarker:6",
-        "wb.view.goToMarker:7",
-        "wb.view.goToMarker:8",
-        "wb.view.goToMarker:9",
-        nullptr
-    };
+    static const char *diagram_only_items[] = { "diagram_size",
+                                                "fnotation",
+                                                "rnotation",
+                                                "wb.edit.goToNextSelected",
+                                                "wb.edit.goToPreviousSelected",
+                                                "wb.edit.selectSimilar",
+                                                "wb.edit.selectConnected",
+                                                "wb.edit.toggleGridAlign",
+                                                "wb.edit.toggleGrid",
+                                                "wb.edit.togglePageGrid",
+                                                "wb.view.zoomDefault",
+                                                "wb.view.zoomIn",
+                                                "wb.view.zoomOut",
+                                                "wb.view.setFigureNotation",
+                                                "wb.view.setRelationshipNotation",
+                                                "wb.view.setMarker:1",
+                                                "wb.view.setMarker:2",
+                                                "wb.view.setMarker:3",
+                                                "wb.view.setMarker:4",
+                                                "wb.view.setMarker:5",
+                                                "wb.view.setMarker:6",
+                                                "wb.view.setMarker:7",
+                                                "wb.view.setMarker:8",
+                                                "wb.view.setMarker:9",
+                                                "wb.view.goToMarker:1",
+                                                "wb.view.goToMarker:2",
+                                                "wb.view.goToMarker:3",
+                                                "wb.view.goToMarker:4",
+                                                "wb.view.goToMarker:5",
+                                                "wb.view.goToMarker:6",
+                                                "wb.view.goToMarker:7",
+                                                "wb.view.goToMarker:8",
+                                                "wb.view.goToMarker:9",
+                                                nullptr };
 
     for (int i = 0; diagram_only_items[i]; i++)
       _menu->set_item_enabled(diagram_only_items[i], false);

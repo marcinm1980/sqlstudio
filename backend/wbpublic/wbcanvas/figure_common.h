@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _FIGURE_COMMON_H_
@@ -39,7 +39,7 @@ namespace wbfig {
    */
   class FigureEventHub {
   public:
-    virtual ~FigureEventHub(){};
+    virtual ~FigureEventHub() {};
     virtual bool figure_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
                               mdc::MouseButton button, mdc::EventState state) = 0;
     virtual bool figure_double_click(const model_ObjectRef &owner, mdc::CanvasItem *target, const base::Point &point,
@@ -55,7 +55,7 @@ namespace wbfig {
   class BaseFigure;
 
   class WBPUBLICBACKEND_PUBLIC_FUNC Titlebar : public mdc::Box {
-    typedef mdc::Box super;
+    using super = mdc::Box;
 
   public:
     Titlebar(mdc::Layer *layer, FigureEventHub *hub, BaseFigure *owner, bool expander);
@@ -120,7 +120,7 @@ namespace wbfig {
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC CaptionFigure : public mdc::TextFigure {
-    typedef mdc::TextFigure super;
+    using super = mdc::TextFigure;
 
     FigureEventHub *_hub;
     model_Object *_owner_object;
@@ -141,7 +141,7 @@ namespace wbfig {
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC FigureItem : public mdc::IconTextFigure {
-    typedef mdc::IconTextFigure super;
+    using super = mdc::IconTextFigure;
 
     FigureEventHub *_hub;
     BaseFigure *_owner;
@@ -182,10 +182,10 @@ namespace wbfig {
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC BaseFigure : public mdc::Box {
-    typedef mdc::Box super;
+    using super = mdc::Box;
 
   public:
-    typedef std::list<FigureItem *> ItemList;
+    using ItemList = std::list<FigureItem *>;
 
     // default implementation just sets background color
     virtual void unset_color();
@@ -237,8 +237,8 @@ namespace wbfig {
     void invalidate_min_sizes();
     static void invalidate_min_sizes(mdc::CanvasItem *item);
 
-    typedef std::function<FigureItem *(mdc::Layer *, FigureEventHub *)> CreateItemSlot;
-    typedef std::function<void(FigureItem *)> UpdateItemSlot;
+    using CreateItemSlot = std::function<FigureItem *(mdc::Layer *, FigureEventHub *)>;
+    using UpdateItemSlot = std::function<void(FigureItem *)>;
 
     virtual ItemList::iterator begin_sync(mdc::Box &box, ItemList &list);
     virtual ItemList::iterator sync_next(mdc::Box &box, ItemList &list, ItemList::iterator iter, const std::string &id,
@@ -263,7 +263,7 @@ namespace wbfig {
   };
 
   class WBPUBLICBACKEND_PUBLIC_FUNC ShrinkableBox : public mdc::Box {
-    typedef mdc::Box super;
+    using super = mdc::Box;
 
     int _limit_item_count;
     int _hidden_item_count;
@@ -281,6 +281,6 @@ namespace wbfig {
 
     void set_allow_manual_resizing(bool flag);
   };
-};
+}; // namespace wbfig
 
 #endif /* _FIGURE_COMMON_H_ */

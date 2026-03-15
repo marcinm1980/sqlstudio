@@ -106,21 +106,21 @@ namespace base {
 #endif
     static void log_throw(const LogLevel level, const char* const domain, const char* format, ...);
     static void log_exc(const LogLevel level, const char* const domain, const char* msg, const std::exception& exc);
-    static std::string get_state();
+    static auto get_state() -> std::string;
     static void set_state(const std::string& state);
-    static std::string log_filename();
-    static std::string log_dir();
+    static auto log_filename() -> std::string;
+    static auto log_dir() -> std::string;
 
-    static std::string active_level();
-    static bool active_level(const std::string& value);
+    static auto active_level() -> std::string;
+    static auto active_level(const std::string& value) -> bool;
 
     static void log_to_stderr(bool value);
 
-    static const std::string& logLevelName(std::size_t index) {
+    static auto logLevelName(std::size_t index) -> const std::string& {
       return _logLevelNames[index];
     }
 
-    static bool wasLogLevelSpecifiedByUser() {
+    static auto wasLogLevelSpecifiedByUser() -> bool {
       return _logLevelSpecifiedByUser;
     }
     static void setLogLevelSpecifiedByUser() {

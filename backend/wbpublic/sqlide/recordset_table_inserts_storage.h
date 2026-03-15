@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef _RECORDSET_TABLE_INSERTS_STORAGE_BE_H_
@@ -33,7 +33,7 @@
 
 class WBPUBLICBACKEND_PUBLIC_FUNC Recordset_table_inserts_storage : public Recordset_sqlite_storage {
 public:
-  typedef std::shared_ptr<Recordset_table_inserts_storage> Ref;
+  using Ref = std::shared_ptr<Recordset_table_inserts_storage>;
   static Ref create() {
     return create_with_path(bec::GRTManager::get()->get_db_file_path());
   }

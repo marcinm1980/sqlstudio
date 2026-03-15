@@ -27,13 +27,13 @@
 
 // Enum class count and index.
 template <class enumeration>
-std::size_t enumCount() {
+auto enumCount() -> std::size_t {
   static_assert(std::is_enum<enumeration>::value, "Not an enum");
   return static_cast<std::size_t>(enumeration::Count); // Requires that the enum class has a last member named "count".
 }
 
 template <class enumeration>
-std::size_t enumIndex(const enumeration value) {
+auto enumIndex(const enumeration value) -> std::size_t {
   static_assert(std::is_enum<enumeration>::value, "Not an enum");
   return static_cast<std::size_t>(value);
 }

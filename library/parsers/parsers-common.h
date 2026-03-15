@@ -122,38 +122,38 @@ namespace parsers {
     Scanner(antlr4::BufferedTokenStream *input);
 
     // Standard navigation.
-    bool next(bool skipHidden = true);
-    bool previous(bool skipHidden = true);
+    auto next(bool skipHidden = true) -> bool;
+    auto previous(bool skipHidden = true) -> bool;
 
     // Advanced navigation.
-    bool advanceToPosition(size_t line, size_t offset);
-    bool advanceToType(size_t type);
-    bool skipTokenSequence(std::initializer_list<size_t> sequence);
+    auto advanceToPosition(size_t line, size_t offset) -> bool;
+    auto advanceToType(size_t type) -> bool;
+    auto skipTokenSequence(std::initializer_list<size_t> sequence) -> bool;
 
-    size_t lookAhead(bool skipHidden = true);
-    size_t lookBack(bool skipHidden = true);
+    auto lookAhead(bool skipHidden = true) -> size_t;
+    auto lookBack(bool skipHidden = true) -> size_t;
 
     void seek(size_t index);
 
     // Stacking.
     void reset();
     void push();
-    bool pop();
+    auto pop() -> bool;
     void removeTos();
 
     // Properties of current token.
-    bool is(size_t type) const;
+    auto is(size_t type) const -> bool;
 
-    std::string tokenText(bool keepQuotes = false) const;
-    size_t tokenType() const;
-    size_t tokenLine() const;
-    size_t tokenStart() const;
-    size_t tokenIndex() const;
-    size_t tokenOffset() const;
-    size_t tokenLength() const;
-    size_t tokenChannel() const;
+    auto tokenText(bool keepQuotes = false) const -> std::string;
+    auto tokenType() const -> size_t;
+    auto tokenLine() const -> size_t;
+    auto tokenStart() const -> size_t;
+    auto tokenIndex() const -> size_t;
+    auto tokenOffset() const -> size_t;
+    auto tokenLength() const -> size_t;
+    auto tokenChannel() const -> size_t;
 
-    std::string tokenSubText() const;
+    auto tokenSubText() const -> std::string;
   private:
     std::vector<antlr4::Token *> _tokens; // Only valid so long as the input stream passed in to the c-tor is alive.
     std::stack<size_t> _tokenStack;

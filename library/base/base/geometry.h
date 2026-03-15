@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
+ * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #pragma once
@@ -47,28 +47,28 @@ namespace base {
     Point();
     Point(double x, double y);
 
-    inline Point operator+(const Point &p) const {
+    inline auto operator+(const Point &p) const -> Point {
       return Point(p.x + x, p.y + y);
     };
-    inline Point operator-(const Point &p) const {
+    inline auto operator-(const Point &p) const -> Point {
       return Point(x - p.x, y - p.y);
     };
-    inline Point operator-() const {
+    inline auto operator-() const -> Point {
       return Point(-x, -y);
     };
-    inline bool operator==(const Point &p) const {
+    inline auto operator==(const Point &p) const -> bool {
       return p.x == x && p.y == y;
     };
-    inline bool operator!=(const Point &p) const {
+    inline auto operator!=(const Point &p) const -> bool {
       return p.x != x || p.y != y;
     };
-    inline Point round() const {
+    inline auto round() const -> Point {
       Point p;
       p.x = ceil(x);
       p.y = ceil(y);
       return p;
     };
-    inline std::string str() const {
+    inline auto str() const -> std::string {
       char buf[20];
       snprintf(buf, sizeof(buf), "{%.2f,%.2f}", x, y);
       return buf;
@@ -79,27 +79,27 @@ namespace base {
     double width;
     double height;
 
-    bool empty();
+    auto empty() -> bool;
 
     Size();
     Size(double w, double h);
 
-    inline Size round() const {
+    inline auto round() const -> Size {
       Size s;
       s.width = ceil(width);
       s.height = ceil(height);
       return s;
     };
-    inline std::string str() const {
+    inline auto str() const -> std::string {
       char buf[20];
       snprintf(buf, sizeof(buf), "{%.2fx%.2f}", width, height);
       return buf;
     };
 
-    inline bool operator==(const Size &s) const {
+    inline auto operator==(const Size &s) const -> bool {
       return s.width == width && s.height == height;
     };
-    inline bool operator!=(const Size &s) const {
+    inline auto operator!=(const Size &s) const -> bool {
       return s.width != width || s.height != height;
     };
   };
@@ -114,29 +114,29 @@ namespace base {
     Rect(const Point &tl, const Point &br);
     Rect(const Point &apos, const Size &asize);
 
-    bool contains(double x, double y) const;
-    bool contains_flipped(double x, double y) const;
+    auto contains(double x, double y) const -> bool;
+    auto contains_flipped(double x, double y) const -> bool;
     void inflate(double horizontal, double vertical);
 
-    double right() const;
-    double bottom() const;
-    inline bool empty() const {
+    auto right() const -> double;
+    auto bottom() const -> double;
+    inline auto empty() const -> bool {
       return (size.width <= 0) || (size.height <= 0);
     }
 
-    double left() const;
-    double top() const;
-    inline double width() const {
+    auto left() const -> double;
+    auto top() const -> double;
+    inline auto width() const -> double {
       return size.width;
     };
-    inline double height() const {
+    inline auto height() const -> double {
       return size.height;
     };
 
-    inline double xcenter() const {
+    inline auto xcenter() const -> double {
       return pos.x + size.width / 2;
     }
-    inline double ycenter() const {
+    inline auto ycenter() const -> double {
       return pos.y + size.height / 2;
     }
 
@@ -157,31 +157,31 @@ namespace base {
       size.height = y - pos.y;
     };
 
-    inline Point center() const {
+    inline auto center() const -> Point {
       return Point(xcenter(), ycenter());
     }
 
-    inline Point top_left() const {
+    inline auto top_left() const -> Point {
       return Point(left(), top());
     }
-    inline Point top_right() const {
+    inline auto top_right() const -> Point {
       return Point(right(), top());
     }
-    inline Point bottom_left() const {
+    inline auto bottom_left() const -> Point {
       return Point(left(), bottom());
     }
-    inline Point bottom_right() const {
+    inline auto bottom_right() const -> Point {
       return Point(right(), bottom());
     }
 
-    inline bool operator==(const Rect &r) const {
+    inline auto operator==(const Rect &r) const -> bool {
       return r.pos == pos && r.size == size;
     };
-    inline bool operator!=(const Rect &r) const {
+    inline auto operator!=(const Rect &r) const -> bool {
       return r.pos != pos || r.size != size;
     };
 
-    inline std::string str() const {
+    inline auto str() const -> std::string {
       char buf[40];
       snprintf(buf, sizeof(buf), "{%.2f,%.2f  %.2fx%.2f}", pos.x, pos.y, size.width, size.height);
       return buf;
@@ -207,7 +207,7 @@ namespace base {
  * Four values describing the space on each side of an area.
  */
 #ifndef SWIG
-  typedef struct BASELIBRARY_PUBLIC_FUNC Padding
+  using Padding = struct BASELIBRARY_PUBLIC_FUNC Padding
 #else
   struct Padding
 #endif
@@ -223,8 +223,7 @@ namespace base {
 
     int horizontal();
     int vertical();
-
-  } Padding;
+  };
 
   /** A struct describing a range in a container. */
   struct BASELIBRARY_PUBLIC_FUNC Range {
@@ -234,8 +233,8 @@ namespace base {
     Range();
     Range(size_t position, size_t size);
 
-    size_t end();
-    bool contains_point(size_t point);
+    auto end() -> size_t;
+    auto contains_point(size_t point) -> bool;
   };
 
 } // namespace base

@@ -37,17 +37,17 @@ namespace mdc {
     IconTextFigure(Layer *layer);
     virtual ~IconTextFigure();
 
-    virtual base::Size calc_min_size();
+    virtual auto calc_min_size() -> base::Size;
 
     virtual void draw_contents(CairoCtx *cr);
 
     void set_icon(cairo_surface_t *icon);
-    cairo_surface_t *get_icon() {
+    auto get_icon() -> cairo_surface_t * {
       return _icon;
     }
 
     void set_spacing(double space);
-    double get_spacing() {
+    auto get_spacing() -> double {
       return _spacing;
     }
 
