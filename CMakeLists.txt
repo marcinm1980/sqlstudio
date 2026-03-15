@@ -25,6 +25,9 @@ string(STRIP "${WB_VERSION}" WB_VERSION)
 
 project(MYSQLSTUDIO LANGUAGES C CXX)
 
+# Needed by clang-tidy/clangd and VS Code C/C++ analysis.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Export compile commands for clang tooling")
+
 option(ENABLE_COTIRE "Enable cotire to generate precompiled headers" OFF)
 option(TEST_BUILD "Enable building additonal debug libs" OFF)
 option(BUILD_FOR_GCOV "Enable gcov instrumentation" OFF)
