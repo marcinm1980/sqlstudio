@@ -279,20 +279,43 @@ endif()
 
 install(FILES ${CMAKE_BINARY_DIR}/mysql-studio.desktop DESTINATION ${WB_INSTALL_SHARED_DIR}/applications)
 
+set(_wb_sharedmimeinfo "")
+set(_wb_legacy_mime "")
 if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/internal)
-    install(FILES README-commercial.md License-commercial.txt DESTINATION ${WB_INSTALL_DOC_DIR}-commercial)
-    install(FILES build/mysql-studio-commercial.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
-    install(FILES build/mysql-studio-commercial.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
+  set(_wb_sharedmimeinfo "${CMAKE_BINARY_DIR}/mysql-studio-commercial.sharedmimeinfo")
+  set(_wb_legacy_mime "${CMAKE_BINARY_DIR}/mysql-studio-commercial.mime")
 else()
-    install(FILES README.md License.txt DESTINATION ${WB_INSTALL_DOC_DIR}-community)
-    install(FILES build/mysql-studio-community.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
-    install(FILES build/mysql-studio-community.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
+  set(_wb_sharedmimeinfo "${CMAKE_BINARY_DIR}/mysql-studio-community.sharedmimeinfo")
+  set(_wb_legacy_mime "${CMAKE_BINARY_DIR}/mysql-studio-community.mime")
 endif()
 
+if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/internal)
+    install(FILES README-commercial.md License-commercial.txt DESTINATION ${WB_INSTALL_DOC_DIR}-commercial)
+else()
+    install(FILES README.md License.txt DESTINATION ${WB_INSTALL_DOC_DIR}-community)
+endif()
 
-install(FILES build/build_freetds.sh
-        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
-        DESTINATION ${WB_PACKAGE_SHARED_DIR}/extras)
+if(EXISTS "${_wb_sharedmimeinfo}")
+  install(FILES "${_wb_sharedmimeinfo}" DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
+else()
+  message(STATUS "Optional shared MIME package not found: ${_wb_sharedmimeinfo}")
+endif()
+
+if(EXISTS "${_wb_legacy_mime}")
+  install(FILES "${_wb_legacy_mime}" DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
+elseif(EXISTS "${CMAKE_SOURCE_DIR}/mysql-Studio.mime")
+  install(FILES "${CMAKE_SOURCE_DIR}/mysql-Studio.mime" DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
+else()
+  message(STATUS "Optional legacy MIME file not found: ${_wb_legacy_mime}")
+endif()
+
+if(EXISTS "${CMAKE_BINARY_DIR}/build_freetds.sh")
+  install(FILES "${CMAKE_BINARY_DIR}/build_freetds.sh"
+      PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
+      DESTINATION ${WB_PACKAGE_SHARED_DIR}/extras)
+else()
+  message(STATUS "Optional helper script not found: ${CMAKE_BINARY_DIR}/build_freetds.sh")
+endif()
 
 install(FILES samples/models/sakila_full.mwb
         DESTINATION ${WB_PACKAGE_SHARED_DIR}/extras)
