@@ -13,11 +13,20 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 # Retrieve current MySqlStudio version
 execute_process(COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/get_wb_version.sh full_version
-                OUTPUT_VARIABLE WB_VERSION)
+                OUTPUT_VARIABLE WB_VERSION
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-string(STRIP ${WB_VERSION} WB_VERSION)
+if(NOT WB_VERSION)
+  set(WB_VERSION "1.0.0")
+  message(WARNING "Could not determine version, defaulting to ${WB_VERSION}")
+endif()
+
+string(STRIP "${WB_VERSION}" WB_VERSION)
 
 project(MYSQLSTUDIO LANGUAGES C CXX)
+
+# Needed by clang-tidy/clangd and VS Code C/C++ analysis.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Export compile commands for clang tooling")
 
 option(ENABLE_COTIRE "Enable cotire to generate precompiled headers" OFF)
 option(TEST_BUILD "Enable building additonal debug libs" OFF)
@@ -49,6 +58,12 @@ if(POLICY CMP0078)
 endif()
 if(POLICY CMP0086)
   cmake_policy(SET CMP0086 OLD) # cmake-3.14
+endif()
+if(POLICY CMP0148)
+  cmake_policy(SET CMP0148 OLD) # cmake-3.27 – keep using FindPythonInterp/FindPythonLibs
+endif()
+if(POLICY CMP0167)
+  cmake_policy(SET CMP0167 OLD) # cmake-3.30 – keep using FindBoost
 endif()
 
 find_package(PkgConfig REQUIRED)
@@ -212,6 +227,14 @@ if(COMPILER_SUPPORTS_TEMPLATE_ID_CDTOR)
   list(APPEND WB_CXXFLAGS -Wno-error=template-id-cdtor)
 endif()
 
+check_cxx_compiler_flag(-Wtemplate-body COMPILER_SUPPORTS_TEMPLATE_BODY)
+if(COMPILER_SUPPORTS_TEMPLATE_BODY)
+  list(APPEND WB_CXXFLAGS -Wno-error=template-body)
+endif()
+
+# RapidJSON 1.1.0 needs this to support std::string comparisons
+add_definitions(-DRAPIDJSON_HAS_STDSTRING=1)
+
 if(BUILD_FOR_GCOV)
     message ("Enable GCOV due to BUILD_FOR_GCOV")
     set(WB_CXXFLAGS ${WB_CXXFLAGS} -fprofile-arcs -ftest-coverage )
@@ -224,7 +247,13 @@ endif()
 #-----------------------------------------------------------------------
 # Define some useful variables and options
 #-----------------------------------------------------------------------
-configure_file(${PROJECT_SOURCE_DIR}/mysql-studio.desktop.in mysql-studio.desktop)
+if(EXISTS "${PROJECT_SOURCE_DIR}/mysql-studio.desktop.in")
+  configure_file(${PROJECT_SOURCE_DIR}/mysql-studio.desktop.in mysql-studio.desktop)
+elseif(EXISTS "${PROJECT_SOURCE_DIR}/mysql-Studio.desktop.in")
+  configure_file(${PROJECT_SOURCE_DIR}/mysql-Studio.desktop.in mysql-studio.desktop)
+else()
+  message(WARNING "mysql-studio.desktop.in not found — skipping desktop file generation")
+endif()
 
 add_subdirectory(tools)
 add_subdirectory(backend)
@@ -235,6 +264,9 @@ add_subdirectory(library)
 add_subdirectory(modules)
 add_subdirectory(plugins)
 add_subdirectory(res)
+if(BUILD_TESTING)
+  add_subdirectory(testing)
+endif()
 if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/internal)
   add_subdirectory(internal)
 endif()
@@ -243,11 +275,13 @@ install(FILES ${CMAKE_BINARY_DIR}/mysql-studio.desktop DESTINATION ${WB_INSTALL_
 
 if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/internal)
     install(FILES README-commercial.md License-commercial.txt DESTINATION ${WB_INSTALL_DOC_DIR}-commercial)
+    install(FILES build/mysql-studio-commercial.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
+    install(FILES build/mysql-studio-commercial.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
 else()
     install(FILES README.md License.txt DESTINATION ${WB_INSTALL_DOC_DIR}-community)
+    install(FILES build/mysql-studio-community.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
+    install(FILES build/mysql-studio-community.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
 endif()
-install(FILES build/mysql-studio-commercial.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
-install(FILES build/mysql-studio-commercial.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
 
 
 install(FILES build/build_freetds.sh
@@ -256,4 +290,27 @@ install(FILES build/build_freetds.sh
 
 install(FILES samples/models/sakila_full.mwb
         DESTINATION ${WB_PACKAGE_SHARED_DIR}/extras)
-       
+
+# ── Bundle: third-party shared libraries ──────────────────────────────────
+# Copy all .so* files from the bundle into the application's lib directory
+# so the installed binary can find them at runtime.
+if(DEFINED ENV{WB_BUNDLE_DIR})
+  set(_BUNDLE_DIR "$ENV{WB_BUNDLE_DIR}")
+elseif(IS_DIRECTORY "${CMAKE_SOURCE_DIR}/bundle/lib")
+  set(_BUNDLE_DIR "${CMAKE_SOURCE_DIR}/bundle")
+endif()
+
+if(_BUNDLE_DIR AND IS_DIRECTORY "${_BUNDLE_DIR}/lib")
+  file(GLOB _BUNDLE_LIBS "${_BUNDLE_DIR}/lib/*.so" "${_BUNDLE_DIR}/lib/*.so.*")
+  install(FILES ${_BUNDLE_LIBS}
+          DESTINATION ${WB_INSTALL_LIB_DIR})
+
+  # Key MySQL client binaries needed at runtime (mysql, mysqldump, etc.)
+  set(_BUNDLE_BINS mysql mysqldump)
+  foreach(_bin ${_BUNDLE_BINS})
+    if(EXISTS "${_BUNDLE_DIR}/bin/${_bin}")
+      install(PROGRAMS "${_BUNDLE_DIR}/bin/${_bin}"
+              DESTINATION ${WB_INSTALL_BIN_DIR})
+    endif()
+  endforeach()
+endif()

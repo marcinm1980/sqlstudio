@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -22,10 +23,15 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "casmine.h"
+#include "gtest/gtest.h"
+#include "context.h"
+
+#include <regex>
 
 #include "wb_version.h"
 #include "wb_test_helpers.h"
+
+#undef ERROR
 
 #include "mysql/MySQLLexer.h"
 #include "mysql/MySQLParser.h"
@@ -35,7 +41,7 @@
 #include "grtsqlparser/mysql_parser_services.h"
 
 // This file contains unit tests for the statement splitter and the ANTLR based parser.
-// These are low level tests. There's another set of high level tests (see test_mysql_sqldata->parser.cpp).
+// These are low level tests. There's another set of high level tests (see test_mysql_sqlparser.cpp).
 
 using namespace parsers;
 using namespace antlr4;
@@ -44,9 +50,7 @@ using namespace antlr4::tree;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-namespace {
-
-$ModuleEnvironment() {};
+namespace testing {
 
 struct TestFile {
   std::string name;
@@ -377,7 +381,8 @@ public:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-$TestData {
+class MySQLParserTest : public ::testing::Test {
+protected:
   /**
    * This test generates queries with many (all?) MySQL function names used in foreign key creation
    * (parser bug #21114). Taken from the server test suite.
@@ -602,7 +607,7 @@ $TestData {
 
   };
 
-  std::string dataDir = casmine::CasmineContext::get()->tmpDataDir();
+  std::string dataDir = Context::get().tmpDataDir();
 
   std::unique_ptr<MySqlStudioTester> tester;
   std::set<std::string> charsets;
@@ -703,77 +708,73 @@ $TestData {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TestData(): lexer(&input), tokens(&lexer), parser(&tokens) {}
-};
+  MySQLParserTest(): lexer(&input), tokens(&lexer), parser(&tokens) {}
 
-$describe("MySQL parser test suite (ANTLR)") {
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $beforeAll([this]() {
-    data->tester.reset(new MySqlStudioTester());
-    data->tester->initializeRuntime();
+  void SetUp() override {
+    tester.reset(new MySqlStudioTester());
+    tester->initializeRuntime();
 
     // The charset list contains also the 3 charsets that were introduced in 5.5.3.
-    grt::ListRef<db_CharacterSet> list = data->tester->getRdbms()->characterSets();
+    grt::ListRef<db_CharacterSet> list = tester->getRdbms()->characterSets();
     for (size_t i = 0; i < list->count(); i++)
-      data->charsets.insert("_" + base::tolower(*list[i]->name()));
+      charsets.insert("_" + base::tolower(*list[i]->name()));
 
-    data->lexer.charsets = data->charsets;
-    data->lexer.removeErrorListeners();
-    data->parser.removeErrorListeners();
+    lexer.charsets = charsets;
+    lexer.removeErrorListeners();
+    parser.removeErrorListeners();
 
-    data->services = MySQLParserServices::get();
-  });
+    services = MySQLParserServices::get();
+  }
+};
 
-  //--------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
-  $it("Statement splitter test", [this]() {
-    std::string filename = data->dataDir + "/db/sakila-db/sakila-data.sql";
-    std::string statement_filename = data->dataDir + "/db/sakila-db/single_statement.sql";
+TEST_F(MySQLParserTest, StatementSplitterTest) {
+    std::string filename = dataDir + "/db/sakila-db/sakila-data.sql";
+    std::string statement_filename = dataDir + "/db/sakila-db/single_statement.sql";
 
     std::ifstream stream(filename, std::ios::binary);
-    $expect(stream.good()).toBeTrue("Error loading sql file");
+    EXPECT_TRUE(stream.good()) << "Error loading sql file";
     std::string sql((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
     std::vector<StatementRange> ranges;
-    data->services->determineStatementRanges(sql.c_str(), sql.size(), ";", ranges);
+    services->determineStatementRanges(sql.c_str(), sql.size(), ";", ranges);
 
-    $expect(ranges.size()).toBe(57U, "Unexpected number of statements returned from splitter");
+    EXPECT_EQ(ranges.size(), 57U) << "Unexpected number of statements returned from splitter";
 
     std::string s1(sql, ranges[0].start, ranges[0].length);
-    $expect(s1).toBe("SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0", "Wrong statement");
+    EXPECT_EQ(s1, "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0") << "Wrong statement";
 
     std::string s3(sql, ranges[56].start, ranges[56].length);
-    $expect(s3).toBe("SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS", "Wrong statement");
+    EXPECT_EQ(s3, "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS") << "Wrong statement";
 
     std::string s2(sql, ranges[30].start, ranges[30].length);
 
     stream.close();
     stream.open(statement_filename, std::ios::binary);
-    $expect(stream.good()).toBeTrue("Error loading result file");
+    EXPECT_TRUE(stream.good()) << "Error loading result file";
 
     sql = std::string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
-    $expect(s2).toBe(sql, "Wrong statement");
-  });
+    EXPECT_EQ(s2, sql) << "Wrong statement";
+}
 
-  //--------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
-  $it("Parse a number of files with various statements", [this]() {
+TEST_F(MySQLParserTest, ParseNumberOfFilesWithVariousStatements) {
     std::size_t count = 0;
     for (auto entry : testFiles) {
-      std::string fileName = data->dataDir + entry.name;
+      std::string fileName = dataDir + entry.name;
 
 #ifdef _MSC_VER
       std::ifstream stream(base::string_to_wstring(fileName), std::ios::binary);
 #else
       std::ifstream stream(fileName, std::ios::binary);
 #endif
-      $expect(stream.good()).toBeTrue("Error loading sql file: " + fileName);
+      EXPECT_TRUE(stream.good()) << "Error loading sql file: " + fileName;
       std::string sql((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 
       std::vector<StatementRange> ranges;
-      data->services->determineStatementRanges(sql.c_str(), sql.size(), entry.initial_delmiter, ranges,
+      services->determineStatementRanges(sql.c_str(), sql.size(), entry.initial_delmiter, ranges,
                                                entry.line_break);
       count += ranges.size();
 
@@ -781,49 +782,49 @@ $describe("MySQL parser test suite (ANTLR)") {
         std::string statement(sql.c_str() + range.start, range.length);
 
         if (versionMatches(statement, 50620)) {
-          auto result = data->parse(statement, 50620, "ANSI_QUOTES");
+          auto result = parse(statement, 50620, "ANSI_QUOTES");
           if (result.first > 0U) {
-            $fail("This query failed to parse (5.6.20):\n" + statement + "\n with error: " + result.second);
+            FAIL() << "This query failed to parse (5.6.20:\n" + statement + "\n with error: " + result.second;
           }
         } else if (versionMatches(statement, 50720)) {
-          auto result = data->parse(statement, 50720, "ANSI_QUOTES");
+          auto result = parse(statement, 50720, "ANSI_QUOTES");
           if (result.first > 0U) {
-            $fail("This query failed to parse (5.7.20):\n" + statement + "\n with error: " + result.second);
+            FAIL() << "This query failed to parse (5.7.20:\n" + statement + "\n with error: " + result.second;
           }
         } else if (versionMatches(statement, 80021)) {
-          auto result = data->parse(statement, 80021, "ANSI_QUOTES");
+          auto result = parse(statement, 80021, "ANSI_QUOTES");
           if (result.first > 0U) {
-            $fail("This query failed to parse (8.0.21):\n" + statement + "\n with error: " + result.second);
+            FAIL() << "This query failed to parse (8.0.21:\n" + statement + "\n with error: " + result.second;
           }
         } else
-          $fail("Invalid version number found in query: " + statement);
+          FAIL() << "Invalid version number found in query: " + statement;
       }
 
     }
-  });
+}
 
-  //--------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
-  $it("Queries with function names as identifiers", [this]() {
-    for (const char *name : data->functions) {
-      std::string query = base::strfmt(data->query1, name);
-      auto result = data->parse(query, 50530, "ANSI_QUOTES");
-      $expect(result.first).toBe(0U, "Query: " + query + " failed to parse with error: " + result.second);
+TEST_F(MySQLParserTest, QueriesWithFunctionNamesAsIdentifiers) {
+    for (const char *name : functions) {
+      std::string query = base::strfmt(query1, name);
+      auto result = parse(query, 50530, "ANSI_QUOTES");
+      EXPECT_EQ(result.first, 0U) << "Query: " + query + " failed to parse with error: " + result.second;
 
-      query = base::strfmt(data->query2, name, name);
-      result = data->parse(query, 50530, "ANSI_QUOTES");
-      $expect(result.first).toBe(0U, "Query: " + query + " failed to parse with error: " + result.second);
+      query = base::strfmt(query2, name, name);
+      result = parse(query, 50530, "ANSI_QUOTES");
+      EXPECT_EQ(result.first, 0U) << "Query: " + query + " failed to parse with error: " + result.second;
     }
-  });
+}
 
-  //--------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
-  $it("Operator precedence tests", [this]() {
+TEST_F(MySQLParserTest, OperatorPrecedenceTests) {
     // This file is an unmodified copy from the server parser test suite.
-    const std::string filename = data->dataDir + "/parser/parser_precedence.result";
+    const std::string filename = dataDir + "/parser/parser_precedence.result";
 
     std::ifstream stream(filename, std::ios::binary);
-    $expect(stream.good()).toBeTrue("25.0 Could not open precedence test file");
+    EXPECT_TRUE(stream.good()) << "25.0 Could not open precedence test file";
 
     std::string line;
 
@@ -842,13 +843,13 @@ $describe("MySQL parser test suite (ANTLR)") {
       // Start of a new test. The test description is optional.
       std::string sql;
       if (base::hasPrefix(line, "Testing ")) {
-        $expect(std::getline(stream, sql).eof()).toBeFalse("Invalid test file format");
+        EXPECT_FALSE(std::getline(stream, sql).eof()) << "Invalid test file format";
       } else
         sql = line;
-      $expect(base::hasPrefix(sql, "select")).toBeTrue("Invalid test file format");
+      EXPECT_TRUE(base::hasPrefix(sql, "select")) << "Invalid test file format";
 
       // The next line either repeats (parts of) the query or contains a server error.
-      $expect(std::getline(stream, line).eof()).toBeFalse("Invalid test file format");
+      EXPECT_FALSE(std::getline(stream, line).eof()) << "Invalid test file format";
 
       bool expectError = false;
       if (base::hasPrefix(line, "ERROR "))
@@ -856,7 +857,7 @@ $describe("MySQL parser test suite (ANTLR)") {
 
       std::vector<EvalValue> expectedResults;
       if (!expectError) { // No results to compare in an error case.
-        $expect(std::getline(stream, line).eof()).toBeFalse("Invalid test file format");
+        EXPECT_FALSE(std::getline(stream, line).eof()) << "Invalid test file format";
         std::string temp;
         std::stringstream stream(line);
         while (stream >> temp) {
@@ -875,9 +876,9 @@ $describe("MySQL parser test suite (ANTLR)") {
         continue;
       }
 
-      auto result = data->parse(sql, 80012, "");
-      $expect(result.first == 0).toBe(!expectError,
-        "Error status is unexpected for query (" + std::to_string(counter) + "): \n" + sql + "\n");
+      auto result = parse(sql, 80012, "");
+      EXPECT_EQ(result.first == 0, !expectError) <<
+        "Error status is unexpected for query (" + std::to_string(counter) + "): \n" + sql + "\n";
       if (expectError) {
         ++counter;
         continue;
@@ -885,15 +886,15 @@ $describe("MySQL parser test suite (ANTLR)") {
 
       EvalParseVisitor evaluator;
       try {
-        evaluator.visit(data->lastParseTree);
+        evaluator.visit(lastParseTree);
       } catch (std::bad_cast &) {
         std::cout << "Query failed to evaluate: \"\n" + sql + "\"\n";
-        std::cout << "Parse tree: " << data->lastParseTree->toStringTree(&data->parser) << std::endl;
+        std::cout << "Parse tree: " << lastParseTree->toStringTree(&parser) << std::endl;
         throw;
       }
 
-      $expect(evaluator.results.size()).toBe(expectedResults.size(),
-        "Result counts differ for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n");
+      EXPECT_EQ(evaluator.results.size(), expectedResults.size()) <<
+        "Result counts differ for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n";
 
       static std::string dataTypes[] = {"FLOAT", "INT", "NULL", "NOT NULL"};
       for (size_t i = 0; i < expectedResults.size(); ++i) {
@@ -903,31 +904,32 @@ $describe("MySQL parser test suite (ANTLR)") {
           type = EvalValue::Float;
         EvalValue::ValueType expectedType = expectedResults[i].type;
 
-        $expect(dataTypes[type]).toBe(dataTypes[expectedType],
-          "Result type " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n");
-        if (!expectedResults[i].isNullType())
-          $expect(evaluator.results[i].number).toBe(expectedResults[i].number,
-            "Result " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n");
+        EXPECT_EQ(dataTypes[type], dataTypes[expectedType]) <<
+          "Result type " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n";
+        if (!expectedResults[i].isNullType()) {
+          EXPECT_EQ(evaluator.results[i].number, expectedResults[i].number) <<
+            "Result " + std::to_string(i) + " differs for query (" + std::to_string(counter) + "): \n\"" + sql + "\"\n";
+        }
       }
       ++counter;
     }
-  });
+}
 
-  //--------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
-  $it("SQL mode dependent parsing", [this]() {
-    for (size_t i = 0; i < data->sqlModeTestQueries.size(); i++) {
-      auto &entry = data->sqlModeTestQueries[i];
-      auto result = data->parseAndCompare(entry.query, 80012, entry.sqlMode, data->sqlModeTestResults[i], entry.errors);
+TEST_F(MySQLParserTest, SqlModeDependentParsing) {
+    for (size_t i = 0; i < sqlModeTestQueries.size(); i++) {
+      auto &entry = sqlModeTestQueries[i];
+      auto result = parseAndCompare(entry.query, 80012, entry.sqlMode, sqlModeTestResults[i], entry.errors);
       if (!result.first) {
-        $fail("SQL mode test " + std::to_string(i) + " failed: " + entry.query + "\nwith error: " + result.second);
+        FAIL() << "SQL mode test " + std::to_string(i) + " failed: " + entry.query + "\nwith error: " + result.second;
       }
     }
-  });
+}
 
-  //--------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
-  $it("Tests the parser's string concatenation feature", [this]() {
+TEST_F(MySQLParserTest, StringConcatenationFeature) {
     class TestListener : public MySQLParserBaseListener {
     public:
       std::string text;
@@ -937,57 +939,56 @@ $describe("MySQL parser test suite (ANTLR)") {
       }
     };
 
-    auto result = data->parse("select \"abc\" \"def\" 'ghi''\\n\\z'", 80012, "");
-    $expect(result.first).toBe(0U, "String concatenation");
+    auto result = parse("select \"abc\" \"def\" 'ghi''\\n\\z'", 80012, "");
+    EXPECT_EQ(result.first, 0U) << "String concatenation";
 
     TestListener listener;
-    tree::ParseTreeWalker::DEFAULT.walk(&listener, data->lastParseTree);
-    $expect(listener.text).toBe("abcdefghi'\nz", "String concatenation");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Version dependent parts of GRANT", [this]() {
-    for (size_t i = 0; i < data->versionTestResults.size(); ++i) {
-      auto &entry = data->versionTestResults[i];
-      auto result = data->parse(entry.sql, entry.version, "");
-      $expect(result.first).toBe(entry.errorCount, "GRANT parsing failed (" +
-        std::to_string(i) + "): ");
-    }
-  });
+    tree::ParseTreeWalker::DEFAULT.walk(&listener, lastParseTree);
+    EXPECT_EQ(listener.text, "abcdefghi'\nz") << "String concatenation";
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 
-  $it("Hex, binary, float, decimal and int number handling", [this]() {
-    for (size_t i = 0; i < data->numbersTestQueries.size(); i++) {
-      auto &entry = data->numbersTestQueries[i];
-      auto result = data->parseAndCompare(entry.query, 80012, entry.sqlMode, data->numbersTestResults[i], entry.errors);
+TEST_F(MySQLParserTest, VersionDependentPartsOfGRANT) {
+    for (size_t i = 0; i < versionTestResults.size(); ++i) {
+      auto &entry = versionTestResults[i];
+      auto result = parse(entry.sql, entry.version, "");
+      EXPECT_EQ(result.first, entry.errorCount) << "GRANT parsing failed (" +
+        std::to_string(i) + "): ";
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+
+TEST_F(MySQLParserTest, HexBinaryFloatDecimalAndIntNumberHandling) {
+    for (size_t i = 0; i < numbersTestQueries.size(); i++) {
+      auto &entry = numbersTestQueries[i];
+      auto result = parseAndCompare(entry.query, 80012, entry.sqlMode, numbersTestResults[i], entry.errors);
       if (!result.first) {
-        $fail("Number test (" + std::to_string(i) + ") failed: " + entry.query + "\nwith error: " + result.second);
+        FAIL() << "Number test (" + std::to_string(i) + ") failed: " + entry.query + "\nwith error: " + result.second;
       }
     }
-  });
+}
 
-  //--------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 
-  $it("Parsing of subparts of the MySQL language", []() {
+TEST(MySQLParserStandaloneTest, ParsingOfSubpartsOfTheMySQLLanguage) {
     // Restricted content parsing (e.g. routines only, views only etc.).
 
-    $pending("this must be implemented yet");
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
-  $it("Bug #30449796", [this]() {
-    auto result = data->parse("ANALYZE TABLE emp UPDATE HISTOGRAM ON job WITH 5 BUCKETS;", 50720, "");
-    $expect(result.first).toEqual(1U);
-    $expect(result.second).toEqual("line 1:18 no viable alternative at input 'UPDATE'");
-    result = data->parse("ANALYZE TABLE emp UPDATE HISTOGRAM ON job WITH 5 BUCKETS;", 80010, "");
-    $expect(result.first).toEqual(0U);
-    $expect(result.second).toBeEmpty();
-  });
-
-  //--------------------------------------------------------------------------------------------------------------------
-
+    GTEST_SKIP() << "this must be implemented yet";
 }
+
+//----------------------------------------------------------------------------------------------------------------------
+
+TEST_F(MySQLParserTest, Bug30449796) {
+    auto result = parse("ANALYZE TABLE emp UPDATE HISTOGRAM ON job WITH 5 BUCKETS;", 50720, "");
+    EXPECT_EQ(result.first, 1U);
+    EXPECT_EQ(result.second, "line 1:18 no viable alternative at input 'UPDATE'");
+    result = parse("ANALYZE TABLE emp UPDATE HISTOGRAM ON job WITH 5 BUCKETS;", 80010, "");
+    EXPECT_EQ(result.first, 0U);
+    EXPECT_TRUE(result.second.empty());
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+
 }

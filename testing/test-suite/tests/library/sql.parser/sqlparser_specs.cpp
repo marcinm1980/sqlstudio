@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -30,9 +31,9 @@
 #include "mysql_sql_parser_fe.h"
 #include "grt/grt_manager.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
-namespace {
+namespace testing {
 
 static const char *test_function_1_input[] = {
   "CREATE DATABASE IF NOT EXISTS `i-flow_dev` CHARACTER SET latin1 COLLATE latin1_swedish_ci;",
@@ -161,88 +162,92 @@ public:
 
 //----------------------------------------------------------------------------------------------------------------------
 
-$ModuleEnvironment() {};
+class SqlParserTest : public ::testing::Test {
+protected:
+  std::shared_ptr<GRTManagerTest> grtManager;
 
-$describe("Old SQL parser tests") {
-  $it("Simple SQL parsing", []() {
-    test_function_1_output_index = 0;
-    test_function_1_success_flag = true;
+  void SetUp() override {
+    grtManager = GRTManagerTest::get();
+  }
+};
 
-    Mysql_sql_parser_fe sql_parser_fe(GRTManagerTest::get()->get_app_option_string("SqlMode"));
-    sql_parser_fe.ignore_dml = false;
+TEST_F(SqlParserTest, SimpleSqlParsing) {
+  test_function_1_output_index = 0;
+  test_function_1_success_flag = true;
 
-    for (ssize_t i= 0; test_function_1_input[i] != NULL; i++)     {
-      sql_parser_fe.parse_sql_script(test_function_1_input[i], test_function_1_cb, reinterpret_cast<void *>(i));
-      $expect(test_function_1_success_flag).toBeTrue();
-    }
-  });
+  Mysql_sql_parser_fe sql_parser_fe(grtManager->get_app_option_string("SqlMode"));
+  sql_parser_fe.ignore_dml = false;
 
-  $it("Parsing of different scripts", []() {
-    Mysql_sql_parser_fe sql_parser_fe(GRTManagerTest::get()->get_app_option_string("SqlMode"));
-    sql_parser_fe.ignore_dml = false;
+  for (ssize_t i = 0; test_function_1_input[i] != NULL; i++) {
+    sql_parser_fe.parse_sql_script(test_function_1_input[i], test_function_1_cb, reinterpret_cast<void *>(i));
+    EXPECT_TRUE(test_function_1_success_flag);
+  }
+}
 
-    test_function_2_counter= 0;
-    sql_parser_fe.parse_sql_script_file("data/db/menagerie-db/cr_event_tbl.sql", test_function_2_cb, NULL);
-    $expect(test_function_2_counter).toEqual(2);
+TEST_F(SqlParserTest, ParsingOfDifferentScripts) {
+  Mysql_sql_parser_fe sql_parser_fe(grtManager->get_app_option_string("SqlMode"));
+  sql_parser_fe.ignore_dml = false;
 
-    test_function_2_counter= 0;
-    sql_parser_fe.parse_sql_script_file("data/db/menagerie-db/cr_pet_tbl.sql", test_function_2_cb, NULL);
-    $expect(test_function_2_counter).toEqual(2);
+  test_function_2_counter = 0;
+  sql_parser_fe.parse_sql_script_file("data/db/menagerie-db/cr_event_tbl.sql", test_function_2_cb, NULL);
+  EXPECT_EQ(test_function_2_counter, 2);
 
-    test_function_2_counter= 0;
-    sql_parser_fe.parse_sql_script_file("data/db/menagerie-db/ins_puff_rec.sql", test_function_2_cb, NULL);
-    $expect(test_function_2_counter).toEqual(1);
+  test_function_2_counter = 0;
+  sql_parser_fe.parse_sql_script_file("data/db/menagerie-db/cr_pet_tbl.sql", test_function_2_cb, NULL);
+  EXPECT_EQ(test_function_2_counter, 2);
 
-    test_function_2_counter= 0;
-    sql_parser_fe.parse_sql_script_file("data/db/menagerie-db/load_pet_tbl.sql", test_function_2_cb, NULL);
-    $expect(test_function_2_counter).toEqual(2);
+  test_function_2_counter = 0;
+  sql_parser_fe.parse_sql_script_file("data/db/menagerie-db/ins_puff_rec.sql", test_function_2_cb, NULL);
+  EXPECT_EQ(test_function_2_counter, 1);
 
-    test_function_2_counter= 0;
-    sql_parser_fe.parse_sql_script_file("data/db/sakila-db/sakila-schema.sql", test_function_2_cb, NULL);
-    $expect(test_function_2_counter).toBe(41);
-  });
+  test_function_2_counter = 0;
+  sql_parser_fe.parse_sql_script_file("data/db/menagerie-db/load_pet_tbl.sql", test_function_2_cb, NULL);
+  EXPECT_EQ(test_function_2_counter, 2);
 
-  $it("Parsing Sakila SQL dump", []() {
-    const char *filename= "data/db/sakila-db/sakila-data.sql";
+  test_function_2_counter = 0;
+  sql_parser_fe.parse_sql_script_file("data/db/sakila-db/sakila-schema.sql", test_function_2_cb, NULL);
+  EXPECT_EQ(test_function_2_counter, 41);
+}
 
-    $expect(g_file_test(filename, G_FILE_TEST_EXISTS)).toBeTrue();
+TEST_F(SqlParserTest, ParsingSakilaSqlDump) {
+  const char *filename = "data/db/sakila-db/sakila-data.sql";
 
-  #if VERBOSE_OUTPUT
-    test_time_point t1;
-  #endif
+  EXPECT_TRUE(g_file_test(filename, G_FILE_TEST_EXISTS));
 
-    Mysql_sql_parser_fe sql_parser_fe(GRTManagerTest::get()->get_app_option_string("SqlMode"));
-    sql_parser_fe.ignore_dml = false;
-    sql_parser_fe.is_ast_generation_enabled = false; // Leave AST creation off. This adds a *huge* burden.
-    sql_parser_fe.parse_sql_script_file(filename, test_function_30_cb, NULL);
+#if VERBOSE_OUTPUT
+  test_time_point t1;
+#endif
 
-  #if VERBOSE_OUTPUT
-    test_time_point t2;
+  Mysql_sql_parser_fe sql_parser_fe(grtManager->get_app_option_string("SqlMode"));
+  sql_parser_fe.ignore_dml = false;
+  sql_parser_fe.is_ast_generation_enabled = false; // Leave AST creation off. This adds a *huge* burden.
+  sql_parser_fe.parse_sql_script_file(filename, test_function_30_cb, NULL);
 
-    struct _stat	statbuf;
-    _stat((const char *)filename, &statbuf);
+#if VERBOSE_OUTPUT
+  test_time_point t2;
 
-    float time_rate= ((float)1000.)/(t2 - t1).get_ticks();
-    float size_per_sec= ((float)statbuf.st_size)*time_rate/1024/1024;
-    std::cout << "Combined splitter + parser performance test (no AST): " << std::endl
-      << "sakila-data.sql was processed in " << (t2 - t1) << " [" << size_per_sec << " MB/sec]" << std::endl;
-  #endif
-  });
+  struct _stat statbuf;
+  _stat((const char *)filename, &statbuf);
 
-  $it("tests bug #65749", []() {
-    const char *filename= "data/db/empty_firstline.sql";
-    int count = 0;
+  float time_rate = ((float)1000.) / (t2 - t1).get_ticks();
+  float size_per_sec = ((float)statbuf.st_size) * time_rate / 1024 / 1024;
+  std::cout << "Combined splitter + parser performance test (no AST): " << std::endl
+            << "sakila-data.sql was processed in " << (t2 - t1) << " [" << size_per_sec << " MB/sec]" << std::endl;
+#endif
+}
 
-    $expect(g_file_test(filename, G_FILE_TEST_EXISTS)).toBeTrue();
+TEST_F(SqlParserTest, Bug65749) {
+  const char *filename = "data/db/empty_firstline.sql";
+  int count = 0;
 
-    Mysql_sql_parser_fe sql_parser_fe(GRTManagerTest::get()->get_app_option_string("SqlMode"));
-    sql_parser_fe.ignore_dml = false;
-    sql_parser_fe.is_ast_generation_enabled = false; // Leave AST creation off. This adds a *huge* burden.
-    sql_parser_fe.parse_sql_script_file(filename, test_function_5_cb, &count);
+  EXPECT_TRUE(g_file_test(filename, G_FILE_TEST_EXISTS));
 
-    $expect(count).toEqual(1);
-  });
+  Mysql_sql_parser_fe sql_parser_fe(grtManager->get_app_option_string("SqlMode"));
+  sql_parser_fe.ignore_dml = false;
+  sql_parser_fe.is_ast_generation_enabled = false; // Leave AST creation off. This adds a *huge* burden.
+  sql_parser_fe.parse_sql_script_file(filename, test_function_5_cb, &count);
 
+  EXPECT_EQ(count, 1);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

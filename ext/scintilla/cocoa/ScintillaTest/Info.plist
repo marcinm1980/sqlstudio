@@ -16,12 +16,23 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+<<<<<<<< HEAD:tools/test-gui/macOS/src/Info.plist
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright (c) 2017, 2018, Oracle Corp. All rights reserved.</string>
+========
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+>>>>>>>> develop:ext/scintilla/cocoa/ScintillaTest/Info.plist
 	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
+	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

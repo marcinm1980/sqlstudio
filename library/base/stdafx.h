@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -46,7 +47,9 @@ typedef int ssize_t;
 #include <string.h>
 #include <iostream>
 #include <wchar.h>
+#ifdef _MSC_VER
 #include <codecvt>
+#endif
 #include <fcntl.h>
 #include <fstream>
 #include <sstream>

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2025, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -24,7 +25,7 @@
 
 #include "grt/tree_model.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
 using namespace grt;
@@ -32,74 +33,70 @@ using namespace bec;
 
 namespace {
 
-$ModuleEnvironment() {};
+TEST(GrtTreeModelBase, BaseTests) {
+  NodeId node, node2;
 
-$describe("grt tree model base") {
+  EXPECT_FALSE(node.is_valid()) << "clean node";
 
-  $it("Base tests", []() {
-    NodeId node, node2;
+  EXPECT_EQ(0U, node.depth()) << "clean node depth";
 
-    $expect(node.is_valid()).toBeFalse("clean node");
+  node = NodeId(5);
+  EXPECT_TRUE(node.is_valid()) << "node(5)";
+  EXPECT_EQ(1U, node.depth()) << "node(5).depth()";
+  EXPECT_EQ(5U, node[0]) << "node(5)[0]";
 
-    $expect(node.depth()).toEqual(0U, "clean node depth");
+  node2 = node.append(7);
+  EXPECT_EQ(2U, node.depth()) << "node append";
+  EXPECT_EQ(5U, node[0]) << "node append[0]";
+  EXPECT_EQ(7U, node[1]) << "node append[1]";
 
-    node = NodeId(5);
-    $expect(node.is_valid()).toBeTrue("node(5)");
-    $expect(node.depth()).toEqual(1U, "node(5).depth()");
-    $expect(node[0]).toEqual(5U, "node(5)[0]");
+  EXPECT_EQ(2U, node2.depth()) << "node append ret";
+  EXPECT_EQ(5U, node2[0]) << "node append ret[0]";
+  EXPECT_EQ(7U, node2[1]) << "node append ret[1]";
 
-    node2 = node.append(7);
-    $expect(node.depth()).toEqual(2U, "node append");
-    $expect(node[0]).toEqual(5U, "node append[0]");
-    $expect(node[1]).toEqual(7U, "node append[1]");
+  EXPECT_EQ(node2, node) << "node compare";
 
-    $expect(node2.depth()).toEqual(2U, "node append ret");
-    $expect(node2[0]).toEqual(5U, "node append ret[0]");
-    $expect(node2[1]).toEqual(7U, "node append ret[1]");
+  node2 = NodeId(5);
+  EXPECT_FALSE(node2 == node) << "node compare";
 
-    $expect(node).toEqual(node2, "node compare");
+  node2.append(7);
+  node2.append(11);
 
-    node2 = NodeId(5);
-    $expect(node).Not.toEqual(node2, "node compare");
+  EXPECT_FALSE(node2 == node) << "node compare";
 
-    node2.append(7);
-    node2.append(11);
+  node = node2;
+  EXPECT_EQ(node2, node) << "node assign/compare";
+}
 
-    $expect(node).Not.toEqual(node2, "node compare");
+TEST(GrtTreeModelBase, Serialization) {
+  // serialization
+  NodeId node;
+  std::string s;
 
-    node = node2;
-    $expect(node).toEqual(node2, "node assign/compare");
-  });
+  s = node.toString();
+  EXPECT_EQ("", s) << "() toString";
+  EXPECT_EQ(node, NodeId(s)) << "() parse";
 
-  $it("Serialization", []() {
-    // serialization
-    NodeId node;
-    std::string s;
+  node.append(3);
+  s = node.toString();
+  EXPECT_EQ(NodeId(3), node) << "(3) check";
+  EXPECT_EQ("3", s) << "(3) toString";
+  EXPECT_EQ(node.toString(), NodeId(s).toString()) << "(3) parse";
 
-    s = node.toString();
-    $expect(s).toEqual("", "() toString");
-    $expect(NodeId(s)).toEqual(node, "() parse");
+  node.append(0);
+  s = node.toString();
+  EXPECT_EQ("3.0", s) << "(3,0) toString";
+  EXPECT_EQ(node.toString(), NodeId(s).toString()) << "(3,0) parse";
 
-    node.append(3);
-    s = node.toString();
-    $expect(node).toEqual(NodeId(3), "(3) check");
-    $expect(s).toEqual("3", "(3) toString");
-    $expect(NodeId(s).toString()).toEqual(node.toString(), "(3) parse");
+  node.append(1);
+  s = node.toString();
+  EXPECT_EQ("3.0.1", s) << "(3,0,1) toString";
+  EXPECT_EQ(node.toString(), NodeId(s).toString()) << "(3,0,1) parse";
+}
 
-    node.append(0);
-    s = node.toString();
-    $expect(s).toEqual("3.0", "(3,0) toString");
-    $expect(NodeId(s).toString()).toEqual(node.toString(), "(3,0) parse");
-
-    node.append(1);
-    s = node.toString();
-    $expect(s).toEqual("3.0.1", "(3,0,1) toString");
-    $expect(NodeId(s).toString()).toEqual(node.toString(), "(3,0,1) parse");
-  });
-
-  $it("Common tree_model methods", []() {
-    $pending("needs implementation");
-  });
+TEST(GrtTreeModelBase, CommonTreeModelMethods) {
+  GTEST_SKIP() << "needs implementation";
 }
 
 }
+

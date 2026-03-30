@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -23,12 +24,12 @@
  */
 
 
-#define APP_MAJOR_NUMBER 8
+#define APP_MAJOR_NUMBER 1
 #define APP_MINOR_NUMBER 0
-#define APP_RELEASE_NUMBER 43
+#define APP_RELEASE_NUMBER 1
 
 #define APP_BUILD_NUMBER 0
-#define APP_RELEASE_TYPE "commercial"
+#define APP_RELEASE_TYPE ""
 
 #define APP_LICENSE_TYPE "GPL"
 #define APP_EDITION_NAME "development"

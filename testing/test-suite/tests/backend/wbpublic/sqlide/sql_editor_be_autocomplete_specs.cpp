@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -22,8 +23,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#include "casmine.h"
-#include "helpers.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
 #include "base/file_utilities.h"
@@ -39,6 +39,8 @@
 #include "sqlide/wb_sql_editor_form.h"
 #include "sqlide/sql_editor_be.h"
 
+using namespace std::string_literals;
+
 #include "grtsqlparser/mysql_parser_services.h"
 
 using namespace bec;
@@ -50,7 +52,17 @@ namespace ph = std::placeholders;
 
 namespace {
 
-$ModuleEnvironment() {};
+  struct TestData {
+    std::unique_ptr<MySqlStudioTester> tester;
+    MySQLEditor::Ref sql_editor;
+
+    parsers::MySQLParserContext::Ref autocompleteContext;
+    SymbolTable mainSymbols;
+    SymbolTable dbObjects;
+    SymbolTable runtimeFunctions;
+
+    long version;
+  };
 
 struct ac_test_entry {
   int version_first; //  First supported version for this entry
@@ -73,18 +85,6 @@ public:
                            const std::string &msg, std::exception_ptr e) override {
     ++errorCount;
   }
-};
-
-$TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
-  MySQLEditor::Ref sql_editor;
-
-  parsers::MySQLParserContext::Ref autocompleteContext;
-  SymbolTable mainSymbols;
-  SymbolTable dbObjects;
-  SymbolTable runtimeFunctions;
-
-  long version;
 };
 
   // Create a mockup symbol table with all database objects we support.
@@ -168,8 +168,11 @@ void createDBObjects(SymbolTable &symbolTable) {
   symbolTable.addNewSymbol<CollationSymbol>(nullptr, "big5_chinese_ci");
 }
 
-$describe("SQL code completion tests") {
-  $beforeAll([this]() {
+class SqlCodeCompletionTest : public ::testing::Test {
+protected:
+  TestData *data = new TestData();
+
+  void SetUp() override {
     data->tester.reset(new MySqlStudioTester());
     data->tester->initializeRuntime();
 
@@ -189,45 +192,45 @@ $describe("SQL code completion tests") {
 
     createDBObjects(data->dbObjects);
     data->mainSymbols.addDependencies({ &data->dbObjects, functionSymbolsForVersion(base::MySQLVersion::MySQL57) });
-  });
+  }
 
-  $afterAll([this]() {
+  void TearDown() override {
     data->sql_editor.reset();
     data->autocompleteContext.reset();
-  });
+    delete data;
+  }
+};
 
-  $it("Testing proper symbol retrieval in symbol tables", [this]() {
-    auto tables = data->mainSymbols.getSymbolsOfType<TableSymbol>();
-    $expect(tables.size()).toBe(0U, "Test 10.1");
+TEST_F(SqlCodeCompletionTest, TestingProperSymbolRetrievalInSymbolTables) {
+  auto tables = data->mainSymbols.getSymbolsOfType<TableSymbol>();
+  EXPECT_EQ(0U, tables.size()) << "Test 10.1";
 
-    auto schemas = data->mainSymbols.getSymbolsOfType<SchemaSymbol>();
-    $expect(schemas.size()).toBe(6U, "Test 10.2");
+  auto schemas = data->mainSymbols.getSymbolsOfType<SchemaSymbol>();
+  EXPECT_EQ(6U, schemas.size()) << "Test 10.2";
 
-    auto iterator = std::find_if(schemas.begin(), schemas.end(), [](Symbol *symbol) {
-      return symbol->name == "sakila";
-    });
+  auto iterator = std::find_if(schemas.begin(), schemas.end(), [](Symbol *symbol) { return symbol->name == "sakila"; });
 
-    // TODO: need matcher/translator for iterators.
-    //$expect(iterator).Not.toBe(schemas.end(), "Test 10.3");
-    $expect(iterator != schemas.end()).toBeTrue("Test 10.3");
+  // TODO: need matcher/translator for iterators.
+  //EXPECT_NE(iterator, schemas.end()) << "Test 10.3";
+  EXPECT_TRUE(iterator != schemas.end()) << "Test 10.3";
 
-    SchemaSymbol *schema = *iterator;
-    $expect(schema).Not.toBe(nullptr, "Test 10.4");
+  SchemaSymbol *schema = *iterator;
+  EXPECT_NE(nullptr, schema) << "Test 10.4";
 
-    tables = data->mainSymbols.getSymbolsOfType<TableSymbol>(schema);
-    $expect(tables.size()).toBe(7U, "Test 10.5");
-    auto views = data->mainSymbols.getSymbolsOfType<ViewSymbol>(schema);
-    $expect(views.size()).toEqual(5U, "Test 10.6");
-    auto routines = data->mainSymbols.getSymbolsOfType<RoutineSymbol>(schema);
-    $expect(routines.size()).toEqual(6U, "Test 10.7");
-    auto udfs = data->mainSymbols.getSymbolsOfType<UdfSymbol>(schema);
-    $expect(udfs.size()).toEqual(3U, "Test 10.8");
+  tables = data->mainSymbols.getSymbolsOfType<TableSymbol>(schema);
+  EXPECT_EQ(7U, tables.size()) << "Test 10.5";
+  auto views = data->mainSymbols.getSymbolsOfType<ViewSymbol>(schema);
+  EXPECT_EQ(5U, views.size()) << "Test 10.6";
+  auto routines = data->mainSymbols.getSymbolsOfType<RoutineSymbol>(schema);
+  EXPECT_EQ(6U, routines.size()) << "Test 10.7";
+  auto udfs = data->mainSymbols.getSymbolsOfType<UdfSymbol>(schema);
+  EXPECT_EQ(3U, udfs.size()) << "Test 10.8";
 
-    auto systemFunctions = data->mainSymbols.getSymbolsOfType<RoutineSymbol>(); // System functions.
-    $expect(systemFunctions.size()).toBe(293U);
-  });
+  auto systemFunctions = data->mainSymbols.getSymbolsOfType<RoutineSymbol>(); // System functions.
+  EXPECT_EQ(293U, systemFunctions.size());
+}
 
-  $it("Code completion for correct candidate collections", [this]() {
+  TEST_F(SqlCodeCompletionTest, CodeCompletionForCorrectCandidateCollections) {
     ANTLRInputStream input(
       "CREATE TABLE `partition_test` (\n"
       "`id` int(10) NOT NULL AUTO_INCREMENT,\n"
@@ -267,26 +270,24 @@ $describe("SQL code completion tests") {
     parser.removeErrorListeners();
     parser.addErrorListener(&errorListener);
     parser.query();
-    $expect(errorListener.errorCount).toEqual(0U, "Test 20.1");
+    EXPECT_EQ(0U, errorListener.errorCount) << "Test 20.1";
 
     auto candidates = getCodeCompletionList(7, 34, "sakila", false, &parser, data->mainSymbols);
-    $expect(candidates.size()).toEqual(9U, "Test 20.2");
-    $expect(candidates[0].second).toBe("comment", "Test 20.3");
-    $expect(candidates[1].second).toBe("data directory", "Test 20.4");
-    $expect(candidates[2].second).toBe("engine", "Test 20.5");
-    $expect(candidates[3].second).toBe("index directory", "Test 20.6");
-    $expect(candidates[4].second).toBe("max_rows", "Test 20.7");
-    $expect(candidates[5].second).toBe("min_rows", "Test 20.8");
-    $expect(candidates[6].second).toBe("nodegroup", "Test 20.9");
-    $expect(candidates[7].second).toBe("storage", "Test 20.10");
-    $expect(candidates[8].second).toBe("tablespace", "Test 20.11");
+    EXPECT_EQ(9U, candidates.size()) << "Test 20.2";
+    EXPECT_EQ("comment", candidates[0].second) << "Test 20.3";
+    EXPECT_EQ("data directory", candidates[1].second) << "Test 20.4";
+    EXPECT_EQ("engine", candidates[2].second) << "Test 20.5";
+    EXPECT_EQ("index directory", candidates[3].second) << "Test 20.6";
+    EXPECT_EQ("max_rows", candidates[4].second) << "Test 20.7";
+    EXPECT_EQ("min_rows", candidates[5].second) << "Test 20.8";
+    EXPECT_EQ("nodegroup", candidates[6].second) << "Test 20.9";
+    EXPECT_EQ("storage", candidates[7].second) << "Test 20.10";
+    EXPECT_EQ("tablespace", candidates[8].second) << "Test 20.11";
 
     candidates = getCodeCompletionList(7, 44, "sakila", false, &parser, data->mainSymbols);
-    $expect(candidates.size()).toEqual(3U, "Test 20.12");
-    $expect(candidates[0].second).toBe("blackhole", "Test 20.13");
-    $expect(candidates[1].second).toBe("innodb", "Test 20.14");
-    $expect(candidates[2].second).toBe("myisam", "Test 20.15");
-  });
-}
-  
+    EXPECT_EQ(3U, candidates.size()) << "Test 20.12";
+    EXPECT_EQ("blackhole", candidates[0].second) << "Test 20.13";
+    EXPECT_EQ("innodb", candidates[1].second) << "Test 20.14";
+    EXPECT_EQ("myisam", candidates[2].second) << "Test 20.15";
+  }
 }

@@ -88,6 +88,7 @@
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright (c) 2008, 2022, Oracle and/or its affiliates.</string>
+	 * Copyright (c) 2026 dev4fun. All rights reserved.
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

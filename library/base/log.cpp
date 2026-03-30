@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -50,20 +51,20 @@ static const char* LevelText[] = {"", "ERR", "WRN", "INF", "DB1", "DB2", "DB3"};
 
 struct Logger::LoggerImpl {
   LoggerImpl() {
-    // Default values for all available log levels.
-    _levels[enumIndex(Logger::LogLevel::Disabled)] = false; // Disable None level.
-    _levels[enumIndex(Logger::LogLevel::Error)] = true;
-    _levels[enumIndex(Logger::LogLevel::Warning)] = true;
-    _levels[enumIndex(Logger::LogLevel::Info)] = true; //  Includes all g_message calls.
+  // Default values for all available log levels.
+  _levels[enumIndex(Logger::LogLevel::Disabled)] = false; // Disable None level.
+  _levels[enumIndex(Logger::LogLevel::Error)] = true;
+  _levels[enumIndex(Logger::LogLevel::Warning)] = true;
+  _levels[enumIndex(Logger::LogLevel::Info)] = true; //  Includes all g_message calls.
 #if !defined(DEBUG) && !defined(_DEBUG)
-    _levels[enumIndex(Logger::LogLevel::Debug)] = false;  // General debug messages.
-    _levels[enumIndex(Logger::LogLevel::Debug2)] = false; // Verbose debug messages.
+  _levels[enumIndex(Logger::LogLevel::Debug)] = false;  // General debug messages.
+  _levels[enumIndex(Logger::LogLevel::Debug2)] = false; // Verbose debug messages.
 #else
-    _levels[enumIndex(Logger::LogLevel::Debug)] = true;
-    _levels[enumIndex(Logger::LogLevel::Debug2)] = true;
+  _levels[enumIndex(Logger::LogLevel::Debug)] = true;
+  _levels[enumIndex(Logger::LogLevel::Debug2)] = true;
 #endif
-    _levels[enumIndex(Logger::LogLevel::Debug3)] = false; // Really chatty, should be switched on only on demand.
-  }
+  _levels[enumIndex(Logger::LogLevel::Debug3)] = false; // Really chatty, should be switched on only on demand.
+}
 
   bool level_is_enabled(const Logger::LogLevel level) const {
     return _levels[enumIndex(level)];

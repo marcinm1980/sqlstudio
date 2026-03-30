@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -24,128 +25,154 @@
 
 #include "structs.test.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
+#include "context.h"
 #include "wb_test_helpers.h"
 
-namespace {
+namespace testing {
 
-$ModuleEnvironment() {};
-
-$describe("GRT: structs/metaclasses") {
-  $beforeAll([]() {
-    $expect([]() { test_Book book; }).toThrow();
+class GRTStructsMetaclassesTest : public ::testing::Test {
+protected:
+  void SetUp() override {
+    EXPECT_THROW({ test_Book book; }, std::exception);
     register_structs_test_xml();
-    grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
+    grt::GRT::get()->load_metaclasses(Context::get().tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
-  });
+  }
 
-  $afterAll([]() { MySqlStudioTester::reinitGRT(); });
-
-  $it("Load structures", [&]() {
-     $expect(grt::GRT::get()->get_metaclasses().size()).toBe(6U);
-   });
-
-  $it("Test valid struct creation and comparison to another struct", [&](){
-    grt::MetaClass *book(grt::GRT::get()->get_metaclass("test.Book"));
-
-    $expect(book).Not.toBeNull();
-    $expect(book->name()).toBe("test.Book");
-
-    $expect(book->is_a(grt::GRT::get()->get_metaclass("test.Publication"))).toBeTrue();
-    $expect(book->is_a(grt::GRT::get()->get_metaclass("test.Base"))).toBeTrue();
-    $expect(book->is_a("test.Base")).toBeTrue();
-    $expect(book->is_a("XXXX")).toBeFalse();
-
-    $expect(book->get_attribute("caption")).toBe("Book");
-    $expect(book->get_attribute("xxx")).toBe("");
-
-    $expect(book->parent()->name()).toBe("test.Publication");
-  });
-
-  $it("check get_member", [&](){
-    grt::MetaClass *book = grt::GRT::get()->get_metaclass("test.Book");
-    const grt::MetaClass::Member *mem;
-
-    mem = book->get_member_info("pages");
-    $expect(mem).Not.toBe(nullptr);
-
-    mem = book->get_member_info("title");
-    $expect(mem).Not.toBe(nullptr);
-
-    test_BookRef book_obj(grt::Initialized);
-
-    book_obj->pages(1234);
-
-    $expect(*grt::IntegerRef::cast_from(book->get_member_value(&book_obj.content(), "pages"))).toBe(1234);
-    $expect(*book_obj->pages()).toBe(1234);
-  });
-
-  $it("check has_member", []() {
-    $pending("it needs an implementation");
-  });
-
-  $it("check get_member", []() {
-    $pending("it needs an implementation");
-  });
-
-  $it("check set_member", []() {
-    $pending("it needs an implementation");
-    // check set_member
-
-    // from parent class
-
-    // with override
-  });
-
-  $it("check allocation", []() {
-    $pending("it needs an implementation");
-  });
-
-  $it("check method call", []() {
-    $pending("it needs an implementation");
-  });
-
-  $it("check foreach_member", []() {
-    $pending("it needs an implementation");
-  });
-
-  $it("Test struct members and their attributes", [&](){
-    grt::MetaClass *book(grt::GRT::get()->get_metaclass("test.Book"));
-    const grt::MetaClass::Member *m;
-    grt::TypeSpec t;
-    std::string a;
-
-    m = book->get_member_info("authors");
-    $expect(m).Not.toBe(nullptr);
-
-    m = book->get_member_info("title");
-    $expect(m).Not.toBe(nullptr);
-
-    t = book->get_member_type("authors");
-    $expect((int)t.base.type).toBe(grt::ListType);
-
-    t = book->get_member_type("title");
-    $expect((int)t.base.type).toBe(grt::StringType);
-
-    // Member attributes.
-    a = book->get_member_attribute("authors", "caption");
-    $expect(a).toBe("Authors");
-
-    a = book->get_member_attribute("authors", "desc");
-    $expect(a).toBe("the list of authors");
-
-    a = book->get_member_attribute("authors", "group");
-    $expect(a).toBe("group1");
-
-    a = book->get_member_attribute("title", "caption");
-    $expect(a).toBe("Title");
-
-    a = book->get_member_attribute("title", "desc");
-    $expect(a).toBe("title of the book");
-
-    a = book->get_member_attribute("title", "group");
-    $expect(a).toBe("");
-  });
+  void TearDown() override {
+    MySqlStudioTester::reinitGRT();
+  }
 };
 
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, LoadStructures) {
+  EXPECT_EQ(grt::GRT::get()->get_metaclasses().size(), 6U);
 }
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, TestValidStructCreationAndComparisonToAnotherStruct) {
+  grt::MetaClass *book(grt::GRT::get()->get_metaclass("test.Book"));
+
+  EXPECT_NE(book, nullptr);
+  EXPECT_EQ(book->name(), "test.Book");
+
+  EXPECT_TRUE(book->is_a(grt::GRT::get()->get_metaclass("test.Publication")));
+  EXPECT_TRUE(book->is_a(grt::GRT::get()->get_metaclass("test.Base")));
+  EXPECT_TRUE(book->is_a("test.Base"));
+  EXPECT_FALSE(book->is_a("XXXX"));
+
+  EXPECT_EQ(book->get_attribute("caption"), "Book");
+  EXPECT_EQ(book->get_attribute("xxx"), "");
+
+  EXPECT_EQ(book->parent()->name(), "test.Publication");
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, CheckGetMember) {
+  grt::MetaClass *book = grt::GRT::get()->get_metaclass("test.Book");
+  const grt::MetaClass::Member *mem;
+
+  mem = book->get_member_info("pages");
+  EXPECT_NE(mem, nullptr);
+
+  mem = book->get_member_info("title");
+  EXPECT_NE(mem, nullptr);
+
+  test_BookRef book_obj(grt::Initialized);
+
+  book_obj->pages(1234);
+
+  EXPECT_EQ(*grt::IntegerRef::cast_from(book->get_member_value(&book_obj.content(), "pages")), 1234);
+  EXPECT_EQ(*book_obj->pages(), 1234);
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, CheckHasMember) {
+  GTEST_SKIP() << "it needs an implementation";
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, CheckGetMember2) {
+  GTEST_SKIP() << "it needs an implementation";
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, CheckSetMember) {
+  GTEST_SKIP() << "it needs an implementation";
+  // check set_member
+
+  // from parent class
+
+  // with override
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, CheckAllocation) {
+  GTEST_SKIP() << "it needs an implementation";
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, CheckMethodCall) {
+  GTEST_SKIP() << "it needs an implementation";
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, CheckForeachMember) {
+  GTEST_SKIP() << "it needs an implementation";
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTStructsMetaclassesTest, TestStructMembersAndTheirAttributes) {
+  grt::MetaClass *book(grt::GRT::get()->get_metaclass("test.Book"));
+  const grt::MetaClass::Member *m;
+  grt::TypeSpec t;
+  std::string a;
+
+  m = book->get_member_info("authors");
+  EXPECT_NE(m, nullptr);
+
+  m = book->get_member_info("title");
+  EXPECT_NE(m, nullptr);
+
+  t = book->get_member_type("authors");
+  EXPECT_EQ((int)t.base.type, grt::ListType);
+
+  t = book->get_member_type("title");
+  EXPECT_EQ((int)t.base.type, grt::StringType);
+
+  // Member attributes.
+  a = book->get_member_attribute("authors", "caption");
+  EXPECT_EQ(a, "Authors");
+
+  a = book->get_member_attribute("authors", "desc");
+  EXPECT_EQ(a, "the list of authors");
+
+  a = book->get_member_attribute("authors", "group");
+  EXPECT_EQ(a, "group1");
+
+  a = book->get_member_attribute("title", "caption");
+  EXPECT_EQ(a, "Title");
+
+  a = book->get_member_attribute("title", "desc");
+  EXPECT_EQ(a, "title of the book");
+
+  a = book->get_member_attribute("title", "group");
+  EXPECT_EQ(a, "");
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+}
+
+

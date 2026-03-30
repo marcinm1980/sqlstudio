@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2007, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -50,14 +51,14 @@ namespace bec {
 
     struct Timer {
       std::function<bool()> slot;
-      GTimeVal next_trigger;
+      gint64 next_trigger_us;
       double interval;
 
       Timer(const std::function<bool()> &slot, double interval);
 
       bool trigger();
 
-      double delay_for_next_trigger(const GTimeVal &now);
+      double delay_for_next_trigger(gint64 now_us);
     };
 
   protected: // Set those c-tors to protected as we need to have different GRTManager in TUT.

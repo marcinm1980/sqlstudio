@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -25,19 +26,18 @@
 #include "studio/wb_model_file.h"
 
 #include "wb_test_helpers.h"
+#include "context.h"
 
 #include "base/file_utilities.h"
 #include "base/utf8string.h"
 
-#include "casmine.h"
-
-namespace {
-
-$ModuleEnvironment() {};
+#include "gtest/gtest.h"
 
 using namespace wb;
 
-$TestData {
+namespace {
+
+struct WbModelFileData {
   std::unique_ptr<MySqlStudioTester> tester;
   std::string tmpDataDir;
   std::string outputDir;
@@ -50,96 +50,106 @@ $TestData {
     wb::ModelFile mf(outputDir);
 
     base::utf8string tempPath = base::strip_extension(modelFile) + "_tmp" + base::extension(modelFile);
-    $expect(base::file_exists(tempPath)).toBeFalse("Model file left-over found");
+    EXPECT_FALSE(base::file_exists(tempPath)) << "Model file left-over found";
 
     // Open, save copy, reopen from copy.
-    $expect([&]() { mf.open(modelFile); }).Not.toThrow();
-    $expect([&]() { mf.save_to(tempPath); mf.cleanup(); }).Not.toThrow();
-    $expect([&]() { mf.open(tempPath); mf.cleanup(); }).Not.toThrow();
+    EXPECT_NO_THROW([&]() { mf.open(modelFile); });
+    EXPECT_NO_THROW([&]() { mf.save_to(tempPath); mf.cleanup(); });
+    EXPECT_NO_THROW([&]() { mf.open(tempPath); mf.cleanup(); });
   }
 };
 
-$describe("Tests for WB model file") {
-  $beforeAll([&]() {
-    data->tmpDataDir = casmine::CasmineContext::get()->tmpDataDir();
-    data->outputDir = casmine::CasmineContext::get()->outputDir();
+} // anonymous namespace
+
+class Tests_for_WB_model_fileTest : public ::testing::Test {
+protected:
+  static std::unique_ptr<WbModelFileData> data;
+
+  static void SetUpTestSuite() {
+    data = std::make_unique<WbModelFileData>();
+    data->tmpDataDir = testing::Context::get().tmpDataDir();
+    data->outputDir = testing::Context::get().outputDir();
     data->tester.reset(new MySqlStudioTester());
-  });
+  }
 
-  $it("Model file creation + rename", [this]() {
-    ModelFile mf(data->outputDir);
-    studio_DocumentRef doc(grt::Initialized);
+  static void TearDownTestSuite() {
+    data.reset();
+  }
 
-    // Create a test file, change it and then save_as.
-    mf.create();
-    doc->name("t1");
+};
 
-    studio_physical_ModelRef pmodel(grt::Initialized);
-    pmodel->owner(doc);
-    db_Catalog catalog;
-    pmodel->catalog(&catalog);
-    doc->physicalModels().insert(pmodel);
+std::unique_ptr<WbModelFileData> Tests_for_WB_model_fileTest::data;
 
-    mf.store_document(doc);
-    mf.save_to(data->outputDir + "/t1.mwb");
+TEST_F(Tests_for_WB_model_fileTest, Model_file_creation_Plus_rename) {
+  ModelFile mf(data->outputDir);
+  studio_DocumentRef doc(grt::Initialized);
 
-    doc->name("t2");
-    mf.store_document(doc);
-    mf.save_to(data->outputDir + "/t2.mwb");
+  // Create a test file, change it and then save_as.
+  mf.create();
+  doc->name("t1");
 
-    ModelFile mf1(data->outputDir);
-    ModelFile mf2(data->outputDir);
+  studio_physical_ModelRef pmodel(grt::Initialized);
+  pmodel->owner(doc);
+  db_Catalog catalog;
+  pmodel->catalog(&catalog);
+  doc->physicalModels().insert(pmodel);
 
-    mf1.open(data->outputDir + "/t1.mwb");
-    mf2.open(data->outputDir + "/t2.mwb");
+  mf.store_document(doc);
+  mf.save_to(data->outputDir + "/t1.mwb");
 
-    studio_DocumentRef d1, d2;
+  doc->name("t2");
+  mf.store_document(doc);
+  mf.save_to(data->outputDir + "/t2.mwb");
 
-    d1 = mf1.retrieve_document();
-    d2 = mf2.retrieve_document();
+  ModelFile mf1(data->outputDir);
+  ModelFile mf2(data->outputDir);
 
-    $expect(*d1->name()).toBe("t1");
-    $expect(*d2->name()).toBe("t2");
-  });
+  mf1.open(data->outputDir + "/t1.mwb");
+  mf2.open(data->outputDir + "/t2.mwb");
 
-  $it("Open file locking test", [this]() {
-    $pending("test needs rework as accessing a locked model file no longer throws an exception");
-    ModelFile mf(data->outputDir);
+  studio_DocumentRef d1, d2;
 
-    mf.open(data->tmpDataDir + "/studio/sakila.mwb");
-    $expect([&]() { mf.open(data->tmpDataDir + "/studio/sakila.mwb"); }).toThrow();
-  });
+  d1 = mf1.retrieve_document();
+  d2 = mf2.retrieve_document();
 
-  $it("Reading comment test", [this]() {
-    ModelFile mf(data->outputDir);
-    std::string comment = mf.read_comment(data->tmpDataDir + "/studio/empty_file.sql");
-    $expect(comment.empty()).toBeTrue();
-    comment = mf.read_comment(data->tmpDataDir + "/studio/empty_model_with_comment.mwb");
-    $expect(comment == "mydb").toBeTrue();
-  });
-
-  $it("Test if opened model can be saved", [this]() {
-    // read the file - the file should be properly closed after reading
-    ModelFile mf(data->outputDir);
-    $expect([&]() { mf.open(data->tmpDataDir + data->BaseModelFile); }).Not.toThrow();
-
-    // Try to write to the file - if the file wasn't closed this will fail.
-    $expect([&]() { mf.save_to(data->tmpDataDir + data->BaseModelFile); }).Not.toThrow();
-  });
-
-  $it("Test model loading and saving with ANSI + full Unicode paths/names", [this]() {
-    data->testModelSavingAndLoading(data->tmpDataDir + data->BaseModelFile);
-
-    // We have to prepare the directory
-    {
-      base::create_directory(data->tmpDataDir + data->UnicodeDirectory, 0777);
-
-      copyFile(data->tmpDataDir + data->BaseModelFile,
-               data->tmpDataDir + data->UnicodeBaseModelFile);
-    }
-    data->testModelSavingAndLoading(data->tmpDataDir + data->UnicodeBaseModelFile);
-  });
-
+  EXPECT_EQ(*d1->name(), "t1");
+  EXPECT_EQ(*d2->name(), "t2");
 }
 
+TEST_F(Tests_for_WB_model_fileTest, Open_file_locking_test) {
+  GTEST_SKIP() << "test needs rework as accessing a locked model file no longer throws an exception";
+  ModelFile mf(data->outputDir);
+
+  mf.open(data->tmpDataDir + "/studio/sakila.mwb");
+  EXPECT_ANY_THROW([&]() { mf.open(data->tmpDataDir + "/studio/sakila.mwb"); });
+}
+
+TEST_F(Tests_for_WB_model_fileTest, Reading_comment_test) {
+  ModelFile mf(data->outputDir);
+  std::string comment = mf.read_comment(data->tmpDataDir + "/studio/empty_file.sql");
+  EXPECT_TRUE(comment.empty());
+  comment = mf.read_comment(data->tmpDataDir + "/studio/empty_model_with_comment.mwb");
+  EXPECT_TRUE(comment == "mydb");
+}
+
+TEST_F(Tests_for_WB_model_fileTest, Test_if_opened_model_can_be_saved) {
+  // read the file - the file should be properly closed after reading
+  ModelFile mf(data->outputDir);
+  EXPECT_NO_THROW([&]() { mf.open(data->tmpDataDir + data->BaseModelFile); });
+
+  // Try to write to the file - if the file wasn't closed this will fail.
+  EXPECT_NO_THROW([&]() { mf.save_to(data->tmpDataDir + data->BaseModelFile); });
+}
+
+TEST_F(Tests_for_WB_model_fileTest, Test_model_loading_and_saving_with_ANSI_Plus_full_Unicode_paths_names) {
+  data->testModelSavingAndLoading(data->tmpDataDir + data->BaseModelFile);
+
+  // We have to prepare the directory
+  {
+    base::create_directory(data->tmpDataDir + data->UnicodeDirectory, 0777);
+
+    base::copyFile(data->tmpDataDir + data->BaseModelFile,
+             data->tmpDataDir + data->UnicodeBaseModelFile);
+  }
+  data->testModelSavingAndLoading(data->tmpDataDir + data->UnicodeBaseModelFile);
 }

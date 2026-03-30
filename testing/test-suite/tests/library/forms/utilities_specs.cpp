@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -32,17 +33,13 @@
 #include "mforms/utilities.h"
 #include "stub/stub_mforms.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 using namespace mforms;
 
 namespace {
 
-$ModuleEnvironment() {};
-
-$describe("mforms utilities testing") {
-
-  $it("Finding password", [&]() {
+TEST(MFormsUtilitiesTest, FindingPassword) {
     mforms::stub::init(NULL);
 
     std::string service = "A quick brown fox jumps over the lazy dog. ÄÖÜ";
@@ -50,16 +47,17 @@ $describe("mforms utilities testing") {
     std::string the_password = "!§$%&dingeling ß123@";
 
     std::string result;
-    $expect(!Utilities::find_password("out of service", "don't call me, I call you", result)).toBeTrue();
+    ASSERT_TRUE(!Utilities::find_password("out of service", "don't call me, I call you", result));
     Utilities::store_password(service, user_name, the_password);
-    $expect(Utilities::find_password(service, user_name, result)).toBeTrue();
-    $expect(the_password).toBe(result);
-  });
+    ASSERT_TRUE(Utilities::find_password(service, user_name, result));
+    EXPECT_EQ(the_password, result);
 }
-}
+
+} // namespace
 
 #ifndef _MSC_VER
 #if __GNUC__ < 5
 #pragma GCC diagnostic pop
 #endif
 #endif
+

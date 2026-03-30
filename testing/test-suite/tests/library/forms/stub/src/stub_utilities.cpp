@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -26,7 +27,6 @@
 
 #include "base/log.h"
 #include <cerrno>
-#include "casmine.h"
 
 using namespace mforms;
 using namespace stub;
@@ -133,19 +133,20 @@ bool UtilitiesWrapper::find_password(const std::string &service, const std::stri
   bool ret_val = false;
 
   if (!loaded_passwords) {
-    const auto &tutPasswords = casmine::CasmineContext::get()->configuration["tutPasswords"];
+    // FIXME: Load passwords from configuration
+    /*const auto &tutPasswords = testing::Context::get().configuration["tutPasswords"];
     try {
       for (auto &entry: tutPasswords.GetArray()) {
         if (entry.HasMember("service")) {
           passwords()[entry["service"].GetString()] = entry["password"].GetString();
-          if (std::get<bool>(casmine::CasmineContext::get()->settings["verbose"])) {
+          if (std::get<bool>(testing::Context::get().settings["verbose"])) {
             g_message("%s=%s", entry["service"].GetString(), entry["password"].GetString());
           }
         }
       }
     } catch (std::out_of_range &) {
       g_message("Config file is missing service credentials.\n");
-    }
+    }*/
     loaded_passwords = true;
   }
 

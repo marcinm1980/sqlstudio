@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2016, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -85,8 +86,14 @@ namespace base {
 
     struct bounds;
 
-    class BASELIBRARY_PUBLIC_FUNC iterator : public std::iterator<std::bidirectional_iterator_tag, utf8string> {
+    class BASELIBRARY_PUBLIC_FUNC iterator {
     public:
+      using iterator_category = std::bidirectional_iterator_tag;
+      using value_type = utf8char;
+      using difference_type = std::ptrdiff_t;
+      using pointer = value_type *;
+      using reference = value_type &;
+
       iterator(char *s, char *p = nullptr);
       bool operator==(iterator const &rhs) const;
       bool operator!=(iterator const &rhs) const;

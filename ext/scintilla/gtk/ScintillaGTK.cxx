@@ -2292,11 +2292,21 @@ static std::vector<int> MapImeIndicators(PangoAttrList *attrs, const char *u8Str
 						indicator[i] = SC_INDICATOR_UNKNOWN;
 						break;
 					case PANGO_UNDERLINE_SINGLE: // normal input
+				#ifdef PANGO_UNDERLINE_SINGLE_LINE
+					case PANGO_UNDERLINE_SINGLE_LINE:
+				#endif
 						indicator[i] = SC_INDICATOR_INPUT;
 						break;
 					case PANGO_UNDERLINE_DOUBLE:
+				#ifdef PANGO_UNDERLINE_DOUBLE_LINE
+					case PANGO_UNDERLINE_DOUBLE_LINE:
+				#endif
 					case PANGO_UNDERLINE_LOW:
 					case PANGO_UNDERLINE_ERROR:
+				#ifdef PANGO_UNDERLINE_ERROR_LINE
+					case PANGO_UNDERLINE_ERROR_LINE:
+				#endif
+					default:
 						break;
 					}
 				}
@@ -2325,7 +2335,7 @@ static std::vector<int> MapImeIndicators(PangoAttrList *attrs, const char *u8Str
 void ScintillaGTK::SetCandidateWindowPos() {
 	// Composition box accompanies candidate box.
 	const Point pt = PointMainCaret();
-	GdkRectangle imeBox = {0}; // No need to set width
+	GdkRectangle imeBox = {0, 0, 0, 0}; // No need to set width
 	imeBox.x = static_cast<gint>(pt.x);           // Only need positiion
 	imeBox.y = static_cast<gint>(pt.y) + vs.lineHeight; // underneath the first charater
 	gtk_im_context_set_cursor_location(im_context, &imeBox);
@@ -3004,6 +3014,12 @@ gintptr scintilla_object_send_message(ScintillaObject *sci, unsigned int iMessag
 
 static void scintilla_class_init(ScintillaClass *klass);
 static void scintilla_init(ScintillaObject *sci);
+static void scintilla_class_init_thunk(gpointer klass, gpointer) {
+	scintilla_class_init(static_cast<ScintillaClass *>(klass));
+}
+static void scintilla_init_thunk(GTypeInstance *instance, gpointer) {
+	scintilla_init(reinterpret_cast<ScintillaObject *>(instance));
+}
 
 extern void Platform_Initialise();
 extern void Platform_Finalise();
@@ -3020,12 +3036,12 @@ GType scintilla_get_type() {
 					(guint16) sizeof(ScintillaObjectClass),
 					nullptr, //(GBaseInitFunc)
 					nullptr, //(GBaseFinalizeFunc)
-					(GClassInitFunc) scintilla_class_init,
+					scintilla_class_init_thunk,
 					nullptr, //(GClassFinalizeFunc)
 					nullptr, //gconstpointer data
 					(guint16) sizeof(ScintillaObject),
 					0, //n_preallocs
-					(GInstanceInitFunc) scintilla_init,
+					scintilla_init_thunk,
 					nullptr //(GTypeValueTable*)
 				};
 				scintilla_type = g_type_register_static(

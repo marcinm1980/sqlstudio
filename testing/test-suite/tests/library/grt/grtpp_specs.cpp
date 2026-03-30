@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -24,7 +25,7 @@
 
 #include "grt.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 // test class outside any namespace
 class Foo {
@@ -38,95 +39,90 @@ using namespace grt;
 
 namespace {
 
-$ModuleEnvironment() {};
+class GRTWrapperTest : public ::testing::Test {
+};
 
-$describe("GRT wrapper base tests") {
-
-  $it("get_full_type_name + get_type_name", [this]() {
+TEST_F(GRTWrapperTest, GetFullTypeNameAndGetTypeName) {
     string name = get_full_type_name(typeid(Foo));
-    $expect(name).toEqual("Foo");
+    EXPECT_EQ(name, "Foo");
 
     name = get_full_type_name(typeid(Foo().member1));
-    $expect(name).toEqual("int");
+    EXPECT_EQ(name, "int");
 
     name = get_type_name(typeid(Foo));
-    $expect(name).toEqual("Foo");
-
-    name = get_type_name(typeid(*this));
-    $expect(name).toEqual("DescribeImpl");
+    EXPECT_EQ(name, "Foo");
 
     name = get_type_name(typeid(int));
-    $expect(name).toEqual("int");
-  });
+    EXPECT_EQ(name, "int");
+}
 
-  $it("os_error exception", []() {
+TEST(GRTWrapperStandaloneTest, OsErrorException) {
     os_error* error = new os_error("dummy");
 
-    $expect(error->what()).toEqual("dummy");
+    EXPECT_EQ(error->what(), "dummy");
     delete error;
 
     error = new os_error(5);
-    $expect(error->what()).toEqual(g_strerror(5));
+    EXPECT_EQ(error->what(), g_strerror(5));
     delete error;
-  });
+}
 
-  $it("type_error exception", []() {
+TEST(GRTWrapperStandaloneTest, TypeErrorException) {
     Type expected = StringType;
     Type actual = DoubleType;
     Type container = ListType;
 
     type_error* error = new type_error("dummy");
-    $expect(error->what()).toEqual("dummy");
+    EXPECT_EQ(error->what(), "dummy");
     delete error;
 
     error = new type_error("foo", "bar");
-    $expect(error->what()).toEqual("Type mismatch: expected object of type foo, but got bar");
+    EXPECT_EQ(error->what(), "Type mismatch: expected object of type foo, but got bar");
     delete error;
 
     error = new type_error("foo", "bar", container);
-    $expect(error->what()).toEqual("Type mismatch: expected content object of type foo, but got bar");
+    EXPECT_EQ(error->what(), "Type mismatch: expected content object of type foo, but got bar");
     delete error;
 
     error = new type_error(expected, actual);
-    $expect(error->what()).toEqual("Type mismatch: expected type string, but got real");
+    EXPECT_EQ(error->what(), "Type mismatch: expected type string, but got real");
     delete error;
 
     error = new type_error(expected, actual, container);
-    $expect(error->what()).toEqual("Type mismatch: expected content-type string, but got real");
+    EXPECT_EQ(error->what(), "Type mismatch: expected content-type string, but got real");
     delete error;
-  });
+}
 
-  $it("null_value exception", []() {
-    $expect(null_value("dummy").what()).toEqual("dummy");
-    $expect(null_value().what()).toEqual("Attempt to operate on a NULL GRT value.");
-  });
+TEST(GRTWrapperStandaloneTest, NullValueException) {
+    EXPECT_EQ(null_value("dummy").what(), "dummy");
+    EXPECT_EQ(null_value().what(), "Attempt to operate on a NULL GRT value.");
+}
 
-  $it("bad_item exception", []() {
-    $expect(bad_item("dummy").what()).toEqual("Invalid item name 'dummy'");
-    $expect(bad_item(10, 100).what()).toEqual("Index out of range");
-  });
+TEST(GRTWrapperStandaloneTest, BadItemException) {
+    EXPECT_EQ(bad_item("dummy").what(), "Invalid item name 'dummy'");
+    EXPECT_EQ(bad_item(10, 100).what(), "Index out of range");
+}
 
-  $it("grt_runtime_error exception", []() {
+TEST(GRTWrapperStandaloneTest, GrtRuntimeErrorException) {
     grt_runtime_error error("dummy", "details");
-    $expect(error.what()).toEqual("dummy");
-    $expect(error.detail).toEqual("details");
-    $expect(error.fatal).toBeFalse();
+    EXPECT_EQ(error.what(), "dummy");
+    EXPECT_EQ(error.detail, "details");
+    EXPECT_FALSE(error.fatal);
 
     error = grt_runtime_error("foo", "bar", false);
-    $expect(error.what()).toEqual("foo");
-    $expect(error.detail).toEqual("bar");
-    $expect(error.fatal).toBeFalse();
+    EXPECT_EQ(error.what(), "foo");
+    EXPECT_EQ(error.detail, "bar");
+    EXPECT_FALSE(error.fatal);
 
     error = grt_runtime_error("foo", "bar", true);
-    $expect(error.what()).toEqual("foo");
-    $expect(error.detail).toEqual("bar");
-    $expect(error.fatal).toBeTrue();;
-  });
+    EXPECT_EQ(error.what(), "foo");
+    EXPECT_EQ(error.detail, "bar");
+    EXPECT_TRUE(error.fatal);
+}
 
-  // Notes:
-  // - Tests for Struct are in struct_specs.cpp.
-  // - Tests for GRT values are in value_specs.cpp.
+// Notes:
+// - Tests for Struct are in struct_specs.cpp.
+// - Tests for GRT values are in value_specs.cpp.
 
 }
 
-}

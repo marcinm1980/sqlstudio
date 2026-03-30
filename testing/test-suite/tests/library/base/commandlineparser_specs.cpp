@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -22,20 +23,23 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "data_types.h"
+#include <gtest/gtest.h>
 
-#include "casmine.h"
+#include "data_types.h"
 
 namespace {
 
-$ModuleEnvironment() {};
-
-$TestData {
+// Command line parser test class
+class CommandLineParserTest : public ::testing::Test {
+ protected:
   bool callbackTriggered = false;
+  
+  void SetUp() override {
+    callbackTriggered = false;
+  }
 };
 
-$describe("command line parser") {
-  $it("General argument handling", []() {
+TEST_F(CommandLineParserTest, GeneralArgumentHandling) {
     std::vector<std::string> args({"--test-argument-value-space", "argument value", "--test-argument-value-equals",
       "=sample", "some/file/path", "--test-boolean"});
     dataTypes::OptionsList opts;
@@ -48,15 +52,15 @@ $describe("command line parser") {
     );
 
     int retVal = 0;
-    $expect(opts.parse(args, retVal)).toBeTrue();
-    $expect(opts.getEntry("test-boolean")->value.logicalValue).toBeTrue();
-    $expect(opts.getEntry("test-argument-value-equals")->value.textValue).toBe("=sample");
-    $expect(opts.getEntry("test-argument-value-space")->value.textValue).toBe("argument value");
-    $expect(opts.pathArgs.size()).toBe(1U);
-    $expect(opts.pathArgs[0]).toBe("some/file/path");
-  });
+    EXPECT_TRUE(opts.parse(args, retVal));
+    EXPECT_TRUE(opts.getEntry("test-boolean")->value.logicalValue);
+    EXPECT_EQ(opts.getEntry("test-argument-value-equals")->value.textValue, "=sample");
+    EXPECT_EQ(opts.getEntry("test-argument-value-space")->value.textValue, "argument value");
+    EXPECT_EQ(opts.pathArgs.size(), 1U);
+    EXPECT_EQ(opts.pathArgs[0], "some/file/path");
+}
 
-  $it("Unknown argument handling", []() {
+TEST_F(CommandLineParserTest, UnknownArgumentHandling) {
     std::vector<std::string> args({"--test-return-value", "--test-callback", "--test-argument-value-space",
       "argument value", "--test-argument-value-equals", "=sample", "some/file/path",
       "--test-boolean"});
@@ -65,27 +69,26 @@ $describe("command line parser") {
       dataTypes::OptionEntry(dataTypes::OptionArgumentType::OptionArgumentLogical, 0, "test-boolean", "Test boolean value")
     );
 
-    $expect([&]() {
+    EXPECT_THROW({
       int retVal = 0;
       opts.parse(args, retVal);
-    }).toThrowError<std::runtime_error>("Unknown argument");
-  });
+    }, std::runtime_error);
+}
 
-  $it("Argument callback trigger", [this]() {
+TEST_F(CommandLineParserTest, ArgumentCallbackTrigger) {
     std::vector<std::string> args({"--test-callback"});
     dataTypes::OptionsList opts;
     opts.addEntry(dataTypes::OptionEntry(dataTypes::OptionArgumentType::OptionArgumentLogical, 0, "test-callback",
                                          "Test callback trigger", [&](const dataTypes::OptionEntry &entry, int *retval) {
-                                           data->callbackTriggered = true;
+                                           callbackTriggered = true;
                                            *retval = 10;
                                            return false;
                                          }));
 
     int retVal = 0;
-    $expect(opts.parse(args, retVal)).toBeFalse();
-    $expect(data->callbackTriggered).toBeTrue();
-    $expect(retVal).toEqual(10);
-  });
+    EXPECT_FALSE(opts.parse(args, retVal));
+    EXPECT_TRUE(callbackTriggered);
+    EXPECT_EQ(retVal, 10);
 }
 
 }

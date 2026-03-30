@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2012, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -33,41 +34,43 @@
 #include "wb_test_helpers.h"
 
 #include "helpers.h"
-#include "casmine.h"
+#include "gtest/gtest.h"
 
 extern void register_all_metaclasses();
 
 namespace {
 
-$ModuleEnvironment() {};
+  class DbcGeneralTest : public ::testing::Test {
+  protected:
+    std::unique_ptr<MySqlStudioTester> tester;
 
-$describe("DBC: general tests") {
-  $beforeAll([&]() {
-    // load structs
-    register_all_metaclasses();
-    grt::GRT::get()->scan_metaclasses_in("../../res/grt/");
-    grt::GRT::get()->end_loading_metaclasses();
-    $expect(grt::GRT::get()->get_metaclasses().size()).toBe((size_t)INT_METACLASS_COUNT, "load structs");
-  });
+    void SetUp() override {
+      register_all_metaclasses();
+      grt::GRT::get()->scan_metaclasses_in("../../res/grt/");
+      grt::GRT::get()->end_loading_metaclasses();
+      tester.reset(new MySqlStudioTester);
+      EXPECT_EQ((size_t)INT_METACLASS_COUNT, grt::GRT::get()->get_metaclasses().size());
+    }
 
-  $afterAll([&]() {
-    db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
+    void TearDown() override {
+      db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
 
-    setupConnectionEnvironment(connectionProperties);
+      setupConnectionEnvironment(connectionProperties);
 
-    sql::DriverManager *dm = sql::DriverManager::getDriverManager();
-    dm->set_testing();
-    sql::ConnectionWrapper wrapper = dm->getConnection(connectionProperties);
-    sql::Connection *connection = wrapper.get();
+      sql::DriverManager *dm = sql::DriverManager::getDriverManager();
+      dm->set_testing();
+      sql::ConnectionWrapper wrapper = dm->getConnection(connectionProperties);
+      sql::Connection *connection = wrapper.get();
 
-    std::unique_ptr<sql::Statement> stmt(connection->createStatement());
-    stmt->execute("DROP SCHEMA IF EXISTS test");
+      std::unique_ptr<sql::Statement> stmt(connection->createStatement());
+      stmt->execute("DROP SCHEMA IF EXISTS test");
 
-    MySqlStudioTester::reinitGRT();
-  });
+      //MySqlStudioTester::reinitGRT();
+    }
+  };
 
-  $it("Checks initial functionality", [&]() {
-    $expect(grt::GRT::get()->get_metaclasses().size()).toBe(INT_METACLASS_COUNT, "load structs");
+  TEST_F(DbcGeneralTest, ChecksInitialFunctionality) {
+    EXPECT_EQ(INT_METACLASS_COUNT, grt::GRT::get()->get_metaclasses().size());
     db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
 
     setupConnectionEnvironment(connectionProperties);
@@ -81,15 +84,15 @@ $describe("DBC: general tests") {
     stmt->execute("DROP SCHEMA IF EXISTS test");
 
     std::unique_ptr<sql::ResultSet> rset1(stmt->executeQuery("SHOW DATABASES like 'test'"));
-    $expect(rset1->rowsCount()).toBe(0U, "database test still exists");
+    EXPECT_EQ(0U, rset1->rowsCount());
 
     stmt->execute("CREATE SCHEMA test");
 
     std::unique_ptr<sql::ResultSet> rset2(stmt->executeQuery("SHOW DATABASES like 'test'"));
-    $expect(rset2->rowsCount()).toBe(1U, "database test doesn't exists");
-  });
+    EXPECT_EQ(1U, rset2->rowsCount());
+  }
 
-  $it("Metadata fetch test", [&]() {
+  TEST_F(DbcGeneralTest, MetadataFetchTest) {
     db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
 
     setupConnectionEnvironment(connectionProperties);
@@ -114,9 +117,9 @@ $describe("DBC: general tests") {
                     << rset2->getString("DDL") << std::endl;
       }
     }
-  });
+  }
 
-  $it("Transaction tests", [&]() {
+  TEST_F(DbcGeneralTest, TransactionTests) {
     db_mgmt_ConnectionRef connectionProperties(grt::Initialized);
 
     setupConnectionEnvironment(connectionProperties);
@@ -127,6 +130,9 @@ $describe("DBC: general tests") {
     sql::Connection *connection = wrapper.get();
 
     std::unique_ptr<sql::Statement> stmt(connection->createStatement());
+
+    stmt->execute("DROP SCHEMA IF EXISTS test");
+    stmt->execute("CREATE SCHEMA test");
 
     stmt->execute("DROP TABLE IF EXISTS test.product");
     stmt->execute("CREATE TABLE test.product(idproduct INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(80))");
@@ -174,7 +180,5 @@ $describe("DBC: general tests") {
     }
     if (getenv("VERBOSE"))
       std::cout << i << " row(s)" << std::endl;
-  });
-};
-
-}
+  }
+} // namespace

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2007, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -1385,7 +1386,7 @@ namespace grt {
     }
 
   protected:
-    explicit ListRef<internal::Integer>(const ValueRef &lvalue) : BaseListRef(lvalue) {
+    explicit ListRef(const ValueRef &lvalue) : BaseListRef(lvalue) {
       if (lvalue.is_valid() && content().content_type() != IntegerType)
         throw type_error(IntegerType, content().content_type(), ListType);
     }
@@ -1813,7 +1814,7 @@ namespace grt {
     }
 
   protected:
-    explicit ListRef<internal::Dict>(const ValueRef &lvalue) : BaseListRef(lvalue) {
+    explicit ListRef(const ValueRef &lvalue) : BaseListRef(lvalue) {
       if (lvalue.is_valid() && content().content_type() != DictType)
         throw type_error(DictType, content().content_type(), ListType);
     }

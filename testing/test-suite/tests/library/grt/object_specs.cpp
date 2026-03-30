@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2018, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -24,15 +25,19 @@
 
 #include "structs.test.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
+#include "context.h"
 
-$ModuleEnvironment() {};
+//-----------------------------------------------------------------------------------------------------
 
 static bool count_member(const grt::MetaClass::Member *member, int *count) {
   (*count)++;
   return true;
 }
+
+//-----------------------------------------------------------------------------------------------------
+
 /*
 class TestBridge : public ObjectBridgeBase {
 public:
@@ -98,139 +103,157 @@ public:
 };
 */
 
-namespace {
+namespace testing {
 
-$describe("GRT: object values") {
-  $beforeAll([](){
-      register_structs_test_xml();
-      grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
-      grt::GRT::get()->end_loading_metaclasses();
-    });
+class GRTObjectValuesTest : public ::testing::Test {
+protected:
+  void SetUp() override {
+    register_structs_test_xml();
+    grt::GRT::get()->load_metaclasses(Context::get().tmpDataDir() + "/structs.test.xml");
+    grt::GRT::get()->end_loading_metaclasses();
+  }
 
-  $afterAll([]() { MySqlStudioTester::reinitGRT(); });
-
-  $it("load structures", [&](){
-    $expect(grt::GRT::get()->get_metaclasses().size()).toBe(6U);
-  });
-
-  $it("Meta class support", [&](){
-    test_BookRef book(grt::Initialized);
-
-    $expect(book.has_member("title")).toBeTrue();
-    $expect(book.has_member("Title")).toBeFalse();
-
-    $expect(book.get_member("title").is_valid()).toBeTrue();
-
-    book.set_member("title", grt::StringRef("Harry Potter"));
-    $expect(book.get_string_member("title")).toBe("Harry Potter");
-
-    book.set_member("price", grt::DoubleRef(123.45));
-    $expect(book.get_double_member("price")).toBe(grt::DoubleRef(123.45));
-
-    test_AuthorRef author(grt::Initialized);
-    author.set_member("name", grt::StringRef("Some One"));
-
-    $expect(author.get_string_member("name")).toBe("Some One");
-
-    $expect([&](){ book->authors().insert(author); }).Not.toThrow();
-  });
-
-  $it("Exceptions for invalid member access", [&](){
-    test_BookRef obj(grt::Initialized);
-
-    $expect([&]() { obj.set_member("invalid", grt::StringRef("XXX")); }).toThrow();
-    $expect([&]() { obj.get_integer_member("invalid"); }).toThrow();
-    $expect([&]() { obj.set_member("title", grt::IntegerRef(1234)); }).toThrow();
-    $expect([&]() { obj.set_member("title", grt::DoubleRef(1234.123)); }).toThrow();
-    $expect([&]() { obj.set_member("price", grt::StringRef("hello")); }).toThrow();
-    $expect([&]() { obj.set_member("authors", grt::StringRef("joe")); }).toThrow();
-    $expect([&]() { obj.set_member("pages", grt::DoubleRef(1234.456)); }).toThrow();
-  });
-
-  $it("Value member access", [&](){
-    test_BookRef book(grt::Initialized);
-
-    book->title("Harry Potter");
-    book->title(*book->title() + " XXV");
-    book->price(500.23);
-    $expect(*book->title()).Not.toBe("Harry Potter");
-
-    $expect(*book->title()).toBe("Harry Potter XXV");
-
-    test_AuthorRef author(grt::Initialized);
-
-    book->authors().insert(author);
-    $expect(book->authors().count()).toBe(1U);
-
-    book->authors().get(0)->name("J.K.Bowling");
-    $expect(*author->name()).toBe("J.K.Bowling");
-
-    book->authors()[0]->name("ABC");
-    $expect(*author->name()).toBe("ABC");
-
-    book->authors().remove(0);
-    $expect(book->authors().count()).toBe(0U);
-  });
-
-  $it("Check if inherited values are properly initialized", [&](){
-    test_BookRef book(grt::Initialized);
-
-    int count = 0;
-    book->get_metaclass()->foreach_member(std::bind(&count_member, std::placeholders::_1, &count));
-    $expect(count).toEqual(6);
-  });
-/*
-  $it("", [&](){
-    bool ret;
-
-    ret= ObjectBridgeBase::register_bridge<TestBridge>;
-    $expect(ret).toBeTrue();
-  });
-
-  $it("", [&](){
-    bool bridge_destroyed= false;
-
-    {
-      test_Bridged bridged;
-      test_Book book;
-
-      $expect(bridged.get_metaclass().get_metaclass()->bridge).toBe("tut::TestBridge");
-      $expect(bridged.get_bridge_private()).Not.toEqual(0U);
-
-      book.title("Harry Potter");
-      book.title(*book.title()+ " XXV");
-      book.price(500.23);
-
-      TestBridge *bridge_data;
-      $expect(*bridged->name()).toBe("hello");
-
-      bridge_data= (TestBridge*)bridged.get_bridge_private();
-      $expect(bridge_data).Not.toEqual(0U);
-
-      bridge_data->flag= &bridge_destroyed;
-      $expect(bridge_data->myname).toBe(bridged->name());
-
-      bridged.name("xyz");
-      $expect(*bridge_data->myname).toBe("xyz");
-
-      bridged.x(1234);
-      $expect(bridged.x()).toBe(1234);
-      $expect(bridged.books().count()).toEqual(0U);
-
-      bridged.books().insert(book);
-      $expect(bridged.books().count()).toEqual(1U);
-      $expect(*bridged.books().get(0).title()).toBe("Harry Potter XXV");
-
-      bridged.books().remove(0);
-      $expect(bridged.books().count()).toEqual(0U);
-      $expect([&](){ bridged.books().remove(0); }).toThrow();
-      $expect(bridged.count_members()).toEqual(4U);
-    }
-    // leaving the context should destroy the objects
-
-    $expect(bridge_destroyed).toBeTrue();
-  });
-*/
+  void TearDown() override {
+    MySqlStudioTester::reinitGRT();
+  }
 };
 
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTObjectValuesTest, LoadStructures) {
+  EXPECT_EQ(grt::GRT::get()->get_metaclasses().size(), 6U);
 }
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTObjectValuesTest, MetaClassSupport) {
+  test_BookRef book(grt::Initialized);
+
+  EXPECT_TRUE(book.has_member("title"));
+  EXPECT_FALSE(book.has_member("Title"));
+
+  EXPECT_TRUE(book.get_member("title").is_valid());
+
+  book.set_member("title", grt::StringRef("Harry Potter"));
+  EXPECT_EQ(book.get_string_member("title"), "Harry Potter");
+
+  book.set_member("price", grt::DoubleRef(123.45));
+  EXPECT_EQ(book.get_double_member("price"), grt::DoubleRef(123.45));
+
+  test_AuthorRef author(grt::Initialized);
+  author.set_member("name", grt::StringRef("Some One"));
+
+  EXPECT_EQ(author.get_string_member("name"), "Some One");
+
+  EXPECT_NO_THROW(book->authors().insert(author));
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTObjectValuesTest, ExceptionsForInvalidMemberAccess) {
+  test_BookRef obj(grt::Initialized);
+
+  EXPECT_THROW(obj.set_member("invalid", grt::StringRef("XXX")), std::exception);
+  EXPECT_THROW(obj.get_integer_member("invalid"), std::exception);
+  EXPECT_THROW(obj.set_member("title", grt::IntegerRef(1234)), std::exception);
+  EXPECT_THROW(obj.set_member("title", grt::DoubleRef(1234.123)), std::exception);
+  EXPECT_THROW(obj.set_member("price", grt::StringRef("hello")), std::exception);
+  EXPECT_THROW(obj.set_member("authors", grt::StringRef("joe")), std::exception);
+  EXPECT_THROW(obj.set_member("pages", grt::DoubleRef(1234.456)), std::exception);
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTObjectValuesTest, ValueMemberAccess) {
+  test_BookRef book(grt::Initialized);
+
+  book->title("Harry Potter");
+  book->title(*book->title() + " XXV");
+  book->price(500.23);
+  EXPECT_NE(*book->title(), "Harry Potter");
+
+  EXPECT_EQ(*book->title(), "Harry Potter XXV");
+
+  test_AuthorRef author(grt::Initialized);
+
+  book->authors().insert(author);
+  EXPECT_EQ(book->authors().count(), 1U);
+
+  book->authors().get(0)->name("J.K.Bowling");
+  EXPECT_EQ(*author->name(), "J.K.Bowling");
+
+  book->authors()[0]->name("ABC");
+  EXPECT_EQ(*author->name(), "ABC");
+
+  book->authors().remove(0);
+  EXPECT_EQ(book->authors().count(), 0U);
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTObjectValuesTest, CheckIfInheritedValuesAreProperlyInitialized) {
+  test_BookRef book(grt::Initialized);
+
+  int count = 0;
+  book->get_metaclass()->foreach_member(std::bind(&count_member, std::placeholders::_1, &count));
+  EXPECT_EQ(count, 6);
+}
+
+//-----------------------------------------------------------------------------------------------------
+
+/*
+TEST_F(GRTObjectValuesTest, BridgeRegistration) {
+  bool ret;
+
+  ret= ObjectBridgeBase::register_bridge<TestBridge>;
+  EXPECT_TRUE(ret);
+}
+
+TEST_F(GRTObjectValuesTest, BridgeInteraction) {
+  bool bridge_destroyed= false;
+
+  {
+    test_Bridged bridged;
+    test_Book book;
+
+    EXPECT_EQ(bridged.get_metaclass().get_metaclass()->bridge, "tut::TestBridge");
+    EXPECT_NE(bridged.get_bridge_private(), 0U);
+
+    book.title("Harry Potter");
+    book.title(*book.title()+ " XXV");
+    book.price(500.23);
+
+    TestBridge *bridge_data;
+    EXPECT_EQ(*bridged->name(), "hello");
+
+    bridge_data= (TestBridge*)bridged.get_bridge_private();
+    EXPECT_NE(bridge_data, 0U);
+
+    bridge_flag= &bridge_destroyed;
+    EXPECT_EQ(bridge_myname, bridged->name());
+
+    bridged.name("xyz");
+    EXPECT_EQ(*bridge_myname, "xyz");
+
+    bridged.x(1234);
+    EXPECT_EQ(bridged.x(), 1234);
+    EXPECT_EQ(bridged.books().count(), 0U);
+
+    bridged.books().insert(book);
+    EXPECT_EQ(bridged.books().count(), 1U);
+    EXPECT_EQ(*bridged.books().get(0).title(), "Harry Potter XXV");
+
+    bridged.books().remove(0);
+    EXPECT_EQ(bridged.books().count(), 0U);
+    EXPECT_THROW(bridged.books().remove(0), std::exception);
+    EXPECT_EQ(bridged.count_members(), 4U);
+  }
+  // leaving the context should destroy the objects
+
+  EXPECT_TRUE(bridge_destroyed);
+}
+*/
+
+}
+
+

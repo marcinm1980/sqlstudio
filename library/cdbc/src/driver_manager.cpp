@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -333,29 +334,29 @@ namespace sql {
         properties["pluginDir"] = base::dirname(mforms::App::get()->get_executable_path("mysql_native_password.so"));
       }
 #endif
-      properties["OPT_AUTHENTICATION_KERBEROS_CLIENT_MODE"] = "";
+      //properties["OPT_AUTHENTICATION_KERBEROS_CLIENT_MODE"] = "";
       std::string krb5 = parameter_values.get_string("krb5");
       std::string krb5cache = parameter_values.get_string("krb5cache");
       std::vector<char> env;
       if (!krb5.empty()) {
         auto tmp = std::string("KRB5_CONFIG=" + krb5);
         env = std::vector<char>(tmp.begin(), tmp.end());
-      } else {
+        putenv(&env[0]);
+      } 
+      /*else {
         auto tmp = std::string("KRB5_CONFIG=");
         env = std::vector<char>(tmp.begin(), tmp.end());
-      }
-      putenv(&env[0]);
-
+      }*/
       env.clear();
       if (!krb5cache.empty()) {
         auto tmp = std::string("KRB5CCNAME=" + krb5cache);
         env = std::vector<char>(tmp.begin(), tmp.end());
-      } else {
+        putenv(&env[0]);
+      }
+      /*else {
         auto tmp = std::string("KRB5CCNAME=");
         env = std::vector<char>(tmp.begin(), tmp.end());
-      }
-      putenv(&env[0]);
-
+      }*/
       properties["defaultAuth"] = "";
     }
     properties["OPT_CAN_HANDLE_EXPIRED_PASSWORDS"] = true;

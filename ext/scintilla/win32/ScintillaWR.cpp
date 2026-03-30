@@ -1,5 +1,11 @@
+<<<<<<<< HEAD:backend/wbpublic/objimpl/db.mgmt/db_mgmt_SSHFile.h
+/*
+ * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+========
 /* 
  * Copyright (c) 2009, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
+>>>>>>>> develop:ext/scintilla/win32/ScintillaWR.cpp
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,9 +23,27 @@
  * 02110-1301  USA
  */
 
+<<<<<<<< HEAD:backend/wbpublic/objimpl/db.mgmt/db_mgmt_SSHFile.h
+#pragma once
+#include <grts/structs.db.mgmt.h>
+#include "wbpublic_public_interface.h"
+
+
+class WBPUBLICBACKEND_PUBLIC_FUNC db_mgmt_SSHFile::ImplData {
+public:
+  ImplData();
+  virtual ~ImplData();
+  virtual grt::StringRef getPath() = 0;
+  virtual grt::StringRef read(const size_t length) = 0;
+  virtual grt::StringRef readline() = 0;
+  virtual grt::IntegerRef seek(const size_t offset) = 0;
+  virtual grt::IntegerRef tell() = 0;
+};
+========
 /**
  * This is an additional file to export and import classes used by other projects
  * so we don't need to modify the original Scintilla code.
  */
 
 #include "ScintillaWR.h"
+>>>>>>>> develop:ext/scintilla/win32/ScintillaWR.cpp

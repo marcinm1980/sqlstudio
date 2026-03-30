@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -24,27 +25,28 @@
 
 #include "grtsqlparser/sql_facade.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
 
 namespace {
-
-$ModuleEnvironment() {};
-
-$TestData {
+struct MysqlSqlFacadeData {
   std::unique_ptr<MySqlStudioTester> tester;
   SqlFacade::Ref facade;
   db_mgmt_RdbmsRef rdbms;
   grt::DictRef options;
 };
 
-$describe("SQL Parser FE (MySQL)") {
-  $beforeAll([this]() {
+class SQL_Parser_FE_MySQLTest : public ::testing::Test {
+protected:
+  static std::unique_ptr<MysqlSqlFacadeData> data;
+
+  static void SetUpTestSuite() {
+    data = std::make_unique<MysqlSqlFacadeData>();
     data->tester.reset(new MySqlStudioTester());
     data->facade = nullptr;
     data->tester->createNewDocument();
 
-    $expect(data->tester->wb->get_document()->physicalModels().count()).toBe(1U, "loaded physycal model count");
+    EXPECT_EQ(data->tester->wb->get_document()->physicalModels().count(), 1U) << "loaded physycal model count";
 
     data->options = grt::DictRef(true);
     data->options.set("gen_fk_names_when_empty", grt::IntegerRef(0));
@@ -52,150 +54,158 @@ $describe("SQL Parser FE (MySQL)") {
     data->rdbms = data->tester->wb->get_document()->physicalModels().get(0)->rdbms();
 
     data->facade = SqlFacade::instance_for_rdbms(data->rdbms);
-    $expect(data->facade).Not.toBeNull("Failed to get sqlparser module");
-  });
+    EXPECT_NE(data->facade, nullptr) << "Failed to get sqlparser module";
+  }
 
-  $it("Pretty simple parsing sample", [this]() {
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
+  static void TearDownTestSuite() {
+    data.reset();
+  }
 
-    std::string query = "select first_name, last_name from sakila.customer;";
+};
 
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeTrue("Unexpexted failure parsing test");
-    $expect(schema_name).toBe("sakila", "Unexpected Schema Name");
-    $expect(table_name).toBe("customer", "Unexpected Table Name");
-    $expect(columns.size()).toBe(2U, "Unexpected Column Count");
-    $expect(columns.front().first).toBe("first_name", "Unexpected Column Name");
-    $expect(columns.front().second).toBe("first_name", "Unexpected Column Alias");
-    columns.pop_front();
-    $expect(columns.front().first).toBe("last_name", "Unexpected Column Name");
-    $expect(columns.front().second).toBe("last_name", "Unexpected Column Alias");
-    columns.pop_front();
-  });
+std::unique_ptr<MysqlSqlFacadeData> SQL_Parser_FE_MySQLTest::data;
 
-  $it("Simple parsing sample using aliases for the columns", [this]() {
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
+TEST_F(SQL_Parser_FE_MySQLTest, Pretty_simple_parsing_sample) {
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
 
-    std::string query = "select first_name as 'First Name', last_name as 'Last Name' from sakila.customer;";
+  std::string query = "select first_name, last_name from sakila.customer;";
 
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeTrue("Unexpexted failure parsing test");
-    $expect(schema_name).toBe("sakila", "Unexpected Schema Name");
-    $expect(table_name).toBe("customer", "Unexpected Table Name");
-    $expect(columns.size()).toBe(2U, "Unexpected Column Count");
-    $expect(columns.front().first).toBe("first_name", "Unexpected Column Name");
-    $expect(columns.front().second).toBe("First Name", "Unexpected Column Alias");
-    columns.pop_front();
-    $expect(columns.front().first).toBe("last_name", "Unexpected Column Name");
-    $expect(columns.front().second).toBe("Last Name", "Unexpected Column Alias");
-    columns.pop_front();
-  });
-
-  $it("Numeric literals as columns", [this]() {
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
-
-    std::string query = "select customer_id, 10 as 'years' from sakila.customer;";
-
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeFalse("Unexpexted success parsing test");
-    $expect(schema_name.empty()).toBeTrue("Unexpected Schema Name");
-    $expect(table_name.empty()).toBeTrue("Unexpected Table Name");
-    $expect(columns.size()).toEqual(0U, "Unexpected Column Count");
-  });
-
-  $it("Using text literals as columns", [this]() {
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
-
-    std::string query = "select 'Dear' as Greeting, first_name, last_name from sakila.customer;";
-
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeFalse("Unexpexted success parsing test");
-    $expect(schema_name.empty()).toBeTrue("Unexpected Schema Name");
-    $expect(table_name.empty()).toBeTrue("Unexpected Table Name");
-    $expect(columns.empty()).toBeTrue("Unexpected Column Count");
-  });
-
-  $it("Using SELECT *", [this]() {
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
-
-    std::string query = "select * from `sakila`.`address`";
-
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeTrue("Unexpected failure parsing test");
-    $expect(schema_name).toBe("sakila", "Unexpected Schema Name");
-    $expect(table_name).toBe("address", "Unexpected Table Name");
-    $expect(columns.size()).toEqual(1U, "Unexpected Column Count");
-    $expect(columns.front().first).toBe("*", "Unexpected Column Name");
-    $expect(columns.front().second).toBe("*", "Unexpected Column Alias");
-    columns.pop_front();
-  });
-
-  $it("Using WHERE", [this]() {
-    // Using the WHERE clause doesn't impact the parsing as long as the information is being
-    // retrieved from a single table
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
-
-    std::string query = "select address, phone as Phone from `sakila`.`address` where district = 'Adana'";
-
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeTrue("Unexpexted failure parsing test");
-    $expect(schema_name).toBe("sakila", "Unexpected Schema Name");
-    $expect(table_name).toBe("address", "Unexpected Table Name");
-    $expect(columns.size()).toEqual(2U, "Unexpected Column Count");
-    $expect(columns.front().first).toBe("address", "Unexpected Column Name");
-    $expect(columns.front().second).toBe("address", "Unexpected Column Alias");
-    columns.pop_front();
-    $expect(columns.front().first).toBe("phone", "Unexpected Column Name");
-    $expect(columns.front().second).toBe("Phone", "Unexpected Column Alias");
-    columns.pop_front();
-  });
-
-  $it("Using many tables to pull the information ", [this]() {
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
-
-    std::string query =
-    "SELECT customer.first_name, customer.last_name, address.address FROM sakila.customer, sakila.address where "
-    "customer.address_id = address.address_id;";
-
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeFalse("Unexpexted success parsing test");
-    $expect(schema_name).toBe("");
-    $expect(table_name).toBe("");
-    $expect(columns.size()).toEqual(0U, "Unexpected Column Count");
-  });
-
-  $it("Multiple select statements", [this]() {
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
-
-    std::string query = "SELECT * FROM sakila.customer; SELECT * FROM sakila.address;";
-
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeFalse("Unexpexted success parsing test");
-    $expect(schema_name).toBe("");
-    $expect(table_name).toBe("");
-    $expect(columns.empty()).toBeTrue("Unexpected Column Count");
-  });
-
-  $it("Multiple functions as columns", [this]() {
-    std::string schema_name;
-    std::string table_name;
-    SqlFacade::String_tuple_list columns;
-
-    std::string query = "SELECT count(*) FROM sakila.customer";
-
-    $expect(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)).toBeFalse("Unexpexted success parsing test");
-    $expect(schema_name).toBe("");
-    $expect(table_name).toBe("");
-    $expect(columns.empty()).toBeTrue("Unexpected Column Count");
-  });
+  EXPECT_TRUE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpexted failure parsing test";
+  EXPECT_EQ(schema_name, "sakila") << "Unexpected Schema Name";
+  EXPECT_EQ(table_name, "customer") << "Unexpected Table Name";
+  EXPECT_EQ(columns.size(), 2U) << "Unexpected Column Count";
+  EXPECT_EQ(columns.front().first, "first_name") << "Unexpected Column Name";
+  EXPECT_EQ(columns.front().second, "first_name") << "Unexpected Column Alias";
+  columns.pop_front();
+  EXPECT_EQ(columns.front().first, "last_name") << "Unexpected Column Name";
+  EXPECT_EQ(columns.front().second, "last_name") << "Unexpected Column Alias";
+  columns.pop_front();
 }
+
+TEST_F(SQL_Parser_FE_MySQLTest, Simple_parsing_sample_using_aliases_for_the_columns) {
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
+
+  std::string query = "select first_name as 'First Name', last_name as 'Last Name' from sakila.customer;";
+
+  EXPECT_TRUE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpexted failure parsing test";
+  EXPECT_EQ(schema_name, "sakila") << "Unexpected Schema Name";
+  EXPECT_EQ(table_name, "customer") << "Unexpected Table Name";
+  EXPECT_EQ(columns.size(), 2U) << "Unexpected Column Count";
+  EXPECT_EQ(columns.front().first, "first_name") << "Unexpected Column Name";
+  EXPECT_EQ(columns.front().second, "First Name") << "Unexpected Column Alias";
+  columns.pop_front();
+  EXPECT_EQ(columns.front().first, "last_name") << "Unexpected Column Name";
+  EXPECT_EQ(columns.front().second, "Last Name") << "Unexpected Column Alias";
+  columns.pop_front();
+}
+
+TEST_F(SQL_Parser_FE_MySQLTest, Numeric_literals_as_columns) {
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
+
+  std::string query = "select customer_id, 10 as 'years' from sakila.customer;";
+
+  EXPECT_FALSE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpexted success parsing test";
+  EXPECT_TRUE(schema_name.empty()) << "Unexpected Schema Name";
+  EXPECT_TRUE(table_name.empty()) << "Unexpected Table Name";
+  EXPECT_EQ(columns.size(), 0U) << "Unexpected Column Count";
+}
+
+TEST_F(SQL_Parser_FE_MySQLTest, Using_text_literals_as_columns) {
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
+
+  std::string query = "select 'Dear' as Greeting, first_name, last_name from sakila.customer;";
+
+  EXPECT_FALSE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpexted success parsing test";
+  EXPECT_TRUE(schema_name.empty()) << "Unexpected Schema Name";
+  EXPECT_TRUE(table_name.empty()) << "Unexpected Table Name";
+  EXPECT_TRUE(columns.empty()) << "Unexpected Column Count";
+}
+
+TEST_F(SQL_Parser_FE_MySQLTest, Using_SELECT) {
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
+
+  std::string query = "select * from `sakila`.`address`";
+
+  EXPECT_TRUE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpected failure parsing test";
+  EXPECT_EQ(schema_name, "sakila") << "Unexpected Schema Name";
+  EXPECT_EQ(table_name, "address") << "Unexpected Table Name";
+  EXPECT_EQ(columns.size(), 1U) << "Unexpected Column Count";
+  EXPECT_EQ(columns.front().first, "*") << "Unexpected Column Name";
+  EXPECT_EQ(columns.front().second, "*") << "Unexpected Column Alias";
+  columns.pop_front();
+}
+
+TEST_F(SQL_Parser_FE_MySQLTest, Using_WHERE) {
+  // Using the WHERE clause doesn't impact the parsing as long as the information is being
+  // retrieved from a single table
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
+
+  std::string query = "select address, phone as Phone from `sakila`.`address` where district = 'Adana'";
+
+  EXPECT_TRUE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpexted failure parsing test";
+  EXPECT_EQ(schema_name, "sakila") << "Unexpected Schema Name";
+  EXPECT_EQ(table_name, "address") << "Unexpected Table Name";
+  EXPECT_EQ(columns.size(), 2U) << "Unexpected Column Count";
+  EXPECT_EQ(columns.front().first, "address") << "Unexpected Column Name";
+  EXPECT_EQ(columns.front().second, "address") << "Unexpected Column Alias";
+  columns.pop_front();
+  EXPECT_EQ(columns.front().first, "phone") << "Unexpected Column Name";
+  EXPECT_EQ(columns.front().second, "Phone") << "Unexpected Column Alias";
+  columns.pop_front();
+}
+
+TEST_F(SQL_Parser_FE_MySQLTest, Using_many_tables_to_pull_the_information) {
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
+
+  std::string query =
+  "SELECT customer.first_name, customer.last_name, address.address FROM sakila.customer, sakila.address where "
+  "customer.address_id = address.address_id;";
+
+  EXPECT_FALSE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpexted success parsing test";
+  EXPECT_EQ(schema_name, "");
+  EXPECT_EQ(table_name, "");
+  EXPECT_EQ(columns.size(), 0U) << "Unexpected Column Count";
+}
+
+TEST_F(SQL_Parser_FE_MySQLTest, Multiple_select_statements) {
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
+
+  std::string query = "SELECT * FROM sakila.customer; SELECT * FROM sakila.address;";
+
+  EXPECT_FALSE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpexted success parsing test";
+  EXPECT_EQ(schema_name, "");
+  EXPECT_EQ(table_name, "");
+  EXPECT_TRUE(columns.empty()) << "Unexpected Column Count";
+}
+
+TEST_F(SQL_Parser_FE_MySQLTest, Multiple_functions_as_columns) {
+  std::string schema_name;
+  std::string table_name;
+  SqlFacade::String_tuple_list columns;
+
+  std::string query = "SELECT count(*) FROM sakila.customer";
+
+  EXPECT_FALSE(data->facade->parseSelectStatementForEdit(query, schema_name, table_name, columns)) << "Unexpexted success parsing test";
+  EXPECT_EQ(schema_name, "");
+  EXPECT_EQ(table_name, "");
+  EXPECT_TRUE(columns.empty()) << "Unexpected Column Count";
+}
+
 
 }

@@ -1,5 +1,6 @@
-/*
+﻿/*
  * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -25,70 +26,81 @@
 #include "structs.test.h"
 #include "grtpp_util.h"
 
-#include "casmine.h"
+#include "gtest/gtest.h"
 #include "wb_test_helpers.h"
+#include "context.h"
 
-namespace {
+namespace testing {
 
 using namespace grt;
 
-$ModuleEnvironment() {};
-
-$describe("GRT: util functions") {
-  $beforeAll([&]() {
+class GRTUtilFunctionsTest : public ::testing::Test {
+protected:
+  void SetUp() override {
     MySqlStudioTester::reinitGRT();
     register_structs_test_xml();
-    grt::GRT::get()->load_metaclasses(casmine::CasmineContext::get()->tmpDataDir() + "/structs.test.xml");
+    grt::GRT::get()->load_metaclasses(Context::get().tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
-    $expect(grt::GRT::get()->get_metaclasses().size()).toBe(6U);
-  });
+    EXPECT_EQ(grt::GRT::get()->get_metaclasses().size(), 6U);
+  }
 
-  $afterAll([&]() { MySqlStudioTester::reinitGRT(); });
+  void TearDown() override {
+    MySqlStudioTester::reinitGRT();
+  }
+};
 
-  $it("Set value by path", []() {
-    test_BookRef book(grt::Initialized);
-    bool flag;
+//-----------------------------------------------------------------------------------------------------
 
-    flag = set_value_by_path(book, "/title", StringRef("TITLE"));
-    $expect(flag).toBeTrue();
-    $expect(*book->title()).toBe("TITLE");
+TEST_F(GRTUtilFunctionsTest, SetValueByPath) {
+  test_BookRef book(grt::Initialized);
+  bool flag;
 
-    flag = set_value_by_path(book, "/", StringRef("TITLE"));
-    $expect(!flag).toBeTrue();
+  flag = set_value_by_path(book, "/title", StringRef("TITLE"));
+  EXPECT_TRUE(flag);
+  EXPECT_EQ(*book->title(), "TITLE");
 
-    try {
-      set_value_by_path(book, "/xxx", StringRef("TITLE"));
-      $expect(false).toBeTrue();
-    } catch (grt::bad_item &) {
-    }
+  flag = set_value_by_path(book, "/", StringRef("TITLE"));
+  EXPECT_TRUE(!flag);
 
-    flag = set_value_by_path(book, "/title/x", StringRef("TITLE"));
-    $expect(!flag).toBeTrue();
+  try {
+    set_value_by_path(book, "/xxx", StringRef("TITLE"));
+    EXPECT_TRUE(false);
+  } catch (grt::bad_item &) {
+  }
 
-    try {
-      set_value_by_path(book, "/title", IntegerRef(1234));
-      $expect(false).toBeTrue();
-    } catch (grt::type_error &) {
-    }
-  });
+  flag = set_value_by_path(book, "/title/x", StringRef("TITLE"));
+  EXPECT_TRUE(!flag);
 
-  $it("Regression test for Bug #17324160 MySql Studio loses connections list", []() {
-    test_PublisherRef publisher(grt::Initialized);
-    test_BookRef book(grt::Initialized);
-
-    book->title("testbook");
-    publisher->name("testpub");
-    publisher->books().insert(book);
-    book->publisher(publisher);
-
-    test_PublisherRef publisher_copy(grt::shallow_copy_object(publisher));
-
-    $expect(publisher_copy.id() != publisher.id()).toBeTrue();
-    $expect(*publisher_copy->name()).toBe(*publisher->name());
-    $expect(publisher_copy->books().count()).toBe(1U);
-    $expect(publisher_copy->books()[0].id()).toBe(book.id());
-    // The bug was that a shallow_copy would modify the referenced objects that would back-reference the copied object
-    $expect(book->publisher().id()).toBe(publisher.id());
-  });
+  try {
+    set_value_by_path(book, "/title", IntegerRef(1234));
+    EXPECT_TRUE(false);
+  } catch (grt::type_error &) {
+  }
 }
+
+//-----------------------------------------------------------------------------------------------------
+
+TEST_F(GRTUtilFunctionsTest, RegressionTestForBug17324160) {
+  test_PublisherRef publisher(grt::Initialized);
+  test_BookRef book(grt::Initialized);
+
+  book->title("testbook");
+  publisher->name("testpub");
+  publisher->books().insert(book);
+  book->publisher(publisher);
+
+  test_PublisherRef publisher_copy(grt::shallow_copy_object(publisher));
+
+  EXPECT_TRUE(publisher_copy.id() != publisher.id());
+  EXPECT_EQ(*publisher_copy->name(), *publisher->name());
+  EXPECT_EQ(publisher_copy->books().count(), 1U);
+  EXPECT_EQ(publisher_copy->books()[0].id(), book.id());
+  // The bug was that a shallow_copy would modify the referenced objects that would back-reference the copied object
+  EXPECT_EQ(book->publisher().id(), publisher.id());
 }
+
+//-----------------------------------------------------------------------------------------------------
+
+}
+
+

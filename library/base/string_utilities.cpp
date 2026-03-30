@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2.0,
@@ -30,24 +31,31 @@
 #include <functional>
 #include <locale>
 #include <algorithm>
+#include <cstdint>
 #include <math.h>
 #include <errno.h>
 #include <string.h>
 #include <fstream>
 
+#ifdef _MSC_VER
+#include <codecvt>
+#endif
+
 DEFAULT_LOG_DOMAIN(DOMAIN_BASE);
 
 namespace base {
 
-  // Win uses C++11 with support for wstring_convert. Other platforms use boost for now.
+#ifdef _MSC_VER
+
+  // MSVC: use std::wstring_convert (still available on MSVC).
 
   //--------------------------------------------------------------------------------------------------
 
   thread_local static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> utf16Converter;
-  thread_local static std::wstring_convert<std::codecvt_utf8<__int32>, __int32> utf32Converter;
+  thread_local static std::wstring_convert<std::codecvt_utf8<int32_t>, int32_t> utf32Converter;
 
   /**
-   * Converts an UTF-8 encoded string to an UTF-16 string.
+   * Converts an UTF-8 encoded string to a wide string (UTF-16 on Windows).
    */
   std::wstring string_to_wstring(const std::string &s) {
     if (sizeof(wchar_t) > 2) {
@@ -60,11 +68,11 @@ namespace base {
   //--------------------------------------------------------------------------------------------------
 
   /**
-   * Converts an UTF-16 encoded string to an UTF-8 string.
+   * Converts a wide string (UTF-16 on Windows) to an UTF-8 string.
    */
   std::string wstring_to_string(const std::wstring &s) {
     if (sizeof(wchar_t) > 2)
-      return utf32Converter.to_bytes((__int32 *)s.c_str());
+      return utf32Converter.to_bytes((int32_t *)s.c_str());
     else
       return utf16Converter.to_bytes(s);
   }
@@ -75,30 +83,90 @@ namespace base {
     return string_to_wstring(s);
   }
 
-//#else
-//
-//  using boost::locale::conv::utf_to_utf;
-//
-//  std::wstring string_to_wstring(const std::string &str) {
-//    return utf_to_utf<wchar_t>(str.c_str(), str.c_str() + str.size());
-//  }
-//
-//  //--------------------------------------------------------------------------------------------------
-//
-//  std::string wstring_to_string(const std::wstring &str) {
-//    if (sizeof(wchar_t) > 2)
-//      return utf_to_utf<char>((int32_t *)str.c_str(), (int32_t *)str.c_str() + str.size());
-//    else
-//      return utf_to_utf<char>(str.c_str(), str.c_str() + str.size());
-//  }
-//
-//  //--------------------------------------------------------------------------------------------------
-//
-//  std::string path_from_utf8(const std::string &s) {
-//    return s;
-//  }
-//
-//#endif
+#else
+
+  // Non-MSVC (GCC/Clang): manual UTF-8 <-> wchar_t (UTF-32 on Linux/macOS) conversion.
+  // std::wstring_convert and std::codecvt_utf8 were deprecated in C++17 and removed in C++26/GCC 15.
+
+  //--------------------------------------------------------------------------------------------------
+
+  /**
+   * Converts an UTF-8 encoded string to a wide string (UTF-32 on Linux).
+   */
+  std::wstring string_to_wstring(const std::string &s) {
+    std::wstring result;
+    result.reserve(s.size());
+    size_t i = 0;
+    while (i < s.size()) {
+      uint32_t cp;
+      unsigned char c = static_cast<unsigned char>(s[i]);
+      if (c < 0x80) {
+        cp = c;
+        i += 1;
+      } else if ((c & 0xE0) == 0xC0) {
+        if (i + 1 >= s.size()) break;
+        cp = (c & 0x1Fu) << 6;
+        cp |= (static_cast<unsigned char>(s[i + 1]) & 0x3Fu);
+        i += 2;
+      } else if ((c & 0xF0) == 0xE0) {
+        if (i + 2 >= s.size()) break;
+        cp = (c & 0x0Fu) << 12;
+        cp |= (static_cast<unsigned char>(s[i + 1]) & 0x3Fu) << 6;
+        cp |= (static_cast<unsigned char>(s[i + 2]) & 0x3Fu);
+        i += 3;
+      } else if ((c & 0xF8) == 0xF0) {
+        if (i + 3 >= s.size()) break;
+        cp = (c & 0x07u) << 18;
+        cp |= (static_cast<unsigned char>(s[i + 1]) & 0x3Fu) << 12;
+        cp |= (static_cast<unsigned char>(s[i + 2]) & 0x3Fu) << 6;
+        cp |= (static_cast<unsigned char>(s[i + 3]) & 0x3Fu);
+        i += 4;
+      } else {
+        // Skip invalid leading byte.
+        i += 1;
+        continue;
+      }
+      result.push_back(static_cast<wchar_t>(cp));
+    }
+    return result;
+  }
+
+  //--------------------------------------------------------------------------------------------------
+
+  /**
+   * Converts a wide string (UTF-32 on Linux) to an UTF-8 string.
+   */
+  std::string wstring_to_string(const std::wstring &s) {
+    std::string result;
+    result.reserve(s.size() * 2);
+    for (wchar_t wc : s) {
+      uint32_t cp = static_cast<uint32_t>(wc);
+      if (cp < 0x80) {
+        result.push_back(static_cast<char>(cp));
+      } else if (cp < 0x800) {
+        result.push_back(static_cast<char>(0xC0 | (cp >> 6)));
+        result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+      } else if (cp < 0x10000) {
+        result.push_back(static_cast<char>(0xE0 | (cp >> 12)));
+        result.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+        result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+      } else {
+        result.push_back(static_cast<char>(0xF0 | (cp >> 18)));
+        result.push_back(static_cast<char>(0x80 | ((cp >> 12) & 0x3F)));
+        result.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+        result.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+      }
+    }
+    return result;
+  }
+
+  //--------------------------------------------------------------------------------------------------
+
+  std::string path_from_utf8(const std::string &s) {
+    return s;
+  }
+
+#endif
 
   //--------------------------------------------------------------------------------------------------
 
