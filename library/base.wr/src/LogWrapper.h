@@ -49,16 +49,17 @@ namespace MySQL {
   public
     ref class Logger {
     public:
-      static void InitLogger(System::String ^ path);
-      static auto EnableLogLevel(LogLevel level) -> void;
+      static void InitLogger(System::String^ path);
+      static void EnableLogLevel(LogLevel level);
 
-      static void LogError(System::String ^ domain, System::String ^ message);
-      static void LogWarning(System::String ^ domain, System::String ^ message);
-      static void LogInfo(System::String ^ domain, System::String ^ message);
-      static void LogDebug(System::String ^ domain, int verbosity, System::String ^ message);
+      static void LogError(System::String^ domain, System::String^ message);
+      static void LogWarning(System::String^ domain, System::String^ message);
+      static void LogInfo(System::String^ domain, System::String^ message);
+      static void LogDebug(System::String^ domain, int verbosity, System::String^ message);
 
-      static auto get() -> property System::String ^ ActiveLevel { System::String ^;
-        void set(System::String ^ value);
+      static property System::String^ ActiveLevel {
+        System::String^ get();
+        void set(System::String^ value);
       }
     };
 

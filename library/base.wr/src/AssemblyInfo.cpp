@@ -12,11 +12,9 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyTitleAttribute("Windows Base Library Wrapper")];
 [assembly:AssemblyDescriptionAttribute("")];
 [assembly:AssemblyConfigurationAttribute("")];
-[assembly:AssemblyCompanyAttribute("Oracle")];
+[assembly:AssemblyCompanyAttribute("Dev4Fun")];
 [assembly:AssemblyProductAttribute("base-wrapper")];
-[assembly:AssemblyCopyrightAttribute("Copyright © 2013, 2024, Oracle and/or its affiliates.")];
- * Copyright (c) 2026 dev4fun. All rights reserved.
-[assembly:AssemblyTrademarkAttribute("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")];
+[assembly:AssemblyCopyrightAttribute("Copyright (c) 2026 dev4fun. All rights reserved.")];
 [assembly:AssemblyCultureAttribute("")];
 
 //

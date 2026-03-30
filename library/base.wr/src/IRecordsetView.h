@@ -27,27 +27,30 @@
 
 namespace MySQL {
   namespace Base {
+
+    // Delegate declarations must be outside the interface
+    public delegate void ColumnResizeCallback(int column);
+    public delegate System::Windows::Forms::ContextMenuStrip^ ColumnHeaderRightClickCallback(int column);
+
   public
     interface class IRecordsetView {
       enum class ColumnHeaderIndicator { NoOrder = 0, OrderDesc = -1, OrderAsc = 1 };
-      auto control() -> System::Windows::Forms::Control ^;
 
-      auto ColumnResizeCallback(int column) -> delegate void;
-      auto ColumnHeaderRightClickCallback(int column) -> delegate System::Windows::Forms::ContextMenuStrip ^;
+      System::Windows::Forms::Control^ control();
 
-      void set_column_resize_callback(ColumnResizeCallback ^ callback);
-      void set_column_header_right_click_callback(ColumnHeaderRightClickCallback ^ callback);
+      void set_column_resize_callback(ColumnResizeCallback^ callback);
+      void set_column_header_right_click_callback(ColumnHeaderRightClickCallback^ callback);
 
-      auto get_column_count() -> int;
-      auto get_column_width(int column) -> int;
-      auto set_column_width(int column, int width) -> void;
-      auto current_cell_row() -> int;
-      auto current_cell_column() -> int;
-      auto set_current_cell(int row, int column) -> void;
-      auto update_columns() -> void;
+      int get_column_count();
+      int get_column_width(int column);
+      void set_column_width(int column, int width);
+      int current_cell_row();
+      int current_cell_column();
+      void set_current_cell(int row, int column);
+      void update_columns();
 
-      void set_font(System::String ^ font, float size, System::Drawing::FontStyle style);
-      auto set_column_header_indicator(int column, ColumnHeaderIndicator order) -> void;
+      void set_font(System::String^ font, float size, System::Drawing::FontStyle style);
+      void set_column_header_indicator(int column, ColumnHeaderIndicator order);
     };
   }
 }
