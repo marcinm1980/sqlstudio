@@ -141,7 +141,6 @@ mforms_wrap.cxx
 library/sql-parser/source/windows/myx_sql_parser.output
 build/msi/distribution/
 build/zip/distribution/
-build/
 build/output/
 *.so
 *.so.*
