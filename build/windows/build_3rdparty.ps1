@@ -60,112 +60,15 @@ $script:SourceRoot = Join-Path $script:WorkRoot "source"
 $script:BuildRoot = Join-Path $script:WorkRoot "build"
 $script:StampRoot = Join-Path $script:WorkRoot "stamps"
 $script:ToolsRoot = Join-Path $script:BundleDir "_tools"
+$script:DepManifestPath = Join-Path $script:ScriptDir "libs.txt"
 $script:VsEnvLoaded = $false
 $script:StatusLineVisible = $false
 $script:StatusPanelProgressId = 9000
 $script:StatusPanelLineBaseId = 9100
 $script:StatusPanelTitle = ""
 $script:StatusPanelLines = @()
+$script:DepManifest = @()
 $script:SelectedOnly = @($Only | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
-
-$script:DepManifest = @(
-    [pscustomobject]@{
-        Name = "openssl"
-        Version = "3.3.1"
-        Type = "openssl"
-        Url = "https://github.com/openssl/openssl/archive/refs/tags/openssl-3.3.1.zip"
-    }
-    [pscustomobject]@{
-        Name = "zlib"
-        Version = "1.3.1"
-        Type = "zlib"
-        Url = "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.zip"
-    }
-    [pscustomobject]@{
-        Name = "libxml2"
-        Version = "2.13.2"
-        Type = "libxml2"
-        Url = "https://github.com/GNOME/libxml2/archive/refs/tags/v2.13.2.zip"
-    }
-    [pscustomobject]@{
-        Name = "cairo"
-        Version = "1.18.0"
-        Type = "cairo"
-        Url = "https://cairographics.org/releases/cairo-1.18.0.tar.xz"
-    }
-    [pscustomobject]@{
-        Name = "libzip"
-        Version = "1.11.2"
-        Type = "libzip"
-        Url = "https://github.com/nih-at/libzip/archive/refs/tags/v1.11.2.zip"
-    }
-    [pscustomobject]@{
-        Name = "antlr4-runtime"
-        Version = "4.13.2"
-        Type = "antlr4"
-        Url = "https://www.antlr.org/download/antlr4-cpp-runtime-4.13.2-source.zip"
-    }
-    [pscustomobject]@{
-        Name = "libssh"
-        Version = "0.11.1"
-        Type = "libssh"
-        Url = "https://www.libssh.org/files/0.11/libssh-0.11.1.tar.xz"
-    }
-    [pscustomobject]@{
-        Name = "proj"
-        Version = "9.5.1"
-        Type = "proj"
-        Url = "https://github.com/OSGeo/PROJ/archive/refs/tags/9.5.1.zip"
-    }
-    [pscustomobject]@{
-        Name = "gdal"
-        Version = "3.10.2"
-        Type = "gdal"
-        Url = "https://github.com/OSGeo/gdal/releases/download/v3.10.2/gdal-3.10.2.tar.gz"
-    }
-    [pscustomobject]@{
-        Name = "boost"
-        Version = "1.87.0"
-        Type = "header-only"
-        Url = "https://github.com/boostorg/boost/releases/download/boost-1.87.0/boost-1.87.0-cmake.tar.gz"
-    }
-    [pscustomobject]@{
-        Name = "rapidjson"
-        Version = "1.1.0"
-        Type = "header-only"
-        Url = "https://github.com/Tencent/rapidjson/archive/refs/tags/v1.1.0.tar.gz"
-    }
-    [pscustomobject]@{
-        Name = "sqlite"
-        Version = "3490100"
-        Type = "sqlite"
-        Url = "https://www.sqlite.org/2025/sqlite-amalgamation-3490100.zip"
-    }
-    [pscustomobject]@{
-        Name = "vsqlitepp"
-        Version = "0.3.13"
-        Type = "vsqlitepp"
-        Url = "https://github.com/vinzenz/vsqlite--/archive/refs/tags/0.3.13.tar.gz"
-    }
-    [pscustomobject]@{
-        Name = "python"
-        Version = "3.12.4"
-        Type = "python"
-        Url = "https://www.python.org/ftp/python/3.12.4/Python-3.12.4.tgz"
-    }
-    [pscustomobject]@{
-        Name = "mysql-server"
-        Version = "8.0.42"
-        Type = "mysql"
-        Url = "https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.42.tar.gz"
-    }
-    [pscustomobject]@{
-        Name = "mysql-connector-cpp"
-        Version = "9.6.0"
-        Type = "connector-cpp"
-        Url = "https://dev.mysql.com/get/Downloads/Connector-C++/mysql-connector-c++-9.6.0-src.tar.gz"
-    }
-)
 
 function Write-Banner {
     Clear-StatusLine
@@ -434,10 +337,23 @@ function Get-DependencySlug([pscustomobject]$Dependency) {
 }
 
 function Get-ArchivePath([pscustomobject]$Dependency) {
-    if (-not $Dependency.PSObject.Properties["Url"]) {
+    if (-not $Dependency.PSObject.Properties["Urls"] -and -not $Dependency.PSObject.Properties["Url"]) {
         return $null
     }
-    $fileName = [System.IO.Path]::GetFileName(([Uri]$Dependency.Url).AbsolutePath)
+
+    $primarySource = if ($Dependency.PSObject.Properties["Urls"] -and $Dependency.Urls.Count -gt 0) {
+        $Dependency.Urls[0]
+    }
+    else {
+        $Dependency.Url
+    }
+
+    $fileName = if ($primarySource -match '^[a-zA-Z][a-zA-Z0-9+.-]*://') {
+        [System.IO.Path]::GetFileName(([Uri]$primarySource).AbsolutePath)
+    }
+    else {
+        [System.IO.Path]::GetFileName($primarySource)
+    }
     return Join-Path $script:DownloadRoot $fileName
 }
 
@@ -455,6 +371,86 @@ function Test-DependencyBuilt([pscustomobject]$Dependency) {
 
 function Mark-DependencyBuilt([pscustomobject]$Dependency) {
     Set-Content -LiteralPath (Get-StampPath $Dependency) -Value ("built {0:yyyy-MM-dd HH:mm:ss}" -f (Get-Date))
+}
+
+function Load-DependencyManifest {
+    if (-not (Test-Path -LiteralPath $script:DepManifestPath -PathType Leaf)) {
+        throw ("Dependency manifest not found: {0}" -f $script:DepManifestPath)
+    }
+
+    $dependencies = @()
+    $seenNames = @{}
+    $allowedTypes = @(
+        "openssl",
+        "zlib",
+        "libxml2",
+        "cairo",
+        "libzip",
+        "antlr4",
+        "libssh",
+        "proj",
+        "gdal",
+        "header-only",
+        "sqlite",
+        "vsqlitepp",
+        "python",
+        "mysql",
+        "connector-cpp"
+    )
+
+    $lineNumber = 0
+    foreach ($line in Get-Content -LiteralPath $script:DepManifestPath) {
+        $lineNumber++
+        $trimmed = $line.Trim()
+        if (-not $trimmed -or $trimmed.StartsWith("#")) {
+            continue
+        }
+
+        $parts = @($line.Split("|"))
+        if ($parts.Count -ne 4) {
+            throw ("Invalid dependency manifest entry at {0}:{1}. Expected format: name|version|type|url" -f $script:DepManifestPath, $lineNumber)
+        }
+
+        $name = $parts[0].Trim()
+        $version = $parts[1].Trim()
+        $type = $parts[2].Trim()
+        $urlField = $parts[3].Trim()
+
+        if ([string]::IsNullOrWhiteSpace($name) -or
+            [string]::IsNullOrWhiteSpace($version) -or
+            [string]::IsNullOrWhiteSpace($type) -or
+            [string]::IsNullOrWhiteSpace($urlField)) {
+            throw ("Invalid dependency manifest entry at {0}:{1}. None of the four fields may be empty." -f $script:DepManifestPath, $lineNumber)
+        }
+
+        $urls = @($urlField.Split(";") | ForEach-Object { $_.Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+        if ($urls.Count -eq 0) {
+            throw ("Invalid dependency manifest entry at {0}:{1}. At least one download source is required." -f $script:DepManifestPath, $lineNumber)
+        }
+
+        if ($type -notin $allowedTypes) {
+            throw ("Unsupported dependency type '{0}' at {1}:{2}" -f $type, $script:DepManifestPath, $lineNumber)
+        }
+
+        if ($seenNames.ContainsKey($name)) {
+            throw ("Duplicate dependency name '{0}' in {1} at lines {2} and {3}" -f $name, $script:DepManifestPath, $seenNames[$name], $lineNumber)
+        }
+
+        $seenNames[$name] = $lineNumber
+        $dependencies += [pscustomobject]@{
+            Name = $name
+            Version = $version
+            Type = $type
+            Url = $urls[0]
+            Urls = $urls
+        }
+    }
+
+    if ($dependencies.Count -eq 0) {
+        throw ("Dependency manifest is empty: {0}" -f $script:DepManifestPath)
+    }
+
+    return $dependencies
 }
 
 function Test-CommandAvailable([string]$Name) {
@@ -725,7 +721,7 @@ function Copy-FirstMatch {
 
 function Download-File {
     param(
-        [Parameter(Mandatory)] [string]$Url,
+        [Parameter(Mandatory)] [string[]]$Sources,
         [Parameter(Mandatory)] [string]$Destination
     )
 
@@ -735,44 +731,73 @@ function Download-File {
     }
 
     Ensure-Directory (Split-Path -Parent $Destination)
-    Write-Info "Downloading $Url"
+    $errors = @()
+    foreach ($source in $Sources) {
+        Write-Info "Downloading $source"
 
-    $downloadedViaBits = $false
-    if (Get-Module -ListAvailable -Name BitsTransfer) {
         try {
-            Import-Module BitsTransfer
-            Start-BitsTransfer -Source $Url -Destination $Destination -DisplayName ([System.IO.Path]::GetFileName($Destination)) -ErrorAction Stop
-            $downloadedViaBits = $true
+            if ($source -notmatch '^[a-zA-Z][a-zA-Z0-9+.-]*://') {
+                if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+                    throw "Local source file was not found."
+                }
+
+                Copy-Item -LiteralPath $source -Destination $Destination -Force
+                Write-Ok ("Saved archive to {0}" -f $Destination)
+                return
+            }
+
+            $downloadedViaBits = $false
+            if (Get-Module -ListAvailable -Name BitsTransfer) {
+                try {
+                    Import-Module BitsTransfer
+                    Start-BitsTransfer -Source $source -Destination $Destination -DisplayName ([System.IO.Path]::GetFileName($Destination)) -ErrorAction Stop
+                    $downloadedViaBits = $true
+                }
+                catch {
+                    Write-Warn ("BITS download failed, falling back to Invoke-WebRequest: {0}" -f $_.Exception.Message)
+                    if (Test-Path -LiteralPath $Destination -PathType Leaf) {
+                        Remove-Item -LiteralPath $Destination -Force
+                    }
+                }
+            }
+
+            if (-not $downloadedViaBits) {
+                $invokeWebRequestParameters = @{
+                    Uri = $source
+                    OutFile = $Destination
+                    ErrorAction = "Stop"
+                }
+                if ((Get-Command Invoke-WebRequest).Parameters.ContainsKey("UseBasicParsing")) {
+                    $invokeWebRequestParameters["UseBasicParsing"] = $true
+                }
+
+                $previousProgressPreference = $ProgressPreference
+                try {
+                    $ProgressPreference = "SilentlyContinue"
+                    Invoke-WebRequest @invokeWebRequestParameters
+                }
+                finally {
+                    $ProgressPreference = $previousProgressPreference
+                }
+            }
+
+            Write-Ok ("Saved archive to {0}" -f $Destination)
+            return
         }
         catch {
-            Write-Warn ("BITS download failed, falling back to Invoke-WebRequest: {0}" -f $_.Exception.Message)
             if (Test-Path -LiteralPath $Destination -PathType Leaf) {
-                Remove-Item -LiteralPath $Destination -Force
+                Remove-Item -LiteralPath $Destination -Force -ErrorAction SilentlyContinue
             }
+            $message = $_.Exception.Message
+            if ($source -like "https://dev.mysql.com/*" -and $message -match "\(403\)\s+Forbidden") {
+                $message = "{0}. Oracle blocked the automated download. Add a fallback local archive path in {1} using ';' separators." -f $message, $script:DepManifestPath
+            }
+            $errors += ("{0} -> {1}" -f $source, $message)
+            Write-Warn ("Download source failed: {0}" -f $source)
         }
     }
 
-    if (-not $downloadedViaBits) {
-        $invokeWebRequestParameters = @{
-            Uri = $Url
-            OutFile = $Destination
-            ErrorAction = "Stop"
-        }
-        if ((Get-Command Invoke-WebRequest).Parameters.ContainsKey("UseBasicParsing")) {
-            $invokeWebRequestParameters["UseBasicParsing"] = $true
-        }
-
-        $previousProgressPreference = $ProgressPreference
-        try {
-            $ProgressPreference = "SilentlyContinue"
-            Invoke-WebRequest @invokeWebRequestParameters
-        }
-        finally {
-            $ProgressPreference = $previousProgressPreference
-        }
-    }
-
-    Write-Ok ("Saved archive to {0}" -f $Destination)
+    throw ("All download sources failed for {0}: {1}" -f ([System.IO.Path]::GetFileName($Destination)), ($errors -join " | "))
 }
 
 function Expand-ArchiveSmart {
@@ -816,7 +841,8 @@ function Get-SourceTree {
     $extractPath = Get-ExtractPath $Dependency
 
     if (-not $BuildOnly) {
-        Download-File -Url $Dependency.Url -Destination $archivePath
+        $sources = if ($Dependency.PSObject.Properties["Urls"] -and $Dependency.Urls.Count -gt 0) { $Dependency.Urls } else { @($Dependency.Url) }
+        Download-File -Sources $sources -Destination $archivePath
     }
     elseif (-not (Test-Path -LiteralPath $archivePath -PathType Leaf)) {
         throw "--BuildOnly was requested but archive is missing: $archivePath"
@@ -1209,14 +1235,30 @@ function Build-BoostHeaders {
     $sourcePath = Get-SourceTree $Dependency
     if ($DownloadOnly) { return }
 
-    $boostDir = Join-Path $sourcePath "boost"
-    if (-not (Test-Path -LiteralPath $boostDir -PathType Container)) {
-        throw "Boost headers were not found under $boostDir"
-    }
-
     $dest = Join-Path $script:BundleDir "include\boost"
     Reset-Directory $dest
-    Copy-DirectoryContent -Source $boostDir -Destination $dest
+
+    $headerRoots = @()
+    $topLevelBoostDir = Join-Path $sourcePath "boost"
+    if (Test-Path -LiteralPath $topLevelBoostDir -PathType Container) {
+        $headerRoots += $topLevelBoostDir
+    }
+    else {
+        $headerRoots = @(
+            Get-ChildItem -LiteralPath (Join-Path $sourcePath "libs") -Directory -ErrorAction SilentlyContinue |
+                ForEach-Object { Join-Path $_.FullName "include\boost" } |
+                Where-Object { Test-Path -LiteralPath $_ -PathType Container }
+        )
+    }
+
+    if (-not $headerRoots -or $headerRoots.Count -eq 0) {
+        throw "Boost headers were not found under $sourcePath"
+    }
+
+    foreach ($headerRoot in $headerRoots) {
+        Copy-DirectoryContent -Source $headerRoot -Destination $dest
+    }
+
     Write-Ok "Boost headers staged."
 }
 
@@ -1266,7 +1308,7 @@ function Build-Sqlite {
         "/DSQLITE_API=__declspec(dllexport)"
     )
 
-    Invoke-LoggedCommand -Label "sqlite release build" -FilePath "cl.exe" -WorkingDirectory $buildRel -Arguments @(
+    $sqliteReleaseArgs = @(
         "/nologo", "/O2", "/MD", "/LD", "/Zi"
     ) + $commonDefines + @(
         $sqliteC,
@@ -1274,9 +1316,10 @@ function Build-Sqlite {
         "/OUT:sqlite3.dll",
         "/IMPLIB:sqlite3.lib",
         "/PDB:sqlite3.pdb"
-    ) | Out-Null
+    )
+    Invoke-LoggedCommand -Label "sqlite release build" -FilePath "cl.exe" -WorkingDirectory $buildRel -Arguments $sqliteReleaseArgs | Out-Null
 
-    Invoke-LoggedCommand -Label "sqlite debug build" -FilePath "cl.exe" -WorkingDirectory $buildDbg -Arguments @(
+    $sqliteDebugArgs = @(
         "/nologo", "/Od", "/MDd", "/LD", "/Zi", "/DSQLITE_DEBUG"
     ) + $commonDefines + @(
         $sqliteC,
@@ -1284,7 +1327,8 @@ function Build-Sqlite {
         "/OUT:sqlite3_d.dll",
         "/IMPLIB:sqlite3_d.lib",
         "/PDB:sqlite3_d.pdb"
-    ) | Out-Null
+    )
+    Invoke-LoggedCommand -Label "sqlite debug build" -FilePath "cl.exe" -WorkingDirectory $buildDbg -Arguments $sqliteDebugArgs | Out-Null
 
     Ensure-Directory (Join-Path $script:BundleDir "include\sqlite")
     Copy-Item -LiteralPath $sqliteH -Destination (Join-Path $script:BundleDir "include\sqlite\sqlite3.h") -Force
@@ -1309,21 +1353,24 @@ function Build-Vsqlitepp {
     $sourcePath = Get-SourceTree $Dependency
     if ($DownloadOnly) { return }
 
-    $headerCandidates = Get-ChildItem -Path $sourcePath -Recurse -File -Include *.h, *.hpp -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch "\\(test|tests|example|examples|doc|docs)\\" }
+    $headerSourceRoot = Join-Path $sourcePath "include\sqlite"
+    if (-not (Test-Path -LiteralPath $headerSourceRoot -PathType Container)) {
+        throw "vsqlitepp headers were not found under $headerSourceRoot"
+    }
 
-    $sourceCandidates = Get-ChildItem -Path $sourcePath -Recurse -File -Include *.cpp, *.cc, *.cxx -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch "\\(test|tests|example|examples|doc|docs)\\" }
+    $sourceRoot = Join-Path $sourcePath "src\sqlite"
+    $sourceCandidates = @(
+        Get-ChildItem -LiteralPath $sourceRoot -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.Extension -in @(".cpp", ".cc", ".cxx") }
+    )
 
     if (-not $sourceCandidates) {
-        throw "No C++ source files were found for vsqlitepp under $sourcePath"
+        throw "No vsqlitepp implementation source files were found under $sourceRoot"
     }
 
     $headerDest = Join-Path $script:BundleDir "include\sqlite"
-    Ensure-Directory $headerDest
-    foreach ($header in $headerCandidates) {
-        Copy-Item -LiteralPath $header.FullName -Destination (Join-Path $headerDest $header.Name) -Force
-    }
+    Reset-Directory $headerDest
+    Copy-DirectoryContent -Source $headerSourceRoot -Destination $headerDest
 
     $buildRel = Join-Path $script:BuildRoot "vsqlitepp\release"
     $buildDbg = Join-Path $script:BuildRoot "vsqlitepp\debug"
@@ -1331,14 +1378,13 @@ function Build-Vsqlitepp {
     Reset-Directory $buildDbg
 
     $includeArgs = @(
-        "/I$sourcePath",
-        "/I$headerDest",
+        "/I" + (Join-Path $sourcePath "include"),
         "/I" + (Join-Path $script:BundleDir "include"),
         "/I" + (Join-Path $script:BundleDir "include\sqlite")
     )
     $sourceArgs = @($sourceCandidates | ForEach-Object { $_.FullName })
 
-    $releaseDll = Invoke-LoggedCommand -Label "vsqlitepp release shared build" -FilePath "cl.exe" -WorkingDirectory $buildRel -AllowFailure -Arguments @(
+    $vsqliteReleaseSharedArgs = @(
         "/nologo", "/O2", "/MD", "/EHsc", "/LD", "/Zi"
     ) + $includeArgs + $sourceArgs + @(
         "sqlite3.lib",
@@ -1348,17 +1394,22 @@ function Build-Vsqlitepp {
         "/IMPLIB:vsqlitepp.lib",
         "/PDB:vsqlitepp.pdb"
     )
+    $releaseDll = Invoke-LoggedCommand -Label "vsqlitepp release shared build" -FilePath "cl.exe" -WorkingDirectory $buildRel -AllowFailure -Arguments $vsqliteReleaseSharedArgs
+    $releaseSharedReady = (Test-Path -LiteralPath (Join-Path $buildRel "vsqlite++.dll") -PathType Leaf) -and
+        (Test-Path -LiteralPath (Join-Path $buildRel "vsqlitepp.lib") -PathType Leaf)
 
-    if ($releaseDll.ExitCode -ne 0) {
-        Write-Warn "Shared build failed for vsqlitepp, falling back to a static library."
-        Invoke-LoggedCommand -Label "vsqlitepp release compile" -FilePath "cl.exe" -WorkingDirectory $buildRel -Arguments @(
+    if ($releaseDll.ExitCode -ne 0 -or -not $releaseSharedReady) {
+        Write-Warn "Shared build did not produce the expected vsqlitepp release artifacts, falling back to a static library."
+        $vsqliteReleaseCompileArgs = @(
             "/nologo", "/O2", "/MD", "/EHsc", "/Zi", "/c"
-        ) + $includeArgs + $sourceArgs | Out-Null
+        ) + $includeArgs + $sourceArgs
+        Invoke-LoggedCommand -Label "vsqlitepp release compile" -FilePath "cl.exe" -WorkingDirectory $buildRel -Arguments $vsqliteReleaseCompileArgs | Out-Null
         $objects = @(Get-ChildItem -Path $buildRel -Filter *.obj | ForEach-Object { $_.FullName })
-        Invoke-LoggedCommand -Label "vsqlitepp release lib" -FilePath "lib.exe" -WorkingDirectory $buildRel -Arguments @("/NOLOGO", "/OUT:vsqlitepp.lib") + $objects | Out-Null
+        $vsqliteReleaseLibArgs = @("/NOLOGO", "/OUT:vsqlitepp.lib") + $objects
+        Invoke-LoggedCommand -Label "vsqlitepp release lib" -FilePath "lib.exe" -WorkingDirectory $buildRel -Arguments $vsqliteReleaseLibArgs | Out-Null
     }
 
-    $debugDll = Invoke-LoggedCommand -Label "vsqlitepp debug shared build" -FilePath "cl.exe" -WorkingDirectory $buildDbg -AllowFailure -Arguments @(
+    $vsqliteDebugSharedArgs = @(
         "/nologo", "/Od", "/MDd", "/EHsc", "/LD", "/Zi"
     ) + $includeArgs + $sourceArgs + @(
         "sqlite3_d.lib",
@@ -1368,14 +1419,19 @@ function Build-Vsqlitepp {
         "/IMPLIB:vsqlitepp.lib",
         "/PDB:vsqlitepp.pdb"
     )
+    $debugDll = Invoke-LoggedCommand -Label "vsqlitepp debug shared build" -FilePath "cl.exe" -WorkingDirectory $buildDbg -AllowFailure -Arguments $vsqliteDebugSharedArgs
+    $debugSharedReady = (Test-Path -LiteralPath (Join-Path $buildDbg "vsqlite++.dll") -PathType Leaf) -and
+        (Test-Path -LiteralPath (Join-Path $buildDbg "vsqlitepp.lib") -PathType Leaf)
 
-    if ($debugDll.ExitCode -ne 0) {
-        Write-Warn "Shared debug build failed for vsqlitepp, falling back to a static library."
-        Invoke-LoggedCommand -Label "vsqlitepp debug compile" -FilePath "cl.exe" -WorkingDirectory $buildDbg -Arguments @(
+    if ($debugDll.ExitCode -ne 0 -or -not $debugSharedReady) {
+        Write-Warn "Shared debug build did not produce the expected vsqlitepp artifacts, falling back to a static library."
+        $vsqliteDebugCompileArgs = @(
             "/nologo", "/Od", "/MDd", "/EHsc", "/Zi", "/c"
-        ) + $includeArgs + $sourceArgs | Out-Null
+        ) + $includeArgs + $sourceArgs
+        Invoke-LoggedCommand -Label "vsqlitepp debug compile" -FilePath "cl.exe" -WorkingDirectory $buildDbg -Arguments $vsqliteDebugCompileArgs | Out-Null
         $objects = @(Get-ChildItem -Path $buildDbg -Filter *.obj | ForEach-Object { $_.FullName })
-        Invoke-LoggedCommand -Label "vsqlitepp debug lib" -FilePath "lib.exe" -WorkingDirectory $buildDbg -Arguments @("/NOLOGO", "/OUT:vsqlitepp.lib") + $objects | Out-Null
+        $vsqliteDebugLibArgs = @("/NOLOGO", "/OUT:vsqlitepp.lib") + $objects
+        Invoke-LoggedCommand -Label "vsqlitepp debug lib" -FilePath "lib.exe" -WorkingDirectory $buildDbg -Arguments $vsqliteDebugLibArgs | Out-Null
     }
 
     if (Test-Path -LiteralPath (Join-Path $buildRel "vsqlite++.dll")) {
@@ -1460,7 +1516,7 @@ function Ensure-WinBison {
     }
 
     $archive = Join-Path $script:DownloadRoot "winflexbison-$toolVersion.zip"
-    Download-File -Url "https://github.com/lexxmark/winflexbison/releases/download/v$toolVersion/winflexbison-$toolVersion.zip" -Destination $archive
+    Download-File -Sources @("https://github.com/lexxmark/winflexbison/releases/download/v$toolVersion/win_flex_bison-$toolVersion.zip") -Destination $archive
     Expand-ArchiveSmart -ArchivePath $archive -Destination $toolDir
 
     if (-not (Test-Path -LiteralPath $toolExe -PathType Leaf)) {
@@ -1513,10 +1569,12 @@ function Build-MySQLServer {
         "-DWITH_SSL=$script:BundleDir"
     )
 
-    Invoke-LoggedCommand -Label "mysql configure release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("-B", $buildRel) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageRel") | Out-Null
+    $mysqlConfigureReleaseArgs = @("-B", $buildRel) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageRel")
+    Invoke-LoggedCommand -Label "mysql configure release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments $mysqlConfigureReleaseArgs | Out-Null
     Invoke-LoggedCommand -Label "mysql build release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--build", $buildRel, "--target", "INSTALL", "--config", "RelWithDebInfo", "--parallel", $Jobs) | Out-Null
 
-    Invoke-LoggedCommand -Label "mysql configure debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("-B", $buildDbg) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageDbg") | Out-Null
+    $mysqlConfigureDebugArgs = @("-B", $buildDbg) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageDbg")
+    Invoke-LoggedCommand -Label "mysql configure debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments $mysqlConfigureDebugArgs | Out-Null
     Invoke-LoggedCommand -Label "mysql build debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--build", $buildDbg, "--target", "INSTALL", "--config", "Debug", "--parallel", $Jobs) | Out-Null
 
     Ensure-Directory (Join-Path $script:BundleDir "include\mysql")
@@ -1566,10 +1624,12 @@ function Build-ConnectorCpp {
         "-DCMAKE_INSTALL_MESSAGE=LAZY"
     )
 
-    Invoke-LoggedCommand -Label "connectorcpp configure release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("-B", $buildRel) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageRel") | Out-Null
+    $connectorCppConfigureReleaseArgs = @("-B", $buildRel) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageRel")
+    Invoke-LoggedCommand -Label "connectorcpp configure release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments $connectorCppConfigureReleaseArgs | Out-Null
     Invoke-LoggedCommand -Label "connectorcpp build release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--build", $buildRel, "--target", "INSTALL", "--config", "RelWithDebInfo", "--parallel", $Jobs) | Out-Null
 
-    Invoke-LoggedCommand -Label "connectorcpp configure debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("-B", $buildDbg) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageDbg") | Out-Null
+    $connectorCppConfigureDebugArgs = @("-B", $buildDbg) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageDbg")
+    Invoke-LoggedCommand -Label "connectorcpp configure debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments $connectorCppConfigureDebugArgs | Out-Null
     Invoke-LoggedCommand -Label "connectorcpp build debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--build", $buildDbg, "--target", "INSTALL", "--config", "Debug", "--parallel", $Jobs) | Out-Null
 
     Ensure-Directory (Join-Path $script:BundleDir "include\cppconn")
@@ -1586,6 +1646,10 @@ function Build-ConnectorCpp {
 }
 
 function Get-SelectedDependencies {
+    if (-not $script:DepManifest -or $script:DepManifest.Count -eq 0) {
+        $script:DepManifest = @(Load-DependencyManifest)
+    }
+
     if (-not $script:SelectedOnly -or $script:SelectedOnly.Count -eq 0) {
         return $script:DepManifest
     }
@@ -1684,7 +1748,23 @@ function Show-Configuration([pscustomobject[]]$Dependencies) {
 
     Write-Section ("Dependencies ({0})" -f $Dependencies.Count)
     foreach ($dep in $Dependencies) {
-        $source = if ($dep.PSObject.Properties["Url"]) { $dep.Url } elseif ($dep.PSObject.Properties["DisplayUrl"]) { $dep.DisplayUrl } else { "-" }
+        $source = if ($dep.PSObject.Properties["Urls"] -and $dep.Urls.Count -gt 0) {
+            if ($dep.Urls.Count -gt 1) {
+                "{0} (+{1} fallback{2})" -f $dep.Urls[0], ($dep.Urls.Count - 1), $(if (($dep.Urls.Count - 1) -eq 1) { "" } else { "s" })
+            }
+            else {
+                $dep.Urls[0]
+            }
+        }
+        elseif ($dep.PSObject.Properties["Url"]) {
+            $dep.Url
+        }
+        elseif ($dep.PSObject.Properties["DisplayUrl"]) {
+            $dep.DisplayUrl
+        }
+        else {
+            "-"
+        }
         Write-Detail ("{0,-22} {1,-12} {2}" -f (Get-DependencySlug $dep), $dep.Type, $source)
     }
 }
