@@ -15,7 +15,7 @@
 
   The default output is a sibling build folder outside the source tree:
 
-    ..\wb_build\bundle
+    ..\bundle
 
   The script mixes:
   - direct source builds for MySQL, Connector/C++, SQLite, Python, and header-only deps
@@ -51,7 +51,7 @@ $script:ScriptDir = Split-Path -Parent $PSCommandPath
 $script:ProjectRoot = [System.IO.Path]::GetFullPath((Join-Path $script:ScriptDir "..\.."))
 $script:ProjectParent = Split-Path -Parent $script:ProjectRoot
 if (-not $BundleDir) {
-    $BundleDir = Join-Path $script:ProjectParent "wb_build\bundle"
+    $BundleDir = Join-Path $script:ProjectParent "bundle"
 }
 $script:BundleDir = [System.IO.Path]::GetFullPath($BundleDir)
 $script:WorkRoot = Join-Path $script:BundleDir "_work"
@@ -63,19 +63,36 @@ $script:ToolsRoot = Join-Path $script:BundleDir "_tools"
 $script:DepManifestPath = Join-Path $script:ScriptDir "libs.txt"
 $script:VsEnvLoaded = $false
 $script:StatusLineVisible = $false
-$script:StatusPanelProgressId = 9000
-$script:StatusPanelLineBaseId = 9100
+$script:StatusPanelMaxLines = 14
 $script:StatusPanelTitle = ""
 $script:StatusPanelLines = @()
+$script:StatusPanelPhysicalRows = 0
 $script:DepManifest = @()
 $script:SelectedOnly = @($Only | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+$script:ActiveProcesses = [System.Collections.Generic.List[System.Diagnostics.Process]]::new()
+
+function Stop-AllActiveProcesses {
+    $procs = @($script:ActiveProcesses)
+    $script:ActiveProcesses.Clear()
+    foreach ($proc in $procs) {
+        try {
+            if ($proc -and -not $proc.HasExited) {
+                & taskkill /T /F /PID $proc.Id 2>$null | Out-Null
+            }
+        }
+        catch {}
+        finally {
+            try { $proc.Dispose() } catch {}
+        }
+    }
+}
 
 function Write-Banner {
     Clear-StatusLine
     Write-Host ""
-    Write-Host "+------------------------------------------------------------------+" -ForegroundColor Blue
-    Write-Host "|   MySQL Workbench / Studio - Windows 3rd-Party Bundle Builder    |" -ForegroundColor Blue
-    Write-Host "+------------------------------------------------------------------+" -ForegroundColor Blue
+    Write-Host "+------------------------------------------------------------------+" -ForegroundColor DarkYellow
+    Write-Host "|   MySQL Workbench / Studio - Windows 3rd-Party Bundle Builder    |" -ForegroundColor Gray
+    Write-Host "+------------------------------------------------------------------+" -ForegroundColor DarkYellow
     Write-Host ""
 }
 
@@ -88,29 +105,11 @@ function Get-ConsoleWidth {
     }
 }
 
-function Get-StatusPanelHeight {
-    return 10
-}
-
-function Normalize-StatusPanelText([string]$Text, [int]$MaxLength) {
-    $normalized = ([string]$Text -replace "\s+", " ").Trim()
-    if ($MaxLength -lt 4) {
-        return $normalized
+function Get-PhysicalRowCount([string]$Text, [int]$Width) {
+    if ([string]::IsNullOrEmpty($Text) -or $Width -le 0) {
+        return 1
     }
-
-    if ($normalized.Length -gt $MaxLength) {
-        return $normalized.Substring(0, $MaxLength - 3) + "..."
-    }
-
-    return $normalized
-}
-
-function Get-SafeProgressActivity([string]$Text, [string]$Fallback = "(working)") {
-    if ([string]::IsNullOrWhiteSpace($Text)) {
-        return $Fallback
-    }
-
-    return $Text
+    return [Math]::Max(1, [Math]::Ceiling($Text.Length / $Width))
 }
 
 function Render-StatusPanel {
@@ -118,33 +117,67 @@ function Render-StatusPanel {
         return
     }
 
-    $visibleLines = @($script:StatusPanelLines)
-    $panelHeight = Get-StatusPanelHeight
-    if ($visibleLines.Count -gt $panelHeight) {
-        $startIndex = $visibleLines.Count - $panelHeight
-        $visibleLines = @($visibleLines[$startIndex..($visibleLines.Count - 1)])
+    $width = Get-ConsoleWidth
+    $esc = [char]0x1b
+    $clearLine = "${esc}[2K"
+    $colorGray = "${esc}[90m"
+    $colorYellow = "${esc}[33m"
+    $colorReset = "${esc}[0m"
+
+    # Erase previous render by moving up the exact physical rows we wrote last time
+    $prevRows = $script:StatusPanelPhysicalRows
+    $buf = [System.Text.StringBuilder]::new(4096)
+    if ($prevRows -gt 0) {
+        [void]$buf.Append("${esc}[${prevRows}A")
+        for ($i = 0; $i -lt $prevRows; $i++) {
+            [void]$buf.Append($clearLine)
+            [void]$buf.AppendLine()
+        }
+        [void]$buf.Append("${esc}[${prevRows}A")
     }
 
-    Write-Progress -Id $script:StatusPanelProgressId -Activity (Get-SafeProgressActivity -Text $script:StatusPanelTitle -Fallback "Build progress") -Status ("Recent output ({0}/{1})" -f $visibleLines.Count, $panelHeight) -PercentComplete -1
-    for ($lineIndex = 0; $lineIndex -lt $panelHeight; $lineIndex++) {
-        $lineId = $script:StatusPanelLineBaseId + $lineIndex
-        if ($lineIndex -lt $visibleLines.Count) {
-            Write-Progress -Id $lineId -ParentId $script:StatusPanelProgressId -Activity (Get-SafeProgressActivity -Text $visibleLines[$lineIndex]) -Status "running" -PercentComplete -1
-        }
-        else {
-            Write-Progress -Id $lineId -ParentId $script:StatusPanelProgressId -Activity "(idle)" -Status "idle" -Completed
-        }
+    # Build new content — lines are truncated so 1 line = 1 physical row
+    $titleText = ([string]$script:StatusPanelTitle -replace "\s+", " ").Trim()
+    $visibleLines = @($script:StatusPanelLines)
+    $newPhysicalRows = 1 + $visibleLines.Count
+
+    # Write title (truncate with ... if needed)
+    $maxLen = $width - 2
+    if ($titleText.Length -gt $maxLen) {
+        $titleText = $titleText.Substring(0, $maxLen - 3) + "..."
     }
+    [void]$buf.Append($clearLine)
+    [void]$buf.Append($colorYellow)
+    [void]$buf.Append($titleText)
+    [void]$buf.AppendLine($colorReset)
+
+    # Write output lines (truncate with ... if needed)
+    foreach ($vl in $visibleLines) {
+        $lineText = "  " + $vl
+        if ($lineText.Length -gt $maxLen) {
+            $lineText = $lineText.Substring(0, $maxLen - 3) + "..."
+        }
+        [void]$buf.Append($clearLine)
+        [void]$buf.Append($colorGray)
+        [void]$buf.Append($lineText)
+        [void]$buf.AppendLine($colorReset)
+    }
+
+    [Console]::Write($buf.ToString())
+    $script:StatusPanelPhysicalRows = $newPhysicalRows
 }
 
 function Start-StatusPanel([string]$Title) {
     if ($script:StatusLineVisible) {
+        $script:StatusPanelTitle = $Title
+        Render-StatusPanel
         return
     }
 
     $script:StatusPanelTitle = $Title
     $script:StatusPanelLines = @()
     $script:StatusLineVisible = $true
+    $script:StatusPanelPhysicalRows = 0
     Render-StatusPanel
 }
 
@@ -162,11 +195,15 @@ function Push-StatusPanelLine([string]$Message) {
         return
     }
 
-    $normalized = Normalize-StatusPanelText -Text $Message -MaxLength 110
-    $script:StatusPanelLines += @($normalized)
-    if ($script:StatusPanelLines.Count -gt (Get-StatusPanelHeight)) {
-        $startIndex = $script:StatusPanelLines.Count - (Get-StatusPanelHeight)
-        $script:StatusPanelLines = @($script:StatusPanelLines[$startIndex..($script:StatusPanelLines.Count - 1)])
+    $normalized = ([string]$Message -replace "\s+", " ").Trim()
+    if ($script:StatusPanelLines -is [System.Collections.ArrayList]) {
+        [void]$script:StatusPanelLines.Add($normalized)
+    } else {
+        $script:StatusPanelLines = [System.Collections.ArrayList]@($script:StatusPanelLines)
+        [void]$script:StatusPanelLines.Add($normalized)
+    }
+    while ($script:StatusPanelLines.Count -gt $script:StatusPanelMaxLines) {
+        $script:StatusPanelLines.RemoveAt(0)
     }
 
     Render-StatusPanel
@@ -177,13 +214,24 @@ function Clear-StatusLine {
         return
     }
 
-    Write-Progress -Id $script:StatusPanelProgressId -Activity "Build progress" -Status "done" -Completed
-    for ($lineIndex = 0; $lineIndex -lt (Get-StatusPanelHeight); $lineIndex++) {
-        Write-Progress -Id ($script:StatusPanelLineBaseId + $lineIndex) -Activity "(idle)" -Status "done" -Completed
+    $prevRows = $script:StatusPanelPhysicalRows
+    if ($prevRows -gt 0) {
+        $esc = [char]0x1b
+        $clearLine = "${esc}[2K"
+        $buf = [System.Text.StringBuilder]::new(256)
+        [void]$buf.Append("${esc}[${prevRows}A")
+        for ($i = 0; $i -lt $prevRows; $i++) {
+            [void]$buf.Append($clearLine)
+            [void]$buf.AppendLine()
+        }
+        [void]$buf.Append("${esc}[${prevRows}A")
+        [Console]::Write($buf.ToString())
     }
+
     $script:StatusLineVisible = $false
     $script:StatusPanelTitle = ""
     $script:StatusPanelLines = @()
+    $script:StatusPanelPhysicalRows = 0
 }
 
 function Write-Section([string]$Message) {
@@ -227,7 +275,7 @@ function Write-StepHeader([int]$Index, [int]$Total, [string]$Label) {
     Write-Host ("[{0}/{1}] {2}  {3}" -f $Index, $Total, $bar, $Label) -ForegroundColor White
 }
 
-function Get-LatestProcessLine([string[]]$Paths) {
+function Get-RecentProcessLines([string[]]$Paths, [int]$TailCount = 50) {
     $noisePatterns = @(
         '^\s*$',
         '^Copyright \(C\) Microsoft Corporation\.',
@@ -237,19 +285,16 @@ function Get-LatestProcessLine([string[]]$Paths) {
         '^All rights reserved\.$'
     )
 
+    $result = [System.Collections.Generic.List[string]]::new()
     foreach ($path in $Paths) {
         if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
             continue
         }
 
-        $tail = @(
-            Get-Content -LiteralPath $path -Tail 30 -ErrorAction SilentlyContinue |
-                Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
-        )
-
-        for ($tailIndex = $tail.Count - 1; $tailIndex -ge 0; $tailIndex--) {
-            $line = $tail[$tailIndex]
+        $tail = @(Get-Content -LiteralPath $path -Tail $TailCount -ErrorAction SilentlyContinue)
+        foreach ($line in $tail) {
             $text = ([string]$line).Trim()
+            if ([string]::IsNullOrWhiteSpace($text)) { continue }
             $isNoise = $false
             foreach ($pattern in $noisePatterns) {
                 if ($text -match $pattern) {
@@ -258,16 +303,12 @@ function Get-LatestProcessLine([string[]]$Paths) {
                 }
             }
             if (-not $isNoise) {
-                return $text
+                $result.Add($text)
             }
-        }
-
-        if ($tail.Count -gt 0) {
-            return ([string]$tail[-1]).Trim()
         }
     }
 
-    return $null
+    return $result
 }
 
 function Remove-FileWithRetry {
@@ -378,7 +419,7 @@ function Load-DependencyManifest {
         throw ("Dependency manifest not found: {0}" -f $script:DepManifestPath)
     }
 
-    $dependencies = @()
+    $dependencies = [System.Collections.Generic.List[pscustomobject]]::new()
     $seenNames = @{}
     $allowedTypes = @(
         "openssl",
@@ -437,13 +478,13 @@ function Load-DependencyManifest {
         }
 
         $seenNames[$name] = $lineNumber
-        $dependencies += [pscustomobject]@{
+        $dependencies.Add([pscustomobject]@{
             Name = $name
             Version = $version
             Type = $type
             Url = $urls[0]
             Urls = $urls
-        }
+        })
     }
 
     if ($dependencies.Count -eq 0) {
@@ -579,24 +620,48 @@ function Invoke-LoggedCommand {
             }
 
             $process = Start-Process @startProcessParameters
+            $script:ActiveProcesses.Add($process)
 
             $lastStatusLine = $null
             $lastHeartbeatBucket = -1
+            $lastSeenLineCount = 0
             Start-StatusPanel -Title ("{0} (starting)" -f $Label)
             Push-StatusPanelLine ("working directory: {0}" -f $WorkingDirectory)
             while (-not $process.HasExited) {
-                $latestLine = Get-LatestProcessLine -Paths @($stderrPath, $stdoutPath)
+                $recentLines = @(Get-RecentProcessLines -Paths @($stderrPath, $stdoutPath) -TailCount 50)
                 $elapsedSeconds = $sw.Elapsed.TotalSeconds
                 Update-StatusPanelTitle -Title ("{0} ({1:n1}s)" -f $Label, $elapsedSeconds)
 
-                if ($latestLine -and $latestLine -ne $lastStatusLine) {
-                    Push-StatusPanelLine -Message $latestLine
-                    $lastStatusLine = $latestLine
+                $newLineCount = $recentLines.Count
+                if ($newLineCount -gt $lastSeenLineCount) {
+                    # Push only lines we haven't shown yet
+                    $startIdx = [Math]::Max(0, $newLineCount - ($newLineCount - $lastSeenLineCount))
+                    for ($li = $lastSeenLineCount; $li -lt $newLineCount; $li++) {
+                        # Clamp index to valid range (tail may have shifted)
+                        if ($li -lt $recentLines.Count) {
+                            Push-StatusPanelLine -Message $recentLines[$li]
+                        }
+                    }
+                    $lastSeenLineCount = $newLineCount
+                    $lastStatusLine = $recentLines[-1]
+                }
+                elseif ($recentLines.Count -gt 0 -and $recentLines[-1] -ne $lastStatusLine) {
+                    # Log file was recycled or shifted — refresh the whole panel
+                    $script:StatusPanelLines = [System.Collections.ArrayList]::new()
+                    foreach ($rl in $recentLines) {
+                        Push-StatusPanelLine -Message $rl
+                    }
+                    $lastSeenLineCount = $recentLines.Count
+                    $lastStatusLine = $recentLines[-1]
                 }
                 else {
                     $heartbeatBucket = [int][Math]::Floor($elapsedSeconds / 5)
                     if ($heartbeatBucket -gt $lastHeartbeatBucket) {
-                        Push-StatusPanelLine -Message ("still running ({0:n1}s)" -f $elapsedSeconds)
+                        $heartbeatMsg = "still running ({0:n1}s)" -f $elapsedSeconds
+                        if ($lastStatusLine) {
+                            $heartbeatMsg = "{0} => {1}" -f $heartbeatMsg, $lastStatusLine
+                        }
+                        Push-StatusPanelLine -Message $heartbeatMsg
                         $lastHeartbeatBucket = $heartbeatBucket
                     }
                 }
@@ -620,6 +685,12 @@ function Invoke-LoggedCommand {
         finally {
             Clear-StatusLine
             if ($process) {
+                try {
+                    if (-not $process.HasExited) {
+                        & taskkill /T /F /PID $process.Id 2>$null | Out-Null
+                    }
+                } catch {}
+                $script:ActiveProcesses.Remove($process) | Out-Null
                 $process.Dispose()
             }
             foreach ($path in @($stdoutPath, $stderrPath)) {
@@ -1771,9 +1842,9 @@ function Show-Configuration([pscustomobject[]]$Dependencies) {
 
 function Show-Summary {
     Write-Host ""
-    Write-Host "+------------------------------------------------------------------+" -ForegroundColor Green
-    Write-Host "|               3rd-party bundle finished successfully             |" -ForegroundColor Green
-    Write-Host "+------------------------------------------------------------------+" -ForegroundColor Green
+    Write-Host "+------------------------------------------------------------------+" -ForegroundColor DarkYellow
+    Write-Host "|               3rd-party bundle finished successfully             |" -ForegroundColor Gray
+    Write-Host "+------------------------------------------------------------------+" -ForegroundColor DarkYellow
     Write-Host ""
     Write-Detail ("Bundle root        : {0}" -f $script:BundleDir)
     Write-Detail ("Set env var        : MSS_3DPARTY_PATH={0}" -f $script:BundleDir)
@@ -1783,33 +1854,39 @@ function Show-Summary {
 }
 
 function Main {
-    Write-Banner
-    Initialize-BundleLayout
+    try {
+        Write-Banner
+        Initialize-BundleLayout
 
-    if ($Clean) {
-        Write-Section "Cleaning"
-        foreach ($path in @($script:BuildRoot, $script:SourceRoot, $script:StampRoot)) {
-            if (Test-Path -LiteralPath $path -PathType Container) {
-                Write-Warn ("Removing {0}" -f $path)
-                Remove-Item -LiteralPath $path -Recurse -Force
+        if ($Clean) {
+            Write-Section "Cleaning"
+            foreach ($path in @($script:BuildRoot, $script:SourceRoot, $script:StampRoot)) {
+                if (Test-Path -LiteralPath $path -PathType Container) {
+                    Write-Warn ("Removing {0}" -f $path)
+                    Remove-Item -LiteralPath $path -Recurse -Force
+                }
+                Ensure-Directory $path
             }
-            Ensure-Directory $path
         }
+
+        $dependencies = @(Get-SelectedDependencies)
+        Show-Configuration -Dependencies $dependencies
+        Check-HostTools
+
+        Write-Section "Processing Dependencies"
+        $index = 0
+        foreach ($dependency in $dependencies) {
+            $index++
+            Write-StepHeader -Index $index -Total $dependencies.Count -Label (Get-DependencySlug $dependency)
+            Process-Dependency -Dependency $dependency
+        }
+
+        Show-Summary
     }
-
-    $dependencies = @(Get-SelectedDependencies)
-    Show-Configuration -Dependencies $dependencies
-    Check-HostTools
-
-    Write-Section "Processing Dependencies"
-    $index = 0
-    foreach ($dependency in $dependencies) {
-        $index++
-        Write-StepHeader -Index $index -Total $dependencies.Count -Label (Get-DependencySlug $dependency)
-        Process-Dependency -Dependency $dependency
+    finally {
+        Stop-AllActiveProcesses
+        Clear-StatusLine
     }
-
-    Show-Summary
 }
 
 Main
