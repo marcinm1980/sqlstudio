@@ -337,6 +337,26 @@ function Remove-FileWithRetry {
     }
 }
 
+function ConvertTo-WindowsCommandLineArgument {
+    param([AllowEmptyString()] [string]$Value)
+
+    if ($null -eq $Value) {
+        return '""'
+    }
+
+    if ($Value.Length -eq 0) {
+        return '""'
+    }
+
+    if ($Value -notmatch '[\s"]') {
+        return $Value
+    }
+
+    $escaped = $Value -replace '(\\*)"', '$1$1\"'
+    $escaped = $escaped -replace '(\\+)$', '$1$1'
+    return '"' + $escaped + '"'
+}
+
 function Ensure-Directory([string]$Path) {
     if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
         [void](New-Item -ItemType Directory -Path $Path -Force)
@@ -412,6 +432,131 @@ function Test-DependencyBuilt([pscustomobject]$Dependency) {
 
 function Mark-DependencyBuilt([pscustomobject]$Dependency) {
     Set-Content -LiteralPath (Get-StampPath $Dependency) -Value ("built {0:yyyy-MM-dd HH:mm:ss}" -f (Get-Date))
+}
+
+function Test-AnyPathExists {
+    param([string[]]$RelativePaths)
+
+    foreach ($relativePath in $RelativePaths) {
+        $fullPath = Join-Path $script:BundleDir $relativePath
+        if (Test-Path -LiteralPath $fullPath) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Test-DependencyOutputsPresent {
+    param([pscustomobject]$Dependency)
+
+    $requiredGroups = switch ($Dependency.Type) {
+        "openssl" {
+            @(
+                @("include\openssl\ssl.h"),
+                @("lib\libssl.lib", "lib\libssl-3-x64.dll")
+            )
+        }
+        "zlib" {
+            @(
+                @("include\zlib\zlib.h"),
+                @("include\zlib\zconf.h"),
+                @("lib\zlib.lib", "lib\zlib1.lib", "lib\zlib.dll", "lib\zlib1.dll"),
+                @("debug\lib\zlibd.lib", "debug\lib\zlibd1.lib", "debug\lib\zlibd.dll", "debug\lib\zlibd1.dll")
+            )
+        }
+        "libxml2" {
+            @(
+                @("include\libxml2\libxml\parser.h"),
+                @("lib\libxml2.lib", "lib\libxml2.dll")
+            )
+        }
+        "cairo" {
+            @(
+                @("include\cairo.h", "include\cairo\cairo.h"),
+                @("lib\cairo.lib", "lib\cairo-2.dll")
+            )
+        }
+        "libzip" {
+            @(
+                @("include\zip.h", "include\zipconf.h"),
+                @("lib\zip.lib", "lib\zip.dll")
+            )
+        }
+        "antlr4" {
+            @(
+                @("include\antlr4-runtime\antlr4-runtime.h"),
+                @("lib\antlr4-runtime.lib", "lib\antlr4-runtime.dll")
+            )
+        }
+        "libssh" {
+            @(
+                @("include\libssh\libssh.h", "include\libssh.h"),
+                @("lib\ssh.lib", "lib\libssh.lib", "lib\ssh.dll", "lib\libssh.dll")
+            )
+        }
+        "proj" {
+            @(
+                @("include\proj.h"),
+                @("lib\proj.lib", "lib\proj.dll")
+            )
+        }
+        "gdal" {
+            @(
+                @("include\gdal.h", "include\gdal_version.h"),
+                @("lib\gdal.lib", "lib\gdal.dll")
+            )
+        }
+        "header-only" {
+            switch ($Dependency.Name) {
+                "boost" { @(@("include\boost\config.hpp")) }
+                "rapidjson" { @(@("include\rapidjson\document.h")) }
+                default { @() }
+            }
+        }
+        "sqlite" {
+            @(
+                @("include\sqlite\sqlite3.h"),
+                @("lib\sqlite3.lib", "lib\sqlite3.dll")
+            )
+        }
+        "vsqlitepp" {
+            @(
+                @("lib\vsqlitepp.lib")
+            )
+        }
+        "python" {
+            @(
+                @("python\python.exe", "python\python312.exe"),
+                @("python\Include\Python.h")
+            )
+        }
+        "mysql" {
+            @(
+                @("include\mysql\mysql.h"),
+                @("lib\libmysql.lib", "lib\libmysql.dll")
+            )
+        }
+        "connector-cpp" {
+            @(
+                @("include\cppconn\driver.h"),
+                @("lib\mysqlcppconn.lib", "lib\mysqlcppconn-10-vs14.dll", "lib\mysqlcppconn-10-vs17.dll")
+            )
+        }
+        default { @() }
+    }
+
+    if ($requiredGroups.Count -eq 0) {
+        return $true
+    }
+
+    foreach ($group in $requiredGroups) {
+        if (-not (Test-AnyPathExists -RelativePaths $group)) {
+            return $false
+        }
+    }
+
+    return $true
 }
 
 function Load-DependencyManifest {
@@ -616,7 +761,7 @@ function Invoke-LoggedCommand {
                 PassThru = $true
             }
             if ($Arguments.Count -gt 0) {
-                $startProcessParameters["ArgumentList"] = $Arguments
+                $startProcessParameters["ArgumentList"] = (($Arguments | ForEach-Object { ConvertTo-WindowsCommandLineArgument $_ }) -join " ")
             }
 
             $process = Start-Process @startProcessParameters
@@ -790,6 +935,177 @@ function Copy-FirstMatch {
     return $true
 }
 
+function Test-ZipArchiveHealthy {
+    param([Parameter(Mandatory)] [string]$ArchivePath)
+
+    try {
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $zip = [System.IO.Compression.ZipFile]::OpenRead($ArchivePath)
+        try {
+            return ($zip.Entries.Count -gt 0)
+        }
+        finally {
+            $zip.Dispose()
+        }
+    }
+    catch {
+        return $false
+    }
+}
+
+function Test-ArchiveHealthy {
+    param([Parameter(Mandatory)] [string]$ArchivePath)
+
+    if (-not (Test-Path -LiteralPath $ArchivePath -PathType Leaf)) {
+        return $false
+    }
+
+    if ($ArchivePath.ToLowerInvariant().EndsWith(".zip")) {
+        return (Test-ZipArchiveHealthy -ArchivePath $ArchivePath)
+    }
+
+    return $true
+}
+
+function Test-ExtractedSourceHealthy {
+    param([Parameter(Mandatory)] [string]$Path)
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
+        return $false
+    }
+
+    return (@(Get-ChildItem -LiteralPath $Path -Force -ErrorAction SilentlyContinue | Select-Object -First 1).Count -gt 0)
+}
+
+function Restore-MesonInstallOutputs {
+    param(
+        [Parameter(Mandatory)] [string]$BuildDir,
+        [Parameter(Mandatory)] [string]$StageDir
+    )
+
+    if (Test-ExtractedSourceHealthy -Path $StageDir) {
+        return
+    }
+
+    $installedJson = Join-Path $BuildDir "meson-info\intro-installed.json"
+    if (-not (Test-Path -LiteralPath $installedJson -PathType Leaf)) {
+        return
+    }
+
+    $installedMap = Get-Content -LiteralPath $installedJson -Raw | ConvertFrom-Json -AsHashtable
+    $restoredCount = 0
+    foreach ($sourcePath in $installedMap.Keys) {
+        $destinationPath = [string]$installedMap[$sourcePath]
+        if (-not $destinationPath.StartsWith($StageDir, [System.StringComparison]::OrdinalIgnoreCase)) {
+            continue
+        }
+        if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) {
+            continue
+        }
+
+        Ensure-Directory (Split-Path -Parent $destinationPath)
+        Copy-Item -LiteralPath $sourcePath -Destination $destinationPath -Force
+        $restoredCount++
+    }
+
+    if ($restoredCount -gt 0) {
+        Write-Warn ("Meson install outputs were restored from build metadata: {0}" -f $StageDir)
+    }
+}
+
+function Ensure-AntlrRuntimeCompatibilityPatch {
+    param([Parameter(Mandatory)] [string]$SourcePath)
+
+    $profilingSource = Join-Path $SourcePath "runtime\src\atn\ProfilingATNSimulator.cpp"
+    if (-not (Test-Path -LiteralPath $profilingSource -PathType Leaf)) {
+        return
+    }
+
+    $content = Get-Content -LiteralPath $profilingSource -Raw
+    if ($content -match '(?m)^\s*#include <chrono>\s*$') {
+        return
+    }
+
+    $updated = $content -replace '(#include "support/CPPUtils.h"\r?\n)', "`$1#include <chrono>`r`n"
+    if ($updated -ne $content) {
+        Set-Content -LiteralPath $profilingSource -Value $updated -NoNewline
+        Write-Warn "Applied ANTLR4 MSVC compatibility patch for ProfilingATNSimulator.cpp"
+    }
+}
+
+function Get-SqliteHeaderRoot {
+    $bundleCandidates = @(
+        (Join-Path $script:BundleDir "include\sqlite"),
+        (Join-Path $script:BundleDir "include")
+    )
+    foreach ($candidate in $bundleCandidates) {
+        if (Test-Path -LiteralPath (Join-Path $candidate "sqlite3.h") -PathType Leaf) {
+            return $candidate
+        }
+    }
+
+    $sourceCandidates = @(Get-ChildItem -LiteralPath $script:SourceRoot -Directory -Filter "sqlite-*" -ErrorAction SilentlyContinue |
+        Sort-Object Name -Descending)
+    foreach ($candidate in $sourceCandidates) {
+        if (Test-Path -LiteralPath (Join-Path $candidate.FullName "sqlite3.h") -PathType Leaf) {
+            return $candidate.FullName
+        }
+    }
+
+    throw "sqlite3.h was not found in the bundle or extracted sqlite sources."
+}
+
+function Ensure-SqliteCliShim {
+    $toolsDir = Join-Path $script:BuildRoot "tools"
+    $shimPy = Join-Path $toolsDir "sqlite3_cli.py"
+    $shimCmd = Join-Path $toolsDir "sqlite3.cmd"
+
+    $pythonPath = $null
+    foreach ($candidate in @("python.exe", "python", "py.exe", "py")) {
+        $command = Get-Command $candidate -ErrorAction SilentlyContinue
+        if ($command) {
+            $pythonPath = $command.Source
+            break
+        }
+    }
+
+    if (-not $pythonPath) {
+        throw "Python is required to emulate sqlite3 for the PROJ build."
+    }
+
+    Ensure-Directory $toolsDir
+    Set-Content -LiteralPath $shimPy -Value @'
+import sqlite3
+import sys
+
+def main():
+    if len(sys.argv) != 2:
+        print("usage: sqlite3_cli.py <database>", file=sys.stderr)
+        return 2
+
+    database_path = sys.argv[1]
+    sql = sys.stdin.buffer.read().decode("utf-8-sig")
+
+    connection = sqlite3.connect(database_path)
+    try:
+        connection.executescript(sql)
+        connection.commit()
+    finally:
+        connection.close()
+
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+'@ -NoNewline
+    Set-Content -LiteralPath $shimCmd -Value @(
+        "@echo off",
+        "`"$pythonPath`" `"$shimPy`" %*"
+    )
+
+    return $shimCmd
+}
+
 function Download-File {
     param(
         [Parameter(Mandatory)] [string[]]$Sources,
@@ -797,8 +1113,13 @@ function Download-File {
     )
 
     if (Test-Path -LiteralPath $Destination -PathType Leaf) {
-        Write-Ok ("Archive already downloaded: {0}" -f ([System.IO.Path]::GetFileName($Destination)))
-        return
+        if (Test-ArchiveHealthy -ArchivePath $Destination) {
+            Write-Ok ("Archive already downloaded: {0}" -f ([System.IO.Path]::GetFileName($Destination)))
+            return
+        }
+
+        Write-Warn ("Cached archive is invalid - re-downloading {0}" -f ([System.IO.Path]::GetFileName($Destination)))
+        Remove-Item -LiteralPath $Destination -Force -ErrorAction SilentlyContinue
     }
 
     Ensure-Directory (Split-Path -Parent $Destination)
@@ -878,8 +1199,13 @@ function Expand-ArchiveSmart {
     )
 
     if (Test-Path -LiteralPath $Destination -PathType Container) {
-        Write-Ok ("Source already extracted: {0}" -f $Destination)
-        return
+        if (Test-ExtractedSourceHealthy -Path $Destination) {
+            Write-Ok ("Source already extracted: {0}" -f $Destination)
+            return
+        }
+
+        Write-Warn ("Extracted source is incomplete - re-extracting {0}" -f $Destination)
+        Remove-Item -LiteralPath $Destination -Recurse -Force
     }
 
     $tempDir = $Destination + ".extracting"
@@ -1021,14 +1347,11 @@ function Build-OpenSsl {
     $layout = New-DualBuildLayout "openssl"
     $srcRelease = Join-Path $script:BuildRoot "openssl\src-release"
     $srcDebug = Join-Path $script:BuildRoot "openssl\src-debug"
+    foreach ($path in @($layout.StageRelease, $layout.StageDebug, $srcRelease, $srcDebug)) {
+        Reset-Directory $path
+    }
     foreach ($path in @($srcRelease, $srcDebug)) {
-        if ($Clean -and (Test-Path -LiteralPath $path -PathType Container)) {
-            Remove-Item -LiteralPath $path -Recurse -Force
-        }
-        if (-not (Test-Path -LiteralPath $path -PathType Container)) {
-            Ensure-Directory $path
-            Copy-Item -Path (Join-Path $sourcePath "*") -Destination $path -Recurse -Force
-        }
+        Copy-Item -Path (Join-Path $sourcePath "*") -Destination $path -Recurse -Force
     }
 
     Invoke-LoggedCommand -Label "openssl configure release" -FilePath "perl" -WorkingDirectory $srcRelease -Arguments @(
@@ -1065,10 +1388,16 @@ function Build-ZlibSource {
     $commonArgs = @("-DBUILD_SHARED_LIBS=ON")
     Invoke-CMakeInstallPair -Label "zlib" -SourcePath $sourcePath -Layout $layout -CommonArguments $commonArgs -ReleaseConfig "Release" -DebugConfig "Debug"
 
-    Ensure-Directory (Join-Path $script:BundleDir "include\zlib")
-    Copy-MatchingFiles -SearchRoots @($sourcePath) -Patterns @("*.h") -Destination (Join-Path $script:BundleDir "include\zlib")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib")) -Patterns @("zlib*.dll", "zlib*.lib", "zlib*.pdb") -Destination (Join-Path $script:BundleDir "lib")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib")) -Patterns @("zlib*.dll", "zlib*.lib", "zlib*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
+    $zlibIncludeDest = Join-Path $script:BundleDir "include\zlib"
+    $zlibReleaseRoots = @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib"), $layout.BuildRelease)
+    $zlibDebugRoots = @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib"), $layout.BuildDebug)
+
+    Ensure-Directory $zlibIncludeDest
+    # zlib's CMake build generates zconf.h in the build/install tree and may rename the source copy.
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "include"), $layout.BuildRelease, $sourcePath) -Patterns @("zlib.h", "zconf.h", "*.h") -Destination $zlibIncludeDest
+    # Some generators populate the install tree, others leave the usable artefacts in the config subdirs.
+    Copy-MatchingFiles -SearchRoots $zlibReleaseRoots -Patterns @("zlib*.dll", "zlib*.lib", "zlib*.pdb") -Destination (Join-Path $script:BundleDir "lib")
+    Copy-MatchingFiles -SearchRoots $zlibDebugRoots -Patterns @("zlib*.dll", "zlib*.lib", "zlib*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
 
     Write-Ok "zlib release and debug artefacts staged."
 }
@@ -1104,26 +1433,36 @@ function Build-CairoBundle {
     if ($DownloadOnly) { return }
 
     $layout = New-DualBuildLayout "cairo"
-
-    Invoke-LoggedCommand -Label "cairo meson setup release" -FilePath "meson" -Arguments @(
+    $mesonArgs = @(
+        "--default-library", "shared",
+        "--wipe",
+        "-Dtests=disabled",
+        "-Dgtk_doc=false",
+        "-Dglib:tests=false",
+        "-Dglib:installed_tests=false",
+        "-Dglib:gtk_doc=false"
+    )
+    $releaseArgs = @(
         "setup", $layout.BuildRelease, $sourcePath,
         "--prefix", $layout.StageRelease,
-        "--buildtype", "release",
-        "--default-library", "shared",
-        "--wipe"
-    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+        "--buildtype", "release"
+    ) + $mesonArgs
+    $debugArgs = @(
+        "setup", $layout.BuildDebug, $sourcePath,
+        "--prefix", $layout.StageDebug,
+        "--buildtype", "debug"
+    ) + $mesonArgs
+
+    Invoke-LoggedCommand -Label "cairo meson setup release" -FilePath "meson" -Arguments $releaseArgs -WorkingDirectory $script:ProjectRoot | Out-Null
     Invoke-LoggedCommand -Label "cairo ninja release" -FilePath "ninja" -Arguments @("-C", $layout.BuildRelease) -WorkingDirectory $script:ProjectRoot | Out-Null
     Invoke-LoggedCommand -Label "cairo install release" -FilePath "ninja" -Arguments @("-C", $layout.BuildRelease, "install") -WorkingDirectory $script:ProjectRoot | Out-Null
 
-    Invoke-LoggedCommand -Label "cairo meson setup debug" -FilePath "meson" -Arguments @(
-        "setup", $layout.BuildDebug, $sourcePath,
-        "--prefix", $layout.StageDebug,
-        "--buildtype", "debug",
-        "--default-library", "shared",
-        "--wipe"
-    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "cairo meson setup debug" -FilePath "meson" -Arguments $debugArgs -WorkingDirectory $script:ProjectRoot | Out-Null
     Invoke-LoggedCommand -Label "cairo ninja debug" -FilePath "ninja" -Arguments @("-C", $layout.BuildDebug) -WorkingDirectory $script:ProjectRoot | Out-Null
     Invoke-LoggedCommand -Label "cairo install debug" -FilePath "ninja" -Arguments @("-C", $layout.BuildDebug, "install") -WorkingDirectory $script:ProjectRoot | Out-Null
+
+    Restore-MesonInstallOutputs -BuildDir $layout.BuildRelease -StageDir $layout.StageRelease
+    Restore-MesonInstallOutputs -BuildDir $layout.BuildDebug -StageDir $layout.StageDebug
 
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include") -Destination (Join-Path $script:BundleDir "include")
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "lib\glib-2.0\include") -Destination (Join-Path $script:BundleDir "lib\glib-2.0\include")
@@ -1181,16 +1520,62 @@ function Build-AntlrRuntime {
     }
 
     $layout = New-DualBuildLayout "antlr4"
+    Ensure-AntlrRuntimeCompatibilityPatch -SourcePath $sourcePath
     $commonArgs = @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DANTLR4_INSTALL=ON",
+        "-DANTLR_BUILD_CPP_TESTS=OFF",
         "-DWITH_DEMO=OFF"
     )
-    Invoke-CMakeInstallPair -Label "antlr4-runtime" -SourcePath $cmakeRoot -Layout $layout -CommonArguments $commonArgs -ReleaseConfig "Release" -DebugConfig "Debug"
 
-    Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include") -Destination (Join-Path $script:BundleDir "include")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib")) -Patterns @("antlr4*.dll", "antlr4*.lib", "antlr4*.pdb") -Destination (Join-Path $script:BundleDir "lib")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib")) -Patterns @("antlr4*.dll", "antlr4*.lib", "antlr4*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
+    $configureReleaseArgs = @(
+        "-S", $cmakeRoot,
+        "-B", $layout.BuildRelease,
+        "-G", $Generator,
+        "-A", "x64",
+        "-DCMAKE_INSTALL_PREFIX=$($layout.StageRelease)"
+    ) + $commonArgs
+    Invoke-LoggedCommand -Label "antlr4-runtime configure release" -FilePath "cmake" -Arguments $configureReleaseArgs -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "antlr4-runtime build release" -FilePath "cmake" -Arguments @(
+        "--build", $layout.BuildRelease,
+        "--target", "antlr4_shared", "antlr4_static",
+        "--config", "Release",
+        "--parallel", $Jobs
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "antlr4-runtime install release" -FilePath "cmake" -Arguments @(
+        "--install", $layout.BuildRelease,
+        "--config", "Release",
+        "--prefix", $layout.StageRelease
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+
+    $configureDebugArgs = @(
+        "-S", $cmakeRoot,
+        "-B", $layout.BuildDebug,
+        "-G", $Generator,
+        "-A", "x64",
+        "-DCMAKE_INSTALL_PREFIX=$($layout.StageDebug)"
+    ) + $commonArgs
+    Invoke-LoggedCommand -Label "antlr4-runtime configure debug" -FilePath "cmake" -Arguments $configureDebugArgs -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "antlr4-runtime build debug" -FilePath "cmake" -Arguments @(
+        "--build", $layout.BuildDebug,
+        "--target", "antlr4_shared", "antlr4_static",
+        "--config", "Debug",
+        "--parallel", $Jobs
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "antlr4-runtime install debug" -FilePath "cmake" -Arguments @(
+        "--install", $layout.BuildDebug,
+        "--config", "Debug",
+        "--prefix", $layout.StageDebug
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+
+    $antlrIncludeDest = Join-Path $script:BundleDir "include\antlr4-runtime"
+    $antlrReleaseRoots = @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib"), (Join-Path $layout.BuildRelease "runtime"), $layout.BuildRelease)
+    $antlrDebugRoots = @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib"), (Join-Path $layout.BuildDebug "runtime"), $layout.BuildDebug)
+
+    Ensure-Directory $antlrIncludeDest
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "include"), (Join-Path $sourcePath "runtime\src")) -Patterns @("*.h") -Destination $antlrIncludeDest
+    Copy-MatchingFiles -SearchRoots $antlrReleaseRoots -Patterns @("antlr4-runtime*.dll", "antlr4-runtime*.lib", "antlr4-runtime*.pdb") -Destination (Join-Path $script:BundleDir "lib")
+    Copy-MatchingFiles -SearchRoots $antlrDebugRoots -Patterns @("antlr4-runtime*.dll", "antlr4-runtime*.lib", "antlr4-runtime*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
 
     Write-Ok "ANTLR4 runtime release and debug artefacts staged."
 }
@@ -1232,26 +1617,73 @@ function Build-Proj {
     if ($DownloadOnly) { return }
 
     $layout = New-DualBuildLayout "proj"
+    foreach ($path in @($layout.BuildRelease, $layout.BuildDebug, $layout.StageRelease, $layout.StageDebug)) {
+        Reset-Directory $path
+    }
+    $sqliteHeaderRoot = Get-SqliteHeaderRoot
+    $sqliteCli = Ensure-SqliteCliShim
     $commonArgs = @(
         "-DBUILD_SHARED_LIBS=ON",
+        "-DBUILD_APPS=OFF",
+        "-DBUILD_PROJINFO=OFF",
+        "-DBUILD_PROJSYNC=OFF",
         "-DBUILD_TESTING=OFF",
         "-DBUILD_CCT=OFF",
         "-DBUILD_CS2CS=OFF",
         "-DBUILD_GEOD=OFF",
         "-DBUILD_GIE=OFF",
+        "-DENABLE_TIFF=OFF",
         "-DENABLE_CURL=OFF",
+        "-DEXE_SQLITE3=$sqliteCli",
         "-DCMAKE_PREFIX_PATH=$script:BundleDir",
-        "-DSQLite3_INCLUDE_DIR=$([System.IO.Path]::Combine($script:BundleDir, 'include', 'sqlite'))",
+        "-DSQLite3_INCLUDE_DIR=$sqliteHeaderRoot",
         "-DSQLite3_LIBRARY=$([System.IO.Path]::Combine($script:BundleDir, 'lib', 'sqlite3.lib'))",
         "-DSQLite3_LIBRARY_RELEASE=$([System.IO.Path]::Combine($script:BundleDir, 'lib', 'sqlite3.lib'))",
         "-DSQLite3_LIBRARY_DEBUG=$([System.IO.Path]::Combine($script:BundleDir, 'debug', 'lib', 'sqlite3_d.lib'))"
     )
-    Invoke-CMakeInstallPair -Label "proj" -SourcePath $sourcePath -Layout $layout -CommonArguments $commonArgs -ReleaseConfig "Release" -DebugConfig "Debug"
+
+    $configureReleaseArgs = @(
+        "-S", $sourcePath,
+        "-B", $layout.BuildRelease,
+        "-G", $Generator,
+        "-A", "x64",
+        "-DCMAKE_INSTALL_PREFIX=$($layout.StageRelease)"
+    ) + $commonArgs
+    Invoke-LoggedCommand -Label "proj configure release" -FilePath "cmake" -Arguments $configureReleaseArgs -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "proj build release" -FilePath "cmake" -Arguments @(
+        "--build", $layout.BuildRelease,
+        "--config", "Release",
+        "--parallel", $Jobs
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "proj install release" -FilePath "cmake" -Arguments @(
+        "--install", $layout.BuildRelease,
+        "--config", "Release",
+        "--prefix", $layout.StageRelease
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+
+    $configureDebugArgs = @(
+        "-S", $sourcePath,
+        "-B", $layout.BuildDebug,
+        "-G", $Generator,
+        "-A", "x64",
+        "-DCMAKE_INSTALL_PREFIX=$($layout.StageDebug)"
+    ) + $commonArgs
+    Invoke-LoggedCommand -Label "proj configure debug" -FilePath "cmake" -Arguments $configureDebugArgs -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "proj build debug" -FilePath "cmake" -Arguments @(
+        "--build", $layout.BuildDebug,
+        "--config", "Debug",
+        "--parallel", $Jobs
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "proj install debug" -FilePath "cmake" -Arguments @(
+        "--install", $layout.BuildDebug,
+        "--config", "Debug",
+        "--prefix", $layout.StageDebug
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
 
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include") -Destination (Join-Path $script:BundleDir "include")
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "share\proj") -Destination (Join-Path $script:BundleDir "share\proj")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib")) -Patterns @("proj*.dll", "proj*.lib", "proj*.pdb") -Destination (Join-Path $script:BundleDir "lib")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib")) -Patterns @("proj*.dll", "proj*.lib", "proj*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib"), (Join-Path $layout.BuildRelease "bin"), (Join-Path $layout.BuildRelease "lib")) -Patterns @("proj*.dll", "proj*.lib", "proj*.pdb") -Destination (Join-Path $script:BundleDir "lib")
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib"), (Join-Path $layout.BuildDebug "bin"), (Join-Path $layout.BuildDebug "lib")) -Patterns @("proj*.dll", "proj*.lib", "proj*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
 
     Write-Ok "PROJ release and debug artefacts staged."
 }
@@ -1771,6 +2203,17 @@ function Process-Dependency {
     }
 
     if (Test-DependencyBuilt $Dependency) {
+        if (-not (Test-DependencyOutputsPresent $Dependency)) {
+            Write-Warn ("Stamp exists but staged outputs are missing - rebuilding {0}" -f (Get-DependencySlug $Dependency))
+            Remove-Item -LiteralPath (Get-StampPath $Dependency) -Force
+        }
+        else {
+            Write-Ok ("Already built - skipping {0}" -f (Get-DependencySlug $Dependency))
+            return
+        }
+    }
+
+    if (Test-DependencyBuilt $Dependency) {
         Write-Ok ("Already built - skipping {0}" -f (Get-DependencySlug $Dependency))
         return
     }
@@ -1801,6 +2244,9 @@ function Process-Dependency {
     }
 
     if (-not $DownloadOnly) {
+        if (-not (Test-DependencyOutputsPresent $Dependency)) {
+            throw ("Dependency completed without staging the expected bundle outputs: {0}" -f (Get-DependencySlug $Dependency))
+        }
         Mark-DependencyBuilt $Dependency
     }
 }

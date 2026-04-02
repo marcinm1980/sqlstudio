@@ -9,11 +9,9 @@ using MySQL.GUI.MySqlStudio;
 [assembly: AssemblyTitle("MySql Studio")]
 [assembly: AssemblyDescription("MySQL Database Design + SQL Work Tool")]
 [assembly: AssemblyConfiguration("development")]
-[assembly: AssemblyCompany("Oracle Corporation")]
+[assembly: AssemblyCompany("dev4fun")]
 [assembly: AssemblyProduct("MySql Studio")]
-[assembly: AssemblyCopyright("Copyright © 2006, 2024, Oracle and/or its affiliates.")]
- * Copyright (c) 2026 dev4fun. All rights reserved.
-[assembly: AssemblyTrademark("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")]
+[assembly: AssemblyCopyright("Copyright (c) 2026 dev4fun. All rights reserved.")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

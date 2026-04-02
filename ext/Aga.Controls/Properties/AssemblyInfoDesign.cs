@@ -10,9 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oracle Corp")]
 [assembly: AssemblyProduct("Aga.Controls.Design")]
-[assembly: AssemblyCopyright("Copyright © 2011, 2024, Oracle and/or its affiliates.")]
- * Copyright (c) 2026 dev4fun. All rights reserved.
-[assembly: AssemblyTrademark("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")]
+[assembly: AssemblyCopyright("Copyright (c) 2026 dev4fun. All rights reserved.")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
