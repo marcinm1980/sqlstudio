@@ -450,7 +450,7 @@ function Test-AnyPathExists {
 function Test-DependencyOutputsPresent {
     param([pscustomobject]$Dependency)
 
-    $requiredGroups = switch ($Dependency.Type) {
+    $requiredGroups = @(switch ($Dependency.Type) {
         "openssl" {
             @(
                 @("include\openssl\ssl.h"),
@@ -492,6 +492,8 @@ function Test-DependencyOutputsPresent {
         "libssh" {
             @(
                 @("include\libssh\libssh.h", "include\libssh.h"),
+                @("include\libssh\server.h"),
+                @("include\libssh\libsshpp.hpp"),
                 @("lib\ssh.lib", "lib\libssh.lib", "lib\ssh.dll", "lib\libssh.dll")
             )
         }
@@ -544,14 +546,14 @@ function Test-DependencyOutputsPresent {
             )
         }
         default { @() }
-    }
+    })
 
     if ($requiredGroups.Count -eq 0) {
         return $true
     }
 
     foreach ($group in $requiredGroups) {
-        if (-not (Test-AnyPathExists -RelativePaths $group)) {
+        if (-not (Test-AnyPathExists -RelativePaths @($group))) {
             return $false
         }
     }
@@ -888,6 +890,34 @@ function Invoke-LoggedCommand {
     return [pscustomobject]@{
         ExitCode = $exitCode
         Output = $output
+    }
+}
+
+function Invoke-WithPathPrefix {
+    param(
+        [string[]]$Prefixes = @(),
+        [Parameter(Mandatory)] [scriptblock]$Action
+    )
+
+    $resolvedPrefixes = @(
+        $Prefixes |
+        Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+        Where-Object { Test-Path -LiteralPath $_ -PathType Container } |
+        Select-Object -Unique
+    )
+
+    if ($resolvedPrefixes.Count -eq 0) {
+        & $Action
+        return
+    }
+
+    $originalPath = $env:PATH
+    try {
+        $env:PATH = (($resolvedPrefixes -join ';') + ';' + $originalPath)
+        & $Action
+    }
+    finally {
+        $env:PATH = $originalPath
     }
 }
 
@@ -1603,6 +1633,9 @@ function Build-LibSsh {
     Invoke-CMakeInstallPair -Label "libssh" -SourcePath $sourcePath -Layout $layout -CommonArguments $commonArgs -ReleaseConfig "Release" -DebugConfig "Debug"
 
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include") -Destination (Join-Path $script:BundleDir "include")
+    $libsshIncludeDest = Join-Path $script:BundleDir "include\libssh"
+    Copy-MatchingFiles -SearchRoots @((Join-Path $sourcePath "include\libssh")) -Patterns @("*.h", "*.hpp") -Destination $libsshIncludeDest
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "include\libssh"), $layout.BuildRelease) -Patterns @("libssh_version.h") -Destination $libsshIncludeDest
     Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib")) -Patterns @("ssh*.dll", "ssh*.lib", "ssh*.pdb", "libssh*.dll", "libssh*.lib", "libssh*.pdb") -Destination (Join-Path $script:BundleDir "lib")
     Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib")) -Patterns @("ssh*.dll", "ssh*.lib", "ssh*.pdb", "libssh*.dll", "libssh*.lib", "libssh*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
 
@@ -1696,6 +1729,9 @@ function Build-Gdal {
     if ($DownloadOnly) { return }
 
     $layout = New-DualBuildLayout "gdal"
+    foreach ($path in @($layout.BuildRelease, $layout.BuildDebug, $layout.StageRelease, $layout.StageDebug)) {
+        Reset-Directory $path
+    }
     $commonArgs = @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_APPS=ON",
@@ -1721,13 +1757,51 @@ function Build-Gdal {
         "-DPROJ_INCLUDE_DIR=$([System.IO.Path]::Combine($script:BundleDir, 'include'))",
         "-DPROJ_LIBRARY=$([System.IO.Path]::Combine($script:BundleDir, 'lib', 'proj.lib'))"
     )
-    Invoke-CMakeInstallPair -Label "gdal" -SourcePath $sourcePath -Layout $layout -CommonArguments $commonArgs -ReleaseConfig "Release" -DebugConfig "Debug"
+
+    $configureReleaseArgs = @(
+        "-S", $sourcePath,
+        "-B", $layout.BuildRelease,
+        "-G", $Generator,
+        "-A", "x64",
+        "-DCMAKE_INSTALL_PREFIX=$($layout.StageRelease)"
+    ) + $commonArgs
+    Invoke-LoggedCommand -Label "gdal configure release" -FilePath "cmake" -Arguments $configureReleaseArgs -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "gdal build release" -FilePath "cmake" -Arguments @(
+        "--build", $layout.BuildRelease,
+        "--config", "Release",
+        "--parallel", $Jobs
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "gdal install release" -FilePath "cmake" -Arguments @(
+        "--install", $layout.BuildRelease,
+        "--config", "Release",
+        "--prefix", $layout.StageRelease
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+
+    $configureDebugArgs = @(
+        "-S", $sourcePath,
+        "-B", $layout.BuildDebug,
+        "-G", $Generator,
+        "-A", "x64",
+        "-DCMAKE_INSTALL_PREFIX=$($layout.StageDebug)"
+    ) + $commonArgs
+    Invoke-LoggedCommand -Label "gdal configure debug" -FilePath "cmake" -Arguments $configureDebugArgs -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "gdal build debug" -FilePath "cmake" -Arguments @(
+        "--build", $layout.BuildDebug,
+        "--config", "Debug",
+        "--parallel", $Jobs
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
+    Invoke-LoggedCommand -Label "gdal install debug" -FilePath "cmake" -Arguments @(
+        "--install", $layout.BuildDebug,
+        "--config", "Debug",
+        "--prefix", $layout.StageDebug
+    ) -WorkingDirectory $script:ProjectRoot | Out-Null
 
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include") -Destination (Join-Path $script:BundleDir "include")
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "include"), (Join-Path $sourcePath "gcore"), (Join-Path $layout.BuildRelease "gcore")) -Patterns @("gdal.h", "gdal_version.h") -Destination (Join-Path $script:BundleDir "include")
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "share\gdal") -Destination (Join-Path $script:BundleDir "share\gdal")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib")) -Patterns @("gdal*.dll", "gdal*.lib", "gdal*.pdb") -Destination (Join-Path $script:BundleDir "lib")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib")) -Patterns @("gdal*.dll", "gdal*.lib", "gdal*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin")) -Patterns @("ogrinfo.exe", "ogr2ogr.exe") -Destination (Join-Path $script:BundleDir "bin")
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib"), (Join-Path $layout.BuildRelease "Release"), $layout.BuildRelease) -Patterns @("gdal*.dll", "gdal*.lib", "gdal*.pdb") -Destination (Join-Path $script:BundleDir "lib")
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib"), (Join-Path $layout.BuildDebug "Debug"), $layout.BuildDebug) -Patterns @("gdal*.dll", "gdal*.lib", "gdal*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), $layout.BuildRelease) -Patterns @("ogrinfo.exe", "ogr2ogr.exe") -Destination (Join-Path $script:BundleDir "bin")
 
     Write-Ok "GDAL release and debug artefacts staged."
 }
@@ -2041,17 +2115,9 @@ function Build-MySQLServer {
     $buildDbg = Join-Path $script:BuildRoot "mysql\debug"
     $stageRel = Join-Path $script:BuildRoot "mysql\stage-release"
     $stageDbg = Join-Path $script:BuildRoot "mysql\stage-debug"
-    if ($Clean) {
-        foreach ($path in @($buildRel, $buildDbg, $stageRel, $stageDbg)) {
-            if (Test-Path -LiteralPath $path -PathType Container) {
-                Remove-Item -LiteralPath $path -Recurse -Force
-            }
-        }
+    foreach ($path in @($buildRel, $buildDbg, $stageRel, $stageDbg)) {
+        Reset-Directory $path
     }
-    Ensure-Directory $buildRel
-    Ensure-Directory $buildDbg
-    Ensure-Directory $stageRel
-    Ensure-Directory $stageDbg
 
     $boostDownloadDir = Join-Path $script:ToolsRoot "mysql-boost"
     Ensure-Directory $boostDownloadDir
@@ -2074,20 +2140,48 @@ function Build-MySQLServer {
 
     $mysqlConfigureReleaseArgs = @("-B", $buildRel) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageRel")
     Invoke-LoggedCommand -Label "mysql configure release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments $mysqlConfigureReleaseArgs | Out-Null
-    Invoke-LoggedCommand -Label "mysql build release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--build", $buildRel, "--target", "INSTALL", "--config", "RelWithDebInfo", "--parallel", $Jobs) | Out-Null
+    Invoke-WithPathPrefix -Prefixes @(
+        (Join-Path $script:BundleDir "lib"),
+        (Join-Path $script:BundleDir "bin")
+    ) -Action {
+        Invoke-LoggedCommand -Label "mysql build release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--build", $buildRel, "--target", "mysqlclient", "libmysql", "mysql", "mysqldump", "--config", "RelWithDebInfo", "--parallel", $Jobs) | Out-Null
+        Invoke-LoggedCommand -Label "mysql install release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--install", $buildRel, "--config", "RelWithDebInfo", "--prefix", $stageRel) | Out-Null
+    }
 
     $mysqlConfigureDebugArgs = @("-B", $buildDbg) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageDbg")
     Invoke-LoggedCommand -Label "mysql configure debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments $mysqlConfigureDebugArgs | Out-Null
-    Invoke-LoggedCommand -Label "mysql build debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--build", $buildDbg, "--target", "INSTALL", "--config", "Debug", "--parallel", $Jobs) | Out-Null
+    Invoke-WithPathPrefix -Prefixes @(
+        (Join-Path $script:BundleDir "debug\lib"),
+        (Join-Path $script:BundleDir "lib"),
+        (Join-Path $script:BundleDir "bin")
+    ) -Action {
+        Invoke-LoggedCommand -Label "mysql build debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--build", $buildDbg, "--target", "mysqlclient", "libmysql", "mysql", "mysqldump", "--config", "Debug", "--parallel", $Jobs) | Out-Null
+        Invoke-LoggedCommand -Label "mysql install debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--install", $buildDbg, "--config", "Debug", "--prefix", $stageDbg) | Out-Null
+    }
 
-    Ensure-Directory (Join-Path $script:BundleDir "include\mysql")
-    Copy-DirectoryContent -Source (Join-Path $stageRel "include\mysql") -Destination (Join-Path $script:BundleDir "include\mysql")
-    Copy-FirstMatch -SearchRoot $stageRel -Patterns @("mysql.h", "mysql_com.h", "mysql_version.h", "mysqld_error.h", "field_types.h", "mysql_time.h", "mysqlx_*.h", "errmsg.h") -Destination (Join-Path $script:BundleDir "include") -AllowMany | Out-Null
+    $mysqlIncludeDir = Join-Path $script:BundleDir "include\mysql"
+    $mysqlHeaderPatterns = @("mysql.h", "mysql_com.h", "mysql_version.h", "mysqld_error.h", "field_types.h", "mysql_time.h", "mysqlx_*.h", "errmsg.h")
+    Ensure-Directory $mysqlIncludeDir
+    Copy-DirectoryContent -Source (Join-Path $stageRel "include\mysql") -Destination $mysqlIncludeDir
+    foreach ($root in @($stageRel, $sourcePath, $buildRel)) {
+        Copy-FirstMatch -SearchRoot $root -Patterns $mysqlHeaderPatterns -Destination $mysqlIncludeDir -AllowMany | Out-Null
+    }
+    Copy-FirstMatch -SearchRoot $stageRel -Patterns $mysqlHeaderPatterns -Destination (Join-Path $script:BundleDir "include") -AllowMany | Out-Null
+    Copy-FirstMatch -SearchRoot $sourcePath -Patterns $mysqlHeaderPatterns -Destination (Join-Path $script:BundleDir "include") -AllowMany | Out-Null
+    Copy-FirstMatch -SearchRoot $buildRel -Patterns @("mysql_version.h", "mysqld_error.h", "errmsg.h") -Destination (Join-Path $script:BundleDir "include") -AllowMany | Out-Null
 
-    Copy-FirstMatch -SearchRoot $stageRel -Patterns @("libmysql.dll", "libmysql.lib", "libmysql.pdb") -Destination (Join-Path $script:BundleDir "lib") -AllowMany | Out-Null
-    Copy-FirstMatch -SearchRoot $stageDbg -Patterns @("libmysql.dll", "libmysql.lib", "libmysql.pdb") -Destination (Join-Path $script:BundleDir "debug\lib") -AllowMany | Out-Null
-    Copy-FirstMatch -SearchRoot $stageRel -Patterns @("mysql.exe", "mysqldump.exe") -Destination (Join-Path $script:BundleDir "bin") -AllowMany | Out-Null
-    Copy-FirstMatch -SearchRoot $stageRel -Patterns @("authentication_*.dll", "mysql_native_password.dll") -Destination (Join-Path $script:BundleDir "lib") -AllowMany | Out-Null
+    $releaseSearchRoots = @($stageRel, (Join-Path $buildRel "library_output_directory"), (Join-Path $buildRel "archive_output_directory"), (Join-Path $buildRel "runtime_output_directory"), $buildRel)
+    $debugSearchRoots = @($stageDbg, (Join-Path $buildDbg "library_output_directory"), (Join-Path $buildDbg "archive_output_directory"), (Join-Path $buildDbg "runtime_output_directory"), $buildDbg)
+    foreach ($root in $releaseSearchRoots) {
+        Copy-FirstMatch -SearchRoot $root -Patterns @("mysqlclient.lib", "libmysql.dll", "libmysql.lib", "libmysql.pdb") -Destination (Join-Path $script:BundleDir "lib") -AllowMany | Out-Null
+    }
+    foreach ($root in $debugSearchRoots) {
+        Copy-FirstMatch -SearchRoot $root -Patterns @("mysqlclient.lib", "libmysql.dll", "libmysql.lib", "libmysql.pdb") -Destination (Join-Path $script:BundleDir "debug\lib") -AllowMany | Out-Null
+    }
+    foreach ($root in $releaseSearchRoots) {
+        Copy-FirstMatch -SearchRoot $root -Patterns @("mysql.exe", "mysqldump.exe") -Destination (Join-Path $script:BundleDir "bin") -AllowMany | Out-Null
+        Copy-FirstMatch -SearchRoot $root -Patterns @("authentication_*.dll", "mysql_native_password.dll") -Destination (Join-Path $script:BundleDir "lib") -AllowMany | Out-Null
+    }
 
     Write-Ok "MySQL client bundle staged."
 }
@@ -2103,47 +2197,96 @@ function Build-ConnectorCpp {
     $buildDbg = Join-Path $script:BuildRoot "connectorcpp\debug"
     $stageRel = Join-Path $script:BuildRoot "connectorcpp\stage-release"
     $stageDbg = Join-Path $script:BuildRoot "connectorcpp\stage-debug"
-    if ($Clean) {
-        foreach ($path in @($buildRel, $buildDbg, $stageRel, $stageDbg)) {
-            if (Test-Path -LiteralPath $path -PathType Container) {
-                Remove-Item -LiteralPath $path -Recurse -Force
-            }
-        }
+    $mysqlHeaders = Join-Path $script:BuildRoot "connectorcpp\mysql-include"
+    $jdbcShim = Join-Path $script:BuildRoot "connectorcpp\jdbc-standalone-shim.cmake"
+    foreach ($path in @($buildRel, $buildDbg, $stageRel, $stageDbg)) {
+        Reset-Directory $path
     }
-    Ensure-Directory $buildRel
-    Ensure-Directory $buildDbg
-    Ensure-Directory $stageRel
-    Ensure-Directory $stageDbg
+    Reset-Directory $mysqlHeaders
+
+    $mysqlSourceRoot = Get-ChildItem -LiteralPath $script:SourceRoot -Directory -Filter "mysql-server-*" -ErrorAction SilentlyContinue |
+        Sort-Object Name -Descending |
+        Select-Object -First 1
+    if (-not $mysqlSourceRoot) {
+        throw "mysql-server sources are required before building mysql-connector-cpp."
+    }
+
+    $mysqlSourceInclude = Join-Path $mysqlSourceRoot.FullName "include"
+    if (-not (Test-Path -LiteralPath $mysqlSourceInclude -PathType Container)) {
+        throw "MySQL source include directory not found: $mysqlSourceInclude"
+    }
+
+    Copy-DirectoryContent -Source $mysqlSourceInclude -Destination $mysqlHeaders
+    Copy-DirectoryContent -Source (Join-Path $script:BundleDir "include\mysql") -Destination $mysqlHeaders
+    Set-Content -LiteralPath $jdbcShim -Value @(
+        "function(add_version_info)"
+        "endfunction()"
+    )
 
     $commonArgs = @(
-        "-S", $sourcePath,
+        "-S", (Join-Path $sourcePath "jdbc"),
         "-G", $Generator,
         "-A", "x64",
-        "-DWITH_JDBC=ON",
         "-DWITH_TESTS=OFF",
-        "-DMYSQL_DIR=$script:BundleDir",
-        "-DCMAKE_PREFIX_PATH=$script:BundleDir",
+        "-DMYSQL_INCLUDE_DIR=$mysqlHeaders",
+        "-DMYSQL_LIB_DIR=$(Join-Path $script:BundleDir 'lib')",
         "-DOPENSSL_ROOT_DIR=$script:BundleDir",
+        "-DINSTALL_INCLUDE_DIR=include",
+        "-DINSTALL_LIB_DIR=lib",
+        "-DINSTALL_LIB_DIR_DEBUG=debug/lib",
+        "-DINSTALL_LIB_DIR_STATIC=lib",
+        "-DINSTALL_LIB_DIR_STATIC_DEBUG=debug/lib",
+        "-DLIB_NAME_BASE=mysqlcppconn",
+        "-DLIB_NAME=mysqlcppconn-10-vs14",
+        "-DJDBC_ABI_VERSION_MAJOR=10",
+        "-DVS=vs14",
+        "-DCMAKE_PROJECT_INCLUDE_BEFORE=$jdbcShim",
         "-DCMAKE_INSTALL_MESSAGE=LAZY"
     )
 
     $connectorCppConfigureReleaseArgs = @("-B", $buildRel) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageRel")
     Invoke-LoggedCommand -Label "connectorcpp configure release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments $connectorCppConfigureReleaseArgs | Out-Null
-    Invoke-LoggedCommand -Label "connectorcpp build release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--build", $buildRel, "--target", "INSTALL", "--config", "RelWithDebInfo", "--parallel", $Jobs) | Out-Null
+    Invoke-WithPathPrefix -Prefixes @(
+        (Join-Path $script:BundleDir "lib"),
+        (Join-Path $script:BundleDir "bin")
+    ) -Action {
+        Invoke-LoggedCommand -Label "connectorcpp build release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--build", $buildRel, "--config", "RelWithDebInfo", "--parallel", $Jobs) | Out-Null
+        Invoke-LoggedCommand -Label "connectorcpp install release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--install", $buildRel, "--config", "RelWithDebInfo", "--prefix", $stageRel) | Out-Null
+    }
 
     $connectorCppConfigureDebugArgs = @("-B", $buildDbg) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageDbg")
     Invoke-LoggedCommand -Label "connectorcpp configure debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments $connectorCppConfigureDebugArgs | Out-Null
-    Invoke-LoggedCommand -Label "connectorcpp build debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--build", $buildDbg, "--target", "INSTALL", "--config", "Debug", "--parallel", $Jobs) | Out-Null
+    Invoke-WithPathPrefix -Prefixes @(
+        (Join-Path $script:BundleDir "debug\lib"),
+        (Join-Path $script:BundleDir "lib"),
+        (Join-Path $script:BundleDir "bin")
+    ) -Action {
+        Invoke-LoggedCommand -Label "connectorcpp build debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--build", $buildDbg, "--config", "Debug", "--parallel", $Jobs) | Out-Null
+        Invoke-LoggedCommand -Label "connectorcpp install debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--install", $buildDbg, "--config", "Debug", "--prefix", $stageDbg) | Out-Null
+    }
 
     Ensure-Directory (Join-Path $script:BundleDir "include\cppconn")
-    Copy-DirectoryContent -Source (Join-Path $sourcePath "jdbc\cppconn") -Destination (Join-Path $script:BundleDir "include\cppconn")
+    foreach ($sourceDir in @(
+        (Join-Path $stageRel "include\cppconn"),
+        (Join-Path $buildRel "include\jdbc\cppconn"),
+        (Join-Path $sourcePath "jdbc\cppconn")
+    )) {
+        Copy-DirectoryContent -Source $sourceDir -Destination (Join-Path $script:BundleDir "include\cppconn")
+    }
     Ensure-Directory (Join-Path $script:BundleDir "include\mysql")
     if (Test-Path -LiteralPath (Join-Path $sourcePath "include\mysql\jdbc.h") -PathType Leaf) {
         Copy-Item -LiteralPath (Join-Path $sourcePath "include\mysql\jdbc.h") -Destination (Join-Path $script:BundleDir "include\mysql\jdbc.h") -Force
     }
+    foreach ($root in @($stageRel, $buildRel, $sourcePath)) {
+        Copy-FirstMatch -SearchRoot $root -Patterns @("mysql_connection.h", "mysql_driver.h", "mysql_error.h", "jdbc.h") -Destination (Join-Path $script:BundleDir "include") -AllowMany | Out-Null
+    }
 
-    Copy-FirstMatch -SearchRoot $stageRel -Patterns @("mysqlcppconn*.lib", "mysqlcppconn*.dll", "mysqlcppconn*.pdb") -Destination (Join-Path $script:BundleDir "lib") -AllowMany | Out-Null
-    Copy-FirstMatch -SearchRoot $stageDbg -Patterns @("mysqlcppconn*.lib", "mysqlcppconn*.dll", "mysqlcppconn*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib") -AllowMany | Out-Null
+    foreach ($root in @($stageRel, $buildRel)) {
+        Copy-FirstMatch -SearchRoot $root -Patterns @("mysqlcppconn*.lib", "mysqlcppconn*.dll", "mysqlcppconn*.pdb") -Destination (Join-Path $script:BundleDir "lib") -AllowMany | Out-Null
+    }
+    foreach ($root in @($stageDbg, $buildDbg)) {
+        Copy-FirstMatch -SearchRoot $root -Patterns @("mysqlcppconn*.lib", "mysqlcppconn*.dll", "mysqlcppconn*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib") -AllowMany | Out-Null
+    }
 
     Write-Ok "Connector/C++ bundle staged."
 }
