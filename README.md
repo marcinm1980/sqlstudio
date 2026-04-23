@@ -6,6 +6,15 @@
 
 ---
 
+## 💖 Support this project
+
+*If you find MySQL Studio useful, consider supporting its development — it helps keep the project active and maintained.*
+
+[![Donate](https://www.paypal.com/donate/?hosted_button_id=TZP3JJYLQ2Z8A)](https://www.paypal.com/donate/?hosted_button_id=TZP3JJYLQ2Z8A)
+
+
+---
+
 ## About
 
 MySQL Studio is a free, open-source visual database design, administration, and development tool for the MySQL and MariaDB database ecosystems. It is based on the original architecture and codebase of **MySQL Workbench**, now independently developed and maintained under the **MySQL Studio** project.
@@ -116,7 +125,7 @@ MySQL Studio is built on the foundation of MySQL Workbench, originally developed
 ## Links
 
 - 📘 Documentation: *(coming soon — published with first stable release)*
-- 🐛 Issue Tracker: [GitHub Issues](../../issues)
+- 🐛 Issue Tracker: [GitHub Issues](https://github.com/dante-d4f/wb_build/issues)
 - 💬 Discussions: [GitHub Discussions](../../discussions)
 - 🔖 Releases: [GitHub Releases](../../releases)
 - 🌐 Source repository: [https://github.com_dante/dante-d4f/mysqlstudio](https://github.com_dante/dante-d4f/mysqlstudio)
