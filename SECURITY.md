@@ -1,30 +1,34 @@
-Reporting security vulnerabilities
-====================
-Oracle values the independent security research community and believes that
-responsible disclosure of security vulnerabilities helps us ensure the security
-and privacy of all our users.
+# Security Policy
 
-Please do NOT raise a GitHub Issue to report a security vulnerability. If you
-believe you have found a security vulnerability, please submit a report to
-secalert_us@oracle.com preferably with a proof of concept. Please review
-some additional information on how to report security vulnerabilities to Oracle 
-(see https://www.oracle.com/corporate/security-practices/assurance/vulnerability/reporting.html)
-We encourage people who contact Oracle Security to use email encryption using
-our encryption key (see https://www.oracle.com/security-alerts/encryptionkey.html)
+## Supported Versions
 
-We ask that you do not use other channels or contact the project maintainers
-directly.
+Security fixes are applied to the actively maintained version of this project.
+If you are reporting a vulnerability, please include the exact version, commit,
+or build you tested.
 
-Security updates, alerts and bulletins
--------------------------------------
-Security updates will be released on a regular cadence. Many of our projects
-will typically release security fixes in conjunction with the Oracle Critical Patch 
-Update program. Additional information, including past advisories, is available on our 
-security alerts page at https://www.oracle.com/security-alerts/
+## Reporting a Vulnerability
 
-Security-related information
-----------------------------
-We will provide security related information such as a threat model, considerations
-for secure use, or any known security issues in our documentation. Please note
-that labs and sample code are intended to demonstrate a concept and may not be
-sufficiently hardened for production use.
+This project is maintained by dev4fun.
+
+Please do not report security vulnerabilities through public GitHub issues,
+discussions, or pull requests. Instead, contact the maintainer privately and
+include the following information when possible:
+
+- A clear description of the issue and its impact
+- Steps to reproduce or a proof of concept
+- The affected version, commit, or build
+- Any suggested mitigation or fix
+
+dev4fun will review the report, confirm whether the issue is valid, and decide
+on remediation and disclosure timing.
+
+## Security Updates
+
+Security fixes will be released as part of normal project maintenance. When
+appropriate, the fix will be documented in the release notes or project history.
+
+## Additional Guidance
+
+Sample code, test assets, and development configurations in this repository may
+not be hardened for production use. Review deployment settings carefully before
+using this project in sensitive environments.
