@@ -10,8 +10,7 @@
 
 *If you find MySQL Studio useful, consider supporting its development — it helps keep the project active and maintained.*
 
-[![Donate](https://www.paypal.com/donate/?hosted_button_id=TZP3JJYLQ2Z8A)](https://www.paypal.com/donate/?hosted_button_id=TZP3JJYLQ2Z8A)
-
+[![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=TZP3JJYLQ2Z8A)
 
 ---
 
