@@ -426,6 +426,33 @@ function Get-StampPath([pscustomobject]$Dependency) {
     return Join-Path $script:StampRoot ((Get-DependencySlug $Dependency) + ".done")
 }
 
+function Get-AntlrToolJarFileName([pscustomobject]$Dependency) {
+    return "antlr-{0}-complete.jar" -f $Dependency.Version
+}
+
+function Get-AntlrToolJarSources([pscustomobject]$Dependency) {
+    $jarName = Get-AntlrToolJarFileName $Dependency
+    return @("https://www.antlr.org/download/$jarName")
+}
+
+function Get-AntlrToolJarArchivePath([pscustomobject]$Dependency) {
+    return Join-Path $script:DownloadRoot (Get-AntlrToolJarFileName $Dependency)
+}
+
+function Ensure-AntlrToolJarDownloaded {
+    param([pscustomobject]$Dependency)
+
+    $jarArchivePath = Get-AntlrToolJarArchivePath $Dependency
+    if (-not $BuildOnly) {
+        Download-File -Sources (Get-AntlrToolJarSources $Dependency) -Destination $jarArchivePath
+    }
+    elseif (-not (Test-Path -LiteralPath $jarArchivePath -PathType Leaf)) {
+        throw "--BuildOnly was requested but ANTLR tool jar is missing: $jarArchivePath"
+    }
+
+    return $jarArchivePath
+}
+
 function Test-DependencyBuilt([pscustomobject]$Dependency) {
     return Test-Path -LiteralPath (Get-StampPath $Dependency)
 }
@@ -486,7 +513,8 @@ function Test-DependencyOutputsPresent {
         "antlr4" {
             @(
                 @("include\antlr4-runtime\antlr4-runtime.h"),
-                @("lib\antlr4-runtime.lib", "lib\antlr4-runtime.dll")
+                @("lib\antlr4-runtime.lib", "lib\antlr4-runtime.dll"),
+                @("bin\antlr-4.13.2-complete.jar")
             )
         }
         "libssh" {
@@ -1540,6 +1568,7 @@ function Build-AntlrRuntime {
     param([pscustomobject]$Dependency)
 
     Enter-VsBuildEnvironment
+    $antlrToolJar = Ensure-AntlrToolJarDownloaded $Dependency
     $sourcePath = Get-SourceTree $Dependency
     if ($DownloadOnly) { return }
 
@@ -1599,15 +1628,18 @@ function Build-AntlrRuntime {
     ) -WorkingDirectory $script:ProjectRoot | Out-Null
 
     $antlrIncludeDest = Join-Path $script:BundleDir "include\antlr4-runtime"
+    $antlrBinDest = Join-Path $script:BundleDir "bin"
     $antlrReleaseRoots = @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib"), (Join-Path $layout.BuildRelease "runtime"), $layout.BuildRelease)
     $antlrDebugRoots = @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib"), (Join-Path $layout.BuildDebug "runtime"), $layout.BuildDebug)
 
     Ensure-Directory $antlrIncludeDest
+    Ensure-Directory $antlrBinDest
     Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "include"), (Join-Path $sourcePath "runtime\src")) -Patterns @("*.h") -Destination $antlrIncludeDest
     Copy-MatchingFiles -SearchRoots $antlrReleaseRoots -Patterns @("antlr4-runtime*.dll", "antlr4-runtime*.lib", "antlr4-runtime*.pdb") -Destination (Join-Path $script:BundleDir "lib")
     Copy-MatchingFiles -SearchRoots $antlrDebugRoots -Patterns @("antlr4-runtime*.dll", "antlr4-runtime*.lib", "antlr4-runtime*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
+    Copy-Item -LiteralPath $antlrToolJar -Destination (Join-Path $antlrBinDest (Get-AntlrToolJarFileName $Dependency)) -Force
 
-    Write-Ok "ANTLR4 runtime release and debug artefacts staged."
+    Write-Ok "ANTLR4 runtime and tool jar staged."
 }
 
 function Build-LibSsh {
