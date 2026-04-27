@@ -236,7 +236,7 @@ xcopy /i /s /y /d %EXT_LIB_DIR%\pcre%DEBUG_PREFIX%.dll %TARGET_DIR%\. 1> nul 2> 
 xcopy /i /s /y /d %EXT_LIB_DIR%\pcrecpp%DEBUG_PREFIX%.dll %TARGET_DIR%\. 1> nul 2> nul
 
 echo * sqlite library ...
-xcopy /i /s /y /d %EXT_LIB_DIR%\sqlite3.dll %TARGET_DIR%\. 1> nul 2> nul
+xcopy /i /s /y /d %EXT_LIB_DIR%\sqlite3%DEBUG_PREFIX%.dll %TARGET_DIR%\. 1> nul 2> nul
 
 echo * vsqlite++ library ...
 xcopy /i /s /y /d %EXT_LIB_DIR%\vsqlite++.dll %TARGET_DIR%\. 1> nul 2> nul
