@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{A3EAB7CA-6415-48F3-9D13-08B27FB04C68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{6681F835-6D0E-4549-AFF6-618761504997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\modules_grt">
+      <UniqueIdentifier>{7C084EA2-E745-4699-A277-F9BD1EE5D31A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\modules_grt\schema_reporting">
+      <UniqueIdentifier>{EBB36A27-732E-41DA-B30F-91F36A30B09E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\mtemplate">
+      <UniqueIdentifier>{45B90962-759E-4E45-B35E-B8D036743C22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests">
+      <UniqueIdentifier>{C91A0C17-6E8F-40CB-8832-E5EE7EB46A67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\backend">
+      <UniqueIdentifier>{5F6B4957-FE95-4520-B914-E60989AE9249}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\backend\wbprivate">
+      <UniqueIdentifier>{5870795D-AC88-4DEB-BCB9-BEAF42D544FA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\backend\wbprivate\sqlide">
+      <UniqueIdentifier>{8796310D-29EC-4810-BEC8-D74DBB1C9DE2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\backend\wbprivate\studio">
+      <UniqueIdentifier>{25610C37-927B-47E8-929A-2DECFE2032FC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\backend\wbpublic">
+      <UniqueIdentifier>{B18711EC-534D-4A5D-85A2-2DEC5071976A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\backend\wbpublic\grt">
+      <UniqueIdentifier>{FA25E576-41B0-42BD-BD64-66C766E0111D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\backend\wbpublic\grtdb">
+      <UniqueIdentifier>{A819F094-CBB6-48FC-8E8E-F0472276AEC1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\backend\wbpublic\sqlide">
+      <UniqueIdentifier>{BE15376A-7A69-4603-9F8E-5E0B379D35E9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library">
+      <UniqueIdentifier>{8A299D93-9429-4C6E-A8AB-A3C9CEE5E8BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\base">
+      <UniqueIdentifier>{74B43976-93CE-4E98-A341-AD9A7B504B0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\cdbc">
+      <UniqueIdentifier>{77D43F0E-17A6-4DC5-8BC8-8F52CB6398FC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\forms">
+      <UniqueIdentifier>{ABBD4311-10C0-422C-8DAA-9815F55BD16D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\forms\stub">
+      <UniqueIdentifier>{B69EBD7A-3117-4E32-A1FF-D83B27BC15DC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\forms\stub\src">
+      <UniqueIdentifier>{2A076487-213D-4270-AB48-066353C754A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\grt">
+      <UniqueIdentifier>{FC873E87-1C0B-4A24-B4B3-273716F3F621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\mtemplates">
+      <UniqueIdentifier>{BA18E531-84AD-405F-9D49-4DD40BAB868A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\mysql.canvas">
+      <UniqueIdentifier>{E5FE7D36-67DF-4AE7-85C7-604097FED125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\parsers">
+      <UniqueIdentifier>{F4CE94CB-CA33-4812-A667-8D7D19104C1E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\library\sql.parser">
+      <UniqueIdentifier>{1CE1ED26-E293-4A05-8198-B7A0FAE93CF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\modules">
+      <UniqueIdentifier>{93374354-75AE-4758-9A02-83F75EC057F4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\modules\db.mysql">
+      <UniqueIdentifier>{8F1676E6-BE83-47D7-88E8-257F8AF3D86A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\modules\db.mysql.parser">
+      <UniqueIdentifier>{F81187CD-9A72-4070-A944-8ECBFE823E77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\modules\db.mysql.sqlparser">
+      <UniqueIdentifier>{00BF0E5B-7918-461F-9DF5-8659049C383A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\plugins">
+      <UniqueIdentifier>{E9E0D0FC-7D85-4F46-A1DD-7780BAE0EE0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\plugins\db.mysql">
+      <UniqueIdentifier>{18AB86B6-63BD-43E3-8FAE-192EB3E3BD6D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\plugins\db.mysql.editors">
+      <UniqueIdentifier>{E0C832F9-EE5F-439F-8968-411898AD1EBA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\plugins\db.mysql.editors\backend">
+      <UniqueIdentifier>{C70DD4EE-193B-48E9-888B-A26FDE3A949D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\plugins\db.mysql\backend">
+      <UniqueIdentifier>{55D632ED-A79C-4566-A0A2-1155C9355A35}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core\context.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\grt_test_helpers.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\helpers.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\model_mockup.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\wb_connection_helpers.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\wb_references.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\wb_test_helpers.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_live_schema_tree_specs.cpp">
+      <Filter>tests\backend\wbprivate\sqlide</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_sql_editor_form_specs.cpp">
+      <Filter>tests\backend\wbprivate\sqlide</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\sqlide\wb_sql_editor_help_specs.cpp">
+      <Filter>tests\backend\wbprivate\sqlide</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\overview_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\ssh_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_context_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_copy_paste_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_lowlevel_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_model_file_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_module_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_diagram_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_editors_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbprivate\studio\wb_undo_others_specs.cpp">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\grtdb\editor_table_specs.cpp">
+      <Filter>tests\backend\wbpublic\grtdb</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\grtdb\table_inserts_specs.cpp">
+      <Filter>tests\backend\wbpublic\grtdb</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\grt\common_specs.cpp">
+      <Filter>tests\backend\wbpublic\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\grt\grt_dispatcher_specs.cpp">
+      <Filter>tests\backend\wbpublic\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\grt\grt_inspector_value_specs.cpp">
+      <Filter>tests\backend\wbpublic\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\grt\nodeid_specs.cpp">
+      <Filter>tests\backend\wbpublic\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\grt\shell_specs.cpp">
+      <Filter>tests\backend\wbpublic\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\grt\tree_model_specs.cpp">
+      <Filter>tests\backend\wbpublic\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\sqlide\recordset_specs.cpp">
+      <Filter>tests\backend\wbpublic\sqlide</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\backend\wbpublic\sqlide\sql_editor_be_autocomplete_specs.cpp">
+      <Filter>tests\backend\wbpublic\sqlide</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\casmine_specs.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\grt_test_helpers.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\base\commandlineparser_specs.cpp">
+      <Filter>tests\library\base</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\base\config_file_specs.cpp">
+      <Filter>tests\library\base</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\base\fileutilities_specs.cpp">
+      <Filter>tests\library\base</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\base\sqlstring_specs.cpp">
+      <Filter>tests\library\base</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\base\stringutilities_specs.cpp">
+      <Filter>tests\library\base</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\base\threading_specs.cpp">
+      <Filter>tests\library\base</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\base\utf8string_specs.cpp">
+      <Filter>tests\library\base</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\cdbc\dbc_connection_specs.cpp">
+      <Filter>tests\library\cdbc</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\cdbc\dbc_general_specs.cpp">
+      <Filter>tests\library\cdbc</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\cdbc\dbc_metadata_specs.cpp">
+      <Filter>tests\library\cdbc</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\cdbc\dbc_result_set_specs.cpp">
+      <Filter>tests\library\cdbc</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\cdbc\dbc_statement_specs.cpp">
+      <Filter>tests\library\cdbc</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\code_editor_specs.cpp">
+      <Filter>tests\library\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_app.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_base.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_drawbox.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_form.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_listbox.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_menu.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_mforms.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_selector.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_textbox.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_textentry.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_treenode.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_utilities.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_view.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\stub\src\stub_wizard.cpp">
+      <Filter>tests\library\forms\stub\src</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\forms\utilities_specs.cpp">
+      <Filter>tests\library\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\comparer_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\diff_tree_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\grtdiff_alter_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\grtdiff_db_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\grtlistdiff_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\grtpp_serialization_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\grtpp_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\grtpp_util_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\modulenative_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\object_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\struct_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\sync_profile_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\grt\value_specs.cpp">
+      <Filter>tests\library\grt</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\mtemplates\mtemplate_specs.cpp">
+      <Filter>tests\library\mtemplates</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\mysql.canvas\mysqlcanvas_specs.cpp">
+      <Filter>tests\library\mysql.canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\parsers\mysql_parser_specs.cpp">
+      <Filter>tests\library\parsers</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\library\sql.parser\sqlparser_specs.cpp">
+      <Filter>tests\library\sql.parser</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\model_mockup.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\modules\db.mysql.parser\mysql_parser_module_specs.cpp">
+      <Filter>tests\modules\db.mysql.parser</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\modules\db.mysql.parser\parse_datatypes_specs.cpp">
+      <Filter>tests\modules\db.mysql.parser</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_invalid_sql_parser_specs.cpp">
+      <Filter>tests\modules\db.mysql.sqlparser</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_facade_specs.cpp">
+      <Filter>tests\modules\db.mysql.sqlparser</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_parser_specs.cpp">
+      <Filter>tests\modules\db.mysql.sqlparser</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_sql_statement_decomposer_specs.cpp">
+      <Filter>tests\modules\db.mysql.sqlparser</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\modules\db.mysql\db_mysql_gen_grant_specs.cpp">
+      <Filter>tests\modules\db.mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\modules\db.mysql\sql_create_specs.cpp">
+      <Filter>tests\modules\db.mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\plugins\db.mysql.editors\backend\mysql_routinegroup_editor_specs.cpp">
+      <Filter>tests\plugins\db.mysql.editors\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\plugins\db.mysql.editors\backend\mysql_table_editor_specs.cpp">
+      <Filter>tests\plugins\db.mysql.editors\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\plugins\db.mysql\backend\db_mysql_plugin_specs.cpp">
+      <Filter>tests\plugins\db.mysql\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\plugins\db.mysql\backend\db_mysql_sql_export_specs.cpp">
+      <Filter>tests\plugins\db.mysql\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\plugins\db.mysql\backend\model_diff_apply_specs.cpp">
+      <Filter>tests\plugins\db.mysql\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\wb_connection_helpers.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\wb_references.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\wb_test_helpers.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\context.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\grt_test_helpers.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\grt_values_test_data.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\helpers.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\model_mockup.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\structs.test.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\wb_connection_helpers.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\wb_test_helpers.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="data\modules_grt\schema_reporting\schema_reporting_test_1.tpl.html.varnames.h">
+      <Filter>data\modules_grt\schema_reporting</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="tests\backend\wbprivate\studio\wb_undo_helpers.h">
+      <Filter>tests\backend\wbprivate\studio</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\grt_test_helpers.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\grt_values_test_data.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_app.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_base.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_box.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_button.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_checkbox.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_codeeditor.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_container.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_drawbox.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_filechooser.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_form.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_hypertext.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_imagebox.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_label.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_listbox.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_menu.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_menuitem.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_mforms.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_panel.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_popup.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_progressbar.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_radiobutton.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_scrollpanel.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_selector.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_splitter.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_table.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_tabview.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_textbox.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_textentry.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_toolbar.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_treenode.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_treeview.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_utilities.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_view.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_webbrowser.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\forms\stub\stub_wizard.h">
+      <Filter>tests\library\forms\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\library\grt\test_modules.h">
+      <Filter>tests\library\grt</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\model_mockup.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\structs.test.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\wb_connection_helpers.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\wb_test_helpers.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\modules_grt\schema_reporting\res_schema_reporting_test_1.html">
+      <Filter>data\modules_grt\schema_reporting</Filter>
+    </None>
+    <None Include="data\modules_grt\schema_reporting\res_schema_reporting_test_2.html">
+      <Filter>data\modules_grt\schema_reporting</Filter>
+    </None>
+    <None Include="data\modules_grt\schema_reporting\schema_reporting_test_1.tpl.html">
+      <Filter>data\modules_grt\schema_reporting</Filter>
+    </None>
+    <None Include="data\mtemplate\test_result.html">
+      <Filter>data\mtemplate</Filter>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
