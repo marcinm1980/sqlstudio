@@ -40,8 +40,11 @@ param(
     [switch]$VerboseOutput,
     [int]$Jobs = [Math]::Max([Environment]::ProcessorCount, 1),
     [string[]]$Only = @(),
-    [ValidateSet("Visual Studio 17 2022")]
-    [string]$Generator = "Visual Studio 17 2022"
+    [ValidateSet("auto", "Visual Studio 18 2026", "Visual Studio 17 2022")]
+    [string]$Generator = "auto",
+    [ValidateSet("latest", "2026", "2022")]
+    [string]$VisualStudio = "latest",
+    [string]$VsInstallPath
 )
 
 Set-StrictMode -Version 3.0
@@ -70,6 +73,8 @@ $script:StatusPanelPhysicalRows = 0
 $script:DepManifest = @()
 $script:SelectedOnly = @($Only | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 $script:ActiveProcesses = [System.Collections.Generic.List[System.Diagnostics.Process]]::new()
+$script:VsPath = $null
+$script:ResolvedGenerator = $Generator
 
 function Stop-AllActiveProcesses {
     $procs = @($script:ActiveProcesses)
@@ -534,7 +539,15 @@ function Test-DependencyOutputsPresent {
         "gdal" {
             @(
                 @("include\gdal.h", "include\gdal_version.h"),
+                @("include\ogrsf_frmts.h"),
+                @("include\ogr_geometry.h"),
                 @("lib\gdal.lib", "lib\gdal.dll")
+            )
+        }
+        "htmlrenderer" {
+            @(
+                @("lib\HtmlRenderer.dll"),
+                @("debug\lib\HtmlRenderer.dll")
             )
         }
         "header-only" {
@@ -606,6 +619,7 @@ function Load-DependencyManifest {
         "libssh",
         "proj",
         "gdal",
+        "htmlrenderer",
         "header-only",
         "sqlite",
         "vsqlitepp",
@@ -688,12 +702,71 @@ function Find-VSWhere {
 }
 
 function Get-VSInstallPath {
-    $vsWhere = Find-VSWhere
-    $path = (& $vsWhere -latest -version "[17,18)" -requires Microsoft.Component.MSBuild -property installationPath).Trim()
-    if (-not $path) {
-        throw "Visual Studio 2022 with MSBuild support was not found."
+    if ($VsInstallPath) {
+        if (-not (Test-Path -LiteralPath $VsInstallPath -PathType Container)) {
+            throw "Visual Studio install path was not found: $VsInstallPath"
+        }
+        return [System.IO.Path]::GetFullPath($VsInstallPath)
     }
+
+    $vsWhere = Find-VSWhere
+    $args = @("-latest")
+    if ($VisualStudio -eq "2026") {
+        $args += @("-version", "[18,19)")
+    }
+    elseif ($VisualStudio -eq "2022") {
+        $args += @("-version", "[17,18)")
+    }
+    $args += @("-requires", "Microsoft.Component.MSBuild", "-property", "installationPath")
+
+    $pathOutput = & $vsWhere @args
+    $path = if ($null -eq $pathOutput) { "" } else { ([string]::Join([Environment]::NewLine, @($pathOutput))).Trim() }
+    if (-not $path) {
+        throw "A compatible Visual Studio installation with MSBuild support was not found."
+    }
+
     return $path
+}
+
+function Resolve-CMakeGenerator([string]$ResolvedVsPath) {
+    if ($Generator -ne "auto") {
+        return $Generator
+    }
+
+    if ($ResolvedVsPath -match "\\Microsoft Visual Studio\\18\\") {
+        return "Visual Studio 18 2026"
+    }
+
+    return "Visual Studio 17 2022"
+}
+
+function Resolve-VsPlatformToolset([string]$ResolvedVsPath) {
+    $auxiliaryBuildDir = Join-Path $ResolvedVsPath "VC\Auxiliary\Build"
+    if (Test-Path -LiteralPath $auxiliaryBuildDir -PathType Container) {
+        $toolsetCandidates = @(
+            Get-ChildItem -LiteralPath $auxiliaryBuildDir -File -Filter "Microsoft.VCToolsVersion.v*.default.props" -ErrorAction SilentlyContinue |
+                ForEach-Object {
+                    if ($_.Name -match '^Microsoft\.VCToolsVersion\.(v\d+)\.default\.props$') {
+                        [pscustomobject]@{
+                            Name = $Matches[1]
+                            Number = [int]($Matches[1].Substring(1))
+                        }
+                    }
+                } |
+                Where-Object { $null -ne $_ } |
+                Sort-Object Number -Descending
+        )
+
+        if ($toolsetCandidates.Count -gt 0) {
+            return $toolsetCandidates[0].Name
+        }
+    }
+
+    if ($ResolvedVsPath -match "\\Microsoft Visual Studio\\18\\") {
+        return "v145"
+    }
+
+    return "v143"
 }
 
 function Enter-VsBuildEnvironment {
@@ -702,6 +775,8 @@ function Enter-VsBuildEnvironment {
     }
 
     $vsPath = Get-VSInstallPath
+    $script:VsPath = $vsPath
+    $script:ResolvedGenerator = Resolve-CMakeGenerator -ResolvedVsPath $vsPath
     $vcVars = Join-Path $vsPath "VC\Auxiliary\Build\vcvarsall.bat"
     if (-not (Test-Path -LiteralPath $vcVars)) {
         throw "vcvarsall.bat was not found under $vsPath"
@@ -1035,6 +1110,131 @@ function Test-ExtractedSourceHealthy {
     return (@(Get-ChildItem -LiteralPath $Path -Force -ErrorAction SilentlyContinue | Select-Object -First 1).Count -gt 0)
 }
 
+function Resolve-TarEntryDestinationPath {
+    param(
+        [Parameter(Mandatory)] [string]$RootPath,
+        [Parameter(Mandatory)] [string]$EntryName
+    )
+
+    $normalizedEntryName = ($EntryName -replace '^[.][/\\]+', '') -replace '/', '\\'
+    if ([string]::IsNullOrWhiteSpace($normalizedEntryName) -or $normalizedEntryName -eq '.') {
+        return $null
+    }
+
+    $rootFullPath = [System.IO.Path]::GetFullPath($RootPath)
+    $destinationPath = [System.IO.Path]::GetFullPath((Join-Path $rootFullPath $normalizedEntryName))
+    if (-not $destinationPath.StartsWith($rootFullPath, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "Archive entry escapes extraction root: $EntryName"
+    }
+
+    return $destinationPath
+}
+
+function Expand-GZipTarArchiveManaged {
+    param(
+        [Parameter(Mandatory)] [string]$ArchivePath,
+        [Parameter(Mandatory)] [string]$Destination
+    )
+
+    Ensure-Directory $Destination
+    $pendingLinks = [System.Collections.Generic.List[pscustomobject]]::new()
+    $archiveStream = [System.IO.File]::OpenRead($ArchivePath)
+    try {
+        $gzipStream = [System.IO.Compression.GZipStream]::new($archiveStream, [System.IO.Compression.CompressionMode]::Decompress, $false)
+        try {
+            $reader = [System.Formats.Tar.TarReader]::new($gzipStream, $false)
+            try {
+                while ($true) {
+                    $entry = $reader.GetNextEntry()
+                    if ($null -eq $entry) {
+                        break
+                    }
+
+                    $destinationPath = Resolve-TarEntryDestinationPath -RootPath $Destination -EntryName $entry.Name
+                    if ($null -eq $destinationPath) {
+                        continue
+                    }
+
+                    switch ($entry.EntryType) {
+                        ([System.Formats.Tar.TarEntryType]::Directory) {
+                            Ensure-Directory $destinationPath
+                            continue
+                        }
+                        ([System.Formats.Tar.TarEntryType]::RegularFile) {
+                            Ensure-Directory (Split-Path -Parent $destinationPath)
+                            $fileStream = [System.IO.File]::Create($destinationPath)
+                            try {
+                                if ($entry.DataStream) {
+                                    $entry.DataStream.CopyTo($fileStream)
+                                }
+                            }
+                            finally {
+                                $fileStream.Dispose()
+                            }
+                            continue
+                        }
+                        ([System.Formats.Tar.TarEntryType]::V7RegularFile) {
+                            Ensure-Directory (Split-Path -Parent $destinationPath)
+                            $fileStream = [System.IO.File]::Create($destinationPath)
+                            try {
+                                if ($entry.DataStream) {
+                                    $entry.DataStream.CopyTo($fileStream)
+                                }
+                            }
+                            finally {
+                                $fileStream.Dispose()
+                            }
+                            continue
+                        }
+                        ([System.Formats.Tar.TarEntryType]::SymbolicLink) {
+                            $pendingLinks.Add([pscustomobject]@{ Path = $destinationPath; LinkName = [string]$entry.LinkName; EntryType = "symlink" })
+                            continue
+                        }
+                        ([System.Formats.Tar.TarEntryType]::HardLink) {
+                            $pendingLinks.Add([pscustomobject]@{ Path = $destinationPath; LinkName = [string]$entry.LinkName; EntryType = "hard link" })
+                            continue
+                        }
+                        default {
+                            continue
+                        }
+                    }
+                }
+            }
+            finally {
+                $reader.Dispose()
+            }
+        }
+        finally {
+            $gzipStream.Dispose()
+        }
+    }
+    finally {
+        $archiveStream.Dispose()
+    }
+
+    foreach ($pendingLink in $pendingLinks) {
+        if ([string]::IsNullOrWhiteSpace($pendingLink.LinkName)) {
+            Write-Warn ("Skipping {0} with empty target: {1}" -f $pendingLink.EntryType, $pendingLink.Path)
+            continue
+        }
+
+        $linkParent = Split-Path -Parent $pendingLink.Path
+        $targetPath = Resolve-TarEntryDestinationPath -RootPath $linkParent -EntryName $pendingLink.LinkName
+        if ($null -eq $targetPath -or -not (Test-Path -LiteralPath $targetPath)) {
+            Write-Warn ("Skipping {0} because target was not extracted: {1} -> {2}" -f $pendingLink.EntryType, $pendingLink.Path, $pendingLink.LinkName)
+            continue
+        }
+
+        Ensure-Directory $linkParent
+        if (Test-Path -LiteralPath $targetPath -PathType Container) {
+            Copy-DirectoryContent -Source $targetPath -Destination $pendingLink.Path
+        }
+        else {
+            Copy-Item -LiteralPath $targetPath -Destination $pendingLink.Path -Force
+        }
+    }
+}
+
 function Restore-MesonInstallOutputs {
     param(
         [Parameter(Mandatory)] [string]$BuildDir,
@@ -1091,6 +1291,33 @@ function Ensure-AntlrRuntimeCompatibilityPatch {
     }
 }
 
+function Ensure-PythonSourceArchiveCompatibilityPatch {
+    param([Parameter(Mandatory)] [string]$SourcePath)
+
+    $sbomGenerator = Join-Path $SourcePath "Tools\build\generate_sbom.py"
+    if (-not (Test-Path -LiteralPath $sbomGenerator -PathType Leaf)) {
+        return
+    }
+
+    $content = Get-Content -LiteralPath $sbomGenerator -Raw
+    $oldSnippet = @'
+    assert git_check_ignore_proc.returncode in (0, 1)
+'@
+    if ($content -notmatch [regex]::Escape($oldSnippet.Trim())) {
+        return
+    }
+
+    $newSnippet = @'
+    if git_check_ignore_proc.returncode not in (0, 1):
+        return sorted(paths)
+'@
+    $updated = $content.Replace($oldSnippet.Trim(), $newSnippet.Trim())
+    if ($updated -ne $content) {
+        Set-Content -LiteralPath $sbomGenerator -Value $updated -NoNewline
+        Write-Warn "Patched Python generate_sbom.py for source archive builds without a git checkout"
+    }
+}
+
 function Get-SqliteHeaderRoot {
     $bundleCandidates = @(
         (Join-Path $script:BundleDir "include\sqlite"),
@@ -1110,7 +1337,47 @@ function Get-SqliteHeaderRoot {
         }
     }
 
+    if (-not $script:DepManifest -or $script:DepManifest.Count -eq 0) {
+        $script:DepManifest = @(Load-DependencyManifest)
+    }
+
+    $sqliteDependency = @($script:DepManifest | Where-Object { $_.Name -eq "sqlite" } | Select-Object -First 1)
+    if ($sqliteDependency.Count -gt 0) {
+        $sqliteSourcePath = Get-SourceTree $sqliteDependency[0]
+        foreach ($candidate in @(
+            $sqliteSourcePath,
+            (Join-Path $sqliteSourcePath "include"),
+            (Join-Path $sqliteSourcePath "sqlite")
+        )) {
+            if (Test-Path -LiteralPath (Join-Path $candidate "sqlite3.h") -PathType Leaf) {
+                return $candidate
+            }
+        }
+    }
+
     throw "sqlite3.h was not found in the bundle or extracted sqlite sources."
+}
+
+function Get-DependencyByName {
+    param([Parameter(Mandatory)] [string]$Name)
+
+    if (-not $script:DepManifest -or $script:DepManifest.Count -eq 0) {
+        $script:DepManifest = @(Load-DependencyManifest)
+    }
+
+    $dependency = @($script:DepManifest | Where-Object { $_.Name -eq $Name } | Select-Object -First 1)
+    if ($dependency.Count -eq 0) {
+        throw "Dependency '$Name' was not found in the manifest."
+    }
+
+    return $dependency[0]
+}
+
+function Ensure-SqliteBundleOutputs {
+    $sqliteDependency = Get-DependencyByName "sqlite"
+    if (-not (Test-DependencyOutputsPresent $sqliteDependency)) {
+        Process-Dependency $sqliteDependency
+    }
 }
 
 function Ensure-SqliteCliShim {
@@ -1273,6 +1540,16 @@ function Expand-ArchiveSmart {
     if ($lower.EndsWith(".zip")) {
         Expand-Archive -LiteralPath $ArchivePath -DestinationPath $tempDir -Force
     }
+    elseif ($lower.EndsWith(".tar.gz") -or $lower.EndsWith(".tgz")) {
+        try {
+            Expand-GZipTarArchiveManaged -ArchivePath $ArchivePath -Destination $tempDir
+        }
+        catch {
+            Write-Warn ("Managed tar.gz extraction failed, falling back to tar.exe: {0}" -f $_.Exception.Message)
+            Reset-Directory $tempDir
+            Invoke-LoggedCommand -Label "extract $([System.IO.Path]::GetFileName($ArchivePath))" -FilePath "tar" -Arguments @("-xf", $ArchivePath, "-C", $tempDir) -WorkingDirectory $script:ProjectRoot | Out-Null
+        }
+    }
     else {
         Invoke-LoggedCommand -Label "extract $([System.IO.Path]::GetFileName($ArchivePath))" -FilePath "tar" -Arguments @("-xf", $ArchivePath, "-C", $tempDir) -WorkingDirectory $script:ProjectRoot | Out-Null
     }
@@ -1343,7 +1620,7 @@ function Invoke-CMakeInstallPair {
     $configureReleaseArgs = @(
         "-S", $SourcePath,
         "-B", $Layout.BuildRelease,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DCMAKE_INSTALL_PREFIX=$($Layout.StageRelease)"
     ) + $CommonArguments
@@ -1359,7 +1636,7 @@ function Invoke-CMakeInstallPair {
     $configureDebugArgs = @(
         "-S", $SourcePath,
         "-B", $Layout.BuildDebug,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DCMAKE_INSTALL_PREFIX=$($Layout.StageDebug)"
     ) + $CommonArguments
@@ -1491,9 +1768,112 @@ function Build-CairoBundle {
     if ($DownloadOnly) { return }
 
     $layout = New-DualBuildLayout "cairo"
+    Reset-Directory $layout.BuildRelease
+    Reset-Directory $layout.BuildDebug
+    Reset-Directory $layout.StageRelease
+    Reset-Directory $layout.StageDebug
+    $bundleZlibInclude = (Join-Path $script:BundleDir "include\zlib") -replace "\\", "/"
+    $bundleZlibReleaseLib = (Join-Path $script:BundleDir "lib\zlib.lib") -replace "\\", "/"
+    $bundleZlibDebugLib = (Join-Path $script:BundleDir "debug\lib\zlibd.lib") -replace "\\", "/"
+    $gdbusCodegenUtilsPath = Join-Path $sourcePath "subprojects\glib-2.74.0\gio\gdbus-2.0\codegen\utils.py"
+    $gdbusCodegenCompatImport = @'
+try:
+    from distutils.version import LooseVersion as _LooseVersion
+except ModuleNotFoundError:
+    try:
+        from setuptools._distutils.version import LooseVersion as _LooseVersion
+    except ModuleNotFoundError:
+        import re
+
+        class _LooseVersion:
+            def __init__(self, value):
+                self._value = str(value)
+                self._parts = tuple(
+                    (0, int(part)) if part.isdigit() else (1, part.lower())
+                    for part in re.findall(r"\d+|[A-Za-z]+", self._value)
+                )
+
+            def _cmp_key(self):
+                return self._parts
+
+            def __lt__(self, other):
+                return self._cmp_key() < other._cmp_key()
+
+            def __le__(self, other):
+                return self._cmp_key() <= other._cmp_key()
+
+            def __eq__(self, other):
+                return self._cmp_key() == other._cmp_key()
+
+            def __ne__(self, other):
+                return self._cmp_key() != other._cmp_key()
+
+            def __gt__(self, other):
+                return self._cmp_key() > other._cmp_key()
+
+            def __ge__(self, other):
+                return self._cmp_key() >= other._cmp_key()
+'@
+    if (Test-Path -LiteralPath $gdbusCodegenUtilsPath -PathType Leaf) {
+        $gdbusCodegenUtilsContent = Get-Content -LiteralPath $gdbusCodegenUtilsPath -Raw
+        $patchedGdbusCodegenUtilsContent = $gdbusCodegenUtilsContent -replace 'import distutils\.version', $gdbusCodegenCompatImport
+        $patchedGdbusCodegenUtilsContent = $patchedGdbusCodegenUtilsContent -replace 'distutils\.version\.LooseVersion', '_LooseVersion'
+        if ($patchedGdbusCodegenUtilsContent -ne $gdbusCodegenUtilsContent) {
+            Set-Content -LiteralPath $gdbusCodegenUtilsPath -Value $patchedGdbusCodegenUtilsContent -Encoding utf8 -NoNewline
+            Write-Warn "Patched Cairo gdbus-codegen for Python distutils removal"
+        }
+    }
+
+    $clPath = (Get-Command "cl.exe" -ErrorAction Stop).Source
+    $linkPath = (Get-Command "link.exe" -ErrorAction Stop).Source
+    $libPath = (Get-Command "lib.exe" -ErrorAction Stop).Source
+    $rcPath = (Get-Command "rc.exe" -ErrorAction Stop).Source
+    $pkgConfigPath = (Get-Command "pkg-config.exe" -ErrorAction Stop).Source
+    $msysBinPath = Split-Path -Parent $pkgConfigPath
+    $pythonPath = Join-Path $msysBinPath "python.exe"
+    if (-not (Test-Path -LiteralPath $pythonPath -PathType Leaf)) {
+        $pythonPath = (Get-Command "python.exe" -ErrorAction Stop | Select-Object -First 1).Source
+    }
+    $normalizedPythonPath = $pythonPath -replace "\\", "/"
+    $ninjaPythonPath = $normalizedPythonPath -replace "^([A-Za-z]):", '$1$:' 
+    $libffiDllPath = Join-Path (Split-Path -Parent $pkgConfigPath) "libffi-8.dll"
+    $libffiImportLibDir = Join-Path $script:BuildRoot "cairo\ffi-msvc"
+    $libffiDefPath = Join-Path $libffiImportLibDir "libffi-8.def"
+    $libffiImportLibPath = Join-Path $libffiImportLibDir "libffi.lib"
+    $mesonNativeFile = Join-Path $script:BuildRoot "cairo\msvc-native.ini"
+    $mesonNativeFileContent = @(
+        "[binaries]",
+        ("c = '{0}'" -f ($clPath -replace "\\", "/")),
+        ("cpp = '{0}'" -f ($clPath -replace "\\", "/")),
+        ("c_ld = '{0}'" -f ($linkPath -replace "\\", "/")),
+        ("cpp_ld = '{0}'" -f ($linkPath -replace "\\", "/")),
+        ("ar = '{0}'" -f ($libPath -replace "\\", "/")),
+        ("windres = '{0}'" -f ($rcPath -replace "\\", "/")),
+        ("pkgconfig = '{0}'" -f ($pkgConfigPath -replace "\\", "/")),
+        ("python = '{0}'" -f ($pythonPath -replace "\\", "/"))
+    )
+    Set-Content -LiteralPath $mesonNativeFile -Value ($mesonNativeFileContent -join [Environment]::NewLine) -Encoding ascii
+
+    if (-not (Test-Path -LiteralPath $libffiDllPath -PathType Leaf)) {
+        throw "libffi runtime DLL was not found for Cairo build: $libffiDllPath"
+    }
+    Ensure-Directory $libffiImportLibDir
+    $dumpbinOutput = & "dumpbin.exe" /exports $libffiDllPath 2>&1
+    $exportNames = @(
+        $dumpbinOutput |
+        Where-Object { $_ -match '^\s+\d+\s+[0-9A-F]+\s+[0-9A-F]+\s+([A-Za-z0-9_]+)$' } |
+        ForEach-Object { $Matches[1] }
+    )
+    if (-not $exportNames) {
+        throw "Unable to extract libffi exports from $libffiDllPath"
+    }
+    $defContent = @("LIBRARY libffi-8.dll", "EXPORTS") + $exportNames
+    Set-Content -LiteralPath $libffiDefPath -Value ($defContent -join [Environment]::NewLine) -Encoding ascii
+    Invoke-LoggedCommand -Label "cairo libffi import lib" -FilePath "lib.exe" -Arguments @("/NOLOGO", "/DEF:$libffiDefPath", "/OUT:$libffiImportLibPath", "/MACHINE:x64") -WorkingDirectory $libffiImportLibDir | Out-Null
+
     $mesonArgs = @(
+        "--native-file", $mesonNativeFile,
         "--default-library", "shared",
-        "--wipe",
         "-Dtests=disabled",
         "-Dgtk_doc=false",
         "-Dglib:tests=false",
@@ -1503,19 +1883,55 @@ function Build-CairoBundle {
     $releaseArgs = @(
         "setup", $layout.BuildRelease, $sourcePath,
         "--prefix", $layout.StageRelease,
-        "--buildtype", "release"
+        "--buildtype", "plain",
+        "-Ddebug=false",
+        "-Doptimization=2",
+        "-Db_ndebug=true",
+        "-Db_vscrt=md"
     ) + $mesonArgs
     $debugArgs = @(
         "setup", $layout.BuildDebug, $sourcePath,
         "--prefix", $layout.StageDebug,
-        "--buildtype", "debug"
+        "--buildtype", "plain",
+        "-Ddebug=true",
+        "-Doptimization=0",
+        "-Db_ndebug=false",
+        "-Db_vscrt=mdd"
     ) + $mesonArgs
 
     Invoke-LoggedCommand -Label "cairo meson setup release" -FilePath "meson" -Arguments $releaseArgs -WorkingDirectory $script:ProjectRoot | Out-Null
+    $releaseBuildNinja = Join-Path $layout.BuildRelease "build.ninja"
+    if (Test-Path -LiteralPath $releaseBuildNinja -PathType Leaf) {
+        $releaseBuildNinjaContent = Get-Content -LiteralPath $releaseBuildNinja -Raw
+        $releaseSanitizedBuildNinjaContent = $releaseBuildNinjaContent -replace '"/release"\s*', ''
+        $releaseSanitizedBuildNinjaContent = $releaseSanitizedBuildNinjaContent -replace [regex]::Escape('"-IC:/msys64/mingw64/bin/../include"'), ('"-I{0}" "-IC:/msys64/mingw64/bin/../include"' -f $bundleZlibInclude)
+        $releaseSanitizedBuildNinjaContent = $releaseSanitizedBuildNinjaContent -replace [regex]::Escape('"C:/msys64/mingw64/bin/../lib/libz.a"'), ('"{0}"' -f $bundleZlibReleaseLib)
+        $releaseSanitizedBuildNinjaContent = $releaseSanitizedBuildNinjaContent -replace [regex]::Escape('"C:/msys64/mingw64/bin/../lib/../lib/libffi.a"'), ('"{0}"' -f (($libffiImportLibPath) -replace "\\", "/"))
+        $releaseSanitizedBuildNinjaContent = $releaseSanitizedBuildNinjaContent -replace '"[A-Za-z]:/[^"\r\n]*/python\.exe"', ('"{0}"' -f $normalizedPythonPath)
+        $releaseSanitizedBuildNinjaContent = $releaseSanitizedBuildNinjaContent -replace '[A-Za-z]\$:/[^ \r\n"]*/python\.exe', $ninjaPythonPath
+        if ($releaseSanitizedBuildNinjaContent -ne $releaseBuildNinjaContent) {
+            Set-Content -LiteralPath $releaseBuildNinja -Value $releaseSanitizedBuildNinjaContent -Encoding ascii -NoNewline
+            Write-Warn "Sanitized Cairo release build.ninja for MSVC linker and bundled zlib/libffi/python usage"
+        }
+    }
     Invoke-LoggedCommand -Label "cairo ninja release" -FilePath "ninja" -Arguments @("-C", $layout.BuildRelease) -WorkingDirectory $script:ProjectRoot | Out-Null
     Invoke-LoggedCommand -Label "cairo install release" -FilePath "ninja" -Arguments @("-C", $layout.BuildRelease, "install") -WorkingDirectory $script:ProjectRoot | Out-Null
 
     Invoke-LoggedCommand -Label "cairo meson setup debug" -FilePath "meson" -Arguments $debugArgs -WorkingDirectory $script:ProjectRoot | Out-Null
+    $debugBuildNinja = Join-Path $layout.BuildDebug "build.ninja"
+    if (Test-Path -LiteralPath $debugBuildNinja -PathType Leaf) {
+        $debugBuildNinjaContent = Get-Content -LiteralPath $debugBuildNinja -Raw
+        $debugSanitizedBuildNinjaContent = $debugBuildNinjaContent -replace '"/release"\s*', ''
+        $debugSanitizedBuildNinjaContent = $debugSanitizedBuildNinjaContent -replace [regex]::Escape('"-IC:/msys64/mingw64/bin/../include"'), ('"-I{0}" "-IC:/msys64/mingw64/bin/../include"' -f $bundleZlibInclude)
+        $debugSanitizedBuildNinjaContent = $debugSanitizedBuildNinjaContent -replace [regex]::Escape('"C:/msys64/mingw64/bin/../lib/libz.a"'), ('"{0}"' -f $bundleZlibDebugLib)
+        $debugSanitizedBuildNinjaContent = $debugSanitizedBuildNinjaContent -replace [regex]::Escape('"C:/msys64/mingw64/bin/../lib/../lib/libffi.a"'), ('"{0}"' -f (($libffiImportLibPath) -replace "\\", "/"))
+        $debugSanitizedBuildNinjaContent = $debugSanitizedBuildNinjaContent -replace '"[A-Za-z]:/[^"\r\n]*/python\.exe"', ('"{0}"' -f $normalizedPythonPath)
+        $debugSanitizedBuildNinjaContent = $debugSanitizedBuildNinjaContent -replace '[A-Za-z]\$:/[^ \r\n"]*/python\.exe', $ninjaPythonPath
+        if ($debugSanitizedBuildNinjaContent -ne $debugBuildNinjaContent) {
+            Set-Content -LiteralPath $debugBuildNinja -Value $debugSanitizedBuildNinjaContent -Encoding ascii -NoNewline
+            Write-Warn "Sanitized Cairo debug build.ninja for MSVC linker and bundled zlib/libffi/python usage"
+        }
+    }
     Invoke-LoggedCommand -Label "cairo ninja debug" -FilePath "ninja" -Arguments @("-C", $layout.BuildDebug) -WorkingDirectory $script:ProjectRoot | Out-Null
     Invoke-LoggedCommand -Label "cairo install debug" -FilePath "ninja" -Arguments @("-C", $layout.BuildDebug, "install") -WorkingDirectory $script:ProjectRoot | Out-Null
 
@@ -1526,6 +1942,10 @@ function Build-CairoBundle {
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "lib\glib-2.0\include") -Destination (Join-Path $script:BundleDir "lib\glib-2.0\include")
     Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib")) -Patterns @("*.dll", "*.lib", "*.pdb") -Destination (Join-Path $script:BundleDir "lib")
     Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib")) -Patterns @("*.dll", "*.lib", "*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
+    Copy-Item -LiteralPath $libffiDllPath -Destination (Join-Path $script:BundleDir "lib\libffi-8.dll") -Force
+    Copy-Item -LiteralPath $libffiDllPath -Destination (Join-Path $script:BundleDir "debug\lib\libffi-8.dll") -Force
+    Copy-Item -LiteralPath $libffiImportLibPath -Destination (Join-Path $script:BundleDir "lib\libffi.lib") -Force
+    Copy-Item -LiteralPath $libffiImportLibPath -Destination (Join-Path $script:BundleDir "debug\lib\libffi.lib") -Force
 
     Write-Ok "cairo/glib bundle staged."
 }
@@ -1590,7 +2010,7 @@ function Build-AntlrRuntime {
     $configureReleaseArgs = @(
         "-S", $cmakeRoot,
         "-B", $layout.BuildRelease,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DCMAKE_INSTALL_PREFIX=$($layout.StageRelease)"
     ) + $commonArgs
@@ -1610,7 +2030,7 @@ function Build-AntlrRuntime {
     $configureDebugArgs = @(
         "-S", $cmakeRoot,
         "-B", $layout.BuildDebug,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DCMAKE_INSTALL_PREFIX=$($layout.StageDebug)"
     ) + $commonArgs
@@ -1632,9 +2052,9 @@ function Build-AntlrRuntime {
     $antlrReleaseRoots = @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib"), (Join-Path $layout.BuildRelease "runtime"), $layout.BuildRelease)
     $antlrDebugRoots = @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib"), (Join-Path $layout.BuildDebug "runtime"), $layout.BuildDebug)
 
-    Ensure-Directory $antlrIncludeDest
+    Reset-Directory $antlrIncludeDest
     Ensure-Directory $antlrBinDest
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "include"), (Join-Path $sourcePath "runtime\src")) -Patterns @("*.h") -Destination $antlrIncludeDest
+    Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include\antlr4-runtime") -Destination $antlrIncludeDest
     Copy-MatchingFiles -SearchRoots $antlrReleaseRoots -Patterns @("antlr4-runtime*.dll", "antlr4-runtime*.lib", "antlr4-runtime*.pdb") -Destination (Join-Path $script:BundleDir "lib")
     Copy-MatchingFiles -SearchRoots $antlrDebugRoots -Patterns @("antlr4-runtime*.dll", "antlr4-runtime*.lib", "antlr4-runtime*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
     Copy-Item -LiteralPath $antlrToolJar -Destination (Join-Path $antlrBinDest (Get-AntlrToolJarFileName $Dependency)) -Force
@@ -1685,6 +2105,7 @@ function Build-Proj {
     foreach ($path in @($layout.BuildRelease, $layout.BuildDebug, $layout.StageRelease, $layout.StageDebug)) {
         Reset-Directory $path
     }
+    Ensure-SqliteBundleOutputs
     $sqliteHeaderRoot = Get-SqliteHeaderRoot
     $sqliteCli = Ensure-SqliteCliShim
     $commonArgs = @(
@@ -1710,7 +2131,7 @@ function Build-Proj {
     $configureReleaseArgs = @(
         "-S", $sourcePath,
         "-B", $layout.BuildRelease,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DCMAKE_INSTALL_PREFIX=$($layout.StageRelease)"
     ) + $commonArgs
@@ -1729,7 +2150,7 @@ function Build-Proj {
     $configureDebugArgs = @(
         "-S", $sourcePath,
         "-B", $layout.BuildDebug,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DCMAKE_INSTALL_PREFIX=$($layout.StageDebug)"
     ) + $commonArgs
@@ -1767,6 +2188,7 @@ function Build-Gdal {
     $commonArgs = @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DBUILD_APPS=ON",
+        "-DBUILD_PYTHON_BINDINGS=OFF",
         "-DBUILD_TESTING=OFF",
         "-DGDAL_BUILD_OPTIONAL_DRIVERS=OFF",
         "-DOGR_BUILD_OPTIONAL_DRIVERS=OFF",
@@ -1793,7 +2215,7 @@ function Build-Gdal {
     $configureReleaseArgs = @(
         "-S", $sourcePath,
         "-B", $layout.BuildRelease,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DCMAKE_INSTALL_PREFIX=$($layout.StageRelease)"
     ) + $commonArgs
@@ -1812,7 +2234,7 @@ function Build-Gdal {
     $configureDebugArgs = @(
         "-S", $sourcePath,
         "-B", $layout.BuildDebug,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DCMAKE_INSTALL_PREFIX=$($layout.StageDebug)"
     ) + $commonArgs
@@ -1828,8 +2250,32 @@ function Build-Gdal {
         "--prefix", $layout.StageDebug
     ) -WorkingDirectory $script:ProjectRoot | Out-Null
 
-    Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include") -Destination (Join-Path $script:BundleDir "include")
-    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "include"), (Join-Path $sourcePath "gcore"), (Join-Path $layout.BuildRelease "gcore")) -Patterns @("gdal.h", "gdal_version.h") -Destination (Join-Path $script:BundleDir "include")
+    $gdalIncludeDest = Join-Path $script:BundleDir "include"
+    $gdalHeaderRoots = @(
+        (Join-Path $layout.StageRelease "include"),
+        (Join-Path $sourcePath "alg"),
+        (Join-Path $sourcePath "gcore"),
+        (Join-Path $sourcePath "ogr"),
+        (Join-Path $sourcePath "ogr\ogrsf_frmts"),
+        (Join-Path $sourcePath "port")
+    )
+    $gdalGeneratedHeaderRoots = @(
+        (Join-Path $layout.BuildRelease "gcore"),
+        (Join-Path $layout.BuildRelease "port"),
+        (Join-Path $layout.BuildDebug "gcore"),
+        (Join-Path $layout.BuildDebug "port")
+    )
+
+    Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include") -Destination $gdalIncludeDest
+    Copy-MatchingFiles -SearchRoots $gdalHeaderRoots -Patterns @(
+        "gdal*.h",
+        "ogr*.h",
+        "cpl*.h"
+    ) -Destination $gdalIncludeDest
+    Copy-MatchingFiles -SearchRoots $gdalGeneratedHeaderRoots -Patterns @(
+        "gdal_version.h",
+        "cpl_config.h"
+    ) -Destination $gdalIncludeDest
     Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "share\gdal") -Destination (Join-Path $script:BundleDir "share\gdal")
     Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "bin"), (Join-Path $layout.StageRelease "lib"), (Join-Path $layout.BuildRelease "Release"), $layout.BuildRelease) -Patterns @("gdal*.dll", "gdal*.lib", "gdal*.pdb") -Destination (Join-Path $script:BundleDir "lib")
     Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "bin"), (Join-Path $layout.StageDebug "lib"), (Join-Path $layout.BuildDebug "Debug"), $layout.BuildDebug) -Patterns @("gdal*.dll", "gdal*.lib", "gdal*.pdb") -Destination (Join-Path $script:BundleDir "debug\lib")
@@ -1854,11 +2300,13 @@ function Build-BoostHeaders {
     }
     else {
         $headerRoots = @(
-            Get-ChildItem -LiteralPath (Join-Path $sourcePath "libs") -Directory -ErrorAction SilentlyContinue |
+            Get-ChildItem -LiteralPath (Join-Path $sourcePath "libs") -Directory -Recurse -ErrorAction SilentlyContinue |
                 ForEach-Object { Join-Path $_.FullName "include\boost" } |
                 Where-Object { Test-Path -LiteralPath $_ -PathType Container }
         )
     }
+
+    $headerRoots = @($headerRoots | Sort-Object -Unique)
 
     if (-not $headerRoots -or $headerRoots.Count -eq 0) {
         throw "Boost headers were not found under $sourcePath"
@@ -1886,6 +2334,61 @@ function Build-RapidJsonHeaders {
     Reset-Directory $dest
     Copy-DirectoryContent -Source $rapidDir -Destination $dest
     Write-Ok "RapidJSON headers staged."
+}
+
+function Build-HtmlRenderer {
+    param([pscustomobject]$Dependency)
+
+    Enter-VsBuildEnvironment
+    $sourcePath = Get-SourceTree $Dependency
+    if ($DownloadOnly) { return }
+
+    $projectFile = Join-Path $sourcePath "Source\HtmlRenderer\HtmlRenderer.csproj"
+    if (-not (Test-Path -LiteralPath $projectFile -PathType Leaf)) {
+        throw "HTML Renderer project file was not found: $projectFile"
+    }
+
+    $msbuildExe = Get-Command "MSBuild.exe" -ErrorAction SilentlyContinue
+    if ($msbuildExe) {
+        $msbuildPath = $msbuildExe.Source
+    }
+    else {
+        $vsPath = Get-VSInstallPath
+        $msbuildPath = Join-Path $vsPath "MSBuild\Current\Bin\MSBuild.exe"
+        if (-not (Test-Path -LiteralPath $msbuildPath -PathType Leaf)) {
+            throw "MSBuild.exe was not found under $vsPath"
+        }
+    }
+
+    Invoke-LoggedCommand -Label "htmlrenderer build release" -FilePath $msbuildPath -WorkingDirectory $sourcePath -Arguments @(
+        $projectFile,
+        "/p:Configuration=Release",
+        "/p:Platform=AnyCPU",
+        "/p:TargetFrameworkVersion=v4.8",
+        "/t:Rebuild"
+    ) | Out-Null
+
+    Invoke-LoggedCommand -Label "htmlrenderer build debug" -FilePath $msbuildPath -WorkingDirectory $sourcePath -Arguments @(
+        $projectFile,
+        "/p:Configuration=Debug",
+        "/p:Platform=AnyCPU",
+        "/p:TargetFrameworkVersion=v4.8",
+        "/t:Rebuild"
+    ) | Out-Null
+
+    $releaseOutput = Join-Path $sourcePath "Source\HtmlRenderer\bin\ReleaseNet20"
+    $debugOutput = Join-Path $sourcePath "Source\HtmlRenderer\bin\DebugNet20"
+    if (-not (Test-Path -LiteralPath $releaseOutput -PathType Container)) {
+        throw "HTML Renderer release output directory was not produced: $releaseOutput"
+    }
+    if (-not (Test-Path -LiteralPath $debugOutput -PathType Container)) {
+        throw "HTML Renderer debug output directory was not produced: $debugOutput"
+    }
+
+    Copy-MatchingFiles -SearchRoots @($releaseOutput) -Patterns @("HtmlRenderer.dll", "HtmlRenderer.pdb", "HtmlRenderer.xml") -Destination (Join-Path $script:BundleDir "lib")
+    Copy-MatchingFiles -SearchRoots @($debugOutput) -Patterns @("HtmlRenderer.dll", "HtmlRenderer.pdb", "HtmlRenderer.xml") -Destination (Join-Path $script:BundleDir "debug\lib")
+
+    Write-Ok "HTML Renderer release and debug artefacts staged."
 }
 
 function Build-Sqlite {
@@ -1978,8 +2481,21 @@ function Build-Vsqlitepp {
     }
 
     $headerDest = Join-Path $script:BundleDir "include\sqlite"
-    Reset-Directory $headerDest
+    Ensure-Directory $headerDest
     Copy-DirectoryContent -Source $headerSourceRoot -Destination $headerDest
+
+    $sqliteHeaderRoot = Get-SqliteHeaderRoot
+    foreach ($sqliteHeaderName in @("sqlite3.h", "sqlite3ext.h")) {
+        $sqliteHeaderPath = Join-Path $sqliteHeaderRoot $sqliteHeaderName
+        $sqliteHeaderDestination = Join-Path $headerDest $sqliteHeaderName
+        if (Test-Path -LiteralPath $sqliteHeaderPath -PathType Leaf) {
+            $sourceResolved = [System.IO.Path]::GetFullPath($sqliteHeaderPath)
+            $destinationResolved = [System.IO.Path]::GetFullPath($sqliteHeaderDestination)
+            if ($sourceResolved -ne $destinationResolved) {
+                Copy-Item -LiteralPath $sqliteHeaderPath -Destination $sqliteHeaderDestination -Force
+            }
+        }
+    }
 
     $buildRel = Join-Path $script:BuildRoot "vsqlitepp\release"
     $buildDbg = Join-Path $script:BuildRoot "vsqlitepp\debug"
@@ -1987,79 +2503,55 @@ function Build-Vsqlitepp {
     Reset-Directory $buildDbg
 
     $includeArgs = @(
-        "/I" + (Join-Path $sourcePath "include"),
-        "/I" + (Join-Path $script:BundleDir "include"),
-        "/I" + (Join-Path $script:BundleDir "include\sqlite")
+        ('/I"{0}"' -f (Join-Path $sourcePath "include"))
+        ('/I"{0}"' -f (Join-Path $sourcePath "include\sqlite"))
+        ('/I"{0}"' -f (Join-Path $sourcePath "include\sqlite\private"))
+        ('/I"{0}"' -f (Join-Path $script:BundleDir "include"))
+        ('/I"{0}"' -f (Join-Path $script:BundleDir "include\sqlite"))
     )
-    $sourceArgs = @($sourceCandidates | ForEach-Object { $_.FullName })
 
-    $vsqliteReleaseSharedArgs = @(
-        "/nologo", "/O2", "/MD", "/EHsc", "/LD", "/Zi"
-    ) + $includeArgs + $sourceArgs + @(
-        "sqlite3.lib",
-        "/link", "/NOLOGO",
-        "/LIBPATH:" + (Join-Path $script:BundleDir "lib"),
-        "/OUT:vsqlite++.dll",
-        "/IMPLIB:vsqlitepp.lib",
-        "/PDB:vsqlitepp.pdb"
-    )
-    $releaseDll = Invoke-LoggedCommand -Label "vsqlitepp release shared build" -FilePath "cl.exe" -WorkingDirectory $buildRel -AllowFailure -Arguments $vsqliteReleaseSharedArgs
-    $releaseSharedReady = (Test-Path -LiteralPath (Join-Path $buildRel "vsqlite++.dll") -PathType Leaf) -and
-        (Test-Path -LiteralPath (Join-Path $buildRel "vsqlitepp.lib") -PathType Leaf)
-
-    if ($releaseDll.ExitCode -ne 0 -or -not $releaseSharedReady) {
-        Write-Warn "Shared build did not produce the expected vsqlitepp release artifacts, falling back to a static library."
+    $releaseObjects = @()
+    foreach ($source in $sourceCandidates) {
+        $objectPath = Join-Path $buildRel ($source.BaseName + ".obj")
+        $responsePath = Join-Path $buildRel ($source.BaseName + ".rsp")
         $vsqliteReleaseCompileArgs = @(
-            "/nologo", "/O2", "/MD", "/EHsc", "/Zi", "/c"
-        ) + $includeArgs + $sourceArgs
-        Invoke-LoggedCommand -Label "vsqlitepp release compile" -FilePath "cl.exe" -WorkingDirectory $buildRel -Arguments $vsqliteReleaseCompileArgs | Out-Null
-        $objects = @(Get-ChildItem -Path $buildRel -Filter *.obj | ForEach-Object { $_.FullName })
-        $vsqliteReleaseLibArgs = @("/NOLOGO", "/OUT:vsqlitepp.lib") + $objects
-        Invoke-LoggedCommand -Label "vsqlitepp release lib" -FilePath "lib.exe" -WorkingDirectory $buildRel -Arguments $vsqliteReleaseLibArgs | Out-Null
+            "/nologo", "/O2", "/MD", "/EHsc", "/Zi", "/c",
+            ('/Fo"{0}"' -f $objectPath)
+        ) + $includeArgs + @(('"{0}"' -f $source.FullName))
+        Set-Content -LiteralPath $responsePath -Value ($vsqliteReleaseCompileArgs -join [Environment]::NewLine) -Encoding ascii
+        Invoke-LoggedCommand -Label ("vsqlitepp release compile {0}" -f $source.Name) -FilePath "cl.exe" -WorkingDirectory $buildRel -Arguments @("@$responsePath") | Out-Null
+        $releaseObjects += $objectPath
     }
+    if ($releaseObjects.Count -ne $sourceCandidates.Count) {
+        throw "vsqlitepp release compile did not produce the expected number of object files."
+    }
+    $releaseLibResponsePath = Join-Path $buildRel "vsqlitepp.rsp"
+    $vsqliteReleaseLibArgs = @('/NOLOGO', '/OUT:"vsqlitepp.lib"') + @($releaseObjects | ForEach-Object { ('"{0}"' -f $_) })
+    Set-Content -LiteralPath $releaseLibResponsePath -Value ($vsqliteReleaseLibArgs -join [Environment]::NewLine) -Encoding ascii
+    Invoke-LoggedCommand -Label "vsqlitepp release lib" -FilePath "lib.exe" -WorkingDirectory $buildRel -Arguments @("@$releaseLibResponsePath") | Out-Null
 
-    $vsqliteDebugSharedArgs = @(
-        "/nologo", "/Od", "/MDd", "/EHsc", "/LD", "/Zi"
-    ) + $includeArgs + $sourceArgs + @(
-        "sqlite3_d.lib",
-        "/link", "/NOLOGO",
-        "/LIBPATH:" + (Join-Path $script:BundleDir "debug\lib"),
-        "/OUT:vsqlite++.dll",
-        "/IMPLIB:vsqlitepp.lib",
-        "/PDB:vsqlitepp.pdb"
-    )
-    $debugDll = Invoke-LoggedCommand -Label "vsqlitepp debug shared build" -FilePath "cl.exe" -WorkingDirectory $buildDbg -AllowFailure -Arguments $vsqliteDebugSharedArgs
-    $debugSharedReady = (Test-Path -LiteralPath (Join-Path $buildDbg "vsqlite++.dll") -PathType Leaf) -and
-        (Test-Path -LiteralPath (Join-Path $buildDbg "vsqlitepp.lib") -PathType Leaf)
-
-    if ($debugDll.ExitCode -ne 0 -or -not $debugSharedReady) {
-        Write-Warn "Shared debug build did not produce the expected vsqlitepp artifacts, falling back to a static library."
+    $debugObjects = @()
+    foreach ($source in $sourceCandidates) {
+        $objectPath = Join-Path $buildDbg ($source.BaseName + ".obj")
+        $responsePath = Join-Path $buildDbg ($source.BaseName + ".rsp")
         $vsqliteDebugCompileArgs = @(
-            "/nologo", "/Od", "/MDd", "/EHsc", "/Zi", "/c"
-        ) + $includeArgs + $sourceArgs
-        Invoke-LoggedCommand -Label "vsqlitepp debug compile" -FilePath "cl.exe" -WorkingDirectory $buildDbg -Arguments $vsqliteDebugCompileArgs | Out-Null
-        $objects = @(Get-ChildItem -Path $buildDbg -Filter *.obj | ForEach-Object { $_.FullName })
-        $vsqliteDebugLibArgs = @("/NOLOGO", "/OUT:vsqlitepp.lib") + $objects
-        Invoke-LoggedCommand -Label "vsqlitepp debug lib" -FilePath "lib.exe" -WorkingDirectory $buildDbg -Arguments $vsqliteDebugLibArgs | Out-Null
+            "/nologo", "/Od", "/MDd", "/EHsc", "/Zi", "/c",
+            ('/Fo"{0}"' -f $objectPath)
+        ) + $includeArgs + @(('"{0}"' -f $source.FullName))
+        Set-Content -LiteralPath $responsePath -Value ($vsqliteDebugCompileArgs -join [Environment]::NewLine) -Encoding ascii
+        Invoke-LoggedCommand -Label ("vsqlitepp debug compile {0}" -f $source.Name) -FilePath "cl.exe" -WorkingDirectory $buildDbg -Arguments @("@$responsePath") | Out-Null
+        $debugObjects += $objectPath
     }
+    if ($debugObjects.Count -ne $sourceCandidates.Count) {
+        throw "vsqlitepp debug compile did not produce the expected number of object files."
+    }
+    $debugLibResponsePath = Join-Path $buildDbg "vsqlitepp.rsp"
+    $vsqliteDebugLibArgs = @('/NOLOGO', '/OUT:"vsqlitepp.lib"') + @($debugObjects | ForEach-Object { ('"{0}"' -f $_) })
+    Set-Content -LiteralPath $debugLibResponsePath -Value ($vsqliteDebugLibArgs -join [Environment]::NewLine) -Encoding ascii
+    Invoke-LoggedCommand -Label "vsqlitepp debug lib" -FilePath "lib.exe" -WorkingDirectory $buildDbg -Arguments @("@$debugLibResponsePath") | Out-Null
 
-    if (Test-Path -LiteralPath (Join-Path $buildRel "vsqlite++.dll")) {
-        Copy-Item -LiteralPath (Join-Path $buildRel "vsqlite++.dll") -Destination (Join-Path $script:BundleDir "lib\vsqlite++.dll") -Force
-        Copy-Item -LiteralPath (Join-Path $buildRel "vsqlitepp.lib") -Destination (Join-Path $script:BundleDir "lib\vsqlitepp.lib") -Force
-        Copy-Item -LiteralPath (Join-Path $buildRel "vsqlitepp.pdb") -Destination (Join-Path $script:BundleDir "lib\vsqlitepp.pdb") -Force -ErrorAction SilentlyContinue
-    }
-    else {
-        Copy-Item -LiteralPath (Join-Path $buildRel "vsqlitepp.lib") -Destination (Join-Path $script:BundleDir "lib\vsqlitepp.lib") -Force
-    }
-
-    if (Test-Path -LiteralPath (Join-Path $buildDbg "vsqlite++.dll")) {
-        Copy-Item -LiteralPath (Join-Path $buildDbg "vsqlite++.dll") -Destination (Join-Path $script:BundleDir "debug\lib\vsqlite++.dll") -Force
-        Copy-Item -LiteralPath (Join-Path $buildDbg "vsqlitepp.lib") -Destination (Join-Path $script:BundleDir "debug\lib\vsqlitepp.lib") -Force
-        Copy-Item -LiteralPath (Join-Path $buildDbg "vsqlitepp.pdb") -Destination (Join-Path $script:BundleDir "debug\lib\vsqlitepp.pdb") -Force -ErrorAction SilentlyContinue
-    }
-    else {
-        Copy-Item -LiteralPath (Join-Path $buildDbg "vsqlitepp.lib") -Destination (Join-Path $script:BundleDir "debug\lib\vsqlitepp.lib") -Force
-    }
+    Copy-Item -LiteralPath (Join-Path $buildRel "vsqlitepp.lib") -Destination (Join-Path $script:BundleDir "lib\vsqlitepp.lib") -Force
+    Copy-Item -LiteralPath (Join-Path $buildDbg "vsqlitepp.lib") -Destination (Join-Path $script:BundleDir "debug\lib\vsqlitepp.lib") -Force
 
     Write-Ok "vsqlitepp headers and libraries staged."
 }
@@ -2076,7 +2568,9 @@ function Build-Python {
         throw "Python PCbuild directory not found: $pcBuild"
     }
 
-    Set-Content -LiteralPath (Join-Path $pcBuild "MSBuild.rsp") -Value "/p:PlatformToolset=v143"
+    Ensure-PythonSourceArchiveCompatibilityPatch -SourcePath $sourcePath
+    $pythonPlatformToolset = Resolve-VsPlatformToolset -ResolvedVsPath $script:VsPath
+    Set-Content -LiteralPath (Join-Path $pcBuild "MSBuild.rsp") -Value ("/p:PlatformToolset={0}" -f $pythonPlatformToolset)
 
     Invoke-LoggedCommand -Label "python release build" -FilePath (Join-Path $pcBuild "build.bat") -Arguments @("-c", "Release", "-p", "x64", "-t", "Build") -WorkingDirectory $pcBuild | Out-Null
     Invoke-LoggedCommand -Label "python debug build" -FilePath (Join-Path $pcBuild "build.bat") -Arguments @("-c", "Debug", "-p", "x64", "-t", "Build") -WorkingDirectory $pcBuild | Out-Null
@@ -2156,7 +2650,7 @@ function Build-MySQLServer {
 
     $commonArgs = @(
         "-S", $sourcePath,
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DBISON_EXECUTABLE=$bisonExe",
         "-DDOWNLOAD_BOOST=1",
@@ -2176,8 +2670,7 @@ function Build-MySQLServer {
         (Join-Path $script:BundleDir "lib"),
         (Join-Path $script:BundleDir "bin")
     ) -Action {
-        Invoke-LoggedCommand -Label "mysql build release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--build", $buildRel, "--target", "mysqlclient", "libmysql", "mysql", "mysqldump", "--config", "RelWithDebInfo", "--parallel", $Jobs) | Out-Null
-        Invoke-LoggedCommand -Label "mysql install release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--install", $buildRel, "--config", "RelWithDebInfo", "--prefix", $stageRel) | Out-Null
+        Invoke-LoggedCommand -Label "mysql build release" -FilePath "cmake" -WorkingDirectory $buildRel -Arguments @("--build", $buildRel, "--target", "mysqlclient", "libmysql", "mysql", "mysqldump", "INFO_BIN", "INFO_SRC", "--config", "RelWithDebInfo", "--parallel", $Jobs) | Out-Null
     }
 
     $mysqlConfigureDebugArgs = @("-B", $buildDbg) + $commonArgs + @("-DCMAKE_INSTALL_PREFIX=$stageDbg")
@@ -2187,8 +2680,7 @@ function Build-MySQLServer {
         (Join-Path $script:BundleDir "lib"),
         (Join-Path $script:BundleDir "bin")
     ) -Action {
-        Invoke-LoggedCommand -Label "mysql build debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--build", $buildDbg, "--target", "mysqlclient", "libmysql", "mysql", "mysqldump", "--config", "Debug", "--parallel", $Jobs) | Out-Null
-        Invoke-LoggedCommand -Label "mysql install debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--install", $buildDbg, "--config", "Debug", "--prefix", $stageDbg) | Out-Null
+        Invoke-LoggedCommand -Label "mysql build debug" -FilePath "cmake" -WorkingDirectory $buildDbg -Arguments @("--build", $buildDbg, "--target", "mysqlclient", "libmysql", "mysql", "mysqldump", "INFO_BIN", "INFO_SRC", "--config", "Debug", "--parallel", $Jobs) | Out-Null
     }
 
     $mysqlIncludeDir = Join-Path $script:BundleDir "include\mysql"
@@ -2257,7 +2749,7 @@ function Build-ConnectorCpp {
 
     $commonArgs = @(
         "-S", (Join-Path $sourcePath "jdbc"),
-        "-G", $Generator,
+        "-G", $script:ResolvedGenerator,
         "-A", "x64",
         "-DWITH_TESTS=OFF",
         "-DMYSQL_INCLUDE_DIR=$mysqlHeaders",
@@ -2341,9 +2833,122 @@ function Get-SelectedDependencies {
     return $selected
 }
 
+function Test-DependencyArchiveNeedsTar {
+    param([pscustomobject]$Dependency)
+
+    $sources = @()
+    if ($Dependency.PSObject.Properties["Urls"]) {
+        $sources = @($Dependency.Urls)
+    }
+    elseif ($Dependency.PSObject.Properties["Url"]) {
+        $sources = @($Dependency.Url)
+    }
+
+    foreach ($source in $sources) {
+        if ([string]::IsNullOrWhiteSpace($source)) {
+            continue
+        }
+
+        $candidate = $source
+        if ($candidate -match '^[a-zA-Z][a-zA-Z0-9+.-]*://') {
+            try {
+                $candidate = ([Uri]$candidate).AbsolutePath
+            }
+            catch {
+                $candidate = $source
+            }
+        }
+
+        if ($candidate -match '\.(tar\.gz|tgz|tar\.xz|txz|tar\.bz2|tbz2|tar)$') {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Get-RequiredHostTools {
+    param([pscustomobject[]]$Dependencies)
+
+    $required = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+
+    foreach ($dependency in $Dependencies) {
+        switch ($dependency.Type) {
+            "openssl" {
+                [void]$required.Add("perl")
+                [void]$required.Add("nasm")
+            }
+            "zlib" { [void]$required.Add("cmake") }
+            "libxml2" { [void]$required.Add("cmake") }
+            "cairo" {
+                [void]$required.Add("meson")
+                [void]$required.Add("ninja")
+            }
+            "libzip" { [void]$required.Add("cmake") }
+            "antlr4" { [void]$required.Add("cmake") }
+            "libssh" { [void]$required.Add("cmake") }
+            "proj" { [void]$required.Add("cmake") }
+            "gdal" { [void]$required.Add("cmake") }
+            "mysql" { [void]$required.Add("cmake") }
+            "connector-cpp" { [void]$required.Add("cmake") }
+        }
+
+        if (-not $BuildOnly -and (Test-DependencyArchiveNeedsTar -Dependency $dependency)) {
+            [void]$required.Add("tar")
+        }
+    }
+
+    return @($required | Sort-Object)
+}
+
+function Get-RequiredVsTools {
+    param([pscustomobject[]]$Dependencies)
+
+    if ($DownloadOnly) {
+        return @()
+    }
+
+    $required = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+
+    foreach ($dependency in $Dependencies) {
+        switch ($dependency.Type) {
+            "openssl" {
+                [void]$required.Add("nmake.exe")
+            }
+            "zlib" {
+                [void]$required.Add("cl.exe")
+                [void]$required.Add("lib.exe")
+            }
+            "sqlite" {
+                [void]$required.Add("cl.exe")
+                [void]$required.Add("lib.exe")
+            }
+            "vsqlitepp" {
+                [void]$required.Add("cl.exe")
+                [void]$required.Add("lib.exe")
+            }
+            "python" {
+                [void]$required.Add("cmd.exe")
+            }
+            "htmlrenderer" {
+                [void]$required.Add("MSBuild.exe")
+            }
+            default {
+                if ($dependency.Type -in @("libxml2", "cairo", "libzip", "antlr4", "libssh", "proj", "gdal", "mysql", "connector-cpp")) {
+                    [void]$required.Add("MSBuild.exe")
+                }
+            }
+        }
+    }
+
+    return @($required | Sort-Object)
+}
+
 function Check-HostTools {
+    param([pscustomobject[]]$Dependencies)
+
     Write-Section "Host Tools"
-    $required = @("cmake", "tar", "perl", "nasm", "meson", "ninja")
+    $required = @(Get-RequiredHostTools -Dependencies $Dependencies)
     $missing = @()
     foreach ($tool in $required) {
         if (Test-CommandAvailable $tool) {
@@ -2359,13 +2964,16 @@ function Check-HostTools {
         throw ("Missing required tools: {0}" -f ($missing -join ", "))
     }
 
-    Enter-VsBuildEnvironment
-    foreach ($tool in @("cl.exe", "lib.exe", "cmd.exe", "nmake.exe")) {
-        if (Test-CommandAvailable $tool) {
-            Write-Ok ("{0,-10} {1}" -f $tool, (Get-Command $tool).Source)
-        }
-        else {
-            throw "Required Visual Studio tool not found after loading the build environment: $tool"
+    $requiredVsTools = @(Get-RequiredVsTools -Dependencies $Dependencies)
+    if ($requiredVsTools.Count -gt 0) {
+        Enter-VsBuildEnvironment
+        foreach ($tool in $requiredVsTools) {
+            if (Test-CommandAvailable $tool) {
+                Write-Ok ("{0,-10} {1}" -f $tool, (Get-Command $tool).Source)
+            }
+            else {
+                throw "Required Visual Studio tool not found after loading the build environment: $tool"
+            }
         }
     }
 }
@@ -2403,6 +3011,7 @@ function Process-Dependency {
         "libssh" { Build-LibSsh $Dependency }
         "proj" { Build-Proj $Dependency }
         "gdal" { Build-Gdal $Dependency }
+        "htmlrenderer" { Build-HtmlRenderer $Dependency }
         "header-only" {
             switch ($Dependency.Name) {
                 "boost" { Build-BoostHeaders $Dependency }
@@ -2432,7 +3041,10 @@ function Show-Configuration([pscustomobject[]]$Dependencies) {
     Write-Info ("Bundle directory : {0}" -f $script:BundleDir)
     Write-Info ("Downloads        : {0}" -f $script:DownloadRoot)
     Write-Info ("Build root       : {0}" -f $script:BuildRoot)
-    Write-Info ("Generator        : {0}" -f $Generator)
+    Write-Info ("Generator        : {0}" -f $script:ResolvedGenerator)
+    if ($script:VsPath) {
+        Write-Info ("Visual Studio    : {0}" -f $script:VsPath)
+    }
     Write-Info ("Jobs             : {0}" -f $Jobs)
     if ($Clean) { Write-Warn "--Clean enabled: previous build outputs may be removed." }
     if ($DownloadOnly) { Write-Info "Mode             : download only" }
@@ -2478,6 +3090,8 @@ function Main {
     try {
         Write-Banner
         Initialize-BundleLayout
+        $script:VsPath = Get-VSInstallPath
+        $script:ResolvedGenerator = Resolve-CMakeGenerator -ResolvedVsPath $script:VsPath
 
         if ($Clean) {
             Write-Section "Cleaning"
@@ -2492,7 +3106,7 @@ function Main {
 
         $dependencies = @(Get-SelectedDependencies)
         Show-Configuration -Dependencies $dependencies
-        Check-HostTools
+        Check-HostTools -Dependencies $dependencies
 
         Write-Section "Processing Dependencies"
         $index = 0

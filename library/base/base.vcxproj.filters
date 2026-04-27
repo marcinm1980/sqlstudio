@@ -183,5 +183,8 @@
     <ClInclude Include="base\symbol-info.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="threading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,0 +1,40 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  copilot-setup-steps:
+    runs-on: windows-2022
+    permissions: {}
+    timeout-minutes: 30
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install command-line build tools
+        shell: pwsh
+        run: |
+          choco install --yes cmake strawberryperl nasm
+          python -m pip install --disable-pip-version-check --upgrade pip
+          python -m pip install --disable-pip-version-check meson ninja
+
+          $chocoBin = Join-Path $env:ChocolateyInstall "bin"
+          $pythonScripts = Join-Path $env:pythonLocation "Scripts"
+
+          Add-Content -Path $env:GITHUB_PATH -Value $chocoBin
+          Add-Content -Path $env:GITHUB_PATH -Value $pythonScripts
+
+          $env:PATH = "$chocoBin;$pythonScripts;$env:PATH"
+
+          foreach ($tool in "cmake", "perl", "nasm", "meson", "ninja") {
+            Get-Command $tool | Out-Null
+          }

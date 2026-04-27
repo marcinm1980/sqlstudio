@@ -281,7 +281,6 @@
     <ClCompile Include="sqlide\sql_script_run_wizard.cpp" />
     <ClCompile Include="sqlide\table_inserts_loader_be.cpp" />
     <ClCompile Include="sqlide\var_grid_model_be.cpp" />
-    <ClCompile Include="sqlite_modern_cpp_nil.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -437,7 +436,6 @@
     <ClInclude Include="sqlide\sql_script_run_wizard.h" />
     <ClInclude Include="sqlide\table_inserts_loader_be.h" />
     <ClInclude Include="sqlide\var_grid_model_be.h" />
-    <ClInclude Include="sqlite_modern_cpp_nil.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="wbcanvas\badge_figure.h" />
     <ClInclude Include="wbcanvas\base_bridge.h" />

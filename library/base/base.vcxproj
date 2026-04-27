@@ -213,6 +213,7 @@
     <ClInclude Include="base\wb_memory.h" />
     <ClInclude Include="base\xml_functions.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="threading.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

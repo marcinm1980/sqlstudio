@@ -20,6 +20,8 @@
 namespace mysql_parser
 {
 
+typedef void* gptr;
+
 //#ifdef	__cplusplus
 //extern "C" {
 //#endif

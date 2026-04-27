@@ -2425,7 +2425,7 @@ namespace grt {
 
     // strip namespace::
     std::string::size_type p = name.rfind(':');
-    if (p != std::string::npos)
+    if ( p != std::string::npos)
       return name.substr(p + 1);
 
     return name;

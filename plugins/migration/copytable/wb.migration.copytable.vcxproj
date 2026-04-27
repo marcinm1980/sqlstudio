@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -52,6 +52,7 @@
     <Import Project="..\..\..\vsprops\wb_libxml_inc.props" />
     <Import Project="..\..\..\vsprops\wb_mysql.props" />
     <Import Project="..\..\..\vsprops\wb_cpp_std.props" />
+    <Import Project="..\..\..\vsprops\wb_base.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -61,6 +62,7 @@
     <Import Project="..\..\..\vsprops\wb_libxml_inc.props" />
     <Import Project="..\..\..\vsprops\wb_mysql.props" />
     <Import Project="..\..\..\vsprops\wb_cpp_std.props" />
+    <Import Project="..\..\..\vsprops\wb_base.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -70,6 +72,7 @@
     <Import Project="..\..\..\vsprops\wb_libxml_inc.props" />
     <Import Project="..\..\..\vsprops\wb_mysql.props" />
     <Import Project="..\..\..\vsprops\wb_cpp_std.props" />
+    <Import Project="..\..\..\vsprops\wb_base.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -100,7 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>$(SolutionDir)\backend\wbprivate;$(SolutionDir)\library\ssh;$(SolutionDir)\library\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\backend\wbprivate;$(SolutionDir)\library\ssh;$(SolutionDir)\library\base;$(SolutionDir)library\sql.parser\source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/w34296 %(AdditionalOptions)</AdditionalOptions>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -120,7 +123,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\backend\wbprivate;$(SolutionDir)\library\ssh;$(SolutionDir)\library\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\backend\wbprivate;$(SolutionDir)\library\ssh;$(SolutionDir)\library\base;$(SolutionDir)library\sql.parser\source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/w34296 %(AdditionalOptions)</AdditionalOptions>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -141,7 +144,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\backend\wbprivate;$(SolutionDir)\library\ssh;$(SolutionDir)\library\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\backend\wbprivate;$(SolutionDir)\library\ssh;$(SolutionDir)\library\base;$(SolutionDir)library\sql.parser\source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/w34296 %(AdditionalOptions)</AdditionalOptions>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -182,3 +185,4 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
+

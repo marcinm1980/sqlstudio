@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -45,23 +45,26 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\vsprops\wb_cpp_std.props" />
+    <Import Project="..\..\..\vsprops\wb_base.props" />
     <Import Project="..\..\..\vsprops\wb_boost.props" />
     <Import Project="..\..\..\vsprops\wb_libxml.props" />
-    <Import Project="..\..\..\vsprops\wb_libxml_inc.props" />
+    <Import Project="..\..\..\vsprops\wb_glib.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\vsprops\wb_cpp_std.props" />
+    <Import Project="..\..\..\vsprops\wb_base.props" />
     <Import Project="..\..\..\vsprops\wb_boost.props" />
     <Import Project="..\..\..\vsprops\wb_libxml.props" />
-    <Import Project="..\..\..\vsprops\wb_libxml_inc.props" />
+    <Import Project="..\..\..\vsprops\wb_glib.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_OSS|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\vsprops\wb_cpp_std.props" />
+    <Import Project="..\..\..\vsprops\wb_base.props" />
     <Import Project="..\..\..\vsprops\wb_boost.props" />
     <Import Project="..\..\..\vsprops\wb_libxml.props" />
-    <Import Project="..\..\..\vsprops\wb_libxml_inc.props" />
+    <Import Project="..\..\..\vsprops\wb_glib.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -86,7 +89,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;SCI_LEXER;DECL_SCI_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\include;..\lexlib;..\src;..\..\..\backend\wbpublic\objimpl;..\..\..\generated;..\..\..\library\grt\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\library\base;$(ProjectDir)..\..\..\backend\wbpublic;..\include;..\lexlib;..\src;..\..\..\backend\wbpublic\objimpl;..\..\..\generated;..\..\..\library\grt\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -114,7 +117,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;SCI_LEXER;DECL_SCI_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\include;..\lexlib;..\src;..\..\..\backend\wbpublic\objimpl;..\..\..\generated;..\..\..\library\grt\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\library\base;$(ProjectDir)..\..\..\backend\wbpublic;..\include;..\lexlib;..\src;..\..\..\backend\wbpublic\objimpl;..\..\..\generated;..\..\..\library\grt\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -138,7 +141,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;SCI_LEXER;DECL_SCI_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\include;..\lexlib;..\src;..\..\..\backend\wbpublic\objimpl;..\..\..\generated;..\..\..\library\grt\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\library\base;$(ProjectDir)..\..\..\backend\wbpublic;..\include;..\lexlib;..\src;..\..\..\backend\wbpublic\objimpl;..\..\..\generated;..\..\..\library\grt\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -374,6 +377,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\win32\ScintRes.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\library\base.wr\base.wr.vcxproj">
+      <Project>{456d822c-724a-412c-b0eb-9ec88378decb}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
