@@ -1250,10 +1250,15 @@ function Restore-MesonInstallOutputs {
         return
     }
 
-    $installedMap = Get-Content -LiteralPath $installedJson -Raw | ConvertFrom-Json -AsHashtable
+        $installedMap = Get-Content -LiteralPath $installedJson -Raw | ConvertFrom-Json
+        if ($null -eq $installedMap) {
+            return
+        }
+
     $restoredCount = 0
-    foreach ($sourcePath in $installedMap.Keys) {
-        $destinationPath = [string]$installedMap[$sourcePath]
+        foreach ($installedEntry in $installedMap.PSObject.Properties) {
+            $sourcePath = [string]$installedEntry.Name
+            $destinationPath = [string]$installedEntry.Value
         if (-not $destinationPath.StartsWith($StageDir, [System.StringComparison]::OrdinalIgnoreCase)) {
             continue
         }
@@ -1316,6 +1321,39 @@ function Ensure-PythonSourceArchiveCompatibilityPatch {
         Set-Content -LiteralPath $sbomGenerator -Value $updated -NoNewline
         Write-Warn "Patched Python generate_sbom.py for source archive builds without a git checkout"
     }
+}
+
+function Patch-CairoGlibMkenumsCommands {
+    param(
+        [Parameter(Mandatory)] [string]$BuildDir,
+        [Parameter(Mandatory)] [string]$BuildNinjaContent
+    )
+
+    $pattern = '(?m)^(?<indent>\s*)COMMAND = "(?<meson>[^"]+)" "--internal" "exe" "--capture" "(?<output>subprojects\\glib-2\.74\.0\\gio\\gioenumtypes\.(?:c|h))" "--" "(?<python>[^"]+)" "(?<script>subprojects/glib-2\.74\.0/gobject/glib-mkenums)" (?<args>.+)$'
+    $matches = [regex]::Matches($BuildNinjaContent, $pattern)
+    if ($matches.Count -eq 0) {
+        return $BuildNinjaContent
+    }
+
+    $updatedContent = $BuildNinjaContent
+    foreach ($match in $matches) {
+        $outputRelativePath = $match.Groups['output'].Value
+        $responseAbsolutePath = Join-Path $BuildDir ($outputRelativePath + '.rsp')
+        $responseRelativePath = (($outputRelativePath + '.rsp') -replace '\\', '/')
+        Ensure-Directory (Split-Path -Parent $responseAbsolutePath)
+        Set-Content -LiteralPath $responseAbsolutePath -Value $match.Groups['args'].Value -Encoding ascii -NoNewline
+
+        $replacement = '{0}COMMAND = "{1}" "--internal" "exe" "--capture" "{2}" "--" "{3}" "{4}" "@{5}"' -f `
+            $match.Groups['indent'].Value,
+            $match.Groups['meson'].Value,
+            $outputRelativePath,
+            $match.Groups['python'].Value,
+            $match.Groups['script'].Value,
+            $responseRelativePath
+        $updatedContent = $updatedContent.Replace($match.Value, $replacement)
+    }
+
+    return $updatedContent
 }
 
 function Get-SqliteHeaderRoot {
@@ -1909,6 +1947,7 @@ except ModuleNotFoundError:
         $releaseSanitizedBuildNinjaContent = $releaseSanitizedBuildNinjaContent -replace [regex]::Escape('"C:/msys64/mingw64/bin/../lib/../lib/libffi.a"'), ('"{0}"' -f (($libffiImportLibPath) -replace "\\", "/"))
         $releaseSanitizedBuildNinjaContent = $releaseSanitizedBuildNinjaContent -replace '"[A-Za-z]:/[^"\r\n]*/python\.exe"', ('"{0}"' -f $normalizedPythonPath)
         $releaseSanitizedBuildNinjaContent = $releaseSanitizedBuildNinjaContent -replace '[A-Za-z]\$:/[^ \r\n"]*/python\.exe', $ninjaPythonPath
+        $releaseSanitizedBuildNinjaContent = Patch-CairoGlibMkenumsCommands -BuildDir $layout.BuildRelease -BuildNinjaContent $releaseSanitizedBuildNinjaContent
         if ($releaseSanitizedBuildNinjaContent -ne $releaseBuildNinjaContent) {
             Set-Content -LiteralPath $releaseBuildNinja -Value $releaseSanitizedBuildNinjaContent -Encoding ascii -NoNewline
             Write-Warn "Sanitized Cairo release build.ninja for MSVC linker and bundled zlib/libffi/python usage"
@@ -1927,6 +1966,7 @@ except ModuleNotFoundError:
         $debugSanitizedBuildNinjaContent = $debugSanitizedBuildNinjaContent -replace [regex]::Escape('"C:/msys64/mingw64/bin/../lib/../lib/libffi.a"'), ('"{0}"' -f (($libffiImportLibPath) -replace "\\", "/"))
         $debugSanitizedBuildNinjaContent = $debugSanitizedBuildNinjaContent -replace '"[A-Za-z]:/[^"\r\n]*/python\.exe"', ('"{0}"' -f $normalizedPythonPath)
         $debugSanitizedBuildNinjaContent = $debugSanitizedBuildNinjaContent -replace '[A-Za-z]\$:/[^ \r\n"]*/python\.exe', $ninjaPythonPath
+        $debugSanitizedBuildNinjaContent = Patch-CairoGlibMkenumsCommands -BuildDir $layout.BuildDebug -BuildNinjaContent $debugSanitizedBuildNinjaContent
         if ($debugSanitizedBuildNinjaContent -ne $debugBuildNinjaContent) {
             Set-Content -LiteralPath $debugBuildNinja -Value $debugSanitizedBuildNinjaContent -Encoding ascii -NoNewline
             Write-Warn "Sanitized Cairo debug build.ninja for MSVC linker and bundled zlib/libffi/python usage"
@@ -2572,10 +2612,49 @@ function Build-Python {
     $pythonPlatformToolset = Resolve-VsPlatformToolset -ResolvedVsPath $script:VsPath
     Set-Content -LiteralPath (Join-Path $pcBuild "MSBuild.rsp") -Value ("/p:PlatformToolset={0}" -f $pythonPlatformToolset)
 
+    $msbuildExe = Get-Command "MSBuild.exe" -ErrorAction SilentlyContinue
+    if ($msbuildExe) {
+        $msbuildPath = $msbuildExe.Source
+    }
+    else {
+        $vsPath = Get-VSInstallPath
+        $msbuildPath = Join-Path $vsPath "MSBuild\Current\Bin\MSBuild.exe"
+        if (-not (Test-Path -LiteralPath $msbuildPath -PathType Leaf)) {
+            throw "MSBuild.exe was not found under $vsPath"
+        }
+    }
+
     Invoke-LoggedCommand -Label "python release build" -FilePath (Join-Path $pcBuild "build.bat") -Arguments @("-c", "Release", "-p", "x64", "-t", "Build") -WorkingDirectory $pcBuild | Out-Null
     Invoke-LoggedCommand -Label "python debug build" -FilePath (Join-Path $pcBuild "build.bat") -Arguments @("-c", "Debug", "-p", "x64", "-t", "Build") -WorkingDirectory $pcBuild | Out-Null
 
     $amd64Dir = Join-Path $pcBuild "amd64"
+    $pythonExecutableBuilds = @(
+        [pscustomobject]@{ Label = "python release executable"; Project = "python.vcxproj"; Configuration = "Release"; Expected = "python.exe" },
+        [pscustomobject]@{ Label = "python debug executable"; Project = "python.vcxproj"; Configuration = "Debug"; Expected = "python_d.exe" },
+        [pscustomobject]@{ Label = "pythonw release executable"; Project = "pythonw.vcxproj"; Configuration = "Release"; Expected = "pythonw.exe" },
+        [pscustomobject]@{ Label = "pythonw debug executable"; Project = "pythonw.vcxproj"; Configuration = "Debug"; Expected = "pythonw_d.exe" }
+    )
+    foreach ($pythonExecutableBuild in $pythonExecutableBuilds) {
+        $expectedExecutable = Join-Path $amd64Dir $pythonExecutableBuild.Expected
+        if (Test-Path -LiteralPath $expectedExecutable -PathType Leaf) {
+            continue
+        }
+
+        Invoke-LoggedCommand -Label $pythonExecutableBuild.Label -FilePath $msbuildPath -Arguments @(
+            (Join-Path $pcBuild $pythonExecutableBuild.Project),
+            "/t:Build",
+            "/p:Configuration=$($pythonExecutableBuild.Configuration)",
+            "/p:Platform=x64",
+            "/p:PlatformToolset=$pythonPlatformToolset",
+            "/v:m",
+            "/nologo"
+        ) -WorkingDirectory $pcBuild | Out-Null
+
+        if (-not (Test-Path -LiteralPath $expectedExecutable -PathType Leaf)) {
+            throw "Python executable was not produced: $expectedExecutable"
+        }
+    }
+
     $pythonDest = Join-Path $script:BundleDir "python"
     Ensure-Directory $pythonDest
     Ensure-Directory (Join-Path $pythonDest "libs")
