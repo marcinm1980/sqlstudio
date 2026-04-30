@@ -1,4 +1,8 @@
-﻿namespace MySQL.GUI.MySqlStudio
+﻿/*
+ * Copyright (c) 2026 dev4fun. All rights reserved.
+ */
+
+namespace MySQL.GUI.MySqlStudio
 {
     partial class SqlIdeForm
     {

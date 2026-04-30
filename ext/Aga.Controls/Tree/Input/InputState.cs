@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2026 dev4fun. All rights reserved.
+ */
+
+using System;
 using System.Windows.Forms;
 namespace Aga.Controls.Tree
 {

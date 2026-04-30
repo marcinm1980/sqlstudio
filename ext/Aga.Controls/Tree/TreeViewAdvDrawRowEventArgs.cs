@@ -1,3 +1,7 @@
+﻿/*
+ * Copyright (c) 2026 dev4fun. All rights reserved.
+ */
+
 using System;
 
 // by mikel

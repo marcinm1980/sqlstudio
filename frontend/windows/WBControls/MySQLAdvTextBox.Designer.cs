@@ -1,3 +1,7 @@
+﻿/*
+ * Copyright (c) 2026 dev4fun. All rights reserved.
+ */
+
 namespace MySQL.Utilities
 {
   partial class MySQLAdvTextBox

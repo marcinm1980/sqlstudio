@@ -1,4 +1,5 @@
-/*
+﻿/*
+ * Copyright (c) 2026 dev4fun. All rights reserved.
  * Copyright (c) 2009, 2018, Oracle and/or its affiliates. All rights reserved.
 
  *

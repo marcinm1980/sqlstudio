@@ -1,3 +1,7 @@
+﻿/*
+ * Copyright (c) 2026 dev4fun. All rights reserved.
+ */
+
 #region Java Info
 /**
  * Class GifDecoder - Decodes a GIF file into one or more frames.
