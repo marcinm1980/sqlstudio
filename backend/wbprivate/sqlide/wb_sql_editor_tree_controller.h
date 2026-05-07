@@ -129,11 +129,7 @@ public:
   std::string generate_alter_script(const db_mgmt_RdbmsRef &rdbms, db_DatabaseObjectRef db_object,
                                     std::string algorithm, std::string lock);
 
-private:
-  grt::StringRef do_fetch_live_schema_contents(std::weak_ptr<SqlEditorTreeController> self_ptr,
-                                               const std::string &schema_name,
-                                               wb::LiveSchemaTree::NewSchemaContentArrivedSlot arrived_slot);
-  wb::LiveSchemaTree::ObjectType fetch_object_type(const std::string &schema_name, const std::string &obj_name);
+public:
   void fetch_column_data(const std::string &schema_name, const std::string &obj_name,
                          wb::LiveSchemaTree::ObjectType type,
                          const wb::LiveSchemaTree::NodeChildrenUpdaterSlot &updater_slot);
@@ -146,6 +142,12 @@ private:
   void fetch_foreign_key_data(const std::string &schema_name, const std::string &obj_name,
                               wb::LiveSchemaTree::ObjectType type,
                               const wb::LiveSchemaTree::NodeChildrenUpdaterSlot &updater_slot);
+
+private:
+  grt::StringRef do_fetch_live_schema_contents(std::weak_ptr<SqlEditorTreeController> self_ptr,
+                                               const std::string &schema_name,
+                                               wb::LiveSchemaTree::NewSchemaContentArrivedSlot arrived_slot);
+  wb::LiveSchemaTree::ObjectType fetch_object_type(const std::string &schema_name, const std::string &obj_name);
 
   grt::StringRef do_fetch_data_for_filter(std::weak_ptr<SqlEditorTreeController> self_ptr,
                                           const std::string &schema_filter, const std::string &object_filter,

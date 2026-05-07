@@ -25,6 +25,8 @@
 
 #include "gtest/gtest.h"
 
+#include "structs.db.mgmt.h"
+#include "structs.db.query.h"
 #include "mysql_routinegroup_editor.h"
 #include "model_mockup.h"
 

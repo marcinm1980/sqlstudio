@@ -40,6 +40,11 @@
 
 #include "gtest/gtest.h"
 
+// Compatibility macro for older versions of Google Test that don't have GTEST_SKIP
+#ifndef GTEST_SKIP
+#define GTEST_SKIP() return
+#endif
+
 #define DATABASE_TO_USE "USE test"
 
 static bool populate_test_table(std::unique_ptr<sql::Statement> &stmt) {

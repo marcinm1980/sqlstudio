@@ -196,9 +196,6 @@
     <ClCompile Include="tests\backend\wbpublic\sqlide\sql_editor_be_autocomplete_specs.cpp">
       <Filter>tests\backend\wbpublic\sqlide</Filter>
     </ClCompile>
-    <ClCompile Include="tests\casmine_specs.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
     <ClCompile Include="tests\grt_test_helpers.cpp">
       <Filter>tests</Filter>
     </ClCompile>
@@ -388,8 +385,7 @@
     <ClCompile Include="tests\wb_test_helpers.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
+    <ClCompile Include="test_context.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\context.h">
@@ -549,6 +545,7 @@
     <ClInclude Include="tests\wb_test_helpers.h">
       <Filter>tests</Filter>
     </ClInclude>
+    <ClInclude Include="test_context.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\modules_grt\schema_reporting\res_schema_reporting_test_1.html">
@@ -563,6 +560,5 @@
     <None Include="data\mtemplate\test_result.html">
       <Filter>data\mtemplate</Filter>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

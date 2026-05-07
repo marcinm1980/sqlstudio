@@ -45,7 +45,6 @@
 
 #include "wb_version.h"
 #include "wb_test_helpers.h"
-#include "casmine.h"
 
 
 #undef min

@@ -544,6 +544,16 @@ function Test-DependencyOutputsPresent {
                 @("lib\gdal.lib", "lib\gdal.dll")
             )
         }
+        "googletest" {
+            @(
+                @("include\googletest\gtest\gtest.h"),
+                @("include\googletest\gmock\gmock.h"),
+                @("lib\gtest.lib"),
+                @("lib\gmock.lib"),
+                @("debug\lib\gtest.lib"),
+                @("debug\lib\gmock.lib")
+            )
+        }
         "htmlrenderer" {
             @(
                 @("lib\HtmlRenderer.dll"),
@@ -619,6 +629,7 @@ function Load-DependencyManifest {
         "libssh",
         "proj",
         "gdal",
+        "googletest",
         "htmlrenderer",
         "header-only",
         "sqlite",
@@ -2376,6 +2387,47 @@ function Build-RapidJsonHeaders {
     Write-Ok "RapidJSON headers staged."
 }
 
+function Build-GoogleTest {
+    param([pscustomobject]$Dependency)
+
+    Enter-VsBuildEnvironment
+    $sourcePath = Get-SourceTree $Dependency
+    if ($DownloadOnly) { return }
+
+    $layout = New-DualBuildLayout "googletest"
+    foreach ($path in @($layout.StageRelease, $layout.StageDebug)) {
+        Reset-Directory $path
+    }
+
+    $commonArgs = @(
+        "-DBUILD_GMOCK=ON",
+        "-DINSTALL_GTEST=ON",
+        "-Dgtest_force_shared_crt=ON",
+        "-DBUILD_SHARED_LIBS=OFF"
+    )
+
+    Invoke-CMakeInstallPair -Label "googletest" -SourcePath $sourcePath -Layout $layout -CommonArguments $commonArgs
+
+    $includeDest = Join-Path $script:BundleDir "include\googletest"
+    Reset-Directory $includeDest
+    Copy-DirectoryContent -Source (Join-Path $layout.StageRelease "include") -Destination $includeDest
+
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageRelease "lib"), $layout.BuildRelease) -Patterns @(
+        "gtest.lib",
+        "gmock.lib",
+        "gtest_main.lib",
+        "gmock_main.lib"
+    ) -Destination (Join-Path $script:BundleDir "lib")
+    Copy-MatchingFiles -SearchRoots @((Join-Path $layout.StageDebug "lib"), $layout.BuildDebug) -Patterns @(
+        "gtest.lib",
+        "gmock.lib",
+        "gtest_main.lib",
+        "gmock_main.lib"
+    ) -Destination (Join-Path $script:BundleDir "debug\lib")
+
+    Write-Ok "GoogleTest and Google Mock release and debug libraries staged."
+}
+
 function Build-HtmlRenderer {
     param([pscustomobject]$Dependency)
 
@@ -2968,6 +3020,7 @@ function Get-RequiredHostTools {
             "libssh" { [void]$required.Add("cmake") }
             "proj" { [void]$required.Add("cmake") }
             "gdal" { [void]$required.Add("cmake") }
+            "googletest" { [void]$required.Add("cmake") }
             "mysql" { [void]$required.Add("cmake") }
             "connector-cpp" { [void]$required.Add("cmake") }
         }
@@ -3013,7 +3066,7 @@ function Get-RequiredVsTools {
                 [void]$required.Add("MSBuild.exe")
             }
             default {
-                if ($dependency.Type -in @("libxml2", "cairo", "libzip", "antlr4", "libssh", "proj", "gdal", "mysql", "connector-cpp")) {
+                if ($dependency.Type -in @("libxml2", "cairo", "libzip", "antlr4", "libssh", "proj", "gdal", "googletest", "mysql", "connector-cpp")) {
                     [void]$required.Add("MSBuild.exe")
                 }
             }
@@ -3090,6 +3143,7 @@ function Process-Dependency {
         "libssh" { Build-LibSsh $Dependency }
         "proj" { Build-Proj $Dependency }
         "gdal" { Build-Gdal $Dependency }
+        "googletest" { Build-GoogleTest $Dependency }
         "htmlrenderer" { Build-HtmlRenderer $Dependency }
         "header-only" {
             switch ($Dependency.Name) {

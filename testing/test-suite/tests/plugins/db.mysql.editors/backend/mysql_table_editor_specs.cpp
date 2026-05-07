@@ -27,8 +27,11 @@
 #include "wb_test_helpers.h"
 
 #include "grt.h"
+#include "structs.db.mgmt.h"
+#include "structs.db.query.h"
 #include "mysql_table_editor.h"
 #include "model_mockup.h"
+
 
 using namespace grt;
 using namespace bec;

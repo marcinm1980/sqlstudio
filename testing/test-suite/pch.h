@@ -37,6 +37,7 @@ typedef int ssize_t;
 
 #include <windows.h>
 #include <shellapi.h>
+#undef ERROR  // Windows defines ERROR as 0; this conflicts with antlr4::tree::ParseTreeType::ERROR enum value
 
 #include <stdexcept>
 #include <functional>
@@ -71,6 +72,8 @@ typedef int ssize_t;
 #include <regex>
 
 #include <VersionHelpers.h>
+
+#include "test_context.h"
 
 //#include <boost/optional.hpp>
 //#include <boost/cstdint.hpp>

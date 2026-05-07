@@ -25,22 +25,37 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="..\..\vsprops\wb_base.props" />
     <Import Project="..\..\vsprops\wb_glib.props" />
+    <Import Project="..\..\vsprops\wb_gtest.props" />
     <Import Project="..\..\vsprops\wb_rapidjson.props" />
     <Import Project="..\..\vsprops\wb_cairo_inc.props" />
     <Import Project="..\..\vsprops\wb_cairo.props" />
     <Import Project="..\..\vsprops\wb_cppconn.props" />
     <Import Project="..\..\vsprops\wb_libxml.props" />
+    <Import Project="..\..\vsprops\wb_mysql.props" />
+    <Import Project="..\..\vsprops\wb_antlr4.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="..\..\vsprops\wb_base.props" />
     <Import Project="..\..\vsprops\wb_glib.props" />
+    <Import Project="..\..\vsprops\wb_gtest.props" />
     <Import Project="..\..\vsprops\wb_rapidjson.props" />
     <Import Project="..\..\vsprops\wb_cairo_inc.props" />
     <Import Project="..\..\vsprops\wb_cairo.props" />
     <Import Project="..\..\vsprops\wb_cppconn.props" />
     <Import Project="..\..\vsprops\wb_libxml.props" />
+    <Import Project="..\..\vsprops\wb_mysql.props" />
+    <Import Project="..\..\vsprops\wb_antlr4.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <LinkLibraryDependencies>true</LinkLibraryDependencies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -52,11 +67,15 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\grt\src;$(ProjectDir)core;$(ProjectDir)..\..\library;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\generated\;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\backend\wbprivate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)core;$(ProjectDir)tests;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\library;$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\forms\stub;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\parsers\code-completion;$(ProjectDir)..\..\library\ssh;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\backend\wbpublic\grt;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbprivate\model;$(ProjectDir)..\..\backend\wbprivate\sqlide;$(ProjectDir)..\..\backend\wbprivate\studio;$(ProjectDir)..\..\plugins\db.mysql;$(ProjectDir)..\..\plugins\db.mysql\backend;$(ProjectDir)..\..\plugins\db.mysql.editors\backend;$(ProjectDir)..\..\modules;$(ProjectDir)..\..\modules\db.mysql\src;$(ProjectDir)..\..\modules\db.mysql.sqlparser\src;$(ProjectDir)..\..\ext\scintilla\include;$(ProjectDir)..\..\library\sql.parser\include;$(ProjectDir)..\..\library\sql.parser\source;$(ProjectDir)..\..\generated\grts\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+	</ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>wbprivate.be.lib;wbpublic.be.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration);$(SolutionDir)backend\wbprivate\bin\$(PlatformTarget)\$(Configuration);$(SolutionDir)backend\wbpublic\bin\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -68,11 +87,15 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\library\grt\src;$(ProjectDir)core;$(ProjectDir)..\..\library;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\generated\;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\backend\wbprivate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)core;$(ProjectDir)tests;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\library;$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\forms\stub;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\parsers\code-completion;$(ProjectDir)..\..\library\ssh;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\backend\wbpublic\grt;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbprivate\model;$(ProjectDir)..\..\backend\wbprivate\sqlide;$(ProjectDir)..\..\backend\wbprivate\studio;$(ProjectDir)..\..\plugins\db.mysql;$(ProjectDir)..\..\plugins\db.mysql\backend;$(ProjectDir)..\..\plugins\db.mysql.editors\backend;$(ProjectDir)..\..\modules;$(ProjectDir)..\..\modules\db.mysql\src;$(ProjectDir)..\..\modules\db.mysql.sqlparser\src;$(ProjectDir)..\..\ext\scintilla\include;$(ProjectDir)..\..\library\sql.parser\include;$(ProjectDir)..\..\library\sql.parser\source;$(ProjectDir)..\..\generated\grts\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+	</ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>wbprivate.be.lib;wbpublic.be.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration);$(SolutionDir)backend\wbprivate\bin\$(PlatformTarget)\$(Configuration);$(SolutionDir)backend\wbpublic\bin\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
@@ -131,6 +154,7 @@
     <ClInclude Include="tests\structs.test.h" />
     <ClInclude Include="tests\wb_connection_helpers.h" />
     <ClInclude Include="tests\wb_test_helpers.h" />
+    <ClInclude Include="test_context.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\context.cpp" />
@@ -167,8 +191,6 @@
     <ClCompile Include="tests\backend\wbpublic\grt\tree_model_specs.cpp" />
     <ClCompile Include="tests\backend\wbpublic\sqlide\recordset_specs.cpp" />
     <ClCompile Include="tests\backend\wbpublic\sqlide\sql_editor_be_autocomplete_specs.cpp" />
-    <ClCompile Include="tests\casmine_specs.cpp" />
-    <ClCompile Include="tests\grt_test_helpers.cpp" />
     <ClCompile Include="tests\library\base\commandlineparser_specs.cpp" />
     <ClCompile Include="tests\library\base\config_file_specs.cpp" />
     <ClCompile Include="tests\library\base\fileutilities_specs.cpp" />
@@ -214,7 +236,6 @@
     <ClCompile Include="tests\library\mysql.canvas\mysqlcanvas_specs.cpp" />
     <ClCompile Include="tests\library\parsers\mysql_parser_specs.cpp" />
     <ClCompile Include="tests\library\sql.parser\sqlparser_specs.cpp" />
-    <ClCompile Include="tests\model_mockup.cpp" />
     <ClCompile Include="tests\modules\db.mysql.parser\mysql_parser_module_specs.cpp" />
     <ClCompile Include="tests\modules\db.mysql.parser\parse_datatypes_specs.cpp" />
     <ClCompile Include="tests\modules\db.mysql.sqlparser\mysql_invalid_sql_parser_specs.cpp" />
@@ -228,9 +249,12 @@
     <ClCompile Include="tests\plugins\db.mysql\backend\db_mysql_plugin_specs.cpp" />
     <ClCompile Include="tests\plugins\db.mysql\backend\db_mysql_sql_export_specs.cpp" />
     <ClCompile Include="tests\plugins\db.mysql\backend\model_diff_apply_specs.cpp" />
-    <ClCompile Include="tests\wb_connection_helpers.cpp" />
-    <ClCompile Include="tests\wb_references.cpp" />
-    <ClCompile Include="tests\wb_test_helpers.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="$(ProjectDir)..\..\backend\wbprivate\studio\metaclasses.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ForcedIncludeFiles></ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="test_context.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\backend\wbprivate\wbprivate.be.vcxproj">
@@ -239,8 +263,29 @@
     <ProjectReference Include="..\..\backend\wbpublic\wbpublic.be.vcxproj">
       <Project>{55ee797d-2b76-474b-82d6-1f96f7788af8}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\backend\windows\wbprivate.wr\wbprivate.wr.vcxproj">
+      <Project>{597b7650-63d5-415a-9688-6f75e529e470}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\backend\windows\wbpublic.wr\wbpublic.wr.vcxproj">
+      <Project>{9d8ca378-b2ae-4e1e-9f86-fa01440c57f7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ext\scintilla\vcbuild\Scintilla.vcxproj">
+      <Project>{9a806a71-e3a2-4a17-af1c-507ef72243e2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\frontend\windows\grt.db\grt.db.fe.csproj">
       <Project>{84d94572-ead9-4839-b16b-699a8c499fe5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\frontend\windows\sqlide\sqlide.fe.csproj">
+      <Project>{d2e64e9e-3f39-496f-8ce0-1b2652aecdde}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\frontend\windows\WBPlugins\WBPlugins.csproj">
+      <Project>{960ef7b9-a96a-4290-aed9-2689eb28bbf7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\base.windows\base.windows.csproj">
+      <Project>{09e3ad36-deb1-4302-8e7f-4a970b2ec84b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\base.wr\base.wr.vcxproj">
+      <Project>{456d822c-724a-412c-b0eb-9ec88378decb}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\library\base\base.vcxproj">
       <Project>{c3b85913-b106-40c6-8dde-a7cf52a4ec80}</Project>
@@ -260,26 +305,79 @@
     <ProjectReference Include="..\..\library\mysql.canvas\mysql.canvas.vcxproj">
       <Project>{1b17d534-365d-4c93-b3b6-55610df8629a}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\library\parsers\parsers.vcxproj">
+      <Project>{f563e3de-39ba-4a9d-a6c2-9e9222e8f518}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\library\ssh\wbssh.vcxproj">
+      <Project>{f678c48f-46ba-4e15-8be2-0d0bd441a23c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\db.mysql.parser\db.mysql.parser.grt.vcxproj">
+      <Project>{05413b7f-3ee1-4797-8ede-bf4e8e3c4bef}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\db.mysql.query\db.mysql.query.grt.vcxproj">
+      <Project>{55c25fff-715d-4bfb-959a-3f99f3bfa819}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\db.mysql.sqlparser\db.mysql.sqlparser.grt.vcxproj">
+      <Project>{e3fac4a5-5dcc-43a1-bdd3-0066224ab9a7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\db.mysql\db.mysql.grt.vcxproj">
+      <Project>{500b44c3-7d51-42ea-bd8d-5db34c3160fa}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\utilities\utilities.grt.vcxproj">
+      <Project>{b94b7613-cba5-4b30-834d-e16f414d1b1c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\wb.model\wb.model.grt.vcxproj">
+      <Project>{2994f846-467d-400e-bfa7-9a626b6df7aa}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\db.mysql.diff.reporting\db.mysql.diff.reporting.wbp.vcxproj">
+      <Project>{bc0f0530-cd05-46c9-bf31-e38b77966c22}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\db.mysql.editors\backend\db.mysql.editors.wbp.be.vcxproj">
+      <Project>{b2d1d661-3359-4941-a8e5-72715abac49b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\db.mysql.editors\windows\cs\db.mysql.editors.wbp.fe.csproj">
+      <Project>{2cc3b21c-273d-4b65-8a25-7d5099447bf1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\db.mysql.editors\windows\wrapper\db.mysql.editors.wbp.wr.vcxproj">
+      <Project>{99443d12-1a0d-4e87-bb3c-7fd0a411f1ba}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\db.mysql\db.mysql.wbp.vcxproj">
+      <Project>{4aaa077a-2f2f-4d87-9447-030e1ca1002f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\db.search\db.search.wbp.be.vcxproj">
+      <Project>{61f7284f-aef8-4cad-92e2-180cc6d11140}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\migration\copytable\wb.migration.copytable.vcxproj">
+      <Project>{bfe4d804-7156-4507-be83-ad8da5d902de}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\wb.model.editors\backend\wb.model.editors.wbp.be.vcxproj">
+      <Project>{6fdebea2-537c-4317-893c-a1f8d25f7731}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\wb.model.editors\windows\cs\wb.model.editors.wbp.fe.csproj">
+      <Project>{d94bf0a3-e9d3-472e-a84f-7b9b329d7b65}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\wb.model.editors\windows\wrapper\wb.model.editors.wbp.wr.vcxproj">
+      <Project>{0d5621f5-51d8-4754-8395-a64bf1e233c8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\wb.model.snippets\wb.model.snippets.wbp.vcxproj">
+      <Project>{b3e2d8e7-fa86-4f43-b67e-1bdf8190a4a7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\wb.printing\backend\wb.printing.wbp.be.vcxproj">
+      <Project>{be4ad5ca-c9ae-4c89-ae21-07506058acc5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\wb.printing\windows\cs\wb.printing.wbp.fe.csproj">
+      <Project>{62622efd-fe21-434d-b3a3-534c26e044f9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\plugins\wb.printing\windows\wrapper\wb.printing.wbp.wr.vcxproj">
+      <Project>{69a812ed-af18-493e-abd6-100e154fc6c1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\modules_grt\schema_reporting\res_schema_reporting_test_1.html" />
     <None Include="data\modules_grt\schema_reporting\res_schema_reporting_test_2.html" />
     <None Include="data\modules_grt\schema_reporting\schema_reporting_test_1.tpl.html" />
     <None Include="data\mtemplate\test_result.html" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets" Condition="Exists('..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets')" />
-    <Import Project="..\..\packages\gmock.1.11.0\build\native\gmock.targets" Condition="Exists('..\..\packages\gmock.1.11.0\build\native\gmock.targets')" />
-    <Import Project="..\..\packages\gtest.1.7.0\build\native\gtest.targets" Condition="Exists('..\..\packages\gtest.1.7.0\build\native\gtest.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7\build\native\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.targets'))" />
-    <Error Condition="!Exists('..\..\packages\gmock.1.11.0\build\native\gmock.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\gmock.1.11.0\build\native\gmock.targets'))" />
-    <Error Condition="!Exists('..\..\packages\gtest.1.7.0\build\native\gtest.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\gtest.1.7.0\build\native\gtest.targets'))" />
-  </Target>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

@@ -29,7 +29,6 @@
 #include "grts/structs.db.mysql.h"
 
 #include "common.h"
-#include "expect.h"
 
 namespace bec {
   class TreeModel;
@@ -42,8 +41,5 @@ void deepCompareGrtValues(std::string const& major_msg, const grt::ValueRef &act
 
 void dumpTreeModel(const std::string &path, bec::TreeModel *tree, const std::vector<ssize_t> &columns,
                    bool dump_type = false);
-
-struct GrtEnvironment : casmine::EnvironmentBase {
-};
 
 }
