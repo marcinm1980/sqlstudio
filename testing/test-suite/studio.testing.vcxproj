@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -52,9 +52,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)x64\Debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)x64\Release\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -69,8 +71,8 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(ProjectDir)core;$(ProjectDir)tests;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\library;$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\forms\stub;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\parsers\code-completion;$(ProjectDir)..\..\library\ssh;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\backend\wbpublic\grt;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbprivate\model;$(ProjectDir)..\..\backend\wbprivate\sqlide;$(ProjectDir)..\..\backend\wbprivate\studio;$(ProjectDir)..\..\plugins\db.mysql;$(ProjectDir)..\..\plugins\db.mysql\backend;$(ProjectDir)..\..\plugins\db.mysql.editors\backend;$(ProjectDir)..\..\modules;$(ProjectDir)..\..\modules\db.mysql\src;$(ProjectDir)..\..\modules\db.mysql.sqlparser\src;$(ProjectDir)..\..\ext\scintilla\include;$(ProjectDir)..\..\library\sql.parser\include;$(ProjectDir)..\..\library\sql.parser\source;$(ProjectDir)..\..\generated\grts\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-	</ClCompile>
+      <AdditionalOptions>/utf-8 /FS %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -89,8 +91,8 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>$(ProjectDir)core;$(ProjectDir)tests;$(ProjectDir)tests\library\forms\stub;$(ProjectDir)..\..\library;$(ProjectDir)..\..\library\base;$(ProjectDir)..\..\library\base\base;$(ProjectDir)..\..\library\cdbc\src;$(ProjectDir)..\..\library\forms;$(ProjectDir)..\..\library\forms\stub;$(ProjectDir)..\..\library\grt\src;$(ProjectDir)..\..\library\mysql.canvas\src;$(ProjectDir)..\..\library\parsers;$(ProjectDir)..\..\library\parsers\code-completion;$(ProjectDir)..\..\library\ssh;$(ProjectDir)..\..\generated;$(ProjectDir)..\..\backend\wbpublic;$(ProjectDir)..\..\backend\wbpublic\grt;$(ProjectDir)..\..\backend\wbprivate;$(ProjectDir)..\..\backend\wbprivate\model;$(ProjectDir)..\..\backend\wbprivate\sqlide;$(ProjectDir)..\..\backend\wbprivate\studio;$(ProjectDir)..\..\plugins\db.mysql;$(ProjectDir)..\..\plugins\db.mysql\backend;$(ProjectDir)..\..\plugins\db.mysql.editors\backend;$(ProjectDir)..\..\modules;$(ProjectDir)..\..\modules\db.mysql\src;$(ProjectDir)..\..\modules\db.mysql.sqlparser\src;$(ProjectDir)..\..\ext\scintilla\include;$(ProjectDir)..\..\library\sql.parser\include;$(ProjectDir)..\..\library\sql.parser\source;$(ProjectDir)..\..\generated\grts\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-	</ClCompile>
+      <AdditionalOptions>/utf-8 /FS %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -252,7 +254,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="$(ProjectDir)..\..\backend\wbprivate\studio\metaclasses.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <ForcedIncludeFiles></ForcedIncludeFiles>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="test_context.cpp" />
   </ItemGroup>

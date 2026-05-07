@@ -43,7 +43,7 @@ typedef int ssize_t;
 
 #include <sql.h>
 #include <sqlext.h>
-#include <mysql.h>
+//#include <mysql.h>
 
 #include <errno.h>
 #include <stdlib.h>

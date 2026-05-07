@@ -2815,9 +2815,12 @@ function Build-MySQLServer {
     }
 
     $mysqlIncludeDir = Join-Path $script:BundleDir "include\mysql"
+    $mysqlNestedIncludeDir = Join-Path $mysqlIncludeDir "mysql"
     $mysqlHeaderPatterns = @("mysql.h", "mysql_com.h", "mysql_version.h", "mysqld_error.h", "field_types.h", "mysql_time.h", "mysqlx_*.h", "errmsg.h")
     Ensure-Directory $mysqlIncludeDir
     Copy-DirectoryContent -Source (Join-Path $stageRel "include\mysql") -Destination $mysqlIncludeDir
+    Copy-DirectoryContent -Source (Join-Path $sourcePath "include\mysql") -Destination $mysqlNestedIncludeDir
+    Copy-DirectoryContent -Source (Join-Path $stageRel "include\mysql\mysql") -Destination $mysqlNestedIncludeDir
     foreach ($root in @($stageRel, $sourcePath, $buildRel)) {
         Copy-FirstMatch -SearchRoot $root -Patterns $mysqlHeaderPatterns -Destination $mysqlIncludeDir -AllowMany | Out-Null
     }

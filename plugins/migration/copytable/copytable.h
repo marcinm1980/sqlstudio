@@ -47,6 +47,8 @@
 
 #endif
 
+#include <mysql.h>
+
 #include "converter.h"
 #include "glib.h"
 #include "base/threading.h"

@@ -79,7 +79,7 @@ namespace MySQL {
         delete uiform;
       }
 
-      MySQL::Base::UIForm ^ get_uiform() { return uiform; }
+      MySQL::Base::UIForm ^ get_uiform();
 
         bool matches_handle(System::IntPtr handle) {
         return (dynamic_cast<bec::UIForm *>(get_unmanaged_object()) ==
@@ -204,10 +204,7 @@ namespace MySQL {
       }
 
       System::Collections::Generic::List<::MySQL::Base::ToolbarItem ^> ^
-        get_toolbar_items(MySQL::Grt::NodeIdWrapper ^ node) {
-          bec::ToolbarItemList items = get_unmanaged_object()->get_toolbar_items(*node->get_unmanaged_object());
-          return MySQL::Grt::CppVectorToObjectList<::bec::ToolbarItem, ::MySQL::Base::ToolbarItem>(items);
-        }
+        get_toolbar_items(MySQL::Grt::NodeIdWrapper ^ node);
 
         bool activate_toolbar_item(MySQL::Grt::NodeIdWrapper ^ node, System::String ^ name) {
         return get_unmanaged_object()->activate_toolbar_item(*node->get_unmanaged_object(), NativeToCppString(name));

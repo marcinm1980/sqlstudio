@@ -28,3 +28,19 @@
 #include "ConvUtils.h"
 #include "GrtTemplates.h"
 #include "Overview.h"
+
+namespace MySQL {
+  namespace MySqlStudio {
+
+    MySQL::Base::UIForm ^ Overview::get_uiform() {
+      return uiform;
+    }
+
+    System::Collections::Generic::List<::MySQL::Base::ToolbarItem ^> ^
+      Overview::get_toolbar_items(MySQL::Grt::NodeIdWrapper ^ node) {
+      bec::ToolbarItemList items = get_unmanaged_object()->get_toolbar_items(*node->get_unmanaged_object());
+      return MySQL::Grt::CppVectorToObjectList<::bec::ToolbarItem, ::MySQL::Base::ToolbarItem>(items);
+    }
+
+  } // namespace MySqlStudio
+} // namespace MySQL
