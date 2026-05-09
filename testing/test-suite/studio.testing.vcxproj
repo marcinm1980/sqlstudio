@@ -51,12 +51,12 @@
     <LinkLibraryDependencies>true</LinkLibraryDependencies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)x64\Debug\</IntDir>
+    <IntDir>$(ProjectDir)obj\x64\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)bin\x64\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)x64\Release\</IntDir>
+    <OutDir>$(ProjectDir)bin\x64\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\x64\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -79,6 +79,9 @@
       <AdditionalDependencies>wbprivate.be.lib;wbpublic.be.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(PlatformTarget)\$(Configuration);$(SolutionDir)backend\wbprivate\bin\$(PlatformTarget)\$(Configuration);$(SolutionDir)backend\wbpublic\bin\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>call "$(ProjectDir)PrepareOutputDir.cmd" "$(SolutionDir)" "$(Configuration)" "$(Platform)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -101,6 +104,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
+    <PostBuildEvent>
+      <Command>call "$(ProjectDir)PrepareOutputDir.cmd" "$(SolutionDir)" "$(Configuration)" "$(Platform)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="core\context.h" />
@@ -376,6 +382,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="compile.ps1" />
     <None Include="data\modules_grt\schema_reporting\res_schema_reporting_test_1.html" />
     <None Include="data\modules_grt\schema_reporting\res_schema_reporting_test_2.html" />
     <None Include="data\modules_grt\schema_reporting\schema_reporting_test_1.tpl.html" />

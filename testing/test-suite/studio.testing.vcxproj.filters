@@ -196,9 +196,6 @@
     <ClCompile Include="tests\backend\wbpublic\sqlide\sql_editor_be_autocomplete_specs.cpp">
       <Filter>tests\backend\wbpublic\sqlide</Filter>
     </ClCompile>
-    <ClCompile Include="tests\grt_test_helpers.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
     <ClCompile Include="tests\library\base\commandlineparser_specs.cpp">
       <Filter>tests\library\base</Filter>
     </ClCompile>
@@ -334,9 +331,6 @@
     <ClCompile Include="tests\library\sql.parser\sqlparser_specs.cpp">
       <Filter>tests\library\sql.parser</Filter>
     </ClCompile>
-    <ClCompile Include="tests\model_mockup.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
     <ClCompile Include="tests\modules\db.mysql.parser\mysql_parser_module_specs.cpp">
       <Filter>tests\modules\db.mysql.parser</Filter>
     </ClCompile>
@@ -376,16 +370,9 @@
     <ClCompile Include="tests\plugins\db.mysql\backend\model_diff_apply_specs.cpp">
       <Filter>tests\plugins\db.mysql\backend</Filter>
     </ClCompile>
-    <ClCompile Include="tests\wb_connection_helpers.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\wb_references.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\wb_test_helpers.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
     <ClCompile Include="test_context.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="$(ProjectDir)..\..\backend\wbprivate\studio\metaclasses.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\context.h">
@@ -560,5 +547,6 @@
     <None Include="data\mtemplate\test_result.html">
       <Filter>data\mtemplate</Filter>
     </None>
+    <None Include="compile.ps1" />
   </ItemGroup>
 </Project>
