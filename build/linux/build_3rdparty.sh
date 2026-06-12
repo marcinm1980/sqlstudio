@@ -817,6 +817,13 @@ build_override_libssh() {
 build_override_antlr4_runtime() {
     local source_dir="$1" build_dir="$2"
 
+    local antlr_cmake="${source_dir}/CMakeLists.txt"
+    if [[ -f "${antlr_cmake}" ]]; then
+        info "Normalizing ANTLR4 license install paths"
+        perl -0pi.bak -e 's/if\(EXISTS LICENSE\.txt\)\ninstall\(FILES LICENSE\.txt\n        DESTINATION "share\/doc\/libantlr4"\)\nelseif\(EXISTS \.\.\/\.\.\/LICENSE\.txt\)\ninstall\(FILES \.\.\/\.\.\/LICENSE\.txt\n    DESTINATION "share\/doc\/libantlr4"\)\nendif\(\)/if(EXISTS "\${CMAKE_CURRENT_SOURCE_DIR}\/LICENSE.txt")\ninstall(FILES "\${CMAKE_CURRENT_SOURCE_DIR}\/LICENSE.txt"\n        DESTINATION "share\/doc\/libantlr4")\nendif()/g' "${antlr_cmake}"
+        rm -f "${antlr_cmake}.bak"
+    fi
+
     # Some ANTLR4 source packages nest the runtime under runtime/Cpp/
     local cmake_root="$source_dir"
     if [[ ! -f "${cmake_root}/CMakeLists.txt" && -f "${cmake_root}/runtime/Cpp/CMakeLists.txt" ]]; then
