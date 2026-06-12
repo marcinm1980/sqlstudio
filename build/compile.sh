@@ -62,7 +62,11 @@ detail()  { echo -e "  ${C_DIM}$*${C_RESET}"; }
 banner() {
     echo -e "${C_BLUE}${C_BOLD}"
     echo "╔══════════════════════════════════════════════════════╗"
-    echo "║          MySQL Studio — Linux Build Script          ║"
+    if [[ "${PLATFORM_NAME}" == "macOS" ]]; then
+        echo "║          MySQL Studio — macOS Build Script          ║"
+    else
+        echo "║          MySQL Studio — Linux Build Script          ║"
+    fi
     echo "╚══════════════════════════════════════════════════════╝"
     echo -e "${C_RESET}"
 }
@@ -72,6 +76,18 @@ banner() {
 ###############################################################################
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+SOURCE_PARENT="$(cd "${SOURCE_DIR}/.." && pwd)"
+
+case "$(uname -s)" in
+    Darwin)
+        PLATFORM_NAME="macOS"
+        LIB_EXT="dylib"
+        ;;
+    *)
+        PLATFORM_NAME="Linux"
+        LIB_EXT="so"
+        ;;
+esac
 
 ###############################################################################
 # Defaults
@@ -135,8 +151,8 @@ info "Parallel jobs      : ${C_WHITE}${JOBS}"
 
 if [[ -n "${WB_BUNDLE_DIR:-}" ]]; then
     ok   "WB_BUNDLE_DIR      : ${C_WHITE}${WB_BUNDLE_DIR}"
-elif [[ -d "${SOURCE_DIR}/bundle/lib" ]]; then
-    export WB_BUNDLE_DIR="${SOURCE_DIR}/bundle"
+elif [[ -d "${SOURCE_PARENT}/bundle/lib" ]]; then
+    export WB_BUNDLE_DIR="${SOURCE_PARENT}/bundle"
     ok   "WB_BUNDLE_DIR      : ${C_WHITE}${WB_BUNDLE_DIR} ${C_DIM}(auto-detected)"
 else
     warn "WB_BUNDLE_DIR is ${C_BOLD}not set${C_RESET}${C_YELLOW} — system packages will be used for 3rd-party libs"
@@ -199,6 +215,42 @@ CMAKE_ARGS=(
     -DTEST_BUILD="${TEST_BUILD}"
 )
 
+if [[ "${PLATFORM_NAME}" == "macOS" ]]; then
+    PYTHON_EXECUTABLE_PATH="$(command -v python3 || true)"
+    PYTHON_INCLUDE_HINT="$(${PYTHON_EXECUTABLE_PATH:-python3} -c 'import sysconfig; print(sysconfig.get_config_var("INCLUDEPY") or "")' 2>/dev/null || true)"
+    PYTHON_LIBRARY_HINT="$(${PYTHON_EXECUTABLE_PATH:-python3} -c 'import os,sysconfig; libdir=sysconfig.get_config_var("LIBDIR") or ""; ldlib=sysconfig.get_config_var("LDLIBRARY") or ""; print(os.path.normpath(os.path.join(libdir, ldlib)) if libdir and ldlib else "")' 2>/dev/null || true)"
+
+    if [[ -n "${PYTHON_INCLUDE_HINT}" && -d "${PYTHON_INCLUDE_HINT}" ]]; then
+        PYTHON_FRAMEWORK_DIR="$(cd "${PYTHON_INCLUDE_HINT}/.." 2>/dev/null && pwd || true)"
+        PYTHON_FRAMEWORK_BIN="${PYTHON_FRAMEWORK_DIR}/Python3"
+        if [[ -z "${PYTHON_LIBRARY_HINT}" || ! -e "${PYTHON_LIBRARY_HINT}" ]]; then
+            if [[ -e "${PYTHON_FRAMEWORK_BIN}" ]]; then
+                PYTHON_LIBRARY_HINT="${PYTHON_FRAMEWORK_BIN}"
+            fi
+        fi
+    fi
+
+    if [[ -n "${PYTHON_EXECUTABLE_PATH}" ]]; then
+        CMAKE_ARGS+=( -DPYTHON_EXECUTABLE="${PYTHON_EXECUTABLE_PATH}" )
+    fi
+    if [[ -n "${PYTHON_INCLUDE_HINT}" && -d "${PYTHON_INCLUDE_HINT}" ]]; then
+        CMAKE_ARGS+=( -DPYTHON_INCLUDE_DIR="${PYTHON_INCLUDE_HINT}" )
+    fi
+    if [[ -n "${PYTHON_LIBRARY_HINT}" && -e "${PYTHON_LIBRARY_HINT}" ]]; then
+        CMAKE_ARGS+=( -DPYTHON_LIBRARY="${PYTHON_LIBRARY_HINT}" )
+    fi
+
+    if [[ -z "${ANTLR_JAR}" ]] && command -v brew &>/dev/null; then
+        BREW_ANTLR_PREFIX="$(brew --prefix antlr 2>/dev/null || true)"
+        if [[ -n "${BREW_ANTLR_PREFIX}" ]]; then
+            BREW_ANTLR_JAR="$(find -L "${BREW_ANTLR_PREFIX}" -type f -name 'antlr-4*-complete.jar' | head -n 1)"
+            if [[ -n "${BREW_ANTLR_JAR}" && -f "${BREW_ANTLR_JAR}" ]]; then
+                ANTLR_JAR="${BREW_ANTLR_JAR}"
+            fi
+        fi
+    fi
+fi
+
 # ------- WB_BUNDLE_DIR integration -------
 # When WB_BUNDLE_DIR is set we expose its sub-directories via CMAKE_PREFIX_PATH
 # and also set individual hint variables so that Find-modules locate every
@@ -216,24 +268,24 @@ if [[ -n "${WB_BUNDLE_DIR:-}" ]]; then
     CMAKE_ARGS+=(
         -DCMAKE_PREFIX_PATH="${WB_BUNDLE_DIR}"
         # MySQL client (libmysqlclient)
-        -DMYSQL_LIBRARY="${BUNDLE_LIB}/libmysqlclient.so"
-        -DMYSQL_INCLUDE_DIR="${BUNDLE_INC}/mysql"
+        -DMYSQL_LIBRARY="${BUNDLE_LIB}/libmysqlclient.${LIB_EXT}"
+        -DMYSQL_INCLUDE_DIR="${BUNDLE_INC}"
         # MySQL Connector/C++ (JDBC API — headers in include/jdbc/)
-        -DMYSQLCPPCONN_LIBRARY="${BUNDLE_LIB}/libmysqlcppconn.so"
+        -DMYSQLCPPCONN_LIBRARY="${BUNDLE_LIB}/libmysqlcppconn.${LIB_EXT}"
         -DMYSQLCPPCONN_INCLUDE_DIR="${BUNDLE_INC}/jdbc"
         # vsqlite++ (headers in include/sqlite/)
-        -DVSQLITE_LIBRARY="${BUNDLE_LIB}/libvsqlitepp.so"
+        -DVSQLITE_LIBRARY="${BUNDLE_LIB}/libvsqlitepp.${LIB_EXT}"
         -DVSQLITE_INCLUDE_DIR="${BUNDLE_INC}"
         # GDAL
-        -DGDAL_LIBRARY="${BUNDLE_LIB}/libgdal.so"
+        -DGDAL_LIBRARY="${BUNDLE_LIB}/libgdal.${LIB_EXT}"
         -DGDAL_INCLUDE_DIR="${BUNDLE_INC}"
         # ANTLR4 runtime (headers in include/antlr4-runtime/)
-        -DANTLR4_LIBRARY="${BUNDLE_LIB}/libantlr4-runtime.so"
+        -DANTLR4_LIBRARY="${BUNDLE_LIB}/libantlr4-runtime.${LIB_EXT}"
         -DANTLR4_INCLUDE_DIR="${BUNDLE_INC}/antlr4-runtime"
         # libssh (cmake config in lib/cmake/libssh/)
         -Dlibssh_DIR="${BUNDLE_LIB}/cmake/libssh"
         # iODBC
-        -DIODBC_LIBRARY="${BUNDLE_LIB}/libiodbc.so"
+        -DIODBC_LIBRARY="${BUNDLE_LIB}/libiodbc.${LIB_EXT}"
         -DIODBC_INCLUDE_DIR="${BUNDLE_INC}"
         # RapidJSON (header-only, in include/rapidjson/)
         -DRAPIDJSON_INCLUDE_DIR="${BUNDLE_INC}"

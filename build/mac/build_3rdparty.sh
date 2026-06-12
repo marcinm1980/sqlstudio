@@ -16,12 +16,13 @@
 #   --clean             Remove build directories before rebuilding
 #   --download-only     Download archives only — do not extract or build
 #   --build-only        Skip downloads — archives must already exist
-#   -j, --jobs N        Parallel make jobs (default: nproc)
+#   -j, --jobs N        Parallel make jobs (default: hw.ncpu)
 #   --verbose           Stream full subprocess output to the terminal
 #   -h, --help          Show this help message
 #
 # Environment:
 #   MYSQLSTUDIO_BUNDLE  Fallback bundle path when --bundle is not given.
+#   WB_BUNDLE_DIR       Alternative fallback bundle path.
 #
 # Dependencies list (list.txt):
 #   Each non-empty, non-comment line uses pipe-delimited fields:
@@ -62,7 +63,7 @@ detail()  { echo -e "    ${C_DIM}$*${C_RESET}"; }
 banner() {
     echo -e "${C_BLUE}${C_BOLD}"
     echo "╔══════════════════════════════════════════════════════════╗"
-    echo "║     MySQL Studio — 3rd-Party Dependency Builder         ║"
+    echo "║  MySQL Studio — macOS 3rd-Party Dependency Builder      ║"
     echo "╚══════════════════════════════════════════════════════════╝"
     echo -e "${C_RESET}"
 }
@@ -103,7 +104,7 @@ DO_CLEAN=false
 DOWNLOAD_ONLY=false
 BUILD_ONLY=false
 VERBOSE=false
-JOBS="$(nproc 2>/dev/null || echo 4)"
+JOBS="$(sysctl -n hw.ncpu 2>/dev/null || echo 4)"
 
 ###############################################################################
 # Usage
@@ -119,12 +120,13 @@ Options:
   --clean             Remove build trees before rebuilding
   --download-only     Download archives only — skip extract and build
   --build-only        Skip downloads — archives must already exist
-  -j, --jobs N        Parallel make jobs (default: nproc)
+    -j, --jobs N        Parallel make jobs (default: hw.ncpu)
   --verbose           Stream full subprocess output to the terminal
   -h, --help          Show this help
 
 Environment:
-  MYSQLSTUDIO_BUNDLE  Fallback bundle directory (overridden by --bundle)
+    MYSQLSTUDIO_BUNDLE  Fallback bundle directory (overridden by --bundle)
+    WB_BUNDLE_DIR       Alternative fallback bundle directory
 
 Example:
   ./build_3rdparty.sh --bundle /opt/wb-deps --verbose
@@ -156,7 +158,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 ###############################################################################
-# Resolve bundle directory (--bundle > $MYSQLSTUDIO_BUNDLE > default)
+# Resolve bundle directory (--bundle > $MYSQLSTUDIO_BUNDLE > $WB_BUNDLE_DIR > default)
 ###############################################################################
 resolve_bundle_dir() {
     if [[ -n "${BUNDLE_DIR}" ]]; then
@@ -166,6 +168,11 @@ resolve_bundle_dir() {
 
     if [[ -n "${MYSQLSTUDIO_BUNDLE:-}" ]]; then
         BUNDLE_DIR="$(cd "$(dirname "${MYSQLSTUDIO_BUNDLE}")" 2>/dev/null && pwd)/$(basename "${MYSQLSTUDIO_BUNDLE}")"
+        return
+    fi
+
+    if [[ -n "${WB_BUNDLE_DIR:-}" ]]; then
+        BUNDLE_DIR="$(cd "$(dirname "${WB_BUNDLE_DIR}")" 2>/dev/null && pwd)/$(basename "${WB_BUNDLE_DIR}")"
         return
     fi
 
@@ -573,7 +580,7 @@ build_override_mysql_server() {
     # Ensure auth plugins land in lib/mysql/ (some builds put them in lib/plugin/)
     if [[ -d "${BUNDLE_LIB}/plugin" ]]; then
         mkdir -p "${BUNDLE_LIB}/mysql"
-        find "${BUNDLE_LIB}/plugin" -name '*.so' -exec cp -a {} "${BUNDLE_LIB}/mysql/" \;
+        find "${BUNDLE_LIB}/plugin" \( -name '*.so' -o -name '*.dylib' \) -exec cp -a {} "${BUNDLE_LIB}/mysql/" \;
         ok "Auth plugins copied to ${C_DIM}${BUNDLE_LIB}/mysql/${C_RESET}"
     fi
 }
@@ -582,9 +589,23 @@ build_override_mysql_server() {
 # Needs to find the libmysqlclient that was just built above.
 build_override_mysql_connector_cpp() {
     local source_dir="$1" build_dir="$2"
+    local dependency_cmake="${source_dir}/cdk/cmake/dependency.cmake"
+    local protobuf_cmake="${source_dir}/cdk/extra/protobuf/CMakeLists.txt"
 
     info "Build system: ${C_GREEN}CMake${C_RESET} ${C_YELLOW}(mysql-connector-cpp)${C_RESET}"
     mkdir -p "$build_dir"
+
+    if [[ -f "${protobuf_cmake}" ]]; then
+        info "Normalizing bundled protobuf CMake policy compatibility"
+        sed -i.bak 's/^cmake_minimum_required(VERSION 3\.1)$/cmake_minimum_required(VERSION 3.5)/' "${protobuf_cmake}"
+        rm -f "${protobuf_cmake}.bak"
+    fi
+
+    if [[ -f "${dependency_cmake}" ]]; then
+        info "Forwarding CMake policy minimum into bundled dependency builds"
+        perl -0pi.bak -e 's/(set\(EXT_FWD\s*\n\s*CMAKE_BUILD_TYPE\s*\n)/$1  CMAKE_POLICY_VERSION_MINIMUM\n/' "${dependency_cmake}"
+        rm -f "${dependency_cmake}.bak"
+    fi
 
     run_cmd "cmake configure (connector-cpp)" \
         cmake \
@@ -597,6 +618,7 @@ build_override_mysql_connector_cpp() {
         -DCMAKE_INSTALL_LIBDIR="${BUNDLE_LIB}" \
         -DCMAKE_INSTALL_INCLUDEDIR="${BUNDLE_INCLUDE}" \
         -DCMAKE_PREFIX_PATH="${BUNDLE_DIR}" \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
         -DMYSQL_DIR="${BUNDLE_DIR}" \
         -DWITH_JDBC=ON \
         -DWITH_SSL=system
@@ -654,13 +676,26 @@ build_override_rapidjson() {
 # run first.  Build depends on sqlite3 already being in the bundle.
 build_override_vsqlitepp() {
     local source_dir="$1" build_dir="$2"
+    local version_backup=""
 
     info "Build system: ${C_GREEN}autotools${C_RESET} ${C_YELLOW}(vsqlitepp)${C_RESET}"
 
     pushd "$source_dir" > /dev/null
 
+    # On default macOS case-insensitive filesystems, vsqlitepp's VERSION file
+    # can shadow libc++ <version> during compilation.
+    if [[ -f VERSION ]]; then
+        version_backup="VERSION.vsqlitepp.bak"
+        mv VERSION "${version_backup}"
+    fi
+
     # Generate configure if it doesn't exist
     if [[ ! -f configure ]]; then
+        if ! command -v autoreconf >/dev/null 2>&1; then
+            fail "vsqlitepp requires autoreconf but it is not installed."
+            info "Install autotools on macOS: ${C_WHITE}brew install autoconf automake libtool${C_RESET}"
+            exit 1
+        fi
         run_cmd "autogen (vsqlitepp)" \
             ./autogen.sh
     fi
@@ -679,11 +714,25 @@ build_override_vsqlitepp() {
         CXXFLAGS="-g -O2 -I${BUNDLE_INCLUDE}" \
         LDFLAGS="-L${BUNDLE_LIB}"
 
+    # Upstream vsqlitepp injects GNU ld-only link flags in Makefile.am.
+    # Strip them for Darwin/ld64.
+    if [[ -f Makefile ]]; then
+        sed -i.bak \
+            -e 's/-Wl,--as-needed//g' \
+            -e 's/-Wl,-soname[[:space:]]*-Wl,[^[:space:]]*//g' \
+            Makefile
+        rm -f Makefile.bak
+    fi
+
     run_cmd "make (vsqlitepp)" \
         make -j"${JOBS}"
 
     run_cmd "make install (vsqlitepp)" \
         make install
+
+    if [[ -n "${version_backup}" && -f "${version_backup}" ]]; then
+        mv "${version_backup}" VERSION
+    fi
 
     popd > /dev/null
 }
@@ -692,8 +741,20 @@ build_override_vsqlitepp() {
 # Minimal GDAL build — only the core library, ogr2ogr, and ogrinfo.
 build_override_gdal() {
     local source_dir="$1" build_dir="$2"
+    local cmake_prefix_path="${BUNDLE_DIR}"
+    local proj_prefix=""
 
     info "Build system: ${C_GREEN}CMake${C_RESET} ${C_YELLOW}(gdal — minimal)${C_RESET}"
+
+    if command -v brew >/dev/null 2>&1; then
+        proj_prefix="$(brew --prefix proj 2>/dev/null || true)"
+        if [[ -n "${proj_prefix}" && -d "${proj_prefix}" ]]; then
+            cmake_prefix_path="${BUNDLE_DIR};${proj_prefix}"
+            info "Using Homebrew PROJ from ${C_DIM}${proj_prefix}${C_RESET}"
+        fi
+    fi
+
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
 
     run_cmd "cmake configure (gdal)" \
@@ -707,9 +768,11 @@ build_override_gdal() {
         -DCMAKE_INSTALL_LIBDIR="${BUNDLE_LIB}" \
         -DCMAKE_INSTALL_INCLUDEDIR="${BUNDLE_INCLUDE}" \
         -DCMAKE_INSTALL_BINDIR="${BUNDLE_BIN}" \
-        -DCMAKE_PREFIX_PATH="${BUNDLE_DIR}" \
+        -DCMAKE_PREFIX_PATH="${cmake_prefix_path}" \
+        -DGDAL_FIND_PACKAGE_PROJ_MODE=CONFIG \
         -DBUILD_APPS=ON \
         -DBUILD_TESTING=OFF \
+        -DGDAL_USE_PROJ=OFF \
         -DGDAL_BUILD_OPTIONAL_DRIVERS=OFF \
         -DOGR_BUILD_OPTIONAL_DRIVERS=OFF \
         -DBUILD_PYTHON_BINDINGS=OFF
@@ -817,13 +880,15 @@ build_override_libssh() {
 build_override_antlr4_runtime() {
     local source_dir="$1" build_dir="$2"
 
-    # Some ANTLR4 source packages nest the runtime under runtime/Cpp/
+    # Prefer runtime/Cpp when present. Some archives ship a top-level
+    # CMakeLists that installs docs using paths relative to runtime/Cpp.
     local cmake_root="$source_dir"
-    if [[ ! -f "${cmake_root}/CMakeLists.txt" && -f "${cmake_root}/runtime/Cpp/CMakeLists.txt" ]]; then
-        cmake_root="${cmake_root}/runtime/Cpp"
+    if [[ -f "${source_dir}/runtime/Cpp/CMakeLists.txt" ]]; then
+        cmake_root="${source_dir}/runtime/Cpp"
     fi
 
     info "Build system: ${C_GREEN}CMake${C_RESET} ${C_YELLOW}(antlr4-runtime)${C_RESET}"
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
 
     run_cmd "cmake configure (antlr4-runtime)" \
@@ -833,6 +898,7 @@ build_override_antlr4_runtime() {
         -G "Unix Makefiles" \
         -DCMAKE_INSTALL_PREFIX="${BUNDLE_DIR}" \
         -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
         -DBUILD_SHARED_LIBS=ON \
         -DCMAKE_INSTALL_LIBDIR="${BUNDLE_LIB}" \
         -DCMAKE_INSTALL_INCLUDEDIR="${BUNDLE_INCLUDE}" \
@@ -923,7 +989,7 @@ process_dep() {
 ###############################################################################
 check_host_tools() {
     local missing_tools=()
-    for tool in cmake make gcc g++ pkg-config; do
+    for tool in cmake make clang clang++ pkg-config; do
         local path
         path="$(command -v "$tool" 2>/dev/null || true)"
         if [[ -n "$path" ]]; then
@@ -936,33 +1002,22 @@ check_host_tools() {
 
     if [[ ${#missing_tools[@]} -gt 0 ]]; then
         fail "Missing tools: ${missing_tools[*]}"
+        info "Install command line tools: ${C_WHITE}xcode-select --install${C_RESET}"
         exit 1
     fi
 
-    # Check development libraries required by dependencies
-    section "Development libraries"
-    local missing_libs=()
-    local -A lib_checks=(
-        ["libncurses"]="ncurses.h"
-        ["libssl-dev"]="openssl/ssl.h"
-    )
+    if command -v brew >/dev/null 2>&1; then
+        ok "$(printf '%-14s' "homebrew") ${C_DIM}$(command -v brew)${C_RESET}"
 
-    for lib in "${!lib_checks[@]}"; do
-        local header="${lib_checks[$lib]}"
-        if find /usr/include -name "$(basename "$header")" -print -quit 2>/dev/null | grep -q .; then
-            ok "$(printf '%-20s' "$lib") ${C_DIM}${header}${C_RESET}"
+        # autotools are required by vsqlitepp/autogen.sh
+        if command -v autoreconf >/dev/null 2>&1; then
+            ok "$(printf '%-14s' "autoreconf") ${C_DIM}$(command -v autoreconf)${C_RESET}"
         else
-            fail "$(printf '%-20s' "$lib") ${C_RED}NOT FOUND${C_RESET}"
-            missing_libs+=("$lib")
+            warn "autoreconf not found. vsqlitepp build will fail without autotools."
+            info "Install with: ${C_WHITE}brew install autoconf automake libtool${C_RESET}"
         fi
-    done
-
-    if [[ ${#missing_libs[@]} -gt 0 ]]; then
-        echo
-        fail "Missing development libraries: ${C_BOLD}${missing_libs[*]}${C_RESET}"
-        info "On Debian/Ubuntu:  ${C_WHITE}sudo apt-get install libncurses5-dev libssl-dev${C_RESET}"
-        info "On RHEL/Fedora:    ${C_WHITE}sudo dnf install ncurses-devel openssl-devel${C_RESET}"
-        exit 1
+    else
+        warn "Homebrew not found. Some dependencies may require it on macOS."
     fi
 }
 
