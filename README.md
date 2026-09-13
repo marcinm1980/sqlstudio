@@ -128,8 +128,8 @@ MySQL Studio is built on the foundation of MySQL Workbench, originally developed
 ## Links
 
 - 📘 Documentation: *(coming soon - published with first stable release)*
-- 🐛 Issue Tracker: [GitHub Issues](https://github.com/dante-d4f/wb_build/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/dante-d4f/mysqlstudio/discussions)
+- 🐛 Issue Tracker: [GitHub Issues](https://github.com/marcinm1980/wb_build/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/marcinm1980/mysqlstudio/discussions)
 - 🎧 Discord Channel: [Join the Discord server](https://discord.gg/gQNPbpgeg)
 - 🔖 Releases: [GitHub Releases](../../releases)
-- 🌐 Source repository: [https://github.com/dante-d4f/mysqlstudio](https://github.com_dante/dante-d4f/mysqlstudio)
+- 🌐 Source repository: [https://github.com/dante-d4f/mysqlstudio](https://github.com_dante/marcinm1980/mysqlstudio)
