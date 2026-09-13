@@ -54,11 +54,6 @@ The migration wizard handles schema mapping, data type conversion, and data tran
 ### Performance Monitoring
 Built-in dashboards provide real-time performance metrics, query analysis, index efficiency reporting, and InnoDB status visualization - helping you identify and resolve bottlenecks quickly.
 
-### Enterprise-Grade Utilities
-- **Backup Integration:** Compatible with MySQL Enterprise Backup workflows.
-- **Audit Support:** View and analyze MySQL Enterprise Audit log data.
-- **Firewall Rules:** Inspect and manage MySQL Enterprise Firewall configuration.
-
 ---
 
 ## Supported Server Versions
