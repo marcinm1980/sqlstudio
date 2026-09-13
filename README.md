@@ -1,4 +1,4 @@
-# MySQL Studio
+# SQL Studio
 
 **A community-driven, open-source graphical database management tool - evolved from the foundations of MySQL Workbench.**
 
