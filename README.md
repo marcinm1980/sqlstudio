@@ -65,7 +65,7 @@ Built-in dashboards provide real-time performance metrics, query analysis, index
 
 MySQL Studio is tested and supported with:
 - **MySQL** 5.7, 8.0, 8.1, 8.2, 8.3, 8.4 (LTS), 9.x
-- **MariaDB** 10.4, 10.5, 10.6 (LTS), 10.11 (LTS), 11.x
+- **MariaDB** 10.4, 10.5, 10.6 (LTS), 10.11 (LTS), 11.x (support will be soon published)
 
 ---
 
