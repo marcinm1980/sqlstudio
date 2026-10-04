@@ -228,3 +228,4 @@ build/__output/plugins/db.mysql.diff.reporting/db.mysql.diff.reporting.wbp.so.1.
 build/__output/plugins/db.mysql.editors/linux/db.mysql.editors.wbp.so.1.0.1
 build/__output/plugins/migration/wbcopytables
 build/__output/plugins/migration/wbcopytables-bin
+docker/databases/.env
