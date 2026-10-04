@@ -26,7 +26,7 @@
 #include "WbPrinting.h"
 #include "GrtTemplates.h"
 
-using namespace MySQL::GUI::MySqlStudio::Plugins;
+using namespace MySQL::GUI::SqlStudio::Plugins;
 
 using namespace System;
 using namespace System::Collections::Generic;

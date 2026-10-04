@@ -1,14 +1,14 @@
 
-Localization for MySql Studio
+Localization for SqlStudio
 
-How to translate MySql Studio to your language.
+How to translate SqlStudio to your language.
 
 
 
 Intro
 -----
 
-MySqlStudio supports Windows, Mac OS X and Linux operating systems. There is backend
+SqlStudio supports Windows, Mac OS X and Linux operating systems. There is backend
 code that is written in C++ and is used in all platforms, frontend code that is native
 to each platform and plugins/modules, some of which are platform neutral and some are native.
 

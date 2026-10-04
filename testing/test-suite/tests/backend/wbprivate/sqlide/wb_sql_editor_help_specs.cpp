@@ -40,7 +40,7 @@ using namespace bec;
 namespace {
 
   struct TestData {
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
     help::HelpContext *helpContext;
     db_mysql_CatalogRef catalog;
     unsigned long version;
@@ -905,7 +905,7 @@ protected:
 
   void SetUp() override {
     bec::GRTManager::get();
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 
     data->catalog = createEmptyCatalog();

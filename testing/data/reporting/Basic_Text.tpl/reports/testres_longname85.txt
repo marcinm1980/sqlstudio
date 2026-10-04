@@ -6,4 +6,4 @@ Table `t1` was modified
   - average row length: 101 --> 101
   __
 ----------------------------------------------
-End of MySql Studio Report
+End of SqlStudio Report

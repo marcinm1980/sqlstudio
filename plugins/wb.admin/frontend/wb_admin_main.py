@@ -178,10 +178,9 @@ class AdministratorTab(mforms.AppView):
     #---------------------------------------------------------------------------
     def add_page(self, page):
         self.tabs.append(page)
-        # not needed in Mac since it's already done earlier and in Linux, we shouldn't set the background color,
-        # because you never know what gtk theme the user may be using
-        if self.server_profile.host_os == wbaOS.windows:
-            page.set_back_color("#ffffff")
+        # Appearance follows the client, independently of the managed server's OS.
+        if sys.platform == "win32":
+            page.set_back_color(Color.getSystemColor(ControlBackgroundColor).to_html())
         self.tabview.add_page(page, "")
 
     #---------------------------------------------------------------------------
@@ -249,7 +248,11 @@ class AdministratorTab(mforms.AppView):
     #---------------------------------------------------------------------------
     def updateColors(self, name, sender, info):
         # Called when the system color scheme or a color setting was changed.
-        self.set_back_color(Color.getSystemColor(ControlBackgroundColor).to_html())
+        background = Color.getSystemColor(ControlBackgroundColor).to_html()
+        self.set_back_color(background)
+        if sys.platform == "win32":
+            for page in self.tabs:
+                page.set_back_color(background)
 
     #---------------------------------------------------------------------------
     def server_started_event(self):

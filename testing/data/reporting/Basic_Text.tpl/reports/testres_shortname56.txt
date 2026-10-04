@@ -4,4 +4,4 @@
 Table `grtdiff_alter_test`.`t1` was modified
   - removed index idx1
 ----------------------------------------------
-End of MySql Studio Report
+End of SqlStudio Report

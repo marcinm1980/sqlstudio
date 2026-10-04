@@ -31,14 +31,15 @@ using System.Runtime.InteropServices;
 using MySQL.Base;
 using MySQL.Controls;
 using MySQL.Grt;
-using MySQL.MySqlStudio;
+using MySQL.SqlStudio;
+using MySQL.Utilities;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   /// <summary>
   /// Generic GRT Object Editor
   /// </summary>
-  public partial class DockablePlugin : TabDocument, IMySqlStudioDocument
+  public partial class DockablePlugin : TabDocument, ISqlStudioDocument
   {
     #region Member Variables
 
@@ -117,14 +118,14 @@ namespace MySQL.GUI.MySqlStudio.Plugins
 
     #endregion
 
-    #region IMySqlStudioDocument Members
+    #region ISqlStudioDocument Members
 
     public virtual UIForm BackendForm
     {
       get { return null; }
     }
 
-    public virtual void RefreshGUI(MySQL.MySqlStudio.RefreshType refresh, string str, IntPtr ptr)
+    public virtual void RefreshGUI(MySQL.SqlStudio.RefreshType refresh, string str, IntPtr ptr)
     {
     }
 
@@ -182,6 +183,8 @@ namespace MySQL.GUI.MySqlStudio.Plugins
           // If that is required we have to reach through to those specific places and fix that individually.
           //tabView.BackgroundColor = Conversions.GetApplicationColor(ApplicationColor.AppColorMainBackground, false);
         }
+        else if (control is Bevel)
+          (control as Bevel).UpdateColors();
         else
           if (control is HeaderPanel)
           {
@@ -197,6 +200,9 @@ namespace MySQL.GUI.MySqlStudio.Plugins
               ToolStrip toolStrip = control as ToolStrip;
               toolStrip.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false);
               toolStrip.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, true);
+              if (toolStrip is MenuStrip)
+                toolStrip.Renderer = Conversions.UseWin8Drawing()
+                  ? (ToolStripRenderer)new Win8MenuStripRenderer() : new TransparentMenuStripRenderer();
             }
             else
               if (control is TabPage)

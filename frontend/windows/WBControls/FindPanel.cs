@@ -26,14 +26,67 @@
 
 using System.Windows.Forms;
 using System.Drawing;
+using System;
+using System.Collections.Generic;
+using MySQL.SqlStudio;
+using MySQL.Controls;
 
 namespace MySQL.Utilities
 {
-  public partial class FindPanel : UserControl
+  public partial class FindPanel : UserControl, ISqlStudioObserver
   {
     public FindPanel()
     {
       InitializeComponent();
+      UpdateColors();
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+      base.OnHandleCreated(e);
+      UpdateColors();
+      ManagedNotificationCenter.AddObserver(this, "GNColorsChanged");
+    }
+
+    protected override void OnHandleDestroyed(EventArgs e)
+    {
+      ManagedNotificationCenter.RemoveObserver(this, "GNColorsChanged");
+      base.OnHandleDestroyed(e);
+    }
+
+    public void HandleNotification(string name, IntPtr sender, Dictionary<string, string> info)
+    {
+      if (name == "GNColorsChanged" && !IsDisposed && !Disposing)
+        UpdateColors();
+    }
+
+    public void UpdateColors()
+    {
+      bool dark = Conversions.InDarkMode();
+      Color background = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false) : SystemColors.ControlLight;
+      Color field = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false) : SystemColors.Window;
+      Color text = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true) : SystemColors.WindowText;
+      BackColor = background;
+      ForeColor = dark ? text : SystemColors.ControlText;
+      panel1.BackColor = field;
+      searchTextBox.BackColor = replaceTextBox.BackColor = field;
+      searchTextBox.ForeColor = replaceTextBox.ForeColor = text;
+      modeComboBox.BackColor = field;
+      modeComboBox.ForeColor = text;
+      modeComboBox.FlatStyle = dark ? FlatStyle.Flat : FlatStyle.Standard;
+      foreach (Button button in new[] { doneButton, replaceButton, replaceAllButton, navButtonBack, navButtonNext })
+      {
+        button.FlatStyle = dark ? FlatStyle.Flat : FlatStyle.Standard;
+        button.BackColor = dark ? background : SystemColors.Control;
+        button.ForeColor = dark ? text : SystemColors.ControlText;
+        button.UseVisualStyleBackColor = !dark;
+      }
+      searchClearButton.BackColor = optionsButton.BackColor = field;
+      searchClearButton.ForeColor = optionsButton.ForeColor = text;
+      optionsButton.UseVisualStyleBackColor = !dark;
+      optionsMenuStrip.Renderer = Conversions.UseWin8Drawing()
+        ? (ToolStripRenderer)new Win8MenuStripRenderer() : new TransparentMenuStripRenderer();
+      Invalidate(true);
     }
 
     #region Properties

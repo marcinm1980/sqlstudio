@@ -196,7 +196,7 @@ class ServerProfile(object):
                             return False
                     else:
                         from wb_common import NoDriverInConnection
-                        raise NoDriverInConnection("""MySqlStudio has not found a driver for the connection
+                        raise NoDriverInConnection("""SqlStudio has not found a driver for the connection
 that is being used by this server instance.
 Please edit your connection settings and try again.""")
             return False
@@ -748,7 +748,7 @@ class ServerControlShell(ServerControlBase):
 class ServerControlWMI(ServerControlBase):
     def __init__(self, profile, helper, password_delegate):
         ServerControlBase.__init__(self, profile, helper, password_delegate)
-        self.wmi = grt.modules.MySqlStudio
+        self.wmi = grt.modules.SqlStudio
         self.wmi_session_ids = {}
         self.shell = None
         if self.profile.is_local:
@@ -758,7 +758,7 @@ class ServerControlWMI(ServerControlBase):
             self.check_and_fix_profile_for_local_windows(profile)
             self.shell = ServerControlShell(profile, helper, password_delegate)
             # Force usage of Users.ADMIN for local windows
-            self.info("MySqlStudio will use cmd shell commands to start/stop this instance")
+            self.info("SqlStudio will use cmd shell commands to start/stop this instance")
         else:
             user = self.profile.wmi_username
             server = self.profile.wmi_hostname

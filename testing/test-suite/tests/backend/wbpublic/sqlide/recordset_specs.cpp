@@ -38,11 +38,11 @@ static void dummy() {
 
 class RecordsetTest : public ::testing::Test {
 protected:
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   sql::Dbc_connection_handler::Ref connection;
 
   void SetUp() override {
-    tester.reset(new MySqlStudioTester());
+    tester.reset(new SqlStudioTester());
     tester->initializeRuntime();
 
     sql::DriverManager *manager = sql::DriverManager::getDriverManager();

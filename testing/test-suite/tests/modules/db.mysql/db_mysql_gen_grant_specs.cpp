@@ -42,7 +42,7 @@ template <class _InIt1, class _InIt2>
   }
 
 struct DbMysqlGenGrantData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
 };
 
 
@@ -52,7 +52,7 @@ protected:
 
   static void SetUpTestSuite() {
     data = std::make_unique<DbMysqlGenGrantData>();
-    data->tester.reset(new MySqlStudioTester()); 
+    data->tester.reset(new SqlStudioTester());
   }
 
   static void TearDownTestSuite() {

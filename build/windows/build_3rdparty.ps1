@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Download, build, and stage the Windows 3rd-party bundle for MySQL Workbench / MySQL Studio.
+  Download, build, and stage the Windows 3rd-party bundle for MySQL Workbench / SqlStudio.
 
 .DESCRIPTION
   This script is the Windows-side equivalent of build/linux/build_3rdparty.sh.

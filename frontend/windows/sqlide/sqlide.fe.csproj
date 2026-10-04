@@ -51,7 +51,7 @@
     <Compile Include="RecordsetView.Designer.cs">
       <DependentUpon>RecordsetView.cs</DependentUpon>
     </Compile>
-    <Compile Include="MySqlStudioToolbarManager.cs" />
+    <Compile Include="SqlStudioToolbarManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MySQLAssembly.ico" />

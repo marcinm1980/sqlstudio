@@ -117,7 +117,7 @@ namespace mforms {
   class View;
 }
 
-@interface NSPasteboard (MySQLMySqlStudio)
+@interface NSPasteboard (SqlStudio)
 
 - (void)writeNativeData:(void *)data typeAsString:(NSString *)type;
 - (void)writeNativeData:(void *)data typeAsChar:(const char *)type;

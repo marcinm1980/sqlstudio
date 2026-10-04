@@ -136,9 +136,6 @@
     <ProjectReference Include="..\..\..\ext\Aga.Controls\Aga.Controls.csproj">
       <Project>{e73bb233-d88b-44a7-a98f-d71ee158381d}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\frontend\windows\MySQLCsUtilities\MySQLCsUtilities.csproj">
-      <Project>{ed3999b7-1041-449b-a9c8-a5c76b7732fe}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\frontend\windows\WBControls\WBControls.csproj">
       <Project>{35c9b1f0-96f0-40fe-b7f7-5a9ba3628db2}</Project>
     </ProjectReference>

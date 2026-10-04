@@ -273,7 +273,7 @@ void WBContextUI::show_about() {
 //--------------------------------------------------------------------------------------------------
 
 /**
- * Creates the main home screen (MySqlStudio Central, Workspace) if not yet done and docks it to
+ * Creates the main home screen (SqlStudio Central, Workspace) if not yet done and docks it to
  * the main application window.
  */
 
@@ -471,17 +471,17 @@ void WBContextUI::show_home_screen() {
     int rc = mforms::Utilities::show_warning(
       "Connections using old authentication protocol found",
       "While loading the stored connections some were found to use the old authentication protocol. "
-      "This is no longer supported by MySql Studio and the MySQL client library. Click on the \"More Info\" button "
+      "This is no longer supported by SqlStudio and the MySQL client library. Click on the \"More Info\" button "
       "for a more detailed explanation.\n\n"
       "With this change it is essential that user accounts are converted to the new password storage or you can no "
-      "longer connect with MySql Studio using these accounts.\n\n"
+      "longer connect with SqlStudio using these accounts.\n\n"
       "The following connections are affected:\n" +
         tmp,
       "Change", "Ignore", "More Info");
     if (rc == mforms::ResultOther) {
       mforms::Utilities::open_url(
-        "http://mysqlstudio.org/2014/03/"
-        "mysql-studio-6-1-updating-accounts-using-the-old-pre-4-1-1-authentication-protocol/");
+        "http://sqlstudio.org/2014/03/"
+        "sql-studio-6-1-updating-accounts-using-the-old-pre-4-1-1-authentication-protocol/");
     } else if (rc == mforms::ResultOk) {
       std::vector<db_mgmt_ConnectionRef>::const_iterator it;
       for (it = _oldAuthList.begin(); it != _oldAuthList.end(); ++it) {
@@ -581,7 +581,7 @@ void WBContextUI::remove_connection(const db_mgmt_ConnectionRef &connection) {
   grt::BaseListRef args(true);
   args->insert_unchecked(connection);
 
-  grt::ValueRef result = grt::GRT::get()->call_module_function("MySqlStudio", "deleteConnection", args);
+  grt::ValueRef result = grt::GRT::get()->call_module_function("SqlStudio", "deleteConnection", args);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -689,7 +689,7 @@ void WBContextUI::handle_home_context_menu(const base::any &object, const std::s
       std::string val = object;
       args->insert_unchecked(grt::StringRef(val));
 
-      grt::ValueRef result = grt::GRT::get()->call_module_function("MySqlStudio", "deleteConnectionGroup", args);
+      grt::ValueRef result = grt::GRT::get()->call_module_function("SqlStudio", "deleteConnectionGroup", args);
 
       // Internal deletion does not require the UI update
       if (action == "delete_connection_group")
@@ -909,7 +909,7 @@ void WBContextUI::handle_home_action(mforms::HomeScreenAction action, const base
 
     case HomeScreenAction::ActionOpenEERModel: {
       // Note: wb->open_document has an own GUILock, so we must not set another one here.
-      std::string filename = _wb->_frontendCallbacks->show_file_dialog("open", _("Open MySqlStudio Model"), "mwb");
+      std::string filename = _wb->_frontendCallbacks->show_file_dialog("open", _("Open SqlStudio Model"), "mwb");
       if (!filename.empty())
         _wb->open_document(filename);
       else
@@ -1014,9 +1014,9 @@ void WBContextUI::refresh_home_connections(bool clear_state) {
   // If there are no connections defined yet then create entries for all currently installed
   // local servers (only if this is the first run, after application start).
   if (_initializing_home_screen && (connections->count() == 0)) {
-    grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
+    grt::Module *module = grt::GRT::get()->get_module("SqlStudio");
     if (module == NULL)
-      throw std::logic_error("Internal error: can't find MySqlStudio module.");
+      throw std::logic_error("Internal error: can't find SqlStudio module.");
 
     grt::StringListRef arguments(grt::Initialized);
     module->call_function("createInstancesFromLocalServers", arguments);

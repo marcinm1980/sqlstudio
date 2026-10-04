@@ -33,7 +33,7 @@
 using namespace bec;
 using namespace casmine;
 
-SyntheticMySQLModel::SyntheticMySQLModel(MySqlStudioTester *tester)
+SyntheticMySQLModel::SyntheticMySQLModel(SqlStudioTester *tester)
   : physicalDiagram(grt::Initialized),
     schema(grt::Initialized),
     table(grt::Initialized),
@@ -96,7 +96,7 @@ SyntheticMySQLModel::SyntheticMySQLModel()
   routineGroupFigure(grt::Initialized) {
 
   // Set up a basic root structure.
-  studio_MySqlStudioRef wb(grt::Initialized);
+  studio_SqlStudioRef wb(grt::Initialized);
   studio_DocumentRef doc(grt::Initialized);
   doc->owner(wb);
   wb->doc(doc);

@@ -490,6 +490,11 @@ namespace MySQL.Controls
   /// </summary>
   public class Win8MenuStripRenderer : ToolStripRenderer
   {
+    private static Color MenuBackground { get { return Conversions.InDarkMode()
+      ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false) : Color.FromArgb(0xe7, 0xe8, 0xec); } }
+    private static Color MenuBorder { get { return Conversions.InDarkMode()
+      ? Color.FromArgb(0x45, 0x45, 0x45) : Color.FromArgb(0xcc, 0xce, 0xdb); } }
+
     public Bitmap Logo { get; set; }
 
     public Win8MenuStripRenderer()
@@ -516,7 +521,7 @@ namespace MySQL.Controls
           // Simple solid background and border if dropped down.
           if (!e.Item.IsOnDropDown && ((ToolStripMenuItem)e.Item).DropDown.Visible)
           {
-            using (SolidBrush brush = new SolidBrush(Color.FromArgb(0xe7, 0xe8, 0xe9)))
+            using (SolidBrush brush = new SolidBrush(MenuBackground))
               e.Graphics.FillRectangle(brush, bounds);
 
             bounds.X = 0;
@@ -527,7 +532,7 @@ namespace MySQL.Controls
               outline.AddLine(bounds.Left, bounds.Bottom, bounds.Left, bounds.Top);
               outline.AddLine(bounds.Left, bounds.Top, bounds.Right, bounds.Top);
               outline.AddLine(bounds.Right, bounds.Top, bounds.Right, bounds.Bottom);
-              using (Pen pen = new Pen(Color.FromArgb(0xcb, 0xcd, 0xda)))
+              using (Pen pen = new Pen(MenuBorder))
                 e.Graphics.DrawPath(pen, outline);
             }
           }
@@ -538,7 +543,7 @@ namespace MySQL.Controls
               bounds.X += 3;
               bounds.Width -= 5;
             }
-            using (SolidBrush brush = new SolidBrush(Color.FromArgb(0xd1, 0xe2, 0xf2)))
+            using (SolidBrush brush = new SolidBrush(Conversions.InDarkMode() ? Color.FromArgb(0x09, 0x47, 0x71) : Color.FromArgb(0xd1, 0xe2, 0xf2)))
               e.Graphics.FillRectangle(brush, bounds);
 
             bounds.X -= 0.5f;
@@ -554,7 +559,7 @@ namespace MySQL.Controls
     {
       if (e.ToolStrip.IsDropDown)
       {
-        using (SolidBrush brush = new SolidBrush(Color.FromArgb(0xe7, 0xe8, 0xec)))
+        using (SolidBrush brush = new SolidBrush(MenuBackground))
           e.Graphics.FillRectangle(brush, e.AffectedBounds);
       }
       else
@@ -581,7 +586,7 @@ namespace MySQL.Controls
       // we have to draw the text manually, as it would appear semi-transparently otherwise.
       Color color = Color.FromArgb(0xa2, 0xa4, 0xa5);
       if (e.Item.Enabled)
-        color = Color.FromArgb(0x1e, 0x1e, 0x1e);
+        color = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true);
       using (SolidBrush brush = new SolidBrush(color))
         e.Graphics.DrawString(e.Text, e.TextFont, brush, e.TextRectangle, format);
     }
@@ -593,7 +598,7 @@ namespace MySQL.Controls
         Rectangle bounds = e.AffectedBounds;
         bounds.Width--;
         bounds.Height--;
-        using (Pen pen = new Pen(Color.FromArgb(0xcc, 0xce, 0xdb)))
+        using (Pen pen = new Pen(MenuBorder))
         {
           e.Graphics.DrawLine(pen, e.ConnectedArea.Right, bounds.Top, bounds.Right, bounds.Top);
           e.Graphics.DrawLine(pen, bounds.Right, bounds.Top, bounds.Right, bounds.Bottom);
@@ -608,13 +613,13 @@ namespace MySQL.Controls
       // Currently we render only horizontal separators (as this renderer is for menus only).
       PointF start = new Point(e.Item.Margin.Left, e.Item.Height / 2 );
       PointF end = new Point(e.Item.Width - e.Item.Margin.Right, e.Item.Height / 2);
-      using (Pen pen = new Pen(Color.FromArgb(0xcc, 0xce, 0xdb)))
+      using (Pen pen = new Pen(MenuBorder))
         e.Graphics.DrawLine(pen, start, end);
     }
 
     protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
     {
-      using (SolidBrush brush = new SolidBrush(Color.FromArgb(0xe7, 0xe8, 0xec)))
+      using (SolidBrush brush = new SolidBrush(MenuBackground))
         e.Graphics.FillRectangle(brush, e.AffectedBounds);
     }
 

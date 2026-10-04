@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
     if (base::hasSuffix(script_name, termination))
       script_name = base::left(script_name, script_name.length() - termination.length());
 
-    std::cout << "To start MySql Studio, use " << script_name << " instead of " << argv[0] << std::endl;
+    std::cout << "To start SqlStudio, use " << script_name << " instead of " << argv[0] << std::endl;
     exit(1);
   }
 
@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
   wboptions.struct_search_path = wboptions.basedir + "/grt";
   wboptions.module_search_path = getenv("MWB_MODULE_DIR");
 
-  g_set_application_name("MySql Studio");
+  g_set_application_name("SqlStudio");
 
   Program program;
 
@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
   } catch (Glib::Error &err) {
     logError("Unable to load: %s, using system defaults.\n", std::string(wboptions.basedir + "/studio.css").c_str());
   }
-  // MySqlStudio doesn't support any other language than English,
+  // SqlStudio doesn't support any other language than English,
   // force text/window directon to be Left To Right.
   gtk_widget_set_default_direction(GTK_TEXT_DIR_LTR);
 
@@ -185,7 +185,7 @@ int main(int argc, char **argv) {
 
       Gtk::MessageDialog dlg(
         strfmt("<b>Unhandled Exception</b>\nAn unhandled exception has occurred (%s).\nInternal state may be "
-               "inconsystent, please save your work to a temporary file and restart MySqlStudio.\nPlease report this "
+               "inconsystent, please save your work to a temporary file and restart SqlStudio.\nPlease report this "
                "with details on how to repeat at http://bugs.mysql.com",
                exc.what()),
         true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
 
       Gtk::MessageDialog dlg(
         strfmt("<b>Unhandled Exception</b>\nAn unhandled exception has occurred (%s).\nInternal state may be "
-               "inconsystent, please save your work to a temporary file and restart MySqlStudio.\nPlease report this "
+               "inconsystent, please save your work to a temporary file and restart SqlStudio.\nPlease report this "
                "with details on how to repeat at http://bugs.mysql.com",
                exc.what().c_str()),
         true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
@@ -210,7 +210,7 @@ int main(int argc, char **argv) {
 
       Gtk::MessageDialog dlg(
         strfmt("<b>Unhandled Exception</b>\nAn unhandled exception has occurred.\nInternal state may be inconsystent, "
-               "please save your work to a temporary file and restart MySqlStudio.\nPlease report this with details on "
+               "please save your work to a temporary file and restart SqlStudio.\nPlease report this with details on "
                "how to repeat at http://bugs.mysql.com"),
         true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
       dlg.set_title(_("Error"));

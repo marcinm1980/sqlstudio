@@ -119,7 +119,7 @@ namespace {
   };
 
   struct TestData {
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
     db_TableRef table;
     std::unique_ptr<TestTableEditor> editor;
 
@@ -137,7 +137,7 @@ namespace {
     TestData *data = new TestData();
 
     void SetUp() override {
-      data->tester.reset(new MySqlStudioTester());
+      data->tester.reset(new SqlStudioTester());
       data->tester->initializeRuntime();
       data->tester->createNewDocument();
 

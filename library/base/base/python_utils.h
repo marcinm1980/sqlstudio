@@ -23,8 +23,8 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#ifndef __MySQLMySqlStudio__python__
-#define __MySQLMySqlStudio__python__
+#ifndef __SqlStudio__python__
+#define __SqlStudio__python__
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
@@ -78,4 +78,4 @@ struct WillLeavePython {
   }
 };
 
-#endif /* defined(__MySQLMySqlStudio__python__) */
+#endif /* defined(__SqlStudio__python__) */

@@ -60,7 +60,7 @@
 
 #import "MainWindowController+Model.h"
 
-DEFAULT_LOG_DOMAIN("MySqlStudio")
+DEFAULT_LOG_DOMAIN("SqlStudio")
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ public:
   if (self != nil) {
     mforms::Form::main_form()->set_data(self);
 
-    // Let MySqlStudio know about theme changes in the system.
+    // Let SqlStudio know about theme changes in the system.
     [self addObserver: self forKeyPath: @"effectiveAppearance" options: 0 context: nil];
     self.delegate = self;
   }

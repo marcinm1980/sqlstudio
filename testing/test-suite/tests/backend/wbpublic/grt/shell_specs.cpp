@@ -51,7 +51,7 @@ protected:
   void TearDown() override {
     dispatcher->shutdown();
     dispatcher.reset();
-    MySqlStudioTester::reinitGRT();
+    SqlStudioTester::reinitGRT();
   }
 };
 

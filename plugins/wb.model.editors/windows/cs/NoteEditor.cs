@@ -28,7 +28,7 @@ using System;
 
 using MySQL.Grt;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   public partial class NoteEditor : ObjectEditorPlugin
   {

@@ -122,7 +122,7 @@ public:
 };
 
 struct TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   db_TableRef table;
   //TestTableEditor *editor;
 
@@ -238,7 +238,7 @@ protected:
   TestData* data = new TestData();
   
   void SetUp() override {
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
     data->tester->createNewDocument();
   }

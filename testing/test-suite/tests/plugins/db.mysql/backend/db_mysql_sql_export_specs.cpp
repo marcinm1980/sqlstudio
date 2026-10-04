@@ -38,7 +38,7 @@ using namespace grt;
 namespace {
 
   struct TestData {
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
     SqlFacade::Ref sql_facade;
     db_mgmt_RdbmsRef rdbms;
     DictRef options;
@@ -95,7 +95,7 @@ namespace {
 
     void SetUp() override {
       data->dataDir = testing::Context::get().tmpDataDir();
-      data->tester.reset(new MySqlStudioTester());
+      data->tester.reset(new SqlStudioTester());
     }
 
     void TearDown() override {

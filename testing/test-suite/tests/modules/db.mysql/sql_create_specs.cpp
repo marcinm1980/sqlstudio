@@ -45,7 +45,7 @@ using namespace grt;
 
 namespace {
 struct SqlCreateData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   SQLGeneratorInterfaceImpl *diffsqlModule = nullptr;
   sql::ConnectionWrapper connection;
 
@@ -70,7 +70,7 @@ protected:
   static void SetUpTestSuite() {
     data = std::make_unique<SqlCreateData>();
     data->dataDir = testing::Context::get().tmpDataDir();
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 
     // Load modules.

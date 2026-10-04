@@ -12,7 +12,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MySQL.GUI.MySqlStudio.Plugins.Properties
+namespace MySQL.GUI.SqlStudio.Plugins.Properties
 {
 
 

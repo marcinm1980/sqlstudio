@@ -453,9 +453,32 @@ HSVColor::HSVColor(const Color &rgb) : a(rgb.alpha) {
 
 static std::shared_ptr<base::Mutex> color_mutex(new base::Mutex());
 
-static ColorScheme active_scheme =
-  ColorSchemeStandard; // Only set when loading the application or by a preferences change.
+static ColorScheme active_scheme = ColorSchemeStandard; // Resolved palette, refreshed on OS appearance changes.
 static bool high_contrast_active = false;
+static ColorScheme requested_scheme = ColorSchemeStandard;
+
+// Keep the preference separate from the resolved palette so OS changes do not
+// discard an explicit selection, including while High Contrast is enabled.
+static ColorScheme resolve_scheme(ColorScheme scheme) {
+#if defined(_MSC_VER)
+  HIGHCONTRASTW contrast = {};
+  contrast.cbSize = sizeof(contrast);
+  if (SystemParametersInfoW(SPI_GETHIGHCONTRAST, sizeof(contrast), &contrast, 0) &&
+      (contrast.dwFlags & HCF_HIGHCONTRASTON))
+    return ColorSchemeHighContrast;
+
+  if (scheme == ColorSchemeStandard) {
+    DWORD light = 1;
+    DWORD size = sizeof(light);
+    if (RegGetValueW(HKEY_CURRENT_USER,
+                    L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+                    L"AppsUseLightTheme", RRF_RT_REG_DWORD, nullptr, &light, &size) == ERROR_SUCCESS && light == 0)
+      return ColorSchemeDark;
+    return IsWindows8OrGreater() ? ColorSchemeStandardWin8 : ColorSchemeStandardWin7;
+  }
+#endif
+  return scheme;
+}
 
 static std::pair<std::string, std::string> custom_colors[] = {
   std::make_pair("", ""), std::make_pair("", ""), std::make_pair("", ""), std::make_pair("", ""),
@@ -498,6 +521,15 @@ std::string Color::getApplicationColorAsString(ApplicationColor color, bool fore
     std::make_pair("#cdd0d6", "#ffffff"), std::make_pair("#679bd3", "#404040"),
   };
 
+  static const std::pair<std::string, std::string> app_colors_dark[] = {
+    std::make_pair("#252526", "#e0e0e0"), std::make_pair("#202020", "#e0e0e0"),
+    std::make_pair("#2d2d30", "#e0e0e0"), std::make_pair("#094771", "#ffffff"),
+    std::make_pair("#252526", "#e0e0e0"), std::make_pair("#1e1e1e", "#e0e0e0"),
+    std::make_pair("#2d2d30", "#b8b8b8"), std::make_pair("#1e1e1e", "#75beff"),
+    std::make_pair("#094771", "#ffffff"), std::make_pair("#37373d", "#e0e0e0"),
+    std::make_pair("#202020", "#e0e0e0"),
+  };
+
   static const std::pair<std::string, std::string> app_colors_high_contrast[] = {
     // Background, foreground.
     std::make_pair("#ffffff", "#000000"), // AppColorMainTab
@@ -516,6 +548,8 @@ std::string Color::getApplicationColorAsString(ApplicationColor color, bool fore
   base::MutexLock lock(*color_mutex);
 
   switch (active_scheme) {
+    case ColorSchemeDark:
+      return foreground ? app_colors_dark[color].second : app_colors_dark[color].first;
     case ColorSchemeCustom:
       if (foreground)
         return custom_colors[color].second;
@@ -562,20 +596,20 @@ Color Color::getApplicationColor(ApplicationColor color, bool foreground) {
 void Color::set_active_scheme(ColorScheme scheme) {
   base::MutexLock lock(*color_mutex);
 
-  active_scheme = scheme;
+  requested_scheme = scheme;
+  active_scheme = resolve_scheme(scheme);
 
   // Cache high contrast setting to avoid having to lock the mutex every time we need to query it.
-  high_contrast_active = scheme == ColorSchemeHighContrast;
+  high_contrast_active = active_scheme == ColorSchemeHighContrast;
+}
 
-  // On Windows translate the default scheme to the correct one for the platform.
-  if (scheme == ColorSchemeStandard) {
-#if defined(_MSC_VER)
-    if (IsWindows8OrGreater())
-      active_scheme = ColorSchemeStandardWin8;
-    else
-      active_scheme = ColorSchemeStandardWin7;
-#endif
-  }
+bool Color::refresh_system_scheme() {
+  base::MutexLock lock(*color_mutex);
+  ColorScheme resolved = resolve_scheme(requested_scheme);
+  bool changed = resolved != active_scheme;
+  active_scheme = resolved;
+  high_contrast_active = active_scheme == ColorSchemeHighContrast;
+  return changed;
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -108,7 +108,7 @@ namespace mforms {
   };
 
   /**
-   * This class implements the main (home) screen in MySql Studio.
+   * This class implements the main (home) screen in SqlStudio.
    */
   class MFORMS_EXPORT HomeScreen : public mforms::AppView, public base::Observer {
   private:

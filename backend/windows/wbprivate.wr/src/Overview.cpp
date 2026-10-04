@@ -30,7 +30,7 @@
 #include "Overview.h"
 
 namespace MySQL {
-  namespace MySqlStudio {
+  namespace SqlStudio {
 
     MySQL::Base::UIForm ^ Overview::get_uiform() {
       return uiform;
@@ -42,5 +42,5 @@ namespace MySQL {
       return MySQL::Grt::CppVectorToObjectList<::bec::ToolbarItem, ::MySQL::Base::ToolbarItem>(items);
     }
 
-  } // namespace MySqlStudio
+  } // namespace SqlStudio
 } // namespace MySQL

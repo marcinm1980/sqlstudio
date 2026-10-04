@@ -1,5 +1,5 @@
 -- ----------------------------------------------------------------------------
--- MySql Studio Migration
+-- SqlStudio Migration
 -- Migrated Schemata: sampledb
 -- Source Schemata: C:\develop\6.0\fixtures\sampledb.sqlite
 -- Created: Fri Apr 19 12:26:43 2013

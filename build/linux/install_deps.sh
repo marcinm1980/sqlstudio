@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # install_deps.sh — Install all system packages required to build
-#                    MySQL Studio and its bundled 3rd-party dependencies.
+#                    SqlStudio and its bundled 3rd-party dependencies.
 #
 # Usage:
 #   sudo ./install_deps.sh          # install everything
@@ -43,7 +43,7 @@ fi
 
 echo -e "${C_CYAN}${C_BOLD}"
 echo "╔══════════════════════════════════════════════════════╗"
-echo "║    MySQL Studio — System Dependencies Installer     ║"
+echo "║    SqlStudio — System Dependencies Installer     ║"
 echo "╚══════════════════════════════════════════════════════╝"
 echo -e "${C_RESET}"
 
@@ -68,7 +68,7 @@ BUILD_TOOLS=(
     unzip
 )
 
-# ── Libraries required by the main MySQL Studio build ─────────────────────
+# ── Libraries required by the main SqlStudio build ─────────────────────
 STUDIO_LIBS=(
     # GTK 3 / GTKMM
     libgtk-3-dev            # gtk+-3.0, glib-2.0, gthread-2.0, gmodule-2.0
@@ -173,5 +173,5 @@ echo -e "${C_GREEN}${C_BOLD}╚════════════════�
 echo
 echo -e "  ${C_DIM}Next steps:${C_RESET}"
 echo -e "    1. Build 3rd-party deps:  ${C_CYAN}./build_3rdparty.sh${C_RESET}"
-echo -e "    2. Build MySQL Studio:    ${C_CYAN}../compile.sh${C_RESET}"
+echo -e "    2. Build SqlStudio:    ${C_CYAN}../compile.sh${C_RESET}"
 echo

@@ -40,12 +40,12 @@
 
 namespace wb {
 
-  class MySqlStudioImpl : public grt::ModuleImplBase, public PluginInterfaceImpl {
+  class SqlStudioImpl : public grt::ModuleImplBase, public PluginInterfaceImpl {
     typedef grt::ModuleImplBase super;
 
   public:
-    MySqlStudioImpl(grt::CPPModuleLoader *);
-    virtual ~MySqlStudioImpl();
+    SqlStudioImpl(grt::CPPModuleLoader *);
+    virtual ~SqlStudioImpl();
 
     void set_context(WBContext *wb);
     std::string getSystemInfo(bool indent);
@@ -54,118 +54,118 @@ namespace wb {
 
     DEFINE_INIT_MODULE(
       WBModule_VERSION, "Oracle and/or its affiliates", grt::ModuleImplBase,
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::getPluginInfo),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::getPluginInfo),
 
       // Non-plugin functions
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::copyToClipboard),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::hasUnsavedChanges),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::copyToClipboard),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::hasUnsavedChanges),
 
       // Model
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::newDocument),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::newDocumentFromDB), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::openModel),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::openRecentModel), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::saveModel),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::saveModelAs), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::exit),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::exportPNG), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::exportPDF),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::exportPS), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::exportSVG),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::activateDiagram),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::exportDiagramToPng),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::newDocument),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::newDocumentFromDB), DECLARE_MODULE_FUNCTION(SqlStudioImpl::openModel),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::openRecentModel), DECLARE_MODULE_FUNCTION(SqlStudioImpl::saveModel),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::saveModelAs), DECLARE_MODULE_FUNCTION(SqlStudioImpl::exit),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::exportPNG), DECLARE_MODULE_FUNCTION(SqlStudioImpl::exportPDF),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::exportPS), DECLARE_MODULE_FUNCTION(SqlStudioImpl::exportSVG),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::activateDiagram),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::exportDiagramToPng),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::selectAll), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::selectSimilar),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::selectConnected),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::goToNextSelected),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::goToPreviousSelected),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::selectAll), DECLARE_MODULE_FUNCTION(SqlStudioImpl::selectSimilar),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::selectConnected),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::goToNextSelected),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::goToPreviousSelected),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::highlightFigure),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::highlightFigure),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::editSelectedFigure),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::editSelectedFigureInNewWindow),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::editObject),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::editObjectInNewWindow),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::editSelectedFigure),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::editSelectedFigureInNewWindow),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::editObject),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::editObjectInNewWindow),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::raiseSelection),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::lowerSelection),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::raiseSelection),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::lowerSelection),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::newDiagram),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::newDiagram),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::toggleGrid), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::togglePageGrid),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::toggleGridAlign),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::toggleFKHighlight),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::toggleGrid), DECLARE_MODULE_FUNCTION(SqlStudioImpl::togglePageGrid),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::toggleGridAlign),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::toggleFKHighlight),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::zoomIn), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::zoomOut),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::zoomDefault),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::zoomIn), DECLARE_MODULE_FUNCTION(SqlStudioImpl::zoomOut),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::zoomDefault),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::setFigureNotation),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::setRelationshipNotation),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::setFigureNotation),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::setRelationshipNotation),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::setMarker), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::goToMarker),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::setMarker), DECLARE_MODULE_FUNCTION(SqlStudioImpl::goToMarker),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::startTrackingUndo),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::finishTrackingUndo),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::cancelTrackingUndo),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::startTrackingUndo),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::finishTrackingUndo),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::cancelTrackingUndo),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::isOsSupported),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::isOsSupported),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::addUndoListAdd),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::addUndoListRemove),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::addUndoObjectChange),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::addUndoDictSet),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::beginUndoGroup), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::endUndoGroup),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::setUndoDescription),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::addUndoListAdd),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::addUndoListRemove),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::addUndoObjectChange),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::addUndoDictSet),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::beginUndoGroup), DECLARE_MODULE_FUNCTION(SqlStudioImpl::endUndoGroup),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::setUndoDescription),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::createAttachedFile),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::setAttachedFileContents),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::getAttachedFileContents),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::getAttachedFileTmpPath),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::exportAttachedFileContents),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::openModelFile), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::closeModelFile),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::getDbFilePath), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::getTempDir),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::createAttachedFile),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::setAttachedFileContents),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::getAttachedFileContents),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::getAttachedFileTmpPath),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::exportAttachedFileContents),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::openModelFile), DECLARE_MODULE_FUNCTION(SqlStudioImpl::closeModelFile),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::getDbFilePath), DECLARE_MODULE_FUNCTION(SqlStudioImpl::getTempDir),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::debugValidateGRT),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::getVideoAdapter),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::debugValidateGRT),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::getVideoAdapter),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::runScriptFile),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::installModuleFile),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::runScriptFile),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::installModuleFile),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showUserTypeEditor),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showDocumentProperties),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showModelOptions), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showOptions),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showConnectionManager),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showInstanceManagerFor),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showInstanceManager),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showQueryConnectDialog),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::saveConnections),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::saveInstances),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::refreshHomeConnections),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showUserTypeEditor),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showDocumentProperties),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showModelOptions), DECLARE_MODULE_FUNCTION(SqlStudioImpl::showOptions),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showConnectionManager),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showInstanceManagerFor),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showInstanceManager),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showQueryConnectDialog),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::saveConnections),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::saveInstances),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::refreshHomeConnections),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showGRTShell), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::newGRTFile),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::openGRTFile),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::showPluginManager), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::reportBug),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showGRTShell), DECLARE_MODULE_FUNCTION(SqlStudioImpl::newGRTFile),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::openGRTFile),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::showPluginManager), DECLARE_MODULE_FUNCTION(SqlStudioImpl::reportBug),
 
       // Utilities
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::confirm), DECLARE_MODULE_FUNCTION(MySqlStudioImpl::requestFileOpen),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::requestFileSave),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::confirm), DECLARE_MODULE_FUNCTION(SqlStudioImpl::requestFileOpen),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::requestFileSave),
 
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::createConnectionsFromLocalServers),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::createInstancesFromLocalServers),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::create_connection),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::initializeOtherRDBMS),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::deleteConnection),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::deleteConnectionGroup),
-      DECLARE_MODULE_FUNCTION(MySqlStudioImpl::createSSHSession));
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::createConnectionsFromLocalServers),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::createInstancesFromLocalServers),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::create_connection),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::initializeOtherRDBMS),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::deleteConnection),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::deleteConnectionGroup),
+      DECLARE_MODULE_FUNCTION(SqlStudioImpl::createSSHSession));
 
   protected:
     virtual void initialization_done() override {
 // Called after init_module (defined by DEFINE_INIT_MODULE above) is done.
 // Here we register platform dependent functions.
 #ifdef _MSC_VER
-      register_functions(DECLARE_MODULE_FUNCTION(MySqlStudioImpl::wmiOpenSession),
-                         DECLARE_MODULE_FUNCTION(MySqlStudioImpl::wmiCloseSession),
-                         DECLARE_MODULE_FUNCTION(MySqlStudioImpl::wmiQuery),
-                         DECLARE_MODULE_FUNCTION(MySqlStudioImpl::wmiServiceControl),
-                         DECLARE_MODULE_FUNCTION(MySqlStudioImpl::wmiSystemStat),
-                         DECLARE_MODULE_FUNCTION(MySqlStudioImpl::wmiStartMonitoring),
-                         DECLARE_MODULE_FUNCTION(MySqlStudioImpl::wmiReadValue),
-                         DECLARE_MODULE_FUNCTION(MySqlStudioImpl::wmiStopMonitoring), NULL);
+      register_functions(DECLARE_MODULE_FUNCTION(SqlStudioImpl::wmiOpenSession),
+                         DECLARE_MODULE_FUNCTION(SqlStudioImpl::wmiCloseSession),
+                         DECLARE_MODULE_FUNCTION(SqlStudioImpl::wmiQuery),
+                         DECLARE_MODULE_FUNCTION(SqlStudioImpl::wmiServiceControl),
+                         DECLARE_MODULE_FUNCTION(SqlStudioImpl::wmiSystemStat),
+                         DECLARE_MODULE_FUNCTION(SqlStudioImpl::wmiStartMonitoring),
+                         DECLARE_MODULE_FUNCTION(SqlStudioImpl::wmiReadValue),
+                         DECLARE_MODULE_FUNCTION(SqlStudioImpl::wmiStopMonitoring), NULL);
 #endif
     };
 

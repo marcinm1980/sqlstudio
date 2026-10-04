@@ -95,9 +95,9 @@ if "%1" == "qthelp" (
 	echo.
 	echo.Build finished; now you can run "qcollectiongenerator" with the ^
 .qhcp project file in %BUILDDIR%/qthelp, like this:
-	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\MySQLMySqlStudioMigrationTool.qhcp
+	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\SqlStudioMigrationTool.qhcp
 	echo.To view the help file:
-	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\MySQLMySqlStudioMigrationTool.ghc
+	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\SqlStudioMigrationTool.ghc
 	goto end
 )
 

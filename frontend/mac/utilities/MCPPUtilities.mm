@@ -31,10 +31,10 @@ void MShowCPPException(const std::exception &exc) {
   NSAlert *alert = [NSAlert new];
   alert.messageText = @"Unhandled Backend Exception";
   alert.informativeText = [NSString stringWithFormat: @"It is advisable to save your work in a backup file and "
-                           "restart MySqlStudio.\nException Details:\n%s", exc.what()];
+                           "restart SqlStudio.\nException Details:\n%s", exc.what()];
   alert.alertStyle = NSAlertStyleCritical;
   [alert addButtonWithTitle: @"Ignore"];
-  [alert addButtonWithTitle: @"Close MySqlStudio"];
+  [alert addButtonWithTitle: @"Close SqlStudio"];
 
   if ([alert runModal] == NSAlertSecondButtonReturn)
     [NSApp terminate: nil];

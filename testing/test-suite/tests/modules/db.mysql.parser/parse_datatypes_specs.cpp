@@ -38,7 +38,7 @@ using namespace bec;
 
 namespace {
 struct ParseDatatypesData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
 
   // Valid id string for unquoted identifiers.
   std::string special_id = "\xE2\x86\xB2\xE2\x86\xB3"; // ↲↳
@@ -378,7 +378,7 @@ protected:
 
   static void SetUpTestSuite() {
     data = std::make_unique<ParseDatatypesData>();
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
     data->tester->createNewDocument();
   }

@@ -1,0 +1,108 @@
+name: sqlstudio-databases
+
+services:
+  mysql-8-2:
+    build:
+      context: mysql-8.2
+    image: sqlstudio/mysql:8.2
+    container_name: sqlstudio-mysql-8-2
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-sqlstudio}
+      MYSQL_USER: ${MYSQL_USER:-sqlstudio}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-sqlstudio}
+    ports:
+      - "127.0.0.1:${MYSQL_82_PORT:-33082}:3306"
+    volumes:
+      - mysql_82_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --host=127.0.0.1 --user=root --password=$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - databases
+
+  mysql-latest:
+    build:
+      context: mysql-latest
+    image: sqlstudio/mysql:latest
+    container_name: sqlstudio-mysql-latest
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-sqlstudio}
+      MYSQL_USER: ${MYSQL_USER:-sqlstudio}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-sqlstudio}
+    ports:
+      - "127.0.0.1:${MYSQL_LATEST_PORT:-33060}:3306"
+    volumes:
+      - mysql_latest_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --host=127.0.0.1 --user=root --password=$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - databases
+
+  mariadb-10-11:
+    build:
+      context: mariadb-10.11
+    image: sqlstudio/mariadb:10.11
+    container_name: sqlstudio-mariadb-10-11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-sqlstudio}
+      MARIADB_USER: ${MARIADB_USER:-sqlstudio}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-sqlstudio}
+    ports:
+      - "127.0.0.1:${MARIADB_1011_PORT:-33011}:3306"
+    volumes:
+      - mariadb_1011_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - databases
+
+  mariadb-latest:
+    build:
+      context: mariadb-latest
+    image: sqlstudio/mariadb:latest
+    container_name: sqlstudio-mariadb-latest
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-sqlstudio}
+      MARIADB_USER: ${MARIADB_USER:-sqlstudio}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-sqlstudio}
+    ports:
+      - "127.0.0.1:${MARIADB_LATEST_PORT:-33070}:3306"
+    volumes:
+      - mariadb_latest_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - databases
+
+volumes:
+  mysql_82_data:
+  mysql_latest_data:
+  mariadb_1011_data:
+  mariadb_latest_data:
+
+networks:
+  databases:
+    name: sqlstudio-databases

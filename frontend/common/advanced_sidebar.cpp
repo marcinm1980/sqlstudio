@@ -1234,6 +1234,8 @@ void AdvancedSidebar::setup_schema_tree() {
   _new_schema_tree.add_column(mforms::IconStringColumnType, _("Schema"), 100, false, true);
   _new_schema_tree.set_selection_mode(mforms::TreeSelectMultiple);
 #ifndef __APPLE__
+  _new_schema_tree.set_front_color(Color::getSystemColor(base::TextColor).to_html());
+  _filtered_schema_tree.set_front_color(Color::getSystemColor(base::TextColor).to_html());
   _new_schema_tree.set_back_color(background_color);
 #endif
   scoped_connect(_new_schema_tree.signal_changed(), std::bind(&AdvancedSidebar::on_tree_node_selected, this));
@@ -1315,6 +1317,8 @@ void AdvancedSidebar::updateColors() {
   }
 
 #ifndef __APPLE__
+  _new_schema_tree.set_front_color(Color::getSystemColor(base::TextColor).to_html());
+  _filtered_schema_tree.set_front_color(Color::getSystemColor(base::TextColor).to_html());
   _new_schema_tree.set_back_color(background_color);
   _filtered_schema_tree.set_back_color(background_color);
   _schema_box.set_back_color(background_color);

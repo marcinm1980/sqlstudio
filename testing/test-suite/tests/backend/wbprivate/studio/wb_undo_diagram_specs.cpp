@@ -58,7 +58,7 @@ static mforms::DialogResult message_cancel_callback() {
 
 
 struct TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   UndoManager *um = nullptr;
   OverviewBE *overview = nullptr;
   ModelDiagramForm *diagramForm = nullptr;
@@ -116,13 +116,13 @@ struct TestData {
 
 };
 
-class UndoRedoForDiagramActionsInMySqlStudioTest : public ::testing::Test {
+class UndoRedoForDiagramActionsInSqlStudioTest : public ::testing::Test {
 protected:
   TestData *data = new TestData();
 
   void SetUp() override {
 
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
     data->dataDir = ".";
 
@@ -172,7 +172,7 @@ protected:
 
   };
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceTable) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceTable) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
@@ -202,7 +202,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceView) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceView) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
@@ -232,7 +232,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceRoutineGroup) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceRoutineGroup) {
     db_SchemaRef schema = data->tester->getCatalog()->schemata()[0];
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
@@ -262,7 +262,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceImage) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceImage) {
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
 
@@ -288,7 +288,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceText) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceText) {
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_root_figure_count = data->diagram->rootLayer()->figures().count();
 
@@ -311,7 +311,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceLayer) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceLayer) {
     size_t old_layer_count = data->diagram->layers().count();
     size_t old_root_layer_count = data->diagram->rootLayer()->subLayers().count();
 
@@ -337,7 +337,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceSomethingInsideALayer) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceSomethingInsideALayer) {
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_layer_count = data->diagram->layers().count();
     size_t old_root_layer_count = data->diagram->rootLayer()->subLayers().count();
@@ -383,7 +383,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceLayerAroundSomething) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceLayerAroundSomething) {
     size_t old_figure_count = data->diagram->figures().count();
     size_t old_layer_count = data->diagram->layers().count();
     size_t old_root_layer_count = data->diagram->rootLayer()->subLayers().count();
@@ -435,7 +435,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveObject) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, MoveObject) {
     double x, y;
     model_FigureRef figure(data->diagram->figures()[0]);
 
@@ -461,7 +461,7 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-  TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveIntoAndOutOfLayer) {
+  TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, MoveIntoAndOutOfLayer) {
     double x, y;
     model_FigureRef figure(data->diagram->figures()[0]);
     model_LayerRef layer(data->diagram->layers()[0]);
@@ -536,19 +536,19 @@ protected:
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveLayer) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, MoveLayer) {
     GTEST_SKIP() << "not implemented";
 }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, MoveLlayerUnderObjectToCaptureIt) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, MoveLlayerUnderObjectToCaptureIt) {
     GTEST_SKIP() << "not implemented";
 }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, ResizeLayerToEatAFigure) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, ResizeLayerToEatAFigure) {
     model_LayerRef layer(data->diagram->layers()[0]);
 
     data->placeFigureWithTool(WB_TOOL_NOTE, 580, 480);
@@ -596,7 +596,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, ResizeLayerToEatAFigure) {
 
   //  XXX: for now disabled as there's a bug which must be fixed first (but cannot right now).
   //       Internal bug number #268.
-  // TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, ResizeTable) // Resize Table
+  // TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, ResizeTable) // Resize Table
   // {
   //   model_FigureRef figure(find_named_object_in_list(data->diagram->figures(), "table1"));
   //
@@ -625,7 +625,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, ResizeLayerToEatAFigure) {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteTable) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteTable) {
     model_FigureRef figure(find_named_object_in_list(data->diagram->figures(), "table1"));
 
     EXPECT_TRUE(figure.is_valid()) << "table found";
@@ -651,13 +651,13 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteTable) {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteLayerWithStuffInside) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteLayerWithStuffInside) {
     GTEST_SKIP() << "not implemented";
 }
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceWithDragDrop) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceWithDragDrop) {
     db_TableRef table(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table3"));
 
     EXPECT_TRUE(table.is_valid()) << "table found";
@@ -684,7 +684,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceWithDragDrop) {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceWithDragDropOnALayer) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, PlaceWithDragDropOnALayer) {
     db_TableRef table(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table3"));
 
     EXPECT_TRUE(table.is_valid()) << "table found";
@@ -717,7 +717,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, PlaceWithDragDropOnALayer) {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipInDiagram) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, CreateRelationshipInDiagram) {
     data->diagramForm->set_tool(WB_TOOL_PREL1n);
 
     model_FigureRef table1(find_named_object_in_list(data->diagram->figures(), "table1"));
@@ -748,7 +748,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipInDiagram) 
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipIndirectlyWithFK) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, CreateRelationshipIndirectlyWithFK) {
     db_TableRef table1(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table1"));
     db_TableRef table2(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table2"));
 
@@ -774,7 +774,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipIndirectlyW
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipDroppingTableWithFK) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, CreateRelationshipDroppingTableWithFK) {
     db_TableRef table(
       find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table_with_fk")
     );
@@ -807,7 +807,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipDroppingTab
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipDroppingTableReferencedByFK) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, CreateRelationshipDroppingTableReferencedByFK) {
     EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
     EXPECT_FALSE(find_named_object_in_list(data->diagram->figures(), "table_with_fk").is_valid()) << "Table already in diagram";
 
@@ -836,7 +836,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, CreateRelationshipDroppingTab
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipInDiagram) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteRelationshipInDiagram) {
     EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
@@ -863,7 +863,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipInDiagram) 
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipIndirectlyWithFK) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteRelationshipIndirectlyWithFK) {
     db_TableRef table2(find_named_object_in_list(data->tester->getPmodel()->catalog()->schemata()[0]->tables(), "table2"));
 
     EXPECT_TRUE(table2.is_valid()) << "table valid";
@@ -890,7 +890,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipIndirectlyW
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedTable) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteRelationshipDeletedTable) {
     EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
@@ -917,7 +917,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedTabl
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedTableFigureOnly) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteRelationshipDeletedTableFigureOnly) {
     EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
@@ -945,7 +945,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedTabl
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedReferencedTable) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteRelationshipDeletedReferencedTable) {
     EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
@@ -971,7 +971,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipDeletedRefe
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipAndRefTable) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteRelationshipAndRefTable) {
     EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
@@ -998,7 +998,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipAndRefTable
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipAndTable) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteRelationshipAndTable) {
     EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);
@@ -1026,7 +1026,7 @@ TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipAndTable) {
 
   //--------------------------------------------------------------------------------------------------------------------
 
-TEST_F(UndoRedoForDiagramActionsInMySqlStudioTest, DeleteRelationshipAndBothTables) {
+TEST_F(UndoRedoForDiagramActionsInSqlStudioTest, DeleteRelationshipAndBothTables) {
     EXPECT_EQ(data->diagram->connections().count(), 1U) << "rel count";
 
     model_ConnectionRef conn(data->diagram->connections()[0]);

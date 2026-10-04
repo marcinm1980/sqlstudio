@@ -27,6 +27,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using MySQL.SqlStudio;
 
 namespace MySQL.Utilities
 {
@@ -41,6 +42,8 @@ namespace MySQL.Utilities
 
 		private BevelStyleType bevelStyle = BevelStyleType.Flat;
 		private Border3DSide borderSide = Border3DSide.Top;
+		private Color originalBackColor;
+		private bool originalBackColorCaptured;
 
 		public Bevel()
 		{
@@ -86,12 +89,12 @@ namespace MySQL.Utilities
 
 			if (BevelStyle == BevelStyleType.White || BevelStyle == BevelStyleType.Dark)
 			{
-				Pen p;
-
-				if (BevelStyle == BevelStyleType.White)
-					p = new Pen(Color.White);
-				else
-					p = new Pen(SystemColors.ControlDark);
+				Color lineColor = BevelStyle == BevelStyleType.White ? Color.White : SystemColors.ControlDark;
+				if (SystemInformation.HighContrast)
+					lineColor = SystemColors.WindowText;
+				else if (Conversions.InDarkMode())
+					lineColor = Color.FromArgb(69, 69, 69);
+				Pen p = new Pen(lineColor);
 
 				switch (borderSide)
 				{
@@ -144,6 +147,25 @@ namespace MySQL.Utilities
 			}
 
 			base.OnPaint(e);
+		}
+
+		public void UpdateColors()
+		{
+			if (!originalBackColorCaptured)
+			{
+				originalBackColor = BackColor;
+				originalBackColorCaptured = true;
+			}
+
+			bool neutralBackground = originalBackColor.IsEmpty || originalBackColor.GetSaturation() < 0.1f;
+			if (SystemInformation.HighContrast)
+				BackColor = SystemColors.Control;
+			else if (Conversions.InDarkMode() && neutralBackground)
+				BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
+			else
+				BackColor = originalBackColor;
+
+			Invalidate();
 		}
 
 		#region Properties

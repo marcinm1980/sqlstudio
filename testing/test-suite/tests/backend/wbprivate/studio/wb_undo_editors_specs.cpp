@@ -36,7 +36,7 @@ using namespace wb;
 
 namespace {
 struct WbUndoEditorsData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   grt::UndoManager* um = nullptr;
   OverviewBE* overview = nullptr;
   db_SchemaRef schema;
@@ -55,7 +55,7 @@ protected:
 
   static void SetUpTestSuite() {
     data = std::make_unique<WbUndoEditorsData>();
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->um = grt::GRT::get()->get_undo_manager();
     data->overview = WBContextUI::get()->get_physical_overview();
 

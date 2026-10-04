@@ -8,4 +8,4 @@ Table `t1` was modified
   - removed column t
   __
 ----------------------------------------------
-End of MySql Studio Report
+End of SqlStudio Report

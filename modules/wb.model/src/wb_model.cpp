@@ -66,7 +66,7 @@ static void def_export_view_plugin(const char *aName, const char *aCaption, grt:
   pdef->objectStructName("model.Diagram");
   pdef->owner(plugin);
   plugin->inputValues().insert(pdef);
-  plugin->groups().insert("Application/MySqlStudio");
+  plugin->groups().insert("Application/SqlStudio");
 
   list.insert(plugin);
 }
@@ -87,7 +87,7 @@ static void def_export_view_plugin(const char *aName, const char *aCaption, grt:
     pdef->objectStructName("model.Diagram");\
     pdef->owner(plugin);\
     plugin->inputValues().insert(pdef);\
-    plugin->groups().insert("Application/MySqlStudio");\
+    plugin->groups().insert("Application/SqlStudio");\
     list.insert(plugin);\
   }
 */
@@ -155,7 +155,7 @@ static void def_figure_selection_plugin(const std::string &aName, const std::str
   pdef->argumentCardinality(aCard);
   pdef->owner(plugin);
   plugin->inputValues().insert(pdef);
-  plugin->groups().insert("Application/MySqlStudio");
+  plugin->groups().insert("Application/SqlStudio");
   list.insert(plugin);
 }
 
@@ -724,7 +724,7 @@ static bool calculate_view_size(const app_PageSettingsRef &page, double &width, 
 
 studio_physical_DiagramRef WbModelImpl::add_model_view(
   const db_CatalogRef &catalog, int xpages,
-  int ypages) { // XXX TODO move this to MySqlStudio module so we can reuse the same code as from wb_component
+  int ypages) { // XXX TODO move this to SqlStudio module so we can reuse the same code as from wb_component
   // also add code to place db objects or figures in canvas
   studio_physical_DiagramRef view(grt::Initialized);
 

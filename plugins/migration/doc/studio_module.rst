@@ -2,7 +2,7 @@ The studio Python Module
 ############################
 
 The :mod:`studio` module provides several submodules that facilitate the development of python plugins
-and scripts for MySql Studio.
+and scripts for SqlStudio.
 
 .. contents::
     :local:

@@ -1218,10 +1218,10 @@ public:
 
 EmptyStringTypeHandler empty_string_handler;
 
-const char* fixed_strins[] = { "Application/MySqlStudio",
+const char* fixed_strins[] = { "Application/SqlStudio",
                                "standalone",
                                "string",
-                               "MySqlStudio",
+                               "SqlStudio",
                                "normal",
                                "action",
                                "internal",

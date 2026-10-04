@@ -879,7 +879,7 @@ def main():
         "testing/test-suite/tests/plugins/db.mysql.editors/backend/mysql_routinegroup_editor_specs.cpp",
     ]
 
-    root = "/home/marcinm/develop/MySQLStudio"
+    root = "/home/marcinm/develop/SqlStudio"
 
     print("=" * 60)
     print("Casmine → GTest Converter")

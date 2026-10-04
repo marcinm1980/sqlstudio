@@ -292,6 +292,7 @@ void SqlEditorForm::update_toolbar_icons() {
   switch (base::Color::get_active_scheme()) {
     case base::ColorSchemeStandardWin8:
     case base::ColorSchemeStandardWin8Alternate:
+    case base::ColorSchemeDark:
       use_win8 = true;
       break;
 

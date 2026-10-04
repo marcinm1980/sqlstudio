@@ -103,16 +103,14 @@ int ButtonWrapper::set_text(const std::string &text) {
   if (control->Padding.Left == 0 && uses_internal_padding())
     enable_internal_padding(true);
 
-  // Resize the button to fit its content.
+  // Resize the button to fit its content without forcing creation of its window handle.
   // Keep the button's width, though, if that is currently larger than the computed width.
-  Graphics ^ g = control->CreateGraphics();
-  SizeF size = g->MeasureString(control->Text, control->Font);
-  delete g;
+  Size size = TextRenderer::MeasureText(control->Text, control->Font, Size::Empty, TextFormatFlags::NoPrefix);
 
-  if (std::ceill(size.Width) < control->Width)
-    size.Width = static_cast<float>(control->Width);
-  control->Width = static_cast<int>(std::ceill(size.Width));
-  return static_cast<int>(std::ceill(size.Height));
+  if (size.Width < control->Width)
+    size.Width = control->Width;
+  control->Width = size.Width;
+  return size.Height;
 }
 
 //-------------------------------------------------------------------------------------------------

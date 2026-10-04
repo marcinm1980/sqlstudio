@@ -40,7 +40,7 @@ using namespace grt;
 
 namespace {
 struct WbUndoOthersData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   UndoManager *um = nullptr;
   OverviewBE *overview = nullptr;
   size_t lastUndoStackSize = 0;
@@ -162,7 +162,7 @@ protected:
 
   static void SetUpTestSuite() {
     data = std::make_unique<WbUndoOthersData>();
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->createNewDocument();
     data->um = grt::GRT::get()->get_undo_manager();
 

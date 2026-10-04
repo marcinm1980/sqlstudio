@@ -4,12 +4,12 @@
 Build and run the native studio.testing test suite on Windows.
 
 .DESCRIPTION
-Builds required MySQL Studio targets, builds testing\test-suite\studio.testing.vcxproj,
+Builds required SqlStudio targets, builds testing\test-suite\studio.testing.vcxproj,
 prepares runtime test data, and optionally runs studio.testing.exe.
 
 .PARAMETER Action
 Operation to perform:
-  build - build MySqlStudio + studio.testing and prepare runtime output.
+  build - build SqlStudio + studio.testing and prepare runtime output.
   run   - optionally build first, then run studio.testing.exe.
   test  - run studio.testing.exe and auto-skip build when binaries are up to date (or force skip with -SkipBuild).
 
@@ -32,7 +32,7 @@ Explicit Visual Studio installation path.
 Path to the 3rd-party bundle (MSS_3DPARTY_PATH).
 
 .PARAMETER SolutionPath
-Path to MySQLStudio.sln.
+Path to SqlStudio.sln.
 
 .PARAMETER Jobs
 Parallel build worker count passed to MSBuild (/m).
@@ -110,7 +110,7 @@ function Show-Usage {
     Write-Host "  -VisualStudio latest|2026|2022    Default: latest" -ForegroundColor Gray
     Write-Host "  -VsInstallPath <path>             Optional" -ForegroundColor Gray
     Write-Host "  -BundleDir <path>                 Optional (uses MSS_3DPARTY_PATH or common bundle paths)" -ForegroundColor Gray
-    Write-Host "  -SolutionPath <path>              Optional (defaults to MySQLStudio.sln)" -ForegroundColor Gray
+    Write-Host "  -SolutionPath <path>              Optional (defaults to SqlStudio.sln)" -ForegroundColor Gray
     Write-Host "  -Jobs <n>                         Default: CPU count" -ForegroundColor Gray
     Write-Host "  -TestArgs <args>                  Extra args passed to studio.testing.exe" -ForegroundColor Gray
     Write-Host "  -SkipBuild                        For -Action run or -Action test" -ForegroundColor Gray
@@ -260,7 +260,7 @@ function Build-TestSuite {
 function Build-StudioTarget {
     $msbuildArgs = @(
         $script:SolutionPath,
-        "/t:MySqlStudio",
+        "/t:SqlStudio",
         "/m:$Jobs",
         "/p:Configuration=$Configuration",
         "/p:Platform=$Platform",
@@ -268,7 +268,7 @@ function Build-StudioTarget {
         "/p:PlatformToolset=$script:ResolvedPlatformToolset"
     )
 
-    Invoke-LoggedCommand -Label "build solution target MySqlStudio" -FilePath $script:MSBuildPath -Arguments $msbuildArgs -WorkingDirectory $script:ProjectRoot
+    Invoke-LoggedCommand -Label "build solution target SqlStudio" -FilePath $script:MSBuildPath -Arguments $msbuildArgs -WorkingDirectory $script:ProjectRoot
 }
 
 function Prepare-TestRuntime {
@@ -337,7 +337,7 @@ if (-not (Test-Path -LiteralPath $script:ProjectPath -PathType Leaf)) {
 }
 
 if (-not $SolutionPath) {
-    $SolutionPath = Join-Path $script:ProjectRoot "MySQLStudio.sln"
+    $SolutionPath = Join-Path $script:ProjectRoot "SqlStudio.sln"
 }
 $script:SolutionPath = [System.IO.Path]::GetFullPath($SolutionPath)
 if (-not (Test-Path -LiteralPath $script:SolutionPath -PathType Leaf)) {

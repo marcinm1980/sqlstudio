@@ -606,7 +606,7 @@ protected:
 
   std::string dataDir = casmine::CasmineContext::get()->tmpDataDir();
 
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   std::set<std::string> charsets;
 
   ANTLRInputStream input;
@@ -708,7 +708,7 @@ protected:
   MySQLParserTest(): lexer(&input), tokens(&lexer), parser(&tokens) {}
 
   void SetUp() override {
-    tester.reset(new MySqlStudioTester());
+    tester.reset(new SqlStudioTester());
     tester->initializeRuntime();
 
     // The charset list contains also the 3 charsets that were introduced in 5.5.3.

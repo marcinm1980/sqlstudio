@@ -30,7 +30,7 @@ using System.Windows.Forms;
 
 using MySQL.Grt;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   using Pages = LinkedList<PageInfo>;
   using PagesNode = LinkedListNode<PageInfo>;

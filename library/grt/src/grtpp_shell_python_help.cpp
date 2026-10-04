@@ -37,10 +37,10 @@ struct HelpTopic {
 };
 
 static HelpTopic help_topics[] = {
-  { "grt", "    GRT (Generic RunTime) is internal system used by MySqlStudio to hold model" NL
+  { "grt", "    GRT (Generic RunTime) is internal system used by SqlStudio to hold model" NL
            "document data and allow plugins and modules to interface between each other," NL
-           "with the MySqlStudio application and the model." NL
-           "    MySqlStudio model data (diagrams, schemas, tables etc) is stored in a hierarchy" NL
+           "with the SqlStudio application and the model." NL
+           "    SqlStudio model data (diagrams, schemas, tables etc) is stored in a hierarchy" NL
            "of objects that can be accessed by any plugin. To allow that, the data is" NL
            "represented in 6 different datatypes that can be accessed from any language" NL
            "supported: integers, doubles, strings, dicts, lists and objects." NL
@@ -52,7 +52,7 @@ static HelpTopic help_topics[] = {
            "    Objects contain data fields and methods, but the GRT only recognizes objects" NL
            "from a pre-registered class hierarchy. You can see the list of existing classes in" NL
            "the 'grt' module in the 'classes' list or in the Classes tab in the Scripting Shell" NL "window." NL
-           "    MySqlStudio document data is kept in a tree-like structure that you can access and" NL
+           "    SqlStudio document data is kept in a tree-like structure that you can access and" NL
            "modify from Python. However, it is easy to corrupt a document beyond repair, so be" NL
            "careful when modifying the GRT tree for models and always make backups. Read-only" NL
            "access to the tree is safe and sufficient for many purposes." NL NL
@@ -60,9 +60,9 @@ static HelpTopic help_topics[] = {
            "    Some examples of nodes that can be of interest:" NL NL
            "    grt.root.wb.doc.physicalModels[0].catalog.schemata" NL "        list of schemas in the open model" NL
            "    grt.root.wb.doc.physicalModels[0].diagrams" NL "        list of diagrams in the model" NL
-           "    grt.root.wb.options" NL "        MySqlStudio options and other state data" NL NL
+           "    grt.root.wb.options" NL "        SqlStudio options and other state data" NL NL
            "    While you cannot create new classes in the GRT from Python, you can create" NL
-           "modules and plugins that are usable from other MySqlStudio parts, including from" NL
+           "modules and plugins that are usable from other SqlStudio parts, including from" NL
            "other languages. See the corresponding help topics for more information about" NL
            "calling and writing your own modules." NL NL
            "    For practical tips and examples on how to write scripts, see 'scripting'." NL
@@ -72,17 +72,17 @@ static HelpTopic help_topics[] = {
     "    To execute a Python script against the loaded model, you can simply input it" NL
     "in the Scripting Shell entry box. For doing quick tests and exploring it will be" NL
     "the quickest way. If you have a script file you want to execute, you can execute" NL
-    "it through the 'Scripting -> Run MySqlStudio Script File' menu item." NL NL
+    "it through the 'Scripting -> Run SqlStudio Script File' menu item." NL NL
     "    If you have a script that is used often or that you want to distribute to other" NL
     "people, you may consider turning it into a plugin. A plugin will be accessible from" NL
-    "the MySqlStudio UI in the main menu or in certain context menus for model objects," NL
+    "the SqlStudio UI in the main menu or in certain context menus for model objects," NL
     "depending on how you register it. See the 'plugins' section for more info about this." NL
     "    You can also put your scripts in a library of plain Python functions, and invoke" NL
     "them from the Scripting Shell. By placing the library in the libraries folder in your" NL
-    "user's MySqlStudio data folder (you can see its path printed in the MySqlStudio Shell) it" NL
-    "will automatically loaded when MySqlStudio starts. This is a more flexible approach as" NL
+    "user's SqlStudio data folder (you can see its path printed in the SqlStudio Shell) it" NL
+    "will automatically loaded when SqlStudio starts. This is a more flexible approach as" NL
     "you can easily pass any kind of argument to your scripts with little coding effort." NL NL "    Samples" NL
-    "    -------" NL "    The following are some sample snippets for things you can do in MySqlStudio," NL
+    "    -------" NL "    The following are some sample snippets for things you can do in SqlStudio," NL
     "to view them type '? keyword'" NL NL "    iter.figures - iterate through figures in the diagram" NL
     "    iter.tables - iterate through tables in the 1st schema in the model" NL
     "    chcolor - change color of all figures matching some criteria" NL
@@ -112,7 +112,7 @@ static HelpTopic help_topics[] = {
     "            table.name = s" NL NL "change_table_names(lambda name: name.lower())" NL },
   { "modules",
     "    In the GRT, modules are libraries with a list of functions that are exported for use" NL
-    "by code in other modules, scripts or MySqlStudio itself. Modules can be currently written" NL
+    "by code in other modules, scripts or SqlStudio itself. Modules can be currently written" NL
     "in C++ and Python but the datatypes used in arguments and return value must be GRT" NL "types." NL
     "    To export certain functions from a Python source file as a module, you need to do the" NL "following:" NL
     "- the file must be placed in the user modules folder. You can see its path in the" NL
@@ -140,18 +140,18 @@ static HelpTopic help_topics[] = {
 void grt_shell_show_python_help(const char *command) {
   if (!command || !*command)
     grt::GRT::get()->send_output(
-      "Help Topics" NL "-----------" NL "grt        General information about the MySqlStudio runtime" NL
-      "scripting  Practical information when working on scripts and modules for MySqlStudio" NL
-      "wbdata     Summary about MySqlStudio model data organization" NL
-      "modules    Information about MySqlStudio module usage" NL
-      "plugins    Information about writing Plugins and Modules for MySqlStudio" NL
+      "Help Topics" NL "-----------" NL "grt        General information about the SqlStudio runtime" NL
+      "scripting  Practical information when working on scripts and modules for SqlStudio" NL
+      "wbdata     Summary about SqlStudio model data organization" NL
+      "modules    Information about SqlStudio module usage" NL
+      "plugins    Information about writing Plugins and Modules for SqlStudio" NL
       "Type '? <topic>' to get help on the topic." NL NL "Custom Python Modules" NL "---------------------" NL
-      "grt        Module to work with MySqlStudio runtime (grt) objects" NL
-      "   grt.root    The root object in the internal MySqlStudio object hierarchy" NL
-      "   grt.modules Location where MySqlStudio modules are available" NL
+      "grt        Module to work with SqlStudio runtime (grt) objects" NL
+      "   grt.root    The root object in the internal SqlStudio object hierarchy" NL
+      "   grt.modules Location where SqlStudio modules are available" NL
       "   grt.classes List of classes known to the GRT system" NL
-      "mforms     A Module to access the cross-platform UI toolkit used in some MySqlStudio features" NL
-      "wb         Utility module for creating MySqlStudio plugins" NL NL
+      "mforms     A Module to access the cross-platform UI toolkit used in some SqlStudio features" NL
+      "wb         Utility module for creating SqlStudio plugins" NL NL
       "Type 'help(<module/object/function>)' to get information about a module, object or function." NL
       "'dir(<object>)' will give a quick list of methods an object has." NL
       "For an introductory tutorial on the Python language, visit http://docs.python.org/tutorial/" NL

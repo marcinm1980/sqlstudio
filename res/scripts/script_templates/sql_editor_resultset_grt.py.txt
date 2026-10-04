@@ -1,7 +1,7 @@
 ## SQL Editor Resultset Plugin
-# MySql Studio Plugin
+# SqlStudio Plugin
 # <description>
-# Written in MySql Studio %wbversion%
+# Written in SqlStudio %wbversion%
 
 from wb import *
 import grt

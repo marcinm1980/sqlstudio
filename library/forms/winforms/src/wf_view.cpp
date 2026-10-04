@@ -1263,6 +1263,10 @@ void ViewWrapper::Initialize() {
 
   // Can be null, e.g. for non-control objects like dialogs.
   if (control != nullptr) {
+    //ControlTheme::Attach(control);
+    //if ((is<Panel>(control) && !is<HeaderPanel>(control)) || is<Label>(control) ||
+    //    is<ButtonBase>(control) || is<GroupBox>(control))
+    //  ControlTheme::AttachSurface(control);
     control->AutoSize = false;
     control->Font = gcnew Font(DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, FontStyle::Regular, GraphicsUnit::Pixel);
 

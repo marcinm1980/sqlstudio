@@ -247,7 +247,7 @@ namespace Aga.Controls.Tree
 
 		internal void Draw(Graphics gr, Rectangle bounds, Font font, bool pressed, bool hot)
 		{
-			DrawBackground(gr, bounds, pressed, hot);
+			DrawBackground(gr, bounds, pressed, hot, Owner == null ? Color.Empty : Owner.TreeView.HeaderBackColor);
 			DrawContent(gr, bounds, font);
 		}
 
@@ -278,9 +278,9 @@ namespace Aga.Controls.Tree
 			}
 
 			if (textSize.Width < maxTextSize.Width)
-				TextRenderer.DrawText(gr, Header, font, innerBounds, SystemColors.ControlText, _baseHeaderFlags | TextFormatFlags.Left);
+				TextRenderer.DrawText(gr, Header, font, innerBounds, (Owner == null || Owner.TreeView.HeaderForeColor.IsEmpty ? SystemColors.ControlText : Owner.TreeView.HeaderForeColor), _baseHeaderFlags | TextFormatFlags.Left);
             else
-				TextRenderer.DrawText(gr, Header, font, innerBounds, SystemColors.ControlText, _headerFlags);
+				TextRenderer.DrawText(gr, Header, font, innerBounds, (Owner == null || Owner.TreeView.HeaderForeColor.IsEmpty ? SystemColors.ControlText : Owner.TreeView.HeaderForeColor), _headerFlags);
         }
 
 		private void DrawSortMark(Graphics gr, Rectangle bounds, int x)
@@ -306,8 +306,16 @@ namespace Aga.Controls.Tree
 			gr.FillRectangle(SystemBrushes.HotTrack, rect.X-1, rect.Y, 2, rect.Height);
 		}
 
-		internal static void DrawBackground(Graphics gr, Rectangle bounds, bool pressed, bool hot)
-		{
+		internal static void DrawBackground(Graphics gr, Rectangle bounds, bool pressed, bool hot, Color background = default(Color))
+        {
+            if (!background.IsEmpty)
+            {
+                using (var brush = new SolidBrush(pressed ? ControlPaint.Dark(background) : hot ? ControlPaint.Light(background) : background))
+                    gr.FillRectangle(brush, bounds);
+                using (var pen = new Pen(ControlPaint.Light(background)))
+                    gr.DrawLine(pen, bounds.Right - 1, bounds.Top, bounds.Right - 1, bounds.Bottom);
+                return;
+            }
 			if (Application.RenderWithVisualStyles)
 			{
 				CreateRenderers();

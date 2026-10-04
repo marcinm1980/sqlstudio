@@ -248,7 +248,7 @@ namespace mforms {
           break;
         case mforms::ApplicationSettings:
           path = g_get_home_dir();
-          path.append("/.mysql/mysqlstudio");
+          path.append("/.mysql/sqlstudio");
           break;
         case WinProgramFiles:
         case WinProgramFilesX86:
@@ -323,7 +323,7 @@ namespace mforms {
 
     const SecretSchema* getWbSecretSchema() {
       static const SecretSchema wbSchema = {
-        .name = "org.mysql.mysqlstudio.Password",
+        .name = "org.mysql.sqlstudio.Password",
         .flags = SECRET_SCHEMA_NONE,
         .attributes = { { "service", SECRET_SCHEMA_ATTRIBUTE_STRING },
                         { "account", SECRET_SCHEMA_ATTRIBUTE_STRING },

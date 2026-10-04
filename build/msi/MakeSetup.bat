@@ -45,8 +45,8 @@ set BUILD_SIGNED=1
 rem Set other variables
 set DIST_DIR=.\distribution
 set UTIL_PATH=%MSS_3DPARTY_PATH%\bin
-set OUTPUT_FILENAME=mysql-studio-%SETUP_TYPE%-%VERSION_DETAIL%-%FILENAME_ARCH%.msi
-set OUTPUT_FILENAME_UNSIGNED=mysql-studio-%SETUP_TYPE%-%VERSION_DETAIL%-%FILENAME_ARCH%-unsigned.msi
+set OUTPUT_FILENAME=sql-studio-%SETUP_TYPE%-%VERSION_DETAIL%-%FILENAME_ARCH%.msi
+set OUTPUT_FILENAME_UNSIGNED=sql-studio-%SETUP_TYPE%-%VERSION_DETAIL%-%FILENAME_ARCH%-unsigned.msi
 
 if not exist %BIN_DIR% goto ERROR
 if not exist %DIST_DIR% mkdir %DIST_DIR%
@@ -68,8 +68,8 @@ echo .
 
 rem -------------------------------------------------------------------------------------
 echo Copying WiX source files ...
-copy source\mysql_studio.xml mysql_studio.xml
-copy source\mysql_studio_fragment.xml mysql_studio_fragment.xml
+copy source\sql_studio.xml sql_studio.xml
+copy source\sql_studio_fragment.xml sql_studio_fragment.xml
 echo .
 
 
@@ -82,7 +82,7 @@ echo .
 
 rem http://stcss.us.oracle.com/codesign/faces/index.jsp
 if "%BUILD_SIGNED%"=="" goto no_sign
-rename mysql_studio.msi %OUTPUT_FILENAME%
+rename sql_studio.msi %OUTPUT_FILENAME%
 if exist %DIST_DIR%\%OUTPUT_FILENAME% del %DIST_DIR%\%OUTPUT_FILENAME% 1> nul 2> nul
 copy /y %OUTPUT_FILENAME% %DIST_DIR%\%OUTPUT_FILENAME_UNSIGNED%
 java -Xmx1024m -jar %UTIL_PATH%\Client.jar -user %4 -pass %5 -file_to_sign %OUTPUT_FILENAME% -signed_location %DIST_DIR%
@@ -90,7 +90,7 @@ if not exist %DIST_DIR%\%OUTPUT_FILENAME% goto sign_error
 goto make_md5
 :no_sign
 rem move generated file
-move mysql_studio.msi %DIST_DIR%\%OUTPUT_FILENAME%
+move sql_studio.msi %DIST_DIR%\%OUTPUT_FILENAME%
 
 :make_md5
 pushd %DIST_DIR%

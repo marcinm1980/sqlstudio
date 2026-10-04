@@ -23,7 +23,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-// High-level testing for MySqlStudio
+// High-level testing for SqlStudio
 // This tests WBContext, which will test the integration of all components.
 
 #include "base/util_functions.h"
@@ -52,9 +52,9 @@ static mforms::DialogResult messageOtherCallback() {
 //----------------------------------------------------------------------------------------------------------------------
 
 static void set_note_content(GrtStoredNoteRef note, const std::string &text) {
-  grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
+  grt::Module *module = grt::GRT::get()->get_module("SqlStudio");
   if (!module)
-    throw std::runtime_error("MySqlStudio module not found");
+    throw std::runtime_error("SqlStudio module not found");
 
   note->lastChangeDate(base::fmttime());
 
@@ -69,9 +69,9 @@ static void set_note_content(GrtStoredNoteRef note, const std::string &text) {
 //----------------------------------------------------------------------------------------------------------------------
 
 static std::string get_note_content(const GrtStoredNoteRef &note) {
-  grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
+  grt::Module *module = grt::GRT::get()->get_module("SqlStudio");
   if (!module)
-    throw std::runtime_error("MySqlStudio module not found");
+    throw std::runtime_error("SqlStudio module not found");
 
   grt::BaseListRef args(true);
 
@@ -83,20 +83,20 @@ static std::string get_note_content(const GrtStoredNoteRef &note) {
 //----------------------------------------------------------------------------------------------------------------------
 
 struct WbContextData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   std::string dataDir = testing::Context::get().tmpDataDir();
   std::string outputDir = testing::Context::get().outputDir();
 };
 
 } // anonymous namespace
 
-class MySqlStudio_model_document_integration_testsTest : public ::testing::Test {
+class SqlStudio_model_document_integration_testsTest : public ::testing::Test {
 protected:
   static std::unique_ptr<WbContextData> data;
 
   static void SetUpTestSuite() {
     data = std::make_unique<WbContextData>();
-        data->tester.reset(new MySqlStudioTester());
+        data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 
     // Modeling uses a default server version, which is not related to any server it might have
@@ -113,9 +113,9 @@ protected:
 
 };
 
-std::unique_ptr<WbContextData> MySqlStudio_model_document_integration_testsTest::data;
+std::unique_ptr<WbContextData> SqlStudio_model_document_integration_testsTest::data;
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Test_creating_new_document) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Test_creating_new_document) {
   // Test creating a new document.
   // General note: many other tests depend on this to work, so there should really be a test
   // order where more complicated tests are based on simpler ones.
@@ -128,10 +128,10 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Test_creating_new_docum
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Test_loading_documents) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Test_loading_documents) {
   EXPECT_TRUE(data->tester->wb->open_document(data->dataDir + "/studio/test_model_xml.mwb"));
 
-  studio_MySqlStudioRef root(data->tester->wb->get_root());
+  studio_SqlStudioRef root(data->tester->wb->get_root());
 
   EXPECT_TRUE(root->doc().is_valid());
 
@@ -145,7 +145,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Test_loading_documents)
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Saving_and_loading_of_a_document) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Saving_and_loading_of_a_document) {
   data->tester->wb->new_document();
   data->tester->addView();
 
@@ -182,7 +182,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Saving_and_loading_of_a
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_opening_a_model_with_selection_will_cause_a_crash) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Bug_opening_a_model_with_selection_will_cause_a_crash) {
   data->tester->wb->new_document();
 
   data->tester->addView();
@@ -207,7 +207,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_opening_a_model_wit
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_dragging_related_tables_to_the_view_wont_create_the_connection) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Bug_dragging_related_tables_to_the_view_wont_create_the_connection) {
   // test dragging the table with fk 1st
   {
     EXPECT_TRUE(data->tester->wb->open_document(data->dataDir + "/studio/2tables_1fk.mwb"));
@@ -329,7 +329,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_dragging_related_ta
   }
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_deleting_tables_with_relationship_wont_delete_the_connection) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Bug_deleting_tables_with_relationship_wont_delete_the_connection) {
   EXPECT_TRUE(data->tester->wb->open_document(data->dataDir + "/studio/2tables_1fk.mwb"));
   EXPECT_TRUE(data->tester->wb->get_document().is_valid());
   EXPECT_EQ(data->tester->getSchema()->tables().count(), 2U);
@@ -372,7 +372,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_deleting_tables_wit
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Deleting_table_with_and_without_dbobject) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Deleting_table_with_and_without_dbobject) {
   data->tester->wb->new_document();
   data->tester->addView();
 
@@ -407,7 +407,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Deleting_table_with_and
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Make_sure_connections_are_deleted_and_recreated_with_undo_redo) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Make_sure_connections_are_deleted_and_recreated_with_undo_redo) {
   data->tester->wb->new_document();
   data->tester->addView();
 
@@ -465,7 +465,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Make_sure_connections_a
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_copy_paste_object_across_schemas_are_not_updating_the_owner) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Bug_copy_paste_object_across_schemas_are_not_updating_the_owner) {
   data->tester->wb->new_document();
 
   WBComponentPhysical *ph = data->tester->wb->get_component<WBComponentPhysical>();
@@ -509,7 +509,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_copy_paste_object_a
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_deleting_an_identifying_relationship_doesnt_delete_indexes) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Bug_deleting_an_identifying_relationship_doesnt_delete_indexes) {
   EXPECT_TRUE(data->tester->wb->open_document(data->dataDir + "/studio/identifying_relationship.mwb"));
   data->tester->openAllDiagrams();
   data->tester->syncView();
@@ -536,7 +536,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_deleting_an_identif
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Delete_column_from_table) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Delete_column_from_table) {
   EXPECT_TRUE(data->tester->wb->open_document(data->dataDir + "/studio/identifying_relationship.mwb"));
   data->tester->openAllDiagrams();
   data->tester->syncView();
@@ -555,7 +555,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Delete_column_from_tabl
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Relationship_handling_when_a_foreign_key_is_added) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Relationship_handling_when_a_foreign_key_is_added) {
   data->tester->wb->new_document();
   data->tester->addView();
 
@@ -596,7 +596,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Relationship_handling_w
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Layer_size_of_a_new_document) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Layer_size_of_a_new_document) {
   data->tester->wb->new_document();
   data->tester->addView();
 
@@ -607,7 +607,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Layer_size_of_a_new_doc
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Creation_of_a_simple_model_with_a_relationship) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Creation_of_a_simple_model_with_a_relationship) {
   data->tester->wb->new_document();
   data->tester->addView();
 
@@ -620,7 +620,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Creation_of_a_simple_mo
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_loading_a_model_with_layers_and_then_hitting_new_crashes) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Bug_loading_a_model_with_layers_and_then_hitting_new_crashes) {
   EXPECT_TRUE(data->tester->wb->open_document(data->dataDir + "/studio/2tables_conn_layer.mwb"));
   EXPECT_TRUE(data->tester->closeDocument());
   data->tester->wb->close_document_finish();
@@ -633,7 +633,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_loading_a_model_wit
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_loading_model_twice_causes_bad_internal_state_in_GUI) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Bug_loading_model_twice_causes_bad_internal_state_in_GUI) {
   EXPECT_TRUE(data->tester->wb->open_document(data->dataDir + "/studio/sakila.mwb"));
   EXPECT_TRUE(data->tester->closeDocument());
   data->tester->wb->close_document_finish();
@@ -643,7 +643,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_loading_model_twice
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_loading_a_model_with_selection_wont_reselect_the_items_in_the_canvas) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Bug_loading_a_model_with_selection_wont_reselect_the_items_in_the_canvas) {
   EXPECT_TRUE(data->tester->wb->open_document(data->dataDir + "/studio/selected_table.mwb"));
   data->tester->openAllDiagrams();
   data->tester->syncView();
@@ -656,7 +656,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Bug_loading_a_model_wit
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Stored_note_management) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Stored_note_management) {
   data->tester->wb->new_document();
 
   // add a note
@@ -692,7 +692,7 @@ TEST_F(MySqlStudio_model_document_integration_testsTest, Stored_note_management)
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(MySqlStudio_model_document_integration_testsTest, Undo_for_stored_notes) {
+TEST_F(SqlStudio_model_document_integration_testsTest, Undo_for_stored_notes) {
   // create note
   data->tester->wb->new_document();
 

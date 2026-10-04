@@ -34,10 +34,10 @@ namespace {
 
 class CodeEditorTest : public ::testing::Test {
 protected:
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
 
     void SetUp() override {
-        tester.reset(new MySqlStudioTester());
+        tester.reset(new SqlStudioTester());
     }
 };
 

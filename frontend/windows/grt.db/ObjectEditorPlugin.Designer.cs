@@ -2,7 +2,7 @@
  * Copyright (c) 2026 dev4fun. All rights reserved.
  */
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
 	partial class ObjectEditorPlugin
 	{

@@ -322,9 +322,9 @@ static const char *lastDropPositionKey = "lastDropPositionKey";
 
 // Helper struct we use to mark custom WB data on the pasteboard.
 struct PasteboardDataWrapper {
-  const char identifier[16]; // always "mysql-studio"
+  const char identifier[16]; // always "sql-studio"
   void *data;
-  PasteboardDataWrapper() : identifier("mysql-studio") {
+  PasteboardDataWrapper() : identifier("sql-studio") {
     data = NULL;
   }
 };
@@ -760,7 +760,7 @@ NSView *nsviewForView(mforms::View *view) {
 
 #pragma mark -
 
-@implementation NSPasteboard (MySQLMySqlStudio)
+@implementation NSPasteboard (SqlStudio)
 
 - (void)writeNativeData: (void *)data typeAsString: (NSString *)type {
   PasteboardDataWrapper wrapper;
@@ -779,7 +779,7 @@ NSView *nsviewForView(mforms::View *view) {
   NSData *data = [self dataForType: type];
   PasteboardDataWrapper wrapper;
   [data getBytes:&wrapper length: sizeof(wrapper)];
-  if (strncmp(wrapper.identifier, "mysql-studio", 15) == 0)
+  if (strncmp(wrapper.identifier, "sql-studio", 15) == 0)
     return wrapper.data;
 
   return NULL;

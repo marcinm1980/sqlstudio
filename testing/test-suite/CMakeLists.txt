@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.8)
 
-project(MYSQLSTUDIO_UNIT_TESTS)
+project(SQLSTUDIO_UNIT_TESTS)
 
 set(studio_dir "${CMAKE_SOURCE_DIR}/../..") # This must come from the parent
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${studio_dir}/build/cmake/Modules/")
@@ -16,7 +16,7 @@ if(DISABLE_SPECIAL_CHARACTERS)
 endif()
 
 set(path_to_binaries "${studio_dir}/wb-build/usr/local")
-set(path_to_libraries "${path_to_binaries}/lib/mysql-studio")
+set(path_to_libraries "${path_to_binaries}/lib/sql-studio")
 set(path_to_modules "${path_to_libraries}/modules")
 set(path_to_plugins "${path_to_libraries}/plugins")
 
@@ -106,6 +106,7 @@ add_executable(wbtests-bin
   tests/library/base/threading_specs.cpp
   tests/library/base/utf8string_specs.cpp
   tests/library/base/config_file_specs.cpp
+  tests/library/base/drawing_specs.cpp
 
   tests/library/mysql.canvas/mysqlcanvas_specs.cpp
 #  tests/library/sqlparser_specs.cpp

@@ -33,7 +33,7 @@ using namespace parsers;
 
 namespace {
 struct MysqlParserModuleData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   MySQLParserServices::Ref services;
   MySQLParserContext::Ref context;
 };
@@ -46,7 +46,7 @@ protected:
 
   static void SetUpTestSuite() {
     data = std::make_unique<MysqlParserModuleData>();
-    data->tester.reset(new MySqlStudioTester(false));
+    data->tester.reset(new SqlStudioTester(false));
     data->tester->initializeRuntime();
 
     data->services = MySQLParserServices::get();

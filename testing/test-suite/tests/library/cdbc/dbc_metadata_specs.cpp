@@ -51,7 +51,7 @@ namespace {
     }
 
     void TearDown() override {
-      MySqlStudioTester::reinitGRT();
+      SqlStudioTester::reinitGRT();
     }
   };
 

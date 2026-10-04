@@ -203,7 +203,7 @@ namespace Aga.Controls.Tree.NodeControls
 
 		private void CreateBrushes(TreeNodeAdv node, DrawContext context, out Brush backgroundBrush, out Color textColor, out Font font, ref string label)
 		{
-			textColor = SystemColors.ControlText;
+			textColor = Parent == null || (node.IsSelected && Parent.FullRowSelect) ? SystemColors.ControlText : Parent.ForeColor;
 			backgroundBrush = null;
 			font = context.Font;
 
@@ -226,7 +226,7 @@ namespace Aga.Controls.Tree.NodeControls
           backgroundBrush = TreeViewAdv.isWin8OrAbove ? new SolidBrush(Color.FromArgb(0xFF, 0xF7, 0xF7, 0xF7)) : SystemBrushes.InactiveBorder;
           break;
         case DrawSelectionMode.FullRowSelect:
-          //textColor = SystemColors.HighlightText;
+          textColor = TreeViewAdv.isWin8OrAbove ? SystemColors.ControlText : SystemColors.HighlightText;
           break;
       }
 

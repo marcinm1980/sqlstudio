@@ -53,7 +53,7 @@ namespace ph = std::placeholders;
 namespace {
 
   struct TestData {
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
     MySQLEditor::Ref sql_editor;
 
     parsers::MySQLParserContext::Ref autocompleteContext;
@@ -173,7 +173,7 @@ protected:
   TestData *data = new TestData();
 
   void SetUp() override {
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 
     GrtVersionRef version = data->tester->getRdbms()->version();

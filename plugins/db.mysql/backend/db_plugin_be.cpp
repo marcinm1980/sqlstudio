@@ -44,7 +44,7 @@ DEFAULT_LOG_DOMAIN("Db Plugin")
 void Db_plugin::grtm(bool reveng) {
   _doc = studio_DocumentRef::cast_from(grt::GRT::get()->get("/wb/doc"));
 
-  db_mgmt_ManagementRef mgmt = studio_MySqlStudioRef::cast_from(_doc->owner())->rdbmsMgmt();
+  db_mgmt_ManagementRef mgmt = studio_SqlStudioRef::cast_from(_doc->owner())->rdbmsMgmt();
   // don't need schema box for reverse engineer, but need it for fwd/sync (in case OmitQualifiers is on)
   _db_conn = new DbConnection(mgmt, db_mgmt_DriverRef(), reveng ? true : false);
 

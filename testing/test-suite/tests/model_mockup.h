@@ -70,7 +70,7 @@ namespace casmine {
     studio_physical_RoutineGroupFigureRef routineGroupFigure;
 
     SyntheticMySQLModel();
-    SyntheticMySQLModel(MySqlStudioTester *wbt);
+    SyntheticMySQLModel(SqlStudioTester *wbt);
 
     void fillDocumentWithData();
   };

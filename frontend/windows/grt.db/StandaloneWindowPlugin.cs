@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 using MySQL.Utilities.SysUtils;
 using System.IO;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   public partial class StandaloneWindowPlugin : ObjectEditorView
   {
@@ -44,8 +44,8 @@ namespace MySQL.GUI.MySqlStudio.Plugins
       Text = EditorPlugin.TabText;
       TopLevel = true;
       FormBorderStyle = FormBorderStyle.SizableToolWindow;
-      if (File.Exists("images/icons/MySQLMySqlStudio.ico"))
-        Icon = new Icon("images/icons/MySQLMySqlStudio.ico", new Size(16, 16));
+      if (File.Exists("images/icons/SqlStudio.ico"))
+        Icon = new Icon("images/icons/SqlStudio.ico", new Size(16, 16));
     }
 
     #region Native Code

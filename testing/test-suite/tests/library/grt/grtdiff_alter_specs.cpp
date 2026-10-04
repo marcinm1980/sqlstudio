@@ -63,7 +63,7 @@ namespace testing {
 
   class GRTDiffAlterTest : public ::testing::Test {
   protected:
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
     SqlFacade::Ref sqlParser;
     DbMySQLImpl *diffsqlModule;
     grt::DbObjectMatchAlterOmf omf;
@@ -227,7 +227,7 @@ namespace testing {
     void SetUp() override {
       dataDir = Context::get().tmpDataDir();
 
-      tester.reset(new MySqlStudioTester());
+      tester.reset(new SqlStudioTester());
       tester->initializeRuntime();
 
       omf.dontdiff_mask = 3;

@@ -23,8 +23,8 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#ifndef _MYSQLSTUDIO_PHYSICAL_MODEL_IMPL_H_
-#define _MYSQLSTUDIO_PHYSICAL_MODEL_IMPL_H_
+#ifndef _SQLSTUDIO_PHYSICAL_MODEL_IMPL_H_
+#define _SQLSTUDIO_PHYSICAL_MODEL_IMPL_H_
 
 #include "model_model_impl.h"
 #include "grts/structs.studio.physical.h"
@@ -47,9 +47,9 @@ enum PhysicalRelationshipNotation {
 };
 
 enum PhysicalFigureNotation {
-  PFMySqlStudioNotation,
-  PFMySqlStudioSimpleNotation,
-  PFMySqlStudioPKOnlyNotation,
+  PFSqlStudioNotation,
+  PFSqlStudioSimpleNotation,
+  PFSqlStudioPKOnlyNotation,
   PFIdef1xNotation,
   PFClassicNotation,
   PFBarkerNotation

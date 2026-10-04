@@ -2,13 +2,13 @@
 
 **A community-driven, open-source graphical database management tool - evolved from the foundations of MySQL Workbench.**
 
-> ⚠️ **Release Notice:** MySQL Studio is released **on demand**. There is no fixed release schedule. New builds are published when significant features, stability improvements, or security fixes are ready. Watch this repository for release notifications.
+> ⚠️ **Release Notice:** SqlStudio is released **on demand**. There is no fixed release schedule. New builds are published when significant features, stability improvements, or security fixes are ready. Watch this repository for release notifications.
 
 ---
 
 ## 💖 Support this project
 
-*If you find MySQL Studio useful, consider supporting its development - it helps keep the project active and maintained.*
+*If you find SqlStudio useful, consider supporting its development - it helps keep the project active and maintained.*
 
 [![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=TZP3JJYLQ2Z8A)
 
@@ -16,15 +16,15 @@
 
 ## About
 
-MySQL Studio is a free, open-source visual database design, administration, and development tool for the MySQL and MariaDB database ecosystems. It is based on the original architecture and codebase of **MySQL Workbench**, now independently developed and maintained under the **MySQL Studio** project.
+SqlStudio is a free, open-source visual database design, administration, and development tool for the MySQL and MariaDB database ecosystems. It is based on the original architecture and codebase of **MySQL Workbench**, now independently developed and maintained under the **SqlStudio** project.
 
-MySQL Studio was created out of the need for a modern, community-maintained alternative to the original MySQL Workbench - actively developed, not just patched. It incorporates all the core capabilities of its predecessor while adding new features, improved stability on modern operating systems, and a long-term commitment to open development.
+SqlStudio was created out of the need for a modern, community-maintained alternative to the original MySQL Workbench - actively developed, not just patched. It incorporates all the core capabilities of its predecessor while adding new features, improved stability on modern operating systems, and a long-term commitment to open development.
 
-MySQL Studio is brought to you by a team of independent contributors and database professionals who believe that a high-quality, open-source graphical MySQL/MariaDB tool should continue to exist and improve - independent of any corporate release timeline.
+SqlStudio is brought to you by a team of independent contributors and database professionals who believe that a high-quality, open-source graphical MySQL/MariaDB tool should continue to exist and improve - independent of any corporate release timeline.
 
 ### About the Author
 
-MySQL Studio is led by a developer with over **25 years of experience in the software industry**. Prior to starting this project, he served as **Technical Lead for MySQL Workbench at Oracle** for more than **10 years** - making Workbench one of his key products and areas of deep expertise. Having been at the core of Workbench's architecture and development for over a decade, he knows the codebase inside out - and MySQL Studio is the result of that experience, rebuilt with a fresh perspective and a long-term community focus in mind.
+SqlStudio is led by a developer with over **25 years of experience in the software industry**. Prior to starting this project, he served as **Technical Lead for MySQL Workbench at Oracle** for more than **10 years** - making Workbench one of his key products and areas of deep expertise. Having been at the core of Workbench's architecture and development for over a decade, he knows the codebase inside out - and SqlStudio is the result of that experience, rebuilt with a fresh perspective and a long-term community focus in mind.
 
 ---
 
@@ -58,7 +58,7 @@ Built-in dashboards provide real-time performance metrics, query analysis, index
 
 ## Supported Server Versions
 
-MySQL Studio is tested and supported with:
+SqlStudio is tested and supported with:
 - **MySQL** 5.7, 8.0, 8.1, 8.2, 8.3, 8.4 (LTS), 9.x
 - **MariaDB** 10.4, 10.5, 10.6 (LTS), 10.11 (LTS), 11.x (support will be soon published)
 
@@ -79,7 +79,7 @@ MySQL Studio is tested and supported with:
 
 ## Release Model
 
-MySQL Studio follows a **release-on-demand** policy:
+SqlStudio follows a **release-on-demand** policy:
 
 - Releases are made when they are ready - not on a fixed calendar schedule.
 - Each release is tagged and published in the [Releases](../../releases) section of this repository.
@@ -96,6 +96,19 @@ Prerequisites and build instructions are provided in the [BUILDING.md](BUILDING.
 
 A Windows build requires Visual Studio 2022 or later with the Desktop C++ workload. On Linux and macOS, GCC 11+ or Clang 14+ is required.
 
+On Windows, run `powershell -NoProfile -ExecutionPolicy Bypass -File .\build\compile-studio.ps1`
+to build the `SqlStudio` application in Debug/x64. The script discovers the newest
+Visual Studio or Build Tools installation with C++ tools, selects its installed
+toolset, and locates the third-party bundle through `MSS_3DPARTY_PATH`,
+`../wb_build/bundle`, `../bundle`, or `./bundle`. Use `-BundleDir <path>` or
+`-VsInstallPath <path>` to override discovery, `-Configuration Release` for a
+release build, and `-DryRun` to inspect the selected tools without compiling.
+The C++/CLI tools, Windows SDK, and .NET Framework 4.8 targeting pack are also required.
+
+In VS Code, **Ctrl+Shift+B** runs the default **Build SqlStudio (Debug)** task.
+The Release task is available under **Terminal > Run Task**. Compiler diagnostics
+appear in the Problems panel. Build output goes to `bin/x64/Debug` or `bin/x64/Release`.
+
 ---
 
 ## Contributing
@@ -108,7 +121,7 @@ Pull requests should target the `develop` branch. Direct commits to `main` are r
 
 ## License
 
-MySQL Studio is released under the **GNU General Public License, version 2.0**. See the [License](License.txt) file for full terms.
+SqlStudio is released under the **GNU General Public License, version 2.0**. See the [License](License.txt) file for full terms.
 
 This distribution may include materials developed by third parties. For license and attribution notices for these materials, please refer to the [License](License.txt) file.
 
@@ -116,7 +129,7 @@ This distribution may include materials developed by third parties. For license 
 
 ## Acknowledgements
 
-MySQL Studio is built on the foundation of MySQL Workbench, originally developed by the MySQL team at Oracle. We gratefully acknowledge the work of all past and present contributors to that project.
+SqlStudio is built on the foundation of MySQL Workbench, originally developed by the MySQL team at Oracle. We gratefully acknowledge the work of all past and present contributors to that project.
 
 ---
 

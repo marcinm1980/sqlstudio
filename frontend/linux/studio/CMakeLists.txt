@@ -1,4 +1,4 @@
-set(MYSQLSTUDIO_DATA_FILES
+set(SQLSTUDIO_DATA_FILES
     res/wb.glade
     res/model_view.glade
     res/diagram_view.glade
@@ -7,14 +7,14 @@ set(MYSQLSTUDIO_DATA_FILES
     res/input_dialog.glade
     studio.css
 )
-install(FILES ${MYSQLSTUDIO_DATA_FILES} DESTINATION ${WB_PACKAGE_SHARED_DIR})
+install(FILES ${SQLSTUDIO_DATA_FILES} DESTINATION ${WB_PACKAGE_SHARED_DIR})
 
 set(libdir          ${LIB_INSTALL_DIR})
 set(utilities_cmd   "")
-configure_file(mysql-studio.in mysql-studio @ONLY)
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/mysql-studio DESTINATION ${WB_INSTALL_BIN_DIR})
+configure_file(sql-studio.in sql-studio @ONLY)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/sql-studio DESTINATION ${WB_INSTALL_BIN_DIR})
 
-add_executable(mysql-studio-bin
+add_executable(sql-studio-bin
     main.cpp
     program.cpp
     main_form.cpp
@@ -30,13 +30,13 @@ add_executable(mysql-studio-bin
     sqlide_main.cpp
 )
 
-target_include_directories(mysql-studio-bin
+target_include_directories(sql-studio-bin
   PRIVATE
     ${PROJECT_SOURCE_DIR}/generated
     ${PROJECT_SOURCE_DIR}/modules
 )
 
-target_include_directories(mysql-studio-bin
+target_include_directories(sql-studio-bin
  SYSTEM
   PRIVATE
     ${GTKMM_INCLUDE_DIRS}
@@ -44,19 +44,19 @@ target_include_directories(mysql-studio-bin
 
 
 target_compile_options(linux_utilities PRIVATE $<$<CXX_COMPILER_ID:GNU>:-rdynamic>)
-target_compile_options(mysql-studio-bin PRIVATE ${WB_CXXFLAGS})
+target_compile_options(sql-studio-bin PRIVATE ${WB_CXXFLAGS})
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  target_compile_options(mysql-studio-bin PUBLIC -fPIE)
+  target_compile_options(sql-studio-bin PUBLIC -fPIE)
 else()
-  target_compile_options(mysql-studio-bin PUBLIC -fPIE -pie)
+  target_compile_options(sql-studio-bin PUBLIC -fPIE -pie)
 endif()
 
 if (KEYRING_DEFINITION)
-  target_compile_definitions(mysql-studio-bin PRIVATE HAVE_LIBSECRET_KEYRING)
+  target_compile_definitions(sql-studio-bin PRIVATE HAVE_LIBSECRET_KEYRING)
 endif()
 
-target_link_libraries(mysql-studio-bin
+target_link_libraries(sql-studio-bin
   PRIVATE
     mforms
     linux_utilities
@@ -77,13 +77,13 @@ target_link_libraries(mysql-studio-bin
 )
 
 if(BUILD_FOR_GCOV)
-  target_link_libraries(mysql-studio-bin PRIVATE gcov)
+  target_link_libraries(sql-studio-bin PRIVATE gcov)
 endif()
 
 if(COMMAND cotire)
-  set_target_properties(mysql-studio-bin PROPERTIES
+  set_target_properties(sql-studio-bin PROPERTIES
     COTIRE_PREFIX_HEADER_IGNORE_PATH "${PRECOMPILED_HEADERS_EXCLUDE_PATHS}")
-  cotire(mysql-studio-bin)
+  cotire(sql-studio-bin)
 endif()
 
-install(TARGETS mysql-studio-bin DESTINATION ${WB_INSTALL_DIR_EXECUTABLE})
+install(TARGETS sql-studio-bin DESTINATION ${WB_INSTALL_DIR_EXECUTABLE})

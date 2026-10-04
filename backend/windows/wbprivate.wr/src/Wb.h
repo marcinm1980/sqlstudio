@@ -43,7 +43,7 @@
 #include "ModelDiagramFormWrapper.h"
 
 namespace MySQL {
-  namespace MySqlStudio {
+  namespace SqlStudio {
 
   public
     enum class Msg_type {
@@ -160,7 +160,7 @@ namespace MySQL {
       WbContextUiHolder* _wbContextUi;
 
       MySQL::Grt::GrtManager ^ manager;
-      MySQL::MySqlStudio::Overview ^ physical_overview;
+      MySQL::SqlStudio::Overview ^ physical_overview;
 
       System::Collections::ArrayList open_editor_slot_wrappers;
 
@@ -198,7 +198,7 @@ namespace MySQL {
       // that need to create a view (can't the wrapper create the frontend view class?).
       VoidStrUIFormDelegate ^ create_main_form_view_delegate;
       VoidStrUIFormWrapperDelegate ^ create_main_form_view_wrapper_delegate;
-      void set_create_main_form_view(MySQL::MySqlStudio::WbFrontendCallbacks ^ cbacks, VoidStrUIFormDelegate ^ dt);
+      void set_create_main_form_view(MySQL::SqlStudio::WbFrontendCallbacks ^ cbacks, VoidStrUIFormDelegate ^ dt);
       void create_main_form_view_wrapper(const std::string& view_name, std::shared_ptr<bec::UIForm> form_be);
 
     public:
@@ -209,7 +209,7 @@ namespace MySQL {
         return wb::WBContextUI::get()->get_wb()->is_commercial();
       };
 
-      bool init(MySQL::MySqlStudio::WbFrontendCallbacks ^ callbacks, WbOptions ^ options,
+      bool init(MySQL::SqlStudio::WbFrontendCallbacks ^ callbacks, WbOptions ^ options,
                 VoidStrUIFormDelegate ^ create_main_form_view);
 
       bool opengl_rendering_enforced() {
@@ -421,7 +421,7 @@ namespace MySQL {
                                              [Out] List<String ^> ^ % items);
       String ^ get_description_for_selection([Out] GrtValue ^ % activeObjList, [Out] List<String ^> ^ % items);
       void set_description_for_selection(GrtValue ^ activeObjList, String ^ val);
-      ::MySQL::MySqlStudio::ModelDiagramFormWrapper ^ get_diagram_form_for_diagram(String ^ id);
+      ::MySQL::SqlStudio::ModelDiagramFormWrapper ^ get_diagram_form_for_diagram(String ^ id);
       void set_active_form(MySQL::Base::UIForm ^ uiform);
       void set_active_form_from_appview(MySQL::Forms::AppViewDockContent ^ form);
       String ^ get_active_context();
@@ -553,5 +553,5 @@ namespace MySQL {
       }
     };
 
-  } // namespace MySqlStudio
+  } // namespace SqlStudio
 } // namespace MySQL

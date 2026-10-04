@@ -33,9 +33,9 @@ using MySQL.Base;
 using MySQL.Controls;
 using MySQL.Forms;
 using MySQL.Grt;
-using MySQL.MySqlStudio;
+using MySQL.SqlStudio;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   /// <summary>
   /// Generic GRT Object Editor
@@ -142,14 +142,14 @@ namespace MySQL.GUI.MySqlStudio.Plugins
 
     #endregion
 
-    #region IMySqlStudioDocument Interface
+    #region ISqlStudioDocument Interface
 
     public override UIForm BackendForm
     {
       get { return backend; }
     }
 
-    public override void RefreshGUI(MySQL.MySqlStudio.RefreshType refresh, String str, IntPtr ptr)
+    public override void RefreshGUI(MySQL.SqlStudio.RefreshType refresh, String str, IntPtr ptr)
     {
     }
 

@@ -23,8 +23,8 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-#ifndef __MySQLMySqlStudio__wb_sql_editor_panel__
-#define __MySQLMySqlStudio__wb_sql_editor_panel__
+#ifndef __SqlStudio__wb_sql_editor_panel__
+#define __SqlStudio__wb_sql_editor_panel__
 
 #include "studio/wb_backend_public_interface.h"
 
@@ -215,4 +215,4 @@ public:
   std::list<SqlEditorResult *> dirty_result_panels();
 };
 
-#endif /* defined(__MySQLMySqlStudio__wb_sql_editor_panel__) */
+#endif /* defined(__SqlStudio__wb_sql_editor_panel__) */

@@ -12,10 +12,10 @@ set(IMAGE_FILES
     properties.png
     schemata.png
     user_datatypes.png
-    MySQLstudio-128.png
-    MySQLstudio-16.png
-    MySQLstudio-32.png
-    MySQLstudio-48.png
+    SqlStudio-128.png
+    SqlStudio-16.png
+    SqlStudio-32.png
+    SqlStudio-48.png
 )
 
 install(FILES ${IMAGE_FILES} DESTINATION ${WB_PACKAGE_SHARED_DIR}/images)

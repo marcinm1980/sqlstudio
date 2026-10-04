@@ -1,0 +1,56 @@
+Visual Studio: C:\Program Files\Microsoft Visual Studio\18\Community
+MSBuild:       C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe
+Toolset:       v145
+Bundle:        D:\develop\MySQL\bundle
+Target:        SqlStudio (Debug|x64)
+
+C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\Microsoft.CSharp.CurrentVersion.targets(130,9): warning MSB3884: Could not find rule set file "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\MinimumRecommendedRules.ruleset". [D:\develop\MySQL\SqlStudio\ext\Aga.Controls\Aga.Controls.csproj]
+  Aga.Controls -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\Aga.Controls.dll
+  base.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\base.dll
+  base.windows -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\base.windows.dll
+  wbssh.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\wbssh.dll
+  parsers.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\parsers.dll
+  mtemplate.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\mtemplate.dll
+  grt.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\grt.dll
+  base.wr.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\base.wr.dll
+  mysql.canvas.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\mysql.canvas.dll
+  mysql.forms.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\mysql.forms.dll
+  WBControls -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\WBControls.dll
+  cdbc.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\cdbc.dll
+  mforms.wr.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\mforms.wr.dll
+  wbpublic.be.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\wbpublic.be.dll
+  wbpublic.wr.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\wbpublic.wr.dll
+  wbprivate.be.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\wbprivate.be.dll
+  MySQLCsUtilities -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\MySQLCsUtilities.dll
+  wbprivate.wr.vcxproj -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\wbprivate.wr.dll
+  sqlide.fe -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\sqlide.fe.dll
+  WBPlugins -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\WbPlugins.dll
+  grt.db.fe -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\grt.db.fe.dll
+  SqlStudio -> D:\develop\MySQL\SqlStudio\bin\x64\Debug\SqlStudio.exe
+  [INFO] Preparing output directory: D:\develop\MySQL\SqlStudio\bin\x64\Debug
+  [INFO] Copy resources, images and scripting libraries ...
+  [INFO] Copy executables and Python libraries ...
+  [INFO] Copy runtime libraries (including libxml2, PROJ, GDAL and zlib) ...
+    Copied HtmlRenderer.dll
+  [INFO] Copy modules and reporting templates ...
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\images\icons\SqlStudio.ico
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\images\icons\SqlStudioDoc.ico
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\images\ui\*.xpm
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\res\scripts\firewall
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\images\changeset\*.png
+  [WARN] No files found: D:\develop\MySQL\bundle\bin\ccapiserver.exe
+  [WARN] No files found: D:\develop\MySQL\bundle\Python\pyodbc*_d.pyd
+  [WARN] No files found: D:\develop\MySQL\bundle\Python\pyodbc_d*.pyd
+  [WARN] No files found: D:\develop\MySQL\bundle\Python\Libs\site-packages\*.pyd
+  [WARN] No files found: D:\develop\MySQL\bundle\debug\lib\*.exe
+  [WARN] No files found: D:\develop\MySQL\bundle\lib\*.exe
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\backend\wbpublic\sqlide\res\*
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\modules\db.mysql.sqlide\res\*.xml
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\modules\wb.sqlide\*
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\plugins\wb.admin\internal
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\plugins\wb.bugreport\*.py
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\plugins\wb.updater\backend\*.py
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\README-commercial.md
+  [WARN] No files found: D:\develop\MySQL\SqlStudio\license-commercial.txt
+  Output directory preparation complete.
+Build succeeded. Output: D:\develop\MySQL\SqlStudio\bin\x64\Debug

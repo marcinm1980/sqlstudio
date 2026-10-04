@@ -36,7 +36,7 @@
 #pragma comment(lib, "wbemuuid.lib")
 
 /**
- * Interface functions for MySqlStudio modules to work with Windows Management Instrumentation.
+ * Interface functions for SqlStudio modules to work with Windows Management Instrumentation.
  * This code can only be used from the Windows version of WB.
  */
 namespace wmi {

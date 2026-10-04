@@ -71,10 +71,10 @@ using base::strfmt;
 static void set_window_icons(Gtk::Window *window) {
   std::vector<Glib::RefPtr<Gdk::Pixbuf> > icons;
 
-  icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-16.png", false));
-  icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-32.png", false));
-  icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-48.png", false));
-  icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-128.png", false));
+  icons.push_back(ImageCache::get_instance()->image_from_filename("SqlStudio-16.png", false));
+  icons.push_back(ImageCache::get_instance()->image_from_filename("SqlStudio-32.png", false));
+  icons.push_back(ImageCache::get_instance()->image_from_filename("SqlStudio-48.png", false));
+  icons.push_back(ImageCache::get_instance()->image_from_filename("SqlStudio-128.png", false));
 
   window->set_default_icon_list(icons);
 }
@@ -101,7 +101,7 @@ MainForm::MainForm() : _exiting(false) {
     sigc::bind_return(sigc::hide(sigc::mem_fun(mforms::Form::main_form(), &mforms::Form::activated)), false));
   get_mainwindow()->signal_focus_out_event().connect(
     sigc::bind_return(sigc::hide(sigc::mem_fun(mforms::Form::main_form(), &mforms::Form::deactivated)), false));
-  get_mainwindow()->set_title("MySql Studio");
+  get_mainwindow()->set_title("SqlStudio");
 
   _model_panel = nullptr;
 
@@ -784,7 +784,7 @@ void MainForm::perform_command_becb(const std::string &command) {
   /*
    // Help
    else if (command == "help_index")
-   Help.ShowHelp(null, System.IO.Path.Combine(Application.StartupPath, "MySQLMySqlStudio.chm"));
+   Help.ShowHelp(null, System.IO.Path.Combine(Application.StartupPath, "SqlStudio.chm"));
    else if (command == "help_version_check")
    Program.CheckForNewVersion();
    */
@@ -1519,7 +1519,7 @@ static std::string get_executable_path(mforms::App *app, const std::string &file
 
   const char *basedir = getenv("MWB_BASE_DIR");
   if (basedir) {
-    char *p = g_strdup_printf("%s/libexec/mysql-studio/%s", basedir, file.c_str());
+    char *p = g_strdup_printf("%s/libexec/sql-studio/%s", basedir, file.c_str());
     path = p;
     g_free(p);
     if (g_file_test(path.c_str(), G_FILE_TEST_EXISTS))

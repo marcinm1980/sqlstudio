@@ -4,4 +4,4 @@
 Routine `p1` was dropped
 Routine `p1` was created
 ----------------------------------------------
-End of MySql Studio Report
+End of SqlStudio Report

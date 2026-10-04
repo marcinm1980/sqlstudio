@@ -120,6 +120,26 @@ namespace MySQL.Utilities
     // Drawing resources.
     private Brush fontDarkBrush = new SolidBrush(Color.FromArgb(30, 30, 30));
 
+    private bool DarkAppearance
+    {
+      get { return BackColor.GetBrightness() < 0.5f; }
+    }
+
+    private Color FlatHeaderColor
+    {
+      get { return DarkAppearance ? Color.FromArgb(45, 45, 48) : Color.FromArgb(245, 245, 245); }
+    }
+
+    private Color FlatTabsColor
+    {
+      get { return DarkAppearance ? Color.FromArgb(37, 37, 38) : Color.FromArgb(242, 242, 242); }
+    }
+
+    private Brush FlatTextBrush
+    {
+      get { return DarkAppearance ? Brushes.White : fontDarkBrush; }
+    }
+
     private Font headerFont = ControlUtilities.GetFont("Trebuchet MS", 11, FontStyle.Bold);
     private Font tabHeaderCaptionFont = ControlUtilities.GetFont("Trebuchet MS", 11, FontStyle.Bold);
     private Font tabHeaderDescriptionFont = ControlUtilities.GetFont("Trebuchet MS", 7);
@@ -300,7 +320,7 @@ namespace MySQL.Utilities
         }
         else
         {
-          using (SolidBrush background = new SolidBrush(Color.FromArgb(245, 245, 245)))
+          using (SolidBrush background = new SolidBrush(FlatHeaderColor))
             g.FillRectangle(background, new Rectangle(0, 0, Width, headerHeight));
 
           // Draw tab action buttons
@@ -356,7 +376,7 @@ namespace MySQL.Utilities
             if (style == CollapsingPanelStyle.Convex)
               g.FillRectangle(SystemBrushes.ButtonFace, 0, headerHeight, Width, Padding.Top + tabsHeight);
             else
-              using (SolidBrush background = new SolidBrush(Color.FromArgb(242, 242, 242)))
+              using (SolidBrush background = new SolidBrush(FlatTabsColor))
                 g.FillRectangle(background, 0, headerHeight, Width, Padding.Top + tabsHeight);
             g.DrawLine(SystemPens.ControlDark, 0, headerHeight + Padding.Top + tabsHeight - 1,
               Width, headerHeight + Padding.Top + tabsHeight - 1);
@@ -388,7 +408,7 @@ namespace MySQL.Utilities
           if (style == CollapsingPanelStyle.Convex)
             g.FillRectangle(SystemBrushes.ButtonFace, 0, 0, Width, headerHeightTabsOnly);
           else
-            using (SolidBrush background = new SolidBrush(Color.FromArgb(242, 242, 242)))
+            using (SolidBrush background = new SolidBrush(FlatTabsColor))
               g.FillRectangle(background, 0, 0, Width, headerHeightTabsOnly);
 
           g.DrawLine(SystemPens.ControlDark, 0, headerHeightTabsOnly - 1,
@@ -473,10 +493,9 @@ namespace MySQL.Utilities
                     x, Expanded ? 3 : 1);
                 else
                 {
-                  g.DrawString(caption, HeaderFont, fontDarkBrush,
-                    x, 2);
-                  g.DrawString(caption, HeaderFont, Brushes.White,
-                    x, 1);
+                  if (!DarkAppearance)
+                    g.DrawString(caption, HeaderFont, fontDarkBrush, x, 2);
+                  g.DrawString(caption, HeaderFont, FlatTextBrush, x, 1);
                 }
 
                 x += Convert.ToInt16(captionWidth) + 8;
@@ -508,7 +527,7 @@ namespace MySQL.Utilities
 
                 // Draw the header caption
                 g.DrawString(caption, HeaderFont, style == CollapsingPanelStyle.Convex ?
-                  Brushes.White : fontDarkBrush, x, 1);
+                  Brushes.White : FlatTextBrush, x, 1);
 
                 // Add caption width
                 x += Convert.ToInt16(captionWidth) + 8;
@@ -594,7 +613,7 @@ namespace MySQL.Utilities
 
               // Draw the caption
               if (!caption.Equals(""))
-                g.DrawString(caption, tabHeaderCaptionFont, Brushes.Black,
+                g.DrawString(caption, tabHeaderCaptionFont, DarkAppearance ? Brushes.White : Brushes.Black,
                   x, y + 15);
               // Draw the description
               if (!description.Equals(""))
@@ -631,7 +650,7 @@ namespace MySQL.Utilities
 
         // Draw the header caption
         g.DrawString(HeaderCaption, HeaderFont,
-          style == CollapsingPanelStyle.Convex ? Brushes.White : fontDarkBrush,
+          style == CollapsingPanelStyle.Convex ? Brushes.White : FlatTextBrush,
           (disableExpansion ? 6 : 30), Convert.ToInt16((headerHeight - h) / 2));
       }
     }

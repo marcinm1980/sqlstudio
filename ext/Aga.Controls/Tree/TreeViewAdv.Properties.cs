@@ -17,6 +17,12 @@ namespace Aga.Controls.Tree
 {
 	public partial class TreeViewAdv
 	{
+        // Empty colors retain native Windows header rendering.
+        [DefaultValue(typeof(Color), "Empty")]
+        public Color HeaderBackColor { get; set; }
+        [DefaultValue(typeof(Color), "Empty")]
+        public Color HeaderForeColor { get; set; }
+
 		private Cursor _innerCursor = null;
 
 		public override Cursor Cursor

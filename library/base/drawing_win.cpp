@@ -33,6 +33,48 @@ using namespace base;
 static bool inTesting = false;
 
 Color Color::getSystemColor(SystemColor colorType) {
+  // Win32 GetSysColor keeps returning light colors for a normal dark app theme.
+  // Use our resolved palette; High Contrast continues through the OS path below.
+  if (get_active_scheme() == ColorSchemeDark) {
+    switch (colorType) {
+      case ControlShadowColor:
+      case ControlDarkShadowColor:
+      case GridColor:
+      case WindowFrameColor:
+        return Color::parse("#454545");
+      case ControlColor:
+      case ControlHighlightColor:
+      case ControlLightHighlightColor:
+      case HeaderColor:
+      case SecondaryBackgroundColor:
+        return Color::parse("#252526");
+      case ControlBackgroundColor:
+      case TextBackgroundColor:
+      case WindowBackgroundColor:
+        return Color::parse("#1e1e1e");
+      case SelectedControlColor:
+      case SelectedTextBackgroundColor:
+      case SelectedMenuItemColor:
+      case AlternateSelectedControlColor:
+      case HighlightColor:
+        return Color::parse("#094771");
+      case SecondarySelectedControlColor:
+        return Color::parse("#37373d");
+      case DisabledControlTextColor:
+      case TertiaryLabelColor:
+      case QuaternaryLabelColor:
+        return Color::parse("#909090");
+      case SecondaryLabelColor:
+        return Color::parse("#b8b8b8");
+      case SelectedControlTextColor:
+      case SelectedTextColor:
+      case SelectedMenuItemTextColor:
+      case AlternateSelectedControlTextColor:
+        return Color::white();
+      default:
+        return Color::parse("#e0e0e0");
+    }
+  }
   DWORD sysColor = 0;
   switch (colorType) {
     case ControlShadowColor:

@@ -1,5 +1,5 @@
 ###############################################################################
-# testing/CMakeLists.txt — Build the MySQL Studio gtest unit-test suite
+# testing/CMakeLists.txt — Build the SqlStudio gtest unit-test suite
 ###############################################################################
 #
 # This file defines the "wbtests-bin" executable that links against the
@@ -344,4 +344,4 @@ set_target_properties(wbtests-bin PROPERTIES
 
 # ── CTest integration ──────────────────────────────────────────────────────
 enable_testing()
-add_test(NAME MySQLStudioTests COMMAND wbtests-bin --gtest_color=yes)
+add_test(NAME SqlStudioTests COMMAND wbtests-bin --gtest_color=yes)

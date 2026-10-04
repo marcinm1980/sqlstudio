@@ -50,7 +50,7 @@
 #include "grts/structs.studio.h"
 #include <glib/gstdio.h>
 
-#define DOCUMENT_FORMAT "MySql Studio Model"
+#define DOCUMENT_FORMAT "SqlStudio Model"
 // version history:
 // switched to 1.1.6 in 5.0.20
 // switched to 1.2.0 in 5.1.0
@@ -449,7 +449,7 @@ std::list<std::string> ModelFile::unpack_zip(const std::string &zipfile, const s
 #endif
   if (z == NULL) {
     if (err == ZIP_ER_NOZIP)
-      throw std::runtime_error("The file is not a MySqlStudio document.");
+      throw std::runtime_error("The file is not a SqlStudio document.");
     else if (err == ZIP_ER_MEMORY)
       throw grt::os_error("Cannot allocate enough memory to open document.");
     else if (err == ZIP_ER_NOENT)
@@ -683,7 +683,7 @@ studio_DocumentRef ModelFile::unserialize_document(xmlDocPtr xmldoc, const std::
   _load_warnings.clear();
 
   if (doctype != DOCUMENT_FORMAT)
-    throw std::runtime_error("The file does not contain a MySqlStudio document.");
+    throw std::runtime_error("The file does not contain a SqlStudio document.");
 
   if (version != DOCUMENT_VERSION) {
     // first phase of document upgrade will upgrade it at XML level
@@ -699,7 +699,7 @@ studio_DocumentRef ModelFile::unserialize_document(xmlDocPtr xmldoc, const std::
     throw std::runtime_error("Error unserializing document data.");
 
   if (!studio_DocumentRef::can_wrap(value))
-    throw std::runtime_error("Loaded file does not contain a valid MySqlStudio document.");
+    throw std::runtime_error("Loaded file does not contain a valid SqlStudio document.");
 
   studio_DocumentRef doc(studio_DocumentRef::cast_from(value));
 

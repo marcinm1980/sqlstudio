@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# compile.sh — Build MySQL Studio (Workbench) on Linux using CMake
+# compile.sh — Build SqlStudio (Workbench) on Linux using CMake
 #
 # Environment:
 #   WB_BUNDLE_DIR   Path to the directory containing pre-built 3rd-party
@@ -62,7 +62,7 @@ detail()  { echo -e "  ${C_DIM}$*${C_RESET}"; }
 banner() {
     echo -e "${C_BLUE}${C_BOLD}"
     echo "╔══════════════════════════════════════════════════════╗"
-    echo "║          MySQL Studio — Linux Build Script          ║"
+    echo "║          SqlStudio — Linux Build Script          ║"
     echo "╚══════════════════════════════════════════════════════╝"
     echo -e "${C_RESET}"
 }
@@ -72,6 +72,7 @@ banner() {
 ###############################################################################
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+SOURCE_PARENT="$(cd "${SOURCE_DIR}/.." && pwd)"
 
 ###############################################################################
 # Defaults
@@ -135,6 +136,9 @@ info "Parallel jobs      : ${C_WHITE}${JOBS}"
 
 if [[ -n "${WB_BUNDLE_DIR:-}" ]]; then
     ok   "WB_BUNDLE_DIR      : ${C_WHITE}${WB_BUNDLE_DIR}"
+elif [[ -d "${SOURCE_PARENT}/bundle/lib" ]]; then
+    export WB_BUNDLE_DIR="${SOURCE_PARENT}/bundle"
+    ok   "WB_BUNDLE_DIR      : ${C_WHITE}${WB_BUNDLE_DIR} ${C_DIM}(auto-detected)"
 else
     warn "WB_BUNDLE_DIR is ${C_BOLD}not set${C_RESET}${C_YELLOW} — system packages will be used for 3rd-party libs"
 fi

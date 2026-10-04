@@ -4,7 +4,7 @@
 
 using MySQL.Utilities;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
 	partial class DbObjectEditorPages
 	{

@@ -79,7 +79,7 @@ class PSHelperViewTab(mforms.Box):
         
         self.set_spacing(8)
         if sys.platform == 'win32':
-            self.set_back_color("#FFFFFF")
+            self.set_back_color(mforms.Color.getSystemColor(mforms.ControlBackgroundColor).to_html())
 
         self._refresh = None
         self._busy = False

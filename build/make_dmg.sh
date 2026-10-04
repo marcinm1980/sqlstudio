@@ -1,16 +1,16 @@
 #!/bin/sh
 
-app="MySQLMySqlStudio.app"
-appx="MySQLMySqlStudio.X.app"
-srcdir="DerivedData/MySQLMySqlStudio/Build/Products/Release"
+app="SqlStudio.app"
+appx="SqlStudio.X.app"
+srcdir="DerivedData/SqlStudio/Build/Products/Release"
 edition=$1
 ver=$2
 if test "$ver" == ""; then
         echo "./make_dmg.sh <edition> <wbversion>"
         exit 1
 fi
-templatedmg=~/guibuild/mysqlstudio-$edition-template.dmg
-finaldmg=mysql-studio-$edition-$ver-osx-x86_64
+templatedmg=~/guibuild/sqlstudio-$edition-template.dmg
+finaldmg=sql-studio-$edition-$ver-osx-x86_64
 
 if [ ! -d $srcdir ]; then
     srcdir="build/Release"

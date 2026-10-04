@@ -30,7 +30,7 @@
 
 namespace MySQL {
   namespace GUI {
-    namespace MySqlStudio {
+    namespace SqlStudio {
       namespace Plugins {
 
       public
@@ -44,7 +44,7 @@ namespace MySQL {
         };
 
       } // namespace MySQL
-    } // namespace MySqlStudio
+    } // namespace SqlStudio
   } // namespace GUI
 } // namespace Plugins
 

@@ -23,7 +23,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-// code to auto-register all metaclasses/structs used in MySqlStudio
+// code to auto-register all metaclasses/structs used in SqlStudio
 
 #include "grts/structs.app.h"
 #include "grts/structs.db.h"

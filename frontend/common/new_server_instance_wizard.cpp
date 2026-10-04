@@ -172,9 +172,9 @@ bool TestDatabaseSettingsPage::get_server_version() {
   if (!bec::is_supported_mysql_version(version)) {
     current_task()->label.set_text("Get Server Version: Unsupported Server Version");
     std::string msg = strfmt(
-      "Unknown/unsupported server version or connection protocol detected (%s).\nMySql Studio is developed and "
-      "tested for MySQL Server versions 5.6 and newer.\nA connection can be established but some MySql Studio "
-      "features may not work properly.\nFor MySQL Server version older than 5.6, please use MySql Studio 6.3.",
+      "Unknown/unsupported server version or connection protocol detected (%s).\nSqlStudio is developed and "
+      "tested for MySQL Server versions 5.6 and newer.\nA connection can be established but some SqlStudio "
+      "features may not work properly.\nFor MySQL Server version older than 5.6, please use SqlStudio 6.3.",
       version.c_str());
     add_log_text(msg);
     throw std::runtime_error(msg);
@@ -807,7 +807,7 @@ void WindowsManagementPage::enter(bool advancing) {
       set_title(_("Set Windows configuration parameters for this machine"));
     }
 
-    grt::Module *module = grt::GRT::get()->get_module("MySqlStudio");
+    grt::Module *module = grt::GRT::get()->get_module("SqlStudio");
 
     try {
       grt::ValueRef wmi_session;

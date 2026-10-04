@@ -33,7 +33,7 @@
 #include "mforms/view.h"
 #include "mforms/code_editor.h"
 
-using namespace MySQL::GUI::MySqlStudio;
+using namespace MySQL::GUI::SqlStudio;
 using namespace MySQL::Forms;
 using namespace MySQL::Grt;
 
