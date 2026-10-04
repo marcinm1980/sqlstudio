@@ -448,7 +448,7 @@ class WbAdminConfigFileBE(object):
                 server_version = self.ctrl_be.target_version.majorNumber, self.ctrl_be.target_version.minorNumber, self.ctrl_be.target_version.releaseNumber
             log_debug2('Got server version "%s" from the server\n' % str(server_version))
         else:
-            log_info("Note! MySqlStudio uses server version '%s' from the server instance profile. Make the entry empty to auto pick version from the server.\n" % (str(server_version)))
+            log_info("Note! SqlStudio uses server version '%s' from the server instance profile. Make the entry empty to auto pick version from the server.\n" % (str(server_version)))
 
         self.possible_options = self.transform_opts_for(server_version, self.server_profile.target_os)
 
@@ -1148,7 +1148,7 @@ class WbAdminConfigFileBE(object):
                     print("Can't add option")
 
         tempdir = tempfile.gettempdir()
-        self.temp_file_name = os.path.join(tempdir, "mysql_studio_config.temp")
+        self.temp_file_name = os.path.join(tempdir, "sql_studio_config.temp")
         outf = open(self.temp_file_name, "w")
         eol = "\n"
 

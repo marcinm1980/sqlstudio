@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Aga.Controls.Tree;
-using MySQL.MySqlStudio;
+using MySQL.SqlStudio;
 
 namespace MySQL.Controls
 {
@@ -30,10 +30,11 @@ namespace MySQL.Controls
       bindings.GetValue(control, item => new Binding(item)).EnableSurface();
     }
 
-    private sealed class Binding : IMySqlStudioObserver
+    private sealed class Binding : ISqlStudioObserver
     {
       private readonly Control control;
       private readonly bool field;
+      private readonly bool themedText;
       private FlatStyle comboStyle;
       private bool initialized;
       private bool subscribed;
@@ -41,6 +42,9 @@ namespace MySQL.Controls
       private bool applying;
       private Color originalBackColor;
       private Color originalForeColor;
+      private Color originalTreeGridColor;
+      private Color originalTreeLineColor;
+      private Color originalTreeDragDropMarkColor;
       private FlatStyle buttonStyle;
       private bool buttonVisualStyle;
 
@@ -79,8 +83,16 @@ namespace MySQL.Controls
         this.control = control;
         field = control is TextBoxBase || control is ComboBox || control is ListBox ||
           control is TreeView || control is TreeViewAdv || control is NumericUpDown;
+        themedText = control is Label || control is CheckBox || control is RadioButton || control is GroupBox;
+        var tree = control as TreeViewAdv;
+        if (tree != null)
+        {
+          originalTreeGridColor = tree.GridColor;
+          originalTreeLineColor = tree.LineColor;
+          originalTreeDragDropMarkColor = tree.DragDropMarkColor;
+        }
         control.ControlAdded += ChildAdded;
-        if (field)
+        if (field || themedText)
         {
           control.HandleCreated += HandleCreated;
           control.HandleDestroyed += HandleDestroyed;
@@ -162,6 +174,18 @@ namespace MySQL.Controls
             control.Invalidate();
             return;
           }
+          if (themedText)
+          {
+            bool neutralText = originalForeColor.IsEmpty || originalForeColor.GetSaturation() < 0.1f;
+            if (SystemInformation.HighContrast)
+              control.ForeColor = SystemColors.ControlText;
+            else if (neutralText)
+              control.ForeColor = dark
+                ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true)
+                : (originalForeColor.IsEmpty ? SystemColors.ControlText : originalForeColor);
+            control.Invalidate();
+            return;
+          }
           control.BackColor = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false) : SystemColors.Window;
           control.ForeColor = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true) : SystemColors.WindowText;
           var combo = control as ComboBox;
@@ -169,8 +193,27 @@ namespace MySQL.Controls
           var tree = control as TreeViewAdv;
           if (tree != null)
           {
-            tree.HeaderBackColor = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false) : Color.Empty;
-            tree.HeaderForeColor = dark ? control.ForeColor : Color.Empty;
+            if (SystemInformation.HighContrast)
+            {
+              tree.GridColor = SystemColors.WindowText;
+              tree.LineColor = SystemColors.WindowText;
+              tree.DragDropMarkColor = SystemColors.Highlight;
+            }
+            else if (dark)
+            {
+              tree.GridColor = Color.FromArgb(69, 69, 69);
+              tree.LineColor = Color.FromArgb(89, 89, 89);
+              tree.DragDropMarkColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true);
+            }
+            else
+            {
+              tree.GridColor = originalTreeGridColor;
+              tree.LineColor = originalTreeLineColor;
+              tree.DragDropMarkColor = originalTreeDragDropMarkColor;
+            }
+            tree.HeaderBackColor = dark && !SystemInformation.HighContrast
+              ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false) : Color.Empty;
+            tree.HeaderForeColor = dark && !SystemInformation.HighContrast ? control.ForeColor : Color.Empty;
           }
           control.Invalidate();
         }

@@ -100,7 +100,7 @@ and the destination server where they should be copied to.'''), False, True)
         label.set_text('')
 
         if selector.get_selected_index() == selector.get_item_count()-1:
-            grt.modules.MySqlStudio.showConnectionManager()
+            grt.modules.SqlStudio.showConnectionManager()
             self.load_connections()
 
     def load_connections(self):

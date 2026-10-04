@@ -39,7 +39,7 @@ typedef uintptr_t NativeHandle;
 typedef void *NativeHandle;
 #endif
 
-// GUI plugins with native code that are loaded and managed by the MySqlStudio process
+// GUI plugins with native code that are loaded and managed by the SqlStudio process
 #define GUI_PLUGIN_TYPE "gui"
 // GUI plugins that are standalone and can be called directly by the module system (eg mforms)
 #define STANDALONE_GUI_PLUGIN_TYPE "standalone"

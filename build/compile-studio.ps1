@@ -1,7 +1,7 @@
 #requires -Version 5.1
 <#
 .SYNOPSIS
-Find Visual Studio and build the MySqlStudio application on Windows.
+Find Visual Studio and build the SqlStudio application on Windows.
 .DESCRIPTION
 Uses vswhere to find the newest Visual Studio 2022 or newer installation (including
 Build Tools) with MSBuild and C++ tools. A Developer Command Prompt is not required.
@@ -27,7 +27,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$solution = Join-Path $repoRoot 'MySQLStudio.sln'
+$solution = Join-Path $repoRoot 'SqlStudio.sln'
 
 if (!$VsInstallPath) {
     $vswhereCommand = Get-Command vswhere.exe -ErrorAction SilentlyContinue
@@ -86,7 +86,7 @@ if (!(Test-Path -LiteralPath (Join-Path $BundleDir 'include') -PathType Containe
 }
 
 $buildArguments = @(
-    $solution, '/t:MySqlStudio', "/m:$Jobs", '/nologo', '/verbosity:minimal',
+    $solution, '/t:SqlStudio', "/m:$Jobs", '/nologo', '/verbosity:minimal',
     "/p:Configuration=$Configuration", '/p:Platform=x64',
     "/p:PlatformToolset=$toolset", "/p:MSS_3DPARTY_PATH=$BundleDir"
 )
@@ -94,7 +94,7 @@ Write-Host "Visual Studio: $VsInstallPath"
 Write-Host "MSBuild:       $msbuild"
 Write-Host "Toolset:       $toolset"
 Write-Host "Bundle:        $BundleDir"
-Write-Host "Target:        MySqlStudio ($Configuration|x64)"
+Write-Host "Target:        SqlStudio ($Configuration|x64)"
 if ($DryRun) {
     Write-Host ('Arguments: ' + ($buildArguments -join ' '))
     return

@@ -28,13 +28,13 @@
 #include "base/notifications.h"
 
 namespace MySQL {
-  namespace MySqlStudio {
+  namespace SqlStudio {
 
     /**
      * Classes which want to get notified implement this interface.
      */
   public
-    interface class IMySqlStudioObserver {
+    interface class ISqlStudioObserver {
       void HandleNotification(const System::String ^ name, System::IntPtr sender,
                               const System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^
                                 info);
@@ -46,14 +46,14 @@ namespace MySQL {
   private
     class InterfacedObserver : public base::Observer {
     private:
-      gcroot<IMySqlStudioObserver ^> _managed_observer;
+      gcroot<ISqlStudioObserver ^> _managed_observer;
 
       virtual void handle_notification(const std::string &name, void *sender, base::NotificationInfo &info);
 
     public:
-      InterfacedObserver(IMySqlStudioObserver ^ native_observer);
+      InterfacedObserver(ISqlStudioObserver ^ native_observer);
 
-      bool WrapsObserver(IMySqlStudioObserver ^ observer);
+      bool WrapsObserver(ISqlStudioObserver ^ observer);
     };
 
   public
@@ -61,11 +61,11 @@ namespace MySQL {
       static std::vector<InterfacedObserver *> *observer_list = NULL;
 
     public:
-      static void AddObserver(IMySqlStudioObserver ^ observer, System::String ^ notification);
-      static void RemoveObserver(IMySqlStudioObserver ^ observer, System::String ^ notification);
+      static void AddObserver(ISqlStudioObserver ^ observer, System::String ^ notification);
+      static void RemoveObserver(ISqlStudioObserver ^ observer, System::String ^ notification);
 
       static void Send(System::String ^ notification, System::IntPtr sender);
     };
 
-  } // namespace MySqlStudio
+  } // namespace SqlStudio
 } // namespace MySQL

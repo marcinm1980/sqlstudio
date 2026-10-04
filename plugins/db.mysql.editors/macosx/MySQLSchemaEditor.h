@@ -32,7 +32,7 @@
 // MySQL Schema Editor controller/plugin class. The name of this class must match
 // what was declared in ../backend/register_plugin.cpp
 // in schema_editor->moduleFunctionName("DbMysqlSchemaEditor")
-// This is the class that will be loaded and instantiated by MySqlStudio
+// This is the class that will be loaded and instantiated by SqlStudio
 @interface DbMysqlSchemaEditor : WBPluginEditorBase {
 }
 

@@ -40,7 +40,7 @@ using namespace grt;
 namespace {
 
   struct TestData {
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
     SqlFacade::Ref sqlFacade;
 
     MySQLParserContext::Ref context;
@@ -138,7 +138,7 @@ protected:
   TestData *data = new TestData();
 
   void SetUp() override {
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 
     auto rdbms = db_mgmt_RdbmsRef::cast_from(grt::GRT::get()->get("/rdbms"));

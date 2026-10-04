@@ -37,7 +37,7 @@ namespace mforms {
 
 namespace MySQL {
   namespace GUI {
-    namespace MySqlStudio {
+    namespace SqlStudio {
 
     public
       ref class SqlEditorWrapper {
@@ -83,6 +83,6 @@ namespace MySQL {
         static SqlEditorWrapper ^ get_sql_editor(MySQL::Grt::BaseEditorWrapper ^ wrapper);
       };
 
-    }; // namespace MySqlStudio
+    }; // namespace SqlStudio
   };   // namespace GUI
 };     // namespace MySQL

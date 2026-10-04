@@ -340,4 +340,4 @@ User {{CREATE_USER_NAME}} was created
 {{/CREATE_USER}}
 
 ----------------------------------------------
-End of MySql Studio Report
+End of SqlStudio Report

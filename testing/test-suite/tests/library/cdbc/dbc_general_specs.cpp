@@ -42,13 +42,13 @@ namespace {
 
   class DbcGeneralTest : public ::testing::Test {
   protected:
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
 
     void SetUp() override {
       register_all_metaclasses();
       grt::GRT::get()->scan_metaclasses_in("../../res/grt/");
       grt::GRT::get()->end_loading_metaclasses();
-      tester.reset(new MySqlStudioTester);
+      tester.reset(new SqlStudioTester);
       EXPECT_EQ((size_t)INT_METACLASS_COUNT, grt::GRT::get()->get_metaclasses().size());
     }
 
@@ -65,7 +65,7 @@ namespace {
       std::unique_ptr<sql::Statement> stmt(connection->createStatement());
       stmt->execute("DROP SCHEMA IF EXISTS test");
 
-      //MySqlStudioTester::reinitGRT();
+      //SqlStudioTester::reinitGRT();
     }
   };
 

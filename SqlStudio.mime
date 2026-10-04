@@ -1,0 +1,4 @@
+# mime types for SqlStudio
+
+application/vnd.sql-studio-model
+    ext: mwb

@@ -367,7 +367,7 @@ namespace sql {
     // set application name
     {
       std::map<sql::SQLString, sql::SQLString> attribs;
-      attribs["program_name"] = "MySQLMySqlStudio";
+      attribs["program_name"] = "SqlStudio";
       properties["OPT_CONNECT_ATTR_ADD"] = attribs;
     }
 

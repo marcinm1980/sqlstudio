@@ -31,7 +31,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using MySQL.Grt;
-using MySQL.MySqlStudio;
+using MySQL.SqlStudio;
 using MySQL.Utilities.Properties;
 
 namespace MySQL.Controls
@@ -54,7 +54,7 @@ namespace MySQL.Controls
     }
   }
 
-  public class GridView : DataGridView, IMySqlStudioObserver
+  public class GridView : DataGridView, ISqlStudioObserver
   {
     private bool refreshing = false;
     private Bitmap fieldNullBitmap;

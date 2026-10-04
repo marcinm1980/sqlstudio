@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=SqlStudio
+Comment=MySQL Database Design, Administration and Development Tool
+Exec=sql-studio %f
+Terminal=false
+Type=Application
+Icon=sql-studio
+MimeType=application/vnd.sql-studio-model;application/sql;
+Categories=GTK;Database;Development;
+StartupWMClass=sql-studio-bin

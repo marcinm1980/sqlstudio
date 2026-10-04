@@ -34,7 +34,7 @@ internal static class ThemeControlsSmoke
       Application.EnableVisualStyles();
       string logDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "theme-test-logs");
       System.IO.Directory.CreateDirectory(logDirectory);
-      MySQL.MySqlStudio.Logger.InitLogger(logDirectory);
+      MySQL.SqlStudio.Logger.InitLogger(logDirectory);
       Conversions.SetColorScheme(ColorScheme.ColorSchemeDark);
       using (var grid = new TestGrid())
       using (var find = new FindPanel())

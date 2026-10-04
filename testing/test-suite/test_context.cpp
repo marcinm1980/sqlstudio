@@ -124,7 +124,7 @@ TestContext::TestContext() {
       static_cast<long>(::getpid())
 #endif
     );
-    _tmpDataDir = (basePath / ("mysqlstudio-test-suite-" + processId)).string();
+    _tmpDataDir = (basePath / ("sqlstudio-test-suite-" + processId)).string();
   }
 
   std::error_code error;

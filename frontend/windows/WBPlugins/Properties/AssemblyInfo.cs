@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MySqlStudioPlugins")]
+[assembly: AssemblyTitle("SqlStudioPlugins")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("dev4fun")]
-[assembly: AssemblyProduct("MySqlStudioPlugins")]
+[assembly: AssemblyProduct("SqlStudioPlugins")]
 [assembly: AssemblyCopyright("Copyright (c) 2026 dev4fun. All rights reserved.")]
 [assembly: AssemblyCulture("")]
 

@@ -30,7 +30,7 @@
 
 namespace MySQL {
   namespace GUI {
-    namespace MySqlStudio {
+    namespace SqlStudio {
 
       using namespace MySQL::Grt;
       using namespace MySQL::Grt::Db;
@@ -66,7 +66,7 @@ namespace MySQL {
         System::Windows::Forms::ContextMenuStrip ^ get_details_context_menu();
       };
 
-    }; // namespace MySqlStudio
+    }; // namespace SqlStudio
   };   // namespace GUI
 };     // namespace MySQL
 

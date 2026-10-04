@@ -32,17 +32,17 @@ namespace {
 
 
 struct TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
 };
 
 } // anonymous namespace
 
-class WbModuleTestsForMySqlStudioTest : public ::testing::Test {
+class WbModuleTestsForSqlStudioTest : public ::testing::Test {
 protected:
   TestData *data = new TestData();
 
   void SetUp() override {
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
   }
 
   void TearDown() override {
@@ -50,12 +50,12 @@ protected:
   }
 };
 
-TEST_F(WbModuleTestsForMySqlStudioTest, SupportedOsTest) {
+TEST_F(WbModuleTestsForSqlStudioTest, SupportedOsTest) {
     // As we move out of supporting old operating systems, we will need to update both this test and isOsSupported()
     // So if it's failing and it wasn't before, that's probably why - just update them.
 
     // proxy function for a module call
-    grt::Module* module = grt::GRT::get()->get_module("MySqlStudio");
+    grt::Module* module = grt::GRT::get()->get_module("SqlStudio");
     auto isOsSupportedProxy = [module](std::string const& os) -> bool {
       grt::StringListRef arguments(grt::Initialized);
       arguments.ginsert(grt::StringRef(os));

@@ -28,7 +28,7 @@ import mforms
 
 import table_templates
 
-# import module for working with MySqlStudio data structures
+# import module for working with SqlStudio data structures
 import grt
 
 # create a module information descriptor. The variable name must be ModuleInfo
@@ -44,7 +44,7 @@ def copyInsertToClipboard(table):
 
   inserts = table.inserts()
   if inserts != "":
-     grt.modules.MySqlStudio.copyToClipboard(table.inserts())
+     grt.modules.SqlStudio.copyToClipboard(table.inserts())
      App.get().set_status_text("Ready")
   else:
      App.get().set_status_text("The table " + table.owner.name + "." + table.name + " has no records for insert statements")
@@ -77,7 +77,7 @@ def copyInsertTemplateToClipboard(table):
     
   code += ");"
 
-  grt.modules.MySqlStudio.copyToClipboard(code)
+  grt.modules.SqlStudio.copyToClipboard(code)
   App.get().set_status_text("Ready")
   return 0
 

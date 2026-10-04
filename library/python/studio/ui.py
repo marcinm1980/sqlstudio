@@ -21,7 +21,7 @@
 # along with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-""" This module provides custom UI widgets relevant to MySql Studio
+""" This module provides custom UI widgets relevant to SqlStudio
 """
 
 from .database_schema_selector_widget import DatabaseSchemaSelector  # noqa

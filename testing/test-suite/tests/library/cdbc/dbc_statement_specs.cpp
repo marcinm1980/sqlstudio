@@ -63,13 +63,13 @@ static bool populate_test_table(std::unique_ptr<sql::Statement> &stmt) {
 
 class DbcStatementTest : public ::testing::Test {
 protected:
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   SqlFacade::Ref sqlSplitter;
   sql::DriverManager *dm;
   db_mgmt_ConnectionRef connectionProperties;
 
   void SetUp() override {
-    tester.reset(new MySqlStudioTester());
+    tester.reset(new SqlStudioTester());
     sqlSplitter = SqlFacade::instance_for_rdbms_name("Mysql");
     ASSERT_TRUE(sqlSplitter != nullptr) << "failed to get sqlparser module";
     dm = sql::DriverManager::getDriverManager();

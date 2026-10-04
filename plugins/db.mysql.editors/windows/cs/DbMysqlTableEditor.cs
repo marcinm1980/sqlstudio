@@ -26,18 +26,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 using Aga.Controls.Tree;
 using Aga.Controls.Tree.NodeControls;
 
 using MySQL.Forms;
+using MySQL.Controls;
 using MySQL.Grt;
 using MySQL.Grt.Db;
-using MySQL.GUI.MySqlStudio.Plugins.Properties;
+using MySQL.GUI.SqlStudio.Plugins.Properties;
 using MySQL.Utilities;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   // TODO: remove all stored NodeIds . This is just nonsense.
   //       NodeIds should be created on demand (they are temporary anyway) from tree node indices.
@@ -63,6 +65,7 @@ namespace MySQL.GUI.MySqlStudio.Plugins
     private bool privPageWasActive = false; // Set when doing re-init.
     private bool updatingTable = false;
     private bool updatingFkValues = false;
+    private System.Drawing.Color originalMainTabBackgroundColor;
 
     #endregion
 
@@ -77,6 +80,8 @@ namespace MySQL.GUI.MySqlStudio.Plugins
       : base(manager)
     {
       InitializeComponent();
+      originalMainTabBackgroundColor = mainTabControl.BackgroundColor;
+      ControlTheme.Attach(this);
       ReinitWithArguments(value);
 
       if (IsEditingLiveObject)
@@ -91,6 +96,20 @@ namespace MySQL.GUI.MySqlStudio.Plugins
     #endregion
 
     #region ObjectEditorPlugin Overrides
+
+    public override void UpdateColors()
+    {
+      base.UpdateColors();
+
+      if (mainTabControl == null)
+        return;
+
+      mainTabControl.BackgroundColor = SystemInformation.HighContrast
+        ? SystemColors.Control
+        : Conversions.InDarkMode()
+          ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false)
+          : originalMainTabBackgroundColor;
+    }
 
     public override bool ReinitWithArguments(GrtValue value)
     {
@@ -2045,7 +2064,7 @@ namespace MySQL.GUI.MySqlStudio.Plugins
 
     #endregion
 
-    #region IMySqlStudioDocument Interface
+    #region ISqlStudioDocument Interface
 
     public override bool CanCloseDocument()
     {

@@ -545,7 +545,7 @@ static void *_ask_for_password_main(const std::string &title, const std::string 
   std::vector<std::string> title_parts = base::split(title, "|", 2);
   std::string caption;
   if (title_parts.size() == 0 || title_parts[0].empty())
-    caption = _("MySql Studio Authentication");
+    caption = _("SqlStudio Authentication");
   else
     caption = title_parts[0];
 

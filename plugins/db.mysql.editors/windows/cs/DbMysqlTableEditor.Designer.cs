@@ -2,7 +2,7 @@
  * Copyright (c) 2026 dev4fun. All rights reserved.
  */
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
 	partial class DbMysqlTableEditor
 	{
@@ -919,7 +919,7 @@ namespace MySQL.GUI.MySqlStudio.Plugins
       this.collapsePictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-                  this.collapsePictureBox.Image = global::MySQL.GUI.MySqlStudio.Plugins.Properties.Resources.EditorCollapse;
+                  this.collapsePictureBox.Image = global::MySQL.GUI.SqlStudio.Plugins.Properties.Resources.EditorCollapse;
                   this.collapsePictureBox.Location = new System.Drawing.Point(694, 8);
       this.collapsePictureBox.Margin = new System.Windows.Forms.Padding(10, 3, 0, 3);
       this.collapsePictureBox.Name = "collapsePictureBox";

@@ -154,7 +154,7 @@ void grtui::DbConnectionEditor::run() {
   reset_stored_conn_list();
 
   if (run_modal(&_ok_button, &_cancel_button))
-    grt::GRT::get()->call_module_function("MySqlStudio", "saveConnections", grt::BaseListRef());
+    grt::GRT::get()->call_module_function("SqlStudio", "saveConnections", grt::BaseListRef());
 }
 
 //--------------------------------------------------------------------------------------------------

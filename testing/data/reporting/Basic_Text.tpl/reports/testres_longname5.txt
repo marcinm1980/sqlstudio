@@ -7,4 +7,4 @@ Table `t1` was modified
   - added column t2 of type TEXT
   __
 ----------------------------------------------
-End of MySql Studio Report
+End of SqlStudio Report

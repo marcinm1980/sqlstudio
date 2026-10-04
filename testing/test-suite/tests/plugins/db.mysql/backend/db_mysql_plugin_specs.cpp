@@ -111,7 +111,7 @@ public:
 
 namespace {
 struct DbMysqlPluginData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   std::shared_ptr<DbMySQLScriptSync> syncPlugin;
   std::shared_ptr<DbMySQLSQLExport> fwePlugin;
   sql::ConnectionWrapper connection;
@@ -226,7 +226,7 @@ protected:
     data = std::make_unique<DbMysqlPluginData>();
     data->dataDir = testing::Context::get().tmpDataDir();
 
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 
     data->omf.dontdiff_mask = 3;

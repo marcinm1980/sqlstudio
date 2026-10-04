@@ -1,0 +1,2 @@
+application/vnd.sql-studio-model; sql-studio '%s'; description="SqlStudio Model"; test=test -n "$DISPLAY"; nametemplate=%s.mwb
+application/sql; sql-studio --script '%s'; description="SqlStudio Query File"; test=test -n "$DISPLAY"; nametemplate=%s.sql

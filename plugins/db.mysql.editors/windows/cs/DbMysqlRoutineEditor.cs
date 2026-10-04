@@ -29,7 +29,7 @@ using System;
 using MySQL.Grt;
 using MySQL.Grt.Db;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   public partial class DbMysqlRoutineEditor : ObjectEditorPlugin
   {

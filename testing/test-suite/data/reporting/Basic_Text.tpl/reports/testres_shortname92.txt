@@ -6,4 +6,4 @@ Table `grtdiff_alter_test`.`t1` was modified
   - partitioning was added
   __
 ----------------------------------------------
-End of MySql Studio Report
+End of SqlStudio Report

@@ -1,0 +1,2 @@
+# not every library was build with debug info
+sql-studio-community-dbgsym: debug-file-with-no-debug-symbols *

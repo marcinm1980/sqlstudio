@@ -31,7 +31,7 @@ using MySQL.Grt;
 using MySQL.Grt.Db;
 using MySQL.Controls;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
 	public partial class DbObjectEditorPages : TabDocument
 	{

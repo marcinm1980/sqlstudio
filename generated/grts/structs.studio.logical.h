@@ -34,13 +34,13 @@
 
 #ifdef _MSC_VER
   #pragma warning(disable: 4355) // 'this' : used in base member initializer list
-  #ifdef GRT_STRUCTS_MYSQLSTUDIO_LOGICAL_EXPORT
-  #define GRT_STRUCTS_MYSQLSTUDIO_LOGICAL_PUBLIC __declspec(dllexport)
+  #ifdef GRT_STRUCTS_SQLSTUDIO_LOGICAL_EXPORT
+  #define GRT_STRUCTS_SQLSTUDIO_LOGICAL_PUBLIC __declspec(dllexport)
 #else
-  #define GRT_STRUCTS_MYSQLSTUDIO_LOGICAL_PUBLIC __declspec(dllimport)
+  #define GRT_STRUCTS_SQLSTUDIO_LOGICAL_PUBLIC __declspec(dllimport)
 #endif
 #else
-  #define GRT_STRUCTS_MYSQLSTUDIO_LOGICAL_PUBLIC
+  #define GRT_STRUCTS_SQLSTUDIO_LOGICAL_PUBLIC
 #endif
 
 #include "grts/structs.h"
@@ -575,7 +575,7 @@ public:
 };
 
 /** a model diagram holding layers */
-class GRT_STRUCTS_MYSQLSTUDIO_LOGICAL_PUBLIC studio_logical_Diagram : public model_Diagram {
+class GRT_STRUCTS_SQLSTUDIO_LOGICAL_PUBLIC studio_logical_Diagram : public model_Diagram {
   typedef model_Diagram super;
 
 public:
@@ -632,7 +632,7 @@ public:
 };
 
 /** a logical model holding diagrams */
-class GRT_STRUCTS_MYSQLSTUDIO_LOGICAL_PUBLIC studio_logical_Model : public model_Model {
+class GRT_STRUCTS_SQLSTUDIO_LOGICAL_PUBLIC studio_logical_Model : public model_Model {
   typedef model_Model super;
 
 public:

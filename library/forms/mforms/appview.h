@@ -77,7 +77,7 @@ namespace mforms {
     /** Constructor.
 
      @param horiz - whether subviews are to be laid out horizontally instead of vertically
-     @param context_name - name for MySqlStudio internal context. Use a unique name.
+     @param context_name - name for SqlStudio internal context. Use a unique name.
      @param is_main - pass true
      */
     AppView(bool horiz, const std::string &accessibilityName, const std::string &context_name, bool is_main);

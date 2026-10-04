@@ -66,7 +66,7 @@
     pdef2->dialogType("save");                                          \
     pdef2->fileExtensions(aExtensions);                                 \
     plugin->inputValues().insert(pdef2);                                \
-    plugin->groups().insert("Application/MySqlStudio");                 \
+    plugin->groups().insert("Application/SqlStudio");                 \
     list.insert(plugin);                                                \
   }
 

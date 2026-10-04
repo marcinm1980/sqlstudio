@@ -41,7 +41,7 @@ using namespace MySQL::GUI::Mdc;
 using namespace MySQL::Grt;
 
 namespace MySQL {
-  namespace MySqlStudio {
+  namespace SqlStudio {
 
     struct wb::WBFrontendCallbacks;
   public

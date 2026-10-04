@@ -30,7 +30,7 @@ using System.Windows.Forms;
 using MySQL.Base;
 using MySQL.Grt;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   public partial class ObjectEditorView : DockablePlugin
   {
@@ -96,7 +96,7 @@ namespace MySQL.GUI.MySqlStudio.Plugins
     }
 
 
-    #region IMySqlStudioDocument implementation
+    #region ISqlStudioDocument implementation
 
     public override UIForm BackendForm
     {

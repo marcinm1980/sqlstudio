@@ -32,7 +32,7 @@ using namespace System;
 using namespace System::Drawing;
 
 using namespace MySQL;
-using namespace MySQL::MySqlStudio;
+using namespace MySQL::SqlStudio;
 
 //--------------------------------------------------------------------------------------------------
 

@@ -26,4 +26,4 @@ Total number of Schemata: {{SCHEMA_COUNT}}
 {{/TABLES}}
 {{/SCHEMATA}}
 =============================================
-End of MySql Studio Report
+End of SqlStudio Report

@@ -30,7 +30,7 @@
 
 using namespace base;
 
-using namespace MySQL::MySqlStudio;
+using namespace MySQL::SqlStudio;
 
 WbFrontendCallbacks::WbFrontendCallbacks(StrStrStrStrDelegate ^ show_file_dialog, VoidStrDelegate ^ show_status_text,
                                          BoolStrStrFloatDelegate ^ show_progress,

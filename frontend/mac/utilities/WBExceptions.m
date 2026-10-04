@@ -89,9 +89,9 @@
   BOOL reportException = [sud boolForKey: @"ReportException"];
   
   // To enable exception reporting, write the following in terminal:
-  // defaults write com.sun.MySQLMySqlStudio ReportException YES
+  // defaults write com.sun.SqlStudio ReportException YES
   // To disable exception reporting, write the following in terminal:
-  // defaults write com.sun.MySQLMySqlStudio ReportException NO
+  // defaults write com.sun.SqlStudio ReportException NO
   if (reportException) {
     [exception logStackTrace];
     

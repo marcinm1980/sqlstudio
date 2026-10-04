@@ -33,7 +33,7 @@ from studio.template import MiniTemplate
 
 text_template = """
 ------------------------------------------------------------------------------------
-MySql Studio Migration Wizard Report
+SqlStudio Migration Wizard Report
 
 Date: {{date}}
 Source: {{sourceRdbmsName}} {{sourceRdbmsVersion}}

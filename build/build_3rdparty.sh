@@ -6,8 +6,8 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 PROJECT_PARENT="$(cd "${PROJECT_ROOT}/.." && pwd)"
 
 # Default to sibling ../bundle unless caller explicitly overrides.
-if [[ -z "${MYSQLSTUDIO_BUNDLE:-}" && -z "${WB_BUNDLE_DIR:-}" ]]; then
-    export MYSQLSTUDIO_BUNDLE="${PROJECT_PARENT}/bundle"
+if [[ -z "${SQLSTUDIO_BUNDLE:-}" && -z "${WB_BUNDLE_DIR:-}" ]]; then
+    export SQLSTUDIO_BUNDLE="${PROJECT_PARENT}/bundle"
 fi
 
 usage() {

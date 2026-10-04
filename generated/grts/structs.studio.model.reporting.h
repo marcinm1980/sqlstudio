@@ -34,13 +34,13 @@
 
 #ifdef _MSC_VER
   #pragma warning(disable: 4355) // 'this' : used in base member initializer list
-  #ifdef GRT_STRUCTS_MYSQLSTUDIO_MODEL_REPORTING_EXPORT
-  #define GRT_STRUCTS_MYSQLSTUDIO_MODEL_REPORTING_PUBLIC __declspec(dllexport)
+  #ifdef GRT_STRUCTS_SQLSTUDIO_MODEL_REPORTING_EXPORT
+  #define GRT_STRUCTS_SQLSTUDIO_MODEL_REPORTING_PUBLIC __declspec(dllexport)
 #else
-  #define GRT_STRUCTS_MYSQLSTUDIO_MODEL_REPORTING_PUBLIC __declspec(dllimport)
+  #define GRT_STRUCTS_SQLSTUDIO_MODEL_REPORTING_PUBLIC __declspec(dllimport)
 #endif
 #else
-  #define GRT_STRUCTS_MYSQLSTUDIO_MODEL_REPORTING_PUBLIC
+  #define GRT_STRUCTS_SQLSTUDIO_MODEL_REPORTING_PUBLIC
 #endif
 
 #include "grts/structs.h"
@@ -79,7 +79,7 @@ public:
   /**
    * Getter for attribute canUseHTMLMarkup
    *
-   * A flag that indicates if MySqlStudio can use HTML markup for SQL syntax highlighting.
+   * A flag that indicates if SqlStudio can use HTML markup for SQL syntax highlighting.
    * \par In Python:
    *    value = obj.canUseHTMLMarkup
    */
@@ -88,7 +88,7 @@ public:
   /**
    * Setter for attribute canUseHTMLMarkup
    *
-   * A flag that indicates if MySqlStudio can use HTML markup for SQL syntax highlighting.
+   * A flag that indicates if SqlStudio can use HTML markup for SQL syntax highlighting.
    * \par In Python:
    *   obj.canUseHTMLMarkup = value
    */

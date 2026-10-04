@@ -83,31 +83,31 @@ void Program::init(wb::WBOptions& wboptions) {
 
 #ifdef ENBLE_DEBUG
   if (!getenv("MWB_DATA_DIR")) {
-    const char* path = "../share/mysql-studio";
+    const char* path = "../share/sql-studio";
     g_message("MWB_DATA_DIR is unset! Setting MWB_DATA_DIR to predifined value '%s'", path);
     setenv("MWB_DATA_DIR", path, 1);
   }
 
   if (!getenv("MWB_MODULE_DIR")) {
-    const char* path = "../lib/mysql-studio/modules";
+    const char* path = "../lib/sql-studio/modules";
     g_message("MWB_MODULE_DIR is unset! Setting MWB_MODULE_DIR to predifined value '%s'", path);
     setenv("MWB_MODULE_DIR", path, 1);
   }
 
   if (!getenv("MWB_LIBRARY_DIR")) {
-    const char* path = "../share/mysql-studio/libraries";
+    const char* path = "../share/sql-studio/libraries";
     g_message("MWB_LIBRARY_DIR is unset! Setting MWB_LIBRARY_DIR to predifined value '%s'", path);
     setenv("MWB_LIBRARY_DIR", path, 1);
   }
 
   if (!getenv("MWB_PLUGIN_DIR")) {
-    const char* path = "../lib/mysql-studio";
+    const char* path = "../lib/sql-studio";
     g_message("MWB_PLUGIN_DIR is unset! Setting MWB_PLUGIN_DIR to predifined value '%s'", path);
     setenv("MWB_PLUGIN_DIR", path, 1);
   }
 #endif
   if (!getenv("MWB_DATA_DIR") || (!getenv("MWB_MODULE_DIR"))) {
-    g_print("Please start MySqlStudio through mysql-studio instead of calling mysql-studio-bin directly\n");
+    g_print("Please start SqlStudio through sql-studio instead of calling sql-studio-bin directly\n");
     exit(1);
   }
 
@@ -320,7 +320,7 @@ std::string Program::show_file_dialog_becb(const std::string& type, const std::s
       if (default_ext.empty())
         default_ext = "mwb";
       filter->add_pattern("*.mwb");
-      filter->set_name("MySql Studio Models (*.mwb)");
+      filter->set_name("SqlStudio Models (*.mwb)");
     } else if (*iter == "sql") {
       if (default_ext.empty())
         default_ext = "sql";

@@ -37,7 +37,7 @@ using namespace grt;
 class GRTUtilFunctionsTest : public ::testing::Test {
 protected:
   void SetUp() override {
-    MySqlStudioTester::reinitGRT();
+    SqlStudioTester::reinitGRT();
     register_structs_test_xml();
     grt::GRT::get()->load_metaclasses(Context::get().tmpDataDir() + "/structs.test.xml");
     grt::GRT::get()->end_loading_metaclasses();
@@ -45,7 +45,7 @@ protected:
   }
 
   void TearDown() override {
-    MySqlStudioTester::reinitGRT();
+    SqlStudioTester::reinitGRT();
   }
 };
 

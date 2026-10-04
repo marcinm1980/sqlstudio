@@ -53,10 +53,10 @@ static grt::DictRef get_traits(bool case_sensitive = false) {
 
 class SyncDiffTest : public ::testing::Test {
 protected:
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   std::string dataDir;
   void SetUp() override {
-    tester.reset(new MySqlStudioTester());
+    tester.reset(new SqlStudioTester());
     tester->initializeRuntime();
     // Set this to a valid path for your test environment
     dataDir = "./data";

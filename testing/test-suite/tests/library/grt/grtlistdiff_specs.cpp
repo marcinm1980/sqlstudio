@@ -35,7 +35,7 @@
 
 using namespace grt;
 
-namespace mysqlstudio {}
+namespace sqlstudio {}
 
 
 template <typename TValueIter, typename TContainer>

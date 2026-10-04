@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
 # build_3rdparty.sh — Download, build, and install 3rd-party dependencies
-# for MySQL Studio into a self-contained bundle directory.
+# for SqlStudio into a self-contained bundle directory.
 #
 # The bundle directory produced by this script is consumed by compile.sh
-# via the WB_BUNDLE_DIR / MYSQLSTUDIO_BUNDLE environment variable and
+# via the WB_BUNDLE_DIR / SQLSTUDIO_BUNDLE environment variable and
 # feeds CMake with the include/, lib/, and bin/ paths it needs.
 #
 # Usage:
@@ -21,7 +21,7 @@
 #   -h, --help          Show this help message
 #
 # Environment:
-#   MYSQLSTUDIO_BUNDLE  Fallback bundle path when --bundle is not given.
+#   SQLSTUDIO_BUNDLE  Fallback bundle path when --bundle is not given.
 #   WB_BUNDLE_DIR       Alternative fallback bundle path.
 #
 # Dependencies list (list.txt):
@@ -63,7 +63,7 @@ detail()  { echo -e "    ${C_DIM}$*${C_RESET}"; }
 banner() {
     echo -e "${C_BLUE}${C_BOLD}"
     echo "╔══════════════════════════════════════════════════════════╗"
-    echo "║  MySQL Studio — macOS 3rd-Party Dependency Builder      ║"
+    echo "║  SqlStudio — macOS 3rd-Party Dependency Builder      ║"
     echo "╚══════════════════════════════════════════════════════════╝"
     echo -e "${C_RESET}"
 }
@@ -115,7 +115,7 @@ Usage: build_3rdparty.sh [options]
 
 Options:
   --bundle DIR        Root of the bundle directory
-                      (default: $MYSQLSTUDIO_BUNDLE or <project>/../bundle)
+                      (default: $SQLSTUDIO_BUNDLE or <project>/../bundle)
   --list FILE         Dependency list file (default: list.txt beside script)
   --clean             Remove build trees before rebuilding
   --download-only     Download archives only — skip extract and build
@@ -125,7 +125,7 @@ Options:
   -h, --help          Show this help
 
 Environment:
-    MYSQLSTUDIO_BUNDLE  Fallback bundle directory (overridden by --bundle)
+    SQLSTUDIO_BUNDLE  Fallback bundle directory (overridden by --bundle)
     WB_BUNDLE_DIR       Alternative fallback bundle directory
 
 Example:
@@ -158,7 +158,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 ###############################################################################
-# Resolve bundle directory (--bundle > $MYSQLSTUDIO_BUNDLE > $WB_BUNDLE_DIR > default)
+# Resolve bundle directory (--bundle > $SQLSTUDIO_BUNDLE > $WB_BUNDLE_DIR > default)
 ###############################################################################
 resolve_bundle_dir() {
     if [[ -n "${BUNDLE_DIR}" ]]; then
@@ -166,8 +166,8 @@ resolve_bundle_dir() {
         return
     fi
 
-    if [[ -n "${MYSQLSTUDIO_BUNDLE:-}" ]]; then
-        BUNDLE_DIR="$(cd "$(dirname "${MYSQLSTUDIO_BUNDLE}")" 2>/dev/null && pwd)/$(basename "${MYSQLSTUDIO_BUNDLE}")"
+    if [[ -n "${SQLSTUDIO_BUNDLE:-}" ]]; then
+        BUNDLE_DIR="$(cd "$(dirname "${SQLSTUDIO_BUNDLE}")" 2>/dev/null && pwd)/$(basename "${SQLSTUDIO_BUNDLE}")"
         return
     fi
 
@@ -631,7 +631,7 @@ build_override_mysql_connector_cpp() {
 }
 
 # ── boost ─────────────────────────────────────────────────────────────────
-# Header-only for MySQL Studio — skip the full CMake/b2 build entirely.
+# Header-only for SqlStudio — skip the full CMake/b2 build entirely.
 build_override_boost() {
     local source_dir="$1" build_dir="$2"
 

@@ -262,7 +262,7 @@ struct AllObjectsMWBValidator {
 };
 
 struct ModelDiffApplyData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   std::unique_ptr<DbMySQLScriptSync> syncPlugin;
   std::unique_ptr<DbMySQLSQLExport> fwePlugin;
   SqlFacade::Ref sqlParser;
@@ -354,7 +354,7 @@ protected:
     data = std::make_unique<ModelDiffApplyData>();
     data->dataDir = testing::Context::get().tmpDataDir();
 
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 
     data->omf.dontdiff_mask = 3;
@@ -694,7 +694,7 @@ TEST_F(db_mysql_pluginTest, Index_to_a_new_column) {
   EXPECT_EQ(objects.t1->indices().count(), 2U) << "new index not added";
   EXPECT_EQ(*objects.t1->indices()[0]->name(), "newindex") << "new index name is wrong";
 
-  // BUG #14588524 - MySql Studio SEGFAULTS WHEN UPDATING MODEL FROM A DATABASE
+  // BUG #14588524 - SqlStudio SEGFAULTS WHEN UPDATING MODEL FROM A DATABASE
   EXPECT_EQ(objects.t1->indices()[0]->columns()[0]->referencedColumn().id(),
     objects.t1->columns()[3]->id()) << "refcolumn from new index";
 }

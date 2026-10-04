@@ -55,7 +55,7 @@ public:
   }
 
   DEFINE_INIT_MODULE_DOC(
-    "1.0", "Oracle Corporation", DOC_MYSQLPARSERSERVICESIMPL, grt::ModuleImplBase,
+    "1.0", "Dev4Fun", DOC_MYSQLPARSERSERVICESIMPL, grt::ModuleImplBase,
     DECLARE_MODULE_FUNCTION_DOC(
       MySQLParserServicesImpl::createNewParserContext,
       "Creates a new parser context which is needed for most calls to parse or syntax check something.",

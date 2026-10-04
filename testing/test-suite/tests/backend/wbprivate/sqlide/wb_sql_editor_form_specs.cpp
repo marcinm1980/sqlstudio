@@ -229,7 +229,7 @@ public:
 namespace {
 
 struct WbSqlEditorFormData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   WBContextSQLIDE *wbContextSqlide;
   sql::ConnectionWrapper connection;
   SqlEditorForm::Ref form;
@@ -245,7 +245,7 @@ protected:
     data = std::make_unique<WbSqlEditorFormData>();
     bec::GRTManager::get(); // Ensure the GRT instance exists.
 
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->wbContextSqlide = new WBContextSQLIDE();
     data->formTester = new LocalEditorFormTester();
 

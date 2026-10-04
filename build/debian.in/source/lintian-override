@@ -1,2 +1,2 @@
-mysql-studio-@edition@ source: changelog-should-mention-nmu
-mysql-studio-@edition@ source: source-nmu-has-incorrect-version-number
+sql-studio-@edition@ source: changelog-should-mention-nmu
+sql-studio-@edition@ source: source-nmu-has-incorrect-version-number

@@ -32,7 +32,7 @@
 
 namespace {
 struct MysqlInvalidSqlParserData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   SqlFacade::Ref facade;
   std::string specificsDelimiter;
   std::string userDelimiter;
@@ -44,7 +44,7 @@ protected:
 
   static void SetUpTestSuite() {
     data = std::make_unique<MysqlInvalidSqlParserData>();
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 
     data->facade = SqlFacade::instance_for_rdbms_name("Mysql");

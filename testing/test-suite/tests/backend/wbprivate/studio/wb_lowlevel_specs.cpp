@@ -23,7 +23,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA 
  */
 
-// High-level testing for MySqlStudio.
+// High-level testing for SqlStudio.
 // This tests WBContext, which will test the integration of all components.
 
 #include "wb_test_helpers.h"
@@ -52,17 +52,17 @@ void signal_handler(int sig) {
 namespace {
 
   struct TestData {
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
   };
 
 } // anonymous namespace
 
-class LowLevelTestsForMySqlStudioContextTest : public ::testing::Test {
+class LowLevelTestsForSqlStudioContextTest : public ::testing::Test {
 protected:
   TestData *data = new TestData();
 
   void SetUp() override {
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
 #ifndef _MSC_VER
     if (signal(SIGSEGV, signal_handler) == SIG_ERR) {
@@ -76,7 +76,7 @@ protected:
   }
 };
 
-TEST_F(LowLevelTestsForMySqlStudioContextTest, StoredConnectionsTest) {
+TEST_F(LowLevelTestsForSqlStudioContextTest, StoredConnectionsTest) {
   GTEST_SKIP() << "need investigate why connection is not avaiable";
   EXPECT_TRUE(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().is_valid());
 
@@ -91,7 +91,7 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, StoredConnectionsTest) {
   EXPECT_TRUE(data->tester->wb->get_root()->rdbmsMgmt()->storedConns().get(0)->driver().is_valid());
 }
 
-TEST_F(LowLevelTestsForMySqlStudioContextTest, CheckIfCreatingAFkBetween2TablesWillCreateTheConnection) {
+TEST_F(LowLevelTestsForSqlStudioContextTest, CheckIfCreatingAFkBetween2TablesWillCreateTheConnection) {
   data->tester->wb->new_document();
   data->tester->addView();
 
@@ -152,7 +152,7 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, CheckIfCreatingAFkBetween2TablesW
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfCreatingARecursiveFkWillCreateTheConnection) {
+TEST_F(LowLevelTestsForSqlStudioContextTest, BugCheckIfCreatingARecursiveFkWillCreateTheConnection) {
   data->tester->wb->new_document();
   data->tester->addView();
 
@@ -188,7 +188,7 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfCreatingARecursiveFkWil
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfDeletingAnObjectWithPrivilegesWillDeleteThePrivsToo) {
+TEST_F(LowLevelTestsForSqlStudioContextTest, BugCheckIfDeletingAnObjectWithPrivilegesWillDeleteThePrivsToo) {
   data->tester->createNewDocument();
 
   WBComponentPhysical *phys = data->tester->wb->get_component<WBComponentPhysical>();
@@ -246,7 +246,7 @@ TEST_F(LowLevelTestsForMySqlStudioContextTest, BugCheckIfDeletingAnObjectWithPri
   data->tester->wb->close_document_finish();
 }
 
-TEST_F(LowLevelTestsForMySqlStudioContextTest, BugUndoDropTableWillNotResetTableFigure) {
+TEST_F(LowLevelTestsForSqlStudioContextTest, BugUndoDropTableWillNotResetTableFigure) {
   db_TableRef table;
 
   data->tester->wb->open_document("data/studio/2tables_1fk.mwb");

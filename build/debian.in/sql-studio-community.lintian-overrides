@@ -1,0 +1,3 @@
+sql-studio-community: embedded-library
+sql-studio-community: binary-without-manpage
+sql-studio-community: debug-file-with-no-debug-symbols

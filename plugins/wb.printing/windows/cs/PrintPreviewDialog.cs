@@ -31,7 +31,7 @@ using System.Windows.Forms;
 
 using MySQL.Grt;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   class PrintPreviewDialog : Plugin
   {
@@ -70,7 +70,7 @@ namespace MySQL.GUI.MySqlStudio.Plugins
 
       System.Windows.Forms.PrintPreviewDialog preview = new System.Windows.Forms.PrintPreviewDialog();
 
-      preview.Icon = new System.Drawing.Icon("images/icons/MySqlStudio.ico");
+      preview.Icon = new System.Drawing.Icon("images/icons/SqlStudio.ico");
 
       preview.Document = printDocument;
       preview.UseAntiAlias = true;

@@ -41,11 +41,11 @@ namespace {
 
   class DbcConnectionTest : public ::testing::Test {
   protected:
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
     db_mgmt_ConnectionRef connectionProperties;
 
     void SetUp() override {
-      tester.reset(new MySqlStudioTester);
+      tester.reset(new SqlStudioTester);
       register_all_metaclasses();
       grt::GRT::get()->scan_metaclasses_in("../../res/grt/");
       grt::GRT::get()->end_loading_metaclasses();
@@ -56,7 +56,7 @@ namespace {
     }
 
     void TearDown() override {
-      MySqlStudioTester::reinitGRT();
+      SqlStudioTester::reinitGRT();
     }
   };
 

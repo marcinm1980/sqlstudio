@@ -185,7 +185,7 @@ namespace MySQL {
         }
       };
 
-    } // namespace MySqlStudio
+    } // namespace SqlStudio
   }   // namespace GUI
 } // namespace MySQL
 

@@ -32,7 +32,7 @@ using namespace MySQL::Forms;
 
 namespace MySQL {
   namespace GUI {
-    namespace MySqlStudio {
+    namespace SqlStudio {
 
       using namespace MySQL::Grt::Db;
 
@@ -58,6 +58,6 @@ namespace MySQL {
 
       //--------------------------------------------------------------------------------------------------
 
-    }; // namespace MySqlStudio
+    }; // namespace SqlStudio
   };   // namespace GUI
 };     // namespace MySQL

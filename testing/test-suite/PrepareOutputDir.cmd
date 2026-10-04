@@ -75,5 +75,5 @@ exit /b 0
 
 :Usage
 call :Err "Usage: %0 SolutionDirectory ConfigurationName Architecture"
-call :Err "Example: %0 \"D:\develop\MySQL\MySQLStudio\\\" Debug x64"
+call :Err "Example: %0 \"D:\develop\MySQL\SqlStudio\\\" Debug x64"
 endlocal & exit /b 1

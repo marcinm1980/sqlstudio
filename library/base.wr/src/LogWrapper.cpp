@@ -32,7 +32,7 @@ using namespace System;
 using namespace base;
 
 namespace MySQL {
-  namespace MySqlStudio {
+  namespace SqlStudio {
 
     //--------------------------------------------------------------------------------------------------
 
@@ -102,5 +102,5 @@ namespace MySQL {
 
     //--------------------------------------------------------------------------------------------------
 
-  } // namespace MySqlStudio
+  } // namespace SqlStudio
 } // namespace MySQL

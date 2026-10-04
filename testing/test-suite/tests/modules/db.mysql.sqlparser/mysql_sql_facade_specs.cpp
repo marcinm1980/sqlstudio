@@ -30,7 +30,7 @@
 
 namespace {
 struct MysqlSqlFacadeData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   SqlFacade::Ref facade;
   db_mgmt_RdbmsRef rdbms;
   grt::DictRef options;
@@ -42,7 +42,7 @@ protected:
 
   static void SetUpTestSuite() {
     data = std::make_unique<MysqlSqlFacadeData>();
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->facade = nullptr;
     data->tester->createNewDocument();
 

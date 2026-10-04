@@ -62,7 +62,7 @@ DEFAULT_LOG_DOMAIN(DOMAIN_WB_MODULE)
 
 //--------------------------------------------------------------------------------------------------
 
-MySqlStudioImpl::MySqlStudioImpl(CPPModuleLoader *loader) : super(loader), _wb(0), _is_other_dbms_initialized(false) {
+SqlStudioImpl::SqlStudioImpl(CPPModuleLoader *loader) : super(loader), _wb(0), _is_other_dbms_initialized(false) {
 #ifdef _MSC_VER
   _last_wmi_session_id = 1;
   _last_wmi_monitor_id = 1;
@@ -71,12 +71,12 @@ MySqlStudioImpl::MySqlStudioImpl(CPPModuleLoader *loader) : super(loader), _wb(0
 
 //--------------------------------------------------------------------------------------------------
 
-MySqlStudioImpl::~MySqlStudioImpl() {
+SqlStudioImpl::~SqlStudioImpl() {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-void MySqlStudioImpl::set_context(WBContext *wb) {
+void SqlStudioImpl::set_context(WBContext *wb) {
   _wb = wb;
 }
 
@@ -85,7 +85,7 @@ void MySqlStudioImpl::set_context(WBContext *wb) {
 /**
  * Returns a number of system parameters for use in the log and the debug output.
  */
-std::string MySqlStudioImpl::getSystemInfo(bool indent) {
+std::string SqlStudioImpl::getSystemInfo(bool indent) {
 #define ARCHITECTURE "64 bit"
 
 #if defined(_MSC_VER)
@@ -186,7 +186,7 @@ std::string MySqlStudioImpl::getSystemInfo(bool indent) {
   return result;
 }
 
-std::map<std::string, std::string> MySqlStudioImpl::getSystemInfoMap() {
+std::map<std::string, std::string> SqlStudioImpl::getSystemInfoMap() {
   std::map<std::string, std::string> result;
   int cver = cairo_version();
 
@@ -207,7 +207,7 @@ std::map<std::string, std::string> MySqlStudioImpl::getSystemInfoMap() {
   return result;
 }
 
-int MySqlStudioImpl::isOsSupported(const std::string &os) {
+int SqlStudioImpl::isOsSupported(const std::string &os) {
   if (os.find("unknown") != std::string::npos) {
     logWarning("OS detection failed, skipping OS support check. OS string: '%s'\n", os.c_str());
     return true;
@@ -247,10 +247,10 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                \
     plugin->caption(aCaption);                          \
     plugin->description(descr);                         \
-    plugin->moduleName("MySqlStudio");                  \
+    plugin->moduleName("SqlStudio");                  \
     plugin->moduleFunctionName(aName);                  \
     plugin->pluginType(type);                           \
-    plugin->groups().insert("Application/MySqlStudio"); \
+    plugin->groups().insert("Application/SqlStudio"); \
     list.insert(plugin);                                \
   }
 
@@ -260,10 +260,10 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                        \
     plugin->caption(aCaption);                                  \
     plugin->description(descr);                                 \
-    plugin->moduleName("MySqlStudio");                          \
+    plugin->moduleName("SqlStudio");                          \
     plugin->moduleFunctionName(aName);                          \
     plugin->pluginType(NORMAL_PLUGIN_TYPE);                     \
-    plugin->groups().insert("Application/MySqlStudio");         \
+    plugin->groups().insert("Application/SqlStudio");         \
     app_PluginObjectInputRef input(grt::Initialized);           \
     input->owner(plugin);                                       \
     input->objectStructName(klass::static_class_name());        \
@@ -277,10 +277,10 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                         \
     plugin->caption(aCaption);                                   \
     plugin->description(descr);                                  \
-    plugin->moduleName("MySqlStudio");                           \
+    plugin->moduleName("SqlStudio");                           \
     plugin->moduleFunctionName(aName);                           \
     plugin->pluginType(NORMAL_PLUGIN_TYPE);                      \
-    plugin->groups().insert("Application/MySqlStudio");          \
+    plugin->groups().insert("Application/SqlStudio");          \
     app_PluginObjectInputRef input(grt::Initialized);            \
     input->owner(plugin);                                        \
     input->name("activeDiagram");                                \
@@ -295,10 +295,10 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                       \
     plugin->caption(aCaption);                                 \
     plugin->description(descr);                                \
-    plugin->moduleName("MySqlStudio");                         \
+    plugin->moduleName("SqlStudio");                         \
     plugin->moduleFunctionName(aName);                         \
     plugin->pluginType(NORMAL_PLUGIN_TYPE);                    \
-    plugin->groups().insert("Application/MySqlStudio");        \
+    plugin->groups().insert("Application/SqlStudio");        \
     app_PluginObjectInputRef input(grt::Initialized);          \
     input->owner(plugin);                                      \
     input->name("activeModel");                                \
@@ -313,10 +313,10 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                       \
     plugin->caption(aCaption);                                 \
     plugin->description(descr);                                \
-    plugin->moduleName("MySqlStudio");                         \
+    plugin->moduleName("SqlStudio");                         \
     plugin->moduleFunctionName(aName);                         \
     plugin->pluginType(STANDALONE_GUI_PLUGIN_TYPE);            \
-    plugin->groups().insert("Application/MySqlStudio");        \
+    plugin->groups().insert("Application/SqlStudio");        \
     app_PluginObjectInputRef input(grt::Initialized);          \
     input->owner(plugin);                                      \
     input->name("activeModel");                                \
@@ -331,10 +331,10 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                \
     plugin->caption(aCaption);                          \
     plugin->description(descr);                         \
-    plugin->moduleName("MySqlStudio");                  \
+    plugin->moduleName("SqlStudio");                  \
     plugin->moduleFunctionName(aName);                  \
     plugin->pluginType(STANDALONE_GUI_PLUGIN_TYPE);     \
-    plugin->groups().insert("Application/MySqlStudio"); \
+    plugin->groups().insert("Application/SqlStudio"); \
     list.insert(plugin);                                \
   }
 
@@ -345,13 +345,13 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                    \
     plugin->caption(aCaption);                              \
     plugin->description(descr);                             \
-    plugin->moduleName("MySqlStudio");                      \
+    plugin->moduleName("SqlStudio");                      \
     plugin->moduleFunctionName(aName);                      \
     plugin->pluginType(type);                               \
     pdef->owner(plugin);                                    \
     pdef->name("string");                                   \
     plugin->inputValues().insert(pdef);                     \
-    plugin->groups().insert("Application/MySqlStudio");     \
+    plugin->groups().insert("Application/SqlStudio");     \
     list.insert(plugin);                                    \
   }
 
@@ -361,7 +361,7 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                          \
     plugin->caption(aCaption);                                    \
     plugin->description(descr);                                   \
-    plugin->moduleName("MySqlStudio");                            \
+    plugin->moduleName("SqlStudio");                            \
     plugin->moduleFunctionName(aName);                            \
     plugin->pluginType(type);                                     \
     app_PluginInputDefinitionRef pdef(grt::Initialized);          \
@@ -373,7 +373,7 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     model->name("activeModel");                                   \
     model->objectStructName(model_Model::static_class_name());    \
     plugin->inputValues().insert(model);                          \
-    plugin->groups().insert("Application/MySqlStudio");           \
+    plugin->groups().insert("Application/SqlStudio");           \
     list.insert(plugin);                                          \
   }
 
@@ -384,7 +384,7 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     plugin->name("wb." group "." aName);                                                          \
     plugin->caption(aCaption);                                                                    \
     plugin->description(descr);                                                                   \
-    plugin->moduleName("MySqlStudio");                                                            \
+    plugin->moduleName("SqlStudio");                                                            \
     plugin->moduleFunctionName(aName);                                                            \
     plugin->pluginType(ptype);                                                                    \
     pdef->owner(plugin);                                                                          \
@@ -392,11 +392,11 @@ int MySqlStudioImpl::isOsSupported(const std::string &os) {
     pdef->dialogType(aType);                                                                      \
     pdef->fileExtensions(aExtensions);                                                            \
     plugin->inputValues().insert(pdef);                                                           \
-    plugin->groups().insert("Application/MySqlStudio");                                           \
+    plugin->groups().insert("Application/SqlStudio");                                           \
     list.insert(plugin);                                                                          \
   }
 
-ListRef<app_Plugin> MySqlStudioImpl::getPluginInfo() {
+ListRef<app_Plugin> SqlStudioImpl::getPluginInfo() {
   ListRef<app_Plugin> list(true);
 
   def_plugin("file", "newDocument", INTERNAL_PLUGIN_TYPE, "New Model", "New Document");
@@ -407,7 +407,7 @@ ListRef<app_Plugin> MySqlStudioImpl::getPluginInfo() {
   def_arg_plugin("file", "openRecentModel", INTERNAL_PLUGIN_TYPE, "Open Model", "Open Model");
   def_file_plugin("file", "saveModelAs", INTERNAL_PLUGIN_TYPE, "Save As", "Save Model to a New File", "Save Model",
                   "save", "mwb");
-  def_plugin("file", "exit", INTERNAL_PLUGIN_TYPE, "Exit", "Exit MySqlStudio");
+  def_plugin("file", "exit", INTERNAL_PLUGIN_TYPE, "Exit", "Exit SqlStudio");
 
   def_file_plugin("export", "exportPNG", STANDALONE_GUI_PLUGIN_TYPE, "Export as PNG", "Export Current Diagram as PNG",
                   "Export as PNG", "save", "png");
@@ -472,12 +472,12 @@ ListRef<app_Plugin> MySqlStudioImpl::getPluginInfo() {
   def_form_plugin("form", "showConnectionManager", "Manage Database Connections", "Open DB Connection Manager");
   def_form_plugin("form", "showInstanceManager", "Manage Server Instance Profiles", "Open Server Profile Manager");
   def_form_plugin("form", "showQueryConnectDialog", "Query Database...", "Connect to and Query a Database Server");
-  def_form_plugin("form", "showGRTShell", "Show GRT Shell...", "Show MySqlStudio Script Development Shell");
+  def_form_plugin("form", "showGRTShell", "Show GRT Shell...", "Show SqlStudio Script Development Shell");
   def_plugin("form", "newGRTFile", STANDALONE_GUI_PLUGIN_TYPE, "New Script File...",
-             "Create a new MySqlStudio script/plugin file");
+             "Create a new SqlStudio script/plugin file");
   def_plugin("form", "openGRTFile", STANDALONE_GUI_PLUGIN_TYPE, "Open Script File...",
-             "Open an existing MySqlStudio script/plugin file");
-  def_form_plugin("form", "showPluginManager", "Plugin Manager...", "Show MySqlStudio Plugin Manager Window");
+             "Open an existing SqlStudio script/plugin file");
+  def_form_plugin("form", "showPluginManager", "Plugin Manager...", "Show SqlStudio Plugin Manager Window");
   def_arg_plugin("form", "reportBug", STANDALONE_GUI_PLUGIN_TYPE, "Report Bug...", "Show Report Bug Window");
 
   def_plugin("debug", "debugValidateGRT", NORMAL_PLUGIN_TYPE, "Validate GRT Tree", "Validate Consistency of GRT Tree");
@@ -485,24 +485,24 @@ ListRef<app_Plugin> MySqlStudioImpl::getPluginInfo() {
   return list;
 }
 
-int MySqlStudioImpl::copyToClipboard(const std::string &astr) {
+int SqlStudioImpl::copyToClipboard(const std::string &astr) {
   bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<void>(
     std::bind(mforms::Utilities::set_clipboard_text, astr), true, false);
 
   return 1;
 }
 
-int MySqlStudioImpl::hasUnsavedChanges() {
+int SqlStudioImpl::hasUnsavedChanges() {
   return _wb->has_unsaved_changes() ? 1 : 0;
 }
 
-int MySqlStudioImpl::newDocument() {
+int SqlStudioImpl::newDocument() {
   _wb->new_document();
 
   return 0;
 }
 
-int MySqlStudioImpl::newDocumentFromDB() {
+int SqlStudioImpl::newDocumentFromDB() {
   // if there is a model open, do plain reveng, otherwise create one 1st
 
   if (!_wb->get_document().is_valid())
@@ -511,7 +511,7 @@ int MySqlStudioImpl::newDocumentFromDB() {
   grt::Module *module = grt::GRT::get()->get_module("MySQLDbModule");
 
   if (module == NULL)
-    throw std::logic_error("Internal error: can't find MySqlStudio DB module.");
+    throw std::logic_error("Internal error: can't find SqlStudio DB module.");
 
   grt::BaseListRef args(true);
   args.ginsert(_wb->get_document()->physicalModels()[0]->catalog());
@@ -520,60 +520,60 @@ int MySqlStudioImpl::newDocumentFromDB() {
   return (int)*resultRef;
 }
 
-int MySqlStudioImpl::openModel(const std::string &filename) {
+int SqlStudioImpl::openModel(const std::string &filename) {
   _wb->open_document(filename);
 
   return 0;
 }
 
-int MySqlStudioImpl::openRecentModel(const std::string &index) {
+int SqlStudioImpl::openRecentModel(const std::string &index) {
   _wb->open_recent_document(base::atoi<int>(index, 0));
 
   return 0;
 }
 
-int MySqlStudioImpl::saveModel() {
+int SqlStudioImpl::saveModel() {
   _wb->save_as(_wb->get_filename());
 
   return 0;
 }
 
-int MySqlStudioImpl::saveModelAs(const std::string &filename) {
+int SqlStudioImpl::saveModelAs(const std::string &filename) {
   _wb->save_as(base::appendExtensionIfNeeded(filename, ".mwb"));
 
   return 0;
 }
 
-int MySqlStudioImpl::exportPNG(const std::string &filename) {
+int SqlStudioImpl::exportPNG(const std::string &filename) {
   _wb->get_model_context()->export_png(base::appendExtensionIfNeeded(filename, ".png"));
 
   return 0;
 }
 
-int MySqlStudioImpl::exportPDF(const std::string &filename) {
+int SqlStudioImpl::exportPDF(const std::string &filename) {
   _wb->get_model_context()->export_pdf(base::appendExtensionIfNeeded(filename, ".pdf"));
 
   return 0;
 }
 
-int MySqlStudioImpl::exportSVG(const std::string &filename) {
+int SqlStudioImpl::exportSVG(const std::string &filename) {
   _wb->get_model_context()->export_svg(base::appendExtensionIfNeeded(filename, ".svg"));
 
   return 0;
 }
 
-int MySqlStudioImpl::exportPS(const std::string &filename) {
+int SqlStudioImpl::exportPS(const std::string &filename) {
   _wb->get_model_context()->export_ps(base::appendExtensionIfNeeded(filename, ".ps"));
 
   return 0;
 }
 
-int MySqlStudioImpl::activateDiagram(const model_DiagramRef &diagram) {
+int SqlStudioImpl::activateDiagram(const model_DiagramRef &diagram) {
   _wb->get_model_context()->switch_diagram(diagram);
   return 0;
 }
 
-int MySqlStudioImpl::exportDiagramToPng(const model_DiagramRef &diagram, const std::string &filename) {
+int SqlStudioImpl::exportDiagramToPng(const model_DiagramRef &diagram, const std::string &filename) {
   _wb->get_model_context()->exportPng(diagram, filename);
   return 0;
 }
@@ -583,20 +583,20 @@ static void quit() {
     wb::WBContextUI::get()->perform_quit();
 }
 
-int MySqlStudioImpl::exit() {
+int SqlStudioImpl::exit() {
   bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<void>(std::bind(quit), false, false);
 
   return 0;
 }
 
-int MySqlStudioImpl::selectAll() {
+int SqlStudioImpl::selectAll() {
   if (dynamic_cast<ModelDiagramForm *>(_wb->get_active_form())) {
     _wb->get_active_form()->select_all();
   }
   return 0;
 }
 
-int MySqlStudioImpl::selectSimilar() {
+int SqlStudioImpl::selectSimilar() {
   if (!dynamic_cast<ModelDiagramForm *>(_wb->get_active_form()))
     return 0;
 
@@ -638,7 +638,7 @@ int MySqlStudioImpl::selectSimilar() {
   return 0;
 }
 
-int MySqlStudioImpl::selectConnected() {
+int SqlStudioImpl::selectConnected() {
   if (!dynamic_cast<ModelDiagramForm *>(_wb->get_active_form()))
     return 0;
 
@@ -682,7 +682,7 @@ static void activate_object(WBComponent *compo, const model_ObjectRef &object, b
     compo->activate_canvas_object(object, newwindow);
 }
 
-int MySqlStudioImpl::editSelectedFigure(const model_DiagramRef &view) {
+int SqlStudioImpl::editSelectedFigure(const model_DiagramRef &view) {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_form());
   if (form) {
     ListRef<model_Object> list(form->get_selection());
@@ -694,7 +694,7 @@ int MySqlStudioImpl::editSelectedFigure(const model_DiagramRef &view) {
   return 0;
 }
 
-int MySqlStudioImpl::editSelectedFigureInNewWindow(const model_DiagramRef &view) {
+int SqlStudioImpl::editSelectedFigureInNewWindow(const model_DiagramRef &view) {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_form());
   if (form) {
     ListRef<model_Object> list(form->get_selection());
@@ -706,17 +706,17 @@ int MySqlStudioImpl::editSelectedFigureInNewWindow(const model_DiagramRef &view)
   return 0;
 }
 
-int MySqlStudioImpl::editObject(const GrtObjectRef &object) {
+int SqlStudioImpl::editObject(const GrtObjectRef &object) {
   bec::GRTManager::get()->open_object_editor(object, bec::NoFlags);
   return 0;
 }
 
-int MySqlStudioImpl::editObjectInNewWindow(const GrtObjectRef &object) {
+int SqlStudioImpl::editObjectInNewWindow(const GrtObjectRef &object) {
   bec::GRTManager::get()->open_object_editor(object, bec::ForceNewWindowFlag);
   return 0;
 }
 
-int MySqlStudioImpl::goToNextSelected() {
+int SqlStudioImpl::goToNextSelected() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_form());
   if (!form)
     return 0;
@@ -745,7 +745,7 @@ int MySqlStudioImpl::goToNextSelected() {
   return 0;
 }
 
-int MySqlStudioImpl::goToPreviousSelected() {
+int SqlStudioImpl::goToPreviousSelected() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_form());
   if (!form)
     return 0;
@@ -771,7 +771,7 @@ int MySqlStudioImpl::goToPreviousSelected() {
   return 0;
 }
 
-int MySqlStudioImpl::newDiagram(const model_ModelRef &model) {
+int SqlStudioImpl::newDiagram(const model_ModelRef &model) {
   model->addNewDiagram(false);
 
   return 0;
@@ -779,7 +779,7 @@ int MySqlStudioImpl::newDiagram(const model_ModelRef &model) {
 
 // canvas manipulation
 
-int MySqlStudioImpl::raiseSelection(const model_DiagramRef &view) {
+int SqlStudioImpl::raiseSelection(const model_DiagramRef &view) {
   for (size_t c = view->selection().count(), i = 0; i < c; i++) {
     if (view->selection().get(i).is_instance(model_Figure::static_class_name())) {
       model_FigureRef figure(model_FigureRef::cast_from(view->selection()[i]));
@@ -790,7 +790,7 @@ int MySqlStudioImpl::raiseSelection(const model_DiagramRef &view) {
   return 0;
 }
 
-int MySqlStudioImpl::lowerSelection(const model_DiagramRef &view) {
+int SqlStudioImpl::lowerSelection(const model_DiagramRef &view) {
   for (size_t c = view->selection().count(), i = 0; i < c; i++) {
     if (view->selection().get(i).is_instance(model_Figure::static_class_name())) {
       model_FigureRef figure(model_FigureRef::cast_from(view->selection()[i]));
@@ -801,7 +801,7 @@ int MySqlStudioImpl::lowerSelection(const model_DiagramRef &view) {
   return 0;
 }
 
-int MySqlStudioImpl::toggleGridAlign(const model_DiagramRef &view) {
+int SqlStudioImpl::toggleGridAlign(const model_DiagramRef &view) {
   ModelDiagramForm *form = _wb->get_model_context()->get_diagram_form_for_diagram_id(view->id());
   if (form) {
     form->get_view()->set_grid_snapping(!form->get_view()->get_grid_snapping());
@@ -812,7 +812,7 @@ int MySqlStudioImpl::toggleGridAlign(const model_DiagramRef &view) {
   return 0;
 }
 
-int MySqlStudioImpl::toggleGrid(const model_DiagramRef &view) {
+int SqlStudioImpl::toggleGrid(const model_DiagramRef &view) {
   ModelDiagramForm *form = _wb->get_model_context()->get_diagram_form_for_diagram_id(view->id());
   if (form) {
     form->get_view()->get_background_layer()->set_grid_visible(
@@ -823,7 +823,7 @@ int MySqlStudioImpl::toggleGrid(const model_DiagramRef &view) {
   return 0;
 }
 
-int MySqlStudioImpl::togglePageGrid(const model_DiagramRef &view) {
+int SqlStudioImpl::togglePageGrid(const model_DiagramRef &view) {
   ModelDiagramForm *form = _wb->get_model_context()->get_diagram_form_for_diagram_id(view->id());
   if (form) {
     form->get_view()->get_background_layer()->set_paper_visible(
@@ -834,7 +834,7 @@ int MySqlStudioImpl::togglePageGrid(const model_DiagramRef &view) {
   return 0;
 }
 
-int MySqlStudioImpl::toggleFKHighlight(const model_DiagramRef &view) {
+int SqlStudioImpl::toggleFKHighlight(const model_DiagramRef &view) {
   ModelDiagramForm *form = _wb->get_model_context()->get_diagram_form_for_diagram_id(view->id());
   if (form) {
     form->set_highlight_fks(!form->get_highlight_fks());
@@ -844,7 +844,7 @@ int MySqlStudioImpl::toggleFKHighlight(const model_DiagramRef &view) {
   return 0;
 }
 
-int MySqlStudioImpl::goToMarker(const std::string &marker) {
+int SqlStudioImpl::goToMarker(const std::string &marker) {
   model_ModelRef model(_wb->get_model_context()->get_active_model(true));
 
   if (model.is_valid()) {
@@ -870,7 +870,7 @@ int MySqlStudioImpl::goToMarker(const std::string &marker) {
   return 0;
 }
 
-int MySqlStudioImpl::setMarker(const std::string &marker) {
+int SqlStudioImpl::setMarker(const std::string &marker) {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(wb::WBContextUI::get()->get_active_main_form());
 
   if (form) {
@@ -904,7 +904,7 @@ grt::Ref<C> get_parent_for_object(const GrtObjectRef &object) {
   return grt::Ref<C>::cast_from(obj);
 }
 
-int MySqlStudioImpl::highlightFigure(const model_ObjectRef &figure) {
+int SqlStudioImpl::highlightFigure(const model_ObjectRef &figure) {
   if (figure.is_valid()) {
     model_DiagramRef view;
 
@@ -925,7 +925,7 @@ int MySqlStudioImpl::highlightFigure(const model_ObjectRef &figure) {
   return 0;
 }
 
-int MySqlStudioImpl::setFigureNotation(const std::string &name, studio_physical_ModelRef model) {
+int SqlStudioImpl::setFigureNotation(const std::string &name, studio_physical_ModelRef model) {
   //  model_ModelRef model(wb::WBContextUI::get()->get_active_model(true));
 
   if (model.is_valid() && model.is_instance<studio_physical_Model>())
@@ -935,7 +935,7 @@ int MySqlStudioImpl::setFigureNotation(const std::string &name, studio_physical_
   return 0;
 }
 
-int MySqlStudioImpl::setRelationshipNotation(const std::string &name, studio_physical_ModelRef model) {
+int SqlStudioImpl::setRelationshipNotation(const std::string &name, studio_physical_ModelRef model) {
   //  model_ModelRef model(wb::WBContextUI::get()->get_active_model(true));
 
   if (model.is_valid() && model.is_instance<studio_physical_Model>())
@@ -944,7 +944,7 @@ int MySqlStudioImpl::setRelationshipNotation(const std::string &name, studio_phy
   return 0;
 }
 
-int MySqlStudioImpl::zoomIn() {
+int SqlStudioImpl::zoomIn() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
   if (!form)
     return 0;
@@ -953,7 +953,7 @@ int MySqlStudioImpl::zoomIn() {
   return 0;
 }
 
-int MySqlStudioImpl::zoomOut() {
+int SqlStudioImpl::zoomOut() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
   if (!form)
     return 0;
@@ -963,7 +963,7 @@ int MySqlStudioImpl::zoomOut() {
   return 0;
 }
 
-int MySqlStudioImpl::zoomDefault() {
+int SqlStudioImpl::zoomDefault() {
   ModelDiagramForm *form = dynamic_cast<ModelDiagramForm *>(_wb->get_active_main_form());
   if (!form)
     return 0;
@@ -975,100 +975,100 @@ int MySqlStudioImpl::zoomDefault() {
   return 0;
 }
 
-int MySqlStudioImpl::startTrackingUndo() {
+int SqlStudioImpl::startTrackingUndo() {
   grt::GRT::get()->begin_undoable_action();
   return 0;
 }
 
-int MySqlStudioImpl::finishTrackingUndo(const std::string &description) {
+int SqlStudioImpl::finishTrackingUndo(const std::string &description) {
   grt::GRT::get()->end_undoable_action(description);
   return 0;
 }
 
-int MySqlStudioImpl::cancelTrackingUndo() {
+int SqlStudioImpl::cancelTrackingUndo() {
   grt::GRT::get()->cancel_undoable_action();
   return 0;
 }
 
-int MySqlStudioImpl::addUndoListAdd(const BaseListRef &list) {
+int SqlStudioImpl::addUndoListAdd(const BaseListRef &list) {
   grt::GRT::get()->get_undo_manager()->add_undo(new grt::UndoListInsertAction(list));
   return 0;
 }
 
-int MySqlStudioImpl::addUndoListRemove(const BaseListRef &list, int index) {
+int SqlStudioImpl::addUndoListRemove(const BaseListRef &list, int index) {
   grt::GRT::get()->get_undo_manager()->add_undo(new grt::UndoListRemoveAction(list, index));
   return 0;
 }
 
-int MySqlStudioImpl::addUndoObjectChange(const ObjectRef &object, const std::string &member) {
+int SqlStudioImpl::addUndoObjectChange(const ObjectRef &object, const std::string &member) {
   grt::GRT::get()->get_undo_manager()->add_undo(new grt::UndoObjectChangeAction(object, member));
   return 0;
 }
 
-int MySqlStudioImpl::addUndoDictSet(const DictRef &dict, const std::string &key) {
+int SqlStudioImpl::addUndoDictSet(const DictRef &dict, const std::string &key) {
   grt::GRT::get()->get_undo_manager()->add_undo(new grt::UndoDictSetAction(dict, key));
   return 0;
 }
 
-int MySqlStudioImpl::beginUndoGroup() {
+int SqlStudioImpl::beginUndoGroup() {
   grt::GRT::get()->get_undo_manager()->begin_undo_group();
   return 0;
 }
 
-int MySqlStudioImpl::endUndoGroup() {
+int SqlStudioImpl::endUndoGroup() {
   grt::GRT::get()->get_undo_manager()->end_undo_group();
   return 0;
 }
 
-int MySqlStudioImpl::setUndoDescription(const std::string &text) {
+int SqlStudioImpl::setUndoDescription(const std::string &text) {
   grt::GRT::get()->get_undo_manager()->set_action_description(text);
   return 0;
 }
 
-std::string MySqlStudioImpl::createAttachedFile(const std::string &group, const std::string &tmpl) {
+std::string SqlStudioImpl::createAttachedFile(const std::string &group, const std::string &tmpl) {
   return _wb->create_attached_file(group, tmpl);
 }
 
-int MySqlStudioImpl::setAttachedFileContents(const std::string &filename, const std::string &text) {
+int SqlStudioImpl::setAttachedFileContents(const std::string &filename, const std::string &text) {
   _wb->save_attached_file_contents(filename, text.data(), text.size());
   return 0;
 }
 
-std::string MySqlStudioImpl::getAttachedFileContents(const std::string &filename) {
+std::string SqlStudioImpl::getAttachedFileContents(const std::string &filename) {
   return _wb->get_attached_file_contents(filename);
 }
 
-std::string MySqlStudioImpl::getAttachedFileTmpPath(const std::string &filename) {
+std::string SqlStudioImpl::getAttachedFileTmpPath(const std::string &filename) {
   return _wb->get_attached_file_tmp_path(filename);
 }
 
-int MySqlStudioImpl::exportAttachedFileContents(const std::string &filename, const std::string &export_to) {
+int SqlStudioImpl::exportAttachedFileContents(const std::string &filename, const std::string &export_to) {
   return _wb->export_attached_file_contents(filename, export_to);
 }
 
-studio_DocumentRef MySqlStudioImpl::openModelFile(const std::string &path) {
+studio_DocumentRef SqlStudioImpl::openModelFile(const std::string &path) {
   return _wb->openModelFile(path);
 }
 
-int MySqlStudioImpl::closeModelFile() {
+int SqlStudioImpl::closeModelFile() {
   return _wb->closeModelFile();
 }
 
-std::string MySqlStudioImpl::getTempDir() {
+std::string SqlStudioImpl::getTempDir() {
   return _wb->getTempDir();
 }
 
-std::string MySqlStudioImpl::getDbFilePath() {
+std::string SqlStudioImpl::getDbFilePath() {
   return _wb->getDbFilePath();
 }
 
-int MySqlStudioImpl::runScriptFile(const std::string &filename) {
+int SqlStudioImpl::runScriptFile(const std::string &filename) {
   _wb->run_script_file(filename);
 
   return 0;
 }
 
-int MySqlStudioImpl::installModuleFile(const std::string &filename) {
+int SqlStudioImpl::installModuleFile(const std::string &filename) {
   _wb->install_module_file(filename);
   return 0;
 }
@@ -1142,7 +1142,7 @@ static int traverse_value(const ObjectRef &owner, const std::string &member, con
   return 0;
 }
 
-int MySqlStudioImpl::debugValidateGRT() {
+int SqlStudioImpl::debugValidateGRT() {
   ValueRef root(grt::GRT::get()->root());
   ObjectRef owner;
 
@@ -1159,58 +1159,58 @@ int MySqlStudioImpl::debugValidateGRT() {
 
 //--------------------------------------------------------------------------------------------------
 
-int MySqlStudioImpl::refreshHomeConnections() {
+int SqlStudioImpl::refreshHomeConnections() {
   wb::WBContextUI::get()->refresh_home_connections();
   return 0;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MySqlStudioImpl::confirm(const std::string &title, const std::string &caption) {
+int SqlStudioImpl::confirm(const std::string &title, const std::string &caption) {
   return bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<int>(
     std::bind(mforms::Utilities::show_message, title, caption, _("OK"), _("Cancel"), ""), true, false);
 }
 
-std::string MySqlStudioImpl::requestFileOpen(const std::string &caption, const std::string &extensions) {
+std::string SqlStudioImpl::requestFileOpen(const std::string &caption, const std::string &extensions) {
   return bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<std::string>(
     std::bind(_wb->_frontendCallbacks->show_file_dialog, "open", caption, extensions), true, false);
 }
 
-std::string MySqlStudioImpl::requestFileSave(const std::string &caption, const std::string &extensions) {
+std::string SqlStudioImpl::requestFileSave(const std::string &caption, const std::string &extensions) {
   return bec::GRTManager::get()->get_dispatcher()->call_from_main_thread<std::string>(
     std::bind(_wb->_frontendCallbacks->show_file_dialog, "save", caption, extensions), true, false);
 }
 
 //--------------------------------------------------------------------------------------------------
 
-int MySqlStudioImpl::showUserTypeEditor(const studio_physical_ModelRef &model) {
+int SqlStudioImpl::showUserTypeEditor(const studio_physical_ModelRef &model) {
   if (_wb->get_model_context())
     _wb->get_model_context()->show_user_type_editor(model);
 
   return 0;
 }
 
-int MySqlStudioImpl::showGRTShell() {
+int SqlStudioImpl::showGRTShell() {
   wb::WBContextUI::get()->get_shell_window()->show();
 
   return 0;
 }
 
-int MySqlStudioImpl::newGRTFile() {
+int SqlStudioImpl::newGRTFile() {
   wb::WBContextUI::get()->get_shell_window()->show();
   wb::WBContextUI::get()->get_shell_window()->add_new_script();
 
   return 0;
 }
 
-int MySqlStudioImpl::openGRTFile() {
+int SqlStudioImpl::openGRTFile() {
   wb::WBContextUI::get()->get_shell_window()->show();
   wb::WBContextUI::get()->get_shell_window()->open_script_file();
 
   return 0;
 }
 
-int MySqlStudioImpl::showDocumentProperties() {
+int SqlStudioImpl::showDocumentProperties() {
   DocumentPropertiesForm props;
 
   props.show();
@@ -1218,21 +1218,21 @@ int MySqlStudioImpl::showDocumentProperties() {
   return 0;
 }
 
-int MySqlStudioImpl::showModelOptions(const studio_physical_ModelRef &model) {
+int SqlStudioImpl::showModelOptions(const studio_physical_ModelRef &model) {
   PreferencesForm prefs(model);
   prefs.show();
 
   return 0;
 }
 
-int MySqlStudioImpl::showOptions() {
+int SqlStudioImpl::showOptions() {
   PreferencesForm prefs;
   prefs.show();
 
   return 0;
 }
 
-int MySqlStudioImpl::reportBug(const std::string error_info) {
+int SqlStudioImpl::reportBug(const std::string error_info) {
   unsigned short os_id = 1;
   std::map<std::string, std::string> sys_info = getSystemInfoMap();
 
@@ -1270,7 +1270,7 @@ int MySqlStudioImpl::reportBug(const std::string error_info) {
   return 0;
 }
 
-int MySqlStudioImpl::showConnectionManager() {
+int SqlStudioImpl::showConnectionManager() {
   grtui::DbConnectionEditor editor(_wb->get_root()->rdbmsMgmt());
   _wb->_frontendCallbacks->show_status_text("Connection Manager Opened.");
   editor.run();
@@ -1281,7 +1281,7 @@ int MySqlStudioImpl::showConnectionManager() {
   return 0;
 }
 
-int MySqlStudioImpl::showInstanceManager() {
+int SqlStudioImpl::showInstanceManager() {
   ServerInstanceEditor editor(_wb->get_root()->rdbmsMgmt());
   _wb->_frontendCallbacks->show_status_text("Server Profile Manager Opened.");
   db_mgmt_ServerInstanceRef instance(editor.run());
@@ -1291,7 +1291,7 @@ int MySqlStudioImpl::showInstanceManager() {
   return 0;
 }
 
-int MySqlStudioImpl::showInstanceManagerFor(const db_mgmt_ConnectionRef &conn) {
+int SqlStudioImpl::showInstanceManagerFor(const db_mgmt_ConnectionRef &conn) {
   ServerInstanceEditor editor(_wb->get_root()->rdbmsMgmt());
   _wb->_frontendCallbacks->show_status_text("Server Profile Manager Opened.");
   db_mgmt_ServerInstanceRef instance(editor.run(conn, true));
@@ -1301,23 +1301,23 @@ int MySqlStudioImpl::showInstanceManagerFor(const db_mgmt_ConnectionRef &conn) {
   return 0;
 }
 
-int MySqlStudioImpl::saveConnections() {
+int SqlStudioImpl::saveConnections() {
   _wb->save_connections();
   return 0;
 }
 
-int MySqlStudioImpl::saveInstances() {
+int SqlStudioImpl::saveInstances() {
   _wb->save_instances();
   return 0;
 }
 
-int MySqlStudioImpl::showQueryConnectDialog() {
+int SqlStudioImpl::showQueryConnectDialog() {
   _wb->add_new_query_window(db_mgmt_ConnectionRef());
 
   return 0;
 }
 
-int MySqlStudioImpl::showPluginManager() {
+int SqlStudioImpl::showPluginManager() {
   PluginManagerWindow pm(_wb);
 
   pm.run();
@@ -1338,7 +1338,7 @@ int MySqlStudioImpl::showPluginManager() {
  * @return A unique id for the new session. Use that for any further call and don't forgot to close the session
  *         once you don't need it anymore or you will get a memory leak. Returns 0 on error.
  */
-int MySqlStudioImpl::wmiOpenSession(const std::string server, const std::string &user, const std::string &password) {
+int SqlStudioImpl::wmiOpenSession(const std::string server, const std::string &user, const std::string &password) {
   logDebug2("Opening wmi session\n");
 
   wmi::WmiServices *services = new wmi::WmiServices(server, user, password);
@@ -1375,7 +1375,7 @@ int MySqlStudioImpl::wmiOpenSession(const std::string server, const std::string 
  * @param session The session that should be closed.
  * @return 1 if the session was successfully closed, -1 if the session is invalid.
  */
-int MySqlStudioImpl::wmiCloseSession(int session) {
+int SqlStudioImpl::wmiCloseSession(int session) {
   logDebug2("Closing wmi session\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end())
     return -1;
@@ -1408,7 +1408,7 @@ int MySqlStudioImpl::wmiCloseSession(int session) {
  * @return A list of GRT dicts containing the objects returned by the query, that is, name/value pairs
  *         of object properties.
  */
-grt::DictListRef MySqlStudioImpl::wmiQuery(int session, const std::string &query) {
+grt::DictListRef SqlStudioImpl::wmiQuery(int session, const std::string &query) {
   logDebug2("Running a wmi query\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end()) {
     logWarning("Attempt to run a wmi query against non-existing session\n");
@@ -1440,7 +1440,7 @@ grt::DictListRef MySqlStudioImpl::wmiQuery(int session, const std::string &query
  *   - stopping
  *   - starting
  */
-std::string MySqlStudioImpl::wmiServiceControl(int session, const std::string &service, const std::string &action) {
+std::string SqlStudioImpl::wmiServiceControl(int session, const std::string &service, const std::string &action) {
   logDebug2("Running wmi service control command\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end())
     return "error - Invalid wmi session";
@@ -1462,7 +1462,7 @@ std::string MySqlStudioImpl::wmiServiceControl(int session, const std::string &s
  * @return The asked for value. If what is invalid then the result is simply 0. The returned value
  *         is formatted as string to cater for different types of return values.
  */
-std::string MySqlStudioImpl::wmiSystemStat(int session, const std::string &what) {
+std::string SqlStudioImpl::wmiSystemStat(int session, const std::string &what) {
   logDebug2("Running wmi system statistics query\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end())
     return "error - Invalid wmi session";
@@ -1485,7 +1485,7 @@ std::string MySqlStudioImpl::wmiSystemStat(int session, const std::string &what)
  * @param what The property/value to monitor. Supported values are: LoadPercentage.
  * @return A unique id describing the new monitor.
  */
-int MySqlStudioImpl::wmiStartMonitoring(int session, const std::string &what) {
+int SqlStudioImpl::wmiStartMonitoring(int session, const std::string &what) {
   logDebug2("Starting new wmi monitor\n");
   if (_wmi_sessions.find(session) == _wmi_sessions.end())
     return -1;
@@ -1508,7 +1508,7 @@ int MySqlStudioImpl::wmiStartMonitoring(int session, const std::string &what) {
  * @param monitor The monitor set up with wmiStartMonitoring.
  * @return The current value formatted as string.
  */
-std::string MySqlStudioImpl::wmiReadValue(int monitor_id) {
+std::string SqlStudioImpl::wmiReadValue(int monitor_id) {
   logDebug3("Reading wmi value for monitor: %d\n", monitor_id);
   if (_wmi_monitors.find(monitor_id) == _wmi_monitors.end()) {
     logWarning("Attempt to read monitor value for non-existing monitor\n");
@@ -1528,7 +1528,7 @@ std::string MySqlStudioImpl::wmiReadValue(int monitor_id) {
  * @param monitor The monitor to stop.
  * @return -1 if monitor_id is invalid, else 1
  */
-int MySqlStudioImpl::wmiStopMonitoring(int monitor_id) {
+int SqlStudioImpl::wmiStopMonitoring(int monitor_id) {
   logDebug2("Stopping wmi monitor %d\n", monitor_id);
   if (_wmi_monitors.find(monitor_id) == _wmi_monitors.end()) {
     logWarning("Attempt to stop non-existing wmi monitor\n");
@@ -1553,7 +1553,7 @@ static const char *DEFAULT_RDBMS_ID = "com.mysql.rdbms.mysql";
  * Creates a new connection ref and adds it to the stored connections collection.
  * The new connection is also returned.
  */
-db_mgmt_ConnectionRef MySqlStudioImpl::create_connection(const std::string &host, const std::string &user,
+db_mgmt_ConnectionRef SqlStudioImpl::create_connection(const std::string &host, const std::string &user,
                                                          const std::string socket_or_pipe_name, int can_use_networking,
                                                          int can_use_socket_or_pipe, int port,
                                                          const std::string &name) {
@@ -1600,7 +1600,7 @@ db_mgmt_ConnectionRef MySqlStudioImpl::create_connection(const std::string &host
 /**
  * Returns a list of Dicts with data for each locally installed MySQL server.
  */
-grt::DictListRef MySqlStudioImpl::getLocalServerList() {
+grt::DictListRef SqlStudioImpl::getLocalServerList() {
   logDebug("Reading locally installed MySQL servers\n");
 
   grt::DictListRef entries;
@@ -1671,7 +1671,7 @@ grt::DictListRef MySqlStudioImpl::getLocalServerList() {
 /**
  * Creates a list of new connections to all local servers found.
  */
-int MySqlStudioImpl::createConnectionsFromLocalServers() {
+int SqlStudioImpl::createConnectionsFromLocalServers() {
   grt::DictListRef servers = getLocalServerList();
   if (!servers.is_valid())
     return -1;
@@ -1723,7 +1723,7 @@ int MySqlStudioImpl::createConnectionsFromLocalServers() {
 /**
  * Creates a list of server instance entries for all local servers found.
  */
-int MySqlStudioImpl::createInstancesFromLocalServers() {
+int SqlStudioImpl::createInstancesFromLocalServers() {
   int found_instances = 0;
   try {
     grt::DictListRef servers = getLocalServerList();
@@ -1888,7 +1888,7 @@ int MySqlStudioImpl::createInstancesFromLocalServers() {
 /**
  * Returns a short string describing the currently active video adapter, especially the used chipset.
  */
-std::string MySqlStudioImpl::getVideoAdapter() {
+std::string SqlStudioImpl::getVideoAdapter() {
   logDebug("Attempting to determine the current video adaptor and its properties\n");
   std::string result = _("Unknown");
   try {
@@ -1927,7 +1927,7 @@ std::string MySqlStudioImpl::getVideoAdapter() {
 /**
  * Returns all available info about the currently active video adapter in human readable format.
  */
-std::string MySqlStudioImpl::getFullVideoAdapterInfo(bool indent) {
+std::string SqlStudioImpl::getFullVideoAdapterInfo(bool indent) {
   std::stringstream result;
   std::string tab = indent ? "\t" : "";
   try {
@@ -1984,7 +1984,7 @@ std::string MySqlStudioImpl::getFullVideoAdapterInfo(bool indent) {
   return result.str();
 }
 
-int MySqlStudioImpl::initializeOtherRDBMS() {
+int SqlStudioImpl::initializeOtherRDBMS() {
   if (_is_other_dbms_initialized)
     return 0;
   _is_other_dbms_initialized = true;
@@ -2015,7 +2015,7 @@ int MySqlStudioImpl::initializeOtherRDBMS() {
   return 1;
 }
 
-db_mgmt_SSHConnectionRef MySqlStudioImpl::createSSHSession(const grt::ObjectRef &val) {
+db_mgmt_SSHConnectionRef SqlStudioImpl::createSSHSession(const grt::ObjectRef &val) {
   if (!db_mgmt_ConnectionRef::can_wrap(val) && !db_mgmt_ServerInstanceRef::can_wrap(val)) {
     logError("Invalid argument, Connection or ServerInstace is required.\n");
     return db_mgmt_SSHConnectionRef();
@@ -2041,7 +2041,7 @@ db_mgmt_SSHConnectionRef MySqlStudioImpl::createSSHSession(const grt::ObjectRef 
 * Removes a connection from the stored connections list along with all associated data
 * (including its server instance entry).
 */
-int MySqlStudioImpl::deleteConnection(const db_mgmt_ConnectionRef &connection) {
+int SqlStudioImpl::deleteConnection(const db_mgmt_ConnectionRef &connection) {
   grt::ListRef<db_mgmt_Connection> connections(_wb->get_root()->rdbmsMgmt()->storedConns());
   grt::ListRef<db_mgmt_ServerInstance> instances = _wb->get_root()->rdbmsMgmt()->storedInstances();
 
@@ -2080,7 +2080,7 @@ int MySqlStudioImpl::deleteConnection(const db_mgmt_ConnectionRef &connection) {
   return 0;
 }
 
-int MySqlStudioImpl::deleteConnectionGroup(const std::string &group) {
+int SqlStudioImpl::deleteConnectionGroup(const std::string &group) {
   size_t group_length = group.length();
 
   std::vector<db_mgmt_ConnectionRef> candidates;

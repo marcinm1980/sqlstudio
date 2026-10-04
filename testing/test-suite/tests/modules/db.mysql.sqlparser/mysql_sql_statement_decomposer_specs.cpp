@@ -33,7 +33,7 @@
 namespace {
 
   struct TestData {
-    std::unique_ptr<MySqlStudioTester> tester;
+    std::unique_ptr<SqlStudioTester> tester;
     SqlFacade::Ref sqlFacade;
     Sql_statement_decomposer::Ref sqlStatementDecomposer;
     db_mgmt_RdbmsRef rdbms;
@@ -126,7 +126,7 @@ protected:
   TestData *data = new TestData();
 
   void SetUp() override {
-    data->tester = std::make_unique<MySqlStudioTester>();
+    data->tester = std::make_unique<SqlStudioTester>();
     data->tester->createNewDocument();
 
     EXPECT_EQ(1U, data->tester->wb->get_document()->physicalModels().count()) << "loaded physycal model count";

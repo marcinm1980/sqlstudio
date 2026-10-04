@@ -29,10 +29,10 @@ using namespace Runtime::InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly:AssemblyTitleAttribute("MySql Studio Windows mforms wrapper")];
+[assembly:AssemblyTitleAttribute("SqlStudio Windows mforms wrapper")];
 [assembly:AssemblyDescriptionAttribute("")];
 [assembly:AssemblyConfigurationAttribute("")];
-[assembly:AssemblyCompanyAttribute("Oracle Corporation")];
+[assembly:AssemblyCompanyAttribute("Dev4Fun")];
 [assembly:AssemblyProductAttribute("mforms.wr")];
 [assembly:AssemblyCopyrightAttribute("Copyright © 2010, 2017, Oracle and/or its affiliates")];
 [assembly:AssemblyTrademarkAttribute("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")];

@@ -61,7 +61,7 @@ static void ensure_files_equal(const std::string &test, const char *file, const 
 }
 
 struct TestData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
 };
 
 class WBOverviewTest : public ::testing::Test {
@@ -69,7 +69,7 @@ protected:
   TestData *data = new TestData();
 
   void SetUp() override {
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
     data->tester->initializeRuntime();
   }
 

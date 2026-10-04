@@ -93,7 +93,7 @@ Current limitations:
 
 * No remote server support for logs stored in files.
 
-* Cannot read files that aren't readable by the user running MySqlStudio.
+* Cannot read files that aren't readable by the user running SqlStudio.
 
 """
 
@@ -380,7 +380,7 @@ class BaseLogFileReader(object):
         elif use_event_viewer:
             if not self.ctrl_be.server_profile.is_local:
                 raise LogFileAccessError('''An attempt to read events from the remote server failed. Events can only be read from the local machine, 
-                    hence installed MySql Studio on the remote machine to allow showing the server's event log.''')
+                    hence installed SqlStudio on the remote machine to allow showing the server's event log.''')
             self.log_file = EventLogInput(self.ctrl_be, self.log_file_name)
             self.file_size = self.log_file.size
         elif use_sftp:

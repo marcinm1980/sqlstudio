@@ -113,7 +113,7 @@ protected:
   }
 
   void TearDown() override {
-    MySqlStudioTester::reinitGRT();
+    SqlStudioTester::reinitGRT();
   }
 };
 

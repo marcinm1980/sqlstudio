@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# compile.sh — Build MySQL Studio (Workbench) on Linux using CMake
+# compile.sh — Build SqlStudio (Workbench) on Linux using CMake
 #
 # Environment:
 #   WB_BUNDLE_DIR   Path to the directory containing pre-built 3rd-party
@@ -62,7 +62,7 @@ detail()  { echo -e "  ${C_DIM}$*${C_RESET}"; }
 banner() {
     echo -e "${C_BLUE}${C_BOLD}"
     echo "╔══════════════════════════════════════════════════════╗"
-    echo "║          MySQL Studio — Linux Build Script          ║"
+    echo "║          SqlStudio — Linux Build Script          ║"
     echo "╚══════════════════════════════════════════════════════╝"
     echo -e "${C_RESET}"
 }

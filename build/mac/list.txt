@@ -1,5 +1,5 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# list.txt — macOS 3rd-party dependencies for MySQL Studio
+# list.txt — macOS 3rd-party dependencies for SqlStudio
 # ──────────────────────────────────────────────────────────────────────────────
 #
 # Format:   name | version | download-url

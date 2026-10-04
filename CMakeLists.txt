@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 
-# Retrieve current MySqlStudio version
+# Retrieve current SqlStudio version
 execute_process(COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/get_wb_version.sh full_version
                 OUTPUT_VARIABLE WB_VERSION
                 OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -23,7 +23,7 @@ endif()
 
 string(STRIP "${WB_VERSION}" WB_VERSION)
 
-project(MYSQLSTUDIO LANGUAGES C CXX)
+project(SQLSTUDIO LANGUAGES C CXX)
 
 # Needed by clang-tidy/clangd and VS Code C/C++ analysis.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Export compile commands for clang tooling")
@@ -128,7 +128,7 @@ if (UNIX)
       set(ODBC_INCLUDE_DIRS ${UNIXODBC_INCLUDE_DIRS})
       set(ODBC_DEFINITIONS ${UNIXODBC_DEFINITIONS})
     else()
-      message(FATAL_ERROR "MySqlStudio required iodbc or Unixodbc, none was found, CMake will exit.")
+      message(FATAL_ERROR "SqlStudio required iodbc or Unixodbc, none was found, CMake will exit.")
     endif()
   endif(USE_UNIXODBC)
 endif(UNIX)
@@ -194,14 +194,14 @@ if (UNIX)
 	set(WB_INSTALL_DIR              "${CMAKE_INSTALL_PREFIX}")
 	set(WB_INSTALL_DIR_EXECUTABLE   "${REAL_EXECUTABLE_DIR}")
 	set(WB_INSTALL_BIN_DIR          "${CMAKE_INSTALL_PREFIX}/bin")
-	set(WB_INSTALL_LIB_DIR          "${LIB_INSTALL_DIR}/mysql-studio")
+	set(WB_INSTALL_LIB_DIR          "${LIB_INSTALL_DIR}/sql-studio")
 	set(WB_PYTHON_MODULES_DIR       "${WB_INSTALL_LIB_DIR}/modules")
 	set(WB_INSTALL_SHARED_DIR       "${SHARE_INSTALL_PREFIX}")
 	set(WB_INSTALL_ETC_DIR          "${ETC_INSTALL_DIR}")
-	set(WB_PACKAGE_SHARED_DIR       "${SHARE_INSTALL_PREFIX}/mysql-studio")
-	set(WB_PACKAGE_PLUGINS_DIR      "${LIB_INSTALL_DIR}/mysql-studio/plugins")
-	set(WB_PYTHON_MODULES_DATA_DIR  "${SHARE_INSTALL_PREFIX}/mysql-studio/modules/data")
-	set(WB_INSTALL_DOC_DIR          "${SHARE_INSTALL_PREFIX}/doc/mysql-studio")
+	set(WB_PACKAGE_SHARED_DIR       "${SHARE_INSTALL_PREFIX}/sql-studio")
+	set(WB_PACKAGE_PLUGINS_DIR      "${LIB_INSTALL_DIR}/sql-studio/plugins")
+	set(WB_PYTHON_MODULES_DATA_DIR  "${SHARE_INSTALL_PREFIX}/sql-studio/modules/data")
+	set(WB_INSTALL_DOC_DIR          "${SHARE_INSTALL_PREFIX}/doc/sql-studio")
 endif()
 
 include(ExternalProject)
@@ -247,12 +247,12 @@ endif()
 #-----------------------------------------------------------------------
 # Define some useful variables and options
 #-----------------------------------------------------------------------
-if(EXISTS "${PROJECT_SOURCE_DIR}/mysql-studio.desktop.in")
-  configure_file(${PROJECT_SOURCE_DIR}/mysql-studio.desktop.in mysql-studio.desktop)
-elseif(EXISTS "${PROJECT_SOURCE_DIR}/mysql-Studio.desktop.in")
-  configure_file(${PROJECT_SOURCE_DIR}/mysql-Studio.desktop.in mysql-studio.desktop)
+if(EXISTS "${PROJECT_SOURCE_DIR}/sql-studio.desktop.in")
+  configure_file(${PROJECT_SOURCE_DIR}/sql-studio.desktop.in sql-studio.desktop)
+elseif(EXISTS "${PROJECT_SOURCE_DIR}/SqlStudio.desktop.in")
+  configure_file(${PROJECT_SOURCE_DIR}/SqlStudio.desktop.in sql-studio.desktop)
 else()
-  message(WARNING "mysql-studio.desktop.in not found — skipping desktop file generation")
+  message(WARNING "sql-studio.desktop.in not found — skipping desktop file generation")
 endif()
 
 add_subdirectory(tools)
@@ -271,16 +271,16 @@ if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/internal)
   add_subdirectory(internal)
 endif()
 
-install(FILES ${CMAKE_BINARY_DIR}/mysql-studio.desktop DESTINATION ${WB_INSTALL_SHARED_DIR}/applications)
+install(FILES ${CMAKE_BINARY_DIR}/sql-studio.desktop DESTINATION ${WB_INSTALL_SHARED_DIR}/applications)
 
 if (IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/internal)
     install(FILES README-commercial.md License-commercial.txt DESTINATION ${WB_INSTALL_DOC_DIR}-commercial)
-    install(FILES build/mysql-studio-commercial.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
-    install(FILES build/mysql-studio-commercial.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
+    install(FILES build/sql-studio-commercial.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME sql-studio.xml)
+    install(FILES build/sql-studio-commercial.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME sql-studio.mime)
 else()
     install(FILES README.md License.txt DESTINATION ${WB_INSTALL_DOC_DIR}-community)
-    install(FILES build/mysql-studio-community.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME mysql-studio.xml)
-    install(FILES build/mysql-studio-community.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME mysql-studio.mime)
+    install(FILES build/sql-studio-community.sharedmimeinfo DESTINATION ${WB_INSTALL_SHARED_DIR}/mime/packages RENAME sql-studio.xml)
+    install(FILES build/sql-studio-community.mime DESTINATION ${WB_INSTALL_SHARED_DIR}/mime-info RENAME sql-studio.mime)
 endif()
 
 

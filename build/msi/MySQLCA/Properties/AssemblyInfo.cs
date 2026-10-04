@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MySQLCA")]
-[assembly: AssemblyDescription("Custom actions for the MySql Studio Installer")]
-[assembly: AssemblyCompany("Oracle Corporation")]
+[assembly: AssemblyDescription("Custom actions for the SqlStudio Installer")]
+[assembly: AssemblyCompany("Dev4Fun")]
 [assembly: AssemblyProduct("MySQLCA")]
 [assembly: AssemblyCopyright("Copyright © 2011, 2024, Oracle and/or its affiliates.")]
 [assembly: AssemblyTrademark("Oracle®, Java, MySQL, and NetSuite are registered trademarks of Oracle and/or its affiliates.")]

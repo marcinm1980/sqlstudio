@@ -28,12 +28,12 @@ using System.Windows.Forms;
 using System.Drawing;
 using System;
 using System.Collections.Generic;
-using MySQL.MySqlStudio;
+using MySQL.SqlStudio;
 using MySQL.Controls;
 
 namespace MySQL.Utilities
 {
-  public partial class FindPanel : UserControl, IMySqlStudioObserver
+  public partial class FindPanel : UserControl, ISqlStudioObserver
   {
     public FindPanel()
     {

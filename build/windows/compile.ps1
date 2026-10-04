@@ -52,13 +52,13 @@ $script:VsPath = $null
 $script:MSBuildPath = $null
 
 if (-not $SolutionPath) {
-    $SolutionPath = Join-Path $script:ProjectRoot "MySQLStudio.sln"
+    $SolutionPath = Join-Path $script:ProjectRoot "SqlStudio.sln"
 }
 if (-not $TestProjectPath) {
-    $TestProjectPath = Join-Path $script:ProjectRoot "testing\test-suite\test-suite.vcxproj"
+    $TestProjectPath = Join-Path $script:ProjectRoot "testing\test-suite\studio.testing.vcxproj"
 }
 if (-not $CoverageOutput) {
-    $CoverageOutput = Join-Path $script:ProjectRoot "artifacts\coverage\mysqlstudio-coverage.xml"
+    $CoverageOutput = Join-Path $script:ProjectRoot "artifacts\coverage\sqlstudio-coverage.xml"
 }
 
 function Write-Info([string]$Message) {
@@ -80,13 +80,13 @@ function Write-Section([string]$Title) {
 
 function Show-Usage {
     @"
-MySQL Studio Windows build script
+SqlStudio Windows build script
 
 Usage:
   powershell -NoProfile -File .\build\windows\compile.ps1 [-Action <name>] [options]
 
 Actions:
-  build            Build the MySQL Studio solution target.
+  build            Build the SqlStudio solution target.
   build-unittest   Build the application and the native test-suite executable.
   run-unittest     Build if needed, prepare runtime files, and run test-suite.exe.
   run-coverage     Build if needed, prepare runtime files, and run test-suite.exe under OpenCppCoverage.
@@ -100,7 +100,7 @@ Options:
   -VsInstallPath   Explicit Visual Studio install path
   -Jobs            Parallel MSBuild workers          Default: CPU count
   -BundleDir       Path to MSS_3DPARTY_PATH bundle
-  -SolutionPath    Path to MySQLStudio.sln
+  -SolutionPath    Path to SqlStudio.sln
   -TestProjectPath Path to testing\test-suite\test-suite.vcxproj
   -CoverageOutput  Coverage XML output path
   -TestArgs        Extra arguments forwarded to test-suite.exe
@@ -377,7 +377,7 @@ function Prepare-RuntimeOutput {
 }
 
 function Build-Studio {
-    Invoke-MSBuildSolutionTarget -TargetName "MySqlStudio"
+    Invoke-MSBuildSolutionTarget -TargetName "SqlStudio"
 }
 
 function Build-UnitTests {

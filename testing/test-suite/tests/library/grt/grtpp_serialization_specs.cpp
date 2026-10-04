@@ -60,7 +60,7 @@ protected:
   }
 
   void TearDown() override {
-    MySqlStudioTester::reinitGRT();
+    SqlStudioTester::reinitGRT();
   }
 
   void runSerialization(const ValueRef& val) {

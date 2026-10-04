@@ -4,8 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 DOCKER_DIR="${ROOT_DIR}/testing/test-suite/docker/mysql"
 
-CONTAINER_NAME="${WB_TEST_DB_CONTAINER:-mysqlstudio-test-mysql}"
-IMAGE_NAME="${WB_TEST_DB_IMAGE:-mysqlstudio-test-mysql:local}"
+CONTAINER_NAME="${WB_TEST_DB_CONTAINER:-sqlstudio-test-mysql}"
+IMAGE_NAME="${WB_TEST_DB_IMAGE:-sqlstudio-test-mysql:local}"
 HOST_PORT="${WB_TEST_DB_PORT:-3306}"
 CONTAINER_PORT=3306
 

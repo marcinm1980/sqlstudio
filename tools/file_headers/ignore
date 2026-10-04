@@ -3,7 +3,7 @@ ext
 doc
 generated
 images
-MySQLMySqlStudio.xcodeproj
+SqlStudio.xcodeproj
 po
 res
 samples

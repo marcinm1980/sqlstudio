@@ -87,7 +87,7 @@ protected:
     std::unique_ptr<sql::Statement> stmt(connection->createStatement());
     stmt->execute("DROP SCHEMA IF EXISTS test;");
 
-    MySqlStudioTester::reinitGRT();
+    SqlStudioTester::reinitGRT();
   }
 };
 

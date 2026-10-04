@@ -339,7 +339,7 @@ void WBContextUI::add_backend_builtin_commands() {
       "web_mysql_docs", std::bind(&WBContextUI::show_web_page, this, "https://dev.mysql.com/doc/studio/en/", true));
 
   _command_ui->add_builtin_command("web_mysql_blog",
-                                   std::bind(&WBContextUI::show_web_page, this, "https://mysqlstudio.org/", true));
+                                   std::bind(&WBContextUI::show_web_page, this, "https://sqlstudio.org/", true));
 
   _command_ui->add_builtin_command(
       "web_mysql_forum", std::bind(&WBContextUI::show_web_page, this, "https://forums.mysql.com/list.php?152", true));
@@ -936,12 +936,12 @@ std::string WBContextUI::get_title() {
   if (_wb->get_model_context()) {
 #ifndef __APPLE__
     if (_wb->has_unsaved_changes())
-      return get_document_name() + "* - MySql Studio";
+      return get_document_name() + "* - SqlStudio";
     else
 #endif
-      return get_document_name() + " - MySql Studio";
+      return get_document_name() + " - SqlStudio";
   } else
-    return "MySql Studio";
+    return "SqlStudio";
 }
 
 #endif // ___others
@@ -964,11 +964,11 @@ static struct RegisterNotifDocs_wb_context_ui {
   RegisterNotifDocs_wb_context_ui() {
     base::NotificationCenter::get()->register_notification(
       "GNAppStarted", "application",
-      "Sent when MySqlStudio starts up and finishes with various initialization routines.", "", "");
+      "Sent when SqlStudio starts up and finishes with various initialization routines.", "", "");
 
     base::NotificationCenter::get()->register_notification(
       "GNAppShouldClose", "application",
-      "Sent when the user requests MySqlStudio to close. Close can "
+      "Sent when the user requests SqlStudio to close. Close can "
       "be cancelled by setting the 'cancel' field in the info "
       "dict to 1.",
       "", "cancel - set to 1 if exit should be cancelled");

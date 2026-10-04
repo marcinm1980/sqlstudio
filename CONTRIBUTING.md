@@ -1,15 +1,15 @@
 # Contributing
 
-Thanks for contributing to MySQL Studio.
+Thanks for contributing to SqlStudio.
 
 This project is independently maintained by dev4fun. Contributions, bug reports,
 and feature ideas are handled through the GitHub repository.
 
 ## Before You Start
 
-- Use [GitHub Discussions](https://github.com/dante-d4f/mysqlstudio/discussions) for questions, design discussion,
+- Use [GitHub Discussions](https://github.com/dante-d4f/sqlstudio/discussions) for questions, design discussion,
   and general feedback.
-- Use [GitHub Issues](https://github.com/dante-d4f/mysqlstudio/issues) to report bugs or request features.
+- Use [GitHub Issues](https://github.com/dante-d4f/sqlstudio/issues) to report bugs or request features.
 - Search existing issues and discussions before opening a new one.
 
 ## Submitting Changes
@@ -29,7 +29,7 @@ and feature ideas are handled through the GitHub repository.
 
 ## Discussions and Support
 
-Project discussion happens in [GitHub Discussions](https://github.com/dante-d4f/mysqlstudio/discussions).
+Project discussion happens in [GitHub Discussions](https://github.com/dante-d4f/sqlstudio/discussions).
 If you are unsure whether something is a bug, feature request, or design topic,
 start there.
 

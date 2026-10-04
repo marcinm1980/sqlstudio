@@ -4,7 +4,7 @@ Source: http://dev.mysql.com/
 Files: *
 Copyright: 2008, 2018, Oracle and/or its affiliates. All rights reserved.
 License:
- This is a release of MySql Studio, a graphical tool for working with MySQL servers and databases.
+ This is a release of SqlStudio, a graphical tool for working with MySQL servers and databases.
  .
  License information can be found in the License.txt file.
  .
@@ -12,10 +12,10 @@ License:
  For license and attribution notices for these materials,
  please refer to the License.txt file.
  .
- For more information on MySql Studio, visit
+ For more information on SqlStudio, visit
  http://dev.mysql.com/doc/studio/en
  .
- For additional downloads and the source of MySql Studio, visit
+ For additional downloads and the source of SqlStudio, visit
  http://dev.mysql.com/downloads/
  .
- MySql Studio is brought to you by the MySql Studio team at Oracle.
+ SqlStudio is brought to you by the SqlStudio team at Oracle.

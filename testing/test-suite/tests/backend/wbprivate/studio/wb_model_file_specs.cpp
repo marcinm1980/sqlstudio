@@ -38,7 +38,7 @@ using namespace wb;
 namespace {
 
 struct WbModelFileData {
-  std::unique_ptr<MySqlStudioTester> tester;
+  std::unique_ptr<SqlStudioTester> tester;
   std::string tmpDataDir;
   std::string outputDir;
 
@@ -69,7 +69,7 @@ protected:
     data = std::make_unique<WbModelFileData>();
     data->tmpDataDir = testing::Context::get().tmpDataDir();
     data->outputDir = testing::Context::get().outputDir();
-    data->tester.reset(new MySqlStudioTester());
+    data->tester.reset(new SqlStudioTester());
   }
 
   static void TearDownTestSuite() {

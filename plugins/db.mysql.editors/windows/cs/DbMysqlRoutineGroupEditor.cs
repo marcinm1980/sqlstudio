@@ -32,7 +32,7 @@ using System.Windows.Forms;
 using MySQL.Grt;
 using MySQL.Grt.Db;
 
-namespace MySQL.GUI.MySqlStudio.Plugins
+namespace MySQL.GUI.SqlStudio.Plugins
 {
   public partial class DbMysqlRoutineGroupEditor : ObjectEditorPlugin
   {

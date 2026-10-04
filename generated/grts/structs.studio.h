@@ -34,13 +34,13 @@
 
 #ifdef _MSC_VER
   #pragma warning(disable: 4355) // 'this' : used in base member initializer list
-  #ifdef GRT_STRUCTS_MYSQLSTUDIO_EXPORT
-  #define GRT_STRUCTS_MYSQLSTUDIO_PUBLIC __declspec(dllexport)
+  #ifdef GRT_STRUCTS_SQLSTUDIO_EXPORT
+  #define GRT_STRUCTS_SQLSTUDIO_PUBLIC __declspec(dllexport)
 #else
-  #define GRT_STRUCTS_MYSQLSTUDIO_PUBLIC __declspec(dllimport)
+  #define GRT_STRUCTS_SQLSTUDIO_PUBLIC __declspec(dllimport)
 #endif
 #else
-  #define GRT_STRUCTS_MYSQLSTUDIO_PUBLIC
+  #define GRT_STRUCTS_SQLSTUDIO_PUBLIC
 #endif
 
 #include "grts/structs.h"
@@ -56,8 +56,8 @@ class studio_OverviewPanel;
 typedef grt::Ref<studio_OverviewPanel> studio_OverviewPanelRef;
 class studio_Document;
 typedef grt::Ref<studio_Document> studio_DocumentRef;
-class studio_MySqlStudio;
-typedef grt::Ref<studio_MySqlStudio> studio_MySqlStudioRef;
+class studio_SqlStudio;
+typedef grt::Ref<studio_SqlStudio> studio_SqlStudioRef;
 
 namespace mforms {
   class Object;
@@ -697,25 +697,25 @@ public:
 };
 
 /** an object to store the studio's data */
-class studio_MySqlStudio : public app_Application {
+class studio_SqlStudio : public app_Application {
   typedef app_Application super;
 
 public:
-  studio_MySqlStudio(grt::MetaClass *meta = nullptr)
+  studio_SqlStudio(grt::MetaClass *meta = nullptr)
     : app_Application(meta != nullptr ? meta : grt::GRT::get()->get_metaclass(static_class_name())),
       _docPath(""),
       _sqlEditors(this, false) {
   }
 
   static std::string static_class_name() {
-    return "studio.MySqlStudio";
+    return "studio.SqlStudio";
   }
 
-  // doc is owned by studio_MySqlStudio
+  // doc is owned by studio_SqlStudio
   /**
    * Getter for attribute doc
    *
-   * the MySqlStudio document
+   * the SqlStudio document
    * \par In Python:
    *    value = obj.doc
    */
@@ -726,7 +726,7 @@ public:
   /**
    * Setter for attribute doc
    *
-   * the MySqlStudio document
+   * the SqlStudio document
    * \par In Python:
    *   obj.doc = value
    */
@@ -737,7 +737,7 @@ public:
   /**
    * Getter for attribute docPath
    *
-   * the MySqlStudio document path
+   * the SqlStudio document path
    * \par In Python:
    *    value = obj.docPath
    */
@@ -748,7 +748,7 @@ public:
   /**
    * Setter for attribute docPath
    *
-   * the MySqlStudio document path
+   * the SqlStudio document path
    * \par In Python:
    *   obj.docPath = value
    */
@@ -758,7 +758,7 @@ public:
     member_changed("docPath", ovalue, value);
   }
 
-  // migration is owned by studio_MySqlStudio
+  // migration is owned by studio_SqlStudio
   /**
    * Getter for attribute migration
    *
@@ -784,7 +784,7 @@ public:
     owned_member_changed("migration", ovalue, value);
   }
 
-  // rdbmsMgmt is owned by studio_MySqlStudio
+  // rdbmsMgmt is owned by studio_SqlStudio
   /**
    * Getter for attribute rdbmsMgmt
    *
@@ -810,7 +810,7 @@ public:
     owned_member_changed("rdbmsMgmt", ovalue, value);
   }
 
-  // sqlEditors is owned by studio_MySqlStudio
+  // sqlEditors is owned by studio_SqlStudio
   /**
    * Getter for attribute sqlEditors (read-only)
    *
@@ -839,7 +839,7 @@ protected:
 
 private: // Wrapper methods for use by the grt.
   static grt::ObjectRef create() {
-    return grt::ObjectRef(new studio_MySqlStudio());
+    return grt::ObjectRef(new studio_SqlStudio());
   }
 
 public:
@@ -847,36 +847,36 @@ public:
     grt::MetaClass *meta = grt::GRT::get()->get_metaclass(static_class_name());
     if (meta == nullptr)
       throw std::runtime_error("error initializing grt object class, metaclass not found");
-    meta->bind_allocator(&studio_MySqlStudio::create);
+    meta->bind_allocator(&studio_SqlStudio::create);
     {
-      void (studio_MySqlStudio::*setter)(const studio_DocumentRef &) = 0;
-      studio_DocumentRef (studio_MySqlStudio::*getter)() const = 0;
+      void (studio_SqlStudio::*setter)(const studio_DocumentRef &) = 0;
+      studio_DocumentRef (studio_SqlStudio::*getter)() const = 0;
       meta->bind_member("doc",
-                        new grt::MetaClass::Property<studio_MySqlStudio, studio_DocumentRef>(getter, setter));
+                        new grt::MetaClass::Property<studio_SqlStudio, studio_DocumentRef>(getter, setter));
     }
     {
-      void (studio_MySqlStudio::*setter)(const grt::StringRef &) = &studio_MySqlStudio::docPath;
-      grt::StringRef (studio_MySqlStudio::*getter)() const = &studio_MySqlStudio::docPath;
-      meta->bind_member("docPath", new grt::MetaClass::Property<studio_MySqlStudio, grt::StringRef>(getter, setter));
+      void (studio_SqlStudio::*setter)(const grt::StringRef &) = &studio_SqlStudio::docPath;
+      grt::StringRef (studio_SqlStudio::*getter)() const = &studio_SqlStudio::docPath;
+      meta->bind_member("docPath", new grt::MetaClass::Property<studio_SqlStudio, grt::StringRef>(getter, setter));
     }
     {
-      void (studio_MySqlStudio::*setter)(const db_migration_MigrationRef &) = &studio_MySqlStudio::migration;
-      db_migration_MigrationRef (studio_MySqlStudio::*getter)() const = &studio_MySqlStudio::migration;
+      void (studio_SqlStudio::*setter)(const db_migration_MigrationRef &) = &studio_SqlStudio::migration;
+      db_migration_MigrationRef (studio_SqlStudio::*getter)() const = &studio_SqlStudio::migration;
       meta->bind_member("migration",
-                        new grt::MetaClass::Property<studio_MySqlStudio, db_migration_MigrationRef>(getter, setter));
+                        new grt::MetaClass::Property<studio_SqlStudio, db_migration_MigrationRef>(getter, setter));
     }
     {
-      void (studio_MySqlStudio::*setter)(const db_mgmt_ManagementRef &) = &studio_MySqlStudio::rdbmsMgmt;
-      db_mgmt_ManagementRef (studio_MySqlStudio::*getter)() const = &studio_MySqlStudio::rdbmsMgmt;
+      void (studio_SqlStudio::*setter)(const db_mgmt_ManagementRef &) = &studio_SqlStudio::rdbmsMgmt;
+      db_mgmt_ManagementRef (studio_SqlStudio::*getter)() const = &studio_SqlStudio::rdbmsMgmt;
       meta->bind_member("rdbmsMgmt",
-                        new grt::MetaClass::Property<studio_MySqlStudio, db_mgmt_ManagementRef>(getter, setter));
+                        new grt::MetaClass::Property<studio_SqlStudio, db_mgmt_ManagementRef>(getter, setter));
     }
     {
-      void (studio_MySqlStudio::*setter)(const grt::ListRef<db_query_Editor> &) = &studio_MySqlStudio::sqlEditors;
-      grt::ListRef<db_query_Editor> (studio_MySqlStudio::*getter)() const = &studio_MySqlStudio::sqlEditors;
+      void (studio_SqlStudio::*setter)(const grt::ListRef<db_query_Editor> &) = &studio_SqlStudio::sqlEditors;
+      grt::ListRef<db_query_Editor> (studio_SqlStudio::*getter)() const = &studio_SqlStudio::sqlEditors;
       meta->bind_member(
         "sqlEditors",
-        new grt::MetaClass::Property<studio_MySqlStudio, grt::ListRef<db_query_Editor>>(getter, setter));
+        new grt::MetaClass::Property<studio_SqlStudio, grt::ListRef<db_query_Editor>>(getter, setter));
     }
   }
 };
@@ -884,7 +884,7 @@ public:
 inline void register_structs_studio_xml() {
   grt::internal::ClassRegistry::register_class<studio_OverviewPanel>();
   grt::internal::ClassRegistry::register_class<studio_Document>();
-  grt::internal::ClassRegistry::register_class<studio_MySqlStudio>();
+  grt::internal::ClassRegistry::register_class<studio_SqlStudio>();
 }
 
 #ifdef AUTO_REGISTER_GRT_CLASSES

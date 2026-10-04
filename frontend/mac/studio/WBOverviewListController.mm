@@ -98,7 +98,7 @@
     overview->get_field(child, wb::OverviewBE::Label, name);
     icon = [iconCache imageForIconId:overview->get_field_icon(child, wb::OverviewBE::Label, iconSize)];
     if (!icon)
-      icon = [NSImage imageNamed:@"MySQLMySqlStudio-16.png"];
+      icon = [NSImage imageNamed:@"SqlStudio-16.png"];
 
     [items addObject: [NSMutableDictionary
                        dictionaryWithObjectsAndKeys: @(name.c_str()), @"name",
