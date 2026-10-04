@@ -202,6 +202,9 @@
     <ClCompile Include="tests\library\base\config_file_specs.cpp">
       <Filter>tests\library\base</Filter>
     </ClCompile>
+    <ClCompile Include="tests\library\base\drawing_specs.cpp">
+      <Filter>tests\library\base</Filter>
+    </ClCompile>
     <ClCompile Include="tests\library\base\fileutilities_specs.cpp">
       <Filter>tests\library\base</Filter>
     </ClCompile>

@@ -44,8 +44,8 @@ namespace MySQL.GUI.MySqlStudio.Plugins
       Text = EditorPlugin.TabText;
       TopLevel = true;
       FormBorderStyle = FormBorderStyle.SizableToolWindow;
-      if (File.Exists("images/icons/MySQLMySqlStudio.ico"))
-        Icon = new Icon("images/icons/MySQLMySqlStudio.ico", new Size(16, 16));
+      if (File.Exists("images/icons/MySqlStudio.ico"))
+        Icon = new Icon("images/icons/MySqlStudio.ico", new Size(16, 16));
     }
 
     #region Native Code

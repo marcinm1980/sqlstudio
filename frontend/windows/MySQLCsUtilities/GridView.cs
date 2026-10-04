@@ -31,6 +31,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using MySQL.Grt;
+using MySQL.MySqlStudio;
 using MySQL.Utilities.Properties;
 
 namespace MySQL.Controls
@@ -53,7 +54,7 @@ namespace MySQL.Controls
     }
   }
 
-  public class GridView : DataGridView
+  public class GridView : DataGridView, IMySqlStudioObserver
   {
     private bool refreshing = false;
     private Bitmap fieldNullBitmap;
@@ -123,7 +124,62 @@ namespace MySQL.Controls
       RowHeadersWidth -= 15;
 
 			// Set grid color
-			GridColor = gridColor;
+      UpdateColors();
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+      base.OnHandleCreated(e);
+      UpdateColors();
+      ManagedNotificationCenter.AddObserver(this, "GNColorsChanged");
+    }
+
+    protected override void OnHandleDestroyed(EventArgs e)
+    {
+      ManagedNotificationCenter.RemoveObserver(this, "GNColorsChanged");
+      base.OnHandleDestroyed(e);
+    }
+
+    public void HandleNotification(string name, IntPtr sender, Dictionary<string, string> info)
+    {
+      if (name == "GNColorsChanged" && !IsDisposed && !Disposing)
+        UpdateColors();
+    }
+
+    public void UpdateColors()
+    {
+      bool dark = Conversions.InDarkMode();
+      bool highContrast = Conversions.InHighContrastMode();
+      gridColor = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false) : SystemColors.Window;
+      gridAlternateRowColor = dark ? Color.FromArgb(37, 37, 38)
+        : highContrast ? SystemColors.Window : Color.FromArgb(237, 243, 253);
+      Color text = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true) : SystemColors.WindowText;
+      Color selection = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeaderFocused, false) : SystemColors.Highlight;
+      Color selectedText = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeaderFocused, true) : SystemColors.HighlightText;
+      Color header = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false) : SystemColors.Control;
+
+      BackgroundColor = gridColor;
+      ForeColor = text;
+      GridColor = dark ? Color.FromArgb(69, 69, 69) : highContrast ? SystemColors.WindowText : gridColor;
+      EnableHeadersVisualStyles = !dark;
+      DefaultCellStyle.BackColor = gridColor;
+      DefaultCellStyle.ForeColor = text;
+      DefaultCellStyle.SelectionBackColor = selection;
+      DefaultCellStyle.SelectionForeColor = selectedText;
+      AlternatingRowsDefaultCellStyle.BackColor = gridAlternateRowColor;
+      foreach (DataGridViewCellStyle style in new[] { ColumnHeadersDefaultCellStyle, RowHeadersDefaultCellStyle })
+      {
+        style.BackColor = header;
+        style.ForeColor = dark ? text : SystemColors.ControlText;
+        style.SelectionBackColor = selection;
+        style.SelectionForeColor = selectedText;
+      }
+      if (EditingControl != null)
+      {
+        EditingControl.BackColor = gridColor;
+        EditingControl.ForeColor = text;
+      }
+      Invalidate();
     }
 
     private void setRowHeight(Font font) 
@@ -372,15 +428,6 @@ namespace MySQL.Controls
         e.Graphics.DrawImageUnscaledAndClipped(icon, rect);
         e.Handled = true;
       }
-    }
-
-    protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
-    {
-      base.OnCellFormatting(e);
-
-			// Alter background color for every odd row
-      if (1 == e.RowIndex % 2)
-				e.CellStyle.BackColor = gridAlternateRowColor;
     }
 
     protected override void OnReadOnlyChanged(EventArgs e)

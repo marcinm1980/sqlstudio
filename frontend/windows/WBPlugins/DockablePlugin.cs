@@ -197,6 +197,9 @@ namespace MySQL.GUI.MySqlStudio.Plugins
               ToolStrip toolStrip = control as ToolStrip;
               toolStrip.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false);
               toolStrip.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, true);
+              if (toolStrip is MenuStrip)
+                toolStrip.Renderer = Conversions.UseWin8Drawing()
+                  ? (ToolStripRenderer)new Win8MenuStripRenderer() : new TransparentMenuStripRenderer();
             }
             else
               if (control is TabPage)

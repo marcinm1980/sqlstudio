@@ -34,6 +34,7 @@ public
     ColorSchemeStandardWin8 = base::ColorSchemeStandardWin8,
     ColorSchemeStandardWin8Alternate = base::ColorSchemeStandardWin8Alternate,
     ColorSchemeHighContrast = base::ColorSchemeHighContrast,
+    ColorSchemeDark = base::ColorSchemeDark,
     ColorSchemeCustom = base::ColorSchemeCustom,
   };
 
@@ -64,6 +65,8 @@ public
     static System::Drawing::Color GetApplicationColor(ApplicationColor color, bool foreground);
     static bool UseWin8Drawing();
     static bool InHighContrastMode();
+    static bool InDarkMode();
+    static void RefreshSystemColorScheme();
 
     static void SetColorScheme(ColorScheme newScheme);
   };

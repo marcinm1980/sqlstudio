@@ -2469,6 +2469,10 @@ namespace MySQL.Utilities.SysUtils
     public const uint DWM_BB_BLURREGION = 0x00000002;
     public const uint DWM_BB_TRANSITIONONMAXIMIZED = 0x00000004;
 
+    // Windows 10 1809+; 19 is used by the first Windows 10 dark-title-bar builds.
+    public const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+    public const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
+
     public const uint DTT_COMPOSITED = 8192;
     public const uint DTT_GLOWSIZE = 2048;
     public const uint DTT_TEXTCOLOR = 1;
@@ -3060,6 +3064,9 @@ namespace MySQL.Utilities.SysUtils
 
     [DllImport("dwmapi.dll", PreserveSig = false)]
     public static extern void DwmQueryThumbnailSourceSize(IntPtr hThumbnail, out Size size);
+
+    [DllImport("dwmapi.dll", PreserveSig = true)]
+    public static extern int DwmSetWindowAttribute(IntPtr hWnd, int dwAttribute, ref int pvAttribute, int cbAttribute);
 
     #endregion
 

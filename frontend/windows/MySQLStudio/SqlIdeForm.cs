@@ -103,13 +103,11 @@ namespace MySQL.GUI.MySqlStudio
       logView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
       logView.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
       logView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-      logView.ForeColor = Color.Black;
       logView.CellContextMenuStripNeeded += new DataGridViewCellContextMenuStripNeededEventHandler(logView_CellContextMenuStripNeeded);
 
       Logger.LogDebug("WQE.net", 1, "Creating History View\n");
       historyEntriesView = new GridView(dbSqlEditorBE.history().entries_model());
       historyEntriesView.AutoScroll = true;
-      historyEntriesView.ForeColor = Color.Black;
       historyEntriesView.MultiSelect = false;
       historyEntriesView.RowHeadersVisible = false;
       historyEntriesView.Parent = historySplitContainer.Panel1;
@@ -135,7 +133,6 @@ namespace MySQL.GUI.MySqlStudio
       Logger.LogDebug("WQE.net", 1, "Setting up History Details View\n");
       historyDetailsView = new GridView(dbSqlEditorBE.history().details_model());
       historyDetailsView.AutoScroll = true;
-      historyDetailsView.ForeColor = Color.Black;
       historyDetailsView.RowHeadersVisible = false;
       historyDetailsView.Parent = historySplitContainer.Panel2;
       historyDetailsView.CellContextMenuStripNeeded += new DataGridViewCellContextMenuStripNeededEventHandler(historyDetailsView_CellContextMenuStripNeeded);

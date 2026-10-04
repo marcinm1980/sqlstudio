@@ -71,10 +71,10 @@ using base::strfmt;
 static void set_window_icons(Gtk::Window *window) {
   std::vector<Glib::RefPtr<Gdk::Pixbuf> > icons;
 
-  icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-16.png", false));
-  icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-32.png", false));
-  icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-48.png", false));
-  icons.push_back(ImageCache::get_instance()->image_from_filename("MySQLMySqlStudio-128.png", false));
+  icons.push_back(ImageCache::get_instance()->image_from_filename("MySqlStudio-16.png", false));
+  icons.push_back(ImageCache::get_instance()->image_from_filename("MySqlStudio-32.png", false));
+  icons.push_back(ImageCache::get_instance()->image_from_filename("MySqlStudio-48.png", false));
+  icons.push_back(ImageCache::get_instance()->image_from_filename("MySqlStudio-128.png", false));
 
   window->set_default_icon_list(icons);
 }

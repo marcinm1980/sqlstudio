@@ -565,7 +565,9 @@ void PreferencesForm::update_selector_option(const std::string &option_name, mfo
   }
 
   if (option_name == "ColorScheme") {
-    base::Color::set_active_scheme((base::ColorScheme)selector->get_selected_index());
+    int index = selector->get_selected_index();
+    const std::string &value = index < 0 ? default_value : choices[index];
+    base::Color::set_active_scheme(static_cast<base::ColorScheme>(std::stoi(value)));
     NotificationCenter::get()->send("GNColorsChanged", NULL);
   }
 }
@@ -2105,7 +2107,7 @@ mforms::View *PreferencesForm::create_fonts_and_colors_page() {
     selector->set_size(250, -1);
     hbox->add(selector, true, false);
 
-    mforms::Label *help = new_label(_("The scheme that determines the core colors."), "", false, true);
+    mforms::Label *help = new_label(_("System follows the Windows app theme. Light and Dark override it."), "", false, true);
     hbox->add(help, true, false);
     help->set_size(200, -1);
 

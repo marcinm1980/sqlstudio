@@ -124,7 +124,7 @@ base::Rect AppWrapper::get_application_bounds(mforms::App *app) {
 //--------------------------------------------------------------------------------------------------
 
 bool AppWrapper::isDarkModeActive(mforms::App *app) {
-  return false;
+  return base::Color::get_active_scheme() == base::ColorSchemeDark;
 }
 
 //--------------------------------------------------------------------------------------------------

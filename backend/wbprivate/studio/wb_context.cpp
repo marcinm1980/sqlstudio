@@ -1570,8 +1570,9 @@ void WBContext::set_default_options(grt::DictRef options) {
   colors += "#FFFFFF\n";
   set_default(options, "studio.model.ObjectFigure:ColorList", colors);
 
+  set_default(options, "ColorScheme", 0);
   set_default(options, "@ColorScheme/Items",
-              "System Default:0,Windows 7:1,Windows 8:2,Windows 8 (alternative):3,High Contrast:4");
+              "System:0,Light:2,Dark:5,Windows 7:1,Windows 8 (alternative):3,High Contrast:4");
 
   // Advanced options
   // Option can't be turned off by default. We've got a situation with connector c++ on windows

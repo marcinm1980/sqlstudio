@@ -260,6 +260,16 @@ namespace MySQL.GUI.MySqlStudio
       contentSplitContainer.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorMainBackground, false);
       sideSplitContainer.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorMainBackground, false);
       scrollPanel.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorMainBackground, false);
+      contentHeaderPanel.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
+      contentHeaderPanel.HeaderColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeader, false);
+      contentHeaderPanel.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeader, true);
+      contentHeaderPanel.HeaderColorFocused = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeaderFocused, false);
+      contentHeaderPanel.ForeColorFocused = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeaderFocused, true);
+      secondarySidebarPanel.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
+      secondarySidebarPanel.HeaderColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeader, false);
+      secondarySidebarPanel.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeader, true);
+      secondarySidebarPanel.HeaderColorFocused = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeaderFocused, false);
+      secondarySidebarPanel.ForeColorFocused = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelHeaderFocused, true);
     }
 
     public DockablePlugin FindPluginOfType(Type type)
@@ -530,7 +540,8 @@ namespace MySQL.GUI.MySqlStudio
           overviewPanel.DisableExpansionIcon = isExpansionDisabled;
           overviewPanel.HeaderFont = new Font("Tahoma", 9.75f, FontStyle.Bold);
           overviewPanel.Padding = new Padding(12, 4, 0, 0);
-          overviewPanel.BackColor = Color.White;
+          overviewPanel.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
+          overviewPanel.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true);
 
           panelsByNode[panelNodeId.toString()] = overviewPanel;
 
@@ -562,6 +573,7 @@ namespace MySQL.GUI.MySqlStudio
           }
         }
         scrollPanel.ResumeLayout(true);
+        UpdateColors();
       }
 
       // Update immediately so we have a complete overview page while loading other content.
@@ -874,10 +886,12 @@ namespace MySQL.GUI.MySqlStudio
       if (addSectionHeader)
       {
         Panel panel = new Panel();
+        panel.Name = "OverviewSectionHeader";
         panel.BorderStyle = BorderStyle.None;
         panel.Padding = new Padding(5, 2, 5, 0);
-        panel.BackgroundImage = Resources.header_bar_blue;
+        panel.BackgroundImage = Conversions.InDarkMode() ? null : Resources.header_bar_blue;
         panel.BackgroundImageLayout = ImageLayout.None;
+        panel.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false);
 
         panel.Height = 24;
 
@@ -885,7 +899,7 @@ namespace MySQL.GUI.MySqlStudio
         // Info label.
         Label infoLabel = new Label();
         infoLabel.Text = info;
-        infoLabel.ForeColor = Color.Gray;
+        infoLabel.ForeColor = Conversions.InDarkMode() ? Color.FromArgb(184, 184, 184) : Color.Gray;
         infoLabel.Font = overviewPanel.Font;
         infoLabel.AutoSize = true;
         infoLabel.Margin = new Padding(10, 0, 0, 0);
@@ -900,7 +914,7 @@ namespace MySQL.GUI.MySqlStudio
         //captionLabel.Font = new Font(overviewPanel.Font, FontStyle.Bold);
         captionLabel.AutoSize = true;
         captionLabel.Dock = DockStyle.Left;
-        captionLabel.ForeColor = Color.Black;
+        captionLabel.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, true);
         panel.Controls.Add(captionLabel);
 
         overviewPanel.Controls.Add(panel);
@@ -920,6 +934,8 @@ namespace MySQL.GUI.MySqlStudio
       sectionListview.Scrollable = true;
       sectionListview.Visible = true;
       sectionListview.Font = overviewPanel.Font;
+      sectionListview.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
+      sectionListview.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true);
       sectionListview.Tag = CreateIdentifier(controlNodeId);
       sectionListview.Sorting = SortOrder.None; // We do custom sort.
 
@@ -1706,7 +1722,8 @@ namespace MySQL.GUI.MySqlStudio
         if (!sideTopTabControl.HasDocument(document))
         {
           int index = sideTopTabControl.AddDocument(document);
-          sideTopTabControl.TabPages[index].BackColor = Color.White;
+          sideTopTabControl.TabPages[index].BackColor =
+            Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
         }
       }
       else
@@ -1714,7 +1731,8 @@ namespace MySQL.GUI.MySqlStudio
         if (!sideBottomTabControl.HasDocument(document))
         {
           int index = sideBottomTabControl.AddDocument(document);
-          sideBottomTabControl.TabPages[index].BackColor = Color.White;
+          sideBottomTabControl.TabPages[index].BackColor =
+            Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
         }
       }
       if (activate)
@@ -1935,6 +1953,29 @@ namespace MySQL.GUI.MySqlStudio
           tabView.BackgroundColor = Conversions.GetApplicationColor(ApplicationColor.AppColorMainBackground, false);
         }
         else
+          if (control is CollapsingPanel)
+          {
+            control.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
+            control.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true);
+            control.Invalidate();
+          }
+          else
+            if (control is ListView)
+            {
+              control.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
+              control.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, true);
+            }
+            else
+              if (control is Panel && control.Name == "OverviewSectionHeader")
+              {
+                control.BackgroundImage = Conversions.InDarkMode() ? null : Resources.header_bar_blue;
+                control.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false);
+                foreach (Control child in control.Controls)
+                  child.ForeColor = child == control.Controls[0] && Conversions.InDarkMode()
+                    ? Color.FromArgb(184, 184, 184)
+                    : Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, true);
+              }
+              else
           if (control is HeaderPanel)
           {
             HeaderPanel panel = control as HeaderPanel;

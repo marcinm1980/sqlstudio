@@ -14,6 +14,7 @@ namespace Aga.Controls.Tree
 	internal class TreeColumnCollection : Collection<TreeColumn>
 	{
 		private TreeViewAdv _treeView;
+        internal TreeViewAdv TreeView { get { return _treeView; } }
 
 		public TreeColumnCollection(TreeViewAdv treeView)
 		{

@@ -101,6 +101,19 @@ Prerequisites and build instructions are provided in the [BUILDING.md](BUILDING.
 
 A Windows build requires Visual Studio 2022 or later with the Desktop C++ workload. On Linux and macOS, GCC 11+ or Clang 14+ is required.
 
+On Windows, run `powershell -NoProfile -ExecutionPolicy Bypass -File .\build\compile-studio.ps1`
+to build the `MySqlStudio` application in Debug/x64. The script discovers the newest
+Visual Studio or Build Tools installation with C++ tools, selects its installed
+toolset, and locates the third-party bundle through `MSS_3DPARTY_PATH`,
+`../wb_build/bundle`, `../bundle`, or `./bundle`. Use `-BundleDir <path>` or
+`-VsInstallPath <path>` to override discovery, `-Configuration Release` for a
+release build, and `-DryRun` to inspect the selected tools without compiling.
+The C++/CLI tools, Windows SDK, and .NET Framework 4.8 targeting pack are also required.
+
+In VS Code, **Ctrl+Shift+B** runs the default **Build MySQL Studio (Debug)** task.
+The Release task is available under **Terminal > Run Task**. Compiler diagnostics
+appear in the Problems panel. Build output goes to `bin/x64/Debug` or `bin/x64/Release`.
+
 ---
 
 ## Contributing

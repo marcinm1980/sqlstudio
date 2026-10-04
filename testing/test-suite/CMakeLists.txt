@@ -106,6 +106,7 @@ add_executable(wbtests-bin
   tests/library/base/threading_specs.cpp
   tests/library/base/utf8string_specs.cpp
   tests/library/base/config_file_specs.cpp
+  tests/library/base/drawing_specs.cpp
 
   tests/library/mysql.canvas/mysqlcanvas_specs.cpp
 #  tests/library/sqlparser_specs.cpp

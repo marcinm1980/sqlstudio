@@ -61,6 +61,8 @@ namespace MySQL.GUI.MySqlStudio
     private ModelObjectDescriptionForm()
     {
       InitializeComponent();
+      toolTip1.OwnerDraw = true;
+      toolTip1.Draw += DrawDescriptionToolTip;
     }
 
     /// <summary>
@@ -140,6 +142,18 @@ namespace MySQL.GUI.MySqlStudio
     #endregion
 
     #region UI Logic
+
+    private void DrawDescriptionToolTip(object sender, DrawToolTipEventArgs e)
+    {
+      bool dark = Conversions.InDarkMode();
+      Color background = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, false) : SystemColors.Info;
+      Color foreground = dark ? Conversions.GetApplicationColor(ApplicationColor.AppColorPanelToolbar, true) : SystemColors.InfoText;
+      using (var brush = new SolidBrush(background))
+        e.Graphics.FillRectangle(brush, e.Bounds);
+      e.DrawBorder();
+      TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, foreground,
+        TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+    }
 
     public void UpdateColors()
     {

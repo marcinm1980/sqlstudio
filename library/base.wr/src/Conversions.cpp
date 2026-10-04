@@ -62,6 +62,7 @@ bool Conversions::UseWin8Drawing() {
   switch (base::Color::get_active_scheme()) {
     case base::ColorSchemeStandardWin8:
     case base::ColorSchemeStandardWin8Alternate:
+    case base::ColorSchemeDark:
       return true;
 
     default:
@@ -80,6 +81,15 @@ bool Conversions::InHighContrastMode() {
 void Conversions::SetColorScheme(ColorScheme newScheme) {
   base::Color::set_active_scheme((base::ColorScheme)newScheme);
   ManagedNotificationCenter::Send("GNColorsChanged", IntPtr::Zero);
+}
+
+bool Conversions::InDarkMode() {
+  return base::Color::get_active_scheme() == base::ColorSchemeDark;
+}
+
+void Conversions::RefreshSystemColorScheme() {
+  if (base::Color::refresh_system_scheme() || base::Color::is_high_contrast_scheme())
+    ManagedNotificationCenter::Send("GNColorsChanged", IntPtr::Zero);
 }
 
 //--------------------------------------------------------------------------------------------------

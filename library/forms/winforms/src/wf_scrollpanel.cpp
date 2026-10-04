@@ -70,6 +70,7 @@ private:
 
 public:
   ScrollFillPanel() {
+    MySQL::Controls::ControlTheme::AttachSurface(this);
     autoHideScrollbars = true;
     hideHorizontalScrollbar = false;
     hideVerticalScrollbar = false;

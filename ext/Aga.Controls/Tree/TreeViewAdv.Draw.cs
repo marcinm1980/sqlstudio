@@ -253,7 +253,7 @@ namespace Aga.Controls.Tree
 		{
 			ReorderColumnState reorder = Input as ReorderColumnState;
 			int x = 0;
-			TreeColumn.DrawBackground(gr, new Rectangle(0, 0, ClientRectangle.Width + 2, ColumnHeaderHeight - 1), false, false);
+			TreeColumn.DrawBackground(gr, new Rectangle(0, 0, ClientRectangle.Width + 2, ColumnHeaderHeight - 1), false, false, HeaderBackColor);
 			gr.TranslateTransform(-OffsetX, 0);
 			foreach (TreeColumn c in Columns)
 			{

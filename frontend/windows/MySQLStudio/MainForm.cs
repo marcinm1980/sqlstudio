@@ -213,23 +213,18 @@ namespace MySQL.GUI.MySqlStudio
 
     public void PreferenceChangedHandler(object sender, Microsoft.Win32.UserPreferenceChangedEventArgs e)
     {
-      if (e.Category == Microsoft.Win32.UserPreferenceCategory.VisualStyle     // For changing from high contrast to normal style.
-        || e.Category == Microsoft.Win32.UserPreferenceCategory.Accessibility) // For changing between high contrast schemes.
+      // SystemEvents may arrive off the UI thread. Re-read the OS state for all
+      // categories: app light/dark changes are not always classified as VisualStyle.
+      if (IsDisposed || Disposing || !IsHandleCreated)
+        return;
+      BeginInvoke((Action)(() =>
       {
-        if (SystemInformation.HighContrast)
-          Conversions.SetColorScheme(ColorScheme.ColorSchemeHighContrast);
-        else
-        {
-          Conversions.SetColorScheme(ColorScheme.ColorSchemeStandard);
-
-          // Re-establish our glass frame.
-          int topAreaHeight = 0;
-          if (contentTabControl.ActiveDocument != null)
-            topAreaHeight += contentTabControl.ActiveDocument.ToolbarHeight;
-
-          AdjustGlassFrame(topAreaHeight);
-        }
-      }
+        if (IsDisposed || Disposing)
+          return;
+        Conversions.RefreshSystemColorScheme();
+        int topAreaHeight = contentTabControl.ActiveDocument == null ? 0 : contentTabControl.ActiveDocument.ToolbarHeight;
+        AdjustGlassFrame(topAreaHeight);
+      }));
     }
 
     public void ShowStatusText(String message)
@@ -894,9 +889,11 @@ namespace MySQL.GUI.MySqlStudio
 
     private void UpdateColors()
     {
+      UpdateWindowFrameTheme();
       contentTabControl.RenderWithGlow = false;
       contentTabControl.UpdateColors();
       contentTabControl.BackgroundColor = Conversions.GetApplicationColor(ApplicationColor.AppColorMainBackground, false);
+      BackColor = contentTabControl.BackgroundColor;
       mainStatusStrip.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorMainBackground, false);
       mainStatusStrip.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorStatusbar, true);
       statusText.ForeColor = Conversions.GetApplicationColor(ApplicationColor.AppColorStatusbar, true);
@@ -908,6 +905,36 @@ namespace MySQL.GUI.MySqlStudio
         else
           if (document is AppViewDockContent)
             (document as AppViewDockContent).UpdateColors();
+      }
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+      base.OnHandleCreated(e);
+      UpdateWindowFrameTheme();
+    }
+
+    private void UpdateWindowFrameTheme()
+    {
+      if (!IsHandleCreated)
+        return;
+
+      int enabled = Conversions.InDarkMode() ? 1 : 0;
+      try
+      {
+        int result = Win32.DwmSetWindowAttribute(Handle, Win32.DWMWA_USE_IMMERSIVE_DARK_MODE,
+          ref enabled, sizeof(int));
+        if (result != 0)
+          Win32.DwmSetWindowAttribute(Handle, Win32.DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1,
+            ref enabled, sizeof(int));
+      }
+      catch (DllNotFoundException)
+      {
+        // DWM is unavailable on old Windows versions and in some compatibility environments.
+      }
+      catch (EntryPointNotFoundException)
+      {
+        // Older DWM versions do not expose this API.
       }
     }
 
@@ -1728,9 +1755,7 @@ namespace MySQL.GUI.MySqlStudio
 
     private void MainForm_Load(object sender, EventArgs e)
     {
-      // Switch to high contrast mode if that is active on the system but not set in our settings.
-      if (!Conversions.InHighContrastMode() && SystemInformation.HighContrast)
-        Conversions.SetColorScheme(ColorScheme.ColorSchemeHighContrast);
+      Conversions.RefreshSystemColorScheme();
 
       LoadFormState();
 

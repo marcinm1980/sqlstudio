@@ -119,7 +119,7 @@ namespace MySQL.GUI.MySqlStudio.Properties {
         /// </summary>
         internal static System.Drawing.Icon MySQLMySqlStudio {
             get {
-                object obj = ResourceManager.GetObject("MySQLMySqlStudio", resourceCulture);
+                object obj = ResourceManager.GetObject("MySqlStudio", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

@@ -68,6 +68,7 @@ namespace base {
     ColorSchemeStandardWin8,
     ColorSchemeStandardWin8Alternate,
     ColorSchemeHighContrast,
+    ColorSchemeDark,
     ColorSchemeCustom = 128,
   };
 
@@ -169,6 +170,8 @@ namespace base {
 
     static void set_active_scheme(ColorScheme scheme);
     static ColorScheme get_active_scheme();
+    // Re-resolve the saved preference after an OS appearance/accessibility change.
+    static bool refresh_system_scheme();
     static bool is_high_contrast_scheme();
     static void prepareForTesting();
 

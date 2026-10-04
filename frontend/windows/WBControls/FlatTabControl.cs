@@ -392,6 +392,10 @@ namespace MySQL.Controls
       bottomTabSelectedColor = Conversions.GetApplicationColor(ApplicationColor.AppColorBottomTabSelected, false);
       bottomTabSelectedTextColor = Conversions.GetApplicationColor(ApplicationColor.AppColorBottomTabSelected, true);
 
+      if (tabStyle == TabStyleType.BottomNormal)
+        foreach (TabPage page in TabPages)
+          page.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
+
       Invalidate();
     }
 
@@ -659,7 +663,7 @@ namespace MySQL.Controls
             if (ControlUtilities.IsCompositionEnabled())
             {
               Rectangle intBounds = Rectangle.Ceiling(bounds);
-              Win32.DrawTextOnGlass(g, page.Text, font, intBounds, Color.Black, formatFlags, renderWithGlow);
+              Win32.DrawTextOnGlass(g, page.Text, font, intBounds, topTransparentTabTextColor, formatFlags, renderWithGlow);
             }
             else
               using (GraphicsPath textPath = new GraphicsPath())
@@ -712,7 +716,7 @@ namespace MySQL.Controls
           switch (tabStyle)
           {
             case TabStyleType.TopTransparent:
-              g.DrawImageUnscaled(darkCloseButton, buttonRect);
+              g.DrawImageUnscaled(Conversions.InDarkMode() ? lightCloseButton : darkCloseButton, buttonRect);
               break;
             case TabStyleType.TopNormal:
               {
@@ -729,7 +733,7 @@ namespace MySQL.Controls
                 break;
               }
             case TabStyleType.BottomNormal:
-              g.DrawImageUnscaled(darkCloseButton, buttonRect);
+              g.DrawImageUnscaled(Conversions.InDarkMode() ? lightCloseButton : darkCloseButton, buttonRect);
               break;
           }
         }
@@ -1088,7 +1092,7 @@ namespace MySQL.Controls
         TabPage page = e.Control as TabPage;
         page.TextChanged += new EventHandler(PageTextChanged);
         if (tabStyle == TabStyleType.BottomNormal)
-          page.BackColor = Color.White;
+          page.BackColor = Conversions.GetApplicationColor(ApplicationColor.AppColorPanelContentArea, false);
 
         layoutInfo.Insert(TabPages.IndexOf(page), new TabInfo());
         AdjustLayoutInfo(page);
@@ -2071,6 +2075,7 @@ namespace MySQL.Controls
     {
       FormBorderStyle = FormBorderStyle.None;
       TopLevel = false;
+      ControlTheme.Attach(this);
     }
 
     new virtual public void Show()
