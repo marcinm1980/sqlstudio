@@ -1,0 +1,12 @@
+# Vendored dependencies and generated sources.
+ext/**
+packages/**
+generated/**
+
+# Build/install output. Do not exclude build/: it contains maintained sources.
+obj/**
+bin/**
+prefix/**
+**/CMakeFiles/**
+**/Debug/**
+**/Release/**
