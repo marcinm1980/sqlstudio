@@ -271,22 +271,20 @@ if [[ -n "${WB_BUNDLE_DIR:-}" ]]; then
         -DMYSQL_LIBRARY="${BUNDLE_LIB}/libmysqlclient.${LIB_EXT}"
         -DMYSQL_INCLUDE_DIR="${BUNDLE_INC}"
         # MySQL Connector/C++ (JDBC API — headers in include/jdbc/)
-        -DMYSQLCPPCONN_LIBRARY="${BUNDLE_LIB}/libmysqlcppconn.${LIB_EXT}"
-        -DMYSQLCPPCONN_INCLUDE_DIR="${BUNDLE_INC}/jdbc"
+        -DMySQLCppConn_LIBRARY="${BUNDLE_LIB}/libmysqlcppconn.${LIB_EXT}"
+        -DMySQLCppConn_INCLUDE_DIR="${BUNDLE_INC}/jdbc"
         # vsqlite++ (headers in include/sqlite/)
         -DVSQLITE_LIBRARY="${BUNDLE_LIB}/libvsqlitepp.${LIB_EXT}"
         -DVSQLITE_INCLUDE_DIR="${BUNDLE_INC}"
         # GDAL
         -DGDAL_LIBRARY="${BUNDLE_LIB}/libgdal.${LIB_EXT}"
         -DGDAL_INCLUDE_DIR="${BUNDLE_INC}"
-        # ANTLR4 runtime (headers in include/antlr4-runtime/)
+        # ANTLR4 runtime (headers in include/antlr4-runtime/; FindANTLR4
+        # appends the antlr4-runtime/ part itself)
         -DANTLR4_LIBRARY="${BUNDLE_LIB}/libantlr4-runtime.${LIB_EXT}"
-        -DANTLR4_INCLUDE_DIR="${BUNDLE_INC}/antlr4-runtime"
+        -DANTLR4_INCLUDE_DIR="${BUNDLE_INC}"
         # libssh (cmake config in lib/cmake/libssh/)
         -Dlibssh_DIR="${BUNDLE_LIB}/cmake/libssh"
-        # iODBC
-        -DIODBC_LIBRARY="${BUNDLE_LIB}/libiodbc.${LIB_EXT}"
-        -DIODBC_INCLUDE_DIR="${BUNDLE_INC}"
         # RapidJSON (header-only, in include/rapidjson/)
         -DRAPIDJSON_INCLUDE_DIR="${BUNDLE_INC}"
         # Boost (header-only, in include/boost/)
@@ -296,6 +294,15 @@ if [[ -n "${WB_BUNDLE_DIR:-}" ]]; then
         # SQLite (for pkg-config)
         -DCMAKE_LIBRARY_PATH="${BUNDLE_LIB}"
     )
+
+    # iODBC: FindIODBC only searches when given iodbc-config, and aborts if
+    # the given path does not exist.
+    if [[ "${USE_UNIXODBC}" != "ON" && -x "${BUNDLE_BIN}/iodbc-config" ]]; then
+        CMAKE_ARGS+=(
+            -DIODBC_CONFIG_PATH="${BUNDLE_BIN}/iodbc-config"
+            -DIODBC_INCLUDE_PATH="${BUNDLE_INC}"
+        )
+    fi
 
     # Help pkg-config find bundled .pc files
     export PKG_CONFIG_PATH="${BUNDLE_LIB}/pkgconfig:${PKG_CONFIG_PATH:-}"
