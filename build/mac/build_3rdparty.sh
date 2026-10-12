@@ -256,6 +256,13 @@ validate_bundle() {
 ###############################################################################
 # Download with progress
 ###############################################################################
+# Remove a partial download so the next run does not mistake it for a complete archive.
+download_failed() {
+    rm -f "$1"
+    fail "Download failed: $2"
+    exit 1
+}
+
 download_archive() {
     local idx=$1
     local url="${DEP_URLS[$idx]}"
@@ -271,10 +278,13 @@ download_archive() {
     # Prefer wget for built-in progress bar; fall back to curl
     if command -v wget &>/dev/null; then
         if $VERBOSE; then
-            wget --no-check-certificate -O "$dest" "$url"
+            wget --no-check-certificate -O "$dest" "$url" || download_failed "$dest" "$url"
         else
+            # grep finds no percentages when the server sends no Content-Length
+            # (e.g. GitHub tag archives), so only wget's exit status may fail this.
+            set +e
             wget --no-check-certificate -O "$dest" "$url" 2>&1 | \
-                grep --line-buffered -oP '\d+%' | \
+                { grep --line-buffered -oE '[0-9]+%' || true; } | \
                 while IFS= read -r pct_str; do
                     local pct="${pct_str%\%}"
                     local bar_len=40
@@ -285,13 +295,16 @@ download_archive() {
                     for (( i = filled; i < bar_len; i++ )); do bar+="░"; done
                     printf "\r    ${C_GREEN}%s${C_RESET}  %3d%%" "$bar" "$((10#$pct))"
                 done
+            local rc=${PIPESTATUS[0]}
+            set -e
             echo  # newline after bar
+            [[ $rc -eq 0 ]] || download_failed "$dest" "$url"
         fi
     elif command -v curl &>/dev/null; then
         if $VERBOSE; then
-            curl -fSL -o "$dest" "$url"
+            curl -fSL -o "$dest" "$url" || download_failed "$dest" "$url"
         else
-            curl -fSL --progress-bar -o "$dest" "$url"
+            curl -fSL --progress-bar -o "$dest" "$url" || download_failed "$dest" "$url"
         fi
     else
         fail "Neither wget nor curl found — cannot download."
