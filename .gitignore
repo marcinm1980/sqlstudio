@@ -230,3 +230,7 @@ build/__output/plugins/migration/wbcopytables
 build/__output/plugins/migration/wbcopytables-bin
 docker/databases/.env
 !/build/cmake/**/*.cmake
+
+# Local build leftovers
+build/CMakeCache.txt
+build/*.log
