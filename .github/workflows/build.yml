@@ -26,7 +26,7 @@ jobs:
     timeout-minutes: 300
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set paths
         run: |
@@ -50,7 +50,7 @@ jobs:
       # time to build, so it is cached and rebuilt only when its recipe changes.
       - name: Restore 3rd-party bundle
         id: bundle-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: |
             ${{ env.WB_BUNDLE_DIR }}
@@ -65,7 +65,7 @@ jobs:
       # Saved right away so a failing application build does not throw the bundle away.
       - name: Save 3rd-party bundle
         if: steps.bundle-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: |
             ${{ env.WB_BUNDLE_DIR }}
@@ -99,7 +99,7 @@ jobs:
           DESTDIR="$STAGE_DIR" cmake --install build/output
           tar -C "$STAGE_DIR" -czf "sql-studio-linux-x86_64-${SHORT_SHA}.tar.gz" .
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: sql-studio-linux-x86_64-${{ env.SHORT_SHA }}
           path: sql-studio-linux-x86_64-*.tar.gz
@@ -107,7 +107,7 @@ jobs:
 
       - name: Upload build logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: logs-linux-${{ env.SHORT_SHA }}
           path: |
