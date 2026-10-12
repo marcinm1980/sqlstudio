@@ -103,6 +103,7 @@ THIRDPARTY_LIBS=(
     # MySQL server build (client-only)
     libncurses-dev          # ncurses — needed by mysql's bundled editline
     bison                   # SQL parser generator for MySQL server
+    libtirpc-dev            # rpc/rpc.h — MySQL server build (not pulled in on Ubuntu 24.04)
 
     # GDAL build
     libproj-dev             # PROJ — hard dependency for GDAL
