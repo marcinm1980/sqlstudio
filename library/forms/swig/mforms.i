@@ -720,9 +720,21 @@ inline boost::function<void (mforms::TextEntryAction)> pycall_void_entryaction_f
   delete $1;
 }
 
+// SWIG 4.3 added an is_void parameter to SWIG_Python_AppendOutput; distro
+// SWIG versions (e.g. 4.0 on Ubuntu 22.04, 4.2 on 24.04) still take two.
+#if SWIG_VERSION >= 0x040300
+%{
+#define WB_SWIG_APPEND_OUTPUT(result, obj) SWIG_Python_AppendOutput(result, obj, 0)
+%}
+#else
+%{
+#define WB_SWIG_APPEND_OUTPUT(result, obj) SWIG_Python_AppendOutput(result, obj)
+%}
+#endif
+
 %typemap(argout) std::string &ret_password {
     PyObject *o= PyUnicode_DecodeUTF8(($1)->data(), ($1)->size(), NULL);
-    $result = SWIG_Python_AppendOutput($result, o, 0);
+    $result = WB_SWIG_APPEND_OUTPUT($result, o);
 }
 
 %typemap(in,numinputs=0) std::string &ret_password(std::string temp) {
@@ -731,7 +743,7 @@ inline boost::function<void (mforms::TextEntryAction)> pycall_void_entryaction_f
 
 %typemap(argout) std::string &ret_value {
     PyObject *o= PyUnicode_DecodeUTF8(($1)->data(), ($1)->size(), NULL);
-    $result = SWIG_Python_AppendOutput($result, o, 0);
+    $result = WB_SWIG_APPEND_OUTPUT($result, o);
 }
 
 %typemap(in,numinputs=0) std::string &ret_value(std::string temp) {
@@ -741,7 +753,7 @@ inline boost::function<void (mforms::TextEntryAction)> pycall_void_entryaction_f
 
 %typemap(argout) bool &ret_store {
     if (*$1) Py_INCREF(Py_True); else Py_INCREF(Py_False);
-    $result = SWIG_Python_AppendOutput($result, *$1 ? Py_True : Py_False, 0);
+    $result = WB_SWIG_APPEND_OUTPUT($result, *$1 ? Py_True : Py_False);
 }
 
 %typemap(in,numinputs=0) bool &ret_store(bool temp) {
