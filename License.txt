@@ -29,6 +29,7 @@ Licensing Information
    program or referenced in the documentation.
 
    Copyright (c) 2006, 2025, Oracle and/or its affiliates.
+   Copyright (c) 2026 dev4fun. All rights reserved.
 
 Election of GPLv2
 

@@ -3,6 +3,7 @@ Source: http://dev.mysql.com/
 
 Files: *
 Copyright: 2008, 2018, Oracle and/or its affiliates. All rights reserved.
+           2026, dev4fun. All rights reserved.
 License:
  This is a release of SqlStudio, a graphical tool for working with MySQL servers and databases.
  .

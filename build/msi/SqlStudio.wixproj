@@ -1,0 +1,29 @@
+<Project Sdk="WixToolset.Sdk/7.0.0">
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <OutputName>sql_studio</OutputName>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <InstallerPlatform Condition="'$(InstallerPlatform)' == ''">x64</InstallerPlatform>
+    <Platform>$(InstallerPlatform)</Platform>
+    <Edition Condition="'$(Edition)' == ''">community</Edition>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">0.0.0</ProductVersion>
+    <VersionMain>$([System.Version]::Parse('$(ProductVersion)').ToString(2))</VersionMain>
+    <IncludeSearchPaths>$(MSBuildThisFileDirectory)source</IncludeSearchPaths>
+    <DefineConstants>$(DefineConstants);SETUP_TYPE=$(Edition);LICENSE_TYPE=$(Edition);VERSION_MAIN=$(VersionMain);VERSION_DETAIL=$(ProductVersion);InstallerSourceDir=$(MSBuildThisFileDirectory)</DefineConstants>
+    <OutputPath>$(MSBuildThisFileDirectory)bin\$(InstallerPlatform)\$(Edition)\</OutputPath>
+    <IntermediateOutputPath>obj\$(InstallerPlatform)\$(Edition)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="source\sql_studio.xml" />
+    <Compile Include="source\sql_studio_fragment.xml" />
+    <BindPath Include="$(PayloadDirectory)" Condition="'$(PayloadDirectory)' != ''" />
+    <PackageReference Include="WixToolset.Netfx.wixext" Version="7.0.0" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="7.0.0" />
+    <ProjectReference Include="MySQLCA\MySQLCA.csproj" />
+  </ItemGroup>
+  <Target Name="ValidateInstallerInputs" BeforeTargets="BeforeBuild">
+    <Error Condition="'$(Edition)' != 'community' and '$(Edition)' != 'commercial' and '$(Edition)' != 'debug'" Text="Edition must be community, commercial, or debug." />
+    <Error Condition="'$(InstallerPlatform)' != 'x86' and '$(InstallerPlatform)' != 'x64'" Text="InstallerPlatform must be x86 or x64." />
+    <Error Condition="'$(PayloadDirectory)' == '' or !Exists('$(PayloadDirectory)\SqlStudio.exe')" Text="Set PayloadDirectory to a staged SqlStudio distribution containing SqlStudio.exe." />
+  </Target>
+</Project>

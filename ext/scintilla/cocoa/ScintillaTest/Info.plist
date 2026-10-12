@@ -24,7 +24,7 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright (c) 2017, 2018, Oracle Corp. All rights reserved.</string>
+	<string>Copyright (c) 2017, 2018, Oracle Corp. All rights reserved. Copyright (c) 2026 dev4fun. All rights reserved.</string>
 ========
 	<key>CFBundleSignature</key>
 	<string>????</string>

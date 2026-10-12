@@ -1,4 +1,7 @@
 @echo off
+setlocal
+set RELEASE_ARCH=
+set BUILD_SIGNED=
 
 if "%1"=="" goto printUsage
 if "%2"=="" goto printUsage
@@ -38,9 +41,9 @@ rem Set version variables
 set VERSION_DETAIL=%2
 for %%A in ("%VERSION_DETAIL%") do set VERSION_MAIN=%%~nA
 
-if "%4"=="" goto no_sign
+if "%4"=="" goto signing_options_done
 set BUILD_SIGNED=1
-:no_sign
+:signing_options_done
 
 rem Set other variables
 set DIST_DIR=.\distribution

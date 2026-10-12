@@ -13,7 +13,7 @@
       Icons
     -->
 
-    <Icon Id="WBIcon.exe" SourceFile="resources/SqlStudio.ico" />
+    <Icon Id="WBIcon.exe" SourceFile="$(var.InstallerSourceDir)resources/SqlStudio.ico" />
 
     <!-- *****************************************************************************************
       Directories / Files
