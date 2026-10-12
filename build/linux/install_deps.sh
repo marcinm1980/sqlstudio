@@ -66,6 +66,11 @@ BUILD_TOOLS=(
     wget
     curl
     unzip
+    xz-utils                # .tar.xz archives (libssh)
+    bzip2                   # .tar.bz2 archives
+    ca-certificates         # HTTPS downloads
+    dpkg-dev                # make_deb.sh (dpkg-shlibdeps)
+    zstd                    # faster CI cache compression
 )
 
 # ── Libraries required by the main SqlStudio build ─────────────────────
@@ -151,6 +156,9 @@ fi
 # Install missing packages
 ###############################################################################
 section "Installing ${#MISSING[@]} missing packages"
+
+# Never prompt (e.g. tzdata) — the script also runs unattended in CI containers.
+export DEBIAN_FRONTEND=noninteractive
 
 apt-get update -qq
 
