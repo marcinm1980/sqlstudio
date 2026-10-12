@@ -87,7 +87,7 @@ jobs:
 
       - name: Build SqlStudio
         run: |
-          build/linux/compile.sh \
+          build/compile.sh \
             --build-type Release \
             --jobs "$(nproc)" \
             --prefix /usr \
