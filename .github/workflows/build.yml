@@ -1,0 +1,117 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [develop, master]
+  push:
+    branches: [develop, master]
+  workflow_dispatch:
+
+# A new push to the same PR cancels the build that is still running for it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  ANTLR_VERSION: 4.13.2
+  ANTLR_SHA256: eae2dfa119a64327444672aff63e9ec35a20180dc5b8090b7a6ab85125df4d76
+
+jobs:
+  linux:
+    name: Linux (Ubuntu 22.04, x86_64)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 300
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set paths
+        run: |
+          echo "WB_BUNDLE_DIR=${RUNNER_TEMP}/bundle" >> "$GITHUB_ENV"
+          echo "ANTLR_JAR=${RUNNER_TEMP}/antlr/antlr-${ANTLR_VERSION}-complete.jar" >> "$GITHUB_ENV"
+          echo "STAGE_DIR=${RUNNER_TEMP}/stage" >> "$GITHUB_ENV"
+          echo "SHORT_SHA=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      # The hosted image ships ~25 GB of SDKs we never use; the MySQL and GDAL
+      # builds need the space.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+                      /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+
+      - name: Install system packages
+        run: sudo build/linux/install_deps.sh
+
+      # The 3rd-party bundle (MySQL client, Connector/C++, GDAL, ...) takes a long
+      # time to build, so it is cached and rebuilt only when its recipe changes.
+      - name: Restore 3rd-party bundle
+        id: bundle-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ env.WB_BUNDLE_DIR }}
+            !${{ env.WB_BUNDLE_DIR }}/source
+            !${{ env.WB_BUNDLE_DIR }}/build
+          key: bundle-linux-ubuntu2204-${{ hashFiles('build/linux/list.txt', 'build/linux/build_3rdparty.sh', 'build/linux/install_deps.sh') }}
+
+      - name: Build 3rd-party bundle
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        run: build/linux/build_3rdparty.sh --bundle "$WB_BUNDLE_DIR" -j "$(nproc)"
+
+      # Saved right away so a failing application build does not throw the bundle away.
+      - name: Save 3rd-party bundle
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ env.WB_BUNDLE_DIR }}
+            !${{ env.WB_BUNDLE_DIR }}/source
+            !${{ env.WB_BUNDLE_DIR }}/build
+          key: ${{ steps.bundle-cache.outputs.cache-primary-key }}
+
+      - name: Remove bundle build trees
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        run: rm -rf "$WB_BUNDLE_DIR/source" "$WB_BUNDLE_DIR/build" && df -h /
+
+      # The MySQL parser is generated from the grammar at build time.
+      - name: Download ANTLR
+        run: |
+          mkdir -p "$(dirname "$ANTLR_JAR")"
+          curl -fsSL -o "$ANTLR_JAR" \
+            "https://repo1.maven.org/maven2/org/antlr/antlr4/${ANTLR_VERSION}/antlr4-${ANTLR_VERSION}-complete.jar"
+          echo "${ANTLR_SHA256}  ${ANTLR_JAR}" | sha256sum -c -
+
+      - name: Build SqlStudio
+        run: |
+          build/linux/compile.sh \
+            --build-type Release \
+            --jobs "$(nproc)" \
+            --prefix /usr \
+            --build-dir "$GITHUB_WORKSPACE/build/output" \
+            --antlr-jar "$ANTLR_JAR"
+
+      - name: Stage install tree
+        run: |
+          DESTDIR="$STAGE_DIR" cmake --install build/output
+          tar -C "$STAGE_DIR" -czf "sql-studio-linux-x86_64-${SHORT_SHA}.tar.gz" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sql-studio-linux-x86_64-${{ env.SHORT_SHA }}
+          path: sql-studio-linux-x86_64-*.tar.gz
+          retention-days: 14
+
+      - name: Upload build logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-linux-${{ env.SHORT_SHA }}
+          path: |
+            build/output/*.log
+            build/output/CMakeFiles/*.log
+          if-no-files-found: ignore
+          retention-days: 7
