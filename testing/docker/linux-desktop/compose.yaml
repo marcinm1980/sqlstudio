@@ -1,0 +1,32 @@
+name: sqlstudio-linux-desktop
+
+services:
+  desktop:
+    build:
+      context: .
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-ubuntu:22.04}
+    image: sqlstudio/linux-desktop:${DISTRO_TAG:-ubuntu22.04}
+    # Packages are built for amd64; on Apple Silicon this runs through
+    # Rosetta (OrbStack) or QEMU (Docker Desktop).
+    platform: linux/amd64
+    environment:
+      NOVNC_PORT: ${NOVNC_PORT:-6080}
+    ports:
+      - "127.0.0.1:${NOVNC_PORT:-6080}:6080"
+    volumes:
+      - ${PACKAGE_DIR:-./packages}:/packages:ro
+      - home:/root
+    shm_size: 1gb
+    networks:
+      - databases
+
+volumes:
+  home:
+
+networks:
+  # Created by ../databases/compose.yaml, so database containers are
+  # reachable by their service names (mysql-8-2, mariadb-10-11, ...).
+  databases:
+    name: sqlstudio-databases
+    external: true
