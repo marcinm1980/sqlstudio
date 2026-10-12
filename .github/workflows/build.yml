@@ -20,12 +20,44 @@ env:
   ANTLR_SHA256: eae2dfa119a64327444672aff63e9ec35a20180dc5b8090b7a6ab85125df4d76
 
 jobs:
+  # Every distro ships different library versions (libpython 3.10 / 3.12 /
+  # 3.11, ...), so each .deb is built inside a container of the distro it
+  # targets. Clean containers also keep libraries preinstalled on the hosted
+  # runner image from leaking into the build.
   linux:
-    name: Linux (Ubuntu 22.04, x86_64)
-    runs-on: ubuntu-22.04
+    name: Linux (${{ matrix.name }})
+    runs-on: ubuntu-24.04
     timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Ubuntu 22.04, image: "ubuntu:22.04", tag: ubuntu22.04 }
+          - { name: Ubuntu 24.04, image: "ubuntu:24.04", tag: ubuntu24.04 }
+          - { name: Debian 12,    image: "debian:12",    tag: debian12 }
+    container:
+      image: ${{ matrix.image }}
+      # Host directories with SDKs we never use, mounted so they can be
+      # deleted to make room for the MySQL and GDAL builds.
+      volumes:
+        - /usr/share/dotnet:/host/dotnet
+        - /usr/local/lib/android:/host/android
+        - /opt/ghc:/host/ghc
+    defaults:
+      run:
+        shell: bash
+    env:
+      DEBIAN_FRONTEND: noninteractive
 
     steps:
+      - name: Free disk space
+        run: |
+          rm -rf /host/dotnet/* /host/android/* /host/ghc/*
+          df -h /
+
+      - name: Install git
+        run: apt-get update -qq && apt-get install -y -qq git ca-certificates
+
       - uses: actions/checkout@v7
 
       - name: Set paths
@@ -35,16 +67,8 @@ jobs:
           echo "STAGE_DIR=${RUNNER_TEMP}/stage" >> "$GITHUB_ENV"
           echo "SHORT_SHA=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
 
-      # The hosted image ships ~25 GB of SDKs we never use; the MySQL and GDAL
-      # builds need the space.
-      - name: Free disk space
-        run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
-                      /opt/hostedtoolcache/CodeQL /usr/local/share/boost
-          df -h /
-
       - name: Install system packages
-        run: sudo build/linux/install_deps.sh
+        run: build/linux/install_deps.sh
 
       # The 3rd-party bundle (MySQL client, Connector/C++, GDAL, ...) takes a long
       # time to build, so it is cached and rebuilt only when its recipe changes.
@@ -56,7 +80,7 @@ jobs:
             ${{ env.WB_BUNDLE_DIR }}
             !${{ env.WB_BUNDLE_DIR }}/source
             !${{ env.WB_BUNDLE_DIR }}/build
-          key: bundle-linux-ubuntu2204-${{ hashFiles('build/linux/list.txt', 'build/linux/build_3rdparty.sh', 'build/linux/install_deps.sh') }}
+          key: bundle-linux-${{ matrix.tag }}-${{ hashFiles('build/linux/list.txt', 'build/linux/build_3rdparty.sh', 'build/linux/install_deps.sh') }}
 
       - name: Build 3rd-party bundle
         if: steps.bundle-cache.outputs.cache-hit != 'true'
@@ -94,24 +118,76 @@ jobs:
             --build-dir "$GITHUB_WORKSPACE/build/output" \
             --antlr-jar "$ANTLR_JAR"
 
-      - name: Stage install tree
+      - name: Build .deb package
         run: |
           DESTDIR="$STAGE_DIR" cmake --install build/output
-          tar -C "$STAGE_DIR" -czf "sql-studio-linux-x86_64-${SHORT_SHA}.tar.gz" .
+          build/linux/make_deb.sh --stage "$STAGE_DIR" --out dist --distro-tag ${{ matrix.tag }}
 
       - uses: actions/upload-artifact@v7
         with:
-          name: sql-studio-linux-x86_64-${{ env.SHORT_SHA }}
-          path: sql-studio-linux-x86_64-*.tar.gz
+          name: sql-studio-${{ matrix.tag }}-${{ env.SHORT_SHA }}
+          path: dist/*.deb
           retention-days: 14
 
       - name: Upload build logs
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: logs-linux-${{ env.SHORT_SHA }}
+          name: logs-${{ matrix.tag }}-${{ env.SHORT_SHA }}
           path: |
             build/output/*.log
             build/output/CMakeFiles/*.log
           if-no-files-found: ignore
           retention-days: 7
+
+  # Installs each package on a clean system of its distro, as a user would,
+  # and checks that every bundled binary and library resolves its libraries.
+  linux-package-test:
+    name: Test package (${{ matrix.name }})
+    needs: linux
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Ubuntu 22.04, image: "ubuntu:22.04", tag: ubuntu22.04 }
+          - { name: Ubuntu 24.04, image: "ubuntu:24.04", tag: ubuntu24.04 }
+          - { name: Debian 12,    image: "debian:12",    tag: debian12 }
+    container:
+      image: ${{ matrix.image }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - name: Set paths
+        run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: sql-studio-${{ matrix.tag }}-${{ env.SHORT_SHA }}
+          path: dist
+
+      - name: Install package
+        run: |
+          apt-get update -qq
+          apt-get install -y ./dist/*.deb
+          dpkg -s sql-studio-community | grep -E '^(Status|Version|Depends):'
+
+      - name: Check shared libraries
+        run: |
+          # Same search path as the sql-studio launcher sets up.
+          export LD_LIBRARY_PATH=/usr/lib/sql-studio:/usr/lib/sql-studio/plugins:/usr/lib/sql-studio/modules
+          missing="$(
+            find /usr/bin/sql-studio-bin /usr/bin/wbcopytables-bin /usr/lib/sql-studio -type f \
+                 \( -name '*.so*' -o -perm -u+x \) -exec sh -c 'ldd "$1" 2>/dev/null | sed "s|^|$1: |"' _ {} \; |
+            grep 'not found' || true
+          )"
+          if [[ -n "$missing" ]]; then
+            echo "$missing"
+            exit 1
+          fi
+          echo "All libraries resolved."
