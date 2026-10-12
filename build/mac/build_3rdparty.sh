@@ -788,6 +788,7 @@ build_override_gdal() {
         -DGDAL_USE_PROJ=OFF \
         -DGDAL_BUILD_OPTIONAL_DRIVERS=OFF \
         -DOGR_BUILD_OPTIONAL_DRIVERS=OFF \
+        -DGDAL_USE_ODBC=OFF \
         -DBUILD_PYTHON_BINDINGS=OFF
 
     run_cmd "cmake build (gdal)" \
