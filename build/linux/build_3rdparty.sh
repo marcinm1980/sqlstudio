@@ -814,7 +814,7 @@ build_override_libssh() {
         -DCMAKE_INSTALL_INCLUDEDIR="${BUNDLE_INCLUDE}" \
         -DCMAKE_INSTALL_BINDIR="${BUNDLE_BIN}" \
         -DWITH_EXAMPLES=OFF \
-        -DWITH_SERVER=OFF \
+        -DWITH_SERVER=ON \
         -DUNIT_TESTING=OFF
 
     run_cmd "cmake build (libssh)" \
