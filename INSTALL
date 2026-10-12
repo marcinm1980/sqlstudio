@@ -51,7 +51,7 @@ To build SqlStudio on Ubuntu and other Debian based distros:
   $> make install DESTDIR=.
   
 
-For complete and up-to-date instructions, visit http://wb.mysql.com/?page_id=152
+For complete and up-to-date instructions, visit https://www.dev4fun.net/documentation/
 
 Note about swig:
 - You will need swig 3.0 to build WB
@@ -116,7 +116,7 @@ please view the included COPYING file.
 
 
 For more information, newer versions, FAQ, mailing lists etc
-visit http://wb.mysql.com
+visit https://www.dev4fun.net/
 
 
 The SqlStudio Team.
