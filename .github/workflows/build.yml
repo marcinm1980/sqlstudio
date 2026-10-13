@@ -195,8 +195,15 @@ jobs:
           fi
           echo "All libraries resolved."
 
+      # lsb-release is installed on every regular Ubuntu system but missing from
+      # container images. Without it the OS detection in get_local_os_name()
+      # (library/base/util_functions.cpp) reads an uninitialized GError and
+      # crashes at random on the runner's Ubuntu kernel. Remove lsb-release
+      # from this list once that is fixed, so the test also covers its absence.
       - name: Install smoke test tools
-        run: apt-get install -y -qq --no-install-recommends git ca-certificates xvfb xdotool x11-utils dbus-x11 imagemagick
+        run: |
+          apt-get install -y -qq --no-install-recommends \
+            git ca-certificates xvfb xdotool x11-utils dbus-x11 imagemagick lsb-release
 
       # Only the test script is needed from the repository.
       - uses: actions/checkout@v7
