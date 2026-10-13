@@ -15,6 +15,10 @@ their signatures. The script fails if any reference is left that points
 outside the app or the operating system.
 
 Usage: bundle_app.py SqlStudio.app [--search DIR]...
+       bundle_app.py SqlStudio.app --check
+
+--check only verifies an already bundled app (for example one installed from
+the .dmg) and changes nothing.
 
 --search adds a directory where libraries referenced only by name (for
 example "libantlr4-runtime.4.13.2.dylib" or "@rpath/libssh.4.dylib") are
@@ -140,10 +144,18 @@ class Bundler:
                 run("install_name_tool", "-change", ref, new_ref, path)
                 self.modified.add(path)
 
+    def macho_files(self):
+        files = [os.path.join(root, name)
+                 for root, _, names in os.walk(self.app) for name in names]
+        return [p for p in files if is_macho(p)]
+
+    def check(self):
+        files = self.macho_files()
+        print(f"Checking {len(files)} Mach-O files in {self.app}")
+        return self.verify(files)
+
     def run(self):
-        queue = [os.path.join(root, name)
-                 for root, _, files in os.walk(self.app) for name in files]
-        queue = [p for p in queue if is_macho(p)]
+        queue = self.macho_files()
         print(f"Checking {len(queue)} Mach-O files in {self.app}")
         done = set()
         while queue:
@@ -186,8 +198,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("app")
     parser.add_argument("--search", action="append", default=[], metavar="DIR")
+    parser.add_argument("--check", action="store_true", help="only verify, change nothing")
     args = parser.parse_args()
-    return Bundler(args.app, [os.path.abspath(d) for d in args.search]).run()
+    bundler = Bundler(args.app, [os.path.abspath(d) for d in args.search])
+    return bundler.check() if args.check else bundler.run()
 
 
 if __name__ == "__main__":
