@@ -105,6 +105,21 @@ toolset, and locates the third-party bundle through `MSS_3DPARTY_PATH`,
 release build, and `-DryRun` to inspect the selected tools without compiling.
 The C++/CLI tools, Windows SDK, and .NET Framework 4.8 targeting pack are also required.
 
+On Debian and Ubuntu, a `.deb` package is built the same way as in CI, on the
+distribution it is meant for:
+
+```sh
+sudo build/linux/install_deps.sh
+build/linux/build_3rdparty.sh --bundle "$HOME/sqlstudio-bundle"
+export WB_BUNDLE_DIR="$HOME/sqlstudio-bundle"
+build/compile.sh --build-type Release --prefix /usr --antlr-jar /path/to/antlr-4.13.2-complete.jar
+DESTDIR="$PWD/stage" cmake --install build/output
+build/linux/make_deb.sh --stage stage --out dist
+```
+
+The checks that run on every pull request are described in
+[CONTRIBUTING.md](CONTRIBUTING.md#build-and-package-checks).
+
 In VS Code, **Ctrl+Shift+B** runs the default **Build SqlStudio (Debug)** task.
 The Release task is available under **Terminal > Run Task**. Compiler diagnostics
 appear in the Problems panel. Build output goes to `bin/x64/Debug` or `bin/x64/Release`.

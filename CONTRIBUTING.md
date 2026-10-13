@@ -48,6 +48,32 @@ excluded wholesale. This check targets C/C++ files; Objective-C and Objective-C+
 files are not included. Keep include ordering and per-file pointer alignment as
 configured, and avoid unrelated repository-wide formatting changes.
 
+## Build and Package Checks
+
+Every pull request to `develop` or `master`, and every push to them, runs the
+**Build** workflow (`.github/workflows/build.yml`). For each supported Linux
+distribution (Ubuntu 22.04 and 24.04, Debian 12 and 13) it:
+
+1. builds SqlStudio in a clean container of that distribution, because each one
+   ships different library versions (libpython, GTK, ...),
+2. packages the result as a `.deb` with `build/linux/make_deb.sh`,
+3. installs the package in another clean container and checks that every
+   binary and library resolves its shared libraries,
+4. checks the package with that distribution's `lintian` (errors fail),
+5. starts the application on a virtual display (`build/linux/smoke_test.sh`)
+   and fails if it crashes, shows no main window, or logs a Python traceback.
+
+The packages and the smoke test results (screenshot and logs) are attached to
+the workflow run as artifacts for 14 days. To try a package by hand, see
+[testing/docker/linux-desktop](testing/docker/linux-desktop/README.md).
+
+The third-party libraries (MySQL client, Connector/C++, GDAL, ANTLR runtime,
+...) take a long time to build, so they are cached per distribution and
+rebuilt only when `build/linux/list.txt`, `build/linux/build_3rdparty.sh` or
+`build/linux/install_deps.sh` change. A pull request can use caches saved by
+its own earlier runs or on its target branch, so the first run after such a
+change takes longer.
+
 ## Pull Request Guidelines
 
 - Describe the problem and the change clearly.
