@@ -17,8 +17,12 @@ RUN apt-get update \
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
+# A UTF-8 locale as on a regular desktop. en_US.UTF-8 is deliberately not
+# generated: SqlStudio must also work without it.
 ENV DISPLAY=:1 \
-    SCREEN_GEOMETRY=1600x1000x24
+    SCREEN_GEOMETRY=1600x1000x24 \
+    LANG=C.UTF-8 \
+    KEYRING_PASSWORD=sqlstudio
 
 EXPOSE 6080
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

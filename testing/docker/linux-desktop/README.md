@@ -35,6 +35,10 @@ fresh "install on a clean system" check.
 Connect to the databases by service name, e.g. host `mysql-8-2`, port `3306`,
 user `sqlstudio`, password `sqlstudio` (see `../databases/README.md`).
 
+Passwords saved with "Store in Keychain" go to a gnome-keyring kept in the
+`home` volume, so they survive restarts (the keyring password is `sqlstudio`,
+set by `KEYRING_PASSWORD`).
+
 Closing SqlStudio leaves the desktop running; start it again from the terminal
 with `sql-studio`. Its output is shown by `docker compose logs -f` and kept in
 `/var/log/sql-studio.log`.

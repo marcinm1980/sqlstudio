@@ -29,8 +29,11 @@ x11vnc -display "${DISPLAY}" -forever -shared -nopw -quiet -rfbport 5900 &
 websockify --web /usr/share/novnc 6080 localhost:5900 >/dev/null 2>&1 &
 
 # A session bus and an unlocked keyring, so "Store in Keychain" works.
+# gnome-keyring only creates the "login" keyring for a non-empty password;
+# with an empty one storing a password fails. The keyring is kept in the
+# home volume, so saved passwords survive container restarts.
 eval "$(dbus-launch --sh-syntax)"
-printf '' | gnome-keyring-daemon --unlock --components=secrets >/dev/null
+printf '%s' "${KEYRING_PASSWORD}" | gnome-keyring-daemon --unlock --components=secrets >/dev/null
 
 # A terminal to relaunch SqlStudio (`sql-studio`) after closing it.
 xterm -geometry 100x20+0+0 &
