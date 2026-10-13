@@ -141,7 +141,8 @@ jobs:
           retention-days: 7
 
   # Installs each package on a clean system of its distro, as a user would,
-  # and checks that every bundled binary and library resolves its libraries.
+  # checks that every bundled binary and library resolves its libraries, and
+  # starts the application once (smoke test).
   linux-package-test:
     name: Test package (${{ matrix.name }})
     needs: linux
@@ -193,3 +194,27 @@ jobs:
             exit 1
           fi
           echo "All libraries resolved."
+
+      - name: Install smoke test tools
+        run: apt-get install -y -qq --no-install-recommends git ca-certificates xvfb xdotool x11-utils dbus-x11 imagemagick
+
+      # Only the test script is needed from the repository.
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: build/linux/smoke_test.sh
+          sparse-checkout-cone-mode: false
+          path: src
+
+      # Starts the application on a virtual display and checks that its main
+      # window appears and it keeps running without Python errors.
+      - name: Smoke test
+        run: src/build/linux/smoke_test.sh smoke-test
+
+      - name: Upload smoke test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: smoke-test-${{ matrix.tag }}-${{ env.SHORT_SHA }}
+          path: smoke-test
+          if-no-files-found: ignore
+          retention-days: 14
