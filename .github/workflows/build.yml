@@ -267,6 +267,9 @@ jobs:
       # embeds (build/fixup_python_paths.sh).
       PYTHON_VERSION: 3.12.10
       PYTHON_PKG_SHA256: 8373e58da4ea146b3eb1c1f9834f19a319440b6b679b06050b1f9ee3237aa8e4
+      # Built against the bundle's iODBC for the migration plugins (MSSQL, Access, ODBC).
+      PYODBC_VERSION: 5.3.0
+      PYODBC_SHA256: 2fe0e063d8fb66efd0ac6dc39236c4de1a45f17c33eaded0d553d21c199f4d05
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
@@ -325,9 +328,12 @@ jobs:
         if: steps.bundle-cache.outputs.cache-hit != 'true'
         run: rm -rf "$WB_BUNDLE_DIR/source" "$WB_BUNDLE_DIR/build" && df -h /
 
-      - name: Download Python and ANTLR
+      - name: Download Python, pyodbc and ANTLR
         run: |
           mkdir -p "$DOWNLOADS"
+          curl -fsSL -o "$DOWNLOADS/pyodbc-${PYODBC_VERSION}.tar.gz" \
+            "https://files.pythonhosted.org/packages/source/p/pyodbc/pyodbc-${PYODBC_VERSION}.tar.gz"
+          echo "${PYODBC_SHA256}  $DOWNLOADS/pyodbc-${PYODBC_VERSION}.tar.gz" | shasum -a 256 -c -
           curl -fsSL -o "$DOWNLOADS/python.pkg" \
             "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-macos11.pkg"
           echo "${PYTHON_PKG_SHA256}  $DOWNLOADS/python.pkg" | shasum -a 256 -c -
@@ -340,7 +346,8 @@ jobs:
           build/mac/prepare_3rdparty_ce.sh \
             --bundle "$WB_BUNDLE_DIR" \
             --python-pkg "$DOWNLOADS/python.pkg" \
-            --antlr-jar "$DOWNLOADS/antlr-${ANTLR_VERSION}-complete.jar"
+            --antlr-jar "$DOWNLOADS/antlr-${ANTLR_VERSION}-complete.jar" \
+            --pyodbc-sdist "$DOWNLOADS/pyodbc-${PYODBC_VERSION}.tar.gz"
 
       - name: Build SqlStudio
         run: |
@@ -357,6 +364,13 @@ jobs:
           build/mac/bundle_app.py "$APP" \
             --search "$WB_BUNDLE_DIR/lib" --search 3rd-party-ce/lib
           du -sh "$APP"
+
+      # The migration plugins import pyodbc only when used, so the smoke test
+      # would not notice a broken module.
+      - name: Check pyodbc in the embedded Python
+        run: |
+          "$APP/Contents/Frameworks/Python.framework/Versions/3.12/bin/python3.12" -I -c \
+            "import sys; sys.path.insert(0, '$APP/Contents/Resources/libraries'); import pyodbc; print('pyodbc', pyodbc.version)"
 
       - name: Build .dmg
         run: |
