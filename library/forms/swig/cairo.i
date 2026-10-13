@@ -123,9 +123,21 @@
       $1 = &extout;
 }
 
+// SWIG 4.3 added an is_void parameter to SWIG_Python_AppendOutput; distro
+// SWIG versions (e.g. 4.0 on Ubuntu 22.04, 4.2 on 24.04) still take two.
+#if SWIG_VERSION >= 0x040300
+%{
+#define WB_SWIG_APPEND_OUTPUT(result, obj) SWIG_Python_AppendOutput(result, obj, 0)
+%}
+#else
+%{
+#define WB_SWIG_APPEND_OUTPUT(result, obj) SWIG_Python_AppendOutput(result, obj)
+%}
+#endif
+
 %typemap(argout) cairo_text_extents_t *extents {
       PyObject *o= SWIG_NewPointerObj(new cairo_text_extents_t(*$1), SWIGTYPE_p_cairo_text_extents_t, 0 |  0 );
-      $result = SWIG_Python_AppendOutput($result, o, 0);
+      $result = WB_SWIG_APPEND_OUTPUT($result, o);
 }
 
 %typemap(in) const char* (std::string s) {

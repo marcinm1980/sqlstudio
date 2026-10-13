@@ -65,7 +65,7 @@ Release: %{release}%{?dist}
 Group  : Applications/Databases
 Vendor : Dev4Fun
 License: %{license_type}
-URL    : http://wb.mysql.com
+URL    : https://www.dev4fun.net/
 Source : %{name}-%{version}-src.tar.gz
 
 BuildRoot    : %{_tmppath}/%{name}-%{version}-root

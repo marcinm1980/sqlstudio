@@ -1,0 +1,237 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [develop, master]
+  push:
+    branches: [develop, master]
+  workflow_dispatch:
+
+# A new push to the same PR cancels the build that is still running for it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  ANTLR_VERSION: 4.13.2
+  ANTLR_SHA256: eae2dfa119a64327444672aff63e9ec35a20180dc5b8090b7a6ab85125df4d76
+
+jobs:
+  # Every distro ships different library versions (libpython 3.10 / 3.12 /
+  # 3.11 / 3.13, ...), so each .deb is built inside a container of the distro it
+  # targets. Clean containers also keep libraries preinstalled on the hosted
+  # runner image from leaking into the build.
+  linux:
+    name: Linux (${{ matrix.name }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Ubuntu 22.04, image: "ubuntu:22.04", tag: ubuntu22.04 }
+          - { name: Ubuntu 24.04, image: "ubuntu:24.04", tag: ubuntu24.04 }
+          - { name: Debian 12,    image: "debian:12",    tag: debian12 }
+          - { name: Debian 13,    image: "debian:13",    tag: debian13 }
+    container:
+      image: ${{ matrix.image }}
+      # Host directories with SDKs we never use, mounted so they can be
+      # deleted to make room for the MySQL and GDAL builds.
+      volumes:
+        - /usr/share/dotnet:/host/dotnet
+        - /usr/local/lib/android:/host/android
+        - /opt/ghc:/host/ghc
+    defaults:
+      run:
+        shell: bash
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - name: Free disk space
+        run: |
+          rm -rf /host/dotnet/* /host/android/* /host/ghc/*
+          df -h /
+
+      - name: Install git
+        run: apt-get update -qq && apt-get install -y -qq git ca-certificates
+
+      - uses: actions/checkout@v7
+
+      - name: Set paths
+        run: |
+          echo "WB_BUNDLE_DIR=${RUNNER_TEMP}/bundle" >> "$GITHUB_ENV"
+          echo "ANTLR_JAR=${RUNNER_TEMP}/antlr/antlr-${ANTLR_VERSION}-complete.jar" >> "$GITHUB_ENV"
+          echo "STAGE_DIR=${RUNNER_TEMP}/stage" >> "$GITHUB_ENV"
+          echo "SHORT_SHA=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      - name: Install system packages
+        run: build/linux/install_deps.sh
+
+      # The 3rd-party bundle (MySQL client, Connector/C++, GDAL, ...) takes a long
+      # time to build, so it is cached and rebuilt only when its recipe changes.
+      - name: Restore 3rd-party bundle
+        id: bundle-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: |
+            ${{ env.WB_BUNDLE_DIR }}
+            !${{ env.WB_BUNDLE_DIR }}/source
+            !${{ env.WB_BUNDLE_DIR }}/build
+          key: bundle-linux-${{ matrix.tag }}-${{ hashFiles('build/linux/list.txt', 'build/linux/build_3rdparty.sh', 'build/linux/install_deps.sh') }}
+
+      - name: Build 3rd-party bundle
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        run: build/linux/build_3rdparty.sh --bundle "$WB_BUNDLE_DIR" -j "$(nproc)"
+
+      # Saved right away so a failing application build does not throw the bundle away.
+      - name: Save 3rd-party bundle
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: |
+            ${{ env.WB_BUNDLE_DIR }}
+            !${{ env.WB_BUNDLE_DIR }}/source
+            !${{ env.WB_BUNDLE_DIR }}/build
+          key: ${{ steps.bundle-cache.outputs.cache-primary-key }}
+
+      - name: Remove bundle build trees
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        run: rm -rf "$WB_BUNDLE_DIR/source" "$WB_BUNDLE_DIR/build" && df -h /
+
+      # The MySQL parser is generated from the grammar at build time.
+      - name: Download ANTLR
+        run: |
+          mkdir -p "$(dirname "$ANTLR_JAR")"
+          curl -fsSL -o "$ANTLR_JAR" \
+            "https://repo1.maven.org/maven2/org/antlr/antlr4/${ANTLR_VERSION}/antlr4-${ANTLR_VERSION}-complete.jar"
+          echo "${ANTLR_SHA256}  ${ANTLR_JAR}" | sha256sum -c -
+
+      - name: Build SqlStudio
+        run: |
+          build/compile.sh \
+            --build-type Release \
+            --jobs "$(nproc)" \
+            --prefix /usr \
+            --build-dir "$GITHUB_WORKSPACE/build/output" \
+            --antlr-jar "$ANTLR_JAR"
+
+      - name: Build .deb package
+        run: |
+          DESTDIR="$STAGE_DIR" cmake --install build/output
+          build/linux/make_deb.sh --stage "$STAGE_DIR" --out dist --distro-tag ${{ matrix.tag }}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sql-studio-${{ matrix.tag }}-${{ env.SHORT_SHA }}
+          path: dist/*.deb
+          retention-days: 14
+
+      - name: Upload build logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: logs-${{ matrix.tag }}-${{ env.SHORT_SHA }}
+          path: |
+            build/output/*.log
+            build/output/CMakeFiles/*.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # Installs each package on a clean system of its distro, as a user would,
+  # checks that every bundled binary and library resolves its libraries, and
+  # starts the application once (smoke test).
+  linux-package-test:
+    name: Test package (${{ matrix.name }})
+    needs: linux
+    # Test the packages that did build even when another distro failed.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Ubuntu 22.04, image: "ubuntu:22.04", tag: ubuntu22.04 }
+          - { name: Ubuntu 24.04, image: "ubuntu:24.04", tag: ubuntu24.04 }
+          - { name: Debian 12,    image: "debian:12",    tag: debian12 }
+          - { name: Debian 13,    image: "debian:13",    tag: debian13 }
+    container:
+      image: ${{ matrix.image }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - name: Set paths
+        run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: sql-studio-${{ matrix.tag }}-${{ env.SHORT_SHA }}
+          path: dist
+
+      - name: Install package
+        run: |
+          apt-get update -qq
+          apt-get install -y ./dist/*.deb
+          dpkg -s sql-studio-community | grep -E '^(Status|Version|Depends):'
+
+      - name: Check shared libraries
+        run: |
+          # Same search path as the sql-studio launcher sets up.
+          export LD_LIBRARY_PATH=/usr/lib/sql-studio:/usr/lib/sql-studio/plugins:/usr/lib/sql-studio/modules
+          missing="$(
+            find /usr/bin/sql-studio-bin /usr/bin/wbcopytables-bin /usr/lib/sql-studio -type f \
+                 \( -name '*.so*' -o -perm -u+x \) -exec sh -c 'ldd "$1" 2>/dev/null | sed "s|^|$1: |"' _ {} \; |
+            grep 'not found' || true
+          )"
+          if [[ -n "$missing" ]]; then
+            echo "$missing"
+            exit 1
+          fi
+          echo "All libraries resolved."
+
+      # Debian policy checks with the distro's own lintian. Errors fail the
+      # job; warnings are listed only. Intentional exceptions are overridden in
+      # the package itself (see build/linux/make_deb.sh).
+      - name: Lintian
+        run: |
+          apt-get install -y -qq --no-install-recommends lintian
+          lintian --allow-root --fail-on error --tag-display-limit 0 dist/*.deb
+
+      # lsb-release is installed on every regular Ubuntu system but missing from
+      # container images. Without it the OS detection in get_local_os_name()
+      # (library/base/util_functions.cpp) reads an uninitialized GError and
+      # crashes at random on the runner's Ubuntu kernel. Remove lsb-release
+      # from this list once that is fixed, so the test also covers its absence.
+      - name: Install smoke test tools
+        run: |
+          apt-get install -y -qq --no-install-recommends \
+            git ca-certificates xvfb xdotool x11-utils dbus-x11 imagemagick lsb-release
+
+      # Only the test script is needed from the repository.
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: build/linux/smoke_test.sh
+          sparse-checkout-cone-mode: false
+          path: src
+
+      # Starts the application on a virtual display and checks that its main
+      # window appears and it keeps running without Python errors.
+      - name: Smoke test
+        run: src/build/linux/smoke_test.sh smoke-test
+
+      - name: Upload smoke test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: smoke-test-${{ matrix.tag }}-${{ env.SHORT_SHA }}
+          path: smoke-test
+          if-no-files-found: ignore
+          retention-days: 14

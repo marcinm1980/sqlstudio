@@ -2124,7 +2124,7 @@ function Build-LibSsh {
     $commonArgs = @(
         "-DBUILD_SHARED_LIBS=ON",
         "-DWITH_EXAMPLES=OFF",
-        "-DWITH_SERVER=OFF",
+        "-DWITH_SERVER=ON",
         "-DWITH_GSSAPI=OFF",
         "-DUNIT_TESTING=OFF",
         "-DCMAKE_PREFIX_PATH=$script:BundleDir",
