@@ -58,7 +58,8 @@ distribution (Ubuntu 22.04 and 24.04, Debian 12 and 13) it:
    ships different library versions (libpython, GTK, ...),
 2. packages the result as a `.deb` with `build/linux/make_deb.sh`,
 3. installs the package in another clean container and checks that every
-   binary and library resolves its shared libraries,
+   binary and library resolves its shared libraries and that the bundled
+   pyodbc module (used by the migration plugins) imports,
 4. checks the package with that distribution's `lintian` (errors fail),
 5. starts the application on a virtual display (`build/linux/smoke_test.sh`)
    and fails if it crashes, shows no main window, or logs a Python traceback.
