@@ -267,9 +267,6 @@ jobs:
       # embeds (build/fixup_python_paths.sh).
       PYTHON_VERSION: 3.12.10
       PYTHON_PKG_SHA256: 8373e58da4ea146b3eb1c1f9834f19a319440b6b679b06050b1f9ee3237aa8e4
-      # Built against the bundle's iODBC for the migration plugins (MSSQL, Access, ODBC).
-      PYODBC_VERSION: 5.3.0
-      PYODBC_SHA256: 2fe0e063d8fb66efd0ac6dc39236c4de1a45f17c33eaded0d553d21c199f4d05
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
@@ -365,13 +362,6 @@ jobs:
             --search "$WB_BUNDLE_DIR/lib" --search 3rd-party-ce/lib
           du -sh "$APP"
 
-      # The migration plugins import pyodbc only when used, so the smoke test
-      # would not notice a broken module.
-      - name: Check pyodbc in the embedded Python
-        run: |
-          "$APP/Contents/Frameworks/Python.framework/Versions/3.12/bin/python3.12" -I -c \
-            "import sys; sys.path.insert(0, '$APP/Contents/Resources/libraries'); import pyodbc; print('pyodbc', pyodbc.version)"
-
       - name: Build .dmg
         run: |
           version="$(tools/get_wb_version.sh full_version)"
@@ -383,16 +373,71 @@ jobs:
             -format UDZO -ov "dist/SqlStudio-${version}-macos-arm64.dmg"
           ls -l dist
 
-      # Starts the app and checks that a window appears and it keeps running
-      # without Python errors.
-      - name: Smoke test
-        run: build/mac/smoke_test.sh "$APP" smoke-test
-
       - uses: actions/upload-artifact@v7
         with:
           name: sql-studio-macos-arm64-${{ env.SHORT_SHA }}
           path: dist/*.dmg
           retention-days: 14
+
+  # Installs the .dmg on a fresh runner, as a user would, with Homebrew and
+  # the system-wide Python hidden, so the app can only use what it ships.
+  macos-package-test:
+    name: Test package (macOS Apple Silicon)
+    needs: macos
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      APP: /Applications/SqlStudio.app
+
+    steps:
+      - name: Set paths
+        run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      # Only the test scripts are needed from the repository.
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: build/mac
+          path: src
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: sql-studio-macos-arm64-${{ env.SHORT_SHA }}
+          path: dist
+
+      - name: Hide Homebrew and the system-wide Python
+        run: |
+          sudo mv /opt/homebrew /opt/homebrew.hidden
+          if [[ -d /Library/Frameworks/Python.framework ]]; then
+            sudo mv /Library/Frameworks/Python.framework /Library/Frameworks/Python.framework.hidden
+          fi
+
+      - name: Install from the .dmg
+        run: |
+          mount="$(mktemp -d)"
+          hdiutil attach -nobrowse -readonly -mountpoint "$mount" dist/*.dmg
+          cp -R "$mount/SqlStudio.app" /Applications/
+          hdiutil detach "$mount"
+          defaults read "$APP/Contents/Info" CFBundleShortVersionString
+          defaults read "$APP/Contents/Info" LSMinimumSystemVersion
+
+      # Every library the app loads must be inside it or part of macOS, and
+      # the ad-hoc signature must be intact.
+      - name: Check libraries and signature
+        run: |
+          /usr/bin/python3 src/build/mac/bundle_app.py "$APP" --check
+          codesign --verify --deep --strict --verbose=2 "$APP"
+
+      # The migration plugins import pyodbc only when used, so the smoke test
+      # would not notice a broken module.
+      - name: Check pyodbc
+        run: |
+          "$APP/Contents/Frameworks/Python.framework/Versions/3.12/bin/python3.12" -I -c \
+            "import sys; sys.path.insert(0, '$APP/Contents/Resources/libraries'); import pyodbc; print('pyodbc', pyodbc.version)"
+
+      # Starts the app and checks that a window appears and it keeps running
+      # without Python errors.
+      - name: Smoke test
+        run: src/build/mac/smoke_test.sh "$APP" smoke-test
 
       - name: Upload smoke test results
         if: ${{ !cancelled() }}
