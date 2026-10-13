@@ -302,6 +302,9 @@ endif()
 
 if(_BUNDLE_DIR AND IS_DIRECTORY "${_BUNDLE_DIR}/lib")
   file(GLOB _BUNDLE_LIBS "${_BUNDLE_DIR}/lib/*.so" "${_BUNDLE_DIR}/lib/*.so.*")
+  # GoogleTest/GoogleMock are installed into the bundle by a 3rd-party build
+  # but are only needed for tests.
+  list(FILTER _BUNDLE_LIBS EXCLUDE REGEX "/lib(gtest|gmock)[^/]*$")
   install(FILES ${_BUNDLE_LIBS}
           DESTINATION ${WB_INSTALL_LIB_DIR})
 

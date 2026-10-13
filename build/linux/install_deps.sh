@@ -70,6 +70,7 @@ BUILD_TOOLS=(
     bzip2                   # .tar.bz2 archives
     ca-certificates         # HTTPS downloads
     dpkg-dev                # make_deb.sh (dpkg-shlibdeps)
+    patchelf                # make_deb.sh (drops build-time RUNPATHs)
     zstd                    # faster CI cache compression
 )
 

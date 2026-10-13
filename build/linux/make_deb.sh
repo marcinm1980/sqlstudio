@@ -56,8 +56,8 @@ done
     exit 1
 }
 
-for tool in dpkg-deb dpkg-shlibdeps dpkg-architecture; do
-    command -v "$tool" >/dev/null || { echo "$tool not found (install dpkg-dev)" >&2; exit 1; }
+for tool in dpkg-deb dpkg-shlibdeps dpkg-architecture strip patchelf; do
+    command -v "$tool" >/dev/null || { echo "$tool not found (run build/linux/install_deps.sh)" >&2; exit 1; }
 done
 
 if [[ -z "${DISTRO_TAG}" ]]; then
@@ -91,6 +91,27 @@ mapfile -t ELF_FILES < <(
 )
 [[ ${#ELF_FILES[@]} -gt 0 ]] || { echo "No ELF files found in ${STAGE_DIR}" >&2; exit 1; }
 
+# ── Binaries ──────────────────────────────────────────────────────────────
+for f in "${ELF_FILES[@]}"; do
+    # Keep only $ORIGIN-relative RUNPATH entries; absolute ones point into the
+    # build machine (e.g. SQLite's configure adds the bundle's lib dir).
+    runpath="$(patchelf --print-rpath "$f")"
+    if [[ -n "$runpath" ]]; then
+        kept="$(tr ':' '\n' <<<"$runpath" | grep '^\$ORIGIN' | paste -sd: || true)"
+        if [[ -z "$kept" ]]; then
+            patchelf --remove-rpath "$f"
+        elif [[ "$kept" != "$runpath" ]]; then
+            patchelf --set-rpath "$kept" "$f"
+        fi
+    fi
+    # Same as dh_strip: symbols are not needed at run time.
+    if [[ "$f" == *.so || "$f" == *.so.* ]]; then
+        strip --remove-section=.comment --remove-section=.note --strip-unneeded "$f"
+    else
+        strip --remove-section=.comment --remove-section=.note "$f"
+    fi
+done
+
 # Libraries bundled in LIB_DIR satisfy each other and are not distro
 # packages, so their missing package info is expected.
 SHLIBS_DEPENDS="$(
@@ -101,6 +122,48 @@ SHLIBS_DEPENDS="$(
     sed -n 's/^shlibs:Depends=//p'
 )" || { cat "${WORK_DIR}/shlibdeps.log" >&2; exit 1; }
 [[ -n "${SHLIBS_DEPENDS}" ]] || { cat "${WORK_DIR}/shlibdeps.log" >&2; exit 1; }
+
+# ── Documentation required by Debian policy ───────────────────────────────
+DOC_DIR="${PKG_DIR}/usr/share/doc/${PACKAGE}"
+mkdir -p "${DOC_DIR}"
+
+cat > "${DOC_DIR}/copyright" <<EOF
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: SqlStudio
+Source: https://github.com/marcinm1980/sqlstudio
+
+Files: *
+Copyright: 2007-2019 Oracle and/or its affiliates
+           2026 dev4fun
+License: GPL-2
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License, version 2.0, as
+ published by the Free Software Foundation, with the additional permissions
+ described in License.txt in this directory, which also lists the licenses
+ of the bundled third-party libraries.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ version 2 can be found in /usr/share/common-licenses/GPL-2.
+EOF
+
+GIT_COMMIT="${GITHUB_SHA:0:8}"
+[[ -n "${GIT_COMMIT}" ]] || GIT_COMMIT="$(git -C "${SOURCE_DIR}" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+cat <<EOF | gzip -9n > "${DOC_DIR}/changelog.Debian.gz"
+${PACKAGE} (${VERSION}) unstable; urgency=medium
+
+  * Package built from commit ${GIT_COMMIT}.
+
+ -- ${MAINTAINER}  $(LC_ALL=C date -R)
+EOF
+
+# Lintian reports these on purpose-made choices; see the comments.
+mkdir -p "${PKG_DIR}/usr/share/lintian/overrides"
+cat > "${PKG_DIR}/usr/share/lintian/overrides/${PACKAGE}" <<EOF
+# The MySQL client, Connector/C++, GDAL, libssh, SQLite and others are built
+# from source and shipped in /usr/lib/sql-studio (build/linux/list.txt), so
+# the package does not depend on the distro's versions of them.
+${PACKAGE}: embedded-library
+EOF
 
 # ── Control files ─────────────────────────────────────────────────────────
 INSTALLED_SIZE="$(du -sk --exclude=DEBIAN "${PKG_DIR}" | cut -f1)"
