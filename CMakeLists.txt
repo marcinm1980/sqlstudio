@@ -302,15 +302,20 @@ endif()
 
 if(_BUNDLE_DIR AND IS_DIRECTORY "${_BUNDLE_DIR}/lib")
   file(GLOB _BUNDLE_LIBS "${_BUNDLE_DIR}/lib/*.so" "${_BUNDLE_DIR}/lib/*.so.*")
+  # GoogleTest/GoogleMock are installed into the bundle by a 3rd-party build
+  # but are only needed for tests.
+  list(FILTER _BUNDLE_LIBS EXCLUDE REGEX "/lib(gtest|gmock)[^/]*$")
   install(FILES ${_BUNDLE_LIBS}
           DESTINATION ${WB_INSTALL_LIB_DIR})
 
-  # Key MySQL client binaries needed at runtime (mysql, mysqldump, etc.)
+  # Key MySQL client binaries needed at runtime (mysql, mysqldump, etc.).
+  # They go next to the libraries, where get_executable_path() looks for them,
+  # and not to bin/, where they would clash with the distro's mysql-client.
   set(_BUNDLE_BINS mysql mysqldump)
   foreach(_bin ${_BUNDLE_BINS})
     if(EXISTS "${_BUNDLE_DIR}/bin/${_bin}")
       install(PROGRAMS "${_BUNDLE_DIR}/bin/${_bin}"
-              DESTINATION ${WB_INSTALL_BIN_DIR})
+              DESTINATION ${WB_INSTALL_LIB_DIR})
     endif()
   endforeach()
 endif()

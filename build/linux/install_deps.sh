@@ -66,6 +66,12 @@ BUILD_TOOLS=(
     wget
     curl
     unzip
+    xz-utils                # .tar.xz archives (libssh)
+    bzip2                   # .tar.bz2 archives
+    ca-certificates         # HTTPS downloads
+    dpkg-dev                # make_deb.sh (dpkg-shlibdeps)
+    patchelf                # make_deb.sh (drops build-time RUNPATHs)
+    zstd                    # faster CI cache compression
 )
 
 # ── Libraries required by the main SqlStudio build ─────────────────────
@@ -98,6 +104,7 @@ THIRDPARTY_LIBS=(
     # MySQL server build (client-only)
     libncurses-dev          # ncurses — needed by mysql's bundled editline
     bison                   # SQL parser generator for MySQL server
+    libtirpc-dev            # rpc/rpc.h — MySQL server build (not pulled in on Ubuntu 24.04)
 
     # GDAL build
     libproj-dev             # PROJ — hard dependency for GDAL
@@ -151,6 +158,9 @@ fi
 # Install missing packages
 ###############################################################################
 section "Installing ${#MISSING[@]} missing packages"
+
+# Never prompt (e.g. tzdata) — the script also runs unattended in CI containers.
+export DEBIAN_FRONTEND=noninteractive
 
 apt-get update -qq
 

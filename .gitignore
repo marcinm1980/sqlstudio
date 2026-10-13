@@ -67,7 +67,6 @@ build-stamp
 configure-stamp
 SqlStudio.desktop
 build/sql-studio.spec
-debian/sql-studio
 frontend/linux/shell/grtshell
 frontend/linux/studio/sql-studio-bin
 template_dictionary_nothreads_unittest
@@ -89,10 +88,7 @@ template_regtest
 template_test_util_nothreads_test
 template_test_util_test
 output/*
-../../../debian/files
-../../../debian/sql-studio.substvars
 files
-sql-studio.substvars
 *.pbxuser
 *.mode2v3
 ext/scintilla/cocoa/ScintillaTest/build
@@ -230,3 +226,7 @@ build/__output/plugins/migration/wbcopytables
 build/__output/plugins/migration/wbcopytables-bin
 docker/databases/.env
 !/build/cmake/**/*.cmake
+
+# Local build leftovers
+build/CMakeCache.txt
+build/*.log

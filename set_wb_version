@@ -67,20 +67,3 @@ sed -e "/<key>CFBundleShortVersionString<\/key>/N;s/.*\n.*<\/string>/	<key>CFBun
 
 echo "Updating sql-studio.spec.in"
 sed -e "s/--define='version.*'/--define='version $major.$minor.$release_number'/" -i.bak build/sql-studio.spec.in
-
-# check if build/debian.in/changelog needs update
-echo "Checking if build/debian.in/changelog needs updating"
-if ! grep $major.$minor.$release- build/debian.in/changelog; then
-    echo "build/debian.in/changelog needs update, adding a new entry"
-    cat <<EOF > build/debian.in/changelog.new
-sql-studio-@edition@ ($major.$minor.$release$dot_release_type-1@distrov@) @distro@; urgency=low
-
-  * New release
-
- -- `git config user.name` <`git config user.email`>  `LANG=en_EN date +"%a, %d %b %Y %T %z"`
-
-EOF
-    cat build/debian.in/changelog >> build/debian.in/changelog.new
-    mv -f build/debian.in/changelog.new build/debian.in/changelog
-    head -10 build/debian.in/changelog
-fi
