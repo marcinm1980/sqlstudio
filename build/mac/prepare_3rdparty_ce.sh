@@ -21,6 +21,8 @@
 #   --bundle DIR        Bundle built by build_3rdparty.sh             (required)
 #   --python-pkg FILE   python.org macOS installer (.pkg) for Python 3.12 (required)
 #   --antlr-jar FILE    antlr-<version>-complete.jar                  (required)
+#   --pyodbc-sdist FILE pyodbc source archive (.tar.gz); builds the pyodbc
+#                       module used by the migration plugins       (optional)
 #   --out DIR           Target directory          (default: <repo>/3rd-party-ce)
 #   -h, --help          Show this help message
 #
@@ -32,6 +34,7 @@ SOURCE_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 BUNDLE_DIR=""
 PYTHON_PKG=""
 ANTLR_JAR=""
+PYODBC_SDIST=""
 OUT_DIR="${SOURCE_DIR}/3rd-party-ce"
 
 usage() {
@@ -44,6 +47,7 @@ while [[ $# -gt 0 ]]; do
         --bundle)     BUNDLE_DIR="$2"; shift 2 ;;
         --python-pkg) PYTHON_PKG="$2"; shift 2 ;;
         --antlr-jar)  ANTLR_JAR="$2";  shift 2 ;;
+        --pyodbc-sdist) PYODBC_SDIST="$2"; shift 2 ;;
         --out)        OUT_DIR="$2";    shift 2 ;;
         -h|--help)    usage ;;
         *) echo "Unknown option: $1" >&2; exit 1 ;;
@@ -124,5 +128,30 @@ trap 'rm -rf "${WORK_DIR}"' EXIT
 pkgutil --expand-full "${PYTHON_PKG}" "${WORK_DIR}/pkg"
 rm -rf "${OUT_DIR}/Python/Python.framework"
 cp -R "${WORK_DIR}/pkg/Python_Framework.pkg/Payload" "${OUT_DIR}/Python/Python.framework"
+
+# ── pyodbc ────────────────────────────────────────────────────────────────
+# Compiled directly against the embedded Python's headers and the bundle's
+# iODBC, the way pyodbc's setup.py would, so it needs no host Python.
+# iODBC 3.52 does not define the ODBC 3.8 constant pyodbc refers to; it is
+# only used when a script sets pyodbc.odbcversion = "3.8".
+if [[ -n "${PYODBC_SDIST}" ]]; then
+    [[ -f "${PYODBC_SDIST}" ]] || fail "--pyodbc-sdist must point at a pyodbc .tar.gz"
+    tar -xzf "${PYODBC_SDIST}" -C "${WORK_DIR}"
+    pyodbc_src="$(echo "${WORK_DIR}"/pyodbc-*)"
+    pyodbc_version="${pyodbc_src##*/pyodbc-}"
+    py_dir="$(echo "${OUT_DIR}"/Python/Python.framework/Versions/3.*)"
+    py_version="${py_dir##*/}"
+    mkdir -p "${OUT_DIR}/Python/pyodbc"
+    xcrun clang++ -std=c++17 -O2 -arch "$(uname -m)" \
+        -mmacosx-version-min="${MACOSX_DEPLOYMENT_TARGET:-26.0}" \
+        -Wno-write-strings -Wno-deprecated-declarations -DNDEBUG \
+        -DPYODBC_VERSION="${pyodbc_version}" -DSQL_OV_ODBC3_80=380UL \
+        -I"${py_dir}/include/python${py_version}" -I"${BUNDLE_DIR}/include" \
+        "${pyodbc_src}"/src/*.cpp \
+        -bundle -undefined dynamic_lookup \
+        -L"${BUNDLE_DIR}/lib" -liodbc -liodbcinst \
+        -o "${OUT_DIR}/Python/pyodbc/pyodbc.cpython-${py_version/./}-darwin.so"
+    echo "pyodbc ${pyodbc_version} built for Python ${py_version}"
+fi
 
 echo "3rd-party-ce prepared in ${OUT_DIR}"
