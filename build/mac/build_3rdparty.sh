@@ -678,6 +678,11 @@ build_override_rapidjson() {
     if [[ -d "${source_dir}/include/rapidjson" ]]; then
         mkdir -p "${BUNDLE_INCLUDE}/rapidjson"
         cp -a "${source_dir}/include/rapidjson/." "${BUNDLE_INCLUDE}/rapidjson/"
+        # 1.1.0, the last release, has a copy assignment operator that assigns
+        # to const members. GCC 14 and Clang 19 reject it even when unused.
+        # Apply the upstream fix (commits 3b2441b and 862c39b): declare it only.
+        perl -pi -e 's{GenericStringRef& operator=\(const GenericStringRef& rhs\) \{ s = rhs\.s; length = rhs\.length; \}}{GenericStringRef& operator=(const GenericStringRef& rhs) /* = delete */;}' \
+            "${BUNDLE_INCLUDE}/rapidjson/document.h"
         ok "Rapidjson headers installed."
     else
         warn "Could not locate rapidjson headers in ${source_dir}"
