@@ -362,15 +362,11 @@ jobs:
             --search "$WB_BUNDLE_DIR/lib" --search 3rd-party-ce/lib
           du -sh "$APP"
 
+      # Drag-to-Applications window with the background from build/mac.
       - name: Build .dmg
         run: |
           version="$(tools/get_wb_version.sh full_version)"
-          staging="$RUNNER_TEMP/dmg"
-          mkdir -p "$staging" dist
-          cp -R "$APP" "$staging/"
-          ln -s /Applications "$staging/Applications"
-          hdiutil create -volname "SqlStudio ${version}" -srcfolder "$staging" \
-            -format UDZO -ov "dist/SqlStudio-${version}-macos-arm64.dmg"
+          build/mac/make_dmg.sh "$APP" "dist/SqlStudio-${version}-macos-arm64.dmg"
           ls -l dist
 
       - uses: actions/upload-artifact@v7
@@ -419,6 +415,16 @@ jobs:
           hdiutil detach "$mount"
           defaults read "$APP/Contents/Info" CFBundleShortVersionString
           defaults read "$APP/Contents/Info" LSMinimumSystemVersion
+
+      # What a user sees when opening the .dmg: Finder applies the window
+      # layout stored in it. The screenshot goes to the smoke test results.
+      - name: Screenshot of the .dmg window
+        run: |
+          mkdir -p smoke-test
+          open dist/*.dmg
+          sleep 10
+          screencapture -x smoke-test/dmg-window.png
+          for volume in /Volumes/SqlStudio*; do hdiutil detach "$volume"; done
 
       # Every library the app loads must be inside it or part of macOS, and
       # the ad-hoc signature must be intact.
