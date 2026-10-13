@@ -114,6 +114,7 @@ build/linux/build_3rdparty.sh --bundle "$HOME/sqlstudio-bundle"
 export WB_BUNDLE_DIR="$HOME/sqlstudio-bundle"
 build/compile.sh --build-type Release --prefix /usr --antlr-jar /path/to/antlr-4.13.2-complete.jar
 DESTDIR="$PWD/stage" cmake --install build/output
+build/linux/build_pyodbc.sh --bundle "$HOME/sqlstudio-bundle" --sdist pyodbc-5.3.0.tar.gz --out stage/usr/lib/sql-studio
 build/linux/make_deb.sh --stage stage --out dist
 ```
 
