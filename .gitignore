@@ -230,3 +230,7 @@ docker/databases/.env
 # Local build leftovers
 build/CMakeCache.txt
 build/*.log
+
+# Third-party bundles for the Xcode build (build/mac/prepare_3rdparty_ce.sh)
+/3rd-party-ce/
+/3rd-party-se/
