@@ -197,6 +197,14 @@ jobs:
           fi
           echo "All libraries resolved."
 
+      # Debian policy checks with the distro's own lintian. Errors fail the
+      # job; warnings are listed only. Intentional exceptions are overridden in
+      # the package itself (see build/linux/make_deb.sh).
+      - name: Lintian
+        run: |
+          apt-get install -y -qq --no-install-recommends lintian
+          lintian --allow-root --fail-on error --tag-display-limit 0 dist/*.deb
+
       # lsb-release is installed on every regular Ubuntu system but missing from
       # container images. Without it the OS detection in get_local_os_name()
       # (library/base/util_functions.cpp) reads an uninitialized GError and
