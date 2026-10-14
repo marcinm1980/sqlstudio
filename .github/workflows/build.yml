@@ -18,6 +18,10 @@ permissions:
 env:
   ANTLR_VERSION: 4.13.2
   ANTLR_SHA256: eae2dfa119a64327444672aff63e9ec35a20180dc5b8090b7a6ab85125df4d76
+  # The migration plugins (MSSQL, Access, Sybase, ODBC) import pyodbc. It is
+  # built against the bundled iODBC and shipped with the application.
+  PYODBC_VERSION: 5.3.0
+  PYODBC_SHA256: 2fe0e063d8fb66efd0ac6dc39236c4de1a45f17c33eaded0d553d21c199f4d05
 
 jobs:
   # Every distro ships different library versions (libpython 3.10 / 3.12 /
@@ -122,6 +126,11 @@ jobs:
       - name: Build .deb package
         run: |
           DESTDIR="$STAGE_DIR" cmake --install build/output
+          curl -fsSL -o "$RUNNER_TEMP/pyodbc.tar.gz" \
+            "https://files.pythonhosted.org/packages/source/p/pyodbc/pyodbc-${PYODBC_VERSION}.tar.gz"
+          echo "${PYODBC_SHA256}  $RUNNER_TEMP/pyodbc.tar.gz" | sha256sum -c -
+          build/linux/build_pyodbc.sh --bundle "$WB_BUNDLE_DIR" \
+            --sdist "$RUNNER_TEMP/pyodbc.tar.gz" --out "$STAGE_DIR/usr/lib/sql-studio"
           build/linux/make_deb.sh --stage "$STAGE_DIR" --out dist --distro-tag ${{ matrix.tag }}
 
       - uses: actions/upload-artifact@v7
@@ -196,6 +205,14 @@ jobs:
             exit 1
           fi
           echo "All libraries resolved."
+
+      # The migration plugins import pyodbc only when used, so the smoke test
+      # would not notice a broken module. Same search paths as the launcher.
+      - name: Check pyodbc
+        run: |
+          apt-get install -y -qq --no-install-recommends python3
+          LD_LIBRARY_PATH=/usr/lib/sql-studio PYTHONPATH=/usr/lib/sql-studio \
+            python3 -c "import pyodbc; print('pyodbc', pyodbc.version, pyodbc.__file__)"
 
       # Debian policy checks with the distro's own lintian. Errors fail the
       # job; warnings are listed only. Intentional exceptions are overridden in
