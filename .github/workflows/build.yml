@@ -252,3 +252,204 @@ jobs:
           path: smoke-test
           if-no-files-found: ignore
           retention-days: 14
+
+  # Apple Silicon build of SqlStudio.app for macOS 26 and later. The bundle
+  # (build/mac/build_3rdparty.sh) provides MySQL client, Connector/C++, GDAL
+  # and the rest; glib, cairo and friends come from Homebrew, and
+  # build/mac/bundle_app.py copies everything the app loads into it.
+  macos:
+    name: macOS (Apple Silicon)
+    runs-on: macos-26
+    timeout-minutes: 240
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "26.0"
+      # The last python.org installer of Python 3.12, which the Xcode project
+      # embeds (build/fixup_python_paths.sh).
+      PYTHON_VERSION: 3.12.10
+      PYTHON_PKG_SHA256: 8373e58da4ea146b3eb1c1f9834f19a319440b6b679b06050b1f9ee3237aa8e4
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set paths
+        run: |
+          echo "WB_BUNDLE_DIR=${RUNNER_TEMP}/bundle" >> "$GITHUB_ENV"
+          echo "DOWNLOADS=${RUNNER_TEMP}/downloads" >> "$GITHUB_ENV"
+          echo "APP=${RUNNER_TEMP}/xcode/Build/Products/Release/SqlStudio.app" >> "$GITHUB_ENV"
+          echo "SHORT_SHA=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+          echo "/opt/homebrew/opt/openjdk/bin" >> "$GITHUB_PATH"
+
+      - name: Install Homebrew packages
+        run: |
+          brew install swig autoconf automake libtool pkgconf openjdk \
+            glib cairo pixman libpng libzip openssl@3 proj
+
+      # The bundle links some Homebrew libraries (OpenSSL, PROJ, ...), so a
+      # new version of those must rebuild it too.
+      - name: Hash Homebrew libraries used by the bundle
+        id: brew
+        run: |
+          versions="$(brew list --versions openssl@3 proj zstd lz4 libtiff json-c jpeg-turbo)"
+          echo "$versions"
+          echo "hash=$(shasum -a 256 <<<"$versions" | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore 3rd-party bundle
+        id: bundle-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: |
+            ${{ env.WB_BUNDLE_DIR }}
+            !${{ env.WB_BUNDLE_DIR }}/source
+            !${{ env.WB_BUNDLE_DIR }}/build
+          key: bundle-macos-arm64-${{ hashFiles('build/mac/list.txt', 'build/mac/build_3rdparty.sh') }}-${{ steps.brew.outputs.hash }}
+
+      - name: Build 3rd-party bundle
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        run: build/mac/build_3rdparty.sh --bundle "$WB_BUNDLE_DIR" -j "$(sysctl -n hw.ncpu)"
+
+      # Saved right away so a failing application build does not throw the bundle away.
+      - name: Save 3rd-party bundle
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: |
+            ${{ env.WB_BUNDLE_DIR }}
+            !${{ env.WB_BUNDLE_DIR }}/source
+            !${{ env.WB_BUNDLE_DIR }}/build
+          key: ${{ steps.bundle-cache.outputs.cache-primary-key }}
+
+      - name: Remove bundle build trees
+        if: steps.bundle-cache.outputs.cache-hit != 'true'
+        run: rm -rf "$WB_BUNDLE_DIR/source" "$WB_BUNDLE_DIR/build" && df -h /
+
+      - name: Download Python, pyodbc and ANTLR
+        run: |
+          mkdir -p "$DOWNLOADS"
+          curl -fsSL -o "$DOWNLOADS/pyodbc-${PYODBC_VERSION}.tar.gz" \
+            "https://files.pythonhosted.org/packages/source/p/pyodbc/pyodbc-${PYODBC_VERSION}.tar.gz"
+          echo "${PYODBC_SHA256}  $DOWNLOADS/pyodbc-${PYODBC_VERSION}.tar.gz" | shasum -a 256 -c -
+          curl -fsSL -o "$DOWNLOADS/python.pkg" \
+            "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-macos11.pkg"
+          echo "${PYTHON_PKG_SHA256}  $DOWNLOADS/python.pkg" | shasum -a 256 -c -
+          curl -fsSL -o "$DOWNLOADS/antlr-${ANTLR_VERSION}-complete.jar" \
+            "https://repo1.maven.org/maven2/org/antlr/antlr4/${ANTLR_VERSION}/antlr4-${ANTLR_VERSION}-complete.jar"
+          echo "${ANTLR_SHA256}  $DOWNLOADS/antlr-${ANTLR_VERSION}-complete.jar" | shasum -a 256 -c -
+
+      - name: Prepare 3rd-party-ce
+        run: |
+          build/mac/prepare_3rdparty_ce.sh \
+            --bundle "$WB_BUNDLE_DIR" \
+            --python-pkg "$DOWNLOADS/python.pkg" \
+            --antlr-jar "$DOWNLOADS/antlr-${ANTLR_VERSION}-complete.jar" \
+            --pyodbc-sdist "$DOWNLOADS/pyodbc-${PYODBC_VERSION}.tar.gz"
+
+      - name: Build SqlStudio
+        run: |
+          xcodebuild -version
+          xcodebuild -quiet \
+            -project SqlStudio.xcodeproj -scheme SqlStudio -configuration Release \
+            -arch arm64 ONLY_ACTIVE_ARCH=YES \
+            MACOSX_DEPLOYMENT_TARGET="$MACOSX_DEPLOYMENT_TARGET" CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath "$RUNNER_TEMP/xcode" \
+            build
+
+      - name: Bundle libraries into the app
+        run: |
+          build/mac/bundle_app.py "$APP" \
+            --search "$WB_BUNDLE_DIR/lib" --search 3rd-party-ce/lib
+          du -sh "$APP"
+
+      # Drag-to-Applications window with the background from build/mac.
+      - name: Build .dmg
+        run: |
+          version="$(tools/get_wb_version.sh full_version)"
+          build/mac/make_dmg.sh "$APP" "dist/SqlStudio-${version}-macos-arm64.dmg"
+          ls -l dist
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sql-studio-macos-arm64-${{ env.SHORT_SHA }}
+          path: dist/*.dmg
+          retention-days: 14
+
+  # Installs the .dmg on a fresh runner, as a user would, with Homebrew and
+  # the system-wide Python hidden, so the app can only use what it ships.
+  macos-package-test:
+    name: Test package (macOS Apple Silicon)
+    needs: macos
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      APP: /Applications/SqlStudio.app
+
+    steps:
+      - name: Set paths
+        run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      # Only the test scripts are needed from the repository.
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: build/mac
+          path: src
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: sql-studio-macos-arm64-${{ env.SHORT_SHA }}
+          path: dist
+
+      - name: Hide Homebrew and the system-wide Python
+        run: |
+          sudo mv /opt/homebrew /opt/homebrew.hidden
+          if [[ -d /Library/Frameworks/Python.framework ]]; then
+            sudo mv /Library/Frameworks/Python.framework /Library/Frameworks/Python.framework.hidden
+          fi
+
+      - name: Install from the .dmg
+        run: |
+          mount="$(mktemp -d)"
+          hdiutil attach -nobrowse -readonly -mountpoint "$mount" dist/*.dmg
+          cp -R "$mount/SqlStudio.app" /Applications/
+          hdiutil detach "$mount"
+          defaults read "$APP/Contents/Info" CFBundleShortVersionString
+          defaults read "$APP/Contents/Info" LSMinimumSystemVersion
+
+      # What a user sees when opening the .dmg: Finder applies the window
+      # layout stored in it. The screenshot goes to the smoke test results.
+      - name: Screenshot of the .dmg window
+        run: |
+          mkdir -p smoke-test
+          open dist/*.dmg
+          sleep 10
+          screencapture -x smoke-test/dmg-window.png
+          for volume in /Volumes/SqlStudio*; do hdiutil detach "$volume"; done
+
+      # Every library the app loads must be inside it or part of macOS, and
+      # the ad-hoc signature must be intact.
+      - name: Check libraries and signature
+        run: |
+          /usr/bin/python3 src/build/mac/bundle_app.py "$APP" --check
+          codesign --verify --deep --strict --verbose=2 "$APP"
+
+      # The migration plugins import pyodbc only when used, so the smoke test
+      # would not notice a broken module.
+      - name: Check pyodbc
+        run: |
+          "$APP/Contents/Frameworks/Python.framework/Versions/3.12/bin/python3.12" -I -c \
+            "import sys; sys.path.insert(0, '$APP/Contents/Resources/libraries'); import pyodbc; print('pyodbc', pyodbc.version)"
+
+      # Starts the app and checks that a window appears and it keeps running
+      # without Python errors.
+      - name: Smoke test
+        run: src/build/mac/smoke_test.sh "$APP" smoke-test
+
+      - name: Upload smoke test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: smoke-test-macos-arm64-${{ env.SHORT_SHA }}
+          path: smoke-test
+          if-no-files-found: ignore
+          retention-days: 14

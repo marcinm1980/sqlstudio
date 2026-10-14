@@ -64,6 +64,14 @@ distribution (Ubuntu 22.04 and 24.04, Debian 12 and 13) it:
 5. starts the application on a virtual display (`build/linux/smoke_test.sh`)
    and fails if it crashes, shows no main window, or logs a Python traceback.
 
+On macOS (Apple Silicon, macOS 26 and later) the workflow builds
+`SqlStudio.app` with Xcode, copies every library it loads into it
+(`build/mac/bundle_app.py`) and packages it as a `.dmg`. A separate job
+installs the `.dmg` on a fresh runner with Homebrew and the system-wide Python
+hidden, checks that all library references stay inside the app, that the
+signature is intact and that pyodbc imports, and runs the smoke test
+(`build/mac/smoke_test.sh`).
+
 The packages and the smoke test results (screenshot and logs) are attached to
 the workflow run as artifacts for 14 days. To try a package by hand, see
 [testing/docker/linux-desktop](testing/docker/linux-desktop/README.md).
