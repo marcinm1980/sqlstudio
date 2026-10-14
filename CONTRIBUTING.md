@@ -83,6 +83,11 @@ rebuilt only when `build/linux/list.txt`, `build/linux/build_3rdparty.sh` or
 its own earlier runs or on its target branch, so the first run after such a
 change takes longer.
 
+A daily `Cleanup` workflow deletes the caches of closed pull requests and the
+artifacts of older runs of each pull request, keeping only the newest one. It
+can also be started by hand from the Actions tab; by default it then only
+lists what it would delete.
+
 ## Pull Request Guidelines
 
 - Describe the problem and the change clearly.
