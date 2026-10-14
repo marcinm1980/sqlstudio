@@ -93,16 +93,42 @@ To Build:
 
 
 
-Buiding on macOS
--------------------
+Building on macOS
+-----------------
 
-- Go to http://rudix.org/ and download and install the following packages
-  gettext, glib, libpng, libsigc++, lua, pkg-config, pcre, libzip, cairo, pixman
-- Install a recent MySQL server (64bit). The installer will link /usr/local/mysql
-  to the correct installation.
-- Install the latest MySQL Connector/C++ and vsqlite++.
-- Install the latest Xcode and open the SqlStudio.xcodeproj file.
-- In the target dropdown pick SqlStudio and build it.
+SqlStudio for macOS is built for Apple Silicon (arm64) and macOS 26 or later,
+the same way as in CI (the macos job in .github/workflows/build.yml).
+
+- Install Xcode and Homebrew, then the build tools and libraries:
+
+  $> brew install swig autoconf automake libtool pkgconf openjdk cmake \
+                  glib cairo pixman libpng libzip openssl@3 proj
+  $> export PATH="$(brew --prefix openjdk)/bin:$PATH"
+
+- Build the 3rd-party bundle (MySQL client, Connector/C++, GDAL, ANTLR runtime,
+  libssh, ...):
+
+  $> build/mac/build_3rdparty.sh --bundle "$HOME/sqlstudio-bundle-mac"
+
+- Download the python.org installer for Python 3.12 (python-3.12.10-macos11.pkg),
+  antlr-4.13.2-complete.jar and the pyodbc source archive (pyodbc-5.3.0.tar.gz),
+  then lay out 3rd-party-ce/, which the Xcode project reads:
+
+  $> build/mac/prepare_3rdparty_ce.sh --bundle "$HOME/sqlstudio-bundle-mac" \
+         --python-pkg python-3.12.10-macos11.pkg \
+         --antlr-jar antlr-4.13.2-complete.jar --pyodbc-sdist pyodbc-5.3.0.tar.gz
+
+- Build the app:
+
+  $> xcodebuild -project SqlStudio.xcodeproj -scheme SqlStudio -configuration Release \
+         -arch arm64 ONLY_ACTIVE_ARCH=YES MACOSX_DEPLOYMENT_TARGET=26.0 \
+         CODE_SIGNING_ALLOWED=NO -derivedDataPath build/xcode build
+
+- Copy the libraries the app loads into it and package it as a .dmg:
+
+  $> build/mac/bundle_app.py build/xcode/Build/Products/Release/SqlStudio.app \
+         --search "$HOME/sqlstudio-bundle-mac/lib" --search 3rd-party-ce/lib
+  $> build/mac/make_dmg.sh build/xcode/Build/Products/Release/SqlStudio.app SqlStudio.dmg
 
 ==============================================================================
 

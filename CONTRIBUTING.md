@@ -58,10 +58,19 @@ distribution (Ubuntu 22.04 and 24.04, Debian 12 and 13) it:
    ships different library versions (libpython, GTK, ...),
 2. packages the result as a `.deb` with `build/linux/make_deb.sh`,
 3. installs the package in another clean container and checks that every
-   binary and library resolves its shared libraries,
+   binary and library resolves its shared libraries and that the bundled
+   pyodbc module (used by the migration plugins) imports,
 4. checks the package with that distribution's `lintian` (errors fail),
 5. starts the application on a virtual display (`build/linux/smoke_test.sh`)
    and fails if it crashes, shows no main window, or logs a Python traceback.
+
+On macOS (Apple Silicon, macOS 26 and later) the workflow builds
+`SqlStudio.app` with Xcode, copies every library it loads into it
+(`build/mac/bundle_app.py`) and packages it as a `.dmg`. A separate job
+installs the `.dmg` on a fresh runner with Homebrew and the system-wide Python
+hidden, checks that all library references stay inside the app, that the
+signature is intact and that pyodbc imports, and runs the smoke test
+(`build/mac/smoke_test.sh`).
 
 The packages and the smoke test results (screenshot and logs) are attached to
 the workflow run as artifacts for 14 days. To try a package by hand, see
@@ -73,6 +82,11 @@ rebuilt only when `build/linux/list.txt`, `build/linux/build_3rdparty.sh` or
 `build/linux/install_deps.sh` change. A pull request can use caches saved by
 its own earlier runs or on its target branch, so the first run after such a
 change takes longer.
+
+A daily `Cleanup` workflow deletes the caches of closed pull requests and the
+artifacts of older runs of each pull request, keeping only the newest one. It
+can also be started by hand from the Actions tab; by default it then only
+lists what it would delete.
 
 ## Pull Request Guidelines
 
