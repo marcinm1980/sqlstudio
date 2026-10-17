@@ -72,6 +72,16 @@ hidden, checks that all library references stay inside the app, that the
 signature is intact and that pyodbc imports, and runs the smoke test
 (`build/mac/smoke_test.sh`).
 
+On Windows (x64) the workflow builds the whole solution with the v143 toolset
+and packages it twice: as a portable `.zip` that carries the Visual C++
+runtime (`build/zip/make_zip.ps1`), and as an `.msi` built from that `.zip`
+(`build/msi`). A separate job unpacks the `.zip` on a fresh runner with the
+runner's Python taken off `PATH`, checks that every DLL resolves
+(`build/windows/check_dll_deps.ps1`) and that pyodbc imports, and runs the
+smoke test (`build/windows/smoke_test.ps1`). It then installs the `.msi`
+silently, runs the same checks on the installed copy, and checks that an
+uninstall removes it.
+
 The packages and the smoke test results (screenshot and logs) are attached to
 the workflow run as artifacts for 14 days. To try a package by hand, see
 [testing/docker/linux-desktop](testing/docker/linux-desktop/README.md).
@@ -79,7 +89,8 @@ the workflow run as artifacts for 14 days. To try a package by hand, see
 The third-party libraries (MySQL client, Connector/C++, GDAL, ANTLR runtime,
 ...) take a long time to build, so they are cached per distribution and
 rebuilt only when `build/linux/list.txt`, `build/linux/build_3rdparty.sh` or
-`build/linux/install_deps.sh` change. A pull request can use caches saved by
+`build/linux/install_deps.sh` change (on Windows: `build/windows/libs.txt`,
+`build/windows/build_3rdparty.ps1` or the toolset). A pull request can use caches saved by
 its own earlier runs or on its target branch, so the first run after such a
 change takes longer.
 
